@@ -1,49 +1,4 @@
-/*$(function() {
-	$(".ladder").css("width", $(window).width() - 50);
-	
-	$(window).resize(function() {
-		$(".ladder").css("width", $(window).width() - 50);
-	});
-	
-	$("#draw_d").on("click", function() {
-		setDefaultLad();
-	});
-	$("#draw_l").on("click", function() {
-		setLadInfo();
-		printLadLine();
-		setUserPath();
-	});
-	$("#allpop").on("click", function() {
-		popAllUser();
-	});
-	$("#allani").on("click", function() {
-		aniAllUser();
-	});
-	$(document).on('click', 'div.users', function(e) {
-		var _this = $(e.target);
-		var usernum = _this.attr('num') * 1;
-		
-		$('.users').css('background', 'pink');
-		_this.css('background', 'red');
-		
-		if(userStatus[usernum] === 0) {
-			aniOneUser(usernum);
-		} else {
-			popOneUser(usernum);
-		}
-	});
-	$("#fast").on("click", function() {
-		changeSpeed(2, "fast");
-	});
-	$("#slow").on("click", function() {
-		changeSpeed(2, "slow");
-	});
-	$("#add").on("click", function() {
-		addUser(1);
-	});
-});*/
-
-var userDiv = 100; 
+var userDiv = 101;
 var ladderlinecnt = 0;
 var clickUserOrder = -1;
 var resultOrder = -1;
@@ -53,14 +8,16 @@ var hInfo = 39 + 1; // 높이 수
 var wInfo = 0; // 멤버 수
 var hSize = 20; // 세로 간격
 var wSize = 150; // 가로 간격
-var moveSpeed = 4/*hSize / 10*/; // 애니메이션 속도
+var moveSpeed = 6/*hSize / 10*/; // 애니메이션 속도
 var lad = ""; // 사다리 정보
 var ladArr = []; // 사다리 정보를 배열로 저장
 var printLadInfo = []; // 사다리 방향 정보
 var checkUserPath = []; // 유저별 사다리 이동 방향 정보
 var userStatus = []; // 유저의 사다리 실행 상태 (처음 실행 : 0, 다시 실행 : 1)
-var drawStatus = false;
-var beforeStatus = 0;
+var drawStatus = false; // true:애니메이션 진행 false:애니메이션 정지
+var beforeStatus = 0; // 0: 직전에 애니메이션 진행 1: 직전에 팝 진행
+function ladderInitSettingVar() {
+}
 
 function changeSpeed(speed, flag) { // 속도 변화
 	if(flag === "fast") {
@@ -70,25 +27,10 @@ function changeSpeed(speed, flag) { // 속도 변화
 	}
 }
 
-function changeUser(num) { // 유저 추가
-	wInfo = num;
-	/*if(flag === "add") {
-		wInfo += num;
-	} else {
-		wInfo -= num;
-	}*/
-	setDefaultLad();
-}
-
 function setDefaultLad() { // 세로선, 유저, 아이템 나타나기
-	/*if(wInfo * wSize + startXPoint * 2 > $("canvas").attr("width")) {
-		$("canvas").attr("width", (wInfo - 1) * wSize + startXPoint * 2);
-	}*/
 	for(var i = 0; i < wInfo; i++) {
 		drawLadLine('H', startXPoint + (wSize * i), startYPoint);
 		
-		/*$("#attendant").append("<div class='users' num='" + i + "' style='left: " + (wSize * i + startXPoint - userDiv / 2) + "px; top: " + (startYPoint - userDiv) + "px;'></div>");
-		$("#item").append("<div class='items' num='" + i + "' style='left: " + (wSize * i + startXPoint - userDiv) + "px;'><input type='text'></div>");*/
 		userStatus[i] = 0;
 	}
 }
@@ -152,78 +94,138 @@ function setUserPath() { // 각 유저의 이동경로 저장
 	}
 }
 
-var moveImgHarfSize = 33;
-var moveLeft = 0;
-var moveTop = 0;
+var moveImgHalfHeight;
+var canvasTop;
+var canvasBottom;
+var canvasLeft;
+var moveTop;
+var moveLeft;
+function ladderDrawInitSettingVar() {
+	moveImgHalfHeight = ($("#drag0 img").height() + Number($("#drag0 img").css("border-width").split("px")[0]) * 2) / 2;
+	canvasTop = $("canvas").position().top + startYPoint - moveImgHalfHeight;
+	canvasBottom = canvasTop + $("canvas").height();
+	canvasLeft = $("canvas").position().left + moveImgHalfHeight / 2;
+	moveTop = 0;
+	moveLeft = 0;
+}
+
 function moveUserPicImg(type) {
 	var userImgHtml = $("#drag" + clickUserOrder + " span").html();
-	
+	if($("[_result='0']").length > 0) {
+		userStatus[$("[_result='0']").attr("id").slice(11)] = 0;
+		$("[_result='0']").remove();
+	}
 	
 	if(type.substring(0, 3) == "pop") {
-		$("#moveImgUser"  + clickUserOrder).remove();
 		
 		printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, type);
 		
-		moveLeft = $("#drag0 img").offset().left + wSize * resultOrder;
-		
-		$("#lineDiv span").append(userImgHtml);
-		$("#lineDiv img:last").attr("id", "moveImgUser" + clickUserOrder).css("position", "absolute").offset({"top": 1148, "left": moveLeft});
-
-	} else {
-		if(type.substring(3, 6) == "all") {
-			$("#lineDiv span").empty();
+		if(userStatus[clickUserOrder] == 0) {
+			$("#moveImgUser" + clickUserOrder).remove();
+			
+			moveLeft = canvasLeft + wSize * resultOrder;
+			
+			$("#lineDiv span").append(userImgHtml);
+			$("#lineDiv img:last").attr("id", "moveImgUser" + clickUserOrder).attr("_result", userStatus[clickUserOrder]).css("position", "absolute").css("top", canvasBottom).css("left", moveLeft);/*offset({"top": canvasBottom, "left": $("#drag0 img").offset().left + wSize * resultOrder});*/
+			userStatus[clickUserOrder] = 1;
+			
+			ladderAnimationComplete();
 		}
-		moveLeft = $("#drag0 img").offset().left + wSize * clickUserOrder;
-		moveTop = 0 - moveImgHarfSize;
+	} else {
 		
-		$("#lineDiv span").append(userImgHtml);
-		$("#lineDiv img:last").attr("id", "moveImgUser" + clickUserOrder).css("position", "absolute").offset({"top": $("#drag0 img").offset().top, "left": moveLeft});
+		moveLeft = canvasLeft + wSize * clickUserOrder;
+		moveTop = canvasTop;
 		
-		$("#moveImgUser" + clickUserOrder).animate({"top": moveTop}, moveSpeed * 10, function() {
-			moveTop = $("#moveImgUser" + clickUserOrder).offset().top;
-			printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, type);
-		});
+		if(userStatus[clickUserOrder] == 0) {
+			$("#lineDiv span").append(userImgHtml);
+			$("#lineDiv img:last").attr("id", "moveImgUser" + clickUserOrder).attr("_result", userStatus[clickUserOrder]).css("position", "absolute").css("top", canvasTop - 80).css("left", moveLeft);/*.offset({"top": $("#drag0 img").offset().top, "left": moveLeft});*/
+			
+			userStatus[clickUserOrder] = 1;
+			
+			$("#moveImgUser" + clickUserOrder).animate({"top": canvasTop}, moveSpeed * 10, function() {
+				printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, type);
+			});
+		} else {
+			$("#lineDiv span").append(userImgHtml);
+			$("#lineDiv img:last").attr("id", "copyUser").attr("_result", "0").css("position", "absolute").css("top", canvasTop - 80).css("left", moveLeft);
+			
+			$("#copyUser").animate({"top": canvasTop}, moveSpeed * 10, function() {
+				printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, type);
+			});
+		}
 	}
-	
 }
 
-function aniOneUser() { 
-	if(beforeStatus == 0) {
-		drawStatus = !drawStatus;
+/*function moveUserPicImg(type) {
+	var userImgHtml = $("#drag" + clickUserOrder + " span").html();
+	if($("[_result='0']").length > 0) {
+		userStatus[$("[_result='0']").attr("id").slice(11)] = 0;
+		$("[_result='0']").remove();
 	}
 	
-	moveUserPicImg("anione");
-	
-	userStatus[clickUserOrder] = 1;
+	if(type.substring(0, 3) == "pop") {
+		
+		printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, type);
+		
+		if(userStatus[clickUserOrder] == 0) {
+			$("#moveImgUser"  + clickUserOrder).remove();
+			$("#lineDiv span").append(userImgHtml);
+			$("#lineDiv img:last").attr("id", "moveImgUser" + clickUserOrder).attr("_result", userStatus[clickUserOrder]).css("position", "absolute").offset({"top": canvasBottom, "left": canvasLeft + wSize * resultOrder});
+			userStatus[clickUserOrder] = 1;
+			
+			ladderAnimationComplete();
+		}
+	} else {
+		
+		moveLeft = canvasLeft + wSize * clickUserOrder;
+		moveTop = canvasTop;
+		
+		if(userStatus[clickUserOrder] == 0) {
+			$("#lineDiv span").append(userImgHtml);
+			$("#lineDiv img:last").attr("id", "moveImgUser" + clickUserOrder).attr("_result", userStatus[clickUserOrder]).css("position", "absolute").offset({"top": $("#drag0 img").offset().top, "left": moveLeft});
+			userStatus[clickUserOrder] = 1;
+			
+			$("#moveImgUser" + clickUserOrder).animate({"top": 0 - moveImgHalfHeight}, moveSpeed * 10, function() {
+				printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, type);
+			});
+		} else {
+			$("#lineDiv span").append(userImgHtml);
+			$("#lineDiv img:last").attr("id", "copyUser").attr("_result", "0").css("position", "absolute").offset({"top": $("#drag0 img").offset().top, "left": moveLeft});
+			
+			$("#copyUser").animate({"top": 0 - moveImgHalfHeight}, moveSpeed * 10, function() {
+				printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, type);
+			});
+		}
+	}
+}*/
+
+function aniOneUser() { 
+	drawStatus = !drawStatus;
 	beforeStatus = 0;
+	
+	moveUserPicImg("anione");
 }
 
 function aniAllUser() {
-	// TODO printUserPath 함수가 끝난 다음에 실행될 수 있도록 해야함.... 속도조절시 문제... 한번 실행중일떄 버튼 클릭 막기 
-	if(beforeStatus == 0) {
-		drawStatus = !drawStatus;
-	}
+	drawStatus = !drawStatus;
+	beforeStatus = 0;
 	
 	moveUserPicImg("aniall" + clickUserOrder);
-	
-	userStatus[clickUserOrder] = 1;
 }
 
 function popOneUser() {
-	drawStatus = !drawStatus;	
-	moveUserPicImg("popone");
-//	printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'popone');
-	userStatus[clickUserOrder] = 1;
+	drawStatus = false;
 	beforeStatus = 1;
-	ladderAnimationComplete();
+	
+	moveUserPicImg("popone");
 }
 
 function popAllUser() {
-	drawStatus = !drawStatus;
+	drawStatus = false;
+	beforeStatus = 1;
+	
 	for(clickUserOrder = 0; clickUserOrder < wInfo; clickUserOrder++) {
 		moveUserPicImg("popall");
-//		printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'popall');
-		userStatus[clickUserOrder] = 1;
 	}
 }
 
@@ -256,7 +258,13 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 		resultOrder = locX;
 	} else if(typeStr1 == 'ani') {
 		drawPathLine(user, moveX, moveY, typeStr2);
-		$("#moveImgUser" + clickUserOrder).offset({"top": moveTop, "left": moveLeft});
+		if($("#copyUser").length != 0) {
+			$("#copyUser").css("top", moveTop).css("left", moveLeft);
+			/*$("#copyUser").offset({"top": moveTop, "left": moveLeft});*/
+		} else {
+			$("#moveImgUser" + clickUserOrder).css("top", moveTop).css("left", moveLeft);
+			/*$("#moveImgUser" + clickUserOrder).offset({"top": moveTop, "left": moveLeft});*/
+		}
 		
 		if(locY >= hInfo) { 
 			drawStatus = false;
@@ -277,7 +285,7 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 				if(moveX <= startXPoint + (locX - 1) * wSize) {
 					locX--;
 					moveX = startXPoint + locX * wSize;
-					moveLeft = $("#drag0 img").offset().left + locX * wSize;
+					moveLeft = canvasLeft + locX * wSize;
 				}
 			} else if(path['direction'] == 'right') {
 				moveX += moveSpeed;
@@ -285,7 +293,7 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 				if(moveX >= startXPoint + (locX + 1) * wSize) {
 					locX++;
 					moveX = startXPoint + locX * wSize;
-					moveLeft = $("#drag0 img").offset().left + locX * wSize;
+					moveLeft = canvasLeft + locX * wSize;
 				}
 			} 
 		} else {
@@ -294,7 +302,7 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 			if(moveY >= startYPoint + (locY + 1) * hSize) {
 				locY++;
 				moveY = startYPoint + locY * hSize;
-				moveTop = $("#drag0 img").offset().top + 87 + locY * hSize;
+				moveTop = canvasTop + locY * hSize;
 			}
 		}
 		
@@ -302,7 +310,9 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 		
 		setTimeout(function(){ 
 			if(!drawStatus) {
-				drawStatus = true;
+				if(beforeStatus == 0) {
+					drawStatus = true;
+				}
 			} else {
 				return printUserPath(user, locX, locY, moveX, moveY, type);
 			}

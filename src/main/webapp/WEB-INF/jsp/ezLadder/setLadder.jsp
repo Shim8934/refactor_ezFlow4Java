@@ -44,6 +44,9 @@
 					max: 0,
 					slide: function( event, ui ) {
 						$("#amount").text(ui.value);
+					},
+					change: function(event, ui) {
+						lineCnt = ui.value;
 					}
 				});
 				
@@ -564,7 +567,7 @@
 				display: inline-block;
 			}
 			.icon {
-				border-radius: 30px;
+				border-radius: 15px;
 				cursor: pointer;
 				display: none;
 			}

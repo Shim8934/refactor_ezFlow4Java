@@ -42,15 +42,11 @@
 		var servername = null;
 		var attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
 		var items = []; 
-		/* var lad = "${vo.lineArray}"; */
-		/* var ladArr = lad.split(''); */
 		var height = 10;
 		var resultUser = new Array;
 		var seeAllcnt = 0;
 		var pathColor = new Array;
-		/* window.onload = function() {
-			draw();
-		} */
+		
 		$(window).unload(function() {
 			if (stompClient !== null) {
 		        stompClient.disconnect();
@@ -314,12 +310,12 @@
 						canvasSetting();
 						var html = '';
 						_ladderLine.forEach(function(line, index) {
-							html += '<li><div id="drag' + index + '" style="height: 140px;padding-top:  20px;">';
-							html += '<img src="' + line.pic + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />';
-							html += '<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>' + line.userName + '</span></div></div></li>';
+							html += '<li><div id="drag' + index + '" style="height: 140px; padding-top:  20px; cursor: pointer;">';
+							html += '<span><img src="' + line.pic + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" /></span>';
+							html += '<div style="line-height: 30px; height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>' + line.userName + '</span></div></div></li>';
 						});
 						$("#attendantList").html(html);
-						$("#blackBox").remove();
+						$("#blackBox, #startButton").remove();
 					}
 				});
 			});
@@ -349,6 +345,7 @@
 			
 			$("canvas").attr("width", (wInfo * wSize));
 			
+			ladderDrawInitSettingVar();
 			setDefaultLad();
 			setLadInfo();
 			printLadLine();
@@ -359,6 +356,7 @@
 			$(document)
 			.on("click", "[id^=drag]", function() {
 				clickUserOrder = Number($(this).attr("id").slice(4));
+				
 				if(userStatus[clickUserOrder] == 0) {
 					aniOneUser();
 				} else {
@@ -367,12 +365,17 @@
 			});
 		}
 		function ladderAnimationComplete() {
+			$("#copyUser").remove();
+			
+			/* userStatus[clickUserOrder] = 1; */
+			$("#lineDiv img:last").attr("_result", userStatus[clickUserOrder]);
+			
 			if($("#itemList li:eq(" + resultOrder + ") div").length == 1) {
-				var html = "<div style='line-height: 30px; background: #ddd; margin-top: 10px; border-radius: 15px;'>" + _ladderLine[clickUserOrder].userName + "</div>";
+				var html = "<div style='line-height: 30px; height: 30px; background: #ddd; margin-top: 10px; border-radius: 15px;'>" + _ladderLine[clickUserOrder].userName + "</div>";
 				$("#itemList li:eq(" + resultOrder + ")").append(html);
 			}
 			
-			var scrollval = $("#itemList li:eq(" + resultOrder + ")").offset().left - $("#ladderLineBox").width()/2;
+			var scrollval = resultOrder * 150 - $("#ladderLineBox").width()/2;
 			$("#ladderLineBox").animate({"scrollLeft": scrollval}, 400);
 		}
 		/** 삭제 */
@@ -720,11 +723,11 @@
 								<div style="height: 140px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
-											<li _attendantIndex="${status.index}">
+											<li attendantIndex="${status.index}">
 												<div class="ladderDrag" id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer; left: 0px; border-radius: 5px;">
 													<div>
 														<span><img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #a9a9a9; border-radius: 40px;" /></span>
-														<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
+														<div style="line-height: 30px; height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
 													</div>
 												</div>
 											</li>
@@ -735,11 +738,14 @@
 									<div id="blackBox" style="height: 800px;background: darkgray;position: absolute;left: -50px;right: 0;">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
+									<span id="moveUser"></span>
+									<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
+									<canvas id='ladderCanvas' width='0' height='800'></canvas>
 								</div>
 								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
 										<li>
-											<div style="line-height: 30px; outline: 1px solid #ddd;">
+											<div style="line-height: 30px; height:30px; outline: 1px solid #ddd;">
 												<span>${line.item}</span>
 											</div>
 										</li>
@@ -756,7 +762,7 @@
 											<li>
 												<div id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer;">
 													<span><img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;"/></span>
-													<div style="line-height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
+													<div style="line-height: 30px; height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
 												</div>
 											</li>
 										</c:forEach>
@@ -770,7 +776,7 @@
 								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
 										<li>
-											<div style="line-height: 30px; outline: 1px solid #ddd;">
+											<div style="line-height: 30px; height:30px; outline: 1px solid #ddd;">
 												<span>${line.item}</span>
 											</div>
 										</li>
