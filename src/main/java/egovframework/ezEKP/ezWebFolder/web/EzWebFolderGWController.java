@@ -468,14 +468,23 @@ public class EzWebFolderGWController {
 			String realPath   = request.getServletContext().getRealPath("");
 			List<FileVO> list = ezWebFolderService.saveUploadedFiles(multiFileLists, nameArray, folder, realPath, userInfo);
 			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", list);
+			if (list == null || list.size() == 0) {
+				result.put("status", "error");
+				result.put("code", 1);
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
+			}
+			else {
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", list);
+			}
+			
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 			result.put("data", "");
 		}
 		
@@ -1494,7 +1503,7 @@ public class EzWebFolderGWController {
 					filePathMap           = ezWebFolderService.getAllFolderNameMap(listName, primary, tenantId);
 					
 					for (FileVO file : fileList) {
-						if (file.getFilePosition().equals("")) {
+						if (file.getFilePosition() == null || file.getFilePosition().equals("")) {
 							String file_path    = originalPath;
 							String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
 							String[] fldPathArr = fldPath.split("\\|");

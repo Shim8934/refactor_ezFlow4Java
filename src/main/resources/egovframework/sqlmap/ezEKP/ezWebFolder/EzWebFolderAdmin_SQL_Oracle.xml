@@ -92,7 +92,7 @@
 			
 			<isNotEqual property="startDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(CREATE_DATE >= #startDate# AND CREATE_DATE <= #endDate#)
+					(CREATE_DATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND CREATE_DATE <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				]]>
 			</isNotEqual>
 		</isEqual>
@@ -197,16 +197,16 @@
 	<select id="EzWebFolderAdminDAO.getUserCapacity" resultMap="userCapacityVO">
 		<![CDATA[
 			SELECT
-				U.CN                                                                         AS CN,
-				CASE WHEN #primary# = '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END         AS DISPLAY_NAME,
-				U.DEPARTMENT                                                                 AS DEPARTMENT_ID,
-				CASE WHEN #primary# = '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END         AS DEPARTMENT_NAME,
-				U.PHYSICALDELIVERYOFFICENAME                                                 AS COMPANY_ID,
-				CASE WHEN #primary# = '1' THEN U.COMPANY ELSE U.COMPANY2 END                 AS COMPANY_NAME,
-				IF(W.TOTAL_CAPACITY IS NOT NULL, W.TOTAL_CAPACITY, IFNULL(C.TOTAL_LIMIT, 0)) AS TOTAL_CAPACITY,
-				CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END                     AS JOB_TITLE,
+				U.CN                                                                                        AS CN,
+				CASE WHEN #primary# = '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END                        AS DISPLAY_NAME,
+				U.DEPARTMENT                                                                                AS DEPARTMENT_ID,
+				CASE WHEN #primary# = '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END                        AS DEPARTMENT_NAME,
+				U.PHYSICALDELIVERYOFFICENAME                                                                AS COMPANY_ID,
+				CASE WHEN #primary# = '1' THEN U.COMPANY ELSE U.COMPANY2 END                                AS COMPANY_NAME,
+				CASE WHEN W.TOTAL_CAPACITY IS NOT NULL THEN W.TOTAL_CAPACITY ELSE NVL(C.TOTAL_LIMIT, 0) END AS TOTAL_CAPACITY,
+				CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END                                    AS JOB_TITLE,
 				(
-					SELECT IFNULL(SUM(CAST(F.FILE_SIZE AS INT)), 0)
+					SELECT NVL(SUM(TO_NUMBER(F.FILE_SIZE)), 0)
 						FROM
 							(
 								TBL_WEBFOLDER_FOLDER S INNER JOIN TBL_WEBFOLDER_FILE F ON S.FOLDER_ID = F.FOLDER_ID
@@ -237,39 +237,51 @@
 	<select id="EzWebFolderAdminDAO.getListUserCapacity" resultMap="userCapacityVO">
 		<![CDATA[
 			SELECT
-				U.CN                                                                         AS CN,
-				CASE WHEN #primary# = '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END         AS DISPLAY_NAME,
-				U.DEPARTMENT                                                                 AS DEPARTMENT_ID,
-				CASE WHEN #primary# = '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END         AS DEPARTMENT_NAME,
-				U.PHYSICALDELIVERYOFFICENAME                                                 AS COMPANY_ID,
-				CASE WHEN #primary# = '1' THEN U.COMPANY ELSE U.COMPANY2 END                 AS COMPANY_NAME,
-				IF(W.TOTAL_CAPACITY IS NOT NULL, W.TOTAL_CAPACITY, IFNULL(C.TOTAL_LIMIT, 0)) AS TOTAL_CAPACITY,
-				CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END                     AS JOB_TITLE,
-				(
-					SELECT IFNULL(SUM(CAST(F.FILE_SIZE AS INT)), 0)
-						FROM
-							(
-								TBL_WEBFOLDER_FOLDER S INNER JOIN TBL_WEBFOLDER_FILE F ON S.FOLDER_ID = F.FOLDER_ID
-							)
-						WHERE
-							F.TENANT_ID   = #tenantId#
-						AND
-							S.FOLDER_TYPE = 'U'
-						AND
-							F.USE_STATUS != 'N'
-						AND
-							S.OWNER_ID    = U.CN
-				)                                                                            AS TOTAL_USED,
-				U.TENANT_ID                                                                  AS TENANT_ID
+				*
 			FROM
-				TBL_USERMASTER U
-								LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN AND U.TENANT_ID = W.TENANT_ID
-								LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID AND U.TENANT_ID = C.TENANT_ID
-		]]>
-		<include refid="userCapacityCondition"/>
+				(
+					SELECT
+						k.*, ROWNUM AS RNUM
+					FROM
+						(
+							SELECT
+								U.CN                                                                                        AS CN,
+								CASE WHEN #primary# = '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END                        AS DISPLAY_NAME,
+								U.DEPARTMENT                                                                                AS DEPARTMENT_ID,
+								CASE WHEN #primary# = '1' THEN U.DESCRIPTION ELSE U.DESCRIPTION2 END                        AS DEPARTMENT_NAME,
+								U.PHYSICALDELIVERYOFFICENAME                                                                AS COMPANY_ID,
+								CASE WHEN #primary# = '1' THEN U.COMPANY ELSE U.COMPANY2 END                                AS COMPANY_NAME,
+								CASE WHEN W.TOTAL_CAPACITY IS NOT NULL THEN W.TOTAL_CAPACITY ELSE NVL(C.TOTAL_LIMIT, 0) END AS TOTAL_CAPACITY,
+								CASE WHEN #primary# = '1' THEN U.TITLE ELSE U.TITLE2 END                                    AS JOB_TITLE,
+								(
+									SELECT NVL(SUM(TO_NUMBER(F.FILE_SIZE)), 0)
+										FROM
+											(
+												TBL_WEBFOLDER_FOLDER S INNER JOIN TBL_WEBFOLDER_FILE F ON S.FOLDER_ID = F.FOLDER_ID
+											)
+										WHERE
+											F.TENANT_ID   = #tenantId#
+										AND
+											S.FOLDER_TYPE = 'U'
+										AND
+											F.USE_STATUS != 'N'
+										AND
+											S.OWNER_ID    = U.CN
+								)                                                                            AS TOTAL_USED,
+								U.TENANT_ID                                                                  AS TENANT_ID
+							FROM
+								TBL_USERMASTER U
+												LEFT JOIN TBL_WEBFOLDER_USER W ON U.CN = W.CN AND U.TENANT_ID = W.TENANT_ID
+												LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID AND U.TENANT_ID = C.TENANT_ID
+						]]>
+					<include refid="userCapacityCondition"/>
 		<![CDATA[
-			LIMIT
-				#startPoint#, #pageSize#
+						) k
+					WHERE
+						ROWNUM <= #startPoint# + #pageSize#
+				)
+			WHERE
+				RNUM >= #startPoint# + 1
 		]]>
 	</select>
 	
@@ -332,28 +344,40 @@
 	<select id="EzWebFolderAdminDAO.getListFileLogs" resultMap="fileLogVO">
 		<![CDATA[
 			SELECT
-				LOG_ID                                          AS LOG_ID,
-				FILE_TYPE                                       AS FILE_TYPE,
-				FILE_NAME                                       AS FILE_NAME,
-				FILE_SIZE                                       AS FILE_SIZE,
-				FILE_EXT                                        AS FILE_EXT,
-				LOG_TYPE                                        AS LOG_TYPE,
-				CREATE_ID                                       AS CREATE_ID,
-				CREATE_NAME1                                    AS CREATE_NAME1,
-				CREATE_NAME2                                    AS CREATE_NAME2,
-				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				COMPANY_ID                                      AS COMPANY_ID,
-				TENANT_ID                                       AS TENANT_ID
+				*
 			FROM
-				TBL_WEBFOLDER_LOG
-		]]>
-		<include refid="fileHistoryCondition"/>
-		<![CDATA[
-			ORDER BY
-				CREATE_DATE DESC,
-				CAST(LOG_ID AS INT) DESC
-			LIMIT
-				#startPoint#, #pageSize#
+				(
+					SELECT
+						k.*, ROWNUM AS RNUM
+					FROM
+						(
+							SELECT
+								LOG_ID                                          AS LOG_ID,
+								FILE_TYPE                                       AS FILE_TYPE,
+								FILE_NAME                                       AS FILE_NAME,
+								FILE_SIZE                                       AS FILE_SIZE,
+								FILE_EXT                                        AS FILE_EXT,
+								LOG_TYPE                                        AS LOG_TYPE,
+								CREATE_ID                                       AS CREATE_ID,
+								CREATE_NAME1                                    AS CREATE_NAME1,
+								CREATE_NAME2                                    AS CREATE_NAME2,
+								(CREATE_DATE + #offset#/(24*60))                AS CREATE_DATE,
+								COMPANY_ID                                      AS COMPANY_ID,
+								TENANT_ID                                       AS TENANT_ID
+							FROM
+								TBL_WEBFOLDER_LOG
+						]]>
+						<include refid="fileHistoryCondition"/>
+						<![CDATA[
+							ORDER BY
+								CREATE_DATE DESC,
+								TO_NUMBER(LOG_ID) DESC
+						) k
+					WHERE
+						ROWNUM <= #startPoint# + #pageSize#
+				)
+			WHERE
+				RNUM >= #startPoint# + 1
 		]]>
 	</select>
 	
@@ -393,7 +417,7 @@
 				)
 				VALUES (
 					#logId#,        #fileType#,        #fileName#,          #fileSize#,         #fileExt#,
-					#logType#,      #createId#,        #createName1#,       #createName2#,      #createDate#,
+					#logType#,      #createId#,        #createName1#,       #createName2#,      TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),
 					#companyId#,    #tenantId#
 				)
 			]]>
@@ -411,7 +435,7 @@
 					CREATE_ID       = #createId#,
 					CREATE_NAME1    = #createName1#,
 					CREATE_NAME2    = #createName2#,
-					CREATE_DATE     = #createDate#,
+					CREATE_DATE     = TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),
 					COMPANY_ID      = #companyId#
 				WHERE
 						LOG_ID      = #logId#
@@ -452,8 +476,8 @@
 				VALUES (
 					#folderId#,         #folerName1#,         #folerName2#,         #folderType#,        #folderPath#,
 					#folderStep#,       #folderLevel#,        #folderUpper#,        #useStatus#,         #ownerId#,
-					#createId#,         #createDate#,         #createName1#,        #createName2#,       #updateId#,
-					#updateDate#,       #companyId#,          #deleterId#,          #tenantId#
+					#createId#,         TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),         #createName1#,        #createName2#,       #updateId#,
+					TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),       #companyId#,          #deleterId#,          #tenantId#
 				)
 			]]>
 		</isEqual>
@@ -472,11 +496,11 @@
 					USE_STATUS      = #useStatus#,
 					OWNER_ID        = #ownerId#,
 					CREATE_ID       = #createId#,
-					CREATE_DATE     = #createDate#,
+					CREATE_DATE     = TO_DATE(#createDate#, 'YYYY-MM-DD HH24:MI:SS'),
 					CREATE_NAME1    = #createName1#,
 					CREATE_NAME2    = #createName2#,
 					UPDATE_ID       = #updateId#,
-					UPDATE_DATE     = #updateDate#,
+					UPDATE_DATE     = TO_DATE(#updateDate#, 'YYYY-MM-DD HH24:MI:SS'),
 					COMPANY_ID      = #companyId#,
 					DELETER_ID      = #deleterId#
 				WHERE
@@ -524,8 +548,8 @@
 				VALUES (
 					#folderId#,         #folerName1#,         #folerName2#,         #folderType#,        #folderPath#,
 					#folderStep#,       #folderLevel#,        #folderUpper#,        #useStatus#,         #ownerId#,
-					#createId#,         #createDate#,         #createName1#,        #createName2#,       #updateId#,
-					#updateDate#,       #companyId#,          #deleterId#,          #tenantId#
+					#createId#,         TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),         #createName1#,        #createName2#,       #updateId#,
+					TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),       #companyId#,          #deleterId#,          #tenantId#
 				)
 			]]>
 		</isEqual>
@@ -535,7 +559,7 @@
 					TBL_WEBFOLDER_FOLDER
 				SET
 					UPDATE_ID    = #updateId#,
-					UPDATE_DATE  = #updateDate#,
+					UPDATE_DATE  = TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),
 					DELETER_ID   = #deleterId#
 				WHERE
 					FOLDER_NAME1 = #folerName1#
@@ -579,7 +603,7 @@
 				)
 				VALUES (
 					#seqId#,           #userId#,              #userType#,            #folderId#,          #createId#,
-					#createDate#,      #companyId#,           #tenantId#
+					TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),      #companyId#,           #tenantId#
 				)
 			]]>
 		</isEqual>
@@ -592,7 +616,7 @@
 					USER_TYPE       = #userType#,
 					FOLDER_ID       = #folderId#,
 					CREATE_ID       = #createId#,
-					CREATE_DATE     = #createDate#,
+					CREATE_DATE     = TO_DATE(#createDate#,'yyyy-mm-dd hh24:mi:ss'),
 					COMPANY_ID      = #companyId#
 				WHERE
 						SEQ_ID      = #seqId#
@@ -632,7 +656,7 @@
 				tbl_webfolder_folder
 			SET
 				FOLDER_TYPE  = #folderType#,
-				UPDATE_DATE  = #updateTime#,
+				UPDATE_DATE  = TO_DATE(#updateTime#,'yyyy-mm-dd hh24:mi:ss'),
 				UPDATE_ID    = #userId#,
 				OWNER_ID     = #ownerId#,
 				FOLDER_PATH  = replace(FOLDER_PATH, #oldPath#, #newPath#),

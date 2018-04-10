@@ -21,22 +21,22 @@
 		<isEqual property="fileType" compareValue="2" prepend="AND">
 			<![CDATA[
 				t.TYPE_NAME = 'document'
-			]]>
+			]]> 
 		</isEqual>
 		<isEqual property="fileType" compareValue="3" prepend="AND">
 			<![CDATA[
 				t.TYPE_NAME = 'music'
-			]]>
+			]]> 
 		</isEqual>
 		<isEqual property="fileType" compareValue="4" prepend="AND">
 			<![CDATA[
 				t.TYPE_NAME = 'video'
-			]]>
+			]]> 
 		</isEqual>
 		<isEqual property="fileType" compareValue="5" prepend="AND">
 			<![CDATA[
 				t.TYPE_NAME = 'image'
-			]]>
+			]]> 
 		</isEqual>
 		<isEqual property="fileType" compareValue="6" prepend="AND">
 			<![CDATA[
@@ -72,7 +72,7 @@
 			
 			<isNotEqual property="startDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(f.CREATE_DATE >= #startDate# AND f.CREATE_DATE <= #endDate#)
+					(f.CREATE_DATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND f.CREATE_DATE <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				]]>
 			</isNotEqual>
 		</isEqual>
@@ -129,6 +129,11 @@
 		<result property="tenantId"             column="tenant_id"              columnIndex="23" />
 	</resultMap>
 	
+	<resultMap id="hashMapResult" class="java.util.HashMap">
+		<result property="bnkKey"   column="FOLDER_ID"/>
+		<result property="bnkValue" column="FOLDER_NAME"/>
+	</resultMap>
+	
 	<!-- 로그인  resultMap -->
 	<resultMap id="folderUserVO" class="FolderUserVO">
 		<result property="userId"               column="USER_ID"                 columnIndex="1"/>
@@ -179,7 +184,7 @@
 		<result property="tenantId"             column="TENANT_ID"                columnIndex="19" />
 	</resultMap>
 	
-	<!-- FolderSimple resultMap -->
+	<!-- FileTypeVO resultMap -->
 	<resultMap id="fileTypeVO" class="FileTypeVO">
 		<result property="typeId"               column="TYPE_ID"                columnIndex="1" />
 		<result property="typeName"             column="TYPE_NAME"              columnIndex="2" />
@@ -243,7 +248,7 @@
 				VALUES (
 					#fileId#,           #fileName#,        #filePath#,          #fileSize#,         #typeId#, 
 					#downloadCnt#,      #fileExt#,         #folderId#,          #useStatus#,        #createId#,
-					#createName1#,      #createName2#,     #createDate#,        #updateId#,         #updateDate#,
+					#createName1#,      #createName2#,     TO_DATE(#createDate#, 'YYYY-MM-DD HH24:MI:SS'),        #updateId#,         TO_DATE(#updateDate#, 'YYYY-MM-DD HH24:MI:SS'),
 					#deleterId#,        #tenantId#
 				)
 			]]>
@@ -264,9 +269,9 @@
 					CREATE_ID      = #createId#,
 					CREATE_NAME1   = #createName1#,
 					CREATE_NAME2   = #createName2#,
-					CREATE_DATE    = #createDate#,
+					CREATE_DATE    = TO_DATE(#createDate#, 'YYYY-MM-DD HH24:MI:SS'),
 					UPDATE_ID      = #updateId#,
-					UPDATE_DATE    = #updateDate#,
+					UPDATE_DATE    = TO_DATE(#updateDate#, 'YYYY-MM-DD HH24:MI:SS'),
 					DELETER_ID     = #deleterId#
 				WHERE
 						FILE_ID    = #fileId#
@@ -279,7 +284,7 @@
 	<select id="EzWebFolderDAO.getFileSequence" resultClass="String">
 		<![CDATA[
 			SELECT
-				IFNULL(MAX(CONVERT(FILE_ID, UNSIGNED INTEGER)), -1) as maxno
+				NVL(MAX(TO_NUMBER(FILE_ID)), -1) as maxno
 			FROM
 				TBL_WEBFOLDER_FILE
 			WHERE
@@ -290,7 +295,7 @@
 	<select id="EzWebFolderDAO.checkDepartChief" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				IFNULL(COUNT(*), 0) as maxno
+				NVL(COUNT(*), 0) as maxno
 			FROM
 				TBL_DEPTMASTER
 			WHERE
@@ -303,7 +308,7 @@
 	<select id="EzWebFolderDAO.getFolderSequence" resultClass="String">
 		<![CDATA[
 			SELECT
-				IFNULL(MAX(CONVERT(FOLDER_ID, UNSIGNED INTEGER)),-1) as maxno
+				NVL(MAX(TO_NUMBER(FOLDER_ID)),-1) as maxno
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE
@@ -314,7 +319,7 @@
 	<select id="EzWebFolderDAO.getFolderUserSequence" resultClass="String">
 		<![CDATA[
 			SELECT
-				IFNULL(MAX(CONVERT(SEQ_ID, UNSIGNED INTEGER)),-1) as maxno
+				NVL(MAX(TO_NUMBER(SEQ_ID)),-1) as maxno
 			FROM
 				TBL_WEBFOLDER_FOLDERUSER
 			WHERE
@@ -325,7 +330,7 @@
 	<select id="EzWebFolderDAO.getMaxFolderStep" resultClass="String">
 		<![CDATA[
 			SELECT
-				IFNULL(MAX(FOLDER_STEP),-1) as maxno
+				NVL(MAX(FOLDER_STEP),-1) as maxno
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE
@@ -338,25 +343,25 @@
 	<select id="EzWebFolderDAO.getRootFolderId" resultMap="folderVO">
 		<![CDATA[
 			SELECT
-				FOLDER_ID                                       AS FOLDER_ID,
-				FOLDER_NAME1                                    AS FOLDER_NAME1,
-				FOLDER_NAME2                                    AS FOLDER_NAME2,
-				FOLDER_TYPE                                     AS FOLDER_TYPE,
-				FOLDER_PATH                                     AS FOLDER_PATH,
-				FOLDER_STEP                                     AS FOLDER_STEP,
-				FOLDER_LEVEL                                    AS FOLDER_LEVEL,
-				FOLDER_UPPER                                    AS FOLDER_UPPER,
-				USE_STATUS                                      AS USE_STATUS,
-				OWNER_ID                                        AS OWNER_ID,
-				CREATE_ID                                       AS CREATE_ID,
-				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				CREATE_NAME1                                    AS CREATE_NAME1,
-				CREATE_NAME2                                    AS CREATE_NAME2,
-				UPDATE_ID                                       AS UPDATE_ID,
-				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				COMPANY_ID                                      AS COMPANY_ID,
-				DELETER_ID                                      AS DELETER_ID,
-				TENANT_ID                                       AS TENANT_ID
+				FOLDER_ID                        AS FOLDER_ID,
+				FOLDER_NAME1                     AS FOLDER_NAME1,
+				FOLDER_NAME2                     AS FOLDER_NAME2,
+				FOLDER_TYPE                      AS FOLDER_TYPE,
+				FOLDER_PATH                      AS FOLDER_PATH,
+				FOLDER_STEP                      AS FOLDER_STEP,
+				FOLDER_LEVEL                     AS FOLDER_LEVEL,
+				FOLDER_UPPER                     AS FOLDER_UPPER,
+				USE_STATUS                       AS USE_STATUS,
+				OWNER_ID                         AS OWNER_ID,
+				CREATE_ID                        AS CREATE_ID,
+				(CREATE_DATE + #offset#/(24*60)) AS CREATE_DATE,
+				CREATE_NAME1                     AS CREATE_NAME1,
+				CREATE_NAME2                     AS CREATE_NAME2,
+				UPDATE_ID                        AS UPDATE_ID,
+				(UPDATE_DATE + #offset#/(24*60)) AS UPDATE_DATE,
+				COMPANY_ID                       AS COMPANY_ID,
+				DELETER_ID                       AS DELETER_ID,
+				TENANT_ID                        AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_FOLDER
 			WHERE
@@ -373,7 +378,7 @@
 	<select id="EzWebFolderDAO.getFileLogSequence" resultClass="String">
 		<![CDATA[
 			SELECT
-				IFNULL(MAX(CONVERT(LOG_ID, UNSIGNED INTEGER)),-1) as maxno
+				NVL(MAX(TO_NUMBER(LOG_ID)),-1) as maxno
 			FROM
 				TBL_WEBFOLDER_LOG
 			WHERE
@@ -388,7 +393,7 @@
 			FROM
 				TBL_WEBFOLDER_FILETYPE
 			WHERE
-				FILE_EXT = #extension#
+				FILE_EXT  = #extension#
 			AND
 				TENANT_ID = #tenantId#
 		]]>
@@ -397,28 +402,28 @@
 	<select id="EzWebFolderDAO.getFileByFileId" resultMap="fileVO">
 		<![CDATA[
 			SELECT
-				f.FILE_ID                                         AS FILE_ID,
-				f.FILE_NAME                                       AS FILE_NAME,
-				f.FILE_PATH                                       AS FILE_PATH,
-				f.FILE_SIZE                                       AS FILE_SIZE,
-				f.TYPE_ID                                         AS TYPE_ID,
-				f.DOWN_COUNT                                      AS DOWN_COUNT,
-				f.FILE_EXT                                        AS FILE_EXT,
-				f.FOLDER_ID                                       AS FOLDER_ID,
-				f.USE_STATUS                                      AS USE_STATUS,
-				f.CREATE_ID                                       AS CREATE_ID,
-				f.CREATE_NAME1                                    AS CREATE_NAME1,
-				f.CREATE_NAME2                                    AS CREATE_NAME2,
-				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				UPDATE_ID                                         AS UPDATE_ID,
-				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				t.TYPE_ID                                         AS FILETYPE_ID,
-				t.TYPE_NAME                                       AS FILETYPE_NAME,
-				t.TYPE_ICON                                       AS FILETYPE_ICON,
-				f.DELETER_ID                                      AS DELETER_ID,
-				f.TENANT_ID                                       AS TENANT_ID
+				f.FILE_ID                                                                                                                                                        AS FILE_ID,
+				f.FILE_NAME                                                                                                                                                      AS FILE_NAME,
+				f.FILE_PATH                                                                                                                                                      AS FILE_PATH,
+				f.FILE_SIZE                                                                                                                                                      AS FILE_SIZE,
+				f.TYPE_ID                                                                                                                                                        AS TYPE_ID,
+				f.DOWN_COUNT                                                                                                                                                     AS DOWN_COUNT,
+				f.FILE_EXT                                                                                                                                                       AS FILE_EXT,
+				f.FOLDER_ID                                                                                                                                                      AS FOLDER_ID,
+				f.USE_STATUS                                                                                                                                                     AS USE_STATUS,
+				f.CREATE_ID                                                                                                                                                      AS CREATE_ID,
+				f.CREATE_NAME1                                                                                                                                                   AS CREATE_NAME1,
+				f.CREATE_NAME2                                                                                                                                                   AS CREATE_NAME2,
+				(f.CREATE_DATE + #offset#/(24*60))                                                                                                                               AS CREATE_DATE,
+				UPDATE_ID                                                                                                                                                        AS UPDATE_ID,
+				(f.UPDATE_DATE + #offset#/(24*60))                                                                                                                               AS UPDATE_DATE,
+				t.TYPE_ID                                                                                                                                                        AS FILETYPE_ID,
+				CASE WHEN t.TYPE_NAME IS NOT NULL THEN t.TYPE_NAME ELSE (SELECT TYPE_NAME FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_NAME,
+				CASE WHEN t.TYPE_ICON IS NOT NULL THEN t.TYPE_ICON ELSE (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_ICON,
+				f.DELETER_ID                                                                                                                                                     AS DELETER_ID,
+				f.TENANT_ID                                                                                                                                                      AS TENANT_ID
 			FROM
-				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+				TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
 			WHERE
 				f.FILE_ID   = #fileId#
 			AND
@@ -429,97 +434,126 @@
 	<select id="EzWebFolderDAO.getAllFilesInFolder" resultMap="fileVO2">
 		<![CDATA[
 			SELECT
-				f.FILE_ID                                         AS FILE_ID,
-				f.FILE_NAME                                       AS FILE_NAME,
-				f.FILE_PATH                                       AS FILE_PATH,
-				f.FILE_SIZE                                       AS FILE_SIZE,
-				f.TYPE_ID                                         AS TYPE_ID,
-				f.DOWN_COUNT                                      AS DOWN_COUNT,
-				f.FILE_EXT                                        AS FILE_EXT,
-				f.FOLDER_ID                                       AS FOLDER_ID,
-				f.USE_STATUS                                      AS USE_STATUS,
-				f.CREATE_ID                                       AS CREATE_ID,
-				f.CREATE_NAME1                                    AS CREATE_NAME1,
-				f.CREATE_NAME2                                    AS CREATE_NAME2,
-				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				UPDATE_ID                                         AS UPDATE_ID,
-				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				t.TYPE_ID                                         AS FILETYPE_ID,
-				t.TYPE_NAME                                       AS FILETYPE_NAME,
-				t.TYPE_ICON                                       AS FILETYPE_ICON,
-				CONCAT(#originalPath#, f.FILE_NAME)               AS FILE_POSITION,
-				""                                                AS FOLDER_NAME,
-				""                                                AS FOLDER_PATH,
-				f.DELETER_ID                                      AS DELETER_ID,
-				f.TENANT_ID                                       AS TENANT_ID
+				*
 			FROM
-				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
-		]]>
-		<include refid="getAllFilesInFolderCont"/>
-		<![CDATA[
-			AND
-			 f.FOLDER_ID = #folderId#
-		]]>
-		<![CDATA[
-			ORDER BY
-				f.UPDATE_DATE DESC,
-				CAST(f.FILE_ID AS INT) DESC
-		]]>
+				(
+					SELECT
+						k.*, ROWNUM AS RNUM
+					FROM
+						(
+							SELECT
+								f.FILE_ID                                                                                                                                                        AS FILE_ID,
+								f.FILE_NAME                                                                                                                                                      AS FILE_NAME,
+								f.FILE_PATH                                                                                                                                                      AS FILE_PATH,
+								f.FILE_SIZE                                                                                                                                                      AS FILE_SIZE,
+								f.TYPE_ID                                                                                                                                                        AS TYPE_ID,
+								f.DOWN_COUNT                                                                                                                                                     AS DOWN_COUNT,
+								f.FILE_EXT                                                                                                                                                       AS FILE_EXT,
+								f.FOLDER_ID                                                                                                                                                      AS FOLDER_ID,
+								f.USE_STATUS                                                                                                                                                     AS USE_STATUS,
+								f.CREATE_ID                                                                                                                                                      AS CREATE_ID,
+								f.CREATE_NAME1                                                                                                                                                   AS CREATE_NAME1,
+								f.CREATE_NAME2                                                                                                                                                   AS CREATE_NAME2,
+								(f.CREATE_DATE + #offset#/(24*60))                                                                                                                               AS CREATE_DATE,
+								UPDATE_ID                                                                                                                                                        AS UPDATE_ID,
+								(f.UPDATE_DATE + #offset#/(24*60))                                                                                                                               AS UPDATE_DATE,
+								t.TYPE_ID                                                                                                                                                        AS FILETYPE_ID,
+								CASE WHEN t.TYPE_NAME IS NOT NULL THEN t.TYPE_NAME ELSE (SELECT TYPE_NAME FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_NAME,
+								CASE WHEN t.TYPE_ICON IS NOT NULL THEN t.TYPE_ICON ELSE (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_ICON,
+								CONCAT(#originalPath#, f.FILE_NAME)                                                                                                                              AS FILE_POSITION,
+								''                                                                                                                                                               AS FOLDER_NAME,
+								''                                                                                                                                                               AS FOLDER_PATH,
+								f.DELETER_ID                                                                                                                                                     AS DELETER_ID,
+								f.TENANT_ID                                                                                                                                                      AS TENANT_ID
+							FROM
+								TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+						]]>
+							<include refid="getAllFilesInFolderCont"/>
+							<![CDATA[
+								AND
+								 f.FOLDER_ID = #folderId#
+							]]>
+							<![CDATA[
+								ORDER BY
+									f.UPDATE_DATE DESC,
+									TO_NUMBER(f.FILE_ID) DESC
+						) k
+			]]>
 		<isGreaterThan property="pageSize" compareValue="0">
 			<![CDATA[
-				LIMIT
-				#startPoint#, #pageSize#
+					WHERE
+						ROWNUM <= #startPoint# + #pageSize#
+				)
+			WHERE
+				RNUM >= #startPoint# + 1
 			]]>
 		</isGreaterThan>
+		<isEqual property="pageSize" compareValue="0">
+			<![CDATA[
+				)
+			]]>
+		</isEqual>
 	</select>
 	
 	<select id="EzWebFolderDAO.getAllFiles" resultMap="fileVO2">
 		<![CDATA[
 			SELECT
-				f.FILE_ID                                         AS FILE_ID,
-				f.FILE_NAME                                       AS FILE_NAME,
-				f.FILE_PATH                                       AS FILE_PATH,
-				f.FILE_SIZE                                       AS FILE_SIZE,
-				f.TYPE_ID                                         AS TYPE_ID,
-				f.DOWN_COUNT                                      AS DOWN_COUNT,
-				f.FILE_EXT                                        AS FILE_EXT,
-				f.FOLDER_ID                                       AS FOLDER_ID,
-				f.USE_STATUS                                      AS USE_STATUS,
-				f.CREATE_ID                                       AS CREATE_ID,
-				f.CREATE_NAME1                                    AS CREATE_NAME1,
-				f.CREATE_NAME2                                    AS CREATE_NAME2,
-				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				f.UPDATE_ID                                       AS UPDATE_ID,
-				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				t.TYPE_ID                                         AS FILETYPE_ID,
-				t.TYPE_NAME                                       AS FILETYPE_NAME,
-				t.TYPE_ICON                                       AS FILETYPE_ICON,
-				(
-					CASE
-						WHEN u.FOLDER_LEVEL = 0 THEN CONCAT(#originalPath#, f.FILE_NAME)
-						WHEN u.FOLDER_LEVEL = 1 THEN CONCAT(CONCAT(CONCAT(#originalPath#, u.FOLDER_NAME1), "/"), f.FILE_NAME)
-						ELSE "" 
-					END
-				)                                                 AS FILE_POSITION,
-				u.FOLDER_NAME1                                    AS FOLDER_NAME,
-				u.FOLDER_PATH                                     AS FOLDER_PATH,
-				f.DELETER_ID                                      AS DELETER_ID,
-				f.TENANT_ID                                       AS TENANT_ID
+				*
 			FROM
-				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
-									 LEFT JOIN TBL_WEBFOLDER_FOLDER u ON f.TENANT_ID = u.TENANT_ID AND f.FOLDER_ID = u.FOLDER_ID
-		]]>
-		<include refid="getAllFilesInFolderCont"/>
-		<![CDATA[
-			AND
-				u.FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
-		]]>
-		<![CDATA[
-			ORDER BY
-				f.UPDATE_DATE DESC,
-				CAST(f.FILE_ID AS INT) DESC
-			LIMIT
-				#startPoint#, #pageSize#
+				(
+					SELECT
+						k.*, ROWNUM AS RNUM
+					FROM
+						(
+							SELECT
+								f.FILE_ID                                                                                                                                                        AS FILE_ID,
+								f.FILE_NAME                                                                                                                                                      AS FILE_NAME,
+								f.FILE_PATH                                                                                                                                                      AS FILE_PATH,
+								f.FILE_SIZE                                                                                                                                                      AS FILE_SIZE,
+								f.TYPE_ID                                                                                                                                                        AS TYPE_ID,
+								f.DOWN_COUNT                                                                                                                                                     AS DOWN_COUNT,
+								f.FILE_EXT                                                                                                                                                       AS FILE_EXT,
+								f.FOLDER_ID                                                                                                                                                      AS FOLDER_ID,
+								f.USE_STATUS                                                                                                                                                     AS USE_STATUS,
+								f.CREATE_ID                                                                                                                                                      AS CREATE_ID,
+								f.CREATE_NAME1                                                                                                                                                   AS CREATE_NAME1,
+								f.CREATE_NAME2                                                                                                                                                   AS CREATE_NAME2,
+								(f.CREATE_DATE + #offset#/(24*60))                                                                                                                               AS CREATE_DATE,
+								f.UPDATE_ID                                                                                                                                                      AS UPDATE_ID,
+								(f.UPDATE_DATE + #offset#/(24*60))                                                                                                                               AS UPDATE_DATE,
+								t.TYPE_ID                                                                                                                                                        AS FILETYPE_ID,
+								CASE WHEN t.TYPE_NAME IS NOT NULL THEN t.TYPE_NAME ELSE (SELECT TYPE_NAME FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_NAME,
+								CASE WHEN t.TYPE_ICON IS NOT NULL THEN t.TYPE_ICON ELSE (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_ICON,
+								(
+									CASE
+										WHEN u.FOLDER_LEVEL = 0 THEN CONCAT(#originalPath#, f.FILE_NAME)
+										WHEN u.FOLDER_LEVEL = 1 THEN CONCAT(CONCAT(CONCAT(#originalPath#, CASE WHEN #primary# = '1' THEN u.FOLDER_NAME1 ELSE u.FOLDER_NAME2 END), '/'), f.FILE_NAME)
+										ELSE '' 
+									END
+								)                                                                                                                                                                AS FILE_POSITION,
+								''                                                                                                                                                               AS FOLDER_NAME,
+								u.FOLDER_PATH                                                                                                                                                    AS FOLDER_PATH,
+								f.DELETER_ID                                                                                                                                                     AS DELETER_ID,
+								f.TENANT_ID                                                                                                                                                      AS TENANT_ID
+							FROM
+								TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT  AND f.TENANT_ID = t.TENANT_ID
+													 LEFT JOIN TBL_WEBFOLDER_FOLDER  u ON f.TENANT_ID = u.TENANT_ID AND f.FOLDER_ID = u.FOLDER_ID
+						]]>
+						<include refid="getAllFilesInFolderCont"/>
+						<![CDATA[
+							AND
+								u.FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+						]]>
+						<![CDATA[
+							ORDER BY
+								f.UPDATE_DATE DESC,
+								TO_NUMBER(f.FILE_ID) DESC
+						) k
+					WHERE
+						ROWNUM <= #startPoint# + #pageSize#
+				)
+			WHERE
+				RNUM >= #startPoint# + 1
 		]]>
 	</select>
 	
@@ -528,7 +562,7 @@
 			SELECT
 				COUNT(*)
 			FROM
-				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+				TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
 		]]>
 		<include refid="getAllFilesInFolderCont"/>
 		<![CDATA[
@@ -542,7 +576,7 @@
 			SELECT
 				COUNT(*)
 			FROM
-				TBL_WEBFOLDER_FILE f JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+				TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
 									 LEFT JOIN TBL_WEBFOLDER_FOLDER u ON f.TENANT_ID = u.TENANT_ID AND f.FOLDER_ID = u.FOLDER_ID
 		]]>
 		<include refid="getAllFilesInFolderCont"/>
@@ -566,11 +600,11 @@
 				USE_STATUS                                      AS USE_STATUS,
 				OWNER_ID                                        AS OWNER_ID,
 				CREATE_ID                                       AS CREATE_ID,
-				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				(CREATE_DATE + #offset#/(24*60))                AS CREATE_DATE,
 				CREATE_NAME1                                    AS CREATE_NAME1,
 				CREATE_NAME2                                    AS CREATE_NAME2,
 				UPDATE_ID                                       AS UPDATE_ID,
-				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				(UPDATE_DATE + #offset#/(24*60))                AS UPDATE_DATE,
 				COMPANY_ID                                      AS COMPANY_ID,
 				DELETER_ID                                      AS DELETER_ID,
 				TENANT_ID                                       AS TENANT_ID
@@ -605,9 +639,9 @@
 	<select id="EzWebFolderDAO.getFolderUsers" resultMap="folderUserVO">
 		<![CDATA[
 			SELECT
-				CASE  WHEN USER_TYPE = "user" THEN a.CN else d.CN                     END AS USER_ID,
-				CASE  WHEN USER_TYPE = "user" THEN a.DISPLAYNAME else d.DISPLAYNAME   END AS DISPLAY_NAME1,
-				CASE  WHEN USER_TYPE = "user" THEN a.DISPLAYNAME2 else d.DISPLAYNAME2 END AS DISPLAY_NAME2,
+				CASE  WHEN USER_TYPE = 'user' THEN a.CN else d.CN                     END AS USER_ID,
+				CASE  WHEN USER_TYPE = 'user' THEN a.DISPLAYNAME else d.DISPLAYNAME   END AS DISPLAY_NAME1,
+				CASE  WHEN USER_TYPE = 'user' THEN a.DISPLAYNAME2 else d.DISPLAYNAME2 END AS DISPLAY_NAME2,
 				USER_TYPE
 			FROM
 				TBL_WEBFOLDER_FOLDERUSER u LEFT JOIN TBL_USERMASTER a ON u.USER_ID = a.CN and u.TENANT_ID = a.TENANT_ID and u.USER_TYPE = 'user'
@@ -659,11 +693,11 @@
 				USE_STATUS                                      AS USE_STATUS,
 				OWNER_ID                                        AS OWNER_ID,
 				CREATE_ID                                       AS CREATE_ID,
-				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				(CREATE_DATE + #offset#/(24*60))                AS CREATE_DATE,
 				CREATE_NAME1                                    AS CREATE_NAME1,
 				CREATE_NAME2                                    AS CREATE_NAME2,
 				UPDATE_ID                                       AS UPDATE_ID,
-				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				(UPDATE_DATE + #offset#/(24*60))                AS UPDATE_DATE,
 				COMPANY_ID                                      AS COMPANY_ID,
 				DELETER_ID                                      AS DELETER_ID,
 				TENANT_ID                                       AS TENANT_ID
@@ -777,9 +811,9 @@
 			SET
 				DOWN_COUNT = DOWN_COUNT + 1
 			WHERE
-				FILE_ID = #fileId#
+				FILE_ID    = #fileId#
 			AND
-				TENANT_ID = #tenantId#
+				TENANT_ID  = #tenantId#
 		]]>
 	</update>
 	
@@ -793,8 +827,8 @@
 		(
 			SELECT
 				b.*,
-				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER d WHERE b.CN = d.EXTENSIONATTRIBUTE1 AND b.TENANT_ID = d.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
-				#level#                                                                                                                                  AS LEVEL 
+				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER d WHERE b.CN = d.EXTENSIONATTRIBUTE1 AND b.TENANT_ID = d.TENANT_ID) = 0 THEN 0 ELSE 1 END AS "HAS_SUB",
+				#level#                                                                                                                                  AS "LEVEL" 
 			FROM 
 				TBL_DEPTMASTER b
 			WHERE
@@ -806,8 +840,8 @@
 			
 			SELECT 
 				a.*,
-				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER e WHERE a.CN = e.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = e.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
-				(#level# + 1)                                                                                                                            AS LEVEL
+				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER e WHERE a.CN = e.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = e.TENANT_ID) = 0 THEN 0 ELSE 1 END AS "HAS_SUB",
+				(#level# + 1)                                                                                                                            AS "LEVEL"
 			FROM
 				TBL_DEPTMASTER a
 			WHERE
@@ -816,15 +850,15 @@
 				a.TENANT_ID           = #tenantId#
 		) c
 		ORDER BY
-			LEVEL, lpad(ifnull(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
+			LEVEL, lpad(NVL(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
 	</select>
 	
 	<select id="EzWebFolderDAO.getAllSimpleSubDepts" resultMap="simpleDeptVO">
 		SELECT
 			a.CN                                                                                                                                     AS DEPT_ID,
 			CASE WHEN #primary# = '1' THEN a.DISPLAYNAME ELSE a.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
-			#level#                                                                                                                                  AS LEVEL,
-			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE a.CN = b.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
+			#level#                                                                                                                                  AS "LEVEL",
+			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE a.CN = b.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS "HAS_SUB"
 		FROM
 			TBL_DEPTMASTER a
 		WHERE
@@ -832,15 +866,15 @@
 		AND
 			a.TENANT_ID = #tenantId#
 		ORDER BY
-			lpad(ifnull(a.EXTENSIONATTRIBUTE15, 0),6,0), a.DISPLAYNAME
+			lpad(NVL(a.EXTENSIONATTRIBUTE15, 0),6,0), a.DISPLAYNAME
 	</select>
 	
 	<select id="EzWebFolderDAO.getSimpleCompany" resultMap="simpleDeptVO">
 		SELECT
 			a.CN                                                                                                                                     AS DEPT_ID,
 			CASE WHEN #primary# = '1' THEN a.DISPLAYNAME ELSE a.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
-			#level#                                                                                                                                  AS LEVEL,
-			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE a.CN = b.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
+			#level#                                                                                                                                  AS "LEVEL",
+			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE a.CN = b.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS "HAS_SUB"
 		FROM
 			TBL_DEPTMASTER a
 		WHERE
@@ -874,7 +908,7 @@
 				CN                                                                                                                           AS CN,
 				CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
 				CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
-				CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
+				CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))), NVL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
 				DEPARTMENT                                                                                                                   AS DEPARTMENT,
 				CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME
 			FROM
@@ -894,7 +928,7 @@
 				A.CN                                                                                                                         AS CN,
 				CASE WHEN #primary# = '1'THEN A.TITLE ELSE A.TITLE2 END                                                                      AS POSITION,
 				CASE WHEN #primary# = '1'THEN A.DISPLAYNAME ELSE A.DISPLAYNAME2 END                                                          AS DISPLAYNAME,
-				CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
+				CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))), NVL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
 				A.DEPARTMENT                                                                                                                 AS DEPARTMENT,
 				CASE WHEN #primary# = '1'THEN A.DESCRIPTION ELSE A.DESCRIPTION2 END                                                          AS DEPARTMENTNAME
 			FROM
@@ -1056,7 +1090,21 @@
 						f2.*
 					FROM
 						tbl_webfolder_folder f2 JOIN tbl_webfolder_folderuser u 
-							ON f2.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f2.TENANT_ID = u.TENANT_ID
+													ON f2.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f2.TENANT_ID = u.TENANT_ID
+												JOIN
+													(
+														SELECT
+															d1.*
+															FROM tbl_deptmaster d1 JOIN
+																					(
+																						SELECT
+																							*
+																						FROM
+																							tbl_deptmaster
+																						WHERE
+																							EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
+																					) AS d2 ON d1.DEPT_CD_PATH LIKE CONCAT(d2.DEPT_CD_PATH, '%')
+													) AS s1 ON s1.CN = f2.OWNER_ID AND s1.TENANT_ID = f2.TENANT_ID
 					WHERE
 						f2.TENANT_ID = #tenantId#
 				) AS f
@@ -1134,7 +1182,7 @@
 										d1.*
 									FROM
 										TBL_DEPTMASTER d1 LEFT JOIN tbl_addjobmaster a
-												 ON d1.CN = a.DEPTID AND d1.TENANT_ID = a.TENANT_ID
+																	ON d1.CN = a.DEPTID AND d1.TENANT_ID = a.TENANT_ID
 									WHERE
 										(a.CN = #userId# OR d1.CN = #deptId#)
 									AND
@@ -1150,7 +1198,21 @@
 											FROM
 												(
 													tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
-													ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
+																				ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
+																			JOIN
+																				(
+																					SELECT
+																						d3.*
+																						FROM tbl_deptmaster d3 JOIN
+																												(
+																													SELECT
+																														*
+																													FROM
+																														tbl_deptmaster
+																													WHERE
+																														EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
+																												) AS d4 ON d3.DEPT_CD_PATH LIKE CONCAT(d4.DEPT_CD_PATH, '%')
+																				) AS s1 ON s1.CN = f.OWNER_ID AND s1.TENANT_ID = f.TENANT_ID
 												)
 											) AS a ON d2.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND d2.TENANT_ID = a.TENANT_ID
 									WHERE
@@ -1209,15 +1271,15 @@
 		FROM
 			TBL_WEBFOLDER_FOLDER f
 		WHERE
-			f.TENANT_ID = #tenantId#
+			f.TENANT_ID    = #tenantId#
 		AND
 			f.FOLDER_UPPER = 'root'
 		AND 
-			f.FOLDER_TYPE = 'U'
+			f.FOLDER_TYPE  = 'U'
 		AND 
-			f.OWNER_ID = #userId#
+			f.OWNER_ID     = #userId#
 		AND
-			f.USE_STATUS = 'Y'
+			f.USE_STATUS   = 'Y'
 	</select>
 	
 	<select id="EzWebFolderDAO.getListCount" resultMap="envVO">
@@ -1230,7 +1292,6 @@
 		AND
 			TENANT_ID = #tenantId#
 	</select>
-	
 	
 	<insert id="EzWebFolderDAO.updateListCount" parameterClass="Map">
 		<selectKey keyProperty="v_temp" resultClass="Integer">
@@ -1284,37 +1345,52 @@
 		SELECT
 		 	s.CN                                                                                                                                     AS DEPT_ID,
 			CASE WHEN #primary# = '1' THEN s.DISPLAYNAME ELSE s.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
-			#level#                                                                                                                                  AS LEVEL,
-			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE s.CN = b.EXTENSIONATTRIBUTE1 AND s.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
+			#level#                                                                                                                                  AS "LEVEL",
+			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE s.CN = b.EXTENSIONATTRIBUTE1 AND s.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS "HAS_SUB"
 		FROM
 			tbl_deptmaster s
 		WHERE
 			EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
 		ORDER BY
-			LEVEL, lpad(ifnull(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
+			LEVEL, lpad(NVL(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
 	</select>
 	
 	<select id="EzWebFolderDAO.getSelectedDeptsForChief" resultMap="simpleDeptVO">
 		SELECT
 			s.CN                                                                                                                                     AS DEPT_ID,
 			CASE WHEN #primary# = '1' THEN s.DISPLAYNAME ELSE s.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
-			#level#                                                                                                                                  AS LEVEL,
-			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE s.CN = b.EXTENSIONATTRIBUTE1 AND s.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
+			#level#                                                                                                                                  AS "LEVEL",
+			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE s.CN = b.EXTENSIONATTRIBUTE1 AND s.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS "HAS_SUB"
 		FROM
 			TBL_DEPTMASTER s JOIN
-				(
-				SELECT 
-					f.* 
-				FROM
-					(
-						tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
-						ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
-					)
-				) AS a ON s.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND s.TENANT_ID = a.TENANT_ID
+							(
+								SELECT 
+									* 
+								FROM
+									TBL_DEPTMASTER
+								WHERE
+									EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
+							) AS d1 ON s.DEPT_CD_PATH LIKE ||(d1.DEPT_CD_PATH, '%')
+							 JOIN
+							(
+								SELECT
+									d2.*
+								FROM
+									TBL_DEPTMASTER d2 JOIN
+										(
+										SELECT 
+											f.* 
+										FROM
+											(
+												tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
+												ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
+											)
+										) AS a ON d2.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND d2.TENANT_ID = a.TENANT_ID
+							) AS s2 ON s.CN = s2.CN and s.TENANT_ID = s2.TENANT_ID
 		WHERE
 			s.TENANT_ID = #tenantId#
 		ORDER BY
-			LEVEL, lpad(ifnull(s.EXTENSIONATTRIBUTE15, 0),6,0), s.DISPLAYNAME
+			LEVEL, lpad(NVL(s.EXTENSIONATTRIBUTE15, 0),6,0), s.DISPLAYNAME
 	</select>
 	
 	<select id="EzWebFolderDAO.checkFilesOwner" resultClass="Integer">
@@ -1328,6 +1404,36 @@
 			CREATE_ID = #userId#
 		AND
 			TENANT_ID = #tenantId#
-		
+	</select>
+	
+	<select id="EzWebFolderDAO.getFolderNameList" resultClass="String">
+		SELECT
+			CASE WHEN #primary# = '1' THEN FOLDER_NAME1 ELSE FOLDER_NAME2 END AS FOLDER_NAME
+		FROM
+			TBL_WEBFOLDER_FOLDER
+		WHERE
+			FOLDER_ID IN
+			<iterate property="path" open="(" close=")" conjunction=",">
+				#path[]#
+			</iterate>
+		AND
+			TENANT_ID = #tenantId#
+		ORDER BY
+			FOLDER_LEVEL ASC
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllFolderNameMap" resultMap="hashMapResult">
+		SELECT
+			FOLDER_ID                                                         AS FOLDER_ID,
+			CASE WHEN #primary# = '1' THEN FOLDER_NAME1 ELSE FOLDER_NAME2 END AS FOLDER_NAME
+		FROM
+			TBL_WEBFOLDER_FOLDER
+		WHERE
+			FOLDER_ID IN
+			<iterate property="testbnk" open="(" close=")" conjunction=",">
+				#testbnk[]#
+			</iterate>
+		AND
+			TENANT_ID = #tenantId#
 	</select>
 </sqlMap>

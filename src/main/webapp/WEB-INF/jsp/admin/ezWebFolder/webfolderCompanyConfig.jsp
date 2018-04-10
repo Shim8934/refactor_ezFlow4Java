@@ -81,7 +81,7 @@
 					dataType: "text",
 					async: true,
 					success : function(data) {
-						alert("spring:message code='ezWebFolder.t182'/>");
+						alert("<spring:message code='ezWebFolder.t182'/>");
 						currPersonalLimit = personalLimitVal;
 						currUploadLimit   = uploadLimitVal;
 					},

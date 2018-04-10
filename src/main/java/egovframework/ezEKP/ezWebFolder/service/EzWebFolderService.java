@@ -3,15 +3,12 @@ package egovframework.ezEKP.ezWebFolder.service;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
-import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
@@ -25,7 +22,6 @@ public interface EzWebFolderService {
 	String getFileSequence(int tenantId) throws Exception;
 	void insertFile(FileVO fileVO) throws Exception;
 	FileVO getFileByFileId(String fileId, String offset, int tenantId) throws Exception;
-	FileTypeVO getFileTypeByFileExt(String extend, int tenantId) throws Exception;
 	void deleteFileByFileId(String fileId, int tenantId) throws Exception;
 	void updateFileUseStatus(String userId, String fileId, int tenantId) throws Exception;
 	void updateFileName(String fileId, String newName, int tenantId) throws Exception;

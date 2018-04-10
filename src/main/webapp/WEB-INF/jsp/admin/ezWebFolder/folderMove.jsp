@@ -283,8 +283,8 @@
 		}
 		
 		function change() {
-			var selectedFolder = null;
-			var arrSubFolder   = [];
+			selectedFolder = null;
+			arrSubFolder   = [];
 			getData();
 		}
 	</script>
@@ -306,8 +306,8 @@
 				</c:forEach>
 		</select>
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="getData();"> <span><spring:message code="ezWebFolder.t233"/></span>
-			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="getData();"> <span><spring:message code="ezWebFolder.t234"/></span>
+			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="change();"> <span><spring:message code="ezWebFolder.t233"/></span>
+			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="change();"> <span><spring:message code="ezWebFolder.t234"/></span>
 		</div>
 	</div>
 	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto;" id="folderTree"></div>

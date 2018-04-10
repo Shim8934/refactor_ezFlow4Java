@@ -94,11 +94,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("createId",    fileVO.getCreateId());
 		map.put("createName1", fileVO.getCreateName1());
 		map.put("createName2", fileVO.getCreateName2());
-		map.put("createDate",  fileVO.getCreateDate());
+		map.put("createDate",  fileVO.getCreateDate().substring(0, 19));
 		map.put("updateId",    fileVO.getUpdateId());
-		map.put("updateDate",  fileVO.getUpdateDate());
+		map.put("updateDate",  fileVO.getUpdateDate().substring(0, 19));
 		map.put("deleterId",   fileVO.getDeleterId());
 		map.put("tenantId",    fileVO.getTenantId());
+		
 		ezWebFolderDAO.insertFile(map);
 	}
 
@@ -111,17 +112,17 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		return ezWebFolderDAO.getFileByFileId(map);
 	}
 
-	@Override
-	public FileTypeVO getFileTypeByFileExt(String extend, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
+	private FileTypeVO getFileTypeByFileExt(String extend, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("extension", extend);
 		map.put("tenantId",  tenantId);
+		
 		return ezWebFolderDAO.getFileTypeByFileExt(map);
 	}
 
 	@Override
 	public void deleteFileByFileId(String fileId, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("fileId",   fileId);
 		map.put("tenantId", tenantId);
 		ezWebFolderDAO.deleteFileByFileId(map);	
@@ -720,12 +721,14 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {
 				writeUploadedFile(multiFileLists.get(i), pFileName[i], pDirPath);
 				FileTypeVO fileType = getFileTypeByFileExt(extend.toLowerCase(), tenantId);
+				
 				if (fileType == null) {
 					fileType = getFileTypeByFileExt("unknown", tenantId);
 				}
-				Date date           = new Date();
-				FileVO fileVO       = new FileVO();
-				String timeUTC      = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+				
+				Date date      = new Date();
+				FileVO fileVO  = new FileVO();
+				String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 				
 				fileVO.setCreateDate(timeUTC);
 				fileVO.setUpdateDate(timeUTC);
@@ -902,8 +905,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		String result = "";
 		
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("path", Arrays.asList(path));
-		map.put("primary", primary);
+		map.put("path",     Arrays.asList(path));
+		map.put("primary",  primary);
 		map.put("tenantId", tenantId);
 		
 		List<String> folderNames = ezWebFolderDAO.getFolderNameList(map);

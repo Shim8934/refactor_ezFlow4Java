@@ -21,7 +21,7 @@ public class EzWebFolderAdminDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<UserCapacityVO> getListUserCapacity(Map<String, Object> map) {
-		return (List<UserCapacityVO>) list("EzWebFolderAdminDAO.getListUserCapacity", map);
+		return (List<UserCapacityVO>)list("EzWebFolderAdminDAO.getListUserCapacity", map);
 	}
 
 	public void updateNewAmount(Map<String, Object> map) {

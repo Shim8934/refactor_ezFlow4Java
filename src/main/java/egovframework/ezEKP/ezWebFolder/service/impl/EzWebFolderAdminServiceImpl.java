@@ -59,7 +59,17 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId",  tenantId);
-		return ezWebFolderAdminDAO.getWebfolderConfig(map);
+		WebfolderConfigVO result = ezWebFolderAdminDAO.getWebfolderConfig(map);
+		
+		if (result == null) {
+			result = new WebfolderConfigVO();
+			result.setCompanyId(companyId);
+			result.setTenantId(tenantId);
+			result.setTotalLimit("0");
+			result.setUploadLimit("0");
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -168,11 +178,11 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("useStatus",   folder.getUseStatus());
 		map.put("ownerId",     folder.getOwnerId());
 		map.put("createId",    folder.getCreateId());
-		map.put("createDate",  folder.getCreateDate());
+		map.put("createDate",  folder.getCreateDate().substring(0, 19));
 		map.put("createName1", folder.getCreateName1());
 		map.put("createName2", folder.getCreateName2());
 		map.put("updateId",    folder.getUpdateId());
-		map.put("updateDate",  folder.getUpdateDate());
+		map.put("updateDate",  folder.getUpdateDate().substring(0, 19));
 		map.put("companyId",   folder.getCompanyId());
 		map.put("deleterId",   folder.getDeleterId());
 		map.put("tenantId",    folder.getTenantId());
@@ -193,11 +203,11 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("useStatus",   folder.getUseStatus());
 		map.put("ownerId",     folder.getOwnerId());
 		map.put("createId",    folder.getCreateId());
-		map.put("createDate",  folder.getCreateDate());
+		map.put("createDate",  folder.getCreateDate().substring(0, 19));
 		map.put("createName1", folder.getCreateName1());
 		map.put("createName2", folder.getCreateName2());
 		map.put("updateId",    folder.getUpdateId());
-		map.put("updateDate",  folder.getUpdateDate());
+		map.put("updateDate",  folder.getUpdateDate().substring(0, 19));
 		map.put("companyId",   folder.getCompanyId());
 		map.put("deleterId",   folder.getDeleterId());
 		map.put("tenantId",    folder.getTenantId());
