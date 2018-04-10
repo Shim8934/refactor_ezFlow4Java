@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezJournal.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -418,7 +419,13 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<JournalReceiverVO> getReceiverList(Map<String, Object> map) {
-		return (List<JournalReceiverVO>) list("getReceiverList", map);
+		List<JournalReceiverVO> result = null;
+		try {
+			result= (List<JournalReceiverVO>) list("getReceiverList",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	/**
@@ -453,7 +460,13 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<JournalReceiverVO> getViewerList(Map<String, Object>map) {
-		return (List<JournalReceiverVO>) list("getViewerList",map);
+		List<JournalReceiverVO> result = null;
+		try {
+			result= (List<JournalReceiverVO>) list("getViewerList",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	/**

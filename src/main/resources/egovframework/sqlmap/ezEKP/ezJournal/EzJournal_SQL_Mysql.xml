@@ -1270,6 +1270,7 @@
 			b.journal_id = #journalId#
 		and
 			a.tenant_id = #tenantId#
+		order by lpad(ifnull(a.EXTENSIONATTRIBUTE15,0),6,0) ,a.DISPLAYNAME
 		<isNotEmpty property="startCount">
 			<isNotEmpty property="listCnt">
 				limit
@@ -1303,7 +1304,7 @@
 	
 	<!-- 조회자 리스트 가져오기 -->
 	<select id="getViewerList" parameterClass="map" resultMap="receiverVO">
-		select
+		(select
 			b.user_id as user_id,
 			a.DISPLAYNAME as user_name,
 			a.DESCRIPTION as dept_name,
@@ -1318,9 +1319,9 @@
 		and
 			a.tenant_id = #tenantId#
         and
-			b.recieve_date is not null
+			b.recieve_date is not null)
 		union
-		select
+		(select
 		u.cn as user_id,
 		u.DISPLAYNAME as user_name,
 		u.DESCRIPTION as dept_name,
@@ -1329,7 +1330,8 @@
 		from jmocha.tbl_journal_view v
 		inner join jmocha.tbl_usermaster u on(v.tenant_id=u.TENANT_ID and u.CN=v.user_id)
 		where v.journal_id=#journalId#
-		and v.tenant_id =#tenantId#
+		and v.tenant_id =#tenantId#)
+		order by 5 desc
 		limit
 			#startCount#, #listCnt#
 	</select>

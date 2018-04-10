@@ -979,7 +979,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		String mode = request.getParameter("mode");
 		String title = request.getParameter("title");
 		String isPublic = request.getParameter("isPublic");
-		String content = request.getParameter("content").replaceAll("'","\"").replaceAll("(\r\n|\r|\n|\n\r)", " ");;
+		String content = request.getParameter("content");
 		String typeId = request.getParameter("typeId");
 		String formId = request.getParameter("formId");
 		String isSum = request.getParameter("isSum");
@@ -1230,8 +1230,6 @@ public class EzJournalController extends EgovFileMngUtil {
 			String journalDate = (String) journal.get("journalDate");
 			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
 			journal.put("journalDate", journalDate);
-			String journalContent = ((String) journal.get("journalContent")).replaceAll("'","\"").replaceAll("(\r\n|\r|\n|\n\r)", " ");
-			journal.put("journalContent", journalContent);
 			model.addAttribute("journal",journal);
 		}
 		
@@ -1272,9 +1270,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				journal = (JSONObject) resultBody.get("data");
 				String journalDate = (String) journal.get("journalDate");
 				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
-				String journalContent = ((String) journal.get("journalContent")).replaceAll("'","\"").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 				journal.put("journalDate", journalDate);
-				journal.put("journalContent", journalContent);
 				model.addAttribute("journal",journal);
 			}
 			
@@ -1622,12 +1618,57 @@ public class EzJournalController extends EgovFileMngUtil {
 			journal = (JSONObject) resultBody.get("data");
 			String journalDate = (String) journal.get("journalDate");
 			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+			String journalContent = ((String) journal.get("journalContent")).replaceAll("'","\"").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+			journal.put("journalContent", journalContent);
 			journal.put("journalDate", journalDate);
 		}
 		
 		logger.debug("getJournalJSON ended");
 		
 		return journal;
+	}
+	
+	/**
+	 * 업무일지 상세내용 컨텐츠
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezJournal/journalDetailContent.do")
+	public String getJournalContent(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		logger.debug("getJournalContent started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String viewDate ="";
+		try {
+			viewDate = commonUtil.getTodayUTCTime("");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("viewDate", viewDate);
+		
+		String journalId = request.getParameter("journalId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId, param, request,"get",null);
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject journal = null;
+		if (status.equals("ok")) {			
+			journal = (JSONObject) resultBody.get("data");
+			String journalDate = (String) journal.get("journalDate");
+			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+			journal.put("journalDate", journalDate);
+			model.addAttribute("journal",journal);
+		}
+		
+		logger.debug("getJournalContent ended");
+		
+		return "/ezJournal/journalContent";
 	}
 	
 	/**
