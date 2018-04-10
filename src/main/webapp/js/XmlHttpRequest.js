@@ -1210,9 +1210,13 @@ function Replace2HTML(orgStr) {
     return tempStr;
 }
 
-function ReplaceText(orgStr, findStr, replaceStr) {
-    var re = new RegExp(findStr, "gi");
-    return (orgStr.replace(re, replaceStr));
+function ReplaceText(orgStr, findStr, replaceStr) {	
+	if (orgStr != undefined) {
+		var re = new RegExp(findStr, "gi");
+		return (orgStr.replace(re, replaceStr));
+	} else {
+		return orgStr;
+	}
 }
 
 function Mark1000Sep(p_nMoney) {
