@@ -556,6 +556,7 @@ public class EzJournalAdminController {
 				}
 			}
 			model.addAttribute("deptList", deptList);
+			model.addAttribute("companyId",request.getParameter("companyId"));
 		}
 		logger.debug("authorDetail ended");
 		
@@ -683,11 +684,16 @@ public class EzJournalAdminController {
 	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/admin/ezJournal/saveAuthor.do")
-	public void saveAuthor(@RequestBody JSONObject jsonString, HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException{
+	@ResponseBody
+	public String saveAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws IOException{
 		logger.debug("saveAuthor started");
 		
 		String result = "";
-		
+		JSONObject jsonString = new JSONObject();
+		String userId = request.getParameter("userId");
+		String depts = request.getParameter("depts");
+		jsonString.put("userId", userId);
+		jsonString.put("depts", depts);
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", null, request, "post", jsonString);
 		
 		String status = resultBody.get("status").toString();
@@ -698,7 +704,7 @@ public class EzJournalAdminController {
 		}
 		
 		logger.debug("saveAuthor ended");
-		response.getWriter().println(result);
+		return result;
 	}
 	
 	/**

@@ -163,6 +163,11 @@
    						message.SetEditorContent(result.journalContent);
    					//	opener.journalIdList = [];
    						opener.journalIdList.length = 0;
+   						if(mode=="sum"){
+   			    			setTimeout(function(){
+   								$('#loading').hide();
+   							},0);
+   			    		}
 	   				},
 	   				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);

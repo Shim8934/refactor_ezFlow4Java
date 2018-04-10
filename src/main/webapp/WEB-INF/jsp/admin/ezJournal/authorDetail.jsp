@@ -124,9 +124,9 @@
 				if (userId) {
 					opener.setSelectedUser(userId,selectedUserName);
 					//오프너의 부서 이름과 아이디 세팅
-		   			opener.deptIds = lpDepts;  
-		   			opener.deptNames = lpDeptNames;
-		   			opener.setDeptName();
+// 		   			opener.deptIds = lpDepts;  
+// 		   			opener.deptNames = lpDeptNames;
+		   			opener.setDeptName(JSON.stringify(lpDepts),JSON.stringify(lpDeptNames));
 					window.close();
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
