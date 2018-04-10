@@ -2267,11 +2267,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String realPath = commonUtil.getRealPath(request);
 		String result = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		// 결재 문서의 첨부를 다운받으려 하는사람이 결재라인에 있는지 체크 추가 2018-04-10 천성준
+		String checkLine = ezApprovalGService.checkAprLine(docID.trim(), docStatus, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 
 		logger.debug("docID : " + docID);
 		logger.debug("docStatus : " + docStatus);
 		logger.debug("filePath : " + filePath);
 		logger.debug("fileName : " + fileName);
+		logger.debug("checkLine : " + checkLine);
 		
 		//관리자는 권한 제한없도록 추가
 		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
@@ -2290,7 +2293,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID(), userInfo.getTenantId(), "");
 					
 					if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-						result = "NOTPERMISSION";
+						if (!checkLine.equals("<RESULT>TRUE</RESULT>")) {
+							result = "NOTPERMISSION";
+						}
 					}
 				}
 			} else if (docStatus != null && docStatus.toUpperCase().equals("END")) {

@@ -337,8 +337,13 @@
                     }
 
                     var tr = document.createElement("TR");
+                    
+                    if (j != 4) {
+                    	tr.style.borderBottom = "1px solid #efefef";
+                    }
+                    
                     if (j % 2 == 0) {
-                    	tr.style.backgroundColor = "rgb(250, 250, 250)"; 
+                    	//tr.style.backgroundColor = "rgb(250, 250, 250)"; 
                     }
                     var td = document.createElement("TD");
                     var td2 = document.createElement("TD");
