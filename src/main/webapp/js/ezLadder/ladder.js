@@ -127,12 +127,23 @@ function setUserPath() { // 각 유저의 이동경로 저장
 	var locX;
 	var locY;
 	var userPathInfo;
+	var colorArray = colors();
+	var colorCnt = 60;
 	
 	for(var i = 0; i < wInfo; i++) {
 		locX = i;
 		locY = 0;
 		userPathInfo = {};
-		userPathInfo['color'] = '#' + Math.round(Math.random() * 0xffffff).toString(16);
+		temp = Math.floor(Math.random()*colorCnt);
+		userPathInfo['color'] = colorArray[temp];
+		colorArray.splice(temp, 1);
+		colorCnt--;
+		
+		if(colorCnt == 0) {
+			colorArray = colors();
+			colorCnt =60;
+		}
+		/*userPathInfo['color'] = '#' + Math.round(Math.random() * 0xffffff).toString(16);*/
 		
 		while(locY < hInfo) {
 			nowLadInfo = printLadInfo[locX + '-' + locY];
@@ -152,6 +163,13 @@ function setUserPath() { // 각 유저의 이동경로 저장
 	}
 }
 
+function colors() {
+	var color = [ '#FF7100','#FF4B14','#FF1B1B','#FF144B','#FF0071','#FFB420','#FF9440','#FF6D52','#FF526D','#FF4094','#FF20B4','#FFF231','#FFD75E','#FFDBBF','#FF8D8D',
+				  '#FF80B8','#FF5ED7','#FF31F2','#CEFF2F','#EAFF65','#FFF998','#FFDBBF','#FFBFDB','#FF98F9','#EA65FF','#CE2FFF','#8DFF1B','#A9FF54','#C6FF8D','#BFFFE3',
+				  '#E2C6FF','#C68DFF','#C68DFF','#8D1BFF','#60FF2F','#7AFF65','#98FF9F','#BFFFE3','#BFE3FF','#989FFF','#7A65FF','#602FFF','#31FF3E','#5EFF86','#80FFC7',
+			      '#8DFFFF','#80C7FF','#5E86FF','#313EFF','#20FF6B','#40FFAA','#52FFE4','#52E4FF','#40AAFF','#206BFF','#00FF8E','#14FFC8','#1BFFFF','#14C8FF','#008EFF'];
+	return (color);
+}
 var moveImgHarfSize = 33;
 var moveLeft = 0;
 var moveTop = 0;
