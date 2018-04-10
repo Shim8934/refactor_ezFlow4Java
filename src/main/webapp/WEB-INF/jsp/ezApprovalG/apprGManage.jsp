@@ -1702,6 +1702,7 @@
 		    function initselyear() {
 		        $('#sel_year').selectmenu('close');
 		    }
+		    
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
