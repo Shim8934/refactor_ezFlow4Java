@@ -820,7 +820,8 @@
 				},
 				success : function(result) {
 					$("#eSubject").val(result.journalTitle);
-					message.SetEditorContent(result.journalContent);
+					var journalContent = "<p></p><p></p><hr>"+result.journalContent;
+					message.SetEditorContent(journalContent);
 				}
 			});
 	    }

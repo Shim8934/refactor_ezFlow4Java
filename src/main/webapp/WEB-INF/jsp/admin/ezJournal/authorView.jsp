@@ -46,7 +46,11 @@
 	    	}
 	    	 
 	    	//부서 이름 세팅
-	    	function setDeptName(){
+	    	function setDeptName(pdeptIds,pdeptNames){
+	    		if (pdeptIds && pdeptNames) {
+					deptIds = eval(pdeptIds);
+					deptNames = eval(pdeptNames);
+				}
 				var deptString;
 	    		for (var i = 0; i < deptNames.length; i++) {
 	    			if(i!=0){
@@ -55,18 +59,20 @@
 	    				deptString=deptNames[i];
 	    			}
 				}
+	    		console.log(deptIds);
 	    		$("#txtdept").val(deptString);
 	    	}	  
 	    	
 	    	//열람권한 저장
 	    	function insertAuthDept(){
-	   			var jsonString = JSON.stringify({"userId":selectedUser,"depts":deptIds});
 				$.ajax({
-	   				type:"post",
-	   				dataType:"html",
+	   				type:"POST",
+	   				dataType:"text",
 	   				url:"/admin/ezJournal/saveAuthor.do",
-	   				contentType:"application/json;",
-	   				data:jsonString,
+	   				data:{
+	   					userId:selectedUser,
+	   					depts:JSON.stringify(deptIds)
+	   				},
 	   				success: function(result){
 	   					alert(result);
    						opener.location.reload();

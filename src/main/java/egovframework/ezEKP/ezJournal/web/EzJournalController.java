@@ -1237,7 +1237,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			String journalDate = (String) journal.get("journalDate");
 			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
 			journal.put("journalDate", journalDate);
-			String journalContent = ((String) journal.get("journalContent")).replaceAll("'","\"");
+			String journalContent = ((String) journal.get("journalContent")).replaceAll("'","\"").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 			journal.put("journalContent", journalContent);
 			model.addAttribute("journal",journal);
 		}

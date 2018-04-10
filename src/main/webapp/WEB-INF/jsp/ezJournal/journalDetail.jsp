@@ -286,7 +286,6 @@
 	        	sizeOn();
 		    };
 		    window.onload = function (){
-// 		    	var journalContent = '<c:out value="${journal.journalContent }" />';
 		    	$('#message').contents().find('body').html('<div style="text-align: left;"><img onclick="parent.Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> <img onclick="parent.Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"></div><div id="journalContent" style="width:100%;height:10px;display:inline-block;"></div>');
 		    	$('#message').contents().find('#journalContent').html('${journal.journalContent }');
 		    	
@@ -396,8 +395,7 @@
 		        var left = (width - 500) / 2;
 		        var top = (heigth - 300) / 2;
 		        var szHref = "/ezJournal/JournalViewerList.do?journalId=" + journalId+"&currentPage="+currentPage;
-		        var strFeature = "status:no;dialogHeight: 500px;dialogWidth: 520px;help: no;resizable:yes";
-	            DivPopUpShow(520, 420, szHref);
+	            DivPopUpShow(520, 430, szHref);
 		    }
 		    
 		    //엑셀로 저장
@@ -478,7 +476,7 @@
 		        var left = (width - 500) / 2;
 		        var top = (heigth - 300) / 2;
 		        var szHref = "/ezJournal/JournalReceiverList.do?typeId="+typeId+"&journalId=" + journalId+"&currentPage="+currentPage;
-	            DivPopUpShow(520, 420, szHref);
+	            DivPopUpShow(520, 430, szHref);
 		    }
 		    
 		    //인쇄
