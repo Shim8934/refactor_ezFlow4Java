@@ -347,10 +347,6 @@ public class EzJournalController extends EgovFileMngUtil {
 		String receiverIds = "";
 		String receiverNames = "";
 		
-//		if (request.getParameter("sumFormId") != null && !request.getParameter("sumFormId").equals("")) {
-//			model.addAttribute("sumFormId", request.getParameter("sumFormId"));
-//		}
-		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("userId", userInfo.getId());
@@ -371,11 +367,8 @@ public class EzJournalController extends EgovFileMngUtil {
 			
 			if (status.equals("ok")) {
 				JSONObject journal = (JSONObject) result.get("data");
-				logger.debug("journal확인 : " + journal.toString());
 				model.addAttribute("journal", journal);
-				model.addAttribute("content", journal.get("journalContent").toString().replaceAll("\'", "\""));
-//				model.addAttribute("formId", journal.get("formId").toString());
-//				model.addAttribute("deptShare", journal.get("deptShare").toString());
+				model.addAttribute("content", journal.get("journalContent").toString().replaceAll("\'", "\"").replaceAll("(\r\n|\r|\n|\n\r)", " "));
 				JSONArray fileList = (JSONArray) journal.get("fileList");
 				if (fileList != null && fileList.size() > 0) {
 					for (int i = 0; i < fileList.size(); i++) {
@@ -986,7 +979,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		String mode = request.getParameter("mode");
 		String title = request.getParameter("title");
 		String isPublic = request.getParameter("isPublic");
-		String content = request.getParameter("content");
+		String content = request.getParameter("content").replaceAll("'","\"").replaceAll("(\r\n|\r|\n|\n\r)", " ");;
 		String typeId = request.getParameter("typeId");
 		String formId = request.getParameter("formId");
 		String isSum = request.getParameter("isSum");
@@ -1237,7 +1230,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			String journalDate = (String) journal.get("journalDate");
 			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
 			journal.put("journalDate", journalDate);
-			String journalContent = ((String) journal.get("journalContent")).replaceAll("'","\"");
+			String journalContent = ((String) journal.get("journalContent")).replaceAll("'","\"").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 			journal.put("journalContent", journalContent);
 			model.addAttribute("journal",journal);
 		}
@@ -1279,7 +1272,9 @@ public class EzJournalController extends EgovFileMngUtil {
 				journal = (JSONObject) resultBody.get("data");
 				String journalDate = (String) journal.get("journalDate");
 				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+				String journalContent = ((String) journal.get("journalContent")).replaceAll("'","\"").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 				journal.put("journalDate", journalDate);
+				journal.put("journalContent", journalContent);
 				model.addAttribute("journal",journal);
 			}
 			
