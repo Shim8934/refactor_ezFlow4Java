@@ -435,7 +435,7 @@ function openOpinionUI(ret)
 		
 	if (ret != "cancel")	{
 		var Rtnxml = new ActiveXObject("Microsoft.XMLDOM");
-		Rtnxml.loadXML(ret);
+		Rtnxml = loadXMLString(ret);
 			  
 		var NodeList = Rtnxml.selectNodes("LISTVIEWDATA/ROWS/ROW");
 			  
@@ -782,8 +782,8 @@ function ReAprLineSingMapping(ret)
 	}
 	 
 	var xmldom = createXmlDom();
-	xmldom.loadXML(xmlKuljea);
-	var objNodes = xmldom.selectNodes("LISTVIEWDATA/ROWS/ROW");
+	xmldom = loadXMLString(xmlKuljea);
+	var objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
 	var findstring;
 	var lastno;
 
@@ -791,26 +791,26 @@ function ReAprLineSingMapping(ret)
 	if (HwpCtrl.CheckFieldExist("refer"))
 		HwpCtrl.SetFieldText("refer", "");
 	
-	for(i=1;i < 20;i++)
-	{
+	for(i=1;i < 20;i++) {
 		if (HwpCtrl.CheckFieldExist("gongram" + i))
 			HwpCtrl.SetFieldText("gongram" + i, "");
 	}
 	
 		
-	for(i=0;i < count;i++)
-	{
-		var KyljeaOrder = getNodeText(objNodes.item(i).childNodes(0))
-		var KyljeaName = getNodeText(objNodes.item(i).childNodes(1))
-		var KyljeaDeptName = getNodeText(objNodes.item(i).childNodes(3))
-		var KyljeaTypeName  = getNodeText(objNodes.item(i).childNodes(4)) 
-		var KyljeaType  = getNodeText(objNodes.item(i).childNodes(16));
-		var KyljeaStat = getNodeText(objNodes.item(i).childNodes(17)); 
-		var KyljeaStatName = getNodeText(objNodes.item(i).childNodes(5))
-		var KyljeaJobtitle = getNodeText(objNodes.item(i).childNodes(2)) 
-		var ReasonDoNotApprov = getNodeText(objNodes.item(i).childNodes(12)); 
-	   	var suggester = getNodeText(objNodes.item(i).childNodes(13));      
-	   	var reporter = getNodeText(objNodes.item(i).childNodes(14));	   
+	for(i=0;i < count;i++) {
+		var dataNodes = GetChildNodes(objNodes[i]);
+
+        var KyljeaOrder = getNodeText(dataNodes[0]);
+        var KyljeaName = getNodeText(dataNodes[1]);
+        var KyljeaDeptName = getNodeText(dataNodes[3]);
+        var KyljeaTypeName = getNodeText(dataNodes[4]);
+        var KyljeaType = getNodeText(dataNodes[16]);
+        var KyljeaStat = getNodeText(dataNodes[17]);
+        var KyljeaStatName = getNodeText(dataNodes[5]);
+        var KyljeaJobtitle = getNodeText(dataNodes[2]);
+        var ReasonDoNotApprov = getNodeText(dataNodes[12]);
+        var suggester = getNodeText(dataNodes[13]);
+        var reporter = getNodeText(dataNodes[14]);	   
 	    	
 		OrderType[KyljeaOrder] = KyljeaType;
 		OrderTypeName[KyljeaOrder] = KyljeaTypeName;
@@ -826,8 +826,7 @@ function ReAprLineSingMapping(ret)
 		lastno = i;
 	}
 	
-	if(pDraftFlag != "SUSIN")
-	{
+	if(pDraftFlag != "SUSIN") {
 		
 		lastKyulName = OrderName[LastSignSN];
 		lastKyuljiwee = OrderJobtitle[LastSignSN];
@@ -837,10 +836,7 @@ function ReAprLineSingMapping(ret)
 
 		if (HwpCtrl.CheckFieldExist("lastKyulName"))
 			HwpCtrl.SetFieldText("lastKyulName", lastKyulName);
-	}
-	else
-	{
-		
+	} else {
 		lastKyulName = OrderName[LastSignSN]
 		lastKyuljiwee = OrderJobtitle[LastSignSN]
 		if (HwpCtrl.CheckFieldExist("slastKyuljikwee"))
@@ -1056,6 +1052,7 @@ function ReAprLineSingMapping(ret)
 	}
 	setMenuBar("btnJunKyul", false);
 }
+
 
 function openSingUI(parameter)
 {
@@ -1284,7 +1281,7 @@ function setRecevInfo(ret) {
     var recipflag = true;
     var xmldom = new ActiveXObject("Microsoft.XMLDOM");
     xmldom.async = false;
-    xmldom.loadXML(ret)
+    xmldom = loadXMLString(ret);
 
     if (xmldom.documentElement.length == 0) return;
 
@@ -1299,38 +1296,38 @@ function setRecevInfo(ret) {
         HwpCtrl.SetFieldText("recipients", "");
 
     for (var i = rows.length - 1; i >= 0; i--) {
-        var row = rows(i);
+    	var row = rows[i];
+        var params = new Array();
+        params[0] = "0";
+
+        var dataNodes = GetChildNodes(rows[i], params);
         if (recipflag) {
-            if (getNodeText(rows(i).childNodes(3)) == "Y") {
-                precipent = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
-                precipents = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
+        	if (getNodeText(dataNodes[3]) == "Y") {
+                precipent = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+                precipents = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
                 recipflag = false;
-            }
-            else {
-                if (isExtDoc == "Y") {
-                    precipent = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
-                    precipents = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
+            } else {
+            	if (isExtDoc == "Y") {
+                    precipent = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+                    precipents = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+                    recipflag = false;
+                } else {
+                    precipent = getNodeText(dataNodes[0]);
+                    precipents = getNodeText(dataNodes[0]);
                     recipflag = false;
                 }
-                else {
-                    precipent = getNodeText(rows(i).childNodes(0))
-                    precipents = getNodeText(rows(i).childNodes(0))
-                    recipflag = false;
-                }
             }
+        } else {
+        	 precipent = strLangS68;
 
-        }
-        else {
-            precipent = strLang92;
-
-            if (getNodeText(rows(i).childNodes(3)) == "Y")
-                precipents = precipents + "," + getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
-            else {
-                if (isExtDoc == "Y")
-                    precipents = precipents + "," + getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0));
-                else
-                    precipents = precipents + "," + getNodeText(rows(i).childNodes(0));
-            }
+             if (getNodeText(dataNodes[3]) == "Y") {
+                 precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+             } else {
+                 if (isExtDoc == "Y")
+                     precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+                 else
+                     precipents = precipents + "," + getNodeText(dataNodes[0]);
+             }
         }
     }
     if (HwpCtrl.CheckFieldExist("recipient")) {
