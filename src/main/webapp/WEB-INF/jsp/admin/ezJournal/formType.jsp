@@ -52,8 +52,8 @@
 	<body class="mainbody"> 
 		<h1><spring:message code='ezJournal.t2' /></h1>
 		<form class="journalForm">
-			<div id="mainmenu" style="padding-left: 5px;">
-				<span><b><spring:message code = 'ezApprovalG.t1512' /></b></span>
+			<div id="mainmenu" style="padding-left: 5px; padding-bottom: 5px;">
+				<span><b><spring:message code = 'ezJournal.t11' /></b></span>
 	            <select name="companyId" onchange="journal_get_formuse(this.value)">
 	            	<c:forEach items="${compList}" var="company">
 		            	<option value="${company.companyId }"
@@ -63,8 +63,8 @@
 		            	>${company.companyName }</option>
 	            	</c:forEach>
 	            </select>
+	            <br>
 			</div>
-			<br/>
 			<table class="content" style="width: 400px; margin-left: 5px;">
 			    <tr>
 			        <th style="text-align: center; width:250px;"><spring:message code='ezJournal.t12' /></th>

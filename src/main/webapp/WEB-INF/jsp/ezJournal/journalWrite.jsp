@@ -173,6 +173,12 @@
 		    			alert("code : " + request.status + "\nerror : " + error);
 	   				}
 	    		});
+				
+				if (mode == "sum") {
+	    			setTimeout(function () {
+						$('#loading').hide();
+					}, 0);
+	    		}
 			}
 	    	
 			// 최근에 사용한 양식 호출
@@ -392,7 +398,9 @@
 		                  	alert("<spring:message code='ezJournal.t137'/>");
 	          			 	sendJournalRecvMail($("#title").val(), receiverID, result);
 		                  
-		             	  	opener.setJournalList();
+	          			 	if (opener.listType != null && opener.listType != "") {
+		             	  		opener.setJournalList();
+	          			 	}
 	          			  	window.close();
 	                	}
           			  	
@@ -482,7 +490,10 @@
 	                success: function(result) {
 	                	if (result === "ok") {
 			            	alert("<spring:message code='ezJournal.t137'/>");
-			             	opener.setJournalList();
+			            	
+			            	if (opener.listType != null && opener.listType != "") {
+			             		opener.setJournalList();
+			            	}
 		          			window.close();
 	                	}
 	                },
@@ -519,7 +530,9 @@
 		                	fileList : fileList
 		                },
 		                success: function() {
-		                	opener.setJournalList();
+		                	if (opener.listType != null && opener.listType != "") {
+		                		opener.setJournalList();
+		                	}
 							window.close();
 		                },
 		                error: function() {
@@ -527,7 +540,9 @@
 		                }
 					});
 				} else {
-					opener.setJournalList();
+					if (opener.listType != null && opener.listType != "") {
+						opener.setJournalList();
+					}
 					window.close();
 				}
 			}

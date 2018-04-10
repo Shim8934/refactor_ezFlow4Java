@@ -84,13 +84,13 @@
 						url:"/ezJournal/saveJournalReply.do",
 						success: function(result){
 							var journalTitle;
-							if(parent.viewType=='detail'){
+							if(parent.opener.listType != null && parent.opener.listType != "") {
 								journalTitle = parent.journalTitle;
 	// 							parent.openJournalReply();
 								parent.opener.setJournalList();
 							} else {
-								journalTitle = parent.replyJournalTitle;
-								parent.setJournalList();
+								journalTitle = parent.journalTitle;
+							//	parent.setJournalList();
 							}
 							sendJournalReplyMail(replyContent,journalId,result,journalTitle);
 							location.reload();
@@ -119,12 +119,10 @@
 					data:{"replyId":replyId,"journalId":journalId},
 					url:"/ezJournal/removeJournalReply.do",
 					success: function(){
-						if(parent.viewType=='detail'){
+						if(parent.opener.listType != null && parent.opener.listType != "") {
 // 							parent.openJournalReply();
 							parent.opener.setJournalList();
-						} else {
-							parent.setJournalList();
-						}
+						} 
 						location.reload();
 						parent.minusReplyCount();
 					}

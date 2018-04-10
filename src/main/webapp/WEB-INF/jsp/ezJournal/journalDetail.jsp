@@ -61,8 +61,10 @@
 						},
 						success : function() {
 							alert("<spring:message code='ezJournal.t138'/>");
-							opener.setJournalList();
-							window.close();
+							if (opener.listType != null && opener.listType != "") {
+								opener.setJournalList();
+								window.close();
+							}
 						},
 						error : function() {
 							alert("<spring:message code='ezJournal.t149'/>");
@@ -300,9 +302,12 @@
                 }
 		    	
 		    	sizeOn();
-		    	opener.setJournalList();
-		    	opener.parent.left.setRecvCount();
-				opener.setRecvCount();
+		    	
+		    	if (opener.listType != null && opener.listType != "") {
+			    	opener.setJournalList();
+			    	opener.parent.left.setRecvCount();
+					opener.setRecvCount();
+		    	}
 		    }
 		    
 		    function sizeOn(){

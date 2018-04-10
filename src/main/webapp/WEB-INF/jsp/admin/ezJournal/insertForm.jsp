@@ -51,7 +51,7 @@
 		        	
 		        	if (useDepts != null) {
 		        		useDeptList = useDepts.slice();
-		        		console.log("useDeptList : " + useDeptList)
+		        	//	console.log("useDeptList : " + useDeptList)
 		        		$("#setUseDeptList").show();
 		        		drawUseDeptList();
 		        	}
@@ -131,7 +131,7 @@
 				    insertDept();
 		    	})				
 				.jstree({
-		    		'core'		: {"data" : treeContent},
+		    		'core'		: {"data" : treeContent, "multiple" : false},
 		    		'plugins'	: ["wholerow"],
 		    		'themes'	: {"responsive" : true}
 		    	});
@@ -146,7 +146,7 @@
 			    	var deptId = selDeptId;
 			    	var deptName = $("#deptTreeView").jstree().get_node(deptId).text;
 //			    	var deptName = nodeText.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-			    	console.log(deptName);
+			    //	console.log(deptName);
 			    	var chkFlag = true;
 			    	isDeptChanged = "Y";
 			    	for(var j = 0; j < useDeptList.length; j++) {
@@ -183,7 +183,7 @@
 		    
 		    // 선택된 부서 배열을 토대로 화면에 그리는 곳
 		    function drawUseDeptList() {
-		    	console.log(useDeptList);
+		    //	console.log(useDeptList);
 		    	
 		    	var useListHtml = "";     
 		    	for (var i = 0; i < useDeptList.length; i++) {
@@ -369,7 +369,7 @@
 					            	<a class="imgbtn"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></a>
                     			</td>
                     			<td style="width: 8%; text-align: right; border-left: none; padding-right: 3px;" >
-		            				<a class="imgbtn""><span onclick="btnCancel()"><spring:message code='ezJournal.t16' /></span></a>
+		            				<a class="imgbtn"><span onclick="btnCancel()"><spring:message code='ezJournal.t16' /></span></a>
                     			</td>
                    			</tr>
                    		</tbody>
