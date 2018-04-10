@@ -40,7 +40,9 @@ var strLang39 = "공백으로 검색할 수 없습니다.";
 var strLang40 = "'%'는 검색할 수 없습니다.";
 var strLang41 = "'&'는 검색할 수 없습니다.";
 var strLang42 = "작성자만이 삭제할 수 있습니다.";
-
+var strLang43 = "사다리 제목";
+var strLang44 = "사다리 종류";
+var strLang45 = "참여자";
 
 	/** boh */
 var strLang100 = "검색결과";
