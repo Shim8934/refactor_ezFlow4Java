@@ -140,7 +140,7 @@
             <td style="width:120px;">
                 <input id="defaultMax" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultMax}" style="width:100%; text-align:right">
             </td>
-            <td style="white-space:nowrap;"><a href="#" class="imgbtn"><span onClick="Save('')"><spring:message code='ezEmail.t48' /></span></a></td>
+            <td style="white-space:nowrap;"><a href="#" class="imgbtn"><span onClick="Save('')"><spring:message code='main.sp09' /></span></a></td>
         </tr>
     </table>
   </body>

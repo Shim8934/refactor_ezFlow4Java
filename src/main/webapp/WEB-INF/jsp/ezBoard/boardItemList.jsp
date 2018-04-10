@@ -427,7 +427,7 @@
 		            //viewtype(기본보기, 안읽은게시물, 만료된게시물)이 바뀔때마다 실행되는 조건
 		            if (viewtypeChangeFlag) {
 		            	document.getElementById("Preview_HeaderW").style.display = "none"; 
-	            		document.getElementById("ifrmPreViewW").src = "/blank.htm";
+	            		document.getElementById("ifrmPreViewW").src = "<spring:message code='main.kms4' />";
 	            		document.getElementById("ifrmPreViewW").onload = function(){
 	            			if (CrossYN()) {
 			                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null){
@@ -440,7 +440,7 @@
 			                }
 	            		}
 	            		document.getElementById("Preview_HeaderH").style.display = "none"; 
-	            		document.getElementById("ifrmPreViewH").src = "/blank.htm";
+	            		document.getElementById("ifrmPreViewH").src = "<spring:message code='main.kms4' />";
 	            		document.getElementById("ifrmPreViewH").onload = function(){
 	            			if (CrossYN()) {
 			                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
@@ -1298,7 +1298,7 @@
 		                    </div>
 		                </span>
 		                
-		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
 		            </span>
 		        </span>
 		    </span>
