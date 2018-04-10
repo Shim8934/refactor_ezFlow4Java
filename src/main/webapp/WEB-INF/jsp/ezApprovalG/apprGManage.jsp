@@ -1696,7 +1696,7 @@
 		    }
 		    
 		    function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
-		    	return condStr.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+		    	return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%");
 		    }
 		    
 		</script>
