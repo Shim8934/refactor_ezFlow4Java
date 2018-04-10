@@ -966,7 +966,7 @@
 		   
 	    </script>				
 	</head>
-	<body class="mainbody" style="overflow: auto">
+	<body class="mainbody" style="overflow: auto; margin-bottom:0px">
         <h1 id="titleimg">${defaultTitle}</h1>
         <div id="mainmenu">
             <ul>

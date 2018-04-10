@@ -975,7 +975,7 @@
 		    	var nChilds = div2Cmt.childElementCount;		    	
 		    	var editDiv2Cmt = document.getElementById("editCmtDiv" + id.slice(8));	    	
 		    	var innerDiv1 = document.createElement("div");
-		    	innerDiv1.setAttribute("style", "display: inline-block;");		    	
+		    	//innerDiv1.setAttribute("style", "display: inline-block;");		    	
 		    	var innerDiv2 = document.createElement("div");	
 		    	innerDiv2.setAttribute("id", "descriptCmt" + id.slice(8));
 		    	innerDiv2.setAttribute("style", "display: none; padding-left: 10px; position: relative;");	
@@ -992,12 +992,12 @@
 		    	
 		    	//Copy text comment
 		    	var innInnerDiv1 = document.createElement("div");
-		    	innInnerDiv1.setAttribute("style", "display: block; float:left; border:1px solid #ddd;padding-left: 0px;margin-left: 20px; width: 1310px; border-radius: 3px;");
+		    	innInnerDiv1.setAttribute("style", "display: block; float:left; border:1px solid #ddd;padding-left: 0px;margin-left: 20px; width: 105%; border-radius: 3px;");
 		    	var editTxtArea = document.createElement("textarea");
 		    	editTxtArea.setAttribute("id", "editCmtArea" + id.slice(8));
 		    	editTxtArea.setAttribute("cols", "20");
 		    	editTxtArea.setAttribute("rows", "1");
-		    	editTxtArea.setAttribute("style", "display: inline-block; overflow: hidden; outline: none; border: none; resize:none; padding: 5px 5px; width: 1300px;");
+		    	editTxtArea.setAttribute("style", "display: inline-block; overflow: hidden; outline: none; border: none; resize:none; padding: 5px 5px; width: 98%; min-width: 600px; word-break: break-all;");
 		    	editTxtArea.oninput =  function () { editAutoGrow(this); }	
 		    	
 		    	innInnerDiv1.appendChild(editTxtArea);		
@@ -1120,7 +1120,7 @@
 		    	innerDiv3.appendChild(tagA2);
 		    	
 		    	editDiv2Cmt.appendChild(innerDiv3);		    			    	
-		    	editDiv2Cmt.style.display = "inline-block";	 
+		    	editDiv2Cmt.style.display = "block";	 
 		    	
 		    	editAutoGrow(editTxtArea);    	
 		    	editTxtArea.focus(); 
@@ -1970,6 +1970,13 @@
 				
 		    	element.style.height = "1px";    	
 		        element.style.height = (element.scrollHeight - 10) + "px";		        
+		        
+		        //내용 길이 제한 로직 추가. 2018-04-09 홍대표
+		        var maxLen = 500;
+	  			if($(element).val().length > maxLen){
+	  				alert(maxLen + " <spring:message code = 'ezPoll.t212'/>");
+	  				$(element).val($(element).val().substring(0, maxLen));
+	  			}
 		    }
 			
 		    function checkScrollBars() {		
@@ -2160,7 +2167,7 @@
                 editDiv2ForTd2.setAttribute("id", "editCmtDiv" + commentIndex);   
                 editDiv2ForTd2.style.display = "none"; 
                 
-                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;");               
+                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 98%;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = userName;
                 div1ForTd2.setAttribute("style", "display: block; color:#0470e4; font-size:16px; padding:5px 0px 0px 20px;");       
@@ -2287,7 +2294,7 @@
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
 		    			//div2Cmt.firstElementChild.innerHTML = txtContent;
 		    			div2Cmt.firstElementChild.textContent = txtContent;
-		    			div2Cmt.firstElementChild.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;");
+		    			div2Cmt.firstElementChild.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap; word-break: break-all;");
 		    		}
 		    		else {
 		    			var pForTd2 = document.createElement("p");  
@@ -2592,6 +2599,7 @@
 		    		$("#imgPopup").removeAttr("src");
 				});
 		    }
+		  	
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -2893,9 +2901,9 @@
 										</c:otherwise>
 									</c:choose>							
 									
-									<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >
+									<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; width: 100%;" >
 										<c:if test="${_comt.textContent != ''}">
-											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;"><c:out value ="${_comt.textContent}" /></p>
+											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px; width: 98%;"><c:out value ="${_comt.textContent}" /></p>
 										</c:if>
 										<c:if test="${_comt.imageAttach != ''}">
 											<div style="padding-top: 5px;">
@@ -2921,7 +2929,7 @@
 								<td style="width: 145px; position:relative;">
 									<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;"><c:out value ="${_comt.cmtTime}" /></div>
 									<c:if test="${_comt.userId == curentUser}">								
-										<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
+										<img src="/images/option3.png" style="margin:30px 10px 0px 0px; cursor: pointer; height: 25px; width: 25px; position: absolute; top: 0px; right: 0px;" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
 										<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; width: 120px;" tabindex=0>							
 											<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
 											<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>

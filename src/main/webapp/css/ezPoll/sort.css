@@ -175,8 +175,8 @@ input[type=text]::-ms-clear{ display:none;}
 .content .pollButton01{width:129px; height:30px; line-height:28px; font-size:13px; background:#efefef; border:1px solid #dcdcdc; border-radius:5px;}
 .pollButton02 .pollButton03{background:#0470e4; color:#FFF; width:64px; height:30px; line-height:30px; border-radius:5px; text-align:center; margin:0px; padding:0px;}
 .pollButton02 .pollButton03 span{background:#0470e4; color:#FFF; display:block; height:30px; line-height:30px; margin:0px; padding:0px; border-radius:5px;}
-.pollButton02 .pollButton04{background:#efefef; color:#000; border:1px solid #dcdcdc; width:64px; height:28px; line-height:28px; border-radius:5px; text-align:center; margin:0px; padding:0px;}
-.pollButton02 .pollButton04 span{background:#efefef; color:#000; display:block; height:28px; line-height:28px; margin:0px; padding:0px; border-radius:5px;}
+.pollButton02 .pollButton04{background:#efefef; color:#000; border:1px solid #dcdcdc; width:64px; height:30px; line-height:30px; border-radius:5px; text-align:center; margin:0px; padding:0px;}
+.pollButton02 .pollButton04 span{background:#efefef; color:#000; display:block; height:30px; line-height:30px; margin:0px; padding:0px; border-radius:5px;}
 
 .pollAddFile{height:45px; line-height:45px; background:#f9f9f9; border-bottom:1px solid #DDD; padding:0px 10px 0px 10px; color:#818181;}
 
