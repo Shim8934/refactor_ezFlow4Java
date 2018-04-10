@@ -46,3 +46,8 @@ var strLang45 = "참여자";
 
 	/** boh */
 var strLang100 = "검색결과";
+var strLang101 = "꽝 더하기";
+var strLang102 = "꽝 빼기";
+var strLang103 = "꽝";
+var strLang104 = "개";
+var strLang105 = "원";

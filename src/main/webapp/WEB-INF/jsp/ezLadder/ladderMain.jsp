@@ -40,6 +40,10 @@
 						searchLadder();
 					}
 				});
+				$(".deleteLadder").on("click", function(e) {
+					e.stopPropagation();
+					deleteLadder($(this).attr("_ladderId"));
+				});
 				
 				ladder_main_resize();
 				$(window).resize(function() {
@@ -125,7 +129,7 @@
 		<div class="div_scroll" style="width:100%; overflow: auto" id="divList">
 			 <table class="mainlist" style="width:98%; margin-left: 10px; margin-right: 10px; overflow: auto"> 
 			    <tr class="header" style="height=20px;"> 
-					<th width="20px"><spring:message code="ezLadder.t002"/></th> 					
+					<th width="20px"><spring:message code="ezLadder.t002"/></th> 
 					<th width="80px"><spring:message code="ezLadder.t003"/></th> 
 					<th width="40px"><spring:message code="ezLadder.t004"/></th>
 					<th width="40px"><spring:message code="ezLadder.t005"/></th> 
@@ -134,55 +138,54 @@
 					<th width="30px"><spring:message code="ezLadder.t008"/></th>		
 			    </tr>
 				 <c:forEach items="${list }" var="vo">
-					<tr class="black" style="height=30px;">
+					<tr class="black" style="height=30px;" onClick="getLadderGame(${vo.ladderId})">
 						<c:choose>
 							<c:when test="${vo.type eq 0 }">
-								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_bomb.png' /></div></td>
+								<td><div class="effect"><img src ='/images/ezLadder/icon_bomb.png' /></div></td>
 							</c:when>
 							<c:when test="${vo.type eq 1 }">
-								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_money.png' /></div></td>
+								<td><div class="effect"><img src ='/images/ezLadder/icon_money.png' /></div></td>
 							</c:when>
 							<c:when test="${vo.type eq 2 }">
-								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_order.png' /></div></td>
+								<td><div class="effect"><img src ='/images/ezLadder/icon_order.png' /></div></td>
 							</c:when>
 							<c:otherwise>
-								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_handwork.png' /></div></td>
+								<td><div class="effect"><img src ='/images/ezLadder/icon_handwork.png' /></div></td>
 							</c:otherwise>
 						</c:choose>
 						
-						<td><div class="effect" onClick="getLadderGame(${vo.ladderId})">${vo.title }</div></td>
-						<td><div class="effect" onClick="getLadderGame(${vo.ladderId})">${vo.writerName }</div></td>
-						<td><div class="effect" onClick="getLadderGame(${vo.ladderId})">${vo.writeDate.substring(0,16) }</div></td>
+						<td><div class="effect">${vo.title }</div></td>
+						<td><div class="effect">${vo.writerName }</div></td>
+						<td><div class="effect">${vo.writeDate.substring(0,16) }</div></td>
 						
 						<c:choose>
 							<c:when test="${vo.status eq 0 }">
-								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_wait.png' /></div></td>
+								<td><div class="effect"><img src ='/images/ezLadder/icon_wait.png' /></div></td>
 							</c:when>
 							<c:otherwise>
-								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_complete.png' /></div></td>
+								<td><div class="effect"><img src ='/images/ezLadder/icon_complete.png' /></div></td>
 							</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
 							<c:when test="${vo.secretFlag eq 0 }">
-								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_public.png' /></div></td>
+								<td><div class="effect"><img src ='/images/ezLadder/icon_public.png' /></div></td>
 							</c:when>
 							<c:otherwise>
-								<td><div class="effect" onClick="getLadderGame(${vo.ladderId})"><img src ='/images/ezLadder/icon_private.png' /></div></td>
+								<td><div class="effect"><img src ='/images/ezLadder/icon_private.png' /></div></td>
 							</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
 							<c:when test="${id eq vo.writerId}">
-								<td><div class="effect" onclick="deleteLadder(${vo.ladderId})"><img src ='/images/ezLadder/icon_posDelete.png' /></div></td>
+								<td><div class="effect"><img src ='/images/ezLadder/icon_posDelete.png' class="deleteLadder" _ladderId="<c:out value='${vo.ladderId}' />" /></div></td>
 							</c:when>
 							<c:otherwise>
-								<td><div class="effect" onclick="imposDelete()"><img src ='/images/ezLadder/icon_imposDelete.png' /></div></td>
+								<td><div class="effect"><img src ='/images/ezLadder/icon_imposDelete.png' /></div></td>
 							</c:otherwise>
 						</c:choose>
 					</tr>
 				</c:forEach>
-		        
 			    <c:if test="${list.size() == 0}"> 
 					<td colspan="7" align="center"  bgcolor="#FFFFFF"> <spring:message code="ezLadder.t010" /></td> 
 		        </c:if> 

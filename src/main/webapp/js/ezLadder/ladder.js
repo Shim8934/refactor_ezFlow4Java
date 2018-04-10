@@ -153,42 +153,44 @@ function setUserPath() { // 각 유저의 이동경로 저장
 }
 
 var moveImgHarfSize = 33;
-var defTop = 0;
 var moveLeft = 0;
 var moveTop = 0;
 function moveUserPicImg(type) {
 	var userImgHtml = $("#drag" + clickUserOrder + " span").html();
 	
-	moveLeft = $("#drag0 img").offset().left + wSize * clickUserOrder;
-	moveTop = 0 - moveImgHarfSize;
-	defTop = $("#drag0 img").offset().top;
 	
-	$("#lineDiv span").append(userImgHtml);
-	$("#lineDiv img:last").attr("id", "moveImgUser" + clickUserOrder).css("position", "absolute").offset({"top": defTop, "left": moveLeft});
-	
-	$("#moveImgUser" + clickUserOrder).animate({"top": moveTop}, moveSpeed * 10, function() {
-		moveTop = $("#moveImgUser" + clickUserOrder).offset().top;
+	if(type.substring(0, 3) == "pop") {
+		$("#moveImgUser"  + clickUserOrder).remove();
+		
 		printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, type);
-	});
+		
+		moveLeft = $("#drag0 img").offset().left + wSize * resultOrder;
+		
+		$("#lineDiv span").append(userImgHtml);
+		$("#lineDiv img:last").attr("id", "moveImgUser" + clickUserOrder).css("position", "absolute").offset({"top": 1148, "left": moveLeft});
+
+	} else {
+		if(type.substring(3, 6) == "all") {
+			$("#lineDiv span").empty();
+		}
+		moveLeft = $("#drag0 img").offset().left + wSize * clickUserOrder;
+		moveTop = 0 - moveImgHarfSize;
+		
+		$("#lineDiv span").append(userImgHtml);
+		$("#lineDiv img:last").attr("id", "moveImgUser" + clickUserOrder).css("position", "absolute").offset({"top": $("#drag0 img").offset().top, "left": moveLeft});
+		
+		$("#moveImgUser" + clickUserOrder).animate({"top": moveTop}, moveSpeed * 10, function() {
+			moveTop = $("#moveImgUser" + clickUserOrder).offset().top;
+			printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, type);
+		});
+	}
+	
 }
 
 function aniOneUser() { 
 	if(beforeStatus == 0) {
 		drawStatus = !drawStatus;
 	}
-//	var userImgHtml = $("#drag" + clickUserOrder + " span").html();
-//	
-//	moveLeft = $("#drag0 img").offset().left + wSize * clickUserOrder;
-//	moveTop = 0 - moveImgHarfSize;
-//	defTop = $("#drag0 img").offset().top;
-//	
-//	$("#lineDiv span").html(userImgHtml);
-//	$("#lineDiv img").attr("id", "moveImgUser").css("position", "absolute").offset({"top": defTop, "left": moveLeft});
-//	
-//	$("#moveImgUser").animate({"top": moveTop}, moveSpeed * 10, function() {
-//		moveTop = $("#moveImgUser").offset().top;
-//		printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'anione');
-//	});
 	
 	moveUserPicImg("anione");
 	
@@ -204,13 +206,13 @@ function aniAllUser() {
 	
 	moveUserPicImg("aniall" + clickUserOrder);
 	
-//	printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'aniall' + clickUserOrder);
 	userStatus[clickUserOrder] = 1;
 }
 
 function popOneUser() {
 	drawStatus = !drawStatus;	
-	printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'popone');
+	moveUserPicImg("popone");
+//	printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'popone');
 	userStatus[clickUserOrder] = 1;
 	beforeStatus = 1;
 	ladderAnimationComplete();
@@ -219,7 +221,8 @@ function popOneUser() {
 function popAllUser() {
 	drawStatus = !drawStatus;
 	for(clickUserOrder = 0; clickUserOrder < wInfo; clickUserOrder++) {
-		printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'popall');
+		moveUserPicImg("popall");
+//		printUserPath(clickUserOrder, clickUserOrder, 0, startXPoint + clickUserOrder * wSize, startYPoint, 'popall');
 		userStatus[clickUserOrder] = 1;
 	}
 }
@@ -274,6 +277,7 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 				if(moveX <= startXPoint + (locX - 1) * wSize) {
 					locX--;
 					moveX = startXPoint + locX * wSize;
+					moveLeft = $("#drag0 img").offset().left + locX * wSize;
 				}
 			} else if(path['direction'] == 'right') {
 				moveX += moveSpeed;
@@ -281,6 +285,7 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 				if(moveX >= startXPoint + (locX + 1) * wSize) {
 					locX++;
 					moveX = startXPoint + locX * wSize;
+					moveLeft = $("#drag0 img").offset().left + locX * wSize;
 				}
 			} 
 		} else {
@@ -289,6 +294,7 @@ function printUserPath(user, locX, locY, moveX, moveY, type) { // 유저 경로 
 			if(moveY >= startYPoint + (locY + 1) * hSize) {
 				locY++;
 				moveY = startYPoint + locY * hSize;
+				moveTop = $("#drag0 img").offset().top + 87 + locY * hSize;
 			}
 		}
 		

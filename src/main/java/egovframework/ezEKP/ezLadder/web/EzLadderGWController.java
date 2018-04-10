@@ -506,8 +506,24 @@ public class EzLadderGWController {
 			List<LadderLineVO> list = ezLadderService.getLadderLineParticipant(ladVO);
 			List<LadderCommentVO> cmtlist = ezLadderService.selectComments(cmtVO);
 			
+			String imagePath = ezOrganService.getPropertyValue(vo.getWriterId(), "extensionAttribute2", vo.getTenant_id());
+			if (imagePath != null && !imagePath.equals("")) {
+				String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", vo.getTenant_id())+ commonUtil.separator + imagePath;
+				String fullPath = request.getServletContext().getRealPath(realPath);
+				
+				if (checkExist(fullPath)) {
+					vo.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
+				}
+				else {
+					vo.setPic("/images/ezLadder/icon_defaultuser.png");
+				}
+			} 
+			else {
+				vo.setPic("/images/ezLadder/icon_defaultuser.png");
+			}
+			
 			for (LadderCommentVO commentVO : cmtlist) {
-				String imagePath = ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id());
+				imagePath = ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id());
 				
 				if (imagePath != null && !imagePath.equals("")) {
 					String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", commentVO.getTenant_id())+ commonUtil.separator + imagePath;
@@ -526,7 +542,7 @@ public class EzLadderGWController {
 			}
 			
 			for(LadderLineVO lineVO : list) {
-				String imagePath = ezOrganService.getPropertyValue(lineVO.getUserId(), "extensionAttribute2", lineVO.getTenant_id());
+				imagePath = ezOrganService.getPropertyValue(lineVO.getUserId(), "extensionAttribute2", lineVO.getTenant_id());
 				
 				if (imagePath != null && !imagePath.equals("")) {
 					String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", lineVO.getTenant_id())+ commonUtil.separator + imagePath;

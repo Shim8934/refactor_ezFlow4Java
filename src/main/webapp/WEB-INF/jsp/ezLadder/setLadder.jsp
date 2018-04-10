@@ -8,8 +8,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezLadder.t009" /></title>
-		<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
+		<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
+		<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
@@ -19,18 +20,36 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 		
 		<script type="text/javascript">
+			var ladderId;
+			var title;
+			var secretFlag;
+			var ladderType;
+			var lineCnt;
+		
 			function ladder_window_resize() {
-				var win_width = $(window).width() - 70;
+				var win_width = $(window).width();
 				
-				$(".setTable").css("width", win_width + "px");
-				$("#ladderLineBox").css("width", win_width + "px");
+				$(".setTable").css("width", win_width - 20 + "px");
+				$("#ladderLineBox").css("width", win_width - 70 + "px");
 			}
 			$(function() {
-				ladder_set_init();
-				
-				$(window).resize(function() {
+				$(window).resize(function (){
 					ladder_window_resize();
 				});
+				
+				$("#slider-range-min").slider({ 
+					range: "min",
+					value: 0,
+					min: 0,
+					max: 0,
+					slide: function( event, ui ) {
+						$("#amount").text(ui.value);
+					}
+				});
+				
+				ladderSetInitVar();
+				ladderSetInitView();
+				
 				
 				$("#makeLad").on("click", function() {
 					makeLadder();
@@ -48,18 +67,18 @@
 					}
 				});
 				$(".ladderType").on("click", function() {
-					$("[_sel='n']").show();
-					$("[_sel='y']").hide();
-					$(".ladderType").removeClass("active");
-					$(this).addClass("active");
-					$(".ladderType.active img").toggle();
+					$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
+					
+					ladderType = $(this).attr("_num");
+					$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
+					
 					setInputValue(false);
-					setLadderTypeDiv($(this).attr("num"));
+					setLadderTypeDiv();
 				});
 				$("#ladderSecret").on("click", function() {
-					$("#ladderSecret").toggleClass("active");
-					$("#ladderSecret img").toggle();
+					$("#ladderSecret img").toggleClass("active");
 				});
+				
 				$(document)
 					.on("click", "#removeIcon", function() {
 						attendant_remove($(this).closest("li").index());
@@ -71,50 +90,24 @@
 						setBomb(false);
 					})
 					.on("blur", ".item input", function() {
-						if($(".ladderType.active").attr("num") == "1") {
-							setInputValue(false);
-							setLadderTypeDiv("1");
+						if(ladderType == "1") {
+							getMoney();
+							$("#totalmoney span").text(totalmoney);
+							
+							/* setInputValue(false);
+							setLadderTypeDiv(); */
 						}
 					});
-				$("#slider-range-min").slider({ 
-					range: "min",
-					value: 0,
-					min: 0,
-					max: 0,
-					slide: function( event, ui ) {
-						$("#amount").text(ui.value);
-					}
-				});
-				$("#amount").val($("#slider-range-min").slider("value"));
-				$("#bmtest").on("click", function() { /* 즐겨찾기 테스트 버튼 */
-					var arr1 = ["0", "1", "2", "3", "4", "5"];
-					var arr2 = [];
-					
-					arr2[2] = "re2";
-					arr2[5] = "re5";
-					
-					arr2.forEach(function(val, idx) {
-						if(!!val) {
-							console.log("enter");
-							console.log(val);
-							arr1[idx] = val;
-						}
-					});
-					
-					console.log(arr1);
-					
-				});
-				
 				
 			});
 			
-			function setLadderTypeDiv(ladderType) {
+			function setLadderTypeDiv() {
 				var html = "";
 				var len = $("#itemList li").length;
 				if(ladderType == "0") {
-					html += "<div id='addBomb' class='floatL'>꽝 더하기</div>";	
-					html += "<div id='cutBomb' class='floatL'>꽝 빼기</div>";
-					html += "<div id='bombnum' class='floatL'>꽝 X <span>" + bombnum + "</span></div>";
+					html += "<div style='float: right; padding-top: 7px;'><div id='addBomb' class='typeOpbtn' style='margin-right: 10px;' onselectstart='return false'>" + strLang101 + "</div>";	
+					html += "<div id='cutBomb' class='typeOpbtn' style='margin-right: 30px;' onselectstart='return false'>" + strLang102 + "</div>";
+					html += "<div id='bombnum' style='display: inline-block;'>" + strLang103 + "<span style='margin: 0px 5px 0px 15px;'>" + bombnum + "</span>" + strLang104 + "</div></div>";
 					$("#itemList").empty();
 					for(var i = 0; i < len; i++) {
 						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' readonly='readonly' style='background: rgb(244, 245, 245)' /></li>");
@@ -129,7 +122,7 @@
 				} else {
 					if(ladderType == "1") {
 						getMoney();
-						html += "<div id='bombnum' class='floatL'>$ <span>" + totalmoney + "</span> 원</div>";
+						html += "<div id='totalmoney' style='float: right; line-height: 50px;'>$<span style='margin: 0px 5px 0px 15px;'>" + totalmoney + "</span>" + strLang105 + "</div>";
 					}
 					$("#itemList").empty();
 					for(var i = 0; i < len; i++) {
@@ -142,7 +135,7 @@
 			
 			var bombnum = 1;
 			function setBomb(bombadd) {
-				bombnum = $("#bombnum span").text() * 1;
+				bombnum = Number($("#bombnum span").text());
 				if(bombadd && bombnum < $("#attendantList li").length) {
 					$("#bombnum span").html(++bombnum);
 				} else if(!bombadd && bombnum > 1) {
@@ -166,18 +159,33 @@
 				totalmoney = totalmoney.toString().replace(regexp, ',');
 			}
 			
-			function ladder_set_init() {
-				var retladinfo = [];
-				
-				ladder_window_resize();
+			function ladderSetInitVar() {
 				if("${ladderId}" !== "") {
-					retladinfo = getPreLadder("${ladderId}");
+					ladderId = "${ladderId}";
+					
+					var retladinfo = getPreLadder(ladderId);
 					preLadderListComplete(retladinfo["lad"], retladinfo["ladline"]);
 				} else {
-					$(".ladderType:eq(<c:out value='${ladType}' />) img").toggle();
-					$(".ladderType:eq(<c:out value='${ladType}' />) img").addClass("active");
-					setLadderTypeDiv("${ladType}");
+					ladderId = "";
+					title = "";
+					secretFlag = "0";
+					ladderType = "<c:out value='${ladType}' />";
+					lineCnt = "";
 				}
+			}
+			
+			function ladderSetInitView() {
+				ladder_window_resize();
+				
+				$("#title").val(title);
+				
+				$("#ladderSecret img").removeClass("active");
+				$("#ladderSecret [_flag='" + secretFlag + "']").addClass("active");
+				
+				$(".ladderType .select").removeClass("active");
+				$(".ladderType .default").addClass("active");
+				$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
+				setLadderTypeDiv();
 			}
 			
 			/** 이전사다리 가져오기 */
@@ -189,15 +197,22 @@
 				GetOpenWindow("/ezLadder/ladderMain.do?mode=pre&currPage=1&searchSelect=&searchInput=", "ladder_pre_set", 1342, 822);
 			}			
 			function preLadderListComplete(ladderInfo, lineInfo) {
-				$("#title").val(ladderInfo["title"]);
-				$(".icondiv").removeClass("active");
-				$(".ladderType:eq(" + ladderInfo["type"] + ")").addClass("active");
-				setLadderTypeDiv(ladderInfo["type"]);
-				if(ladderInfo["secretFlag"] === 1) {
-					$("#ladderSecret").addClass("active");
-				} 
+				title = ladderInfo["title"];
+				secretFlag = ladderInfo["secretFlag"];
+				ladderType = ladderInfo["type"];
+				lineCnt = ladderInfo["lineCnt"];
+				if(ladderType == "0") {
+					bombnum = 0;
+					lineInfo.forEach(function(line, index) {
+						if(line["item"] == "꽝") {
+							bombnum++;
+						}
+					});
+				}
+				
+				ladderSetInitView();
+				
 				checkAttendant(lineInfo);
-				changeSliderValue(ladderInfo["lineCnt"]);
 			}
 			
 			/** 참여자, 아이템 배열을 현재 input box 정보로 셋팅 */
@@ -240,16 +255,16 @@
 			}
 
 			/** 참여자 변경될때 슬라이더 바 조절 */
-			var maxLine = 10;
 			function changeSliderValue(value) { 
+				var maxLine = 10;
 				var len = attendants["id"].length;
 				if(len >= 2) {
 					$("#slider-range-min").slider("option", "min", len);
 					$("#slider-range-min").slider("option", "max", len * maxLine);
-					if(!value) {
+					if(!lineCnt) {
 						$("#slider-range-min").slider("option", "value", Math.round(len * maxLine / 2));
 					} else {
-						$("#slider-range-min").slider("option", "value", value);
+						$("#slider-range-min").slider("option", "value", lineCnt);
 					}
 				} else {
 					$("#slider-range-min").slider("option", "max", 0);
@@ -272,7 +287,7 @@
 				
 				changeSliderValue();
 				changeUser(attendants["id"].length);
-				setLadderTypeDiv($(".ladderType.active").attr("num"));
+				setLadderTypeDiv();
 			}
 
 			/** 아이디+이름 검사 (익명인지 아닌지) */
@@ -292,7 +307,6 @@
 				
 				var addIndex = 0;
 				if(typeof data === "string") {
-					console.log("string 이름으로검색시");
 					setInputValue(true);
 					
 					data = ReplaceText(data, ",", ";");
@@ -351,8 +365,6 @@
 					}
 					
 				} else {
-					console.log("arr 이전 사다리 불러올시 + 조직도에서 불러올시");
-					
 					attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
 					
 					len = data.length;
@@ -448,8 +460,6 @@
 						html = "";
 						picsrc = "/images/ezLadder/icon_defaultuser.png";
 						
-						
-						
 						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
 							html += '<li class="attendant"><div style="height: 140px; padding-top:  20px;">';
 							html += '<img src="' + picsrc + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />';
@@ -479,7 +489,7 @@
 						$(thisLi + " input[name='userName2s']").val(attendants["name2"][i]);
 						$(thisLi + " input[name='userIds']").val(attendants["id"][i]);
 						
-						if($(".ladderType.active").attr("num") == "0" || $(".ladderType.active").attr("num") == "2") {
+						if(ladderType == "0" || ladderType == "2") {
 							$("#itemList").append("<li class='item'><input type='text' class='input' name='items' readonly='readonly' style='background: rgb(244, 245, 245)' /></li>");
 							$("#itemList li:eq(" + i + ") input").val("?");
 						} else {
@@ -493,7 +503,7 @@
 					changeUser(len);
 				}
 				
-				$("#ladderLineBox").scrollLeft($("#attendantList li:last").offset());
+				$("#ladderLineBox").scrollLeft(len * 150);
 			}
 			
 			/** 유저 정보 xml로 가져오기 */
@@ -523,174 +533,143 @@
 			
 			/** 사다리 만들기 */
 			function makeLadder() {
-				var title = $("#title").val();
-				var type = $(".ladderType.active").attr("num");
-				var secretFlag = $("#ladderSecret.active").length;
-				var lineCnt = $("#slider-range-min").slider("option", "value");
+				if(!$("#title").val()) {
+					alert("<spring:message code='ezLadder.t019'/>");
+					return;
+				}
+				if(!attendants || attendants["id"].length < 2) {
+					alert("<spring:message code='ezLadder.t020'/>");
+					return;
+				}
+				$("input[name='secretFlag']").val($("#ladderSecret .active").attr("_flag"));
+				$("input[name='type']").val(ladderType);
+				$("input[name='lineCnt']").val($("#amount").text());
 				
-				$("input[name='type']").val(type);
-				$("input[name='secretFlag']").val(secretFlag);
-				$("input[name='lineCnt']").val(lineCnt);
-				$("form").append("<input name='bombnum' />");
-				
-				if(type == "0") {
+				if(ladderType == "0") {
 					$("input[name='bombnum']").val(bombnum);
 				} else {
 					$("input[name='bombnum']").val(0);
 				}
 				
-				
-				/* if(type == "0") {
-					var bombItem = 0;
-					var temp;
-					items.fill("꽝", 0, bombnum);
-					items.fill("통과", bombnum);
-					items.forEach(function(item_, index) {
-						bombItem = Math.floor(Math.random() * items.length);
-						temp = item_;
-						items[index] = items[bombItem];
-						items[bombItem] = temp;
-						$("input[name='items']:eq(" + index + ")").val(items[bombItem]);
-						$("input[name='items']:eq(" + bombItem + ")").val(items[bombItem]);
-					});
-				} */
-				
 				setInputValue(true);
 				
 				$("#ladMakeForm").submit();
-				
-				
-				
-				/* $.ajax({ 
-					type: "POST",
-					url: "/ezLadder/setLadder.do",
-					traditional: true,
-					dataType: "json",
-					async : false,
-					data: { 
-						'title': title,
-						'type': type,
-						'secretFlag': secretFlag,
-						'lineCnt': lineCnt,
-						'userId': userId,
-						'userName': userName,
-						'userName2': userName2,
-						'item': item,
-						'ladderOrder': ladderOrder
-					},
-					success: function(result) {
-						window.location.href = "/ezLadder/ladderMain.do?mode=all&currPage=1&searchSelect=&searchInput=";
-					}
-				}); */
 			} 
-			
-			
 
 		</script>
+		<style type="text/css">
+			.ladderType, .ladderSecret {
+				width: 50px;
+				height: 50px;
+				display: inline-block;
+			}
+			.icon {
+				border-radius: 30px;
+				cursor: pointer;
+				display: none;
+			}
+			.default {
+				/* display: inline; */
+				border: 2px solid #dddddd; 
+			}
+			.select {
+				/* display: none; */
+				border: 2px solid #0470e4; 
+			}
+			.typeOpbtn {
+				display: inline-block;
+				border: 1px solid #dddddd;
+				padding: 10px 15px;
+				border-radius: 5px;
+				cursor: pointer;
+				user-select: none;
+			}
+			.active {
+				display: inline;
+			}
+		</style>
 	</head>
 	<body class="mainbody">
 		<h1>사다리 게임</h1>
 		<form id="ladMakeForm" method="post" action="/ezLadder/setLadder.do" name="ladMakeForm">
-			<div class="fullwidth">
-				<table class="setTable">
-					<tr>
-						<td></td><td style="width: 5000px;"></td><td></td>
-					</tr>
-					<tr>
-						<td colspan="2" style="width: 98%;">
-							<div class="wrap left">
-								<div class="title floatL">
-									<div class="icondiv" id="ladderPreList"><img src ='/images/ezLadder/icon_preLadder.png' /></div>
-									<input type="text" class="input" name="title" id="title" style="height: 100%; width: 100%;" placeholder="제목" />
-								</div>
+			<table class="setTable">
+				<tr>
+					<td>
+						<div style="height: 50px; line-height: 50px; margin-bottom: 10px; position: relative;">
+							<div style="height: 40px; position: absolute; left: 0; right: 65px;">
+								<input type="text" class="input" name="title" id="title" style="height: 100%; width: 100%;" placeholder="<spring:message code="ezLadder.t019"/>" maxlength="166"/>
+								<div id="ladderPreList" style="top: 0;"><img src="/images/ezLadder/icon_preLadder.png"/></div>
 							</div>
-						</td>
-						<td>
-							<div class="wrap right">
-									<div class="icondiv floatR fullwidth" id="ladderSecret">
-										<img src="/images/ezLadder/icon_public.png" style="display: block; border: 2px solid #a9a9a9; border-radius: 30px;" _secretFlag="0"/>
-										<img src="/images/ezLadder/icon_private.png" style="display: none; border: 2px solid #a9a9a9; border-radius: 30px;" _secretFlag="1"/>
+							<div id="ladderSecret" style="position: absolute; right: 0;">
+								<img src="/images/ezLadder/icon_public.png" class="default icon" _flag="0"/>
+								<img src="/images/ezLadder/icon_private.png" class="select icon" _flag="1"/>
+							</div>
+							<input name="secretFlag" style="display: none;" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div style="height: 50px; margin-bottom: 10px;">
+							<div style="float: left; height: 40px; line-height: 50px;">
+								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px;" placeholder="참여자추가"/>
+							</div>
+							<div style="float: right;">
+									<div id="ladderTypeOption" style='display: inline-block; margin-right: 30px; height: 50px;'></div>
+									<div class="ladderType" _num="0">
+										<img src="/images/ezLadder/icon_bomb.png" class="default icon"/>
+										<img src="/images/ezLadder/icon_bombSelected.png" class="select icon"/>
 									</div>
-								<input name="secretFlag" style="display: none;" />
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<div class="wrap left">
-								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px;" placeholder="참여자추가" />
-							</div>
-						</td>
-						<td colspan="2">
-							<div class="wrap right">
-								<div id="ladderTypeOption" style='display:  inline-block; right: 265px; position:  absolute;'>
-								</div>
-								<div class="floatR" style="width: 232px;">
-									<div class="icondiv ladderType" num="0">
-										<img src="/images/ezLadder/icon_bomb.png" style="display: block; border: 2px solid #a9a9a9; border-radius: 30px;" _sel="n"/>
-										<img src="/images/ezLadder/icon_bombSelected.png" style="display: none; block; border: 2px solid #2568b3; border-radius: 30px;" _sel="y"/>
+									<div class="ladderType" _num="1">
+										<img src="/images/ezLadder/icon_money.png" class="default icon"/>
+										<img src="/images/ezLadder/icon_moneySelected.png" class="select icon"/>
 									</div>
-									<div class="icondiv ladderType" num="1">
-										<img src="/images/ezLadder/icon_money.png" style="display: block; border: 2px solid #a9a9a9; border-radius: 30px;" _sel="n"/>
-										<img src="/images/ezLadder/icon_moneySelected.png" style="display: none; block; border: 2px solid #2568b3; border-radius: 30px;" _sel="y"/>
+									<div class="ladderType" _num="2">
+										<img src="/images/ezLadder/icon_order.png" class="default icon"/>
+										<img src="/images/ezLadder/icon_orderSelected.png" class="select icon"/>
 									</div>
-									<div class="icondiv ladderType" num="2">
-										<img src="/images/ezLadder/icon_order.png" style="display: block; border: 2px solid #a9a9a9; border-radius: 30px;" _sel="n"/>
-										<img src="/images/ezLadder/icon_orderSelected.png" style="display: none; block; border: 2px solid #2568b3; border-radius: 30px;" _sel="y"/>
+									<div class="ladderType" _num="3">
+										<img src="/images/ezLadder/icon_handwork.png" class="default icon"/>
+										<img src="/images/ezLadder/icon_handworkSelected.png" class="select icon"/>
 									</div>
-									<div class="icondiv ladderType" num="3">
-										<img src="/images/ezLadder/icon_handwork.png" style="display: block; border: 2px solid #a9a9a9; border-radius: 30px;" _sel="n"/>
-										<img src="/images/ezLadder/icon_handworkSelected.png" style="display: none; block; border: 2px solid #2568b3; border-radius: 30px;" _sel="y"/>
-									</div>
-									<input name="type" style="display: none;" />
-								</div>
+								<input name="type" style="display: none;" />
+								<input name='bombnum' style="display: none;" />
 							</div>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3">
-							<div class="wrap left">
-								<div class="floatL icondiv" id="amount">0</div>
-								<div id="slider-range-min" style="width: 300px;"></div>
-								<input name="lineCnt" style="display: none;" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div style="height:50px; margin-bottom: 25px; line-height: 50px;">
+							<div style="height: 50px; width: 50px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 5px;">
+								<span id="amount">0</span>
 							</div>
-						</td>
-					</tr>
-					<%-- <tr>
-						<td colspan="4" style="height: 700px; padding: 10px 0px;">
-							<div class="wrap center" style="height: 100%; width: 100%;">
-								<div id="addAttendant" class="icondiv">add</div>
-								<div id="ladderLineBox" style="height: 100%; width: 100%; border: 1px solid gray">
-									<canvas id='ladderCanvas' width="0" height="650"></canvas>
-									<ul id="attendantList"></ul>
-									<ul id="itemList"></ul>
-								</div>
+							<div id="slider-range-min" style="width: 300px; top: 19px; left: 70px; margin: 0;"></div>
+							<input name="lineCnt" style="display: none;" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td style="position: relative; margin-top: 20px;">
+						<div id="addAttendant" class="icondiv">
+							<img src="/images/ezLadder/icon_addAttendant.png" style=" border: 2px solid #a9a9a9; border-radius: 30px;"/>
+						</div>
+						<div id="ladderLineBox" style="border: 1px solid #ddd;">
+							<div style="height: 140px;">
+								<ul id="attendantList"></ul>
 							</div>
-						</td>
-					</tr> --%>
-				</table>
-				<table class="setTable" style="position: relative;">
-					<tr>
-						<td>
-							<div id="addAttendant" class="icondiv">
-								<img src="/images/ezLadder/icon_addAttendant.png" style=" border: 2px solid #a9a9a9; border-radius: 30px;"/>
+							<div id="lineDiv" style="position: relative; z-index: -1;">
+								<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
+								<canvas id='ladderCanvas' width='0' height='800'></canvas>
 							</div>
-							<div id="ladderLineBox" style="border: 1px solid #ddd;">
-								<div style="height: 140px;">
-									<ul id="attendantList"></ul>
-								</div>
-								<div id="lineDiv" style="position: relative; z-index: -1;">
-									<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
-									<canvas id='ladderCanvas' width='0' height='800'></canvas>
-								</div>
-								<ul id="itemList" style="margin-top: 10px; height: 50px;"></ul>
-							</div>
-						</td>
-					</tr>
-				</table>
-				<div class="wrap center">
-					<div class="ladderBtn" id="makeLad" style="float: right;">사다리 게임 만들기</div>
-				</div>
+							<ul id="itemList" style="margin-top: 10px; height: 50px;"></ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="wrap center">
+				<div class="ladderBtn" id="makeLad" style="float: right;"><spring:message code="ezLadder.t018"/></div>
+			</div>
 				<!-- <table>
 					
 					<tr>
@@ -699,7 +678,6 @@
 						</td>
 					</tr>
 				</table> -->
-			</div>
 		</form>
 		<%-- <canvas id='ladderCanvas' width="500px" height="500px" style="border: 1px solid black"></canvas> --%>
 		
