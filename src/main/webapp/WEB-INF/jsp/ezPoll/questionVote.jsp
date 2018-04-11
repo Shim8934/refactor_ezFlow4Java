@@ -157,10 +157,18 @@
 						for (var i = 0; i < numberOptions; i++) {
 							var _optId = votesArr[i][0];
 							var graphId = "graph" + _optId;
-							var showVotes = "voterNumber_" + _optId;	
+							var showVotes = "voterNumber_" + _optId;
+							var showVotesObj = document.getElementById(showVotes);
 							var voteInfo = "voteInfo" + _optId;							
 							document.getElementById(graphId).style.display = "none";
-							document.getElementById(showVotes).style.display = "none";
+							
+							//투표 수가 있고 내가 투표한 항목일 경우
+							if(votesArr[i][1] > 0 && selectedList.indexOf(_optId) != -1){
+								showVotesObj.style.cssText = "display: block; color: "+ colors[i % 30] +"; font-weight: bold;";
+							}
+							
+							showVotesObj.innerHTML = "<img id='selectAnsImg_"+ _optId +"' class='selectAnsImg' src='/images/icon/check.gif'/>"
+							   					   + "<spring:message code = 'ezBoard.t47'/>";
 							document.getElementById(voteInfo).style.display = "none";
 						}
 					}					
@@ -329,8 +337,9 @@
 							if (!selectedFlag) {
 								var showVotes = document.getElementById("voterNumber_" + _optId);																	
 				   				showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";	
-			   					showVotes.style.color = colors[i % 30];
-								showVotes.style.display = "block";
+			   					/* showVotes.style.color = colors[i % 30];
+								showVotes.style.display = "block"; */
+								showVotes.style.cssText = "display: block; color:" + colors[i % 30] + ";";
 								
 								document.getElementById(graphId).style.display = "none";
 								//document.getElementById(voteInfo).style.display = "block";
@@ -541,7 +550,16 @@
 			        	if (mode == 1) {							
 			        		//In adding mode
 			        		var showVotes = "voterNumber_" + optId;
-			        		document.getElementById(showVotes).style.display = "none";				        		
+			        		var showVotesObj = document.getElementById(showVotes);
+			        		if("${question.resultFirst}" !== "1"){
+			        			$("#selectAnsImg_" + optId).css("display","block");
+			        			showVotesObj.innerHTML = "<img id='selectAnsImg_"+ optId +"' class='selectAnsImg' src='/images/icon/check.gif'/>"
+			        								   + "<spring:message code = 'ezBoard.t47'/>";
+			        			showVotesObj.style.fontWeight = "bold";
+			        		}
+			        		else{
+			        			showVotesObj.style.display = "none";
+			        		}
 			        		totalVotes = totalVotes + 1;
 			        		
 			        		if (user == curentUser) {
@@ -2681,7 +2699,7 @@
 					  
 				</div>
 				<div id="titleAndContent">				
-					<div id="title" class="questionTitle" style="width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
+					<div id="title" class="questionTitle" ><!--<font size="5"><c:out value='${question.title}'/></font>-->
 						<div class="baonkTest" title="<c:out value='${question.title}'/>"><c:out value='${question.title}'/></div>
 						<div style="height: 40px; float:left; display:none;">
 							<span id="status" style="font-weight: bold; color: #FFF;">
@@ -2702,58 +2720,58 @@
 								</span> 			
 							</c:if>
 						</div>			
+				  		<ul style="float:right; padding:0px; margin:9px 20px 0px 10px;">
+				  			<c:choose>
+								<c:when test="${question.multiSelect == 0}">
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : <spring:message code = 'ezEmail.lhm67'/>" >
+									</li>
+								</c:when>
+								<c:otherwise>
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : ${question.multiSelect}" >
+									</li>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${question.resultFirst == 1}">
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t258'/>" >
+									</li>
+								</c:when>
+								<c:otherwise>
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t256'/>" >
+									</li>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${question.secretVote == 1}">
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/anonymousVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t253'/>" >
+									</li>
+								</c:when>
+								<c:otherwise>
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
+									</li>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${question.isSelOnlyOnce == 1}">
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/selOnlyOnce_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.hdp01'/>" >
+									</li>
+								</c:when>
+								<c:otherwise>
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.hdp02'/>" >
+									</li>
+								</c:otherwise>
+							</c:choose>
+				  		</ul>
 					</div>
 					
-			  		<ul style="width:100%; float:left; padding:0px 0px 0px 6px; border-bottom:1px solid #eee">
-			  			<c:choose>
-							<c:when test="${question.multiSelect == 0}">
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : <spring:message code = 'ezEmail.lhm67'/>" >
-								</li>
-							</c:when>
-							<c:otherwise>
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : ${question.multiSelect}" >
-								</li>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${question.resultFirst == 1}">
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t258'/>" >
-								</li>
-							</c:when>
-							<c:otherwise>
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t256'/>" >
-								</li>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${question.secretVote == 1}">
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/anonymousVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t253'/>" >
-								</li>
-							</c:when>
-							<c:otherwise>
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
-								</li>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${question.isSelOnlyOnce == 1}">
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/selOnlyOnce_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.hdp01'/>" >
-								</li>
-							</c:when>
-							<c:otherwise>
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.hdp02'/>" >
-								</li>
-							</c:otherwise>
-						</c:choose>
-			  		</ul>
 					
 					<div class="pad1" style="vertical-align: top; padding-top:10px; width: 100%; border: none; display:inline-block; min-height: 150px;" id="messagetd">
 		               <iframe onload="resizeFrame()" id="message_test" style="border: none; overflow: hidden; width: 100%; background-color: #FFF;"></iframe>   	                                 
