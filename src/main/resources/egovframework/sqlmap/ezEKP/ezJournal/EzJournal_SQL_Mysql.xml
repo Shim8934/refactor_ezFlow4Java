@@ -685,6 +685,9 @@
 		<isNotEmpty property="journalTitle">
 			and j.journal_title like concat('%',#journalTitle#,'%')
 		</isNotEmpty>
+		<isNotEmpty property="journalText">
+			and j.journal_text like concat('%',#journalText#,'%')
+		</isNotEmpty>
 		<isNotEmpty property="formName">
 			and f.form_name like concat('%',#formName#,'%')
 		</isNotEmpty>

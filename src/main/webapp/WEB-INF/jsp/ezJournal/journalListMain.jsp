@@ -200,6 +200,7 @@
 				searchContent = document.getElementById("searchContent").value;
 				searchStartDate = document.getElementById("Sdatepicker").value;
 				searchEndDate = document.getElementById("Edatepicker").value;
+				currentPage = 1;
 				setJournalList();
 				BoardSearchOptionHidden();
 			}

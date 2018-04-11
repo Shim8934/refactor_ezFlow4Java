@@ -1751,9 +1751,6 @@ public class EzJournalController extends EgovFileMngUtil {
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t153") + userInfo.getDisplayName() + "</p>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154") + journalTitle + "</p>";
 				content += "<p>" + replyContent + "</p>";
-//				content += "<a href='#' onclick='window.open(\"/ezJournal/journalDetail.do?journalId=\""+journalId+", \"journalDetail\",\"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1\");return false;' target='_blank'>"+journalTitle+"</a>";
-//				content += "<p onclick='window.open(\'/ezJournal/journalDetail.do?journalId=\'"+journalId+", \'journalDetail\',\'width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1\');return false;' target='_blank'>"+journalTitle+"</p>";
-
 				
 				InternetAddress from = new InternetAddress(userInfo.getEmail());
 				from.setPersonal(userInfo.getDisplayName());
