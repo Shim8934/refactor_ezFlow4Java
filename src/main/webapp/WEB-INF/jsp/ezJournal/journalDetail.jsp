@@ -276,12 +276,6 @@
 	        	sizeOn();
 		    };
 		    window.onload = function (){
-// 		    	$('#message').contents().find('body').html('<div style="text-align: left;"><img onclick="parent.Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png"> <img onclick="parent.Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png"></div><div id="journalContent" style="width:100%;height:10px;display:inline-block;"></div>');
-// 		    	$('#message').contents().find('#journalContent').html('${journal.journalContent }');
-		    	
-// 		    	var $head = $("#message").contents().find("head");
-
-// 		    	$head.append('<style type="text/css">p{margin-top:0px; margin-bottom:0px;}</style>');
 		    	
 		    	if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
                     self.resizeTo(760, 800);

@@ -209,6 +209,9 @@
 	    	
 			// 선택된 수신자 화면에 뿌리기
 	    	function showReceiver() {
+				if (typeof selReceiver == "string") {
+					selReceiver = JSON.parse(selReceiver);
+				}
     			var strReceiver = "";
     			var strReceiverID = "";
     			var total = $(selReceiver).length;

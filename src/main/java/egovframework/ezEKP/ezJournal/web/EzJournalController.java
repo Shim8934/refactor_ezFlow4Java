@@ -1768,7 +1768,6 @@ public class EzJournalController extends EgovFileMngUtil {
 		logger.debug("sendJournalRecvMail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		String journalTitle = request.getParameter("journalTitle");
 		String recvIds = request.getParameter("recvIds");
 		String journalId = request.getParameter("journalId");

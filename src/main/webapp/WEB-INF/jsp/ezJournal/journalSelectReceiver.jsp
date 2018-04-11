@@ -340,7 +340,7 @@
 	        }
 	   		
 	   		function ok_Click() {
-	   			opener.selReceiver = receiverList;
+	   			opener.selReceiver = JSON.stringify(receiverList);
 	   			opener.showReceiver();
 	   			window.close();
 	   		}
