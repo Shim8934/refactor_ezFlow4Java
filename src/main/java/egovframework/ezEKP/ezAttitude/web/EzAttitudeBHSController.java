@@ -486,9 +486,7 @@ public class EzAttitudeBHSController {
 			JSONObject attitudeVO = new JSONObject();
 			if (status.equals("ok")) {
 				attitudeVO = (JSONObject) resultBody.get("data");
-				LOGGER.debug("attitudeVO1 : " + attitudeVO);
 				model.addAttribute("attitudeInfo", attitudeVO);
-				
 			}
 		} 
 		
