@@ -54,6 +54,7 @@ function SelectDept(opentype, CompleteFunction) {
         var OpenWin = window.open(url, "SelectDept_Cross", GetOpenWindowfeature(350, 360));
         try { OpenWin.focus(); } catch (e) { }
     }
+    selectdept_cross_dialogArguments[2] = true;
 }
 
 function SelectDept_Complete(rtn) {
