@@ -1298,7 +1298,7 @@ public class EzAttitudeAdminBOMController {
 			row.getCell(2).setCellStyle(bodyStyle);
 			row.createCell(3).setCellValue(vo.getTypeName());
 			row.getCell(3).setCellStyle(bodyStyle);
-			if (vo.getEndDate() != null || vo.getEndDate() != "") {
+			if (vo.getEndDate() != null && vo.getEndDate() != "") {
 				row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
 			} else {
 				row.createCell(4).setCellValue(vo.getStartDate());
@@ -1306,7 +1306,7 @@ public class EzAttitudeAdminBOMController {
 			row.getCell(4).setCellStyle(bodyStyle);
 			row.createCell(5).setCellValue(vo.getStartTime());
 			row.getCell(5).setCellStyle(bodyStyle);
-			if (vo.getEndTime() != null || vo.getEndTime() != "") {
+			if (vo.getEndTime() != null && vo.getEndTime() != "") {
 				row.createCell(6).setCellValue(vo.getEndTime());
 			} else {
 				row.createCell(6).setCellValue("");
@@ -1317,7 +1317,6 @@ public class EzAttitudeAdminBOMController {
 		
 		//날짜는 길면 짤리므로 자동으로 너비조정을 해준다
 		sheet.autoSizeColumn(4);
-		
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
