@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/js/jsTree/dist/themes/default/style.css" />
     <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jsTree/dist/jstree.js"></script>
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<!--     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script> -->
     
     <script>
         var lang = "${userinfo.lang}";
@@ -38,7 +38,7 @@
 	    var userId = "<c:out value='${userId}'/>";
 		var userName = "<c:out value='${userName}'/>";
 		var folderId="";
-		var folderType = "";
+		var folderType = "${folderType}";
         if ("${isFolderManager}" == "1") {
         	isFolderManager = true;
         }
@@ -50,7 +50,9 @@
                 return true;
         };
         function window_onload() {
-        	folderList('C');
+    		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
+        	folderList(folderType);
+
             try {
                 ReturnFunction = parent.mail_movecopy_cross_dialogArguments[1];
                 CancelFunction = parent.mail_movecopy_cross_dialogArguments[2];
@@ -241,9 +243,9 @@
 	
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('C');"> <span><spring:message code='ezWebFolder.t233'/></span>
-			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('D');"> <span><spring:message code='ezWebFolder.t234'/></span>
-			<input name="treeType" id="radio3" type="radio" value="user"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('U');"> <span><spring:message code='ezWebFolder.t235'/></span>
+			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('C');"> <span><spring:message code='ezWebFolder.t233'/></span>
+			<input name="treeType" id="radio2" type="radio" value="D"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('D');"> <span><spring:message code='ezWebFolder.t234'/></span>
+			<input name="treeType" id="radio3" type="radio" value="U"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('U');"> <span><spring:message code='ezWebFolder.t235'/></span>
 		</div>
 	</div>
 	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto;" id="folderTree"></div>
