@@ -1,5 +1,4 @@
 ﻿(function(e) {
-	var xxxx = "";
 	e.fn.ddslick = function(l) {
 		if (c[l]) {
 			return c[l].apply(this, Array.prototype.slice.call(arguments, 1))
@@ -14,8 +13,9 @@
 	var c = {}, d = {
 		data : [],
 		keepJSONItemsOnTop : false,
-		width : 150,
+		width : 120,
 		height : null,
+		background : "#fff",
 		selectText : "",
 		defaultSelectedIndex : null,
 		truncateDescription : true,
@@ -25,7 +25,7 @@
 		embedCSS : true,
 		onSelected : function() {
 		}
-	}, i = '<div class="dd-select"><input class="dd-selected-value" type="hidden" /><a class="dd-selected"></a><span class="dd-pointer dd-pointer-down"></span></div>', a = '<ul class="dd-options"></ul>', b = '<style id="css-ddslick" type="text/css">.dd-select{ border-radius:2px; border:solid 1px #ccc; position:relative; cursor:pointer;}.dd-desc { color:black; display:block; overflow: hidden; font-weight:normal; line-height: 1.4em;font-size:12px; }.dd-selected{ overflow:hidden; display:block; padding: 5px; font-weight:bold;}.dd-pointer{ width:0; height:0; position:absolute; right:10px; top:50%; margin-top:-3px;}.dd-pointer-down{ border:solid 5px transparent; border-top:solid 5px #000; }.dd-pointer-up{border:solid 5px transparent !important; border-bottom:solid 5px #000 !important; margin-top:-8px;}.dd-options{ border:solid 1px #ccc; border-top:none; list-style:none; box-shadow:0px 1px 5px #ddd; display:inline-block; position:absolute; z-index:2000; margin:0; padding:0;background:#fff; overflow:auto;}.dd-option{ padding:5px; display:block; border-bottom:solid 1px #ddd; overflow:hidden; text-decoration:none; color:#333; cursor:pointer;-webkit-transition: all 0.25s ease-in-out; -moz-transition: all 0.25s ease-in-out;-o-transition: all 0.25s ease-in-out;-ms-transition: all 0.25s ease-in-out; }.dd-options > li:last-child > .dd-option{ border-bottom:none;}.dd-option:hover{ background:#f3f3f3; color:#000;}.dd-selected-description-truncated { text-overflow: ellipsis; white-space:nowrap; display:block;}.dd-option-selected { background:#f6f6f6; }.dd-option-image, .dd-selected-image { vertical-align:middle; float:left; margin-right:5px; max-width:25px;}.dd-selected-text { color: #393939; cursor: pointer; line-height: 30px;}.dd-image-right { float:right; margin-right:15px; margin-left:5px;}.dd-container{ position:relative;}​ .dd-selected-text { font-weight:bold}​</style>';
+	}, i = '<div class="dd-select"><input class="dd-selected-value" type="hidden" /><a class="dd-selected"></a><span class="dd-pointer dd-pointer-down"></span></div>', a = '<ul class="dd-options"></ul>', b = '<style id="css-ddslick" type="text/css">.dd-select{ border-radius:2px; border:solid 1px #ccc; position:relative; cursor:pointer; background-color:white;}.dd-desc { color:#aaa; display:block; overflow: hidden; font-weight:normal; line-height: 1.4em; }.dd-selected{ overflow:hidden; display:block; padding: 0px 10px; font-weight:bold;}.dd-pointer{ width:0; height:0; position:absolute; right:10px; top:50%; margin-top:-3px;}.dd-pointer-down{ border:solid 5px transparent; border-top:solid 5px #000; }.dd-pointer-up{border:solid 5px transparent !important; border-bottom:solid 5px #000 !important; margin-top:-8px;}.dd-options{ border:solid 1px #ccc; border-top:none; list-style:none; box-shadow:0px 1px 5px #ddd; display:none; position:absolute; z-index:2000; margin:0; padding:0;background:#fff; overflow:auto;}.dd-option{ padding:4px 10px; display:block; border-bottom:solid 1px #ddd; overflow:hidden; text-decoration:none; color:#333; cursor:pointer;-webkit-transition: all 0.25s ease-in-out; -moz-transition: all 0.25s ease-in-out;-o-transition: all 0.25s ease-in-out;-ms-transition: all 0.25s ease-in-out; }.dd-options > li:last-child > .dd-option{ border-bottom:none;}.dd-option:hover{ background:#f3f3f3; color:#000;}.dd-selected-description-truncated { text-overflow: ellipsis; white-space:nowrap; display:none;}.dd-option-selected { background-color:white; }.dd-option-image, .dd-selected-image { vertical-align:middle; float:left; margin-right:6px; max-width:22px;}.dd-selected-text { color: #393939; cursor: pointer; line-height: 27px;}.dd-image-right { float:right; margin-right:15px; margin-left:5px;}.dd-container{ position:relative;}​ .dd-selected-text { font-weight:bold}​</style>';
 	c.init = function(l) {
 		var l = e.extend({}, d, l);
 		if (e("#css-ddslick").length <= 0 && l.embedCSS) {
@@ -73,34 +73,36 @@
 								overflow : "auto"
 							})
 						}
-						e.each(
-							l.data,
-							function(v, w) {
-								if (w.selected) {
-									l.defaultSelectedIndex = v
-								}
-								u.append('<li><a class="dd-option" >'
-									+ (w.value ? ' <input class="dd-option-value" type="hidden" value="'
-											+ w.value
-											+ '" />'
-											: "")
-									+ (w.imageSrc ? ' <img class="dd-option-image'
-											+ (l.imagePosition == "right" ? " dd-image-right"
-													: "")
-											+ '" src="'
-											+ w.imageSrc
-											+ '" />'
-											: "")
-									+ (w.text ? ' <label class="dd-option-text">'
-											+ w.text
-											+ "</label>"
-											: "")
-									+ (w.description ? ' <small class="dd-option-description dd-desc">'
-											+ w.description
-											+ "</small>"
-											: "")
-									+ "</a></li>")
-							});
+						e
+								.each(
+										l.data,
+										function(v, w) {
+											if (w.selected) {
+												l.defaultSelectedIndex = v
+											}
+											u
+													.append('<li><a class="dd-option">'
+															+ (w.value ? ' <input class="dd-option-value" type="hidden" value="'
+																	+ w.value
+																	+ '" />'
+																	: "")
+															+ (w.imageSrc ? ' <img class="dd-option-image'
+																	+ (l.imagePosition == "right" ? " dd-image-right"
+																			: "")
+																	+ '" src="'
+																	+ w.imageSrc
+																	+ '" />'
+																	: "")
+															+ (w.text ? ' <label class="dd-option-text">'
+																	+ w.text
+																	+ "</label>"
+																	: "")
+															+ (w.description ? ' <small class="dd-option-description dd-desc">'
+																	+ w.description
+																	+ "</small>"
+																	: "")
+															+ "</a></li>")
+										});
 						var t = {
 							settings : l,
 							original : m,
@@ -122,7 +124,6 @@
 							f(p)
 						});
 						p.find(".dd-option").on("click.ddslick", function() {
-//							var x = $('#inputValue').val();
 							j(p, e(this).closest("li").index())
 						});
 						if (l.clickOffToClose) {
@@ -131,13 +132,13 @@
 								v.stopPropagation()
 							});
 							e("body").on(
-								"click",
-								function() {
-									e(".dd-click-off-close").slideUp(50)
-										.siblings(".dd-select").find(
-												".dd-pointer")
-										.removeClass("dd-pointer-up")
-								})
+									"click",
+									function() {
+										e(".dd-click-off-close").slideUp(50)
+												.siblings(".dd-select").find(
+														".dd-pointer")
+												.removeClass("dd-pointer-up")
+									})
 						}
 					}
 				})
@@ -185,7 +186,8 @@
 		u.selectedItem = m;
 		u.selectedData = t;
 		if (o.showSelectedHTML) {
-			r.html((t.imageSrc ? '<img class="dd-selected-image'
+			r
+					.html((t.imageSrc ? '<img class="dd-selected-image'
 							+ (o.imagePosition == "right" ? " dd-image-right"
 									: "") + '" src="' + t.imageSrc + '" />'
 							: "")
@@ -207,7 +209,6 @@
 		k(q);
 		g(q);
 		if (typeof o.onSelected == "function") {
-			changeValue(t.value);
 			o.onSelected.call(this, u)
 		}
 	}

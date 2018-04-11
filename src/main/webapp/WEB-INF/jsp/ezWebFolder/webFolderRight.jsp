@@ -12,20 +12,16 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 <!-- 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script> -->
-	<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+<!-- 	<link rel="stylesheet" href="/css/Tab.css" type="text/css"> -->
 	<!-- date Picker -->
 	
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-	<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-	<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"                   ></script>
 	<script type="text/javascript" src="/js/ezWebFolder/bnk.js"                         ></script>
 	
 	<!-- time picker-->
-	<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
     <script type="text/javascript">
@@ -82,7 +78,8 @@
 			$('#idSelect').ddslick({
 				onSelected: function(selectedElmt){
 					//callback function: do something with selectedData;
-					var test = document.getElementById("idSelect").value = selectedElmt.selectedData["value"];
+					document.getElementById("idSelect").value = selectedElmt.selectedData["value"];
+					changeValue(document.getElementById("idSelect").value);
 				}
 			});
 			
@@ -713,13 +710,13 @@
 			<li id="right" style="float:right;"><span><spring:message code='ezWebFolder.t215'/></span><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
 			<li id="right" style="float:right;">
 				<select class="select" id="idSelect" onchange="idChange(this.value);" style="width:100px; display:none;">
-					<option value="all" data-imagesrc="/images/webfolder/allTypes.png" data-description="<spring:message code='ezWebFolder.t191'/>" selected></option><!-- 전체 -->
-					<option value="document" data-imagesrc="/images/webfolder/msWord.png"   data-description="<spring:message code='ezWebFolder.t192'/>"></option><!-- 문서 -->
-					<option value="music" data-imagesrc="/images/webfolder/mp3.png"      data-description="<spring:message code='ezWebFolder.t193'/>"></option><!-- 음악 -->
-					<option value="video" data-imagesrc="/images/webfolder/mp4.png"      data-description="<spring:message code='ezWebFolder.t194'/>"></option><!-- 영상 -->
-					<option value="image" data-imagesrc="/images/webfolder/jpg.png"      data-description="<spring:message code='ezWebFolder.t195'/>"></option><!-- 그림 -->
-					<option value="folder" data-imagesrc="/images/webfolder/fldr.png"     data-description="<spring:message code='ezWebFolder.t213'/>"></option><!-- 폴더 -->
-					<option value="zip" data-imagesrc="/images/webfolder/zip.png"      data-description="<spring:message code='ezWebFolder.t196'/>"></option><!-- 압축파일 -->
+					<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
+					<option value="document" data-imagesrc="/images/webfolder/msWord.png"       ><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
+					<option value="music" data-imagesrc="/images/webfolder/mp3.png"      ><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
+					<option value="video" data-imagesrc="/images/webfolder/mp4.png"      ><spring:message code='ezWebFolder.t194'/></option><!-- 영상 -->
+					<option value="image" data-imagesrc="/images/webfolder/jpg.png"      ><spring:message code='ezWebFolder.t195'/></option><!-- 그림 -->
+					<option value="folder" data-imagesrc="/images/webfolder/fldr.png"    ><spring:message code='ezWebFolder.t213'/></option><!-- 폴더 -->
+					<option value="zip" data-imagesrc="/images/webfolder/zip.png"        ><spring:message code='ezWebFolder.t196'/></option><!-- 압축파일 -->
 				</select>
 			
 			</li>
@@ -840,7 +837,7 @@
 	<div id="tblPageRayer"></div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-		<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
+		<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
 </body>
 </html>
