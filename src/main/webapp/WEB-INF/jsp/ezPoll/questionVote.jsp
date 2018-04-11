@@ -929,8 +929,10 @@
 		    }
 		    
 		    function finishVote() {	    	
-		    	var tenantId = "<c:out value='${question.tenantId}'/>";
-		    	stompClient.send("/app/finish", {}, JSON.stringify({'question': qstId, 'tenant': tenantId}));		    	
+		    	if(window.confirm("<spring:message code = 'ezPoll.hdp06'/>")){
+			    	var tenantId = "<c:out value='${question.tenantId}'/>";
+			    	stompClient.send("/app/finish", {}, JSON.stringify({'question': qstId, 'tenant': tenantId}));		    	
+		    	}
 		    }
 		    
 		    function menuQst_DetailUserInfo(pUserID) {
@@ -2720,7 +2722,7 @@
 								</span> 			
 							</c:if>
 						</div>			
-				  		<ul style="float:right; padding:0px; margin:9px 20px 0px 10px;">
+				  		<ul style="float:right; padding:0px; margin:9px 9px 0px 10px;">
 				  			<c:choose>
 								<c:when test="${question.multiSelect == 0}">
 									<li class="voteIconImg_li_info icon">
