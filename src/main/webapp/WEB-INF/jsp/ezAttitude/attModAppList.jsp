@@ -355,6 +355,7 @@
 		    obj.type = type;
 		    obj.endDate = endDate;
 		    obj.excelReq = "true";
+		    obj.adminFlag = adminFlag;
 			
 		    $.ajax({
 				type : 'get',

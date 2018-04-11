@@ -558,7 +558,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		if (adminFlag == null) {
 			adminFlag = "false";
 		}
-		
+		LOGGER.debug("##############################################################adminFlag : " + adminFlag);
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
