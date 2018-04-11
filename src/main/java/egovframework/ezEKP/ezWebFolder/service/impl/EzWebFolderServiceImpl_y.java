@@ -150,7 +150,9 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("tenantId", tenantId);
 		map.put("primary", primary);
 		
-		
+		LOGGER.debug("userId : " + userId + " deptId : " + deptId + " comId" + comId + " folderId : "  + folderId + 
+				" folderType : " + folderType + " tenantId :  " + tenantId + " primary : " + primary
+				);
 		List<Map<String, Object>> folderList = new ArrayList< Map<String,Object>>();
 
 		if ( folderType.equals("C")) {
@@ -175,15 +177,15 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 
 	@Override
 	public FolderVO getFolderDetail(String folderUppId,  String userId,	int tenantId, String comId) throws Exception {
-		FolderVO uppFolder  = new FolderVO() ;
+		FolderVO detailFolder  = new FolderVO() ;
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderUppId);
 		map.put("tenantId", tenantId);
 		map.put("comId", comId);
 		map.put("userId", userId);
-		uppFolder = ezWebFolderDAO_y.getFolderDetail(map);
+		detailFolder = ezWebFolderDAO_y.getFolderDetail(map);
 		
-		return uppFolder;
+		return detailFolder;
 	}
 
 

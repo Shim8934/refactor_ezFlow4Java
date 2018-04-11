@@ -20,6 +20,7 @@
 // 		    var userId = "<c:out value='${userId}'/>";
 // 			var userName = "<c:out value='${userName}'/>";
 			var folderId = "";
+			var folderUpper = "";
 			var folderType = null;
 	    	var $element ;
 			
@@ -53,6 +54,7 @@
 					dataType: "JSON",
 					success : function (data) {
 						folderId = data.data[0]["id"];
+// 						upperId = data.data[0]["parent"];
 						var firstNode = "#" + folderId;
 						
 						$($element).on('changed.jstree', function (e, data) {

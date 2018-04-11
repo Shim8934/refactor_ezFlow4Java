@@ -54,6 +54,7 @@
 		var searchCreateName = "";
 		var searchStartDate = "";
 		var searchEndDate = "";
+		var folderUpp = "";
 		
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
@@ -69,6 +70,7 @@
 		
 		// fileList 화면 
 		window.onload = function () {
+			$('#upload').css('display','none');
 			$('#idSelect').ddslick({
 				onSelected: function(selectedElmt){
 					//callback function: do something with selectedData;
@@ -128,6 +130,11 @@
 					filelist = result.fileList;
 					folderPath = result.folderPath;
 					originalPath = result.originalPath;
+					folderUpp = result.folderUpp;
+					if (folderUpp != 'root') {
+						$('#upload').css('display','inline');
+					}
+					
 // 					$("#originalPath").text(originalPath); 
 					$('#tblFileList tr td').parent().remove();
 					renderData(filelist);
@@ -240,7 +247,7 @@
 					inputElmt.setAttribute("type", "checkbox");
 					inputElmt.setAttribute("value", result[i]["fileId"]);
 					inputElmt.setAttribute("class", "checkBnk");			
-					inputElmt.onchange = function(e){getChecked(this, e);};
+					inputElmt.onclick = function(e){getChecked(this, e);};
 					tdElmt1.appendChild(inputElmt);
 					
 					var faImgElmt = document.createElement("img");
@@ -661,6 +668,7 @@
        function changeCount(value) {
     	   blockSize = value;
     	   currentPage = 1;
+    	   pStart = 0;
     	   refreshView();
        }
        
@@ -686,13 +694,13 @@
 	<div id="mainmenu2">
 		<ul>
 			<li id=""><a onClick="fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-			<li id=""><a onClick="fileUpload()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+			<li id="upload"><a onClick="fileUpload()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
 			<li id=""><a onClick="fileDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
 			<li id=""><a onClick="fileRename()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 			<li id=""><a onClick="fileMove()"     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
 			<li id=""><img src="/images/i_bar.gif"></li>
-			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t271'/></span></a></li>
-			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li>
+			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t281'/></span></a></li>
+<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
 			<li id=""><img src="/images/i_bar.gif"></li>
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
 			<li id=""><img src="/images/i_bar.gif"></li>
