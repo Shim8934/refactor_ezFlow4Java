@@ -545,15 +545,14 @@
 	                    return;
 	
 	                if (pSuSinFlag == "Y" && !btnReceivLineEnable) {
-	                    btnApprovalInfo(2);
-	                }
-	
-	                if (pSuSinFlag == "Y" && !btnReceivLineEnable) {
 	                    var pAlertContent = "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
-	                    OpenAlertUI(pAlertContent);
+	                    if (OpenInformationUI(pAlertContent)) {
+	                    	btnApprovalInfo(2);
+	                    }
 	                    return;
 	                }
 	
+	                
 	                if (cabinetID == "")
 	                    btnApprovalInfo(3);
 	                
