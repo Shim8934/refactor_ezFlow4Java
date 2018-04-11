@@ -253,11 +253,6 @@
 				ISUSE = #isuse#
 			]]>
 			</isNotEmpty>
-			<isNotEmpty prepend="AND" property="isAdmin">
-			<![CDATA[
-  				PARENT_ID = 'A05' 
- 			]]> 
-			</isNotEmpty>
 	</select>
 	
 	<update id="ezAttitudeAdminDAO.updateAttitudeTypeConfig" parameterClass="Map">
@@ -544,10 +539,12 @@
 			ORDER BY $order$
 		]]>
 		</isNotEmpty>
+		<isNotEmpty prepend="" property="limit">
 		<![CDATA[
 			LIMIT 
 				#limit#, #listSize# 
 		]]>
+		</isNotEmpty>
 	</select>
 	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
 		<![CDATA[

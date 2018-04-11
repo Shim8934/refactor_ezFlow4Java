@@ -1,17 +1,28 @@
 package egovframework.ezEKP.ezAttitude.web;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -39,6 +50,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.google.gson.Gson;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -1150,5 +1162,191 @@ public class EzAttitudeAdminBOMController {
 		}
 		return "admin/ezAttitude/searchAttitudeCheck";
 	}
+	
+	/**
+	 * 근태조회 엑셀 출력
+	 * @param loginCookie
+	 * @param response
+	 * @param request
+	 * @param locale
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/excelFileExport.do")
+	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request, Locale locale) throws Exception{
+		LOGGER.debug("excelFileExport started."); 
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie); 
+		
+		String companyId = request.getParameter("companyId");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
+		String typeId = request.getParameter("typeId");
+		String userIdList = request.getParameter("userIdList");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		String userId = userInfo.getId();
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		LOGGER.debug(companyId);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; // 부서근태조회는 따로 빼두는것이 좋지 않을까
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
+				.queryParam("typeId", typeId)
+				.queryParam("userIdList", userIdList)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate)
+				.queryParam("offsetMin", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject data = new JSONObject();
+		List<AdminAttitudeVO> attitudeList = new ArrayList<AdminAttitudeVO>();
+		if(status.equals("ok")){
+			data = (JSONObject) resultBody.get("data");
+			
+			attitudeList = (List<AdminAttitudeVO>) data.get("list");
+		}
+		
+	/////////////////////////////////////////////////////////////////
+		 
+		String realPath = commonUtil.getRealPath(request); 
+		String pDirPath = commonUtil.getUploadPath("upload_attitude.TEMPUPLOAD", userInfo.getTenantId()); 
+		pDirPath = realPath + pDirPath; 
+		
+		String fileName = UUID.randomUUID().toString() + ".xlsx"; 
+		LOGGER.debug("fileName=" + fileName); 
+		 
+		File tempFile = new File(pDirPath); 
+		 
+		if (!tempFile.exists()) { 
+			tempFile.mkdirs(); 
+		} 
+		 
+		tempFile = new File(pDirPath + commonUtil.separator + fileName); 
+		 
+		if (tempFile.exists()) { 
+			tempFile.delete(); 
+		} 
+		
+		LOGGER.debug("attitudeList=" + attitudeList.size()); 
+		
+		/** 엑셀 만들기 */
+		HSSFWorkbook workbook = null; 
+		FileOutputStream fos = null; 
+		 
+		/*	
+		try { 
+			workbook = new HSSFWorkbook(); 
+			
+			HSSFCellStyle headerStyle= workbook.createCellStyle();
+		    headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		    headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		    headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		    headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		    headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		    headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		    
+		    HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		    bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		    bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		    bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		    bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			
+			HSSFSheet sheet = workbook.createSheet("근태");
+			Row row = sheet.createRow(0);
+			
+			row.createCell(0).setCellValue("이름");
+			row.createCell(0).setCellStyle(headerStyle);
+			row.createCell(1).setCellValue("직급");
+			row.createCell(1).setCellStyle(headerStyle);
+			row.createCell(2).setCellValue("부서");
+			row.createCell(2).setCellStyle(headerStyle);
+			row.createCell(3).setCellValue("구분");
+			row.createCell(3).setCellStyle(headerStyle);
+			row.createCell(4).setCellValue("날짜");
+			row.createCell(4).setCellStyle(headerStyle);
+			row.createCell(5).setCellValue("시작시간");
+			row.createCell(5).setCellStyle(headerStyle);
+			row.createCell(6).setCellValue("종료시간");
+			row.createCell(6).setCellStyle(headerStyle);
+			
+			for (int i = 0 ; i < attitudeList.size(); i++) { 
+				AdminAttitudeVO vo = attitudeList.get(i);
+				row = sheet.createRow(i + 1);
+				
+				row.createCell(0).setCellValue(vo.getUserName());
+				row.createCell(0).setCellStyle(bodyStyle);
+				row.createCell(1).setCellValue(vo.getUserTitle());
+				row.createCell(1).setCellStyle(bodyStyle);
+				row.createCell(2).setCellValue(vo.getDeptName());
+				row.createCell(2).setCellStyle(bodyStyle);
+				row.createCell(3).setCellValue(vo.getTypeName());
+				row.createCell(3).setCellStyle(bodyStyle);
+				if (vo.getEndDate() != null || vo.getEndDate() != "") {
+					row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
+				} else {
+					row.createCell(4).setCellValue(vo.getStartDate());
+				}
+				row.createCell(4).setCellStyle(bodyStyle);
+				row.createCell(5).setCellValue(vo.getStartTime());
+				row.createCell(5).setCellStyle(bodyStyle);
+				if (vo.getEndTime() != null || vo.getEndTime() != "") {
+					row.createCell(6).setCellValue(vo.getEndTime());
+				} else {
+					row.createCell(6).setCellValue("");
+				}
+				row.createCell(6).setCellStyle(bodyStyle);
+			}
+			 
+			fos = new FileOutputStream(pDirPath + commonUtil.separator + fileName); 
+			workbook.write(fos); 
+ 
+			downFile(request, response, pDirPath + commonUtil.separator + fileName, egovMessageSource.getMessage("ezOrgan.jyh03", locale) + ".xlsx"); 
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (workbook != null) {
+				try { workbook.close(); } catch(Exception e) {}
+			}
+			
+			if (fos != null) {
+				try { fos.close(); } catch(Exception e) {}
+			}
+		}
+		
+		//다운로드 완료 후 파일 삭제 
+		if (tempFile.exists()) {
+			tempFile.delete();
+			LOGGER.debug("file deleted. fileName=" + fileName);
+		}
+		
+		LOGGER.debug("excelFileExport ended.");
+	 */
+	}	
 
 }

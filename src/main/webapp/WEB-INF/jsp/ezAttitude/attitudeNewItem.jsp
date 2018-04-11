@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>근태작성!!!!!!!!!!!!!</title>
+		<title>근태작성</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -186,26 +186,28 @@
 						break;
 				}
 				
-				alert(startDate + "\n" + endDate);
-				
+				save_attitude();
 			}
 			
 			//저장
 			function save_attitude() {
 				$.ajax({
 		        	type : "POST",
-		        	url : "/ezAttitude/saveAttitude.do",
+		        	url : "/ezAttitude/attitudeSave.do",
 		        	async : false,
 		        	data : {
-		        		selectType : selectType,
-		        		writerName : $("#writerName").text(),
+		        		typeId : selectType,
 		        		region : $("input[name=region]").val(),
 		        		mobile : $("input[name=mobile]").val(),
-		        		bizsub : $("input[name=bizsub]").val(),
-		        		dateType : $("#periodblock").attr("datetype")
+		        		bizSub : $("input[name=bizsub]").val(),
+		        		dateType : $("#periodblock").attr("datetype"),
+		        		startDate : startDate,
+		        		endDate : endDate
 		        	},
 		        	success : function (result) {
-		        		
+		        		alert("근태가 저장되었습니다.");
+		        		window.opener.getAttitudeMainList();
+		        		window.close();
 		        	}
 		        });
 			}
