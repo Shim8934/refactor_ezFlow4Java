@@ -274,14 +274,9 @@ function CalendarView(pTagetID) {
         oTable.setAttribute("cellspacing", "0");
         oTable.setAttribute("border", "0");
         oTable.setAttribute("width", "100%");
-        if (typeCal == 0){
+        oTable.style.minHeight = "670px";
+        if (typeCal == 0)
             oTable.className = "calendar_month";
-            //ie에서의 일정관리 하단높이 조정
-            var agent = navigator.userAgent.toLowerCase(); 
-			if (!CrossYN() || agent.search( "trident" ) > -1 ) {
-				oTable.style.minHeight = "670px";
-			}
-        }
         else if (typeCal == 1)
             oTable.className = "calendar_week";
         else if (typeCal == 2)

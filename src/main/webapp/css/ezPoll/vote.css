@@ -30,7 +30,7 @@
 
 
 .vote_listTd .title01{/*height:30px;*/ line-height:28px; font-size:16px; color:#e04343;}
-.vote_listTd .graph01{background:#efa1a1; border:none;}
+.vote_listTd .graph01{background:#efa1a1; border:none; border-radius:4px;}
 
 ._imageTag{height: 20px; width: 20px; display: block; vertical-align: middle; margin: 0 auto; cursor: pointer}
 
@@ -123,6 +123,6 @@
 .imgPopup{width: auto; height: auto; position: relative; float: left; max-width: 400px; max-height: 400px;}
 .imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 50px;}
 .imgPopupBoxOff, .imgPopupOff{display: none;}
-.thumbnail{width:40px; display:block; height: 40px; vertical-align: middle; margin: 0 auto;}
+.thumbnail{width:40px; display:block; height: 40px; vertical-align: middle; margin: 0 auto; border:1px dotted #666}
 .imgNotAttached{vertical-align: middle; margin: 0px auto; display: block;}
 .vote_listTd._imgOption{width:54px; border:1px solid #DDD; background:white;}
