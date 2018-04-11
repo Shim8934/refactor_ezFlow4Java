@@ -42,24 +42,32 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private EzAttitudeDAO ezAttitudeDAO;
 
 	@Override
-	public Object getAttitudeInfo(String userId, String date, String typeId,
-			int tenantId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, int tenantId) throws Exception {
+		LOGGER.debug("getAttitudeInfo started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("attitudeId", attitudeId);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
+		map.put("tenantId", tenantId);
+		
+		AttitudeVO attitudeVO = ezAttitudeDAO.getAttitudeInfo(map);
+		LOGGER.debug("getAttitudeInfo ended");
+		return attitudeVO;
 	}
 
 	@Override
 	public void insertAttitude(String writerId, String deptId, String startDate,
 			String endDate, String region, String mobile, String bizsub, String content,
-			String ip, String typeId, String dateType, String companyId, int tenantId) throws Exception {
+			String ip, String typeId, String dateType, String offset, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("insertAttitude started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		boolean isDefaultAtti = false;
 		map.put("writerId", writerId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		if (typeId.equals("A01") || typeId.equals("A02")) {
+		if (typeId.equals("A01") || typeId.equals("A03")) {
 			startDate = commonUtil.getTodayUTCTime("");
 			
 			if (typeId.equals("A01")) {
@@ -79,14 +87,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				Date userInTime = f.parse(compareDate);
 				
 				if (userInTime.after(userConfTime)) { //지각인 경우
-					typeId = "A03";
+					typeId = "A02";
 				}
-				
 			}
+			
+			isDefaultAtti = true;
 		}
 		
 		map.put("deptId", deptId);
-		map.put("startDate",  startDate);
+		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("region", region);
 		map.put("mobile", mobile);
@@ -94,6 +103,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("content", content);
 		map.put("ipAddress", ip);
 		map.put("typeId", typeId);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
+		map.put("isDefaultAtti", isDefaultAtti); // 출근, 퇴근과 다른 기타 근태의 insert쿼리를 다르게 하기 위해 적용
 		map.put("dateType", dateType);
 		
 		ezAttitudeDAO.insertAttitude(map);

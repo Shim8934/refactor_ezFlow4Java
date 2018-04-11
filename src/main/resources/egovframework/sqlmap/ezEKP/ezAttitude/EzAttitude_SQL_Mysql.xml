@@ -36,17 +36,17 @@
 		<result  property="writerId" 			column="WRITER_ID"				columnIndex="4"/>
 		<result  property="deptId" 				column="DEPT_ID"				columnIndex="5"/>
 		<result  property="startDate" 			column="START_DATE"				columnIndex="6"/>
-		<result  property="endDate" 			column="END_DATE"				columnIndex="8"/>
-		<result  property="modAppl" 			column="MODAPPL"				columnIndex="10"/>
-		<result  property="region" 				column="REGION"					columnIndex="11"/>
-		<result  property="mobile" 				column="MOBILE"					columnIndex="12"/>
-		<result  property="bizSub" 				column="BIZSUB"					columnIndex="13"/>
-		<result  property="content" 			column="CONTENT"				columnIndex="14"/>
-		<result  property="ip" 					column="IP"						columnIndex="15"/>
-		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="16"/>
-		<result  property="typeId" 				column="TYPE_ID"				columnIndex="17"/>
-		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="18"/>
-		<result  property="imgPath"				column="IMG_PATH"				columnIndex="19"/>
+		<result  property="endDate" 			column="END_DATE"				columnIndex="7"/>
+		<result  property="modAppl" 			column="MODAPPL"				columnIndex="8"/>
+		<result  property="region" 				column="REGION"					columnIndex="9"/>
+		<result  property="mobile" 				column="MOBILE"					columnIndex="10"/>
+		<result  property="bizSub" 				column="BIZSUB"					columnIndex="11"/>
+		<result  property="content" 			column="CONTENT"				columnIndex="12"/>
+		<result  property="ip" 					column="IP"						columnIndex="13"/>
+		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="14"/>
+		<result  property="typeId" 				column="TYPE_ID"				columnIndex="15"/>
+		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
+		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -87,6 +87,27 @@
 		<result property="formHtml"			column="FORM_HTML"		columnIndex="2"/>
 	</resultMap>
 	
+	<resultMap id="attitudeInfo" class="AttitudeVO">
+		<result  property="attitudeId" 			column="ATTITUDE_ID"			columnIndex="1"/>
+		<result  property="companyId" 			column="COMPANY_ID"				columnIndex="2"/>
+		<result  property="tenantId" 			column="TENANT_ID"				columnIndex="3"/>
+		<result  property="writerId" 			column="WRITER_ID"				columnIndex="4"/>
+		<result  property="deptId" 				column="DEPT_ID"				columnIndex="5"/>
+		<result  property="startDate" 			column="START_DATE"				columnIndex="6"/>
+		<result  property="endDate" 			column="END_DATE"				columnIndex="7"/>
+		<result  property="modAppl" 			column="MODAPPL"				columnIndex="8"/>
+		<result  property="region" 				column="REGION"					columnIndex="9"/>
+		<result  property="mobile" 				column="MOBILE"					columnIndex="10"/>
+		<result  property="bizSub" 				column="BIZSUB"					columnIndex="11"/>
+		<result  property="content" 			column="CONTENT"				columnIndex="12"/>
+		<result  property="ip" 					column="IP"						columnIndex="13"/>
+		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="14"/>
+		<result  property="typeId" 				column="TYPE_ID"				columnIndex="15"/>
+		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
+		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
+		<result  property="writerName"			column="DISPLAYNAME"			columnIndex="18"/>
+	</resultMap>
+	
 	<select id="ezAttitude.getAttitudeList" parameterClass="Map" resultMap="attitude">
 		<![CDATA[
 			SELECT 
@@ -123,11 +144,11 @@
 				A.TENANT_ID = #tenantId#
 			AND  
 				(
-					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
+					(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
 					or
-					(END_DATE >= #startDate# and END_DATE < #endDate#) 
+					(date_add(END_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) < #endDate#) 
 					or
-					(START_DATE < #startDate# and END_DATE >= #endDate#)
+					(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
 				)
 			ORDER BY
 				A.TYPE_ID
@@ -149,20 +170,38 @@
 			IP,
 			DATE_TYPE,
 			TYPE_ID)
+		<isEqual property="isDefaultAtti" compareValue="true">
+			VALUES(
+				#companyId#,
+				#tenantId#,
+				#writerId#,
+				#deptId#,
+				#startDate#,
+				IF(#endDate# = '', null, #endDate#),
+				IFNULL(#region#, ''),
+				IFNULL(#mobile#, ''),
+				IFNULL(#bizSub#, ''),
+				IFNULL(#content#, ''),
+				IFNULL(#ipAddress#, ''),
+				#dateType#,
+				#typeId#)
+		</isEqual>
+		<isEqual property="isDefaultAtti" compareValue="false">
 		VALUES(
-			#companyId#,
-			#tenantId#,
-			#writerId#,
-			#deptId#,
-			IFNULL(#startDate#, ''),
-			#endDate#,
-			IFNULL(#region#, ''),
-			IFNULL(#mobile#, ''),
-			IFNULL(#bizSub#, ''),
-			IFNULL(#content#, ''),
-			IFNULL(#ipAddress#, ''),
-			#dateType#,
-			#typeId#)
+				#companyId#,
+				#tenantId#,
+				#writerId#,
+				#deptId#,
+				date_add(#startDate#, INTERVAL -#offsetMin# minute),
+				IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)),
+				IFNULL(#region#, ''),
+				IFNULL(#mobile#, ''),
+				IFNULL(#bizSub#, ''),
+				IFNULL(#content#, ''),
+				IFNULL(#ipAddress#, ''),
+				#dateType#,
+				#typeId#)
+		</isEqual>
 	</insert>
 	
 	<select id="ezAttitude.getIsAttitudeUserConf" parameterClass="Map" resultClass="String">
@@ -457,4 +496,34 @@
 	        	WRITER_ID = #userId#	
 		]]>
 	</update>
+	
+	<select id="ezAttitude.getAttitudeInfo" parameterClass="map" resultMap="attitudeInfo">
+		SELECT 
+			A.ATTITUDE_ID,
+			A.COMPANY_ID,
+			A.TENANT_ID,
+			A.WRITER_ID,
+			A.DEPT_ID,
+			date_add(A.START_DATE, INTERVAL +#offsetMin# minute) AS START_DATE,
+			date_add(A.END_DATE, INTERVAL +#offsetMin# minute) AS END_DATE,
+			A.MODAPPL,
+			A.REGION,
+			A.MOBILE,
+			A.BIZSUB,
+			A.CONTENT,
+			A.IP,
+			A.DATE_TYPE,
+			A.TYPE_ID,
+			B.TYPE_NAME,
+			B.IMG_PATH,
+		    C.DISPLAYNAME
+		FROM   
+			tbl_attitude A 
+				INNER JOIN tbl_attitude_type B ON (A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
+				INNER JOIN tbl_usermaster C ON (A.TENANT_ID = C.TENANT_ID AND A.WRITER_ID = C.CN)
+		WHERE  
+			A.ATTITUDE_ID = #attitudeId# 
+		AND    
+			A.TENANT_ID = #tenantId#;
+	</select>
 </sqlMap>

@@ -21,6 +21,14 @@
 				border : 1px solid #dedede;
 			}
 			
+			#attiCalendar table td[typeId=A02], #attiCalendar table td[typeId=A08] {
+				color : red;
+			}
+			
+			#attiCalendar table td[typeId=A01], #attiCalendar table td[typeId=A03] {
+				color : rgb(102,180,255);
+			}
+			
 			.span_list table td:hover, .td_day:hover {
 				background-color:#edf4fd;
 			}
@@ -32,7 +40,11 @@
 			$(function(){
 				$(document).on('dblclick', '.td_day td', function(){
 					pMode = "new";
-					attitudeWrite(this);
+					attitudeNewItem(this);
+				})
+				
+				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function(){
+					attitudeItemView(this);
 				})
 			})
 			
@@ -157,6 +169,7 @@
 						endDate : endDate
 					},
 					success : function(result) {
+						$("span[name=span_list] table tbody").remove();
 						getAttitudeMainList_after(result);
 						getAttiStatisList();
 					}
@@ -166,26 +179,34 @@
 			function getAttitudeMainList_after(result) {
 				var startDate = "";   // 근태의 시작일
 				var endDate = "";     // 근태의 종료일
-				var betweenDate = ""; // 연속일자로 등록된 근태의 날짜 차이를 저장
+				var betweenDate = ""; // 연속일자의 일자 저장
+				var subDate = "";     // 연속일자로 등록된 근태의 날짜 차이를 저장
+				var imgPath = "";	  // 이미지 경로
+				
 				for (var i = 0; i < result.length; i++) {
+					startDate = result[i].startDate.split(" ")[0];
+					endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
+					imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>";
+					
 					if (result[i].dateType == '4' || result[i].dateType == '5') {
-						startDate = result[i].startDate.split(" ")[0];
-						endDate = result[i].endDate.split(" ")[0];
-						betweenDate = calDateRange(startDate, endDate);
-						startDate = new Date(startDate);
+						subDate = calDateRange(startDate, endDate);
+						betweenDate = new Date(startDate);
 						
-						for (var j = 0; j <= betweenDate; j++) {
-							startDate.setDate(startDate.getDate() + ( j == 0 ? 0 : 1));
-							var tdAttrDay = startDate.getFullYear() + "-" + leadingZeros(startDate.getMonth() + 1, 2) + "-" + leadingZeros(startDate.getDate(),2);
-							$("td[day=" + tdAttrDay + "]").find("table#TD_" + tdAttrDay + "_Value")
-														  .append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'><img width='20px' height='20px' style='vertical-align:top; margin-right:3px;' src='"+ result[i].imgPath +"'/>" + result[i].typeName + " : " + result[i].region + "</td></tr>");
+						for (var j = 0; j<= subDate; j++) {
+							betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1));
+							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
+							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
+									"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" 
+									+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].region + "</td></tr>");
 						}
 					} else if (result[i].dateType == '3') {
-						
+						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
+								"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>");
+					} else if (result[i].dateType == '1') {
+						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
+								"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>");
 					} else {
-						startDate = result[i].startDate.split(" ")[0];
-						var startTime = result[i].startDate.split(" ")[1];
-						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + startTime + "</td></tr>");
+						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1] + "</td></tr>");
 					}
 				}
 			}
@@ -216,21 +237,34 @@
 			/**
 			* 근태작성
 			*/
-			function attitudeWrite(obj) {
+			function attitudeNewItem(obj) {
 				var date = $(obj).attr("dispdate");
-				var pAttitudeId = $(obj).attr("attitudeId"); 
+				
 				if (CrossYN()) {
-                    var OpenWin = window.open("/ezAttitude/attitudeWrite.do?date=" + date, "writeAttitude", GetOpenWindowfeature(650, 580));
+                    var OpenWin = window.open("/ezAttitude/attitudeNewItem.do?date=" + date, "attitudeNewItem", GetOpenWindowfeature(650, 580));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
-                	rtnValue = window.showModalDialog("/ezAttitude/addAttitudeType.do", $("#ListCompany").val(),
+                	rtnValue = window.showModalDialog("/ezAttitude/attitudeNewItem.do?date=" + date, "",
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
 	                }
 	            }
+			}
+			
+			function attitudeItemView(obj) {
+				var pAttitudeId = $(obj).attr("attitudeId"); 
+				var pTypeId = $(obj).attr("typeId");
+				if (CrossYN()) {
+					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(650, 580));
+					
+					try { OpenWin.focus(); } catch (e) { }
+				} else {
+					rtnValue = window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
+					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+				}
 			}
 			
 		</script>

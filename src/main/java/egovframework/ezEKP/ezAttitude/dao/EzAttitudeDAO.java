@@ -171,4 +171,8 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public String getAttitudeCount2(Map<String, Object> map) {
 		return (String) select("ezAttitudeAdminDAO.getAttitudeCount2", map);
 	}
+	
+	public AttitudeVO getAttitudeInfo(Map<String, Object> map) {
+		return (AttitudeVO) select("ezAttitude.getAttitudeInfo", map);
+	}
 }

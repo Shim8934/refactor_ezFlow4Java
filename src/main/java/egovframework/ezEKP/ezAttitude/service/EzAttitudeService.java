@@ -19,10 +19,10 @@ import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 
 public interface EzAttitudeService {
-	public Object getAttitudeInfo(String userId, String date, String typeId, int tenantId) throws Exception;
+	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, int tenantId) throws Exception;
 	
 	public void insertAttitude(String writerId, String deptId, String startDate, String endDate, String region,
-			String mobile, String bizSub, String content, String ip, String typeId, String dateType, String companyId, int tenantId) throws Exception;
+			String mobile, String bizSub, String content, String ip, String typeId, String dateType, String offset, String companyId, int tenantId) throws Exception;
 	
 	public List<AttitudeVO> getAttitudeList(String pidList, String yrmh, String typeId, String startDate, String endDate, String offset, int tenantId) throws Exception;
 	
