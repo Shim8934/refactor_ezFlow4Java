@@ -270,7 +270,7 @@
 		            if (CrossYN()) {
 		                checkname2_cross_dialogArguments[0] = rgParams;
 		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-		                var OpenWin = window.open("/ezPersonal/checkName2.do", "checkName2_cross", GetOpenWindowfeature(600, 320));
+		                var OpenWin = window.open("/ezPersonal/checkName2.do", "checkName2_cross", GetOpenWindowfeature(600, 350));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {
