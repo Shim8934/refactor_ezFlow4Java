@@ -623,5 +623,4 @@
 		      #ids[]# 
 		</iterate>
 	</insert>
->>>>>>> 9a621784dcf0a5f71c8ba9fd99972ef260be0ae6
 </sqlMap>
