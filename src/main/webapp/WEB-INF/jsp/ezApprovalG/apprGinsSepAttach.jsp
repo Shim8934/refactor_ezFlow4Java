@@ -141,10 +141,10 @@
 		        if (CrossYN() && ext != "hwp") {
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
-		
-		            DivPopUpShow(700, 615, url);
-
-		        } else {
+		            
+		            DivPopUpShow(500, 615, url);
+		        }
+		        else {
 		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
 		            feature = feature + GetShowModalPosition(410, 555);
 		
@@ -267,11 +267,11 @@
 		        SetAttribute(objRow, "DATA1", SelectSingleNodeValue(InfoXml.documentElement, "CABINETID"));  
 		        SetAttribute(objRow, "DATA2", SelectSingleNodeValue(InfoXml.documentElement, "REGTYPE"));  
 		        SetAttribute(objRow, "DATA3", SelectSingleNodeValue(InfoXml.documentElement, "AVTYPE"));  
-		
-		        objRow.cells[1].innerHTML = SelectSingleNodeValue(InfoXml.documentElement, "TITLE");  
+
+		        objRow.cells[1].innerHTML = Replace2HTML(SelectSingleNodeValue(InfoXml.documentElement, "TITLE"));  
 		        objRow.cells[2].innerHTML = SelectSingleNodeValue(InfoXml.documentElement, "CABINETNAME");  
-		        objRow.cells[3].innerHTML = SelectSingleNodeValue(InfoXml.documentElement, "REGTYPEDESC");  
-		
+		        objRow.cells[3].innerHTML = SelectSingleNodeValue(InfoXml.documentElement, "REGTYPEDESC");
+		        
 		        var Data = SelectSingleNodeValue(InfoXml.documentElement, "NUMOFPAGE");
 		        if (Data == "")
 		            objRow.cells[4].innerHTML = " ";
@@ -394,7 +394,6 @@
 		    
 		    function GetSelAttachInfoXml(selRow) {
 		        var xmlpara = createXmlDom();
-		
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "PARAMETERS");
 		        createNodeAndInsertText(xmlpara, objNode, "RECORDID", "");

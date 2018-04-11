@@ -73,4 +73,6 @@ public interface EzOrganService {
 	public List<OrganDeptVO> getExtensionAttr4ID(String strReceiveID) throws Exception;
 	
 	public String getChildrenDeptID(String parentID, String companyID, int tenantID) throws Exception;
+	
+	public boolean checkRetired(String userID, String companyID, int tenantID) throws Exception;
 }
