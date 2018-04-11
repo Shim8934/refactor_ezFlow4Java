@@ -39,7 +39,15 @@ public class AttitudeVO {
 	private String typeName;
 	/** 근태타입 이미지*/
 	private String imgPath;
+	/** 작성자명*/
+	private String writerName;
 	
+	public String getWriterName() {
+		return writerName;
+	}
+	public void setWriterName(String writerName) {
+		this.writerName = writerName;
+	}
 	public String getTypeName() {
 		return typeName;
 	}

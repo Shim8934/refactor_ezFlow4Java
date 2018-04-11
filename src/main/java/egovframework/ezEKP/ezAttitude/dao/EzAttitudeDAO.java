@@ -172,6 +172,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (String) select("ezAttitudeAdminDAO.getAttitudeCount2", map);
 	}
 	
+	public AttitudeVO getAttitudeInfo(Map<String, Object> map) {
+		return (AttitudeVO) select("ezAttitude.getAttitudeInfo", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void changeUsersModifyAtt(Map<String, Object> map) {		
 		update("ezAttitudeDAO.changeUsersModifyAtt", map);

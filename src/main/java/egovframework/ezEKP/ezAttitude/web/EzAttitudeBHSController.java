@@ -104,6 +104,11 @@ public class EzAttitudeBHSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String typeId = request.getParameter("typeId");
+		String region = request.getParameter("region");
+		String mobile = request.getParameter("mobile");
+		String bizSub = request.getParameter("bizSub");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 		String dateType = request.getParameter("dateType");
 		String userId = userInfo.getId();
 		
@@ -118,6 +123,11 @@ public class EzAttitudeBHSController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("typeId", typeId)
+				.queryParam("region", region)
+				.queryParam("mobile", mobile)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate)
+				.queryParam("bizSub", bizSub)
 				.queryParam("dateType", dateType);
 		
 		RestTemplate rest = new RestTemplate();
@@ -318,9 +328,9 @@ public class EzAttitudeBHSController {
 	/**
 	 * 작성화면
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeWrite.do")
+	@RequestMapping(value = "/ezAttitude/attitudeNewItem.do")
 	public String attitudeWrite(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/ezAttitude/attitudeWrite started");
+		LOGGER.debug("/ezAttitude/attitudeNewItem started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -374,8 +384,8 @@ public class EzAttitudeBHSController {
 		model.addAttribute("attitudeTypeList", attitudeTypeList);
 		model.addAttribute("date", date);
 		
-		LOGGER.debug("/ezAttitude/attitudeWrite ended");
-		return "ezAttitude/writeAttitude";
+		LOGGER.debug("/ezAttitude/attitudeNewItem ended");
+		return "ezAttitude/attitudeNewItem";
 	}
 	
 	/**
@@ -422,18 +432,19 @@ public class EzAttitudeBHSController {
 	}
 	
 	/**
-	 * 근태 저장
+	 * 근태 상세보기
 	 */
-	@RequestMapping(value = "/ezAttitude/saveAttitude.do")
-	@ResponseBody
-	public void saveAttitude(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/ezAttitude/saveAttitude started");
+	@RequestMapping(value = "/ezAttitude/attitudeItemView.do")
+	public String attitudeItemView(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeItemView started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userId = userInfo.getId();
+		String attitudeId = request.getParameter("attitudeId");
+		String typeId = request.getParameter("typeId");
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/attitudes";
+		String url = gwServerUrl + "/rest/ezattitude/attitudetypes/" + typeId +"/forms/form";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -454,10 +465,32 @@ public class EzAttitudeBHSController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 		
+		JSONObject formVO = new JSONObject();
 		if (status.equals("ok")) {
+			formVO = (JSONObject) resultBody.get("data");
 			
-		}
+			model.addAttribute("formInfo", formVO);
+			
+			url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId; // 근태상세정보 GW 호출
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userId)
+					.queryParam("attitudeId", attitudeId);
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			LOGGER.debug("status : " + status);
+			
+			JSONObject attitudeVO = new JSONObject();
+			if (status.equals("ok")) {
+				attitudeVO = (JSONObject) resultBody.get("data");
+				model.addAttribute("attitudeInfo", attitudeVO);
+			}
+		} 
 		
-		LOGGER.debug("/ezAttitude/saveAttitude ended");
+		LOGGER.debug("/ezAttitude/attitudeItemView ended");
+		return "/ezAttitude/attitudeItemView";
 	}
 }
