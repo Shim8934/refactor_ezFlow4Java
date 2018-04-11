@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"              ></script>
 		<script type="text/javascript" src="/js/jquery-ui/jquery-ui.js"                     ></script>
+		<script type="text/javascript" src="/js/ezWebFolder/bnk.js"                         ></script>
 		<script type="text/javascript">
 			var blockSize    = 10;
 			var currentPage  = null;
@@ -57,6 +58,14 @@
 					buttonImage: "/images/ImgIcon/calendar-month.gif",
 					buttonImageOnly: true,
 					dateFormat: "yy-mm-dd"
+				});
+				
+				$('#fileTypeSelect').ddslick({
+					onSelected: function(selectedElmt){
+						//callback function: do something with selectedData;
+						document.getElementById("fileTypeSelect").value = selectedElmt.selectedData["value"];
+						refresh();
+					}
 				});
 				
 				search_Set("1");
@@ -399,7 +408,7 @@
 			</select>
 		</div>
 		
-		<div id="mainmenu" style="position: relative;">
+		<div id="mainmenu2" style="position: relative;">
 			<ul>
 				<li id=""><a onClick="fileDownload()"    style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
 				<li id=""><a onClick="fileUpload()"      style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
@@ -410,19 +419,19 @@
 				<li id=""><a onClick="refresh()"         style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 			</ul>
 			<div style="position: absolute; top: 0px; right: 10px;">
-				<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect" onchange="refresh();">
-					<option value="1"><spring:message code='ezWebFolder.t191'/></option>
-					<option value="2"><spring:message code='ezWebFolder.t192'/></option>
-					<option value="3"><spring:message code='ezWebFolder.t193'/></option>
-					<option value="4"><spring:message code='ezWebFolder.t194'/></option>
-					<option value="5"><spring:message code='ezWebFolder.t195'/></option>
-					<option value="6"><spring:message code='ezWebFolder.t196'/></option>
+				<select style="height: 27px; border-radius: 3px; display: none;" id="fileTypeSelect" onchange="refresh();">
+					<option value="1" data-imagesrc="/images/webfolder/allTypes.png" selected><spring:message code='ezWebFolder.t191'/></option>
+					<option value="2" data-imagesrc="/images/webfolder/msWord.png"           ><spring:message code='ezWebFolder.t192'/></option>
+					<option value="3" data-imagesrc="/images/webfolder/mp3.png"              ><spring:message code='ezWebFolder.t193'/></option>
+					<option value="4" data-imagesrc="/images/webfolder/mp4.png"              ><spring:message code='ezWebFolder.t194'/></option>
+					<option value="5" data-imagesrc="/images/webfolder/jpg.png"              ><spring:message code='ezWebFolder.t195'/></option>
+					<option value="6" data-imagesrc="/images/webfolder/zip.png"              ><spring:message code='ezWebFolder.t196'/></option>
 				</select>
 			</div>
 		</div>
 		
 		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+			selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
 		</script>
 		
 		<div id="searchPanel" style="position: fixed; top: 132px; left: 200px; height: 180px; width: 514px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
