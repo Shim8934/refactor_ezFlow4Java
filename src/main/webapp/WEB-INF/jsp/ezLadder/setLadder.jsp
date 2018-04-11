@@ -25,6 +25,7 @@
 			var secretFlag;
 			var ladderType;
 			var lineCnt;
+			var maxAttendant = 50;
 		
 			function ladder_window_resize() {
 				var win_width = $(window).width();
@@ -253,8 +254,8 @@
 			function manage_attendant_after() {
 				setInputValue(true);
 				
-				ladder_select_attendant_dialogArguments[0] = attendants;
-			    ladder_select_attendant_dialogArguments[1] = checkAttendant;
+				ladder_select_attendant_dialogArguments[0] = {"attendants": attendants, "maxAttendant": maxAttendant};
+				ladder_select_attendant_dialogArguments[1] = checkAttendant;
 
 			    GetOpenWindow("/ezLadder/setLadderAttendant.do", "ladder_select_attendant", 970, 680);
 			}
@@ -411,6 +412,11 @@
 				var totallen = 0;
 				var user = {};
 				
+				if(attendantlen + userdata.length > maxAttendant) {
+					alert(maxAttendant + "<spring:message code='ezLadder.t048' />");
+					userdata.splice(maxAttendant - attendantlen);
+				}
+				
 				userdata.forEach(function(_user, index) {
 					totallen = attendantlen + index;
 					flag = _user["datatype"].split("-");
@@ -442,7 +448,6 @@
 							attendants["name2"][totallen] = user["name2"];
 						}
 					}
-					console.log(!items[totallen]);
 					if(items[totallen] == null) {
 						items[totallen] = "";
 					}

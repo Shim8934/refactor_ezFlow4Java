@@ -367,7 +367,6 @@
 		function ladderAnimationComplete() {
 			$("#copyUser").remove();
 			
-			/* userStatus[clickUserOrder] = 1; */
 			$("#lineDiv img:last").attr("_result", userStatus[clickUserOrder]);
 			
 			if($("#itemList li:eq(" + resultOrder + ") div").length == 1) {

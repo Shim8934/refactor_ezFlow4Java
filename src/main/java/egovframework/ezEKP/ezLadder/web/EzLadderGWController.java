@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -153,7 +154,7 @@ public class EzLadderGWController {
 	 * 사다리 게임 추가
 	 * */
 	@RequestMapping(value = "/ladder/ladders/writers/{writerId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwInsertLadder(@PathVariable String writerId, LadderVO ladVO, LadderLineVO ladLineVO, String bombnum, String loginCookie, HttpServletRequest request) {
+	public JSONObject gwInsertLadder(@PathVariable String writerId, LadderVO ladVO, @RequestBody LadderLineVO ladLineVO, String bombnum, String loginCookie, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [POST /ladder/ladders/writers/" + writerId + "] started.");
 		
 		JSONObject result = new JSONObject();
