@@ -335,7 +335,7 @@
 		//엑셀 다운로드
 		function exportExcel() {
 			if ($('#attiBoardList tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
-				alert('');
+				alert('출력할 내용이 없습니다');
 				return;
 			}
 			

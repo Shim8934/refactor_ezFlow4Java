@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -46,8 +47,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
@@ -56,6 +60,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -1225,128 +1230,101 @@ public class EzAttitudeAdminBOMController {
 		
 		JSONObject data = new JSONObject();
 		List<AdminAttitudeVO> attitudeList = new ArrayList<AdminAttitudeVO>();
+		Gson gson = new Gson();
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
 			
-			attitudeList = (List<AdminAttitudeVO>) data.get("list");
+			attitudeList = gson.fromJson(data.get("list").toString(), new TypeToken<List<AdminAttitudeVO>>(){}.getType()) ;
 		}
 		
-	/////////////////////////////////////////////////////////////////
-		 
-		String realPath = commonUtil.getRealPath(request); 
-		String pDirPath = commonUtil.getUploadPath("upload_attitude.TEMPUPLOAD", userInfo.getTenantId()); 
-		pDirPath = realPath + pDirPath; 
+	///////    엑 셀        //////////////////////////////////////////////////////////
 		
-		String fileName = UUID.randomUUID().toString() + ".xlsx"; 
-		LOGGER.debug("fileName=" + fileName); 
-		 
-		File tempFile = new File(pDirPath); 
-		 
-		if (!tempFile.exists()) { 
-			tempFile.mkdirs(); 
-		} 
-		 
-		tempFile = new File(pDirPath + commonUtil.separator + fileName); 
-		 
-		if (tempFile.exists()) { 
-			tempFile.delete(); 
-		} 
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet;
+		  
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		  
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 		
-		LOGGER.debug("attitudeList=" + attitudeList.size()); 
+		HSSFFont font = workbook.createFont();
+		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		headerStyle.setFont(font);
 		
-		/** 엑셀 만들기 */
-		HSSFWorkbook workbook = null; 
-		FileOutputStream fos = null; 
-		 
-		/*	
-		try { 
-			workbook = new HSSFWorkbook(); 
-			
-			HSSFCellStyle headerStyle= workbook.createCellStyle();
-		    headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		    headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		    headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		    headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		    headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		    headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		    
-		    HSSFCellStyle bodyStyle= workbook.createCellStyle();
-		    bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		    bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		    bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		    bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-			
-			HSSFSheet sheet = workbook.createSheet("근태");
-			Row row = sheet.createRow(0);
-			
-			row.createCell(0).setCellValue("이름");
-			row.createCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("직급");
-			row.createCell(1).setCellStyle(headerStyle);
-			row.createCell(2).setCellValue("부서");
-			row.createCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue("구분");
-			row.createCell(3).setCellStyle(headerStyle);
-			row.createCell(4).setCellValue("날짜");
-			row.createCell(4).setCellStyle(headerStyle);
-			row.createCell(5).setCellValue("시작시간");
-			row.createCell(5).setCellStyle(headerStyle);
-			row.createCell(6).setCellValue("종료시간");
-			row.createCell(6).setCellStyle(headerStyle);
-			
-			for (int i = 0 ; i < attitudeList.size(); i++) { 
-				AdminAttitudeVO vo = attitudeList.get(i);
-				row = sheet.createRow(i + 1);
-				
-				row.createCell(0).setCellValue(vo.getUserName());
-				row.createCell(0).setCellStyle(bodyStyle);
-				row.createCell(1).setCellValue(vo.getUserTitle());
-				row.createCell(1).setCellStyle(bodyStyle);
-				row.createCell(2).setCellValue(vo.getDeptName());
-				row.createCell(2).setCellStyle(bodyStyle);
-				row.createCell(3).setCellValue(vo.getTypeName());
-				row.createCell(3).setCellStyle(bodyStyle);
-				if (vo.getEndDate() != null || vo.getEndDate() != "") {
-					row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
-				} else {
-					row.createCell(4).setCellValue(vo.getStartDate());
-				}
-				row.createCell(4).setCellStyle(bodyStyle);
-				row.createCell(5).setCellValue(vo.getStartTime());
-				row.createCell(5).setCellStyle(bodyStyle);
-				if (vo.getEndTime() != null || vo.getEndTime() != "") {
-					row.createCell(6).setCellValue(vo.getEndTime());
-				} else {
-					row.createCell(6).setCellValue("");
-				}
-				row.createCell(6).setCellStyle(bodyStyle);
+		Row row;
+		Cell cell;
+		      
+		String pFileName = "";
+		String strDate = EgovDateUtil.getToday("-");
+		pFileName = strDate+"_Report.xls";
+		
+		sheet = workbook.createSheet("report");
+		row = sheet.createRow(0);
+		
+		row.createCell(0).setCellValue("이름");
+		row.getCell(0).setCellStyle(headerStyle);
+		row.createCell(1).setCellValue("직급");
+		row.getCell(1).setCellStyle(headerStyle);
+		row.createCell(2).setCellValue("부서");
+		row.getCell(2).setCellStyle(headerStyle);
+		row.createCell(3).setCellValue("구분");
+		row.getCell(3).setCellStyle(headerStyle);
+		row.createCell(4).setCellValue("날짜");
+		row.getCell(4).setCellStyle(headerStyle);
+		row.createCell(5).setCellValue("시작시간");
+		row.getCell(5).setCellStyle(headerStyle);
+		row.createCell(6).setCellValue("종료시간");
+		row.getCell(6).setCellStyle(headerStyle);
+		  //header
+		
+		for (int i = 0 ; i < attitudeList.size(); i++) { 
+			AdminAttitudeVO vo = attitudeList.get(i);
+			row = sheet.createRow(i + 1);
+
+			row.createCell(0).setCellValue(vo.getUserName());
+			row.getCell(0).setCellStyle(bodyStyle);
+			row.createCell(1).setCellValue(vo.getUserTitle());
+			row.getCell(1).setCellStyle(bodyStyle);
+			row.createCell(2).setCellValue(vo.getDeptName());
+			row.getCell(2).setCellStyle(bodyStyle);
+			row.createCell(3).setCellValue(vo.getTypeName());
+			row.getCell(3).setCellStyle(bodyStyle);
+			if (vo.getEndDate() != null || vo.getEndDate() != "") {
+				row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
+			} else {
+				row.createCell(4).setCellValue(vo.getStartDate());
 			}
-			 
-			fos = new FileOutputStream(pDirPath + commonUtil.separator + fileName); 
-			workbook.write(fos); 
- 
-			downFile(request, response, pDirPath + commonUtil.separator + fileName, egovMessageSource.getMessage("ezOrgan.jyh03", locale) + ".xlsx"); 
-			
-		} catch(IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (workbook != null) {
-				try { workbook.close(); } catch(Exception e) {}
+			row.getCell(4).setCellStyle(bodyStyle);
+			row.createCell(5).setCellValue(vo.getStartTime());
+			row.getCell(5).setCellStyle(bodyStyle);
+			if (vo.getEndTime() != null || vo.getEndTime() != "") {
+				row.createCell(6).setCellValue(vo.getEndTime());
+			} else {
+				row.createCell(6).setCellValue("");
 			}
-			
-			if (fos != null) {
-				try { fos.close(); } catch(Exception e) {}
-			}
+			row.getCell(6).setCellStyle(bodyStyle);
 		}
+		//body
 		
-		//다운로드 완료 후 파일 삭제 
-		if (tempFile.exists()) {
-			tempFile.delete();
-			LOGGER.debug("file deleted. fileName=" + fileName);
-		}
+		//날짜는 길면 짤리므로 자동으로 너비조정을 해준다
+		sheet.autoSizeColumn(4);
+		
+		
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		workbook.write(response.getOutputStream());
+		  
+		workbook.close();
 		
 		LOGGER.debug("excelFileExport ended.");
-	 */
 	}	
 
 }

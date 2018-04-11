@@ -784,7 +784,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		int limit = 0;
-		if (pageNum != null || pageNum != "") {
+		if (pageNum != null && pageNum != "") {
 			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
 			map.put("limit", limit);
 		}
