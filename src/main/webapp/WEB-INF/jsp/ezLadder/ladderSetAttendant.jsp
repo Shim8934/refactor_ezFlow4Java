@@ -20,8 +20,6 @@
         <script type="text/javascript" src="/js/Common.js"></script>        
         <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
         <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-        
 		
 		<script type="text/javascript">
 			var pStartTime = "<c:out value='${startTime}' />";
@@ -83,7 +81,7 @@
 	        window.onload = function () {
 	            try {
 	                RetValue = parent.ladder_select_attendant_dialogArguments[0];
-	                ReturnFunction = parent.ladder_select_attendant_dialogArguments[1];                
+	                ReturnFunction = parent.ladder_select_attendant_dialogArguments[1];
 	            } catch (e) {
 	                try {
 	                    RetValue = opener.ladder_select_attendant_dialogArguments[0];
@@ -103,9 +101,9 @@
 	            if (pGubun == "") {
 	//	                document.getElementById("btnAddUser").style.display = "";
 	                if (CrossYN())
-	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezCircular.t34'/>";
+	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezLadder.t127'/>";
 	                else
-	                    document.getElementById("ToTitleStr").innerText = "<spring:message code='ezCircular.t34'/>";
+	                    document.getElementById("ToTitleStr").innerText = "<spring:message code='ezLadder.t127'/>";
 	            }
 	
 	            $("#1tab1").click();
@@ -138,7 +136,7 @@
 	            	treeView.DataBind("TreeView");
 	            	
 	                if (type == "group") {
-	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezCircular.t34'/>";	
+	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezLadder.t127'/>";	
 	                }
 	            }
 	            catch (ErrMsg) {
@@ -152,8 +150,11 @@
 	            var totalLen = totalRows.length;
 	
 	            var stridlength = 0;
-	            if (RetValue != undefined && RetValue != null && RetValue["id"] != undefined && RetValue["id"] != "")
-	                stridlength = RetValue["id"].length;
+	            var attendants = RetValue["attendants"];
+	            /* if (attendants != undefined && attendants != null && attendants["id"] != undefined && attendants["id"] != "") */
+	            if(!!attendants && !! attendants["id"]) {
+	                stridlength = attendants["id"].length;
+	            }
 	
 	            for (var i = 0; i < stridlength; i++) {
 	                var pparsingXML = "";
@@ -168,13 +169,13 @@
 	                var strDeptName2;
 	                var strPic;
 	
-	                strName = RetValue["name"][i];
-	                strId = RetValue["id"][i];
-	                /* strName1 = RetValue["name1"][i]; */
-	                strName2 = RetValue["name2"][i];
-	                /* strDeptName1 = RetValue["deptname"][i];
-	                strDeptName2 = RetValue["deptname2"][i]; */
-	                strPic = RetValue["pic"][i];
+	                strName = attendants["name"][i];
+	                strId = attendants["id"][i];
+	                /* strName1 = attendants["name1"][i]; */
+	                strName2 = attendants["name2"][i];
+	                /* strDeptName1 = attendants["deptname"][i];
+	                strDeptName2 = attendants["deptname2"][i]; */
+	                strPic = attendants["pic"][i];
 	
 	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
@@ -211,20 +212,24 @@
 	            	setBmGroup("add", 0);
 	            });
 	            
+	            $(window).on("click", function() {
+	            	$("[id^='editBmGroup_']").css("display", "none");
+	            });
+	            
 	            $(document)
 	            	.on("click", ".editBmIcon", function(e) {
-		            	var editId = "#" + $(this).attr("name");
-		            	$(editId).toggle();
-		            })
-		            .on("click", "div[name='modify']", function() {
-		            	setBmGroup("modify", $(this).parents("tr").attr("id"));
-		            })
-		            .on("click", "div[name='delete']", function() {
-		            	setBmGroup("delete", $(this).parents("tr").attr("id"));
-		            })
-		            .on("mouseleave", "div[id^='editBmGroup_']", function() {
-		            	$("div[id^='editBmGroup_']").hide();
-		            })
+	            		e.stopPropagation();
+						$("#" + $(this).attr("name")).css("display", "block");
+					})
+					.on("click", "div[name='modify']", function() {
+						setBmGroup("modify", $(this).parents("tr").attr("id"));
+					})
+					.on("click", "div[name='delete']", function() {
+						setBmGroup("delete", $(this).parents("tr").attr("id"));
+					})
+					.on("mouseleave", "div[id^='editBmGroup_']", function() {
+						$("div[id^='editBmGroup_']").hide();
+					})
 	        }
 	
 	        var schedule_add_user_cross_dialogArguments = new Array();
@@ -236,7 +241,7 @@
 	            var totalLen = totalRows.length;
 	
 	            if (totalLen == 0) {
-	                alert("<spring:message code='ezCircular.t147' />");
+	                alert("<spring:message code='ezLadder.t030' />");
 	                return;
 	            }
 	
@@ -447,7 +452,7 @@
 	        
 	        function infoview_click() {
 	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
-	                alert("<spring:message code='ezCircular.t148' />");
+	                alert("<spring:message code='ezLadder.t031' />");
 	                return;
 	            }
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
@@ -558,10 +563,8 @@
 	                listEventCheckbox = false;
 	        }
 	        
-		    function event_listDBclick(obj, event) {
-		    	if(!_RowObjectName || _RowObjectName.trim() !== "deptList" || event.clientX < 640) {
-					InsertReceiver("MsgToList");
-		    	}
+		    function event_listDBclick(obj) {
+				InsertReceiver("MsgToList");
 		    }
 	
 		    var strId = "";
@@ -655,7 +658,7 @@
 		            } else {
 		            	console.log('4444444444444444');
 		                if (p_ListOrderObject == "") {
-		                    alert("<spring:message code='ezCircular.t148' />");
+		                    alert("<spring:message code='ezLadder.t031' />");
 		                    return;
 		                }
 		                
@@ -747,6 +750,10 @@
 			function parsingXMLUserList(userlist) {
 				DivPopUpHidden();
 				
+				/* if(RetValue["maxAttendant"]) {
+					
+				} */
+				
 				var listid = "MsgToList"; // 추가된 유저목록 테이블 아이디
 				var i = 0;
 				var len = userlist.length;
@@ -761,6 +768,15 @@
 				var strDeptNM2 = "";
 				var jickwe = "";
 				var phone = "";
+				
+				var listview = new ListView();
+				listview.LoadFromID(listid);
+				var totalRow = listview.GetDataRows().length;
+				
+				if(totalRow + userlist.length > RetValue["maxAttendant"]) {
+					alert(RetValue["maxAttendant"] + "<spring:message code='ezLadder.t048' />");
+					userlist.splice(RetValue["maxAttendant"] - totalRow);
+				}
 				
 				for(; i < len; i++) {
 					var user = userlist[i]["data"];
@@ -792,7 +808,7 @@
 				
 					Resultxml = loadXMLString(pparsingXML);
 					
-					var listview = new ListView();
+					listview = new ListView();
 					listview.LoadFromID(listid);
 					
 					var MaxID = 0;
@@ -1100,18 +1116,18 @@
 		        listContentArry = new Array();
 	
 		        if ($.trim($("#keyword").val()) == "") {
-		        	alert("<spring:message code='ezCircular.t189' />");
+		        	alert("<spring:message code='ezLadder.t121' />");
 		            document.all("keyword").focus();
 		            return;
 		        }
 	
 		        if (specialChk(keyword.value)) {
-		    		alert("<spring:message code='ezCircular.t134' />");
+		    		alert("<spring:message code='ezLadder.t032' />");
 		    		return;
 		    	}
 		        
 		        if (keyword.value == "") {
-		            alert("<spring:message code='ezCircular.t135' />");
+		            alert("<spring:message code='ezLadder.t033' />");
 		            keyword.focus();
 		            return;
 		        }
@@ -1135,7 +1151,7 @@
 							event_displayUserList2(loadXMLString(xml));
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
-						alert("<spring:message code='ezCircular.t151'/>" + textStatus);
+						alert("<spring:message code='ezLadder.t034'/>" + textStatus);
 					}
 				});
 		
@@ -1150,7 +1166,7 @@
 		    function event_displayUserList2(xml) {
 		        if (xml != null) {
 	                if (SelectNodes(xml, "LISTVIEWDATA/ROWS/ROW").length == 0) {
-	                	alert("<spring:message code='ezCircular.t152'/>");
+	                	alert("<spring:message code='ezLadder.t035'/>");
 	                } else {
 	                    pListXML_Info = xml;
 	                	pSeach = true;
@@ -1258,7 +1274,7 @@
    						
 				    	if(typeof ladderbmid === "undefined") { // 즐겨찾기 그룹 부르기
 							bm_list.forEach(function(group, index) {
-								html += "<tr id='" + group.ladderBmId + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this, event)'>";
+								html += "<tr id='" + group.ladderBmId + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>";
 								html += "<td style='width:5%'>" + (index + 1) + "</td>";
 								html += "<td style='width:37%'>" + group.bmName + "</td>";
 								html += "<td style='width:29%'>" + group.regdate + "</td>";
@@ -1574,7 +1590,7 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
-		<h1 id="h1Title" style="height: 20px;"><spring:message code='ezCircular.t40' /></h1>
+		<h1 id="h1Title" style="height: 20px;"><spring:message code='ezLadder.t036' /></h1>
 		<table style="width:100%">
 			<tr>
 				<td>
@@ -1582,8 +1598,8 @@
 	                	<tr>
 	                		<div class="portlet_tabpart01">
 	        					<div class="portlet_tabpart01_top" id="tab1">
-					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezCircular.t41' /></span></p>
-									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezCircular.t12' /></span></p>
+					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezLadder.t037' /></span></p>
+									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezLadder.t038' /></span></p>
 						        </div>
 						    </div>
 	                    	<td id="circularOrgan_content" style="display:none;">
@@ -1594,23 +1610,23 @@
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
 	                                                    <select id="search_type">
-	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezCircular.t80' /></option>
-	                                                        <option value="description" usedefault="1"><spring:message code='ezCircular.t78' /></option>
-	                                                        <option value="title" usedefault="1"><spring:message code='ezCircular.t154' /></option>
-	                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezCircular.t155' /></option>
-	                                                        <option value="mobile" usedefault="0"><spring:message code='ezCircular.t156' /></option>
-	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezCircular.t157' /></option>
-	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezCircular.t158' /></option>
-	                                                        <option value="mail" usedefault="0"><spring:message code='ezCircular.t159' /></option>
-	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezCircular.t160' /></option>
+	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezLadder.t029' /></option>
+	                                                        <option value="description" usedefault="1"><spring:message code='ezLadder.t028' /></option>
+	                                                        <option value="title" usedefault="1"><spring:message code='ezLadder.t039' /></option>
+	                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezLadder.t040' /></option>
+	                                                        <option value="mobile" usedefault="0"><spring:message code='ezLadder.t041' /></option>
+	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezLadder.t042' /></option>
+	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezLadder.t043' /></option>
+	                                                        <option value="mail" usedefault="0"><spring:message code='ezLadder.t044' /></option>
+	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezLadder.t045' /></option>
 	                                                    </select>
 	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
-	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezCircular.t85' /></span></a>
+	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezLadder.t046' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px;">
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>
+	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezLadder.t047' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                        </tr>
@@ -1638,17 +1654,17 @@
 	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t80' /></td>
-	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t154' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezCircular.t155' /></td>
+	                                                    <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezLadder.t029' /></td>
+	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezLadder.t039' /></td>
+	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezLadder.t040' /></td>
 	                                                </tr>
 	                                            </table>
 	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t78' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t80' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t154' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezCircular.t155' /></td>
+	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezLadder.t028' /></td>
+	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezLadder.t029' /></td>
+	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezLadder.t039' /></td>
+	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezLadder.t040' /></td>
 	                                                </tr>
 	                                            </table>
 	                                        </div>
@@ -1662,16 +1678,16 @@
 	                        	<table style="width:100%">
 	                                <tr>
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
-	                                        <h2 class="h2_dot" style="padding-top: 2px;">즐겨찾기 목록</h2>
+	                                        <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezLadder.t022' /></h2>
 	                                        <div class="border_gray">
 	                                            <div id="circularDept" style="Width: 100%; Height: 182px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table class="mainlist" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
-									                        	<th style="width: 5%;"><span>No</span></th>
-									                            <th style="width: 37%;"><span>제목</span></th>
-									                            <th style="width: 29%;"><span>작성일</span></th>
-									                            <th style="width: 22%;"><span>회람자</span></th>
+									                        	<th style="width: 5%;"><span><spring:message code='ezLadder.t023' /></span></th>
+									                            <th style="width: 37%;"><span><spring:message code='ezLadder.t024' /></span></th>
+									                            <th style="width: 29%;"><span><spring:message code='ezLadder.t025' /></span></th>
+									                            <th style="width: 22%;"><span><spring:message code='ezLadder.t026' /></span></th>
 									                            <th style="width: 6%;"></th>
 									                        </tr>
 								                        </thead>
@@ -1689,10 +1705,10 @@
 	                                            	<table id="List" class="mainlist" style="width:100%">
 														<thead id="List_THEAD2">
 															<tr>
-																<th id="TH_0" style="width:5%">No</th>
-																<th id="TH_1" style="width:18%">회사</th>
-																<th id="TH_2" style="width:20%">부서</th>
-																<th id="TH_3" style="width:16%">이름</th>
+																<th id="TH_0" style="width:5%"><spring:message code='ezLadder.t023'/></th>
+																<th id="TH_1" style="width:18%"><spring:message code='ezLadder.t027'/></th>
+																<th id="TH_2" style="width:20%"><spring:message code='ezLadder.t028'/></th>
+																<th id="TH_3" style="width:16%"><spring:message code='ezLadder.t029'/></th>
 																<th id="TH_4" style="width:41%">E-MAIL</th>
 															</tr>
 														</thead>
@@ -1711,11 +1727,11 @@
 	                        </td>
 	                        <td style="vertical-align: top;">
 	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:4px;">
-	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezCircular.t34'/></span>
+	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezLadder.t127'/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox" style="position: relative;">
 	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 484px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
-	                                <div id="ladderBmBtn">즐겨찾기 추가</div>
+	                                <div id="ladderBmBtn"><spring:message code='ezLadder.t021'/></div>
 	                            </div>
 	                        </td>
 	                    </tr>

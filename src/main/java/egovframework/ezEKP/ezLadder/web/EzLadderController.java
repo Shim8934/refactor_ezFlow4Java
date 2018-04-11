@@ -245,6 +245,8 @@ public class EzLadderController {
 			shuffleList.toArray(shuffleItems);
 			ladLineVO.setItems(shuffleItems);
 		}
+		ladLineVO.setWriterId(userInfo.getId());
+		ladLineVO.setTenant_id(userInfo.getTenantId());
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/ladder/ladders/writers/" + userInfo.getId();
@@ -253,7 +255,7 @@ public class EzLadderController {
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
+		HttpEntity<?> entity = new HttpEntity<>(ladLineVO, headers);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -267,11 +269,6 @@ public class EzLadderController {
 				.queryParam("deptName", userInfo.getDeptName())
 				.queryParam("deptName2", userInfo.getDeptName2())
 				.queryParam("tenant_id", userInfo.getTenantId())
-				.queryParam("userIds", ladLineVO.getUserIds())
-				.queryParam("userNames", ladLineVO.getUserNames())
-				.queryParam("userName2s", ladLineVO.getUserName2s())
-				.queryParam("items", ladLineVO.getItems())
-				.queryParam("ladderOrders", ladLineVO.getLadderOrders())
 				.queryParam("loginCookie", loginCookie);
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
