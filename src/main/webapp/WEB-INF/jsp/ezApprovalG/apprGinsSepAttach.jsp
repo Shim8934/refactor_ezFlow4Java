@@ -391,8 +391,6 @@
 		    
 		    function GetSelAttachInfoXml(selRow) {
 		        var xmlpara = createXmlDom();
-alert(selRow[0].cells[1].innerHTML);
-
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "PARAMETERS");
 		        createNodeAndInsertText(xmlpara, objNode, "RECORDID", "");
@@ -405,7 +403,6 @@ alert(selRow[0].cells[1].innerHTML);
 		        createNodeAndInsertText(xmlpara, objNode, "REGTYPEDESC", selRow[0].cells[3].innerHTML);
 		        createNodeAndInsertText(xmlpara, objNode, "AVTYPEDESC", selRow[0].cells[5].innerHTML);
 		        createNodeAndInsertText(xmlpara, objNode, "CABINETNAME", selRow[0].cells[2].innerHTML);
-alert(SelectSingleNodeValueNew(xmlpara, "PARAMETERS/TITLE"));
 		        return getXmlString(xmlpara);
 		    }
 		    function GetListXml() {
