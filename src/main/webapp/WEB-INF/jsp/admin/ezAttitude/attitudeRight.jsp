@@ -7,6 +7,6 @@
 	</head>
 	
 	<frameset rows="0,*" frameborder="0" border="0">
-		<frame src="/admin/ezAttitude/attitudeConfig.do" name="attitude_main" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"/>
+		<frame src="" name="attitude_main" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"/>
 	</frameset>
 </html>
