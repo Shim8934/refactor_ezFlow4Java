@@ -19,6 +19,11 @@ var beforeStatus = 0; // 0: 직전에 애니메이션 진행 1: 직전에 팝 �
 function ladderInitSettingVar() {
 }
 
+function changeUser(len) {
+	wInfo = len;
+	setDefaultLad();
+}
+
 function changeSpeed(speed, flag) { // 속도 변화
 	if(flag === "fast") {
 		moveSpeed += speed;

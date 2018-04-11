@@ -46,7 +46,9 @@
 						$("#amount").text(ui.value);
 					},
 					change: function(event, ui) {
-						lineCnt = ui.value;
+						if(!!ladderId) {
+							lineCnt = ui.value;
+						}
 					}
 				});
 				
