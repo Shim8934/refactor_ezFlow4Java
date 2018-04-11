@@ -917,7 +917,7 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO_y.getAddJobList" parameterClass="Map" resultClass="HashMap"> 
+	<select id="EzWebFolderDAO_y.getAddJobList" parameterClass="Map" resultClass="String"> 
 		<![CDATA[
 			select DEPTID as cn from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#
 		]]>

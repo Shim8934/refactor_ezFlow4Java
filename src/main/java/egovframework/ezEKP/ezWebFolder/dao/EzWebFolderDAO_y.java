@@ -76,8 +76,8 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public List<Map<String, Object>> getDeptFolder(Map<String, Object> map) {
 		return  (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList_D",map );
 	}
-	public List<Map<String, Object>> getAddJobList(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getAddJobList",map );
+	public List<String> getAddJobList(Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderDAO_y.getAddJobList",map);
 	}
 	public List<Map<String, Object>> getDeptAddJobList(Map<String, Object> map) {
 		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getDeptAddJobList",map );

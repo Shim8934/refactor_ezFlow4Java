@@ -268,18 +268,14 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 
 	// 겸직 리스트 가져오는 메서드 
 	@Override
-	public List<Map<String, Object>> getAddJobList(int tenantId, String userId,
-			String deptId, String comId) throws Exception {
+	public List<String> getAddJobList(int tenantId, String userId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("tenantId", tenantId);		
 		map.put("userId", userId);		
-		map.put("deptId", deptId);		
-		map.put("comId", comId);		
-		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
-		result = ezWebFolderDAO_y.getAddJobList(map);
-		return result;
+		
+		return ezWebFolderDAO_y.getAddJobList(map);
 	}
+	
 	// 부서장인지 확인하고 dept가져오는 메서드
 	@Override
 	public List<Map<String, Object>> getDeptHeader(int tenantId, String userId,
@@ -314,7 +310,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		// 일단 겸직하는거 가져와서 
 		LoginVO loginvo =  getUserInfo(tenantId,comId,userId);
-		List<Map<String, Object>> addJob = new ArrayList< Map<String,Object>>();
+		List<String> addJob = new ArrayList<String>();
 		List<Map<String, Object>> subDept = new ArrayList< Map<String,Object>>();
 		List<Map<String, Object>> allDeptheader = new ArrayList< Map<String,Object>>();
 		FolderVO vo = null;
@@ -402,54 +398,28 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		String searchAddJob = "";
 		
 		// addjob 부서 하위의 모든 부서를 가져오는것 
-		// 겸직 부서가 있다. 
-		if ( addJob.size() != 0) {
-			for (int i = 0; i<addJob.size(); i++) {
-				String cn = (String) addJob.get(i).get("cn");							// 겸직 부서명
-				map.put("deptId", cn);
-				allDeptheader = ezWebFolderDAO_y.getDeptSub(map);
-				String deptHeader = (String) allDeptheader.get(0).get("EXTENSIONATTRIBUTE9");
-				// 겸직부서의 이놈이 부서장인지를 판단하는 것 
-				// |이놈| 이놈 아님 | 빈놈
+		for (int i = 0; i<addJob.size(); i++) {
+			String cn = addJob.get(i);
+			map.put("deptId", cn);
+			allDeptheader = ezWebFolderDAO_y.getDeptSub(map);
+			String deptHeader = (String) allDeptheader.get(0).get("EXTENSIONATTRIBUTE9");
+			// 겸직부서의 이놈이 부서장인지를 판단하는 것 
+			// |이놈| 이놈 아님 | 빈놈
+			
+			// 부서장이 아니라는 의미 
+			if (deptHeader== null) {
+				deptHeader = "";
+			} 
+			
+			// 현재 addJobList의 부서의 부서장이 EXTENSIONATTRIBUTE9에 본인 아이디가 들어있으면 본인은 부서장 
+			if ( deptHeader == userId ) {
+				// 겸직 하위 부서 부서명 
+				subDept = ezWebFolderDAO_y.getDeptSub(map);
 				
-				// 부서장이 아니라는 의미 
-				if (deptHeader== null) {
-					deptHeader = "";
-				} 
-				
-				// 현재 addJobList의 부서의 부서장이 EXTENSIONATTRIBUTE9에 본인 아이디가 들어있으면 본인은 부서장 
-				if ( deptHeader == userId ) {
-					// 겸직 하위 부서 부서명 
-					subDept = ezWebFolderDAO_y.getDeptSub(map);
-					
-					for ( int j = 0; j < subDept.size(); j++ ) {
-						String subDeptCn = (String) subDept.get(j).get("cn");
-						deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
-						map.put("deptId", subDeptCn);
-						map.put("folderUppId", "root");
-						map.put("folderType", folderType);
-						map.put("folderStep", 0);
-						map.put("folderLevel", 0 );
-						map.put("folderPath", "|");
-						map.put("folderName1", deptInfo.get("displayname").toString());
-						map.put("folderName2", deptInfo.get("displayname2").toString());
-						map.put("createName1",	 loginvo.getDisplayName1());
-						map.put("userId", 		 userId);
-						map.put("comId",		 comId);
-						
-						// displayName2가 비어 있는 사람은 displayName을 넣는다.
-						if ( loginvo.getDisplayName2().equals("")) {
-							map.put("createName2", loginvo.getDisplayName1());
-						} else {
-							map.put("createName2", loginvo.getDisplayName2() );
-						}
-						
-						String insFldId = "";
-						insFldId = ezWebFolderDAO_y.deptInsertTest(map);
-					}
-					
-				} else {
+				for ( int j = 0; j < subDept.size(); j++ ) {
+					String subDeptCn = (String) subDept.get(j).get("cn");
 					deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
+					map.put("deptId", subDeptCn);
 					map.put("folderUppId", "root");
 					map.put("folderType", folderType);
 					map.put("folderStep", 0);
@@ -470,10 +440,33 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 					
 					String insFldId = "";
 					insFldId = ezWebFolderDAO_y.deptInsertTest(map);
-					
 				}
 				
+			} else {
+				deptInfo = ezWebFolderDAO_y.getdeptInfo(map);
+				map.put("folderUppId", "root");
+				map.put("folderType", folderType);
+				map.put("folderStep", 0);
+				map.put("folderLevel", 0 );
+				map.put("folderPath", "|");
+				map.put("folderName1", deptInfo.get("displayname").toString());
+				map.put("folderName2", deptInfo.get("displayname2").toString());
+				map.put("createName1",	 loginvo.getDisplayName1());
+				map.put("userId", 		 userId);
+				map.put("comId",		 comId);
+				
+				// displayName2가 비어 있는 사람은 displayName을 넣는다.
+				if ( loginvo.getDisplayName2().equals("")) {
+					map.put("createName2", loginvo.getDisplayName1());
+				} else {
+					map.put("createName2", loginvo.getDisplayName2() );
+				}
+				
+				String insFldId = "";
+				insFldId = ezWebFolderDAO_y.deptInsertTest(map);
+				
 			}
+			
 		}
 		
 		return "ok";
