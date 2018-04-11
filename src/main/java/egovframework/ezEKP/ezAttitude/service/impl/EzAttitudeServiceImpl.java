@@ -781,11 +781,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			startDate = startDate + " 00:00:00";
 			endDate = endDate + " 23:59:59";
 		}
-
-		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+		
+		int limit = 0;
+		if (pageNum != null || pageNum != "") {
+			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+			map.put("limit", limit);
+		}
+		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("limit", limit);
 		map.put("listSize", listSize);
 		map.put("typeId", typeId);
 		map.put("order", order.trim());

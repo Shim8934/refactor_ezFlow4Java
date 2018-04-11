@@ -544,10 +544,12 @@
 			ORDER BY $order$
 		]]>
 		</isNotEmpty>
+		<isNotEmpty prepend="" property="limit">
 		<![CDATA[
 			LIMIT 
 				#limit#, #listSize# 
 		]]>
+		</isNotEmpty>
 	</select>
 	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
 		<![CDATA[
