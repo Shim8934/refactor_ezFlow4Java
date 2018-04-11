@@ -30,7 +30,7 @@
 
 
 .vote_listTd .title01{/*height:30px;*/ line-height:28px; font-size:16px; color:#e04343;}
-.vote_listTd .graph01{background:#efa1a1; border:none;}
+.vote_listTd .graph01{background:#efa1a1; border:none; border-radius:4px;}
 
 ._imageTag{height: 20px; width: 20px; display: block; vertical-align: middle; margin: 0 auto; cursor: pointer}
 
