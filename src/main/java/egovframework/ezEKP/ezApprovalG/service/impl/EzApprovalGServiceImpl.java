@@ -18024,8 +18024,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String tmpProcessDate2 = "";
 		
 		if (!draftToYEAR.equals("") && draftToYEAR != null) {
-			tmpStartDate1 = commonUtil.getDateStringInUTC(draftFromDAY, offset, true).trim();
-			tmpStartDate2 = commonUtil.getDateStringInUTC(draftToYEAR, offset, true).trim();
+			tmpStartDate1 = commonUtil.getDateStringInUTC(commonUtil.makeDate(draftFromYEAR, draftFromMONTH, draftFromDAY, true), offset, false).trim();
+			tmpStartDate2 = commonUtil.getDateStringInUTC(commonUtil.makeDate(draftToYEAR, draftToMONTH, draftToDAY, false), offset, false).trim();
 		}
 		
 		if (!apprFromYEAR.equals("") && apprFromYEAR != null) {
@@ -18040,7 +18040,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
 		int totalCount = getSearchDocListCount(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
-				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, commonUtil.getMultiData(lang, tenantID), approvUser, approvalFlag, companyID, tenantID);
+				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, commonUtil.getMultiData(lang, tenantID), approvUser, approvalFlag, companyID, tenantID, offset);
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
 		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
 		int querySize3 = querySize - Integer.parseInt(pageSize) ;
@@ -18286,7 +18286,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	private int getSearchDocListCount(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
 			String draftDeptName, String formID, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
-			String docState, String langType, String approvUser, String approvalFlag, String companyID, int tenantID) throws Exception {
+			String docState, String langType, String approvUser, String approvalFlag, String companyID, int tenantID, String offset) throws Exception {
 		logger.debug("getSearchDocListCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -18299,6 +18299,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			map.put("v_PUBFLAG", "N");
 		}
+		map.put("v_offset", offset);
 		map.put("v_SUBQUERY", subQuery);
 		map.put("v_DOCNUMBER", docNumber.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
 		map.put("v_DOCTITLE", docTitle.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));

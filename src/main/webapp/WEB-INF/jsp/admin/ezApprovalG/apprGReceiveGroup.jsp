@@ -265,7 +265,7 @@
 		    function deleteAllCont_onclick() {
 
 		        var selRow = lvtDeptSelect.GetDataRows()
-		        if (selRow.length > 0) {
+		        if (selRow.length > 0 && selRow[0].id != "lvtDeptSelForm_TR_noItems") {
 		            for (i = selRow.length - 1; i >= 0; i--) {
 		                var rtn = deleteGroupSubiteminfo(selRow[i]);
 		                if (rtn == "TRUE") {
