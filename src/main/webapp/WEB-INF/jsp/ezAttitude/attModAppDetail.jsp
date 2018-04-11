@@ -29,7 +29,7 @@
 	        var username = "<c:out value='${data.writerName}'/>";
 	        var username2 = "<c:out value='${data.writerName2}'/>";
 	        var attid = "<c:out value='${data.attitudeId}'/>";
-	        var content = "<c:out value='${data.content}'/>";
+	        var content = '${data.content}';
 	        var contentpath = "${contentPath}";
 	        var startDateStringOrgin = "<c:out value='${startDateStringOrgin}'/>";
 	        var endDateStringOrgin = "<c:out value='${endDateStringOrgin}'/>";
@@ -39,6 +39,7 @@
 	        var deptName = "<c:out value='${deptName}'/>";
 	        var deptID = "<c:out value='${deptID}'/>";
 	        var offSetMin = "<c:out value='${offSetMin}'/>";
+	        var adminFlag = "<c:out value='${adminFlag}'/>";
 		    var timeCheck = false;
 		    
 		    window.onload = function () {
@@ -52,7 +53,7 @@
 		        
 		        var doc = document.getElementById('message').contentWindow.document;
 				doc.open();
-				doc.write('${data.content}');
+				doc.write(content);
 				doc.close();
 		    }
 		    
@@ -87,6 +88,57 @@
 				    }
 			    });
 		    }
+		    
+		    function modApprove() { 
+		    	var obj = new Object();
+		    	
+			    obj.idList = attid;
+			    obj.changeStatus = "appr";
+				
+			    $.ajax({
+					type : 'post',
+				    url : '/ezAttitude/changeAttModApp.do',
+				    data : obj,
+				    dataType : "text",
+				    error: function(xhr, status, error){
+				    	ajaxRunning = false;
+				    	alert("승인 중 오류 발생")
+				    },
+				    success : function(json){
+				    	alert("승인되었습니다.");
+						window.close();
+			            try {
+			                window.opener.att_refresh();
+			            } catch (e) { }
+				    }
+			    });
+		    }
+		    
+		  	//반려
+		    function modReturn() {
+				var obj = new Object();
+		    	
+			    obj.idList = attid;
+			    obj.changeStatus = "ret";
+				
+			    $.ajax({
+					type : 'post',
+				    url : '/ezAttitude/changeAttModApp.do',
+				    data : obj,
+				    dataType : "text",
+				    error: function(xhr, status, error){
+				    	ajaxRunning = false;
+				    	alert("반려 중 오류 발생")
+				    },
+				    success : function(json){
+				    	alert("반려되었습니다.");
+						window.close();
+			            try {
+			                window.opener.att_refresh();
+			            } catch (e) { }
+				    }
+			    });
+		    }
 	    </script>
 	</head>
 
@@ -97,9 +149,15 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <ul id="menuTable">	
-	                                <li><span onclick="modify()">수정</span></li>
+	                            <ul id="menuTable">
+	                            	<c:if test="${adminFlag == 'true'}">
+	                            	<li><span onclick="modApprove()">승인</span></li>
+	                                <li><span onclick="modReturn()">반려</span></li>
+	                            	</c:if>
+	                            	<c:if test="${adminFlag != 'true'}">
+	                            	<li><span onclick="modify()">수정</span></li>
 	                                <li><span onclick="del()">삭제</span></li>
+	                            	</c:if>
 	                            </ul>
 	                        </div>
 	                        <div id="close">
@@ -157,9 +215,6 @@
 	            	</tr>
 	            </table>
 	        </div>
-	        <script type="text/javascript">
-		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210 + "PX";
-		    </script>
 	    </form>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">

@@ -693,6 +693,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("ids", ids);
+		map.put("delFlag", "1"); //0:삭제안함, 1:삭제
 		
 		ezAttitudeDAO.delUsersModifyAtt(map);
 	}
@@ -792,11 +793,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			startDate = startDate + " 00:00:00";
 			endDate = endDate + " 23:59:59";
 		}
-
-		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+		
+		int limit = 0;
+		if (pageNum != null || pageNum != "") {
+			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+			map.put("limit", limit);
+		}
+		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("limit", limit);
 		map.put("listSize", listSize);
 		map.put("typeId", typeId);
 		map.put("order", order.trim());
@@ -854,5 +859,22 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			resultCount = ezAttitudeDAO.getAttitudeCount2(map);
 		}
 		return resultCount;
+	}
+
+	@Override
+	public void changeUsersModifyAtt(String companyId, int tenantId,
+			String[] ids, String changeStatus) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("ids", ids);
+		map.put("changeStatus", changeStatus);
+		
+		//승인, 반려 기록
+		ezAttitudeDAO.changeUsersModifyAtt(map);
+		
+		//수정이 완료 되면 히스토리 기록
+		ezAttitudeDAO.addUsersModifyAttHistory(map);
 	}
 }

@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -225,10 +226,6 @@ public class EzAttitudeKMSController {
 			model.addAttribute("list", list);
 		}
 		
-		for (int i = 0 ; i < list.size(); i++ ) {
-			LOGGER.debug(list.get(i).toString());
-		}
-		
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userTimeSet", offset);
 		model.addAttribute("offsetMin", offsetMin);
@@ -407,10 +404,6 @@ public class EzAttitudeKMSController {
 			data = (JSONObject) resultBody.get("data");
 			list = (JSONArray) data.get("list");
 			model.addAttribute("list", list);
-		}
-		
-		for (int i = 0 ; i < list.size(); i++ ) {
-			LOGGER.debug(list.get(i).toString());
 		}
 		
 		model.addAttribute("userLang", userInfo.getLang());
@@ -599,74 +592,74 @@ public class EzAttitudeKMSController {
 	}
 	
 	@RequestMapping(value = "/ezAttitude/saticGetXlsAtt.do")
-	   public void qstResultsaticGetXlsAtt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
-	      LOGGER.debug("saticGetXlsAtt started");
-	      
-	      String headerFLAG = "";
-	      
-	      if (request.getParameter("headerFlag") != null) {
-	         headerFLAG = request.getParameter("headerFlag");
-	        }
-	  
-	      HSSFWorkbook workbook = new HSSFWorkbook();
-	      HSSFSheet sheet;
-	      
-	      HSSFCellStyle headerStyle= workbook.createCellStyle();
-	      headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-	      headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-	      headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-	      headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-	      headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-	      headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-	      
-	      HSSFCellStyle bodyStyle= workbook.createCellStyle();
-	      bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-	      bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-	      bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-	      bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-	      
-	      Row row;
-	      Cell cell;
-	      
-	      String pFileName = "";
-	      String strDate = EgovDateUtil.getToday("-");
-	      pFileName = strDate+"_Report.xls";
-	      
-	      String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
-	      Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
-	      Node tbodyNode = analysisData.getElementsByTagName("tbody").item(0);
-	      Node tableHeadNode;
-	      Node tableBodyNode;
-	      
-	      tableHeadNode = tbodyNode.getChildNodes().item(0);
-	      
-	      sheet = workbook.createSheet("report");
-
-		  row = sheet.createRow(0);
-		  for (int i = 0; i <tableHeadNode.getChildNodes().getLength(); i++) {
-			  cell = row.createCell(i);
-			  cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
-			  cell.setCellStyle(headerStyle);
-		  }
+	public void qstResultsaticGetXlsAtt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		LOGGER.debug("saticGetXlsAtt started");
+		
+		String headerFLAG = "";
+		 
+		if (request.getParameter("headerFlag") != null) {
+			headerFLAG = request.getParameter("headerFlag");
+		}
+		  
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet;
+		  
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		  
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		 
+		Row row;
+		Cell cell;
+		      
+		String pFileName = "";
+		String strDate = EgovDateUtil.getToday("-");
+		pFileName = strDate+"_Report.xls";
+		  
+		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
+		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
+		Node tbodyNode = analysisData.getElementsByTagName("tbody").item(0);
+		Node tableHeadNode;
+		Node tableBodyNode;
+		 
+		tableHeadNode = tbodyNode.getChildNodes().item(0);
+		
+		sheet = workbook.createSheet("report");
+		row = sheet.createRow(0);
+		for (int i = 0; i <tableHeadNode.getChildNodes().getLength(); i++) {
+			cell = row.createCell(i);
+			cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
+			cell.setCellStyle(headerStyle);
+		}
 		  //header
-
-		  for (int i = 1; i < tbodyNode.getChildNodes().getLength() ; i++){
-			  row = sheet.createRow(i);
-			  tableBodyNode = tbodyNode.getChildNodes().item(i);
-			  for (int j = 0; j < tableBodyNode.getChildNodes().getLength(); j++) {
-				  cell = row.createCell(j);
-				  cell.setCellValue(tableBodyNode.getChildNodes().item(j).getTextContent());
-				  cell.setCellStyle(bodyStyle);
-			  }
-		  }//body
-
-	      response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
-	      workbook.write(response.getOutputStream());
-	      
-	      workbook.close();
-	      
-	      LOGGER.debug("saticGetXlsAtt ended");
-	   }
+		
+		for (int i = 1; i < tbodyNode.getChildNodes().getLength() ; i++){
+			row = sheet.createRow(i);
+			tableBodyNode = tbodyNode.getChildNodes().item(i);
+			for (int j = 0; j < tableBodyNode.getChildNodes().getLength(); j++) {
+				cell = row.createCell(j);
+				cell.setCellValue(tableBodyNode.getChildNodes().item(j).getTextContent());
+				cell.setCellStyle(bodyStyle);
+			}
+		}//body
+		
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		workbook.write(response.getOutputStream());
+		  
+		workbook.close();
+		  
+		LOGGER.debug("saticGetXlsAtt ended");
+	}
+	
 	@RequestMapping(value="/ezAttitude/delAttModApp.do" , method= RequestMethod.POST)
 	@ResponseBody
 	public String delAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
@@ -680,9 +673,6 @@ public class EzAttitudeKMSController {
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
-		
-		String offset = userInfo.getOffset();
-		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
@@ -707,15 +697,100 @@ public class EzAttitudeKMSController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		
-		JSONObject data = new JSONObject();
-		
-//		if(status.equals("ok")){
-//			data  = (JSONObject)resultBody.get("data");
-//		}
+
 		LOGGER.debug("delAttModApp ended");
 		return status;
 	}
+	
+	@RequestMapping(value="/ezAttitude/changeAttModApp.do", method= RequestMethod.POST)
+	@ResponseBody
+	public String changeAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=true)String idList,
+			@RequestParam(required=true)String changeStatus
+			) throws Exception {
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("idList", idList)
+				.queryParam("changeStatus", changeStatus);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		LOGGER.debug("apprAttModApp ended");
+		return status;
+	}
+	
+	@RequestMapping(value="/ezAttitude/retAttModApp.do" , method= RequestMethod.POST)
+	@ResponseBody
+	public String retAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=false)String idList) throws Exception {
+		LOGGER.debug("retAttModApp started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("idList", idList);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+
+		LOGGER.debug("retAttModApp ended");
+		
+		return status;
+	}
+	
 	/**
 	 * 근태수정현황 수정
 	 */
@@ -726,7 +801,6 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String changeDate,
 			@RequestParam(required=false)String content) throws Exception {
 		LOGGER.debug("modAttModApp started");
-		LOGGER.debug("id : " + attId + "changeDate : " + changeDate + "content : " + content);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -764,10 +838,9 @@ public class EzAttitudeKMSController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		
-		JSONObject data = new JSONObject();
 
 		LOGGER.debug("modAttModApp ended");
+		
 		return status;
 	}
 	
@@ -776,7 +849,8 @@ public class EzAttitudeKMSController {
 	 */
 	@RequestMapping(value="/ezAttitude/attModAppDetail.do")
 	public String attModAppDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
-			@RequestParam(required=false)String attModId) throws Exception {
+			@RequestParam(required=true)String attModId,
+			@RequestParam(required=false)String adminFlag) throws Exception {
 		LOGGER.debug("attModAppDetail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -784,6 +858,16 @@ public class EzAttitudeKMSController {
 
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
+		}
+		
+		if (adminFlag != null) {
+			if (adminFlag.equals("true")) {
+				if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
+					return "cmm/error/adminDenied";
+				}
+			}
+		} else {
+			adminFlag = "false";
 		}
 		
 		String offset = userInfo.getOffset();
@@ -816,8 +900,7 @@ public class EzAttitudeKMSController {
 		String status = resultBody.get("status").toString();
 		
 		JSONObject data = new JSONObject();
-		JSONArray list = new JSONArray();
-
+		
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
 			model.addAttribute("data", data);
@@ -826,6 +909,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userTimeSet", offset);
 		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("adminFlag", adminFlag);
 		
 		LOGGER.debug("attModAppDetail ended");
 		
@@ -877,7 +961,6 @@ public class EzAttitudeKMSController {
 		String status = resultBody.get("status").toString();
 		
 		JSONObject data = new JSONObject();
-		JSONArray list = new JSONArray();
 
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");

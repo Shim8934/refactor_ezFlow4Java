@@ -167,7 +167,9 @@ public class AttitudeApplicationVO {
 		return content;
 	}
 	public void setContent(String content) {
-		this.content = content;
+		if (content != null){
+			this.content = content.replaceAll("\'", "\"");
+		}
 	}
 	public String getOriginDate() {
 		return originDate;

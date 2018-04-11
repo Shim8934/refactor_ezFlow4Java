@@ -135,7 +135,7 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	
 	@SuppressWarnings("unchecked")
 	public void delUsersModifyAtt(Map<String, Object> map) throws Exception {
-		delete("ezAttitudeDAO.delUsersModifyAtt", map);
+		update("ezAttitudeDAO.delUsersModifyAtt", map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -150,7 +150,7 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	
 	@SuppressWarnings("unchecked")
 	public AttitudeApplicationVO attModAppDetail(Map<String, Object> map) throws Exception {
-		return (AttitudeApplicationVO) select("ezAttitudeAdminDAO.attModAppDetail", map);
+		return (AttitudeApplicationVO) select("ezAttitudeDAO.attModAppDetail", map);
 	}
 	
 	public AttitudeFormVO getFormBody(Map<String, Object> map) throws Exception {
@@ -174,5 +174,15 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	
 	public AttitudeVO getAttitudeInfo(Map<String, Object> map) {
 		return (AttitudeVO) select("ezAttitude.getAttitudeInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void changeUsersModifyAtt(Map<String, Object> map) {		
+		update("ezAttitudeDAO.changeUsersModifyAtt", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void addUsersModifyAttHistory(Map<String, Object> map) throws Exception {
+		insert("ezAttitudeAdminDAO.addUsersModifyAttHistory", map);
 	}
 }

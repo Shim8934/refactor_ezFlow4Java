@@ -271,6 +271,10 @@
 			a.APPR_STATUS = #type#
 			]]>
 		</isNotEmpty>
+		<![CDATA[
+			AND
+				DELFLAG = 0
+		]]>
 		<isNotEmpty prepend="" property="order">
 				ORDER BY $order$
 		</isNotEmpty>
@@ -305,7 +309,7 @@
 		<include refid="ezAttitudeDAO.searchQuery"/>
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.attModAppDetail" parameterClass="Map" resultMap="attitudeApplicationDetailVO">
+	<select id="ezAttitudeAdminDAO.attModAppDetail" parameterClass="Map" resultMap="attitudeApplicationVO">
 		<![CDATA[
 			SELECT
 					a.attitude_id as ATTITUDE_ID,
@@ -323,8 +327,6 @@
 				a.COMPANY_ID = #companyId#
 			and 
 				a.TENANT_ID = #tenantId#
-			and 
-				a.WRITER_ID = #userId#
 			and
 				a.ATTITUDE_ID = #attModId#
 		]]>
@@ -359,8 +361,6 @@
 				a.COMPANY_ID = #companyId#
 			and 
 				a.TENANT_ID = #tenantId#
-			and 
-				a.WRITER_ID = #userId#
 			and
 				a.ATTITUDE_ID = #attModId#
 		]]>
@@ -445,10 +445,12 @@
 		]]>
 	</select>
 	
-	<delete id="ezAttitudeDAO.delUsersModifyAtt" parameterClass="Map">
+	<update id="ezAttitudeDAO.delUsersModifyAtt" parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
+			UPDATE
 				TBL_ATTITUDE_MODAPPL
+			SET
+				DELFLAG = #delFlag#
           	WHERE
           		TENANT_ID = #tenantId#
           	AND
@@ -458,7 +460,7 @@
 		<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
 		      #ids[]# 
 		</iterate>
-	</delete>
+	</update>
 	
 	<select id="ezAttitudeDAO.getFormBody" parameterClass="Map" resultMap="getFormBody">
 		<![CDATA[
@@ -526,4 +528,100 @@
 		AND    
 			A.TENANT_ID = #tenantId#;
 	</select>
+	
+	<update id="ezAttitudeDAO.changeUsersModifyAtt" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_ATTITUDE_MODAPPL
+			SET 
+				APPR_STATUS =
+		]]> 
+			<isEqual property="changeStatus" compareValue="appr">
+				1
+			</isEqual>
+			<isEqual property="changeStatus" compareValue="ret">
+				2
+			</isEqual>
+		<![CDATA[
+	        WHERE
+	        	TENANT_ID = #tenantId#
+		]]>	        	
+	        AND
+	        <iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
+				#ids[]# 
+			</iterate>
+		<![CDATA[			
+	        AND
+	        	COMPANY_ID = #companyId#
+		]]>
+	</update>
+	
+	<insert id="ezAttitudeAdminDAO.addUsersModifyAttHistory" parameterClass="Map">
+		INSERT INTO tbl_attitude_modappl_history(
+			ATTITUDE_ID,
+			MOD_CNT,
+			COMPANY_ID,
+			TENANT_ID,
+			WRITER_ID,
+			WRITER_NAME,
+			WRITER_NAME2,
+			WRITER_TITLE,
+			WRITER_TITLE2,
+			WRITER_DEPT_ID,
+			WRITER_DEPT_NAME,
+			WRITER_DEPT_NAME2,
+			CHANGE_DATE,
+			DELFLAG,
+			APPR_USER_ID,
+			APPR_DATE,
+			APPR_STATUS,
+			CONTENT
+			)
+		SELECT
+			ATTITUDE_ID,
+			(SELECT 
+				count(*) 
+			FROM
+				tbl_attitude_modappl_history
+			WHERE
+				TENANT_ID = #tenantId#
+        	AND
+        		COMPANY_ID = #companyId#
+        	AND
+			<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
+			      #ids[]# 
+			</iterate>),
+			COMPANY_ID,
+			TENANT_ID,
+			WRITER_ID,
+			WRITER_NAME,
+			WRITER_NAME2,
+			WRITER_TITLE,
+			WRITER_TITLE2,
+			WRITER_DEPT_ID,
+			WRITER_DEPT_NAME,
+			WRITER_DEPT_NAME2,
+			CHANGE_DATE,
+			DELFLAG,
+			APPR_USER_ID,
+			APPR_DATE,
+			<isEqual property="changeStatus" compareValue="appr">
+				1
+			</isEqual>
+			<isEqual property="changeStatus" compareValue="ret">
+				2
+			</isEqual>,
+			CONTENT
+		FROM 
+			tbl_attitude_modappl
+		WHERE
+			TENANT_ID = #tenantId#
+        AND
+        	COMPANY_ID = #companyId#
+        AND
+		<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
+		      #ids[]# 
+		</iterate>
+	</insert>
+>>>>>>> 9a621784dcf0a5f71c8ba9fd99972ef260be0ae6
 </sqlMap>

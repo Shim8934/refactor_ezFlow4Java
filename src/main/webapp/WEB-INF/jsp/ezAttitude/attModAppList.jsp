@@ -37,6 +37,52 @@
 		var m_strColorDefault = "#ffffff";
 		var adminFlag = "${adminFlag}";
 		
+		$(document).ready(function() {
+	    	var clickOutside;
+	    	
+	    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) {
+	    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
+	    	} else {
+	    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
+	    	}	    	
+	    	
+	    	clickOutside.mouseup(function (e) {
+	    		searchHiddenOutside(e);
+	    	});
+	    	
+	    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
+	    		searchHiddenOutside(e);
+	    	});
+	    	
+	    	$(parent.document).mouseup(function (e) {
+	    		searchHiddenOutside(e);
+	    	});
+	    	
+	    	$(document).mouseup(function (e) {
+	    		searchHiddenOutside(e);
+	    	});
+	    	
+	    	$(window.frames['ifrmPreViewH']).mouseup(function (e) {
+	    		searchHiddenOutside(e);
+	    	});
+	    	
+	    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
+	    		searchHiddenOutside(e);
+	    	});
+	    	
+	    });
+		
+		function searchHiddenOutside(e) {
+			var container = $('#layer_popup');
+			var maillistoptionmode = $('#layer_popup').css('display');
+
+			if (maillistoptionmode != "none") {
+				if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'search') {
+					$('#layer_popup').hide();
+				}
+			}
+		}
+		
 		$(function(){
 			$(document).on('click', '#AttList th', function(){
 				if (!($(this).find("input[type=checkbox]").length) && ($(this).attr("colname") != "NO") ) { // checkbox는 sort에서 제외
@@ -306,6 +352,7 @@
 	    	
 		    obj.apprUserName = $('#appr_search').val();
 		    obj.startDate = startDate;
+		    obj.type = type;
 		    obj.endDate = endDate;
 		    obj.excelReq = "true";
 			
@@ -394,6 +441,7 @@
     			}
 	    	}
 	    }
+	    
 	    function date_reset() {
 	    	$("#Sdatepicker").datepicker({
 	            changeMonth: true,
@@ -421,7 +469,8 @@
 	    function search_keypress(evt)
 		{	
 	        var curevent = (typeof event == 'undefined' ? evt : event)
-	        if (curevent.keyCode == "13") {
+
+			if (curevent.keyCode == "13") {
 	        	att_search();
 	        }
 		}
@@ -452,6 +501,7 @@
 	    
 	    function selbeforeBlock_one(){
 	        var pageNum = parseInt(currentPage);
+
 	        if(parseInt(pageNum - 1) > 0)
 	            goToPageByNum(parseInt(pageNum - 1));
 	        else
@@ -460,6 +510,7 @@
 	    
 	    function selafterBlock(){
 	        var pageNum = parseInt(currentPage);
+
 	        pageNum = ((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1;
 	        goToPageByNum(pageNum);
 	    }
@@ -473,6 +524,7 @@
 	    }
 	    
 	    var usepostDate = false;
+	    
 	    function DateSearch_Click() {
 	        if(usepostDate){
 	            usepostDate = false;
@@ -499,6 +551,7 @@
 	    
 	    var PressShiftKey = false;
 	    var PressCtrlKey = false;
+	    
 	    function event_listOnkeyUp(event) {
 	        if (navigator.userAgent.indexOf('Firefox') != -1) {
 	            if (!event) event = window.event;
@@ -517,6 +570,7 @@
 	        }
 
 	    }
+	    
 	    function event_listOnkeyDown(event) {
 	        if (navigator.userAgent.indexOf('Firefox') != -1) {
 	            if (!event) event = window.event;
@@ -678,6 +732,76 @@
 		    });
 	    }
 	    
+		//승인
+	    function modApprove() { 
+	    	ShowAttProgress();
+	    	
+	    	var attList = $(".checkAtt:checked");
+	    	var idList = "";
+	    	
+	    	for (var i = 0; i < attList.length; i++) {
+	    		idList += attList[i].getAttribute("id").split("_")[1] + ","
+	    	}
+	    	
+	    	var obj = new Object();
+	    	
+		    obj.idList = idList.slice(0,-1);
+		    obj.changeStatus = "appr";
+			
+		    $.ajax({
+				type : 'post',
+			    url : '/ezAttitude/changeAttModApp.do',
+			    data : obj,
+			    dataType : "text",
+			    error: function(xhr, status, error){
+			    	ajaxRunning = false;
+			    	alert("승인 중 오류 발생")
+			    },
+			    success : function(json){
+			    	get_att_list(currentPage);
+					alert("승인되었습니다.");
+			    },
+				complete : function() {
+					HiddenAttProgress();
+				}
+		    });
+	    }
+	    
+	  	//반려
+	    function modReturn() {
+	    	ShowAttProgress();
+	    	
+	    	var attList = $(".checkAtt:checked");
+	    	var idList = "";
+	    	
+	    	for (var i = 0; i < attList.length; i++) {
+	    		idList += attList[i].getAttribute("id").split("_")[1] + ","
+	    	}
+	    	
+	    	var obj = new Object();
+	    	
+		    obj.idList = idList.slice(0,-1);
+		    obj.changeStatus = "ret";
+			
+		    $.ajax({
+				type : 'post',
+			    url : '/ezAttitude/changeAttModApp.do',
+			    data : obj,
+			    dataType : "text",
+			    error: function(xhr, status, error){
+			    	ajaxRunning = false;
+			    	alert("반려 중 오류 발생")
+			    },
+			    success : function(json){
+			    	get_att_list(currentPage);
+					alert("반려되었습니다.");
+			    },
+				complete : function() {
+					HiddenAttProgress();
+				}
+		    });
+	    }
+	    
 	    function ArrayDelete(TargetArray, DeleteNodeStr) {
 	        var TempArray = new Array();
 	        for (var i = 0; i < TargetArray.length; i++) {
@@ -757,22 +881,32 @@
 			var feature = GetOpenPosition(790, 760);
 			var tds =  t.getElementsByTagName("td");
 			var modAttId;
-			console.log(feature);
+			
 			modAttId = tds[0].getElementsByTagName("input").item(0).getAttribute("value");
 			
-			window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId, "",
-		 			"height = 830px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			if (adminFlag == "true") {
+				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId +"&adminFlag=" + adminFlag, "",
+			 			"height = 830px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			} else {
+				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId, "",
+			 			"height = 830px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
+			}
 	    }
 		</script>
 </head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
-	<c:if test="${list.apprStatus == 1}">
-				          		<td>승인</td>	
+	<c:if test="${adminFlag == 'true'}">
+		<h1>근태수정관리현황<span id="mailBoxInfo">-신청관리현황[총 xxx개-xxxx년 xx월 xx일~xxxx년 xx월 xx일]</span></h1>
 	</c:if>
-		<h1>근태수정현황<span id="mailBoxInfo">-신청관리현황[총 xxx개-xxxx년 xx월 xx일~xxxx년 xx월 xx일]</span>
-	    </h1>	
+	<c:if test="${adminFlag == 'false'}">
+		<h1>근태수정현황<span id="mailBoxInfo">-신청관리현황[총 xxx개-xxxx년 xx월 xx일~xxxx년 xx월 xx일]</span></h1>
+	</c:if>
         <div id="mainmenu">
         <ul id="tb_Parent">
+        <c:if test="${adminFlag == 'true'}">
+			<li id="reply"><span onClick="modApprove()">승인</span></li>
+          <li id="search"><span onClick="modReturn()">반려</span></li>
+		</c:if>
           <li><span onClick="attList_del()">삭제</span></li>
           <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
           <li id="search"><span onClick="search_popup()">검색</span></li>
@@ -883,7 +1017,7 @@
 			</tr>
 		</table>
 		
-		<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezAttitude/getXlsAtt.do">
+		<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezAttitude/saticGetXlsAtt.do">
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value=""/>
 	        <input type="hidden" id="userAgent" name="userAgent" value=""/>
 	    </form>
