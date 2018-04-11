@@ -109,7 +109,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public List<LadderVO> getLadderList(LadderVO vo, int startPoint, int endPoint, String mode) throws Exception {
+	public List<LadderVO> getLadderList(LadderVO vo, int startPoint, int endPoint, String mode, String sort, String sortFlag) throws Exception {
 		logger.debug("getLadderList started.");		// 비검색 전체
 		String lang = commonUtil.getMultiData(vo.getLang(), vo.getTenant_id());
 		
@@ -121,6 +121,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("mode", mode);
 		map.put("offset", commonUtil.getMinuteUTC(vo.getOffset()));
 		map.put("lang", lang);
+		map.put("sort", sort);
+		map.put("sortFlag", sortFlag);
 	
 		if(mode.equals("pre")) {
 			List<LadderVO> ladList = ezLadderDAO.selectPreList(map);
@@ -140,7 +142,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public List<LadderVO> getPartLadderList(LadderVO vo, int startPoint, int endPoint) throws Exception {
+	public List<LadderVO> getPartLadderList(LadderVO vo, int startPoint, int endPoint, String sort, String sortFlag) throws Exception {
 		logger.debug("getPartLadderList started.");		// 비검색 참여자
 		String lang = commonUtil.getMultiData(vo.getLang(), vo.getTenant_id());
 		
@@ -151,6 +153,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("endPoint", endPoint);
 		map.put("offset", commonUtil.getMinuteUTC(vo.getOffset()));
 		map.put("lang", lang);
+		map.put("sort", sort);
+		map.put("sortFlag", sortFlag);
 		List<LadderVO> list = ezLadderDAO.getPartLadderList(map);
 		if(lang.equals("2")) {
 			for(LadderVO userVO : list) {
@@ -162,7 +166,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public List<LadderVO> searchLadderList(LadderVO vo, List<String> allData, int startPoint, int endPoint) throws Exception {
+	public List<LadderVO> searchLadderList(LadderVO vo, List<String> allData, int startPoint, int endPoint, String sort, String sortFlag) throws Exception {
 		logger.debug("searchLadderList started.");		// 검색
 		String lang = commonUtil.getMultiData(vo.getLang(), vo.getTenant_id());
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -181,6 +185,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("endPoint", endPoint);
 		map.put("offset", commonUtil.getMinuteUTC(vo.getOffset()));
 		map.put("lang", lang);
+		map.put("sort", sort);
+		map.put("sortFlag", sortFlag);
 		
 		List<LadderVO> list = null;
 		if(mode.equals("part")) {		// 참여버튼 검색

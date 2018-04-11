@@ -14,9 +14,9 @@ public interface EzLadderService {
 	public int ladderCount(LadderVO vo, String mode) throws Exception;
 	public int partLadderCount(LadderVO vo) throws Exception;
 	public int searchLadderCount(LadderVO vo, List<String> allData) throws Exception;
-	public List<LadderVO> getLadderList(LadderVO vo, int startPoint, int endPoint, String mode) throws Exception;
-	public List<LadderVO> getPartLadderList(LadderVO vo, int startPoint, int endPoint) throws Exception;
-	public List<LadderVO> searchLadderList(LadderVO vo, List<String> allData, int startPoint, int endPoint) throws Exception;
+	public List<LadderVO> getLadderList(LadderVO vo, int startPoint, int endPoint, String mode, String sort, String sortFlag) throws Exception;
+	public List<LadderVO> getPartLadderList(LadderVO vo, int startPoint, int endPoint, String sort, String sortFlag) throws Exception;
+	public List<LadderVO> searchLadderList(LadderVO vo, List<String> allData, int startPoint, int endPoint, String sort, String sortFlag) throws Exception;
 	
 	/** boh */
 	public void insertLadder(LadderVO lad, LadderLineVO ladLines, String logCookie) throws Exception; // 사다리 게임 만들기

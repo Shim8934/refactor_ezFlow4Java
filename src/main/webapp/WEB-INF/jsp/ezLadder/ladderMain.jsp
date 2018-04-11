@@ -28,13 +28,15 @@
 			var allData = [];
 			var id = "${id}";
 			var back = "none";
-		
+			var sort = "${sort}";
+			var sortFlag = "${sortFlag}";
 			
 			$(function() {
 				
 				mouseCursor();
 				changeBtnColor();
 				makePageSelPage();
+				$("#header img").hide();
 				$("#searchInput").on("keyup", function(e) {
 					if(e.keyCode == "13") {
 						searchLadder();
@@ -54,7 +56,7 @@
 				$("#searchOption").on('change', function() { // // select Option값 바뀔시
 					checkSearchOption();
 				});
-				
+				sortViews();
 			});
 			// 윈도우 창 조절
 			function ladder_main_resize() {
@@ -92,6 +94,10 @@
 				border-color:#B5B3B3; 
 				border:1px solid #B5B3B3;
 			}
+			.mainlist th {
+			    cursor: pointer;
+			}
+			
 		</style>
 	</head>
 	<body class="mainbody" style="min-width: 750px;">
@@ -129,13 +135,13 @@
 		<div class="div_scroll" style="width:100%; overflow: auto" id="divList">
 			 <table class="mainlist" style="width:98%; margin-left: 10px; margin-right: 10px; overflow: auto"> 
 			    <tr class="header" style="height=20px;"> 
-					<th width="20px"><spring:message code="ezLadder.t002"/></th> 
-					<th width="80px"><spring:message code="ezLadder.t003"/></th> 
-					<th width="40px"><spring:message code="ezLadder.t004"/></th>
-					<th width="40px"><spring:message code="ezLadder.t005"/></th> 
-					<th width="30px"><spring:message code="ezLadder.t006"/></th> 
-					<th width="30px"><spring:message code="ezLadder.t007"/></th>
-					<th width="30px"><spring:message code="ezLadder.t008"/></th>		
+					<th width="20px" onClick="listSort(0)"><spring:message code="ezLadder.t002"/><span id="sort_0" ></span></th> 
+					<th width="80px" onClick="listSort(1)"><spring:message code="ezLadder.t003"/><span id="sort_1" ></span></th> 
+					<th width="40px" onClick="listSort(2)"><spring:message code="ezLadder.t004"/><span id="sort_2" ></span></th>
+					<th width="40px" onClick="listSort(3)"><spring:message code="ezLadder.t005"/><span id="sort_3" ></span></th> 
+					<th width="30px" onClick="listSort(4)"><spring:message code="ezLadder.t006"/><span id="sort_4" ></span></th> 
+					<th width="30px" onClick="listSort(5)"><spring:message code="ezLadder.t007"/><span id="sort_5" ></span></th>
+					<th width="30px" onClick="listSort(6)"><spring:message code="ezLadder.t008"/><span id="sort_6" ></span></th>
 			    </tr>
 				 <c:forEach items="${list }" var="vo">
 					<tr class="black" style="height=30px;" onClick="getLadderGame(${vo.ladderId})">

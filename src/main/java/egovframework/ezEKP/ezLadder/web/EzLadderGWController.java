@@ -94,12 +94,15 @@ public class EzLadderGWController {
 		String mode = request.getParameter("mode");
 		String searchSelect = request.getParameter("searchSelect");
 		String searchInput = request.getParameter("searchInput");
-
+		String sort = request.getParameter("sort");
+		String sortFlag = request.getParameter("sortFlag");
 		
 		logger.debug("mode : " + mode);
 		logger.debug("currPage : " + page);
 		logger.debug("searchSelect : " + searchSelect);
-		logger.debug("searchInput : " + searchInput);	
+		logger.debug("searchInput : " + searchInput);
+		logger.debug("sort : " + sort);	
+		logger.debug("sortFlag : " + sortFlag);	
 		vo.setUserId(userId);
 
 	
@@ -112,15 +115,15 @@ public class EzLadderGWController {
 				if(mode.equals("part")){		// 일부 참여자 선택
 					totalLadder = ezLadderService.partLadderCount(vo);
 					pages = paging(page, totalLadder);
-					list = ezLadderService.getPartLadderList(vo, pages[1], pages[2]);
+					list = ezLadderService.getPartLadderList(vo, pages[1], pages[2], sort, sortFlag);
 				} else if(mode.equals("pre")) { // 이전 사다리 리스트 출력 
 					totalLadder = ezLadderService.ladderCount(vo, mode);
 					pages = paging(page, totalLadder);
-					list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode);
+					list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode, sort, sortFlag);
 				} else {						// 전체 참여자 선택
 					totalLadder = ezLadderService.ladderCount(vo, mode);
 					pages = paging(page, totalLadder);
-					list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode);
+					list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode, sort, sortFlag);
 				}
 			} else {							// 검색
 				List<String> allData = new ArrayList<String>();
@@ -129,7 +132,7 @@ public class EzLadderGWController {
 				allData.add(mode);
 				totalLadder = ezLadderService.searchLadderCount(vo, allData);
 				pages = paging(page, totalLadder);
-				list = ezLadderService.searchLadderList(vo, allData, pages[1], pages[2]);
+				list = ezLadderService.searchLadderList(vo, allData, pages[1], pages[2], sort, sortFlag);
 			}
 		
 			result.put("status", "ok");
@@ -461,7 +464,7 @@ public class EzLadderGWController {
 			if(searchInput.equals("")) {	// 이전 사다리 비검색
 				totalLadder = ezLadderService.ladderCount(vo, mode);
 				pages = paging(page, totalLadder);
-				list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode);
+				list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode, "date", "desc");
 			} else {						// 이전 사다리 검색
 				List<String> allData = new ArrayList<String>();
 				allData.add(searchSelect);
@@ -469,7 +472,7 @@ public class EzLadderGWController {
 				allData.add(mode);
 				totalLadder = ezLadderService.searchLadderCount(vo, allData);
 				pages = paging(page, totalLadder);
-				list = ezLadderService.searchLadderList(vo, allData, pages[1], pages[2]);
+				list = ezLadderService.searchLadderList(vo, allData, pages[1], pages[2], "date", "desc");
 			}
 			
 			result.put("status", "ok");

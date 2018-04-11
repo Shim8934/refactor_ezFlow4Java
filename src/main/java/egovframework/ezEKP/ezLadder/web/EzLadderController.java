@@ -88,12 +88,14 @@ public class EzLadderController {
 	 * 사다리 게임 호출
 	 * */
 	@RequestMapping(value = "/ezLadder/ladderMain.do")
-	public String ladderMain(String mode, String currPage, String searchSelect, String searchInput, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String ladderMain(String mode, String currPage, String searchSelect, String searchInput, String sort, String sortFlag, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("ladderMain started.");
 		logger.debug("mode : " + mode);
 		logger.debug("currPage : " + currPage);
 		logger.debug("searchSelect : " + searchSelect);
 		logger.debug("searchInput : " + searchInput);
+		logger.debug("sort : " + sort);
+		logger.debug("sortFlag : " + sortFlag);
 	
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
@@ -114,7 +116,9 @@ public class EzLadderController {
 									.queryParam("searchSelect", searchSelect)
 									.queryParam("searchInput", searchInput)
 									.queryParam("offset", userInfo.getOffset())
-									.queryParam("lang", userInfo.getLang());
+									.queryParam("lang", userInfo.getLang())
+									.queryParam("sort", sort)
+									.queryParam("sortFlag", sortFlag);
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
@@ -137,7 +141,8 @@ public class EzLadderController {
 			model.addAttribute("mode", mode);
 			model.addAttribute("searchSelect", searchSelect);
 			model.addAttribute("searchInput", searchInput);
-			
+			model.addAttribute("sort", sort);
+			model.addAttribute("sortFlag", sortFlag);
 		} else {
 			return "error";
 		}
@@ -284,7 +289,7 @@ public class EzLadderController {
 		}
 		
 		logger.debug("### POST setLadder.do ended.");
-		return "forward:/ezLadder/ladderMain.do?mode=all&currPage=1&searchSelect=&searchInput=";
+		return "forward:/ezLadder/ladderMain.do?mode=all&currPage=1&searchSelect=&searchInput=&sort=writeDate&sortFlag=desc";
 	}
 	
 	/**

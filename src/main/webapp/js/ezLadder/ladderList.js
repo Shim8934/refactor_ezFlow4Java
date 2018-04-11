@@ -153,10 +153,72 @@ function deleteLadder(ladderId) {
 		});
 	}
 }
+function sortView() {
+	var temp;
+	if(sort==='type') {
+		temp=0;
+	} else if(sort==='title') {
+		temp=1;
+	} else if(sort=== 'writerName') {
+		temp=2;
+	} else if(sort==='writeDate') {
+		temp=3;
+	} else if(sort==='status') {
+		temp=4;
+	} else if(sort==='secretFlag') {
+		temp=5;
+	} else {
+		temp=6;
+	}
 
+	return temp;
+}
+
+function sortViews() {
+	var html="";
+	var temp = sortView();
+	$("#sort_" + temp).html("");
+	html = "";
+	if(sortFlag == 'desc') {
+		html += "<img src='/images/etc/view-sortdown.gif' align='absmiddle'>";
+	} else {
+		html += "<img src='/images/etc/view-sortup.gif' align='absmiddle'>";
+	}
+	$("#sort_" + temp).append(html); 
+}
+
+function listSort(num) {
+	
+	var temp = sort;
+	switch(num) {
+		case 0: sort="type";
+				break;
+		case 1: sort="title";
+				break;
+		case 2: sort="writerName";
+				break;
+		case 3: sort="writeDate";
+				break;
+		case 4: sort="status";
+				break;
+		case 5: sort="secretFlag";
+				break;
+		case 6: sort="deleteFlag";
+				break;
+			
+	}
+	
+	if((sortFlag == 'desc') && (temp == sort)) {
+		sortFlag = 'asc';
+	} else {
+		sortFlag = 'desc';
+	}
+	mode=modeCheck;
+	view();
+}
 
 function view() {
-	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=" + searchInput;
+	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=" + searchInput + "&sort=" + sort + "&sortFlag=" + sortFlag;
 	document.location.href = szUrl;
 }
 

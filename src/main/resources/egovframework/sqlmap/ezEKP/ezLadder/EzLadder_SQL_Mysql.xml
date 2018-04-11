@@ -177,12 +177,56 @@
 				<![CDATA[
 				A.WRITERID = #userId# 
             )
-            ORDER BY 
-				E.LADDERID 
-			DESC
+            ORDER BY
+            ]]> 
+            <isEqual property="sort" compareValue="type">
+            <![CDATA[
+				E.TYPE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="title">
+            <![CDATA[
+				E.TITLE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="writerName">
+            <![CDATA[
+				E.WRITERNAME
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="writeDate">
+            <![CDATA[
+				E.WRITEDATE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="status">
+            <![CDATA[
+				E.STATUS 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="secretFlag">
+            <![CDATA[
+				E.SECRETFLAG 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="deleteFlag">
+            <![CDATA[
+				E.DELETEFLAG 
+			]]>
+			</isEqual>
+			<isEqual property="sortFlag" compareValue="desc">
+            <![CDATA[
+				DESC
+			]]>
+			</isEqual>
+			<isNotEqual property="sortFlag" compareValue="desc">
+			 <![CDATA[
+				ASC
+			]]>
+			</isNotEqual>
 			LIMIT 
 				#startPoint#, #endPoint# 
-		]]>
+		
 	</select>
 	
 	<select id="EzLadderDAO.getPartLadderCount" resultClass="Integer">
@@ -243,12 +287,56 @@
                                     B.LADDERID = C.LADDERID
 								WHERE 
 									C.USERID = #userId#)
-			ORDER BY 
-				A.LADDERID 
-			DESC
+			ORDER BY
+			 ]]> 
+            <isEqual property="sort" compareValue="type">
+            <![CDATA[
+				A.TYPE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="title">
+            <![CDATA[
+				A.TITLE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="writerName">
+            <![CDATA[
+				A.WRITERNAME
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="writeDate">
+            <![CDATA[
+				A.WRITEDATE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="status">
+            <![CDATA[
+				A.STATUS 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="secretFlag">
+            <![CDATA[
+				A.SECRETFLAG 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="deleteFlag">
+            <![CDATA[
+				A.DELETEFLAG 
+			]]>
+			</isEqual>
+			<isEqual property="sortFlag" compareValue="desc">
+            <![CDATA[
+				DESC
+			]]>
+			</isEqual>
+			<isNotEqual property="sortFlag" compareValue="desc">
+			 <![CDATA[
+				ASC
+			]]>
+			</isNotEqual>
 			LIMIT 
 				#startPoint#, #endPoint# 
-		]]>
+	
 	</select>
 	
 	<select id="EzLadderDAO.searchSPartLadderCount" resultClass="Integer">
@@ -381,7 +469,43 @@
 				D.USERNAME
 			LIKE CONCAT('%', #searchInput#, '%')
 			ORDER BY 
-				A.LADDERID 
+			 ]]> 
+            <isEqual property="sort" compareValue="type">
+            <![CDATA[
+				A.TYPE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="title">
+            <![CDATA[
+				A.TITLE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="writerName">
+            <![CDATA[
+				A.WRITERNAME
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="writeDate">
+            <![CDATA[
+				A.WRITEDATE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="status">
+            <![CDATA[
+				A.STATUS 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="secretFlag">
+            <![CDATA[
+				A.SECRETFLAG 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="deleteFlag">
+            <![CDATA[
+				A.DELETEFLAG 
+			]]>
+			</isEqual>
+			<![CDATA[
 			DESC
 			LIMIT 
 				#startPoint#, #endPoint# 
@@ -441,7 +565,43 @@
 				</isEqual>
 				<![CDATA[
 					ORDER BY 
-						A.LADDERID 
+				 ]]> 
+            <isEqual property="sort" compareValue="type">
+            <![CDATA[
+				A.TYPE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="title">
+            <![CDATA[
+				A.TITLE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="writerName">
+            <![CDATA[
+				A.WRITERNAME
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="writeDate">
+            <![CDATA[
+				A.WRITEDATE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="status">
+            <![CDATA[
+				A.STATUS 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="secretFlag">
+            <![CDATA[
+				A.SECRETFLAG 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="deleteFlag">
+            <![CDATA[
+				A.DELETEFLAG 
+			]]>
+			</isEqual>
+			<![CDATA[
 					DESC
 					LIMIT 
 						#startPoint#, #endPoint# 
@@ -613,7 +773,43 @@
 				E.USERNAME
 			LIKE CONCAT('%', #searchInput#, '%')
 			ORDER BY
-				D.LADDERID
+			 ]]> 
+            <isEqual property="sort" compareValue="type">
+            <![CDATA[
+				D.TYPE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="title">
+            <![CDATA[
+				D.TITLE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="writerName">
+            <![CDATA[
+				D.WRITERNAME
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="writeDate">
+            <![CDATA[
+				D.WRITEDATE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="status">
+            <![CDATA[
+				D.STATUS 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="secretFlag">
+            <![CDATA[
+				D.SECRETFLAG 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="deleteFlag">
+            <![CDATA[
+				D.DELETEFLAG 
+			]]>
+			</isEqual>
+			<![CDATA[
 			DESC
 			LIMIT 
 				#startPoint#, #endPoint# 
@@ -689,7 +885,43 @@
 				</isEqual>
 				<![CDATA[
 					ORDER BY 
-						D.LADDERID 
+					 ]]> 
+            <isEqual property="sort" compareValue="type">
+            <![CDATA[
+				D.TYPE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="title">
+            <![CDATA[
+				D.TITLE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="writerName">
+            <![CDATA[
+				D.WRITERNAME
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="writeDate">
+            <![CDATA[
+				D.WRITEDATE 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="status">
+            <![CDATA[
+				D.STATUS 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="secretFlag">
+            <![CDATA[
+				D.SECRETFLAG 
+			]]>
+			</isEqual>
+			<isEqual property="sort" compareValue="deleteFlag">
+            <![CDATA[
+				D.DELETEFLAG 
+			]]>
+			</isEqual>
+			<![CDATA[
 					DESC
 					LIMIT 
 						#startPoint#, #endPoint# 
