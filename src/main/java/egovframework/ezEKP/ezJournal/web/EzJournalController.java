@@ -396,7 +396,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				if (receiver.size() > 0 && receiver != null) {
 					
 					for (int i = 0; i < receiver.size(); i++) {
-					//  logger.debug("receiver확인용 : " + receiver.get(i));
+					    logger.debug("receiver확인용 : " + receiver.get(i));
 						JSONObject obj = (JSONObject) receiver.get(i);
 						
 						receiverIds += obj.get("userId") + ", ";
@@ -823,6 +823,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		List<MultipartFile> files = request.getFiles("fileToUpload"); 
 		int cnt = files.size();
 		int maxSize = 0;
+		logger.debug("###files : " + files + ", cnt: " + cnt);
 		
 //		String realPath = request.getServletContext().getRealPath("");
         Long[] fileSize = new Long[cnt];        
@@ -856,7 +857,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
         
-        if (StringUtils.isNotEmpty(files.get(0).getOriginalFilename()) && StringUtils.isNotBlank(files.get(0).getOriginalFilename())) {        	
+        if (StringUtils.isNotEmpty(files.get(0).getOriginalFilename()) && StringUtils.isNotBlank(files.get(0).getOriginalFilename()) && cnt > 0) {        	
             for (int i = 0; i < cnt; i++) {
             	JSONObject fileJson = new JSONObject();
             	
@@ -959,7 +960,7 @@ public class EzJournalController extends EgovFileMngUtil {
 
         logger.debug("tempUploadFileDelete ended");
         
-        return "json";
+        return status;
     }
 	
 	/**
@@ -995,10 +996,6 @@ public class EzJournalController extends EgovFileMngUtil {
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
 		
-		if (mode.equals("reuse")) {
-			originJournalId = "";
-		}
-		
 		JSONObject jsonParam = new JSONObject();
 		jsonParam.put("title", title);
 		jsonParam.put("content", content);
@@ -1012,6 +1009,10 @@ public class EzJournalController extends EgovFileMngUtil {
 		jsonParam.put("isSum", isSum);
 		if (mode.equals("temp")) {
 			jsonParam.put("isTemp", "N");
+		}
+		if (mode.equals("reuse")) {
+			jsonParam.put("originJournalId", originJournalId);
+			originJournalId = "";
 		}
 		
 		JSONObject result = new JSONObject();
@@ -1062,17 +1063,13 @@ public class EzJournalController extends EgovFileMngUtil {
 		logger.debug("journalId:"+originJournalId+",mode:"+mode+",title:"+title+",isPublic:"+isPublic+",formId:"+formId+",typeId:"+typeId+",isSum:"+isSum);
 		
 		fileList = request.getParameter("fileList");
-		logger.debug("fileList : " + fileList);
+//		logger.debug("fileList : " + fileList);
 		
 		String receiverIDs = request.getParameter("receiverID");
 		String receiverList = request.getParameter("receiverList");
 		
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
-		
-		if (mode.equals("reuse")) {
-			originJournalId = "0";
-		}
 		
 		JSONObject jsonParam = new JSONObject();
 		jsonParam.put("title", title);
@@ -1086,10 +1083,14 @@ public class EzJournalController extends EgovFileMngUtil {
 		jsonParam.put("mode", mode);
 		jsonParam.put("isSum", isSum);
 		jsonParam.put("isTemp", "Y");
+		if (mode.equals("reuse")) {
+			jsonParam.put("originJournalId", originJournalId);
+			originJournalId = "0";
+		}
 		
 		JSONObject result = new JSONObject();
 		
-		if (originJournalId.trim().equals("0") || mode.trim().equals("reuse")) {
+		if (originJournalId.trim().equals("0") || mode.trim().equals("new")) {
 			restUrl = "/rest/ezjournal/types/" + typeId + "/journals";
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
 		} else {
@@ -1641,15 +1642,8 @@ public class EzJournalController extends EgovFileMngUtil {
 		logger.debug("getJournalContent started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String viewDate ="";
-		try {
-			viewDate = commonUtil.getTodayUTCTime("");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("viewDate", viewDate);
 		
 		String journalId = request.getParameter("journalId");
 		
@@ -1660,10 +1654,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		JSONObject journal = null;
 		if (status.equals("ok")) {			
 			journal = (JSONObject) resultBody.get("data");
-			String journalDate = (String) journal.get("journalDate");
-			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
-			journal.put("journalDate", journalDate);
-			model.addAttribute("journal",journal);
+			model.addAttribute("journalContent",journal.get("journalContent"));
 		}
 		
 		logger.debug("getJournalContent ended");

@@ -1124,7 +1124,7 @@ public class EzJournalGWController {
 			
 			LOGGER.debug("pDirPath : " + pDirPath + " | fileList : " + fileList);
 			
-			// journalId가 temp이면 임시파일 삭제의 의미 (있으면 journalId에 해당하는 일지의 첨부파일 삭제해야함)
+			// journalId가 temp이면 임시파일 삭제의 의미
 			if (journalId.equals("temp")) {
 				if (fileList.length() != 0) {
 					String[] data = fileList.split(","); 
@@ -1135,8 +1135,9 @@ public class EzJournalGWController {
 						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
 						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
-						
-						file.delete();
+						if(file.exists()){
+							file.delete();
+						}
 					}			
 				}
 			} else {

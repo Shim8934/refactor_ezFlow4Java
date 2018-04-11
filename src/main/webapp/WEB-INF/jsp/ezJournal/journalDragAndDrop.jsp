@@ -254,16 +254,16 @@
 		            alert("<spring:message code='ezJournal.t163'/>");
 		        }
 		        
-		        if (mode == "modify" || mode == "temp") {
- 		        	url = "/ezJournal/tempUploadFileDelete.do?mode=temp&journalId=" + journalId;
- 		        } else {
-		        	url = "/ezJournal/tempUploadFileDelete.do";
- 		        }
+//		        if (mode == "modify" || mode == "temp") {
+// 		        	url = "/ezJournal/tempUploadFileDelete.do?mode=temp&journalId=" + journalId;
+// 		        } else {
+//		        	url = "/ezJournal/tempUploadFileDelete.do";
+// 		        }
 
 		        // upload된 파일 tempUploadFile에서 삭제
 		        $.ajax({
 					async : false,
-					url : url,
+					url : "/ezJournal/tempUploadFileDelete.do",
 	                type : 'POST',
 	                dataType : 'text',
 	                data : {

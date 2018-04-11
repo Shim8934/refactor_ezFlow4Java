@@ -794,7 +794,7 @@
 	                GetBoardItemInfo_New3_DotNet("${boardID}", "${itemID}");
 	            }	
 	            //업무일지면...
-	            else if (Org_cmd == "journal"){
+	            else if (Org_cmd == "journal") {
 	            	getJournalToMail();
 	            	return;
 	            }
@@ -811,6 +811,7 @@
 	    }
 	
 	    function getJournalToMail(){
+	    	var journal;
 	    	$.ajax ({
 				type : "POST",
 				async : false,
@@ -883,30 +884,6 @@
 				}
 			});
 	    }
-	    
-// 	    function fileUploadFromJournal(fileList){
-// // 	    	var filePathArray = [];
-// // 	    	var fileNameArray = [];
-// // 	    	for (var i = 0; i < fileList.length; i++) {
-// // 	    		filePathArray.push(fileList[i].filePath);
-// // 	    		fileNameArray.push(fileList[i].fileName);
-// // 	    	}
-// 	    	$.ajax ({
-// 				type : "POST",
-// // 				async : false,
-// 				url : "/ezEmail/mailInterUploadCopyXCKFromJournal.do",
-// 				data : {
-// 					journalId : journalId,
-// 					fileList : fileList
-// // 					filePathList : JSON.stringify(filePathArray),
-// // 					fileNameList : JSON.stringify(fileNameArray)
-// 				},
-// 				success : function(result) {
-					
-// 				}
-// 	    	});
-	    	
-// 	    }
 	    
 	    function btn_AttachSelect_onclick() {
 	        document.getElementById('mode').value = "ATT";

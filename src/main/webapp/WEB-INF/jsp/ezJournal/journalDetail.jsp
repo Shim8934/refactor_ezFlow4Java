@@ -16,24 +16,12 @@
 		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 		<script type="text/javascript" src="/js/ezJournal/excel.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<style type="text/css">
-		/* #journalContent * { */
-		/* 	height: 0.3em; */
-		/* } */
-		/* #journalContent { */
-		/*    width:initial; */
-		/* } */
-		/* #journalContent *{ */
-		/* 	height: 0px; */
-		/* } */
-		</style>
 		<script type="text/javascript">
 		
 			var formId = "${journal.formId}";
 			var journalId = "${journal.journalId}";
 			var journalTitle = "${journal.journalTitle}";
 			var typeId = "${journal.typeId}";
-			var viewType = "detail";
 			var isSum = "<c:out value='${journal.isSum}'/>";
 			
 			// 수정
@@ -339,7 +327,6 @@
                 $('#message').contents().find('#journalContent').css("zoom",nowZoom + "%");
                 sizeOn();
 	        }
-		
 		    
 		    //프린터
 		    var boarditemview_cross_print_option_dialogArguments = new Array();
@@ -481,7 +468,7 @@
 		        var width = window.screen.availWidth;
 		        var left = (width - 500) / 2;
 		        var top = (heigth - 300) / 2;
-		        var szHref = "/ezJournal/JournalReceiverList.do?typeId="+typeId+"&journalId=" + journalId+"&currentPage="+currentPage;
+		        var szHref = "/ezJournal/JournalReceiverList.do?typeId=" + typeId + "&journalId=" + journalId + "&currentPage=" + currentPage;
 	            DivPopUpShow(520, 430, szHref);
 		    }
 		    
@@ -506,10 +493,10 @@
 		    }
 		  
 		  function addReplyCount(){
-			  $("#replyCount").text(Number($("#replyCount").text())+1);
+			  $("#replyCount").text(Number($("#replyCount").text()) + 1);
 		  }
 		  function minusReplyCount(){
-			  $("#replyCount").text(Number($("#replyCount").text())-1);
+			  $("#replyCount").text(Number($("#replyCount").text()) - 1);
 		  }
 		</script>
 

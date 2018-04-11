@@ -240,6 +240,7 @@
 	    			$("#title").val("${journal.journalTitle}");
 	    			var receiverID = "${receiverIds}";
 	    			var receiverName = "${receiverNames}";
+	    			console.log("receiverId : " + receiverID);
 	    			
 	    			if ((receiverID != null && receiverID != "") && (receiverName != null && receiverName != "")) {
 	    				receiverID = receiverID.slice(0, -2).split(", ");
@@ -379,6 +380,7 @@
 	    		$.ajax ({
 	 			   	url : '/ezJournal/saveJournal.do',
 	 			   	type : 'POST',
+	 			    async : false,
 	                dataType : 'text',
 	                data : {	title : $("#title").val(),
 	                			typeId : typeId,
@@ -396,11 +398,11 @@
 	                success: function(result) {	   
 	                	if (result != null && result != "") {
 		                  	alert("<spring:message code='ezJournal.t137'/>");
-	          			 	sendJournalRecvMail($("#title").val(), receiverID, result);
 		                  
 	          			 	if (opener.listType != null && opener.listType != "") {
 		             	  		opener.setJournalList();
 	          			 	}
+	          			 	sendJournalRecvMail($("#title").val(), receiverID, result);
 	          			  	window.close();
 	                	}
           			  	
@@ -417,7 +419,7 @@
 	    	function sendJournalRecvMail(journalTitle,recvIds,journalId){
 	    		$.ajax({
 					type : "post",
-					async : false,
+				//	async : false,
 					data : {
 						"journalTitle" : journalTitle,
 						"recvIds" : recvIds,
@@ -530,7 +532,7 @@
 						async : false,
 						url : '/ezJournal/tempUploadFileDelete.do',
 		                type : 'POST',
-		                dataType : 'json',
+		                dataType : 'text',
 		                data : {
 		                	fileList : fileList
 		                },

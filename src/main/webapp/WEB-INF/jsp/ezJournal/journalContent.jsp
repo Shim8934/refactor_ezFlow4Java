@@ -18,7 +18,7 @@
 		<img onclick="parent.Bigger();" style="cursor: pointer; margin: 5px; margin-left: -10px;" src="/images/plus.png">
 	</div>
 	<div id="journalContent" class="txtContent" style="width: 100%; height: 10px; display: inline-block;">
-		${journal.journalContent }
+		${journalContent }
 	</div>
 </body>
 </html>

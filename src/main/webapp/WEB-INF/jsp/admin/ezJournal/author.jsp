@@ -20,14 +20,14 @@
 				parent.frames["right"].location.href = url+"?companyId="+val;
 			}
 			
-			function insertAuth(){			
+			function insertAuth() {			
 				var url = "/admin/ezJournal/authorView.do";
 				var companyId = document.getElementById("companyId").value;
 				url+="?companyId="+companyId;
 				window.open(url, "authorView", GetOpenWindowfeature(500, 200));
 			}
 			
-			function updateAuth(){			
+			function updateAuth() {			
 				var userId = selectedUser;
 				var url = "/admin/ezJournal/authorView.do";
 				var companyId = document.getElementById("companyId").value;
@@ -40,7 +40,7 @@
 				}
 			}
 			
-			function selectedTR(elem){
+			function selectedTR(elem) {
 				selectedUser = $(elem).attr("id");
 				selectedUserName = $(elem).attr("userName");
 				$("*").removeClass("selectTR");
