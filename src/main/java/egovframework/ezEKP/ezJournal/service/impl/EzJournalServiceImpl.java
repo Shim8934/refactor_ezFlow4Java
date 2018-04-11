@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -630,6 +631,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		String mode = jsonParam.get("mode").toString();
 		String journalContent = jsonParam.get("content").toString();
 		String isTemp = "";
+		String originJournalId = "";
 		if (jsonParam.get("isTemp") != null) {
 			isTemp = jsonParam.get("isTemp").toString();
 		}
@@ -650,8 +652,11 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("deptShare", jsonParam.get("deptShare"));
 		map.put("journalText", journalText);
 		map.put("isSum", jsonParam.get("isSum"));
-		if (mode != null && mode.equals("temp") || !isTemp.equals("")) {
+		if ((mode != null && mode.equals("temp")) || !isTemp.equals("")) {
 			map.put("journalStatus", "temp");
+		}
+		if (mode != null && mode.equals("reuse")) {
+			originJournalId = (String) jsonParam.get("originJournalId");
 		}
 		
 //		logger.debug("insertJournal map" + map);
@@ -659,7 +664,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		String journalId = ezJournalDAO.insertJournal(map) + "";
 		
 		String fileList = jsonParam.get("fileList").toString();
-		logger.debug("fileList정보 : " + fileList.toString());
+//		logger.debug("fileList정보 : " + fileList.toString());
 	
 		// 첨부파일 저장
 		Map<String, Object> attachMap = new HashMap<String, Object>();
@@ -670,8 +675,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 			pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", tenantId);
 			pDirPath = realPath + pDirPath;
 			
-			logger.debug("pDirPath : " + pDirPath + ",reapPath : " + realPath);
-			
+//			logger.debug("pDirPath : " + pDirPath + ",reapPath : " + realPath);
 			
 			if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
 				pDirPath = pDirPath + commonUtil.separator;
@@ -707,7 +711,23 @@ public class EzJournalServiceImpl implements EzJournalService {
 				logger.debug("uploadFilePath : " + uploadFilePath);
 				
 				ezJournalDAO.insertJournalAttach(attachMap);
-				
+			
+				if (mode.equals("reuse")) {
+					
+					String orgFilePath = "";
+					String destFilePath = "";
+					String reuseFileName = "";
+					
+					try {
+						orgFilePath = pDirPath + "uploadFile" + commonUtil.separator + originJournalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+					//	filePath = "{" + UUID.randomUUID() + "}";
+						reuseFileName = filePath + ";" + fileName;
+						destFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + reuseFileName;
+						
+						FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
+					} catch (Exception e) { }
+				}
+			
 				fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
 			}
 			
@@ -715,9 +735,9 @@ public class EzJournalServiceImpl implements EzJournalService {
 		
 		// 수신자 정보 저장
 		String receiverIDs = jsonParam.get("receiverIDs").toString();
-		String receiverList = jsonParam.get("receiverList").toString();
+//		String receiverList = jsonParam.get("receiverList").toString();
 		
-		logger.debug("receiverIDs : " + receiverIDs + " | receiverList : " + receiverList);
+		logger.debug("receiverIDs : " + receiverIDs);
 		
 		if (receiverIDs != null && !receiverIDs.equals("")) {
 			
@@ -856,7 +876,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
 		if (fileList != null && !fileList.equals("")) {
-			logger.debug("updateJournal fileList : " + fileList);
+//			logger.debug("updateJournal fileList : " + fileList);
 			
 			String[] attach = fileList.split(",");
 			
@@ -877,7 +897,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", uploadFilePath);
 				
-				logger.debug("uploadFilePath : " + uploadFilePath);
+//				logger.debug("uploadFilePath : " + uploadFilePath);
 				
 				ezJournalDAO.insertJournalAttach(attachMap);
 				
@@ -1035,14 +1055,16 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 	
 	@Override
-	public List<JournalReceiverVO> getReceiverList(String journalId,String startCount, String listCnt, int tenantId) {
+	public List<JournalReceiverVO> getReceiverList(String journalId, String startCount, String listCnt, int tenantId) {
 		logger.debug("getReceiverList started.");
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("journalId", journalId);
 		map.put("tenantId", tenantId);
-		map.put("startCount", Integer.parseInt(startCount));
-		map.put("listCnt", Integer.parseInt(listCnt));
+		if (startCount != null && !startCount.equals("") && listCnt != null && !listCnt.equals("")) {
+			map.put("startCount", Integer.parseInt(startCount));
+			map.put("listCnt", Integer.parseInt(listCnt));
+		}
 		
 		List<JournalReceiverVO> receiverList = ezJournalDAO.getReceiverList(map);
 		logger.debug("수신자리스트 확인용 : " + receiverList);

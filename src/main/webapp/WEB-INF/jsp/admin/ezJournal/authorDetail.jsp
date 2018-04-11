@@ -47,34 +47,6 @@
 				});
 	   		}
 	   		
-// 	   		//레이어팝업의 부서
-// 	   		function setDeptListLayerPopup(){
-// 	   			$('#lptreeview').jstree({ 
-// 					'core' : {'data' : treeContent},
-// 					'plugins': ["wholerow"],
-// 					'themes' : {'responsive' : true}
-// 				}).on('changed.jstree', function (e, data) {
-// 					lpDeptId = data.instance.get_node(data.selected).id;
-// 					lpDeptName = data.instance.get_node(data.selected).text;
-// 				}).on('dblclick.jstree', function (e, data) {
-// 					addDeptInLP();
-// 				});
-// 	   		}
-	   		
-// 	   		//부서 리스트 오른쪽에 이동!
-// 	   		function addDeptInLP(){
-// 	   			var flag = true;
-// 	   			for (var i = 0; i < lpDepts.length ; i++) {
-// 					if(lpDepts[i] == lpDeptId){
-// 						flag=false;
-// 					}
-// 				}
-// 	   			if(flag){
-// 		   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
-// 		   			lpDepts.push(lpDeptId);
-// 	   			}
-// 	   		}
-	   		
 	   		//사원 리스트 뿌리기
 	   		function setUserList(key,value,deptName){
 	   			$.ajax({
@@ -126,78 +98,16 @@
 					//오프너의 부서 이름과 아이디 세팅
 // 		   			opener.deptIds = lpDepts;  
 // 		   			opener.deptNames = lpDeptNames;
-		   			opener.setDeptName(JSON.stringify(lpDepts),JSON.stringify(lpDeptNames));
+		   			opener.setDeptName(JSON.stringify(lpDepts), JSON.stringify(lpDeptNames));
 					window.close();
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
 				}
 	   		}
-// 	   		function initSelectedUser(){
-// 	   			var selectedUser = "<c:out value='${selectedUser}'/>" ;
-// 	   			if(selectedUser !="" ){
-// 			   		var elem = document.getElementById(selectedUser);
-// 			   		setUserAuthorDept(elem,selectedUser);
-// 	   			}
-// 	   		}
-	   		
-// 	   		//레이어 팝업 안에 초기화
-// 	   		function showInsertAuthDept(elem){
-// 	   			journal_layer_popup("#insertAuthorDeptPopup");
-// 	   			userId = $(elem).attr("id");
-// 	   			updateUserId = userId;
-// 				$.ajax({
-// 	   				type:"post",
-// 	   				dataType:"html",
-// 	   				url:"/admin/ezJournal/authorDeptList.do",
-// 	   				data:{"userId":userId},
-// 	   				success: function(result){
-// 	   					lpDepts=[];
-// 	   					$("#lplistView").html(result);
-// 	   					$("#lplistView tr").each(function(){
-// 	   						lpDepts.push($(this).attr("targetId"));
-// 	   					})
-// 	   				}
-// 	   			});
-// 	   		}
-	   		
-// 	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
-// 	   		function delTargetDept(elem){
-// 	   			var targetDeptId = $(elem).attr("targetId");
-//    				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
-//    				$(elem).remove();
-// 	   		}
-	   		
-// 	   		//열람궎란정보 저장
-// 	   		function insertAuthDept(){
-// 	   			var jsonString = JSON.stringify({"userId":updateUserId,"depts":lpDepts});
-// 				$.ajax({
-// 	   				type:"post",
-// 	   				dataType:"html",
-// 	   				url:"/admin/ezJournal/saveAuthor.do",
-// 	   				contentType:"application/json;",
-// 	   				data:jsonString,
-// 	   				success: function(result){
-// 	   					alert(result);
-//    						$('.journal-layer').fadeOut();
-//    						opener.location.reload();
-//    						location.reload(true);
-// 	   				}
-// 	   			});
-// 	   		}
 	   		
 	   		$(document).ready(function(){
 	   			treeContent = ${deptList};
 		   		setDeptList();
-// 		   		setDeptListLayerPopup();
-// 	   			$(function () {
-// 		   			$(document).on({
-// 		   				"dblclick":function(){delTargetDept(this);},
-// 		   				"click":function(){targetDept = this;
-// 			   				$("*").removeClass("selectTR");
-// 				   			$(this).addClass("selectTR");
-// 		   				}
-// 	   				},"#lplistView tr");
-// 	   			});
    			});
 		</script>
 		<style>

@@ -80,6 +80,7 @@
 				}else{
 					$.ajax({
 						type:"post",
+						async : false,
 						data:{"replyContent":replyContent,"journalId":journalId},
 						url:"/ezJournal/saveJournalReply.do",
 						success: function(result){
@@ -92,9 +93,9 @@
 								journalTitle = parent.journalTitle;
 							//	parent.setJournalList();
 							}
-							sendJournalReplyMail(replyContent,journalId,result,journalTitle);
 							location.reload();
 							parent.addReplyCount();
+							sendJournalReplyMail(replyContent,journalId,result,journalTitle);
 						}
 					});
 				}
@@ -104,7 +105,7 @@
 			function sendJournalReplyMail(replyContent,journalId,journalWriter,journalTitle){
 				$.ajax({
 					type : "post",
-					async : false,
+				//	async : false,
 					data : {
 						"replyContent" : replyContent,
 						"journalId" : journalId,
@@ -141,12 +142,12 @@
 		    }
 			
 			function closeJournalPopup(){
-				if(parent.viewType=='detail'){
+//				if(parent.viewType=='detail'){
 					closePopup();
-				} else {
-					parent.setJournalList();
-					parent.DivPopUpHidden_sub();
-				}
+//				} else {
+//					parent.setJournalList();
+//					parent.DivPopUpHidden_sub();
+//				}
 			}
 		</script>
 	</head>

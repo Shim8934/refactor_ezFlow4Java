@@ -796,7 +796,7 @@
 	            //업무일지면...
 	            else if (Org_cmd == "journal"){
 	            	getJournalToMail();
-	            	return;
+	            //	return;
 	            }
 	            
 	            initFlag = true;
@@ -811,6 +811,7 @@
 	    }
 	
 	    function getJournalToMail(){
+	    	var journal;
 	    	$.ajax ({
 				type : "POST",
 				async : false,
@@ -820,10 +821,70 @@
 				},
 				success : function(result) {
 					$("#eSubject").val(result.journalTitle);
-					var journalContent = "<p></p><p></p><hr>"+result.journalContent;
+					journal = result;
+					var journalContent = "<p></p><p></p><hr>" + result.journalContent;
 					message.SetEditorContent(journalContent);
 				}
 			});
+	    	
+	    	var AttachRows = journal.fileList;
+	    	var pstrXML = "";
+	    	console.log("AttachRows : " + AttachRows.length);
+	    	//첨부파일이 있을 경우
+            if (AttachRows.length > 0) {
+                pstrXML += "<LISTVIEWDATA><HEADERS>";
+                pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+                pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+                pstrXML += "</HEADERS><ROWS>";
+            }
+            for (var i = 0; i < AttachRows.length; i++) {
+                var filepath = AttachRows[i].filePath;
+                filepath = "/upload_journal" + filepath;
+          //      var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
+         //       var filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf(";") + 1, filenameTemp.length));
+         		var filename = AttachRows[i].fileName;
+                var filesize = AttachRows[i].fileSize;
+
+                pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+                pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+                pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+                pstrXML += "<DATA3></DATA3>";
+                pstrXML += "<DATA4>BOARD</DATA4>";
+                pstrXML += "<DATA5>N</DATA5>";
+                pstrXML += "<DATA6>" + filesize + "</DATA6>";
+                if(filesize > BigSizeAttachSize )
+                    pstrXML += "<DATA7>Y</DATA7>";
+                else
+                    pstrXML += "<DATA7>N</DATA7>";
+                pstrXML += "</CELL><CELL>";
+                pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
+                pstrXML += "</CELL></ROW>";
+            }
+            if (pstrXML != "") {
+                pstrXML += "</ROWS></LISTVIEWDATA>";
+                objXML = loadXMLString(pstrXML);
+                if (pAttachListXml == "") {
+                    pAttachListXml = objXML;
+                }
+                else {
+                    if (typeof (pAttachListXml) == "string")
+                        Rtnxml = loadXMLString(pAttachListXml);
+                    else
+                        Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+
+                    for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+                        var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
+                        GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
+                    }
+                    pAttachListXml = Rtnxml;
+                }
+                if (DragDropAttachObjetLoading) {
+                	dadiframe.fileupload2(pAttachListXml);
+                }
+            }
+            
+            eSubject.value = strLang121 + eSubject.value;
+            Subject_ReApply();
 	    }
 	    
 	    function btn_AttachSelect_onclick() {

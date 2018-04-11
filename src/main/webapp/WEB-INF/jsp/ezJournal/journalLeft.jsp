@@ -20,7 +20,7 @@
 				var url = "/ezJournal/journalListMain.do";
 				
 				var listType = $(elem).attr("listType");
-				url=url+"?listType="+listType;
+				url = url + "?listType=" + listType;
 				var typeId = $(elem).attr("typeId");
 				if(typeId&&typeId!=undefined){
 					url=url+"&typeId="+typeId;
@@ -34,8 +34,8 @@
 	   				type:"post",
 	   				url:"/ezJournal/leftRecvCount.do",
 	   				success: function(data){
-	   					if(data!=0){
-		   					$("#recvCount").text("("+data+")");
+	   					if(data != 0){
+		   					$("#recvCount").text("(" + data + ")");
 	   					}else{
 		   					$("#recvCount").text("");
 	   					}

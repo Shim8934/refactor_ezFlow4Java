@@ -120,13 +120,8 @@
 	   				addDeptInLP();
 				}
    			});
-// 			<c:forEach items="${authDeptList }" var="dept">
-// 				<c:if test="${dept.mine ne 'yes'}" >
-// 					lpDepts.push("${dept.deptId }");
-// 					lpDeptNames.push("${dept.deptName}");
-// 				</c:if>
-// 			</c:forEach>
 		</script>
+		
 		<style>
 			tr.hover:hover{background:#eee; color:#fff;}
 			
@@ -135,6 +130,7 @@
 			}
 		</style>
 	</head>
+	
 	<body class="popup"> 
         <h1><spring:message code='ezJournal.t165'/></h1>
 	    <div id="close">
@@ -154,22 +150,6 @@
                  		</td>
                 <td class="listview" style="width: 250px; vertical-align: top;" id="lplistView">
                 	<table class="mainlist_free">
-<%-- 						<c:if test="${not empty authDeptList }"> --%>
-<%-- 							<c:forEach items="${authDeptList}" var="dept"> --%>
-<%-- 							<c:choose> --%>
-<%-- 								<c:when test="${dept.mine eq 'yes' }"> --%>
-<%-- 									<tr targetId="${dept.deptId }" targetName="${dept.deptName }" style="display:none; cursor: pointer;" class="hover"> --%>
-<%-- 										<td align="left" style="width:250px;">${dept.deptName }</td> --%>
-<!-- 									</tr> -->
-<%-- 								</c:when> --%>
-<%-- 								<c:otherwise> --%>
-<%-- 									<tr targetId="${dept.deptId }" targetName="${dept.deptName }" style="cursor: pointer;" class="hover"> --%>
-<%-- 										<td align="left" style="width:250px;">${dept.deptName }</td> --%>
-<!-- 									</tr> -->
-<%-- 								</c:otherwise> --%>
-<%-- 							</c:choose> --%>
-<%-- 							</c:forEach> --%>
-<%-- 						</c:if> --%>
 					</table>
                 </td>    
             </tr>

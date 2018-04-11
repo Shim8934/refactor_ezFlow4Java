@@ -73,7 +73,6 @@
 		    
 			// 양식추가버튼
 		    function btnInsForm() {
-		    //	console.log(typeId + " " + companyId + " " + pEditor);
 		    	var url = "/admin/ezJournal/insertForm.do";
 		    	url += "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId);
 		    	
@@ -224,7 +223,7 @@
 				</td>
 		    	<td style="width:800px; padding-left:5px; padding-right:5px;vertical-align:top">
 		    		<div class="listview">
-			        	<div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 500px;overflow-x:auto;overflow-y:auto; padding:0px; /* border:1px solid #bdbdbd; */"  >
+			        	<div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 500px;overflow-x:auto;overflow-y:auto; padding:0px;" >
 			        		<table class="mainlist" style="width: 100%;">
 			        			<thead>
 			        				<tr>

@@ -182,7 +182,6 @@
 		    
 		    // 선택된 부서 배열을 토대로 화면에 그리는 곳
 		    function drawUseDeptList() {
-		    //	console.log(useDeptList);
 		    	
 		    	var useListHtml = "";     
 		    	for (var i = 0; i < useDeptList.length; i++) {
@@ -222,8 +221,7 @@
 		    	} else if (($(":input:radio[name=setUseDept]:checked").val() == "A") && formId != null) {
 		    		isDeptChanged = "Y";
 		    	}
-		    	// console.log("formId : " + formId);
-		    	// console.log("isDeptChanged : " + isDeptChanged)
+		    	
 		    	$.ajax({
 		    		type : "POST",
 		    		url : "/admin/ezJournal/formSave.do",
@@ -237,7 +235,6 @@
     						"isDeptChanged"	: isDeptChanged},
     				success : function(result) {
 						if (result === "ok") {
-	    					// console.log("저장결과확인 : " + result);
 	    					alert("<spring:message code='ezJournal.t128'/>");
 	    					opener.location.reload();
 							window.close();    					
