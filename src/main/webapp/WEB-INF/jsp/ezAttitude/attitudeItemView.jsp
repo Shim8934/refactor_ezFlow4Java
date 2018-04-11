@@ -22,6 +22,7 @@
 		<script type="text/javascript">
 			var formInfo = ${formInfo};
 			var attitudeInfo = ${attitudeInfo};
+			var attitudeId = ${attitudeInfo.attitudeId};
 			
 			window.onload = function () {
 				setHtml();
@@ -61,19 +62,45 @@
 				
 				$("#attiTime").text(" " + showTime);
 			}
+			
+			function deleteAttitude() {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/attitudeDeleteItem.do",
+					data : {
+						attitudeId : attitudeId
+					},
+					success : function(result) {
+						window.opener.getAttitudeMainList();
+						window.close();
+					}
+				})
+			}
+			
+			function modifyAttitude() {
+				$.ajax({
+					
+				})
+			}
+			
+			function sendMailAttitude() {
+				
+			}
 		</script>
 	</head>
 	<body class = "popup">
 <!-- 		<h1>근태 작성</h1> -->
 		<div id="menu">
 			<ul>
-				<li><span onClick="">메일로 발송</span></li>
+				<li><span onClick="sendMailAttitude()">메일로 발송</span></li>
 			</ul>
 			<ul>
-				<li><span onClick="">수정</span></li>
+				<li><span onClick="modifyAttitude()">수정</span></li>
 			</ul>
 			<ul>
-				<li><span onClick="">삭제</span></li>
+				<li><span onClick="deleteAttitude()">삭제</span></li>
 			</ul>
 		</div>
 		<div id="close">
