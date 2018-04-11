@@ -7233,31 +7233,35 @@
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
-							   	 	 	   STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')
+							   	 	 	   STARTDATE >= DATE_ADD(STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s'), INTERVAL -540 MINUTE)
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE2">
 							   	<![CDATA[
 							   	 	 AND 
-							   	 		   STARTDATE <= STR_TO_DATE(#v_STARTDATE2#,'%Y-%m-%d %H:%i:%s')
+							   	 		   STARTDATE <= DATE_ADD(STR_TO_DATE(#v_STARTDATE2#,'%Y-%m-%d %H:%i:%s'), INTERVAL -540 MINUTE)
 							   	 ]]>
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_ENDDATE1">
 							   	 	 AND 
-							   	 	       ENDDATE >= STR_TO_DATE(#v_ENDDATE1#,'%Y-%m-%d %H:%i:%s')
+							   	 	       ENDDATE >= DATE_ADD(STR_TO_DATE(#v_ENDDATE1#,'%Y-%m-%d %H:%i:%s'), INTERVAL -540 MINUTE)
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_ENDDATE2">
 							   	<![CDATA[
 							   	 	 AND 
-							   	 	 		ENDDATE <= STR_TO_DATE(#v_ENDDATE2#,'%Y-%m-%d %H:%i:%s')
+							   	 	 		ENDDATE <= DATE_ADD(STR_TO_DATE(#v_ENDDATE2#,'%Y-%m-%d %H:%i:%s'), INTERVAL -540 MINUTE)
 							   	 ]]>
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_PROCESSDATE1">
+							   	<![CDATA[
 							   	 	 AND 
-							   	 	 	   STARTDATE >= STR_TO_DATE(SUBSTR(#v_STARTDATE1#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	 	 	   STARTDATE >= STR_TO_DATE(SUBSTR(#v_PROCESSDATE1#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	]]>
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_PROCESSDATE2">
+							   	<![CDATA[
 							   	 	 AND 
-							   	 	 	   STARTDATE >= STR_TO_DATE(SUBSTR(#v_STARTDATE1#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	 	 	   STARTDATE <= STR_TO_DATE(SUBSTR(#v_PROCESSDATE2#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	]]>
 							   	</isNotEmpty>
 							   	<isEmpty property="v_CONTID" >
 							   	 	 AND 
@@ -11390,25 +11394,25 @@
    		<isNotEmpty property="v_STARTDATE1"> 
    		<![CDATA[
  				AND   
-			STARTDATE >= STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s')   
+			STARTDATE >= DATE_ADD(STR_TO_DATE(#v_STARTDATE1#, '%Y-%m-%d %H:%i:%s'), INTERVAL -540 MINUTE)   
     		]]>  
    		</isNotEmpty>
    		<isNotEmpty property="v_STARTDATE2"> 
    		<![CDATA[
     		 AND  
-     		 	STARTDATE <= STR_TO_DATE(#v_STARTDATE2# , '%Y-%m-%d %H:%i:%s')
+     		 	STARTDATE <= DATE_ADD(STR_TO_DATE(#v_STARTDATE2# , '%Y-%m-%d %H:%i:%s'), INTERVAL -540 MINUTE)
  		 ]]>  
 		</isNotEmpty> 
    		<isNotEmpty property="v_ENDDATE1"> 
    		<![CDATA[
   		 AND   
-    		  	ENDDATE >= STR_TO_DATE(#v_ENDDATE1#, '%Y-%m-%d %H:%i:%s')
+    		  	ENDDATE >= DATE_ADD(STR_TO_DATE(#v_ENDDATE1#, '%Y-%m-%d %H:%i:%s'), INTERVAL -540 MINUTE)   
     		 ]]> 
    		</isNotEmpty>
    		<isNotEmpty property="v_ENDDATE2">  
   		<![CDATA[
      		AND  
-   			ENDDATE <= STR_TO_DATE(#v_ENDDATE2#, '%Y-%m-%d %H:%i:%s')   
+   			ENDDATE <= DATE_ADD(STR_TO_DATE(#v_ENDDATE2#, '%Y-%m-%d %H:%i:%s'), INTERVAL -540 MINUTE)   
      		 ]]>  
   		</isNotEmpty>
    		<isNotEmpty property="v_PROCESSDATE1"> 
