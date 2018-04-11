@@ -581,8 +581,6 @@
             ON 
                 A.itemid = C.itemid
             AND
-                C.ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
-            AND
                 C.tenant_id = #v_TENANTID#
             AND
                 C.userid = #v_pUserID#
@@ -963,8 +961,7 @@
      							 	S.TENANT_ID = #v_TENANTID#
      							 AND
      							 	S.USERID = #v_PUSERID# 
-     							 AND 
-     							 	S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
+     							 ))
      			  ORDER BY 
      					$iv_PORDERBYSUB$  
      			  LIMIT

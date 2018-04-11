@@ -675,7 +675,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
 		int totalUsers = 0;		
 		int totalVotes = 0;
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		int compareEnd = 0;
 		int compareStart = 0;
 		int numberOfVotedUsers = 0;
@@ -1650,7 +1650,7 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			//Get string of time now
 			Date date = new Date();
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String dateNow = formatter.format(date);
 			
 			//Get all of voted users
@@ -2023,7 +2023,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Close the vote by update the end date		
 		Date date = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateNow = formatter.format(date);
 		
 		try {
