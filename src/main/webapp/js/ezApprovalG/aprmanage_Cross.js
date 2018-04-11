@@ -2414,7 +2414,7 @@ function cancelYN_after(xml) {
         temppDocID = null;
     	} else {
     		 document.getElementById("tbtnforcecallback").style.display = "none";
-    	     document.getElementById("tbtncallback").style.display = "none";
+    	     document.getElementById("tbtncallback").style.display = "";
     	}
     }
 }
