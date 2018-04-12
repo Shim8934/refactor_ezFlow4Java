@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,18 +37,18 @@ import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
+import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @RestController
 public class EzWebFolderGWController_m {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderGWController_m.class);
-	
-	@Resource(name = "EzWebFolderService_m")
-	private EzWebFolderService_m ezWebFolderService;
-	
-	@Autowired
-	private EzWebFolderService ezWebFolderService2;
 	
 	@Autowired
 	private MOptionService mOptionService ;
@@ -54,7 +57,7 @@ public class EzWebFolderGWController_m {
 	private EgovMessageSource egovMessageSource;
 	
 	@Autowired
-	private CommonUtil commonUtil;
+	private EzWebFolderService ezWebFolderService;
 	
 	@Autowired
 	private EzWebFolderService_m ezWebFolderService_m;
@@ -62,8 +65,23 @@ public class EzWebFolderGWController_m {
 	@Autowired
 	private EzWebFolderService_y ezWebFolderService_y;
 	
-	/**
-	 * 공유한 폴더 및 파일 조회
+	@Autowired
+	private CommonUtil commonUtil;
+	
+	/*
+	 * 공유 폴더 및 파일 조회
+	 * 
+	 * @author 강민수79
+	 * @date 2018.02.05.
+	 * @param userId
+	 * @param tenantId
+	 * @param companyId
+	 * @param startDate
+	 * @param endDate
+	 * @param extendName
+	 * @param fileName
+	 * @param createName
+	 * @return JSONObject
 	 */
 	@RequestMapping(value="/ezwebfolder/users/{userId}/sharing-list", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSharingList(@PathVariable String userId, HttpServletRequest request) {
@@ -220,7 +238,7 @@ public class EzWebFolderGWController_m {
 	 */
 	@RequestMapping(value="/ezwebfolder/folder-files/{folderFileId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject updateShareUser(@PathVariable String folderFileId, HttpServletRequest request) throws Exception {
-		Map map = new HashMap<String,Object>();
+		Map<String, Object> map = new HashMap<>();
 		String companyId = request.getParameter("companyId");
 		String createId = request.getParameter("createId");
 		String userList = request.getParameter("userList");
@@ -240,11 +258,10 @@ public class EzWebFolderGWController_m {
 		ezWebFolderService_m.delShare(companyId, folderFileId, folderFileType, createId, tenantId);
 		
 		for (int i = 0; i < jarray.size(); i++) {
-			
 			JSONObject jobj = (JSONObject) jarray.get(i);
 		
 			ezWebFolderService_m.insertShare(ezWebFolderService_m.getShareSeq(tenantId), companyId, (String)jobj.get("userId"), (String)jobj.get("userType"), folderFileId, folderFileType, createId, tenantId);
-			
+			ezWebFolderService_m.insertShare(ezWebFolderService_m.getShareSeq(tenantId), companyId, (String) jobj.get("userId"), (String) jobj.get("userType"), folderFileId, folderFileType, createId, tenantId);
 		}
 		
 		JSONObject result = new JSONObject();
@@ -253,8 +270,7 @@ public class EzWebFolderGWController_m {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
@@ -264,51 +280,181 @@ public class EzWebFolderGWController_m {
 		return result;
 	}
 	
-	/*
+	/**
 	 * 즐겨찾기 대상 조회
 	 * 
-	 * @author 강민수79
+	 * @author 강민수79, 서재원
 	 * @date 2018.02.22.
+	 * 
 	 * @param userId
+	 * @param offset
+	 * @param primary
 	 * @param tenantId
-	 * @param companyId
+	 * @param startIndex
+	 * @param endIndex
+	 * 
 	 * @return JSONObject
 	 */
-	@RequestMapping(value="/ezwebfolder/users/{userId}/favorites", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getFavoriteList(@PathVariable String userId, HttpServletRequest request) {	
+	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorites", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getFavoriteList(@PathVariable String userId, HttpServletRequest request) {
+
+		String offset = request.getParameter("offset");
+		String primaryLang = orElse(request.getParameter("primary"), "1");
+		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
+
+		String startIndex = orElse(request.getParameter("startIndex"), "");
+		String endIndex = orElse(request.getParameter("endIndex"), "");
 		
-		String companyId = request.getParameter("companyId");
-		int tenantId = Integer.parseInt(request.getParameter("tenantId"));	
-		
-		logger.debug("userId: " + userId);
+		SearchVO searchInfo = new SearchVO();
+		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
+		searchInfo.setSearchFileName(orElse(request.getParameter("searchFileName"), ""));
+		searchInfo.setSearchCreateName(orElse(request.getParameter("searchCreatorName"), ""));
+		searchInfo.setSearchFileType(orElse(request.getParameter("searchFileType"), ""));
+		searchInfo.setSearchStartDate(orElse(request.getParameter("searchStartDate"), ""));
+		searchInfo.setSearchEndDate(orElse(request.getParameter("searchEndDate"), ""));
 		
 		JSONObject result = new JSONObject();
-		
-		try {			
+		JSONObject data = new JSONObject();
+
+		try {
+			List<FavoriteFileVO> favoriteFiles = ezWebFolderService_m.getFavorites(userId, offset, tenantId, searchInfo, startIndex, endIndex);
+			String targetPath;
 			
-						
+			for (FavoriteFileVO favoriteFile : favoriteFiles) {
+				targetPath = favoriteFile.getTargetPath().substring(1);
+				targetPath = getFolderPath(targetPath.split("\\|"), offset, primaryLang, tenantId);
+				
+				// is folder
+				if ("D".equalsIgnoreCase(favoriteFile.getTargetType())) {
+					// cut end slash
+					targetPath = targetPath.substring(0, targetPath.length() - 1);
+				} else {
+					targetPath += favoriteFile.getTargetName();
+				}
+				
+				favoriteFile.setTargetPath(targetPath);
+			}
+			
+			Map<String, Integer> favoriteCountMap = ezWebFolderService_m.getFavoriteCount(userId, offset, tenantId, searchInfo);
+			
+			data.put("totalCount", favoriteCountMap.get("totalCount"));
+			data.put("folderCount", favoriteCountMap.get("folderCount"));
+			data.put("fileCount", favoriteCountMap.get("fileCount"));
+			
+			data.put("targetList", favoriteFiles);
+			
 			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", "");
-			
-		} 
-		catch (Exception e) {
-			
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
-		
 		}
-		
+
+		return result;
+	}
+	
+	/**
+	 * 즐겨찾기 대상 추가
+	 * 
+	 * @author 서재원
+	 * @date 2018.04.12.
+	 * 
+	 * @param targetId
+	 * @param userId
+	 * @param targetType
+	 * @param tenantId
+	 * 
+	 * @return JSONObject
+	 */
+	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorites", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject addFavorite(@PathVariable String userId, HttpServletRequest request) {
+
+		String targetId = request.getParameter("targetId");
+		String offset = request.getParameter("offset");
+		String targetType = request.getParameter("targetType");
+		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String createDate = commonUtil.getDateStringInUTC(format.format(new Date()), offset, true);
+
+		JSONObject result = new JSONObject();
+
+		try {
+			if(ezWebFolderService_m.isExistsFavorite(userId, targetId, targetType, tenantId)) {
+				result.put("code", 1);
+			} else {
+				ezWebFolderService_m.addFavorite(userId, targetId, targetType, createDate, tenantId);
+				result.put("code", 0);
+			}
+			
+			result.put("status", "ok");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+
+		return result;
+	}
+	
+	/**
+	 * 즐겨찾기 대상 삭제
+	 * 
+	 * @author 서재원
+	 * @date 2018.04.12.
+	 * 
+	 * @param targetId
+	 * @param userId
+	 * @param targetType
+	 * @param tenantId
+	 * 
+	 * @return JSONObject
+	 */
+	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorites", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteFavorite(@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonObject) {
+
+		String targetId = (String) jsonObject.get("targetId");
+		String targetType = (String) jsonObject.get("targetType");
+		int tenantId = Integer.parseInt((String) jsonObject.get("tenantId"));
+
+		JSONObject result = new JSONObject();
+
+		try {
+			if(ezWebFolderService_m.isExistsFavorite(userId, targetId, targetType, tenantId)) {
+				ezWebFolderService_m.deleteFavorite(userId, targetId, targetType, tenantId);
+				result.put("code", 0);
+			} else {
+				result.put("code", 1);
+			}
+			
+			result.put("status", "ok");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+
 		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/{userId}/getTrashCanList", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
-	public JSONObject getTrashCanList (@PathVariable String userId, HttpServletRequest request, Locale locale)  {
-		String offset = request.getParameter("offset") !=null ? request.getParameter("offset") : "";
-		int tenantId = request.getParameter("tenantId") !=null ? Integer.parseInt(request.getParameter("tenantId")) : 0;
-		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+	public JSONObject getTrashCanList (@PathVariable String userId, HttpServletRequest request, Locale locale) {
+		String offset = request.getParameter("offset") != null ? request.getParameter("offset") : "";
+		int tenantId = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : 0;
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		
+		// TODO primary 수정
+		String primary;
+		
+		try {
+			primary = mOptionService.commonInfo(serverName, userId).getPrimary();
+		} catch (Exception ex) {
+			primary = "1";
+		}
 
 		logger.debug("getTrashCanList Started.");
 		logger.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId + ",serverName=" + serverName);
@@ -325,7 +471,7 @@ public class EzWebFolderGWController_m {
 
 		try {
 			List<TrashCanVO> trashCanList = null;
-			JSONObject trashCanResult = ezWebFolderService.getTrashCanList(userId, offset, tenantId);
+			JSONObject trashCanResult = ezWebFolderService_m.getTrashCanList(userId, offset, tenantId);
 			int fileCnt = 0;
 			int folderCnt = 0;
 			
@@ -340,7 +486,8 @@ public class EzWebFolderGWController_m {
 			if (trashCanList != null) {
 				for (TrashCanVO trashCan : trashCanList) {
 					trashCanPath = trashCan.getTrashCanPath().substring(1);
-					trashCanPath = getFolderPath(trashCanPath.split("\\|"), offset, tenantId);
+					
+					trashCanPath = getFolderPath(trashCanPath.split("\\|"), primary, offset, tenantId);
 					
 					// is folder
 					if ("folder".equalsIgnoreCase(trashCan.getTrashCanExt())) {
@@ -369,17 +516,6 @@ public class EzWebFolderGWController_m {
 		logger.debug("result=" + result);
 		logger.debug("getTrashCanList ended.");
 		return result;
-	}
-	
-	private String getFolderPath(String[] paths, String offset, int tenantId) throws Exception {
-		StringBuilder result = new StringBuilder("/");
-		
-		for (String path : paths) {
-			FolderVO parentFolder = ezWebFolderService2.getFolderByFolderId(path, offset, tenantId);
-			result.append(parentFolder.getFolderName1()).append("/");
-		}
-
-		return result.toString();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -412,7 +548,7 @@ public class EzWebFolderGWController_m {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
-			ezWebFolderService.permanetDeleteSelectedFiles(fileIDList, folderIDList, userInfo, realPath);
+			ezWebFolderService_m.permanetDeleteSelectedFiles(fileIDList, folderIDList, userInfo, realPath);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -426,5 +562,27 @@ public class EzWebFolderGWController_m {
 		
 		logger.debug("filePermanetDelete ended");
 		return result;
+	}
+	
+	private <T> T orElse(T value, T other) {
+		if (other == null) {
+			throw new IllegalArgumentException("other is null!");
+		}
+		
+		return value != null ? value : other;
+	}
+	
+	private String getFolderPath(String[] paths, String offset, String primaryLang, int tenantId) throws Exception {
+		StringBuilder result = new StringBuilder("/");
+		String folderName;
+		
+		for (String path : paths) {
+			FolderVO parentFolder = ezWebFolderService.getFolderByFolderId(path, offset, tenantId);
+			folderName = primaryLang.equals("2") ? parentFolder.getFolderName2() : parentFolder.getFolderName1();
+			
+			result.append(folderName).append("/");
+		}
+
+		return result.toString();
 	}
 }

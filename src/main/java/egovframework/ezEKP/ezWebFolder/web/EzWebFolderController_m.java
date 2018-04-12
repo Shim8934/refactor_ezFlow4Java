@@ -161,4 +161,13 @@ public class EzWebFolderController_m {
 		return "json";
 	}
 	
+	@RequestMapping(value = "/ezWebFolder/favorite.do")
+	public String favor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		logger.debug("favorite started.");
+
+		model.addAttribute("userInfo", commonUtil.userInfo(loginCookie));
+
+		logger.debug("favorite ended.");
+		return "ezWebFolder/favorite";
+	}
 }

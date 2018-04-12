@@ -5,67 +5,78 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
+import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
+import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzWebFolderDAO_m")
+@SuppressWarnings("unchecked")
 public class EzWebFolderDAO_m extends EgovAbstractDAO {
-	@SuppressWarnings("unchecked")
+
 	public List<ShareVO> getSharingList(Map<String, Object> map) {
 		return (List<ShareVO>)list("EzWebFolderDAO_m.getSharingList", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<ShareVO> getSharedList(Map<String, Object> map) {
 		return (List<ShareVO>)list("EzWebFolderDAO_m.getSharedList", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getSharingCount(Map<String, Object> map) {
 		return (List<Map<String, Object>>)list("EzWebFolderDAO_m.getSharingCount", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getSharedCount(Map<String, Object> map) {
 		return (List<Map<String, Object>>)list("EzWebFolderDAO_m.getSharedCount", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<String> getUserNameList(Map<String, Object> map) {
 		return (List<String>)list("EzWebFolderDAO_m.getUserNameList", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<String> getFolderUserIdList_D(Map<String, Object> map) {
 		return (List<String>)list("EzWebFolderDAO_m.getFolderUserIdList_D", map);
 	}
 	
-	public int getShareSeq(Map<String, Object> map) {
-		return (int)select("EzWebFolderDAO_m.getShareSeq", map);
+	public List<FolderFileVO> getShareGet(Map<String, Object> map) {
+		return (List<FolderFileVO>) list("EzWebFolderDAO_m.getShareGet", map);
 	}
-	
+
+	public List<FolderFileVO> getShareGive(Map<String, Object> map) {
+		return (List<FolderFileVO>) list("EzWebFolderDAO_m.getShareGive", map);
+	}
+
+	public int getShareSeq(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_m.getShareSeq", map);
+	}
+
 	public void delShare(Map<String, Object> map) {
 		delete("EzWebFolderDAO_m.delShare", map);
 	}
-	
+
 	public void insertShare(Map<String, Object> map) {
 		insert("EzWebFolderDAO_m.insertShare", map);
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	public List<String> userDeptList(Map<String, Object> map) {
-		return (List<String>)list("EzWebFolderDAO_m.userDeptList", map);
+		return (List<String>) list("EzWebFolderDAO_m.userDeptList", map);
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	public List<String> chiefDeptPath(Map<String, Object> map) {
-		return (List<String>)list("EzWebFolderDAO_m.chiefDeptPath", map);
+		return (List<String>) list("EzWebFolderDAO_m.chiefDeptPath", map);
+	}
+
+	public List<String> chiefDeptList(Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderDAO_m.chiefDeptList", map);
+	}
+
+	public List<FavoriteFileVO> getFavorites(Map<String, Object> map) {
+		return (List<FavoriteFileVO>) list("EzWebFolderDAO_m.getFavorites", map);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<String> chiefDeptList(Map<String, Object> map) {
-		return (List<String>)list("EzWebFolderDAO_m.chiefDeptList", map);
+	public Integer getFavoriteFolderCount(Map<String, Object> map) {
+		return (Integer) select("EzWebFolderDAO_m.getFavoriteFolderCount", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -103,5 +114,20 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	public List<TrashCanVO> getFolderByFolderPath (Map<String, Object> map){
 		return (List<TrashCanVO>) list ("EzWebFolderDAO_m.getFolderByFolderPath", map);
 	}
-}	
 
+	public Integer getFavoriteFileCount(Map<String, Object> map) {
+		return (Integer) select("EzWebFolderDAO_m.getFavoriteFileCount", map);
+	}
+	
+	public Integer isExistsFavorite(Map<String, Object> map) {
+		return (Integer) select("EzWebFolderDAO_m.isExistsFavorite", map);
+	}
+	
+	public void addFavorite(Map<String, Object> map) {
+		insert("EzWebFolderDAO_m.addFavorite", map);
+	}
+	
+	public void deleteFavorite(Map<String, Object> map) {
+		delete("EzWebFolderDAO_m.deleteFavorite", map);
+	}
+}

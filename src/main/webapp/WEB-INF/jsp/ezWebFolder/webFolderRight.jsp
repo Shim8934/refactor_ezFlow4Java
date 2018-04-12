@@ -20,7 +20,6 @@
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
     <script type="text/javascript">
-    	var xhr  		= new XMLHttpRequest();
     	var file 		 = new Array();
 		var primary      = "<c:out value='${primary}'/>";
 		var strShared1	= "<spring:message code = 'ezWebFolder.t105'/>";
@@ -354,7 +353,7 @@
 	    
 	    function goToPageByNum(Value){
 	    	currentPage = Value;
-	        pStart = (blockSize * (currentPage))- blockSize;
+	        pStart = (blockSize * (currentPage)) - blockSize;
 	        pEnd = blockSize;
 	        getFileList(folderId);
 	    }

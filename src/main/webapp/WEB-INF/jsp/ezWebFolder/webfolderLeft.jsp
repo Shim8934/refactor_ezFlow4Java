@@ -28,11 +28,13 @@
 		    $(function() { 
 				folderList('C');
 		    	folderType = 'C';
-			});		
+			});
+		    
 		    function refreshView(){
 		    	$.jstree.destroy()
 		    	folderList(folderType);
 		    }
+		    
 		    function folderList(obj) {
 		    	$($element).jstree('destroy');
 				if ( obj == 'C') {
@@ -102,8 +104,6 @@
 						alert("<spring:message code='ezWebFolder.t134' />" + error);
 					}
 				});
-				
-
 		    }
 		    
 			function drawVolume() {
@@ -182,6 +182,10 @@
 				window.parent.frames["right"].location.href = "/ezWebFolder/getGivenShareList.do";
 			}
 			
+			function moveFavorPage() {
+				setRightFrame("/ezWebFolder/favorite.do");
+			}
+			
 			function wfConfig() {
 				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderConfig.do";
 			}
@@ -205,6 +209,10 @@
 				if (useBottomFrameOnly == "NO") {
 					parent.parent.frames["topFrame"].contentWindow.hideProgress();
 				}
+			}
+			
+			function setRightFrame(url) {
+				window.parent.frames["right"].location.href = url;
 			}
 		</script>
 	</head>
@@ -245,7 +253,7 @@
 			</ul>
 		    
 		    <h2>
-  				<span style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t216'/></span>
+  				<span style="display:inline-block;width:100%;" onclick="moveFavorPage();"><spring:message code='ezWebFolder.t216'/></span>
   			</h2>  
     		<ul>
 		    </ul>
