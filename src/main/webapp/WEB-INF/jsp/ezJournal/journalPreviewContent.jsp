@@ -50,7 +50,7 @@
 	    </script>
 	</head>
 	<body>
-		 <span class="previewmail_info" style="display: block; width: 100%;">
+		 <span class="previewmail_info" style="border: none; display: block; width: 100%;">
 			<div style="text-align:left; border-bottom: 1px solid rgb(218, 218, 218); width: 100%;">
 	            <p class="mail_title" style="margin-left: 0px;">
 	                <span class="icon_btn"><span onclick="goJournalDetail(this);" id="${journal.journalId}" style="cursor: pointer; padding-right: 5px;">
