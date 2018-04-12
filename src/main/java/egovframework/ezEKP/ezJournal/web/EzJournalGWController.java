@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthCheckVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
@@ -1751,6 +1752,36 @@ public class EzJournalGWController {
 		}
 		
 		LOGGER.debug("ezJournal G/W getRecvJournalCount ended.");
+		return result;
+	}
+	
+	/**
+	 * 업무일지 G/W [GET] 권한 체크
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/auth", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject checkJournalAuth(@PathVariable String journalId,HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezJournal G/W checkJournalAuth started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			JournalAuthCheckVO journalAuth = ezJournalService.checkJournalAuth(userId, journalId, info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", journalAuth);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezJournal G/W checkJournalAuth ended.");
 		return result;
 	}
 	

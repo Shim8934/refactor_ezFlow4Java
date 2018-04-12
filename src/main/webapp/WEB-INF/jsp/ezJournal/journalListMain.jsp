@@ -818,7 +818,7 @@
 			</c:if>
 			<c:choose>
 				<c:when test="${listType eq 'recv' }">
-					<span id="mailBoxInfo">[<spring:message code='ezJournal.t161'/> <span id="recvCount" style="color:#017BEC;"></span> <spring:message code='ezJournal.t55'/> / <spring:message code='ezJournal.t160'/> <span id="totalCount" style="color:#017BEC;"></span> <spring:message code='ezJournal.t55'/>]</span>
+					<span id="mailBoxInfo">[<spring:message code='ezJournal.t161'/> <span id="recvCount" style="color:#017BEC;"></span> <spring:message code='ezJournal.t55'/> / <spring:message code='ezJournal.t54'/> <span id="totalCount" style="color:#017BEC;"></span> <spring:message code='ezJournal.t55'/>]</span>
 				</c:when>
 				<c:otherwise>
 					<span id="mailBoxInfo">[<spring:message code='ezJournal.t54'/> <span id="totalCount" style="color:#017BEC;"></span> <spring:message code='ezJournal.t55'/>]</span>
@@ -833,7 +833,7 @@
 			  </c:if>
 			  &nbsp;
 			  <c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-			  <input id="searchValue" style="width:150px;height:20px;border-right:0px;vertical-align: top" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}""> 
+			  <input id="searchValue" style="width:150px;height:20px;border-right:0px;vertical-align: top" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}"> 
 	          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onclick="quickSearch()"></a>
 			  </c:if>
 	        </span>
@@ -1183,10 +1183,9 @@
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			Openwin.focus();
-// 			if(listType=='recv'){
-// 				parent.left.setRecvCount();
-// 				setRecvCount();
-// 			}
+			if(listType=='recv'){
+				$(elem).find("td:eq(1)").find("img").attr("src", "/images/ImgIcon/icon-msg-read.gif");
+			}
 		}
 	}
 	 

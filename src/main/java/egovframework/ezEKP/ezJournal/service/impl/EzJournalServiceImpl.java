@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezJournal.dao.EzJournalDAO;
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
 import egovframework.ezEKP.ezJournal.vo.DeptInfoVO;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthCheckVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
@@ -1146,6 +1147,19 @@ public class EzJournalServiceImpl implements EzJournalService {
 		}
 			
 		logger.debug("saveJournalViewInfo ended");
+	}
+
+	@Override
+	public JournalAuthCheckVO checkJournalAuth(String userId, String journalId, int tenantId) throws Exception {
+		logger.debug("checkJournalAuth started");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("userId", userId);
+		param.put("journalId", journalId);
+		
+		logger.debug("checkJournalAuth ended");
+		return ezJournalDAO.checkJournalAuth(param);
 	}
 	
 }

@@ -15,7 +15,14 @@
 	<typeAlias alias="fileVO" 				type="egovframework.ezEKP.ezJournal.vo.JournalFileVO" />
 	<typeAlias alias="journalReplyVO" 		type="egovframework.ezEKP.ezJournal.vo.JournalReplyVO" />
 	<typeAlias alias="receiverVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalReceiverVO"/>	
+	<typeAlias alias="journalAuthCheckVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalAuthCheckVO"/>	
 
+	<resultMap class="journalAuthCheckVO" id="journalAuthCheckMap">
+		<result property="isLive" 			column="is_live" />
+		<result property="checkSusin" 	column="check_susin" />
+		<result property="count" 		column="count" />
+	</resultMap>
+	
 	<resultMap class="journalReplyVO" id="journalReplyMap">
 		<result property="replyId" 			column="reply_id" />
 		<result property="replyContent" 	column="reply_content" />
@@ -1337,5 +1344,26 @@
 		order by 5 desc
 		limit
 			#startCount#, #listCnt#
+	</select>
+	
+	<select id="checkJournalAuth" parameterClass="map" resultMap="journalAuthCheckMap">
+		select 
+		count(r.user_id) as count,
+		case j.journal_id
+		when #journalId#
+		then 'Y'
+		else 'N'
+		end as is_live,
+		case r.user_id
+		when #userId#
+		then 'Y'
+		else 'N'
+		end as check_susin
+		from tbl_journal j
+		left join tbl_journal_recv r on(j.journal_id = r.journal_id and j.tenant_id = r.tenant_id)
+		where
+		j.journal_id = #journalId#
+		and j.tenant_id = #tenantId#
+		and r.user_id = #userId#
 	</select>
 </sqlMap>

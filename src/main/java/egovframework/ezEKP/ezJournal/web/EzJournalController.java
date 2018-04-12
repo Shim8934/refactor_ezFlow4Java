@@ -1440,6 +1440,46 @@ public class EzJournalController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 메일전송된 업무일지 권한 체크
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/ezJournal/checkToMailJournal.do")
+	public JSONObject checkToMailJournal(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		logger.debug("checkToMailJournal started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String journalId = request.getParameter("journalId");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId+"/auth", param, request, "get", null);
+//		
+//		Map<String, String> resultMap = new HashMap<String, String>();
+		
+		JSONObject journalAuth=  (JSONObject) resultBody.get("data");
+//		String status = resultBody.get("status").toString();
+		
+//		resultMap.put("isLive", "Y");
+//		if (status.equals("ok")) {		
+//			for (int i = 0; i < viewerList.size(); i++) {
+//				JSONObject viewer =(JSONObject) viewerList.get(i);
+//				if (viewer.get("userId").equals(userInfo.getId())) {
+//					resultMap.put("checkSusin", "Y");
+//				}
+//			}
+//		}
+		
+		logger.debug("checkToMailJournal ended");
+		
+		return journalAuth;
+	}
+	
+	/**
 	 * 업무일지 수신자 리스트
 	 * @param request
 	 * @param model
@@ -1737,8 +1777,9 @@ public class EzJournalController extends EgovFileMngUtil {
 				String subject = egovMessageSource.getMessage("ezJournal.t151") + journalTitle;
 				
 				String content = "<p>" + egovMessageSource.getMessage("ezJournal.t152") + "</p>";
+				
 				content += "<p></p>";
-				content += "<a href='#' target='' onclick='journalMailLink(" + journalId + ");'>" + journalTitle + "</a>";
+				content += "<a href='#' target='' onclick='journalMailLink(" + journalId + ",1);'>" + journalTitle + "</a>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t153") + userInfo.getDisplayName() + "</p>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154") + journalTitle + "</p>";
 				content += "<p>" + replyContent + "</p>";

@@ -51,8 +51,8 @@
 							alert("<spring:message code='ezJournal.t138'/>");
 							if (opener.listType != null && opener.listType != "") {
 								opener.setJournalList();
-								window.close();
 							}
+							window.close();
 						},
 						error : function() {
 							alert("<spring:message code='ezJournal.t149'/>");
@@ -286,7 +286,6 @@
 		    	sizeOn();
 		    	
 		    	if (opener.listType != null && opener.listType != "") {
-			    	opener.setJournalList();
 			    	opener.parent.left.setRecvCount();
 					opener.setRecvCount();
 		    	}
