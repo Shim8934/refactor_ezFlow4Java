@@ -41,7 +41,7 @@
 		<result property="tenantId"        column="TENANT_ID"        columnIndex="12"/>
 	</resultMap>
 
-	<!-- FolderFile resultMap -->
+	<!-- ShareFile resultMap -->
     <resultMap id="shareVO" class="ShareVO">
         <result property="fileId"                 column="file_id"                columnIndex="1"  />
         <result property="fileName"               column="file_name"              columnIndex="2"  />
@@ -583,6 +583,44 @@
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getFolderUserIdList_D" resultClass="String">
+		<![CDATA[
+			SELECT DISTINCT
+				USER_ID
+			FROM TBL_WEBFOLDER_FOLDERUSER FU
+			JOIN TBL_WEBFOLDER_FOLDER F
+			ON FU.FOLDER_ID = F.FOLDER_ID
+			AND FU.TENANT_ID = F.TENANT_ID
+			WHERE F.FOLDER_TYPE = 'D'
+			AND FU.CREATE_ID = #userId#
+			AND FU.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.isShared" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM TBL_WEBFOLDER_SHARE
+			WHERE ((FOLDERFILE_TYPE = 'D' AND FOLDERFILE_ID = #folderId#)
+			OR (FOLDERFILE_TYPE = 'D' AND SUB_STATUS = 'Y'
+		]]>
+			<isNotEmpty prepend="AND" property="parentIdList">
+				<iterate prepend="FOLDERFILE_ID IN " property="parentIdList" open="(" close=")" conjunction=",">
+					#parentIdList[]#
+				</iterate>
+			</isNotEmpty>
+		<![CDATA[
+			)
+		]]>
+			<isEqual property="folderFileType" compareValue="F">
+				OR (FOLDERFILE_TYPE = 'F' AND FOLDERFILE_ID = #fileId#)
+			</isEqual>
+		<![CDATA[
+			) AND TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.isFileShared" resultClass="String">
 		<![CDATA[
 			SELECT DISTINCT
 				USER_ID

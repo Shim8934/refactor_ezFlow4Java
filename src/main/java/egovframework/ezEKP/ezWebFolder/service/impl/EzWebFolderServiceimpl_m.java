@@ -188,6 +188,33 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
+	public boolean isShared(String folderFileId, String folderFileType, String folderPath, int tenantId) throws Exception {
+		boolean isShared = false;
+		folderPath = folderPath.substring(1, folderPath.length() - 1);
+		String[] folderPathArr = folderPath.split("\\|");
+		List<String> folderIdList = new ArrayList<String>();
+		
+		for (String id : folderPathArr) {
+			folderIdList.add(id);
+		}
+		
+		String folderId = folderIdList.remove(folderIdList.size() - 1);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("fileId", folderFileId);
+		map.put("folderId", folderId);
+		map.put("folderFileType", folderFileType);
+		map.put("parentIdList", folderIdList);
+		map.put("tenantId",	tenantId);
+		
+		if (ezWebFolderDAO_m.isShared(map) > 0) {
+			isShared = true;
+		}
+		
+		return isShared;
+	}
+	
+	@Override
 	public int getShareSeq(int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);

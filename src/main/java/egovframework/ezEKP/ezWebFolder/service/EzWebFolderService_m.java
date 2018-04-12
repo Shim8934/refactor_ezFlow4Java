@@ -5,13 +5,12 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
+import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
-import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
-import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
-import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 
 public interface EzWebFolderService_m {
 
@@ -22,7 +21,9 @@ public interface EzWebFolderService_m {
 	public Map<String, Integer> getSharingCount(String userId, String primary, String offset, int pageSize, int tenantId) throws Exception;
 	
 	public Map<String, Integer> getSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception;
-
+	
+	public boolean isShared(String folderFileId, String folderFileType, String folderPath, int tenantId) throws Exception;
+	
 	int getShareSeq(int tenantId) throws Exception;
 	
 	void insertShare(int seqId, String companyId, String userId, String userType, String folderFileId, String folderFileType, String createId, int tenantId) throws Exception;

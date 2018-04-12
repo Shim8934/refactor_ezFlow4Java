@@ -39,6 +39,10 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return (List<String>)list("EzWebFolderDAO_m.getFolderUserIdList_D", map);
 	}
 	
+	public int isShared(Map<String, Object> map) {
+		return (Integer) select("EzWebFolderDAO_m.isShared", map);
+	}
+	
 	public List<FolderFileVO> getShareGet(Map<String, Object> map) {
 		return (List<FolderFileVO>) list("EzWebFolderDAO_m.getShareGet", map);
 	}
