@@ -975,4 +975,19 @@ public class EzAttitudeKMSController {
 		
 		return "/ezAttitude/attModAppMod";
 	}
+	
+	/**
+	 * 개인근태현황 main
+	 */
+	@RequestMapping(value = "/ezAttitude/attitudeDeptMain.do")
+	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeUserMain started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("deptFlag", "true");
+		
+		LOGGER.debug("/ezAttitude/attitudeUserMain ended");
+		return "/ezAttitude/attitudeUserMain";
+	}
 }

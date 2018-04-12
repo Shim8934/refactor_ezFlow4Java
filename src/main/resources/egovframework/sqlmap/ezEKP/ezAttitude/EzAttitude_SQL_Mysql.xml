@@ -47,6 +47,7 @@
 		<result  property="typeId" 				column="TYPE_ID"				columnIndex="15"/>
 		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
+		<result  property="writerName"			column="WRITER_NAME"			columnIndex="18"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -128,20 +129,49 @@
 				  ) AS END_DATE,
 				MODAPPL,
 				REGION,
-				MOBILE,
+				A.MOBILE,
 				BIZSUB,
 				CONTENT,
 				IP,
 				DATE_TYPE,
 				A.TYPE_ID,
 				B.TYPE_NAME,
-				B.IMG_PATH
+				B.IMG_PATH,
+				C.DISPLAYNAME AS WRITER_NAME
 			FROM   
-				tbl_attitude A INNER JOIN tbl_attitude_type B ON (A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
-			WHERE  
-				WRITER_ID = #pidList#
-			AND    
+				tbl_attitude A 
+			INNER JOIN 
+				tbl_attitude_type B 
+			ON 
+				(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
+			INNER JOIN 
+				tbl_usermaster C
+			ON
+				(C.CN = A.WRITER_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
+			WHERE
+			]]>
+			(
+			<isNotEmpty property="pidListArr">
+				<iterate prepend="WRITER_ID IN" property="pidListArr" open="(" close=")" conjunction=",">
+			      		#pidListArr[]#
+				</iterate>
+				<isNotEmpty property="deptIdArr" prepend="or">
+					<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+			      		#deptIdArr[]#
+					</iterate>
+				</isNotEmpty> 
+			</isNotEmpty>
+			<isEmpty property="pidListArr">
+				<isNotEmpty property="deptIdArr">
+					<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+			      		#deptIdArr[]#
+					</iterate>
+				</isNotEmpty>
+			</isEmpty>
+			)
+			AND
 				A.TENANT_ID = #tenantId#
+			<![CDATA[
 			AND  
 				(
 					(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 

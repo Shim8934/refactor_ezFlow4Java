@@ -24,7 +24,7 @@ public interface EzAttitudeService {
 	public void insertAttitude(String writerId, String deptId, String startDate, String endDate, String region,
 			String mobile, String bizSub, String content, String ip, String typeId, String dateType, String offset, String companyId, int tenantId) throws Exception;
 	
-	public List<AttitudeVO> getAttitudeList(String pidList, String yrmh, String typeId, String startDate, String endDate, String offset, int tenantId) throws Exception;
+	public List<AttitudeVO> getAttitudeList(String pidList, String deptIdList, String yrmh, String typeId, String startDate, String endDate, String offset, int tenantId, String deptFlag) throws Exception;
 	
 	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String offset, String startDate, String endDate, int tenantId) throws Exception;
 	
