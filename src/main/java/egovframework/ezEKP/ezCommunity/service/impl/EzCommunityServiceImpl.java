@@ -256,7 +256,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String pNewID = request.getParameter("sNewID");
 		String pNewSubID = request.getParameter("sNewSubID");
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
-		String logo = "default_logo_type1.jpg";
+		String logo = "default_logo_type5.jpg";
 		String thumb = "default_logo_empty.png";
 		
 		logger.debug("logoPath 		::		 " + logoPath);

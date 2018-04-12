@@ -477,7 +477,7 @@
 	    <table style="width:100%;">
 	        <tr style="height:190px;">
 	            <td>
-	                <img src="/images/ezCommunity/cop_type1.png" style="width:300px;height:180px;cursor:pointer;" id="type1" onclick="radioClick(this,'img')"/>
+	                <img src="/images/ezCommunity/cop_type5.png" style="width:300px;height:180px;cursor:pointer;" id="type5" onclick="radioClick(this,'img')"/>
 	            </td>
 	            <td>
 	                <img src="/images/ezCommunity/cop_type2.png" style="width:300px;height:180px;cursor:pointer;" id="type2" onclick="radioClick(this,'img')"/>
@@ -485,7 +485,7 @@
 	        </tr>
 	        <tr style="height:20px;text-align:center;">
 	            <td>
-	                <input type="radio" name="radType" value="type1" onclick="radioClick(this, 'rad')" style="cursor:pointer;" checked="checked"/>Type1
+	                <input type="radio" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;" checked="checked"/>Type1
 	            </td>
 	            <td>
 	                <input type="radio" name="radType" value="type2" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type2
@@ -505,20 +505,6 @@
 	            </td>
 	            <td>
 	                <input type="radio" name="radType" value="type4" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type4
-	            </td>
-	        </tr>
-	        <tr style="height:190px;">
-	            <td>
-	                <img src="/images/ezCommunity/cop_type5.png" style="width:300px;height:180px;cursor:pointer;padding-top:5px" id="type5" onclick="radioClick(this,'img')"/>
-	            </td>
-	            <td>
-	            </td>
-	        </tr>
-	        <tr style="height:20px;text-align:center;">
-	            <td>
-	                <input type="radio" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type5
-	            </td>
-	            <td>
 	            </td>
 	        </tr>
 	    </table>
