@@ -66,7 +66,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유한 폴더 및 파일 조회
 	 */
-	@RequestMapping(value="/ezwebfolder/users/{userId}/sharing-list", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing-list", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSharingList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("getSharingList started.");
 		
@@ -137,7 +137,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유받은 폴더 및 파일 조회
 	 */
-	@RequestMapping(value="/ezwebfolder/users/{userId}/shared-list", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/shared-list", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSharedList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("getSharedList started.");
 		

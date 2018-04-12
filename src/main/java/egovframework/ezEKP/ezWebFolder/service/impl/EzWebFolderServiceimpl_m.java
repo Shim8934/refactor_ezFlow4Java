@@ -256,6 +256,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		idList.addAll(idSet);
 		
+		LOGGER.debug("idList: " + idList.toString());
 		return idList;
 	}
 	

@@ -29,7 +29,7 @@
         <result property="fileName"               column="file_name"              columnIndex="2"  />
         <result property="folderFileType"         column="folderfile_type"        columnIndex="3"  />
         <result property="folderType"             column="folder_type"            columnIndex="4"  />
-        <result property="filePath"               column="file_path"              columnIndex="5"  />
+        <result property="filePosition"           column="file_path"              columnIndex="5"  />
         <result property="fileSize"               column="file_size"              columnIndex="6"  />
         <result property="fileExt"                column="file_ext"               columnIndex="7"  />
         <result property="folderPath"             column="folder_path"            columnIndex="8"  />
@@ -38,11 +38,11 @@
         <result property="createId"               column="create_id"              columnIndex="11" />
         <result property="createName"             column="create_name"            columnIndex="12" />
         <result property="createDate"             column="create_date"            columnIndex="13" />
-<!--         <result property="updateId"               column="update_id"          	  columnIndex="14" /> -->
-<!--         <result property="updateDate"             column="update_date"            columnIndex="15" /> -->
+        <result property="updateId"               column="update_id"          	  columnIndex="14" />
+        <result property="updateDate"             column="update_date"            columnIndex="15" />
         <result property="typeId"                 column="type_id"                columnIndex="16" />
         <result property="typeName"               column="type_name"              columnIndex="17" />        
-        <result property="typeIcon"               column="type_icon"              columnIndex="18" />
+        <result property="fileIconUrl"            column="type_icon"              columnIndex="18" />
 <!--         <result property="shareStatus"            column="share_status"        	  columnIndex="19" /> -->
         <result property="favouriteStatus"        column="favorite_status"        columnIndex="20" />
         <result property="sharerId"               column="sharer_id"  		      columnIndex="22" />
@@ -77,6 +77,8 @@
 					ELSE DF.CREATE_NAME2
 				END CREATE_NAME,
 				DATE_FORMAT(DATE_ADD(DF.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+				DF.UPDATE_ID,
+				DATE_FORMAT(DATE_ADD(DF.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
 				DF.TYPE_ID,
 				FT2.TYPE_NAME,
 				FT2.TYPE_ICON,
@@ -107,6 +109,8 @@
 					D.CREATE_NAME1,
 					D.CREATE_NAME2,
 					D.CREATE_DATE,
+					D.UPDATE_ID,
+					D.UPDATE_DATE,
 					FT.TYPE_ID,
 					D.TENANT_ID
 				FROM TBL_WEBFOLDER_FOLDER AS D
@@ -130,6 +134,8 @@
 					F.CREATE_NAME1,
 					F.CREATE_NAME2,
 					F.CREATE_DATE,
+					F.UPDATE_ID,
+					F.UPDATE_DATE,
 					F.TYPE_ID,
 					F.TENANT_ID
 				FROM TBL_WEBFOLDER_FILE AS F
@@ -152,13 +158,14 @@
 			AND DF.TENANT_ID = #tenantId#
 			GROUP BY S.FOLDERFILE_ID, S.FOLDERFILE_TYPE, S.SHARER_ID
 		    HAVING SHARER_ID = #userId#
+		    ORDER BY FOLDERFILE_TYPE, FILE_NAME
 			LIMIT #startPoint#, #pageSize#
 		]]>
 	</select>
 
 	<select id="EzWebFolderDAO_m.getSharedList" parameterClass="Map" resultMap="shareVO">
 		<![CDATA[
-			SELECT
+			SELECT DISTINCT
 				DF.FILE_ID,
 				CASE #primary#
 					WHEN '1'
@@ -180,6 +187,8 @@
 					ELSE DF.CREATE_NAME2
 				END CREATE_NAME,
 				DATE_FORMAT(DATE_ADD(DF.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+				DF.UPDATE_ID,
+				DATE_FORMAT(DATE_ADD(DF.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
 				DF.TYPE_ID,
 				FT2.TYPE_NAME,
 				FT2.TYPE_ICON,
@@ -219,6 +228,8 @@
 					D.CREATE_NAME1,
 					D.CREATE_NAME2,
 					D.CREATE_DATE,
+					D.UPDATE_ID,
+					D.UPDATE_DATE,
 					FT.TYPE_ID,
 					D.TENANT_ID
 				FROM TBL_WEBFOLDER_FOLDER AS D
@@ -242,6 +253,8 @@
 					F.CREATE_NAME1,
 					F.CREATE_NAME2,
 					F.CREATE_DATE,
+					F.UPDATE_ID,
+					F.UPDATE_DATE,
 					F.TYPE_ID,
 					F.TENANT_ID
 				FROM TBL_WEBFOLDER_FILE AS F
@@ -271,6 +284,7 @@
 			</iterate>
 		<![CDATA[
 			AND DF.TENANT_ID = #tenantId#
+			ORDER BY FOLDERFILE_TYPE, FILE_NAME
 			LIMIT #startPoint#, #pageSize#
 		]]>
 	</select>
@@ -303,6 +317,8 @@
 						ELSE DF.CREATE_NAME2
 					END CREATE_NAME,
 					DATE_FORMAT(DATE_ADD(DF.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+					DF.UPDATE_ID,
+					DATE_FORMAT(DATE_ADD(DF.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
 					DF.TYPE_ID,
 					FT2.TYPE_NAME,
 					FT2.TYPE_ICON,
@@ -333,6 +349,8 @@
 						D.CREATE_NAME1,
 						D.CREATE_NAME2,
 						D.CREATE_DATE,
+						D.UPDATE_ID,
+						D.UPDATE_DATE,
 						FT.TYPE_ID,
 						D.TENANT_ID
 					FROM TBL_WEBFOLDER_FOLDER AS D
@@ -356,6 +374,8 @@
 						F.CREATE_NAME1,
 						F.CREATE_NAME2,
 						F.CREATE_DATE,
+						F.UPDATE_ID,
+						F.UPDATE_DATE,
 						F.TYPE_ID,
 						F.TENANT_ID
 					FROM TBL_WEBFOLDER_FILE AS F
@@ -388,7 +408,7 @@
 				UU.FOLDERFILE_TYPE,
 				COUNT(UU.FOLDERFILE_TYPE) AS COUNT
 			FROM (
-				SELECT
+				SELECT DISTINCT
 					DF.FILE_ID,
 					CASE #primary#
 						WHEN '1'
@@ -410,6 +430,8 @@
 						ELSE DF.CREATE_NAME2
 					END CREATE_NAME,
 					DATE_FORMAT(DATE_ADD(DF.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+					DF.UPDATE_ID,
+					DATE_FORMAT(DATE_ADD(DF.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
 					DF.TYPE_ID,
 					FT2.TYPE_NAME,
 					FT2.TYPE_ICON,
@@ -449,6 +471,8 @@
 						D.CREATE_NAME1,
 						D.CREATE_NAME2,
 						D.CREATE_DATE,
+						D.UPDATE_ID,
+						D.UPDATE_DATE,
 						FT.TYPE_ID,
 						D.TENANT_ID
 					FROM TBL_WEBFOLDER_FOLDER AS D
@@ -472,6 +496,8 @@
 						F.CREATE_NAME1,
 						F.CREATE_NAME2,
 						F.CREATE_DATE,
+						F.UPDATE_ID,
+						F.UPDATE_DATE,
 						F.TYPE_ID,
 						F.TENANT_ID
 					FROM TBL_WEBFOLDER_FILE AS F

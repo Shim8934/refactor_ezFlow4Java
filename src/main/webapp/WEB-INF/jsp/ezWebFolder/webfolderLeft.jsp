@@ -174,12 +174,12 @@
 		    function treeTest() {
 		    	window.parent.frames["right"].location.href = "/ezWebFolder/treeTest.do";
 		    }
-		    function getReceivedShare() {
-				window.parent.frames["right"].location.href = "/ezWebFolder/getShareListPage.do";
+		    function getSharedList() {
+				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderSharedList.do";
 			}
 			
-			function getGivenShare() {
-				window.parent.frames["right"].location.href = "/ezWebFolder/getGivenShareList.do";
+			function getSharingList() {
+				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderSharingList.do";
 			}
 			
 			function wfConfig() {
@@ -220,11 +220,11 @@
 		    </ul>  
 		    
 		    <h2>
-				<span style="display:inline-block;width:100%;" onclick="getReceivedShare();"><spring:message code='ezWebFolder.t266' /></span>
+				<span style="display:inline-block;width:100%;" onclick="getSharedList();"><spring:message code='ezWebFolder.t266' /></span>
 			</h2>
 			<ul>
-				<li><span style="width: 100%; display: inline-block;" onclick="getReceivedShare();"><spring:message code='ezWebFolder.t214' /></span></li>
-				<li><span style="width: 100%; display: inline-block;" onclick="getGivenShare();"   ><spring:message code='ezWebFolder.t266' /></span></span></li>
+				<li><span style="width: 100%; display: inline-block;" onclick="getSharedList();"><spring:message code='ezWebFolder.t214' /></span></li>
+				<li><span style="width: 100%; display: inline-block;" onclick="getSharingList();"><spring:message code='ezWebFolder.t267' /></span></li>
 			</ul>
 		    
 		    <h2>
