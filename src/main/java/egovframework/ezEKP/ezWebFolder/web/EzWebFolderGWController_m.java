@@ -25,24 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
+import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
-import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
-import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
-import egovframework.ezMobile.ezOption.service.MOptionService;
-import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.let.user.login.vo.LoginVO;
-import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
-import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
-import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
-import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
-import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
-import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @RestController
@@ -68,20 +59,8 @@ public class EzWebFolderGWController_m {
 	@Autowired
 	private CommonUtil commonUtil;
 	
-	/*
-	 * 공유 폴더 및 파일 조회
-	 * 
-	 * @author 강민수79
-	 * @date 2018.02.05.
-	 * @param userId
-	 * @param tenantId
-	 * @param companyId
-	 * @param startDate
-	 * @param endDate
-	 * @param extendName
-	 * @param fileName
-	 * @param createName
-	 * @return JSONObject
+	/**
+	 * 공유한 폴더 및 파일 조회
 	 */
 	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing-list", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSharingList(@PathVariable String userId, HttpServletRequest request) {
