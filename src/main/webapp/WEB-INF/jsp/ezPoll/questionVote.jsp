@@ -10,12 +10,18 @@
 		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
 		<link rel="stylesheet" href="/css/font-awesome-4.7.0/css/font-awesome.css">
+		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
 		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
 		<script src="/js/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>	
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		
 		<script type="text/javascript">	
 			var filesize 				= 0;
@@ -190,6 +196,7 @@
 				emoticonPanelClose();
 				optImgSearch();
 				addThumbnailEvent();
+				dateTimePickerSetting()
 				
 			}
 			
@@ -2621,6 +2628,141 @@
 				});
 		    }
 		  	
+		  	//종료일 변경 기능
+		  	function updateEndDate(){
+		  		var fd = new FormData();
+		  		var qstId = ${question.qstId};
+				var N_EndTime   = $( "#eTimePicker option:selected" ).text() + ":59"; //20180109
+	    		var N_EndDate   = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+				var L_StartDateTime = "${question.startDate}";
+		  		var L_StartTime = L_StartDateTime.substring(L_StartDateTime.indexOf(" ") + 1, L_StartDateTime.length);
+		  		var L_StartDate = L_StartDateTime.substring(0, 10);
+				var N_EndDateTime = N_EndDate + " " + N_EndTime;
+				
+				//종료일 유효성 체크
+				if (L_StartDate > N_EndDate) {
+		        	alert('<spring:message code="ezPoll.t236" />\n<spring:message code="ezPoll.t160" /> : ' + L_StartDateTime);
+		        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        	$("#Edatepicker").datepicker('setDate', "${question.endDate}");
+		            return false;
+		        }
+		        else if (L_StartDate == N_EndDate) {
+		        	if (L_StartTime >= N_EndTime) {
+		        		alert('<spring:message code="ezPoll.t236" />\n<spring:message code="ezPoll.t160" /> : ' + L_StartDateTime);
+			            return false;
+		        	}
+		        }
+				
+		  		fd.append("qstId", qstId);
+		  		fd.append("endDate", N_EndDateTime);
+		  		
+		  		xhr1.open("POST", "/ezPoll/updateEndDateForQst.do", false);
+	    	    xhr1.send(fd);
+	    	    window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6";
+		  	}
+		  	
+		  	function dateTimePickerSetting(){
+				$("#Edatepicker").datepicker({
+			        changeMonth: true,
+		    	    changeYear: true,
+		        	autoSize: true,
+		        	showOn: "both",
+		        	format: 'yyyy-mm-dd',
+		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        	buttonImageOnly: true,
+		        	onSelect: endDateModifyConfirm
+		    	});		
+		
+				var _endD = "<c:out value='${question.endDate}'/>";
+				
+		        
+		        var eYear = _endD.substring(0, 4);
+				var eMonth = _endD.substring(5, 7);
+				var eDay = _endD.substring(8, 10);
+				var eHour = _endD.substring(11, 13);
+				var eMin = _endD.substring(14, 16);				
+	        	EDate = new Date(eYear, eMonth-1, eDay);
+	        	
+	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        	$("#Edatepicker").datepicker('setDate', EDate);
+	        	
+	        	eHourMinute = eHour + eMin;	  
+	        	
+	        	var selection = "";
+	        	var i = 0;
+	        	for (var i = 0; i < 24; i++) {
+	        	    var j = zeroFill(i, 2);
+	        	    selection += "<option value='"+ j +"00'>"+ j + ":00" + "</option>";
+	        	    selection += "<option value='"+ j +"30'>"+ j + ":30" + "</option>";
+	        	} 
+	        	
+	        	$("#eTimePicker").html(selection);   	
+	        	
+	        	$("#eTimePicker").val(eHourMinute).change();
+	        	
+	        	//Set time
+    			setDateTimeValue();	
+    			
+    			$("#endDate").click(function() {
+    				if($("#_dateTimePicker").css("display") == "none"){
+	    				$("#_dateTimePicker").css("display", "inline-block");
+	    				$(".ui-datepicker-trigger").click();
+    				}
+    				else{
+	    				$("#_dateTimePicker").css("display", "none");
+	    				$("#Edatepicker").datepicker('setDate', EDate);
+    				}
+    			});
+		  	}
+		  	
+		  	function setDateTimeValue() {
+				
+				var NowDate = new Date(new Date().getTime());
+				var NextWeek = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
+				
+	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        	$("#Edatepicker").datepicker('setDate', "${question.endDate}");			
+	        	
+	        	var selection = "";
+	        	var i = 0;
+	        	
+	        	for (var i = 0; i < 24; i++) {
+	        	    var j = zeroFill(i, 2);
+	        	    selection += "<option value='"+ j +"00'>"+ j + ":00" + "</option>";
+	        	    selection += "<option value='"+ j +"30'>"+ j + ":30" + "</option>";
+	        	} 
+	        	
+	        	$("#eTimePicker").html(selection); 
+			}	
+		  	
+		  	function zeroFill( number, width ) {
+				  width -= number.toString().length;
+				  
+				  if ( width > 0 ) {
+				    return new Array( width + (/\./.test( number ) ? 2 : 1) ).join( '0' ) + number;
+				  }
+				  
+				  return number + "";
+			}
+		  	
+		  	//종료일 변경 다이얼로그창 띄움.
+		  	function endDateModifyConfirm(){
+  				$("#Edatepicker, #eTimePicker").css("color", "#0000FF");
+	  			window.setTimeout(
+       				function(){
+		        		if(window.confirm("<spring:message code = 'ezPoll.hdp05'/>")){
+		        			updateEndDate();
+		        		}
+		        		else{
+		        			$("#Edatepicker").datepicker('setDate', EDate);	
+	  						$("#Edatepicker, #eTimePicker").css("color", "#000000");
+		        		}
+		        		
+		        		$("#_dateTimePicker").toggle();
+		        		
+        			}, 500);
+		  	}
+		  	
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -2698,6 +2840,21 @@
 									<img src="/images/poll/reuseVote.png" class="voteIconImg nosecret" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
 								</li>
 							</ul>
+							<c:if test="${(curentUser eq question.creator || adminPrivilege == 1)}">
+								<ul class="voteIcon_ul">
+									<li class="voteIconImg_li icon">
+										<img id="endDate" src="/images/poll/endDateModify.png" class="voteIconImg nosecret" style="width:45px" title="<spring:message code = 'ezPoll.hdp04'/>" onmouseover="this.src = '/images/poll/endDateModify_hover.png'" onmouseout="this.src = '/images/poll/endDateModify.png'" />
+									</li>
+								</ul>
+								<div id="_dateTimePicker" style="display: none; position: absolute; top: 125px; right: 10px; height: 221px; width: 223px; background: white; border-radius: 10px; padding-top: 20px; border:1px solid #ddd;">										
+									<input type="text" id="Edatepicker" style="width:80px; height: 20px; text-align:center; margin-left: 18px; margin-right: 5px; float: left;" readonly >
+									<select id="eTimePicker" style="float:left"></select>						
+									<!-- <div style="height: 40px;width: 100%;position: relative;margin-top: 70px;">
+										<img src="/images/ImgIcon/mtg-accept.png" style="width: 30px;margin-left: 50px;">
+										<img src="/images/ImgIcon/mtg-decline.png" style="width: 30px; margin-left: 50px;">
+									</div> -->			
+								</div>
+							</c:if>
 					  </div>
 					  
 				</div>
