@@ -180,7 +180,7 @@
 			}
 			
 			//양식명에 의한 셋팅
-			function goToPageByFormName(){
+			function goToPageByFormName() {
 				currentPage=1;
 				searchWriter = "";   
 				searchTitle = "";    
@@ -191,7 +191,34 @@
 			}
 			
 			//검색에 의한 셋팅
-			function goToPageBySearch(){
+			function goToPageBySearch() {
+				
+				if (listType == "mine") {
+					if ($("#searchTitle").val().trim() == "" && $("#searchContent").val().trim() == "" && $("#searchFormName").val().trim() == "" 
+						&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	               		alert("<spring:message code='ezBoard.t192' />");
+	                	return;
+		            }
+				} else {
+					if ($("#searchTitle").val().trim() == "" && $("#searchContent").val().trim() == "" && $("#searchFormName").val().trim() == "" && $("#searchWriter").val().trim() == "" 
+						&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	               		alert("<spring:message code='ezBoard.t192' />");
+	                	return;
+		            }
+				}
+	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	        		alert("<spring:message code='ezSystem.x0035' />");	
+	                return;
+	            }
+	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
+	                alert("<spring:message code='ezSystem.x0036' />");
+	                return;
+	            }
+	            if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+	                alert("<spring:message code='ezBoard.t191' />");
+	                return;
+	            }
+				
 				if(document.getElementById("searchWriter")){
 					searchWriter = document.getElementById("searchWriter").value;   
 				}
@@ -204,15 +231,24 @@
 				setJournalList();
 				BoardSearchOptionHidden();
 			}
-			function quickSearch(){
+			
+			function quickSearch() {
 				var searchFlag = $("input[type='radio'][name='searchKey']:checked").val();
 				if(searchFlag == 'journalWriter'){
-					searchWriter = $("#searchValue").val();
+					searchWriter = $("#searchValue").val().trim();
+					if (searchWriter == "") {
+						alert("<spring:message code='ezBoard.t192' />");
+	                	return;
+					}
 					setJournalList();
 					searchWriter = "";
 					$("#searchValue").val("");
 				} else if(searchFlag == 'journalTitle'){
-					searchTitle = $("#searchValue").val();
+					searchTitle = $("#searchValue").val().trim();
+					if (searchTitle == "") {
+						alert("<spring:message code='ezBoard.t192' />");
+	                	return;
+					}
 					setJournalList();
 					searchTitle = "";
 					$("#searchValue").val("");
@@ -970,10 +1006,10 @@
 				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>
-					<td><input type="text" id="Sdatepicker"
-						style="width: 80px; text-align: center" readonly="readonly">
-						~ <input type="text" id="Edatepicker"
-						style="width: 80px; text-align: center" readonly="readonly">
+					<td>
+						<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly">
+						~ 
+						<input type="text" id="Edatepicker" style="width: 80px; text-align: center" readonly="readonly">
 					</td>
 				</tr>
 			</table>
