@@ -4076,7 +4076,6 @@
 		    	UpdateDate = #writeDate#,
 		    	Importance = #importance#,
 	          	Title = #title#,
-	          	StartDate = #startDate#,
 	          	EndDate = #endDate#,
 	          	Abstract = #ABSTRACT#,
 	          	Attachments = #hasAttach#,
