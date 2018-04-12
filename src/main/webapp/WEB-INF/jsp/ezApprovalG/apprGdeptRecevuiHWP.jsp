@@ -532,7 +532,7 @@
 			    var feature = "status:no;dialogWidth:530px;dialogHeight:520px;help:no;edge:sunken;scroll:no"
 			    var ret = window.showModalDialog(url, parameter, feature);
 			
-			    if (ret != "cancel") {
+			    if (ret != "cancel" && ret != undefined) {
 			
 			        setHeSongDocInfo();
 			    }

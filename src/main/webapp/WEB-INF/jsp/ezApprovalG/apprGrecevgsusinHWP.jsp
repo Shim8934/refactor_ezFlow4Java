@@ -951,7 +951,7 @@
 			    var ret = window.showModalDialog(url, parameter, feature);
 			    var hesongok = true;
 			
-			    if (ret != "cancel") {
+			    if (ret != "cancel" && ret != undefined) {
 			        setButtonReceiveTrue();
 			
 			        if (pDocSN != "")
