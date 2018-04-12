@@ -270,39 +270,15 @@
 	                	<div><spring:message code='ezCommunity.t459' /></div>
 	                    <div style="margin-top:3px"><spring:message code='ezCommunity.t1022' /></div>
 	                </td>
-	            </tr>
-<!-- 				2016-05-02 이효진 사용하지 않는 부분 -->
-<%-- 2018-04-10 홍승비 배너 -> 대표 이미지로 재사용 --%>
-<%--대표 이미지(기존:배너 이미지) 198 * 140--%>
-	            <tr>
-	                <th>썸네일 이미지<%-- <br>(기존 : <spring:message code='ezCommunity.t1025' />) --%></th>
-	                <td style="border-right:0px;padding-left:5px">
-	                	<c:if test="${isCrossBrowser == true}">
-		                    <span style="vertical-align:middle">
-		                        <a class="imgbtn"><span id="btn_AttachAdd_banner" onclick="return btn_AttachSelect_onclick(2)"><spring:message code='ezCommunity.t1177' /></span></a>
-		                        <span id="filename2" style="vertical-align:middle; padding:3px;"></span>
-		                        <input type="file" id="file2" name="thumb" onchange="btn_AttachAdd_onclick(this)" style="display:none;">
-		                    </span>
-		                </c:if>
-		                
-		                <c:if test="${isCrossBrowser == false}">
-		                	<div style="display:inline-block;font-size:15px;vertical-align:middle">
-		                        <a class="imgbtn" style="padding:3px;" onclick="return btn_AttachAdd_onclick(2)"><span id="btn_AttachAdd_banner"><spring:message code='ezCommunity.t1177' /></span></a>
-		                        <span id ="filename2"></span>
-		                    </div>
-		                </c:if>
-	                </td>
-	                <td style="padding: 5px;white-space:nowrap;border-left:0px">
-	                ★ 썸네일 이미지 : 198px*140px로 등록 (width * height)<%-- <br>(기존 : <spring:message code='ezCommunity.t1026' />) --%></td>
-	            </tr>
+	            </tr>	            
 	            <%--상단 이미지(기존:로고 이미지) 894 * 100 --%>	            
 	            <tr>
-	                <th>상단 이미지<%-- <br>(기존 : <spring:message code='ezCommunity.t1023' />) --%></th>
+	                <th><spring:message code='ezCommunity.jjh03' /></th>
 	                <td style="border-right:0px;padding-left:5px">
 	                	<c:if test="${isCrossBrowser == true}">
 		                    <span style="vertical-align:middle">
 		                        <a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick(1)"><spring:message code='ezCommunity.t1177' /></span></a>
-		                        <span id="filename" style="vertical-align:middle; padding:3px;"></span>
+		                        <span id="filename" style="vertical-align:middle; padding:3px;display: inline-block;"></span>
 		                        <input type="file" id="file1" name="logo" onchange="btn_AttachAdd_onclick(this)" style="display:none">
 		                    </span>
 		                </c:if>
@@ -315,9 +291,31 @@
 		                </c:if>
 	                </td>
 	                <td style="padding: 5px;white-space:nowrap;border-left:0px">
-	                ★ 상단 이미지 : 894px*100px로 등록 (width * height)<%-- <br>(기존 : <spring:message code='ezCommunity.t1024' />) --%></td>
+	                	★ <spring:message code='ezCommunity.jjh03' /> : 894px * 100px
+	                </td>
 	            </tr>
-	            
+	            <tr>
+	                <th><spring:message code='ezCommunity.jjh02' /></th>
+	                <td style="border-right:0px;padding-left:5px">
+	                	<c:if test="${isCrossBrowser == true}">
+		                    <span style="vertical-align:middle">
+		                        <a class="imgbtn"><span id="btn_AttachAdd_banner" onclick="return btn_AttachSelect_onclick(2)"><spring:message code='ezCommunity.t1177' /></span></a>
+		                        <span id="filename2" style="vertical-align:middle; padding:3px; display:inline-block;"></span>
+		                        <input type="file" id="file2" name="thumb" onchange="btn_AttachAdd_onclick(this)" style="display:none;">
+		                    </span>
+		                </c:if>
+		                
+		                <c:if test="${isCrossBrowser == false}">
+		                	<div style="display:inline-block;font-size:15px;vertical-align:middle">
+		                        <a class="imgbtn" style="padding:3px;" onclick="return btn_AttachAdd_onclick(2)"><span id="btn_AttachAdd_banner"><spring:message code='ezCommunity.t1177' /></span></a>
+		                        <span id ="filename2"></span>
+		                    </div>
+		                </c:if>
+	                </td>
+	                <td style="padding: 5px;white-space:nowrap;border-left:0px">
+	                	★ <spring:message code='ezCommunity.jjh02' /> : 198px * 140px
+	                </td>
+	            </tr>
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1529' /><spring:message code='ezCommunity.t18' /></th>
 	                <td colspan="2">

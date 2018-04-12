@@ -428,7 +428,7 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code = 'ezCommunity.t2012' /></h1>
-    	<div class="subtxt">이미지 수정<%-- <spring:message code = 'ezCommunity.t497' /> --%></div><br>
+    	<div class="subtxt" style="color:#666"><spring:message code = 'ezCommunity.t497' /></div>
     	<form enctype="multipart/form-data" method="post" name="image" action="/ezCommunity/adminLogoOk.do">
 	        <input type="hidden" name="code" id="code" value="<c:out value = '${code}' />">
 	        <input type="hidden" name="type" id="Type" value="">
@@ -438,7 +438,7 @@
 	        </div> --%>
 	        <table class="content" style="margin-top:5px">
 	            <tr>
-	                <th style="line-height:16px; padding-top:3px; text-align:center;">상단 이미지<br>(894 * 100)<%-- <spring:message code = 'ezCommunity.t1529' /><spring:message code = 'ezCommunity.t498' /> --%></th>
+	                <th style="line-height:16px; padding-top:3px; text-align:center;"><spring:message code='ezCommunity.jjh03' /><br>(894 * 100)<%-- <spring:message code = 'ezCommunity.t1529' /><spring:message code = 'ezCommunity.t498' /> --%></th>
 	                <td>
 	                    <c:if test="${isCrossBrowser == true}">
 	                    	<a class="imgbtn" style="vertical-align:middle; margin-top:10px; margin-bottom:0px;"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
@@ -454,9 +454,8 @@
 	                    </c:if>
 	                </td>
 	            </tr>
-	            
-	             <tr>
-	                <th style="line-height:16px; padding-top:3px; text-align:center;">썸네일 이미지<br>(198 * 140)</th>
+	            <tr>
+	                <th style="line-height:16px; padding-top:3px; text-align:center;"><spring:message code='ezCommunity.jjh02' /><br>(198 * 140)</th>
 	                <td>
 	                    <c:if test="${isCrossBrowser == true}">
 	                    	<a class="imgbtn" style="vertical-align:middle; margin-top:10px; margin-bottom:0px;"><span id="btn_AttachAdd_thumb" onclick="return btn_AttachSelectThumb_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
@@ -473,11 +472,10 @@
 	                </td>
 	            </tr>
 	        </table>
-	        <br>
-	
-	    <div class="subtxt"><spring:message code = 'ezCommunity.t2013' /></div> <br />
+	        <br/><br/>
+	    <div class="subtxt" style="color:#666"><spring:message code = 'ezCommunity.t2013' /></div>
 	    <table style="width:100%;">
-	        <tr style="height:200px;">
+	        <tr style="height:190px;">
 	            <td>
 	                <img src="/images/ezCommunity/cop_type1.png" style="width:300px;height:180px;cursor:pointer;" id="type1" onclick="radioClick(this,'img')"/>
 	            </td>
@@ -485,46 +483,46 @@
 	                <img src="/images/ezCommunity/cop_type2.png" style="width:300px;height:180px;cursor:pointer;" id="type2" onclick="radioClick(this,'img')"/>
 	            </td>
 	        </tr>
-	        <tr style="height:50px;text-align:center;">
+	        <tr style="height:20px;text-align:center;">
 	            <td>
-	                <input type="radio" name="radType" value="type1" onclick="radioClick(this, 'rad')" style="cursor:pointer;margin-bottom:30px" checked="checked"/>Type1
+	                <input type="radio" name="radType" value="type1" onclick="radioClick(this, 'rad')" style="cursor:pointer;" checked="checked"/>Type1
 	            </td>
 	            <td>
-	                <input type="radio" name="radType" value="type2" onclick="radioClick(this, 'rad')" style="cursor:pointer;margin-bottom:30px"/>Type2
-	            </td>
-	        </tr>
-	        <tr style="height:200px;">
-	            <td>
-	                <img src="/images/ezCommunity/cop_type3.png" style="width:300px;height:180px;cursor:pointer;" id="type3" onclick="radioClick(this,'img')"/>
-	            </td>
-	            <td>
-	                <img src="/images/ezCommunity/cop_type4.png" style="width:300px;height:180px;cursor:pointer;" id="type4" onclick="radioClick(this,'img')"/>
+	                <input type="radio" name="radType" value="type2" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type2
 	            </td>
 	        </tr>
-	        <tr style="height:50px;text-align:center;">
+	        <tr style="height:190px;">
 	            <td>
-	                <input type="radio" name="radType" value="type3" onclick="radioClick(this, 'rad')" style="cursor:pointer;margin-bottom:30px"/>Type3
+	                <img src="/images/ezCommunity/cop_type3.png" style="width:300px;height:180px;cursor:pointer;padding-top:5px" id="type3" onclick="radioClick(this,'img')"/>
 	            </td>
 	            <td>
-	                <input type="radio" name="radType" value="type4" onclick="radioClick(this, 'rad')" style="cursor:pointer;margin-bottom:30px"/>Type4
-	            </td>
-	        </tr>
-	        <tr style="height:200px;">
-	            <td>
-	                <img src="/images/ezCommunity/cop_type5.png" style="width:300px;height:180px;cursor:pointer;" id="type5" onclick="radioClick(this,'img')"/>
-	            </td>
-	            <td>
+	                <img src="/images/ezCommunity/cop_type4.png" style="width:300px;height:180px;cursor:pointer;padding-top:5px" id="type4" onclick="radioClick(this,'img')"/>
 	            </td>
 	        </tr>
-	        <tr style="height:50px;text-align:center;">
+	        <tr style="height:20px;text-align:center;">
 	            <td>
-	                <input type="radio" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;margin-bottom:30px"/>Type5
+	                <input type="radio" name="radType" value="type3" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type3
+	            </td>
+	            <td>
+	                <input type="radio" name="radType" value="type4" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type4
+	            </td>
+	        </tr>
+	        <tr style="height:190px;">
+	            <td>
+	                <img src="/images/ezCommunity/cop_type5.png" style="width:300px;height:180px;cursor:pointer;padding-top:5px" id="type5" onclick="radioClick(this,'img')"/>
+	            </td>
+	            <td>
+	            </td>
+	        </tr>
+	        <tr style="height:20px;text-align:center;">
+	            <td>
+	                <input type="radio" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type5
 	            </td>
 	            <td>
 	            </td>
 	        </tr>
 	    </table>
-	    <br/><br/>
+	    <br/><br/><br/>
 	    <div class="btnposition btnpositionNew">
 	            <a class="imgbtn" name="Submit" onclick="javascript:pre_onclick();" style="display: none"><span><spring:message code = 'ezCommunity.t502' /></span></a>
 	            <a class="imgbtn" name="Submit2" onclick="javascript:go();"><span><spring:message code = 'ezCommunity.t20' /></span></a>
