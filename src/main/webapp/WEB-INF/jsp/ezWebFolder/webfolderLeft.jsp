@@ -183,6 +183,10 @@
 			function wfConfig() {
 				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderConfig.do";
 			}
+			
+			function getTrashCanList() {
+				window.parent.frames["right"].location.href = "/ezWebFolder/trashCan.do";
+			}
 		</script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%" onload="drawVolume();">
@@ -233,13 +237,10 @@
 		    </ul> 
 
 		    <h2>
-  				<span style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t269'/></span>
+  				<span style="display:inline-block;width:100%;" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span>
   			</h2>
     		<ul>
 			</ul>
-<!-- 			<h3> -->
-<!-- 		        <span onclick="boardConfig()" style="width:100%; display:inline-block;">휴지통</span> -->
-<!-- 		    </h3> -->
 			<h3>
 		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span>
 		    </h3>

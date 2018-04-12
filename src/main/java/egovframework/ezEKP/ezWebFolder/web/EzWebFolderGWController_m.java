@@ -2,20 +2,34 @@ package egovframework.ezEKP.ezWebFolder.web;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
+import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
+import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @SuppressWarnings("unchecked")
 @RestController
@@ -25,6 +39,18 @@ public class EzWebFolderGWController_m {
 	
 	@Resource(name = "EzWebFolderService_m")
 	private EzWebFolderService_m ezWebFolderService;
+	
+	@Autowired
+	private EzWebFolderService ezWebFolderService2;
+	
+	@Autowired
+	private MOptionService mOptionService ;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	/*
 	 * 공유 폴더 및 파일 조회
@@ -177,4 +203,113 @@ public class EzWebFolderGWController_m {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezwebfolder/{userId}/getTrashCanList", method=RequestMethod.GET, produces ="application/json;charset=utf-8")
+	public JSONObject getTrashCanList (@PathVariable String userId, HttpServletRequest request)  {
+		String offset = request.getParameter("offset");
+		int tenantId = request.getParameter("tenantId") !=null ? Integer.parseInt(request.getParameter("tenantId")) : 0;
+		
+		LOGGER.debug("getTrashCanList Started.");
+		LOGGER.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId);
+
+		JSONObject result = new JSONObject();
+
+		try {
+			List<TrashCanVO> trashCanList = null;
+			JSONObject trashCanResult = ezWebFolderService.getTrashCanList(userId, offset, tenantId);
+			int fileCnt = 0;
+			int folderCnt = 0;
+			
+			if (trashCanResult != null) {
+				trashCanList = (List<TrashCanVO>) trashCanResult.get("trashCanList");
+				fileCnt = (int) trashCanResult.get("fileCnt");
+				folderCnt = (int) trashCanResult.get("folderCnt");
+			}
+			
+			String trashCanPath = "";
+			
+			if (trashCanList != null) {
+				for (TrashCanVO trashCan : trashCanList) {
+					trashCanPath = trashCan.getTrashCanPath().substring(1);
+					trashCanPath = getFolderPath(trashCanPath.split("\\|"), offset, tenantId);
+					
+					// is folder
+					if ("folder".equalsIgnoreCase(trashCan.getTrashCanExt())) {
+						// cut end slash
+						trashCanPath = trashCanPath.substring(0, trashCanPath.length() - 1);
+					} else {
+						trashCanPath += trashCan.getTrashCanName();
+					}
+					
+					trashCan.setTrashCanPath(trashCanPath);
+				}
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", trashCanList);
+			result.put("fileCnt", fileCnt);
+			result.put("folderCnt", folderCnt);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("result=" + result);
+		LOGGER.debug("getTrashCanList ended.");
+		return result;
+	}
+	
+	private String getFolderPath(String[] paths, String offset, int tenantId) throws Exception {
+		StringBuilder result = new StringBuilder("/");
+		
+		for (String path : paths) {
+			FolderVO parentFolder = ezWebFolderService2.getFolderByFolderId(path, offset, tenantId);
+			result.append(parentFolder.getFolderName1()).append("/");
+		}
+
+		return result.toString();
+	}
+	
+	@RequestMapping(value = "/rest/ezwebfolder/file-permanent-delete", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject filePermanetDelete(Locale locale, HttpServletRequest request) {
+		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";
+		String listFileId   = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
+		String userId       = request.getParameter("userId")       != null ? request.getParameter("userId")   	  : "";
+		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		String lang         = request.getParameter("lang")     != null ? request.getParameter("lang")     : "";
+		
+		LOGGER.debug("filePermanetDelete Started.");
+		LOGGER.debug("offset=" + offset + ",listFileId=" + listFileId + ",userId=" + userId + ",serverName=" + serverName + ",lang=" + lang);
+		
+		String[] fileIDList = listFileId.split(",");
+		String realPath = request.getServletContext().getRealPath("");
+		JSONObject result   = new JSONObject();
+		
+		if (fileIDList.length == 0 || serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("")) {
+			LOGGER.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			ezWebFolderService.permanetDeleteSelectedFiles(fileIDList, userInfo, realPath);
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		LOGGER.debug("filePermanetDelete ended");
+		return result;
+	}
 }
