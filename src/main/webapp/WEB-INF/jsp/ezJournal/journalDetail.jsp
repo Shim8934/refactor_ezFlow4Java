@@ -49,9 +49,9 @@
 						},
 						success : function() {
 							alert("<spring:message code='ezJournal.t138'/>");
-							if (opener.listType != null && opener.listType != "") {
+							try {
 								opener.setJournalList();
-							}
+							} catch(e) { }
 							window.close();
 						},
 						error : function() {
@@ -81,7 +81,7 @@
 		            	if (GetAttribute(checks.item(suffix), "attachid") != "" && GetAttribute(checks.item(suffix), "attachid") != null) {
 			                location.href = GetAttribute(checks.item(suffix++), "filepath");
 			            } else {
-			            	console.log("filePath : " + GetAttribute(checks.item(suffix), "filePath"));
+			            //	console.log("filePath : " + GetAttribute(checks.item(suffix), "filePath"));
 		                	location.href = "/ezJournal/journalAttachDown.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName") + "&typeId=" + typeId + "&journalId=" + journalId;
 			            }
 	                	setTimeout(function () { downloadAll(checks) }, 1000);
@@ -285,10 +285,10 @@
 		    	
 		    	sizeOn();
 		    	
-		    	if (opener.listType != null && opener.listType != "") {
+		    	try {
 			    	opener.parent.left.setRecvCount();
 					opener.setRecvCount();
-		    	}
+				} catch(e) { }
 		    }
 		    
 		    function sizeOn(){
