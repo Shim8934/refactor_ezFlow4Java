@@ -790,11 +790,11 @@ function SetBtnStateFalse()
 		setMenuBar("btnOpinion",false);
 		setMenuBar("btnSave", false);
 		
-		if (pDraftFlag == "REDRAFT") {
-		    setMenuBar("btnSaveServer", false);
-		} else {
-		    setMenuBar("btnSaveServer", true);
-		}
+//		if (pDraftFlag == "REDRAFT") {
+//		    setMenuBar("btnSaveServer", false);
+//		} else {
+//		    setMenuBar("btnSaveServer", true);
+//		}
 	}catch(e){
 		alert("SetBtnStateFalse()" + e.description);
 	}
@@ -819,12 +819,12 @@ function SetBtnStateTrue()
 		{
 			setMenuBar("btnSelForm",false);
 		}
-		if (pDraftFlag == "REDRAFT") {
-		    setMenuBar("btnSaveServer", false);
-		}
-		else {
-		    setMenuBar("btnSaveServer", true);
-		}
+//		if (pDraftFlag == "REDRAFT") {
+//		    setMenuBar("btnSaveServer", false);
+//		}
+//		else {
+//		    setMenuBar("btnSaveServer", true);
+//		}ddd
 	}catch(e){
 		alert("SetBtnStateTrue()" + e.description);
 	}
