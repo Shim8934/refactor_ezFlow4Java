@@ -20,43 +20,51 @@
 	    <script type="text/javascript" src="/js/ezSchedule/lang/ezSchedule.js"></script>
 		
 		<script type="text/javascript">
-			var formInfo = ${formInfo};
+			var formHtml = '${formInfo.formHtml}';
 			var attitudeInfo = ${attitudeInfo};
-			var attitudeId = ${attitudeInfo.attitudeId};
-			
+			var typeId = "<c:out value='${attitudeInfo.typeId}'/>";
+			var typeName = "<c:out value='${attitudeInfo.typeName}'/>";
+			var writerName = "<c:out value='${attitudeInfo.writerName}'/>";
+			var region = "<c:out value='${attitudeInfo.region}'/>";
+			var mobile = "<c:out value='${attitudeInfo.mobile}'/>";
+			var bizSub = "<c:out value='${attitudeInfo.bizSub}'/>";
+			var content = "<c:out value='${attitudeInfo.content}'/>";
+			var attitudeId = "<c:out value='${attitudeInfo.attitudeId}'/>";
+			var dateType = "<c:out value='${attitudeInfo.dateType}'/>";
+			var startDate = "<c:out value='${attitudeInfo.startDate}'/>";
+			var endDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			window.onload = function () {
 				setHtml();
 			}
 			
 			function setHtml() {
-				$("#attiInfoView").append(formInfo.formHtml);
+				$("#attiInfoView").append(formHtml);
 				
 				$("#attiInfoView tr td *").remove();
 				
-				$("#typeName").text(" " + attitudeInfo.typeName);
-				$("#writerName").text(" " + attitudeInfo.writerName);
-				$("#region").text(" " + attitudeInfo.region);
-				$("#mobile").text(" " + attitudeInfo.mobile);
-				$("#bizsub").text(" " + attitudeInfo.bizSub);
+				$("#typeName").text(" " + typeName);
+				$("#writerName").text(" " + writerName);
+				$("#region").text(" " + region);
+				$("#mobile").text(" " + mobile);
+				$("#bizsub").text(" " + bizSub);
 				//$("#content").text(" ");
 				
-				var dateType = attitudeInfo.dateType;
 				var showTime = "";
 				switch (dateType) {
 					case "1":
-						showTime = attitudeInfo.startDate.substring(0, 10);
+						showTime = startDate.substring(0, 10);
 						break;
 					case "2":
-						showTime = attitudeInfo.startDate.substring(0, 16);
+						showTime = startDate.substring(0, 16);
 						break;
 					case "3":
-						showTime = attitudeInfo.startDate.substring(0, 16) + " ~ " + attitudeInfo.endDate.substring(11, 16);
+						showTime = startDate.substring(0, 16) + " ~ " + endDate.substring(11, 16);
 						break;
 					case "4":
-						showTime = attitudeInfo.startDate.substring(0, 10) + " ~ " + attitudeInfo.endDate.substring(0, 10);
+						showTime = startDate.substring(0, 10) + " ~ " + endDate.substring(0, 10);
 						break;
 					case "5":
-						showTime = attitudeInfo.startDate.substring(0, 16) + " ~ " + attitudeInfo.endDate.substring(0, 16);
+						showTime = startDate.substring(0, 16) + " ~ " + endDate.substring(0, 16);
 						break;
 				}
 				
@@ -64,25 +72,38 @@
 			}
 			
 			function deleteAttitude() {
-				$.ajax({
-					type : "POST",
-					dataType : "json",
-					async : true,
-					url : "/ezAttitude/attitudeDeleteItem.do",
-					data : {
-						attitudeId : attitudeId
-					},
-					success : function(result) {
-						window.opener.getAttitudeMainList();
-						window.close();
-					}
-				})
+				var delFlag = confirm("근태를 삭제하시겠습니까?");
+				if (delFlag) {
+					$.ajax({
+						type : "POST",
+						async : true,
+						url : "/ezAttitude/attitudeDeleteItem.do",
+						data : {
+							attitudeId : attitudeId
+						},
+						success : function(result) {
+							alert("근태를 삭제하였습니다.");
+							window.opener.getAttitudeMainList();
+							window.close();
+						}
+					})
+				}
 			}
 			
 			function modifyAttitude() {
-				$.ajax({
-					
-				})
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(650, 580));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "",
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+	                
+	                if (typeof (rtnValue) != "undefined") {
+	                	
+	                }
+	            }
+				window.close();
 			}
 			
 			function sendMailAttitude() {

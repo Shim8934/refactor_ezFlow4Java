@@ -242,6 +242,12 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			ezAttitudeService.deleteAttitude(attitudeId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

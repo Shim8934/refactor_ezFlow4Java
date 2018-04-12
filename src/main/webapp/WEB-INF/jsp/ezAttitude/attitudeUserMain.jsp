@@ -197,7 +197,7 @@
 							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
 							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
 									"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" 
-									+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].region + "</td></tr>");
+									+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + (result[i].region != "" ? result[i].region : result[i].content.substring(0,8)) + "</td></tr>");
 						}
 					} else if (result[i].dateType == '3') {
 						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
@@ -206,7 +206,7 @@
 						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
 								"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>");
 					} else {
-						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1] + "</td></tr>");
+						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0,5) + "</td></tr>");
 					}
 				}
 			}
@@ -241,11 +241,11 @@
 				var date = $(obj).attr("dispdate");
 				
 				if (CrossYN()) {
-                    var OpenWin = window.open("/ezAttitude/attitudeNewItem.do?date=" + date, "attitudeNewItem", GetOpenWindowfeature(650, 580));
+                    var OpenWin = window.open("/ezAttitude/attitudeNewItem.do?date=" + date + "&mode=new", "attitudeNewItem", GetOpenWindowfeature(650, 580));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
-                	rtnValue = window.showModalDialog("/ezAttitude/attitudeNewItem.do?date=" + date, "",
+                	rtnValue = window.showModalDialog("/ezAttitude/attitudeNewItem.do?date=" + date + "&mode=new", "",
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
 	                
 	                if (typeof (rtnValue) != "undefined") {

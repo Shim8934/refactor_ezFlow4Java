@@ -336,6 +336,8 @@ public class EzAttitudeBHSController {
 		
 		String userId = userInfo.getId();
 		String date = request.getParameter("date");
+		String mode = request.getParameter("mode");
+		String attitudeId = request.getParameter("attitudeId");
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() +"/attitudetypes";
 		
@@ -362,27 +364,33 @@ public class EzAttitudeBHSController {
 		JSONArray attitudeTypeList = new JSONArray();
 		if (status.equals("ok")) {
 			attitudeTypeList = (JSONArray) resultBody.get("data");
-//			url = gwServerUrl + "/rest/ezattitude/";
-//			
-//			builder = UriComponentsBuilder.fromHttpUrl(url)
-//					.queryParam("", "");
-//			
-//			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-//			
-//			resultBody = (JSONObject) jp.parse(result.getBody());
-//			
-//			status = resultBody.get("status").toString();
-//			LOGGER.debug("status : " + status);
-//			
-//			JSONArray list = new JSONArray();
-//			if (status.equals("ok")) {
-//				
-//			}
+			
+			if (mode != null && mode.equals("mod")) {
+				url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId; // 근태상세정보 GW 호출
+				
+				builder = UriComponentsBuilder.fromHttpUrl(url)
+						.queryParam("userId", userId)
+						.queryParam("attitudeId", attitudeId);
+				
+				result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+				resultBody = (JSONObject) jp.parse(result.getBody());
+				
+				status = resultBody.get("status").toString();
+				LOGGER.debug("status : " + status);
+				
+				JSONObject attitudeVO = new JSONObject();
+				if (status.equals("ok")) {
+					attitudeVO = (JSONObject) resultBody.get("data");
+					
+					model.addAttribute("attitudeInfo", attitudeVO);
+				}
+			}
 		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attitudeTypeList", attitudeTypeList);
 		model.addAttribute("date", date);
+		model.addAttribute("mode", mode);
 		
 		LOGGER.debug("/ezAttitude/attitudeNewItem ended");
 		return "ezAttitude/attitudeNewItem";
@@ -393,7 +401,7 @@ public class EzAttitudeBHSController {
 	 */
 	@RequestMapping(value = "/ezAttitude/getFormBody.do")
 	@ResponseBody
-	public JSONObject getFormBody(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+	public JSONObject getFormBody(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/getFormBody started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -499,7 +507,7 @@ public class EzAttitudeBHSController {
 	 */
 	@RequestMapping(value = "/ezAttitude/attitudeDeleteItem.do")
 	@ResponseBody
-	public void attitudeDeleteItem(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+	public void attitudeDeleteItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeDeleteItem started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -507,8 +515,32 @@ public class EzAttitudeBHSController {
 		String userId = userInfo.getId();
 		String attitudeId = request.getParameter("attitudeId");
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl;
 		
-		LOGGER.debug("/ezAttitude/attitudeDeleteItem started");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		if (status.equals("ok")) {
+			
+		}
+		
+		LOGGER.debug("/ezAttitude/attitudeDeleteItem ended");
 	}
 }

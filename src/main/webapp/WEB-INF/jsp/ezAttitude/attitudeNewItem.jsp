@@ -28,13 +28,17 @@
 		<script type="text/javascript">
 			var writerName = "${userInfo.displayName}";
 			var companyId = "${companyId}";
-			var date = "${date}"
+			var date = "${date}";
+			var mode = "${mode}";
+			var typeId = "<c:out value='${attitudeInfo.typeId}'/>";
+			var region = "<c:out value='${attitudeInfo.region}'/>";
+			var mobile = "<c:out value='${attitudeInfo.mobile}'/>";
+			var bizSub = "<c:out value='${attitudeInfo.bizSub}'/>";
+			var content = "<c:out value='${attitudeInfo.content}'/>";
+			var attitudeId = "<c:out value='${attitudeInfo.attitudeId}'/>";
+			var dateType = "<c:out value='${attitudeInfo.dateType}'/>";
 			
 			window.onload = function () {
-// 				if (datetype == "1") {
-// 	                document.getElementById("alldaycheck").checked = false;
-// 	                allday_change();
-// 	            }
 				form_change();
 			}
 			
@@ -132,6 +136,16 @@
 				} else {
 					selectType = $(obj).val();
 				}
+				
+				if (mode == "mod") {
+					selectType = typeId;
+					if ($("#selectAtti option[value='" + selectType + "']").length == 0) {
+						$("#selectAtti").val("A05");
+						$("#subSelectAtti").val(selectType);
+					} else {
+						$("#selectAtti").val(selectType);
+					}
+				}
 				if (selectType == "" || selectType == undefined) {
 					selectType = $("#selectAtti").val();
 				}
@@ -150,10 +164,16 @@
 					success : function (result) {
 						$("#attiwriteForm tr").not("tr:first").remove();
 						$("#attiwriteForm tbody").append(result.formHtml);
+						$("#writerName").text(writerName);
 						
 						setDatePicker($("#periodblock").attr("datetype"));
 						
-						$("#writerName").text(writerName);
+						if (mode == "mod") {
+							$("input[name=region]").val(region);
+							$("input[name=mobile]").val(mobile);
+							$("input[name=bizsub]").val(bizSub);
+							//content
+						}
 					}
 				})
 			}
@@ -220,7 +240,7 @@
 <!-- 		<h1>근태 작성</h1> -->
 		<div id="menu">
 			<ul>
-				<li><span onClick="dateTypeCheck()">저장</span></li>
+				<li><span onClick="dateTypeCheck()">저장후닫기</span></li>
 			</ul>
 		</div>
 		<div id="close">

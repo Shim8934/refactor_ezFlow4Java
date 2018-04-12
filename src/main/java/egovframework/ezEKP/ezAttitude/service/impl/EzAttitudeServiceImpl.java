@@ -82,7 +82,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				
 				LOGGER.debug("isValue : " + isValue + "////////" + resultVO.getWorkStartTime());
 				//시간을 비교해서 근태설정 시간보다 늦으면 지각 처리
-				LOGGER.debug(compareDate + "," + resultConfDate + ":배현상");
+				
 				SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
 				
 				Date userConfTime = f.parse(resultConfDate);
@@ -209,7 +209,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void deleteAttitude(String attitudeId, int tenantId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		LOGGER.debug("deleteAttitude started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("attitudeId", attitudeId);
+		map.put("tenantId", tenantId);
+		
+		ezAttitudeDAO.deleteAttitude(map);
+		LOGGER.debug("deleteAttitude ended");
 		
 	}
 

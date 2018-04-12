@@ -366,7 +366,7 @@
 		]]>
 	</select>
 	
-	<select id="ezAttitudeDAO.getAttitudeStatisList" parameterClass="Map" resultMap="attitudeStatis">
+	<select id="ezAttitudeDAO.getAttitudeStatisList" parameterClass="Map" resultMap="attitudeStatis" remapResults="true">
 		<![CDATA[
 			SELECT SUM(to_days(
 								IF(
@@ -392,7 +392,7 @@
 			AND
 				TENANT_ID = #tenantId#
 			AND
-				TYPE_ID NOT IN ('A01', 'A02', 'A03')
+				TYPE_ID NOT IN ('A01', 'A03')
 			AND    
 				(
 					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
@@ -635,4 +635,13 @@
 		      #ids[]# 
 		</iterate>
 	</insert>
+	
+	<delete id="ezAttitude.deleteAttitude" parameterClass="Map">
+		DELETE FROM
+			tbl_attitude
+		WHERE
+			ATTITUDE_ID = #attitudeId#
+		AND
+			TENANT_ID = #tenantId#
+	</delete>
 </sqlMap>
