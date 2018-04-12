@@ -481,6 +481,7 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String offset = request.getParameter("offset");
 			String date = request.getParameter("date");
+			String deptFlag = request.getParameter("deptFlag");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			Calendar cal = Calendar.getInstance();
@@ -488,6 +489,7 @@ public class EzAttitudeGWController {
 			
 			String startDate = date + "-01 00:00:00";
 			String endDate = date + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
+			
 			List<AttitudeStatisVO> resultList = ezAttitudeService.getAttitudeStatisticsList(userId, offset, startDate, endDate, info.getTenantId());
 			
 			result.put("status", "ok");

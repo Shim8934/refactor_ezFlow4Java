@@ -259,6 +259,11 @@ public class EzAttitudeBHSController {
 		String date = request.getParameter("date");
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/attitude-count";
+		String deptFlag = "false";
+		
+		if (request.getParameter("deptFlag") != null && !request.getParameter("deptFlag").equals("")) {
+			deptFlag = request.getParameter("deptFlag");
+		}
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -269,7 +274,8 @@ public class EzAttitudeBHSController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userId)
 				.queryParam("offset", userOffset)
-				.queryParam("date", date);
+				.queryParam("date", date)
+				.queryParam("deptFlag", deptFlag);
 		
 		RestTemplate rest = new RestTemplate();
 		
