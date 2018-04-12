@@ -125,6 +125,7 @@ function fileupload() {
 					renderResult(listFile);
 				}
 			}
+			refreshView();
 		},
 		error : function(error) {
 			alert(strErr);
@@ -214,11 +215,11 @@ function renderResult(result) {
 			cell4.textContent = jsObj["fileName"];
 			cell5.textContent = getFileSize(jsObj["fileSize"]);
 			
-			if (primary == "1") {
-				cell6.textContent = jsObj["createName1"];
+			if (primary == "2") {
+				cell6.textContent = jsObj["createName2"];
 			}
 			else {
-				cell6.textContent = jsObj["createName2"];
+				cell6.textContent = jsObj["createName1"];
 			}
 			
 			cell7.textContent = jsObj["createDate"].substring(0, 10);

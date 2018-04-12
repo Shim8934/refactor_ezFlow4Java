@@ -23,16 +23,18 @@
 			var folderUpper = "";
 			var folderType = null;
 	    	var $element ;
-			
+	    	var useBottomFrameOnly = "${useBottomFrameOnly}";
 		    
 		    $(function() { 
 				folderList('C');
 		    	folderType = 'C';
-			});		
+			});
+		    
 		    function refreshView(){
 		    	$.jstree.destroy()
 		    	folderList(folderType);
 		    }
+		    
 		    function folderList(obj) {
 		    	$($element).jstree('destroy');
 				if ( obj == 'C') {
@@ -102,8 +104,6 @@
 						alert("<spring:message code='ezWebFolder.t134' />" + error);
 					}
 				});
-				
-
 		    }
 		    
 			function drawVolume() {
@@ -182,12 +182,37 @@
 				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderSharingList.do";
 			}
 			
+			function moveFavorPage() {
+				setRightFrame("/ezWebFolder/favorite.do");
+			}
+			
 			function wfConfig() {
 				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderConfig.do";
 			}
 			
 			function getTrashCanList() {
 				window.parent.frames["right"].location.href = "/ezWebFolder/trashCan.do";
+			}
+			
+			function showPanel() {
+				document.getElementById("webFolderLeftPanel").style.display = "block";
+			    document.getElementById("webFolderLeftPanel").style.background = "rgba(0,0,0,0.5)";
+			    
+			    if (useBottomFrameOnly == "NO") {
+					parent.parent.frames["topFrame"].contentWindow.showProgress();
+				} 
+			}
+			
+			function hiddenPanel() {
+				document.getElementById("webFolderLeftPanel").style.display = "none";
+				
+				if (useBottomFrameOnly == "NO") {
+					parent.parent.frames["topFrame"].contentWindow.hideProgress();
+				}
+			}
+			
+			function setRightFrame(url) {
+				window.parent.frames["right"].location.href = url;
 			}
 		</script>
 	</head>
@@ -228,7 +253,7 @@
 			</ul>
 		    
 		    <h2>
-  				<span style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t216'/></span>
+  				<span style="display:inline-block;width:100%;" onclick="moveFavorPage();"><spring:message code='ezWebFolder.t216'/></span>
   			</h2>  
     		<ul>
 		    </ul>
@@ -253,6 +278,7 @@
 				<div id='myBar'></div>
 			</div>
 			<div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div>
+   		    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderLeftPanel">&nbsp;</div>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");	        

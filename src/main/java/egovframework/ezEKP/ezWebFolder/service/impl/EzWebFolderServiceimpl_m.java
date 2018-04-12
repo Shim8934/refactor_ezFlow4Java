@@ -2,38 +2,34 @@ package egovframework.ezEKP.ezWebFolder.service.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
 import org.json.simple.JSONObject;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
-import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
+import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
-import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 
 @Service("EzWebFolderService_m")
 public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
@@ -319,7 +315,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		path = chiefDeptPath(userId, tenantId);
 		
-		if(path.size() >0) {
+		if(path.size() > 0) {
 		
 			for (int i = 0; i < path.size(); i++) {
 				map.put("deptCdPath", path.get(i));
@@ -356,9 +352,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		String result = "";
 		
 		for (int i = 0; i < deptList.size(); i++) {
-			
+
 			result = result + ",'" + deptList.get(i) + "'";
-			
+
 		}
 		
 		result = result.substring(1);
@@ -652,5 +648,96 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	private String getWebFolderDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
+	}
+		
+	@Override
+	public List<FavoriteFileVO> getFavorites(String userId, String offset, int tenantId, SearchVO searchInfo, String startIndex, String endIndex) throws Exception {
+
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("userId", userId);
+		parameterMap.put("offset", commonUtil.getMinuteUTC(offset));
+		parameterMap.put("tenantId", tenantId);
+		// search info
+		parameterMap.put("searchExt", searchInfo.getSearchExt());
+		parameterMap.put("searchFileName", searchInfo.getSearchFileName());
+		parameterMap.put("searchCreatorName", searchInfo.getSearchCreateName());
+		parameterMap.put("searchFileType", searchInfo.getSearchFileType());
+		parameterMap.put("searchStartDate", searchInfo.getSearchStartDate());
+		parameterMap.put("searchEndDate", searchInfo.getSearchEndDate());
+		parameterMap.put("startIndex", startIndex);
+		parameterMap.put("endIndex", endIndex);
+
+		List<FavoriteFileVO> result = ezWebFolderDAO.getFavorites(parameterMap);
+
+		return result;
+	}
+
+	@Override
+	public Map<String, Integer> getFavoriteCount(String userId, String offset, int tenantId, SearchVO searchInfo) throws Exception {
+
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("userId", userId);
+		parameterMap.put("offset", commonUtil.getMinuteUTC(offset));
+		parameterMap.put("tenantId", tenantId);
+		// search info
+		parameterMap.put("searchExt", searchInfo.getSearchExt());
+		parameterMap.put("searchFileName", searchInfo.getSearchFileName());
+		parameterMap.put("searchCreatorName", searchInfo.getSearchCreateName());
+		parameterMap.put("searchFileType", searchInfo.getSearchFileType());
+		parameterMap.put("searchStartDate", searchInfo.getSearchStartDate());
+		parameterMap.put("searchEndDate", searchInfo.getSearchEndDate());
+		
+		Integer folderCount = ezWebFolderDAO.getFavoriteFolderCount(parameterMap);
+		Integer fileCount = ezWebFolderDAO.getFavoriteFileCount(parameterMap);
+		
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		result.put("totalCount", folderCount + fileCount);
+		result.put("folderCount", folderCount);
+		result.put("fileCount", fileCount);
+		
+		return result;
+	}
+	
+	@Override
+	public boolean isExistsFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception {
+		
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("userId", userId);
+		parameterMap.put("targetId", targetId);
+		parameterMap.put("targetType", targetType);
+		parameterMap.put("tenantId", tenantId);
+		
+		LOGGER.debug("insi1: "+parameterMap.toString());
+
+		Integer count = ezWebFolderDAO.isExistsFavorite(parameterMap);
+		
+		LOGGER.debug("insi: "+(count == 1));
+		
+		return count == 1;
+	}
+	
+	@Override
+	public void addFavorite(String userId, String targetId, String targetType, String createDate, int tenantId) throws Exception {
+		
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("userId", userId);
+		parameterMap.put("targetId", targetId);
+		parameterMap.put("targetType", targetType);
+		parameterMap.put("createDate", createDate);
+		parameterMap.put("tenantId", tenantId);
+
+		ezWebFolderDAO.addFavorite(parameterMap);
+	}
+
+	@Override
+	public void deleteFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception {
+		
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("userId", userId);
+		parameterMap.put("targetId", targetId);
+		parameterMap.put("targetType", targetType);
+		parameterMap.put("tenantId", tenantId);
+
+		ezWebFolderDAO.deleteFavorite(parameterMap);
 	}
 }

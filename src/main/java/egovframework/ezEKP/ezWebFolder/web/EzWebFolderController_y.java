@@ -213,8 +213,6 @@ public class EzWebFolderController_y {
 		}
 		
 		return "json";
-		
-		
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/treeTest.do")

@@ -286,7 +286,7 @@
 					return;
 				}
 				
-				menu_SelectRange();
+				menu_SelectRange(document.getElementById("companyList").value);
 			}
 			
 			function newFolder() {
@@ -463,8 +463,10 @@
 			}
 			
 			function change() {
+				document.getElementById("listBttn1").style.display = "";
+				document.getElementById("listBttn2").style.display = "none";
 				selectedFolder = "";
-				arrSubFolder = [];
+				arrSubFolder   = [];
 				getData();
 			}
 			

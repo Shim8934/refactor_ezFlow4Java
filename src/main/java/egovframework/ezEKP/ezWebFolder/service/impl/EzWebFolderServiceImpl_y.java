@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezWebFolder.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -563,6 +562,15 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		int listCount = ezWebFolderDAO_y.getUsrListCnt(map);
 		
 		return listCount;
+	}
+
+	@Override
+	public void insertEnv(String userId, int tenantId, int listCount) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("listCount", listCount);
+		ezWebFolderDAO_y.insertEnv(map);
 	}
 	
 }

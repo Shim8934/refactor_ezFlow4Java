@@ -429,8 +429,10 @@
 			}
 			
 			function change() {
+				document.getElementById("listBttn1").style.display = "";
+				document.getElementById("listBttn2").style.display = "none";
 				selectedFolder = "";
-				arrSubFolder = [];
+				arrSubFolder   = [];
 				getData();
 			}
 			

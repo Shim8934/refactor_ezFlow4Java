@@ -173,4 +173,11 @@ public class FolderVO {
 		this.deleterId = deleterId;
 	}
 
+	@Override
+	public String toString() {
+		return "FolderVO [folderId=" + folderId + ", folderName1=" + folderName1 + ", folderName2=" + folderName2 + ", folderType=" + folderType + ", folderPath=" + folderPath + ", folderStep="
+				+ folderStep + ", folderLevel=" + folderLevel + ", folderUpper=" + folderUpper + ", useStatus=" + useStatus + ", ownerId=" + ownerId + ", createId=" + createId + ", createDate="
+				+ createDate + ", createName1=" + createName1 + ", createName2=" + createName2 + ", updateId=" + updateId + ", updateDate=" + updateDate + ", companyId=" + companyId + ", deleterId="
+				+ deleterId + ", tenantId=" + tenantId + "]";
+	}
 }

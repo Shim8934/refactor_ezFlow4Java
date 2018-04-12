@@ -5,6 +5,8 @@
 	<!-- FolderFile typeAlias  -->
 	<typeAlias alias="TrashCanVO"        type="egovframework.ezEKP.ezWebFolder.vo.TrashCanVO"/>
 	<typeAlias alias="ShareVO"           type="egovframework.ezEKP.ezWebFolder.vo.ShareVO"/>
+	<typeAlias alias="FolderFileVO"           type="egovframework.ezEKP.ezWebFolder.vo.FolderFileVO"/>
+	<typeAlias alias="FavoriteFileVO"         type="egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO"/>
 	
 	<!-- FavoriteFile resultMap -->
 	<resultMap id="trashCanVO" class="TrashCanVO">
@@ -21,6 +23,22 @@
 		<result property="updateDate"      column="UPDATE_DATE"        columnIndex="11"/>
 		<result property="fileFolderId"    column="FILE_FOLDER_ID"     columnIndex="12"/>
 		<result property="folderUpper"    column="FOLDER_UPPER"        columnIndex="13"/>
+	</resultMap>
+	
+	<!-- FavoriteFile resultMap -->
+	<resultMap id="favoriteFileVO" class="FavoriteFileVO">
+		<result property="targetId"        column="TARGET_ID"        columnIndex="1"/>
+		<result property="targetName"      column="TARGET_NAME"      columnIndex="2"/>
+		<result property="targetType"      column="TARGET_TYPE"      columnIndex="3"/>
+		<result property="targetIconUrl"   column="TARGET_ICON_URL"  columnIndex="4"/>
+		<result property="targetPath"      column="TARGET_PATH"      columnIndex="5"/>
+		<result property="targetExt"       column="TARGET_EXT"       columnIndex="6"/>
+		<result property="targetSize"      column="TARGET_SIZE"      columnIndex="7"/>
+		<result property="createId"        column="CREATE_ID"        columnIndex="8"/>
+		<result property="createName1"     column="CREATE_NAME1"     columnIndex="9"/>
+		<result property="createName2"     column="CREATE_NAME2"     columnIndex="10"/>
+		<result property="createDate"      column="CREATE_DATE"      columnIndex="11"/>
+		<result property="tenantId"        column="TENANT_ID"        columnIndex="12"/>
 	</resultMap>
 
 	<!-- FolderFile resultMap -->
@@ -838,4 +856,173 @@
 				COMPANY_ID = #companyId#
 			]]>	
 	</select>
+	
+	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteFileVO">
+		SELECT
+			*
+		FROM (
+			SELECT
+				DISTINCT
+				FAVOR.TARGET_ID,
+				FILES.FILE_NAME 	AS TARGET_NAME,
+				FAVOR.TARGET_TYPE 	AS TARGET_TYPE,
+				FILE_TYPE.TYPE_ICON AS TARGET_ICON_URL,
+				FILE_TYPE.TYPE_NAME,
+				FOLDER.FOLDER_PATH 	AS TARGET_PATH,
+				FILES.FILE_EXT		AS TARGET_EXT,
+				FILES.FILE_SIZE 	AS TARGET_SIZE,
+				FILES.CREATE_ID,
+				FILES.CREATE_NAME1,
+				FILES.CREATE_NAME2,
+				DATE_ADD(FAVOR.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				FAVOR.TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FAVOR AS FAVOR
+				INNER JOIN TBL_WEBFOLDER_FILE AS FILES
+				ON FILES.FILE_ID = FAVOR.TARGET_ID AND FILES.TENANT_ID = FAVOR.TENANT_ID
+					INNER JOIN TBL_WEBFOLDER_FOLDER FOLDER
+					ON FOLDER.FOLDER_ID = FILES.FOLDER_ID
+						INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+						ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
+			WHERE
+				FAVOR.TARGET_TYPE = 'F' AND
+				FAVOR.USER_ID = #userId# AND
+				FAVOR.TENANT_ID = #tenantId# AND
+				FILES.USE_STATUS = 'Y'
+				
+			UNION
+				
+			SELECT
+				DISTINCT
+				FAVOR.TARGET_ID,
+				FOLDER.FOLDER_NAME1 AS TARGET_NAME,
+				CONCAT('D_', FOLDER.FOLDER_TYPE) AS TARGET_TYPE,
+				FILE_TYPE.TYPE_ICON AS TARGET_ICON_URL,
+				FILE_TYPE.TYPE_NAME,
+				FOLDER.FOLDER_PATH AS TARGET_PATH,
+				'folder' 		AS TARGET_EXT,
+				0				AS TARGET_SIZE,
+				FOLDER.CREATE_ID,
+				FOLDER.CREATE_NAME1,
+				FOLDER.CREATE_NAME2,
+				DATE_ADD(FAVOR.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				FAVOR.TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FAVOR AS FAVOR
+				INNER JOIN TBL_WEBFOLDER_FILETYPE AS FILE_TYPE
+				ON FILE_TYPE.TYPE_NAME = 'folder'
+					INNER JOIN TBL_WEBFOLDER_FOLDER AS FOLDER
+					ON FOLDER.FOLDER_ID = FAVOR.TARGET_ID AND FOLDER.TENANT_ID = FAVOR.TENANT_ID
+			WHERE
+				FAVOR.TARGET_TYPE = 'D' AND
+				FAVOR.USER_ID = #userId# AND
+				FAVOR.TENANT_ID = #tenantId# AND
+				FOLDER.USE_STATUS = 'Y'
+		) AS RESULT
+		WHERE
+			RESULT.TARGET_EXT LIKE CONCAT('%', #searchExt#, '%') AND
+			RESULT.TARGET_NAME LIKE CONCAT('%', #searchFileName#, '%') AND
+			RESULT.CREATE_NAME1 LIKE CONCAT('%', #searchCreatorName#, '%') AND
+			RESULT.TARGET_TYPE LIKE CONCAT('%', #searchFileType#, '%')
+		ORDER BY
+			RESULT.TARGET_TYPE ASC, CREATE_DATE DESC
+		LIMIT
+			#startIndex#, #endIndex#;
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getFavoriteFolderCount" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(RESULT.TARGET_NAME) COUNT
+		FROM (
+			SELECT
+				DISTINCT
+				COUNT(FAVOR.TARGET_ID) COUNT,
+				FOLDER.FOLDER_NAME1 AS TARGET_NAME,
+				CONCAT('D_', FOLDER.FOLDER_TYPE) AS TARGET_TYPE,
+				'folder' 		AS TARGET_EXT,
+				FOLDER.CREATE_NAME1,
+				FOLDER.CREATE_NAME2,
+				DATE_ADD(FAVOR.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE
+			FROM
+				TBL_WEBFOLDER_FAVOR AS FAVOR
+				INNER JOIN TBL_WEBFOLDER_FILETYPE AS FILE_TYPE
+				ON FILE_TYPE.TYPE_NAME = 'folder'
+					INNER JOIN TBL_WEBFOLDER_FOLDER AS FOLDER
+					ON FOLDER.FOLDER_ID = FAVOR.TARGET_ID AND FOLDER.TENANT_ID = FAVOR.TENANT_ID
+			WHERE
+				FAVOR.TARGET_TYPE = 'D' AND
+				FAVOR.USER_ID = #userId# AND
+				FAVOR.TENANT_ID = #tenantId# AND
+				FOLDER.USE_STATUS = 'Y'
+		) AS RESULT
+		WHERE
+			RESULT.TARGET_EXT LIKE CONCAT('%', #searchExt#, '%') AND
+			RESULT.TARGET_NAME LIKE CONCAT('%', #searchFileName#, '%') AND
+			RESULT.CREATE_NAME1 LIKE CONCAT('%', #searchCreatorName#, '%') AND
+			RESULT.TARGET_TYPE LIKE CONCAT('%', #searchFileType#, '%')
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getFavoriteFileCount" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(RESULT.TARGET_NAME) COUNT
+		FROM (
+			SELECT
+				DISTINCT
+				FILES.FILE_NAME 	AS TARGET_NAME,
+				FAVOR.TARGET_TYPE 	AS TARGET_TYPE,
+				FILES.FILE_EXT		AS TARGET_EXT,
+				FILES.CREATE_NAME1,
+				FILES.CREATE_NAME2,
+				DATE_ADD(FAVOR.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE
+			FROM
+				TBL_WEBFOLDER_FAVOR AS FAVOR
+				INNER JOIN TBL_WEBFOLDER_FILE AS FILES
+				ON FILES.FILE_ID = FAVOR.TARGET_ID AND FILES.TENANT_ID = FAVOR.TENANT_ID
+					INNER JOIN TBL_WEBFOLDER_FOLDER FOLDER
+					ON FOLDER.FOLDER_ID = FILES.FOLDER_ID
+						INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+						ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
+			WHERE
+				FAVOR.TARGET_TYPE = 'F' AND
+				FAVOR.USER_ID = #userId# AND
+				FAVOR.TENANT_ID = #tenantId# AND
+				FILES.USE_STATUS = 'Y'
+			
+		) AS RESULT
+		WHERE
+			RESULT.TARGET_EXT LIKE CONCAT('%', #searchExt#, '%') AND
+			RESULT.TARGET_NAME LIKE CONCAT('%', #searchFileName#, '%') AND
+			RESULT.CREATE_NAME1 LIKE CONCAT('%', #searchCreatorName#, '%') AND
+			RESULT.TARGET_TYPE LIKE CONCAT('%', #searchFileType#, '%')
+	</select>
+	
+	<select id="EzWebFolderDAO_m.isExistsFavorite" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(FAVOR.TARGET_ID) COUNT
+		FROM
+			TBL_WEBFOLDER_FAVOR AS FAVOR
+		WHERE
+			FAVOR.TARGET_ID = #targetId# AND
+			FAVOR.TARGET_TYPE = #targetType# AND
+			FAVOR.USER_ID = #userId# AND
+			FAVOR.TENANT_ID = #tenantId#
+	</select>
+	
+	<insert id="EzWebFolderDAO_m.addFavorite">
+		INSERT INTO
+			TBL_WEBFOLDER_FAVOR
+		VALUES
+			(#targetId#, #userId#, #targetType#, #createDate#, #tenantId#)
+	</insert>
+	
+	<delete id="EzWebFolderDAO_m.deleteFavorite">
+		DELETE
+		FROM
+			TBL_WEBFOLDER_FAVOR
+		WHERE
+			TARGET_ID = #targetId# AND
+			TARGET_TYPE = #targetType# AND
+			USER_ID = #userId# AND
+			TENANT_ID = #tenantId#
+	</delete>
 </sqlMap>

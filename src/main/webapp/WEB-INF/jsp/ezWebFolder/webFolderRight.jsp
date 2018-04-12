@@ -20,7 +20,6 @@
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
     <script type="text/javascript">
-    	var xhr  		= new XMLHttpRequest();
     	var file 		 = new Array();
 		var primary      = "<c:out value='${primary}'/>";
 		var strShared1	= "<spring:message code = 'ezWebFolder.t105'/>";
@@ -354,7 +353,7 @@
 	    
 	    function goToPageByNum(Value){
 	    	currentPage = Value;
-	        pStart = (blockSize * (currentPage))- blockSize;
+	        pStart = (blockSize * (currentPage)) - blockSize;
 	        pEnd = blockSize;
 	        getFileList(folderId);
 	    }
@@ -446,7 +445,23 @@
 				}
 			}
 		}
-	   
+		function getCheckAll(obj) {
+	    	   var listInputs = document.getElementsByClassName("checkBnk");
+	    	   checkedArr = [];
+	    	   if (obj.checked == true) {
+	    		   for (var i = 0; i < listInputs.length; i++) {
+		    			listInputs[i].checked = true;
+		    			checkedArr.push(listInputs[i].value);	    		
+		    		}
+	    		   $('.bnkWebFolder').css('background-color','#e9f1ff');
+	    	   }
+	    	   else {
+	    		   for (var i = 0; i < listInputs.length; i++) {
+		    			listInputs[i].checked = false;	    				    		
+		    		}
+	    		   $('.bnkWebFolder').css('background-color','#ffffff');
+	    	   }
+	       }
    	   function doLayerPopup(obj) {
 	        btn_PostDate_Clear();
 	        document.getElementById("searchExt").value = "";
@@ -518,6 +533,7 @@
        }
        
        function refreshView() {
+    	   checkedArr	= [];
     	   getFileList(folderId);
        }
        
@@ -613,22 +629,7 @@
 			
 			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList);
        }
-       function getCheckAll(obj) {
-    	   var listInputs = document.getElementsByClassName("checkBnk");
-    	   
-    	   checkedArr = [];
-    	   if (obj.checked == true) {
-    		   for (var i = 0; i < listInputs.length; i++) {
-	    			listInputs[i].checked = true;
-	    			checkedArr.push(listInputs[i].value);	    		
-	    		}		    	
-    	   }
-    	   else {
-    		   for (var i = 0; i < listInputs.length; i++) {
-	    			listInputs[i].checked = false;	    				    		
-	    		}
-    	   }
-       }
+       
        function changeCount(value) {
     	   blockSize = value;
     	   currentPage = 1;

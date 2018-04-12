@@ -28,14 +28,13 @@
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
     <script type="text/javascript">
-    
-    	var userInfo = {
+   		var userInfo = {
    			id: 		"${userInfo.id}",
    			lang:		"${userInfo.lang}",
    			offset: 	"${userInfo.offset}",
    			tenantId : 	"${userInfo.tenantId}"
     	};
-    	
+    
     	var pagination = {
     		currentPage:	1,
     		rowLength:		10,
@@ -88,11 +87,12 @@
 	    
 	    function renderFileList() {
 			$.ajax ({
-				type: "get",
+				type: "POST",
 				async: false,
-				url : "/rest/ezwebfolder/" + userInfo.id + "/getTrashCanList",
+				url : "/ezWebFolder/getTrashCanList.do",
 				dataType: "json",
 				data : {
+					"userId" : userInfo.id,
 					"offset" : userInfo.offset,
 					"tenantId" : userInfo.tenantId,
 					"currentPage"   : pagination.currentPage,
@@ -456,8 +456,7 @@
     		   checkedFolderList = checkedFolderList + "," + folderArr[i];
     	   }
     	   
-    	   DivPopUpShow(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + checkedFileList + "&folderList=" + checkedFolderList);	   
-   
+    	   showPanel(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + checkedFileList + "&folderList=" + checkedFolderList);
        }
        
        function getChecked(obj) {
@@ -508,7 +507,31 @@
        function changeCount(value) {
     	   blockSize = value;
     	   currentPage = 1;
-    	   getFileList(folderId);
+    	   renderFileList();
+       }
+       
+       function showPanel(popUpW, popUpH, URL) {
+    	   try {
+    	        var Position = DivPopUpPosition(popUpW, popUpH);
+    	        document.getElementById("iFrameLayer").src = URL;
+    	        document.getElementById("iFramePanel").style.top = Position[0] + "px";
+    	        document.getElementById("iFramePanel").style.left = Position[1] + "px";
+    	        document.getElementById("iFramePanel").style.height = popUpH + "px";
+    	        document.getElementById("iFrameLayer").style.width = popUpW + "px";
+    	        document.getElementById("iFrameLayer").style.height = popUpH + "px";
+    	        document.getElementById("mailPanel").style.display = "";
+    	        document.getElementById("iFramePanel").style.display = "";
+    	        parent.frames["left"].showPanel();
+    	    } catch (e) {}
+       }
+       
+       function hiddenPanel () {
+    	   try {
+    	        document.getElementById("mailPanel").style.display = "none";
+    	        document.getElementById("iFramePanel").style.display = "none";
+    	        document.getElementById("iFrameLayer").src = "/blank.htm";
+    	        parent.frames["left"].hiddenPanel();
+    	    } catch (e) {}
        }
        
     </script>
@@ -605,7 +628,17 @@
             <div class="popupwrap2">
 		        <table class="content">  
 			        <tr>
-			           <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
+			           <th style="text-align:center"><spring:message code='ezWebFolder.t190' /></th>
+			           <td>
+			               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+<!-- 			               <img class="ui-datepicker-trigger" src="/images/ImgIcon/calendar-month.gif" alt title> -->
+			                ~
+			               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+<!-- 			               <img class="ui-datepicker-trigger" src="/images/ImgIcon/calendar-month.gif" alt title>  -->
+			           </td>
+			       </tr>
+			        <tr>
+			           <th style="text-align:center">삭제일</th>
 			           <td>
 			               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
 <!-- 			               <img class="ui-datepicker-trigger" src="/images/ImgIcon/calendar-month.gif" alt title> -->
@@ -617,15 +650,15 @@
 			       
 			        <tr>
 			            <th style="text-align:center">확장자</th>
-			            <td><input type="text" id="searchExt" style="width:98%" value="" name="searchExt"></td>
+			            <td><input type="text" id="searchExt" style="width:100%" value="" name="searchExt"></td>
 			        </tr>
 			        <tr>
 			            <th style="text-align:center">파일명</th>
-			            <td><input type="text" id="searchFileName" style="width:98%" value="" name="searchFileName"></td>
+			            <td><input type="text" id="searchFileName" style="width:100%" value="" name="searchFileName"></td>
 			        </tr>  
 			         <tr>
 			            <th style="text-align:center">작성자</th>
-			            <td><input type="text" id="searchCreateName" style="width:98%" value="" name="searchCreateName"></td>
+			            <td><input type="text" id="searchCreateName" style="width:100%" value="" name="searchCreateName"></td>
 			        </tr>    
 			       
 		   		 </table>
