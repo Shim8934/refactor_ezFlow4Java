@@ -3676,21 +3676,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String openJob = "0", openBirth = "0";
 		
 		String code = request.getParameter("code");
-		String cIntro = request.getParameter("cIntro");
-		String birthType = request.getParameter("birthType");
-		String birthYear = request.getParameter("birthYear");
-		String openEmail = request.getParameter("openEmail");
-		String openHp = request.getParameter("openHp");
-		String openComp = request.getParameter("openComp");
-		String openHouse = request.getParameter("openHouse");
-		String openSex = request.getParameter("openSex");
-		String birthDay = request.getParameter("birthDay ");
-		String birthMonth = request.getParameter("birthMonth");
-		String gender = request.getParameter("gender");
-		
-		if(request.getParameter("openBirth") != null) {
-			openBirth = request.getParameter("openBirth");
-		}
+		String cIntro = "0";
+		String openEmail = "0";
+		String openHp = "0";
+		String openComp = "0";
+		String openHouse = "0";
+		String openSex = "0";
+		String birthDay = "0";
+		String gender = "0";
 		
 		String userLevel = ezCommunityService.joinOkGet1(code, id, tenantID);
 		
@@ -3704,11 +3697,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO clubVO = ezCommunityService.joinOkGet3(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), tenantID);
 
 		if(clubVO.getC_ClubConfirmType().equals("1") || clubVO.getC_ClubConfirmType().equals("2")) {
-			if (openBirth.equals("1")) {
-				birthDay = birthType + birthYear + "-" + birthMonth + "-" + birthDay;
-			} else {
-				birthDay = "";
-			}
 			
 			ezCommunityService.joinOkUpdate1(id, code, cIntro, openEmail, openHp, openComp, openBirth, openSex, openHouse, tenantID);
 			CommunityMemberInfoVO memberInfoVO = ezCommunityService.joinOkGet4(userInfo.getCompanyID(), id, tenantID);
@@ -3719,17 +3707,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 				ezCommunityService.joinOkInsert(userInfo.getCompanyID(), id, userInfo.getDisplayName1(), userInfo.getDisplayName2(), userInfo.getCompanyName1(), userInfo.getCompanyName2(), "", "", userInfo.getDeptName1(), userInfo.getDeptName2(), "", "", "", userInfo.getPhone(), userInfo.getEmail(), birthDay, gender, tenantID);
 			}
 			
-			
 		} else {
 			if (clubVO.getC_ClubConfirmType().equals("3")) {
 				ezCommunityService.joinOkUpdate2(id, code, cIntro, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, tenantID);
 
-				if (openBirth.equals("1")) {
-					birthDay = birthType + birthYear + "-" + birthMonth + "-" + birthDay;
-				} else {
-					birthDay = "";
-				}
-				
 				ezCommunityService.joinOkUpdate1(id, code, cIntro, openEmail, openHp, openComp, openBirth, openSex, openHouse, tenantID);
 				CommunityMemberInfoVO memberInfoVO = ezCommunityService.joinOkGet4(userInfo.getCompanyID(), id, tenantID);
 				
