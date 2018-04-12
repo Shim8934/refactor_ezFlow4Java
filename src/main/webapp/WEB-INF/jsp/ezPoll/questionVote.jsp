@@ -2881,7 +2881,7 @@
 			               			</div>
 			               		</div>          		
 			               </td>		               
-				          <td style="width:80px; border:1px solid #DDD; border-left:none;">	   	               		
+				          <td style="width:85px; border:1px solid #DDD; border-left:none;">	   	               		
 				               	<div id="_resultPercentage<c:out value ="${_option.ansId}"/>" class="_resultPercentage" ></div>           		
 				          </td>		               
 			            </tr>
