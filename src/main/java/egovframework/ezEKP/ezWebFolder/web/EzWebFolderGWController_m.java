@@ -28,7 +28,6 @@ import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
@@ -304,15 +303,25 @@ public class EzWebFolderGWController_m {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezwebfolder/{userId}/getTrashCanList", method=RequestMethod.GET, produces ="application/json;charset=utf-8")
-	public JSONObject getTrashCanList (@PathVariable String userId, HttpServletRequest request)  {
-		String offset = request.getParameter("offset");
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezwebfolder/{userId}/getTrashCanList", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
+	public JSONObject getTrashCanList (@PathVariable String userId, HttpServletRequest request, Locale locale)  {
+		String offset = request.getParameter("offset") !=null ? request.getParameter("offset") : "";
 		int tenantId = request.getParameter("tenantId") !=null ? Integer.parseInt(request.getParameter("tenantId")) : 0;
-		
-		logger.debug("getTrashCanList Started.");
-		logger.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId);
+		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
 
+		logger.debug("getTrashCanList Started.");
+		logger.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId + ",serverName=" + serverName);
+		
 		JSONObject result = new JSONObject();
+		
+		if (userId.equals("") || offset.equals("") || userId.equals("") || serverName.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
+			result.put("code", "1");
+			return result;
+		}
 
 		try {
 			List<TrashCanVO> trashCanList = null;
@@ -373,6 +382,7 @@ public class EzWebFolderGWController_m {
 		return result.toString();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezwebfolder/file-permanent-delete", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject filePermanetDelete(Locale locale, HttpServletRequest request) {
 		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";

@@ -41,12 +41,64 @@ public class EzWebFolderController_m {
 	public String trashCan (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		logger.debug("trashCan Started.");
-		logger.debug("userInfo=" + commonUtil.userInfoSimple(loginCookie));
 		
+		if (loginCookie == null) {
+			logger.debug("trashCan illegal arguments!");
+			return "cmm/error/egovError";
+		}
+		
+		logger.debug("userInfo=" + commonUtil.userInfoSimple(loginCookie));
 		model.addAttribute("userInfo", commonUtil.userInfoSimple(loginCookie));
-
+		
 		logger.debug("trashCan ended.");
 		return "ezWebFolder/trashCan";
+	}
+	
+	@RequestMapping(value="/ezWebFolder/getTrashCanList.do", method = RequestMethod.POST)
+	public String getTrashCanList (@CookieValue("loginCookie") String loginCookie, Model model, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String userId = request.getParameter("userId") !=null ? request.getParameter("userId") : "";
+		int tenantId = request.getParameter("tenantId") !=null ? Integer.parseInt(request.getParameter("tenantId")) : 1;
+		String offset = request.getParameter("offset") !=null ? request.getParameter("offset") : "";
+		
+		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String url = gwServerUrl + "/rest/ezwebfolder/" + userId + "/getTrashCanList";
+		
+		logger.debug("getTrashCanList Started.");
+		logger.debug("userId=" + userId + ",tenantId=" + userId + ",offset=" + offset);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", tenantId)
+										.queryParam("offset", offset);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("status","ok");
+			model.addAttribute("code",0);
+			model.addAttribute("data",resultBody.get("data"));
+			model.addAttribute("fileCnt",resultBody.get("fileCnt"));
+			model.addAttribute("folderCnt",resultBody.get("folderCnt"));
+		}else {
+			model.addAttribute("status","error");
+			model.addAttribute("code",1);
+			model.addAttribute("data","");
+		}
+		
+		logger.debug("status=" + status);
+		logger.debug("getTrashCanList ended");
+		
+		return "json";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/permanentDeleteConfirm.do")
