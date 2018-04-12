@@ -116,10 +116,10 @@
 	    <div class="txt"><spring:message code='ezWebFolder.t265' /></div>
 	    <div class="nobox">
 	    	<span id = "ko_lang"><spring:message code='ezWebFolder.t226' /></span>
-	        <input id="txt_FolderName1" type="text" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:2px" maxlength="8">
+	        <input id="txt_FolderName1" type="text" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:2px" >
 	        <br>
 	    	<span id = "ko_lang"><spring:message code='ezWebFolder.t227' /></span>
-	        <input id="txt_FolderName2" type="text" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:2px" maxlength="8">
+	        <input id="txt_FolderName2" type="text" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:2px" >
 	    </div>
 	    <div class="btnposition btnpositionNew">
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezWebFolder.t116' /></span></a>

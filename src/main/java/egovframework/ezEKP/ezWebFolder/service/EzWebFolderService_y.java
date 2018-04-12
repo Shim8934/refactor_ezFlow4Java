@@ -59,4 +59,7 @@ public interface EzWebFolderService_y {
 	
 	// 본인이 환경설정에서 설정해놓은 listCount를 출력
 	int getUsrListCount (int tenantId, String userId ) ;
+
+	// listCount 수정시 insert
+	void insertEnv(String userId, int tenantId, int listCount);
 }

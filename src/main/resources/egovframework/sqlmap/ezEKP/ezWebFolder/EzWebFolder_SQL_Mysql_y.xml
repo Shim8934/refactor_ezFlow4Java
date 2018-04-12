@@ -145,6 +145,7 @@
 						)
 				) as user on fld.folder_id = user.folder_id 
 				where fld.folder_type = #folderType#
+				and user.tenant_id = #tenantId#
 			)as tt on tt.folder_id = ff.folder_id 
 			or tt.folder_id = ff.folder_id or ff.FOLDER_PATH like concat('%',tt.folder_path,'%')
 			where ff.tenant_id = #tenantId#
@@ -214,10 +215,10 @@
 				from tbl_webfolder_file file inner join (
 					select *
 					from tbl_webfolder_folder  
-					where folder_id = #folderId# and tenant_id = #tenantId#  group by folder_path) as t 
+					where folder_id = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path) as t 
 						on t.folder_id  = file.folder_id
 				inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = #tenantId#
-				where type.tenant_id = #tenantId# and file.USE_STATUS = 'Y' 
+				where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'  
 				
 			]]>
 		</isNotEqual>
@@ -279,7 +280,7 @@
 						where folder_path like (
 							select concat(FOLDER_PATH,'%') 
 							from tbl_webfolder_folder 
-							where FOLDER_ID = #folderId# and tenant_id = #tenantId#  group by folder_path )
+							where FOLDER_ID = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path )
 						and tenant_id = #tenantId# and folder_type = #folderType#) as t on file.folder_id = t.folder_id and t.tenant_id = file.tenant_id
 					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
@@ -403,7 +404,7 @@
 				from tbl_webfolder_file file inner join (
 					select *
 					from tbl_webfolder_folder  
-					where folder_id = #folderId# and tenant_id = #tenantId#  group by folder_path) 
+					where folder_id = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path) 
 						as t on t.folder_id  = file.folder_id
 				inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 				where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
@@ -447,7 +448,7 @@
                     from
                     	tbl_webfolder_folder 
                     where 
-                    	(FOLDER_UPPER = 'root' and COMPANY_ID=#comId# and OWNER_ID =#comId#)
+                    	(FOLDER_UPPER = 'root' and COMPANY_ID=#comId# and OWNER_ID =#comId# and folder_type = #folderType#)
 				)as t on t.folder_id = file.folder_id 
 				or t.folder_id = file.folder_id
 				inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID
@@ -668,7 +669,7 @@
 				from tbl_webfolder_file file inner join (
 					select *
 					from tbl_webfolder_folder  
-					where folder_id = #folderId# and tenant_id = #tenantId#  group by folder_path) 
+					where folder_id = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path) 
 						as t on t.folder_id  = file.folder_id
 				inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 				where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
@@ -706,6 +707,7 @@
 						
 					) as user on fld.folder_id = user.folder_id 
 					where fld.folder_type = #folderType#
+					and user.tenant_id = #tenantId#
 					union all
                     select SUBSTRING_INDEX(SUBSTRING_INDEX(FOLDER_PATH, '|', 2),'|',-1) as a ,
                     	folder_id , folder_name1, folder_path, folder_type 
@@ -729,7 +731,7 @@
 						where folder_path like (
 							select concat(FOLDER_PATH,'%') 
 							from tbl_webfolder_folder 
-							where FOLDER_ID = #folderId# and tenant_id = #tenantId#  group by folder_path )
+							where FOLDER_ID = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path )
 						and tenant_id = #tenantId# and folder_type = #folderType#) as t on file.folder_id = t.folder_id
 					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
@@ -795,7 +797,7 @@
 					
 						select 	
 							SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
-							fld.folder_id, fld.folder_name1,fld.folder_path, folder_type
+							fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type
 						from tbl_webfolder_folder fld inner join 
 						(
 							select 
@@ -815,6 +817,7 @@
 								or user_id = #userId# or user_id= #deptId#
 						) as user on fld.folder_id = user.folder_id 
 						where fld.folder_type = #folderType#
+						and user.tenant_id = #tenantId#
 						union all
 	                    select SUBSTRING_INDEX(SUBSTRING_INDEX(FOLDER_PATH, '|', 2),'|',-1) as a , 
 	                    	folder_id , folder_name1, folder_path, folder_type 
@@ -1241,5 +1244,11 @@
 				( select ENV_VALUE from tbl_webfolder_env  where cn = #userId# and tenant_id = #tenantId# and ENV_TYPE='P') , 10) as cnnt
 		]]>
 	</select>
+	<insert id="EzWebFolderDAO_y.envInsert" parameterClass="Map">
+		INSERT INTO tbl_webfolder_env (cn, env_type,env_value,tenant_id) 
+		value (#userId#,'P',#listCount#, #tenantId#)
+		ON DUPLICATE KEY UPDATE env_value = #listCount#
+		
+	</insert>
 </sqlMap>
 

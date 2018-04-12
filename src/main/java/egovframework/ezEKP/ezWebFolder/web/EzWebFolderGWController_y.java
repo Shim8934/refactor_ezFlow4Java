@@ -439,6 +439,8 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("folderId : " + folderId + " folderType : " + folderType + " deptId : "+ deptId + "offset" + offset );
 			LOGGER.debug("pStart : " + pStart + " pEnd : " + pEnd);
 			
+			service.insertEnv(userId, tenantId, listCount);
+			
 			fileList = service.getFileList(folderId, folderType, userId, deptId, tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset, primary);

@@ -115,6 +115,10 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public int getUsrListCnt(Map<String, Object> map) {
 		return (int) select ("EzWebFolderDAO_y.getUsrListCnt",map);
 	}
+	// listCount 수정시 insert 
+	public void insertEnv(Map<String, Object> map) {
+		update("EzWebFolderDAO_y.envInsert",map);
+	}
 	
 
 	

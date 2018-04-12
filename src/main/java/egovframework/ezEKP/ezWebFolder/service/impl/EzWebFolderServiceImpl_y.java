@@ -564,5 +564,14 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		return listCount;
 	}
+
+	@Override
+	public void insertEnv(String userId, int tenantId, int listCount) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("listCount", listCount);
+		ezWebFolderDAO_y.insertEnv(map);
+	}
 	
 }

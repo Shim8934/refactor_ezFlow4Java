@@ -196,6 +196,8 @@
             	}
             }
             moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+            moveCopyFolderDlg_cross_dialogArguments[1] = "move";
+            moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
             console.log("folderId moveCopy_onclick function" + folderId);
             console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
             DivPopUpShow(330, 500, "/ezWebFolder/folderMove.do");
@@ -207,6 +209,8 @@
             }
            	
             moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+            moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
+            moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
             console.log("folderId copy_onclick function" + folderId);
             console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
             DivPopUpShow(330, 500, "/ezWebFolder/folderMove.do");
@@ -227,7 +231,10 @@
 	    	DivPopUpHidden();
         	folderList(folderType);
 	    }
-        
+        function returnFunction(type) {
+        	folderType = type;
+        	$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
+        }
     </script>
 </head>
 
