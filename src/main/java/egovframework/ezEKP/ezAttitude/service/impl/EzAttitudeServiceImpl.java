@@ -506,27 +506,29 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String companyId, String userIdList, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigInfo started");
 		
-		List<AttitudeUserConfigVO> userList = new ArrayList<AttitudeUserConfigVO>();
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("offsetMin", offsetMin);
 		
-		String[] userIdArray = userIdList.split(","); 
 		
-		for (int i = 0; i < userIdArray.length; i++) {
-			map.put("userId", userIdArray[i]);
-			
-			AttitudeUserConfigVO vo = new AttitudeUserConfigVO();
-			vo = ezAttitudeDAO.getAttitudeUserConfigInfo(map);
-			if (vo != null) {
-				userList.add(vo);
-			}
-		}
+		String[] userList = userIdList.split(",");
+		map.put("userId", userList);
+//		for (int i = 0; i < userIdArray.length; i++) {
+//			map.put("userId", userIdArray[i]);
+//			
+//			AttitudeUserConfigVO vo = new AttitudeUserConfigVO();
+//			vo = ezAttitudeDAO.getAttitudeUserConfigInfo(map);
+//			if (vo != null) {
+//				userList.add(vo);
+//			}
+//		}
+		//+++++++++++
+		List<AttitudeUserConfigVO> userConfList = ezAttitudeDAO.getAttitudeUserConfigInfo(map);
+		
 		LOGGER.debug("getAttitudeUserConfigInfo ended");
-		return userList;
+		return userConfList;
 	}
 
 	@Override
@@ -814,10 +816,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		List<AdminAttitudeVO> resultList = new ArrayList<AdminAttitudeVO>();
 		if (userIdList != null && userIdList != "") {
 			String[] userList = userIdList.split(",");
-			for (int i = 0; i < userList.length; i++) {
-				map.put("userId", userList[i]);
-				resultList.addAll(ezAttitudeDAO.getAttitudeList2(map));
-			}
+			map.put("userId", userList);
+			resultList = ezAttitudeDAO.getAttitudeList2(map);
 		} else {
 			resultList = ezAttitudeDAO.getAttitudeList2(map);
 		}
@@ -853,10 +853,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String resultCount = "0";
 		if (userIdList != null && !userIdList.equals("")) {
 			String[] userList = userIdList.split(",");
-			for (int i = 0; i < userList.length; i++) {
-				map.put("userId", userList[i]);
-				resultCount = String.valueOf((Integer.valueOf(resultCount) + Integer.valueOf(ezAttitudeDAO.getAttitudeCount2(map))));
-			}
+			map.put("userId", userList);
+			resultCount = String.valueOf((Integer.valueOf(resultCount) + Integer.valueOf(ezAttitudeDAO.getAttitudeCount2(map))));
 		} else {
 			resultCount = ezAttitudeDAO.getAttitudeCount2(map);
 		}

@@ -904,7 +904,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/users-attitude-confs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject userAttitudeConfInfo(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/users-attitude-confs] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/users-attitude-confs] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -938,7 +938,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/users-attitude-confs] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/users-attitude-confs] ended.");
 		return result;
 	}
 	
