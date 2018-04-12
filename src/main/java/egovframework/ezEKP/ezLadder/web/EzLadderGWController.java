@@ -37,6 +37,8 @@ import egovframework.ezEKP.ezLadder.vo.LadderOrderVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
+import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -61,6 +63,9 @@ public class EzLadderGWController {
 	
 	@Resource(name="EzLadderService")
 	private EzLadderService ezLadderService;
+	
+	@Resource(name="MOptionService")
+	private MOptionService MOptionService;
 	
 	@Autowired
 	private EzOrganService ezOrganService;
@@ -156,24 +161,44 @@ public class EzLadderGWController {
 	/**
 	 * 사다리 게임 추가
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ladder/ladders/writers/{writerId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwInsertLadder(@PathVariable String writerId, LadderVO ladVO, @RequestBody LadderLineVO ladLineVO, String bombnum, String loginCookie, HttpServletRequest request) {
+	public JSONObject gwInsertLadder(@PathVariable String writerId, @RequestBody JSONObject jsonBodys, LadderVO ladVO, LadderLineVO ladLineVO, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [POST /ladder/ladders/writers/" + writerId + "] started.");
 		
 		JSONObject result = new JSONObject();
-		String logCookie = request.getParameter("loginCookie");
+		
 		try {
+			String serverName = request.getHeader("x-user-host");
+			String todayDate = commonUtil.getTodayUTCTime("");
 			
-			ezLadderService.insertLadder(ladVO, ladLineVO,logCookie);
-			int ladderId = ezLadderService.selectRecentLadderId(ladVO);
+			String logCookie = (String) jsonBodys.get("loginCookie");
+			
+			MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, writerId);
+			
+			ladVO.setTitle((String) jsonBodys.get("title"));
+			ladVO.setType((String) jsonBodys.get("type"));
+			ladVO.setSecretFlag((String) jsonBodys.get("secretFlag"));
+			ladVO.setLineCnt((String) jsonBodys.get("lineCnt"));
+			ladVO.setWriterName(userInfo.getUserName());
+			ladVO.setWriterName2(userInfo.getUserName2());
+			ladVO.setDeptName(userInfo.getDeptName());
+			ladVO.setDeptName2(userInfo.getDeptName2());
+			ladVO.setWriteDate(todayDate);
+			
+			ladLineVO.setUserIds((ArrayList<String>) jsonBodys.get("userIds"));
+			ladLineVO.setUserNames((ArrayList<String>) jsonBodys.get("userNames"));
+			ladLineVO.setUserName2s((ArrayList<String>) jsonBodys.get("userName2s")); 
+			ladLineVO.setItems((ArrayList<String>) jsonBodys.get("items"));
+			
+			ezLadderService.insertLadder(ladVO, ladLineVO, logCookie);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", ladderId);
+			result.put("data", null);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
 		}
 		
 		logger.debug("web G/W LADDER [POST /ladder/ladders/writers/" + writerId + "] ended.");
@@ -316,14 +341,32 @@ public class EzLadderGWController {
 	 * 댓글 조회
 	 * */
 	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject gwSelectComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO) {
+	public JSONObject gwSelectComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [GET /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			LadderCommentVO cmt = ezLadderService.selectComment(cmtVO);
 			
-			List<LadderCommentVO> cmt = ezLadderService.selectComments(cmtVO);
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, cmt.getUserId());
+			
+			String imagePath = userInfo.getUserFileUrl();
+			if (imagePath != null && !imagePath.equals("")) {
+				String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", cmt.getTenant_id())+ commonUtil.separator + imagePath;
+				String fullPath = request.getServletContext().getRealPath(realPath);
+				
+				if (checkExist(fullPath)) {
+					cmt.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
+				}
+				else {
+					cmt.setPic("/images/ezLadder/icon_defaultAttendant.png");
+				}
+			} 
+			else {
+				cmt.setPic("/images/ezLadder/icon_defaultAttendant.png");
+			}
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -342,35 +385,27 @@ public class EzLadderGWController {
 	 * 댓글 추가
 	 * */
 	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwInsertComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO, HttpServletRequest request) {
+	public JSONObject gwInsertComment(@PathVariable String userId, @PathVariable String ladderId, @RequestBody JSONObject jsonBodys, LadderCommentVO cmtVO, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [POST /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, userId);
+			String todayDate = commonUtil.getTodayUTCTime("");
 			
-			LadderCommentVO resultVO = ezLadderService.insertComment(cmtVO);
+			cmtVO.setId((String) jsonBodys.get("commentId"));
+			cmtVO.setComment((String) jsonBodys.get("comment"));
+			cmtVO.setUserName(userInfo.getUserName());
+			cmtVO.setUserName2(userInfo.getUserName2());
+			cmtVO.setWriteDate(todayDate);
 			
-			String imagePath = ezOrganService.getPropertyValue(resultVO.getUserId(), "extensionAttribute2", resultVO.getTenant_id());
-			
-			if (imagePath != null && !imagePath.equals("")) {
-				String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", resultVO.getTenant_id())+ commonUtil.separator + imagePath;
-				String fullPath = request.getServletContext().getRealPath(realPath);
-				
-				if (checkExist(fullPath)) {
-					resultVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
-				}
-				else {
-					resultVO.setPic("/images/ezLadder/icon_defaultuser.png");
-				}
-			} 
-			else {
-				resultVO.setPic("/images/ezLadder/icon_defaultuser.png");
-			}
+			ezLadderService.insertComment(cmtVO);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", resultVO);
+			result.put("data", null);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -385,18 +420,20 @@ public class EzLadderGWController {
 	 * 댓글 수정
 	 * */
 	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject gwUpdateComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO) {
+	public JSONObject gwUpdateComment(@PathVariable String userId, @PathVariable String ladderId, @RequestBody JSONObject jsonBodys, LadderCommentVO cmtVO) {
 		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			cmtVO.setId((String) jsonBodys.get("commentId"));
+			cmtVO.setComment((String) jsonBodys.get("comment"));
 			
-			LadderCommentVO resultVO = ezLadderService.updateComment(cmtVO);
+			ezLadderService.updateComment(cmtVO);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", resultVO);
+			result.put("data", null);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -411,21 +448,19 @@ public class EzLadderGWController {
 	 * 댓글 삭제
 	 * */
 	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject gwDeleteComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO) {
+	public JSONObject gwDeleteComment(@PathVariable String userId, @PathVariable String ladderId, @RequestBody JSONObject jsonBodys, LadderCommentVO cmtVO) {
 		logger.debug("web G/W LADDER [DELETE /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
+			cmtVO.setId((String) jsonBodys.get("commentId"));
 			
 			ezLadderService.deleteComment(cmtVO);
 			
-			JSONObject deleteCmtId = new JSONObject();
-			deleteCmtId.put("id", cmtVO.getId());
-			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", deleteCmtId);
+			result.put("data", null);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -655,25 +690,23 @@ public class EzLadderGWController {
 		logger.debug("web G/W LADDER [PUT /ladder/start/" + ladderId+ "/users/" + userId + "] started.");
 	
 		JSONObject result = new JSONObject();
-		int ladId = Integer.parseInt(ladderId);
-		int size = Integer.parseInt(request.getParameter("size"));
-		int lineCnt = Integer.parseInt(request.getParameter("lineCnt"));
-		String tenantId = request.getParameter("tenantId");
-		String lang = request.getParameter("lang");
-		logger.debug("ladderId : " + ladderId);
-		logger.debug("size : " + size);
-		logger.debug("lineCnt : " + lineCnt);
-		logger.debug("tenantId : " + tenantId);
 	
 		try {
+			int ladId = Integer.parseInt(ladderId);
+			int size = Integer.parseInt(request.getParameter("size"));
+			int lineCnt = Integer.parseInt(request.getParameter("lineCnt"));
+			String tenantId = request.getParameter("tenantId");
+			String lang = request.getParameter("lang");
 			
 			ezLadderService.setLadderStart(ladId, tenantId, size, lineCnt, lang);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", "start");
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			e.printStackTrace();
 		}
 		
 		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId + "users/" + userId + "] ended.");

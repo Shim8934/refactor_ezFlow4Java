@@ -56,6 +56,7 @@ import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderOrderVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -221,32 +222,13 @@ public class EzLadderController {
 	 * 사다리 게임 추가 
 	 * @throws Exception 
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.POST)
-	public String setLadder(@CookieValue("loginCookie") String loginCookie,
-			LadderVO ladVO, LadderLineVO ladLineVO, int bombnum,
-			HttpServletRequest request, Model model) throws Exception {
-		logger.debug("POST setLadder.do started.");
+	public String setLadder(@CookieValue("loginCookie") String loginCookie, String title, String type, String secretFlag, String lineCnt, 
+			String [] userIds, String [] userNames, String [] userName2s, String [] items,/*LadderVO ladVO, LadderLineVO ladLineVO,*/ HttpServletRequest request, Model model) throws Exception {
+		logger.debug("setLadder.do started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String [] shuffleItems = new String [ladLineVO.getUserIds().length];
-		List<String> shuffleList = Arrays.asList(shuffleItems); 
-		if(ladVO.getType() == 0) {
-			Arrays.fill(shuffleItems, 0, bombnum, "꽝");
-			Arrays.fill(shuffleItems, bombnum, shuffleItems.length, "패스");
-			Collections.shuffle(shuffleList);
-			shuffleList.toArray(shuffleItems);
-			ladLineVO.setItems(shuffleItems);
-		} else if(ladVO.getType() == 2) {
-			for(int number = 1; number <= shuffleItems.length; number++) {
-				shuffleItems[number - 1] = String.valueOf(number);
-			}
-			Collections.shuffle(shuffleList);
-			shuffleList.toArray(shuffleItems);
-			ladLineVO.setItems(shuffleItems);
-		}
-		ladLineVO.setWriterId(userInfo.getId());
-		ladLineVO.setTenant_id(userInfo.getTenantId());
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/ladder/ladders/writers/" + userInfo.getId();
@@ -255,37 +237,36 @@ public class EzLadderController {
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
-		HttpEntity<?> entity = new HttpEntity<>(ladLineVO, headers);
+		JSONObject jsonBodys = new JSONObject();
+		jsonBodys.put("title", title);
+		jsonBodys.put("type", type);
+		jsonBodys.put("secretFlag", secretFlag);
+		jsonBodys.put("lineCnt", lineCnt);
+		jsonBodys.put("userIds", userIds);
+		jsonBodys.put("userNames", userNames);
+		jsonBodys.put("userName2s", userName2s);
+		jsonBodys.put("items", items);
+		jsonBodys.put("loginCookie", loginCookie);
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonBodys, headers);
 		
 		RestTemplate rest = new RestTemplate();
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("title", ladVO.getTitle())
-				.queryParam("type", ladVO.getType())
-				.queryParam("secretFlag", ladVO.getSecretFlag())
-				.queryParam("lineCnt", ladVO.getLineCnt())
-				.queryParam("writerName", userInfo.getDisplayName())
-				.queryParam("writerName2", userInfo.getDisplayName2())
-				.queryParam("deptName", userInfo.getDeptName())
-				.queryParam("deptName2", userInfo.getDeptName2())
-				.queryParam("tenant_id", userInfo.getTenantId())
-				.queryParam("loginCookie", loginCookie);
+				.queryParam("tenant_id", userInfo.getTenantId());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-
+		
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		
-		String data = jsonResult.get("data").toString();
 		String status = jsonResult.get("status").toString();
 	
-		if (status.equals("ok")) {
-			model.addAttribute("ladderid", data);
-		} else {
+		if (!status.equals("ok")) {
 			return "error";
 		}
 		
-		logger.debug("### POST setLadder.do ended.");
+		logger.debug("setLadder.do ended.");
 		return "forward:/ezLadder/ladderMain.do?mode=all&currPage=1&searchSelect=&searchInput=&sort=writeDate&sortFlag=desc";
 	}
 	
@@ -438,14 +419,14 @@ public class EzLadderController {
 	}
 	
 	/**
-	 * 댓글 조회 : 사다리 조회 컨트롤러랑 합쳐져야함 
+	 * 추가, 수정 한 댓글 조회
 	 * @throws Exception 
 	 * */
 	@RequestMapping(value = "/ezLadder/getLadderComment.do")
-	public String getLadderComment(@CookieValue("loginCookie") String loginCookie, String ladderId, HttpServletRequest request, Model model) throws Exception {
+	public String getLadderComment(@CookieValue("loginCookie") String loginCookie, String ladderId, String commentId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getLadderComment.do started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie); 
 
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/ladder/ladders/" + ladderId + "/comment/users/" + userInfo.getId();
@@ -460,21 +441,19 @@ public class EzLadderController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
+				.queryParam("id", commentId)
 				.queryParam("offset", userInfo.getOffset())
 				.queryParam("lang", userInfo.getLang());
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-
+		
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		
-		JSONArray list = new JSONArray();
 		String status = jsonResult.get("status").toString();
 	
 		if (status.equals("ok")) {
-			list = (JSONArray) jsonResult.get("data");
-			
-			model.addAttribute("cmtlist", list);
+			model.addAttribute("myComment", (JSONObject) jsonResult.get("data"));
 		} else {
 			return "error";
 		}
@@ -487,47 +466,45 @@ public class EzLadderController {
 	 * 댓글 추가, 수정, 삭제 : 웹소켓 이용... 수정될듯..
 	 * @throws Exception 
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezLadder/setLadderComment.do", method = RequestMethod.POST)
-	public String setLadderComment(@CookieValue("loginCookie") String loginCookie, String flag, LadderCommentVO cmtVO, HttpServletRequest request, Model model) throws Exception {
+	public String setLadderComment(@CookieValue("loginCookie") String loginCookie, String flag, String commentId, String ladderId, String comment, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setLadderComment.do started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userId = userInfo.getId();
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
-		String url = gwServerUrl + "/ladder/ladders/" + cmtVO.getLadderId() + "/comment/users/" + userId;
+		String url = gwServerUrl + "/ladder/ladders/" + ladderId + "/comment/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
+		JSONObject jsonBodys = new JSONObject();
+		jsonBodys.put("commentId", commentId);
+		jsonBodys.put("comment", comment);
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonBodys, headers);
 		
 		RestTemplate rest = new RestTemplate();
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
-				.queryParam("id", cmtVO.getId())
-				.queryParam("comment", cmtVO.getComment())
-				.queryParam("userId", userId)
-				.queryParam("userName", userInfo.getDisplayName())
-				.queryParam("userName2", userInfo.getDisplayName2())
-				.queryParam("offset", userInfo.getOffset())
-				.queryParam("lang", userInfo.getLang());
+				.queryParam("lang", userInfo.getLang())
+				.queryParam("offset", userInfo.getOffset());
 		
 		ResponseEntity<String> result = null;
 		
 		String retDestination = "";
-		JSONObject retjson = new JSONObject();
 		if(flag.equals("add")) {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-			retDestination = "/lad/cmt/addCmt/";
+			retDestination = "/lad/cmt/addCmt/" + ladderId;
 		} else if(flag.equals("modify")) {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-			retDestination = "/lad/cmt/modifyCmt/";
+			retDestination = "/lad/cmt/modifyCmt/" + ladderId;
 		} else if(flag.equals("delete")) {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
-			retDestination = "/lad/cmt/deleteCmt/";
+			retDestination = "/lad/cmt/deleteCmt/" + ladderId;
 		}
 
 		JSONParser jp = new JSONParser();
@@ -536,13 +513,13 @@ public class EzLadderController {
 		String status = jsonResult.get("status").toString();
 	
 		if (status.equals("ok")) {
-			retjson = (JSONObject) jsonResult.get("data");
-			
 			model.addAttribute("status", status);
 			
-			retDestination += cmtVO.getLadderId();
-			this.template.convertAndSend(retDestination, retjson);
+			JSONObject commentInfo = new JSONObject();
+			commentInfo.put("flag", flag);
+			commentInfo.put("commentId", commentId);
 			
+			this.template.convertAndSend(retDestination, commentInfo);
 		} else {
 			return "error";
 		}
@@ -627,7 +604,6 @@ public class EzLadderController {
 	 * 사다리 게임을 조회
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezLadder/getLadderGame.do", method = RequestMethod.GET)
 	public String getLadderGame(@CookieValue("loginCookie") String loginCookie, String ladderId, String searchSelect, String searchInput, String mode, String currPage, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		
@@ -638,15 +614,15 @@ public class EzLadderController {
 		logger.debug("mode : " + mode);
 		logger.debug("currPage : " + currPage);
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = gwServerUrl + "/ladder/ladderGame/" +ladderId + "/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
-		
-		logger.debug("###servername : " + request.getServerName());
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
@@ -661,41 +637,34 @@ public class EzLadderController {
 		
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
-		JSONArray list = new JSONArray();
-		JSONArray cmtlist = new JSONArray();
 		
 		String status = jsonResult.get("status").toString();
-		String retDestination = "/lad/start/" + ladderId;
+		
+		JSONObject vo = (JSONObject) jsonResult.get("data");
+		JSONArray list = (JSONArray) jsonResult.get("participant");
+		JSONArray cmtlist = (JSONArray) jsonResult.get("cmtlist");
+		
 		if (status.equals("ok")) {
-			list = (JSONArray) jsonResult.get("participant");
-			cmtlist = (JSONArray) jsonResult.get("cmtlist");
 			model.addAttribute("id", userInfo.getId());
-			model.addAttribute("vo", jsonResult.get("data"));	// x번째 사다리 정보
 			model.addAttribute("searchSelect", searchSelect );
 			model.addAttribute("searchInput", searchInput );
 			model.addAttribute("mode", mode );
 			model.addAttribute("currPage", currPage);
-			model.addAttribute("list", list); 			// ladderLineList
-			model.addAttribute("cmtlist", cmtlist);
 			
-			JSONObject totalLadderInfo = new JSONObject();
-			totalLadderInfo.put("ladder", jsonResult.get("data"));
-			totalLadderInfo.put("ladderline", list);
-			this.template.convertAndSend(retDestination, totalLadderInfo);
+			model.addAttribute("vo", vo); // ladder
+			model.addAttribute("list", list);// ladder line list
+			model.addAttribute("cmtlist", cmtlist); // ladder comment list
 		} else {
 			return "error";
 		}
 		
-		String retJSP = "";
-		if(mode.equals("pre")) {
-			retJSP = "json";
-		} else {
-			retJSP = "ezLadder/ladderGame";
-		}
-		
 		logger.debug("ezLadder/getLadderGame.do ended.");
 		
-		return retJSP;
+		if(mode.equals("pre") || mode.equals("json")) {
+			return "json";
+		} else {
+			return "ezLadder/ladderGame";
+		}
 	}
 	
 	/**
@@ -852,26 +821,23 @@ public class EzLadderController {
 							.queryParam("size", allData[5])
 							.queryParam("lineCnt", allData[6])
 							.queryParam("lang", userInfo.getLang());
-		
-//		String retDestination = "";
 	
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-//		retDestination = "/lad/start/";
+		
+		String retDestination = "/lad/start/" + allData[0];
+		
 		JSONParser jp = new JSONParser();
 		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
 		
 		String status = jsonResult.get("status").toString();
-	
-		logger.debug("ezLadder/setLadderStart ended.");
 		
 		if (status.equals("ok")) {
-			String msg = jsonResult.get("data").toString();
-//			retDestination += allData[0];
-//			this.template.convertAndSend(retDestination, msg);
-			
+			this.template.convertAndSend(retDestination, jsonResult.get("data").toString());
 		} else {
 			return "error";
 		}
+		
+		logger.debug("ezLadder/setLadderStart ended.");
 		
 		return "json";
 	}

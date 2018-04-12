@@ -209,10 +209,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 
 	/** boh */
 	@Override
-	public void insertLadder(LadderVO lad, LadderLineVO ladLines, String logCookie) throws Exception {
-		lad.setWriteDate(commonUtil.getTodayUTCTime(""));
-		
-		 ezLadderDAO.insertLadderSet(lad);
+	public int insertLadder(LadderVO lad, LadderLineVO ladLines, String logCookie) throws Exception {
+		ezLadderDAO.insertLadderSet(lad);
 		
 		int len = ladLines.getUserIds().length;
 		for(int i = 0; i < len; i++) {
@@ -225,13 +223,13 @@ public class EzLadderServiceImpl implements EzLadderService {
 			ezLadderDAO.insertLadderLine(ladLines);
 		}
 		
-		
 		int ladderId = ezLadderDAO.selectRecentLadderId(lad);
 		lad.setLadderId(ladderId);
+		
 		sendLadderMail(lad, ladLines, logCookie, len);
+		
+		return ladderId;
 	}
-	
-	
 	
 	@Override
 	public int selectRecentLadderId(LadderVO lad) throws Exception {
@@ -346,9 +344,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 	@Override
 	public LadderCommentVO selectComment(LadderCommentVO cmtVO) throws Exception {
-		LadderCommentVO retCmtVO = new LadderCommentVO();
-		
-		retCmtVO = ezLadderDAO.selectComment(cmtVO);
+		LadderCommentVO retCmtVO = ezLadderDAO.selectComment(cmtVO);
 		
 		String dataStr = commonUtil.getDateStringInUTC(retCmtVO.getWriteDate(), cmtVO.getOffset(), false);
 		retCmtVO.setWriteDate(dataStr);
@@ -362,27 +358,13 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 
 	@Override
-	public LadderCommentVO insertComment(LadderCommentVO cmtVO) throws Exception {
-		String dataStr = commonUtil.getTodayUTCTime("");
-		cmtVO.setWriteDate(dataStr);
-		
+	public void insertComment(LadderCommentVO cmtVO) throws Exception {
 		ezLadderDAO.insertComment(cmtVO);
-		
-		LadderCommentVO resultCmtVO = selectComment(cmtVO);
-		
-		return resultCmtVO;
 	}
 
 	@Override
-	public LadderCommentVO updateComment(LadderCommentVO cmtVO) throws Exception {
-		String dataStr = commonUtil.getTodayUTCTime("");
-		cmtVO.setWriteDate(dataStr);
-		
+	public void updateComment(LadderCommentVO cmtVO) throws Exception {
 		ezLadderDAO.updateComment(cmtVO);
-		
-		LadderCommentVO resultCmtVO = selectComment(cmtVO);
-		
-		return resultCmtVO;
 	}
 
 	@Override

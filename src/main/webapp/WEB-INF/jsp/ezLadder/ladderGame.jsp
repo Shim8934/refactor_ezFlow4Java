@@ -220,23 +220,18 @@
 			stompClient.connect({}, function() {
 				stompClient.subscribe("/lad/cmt/addCmt/" + ladderId, function(result) { // add comment
 					var cmtjson = JSON.parse(result.body);
-					addCommentView["type"] = "prepend";
-					addCommentView["contents"] = cmtjson;
-					
-					showCommentList(addCommentView);
+				
+					setCommentComplete(cmtjson["flag"], cmtjson["commentId"]);
 				});
 				stompClient.subscribe("/lad/cmt/modifyCmt/" + ladderId, function(result) { // modify comment
 					var cmtjson = JSON.parse(result.body);
 					
-					if(cmtjson["userId"] === id) {
-						modifyComt(cmtjson["id"]);
-					}
-					$("#cmtArea" + cmtjson["id"]).text(cmtjson["comment"]);
+					setCommentComplete(cmtjson["flag"], cmtjson["commentId"]);
 				});
 				stompClient.subscribe("/lad/cmt/deleteCmt/" + ladderId, function(result) { // delete comment
 					var cmtjson = JSON.parse(result.body);
 					
-					$("tr[_comtIndex='" + cmtjson["id"] + "']").remove();
+					$("tr[_comtIndex='" + cmtjson["commentId"] + "']").remove();
 				});
 				stompClient.subscribe("/lad/userOrder/change/" + ladderId, function(result) {	// 참여자 위치 바꾸기 subscribe
 					var cmtjson = JSON.parse(result.body);
@@ -263,59 +258,10 @@
 						$(moveDragObj).css("z-index", "10").css("position", "relative").animate({"left": moveDragLeft * 150}, 400);
 						$(moveDropObj).css("z-index", "10").css("position", "relative").animate({"left": moveDropLeft * 150}, 400);
 					}
-					
-					
-					/* var lines = JSON.parse(result.body);
-				
-					var copyLadLi1 = $("#attendantList li:eq(" + changeLadId1 + ")").html();
-					var copyLadLi2 = $("#attendantList li:eq(" + changeLadId2 + ")").html();
-					
-					$("#attendantList li:eq(" + changeLadId1 + ")").html(copyLadLi2);
-					$("#attendantList li:eq(" + changeLadId2 + ")").html(copyLadLi1);
-					
-					$("#attendantList li:eq(" + changeLadId1 + ") > div").attr("id", "drag" + changeLadId1);
-					$("#attendantList li:eq(" + changeLadId2 + ") > div").attr("id", "drag" + changeLadId2); */
-				 	/* $("#attendantList").html("");
-					$("#itemList").html("");
-					for(var i = 0; i < lines.length; i++) {
-						html = "";
-						picsrc = "/images/OrganTree/porson_noimg.gif";
-						html += "<li class='attendant'>";
-						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
-						} else {
-							picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
-						}
-						html += "<div class='ladderDrag' id='drag" + i + "'><img src='" 
-									+ picsrc + "' width='90px' height='90px' />";
-						html += "<div>" + lines[i]["userName"] + "</div>";
-						 
-						$("#attendantList").append(html);
-						$("#itemList").append("<li class='item'>" + lines[i]["item"] + "</li>");
-					} 
-					add_user_change_ulsize(attendants["id"].length); 
-				
-					if("${vo.status}" == 0) {
-						drag();
-					} */
-					
 				});
-				stompClient.subscribe("/lad/start/" + ladderId, function(ladderInfo) {	
-					var cmtjson = JSON.parse(ladderInfo.body);
-					_ladder = cmtjson["ladder"];
-					_ladderLine = cmtjson["ladderline"];
-					
-					status = _ladder.status;
-					
-					if(status == 1) {
-						canvasSetting();
-						var html = '';
-						_ladderLine.forEach(function(line, index) {
-							html += '<li><div id="drag' + index + '" style="height: 140px; padding-top:  20px; cursor: pointer;">';
-							html += '<span><img src="' + line.pic + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" /></span>';
-							html += '<div style="line-height: 30px; height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>' + line.userName + '</span></div></div></li>';
-						});
-						$("#attendantList").html(html);
-						$("#blackBox, #startButton").remove();
+				stompClient.subscribe("/lad/start/" + ladderId, function(startFlag) {	
+					if(startFlag.body == "start") {
+						loadLadder();
 					}
 				});
 			});
@@ -399,7 +345,7 @@
 						"allData": allData
 					},
 					success: function() {
-						loadLadder();
+						/* loadLadder(); */
 					}
 				});
 			}
@@ -415,13 +361,22 @@
 					"searchInput": searchInput,
 					"mode": "pre",
 					"currPage": currPage
-				}/* ,
+				},
 				success: function(ladderInfo) {
 					_ladder = ladderInfo["vo"];
 					_ladderLine = ladderInfo["list"];
+					
 					canvasSetting();
-					$("#blackBox").remove();
-				} */
+					var html = '';
+					_ladderLine.forEach(function(line, index) {
+						html += '<li><div id="drag' + index + '" style="height: 140px; padding-top:  20px; cursor: pointer;">';
+						html += '<span><img src="' + line.pic + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" /></span>';
+						html += '<div style="line-height: 30px; height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>' + line.userName + '</span></div></div></li>';
+					});
+					$("#attendantList").html(html);
+					$(".directionBtn").html('<div id="immediatelyDirection" align="center">바로 보기</div><div id="autoDirection" align="center">자동 진행</div>');
+					$("#blackBox, #startButton").remove();
+				}
 			});
 		}
 		/** 댓글 */
@@ -432,13 +387,58 @@
 				dataType: "json",
 				data: {
 					"flag": flag,
-					"id": cmtId,
+					"commentId": cmtId,
 					"ladderId": ladderId,
 					"comment": comment
 				}
 			});
 		}
-		function showCommentList(addCommentView) {
+		function setCommentComplete(flag, cmtId) {
+			$.ajax({
+				type: "GET",
+				url: "/ezLadder/getLadderComment.do",
+				dataType: "json",
+				data: {
+					"ladderId": ladderId,
+					"commentId": cmtId
+				},
+				success: function(data) {
+					var cmt = data["myComment"];
+					if(flag == "add") { 
+						// add
+						var html = '<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="' + cmt["id"] + '">';
+						html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><img src="' + cmt["pic"] + '" style="padding-top: 10px; height: 38px; width:38px; cursor: pointer; " onclick="menuQst_DetailUserInfo(' + cmt["userId"] + ');"></td>';
+						html += '<td><div class="userName">' + cmt["userName"] + '</div>';
+						html += '<div id="div2Cmt' + cmt["id"] + '" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >';
+						html += '<p id="cmtArea' + cmt["id"] + '" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;">' + cmt["comment"] + '</p></div>';
+						html += '<div id="editCmtDiv' + cmt["id"] + '" style="display: none;"></div></td>';
+						html += '<td style="width: 145px; position:relative;">';
+						html += '<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;">' + cmt["writeDate"] + '</div></td></tr>';
+						
+						$("#commentArea table").prepend(html);
+						
+						if(id == cmt["userId"]) {
+							html = '<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" name="editComtButton" _comtIndex="editComt' + cmt["id"] + '" />';
+							html += '<div id="editComt' + cmt["id"] + '" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; width: 120px;" tabindex=0>';
+							html += '<div id="_eCmt' + cmt["id"] + '" _comtIndex="editComt' + cmt["id"] + '" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;"><spring:message code="ezLadder.t052" /></div>';
+							html += '<div id="_dCmt' + cmt["id"] + '" _comtIndex="' + cmt["id"] + '" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;"><spring:message code="ezLadder.t053" /></div></div>';
+							
+							$("[_comtindex='" + cmt["id"] + "'] td:last").append(html);
+							
+							var comtInputTop = $("#sendComment").offset().top;
+							$(document).scrollTop(comtInputTop); 
+						}
+					} else { 
+						// modify
+						if(id == cmt["userId"]) {
+							modifyComt(cmt["id"]);
+						}
+						$("#cmtArea" + cmt["id"]).text(cmt["comment"]);
+					}
+				}
+			});
+		}
+		/* function showNewComment(addCommentView) {
 			var cmt = addCommentView["contents"];
 			var html = "";
 			
@@ -452,15 +452,18 @@
 			html += '<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;">' + cmt["writeDate"] + '</div>';
 			html += '<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" name="editComtButton" _comtIndex="editComt' + cmt["id"] + '" />';
 			html += '<div id="editComt' + cmt["id"] + '" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; width: 120px;" tabindex=0>';
-			html += '<div id="_eCmt' + cmt["id"] + '" _comtIndex="editComt' + cmt["id"] + '" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;">댓글 수정</div>';
-			html += '<div id="_dCmt' + cmt["id"] + '" _comtIndex="' + cmt["id"] + '" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;">댓글 삭제</div></div></td></tr>';
+			html += '<div id="_eCmt' + cmt["id"] + '" _comtIndex="editComt' + cmt["id"] + '" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;"><spring:message code="ezLadder.t052" /></div>';
+			html += '<div id="_dCmt' + cmt["id"] + '" _comtIndex="' + cmt["id"] + '" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;"><spring:message code="ezLadder.t053" /></div></div></td></tr>';
 			
 			$("#commentArea table").prepend(html);
-			var comtInputTop = $("#sendComment").offset().top;
-			$(document).scrollTop(comtInputTop); 
+			
+			if(id == cmt["userId"]) {
+				var comtInputTop = $("#sendComment").offset().top;
+				$(document).scrollTop(comtInputTop); 
+			}
 			
 			addCommentView = [];
-		}
+		} */
 		/** 댓글 편집 패널 토글 */
 		var editComtFlag = -1;
 		function showEditPanel(editComtID) {
@@ -478,7 +481,7 @@
 				$("div[id^='editComt']").hide();
 				editComtFlag = -1;
 			}
-	    }
+		}
 		/** 댓글 입력 */
 		function addComt(comment) {
 			if(!!comment) {
@@ -518,7 +521,7 @@
 		}
 		/** 댓글 삭제 */
 		function deleteComt(comtIndex) {
-			var result = confirm("이 댓글을 삭제하시겠습니까?");
+			var result = confirm("<spring:message code='ezLadder.t051' />");
 			
 			if(result) {
 				setComment("delete", comtIndex, "");
@@ -631,28 +634,10 @@
 	</style>
 </head>
 	<body class="mainbody">
-		<%-- <div id="ladderInfo" style="margin-top: 50px; margin-left: 50px; margin-right: 50px;">
-			<h2>${vo.title }
-				<span style="float: right; font-weight:normal;color:black;">
-					종류 : ${vo.type }, 상태 : ${vo.status }, 공개 : ${vo.secretFlag } | 작성자 ${vo.writerName }, 부서 ${vo.deptName }, 
-					<div id="usePreladder" style="display: inline-block; cursor: pointer;">
-						<img src ='/images/ezLadder/reuse.png' width='30' height ='30'/>
-					</div>,
-					<c:choose>
-						<c:when test="${id eq vo.writerId }">
-							<a href="#" onclick="deleteLadder(${vo.ladderId})"><img src ='/images/ezLadder/trash.png' width='30' height ='30'/></a><br>
-						</c:when>
-						<c:otherwise>
-							<img src ='/images/ezLadder/trash.png' width='30' height ='30'/><br>
-						</c:otherwise>
-					</c:choose>
-				</span> 
-			</h2>
-		</div> --%>
 		<div class="directionBtn">
 			<c:if test="${vo.status eq 1 }">
-					<div id="immediatelyDirection" align="center">바로 보기</div>
-					<div id="autoDirection" align="center">자동 진행</div>
+					<div id="immediatelyDirection" align="center"><spring:message code='ezLadder.t106' /></div>
+					<div id="autoDirection" align="center"><spring:message code='ezLadder.t107' /></div>
 			</c:if>
 		</div>
 		<h1><spring:message code='ezLadder.t001' /></h1>
@@ -707,13 +692,13 @@
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px;text-align: center;">
-											<a href="#" onclick="start(${vo.ladderId})"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top: 25px;"/></a>
+											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top: 25px;"/></a>
 										</div>
 									</c:when>
 									<c:otherwise>
 										<div style="width: 500px; height: 150px; background: white; opacity: 0.7; text-align: center;">
-											<span style="font-size: large; color: maroon; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;">게임이 아직 시작되지 않았어요!</span>
-											<span style="display: inline-block;">리더가 게임을 시작하면 진행할 수 있습니다.</span>
+											<span style="font-size: large; color: maroon; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
+											<span style="display: inline-block;"><spring:message code="ezLadder.t049" /></span>
 										</div>
 									</c:otherwise>
 								</c:choose>
@@ -722,7 +707,7 @@
 								<div style="height: 140px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
-											<li attendantIndex="${status.index}">
+											<li _attendantIndex="${status.index}">
 												<div class="ladderDrag" id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer; left: 0px; border-radius: 5px;">
 													<div>
 														<span><img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #a9a9a9; border-radius: 40px;" /></span>
@@ -792,15 +777,15 @@
 		<c:if test="${mode != 'preview' }">
 			<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
 				<div id="sendComment" class="voteComment" style="width:100%;">
-	            	<div class="sendComment_layout">
-	            		<div class="comment_input_layout">
+					<div class="sendComment_layout">
+						<div class="comment_input_layout">
 							<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
 						</div>
 						<div class="commentBtn">
-							<button id="sendBttn" disabled="disabled" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;">등록</button>						
+							<button id="sendBttn" disabled="disabled" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;"><spring:message code="ezLadder.t054" /></button>						
 						</div>
-	            	</div>
-	            </div>
+					</div>
+				</div>
 				<table style="width: 100%;" id="commentListView">
 					<c:forEach var="_comt" items="${cmtlist}">
 						<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="<c:out value ="${_comt.id}" />">
@@ -819,8 +804,8 @@
 								<c:if test="${_comt.userId == id}">								
 									<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" name="editComtButton" _comtIndex="editComt<c:out value ="${_comt.id}"/>" />
 									<div id="editComt<c:out value ="${_comt.id}"/>" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; width: 120px;" tabindex=0>							
-										<div id="_eCmt<c:out value ="${_comt.id}" />" _comtIndex="editComt<c:out value ="${_comt.id}" />" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;">댓글 수정</div>
-										<div id="_dCmt<c:out value ="${_comt.id}" />"_comtIndex="<c:out value ="${_comt.id}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;">댓글 삭제</div>
+										<div id="_eCmt<c:out value ="${_comt.id}" />" _comtIndex="editComt<c:out value ="${_comt.id}" />" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;"><spring:message code="ezLadder.t052" /></div>
+										<div id="_dCmt<c:out value ="${_comt.id}" />"_comtIndex="<c:out value ="${_comt.id}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;"><spring:message code="ezLadder.t053" /></div>
 									</div>
 								</c:if>
 							</td>

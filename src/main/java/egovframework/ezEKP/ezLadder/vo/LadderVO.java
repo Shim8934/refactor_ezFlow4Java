@@ -50,11 +50,17 @@ public class LadderVO {
 	public void setTenant_id(int tenant_id) {
 		this.tenant_id = tenant_id;
 	}
+	public void setTenant_id(String tenant_id) {
+		this.tenant_id = Integer.parseInt(tenant_id);
+	}
 	public int getLadderId() {
 		return ladderId;
 	}
 	public void setLadderId(int ladderId) {
 		this.ladderId = ladderId;
+	}
+	public void setLadderId(String ladderId) {
+		this.ladderId = Integer.parseInt(ladderId);
 	}
 	public String getTitle() {
 		return title;
@@ -68,17 +74,26 @@ public class LadderVO {
 	public void setType(int type) {
 		this.type = type;
 	}
+	public void setType(String type) {
+		this.type = Integer.parseInt(type);
+	}
 	public int getStatus() {
 		return status;
 	}
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	public void setStatus(String status) {
+		this.status = Integer.parseInt(status);
+	}
 	public int getSecretFlag() {
 		return secretFlag;
 	}
 	public void setSecretFlag(int secretFlag) {
 		this.secretFlag = secretFlag;
+	}
+	public void setSecretFlag(String secretFlag) {
+		this.secretFlag = Integer.parseInt(secretFlag);
 	}
 	public String getWriterId() {
 		return writerId;
@@ -115,6 +130,9 @@ public class LadderVO {
 	}
 	public void setLineCnt(int lineCnt) {
 		this.lineCnt = lineCnt;
+	}
+	public void setLineCnt(String lineCnt) {
+		this.lineCnt = Integer.parseInt(lineCnt);
 	}
 	public String getLineArray() {
 		return lineArray;

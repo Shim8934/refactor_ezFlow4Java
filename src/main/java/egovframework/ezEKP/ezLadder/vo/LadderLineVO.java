@@ -1,9 +1,13 @@
 package egovframework.ezEKP.ezLadder.vo;
 
+import java.util.ArrayList;
+
 public class LadderLineVO {
 	
 	private int tenant_id;
 	private int ladderId;
+	private String tenant_id0;
+	private String ladderId0;
 	/** 참여자 아이디 */
 	private String userId;
 	/** 참여자 이름 */
@@ -14,6 +18,7 @@ public class LadderLineVO {
 	private String item;
 	/** 순서 */
 	private int ladderOrder;
+	private String ladderOrder0;
 	/** 아이템을 결과로 가지는 참여자 아이디 */
 	private String resultUserId;
 	/** 아이템을 결과로 가지는 참여자 이름 */
@@ -147,4 +152,36 @@ public class LadderLineVO {
 	public void setLadderOrders(int[] ladderOrders) {
 		this.ladderOrders = ladderOrders;
 	}
+	public void setUserIds(ArrayList<String> userIds) {
+		this.userIds = (String[]) userIds.toArray(new String[userIds.size()]);
+	}
+	public void setUserNames(ArrayList<String> userNames) {
+		this.userNames = (String[]) userNames.toArray(new String[userNames.size()]);
+	}
+	public void setUserName2s(ArrayList<String> userName2s) {
+		this.userName2s = (String[]) userName2s.toArray(new String[userName2s.size()]);
+	}
+	public void setItems(ArrayList<String> items) {
+		this.items = (String[]) items.toArray(new String[items.size()]);
+	}
+	// string으로...
+	public String getTenant_id0() {
+		return tenant_id0;
+	}
+	public void setTenant_id0(String tenant_id0) {
+		this.tenant_id0 = tenant_id0;
+	}
+	public String getLadderId0() {
+		return ladderId0;
+	}
+	public void setLadderId0(String ladderId0) {
+		this.ladderId0 = ladderId0;
+	}
+	public String getLadderOrder0() {
+		return ladderOrder0;
+	}
+	public void setLadderOrder0(String ladderOrder0) {
+		this.ladderOrder0 = ladderOrder0;
+	}
+	
 }

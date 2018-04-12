@@ -57,15 +57,25 @@
 				ladderSetInitView();
 				
 				
-				$("#makeLad").on("click", function() {
+				$("#makeLad").on("click", function(e) {
 					makeLadder();
+					return false;
 				});
 				$("#ladderPreList").on("click", function() {
 					preLadderList();
 				});
-				$("#addAttendant").on("click", function() {
-					_manage_attendant();
-				});
+				$("#addAttendant")
+					.on("click", function() {
+						_manage_attendant();
+					})
+					.on("mouseenter", function() {
+						$("#addAttendant").css("background", "#ddeeff");
+						$("#addAttendant img").toggle();
+					})
+					.on("mouseleave", function() {
+						$("#addAttendant").css("background", "white");
+						$("#addAttendant img").toggle();
+					});
 				$("#inputAttendant").on("keyup", function(e) {
 					var inputNames = $("#inputAttendant").val();
 					if(e.keyCode == "13" && inputNames !== "") {
@@ -116,14 +126,14 @@
 					html += "<div id='bombnum' style='display: inline-block;'>" + strLang103 + "<span style='margin: 0px 5px 0px 15px;'>" + bombnum + "</span>" + strLang104 + "</div></div>";
 					$("#itemList").empty();
 					for(var i = 0; i < len; i++) {
-						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' readonly='readonly' style='background: rgb(244, 245, 245)' /></li>");
-						$("input[name='items']:eq(" + i + ")").val("?");
+						$("#itemList").append("<li class='item'><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' /><input name='items' style='display: none;' _itemindex='" + i + "' ></li>");
+						$(".tempItem:eq(" + i + ")").val("?");
 					}
 				} else if(ladderType == "2") {
 					$("#itemList").empty();
 					for(var i = 0; i < len; i++) {
-						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' readonly='readonly' style='background: rgb(244, 245, 245)' /></li>");
-						$("input[name='items']:eq(" + i + ")").val("?");
+						$("#itemList").append("<li class='item'><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' /><input name='items' style='display: none;' _itemindex='" + i + "' ></li>");
+						$(".tempItem:eq(" + i + ")").val("?");
 					}
 				} else {
 					if(ladderType == "1") {
@@ -334,9 +344,10 @@
 							alluser[i] = { "data": { "name": names[i], "name2": names[i] }, "datatype": "anony-json" };
 						
 						} else if(adCount === 1) { // 검색결과 하나
-							var checkOverlap1 = attendants["id"].findIndex(function(id) {
+							var checkOverlap1 = attendants["id"].indexOf(getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]));
+							/* var checkOverlap1 = attendants["id"].findIndex(function(id) {
 								return id == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]);
-							});
+							}); */
 							var checkOverlap2 = function() {
 								var overlapretvalue = -1;
 								alluser.forEach(function(user, index) {
@@ -500,8 +511,8 @@
 						$(thisLi + " input[name='userIds']").val(attendants["id"][i]);
 						
 						if(ladderType == "0" || ladderType == "2") {
-							$("#itemList").append("<li class='item'><input type='text' class='input' name='items' readonly='readonly' style='background: rgb(244, 245, 245)' /></li>");
-							$("#itemList li:eq(" + i + ") input").val("?");
+							$("#itemList").append("<li class='item'><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' /><input style='display: none;' name='items' _itemindex='" + i + "' /></li>");
+							$(".tempItem:eq(" + i + ")").val("?");
 						} else {
 							$("#itemList").append("<li class='item'><input type='text' class='input' name='items' /></li>");
 							$("#itemList li:eq(" + i + ") input").val(items[i]);
@@ -555,11 +566,34 @@
 				$("input[name='type']").val(ladderType);
 				$("input[name='lineCnt']").val($("#amount").text());
 				
-				if(ladderType == "0") {
-					$("input[name='bombnum']").val(bombnum);
-				} else {
-					$("input[name='bombnum']").val(0);
-				}
+				items.forEach(function(item, index) {
+					if(ladderType == "0") {
+						items[index] = index < bombnum ? "꽝!" : "패스";
+					} else if(ladderType == "2") {
+						items[index] = index + 1;
+					}
+				});
+				
+				var temp;
+				var randomIdx;
+				items.forEach(function(item, index) {
+					randomIdx = Math.floor(Math.random() * (items.length - 1));
+					temp = item;
+					items[index] = items[randomIdx]; 
+					items[randomIdx] = temp;
+				});
+				
+				/* if(ladderType == "0") {
+					items.fill("꽝!", 0, bombnum);
+					items.fill("패스", bombnum)
+				} else if(ladderType == "2") {
+					items.forEach(function(item, index) {
+						items[index] = index + 1;
+					});
+				} */
+				items.forEach(function(item, index) {
+					$("[_itemindex='" + index + "']").val(item);
+				});
 				
 				setInputValue(true);
 				
@@ -628,22 +662,21 @@
 									<div id="ladderTypeOption" style='display: inline-block; margin-right: 30px; height: 50px;'></div>
 									<div class="ladderType" _num="0">
 										<img src="/images/ezLadder/icon_bomb.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_bombSelected.png" class="select icon"/>
+										<img src="/images/ezLadder/icon_bomb_c.png" class="select icon"/>
 									</div>
 									<div class="ladderType" _num="1">
 										<img src="/images/ezLadder/icon_money.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_moneySelected.png" class="select icon"/>
+										<img src="/images/ezLadder/icon_money_c.png" class="select icon"/>
 									</div>
 									<div class="ladderType" _num="2">
 										<img src="/images/ezLadder/icon_order.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_orderSelected.png" class="select icon"/>
+										<img src="/images/ezLadder/icon_order_c.png" class="select icon"/>
 									</div>
 									<div class="ladderType" _num="3">
 										<img src="/images/ezLadder/icon_handwork.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_handworkSelected.png" class="select icon"/>
+										<img src="/images/ezLadder/icon_handwork_c.png" class="select icon"/>
 									</div>
 								<input name="type" style="display: none;" />
-								<input name='bombnum' style="display: none;" />
 							</div>
 						</div>
 					</td>
@@ -661,8 +694,9 @@
 				</tr>
 				<tr>
 					<td style="position: relative; margin-top: 20px;">
-						<div id="addAttendant" class="icondiv">
-							<img src="/images/ezLadder/icon_addAttendant.png" style=" border: 2px solid #a9a9a9; border-radius: 30px;"/>
+						<div id="addAttendant" class="icondiv" style="width: 50px; height: 50px; overflow: hidden; border: 2px solid #0470e4; border-radius: 15px; cursor: pointer;">
+							<img src="/images/ezLadder/icon_addAttendant.png" style="padding-left: 2px; padding-top: 2px; display: block"/>
+							<img src="/images/ezLadder/icon_addAttendant_hover.png" style="padding-left: 2px; padding-top: 2px; display: none"/>
 						</div>
 						<div id="ladderLineBox" style="border: 1px solid #ddd;">
 							<div style="height: 140px;">
@@ -678,7 +712,7 @@
 				</tr>
 			</table>
 			<div class="wrap center">
-				<div class="ladderBtn" id="makeLad" style="float: right;"><spring:message code="ezLadder.t018"/></div>
+				<div class="ladderBtn" id="makeLad" style="float: right; cursor: pointer;"><spring:message code="ezLadder.t018"/></div>
 			</div>
 				<!-- <table>
 					

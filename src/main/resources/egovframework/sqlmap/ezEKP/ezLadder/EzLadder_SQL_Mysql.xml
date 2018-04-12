@@ -1041,6 +1041,8 @@
 			L.WRITERID = #userId#
 		AND
 			L.TITLE LIKE CONCAT('%', #searchInput#, '%')
+		AND 
+			L.DELETEFLAG = 0
 		ORDER BY 
 			ORIG_ID DESC
 		LIMIT 
@@ -1124,7 +1126,7 @@
 				WHERE 
 					TENANT_ID = #tenant_id# 
 				AND 
-					USERID = #userId#)
+					LADDERID = #ladderId#)
 				]]>
 			</isEqual>
 			<isNotEqual property="id" compareValue="0">
