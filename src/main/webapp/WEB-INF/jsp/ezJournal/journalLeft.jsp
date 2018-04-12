@@ -60,7 +60,7 @@
 		    	<c:choose>
 		    		<c:when test="${not empty typeList }">
 		    			<c:forEach items="${typeList }" var="type">
-						    <li listType='department' typeId='${type.journaltypeId }' onClick="goJournalList(this);" ><span style="width:100%;display:inline-block;"><img style="width:16px;height:16px;" class="icon" src="/images/ImgIcon/icon_partapproval.gif"/><spring:message code="${type.journaltypeId}"/></span></li>
+						    <li listType='department' typeId='${type.journaltypeId }' onClick="goJournalList(this);" ><span style="width:100%;display:inline-block;"><img style="width:16px;height:16px;" class="icon" src="/images/ImgIcon/icon_partapproval.gif"/>&nbsp;<spring:message code="${type.journaltypeId}"/></span></li>
 		    			</c:forEach>
 		    		</c:when>
 		    	</c:choose>
@@ -70,7 +70,7 @@
 		    	<c:choose>
 		    		<c:when test="${not empty typeList }">
 		    			<c:forEach items="${typeList }" var="type">
-						    <li listType='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);" ><span style="width:100%; display:inline-block;"><img style="width:16px;height:16px;" class="icon" src="/images/ImgIcon/icon_partapproval.gif"/><spring:message code="${type.journaltypeId}"/></span></li>
+						    <li listType='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);" ><span style="width:100%; display:inline-block;"><img style="width:16px;height:16px;" class="icon" src="/images/ImgIcon/icon_partapproval.gif"/>&nbsp;<spring:message code="${type.journaltypeId}"/></span></li>
 		    			</c:forEach>
 		    		</c:when>
 		    	</c:choose>

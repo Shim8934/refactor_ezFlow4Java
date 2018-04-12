@@ -1079,7 +1079,6 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("lang", lang);
 		
 		List<JournalReceiverVO> receiverList = ezJournalDAO.getReceiverList(map);
-		logger.debug("수신자리스트 확인용 : " + receiverList);
 		logger.debug("getReceiverList ended.");
 		return receiverList;
 	}
@@ -1096,7 +1095,6 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("lang", lang);
 		
 		List<JournalReceiverVO> viewerList = ezJournalDAO.getViewerList(map);
-		logger.debug("조회자리스트 확인용 : " + viewerList);
 		logger.debug("getJournalViewerList ended.");
 		return viewerList;
 	}
