@@ -240,7 +240,7 @@
 	            	$(this).siblings('label').text(select_name); 
 	            });
             </c:if>
-
+			
 		}
 	    
 		var isAutoSave = false;
