@@ -77,13 +77,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				
 				AttitudeUserConfigVO resultVO = ezAttitudeDAO.getAttitudeConfTime(map);
 				
-				String compareDate = commonUtil.getTodayUTCTime("HH:mm");
+				String compareDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(11);
+				String resultConfDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd") + " " + resultVO.getWorkStartTime() + ":00", offset, false).substring(11);
 				
 				LOGGER.debug("isValue : " + isValue + "////////" + resultVO.getWorkStartTime());
 				//시간을 비교해서 근태설정 시간보다 늦으면 지각 처리
-				SimpleDateFormat f = new SimpleDateFormat("HH:mm");
+				LOGGER.debug(compareDate + "," + resultConfDate + ":배현상");
+				SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
 				
-				Date userConfTime = f.parse(resultVO.getWorkStartTime());
+				Date userConfTime = f.parse(resultConfDate);
 				Date userInTime = f.parse(compareDate);
 				
 				if (userInTime.after(userConfTime)) { //지각인 경우
