@@ -441,13 +441,13 @@ public class EzWebFolderGWController_y {
 			
 			fileList = service.getFileList(folderId, folderType, userId, deptId, tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
-					searchPageCount, pStart, pEnd, offset);
+					searchPageCount, pStart, pEnd, offset, primary);
 			LOGGER.debug("fileListSize : " + fileList.size()+ "searchStartDate" +searchStartDate+"searchEndDate"+searchEndDate );
 			
 			// fileCnt : 파일 개수 , fldCnt : 폴더 개수 , totalCount : 파일, 폴더 둘다 합한 개수 ( 페이징 하기 위해 필요 ) 
 			Map<String, Integer> cnt = service.getFileToTalCount(folderId,folderType,userId,deptId,tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
-					searchPageCount, pStart, pEnd, offset);
+					searchPageCount, pStart, pEnd, offset , primary);
 			LOGGER.debug("fileListSize : " + fileList.size()+ "searchStartDate" +searchStartDate+"searchEndDate"+searchEndDate );
 			
 			int fileCnt = cnt.get("fileTotalCnt");

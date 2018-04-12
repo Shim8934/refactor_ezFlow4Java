@@ -16,6 +16,7 @@
 		var primary        = "<c:out value='${primary}'/>";
 		var fileList       = "<c:out value='${fileIdList}'/>";
 		var selectedFolder = null;
+		var selectedLevel  = null;
 		var currentFolder  = null;
 		var arrSubFolder   = [];
 		var mode           = "<c:out value='${mode}'/>";
@@ -27,6 +28,7 @@
 		function getData() {
 			arrSubFolder   = [];
 			selectedFolder = null;
+			selectedLevel  = null;
 			currentFolder  = null;
 			var type       = document.querySelector('input[name=treeType]:checked').value;
 			
@@ -155,6 +157,7 @@
 			}
 			
 			selectedFolder  = obj.getAttribute("name");
+			selectedLevel   = obj.getAttribute("level");
 			obj.style.color = "#e04343";
 		}
 		
@@ -233,6 +236,11 @@
 				return;
 			}
 			
+			if (selectedLevel == '0') {
+				alert("<spring:message code='ezWebFolder.t18'/>");
+				return;
+			}
+			
 			if (selectedFolder == currentFolder) {
 				alert("<spring:message code='ezWebFolder.t210'/>");
 				return;
@@ -261,6 +269,11 @@
 		function fileMove() {
 			if (selectedFolder == null) {
 				alert("<spring:message code='ezWebFolder.t181'/>");
+				return;
+			}
+			
+			if (selectedLevel == '0') {
+				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
 			
