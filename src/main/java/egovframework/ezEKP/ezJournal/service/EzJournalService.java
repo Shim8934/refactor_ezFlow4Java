@@ -56,7 +56,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalFormInfoVO> getFormListAdmin(String typeId, String deptId, String companyId, int tenantId, String offSet) throws Exception;
+	public List<JournalFormInfoVO> getFormListAdmin(String typeId, String deptId, String companyId, int tenantId, String offSet,String lang) throws Exception;
 	
 	/**
 	 * 양식 리스트 가져오기
@@ -84,7 +84,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalCompanyVO> getCompanyList (String userId, int tenantId, String companyId) throws Exception;
+	public List<JournalCompanyVO> getCompanyList (String userId, int tenantId, String companyId,String lang) throws Exception;
 	
 	/**
 	 * 열람 권한 리스트 가져오기
@@ -93,7 +93,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalAuthorVO> getAuthorList (String companyId, int tenantId) throws Exception;
+	public List<JournalAuthorVO> getAuthorList (String companyId, int tenantId,String lang) throws Exception;
 	
 	/**
 	 * 열람 권한자의 권한 부서 리스트 가져오기
@@ -102,7 +102,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalAuthorVO> getAuthDeptList (int tenantId, String userId) throws Exception;
+	public List<JournalAuthorVO> getAuthDeptList (int tenantId, String userId,String lang) throws Exception;
 	
 	/**
 	 * 조직도에 쓸 부서 리스트 가져오기
@@ -111,7 +111,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DeptViewVO> getDeptViewList (String userId, String companyId, int tenantId) throws Exception;
+	public List<DeptViewVO> getDeptViewList (String userId, String companyId, int tenantId,String lang) throws Exception;
 	
 	/**
 	 * 해당부서의 사원리스트
@@ -120,7 +120,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalAuthorVO> getDeptUserList (int tenantId, String key, String value) throws Exception;
+	public List<JournalAuthorVO> getDeptUserList (int tenantId, String key, String value,String lang) throws Exception;
 
 	/**
 	 * 양식 상세정보
@@ -130,7 +130,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, int tenantId) throws Exception;
+	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, int tenantId,String lang) throws Exception;
 
 	/**
 	 * 양식 수정
@@ -187,7 +187,7 @@ public interface EzJournalService {
 	 * @param tenantId
 	 * @throws Exception
 	 */
-	public List<JournalReceiverVO> getFavoriteUserList(String favoriteId, int tenantId) throws Exception;
+	public List<JournalReceiverVO> getFavoriteUserList(String favoriteId, int tenantId,String lang) throws Exception;
 
 	/**
 	 * 수신자 즐겨찾기 수정
@@ -263,7 +263,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public JournalVO getJournal(String journalId, String userId, String viewDate, int tenantId) throws Exception;
+	public JournalVO getJournal(String journalId, String userId, String viewDate, int tenantId,String lang) throws Exception;
 
 	/**
 	 * 일지 저장하기
@@ -335,7 +335,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalReceiverVO> getReceiverList(String journalId, String startCount, String listCnt, int tenantId) throws Exception;
+	public List<JournalReceiverVO> getReceiverList(String journalId, String startCount, String listCnt, int tenantId,String lang) throws Exception;
 
 	/**
 	 * 업무일지 댓글 리스트
@@ -345,7 +345,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId) throws Exception;
+	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId,String lang) throws Exception;
 	
 	/**
 	 * 업무일지 댓글 저장
@@ -380,7 +380,7 @@ public interface EzJournalService {
 	 * @return 
 	 * @throws Exception
 	 */
-	public List<JournalReceiverVO> getJournalViewerList(String journalId, String startCount, String listCnt, int tenantId) throws Exception;
+	public List<JournalReceiverVO> getJournalViewerList(String journalId, String startCount, String listCnt, int tenantId,String lang) throws Exception;
 	
 	/**
 	 * 일지 조회자 몇명?

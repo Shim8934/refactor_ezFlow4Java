@@ -241,7 +241,7 @@ public class EzJournalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String deptId = request.getParameter("deptId");
 			if (deptId == null || deptId.equals("")) {
 				deptId = "";
@@ -252,7 +252,7 @@ public class EzJournalGWController {
 			if (request.getParameter("companyId") != null && !request.getParameter("companyId").equals("")) {
 				// 관리자단의 양식리스트
 				companyId = request.getParameter("companyId");
-				formList = ezJournalService.getFormListAdmin(typeId, deptId, companyId, info.getTenantId(), info.getOffSet());
+				formList = ezJournalService.getFormListAdmin(typeId, deptId, companyId, info.getTenantId(), info.getOffSet(), lang);
 			} else {
 				// 사용자단의 양식리스트 (부서사용양식, 기본양식)
 				formList = ezJournalService.getFormList(typeId, deptId, info.getCompanyId(), info.getTenantId());
@@ -387,7 +387,7 @@ public class EzJournalGWController {
 			String companyId = info.getCompanyId();
 			
 			LOGGER.debug("companyId : " + companyId);
-			
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			// 마지막 사용양식 id 가져오기
 			if (request.getParameter("isGetForm") != null ) {
 				String selId = ezJournalService.getJournalLastFormId(typeId, formId, userId, companyId, info.getTenantId());
@@ -397,7 +397,7 @@ public class EzJournalGWController {
 				result.put("data", selId);
 			// 선택된 양식 가져오기	
 			} else {
-				JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalFormInfo(formId, companyId, info.getTenantId());
+				JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalFormInfo(formId, companyId, info.getTenantId(),lang);
 				
 				result.put("status", "ok");
 				result.put("code", 0);
@@ -426,11 +426,11 @@ public class EzJournalGWController {
 		
 		try {
 			String companyId = request.getParameter("companyId");
-			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			List<JournalAuthorVO> authList = ezJournalService.getAuthorList(companyId, info.getTenantId());
+			List<JournalAuthorVO> authList = ezJournalService.getAuthorList(companyId, info.getTenantId(),lang);
 		
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -459,8 +459,8 @@ public class EzJournalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
-			List<JournalAuthorVO> deptList = ezJournalService.getAuthDeptList(info.getTenantId(), userId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			List<JournalAuthorVO> deptList = ezJournalService.getAuthDeptList(info.getTenantId(), userId,lang);
 	
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -546,13 +546,14 @@ public class EzJournalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			Map<String, Object> param = new HashMap<String, Object>();
 			
 			for (String key : request.getParameterMap().keySet()) {
 				param.put(key, request.getParameter(key));
 			}
 			param.put("tenantId", info.getTenantId());
+			param.put("lang", lang);
 			
 			List<JournalVO> journalList = ezJournalService.getJournalList(param);
 			result.put("data", journalList);
@@ -693,8 +694,8 @@ public class EzJournalGWController {
 			if (request.getParameter("viewDate") != null) {
 				viewDate = request.getParameter("viewDate");
 			}
-			
-			JournalVO journal = ezJournalService.getJournal(journalId, userId, viewDate, info.getTenantId());
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			JournalVO journal = ezJournalService.getJournal(journalId, userId, viewDate, info.getTenantId(),lang);
 			
 			if (journal.getFileList().size() > 0) {
 				List<JournalFileVO> fileList = journal.getFileList();
@@ -1257,8 +1258,8 @@ public class EzJournalGWController {
 			String listCnt = request.getParameter("listCnt");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
-			
-			List<JournalReceiverVO> receiverList = ezJournalService.getReceiverList(journalId, startCount,listCnt,info.getTenantId());
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			List<JournalReceiverVO> receiverList = ezJournalService.getReceiverList(journalId, startCount,listCnt,info.getTenantId(),lang);
 		
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1320,7 +1321,6 @@ public class EzJournalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			
 			List<ReceiverFavoriteVO> favoriteList = ezJournalService.getFavoriteList(userId, info.getTenantId(), info.getOffSet());
 			
 			result.put("status", "ok");
@@ -1446,8 +1446,8 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			LOGGER.debug("servername: " + serverName);
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
-			List<JournalReceiverVO> userList = ezJournalService.getFavoriteUserList(favoriteId, info.getTenantId());
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			List<JournalReceiverVO> userList = ezJournalService.getFavoriteUserList(favoriteId, info.getTenantId(),lang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1479,8 +1479,8 @@ public class EzJournalGWController {
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
-			
-			List<JournalReplyVO> replyList = ezJournalService.getJournalReplyList(journalId, userId, tenantId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			List<JournalReplyVO> replyList = ezJournalService.getJournalReplyList(journalId, userId, tenantId,lang);
 			
 			result.put("data", replyList);
 			result.put("status", "ok");
@@ -1708,8 +1708,8 @@ public class EzJournalGWController {
 			String listCnt = request.getParameter("listCnt");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
-			List<JournalReceiverVO> viewerList= ezJournalService.getJournalViewerList(journalId,startCount,listCnt, info.getTenantId());
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			List<JournalReceiverVO> viewerList= ezJournalService.getJournalViewerList(journalId,startCount,listCnt, info.getTenantId(),lang);
 			LOGGER.debug("viewerList.size***********" + viewerList.size());
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1773,8 +1773,8 @@ public class EzJournalGWController {
 			if (companyId == null || companyId.equals("")) {
 				companyId = info.getCompanyId();
 			}
-			
-			List<JournalCompanyVO> compList = ezJournalService.getCompanyList(userId, info.getTenantId(), companyId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			List<JournalCompanyVO> compList = ezJournalService.getCompanyList(userId, info.getTenantId(), companyId,lang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1810,7 +1810,8 @@ public class EzJournalGWController {
 			if (companyId == null || companyId.equals("")) {
 				companyId = info.getCompanyId();
 			}
-			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, companyId, info.getTenantId());
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, companyId, info.getTenantId(),lang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1840,8 +1841,9 @@ public class EzJournalGWController {
 			String value = request.getParameter("value");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			List<JournalAuthorVO> userList = ezJournalService.getDeptUserList(info.getTenantId(), key, value);
+			List<JournalAuthorVO> userList = ezJournalService.getDeptUserList(info.getTenantId(), key, value,lang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -113,7 +113,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<JournalFormInfoVO> getFormListAdmin(String typeId, String deptId, String companyId, int tenantId, String offset) throws Exception {
+	public List<JournalFormInfoVO> getFormListAdmin(String typeId, String deptId, String companyId, int tenantId, String offset, String lang) throws Exception {
 		logger.debug("getFormListAdmin started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -122,6 +122,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("lang", lang);
 		
 		List<JournalFormInfoVO> formList = ezJournalDAO.getFormListAdmin(map);
 
@@ -200,13 +201,14 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<JournalCompanyVO> getCompanyList(String userId, int tenantId, String companyId) throws Exception {
+	public List<JournalCompanyVO> getCompanyList(String userId, int tenantId, String companyId,String lang) throws Exception {
 		logger.debug("getCompanyList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
 		param.put("companyId", companyId);
+		param.put("lang", lang);
 		List<JournalCompanyVO> compList = ezJournalDAO.getCompanyList(param);
 		
 		logger.debug("getCompanyList ended");
@@ -214,12 +216,13 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<JournalAuthorVO> getAuthorList(String companyId, int tenantId) throws Exception {
+	public List<JournalAuthorVO> getAuthorList(String companyId, int tenantId,String lang) throws Exception {
 		logger.debug("getAuthorList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("companyId", companyId);
+		param.put("lang", lang);
 		List<JournalAuthorVO> authList = ezJournalDAO.getAuthorList(param);
 		
 		logger.debug("getAuthorList ended");
@@ -227,13 +230,14 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<DeptViewVO> getDeptViewList(String userId,String companyId, int tenantId) throws Exception {
+	public List<DeptViewVO> getDeptViewList(String userId,String companyId, int tenantId,String lang) throws Exception {
 		logger.debug("getDeptViewList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
 		param.put("companyId", companyId);
+		param.put("lang", lang);
 		List<DeptViewVO> deptList = ezJournalDAO.getDeptViewVO(param);
 		
 		logger.debug("getDeptViewList ended");
@@ -241,12 +245,13 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<JournalAuthorVO> getAuthDeptList(int tenantId, String userId) throws Exception {
+	public List<JournalAuthorVO> getAuthDeptList(int tenantId, String userId, String lang) throws Exception {
 		logger.debug("getAuthDeptList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
+		param.put("lang", lang);
 		List<JournalAuthorVO> deptList = ezJournalDAO.getAuthDeptList(param);
 		
 		logger.debug("getAuthDeptList ended");
@@ -254,13 +259,14 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 	
 	@Override
-	public List<JournalAuthorVO> getDeptUserList(int tenantId, String key ,String value) throws Exception{
+	public List<JournalAuthorVO> getDeptUserList(int tenantId, String key ,String value, String lang) throws Exception{
 		logger.debug("getDeptUserList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("key", key);
 		param.put("value", value);
+		param.put("lang", lang);
 		List<JournalAuthorVO> userList = ezJournalDAO.getDeptUserList(param);
 		
 		logger.debug("getDeptUserList ended");
@@ -268,13 +274,14 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, int tenantId) throws Exception {
+	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, int tenantId, String lang) throws Exception {
 		logger.debug("getJournalFormInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("formId", formId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("lang", lang);
 		
 		JournalFormInfoVO journalFormInfoVO = ezJournalDAO.getJournalFormInfo(map);
 		logger.debug("formStatus : " + journalFormInfoVO.getFormStatus());
@@ -452,12 +459,13 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<JournalReceiverVO> getFavoriteUserList(String favoriteId, int tenantId) throws Exception { 
+	public List<JournalReceiverVO> getFavoriteUserList(String favoriteId, int tenantId, String lang) throws Exception { 
 		logger.debug("getFavoriteUserList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("favoriteId", favoriteId);
 		map.put("tenantId", tenantId);
+		map.put("lang", lang);
 		
 		List<JournalReceiverVO> userList = ezJournalDAO.getFavoriteUserList(map);
 		logger.debug("userList : " + userList);
@@ -602,7 +610,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public JournalVO getJournal(String journalId,String userId, String viewDate, int tenantId) throws Exception {
+	public JournalVO getJournal(String journalId,String userId, String viewDate, int tenantId, String lang) throws Exception {
 		logger.debug("getJournal started");
 		
 		logger.debug("journalId : "+journalId);
@@ -614,6 +622,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
 		param.put("viewDate", viewDate);
+		param.put("lang", lang);
 		
 		if (!viewDate.equals("")) {
 			ezJournalDAO.insertViewInfo(param);
@@ -1008,13 +1017,14 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId) throws Exception {
+	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId, String lang) throws Exception {
 		logger.debug("getJournalReplyList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("journalId", journalId);
+		map.put("lang", lang);
 		
 		List<JournalReplyVO> replyList = ezJournalDAO.selectJournalReplyList(map);
 		
@@ -1055,7 +1065,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 	
 	@Override
-	public List<JournalReceiverVO> getReceiverList(String journalId, String startCount, String listCnt, int tenantId) {
+	public List<JournalReceiverVO> getReceiverList(String journalId, String startCount, String listCnt, int tenantId, String lang) {
 		logger.debug("getReceiverList started.");
 	
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1065,6 +1075,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 			map.put("startCount", Integer.parseInt(startCount));
 			map.put("listCnt", Integer.parseInt(listCnt));
 		}
+		map.put("lang", lang);
 		
 		List<JournalReceiverVO> receiverList = ezJournalDAO.getReceiverList(map);
 		logger.debug("수신자리스트 확인용 : " + receiverList);
@@ -1073,7 +1084,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<JournalReceiverVO> getJournalViewerList(String journalId,String startCount, String listCnt, int tenantId) throws Exception {
+	public List<JournalReceiverVO> getJournalViewerList(String journalId,String startCount, String listCnt, int tenantId, String lang) throws Exception {
 		logger.debug("getJournalViewerList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1081,6 +1092,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("tenantId", tenantId);
 		map.put("startCount", Integer.parseInt(startCount));
 		map.put("listCnt", Integer.parseInt(listCnt));
+		map.put("lang", lang);
 		
 		List<JournalReceiverVO> viewerList = ezJournalDAO.getViewerList(map);
 		logger.debug("조회자리스트 확인용 : " + viewerList);
