@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/js/jsTree/dist/themes/default/style.css" />
     <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jsTree/dist/jstree.js"></script>
-<!--     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script> -->
+    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     
     <script>
         var lang = "${userinfo.lang}";
@@ -127,7 +127,6 @@
 			   console.log("The selected nodes are:" + folderId);
 			});
 	    }
-        
         function add_onclick() {
             if (folderId == "") {
                 alert("<spring:message code='ezWebFolder.t257'/>");

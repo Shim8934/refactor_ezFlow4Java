@@ -446,27 +446,6 @@
 				}
 			}
 		}
-		
-		function getCheckAll(obj) {
-			var listInputs = document.getElementsByClassName("checkBnk");
-			
-			checkedArr = [];
-			if (obj.checked == true) {
-				for (var i = 0; i < listInputs.length; i++) {
-					listInputs[i].checked = true;
-					var trElmt            = listInputs[i].parentElement.parentElement;
-					checkedArr.push(listInputs[i].value);
-					trElmt.setAttribute("style", "background-color: #e9f1ff;");
-				}
-			}
-			else {
-				for (var i = 0; i < listInputs.length; i++) {
-					var trElmt            = listInputs[i].parentElement.parentElement;
-					listInputs[i].checked = false;
-					trElmt.setAttribute("style", "");
-				}
-			}
-		}
 	   
    	   function doLayerPopup(obj) {
 	        btn_PostDate_Clear();
@@ -634,7 +613,7 @@
 			
 			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList);
        }
-       
+       /*
        function getChecked(obj) {
     	   var id = obj.getAttribute("value");
     	   if (obj.checked == true) {
@@ -648,7 +627,7 @@
     		   }
     	   }
        }
-       
+       */
        function getCheckAll(obj) {
     	   var listInputs = document.getElementsByClassName("checkBnk");
     	   
