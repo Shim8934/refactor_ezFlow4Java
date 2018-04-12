@@ -40,7 +40,7 @@
 		    var filelist;
 		    var isfileup = false;
 		    var isbigyn = "N";
-			var alertCnt = 0;
+			var alertCnt = 1;
 		    
 		    function onDrop(evt) {
 		        if (evt != undefined) {
@@ -117,10 +117,8 @@
 		        
 		        if (bigFileCheck && alertCnt < 2) {
 		            alert(strLangKMS01+window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
-		            
 		            alertCnt++;
 		        }
-		        
 		        
 		        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize && isbigyn == "N") {
 		           
