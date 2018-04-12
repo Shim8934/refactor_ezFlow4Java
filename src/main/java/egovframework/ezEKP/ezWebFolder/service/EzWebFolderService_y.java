@@ -11,12 +11,12 @@ public interface EzWebFolderService_y {
 	// 파일 list
 	List<FileVO> getFileList(String folderId,String folderType,String userId,String deptId,int tenantId, String companyId, String searchExt,
 			String searchFileName, String searchStartDate, String searchEndDate,String searchCreateName,
-			String searchFileType, String searchPageCount, int pStart , int pEnd, String offset ) throws Exception;
+			String searchFileType, String searchPageCount, int pStart , int pEnd, String offset, String primary ) throws Exception;
 
 	Map<String, Integer> getFileToTalCount(String folderId,String folderType,String userId,String deptId, int tenantId, String parameter,
 			String searchExt, String searchFileName, String searchStartDate,
 			String searchEndDate, String searchCreateName,
-			String searchFileType, String searchPageCount, int pStart, int pEnd , String offset) throws Exception;
+			String searchFileType, String searchPageCount, int pStart, int pEnd , String offset, String primary) throws Exception;
 
 	// 폴더 전체 리스트 
 	List<Map<String, Object>> getFolderList( String admin , String userId,String deptId, String comId, String folderId,

@@ -269,12 +269,12 @@
 					tdElmt4.textContent = result[i]["fileName"];
 					tdElmt5.textContent = getFileSize(result[i]["fileSize"]);
 					
-					if (primary == "1") {
+// 					if (primary == "1") {
 						tdElmt6.textContent = result[i]["createName1"];
-					}
-					else {
-						tdElmt6.textContent = result[i]["createName2"];
-					}
+// 					}
+// 					else {
+// 						tdElmt6.textContent = result[i]["createName2"];
+// 					}
 					
 					tdElmt7.textContent = result[i]["createDate"].substring(0, 10);
 					tdElmt8.textContent = result[i]["updateDate"].substring(0, 10);
@@ -613,21 +613,6 @@
 			
 			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList);
        }
-       /*
-       function getChecked(obj) {
-    	   var id = obj.getAttribute("value");
-    	   if (obj.checked == true) {
-    		   checkedArr.push(id);
-    	   }
-    	   else {
-    		   var pos = checkedArr.indexOf(id);
-	    		
-    		   if (pos != -1) {
-    			   checkedArr.splice(pos, 1);
-    		   }
-    	   }
-       }
-       */
        function getCheckAll(obj) {
     	   var listInputs = document.getElementsByClassName("checkBnk");
     	   

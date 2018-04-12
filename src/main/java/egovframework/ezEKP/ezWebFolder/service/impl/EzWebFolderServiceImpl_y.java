@@ -43,7 +43,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	// fileList출력
 	public List<FileVO> getFileList(String folderId,String folderType,String userId,String deptId, int tenantId,
 			String comId, String searchExt, String searchFileName, String searchStartDate, String searchEndDate,
-			String searchCreateName, String searchFileType, String searchPageCount, int pStart , int pEnd , String offset) throws Exception {
+			String searchCreateName, String searchFileType, String searchPageCount, int pStart , int pEnd , String offset
+			, String primary) throws Exception {
 		
 		String parentId = "";
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -69,6 +70,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("pStart", pStart);
 		map.put("pEnd", pEnd);
 		map.put("offset", offset);
+		map.put("primary", primary);
 		List<FileVO> filevo  = new ArrayList<FileVO>();
 		if (searchExt != "" || searchStartDate != "" || searchEndDate != "" || searchCreateName != "" || searchFileName!="" ) {
 			flag = "1";
@@ -87,7 +89,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			String companyId, String searchExt, String searchFileName,
 			String searchStartDate, String searchEndDate,
 			String searchCreateName, String searchFileType,
-			String searchPageCount, int pStart , int pEnd , String offset) throws Exception {
+			String searchPageCount, int pStart , int pEnd , String offset , String primary) {
 		
 		String parentId = "";
 		
@@ -115,17 +117,28 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("pEnd", pEnd);
 		map.put("offset", offset);
 		int fileTotalCnt = 0;
+		int fldTotalCnt = 0;
 		List<FileVO> filevo  = new ArrayList<FileVO>();
 		if (searchExt != "" || searchStartDate != "" || searchEndDate != "" || searchCreateName != "" || searchFileName!="") {
 			flag = "1";
 		}
-		map.put("flag", flag);
-		if (flag.equals("1")) {
-			fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount(map);
-		}else {
-			fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
+		try {
+			map.put("flag", flag);
+			if (flag.equals("1")) {
+				fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount(map);
+			}else {
+				fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
+			}
+			fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount(map);
+			
+		} catch (Exception e) {
+			if (fileTotalCnt < 0) {
+				fileTotalCnt = 0;
+			}
+			if (fldTotalCnt < 0) {
+				fldTotalCnt = 0;
+			}
 		}
-		int fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount(map);
 		
 		Map<String, Integer> cnt = new HashMap<String, Integer>();
 		int totalCount = 0;
