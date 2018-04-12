@@ -68,7 +68,7 @@ function getData(deptId, companyId) {
 		url: "/ezWebFolder/getDeptTree.do",
 		data: {
 			"deptId"    : deptId,
-			"companyId" : pCompanyID
+			"companyId" : companyId
 		},
 		dataType: "JSON",
 		async: true,

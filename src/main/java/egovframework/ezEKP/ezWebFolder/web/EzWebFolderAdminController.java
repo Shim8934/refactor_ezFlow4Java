@@ -867,30 +867,11 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	public String selectTarget(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("select target is running!");
 		
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
-		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-id/" + user.getId();
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String companyId   = request.getParameter("company");
 		
-		HttpHeaders headers  = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang());
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		String status                 = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			String companyId = (String) resultBody.get("data");
-			model.addAttribute("pCompanyID", companyId);
-			model.addAttribute("primary", user.getLang());
-		}
+		model.addAttribute("pCompanyID", companyId);
+		model.addAttribute("primary", user.getLang());
 		
 		logger.debug("select target finishes!");
 		return "admin/ezWebFolder/targetSelect";
