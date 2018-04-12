@@ -1,17 +1,24 @@
 package egovframework.ezEKP.ezWebFolder.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 
-import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 
 public interface EzWebFolderService_m {
 
-	List<FolderFileVO> getShares (String companyId, String deptId, String userId, String startDate, String endDate, String fileExt, String fileName, String createName, String pageSize, String pageNum, String fileType, int tenantId, String type) throws Exception;
+	public List<ShareVO> getSharingList(String userId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception;
+	
+	public List<ShareVO> getSharedList(String userId, String  deptId, String compId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception;
+	
+	public Map<String, Integer> getSharingCount(String userId, String primary, String offset, int pageSize, int tenantId) throws Exception;
+	
+	public Map<String, Integer> getSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception;
 	
 	public int getShareSeq(int tenantId) throws Exception;
 	

@@ -1,11 +1,15 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -418,6 +422,8 @@ public class EzWebFolderGWController_y {
 			String deptId = common.getDeptId();
 			int tenantId = common.getTenantId();
 			String offset = common.getOffSet();
+			String primary = common.getPrimary();
+			String comId = common.getCompanyId();
 			
 			// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
 			int usrListCnt = service.getUsrListCount(tenantId, userId);
@@ -433,13 +439,13 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("folderId : " + folderId + " folderType : " + folderType + " deptId : "+ deptId + "offset" + offset );
 			LOGGER.debug("pStart : " + pStart + " pEnd : " + pEnd);
 			
-			fileList = service.getFileList(folderId, folderType, userId, deptId, tenantId , common.getCompanyId(),
+			fileList = service.getFileList(folderId, folderType, userId, deptId, tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset);
 			LOGGER.debug("fileListSize : " + fileList.size()+ "searchStartDate" +searchStartDate+"searchEndDate"+searchEndDate );
 			
 			// fileCnt : 파일 개수 , fldCnt : 폴더 개수 , totalCount : 파일, 폴더 둘다 합한 개수 ( 페이징 하기 위해 필요 ) 
-			Map<String, Integer> cnt = service.getFileToTalCount(folderId,folderType,userId,deptId,tenantId , common.getCompanyId(),
+			Map<String, Integer> cnt = service.getFileToTalCount(folderId,folderType,userId,deptId,tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset);
 			LOGGER.debug("fileListSize : " + fileList.size()+ "searchStartDate" +searchStartDate+"searchEndDate"+searchEndDate );
@@ -458,31 +464,54 @@ public class EzWebFolderGWController_y {
 			String folderPath     = folder.getFolderPath();
 			String folderPath2     = folder.getFolderPath();
 			folderPath            = folderPath.substring(1, folderPath.length() - 1);
-			String originalPath   = getFolderPath(folderPath.split("\\|"), offset, tenantId) + folder.getFolderName1() + "/";
-			String []rootPath     = folderPath.split("\\|");
-			Map<String, String> filePathMap = new LinkedHashMap<String, String>();
-			for (FileVO file : fileList) {
-				String file_path    = originalPath;
-				String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
-				String[] fldPathArr = fldPath.split("\\|");
-				for (int i = rootPath.length; i < fldPathArr.length ; i++) {
-					if (filePathMap.containsKey(fldPathArr[i])) {
-						file_path += filePathMap.get(fldPathArr[i]) + "/";
-					}
-					else {
-						FolderVO _folder = ezWebFolderService.getFolderByFolderId(fldPathArr[i], offset, tenantId);
-						file_path       += _folder.getFolderName1() + "/";
-						filePathMap.put(fldPathArr[i], _folder.getFolderName1());
-					}
-				}
-				if ( !file.getTypeId().equals("folder") ){
-					file.setFilePosition(file_path + file.getFileName());
-				}else {
-					file_path = file_path.substring(1, file_path.length() - 1);
-					file.setFilePosition(file_path );
-				}
+			String originalPath   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
+			
+			LOGGER.debug("OriginalPath: " + originalPath);
 					
+			Map<String, String> filePathMap = new LinkedHashMap<String, String>();
+
+			if (fileList.size() > 0) {
+				String [] rootPath  = folderPath.split("\\|");
+				Set<String> testbnk = new HashSet<String>();
+				
+				for (FileVO file : fileList) {
+					String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
+					String[] fldPathArr = fldPath.split("\\|");
+					testbnk.addAll(Arrays.asList(fldPathArr));
+				}
+				
+				List<String> listName = new ArrayList<String>(testbnk);
+				filePathMap           = ezWebFolderService.getAllFolderNameMap(listName, primary, tenantId);
+				
+				for (FileVO file : fileList) {
+//					LOGGER.debug("--------------------------------");
+//					LOGGER.debug("File Id  : " + file.getFileId());
+//					LOGGER.debug("File Name: " + file.getFileName());
+					
+					if (file.getFilePosition() == null || file.getFilePosition().equals("")) {
+						String file_path    = originalPath;
+						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
+						String[] fldPathArr = fldPath.split("\\|");
+						LOGGER.debug("FilePath: " + fldPath.toString());
+						
+						for (int i = rootPath.length; i < fldPathArr.length; i++) {
+							file_path += filePathMap.get(fldPathArr[i]) + "/";
+						}
+						if ( !file.getTypeId().equals("folder") ){
+							file.setFilePosition(file_path + file.getFileName());
+						}else {
+							file_path = file_path.substring(1, file_path.length() - 1);
+							file.setFilePosition(file_path );
+						}
+//							file.setFilePosition(file_path + file.getFileName());
+//						LOGGER.debug("Final: " + file_path);
+					}
+//					LOGGER.debug("--------------------------------");
+				}
 			}
+			FolderVO fldDetail = service.getFolderDetail(folderId, userId, tenantId, comId);
+			LOGGER.debug("-------folderUpp" + fldDetail.getFolderUpper());
+			data.put("folderUpp", fldDetail.getFolderUpper());
 			data.put("folderPath", folderPath2);
 			data.put("originalPath", originalPath);
 			data.put("fileList", fileList);
@@ -507,16 +536,4 @@ public class EzWebFolderGWController_y {
 		
 		return jsonObj;
 	}
-	
-	private String getFolderPath(String[] path, String offset, int tenantId) throws Exception {
-		String result = "/";
-		
-		for (int i = 0; i < path.length - 1; i++) {
-			FolderVO parentFolder = ezWebFolderService.getFolderByFolderId(path[i], offset, tenantId);
-			result               += parentFolder.getFolderName1() + "/";
-		}
-		
-		return result;
-	}
-	
 }

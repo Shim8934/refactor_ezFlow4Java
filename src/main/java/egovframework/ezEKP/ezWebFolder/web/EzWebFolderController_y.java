@@ -227,10 +227,13 @@ public class EzWebFolderController_y {
 	
 
 	@RequestMapping( value ="/ezWebFolder/folderManage.do")
-	public String folderControll (@CookieValue("loginCookie") String loginCookie, HttpServletRequest requtest,
+	public String folderControll (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp , Model model ) throws Exception {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String folderType = request.getParameter("folderType");
 		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("folderType", folderType);
+		LOGGER.debug("userId : " + userInfo.getId() + "folderType : " + folderType);
 		return "ezWebFolder/folderManage";
 		
 	}

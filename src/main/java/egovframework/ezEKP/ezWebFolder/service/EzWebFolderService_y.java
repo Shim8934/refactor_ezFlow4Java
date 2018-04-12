@@ -36,7 +36,7 @@ public interface EzWebFolderService_y {
 	List<Map<String, Object>> getDeptFolder (int tenantId, String userId ,String deptId , String comId, String folderType) throws Exception;
 	
 	// 겸직자인지 판단하는 메서드 
-	List<Map<String, Object>> getAddJobList (int tenantId, String userId ,String deptId , String comId) throws Exception;
+	List<String> getAddJobList(int tenantId, String userId) throws Exception;
 	
 	// 부서장인지 판단하는 메서드 
 	List<Map<String, Object>> getDeptHeader (int tenantId, String userId ,String deptId , String comId) throws Exception;

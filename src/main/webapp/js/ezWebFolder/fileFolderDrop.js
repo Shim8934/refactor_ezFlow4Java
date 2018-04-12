@@ -116,11 +116,13 @@ function fileupload() {
 				alert(reason);
 			}
 			else {
-				if (folderType == null) {
-					renderResult(listFile);
+				if (typeof(appType) == "undefined" || !appType) {
+					//관리자
+					renderResult2(listFile);
 				}
 				else {
-					renderResult2(listFile);
+					//사용자
+					renderResult(listFile);
 				}
 			}
 		},
@@ -148,6 +150,7 @@ function fileupload() {
 	
 }
 
+//사용자
 function renderResult(result) {
 	if (!result) {
 		alert(strErr);
@@ -177,6 +180,8 @@ function renderResult(result) {
 			var cell6  = row.insertCell(5);
 			var cell7  = row.insertCell(6);
 			var cell8  = row.insertCell(7);
+			var cell9  = row.insertCell(8);
+			var cell10 = row.insertCell(9);
 			
 			row.setAttribute("_fileId", jsObj["fileId"]);
 			row.setAttribute("_filePath", jsObj["filePath"]);
@@ -190,7 +195,7 @@ function renderResult(result) {
 			inputElmt.onclick = function(e){getChecked(this, e);};
 			cell1.appendChild(inputElmt);
 			
-			var faImgElmt = document.createElement("IMG");
+			var faImgElmt = document.createElement("img");
 			faImgElmt.setAttribute("class", "webFolderImg");
 			
 			if (jsObj["favouriteStatus"] == "0") {
@@ -217,12 +222,14 @@ function renderResult(result) {
 			}
 			
 			cell7.textContent = jsObj["createDate"].substring(0, 10);
+			cell8.textContent = jsObj["updateDate"].substring(0, 10);
+			cell9.textContent = jsObj["filePosition"];
 			
 			if (jsObj["fileShareStatus"] == "0") {
-				cell8.textContent = strShared2;
+				cell10.textContent = "";
 			}
 			else {
-				cell8.textContent = strShared1;
+				cell10.textContent = strShared1;
 			}
 		}
 	}
@@ -231,6 +238,7 @@ function renderResult(result) {
 	}
 }
 
+//관리자
 function renderResult2(result) {
 	if (!result) {
 		alert(strErr);

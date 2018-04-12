@@ -11,29 +11,23 @@
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
-<!-- 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script> -->
-<!-- 	<link rel="stylesheet" href="/css/Tab.css" type="text/css"> -->
 	<!-- date Picker -->
-	
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 	<script type="text/javascript" src="/js/ezWebFolder/bnk.js"                         ></script>
-	
-	<!-- time picker-->
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
     <script type="text/javascript">
     	var xhr  		= new XMLHttpRequest();
-    	var file 		= new Array();
-		var currFolderId = ""; //Just for test
+    	var file 		 = new Array();
 		var primary      = "<c:out value='${primary}'/>";
 		var strShared1	= "<spring:message code = 'ezWebFolder.t105'/>";
 		var strShared2	= "<spring:message code = 'ezWebFolder.t106'/>";
 		var strErr		= "<spring:message code = 'ezWebFolder.t107'/>";
 		var checkedArr	= [];
-		var userId = "${userInfo.userId}";
+		var appType     = "user";
 		var userName = "${userInfo.userName}";
 		var currentPage = "1";
 		var totalPages = 0 ;
@@ -60,6 +54,7 @@
 		var searchCreateName = "";
 		var searchStartDate = "";
 		var searchEndDate = "";
+		var folderUpp = "";
 		
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
@@ -75,6 +70,7 @@
 		
 		// fileList 화면 
 		window.onload = function () {
+			$('#upload').css('display','none');
 			$('#idSelect').ddslick({
 				onSelected: function(selectedElmt){
 					//callback function: do something with selectedData;
@@ -134,6 +130,11 @@
 					filelist = result.fileList;
 					folderPath = result.folderPath;
 					originalPath = result.originalPath;
+					folderUpp = result.folderUpp;
+					if (folderUpp != 'root') {
+						$('#upload').css('display','inline');
+					}
+					
 // 					$("#originalPath").text(originalPath); 
 					$('#tblFileList tr td').parent().remove();
 					renderData(filelist);
@@ -167,7 +168,6 @@
 				detailName.id = originPath[i];
 				detailName.onclick = function() {
 					nameFileList(this.id);
-					console.log(this.id);
 				};
 
 				detailName.textContent = path[i] ;
@@ -241,25 +241,25 @@
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("_fileId", result[i]["fileId"]);
 					trElmt.setAttribute("_filePath", result[i]["filePath"]);
+					trElmt.onclick = function(event) {clickRow(this, event);};
 					
 					var inputElmt = document.createElement("input");
 					inputElmt.setAttribute("type", "checkbox");
 					inputElmt.setAttribute("value", result[i]["fileId"]);
 					inputElmt.setAttribute("class", "checkBnk");			
-					inputElmt.onchange = function(e){getChecked(this);};
+					inputElmt.onclick = function(e){getChecked(this, e);};
 					tdElmt1.appendChild(inputElmt);
 					
-					var fileIconElmt = document.createElement("img");
-					fileIconElmt.setAttribute("class", "webFolderImg");
+					var faImgElmt = document.createElement("img");
+					faImgElmt.setAttribute("class", "webFolderImg");
 					if (result[i]["favouriteStatus"] == "0") {
-						fileIconElmt.src = "/images/webfolder/favourite.png";
-						tdElmt2.appendChild(fileIconElmt);
+						faImgElmt.src = "/images/webfolder/favourite.png";
+						tdElmt2.appendChild(faImgElmt);
 					}
 					else {
-						fileIconElmt.src = "/images/webfolder/favourite2.png";
-						tdElmt2.appendChild(fileIconElmt);
+						faImgElmt.src = "/images/webfolder/favourite2.png";
+						tdElmt2.appendChild(faImgElmt);
 					}
-					
 					
 					var fileIconElmt = document.createElement("img");
 					fileIconElmt.setAttribute("class", "webFolderImg");
@@ -395,77 +395,57 @@
 	        searchOptionHidden();
 // 	        MakeSubCondition();
 	        getFileList(folderId);
-	    }
-   		function clickRow(obj, e) {
-	        e.stopPropagation();
-	        e.preventDefault();
-	    	
-	    	var inputElmt = obj.firstElementChild.firstElementChild;
-	    	var newUser = {};
-		    newUser["userId"]      = obj.getAttribute("userId");
-		    newUser["usedAmount"]  = obj.getAttribute("usedAmount");
-	    	
-	    	if (inputElmt.checked == true) {
-	    		inputElmt.checked = false;
-	    		
-	    		var pos = null;
-    		    checkedArr.map(function(obj, index) { if(obj["userId"] == newUser["userId"]) { pos = index; return true; }}).filter(isFinite);
-
-    		    if (pos != -1) {
-    			   obj.setAttribute("style", "");
-    			   checkedArr.splice(pos, 1);
-    		    }		    		
-	    	}
-	    	else {
-	    		inputElmt.checked = true;
-	    		checkedArr.push(newUser);
-	    		obj.setAttribute("style", "background-color: #e9f1ff;");
-	    	}
-	    }
-	    
-	    function getChecked(obj, event) {		       
-	       event.stopPropagation();
-	       
-	       var newUser = {};
-	       newUser["userId"]      = obj.getAttribute("userId");
-	       newUser["usedAmount"]  = obj.getAttribute("usedAmount");		       
-	        	   
-    	   if (obj.checked == true) {
-    		   checkedArr.push(newUser);
-    		   obj.parentElement.parentElement.setAttribute("style", "background-color: #e9f1ff;");
-    	   }
-    	   else {	    		   
-    		   var pos = null;
-    		   checkedArr.map(function(obj, index) { if(obj["userId"] == newUser["userId"]) { pos = index; return true; }}).filter(isFinite);
-
-    		   if (pos != -1) {
-    			   obj.parentElement.parentElement.setAttribute("style", "");
-    			   checkedArr.splice(pos, 1);
-    		   }
-    	   }
-       }
-	    
-	   function getCheckAll(obj) {
-    	   var listInputs = document.getElementsByClassName("checkBnk");
-    	   
-    	   checkedArr = [];
-    	   if (obj.checked == true) {
-    		   for (var i = 0; i < listInputs.length; i++) {
-	    			listInputs[i].checked = true;
-	    			var newUser = {};
-		 		    newUser["userId"]      = listInputs[i].getAttribute("userId");
-		 		    newUser["usedAmount"]  = listInputs[i].getAttribute("usedAmount");			 		    		
-		 		    listInputs[i].parentElement.parentElement.setAttribute("style", "background-color: #e9f1ff;");
-	    			checkedArr.push(newUser);	    		
-	    		}		    	
-    	   }
-    	   else {
-    		   for (var i = 0; i < listInputs.length; i++) {
-    			    listInputs[i].parentElement.parentElement.setAttribute("style", "");
-	    			listInputs[i].checked = false;	    				    		
-	    		}
-    	   }
 	   }
+	    
+		function clickRow(obj, e) {
+			e.stopPropagation();
+			e.preventDefault();
+			
+			var inputElmt = obj.firstElementChild.firstElementChild;
+			var id        = inputElmt.getAttribute("value");
+			
+			if (inputElmt.checked == true) {
+				inputElmt.checked = false;
+				
+				var pos = checkedArr.indexOf(id);
+				
+				if (pos != -1) {
+					checkedArr.splice(pos, 1);
+					obj.setAttribute("style", "");
+				}
+			}
+			else {
+				inputElmt.checked = true;
+				checkedArr.push(id);
+				obj.setAttribute("style", "background-color: #e9f1ff;");
+			}
+		}
+		
+		function getChecked(obj, event) {
+			event.stopPropagation();
+			
+			var id     = obj.getAttribute("value");
+			var trElmt = obj.parentElement.parentElement;
+			
+			if (obj.checked == true) {
+				//Double click problem in IE
+				var pos = checkedArr.indexOf(id);
+				
+				if (pos == -1) {
+					checkedArr.push(id);
+				}
+				
+				trElmt.setAttribute("style", "background-color: #e9f1ff;");
+			}
+			else {
+				var pos = checkedArr.indexOf(id);
+				
+				if (pos != -1) {
+					checkedArr.splice(pos, 1);
+					trElmt.setAttribute("style", "");
+				}
+			}
+		}
 	   
    	   function doLayerPopup(obj) {
 	        btn_PostDate_Clear();
@@ -506,16 +486,14 @@
 	   	    else {
 	   	        optionHidden();
 	   	    }
-	   	   }
-   	   
-   	   
-   	   
+	   	}
    	   
 	 	function optionHidden() {
 	 	    document.getElementById("layer_Viewpopup").style.display = "none";
 	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
 	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
 	 	}
+	 	
        function fileDownload() {
     	   if (checkedArr.length <= 0) {
     		   alert("<spring:message code = 'ezWebFolder.t108'/>");
@@ -540,7 +518,6 @@
        }
        
        function refreshView() {
-    	   console.log("Run here!");
     	   getFileList(folderId);
        }
        
@@ -636,7 +613,7 @@
 			
 			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList);
        }
-       
+       /*
        function getChecked(obj) {
     	   var id = obj.getAttribute("value");
     	   if (obj.checked == true) {
@@ -650,7 +627,7 @@
     		   }
     	   }
        }
-       
+       */
        function getCheckAll(obj) {
     	   var listInputs = document.getElementsByClassName("checkBnk");
     	   
@@ -670,6 +647,7 @@
        function changeCount(value) {
     	   blockSize = value;
     	   currentPage = 1;
+    	   pStart = 0;
     	   refreshView();
        }
        
@@ -695,13 +673,13 @@
 	<div id="mainmenu2">
 		<ul>
 			<li id=""><a onClick="fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-			<li id=""><a onClick="fileUpload()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+			<li id="upload"><a onClick="fileUpload()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
 			<li id=""><a onClick="fileDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
 			<li id=""><a onClick="fileRename()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 			<li id=""><a onClick="fileMove()"     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
 			<li id=""><img src="/images/i_bar.gif"></li>
-			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t271'/></span></a></li>
-			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li>
+			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t281'/></span></a></li>
+<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
 			<li id=""><img src="/images/i_bar.gif"></li>
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
 			<li id=""><img src="/images/i_bar.gif"></li>

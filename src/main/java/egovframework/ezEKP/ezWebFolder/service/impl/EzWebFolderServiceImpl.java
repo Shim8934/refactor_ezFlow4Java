@@ -1013,6 +1013,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 					fileVO.setFolderId(folderId);
 					fileVO.setFileId(getMaxFileID(tenantId));
 					fileVO.setCreateDate(timeUTC);
+					fileVO.setCreateId(userId);
+					fileVO.setUpdateId(userId);
 					fileVO.setUpdateDate(timeUTC);
 					insertFile(fileVO);
 					

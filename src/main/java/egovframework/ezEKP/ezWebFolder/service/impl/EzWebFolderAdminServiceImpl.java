@@ -569,6 +569,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		folder.setFolderPath(newPath);
 		folder.setOwnerId(parentFolder.getOwnerId());
 		folder.setFolderType(parentFolder.getFolderType());
+		folder.setCreateId(userId);
 		folder.setUpdateId(userId);
 		folder.setUpdateDate(timeUTC);
 		folder.setFolderUpper(parentFolder.getFolderId());
@@ -627,6 +628,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 				file.setDownloadCnt(0);
 				file.setFolderId(newId);
 				file.setUpdateDate(timeUTC);
+				file.setCreateId(userInfo.getId());
 				file.setUpdateId(userInfo.getId());
 				file.setFileId(ezWebFolderService.getMaxFileID(userInfo.getTenantId()));
 				ezWebFolderService.insertFile(file);

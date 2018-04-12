@@ -20,6 +20,7 @@
 // 		    var userId = "<c:out value='${userId}'/>";
 // 			var userName = "<c:out value='${userName}'/>";
 			var folderId = "";
+			var folderUpper = "";
 			var folderType = null;
 	    	var $element ;
 			
@@ -53,6 +54,7 @@
 					dataType: "JSON",
 					success : function (data) {
 						folderId = data.data[0]["id"];
+// 						upperId = data.data[0]["parent"];
 						var firstNode = "#" + folderId;
 						
 						$($element).on('changed.jstree', function (e, data) {
@@ -162,7 +164,7 @@
 			
 		 	// 폴더관리
 		    function folder_Manage() {
-	        	var OpenWin = window.open("/ezWebFolder/folderManage.do", "", GetOpenWindowfeature(600, 550));
+	        	var OpenWin = window.open("/ezWebFolder/folderManage.do?folderType="+folderType, "", GetOpenWindowfeature(600, 550));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }	
 		    
@@ -242,10 +244,10 @@
     		<ul>
 			</ul>
 			<h3>
-		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span>
+		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span><!-- 파일관리 -->
 		    </h3>
 			<h3>
-				<span onclick="wfConfig();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t236" /></span>
+				<span onclick="wfConfig();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t236" /></span><!-- 환경설정 -->
 			</h3>
 			<div id='myProgress' style='margin-left:20px;'>
 				<div id='myBar'></div>
