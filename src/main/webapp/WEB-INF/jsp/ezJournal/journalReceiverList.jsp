@@ -15,7 +15,7 @@
 			#tblPageRayer .pagenavi span{
 				margin : 0px;
 			}
-			.popuplist tr:nth-child(odd) td{
+			.popuplist tr:nth-child(even) td{
 				background-color : #f8f8fa;
 			}
 		</style>

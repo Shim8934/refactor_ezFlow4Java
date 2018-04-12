@@ -84,15 +84,10 @@
 						data:{"replyContent":replyContent,"journalId":journalId},
 						url:"/ezJournal/saveJournalReply.do",
 						success: function(result){
-							var journalTitle;
-							if(parent.opener.listType != null && parent.opener.listType != "") {
-								journalTitle = parent.journalTitle;
-	// 							parent.openJournalReply();
+							var journalTitle = parent.journalTitle;
+							try {
 								parent.opener.setJournalList();
-							} else {
-								journalTitle = parent.journalTitle;
-							//	parent.setJournalList();
-							}
+							} catch (e) { }
 							location.reload();
 							parent.addReplyCount();
 							sendJournalReplyMail(replyContent,journalId,result,journalTitle);
@@ -126,10 +121,10 @@
 					data:{"replyId":replyId,"journalId":journalId},
 					url:"/ezJournal/removeJournalReply.do",
 					success: function(){
-						if(parent.opener.listType != null && parent.opener.listType != "") {
+						try {
 // 							parent.openJournalReply();
 							parent.opener.setJournalList();
-						} 
+						} catch(e) { }
 						location.reload();
 						parent.minusReplyCount();
 					}

@@ -151,7 +151,7 @@
 						journalIdList : JSON.stringify(journalIdList)
 					},
    					success : function(result){
-   						console.log(result);
+   					//	console.log(result);
    						
    						if (result.formStatus == null) {
    							$("#btnGetOther").css("display", "none");
@@ -396,9 +396,9 @@
 	                	if (result != null && result != "") {
 		                  	alert("<spring:message code='ezJournal.t137'/>");
 		                  
-	          			 	if (opener.listType != null && opener.listType != "") {
-		             	  		opener.setJournalList();
-	          			 	}
+		                	try {
+								opener.setJournalList();
+							} catch(e) { }
 	          			 	sendJournalRecvMail($("#title").val(), receiverID, result);
 	          			 	
 	          			 	setTimeout(function(){
@@ -498,9 +498,9 @@
 	                	if (result === "ok") {
 			            	alert("<spring:message code='ezJournal.t137'/>");
 			            	
-			            	if (opener.listType != null && opener.listType != "") {
-			             		opener.setJournalList();
-			            	}
+			            	try {
+								opener.setJournalList();
+							} catch(e) { }
 		          			window.close();
 	                	}
 	                },
@@ -537,9 +537,9 @@
 		                	fileList : fileList
 		                },
 		                success: function() {
-		                	if (opener.listType != null && opener.listType != "") {
-		                		opener.setJournalList();
-		                	}
+		                	try {
+								opener.setJournalList();
+							} catch(e) { }
 							window.close();
 		                },
 		                error: function() {
@@ -547,9 +547,9 @@
 		                }
 					});
 				} else {
-					if (opener.listType != null && opener.listType != "") {
+					try {
 						opener.setJournalList();
-					}
+					} catch(e) { }
 					window.close();
 				}
 			}
