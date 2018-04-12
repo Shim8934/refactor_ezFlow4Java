@@ -1054,11 +1054,3 @@ function mail_link(){
 	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(820, 900));
 
 }
-
-function journalMailLink(journalId){
-	var feature = GetOpenPosition(820, 850);
-	window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "journalDetail",
-			"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
-			+ feature);
-}
-

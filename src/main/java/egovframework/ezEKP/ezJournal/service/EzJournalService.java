@@ -7,6 +7,7 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthCheckVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
@@ -408,4 +409,11 @@ public interface EzJournalService {
 	 */
 	public void deleteJournaltype(String companyId, int tenantId) throws Exception;
 
+	/**
+	 * 일지 열람 구너한 체크
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public JournalAuthCheckVO checkJournalAuth(String userId,String journalId,int tenantId) throws Exception; 
 }

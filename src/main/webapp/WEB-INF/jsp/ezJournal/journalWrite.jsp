@@ -173,12 +173,6 @@
 		    			alert("code : " + request.status + "\nerror : " + error);
 	   				}
 	    		});
-				
-				if (mode == "sum") {
-	    			setTimeout(function () {
-						$('#loading').hide();
-					}, 0);
-	    		}
 			}
 	    	
 			// 최근에 사용한 양식 호출
@@ -406,7 +400,10 @@
 		             	  		opener.setJournalList();
 	          			 	}
 	          			 	sendJournalRecvMail($("#title").val(), receiverID, result);
-	          			  	window.close();
+	          			 	
+	          			 	setTimeout(function(){
+		          			  	window.close();
+   							},0);
 	                	}
           			  	
 	                },
@@ -422,7 +419,7 @@
 	    	function sendJournalRecvMail(journalTitle,recvIds,journalId){
 	    		$.ajax({
 					type : "post",
-				//	async : false,
+// 					async : false,
 					data : {
 						"journalTitle" : journalTitle,
 						"recvIds" : recvIds,

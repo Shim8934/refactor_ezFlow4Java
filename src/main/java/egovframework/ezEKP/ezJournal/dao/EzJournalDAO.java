@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezJournal.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezJournal.vo.DeptInfoVO;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthCheckVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
@@ -488,6 +490,20 @@ public class EzJournalDAO extends EgovAbstractDAO{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 열람권한체크
+	 * @param map
+	 */
+	public JournalAuthCheckVO checkJournalAuth(Map<String, Object> map) {
+		JournalAuthCheckVO result = null;
+		try {
+			result =  (JournalAuthCheckVO) select("checkJournalAuth",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }
