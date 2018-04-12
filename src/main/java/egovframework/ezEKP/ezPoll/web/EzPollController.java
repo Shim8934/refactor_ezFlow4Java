@@ -2636,7 +2636,7 @@ public class EzPollController extends EgovFileMngUtil {
 						pollQstVO.setStatus(2); // reserve poll
 					}
 					else {
-						pollQstVO.setStatus(1); // processing poll
+						pollQstVO.setStatus(1); // ssing pollproce
 					}					
 				}
 				else {
@@ -2931,6 +2931,20 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		return listSimpleUser;
+	}
+	
+	@RequestMapping(value="/ezPoll/updateEndDateForQst.do", method = RequestMethod.POST)
+	public String updateEndDateForQst(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, ModelMap model, HttpServletResponse response) throws Exception {		
+		logger.debug("Updating question end-date is running!");		
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		int tenantID = loginVO.getTenantId();
+		int qstId = Integer.parseInt(req.getParameter("qstId"));
+		String endDate = req.getParameter("endDate");
+		
+		ezPollService.updateEndDateForQst(qstId, tenantID, endDate);
+		
+		logger.debug("Updating question end-date finishes!");
+		return "forward:/ezPoll/pollList.do";
 	}
 
 }
