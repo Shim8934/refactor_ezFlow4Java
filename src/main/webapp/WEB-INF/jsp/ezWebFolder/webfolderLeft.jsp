@@ -23,7 +23,7 @@
 			var folderUpper = "";
 			var folderType = null;
 	    	var $element ;
-			
+	    	var useBottomFrameOnly = "${useBottomFrameOnly}";
 		    
 		    $(function() { 
 				folderList('C');
@@ -189,6 +189,23 @@
 			function getTrashCanList() {
 				window.parent.frames["right"].location.href = "/ezWebFolder/trashCan.do";
 			}
+			
+			function showPanel() {
+				document.getElementById("webFolderLeftPanel").style.display = "block";
+			    document.getElementById("webFolderLeftPanel").style.background = "rgba(0,0,0,0.5)";
+			    
+			    if (useBottomFrameOnly == "NO") {
+					parent.parent.frames["topFrame"].contentWindow.showProgress();
+				} 
+			}
+			
+			function hiddenPanel() {
+				document.getElementById("webFolderLeftPanel").style.display = "none";
+				
+				if (useBottomFrameOnly == "NO") {
+					parent.parent.frames["topFrame"].contentWindow.hideProgress();
+				}
+			}
 		</script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%" onload="drawVolume();">
@@ -253,6 +270,7 @@
 				<div id='myBar'></div>
 			</div>
 			<div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div>
+   		    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderLeftPanel">&nbsp;</div>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");	        

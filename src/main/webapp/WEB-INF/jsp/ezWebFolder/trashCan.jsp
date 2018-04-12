@@ -456,8 +456,7 @@
     		   checkedFolderList = checkedFolderList + "," + folderArr[i];
     	   }
     	   
-    	   DivPopUpShow(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + checkedFileList + "&folderList=" + checkedFolderList);	   
-   
+    	   showPanel(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + checkedFileList + "&folderList=" + checkedFolderList);
        }
        
        function getChecked(obj) {
@@ -508,7 +507,31 @@
        function changeCount(value) {
     	   blockSize = value;
     	   currentPage = 1;
-    	   getFileList(folderId);
+    	   renderFileList();
+       }
+       
+       function showPanel(popUpW, popUpH, URL) {
+    	   try {
+    	        var Position = DivPopUpPosition(popUpW, popUpH);
+    	        document.getElementById("iFrameLayer").src = URL;
+    	        document.getElementById("iFramePanel").style.top = Position[0] + "px";
+    	        document.getElementById("iFramePanel").style.left = Position[1] + "px";
+    	        document.getElementById("iFramePanel").style.height = popUpH + "px";
+    	        document.getElementById("iFrameLayer").style.width = popUpW + "px";
+    	        document.getElementById("iFrameLayer").style.height = popUpH + "px";
+    	        document.getElementById("mailPanel").style.display = "";
+    	        document.getElementById("iFramePanel").style.display = "";
+    	        parent.frames["left"].showPanel();
+    	    } catch (e) {}
+       }
+       
+       function hiddenPanel () {
+    	   try {
+    	        document.getElementById("mailPanel").style.display = "none";
+    	        document.getElementById("iFramePanel").style.display = "none";
+    	        document.getElementById("iFrameLayer").src = "/blank.htm";
+    	        parent.frames["left"].hiddenPanel();
+    	    } catch (e) {}
        }
        
     </script>
