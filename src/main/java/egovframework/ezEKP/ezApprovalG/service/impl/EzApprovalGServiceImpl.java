@@ -21227,7 +21227,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				makeListField(docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent()),
 				makeListField(docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent())) + "]]></CABCLASSID>");
 		strXML.append("<RECTYPE>" + getRecordTypeString(docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent(),companyID,langType, tenantID) + "</RECTYPE>");// '기록물형태
-		strXML.append("<DEPTNAME>" + docXML.getElementsByTagName("PROCESSDEPTNAME" + commonUtil.getMultiData(langType, tenantID)).item(0).getTextContent() + "</DEPTNAME>"); // '처리과 이름
+		strXML.append("<DEPTNAME><![CDATA[" + docXML.getElementsByTagName("PROCESSDEPTNAME" + commonUtil.getMultiData(langType, tenantID)).item(0).getTextContent() + "]]></DEPTNAME>"); // '처리과 이름
 		strXML.append("<TASKNAME><![CDATA[" + docXML.getElementsByTagName("TASKNAME" + commonUtil.getMultiData(langType, tenantID)).item(0).getTextContent() + "]]></TASKNAME>"); // '단위업무 이름
 		strXML.append("<PRODUCEY>" + docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent() + "</PRODUCEY>"); // '생산년도
 		strXML.append("<REGSN>" + docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() + "</REGSN>"); 	// '등록연번
