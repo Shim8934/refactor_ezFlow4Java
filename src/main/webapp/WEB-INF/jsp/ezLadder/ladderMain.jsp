@@ -77,6 +77,8 @@
 					$("#searchInput").show();
 				} 
 			}
+			
+			
 		</script>
 		<style type="text/css">
 			.effect img {
@@ -118,7 +120,7 @@
 				  <option value="3" <c:if test = "${searchInput eq '3' }" >selected="selected"</c:if>><spring:message code="ezLadder.t104"/></option>
 				</select>
 				
-				<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" onkeypress="check_key(event);" value="<c:out value='${searchInput}'/>">
+				<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" value="<c:out value='${searchInput}'/>">
 				<a href="#"><img src="/images/ezLadder/btn_search.png" width='24px' height='24px' style="vertical-align:middle; float:right;" onclick="searchLadder()" ></a>
 			</span>
 		</h1>

@@ -95,6 +95,7 @@ function searchLadder() {
 	
 	
 	searchSelect = document.getElementById("searchOption").value;
+
 	if(searchSelect === 'kind') {	// 종류 검색
 		searchInput = document.getElementById("ladderType").value;
 	} else {	// 이외
@@ -109,11 +110,11 @@ function searchLadder() {
 		alert(strLang39);
 		searchSelect = '';
 		return;
-	} else if(searchInput.includes("%")) {
+	} else if(searchInput.indexOf('%') >= 0) {
 		alert(strLang40);
 		searchSelect = '';
 		return;
-	} else if(searchInput.includes("&")) {
+	} else if(searchInput.indexOf('&') >= 0) {
 		alert(strLang41);
 		searchSelect = '';
 		return;
