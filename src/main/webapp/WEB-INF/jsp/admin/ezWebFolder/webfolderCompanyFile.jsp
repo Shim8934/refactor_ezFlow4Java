@@ -446,6 +446,18 @@
 			
 			function toggleUploadBttn(levelValue) {
 				document.getElementById("uploadBttn").style.display = levelValue == '0' ? 'none' : "";
+				var dragDropAreaElmt                                = document.getElementById("dragDropArea");
+				
+				if (levelValue == '0') {
+					dragDropAreaElmt.ondragenter = null;
+					dragDropAreaElmt.ondragover  = null;
+					dragDropAreaElmt.ondragover  = null;
+				}
+				else {
+					dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
+					dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
+					dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
+				}
 			}
 		</script>
 	</head>
@@ -466,7 +478,7 @@
 		<div id="mainmenu2" style="position: relative;">
 			<ul>
 				<li id=""><a onClick="fileDownload()"    style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-				<li id="uploadBttn" style="display: ${level == 0 ? 'none' : ''}"><a onClick="fileUpload()"      style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+				<li id="uploadBttn" style="display: none;"><a onClick="fileUpload()"      style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
 				<li id=""><a onClick="fileDelete()"      style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t117'/></span></a></li>
 				<li id=""><a onClick="fileRename()"      style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t118'/></span></a></li>
 				<li id=""><a onClick="fileMove()"        style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>
@@ -530,7 +542,7 @@
 			<div class="progress-bar"></div ><div class="status">0%</div>
 		</div>
 		
-		<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px; overflow-y: auto;">
+		<div id="dragDropArea" style="margin: 10px 0px; overflow-y: auto;">
 			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 				<tr>
 					<th width="10px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
