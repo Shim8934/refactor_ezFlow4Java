@@ -453,6 +453,7 @@
 		   				success: function(journal){
 							$("#Preview_ContentW").html(journal);
 							$("#Preview_ContentH").html(journal);
+							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId="+journalId);
 							if(listType=='recv'){
 								parent.left.setRecvCount();
 // 								setJournalList();
@@ -973,7 +974,6 @@
 <!-- 		                </span> -->
 		                
 		                <div id="Preview_ContentW" style="text-align: center;">
-		                	<span style="margin-top:50px;height:10px;display:inline-block;"></span>
 		                </div>
 		            </span>
 		        </span>
