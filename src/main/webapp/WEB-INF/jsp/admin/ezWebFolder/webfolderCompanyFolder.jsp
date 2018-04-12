@@ -286,7 +286,7 @@
 					return;
 				}
 				
-				menu_SelectRange();
+				menu_SelectRange(document.getElementById("companyList").value);
 			}
 			
 			function newFolder() {

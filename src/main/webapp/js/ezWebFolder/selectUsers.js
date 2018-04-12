@@ -1,8 +1,8 @@
 var g_windowReference = null;
 
-function menu_SelectRange() {
+function menu_SelectRange(companyId) {
 	if (CrossYN()) {
-		var szUrl = "/admin/ezWebFolder/targetSelect.do";
+		var szUrl = "/admin/ezWebFolder/targetSelect.do?company=" + companyId;
 		var _MSIE = 'MSIE';
 		var useragentstr = navigator.userAgent;
 		
@@ -33,12 +33,12 @@ function menu_SelectRange() {
 		}
 	}
 	else {
-		menu_SelectRange_IE();
+		menu_SelectRange_IE(companyId);
 	}
 }
 
-function menu_SelectRange_IE() {
-	var szUrl = "/admin/ezWebFolder/targetSelect.do";
+function menu_SelectRange_IE(companyId) {
+	var szUrl = "/admin/ezWebFolder/targetSelect.do?company=" + companyId;
 	
 	if ((g_windowReference == null) || (g_windowReference.closed == true)) {
 		if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
