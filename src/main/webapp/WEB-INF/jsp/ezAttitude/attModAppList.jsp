@@ -38,17 +38,17 @@
 		var adminFlag = "${adminFlag}";
 		
 		$(document).ready(function() {
-	    	var clickOutside;
+// 	    	var clickOutside;
 	    	
-	    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) {
-	    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
-	    	} else {
-	    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
-	    	}	    	
+// 	    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) {
+// 	    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
+// 	    	} else {
+// 	    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
+// 	    	}	    	
 	    	
-	    	clickOutside.mouseup(function (e) {
-	    		searchHiddenOutside(e);
-	    	});
+// 	    	clickOutside.mouseup(function (e) {
+// 	    		searchHiddenOutside(e);
+// 	    	});
 	    	
 	    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
 	    		searchHiddenOutside(e);
@@ -61,25 +61,17 @@
 	    	$(document).mouseup(function (e) {
 	    		searchHiddenOutside(e);
 	    	});
-	    	
-	    	$(window.frames['ifrmPreViewH']).mouseup(function (e) {
-	    		searchHiddenOutside(e);
-	    	});
-	    	
-	    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
-	    		searchHiddenOutside(e);
-	    	});
-	    	
 	    });
 		
 		function searchHiddenOutside(e) {
-			var container = $('#layer_popup');
-			var maillistoptionmode = $('#layer_popup').css('display');
-
-			if (maillistoptionmode != "none") {
-				if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'search') {
-					$('#layer_popup').hide();
-				}
+			if ($('#layer_popup').length > 0){
+				var container = $('#layer_popup');
+				var maillistoptionmode = $('#layer_popup').css('display');
+				if (maillistoptionmode == "block") {
+					if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'search') {
+						$('#layer_popup').hide();
+					}
+				}	
 			}
 		}
 		

@@ -94,12 +94,17 @@ public class EzAttitudeGWController {
 			String typeId = request.getParameter("typeId");
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
+			String deptFlag = request.getParameter("deptFlag");
+			List<AttitudeVO> resultList;
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			String offset = info.getOffSet();
-			
-			List<AttitudeVO> resultList = ezAttitudeService.getAttitudeList(userId, "", typeId, startDate, endDate, offset, info.getTenantId());
+			if (deptFlag.equals("false")) {
+				resultList = ezAttitudeService.getAttitudeList(userId, "", "", typeId, startDate, endDate, offset, info.getTenantId(), deptFlag);
+			} else {
+				resultList = ezAttitudeService.getAttitudeList("", info.getDeptId(), "", typeId, startDate, endDate, offset, info.getTenantId(), deptFlag);
+			}
 			
 			//imgPath 셋팅
 			
@@ -115,6 +120,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);			
 			result.put("data", resultList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1430,14 +1436,6 @@ public class EzAttitudeGWController {
 		
 		try{
 			String[] ids = idList.split(",");
-
-			idList = "(";
-
-			for (int i = 0; i < ids.length; i++) {
-				idList += ids[i] + ",";
-			}
-			idList = idList.substring(0, idList.length()-1);
-			idList += ")";
 
 			LOGGER.debug("companyId : " + companyId + ", tenantId : " + tenantId 
 					+ ", idList : " + idList + ", changeStatus : " + changeStatus);

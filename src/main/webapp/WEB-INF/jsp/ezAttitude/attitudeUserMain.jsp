@@ -7,12 +7,20 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
 		<link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />
+		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>  
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
+		<!-- modal -->
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+		<!-- data picker-->		
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<style>
 			#attiStatis table td {
 				color : #777;
@@ -36,6 +44,7 @@
 		<script>
 			var pMode = "";
 			var uselang = "<c:out value='${userInfo.lang}'/>";
+			var deptFlag = "${deptFlag}"
 			
 			$(function(){
 				$(document).on('dblclick', '.td_day td', function(){
@@ -46,6 +55,11 @@
 				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function(){
 					attitudeItemView(this);
 				})
+				
+				//근태수정신청 팝업창
+				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02]', function(){
+					showDialog();
+				})
 			})
 			
 			window.onload = function() {
@@ -53,6 +67,51 @@
 				
 				getHolidayList();
 			}
+			
+			//datepicker
+	    	$(function () {
+			    $("#Sdatepicker").datepicker({
+			        changeMonth: true,
+			        changeYear: true,
+			        autoSize: true,
+			        showOn: "both",
+			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImageOnly: true
+			    });
+			});
+			    
+			var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
+			var monthStr = monthMsg.split(";");		    
+			var dayMsg = "일;월;화;수;목;금;토";
+			var dayStr = dayMsg.split(";");
+			    
+			$(function () {
+			    $.datepicker.regional["ko"] = {
+			    	closeText: "닫기",
+			        prevText: "이전달",
+			        nextText: "다음달",
+				currentText: "오늘",
+			        monthNames: monthStr,
+			        monthNamesShort: monthStr,
+			        dayNames: dayStr,
+			        dayNamesShort: dayStr,
+			        dayNamesMin: dayStr,
+			        weekHeader: 'Wk',
+			        dateFormat: 'yy-mm-dd',
+			        firstDay: 0,
+			        isRTL: false,
+			        duration: 200,
+			        showAnim: 'show',
+			        showMonthAfterYear: true
+			    };
+			    $.datepicker.setDefaults($.datepicker.regional["ko"]);
+			    
+			    $("#Sdatepicker").datepicker('disable');
+			});
+   /////////////////////
+			
+			///////////////
+			
 			
 			/**
 			* 근태유형 메소드
@@ -166,7 +225,8 @@
 					url : "/ezAttitude/getAttitudeList.do",
 					data : {
 						startDate : startDate,
-						endDate : endDate
+						endDate : endDate,
+						deptFlag : deptFlag
 					},
 					success : function(result) {
 						$("span[name=span_list] table tbody").remove();
@@ -182,31 +242,61 @@
 				var betweenDate = ""; // 연속일자의 일자 저장
 				var subDate = "";     // 연속일자로 등록된 근태의 날짜 차이를 저장
 				var imgPath = "";	  // 이미지 경로
-				
-				for (var i = 0; i < result.length; i++) {
-					startDate = result[i].startDate.split(" ")[0];
-					endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
-					imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>";
-					
-					if (result[i].dateType == '4' || result[i].dateType == '5') {
-						subDate = calDateRange(startDate, endDate);
-						betweenDate = new Date(startDate);
-						
-						for (var j = 0; j<= subDate; j++) {
-							betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1));
-							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
-							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" 
-									+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + (result[i].region != "" ? result[i].region : result[i].content.substring(0,8)) + "</td></tr>");
+				if (deptFlag == false){
+					for (var i = 0; i < result.length; i++) {
+						startDate = result[i].startDate.split(" ")[0];
+						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
+						imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>";
+
+						if (result[i].dateType == '4' || result[i].dateType == '5') {
+							subDate = calDateRange(startDate, endDate);
+							betweenDate = new Date(startDate);
+							
+							for (var j = 0; j<= subDate; j++) {
+								betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1));
+								var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
+								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
+										"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" 
+										+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].region + "</td></tr>");
+							}
+						} else if (result[i].dateType == '3') {
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>");
+						} else if (result[i].dateType == '1') {
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>");
+						} else {
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1] + "</td></tr>");
 						}
-					} else if (result[i].dateType == '3') {
-						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-								"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>");
-					} else if (result[i].dateType == '1') {
-						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-								"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>");
-					} else {
-						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0,5) + "</td></tr>");
+					}	
+				} else {
+					for (var i = 0; i < result.length; i++) {
+						if (result[i].typeId != 'A01' && result[i].typeId != 'A03') {
+							startDate = result[i].startDate.split(" ")[0];
+							endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
+							imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>";
+							
+							if (result[i].dateType == '4' || result[i].dateType == '5') {
+								subDate = calDateRange(startDate, endDate);
+								betweenDate = new Date(startDate);
+								
+								for (var j = 0; j<= subDate; j++) {
+									betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1));
+									var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
+									$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
+											"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" 
+											+ (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+								}
+							} else if (result[i].dateType == '3') {
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+							} else if (result[i].dateType == '1') {
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + "</td></tr>");
+							} else {
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+							}	
+						}
 					}
 				}
 			}
@@ -267,10 +357,34 @@
 				}
 			}
 			
+			//수정신청 레이어 팝업띄우깅
+			function showDialog() {
+				$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        	
+	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	        	
+	        	$("#popup").css("left", popupX);
+	        	
+				$("#popup").modal({
+					  escapeClose: false,
+					  clickClose: false,
+					  showClose: false
+				});
+			}
+			
+			function layerHidden() {
+		        $.modal.close();
+		    }
+
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">
-		<h1 id="titleimg">개인근태현황</h1>
+		<c:if test="${deptFlag != 'true'}">
+			<h1 id="titleimg">개인근태현황</h1>
+		</c:if>
+		<c:if test="${deptFlag == 'true'}">
+			<h1 id="titleimg">부서근태현황</h1>
+		</c:if>
 		<div id="mainmenu">
 			<ul>
 			</ul>
@@ -293,5 +407,49 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<!-- 근태수정신청 팝업창 -->
+		<div id="popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+			<div class="popupwrap3">
+				<!-- 내용 -->
+			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
+			    	<tr>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태수정신청</th>
+					</tr>
+					<tr>
+			  			<th style="width:90px;height:30px">구분
+						<td>지각</td>
+					</tr>
+					<tr>
+			  			<th style="width:90px;height:30px">출근시각</th>
+						<td>오늘날짜 (공백) 출근시각</td>
+					</tr>
+					<tr>
+			  			<th style="width:90px;height:30px">변경시각</th>
+						<td>
+							<span id="periodblock" datetype="3">
+								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+								<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<th style="width:90px;height:30px">승인상태</th>
+						<td>상태(진행, 반려)</td>
+					</tr>
+					<tr>
+<!-- 						<td colspan="2"><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%; height:90px; box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td> -->
+						<td colspan="2"><textarea class="textarea" style="width:98%; height:90px; box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px; resize:none;"></textarea></td>
+					</tr>
+				</table>
+				<!-- /내용 -->
+				<br />
+				<div style="text-align:center;">
+					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
+					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
+			    </div>
+			</div>
+			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
+		</div>
+		<div class="shadow"></div>
 	</body>
 </html>

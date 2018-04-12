@@ -114,8 +114,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeVO> getAttitudeList(String pidList, String yrmh,
-		String typeId, String startDate, String endDate, String offset, int tenantId) throws Exception {
+	public List<AttitudeVO> getAttitudeList(String pidList, String deptIdList, String yrmh,
+		String typeId, String startDate, String endDate, String offset, int tenantId, String deptFlag) throws Exception {
 		LOGGER.debug("getAttitudeList started");
 		Map<String, Object> map = new HashMap<String,Object>();
 		//if써서 하루꺼를 가져오려는 건지 한달꺼를 가져오려는 건지를 구분해야 될 꺼 같다.
@@ -133,13 +133,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			endDate = endDate + " 23:59:59";
 		}
 		
+		String[] pidListArr = pidList.split(",");
+		String[] deptIdArr = deptIdList.split(",");
+		
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
 		map.put("offsetMin", offsetMin);
 		map.put("typeId", typeId);
-		map.put("pidList", pidList);
-		
+		if (!pidList.trim().equals("")){
+			map.put("pidListArr", pidListArr);
+		}
+		if (!deptIdList.trim().equals("")){
+			map.put("deptIdArr", deptIdArr);
+		}
+	
 		List<AttitudeVO> resultList = ezAttitudeDAO.getAttitudeList(map);
 		
 		LOGGER.debug("getAttitudeList ended");
