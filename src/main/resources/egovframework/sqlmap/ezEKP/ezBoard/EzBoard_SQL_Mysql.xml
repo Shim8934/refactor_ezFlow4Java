@@ -1908,6 +1908,11 @@
   					A.UPPERITEMIDTREE,
   					A.DOCNO,
   			    	'' AS NOTICE,
+  			    	A.EXTENSIONATTRIBUTE6, 
+       				A.EXTENSIONATTRIBUTE7, 
+       				A.EXTENSIONATTRIBUTE8, 
+       				A.EXTENSIONATTRIBUTE9, 
+       				A.EXTENSIONATTRIBUTE10, 
   			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
   			    	I.GUBUN
 				  FROM 
@@ -4076,7 +4081,6 @@
 		    	UpdateDate = #writeDate#,
 		    	Importance = #importance#,
 	          	Title = #title#,
-	          	StartDate = #startDate#,
 	          	EndDate = #endDate#,
 	          	Abstract = #ABSTRACT#,
 	          	Attachments = #hasAttach#,

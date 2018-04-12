@@ -2499,6 +2499,10 @@ public class EzBoardController extends EgovFileMngUtil{
 					fieldValue = commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get(fieldName)));
 				}
 				
+				if (fieldValue == null || fieldValue.equals(null) || fieldValue.equals("null")) {
+					fieldValue = "";
+				}
+				
 				resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
 				
 				if (i == 0) {

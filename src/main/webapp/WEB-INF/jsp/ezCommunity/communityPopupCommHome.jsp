@@ -552,7 +552,7 @@
 		                    }
 		                    
 		                    break;
-		                case "btn_Manager": open_admin(code);
+		                case "btn_Manager": open_admin_home(code,"2");
 		                    break;
 		                case "btn_Manager_home1": open_admin_home(code,"2");
 		                    break;
