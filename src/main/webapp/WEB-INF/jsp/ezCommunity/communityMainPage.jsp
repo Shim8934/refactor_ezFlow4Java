@@ -136,10 +136,10 @@
 
                     var img = document.createElement("IMG");
                     
-                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1) {
+                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_") > -1) {
                         img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
                     } else {
-                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
                     }
                     
                     img.style.width = "56px";
@@ -194,10 +194,10 @@
 
                     var img = document.createElement("IMG");
                     
-                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1) {
+                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_") > -1) {
                         img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
                     } else {
-                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
                     }
                     
                     img.style.width = "56px";
@@ -760,10 +760,10 @@
                     var dt = document.createElement("DT");
                     var img = document.createElement("IMG");
                     
-                	if (clubVO.c_Logo_Thumbnail.indexOf("default_logo_type") > -1) {
+                	if (clubVO.c_Logo_Thumbnail.indexOf("default_logo_") > -1) {
                         img.src = "/images/ezCommunity/logo/" + clubVO.c_Logo_Thumbnail;
                     } else {
-                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + clubVO.c_Logo_Thumbnail;
+                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + clubVO.c_Logo_Thumbnail;
                     }
                     
                     img.style.width = "84px";
@@ -965,10 +965,10 @@
                 img3.style.width = "198px";
                 img3.style.height = "140px";
                 
-                if (result["clubVO"]["c_Logo_Thumbnail"].indexOf("default_logo_type") > -1) {
+                if (result["clubVO"]["c_Logo_Thumbnail"].indexOf("default_logo_") > -1) {
                     img3.src = "/images/ezCommunity/logo/" + result["clubVO"]["c_Logo_Thumbnail"];
                 } else {
-                    img3.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + result["clubVO"]["c_Logo_Thumbnail"];
+                    img3.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + result["clubVO"]["c_Logo_Thumbnail"];
                 }
 
                 p2.appendChild(img3);

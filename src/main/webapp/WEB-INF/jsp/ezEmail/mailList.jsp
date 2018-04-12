@@ -85,6 +85,7 @@
 		    var protocol = window.location.protocol;
 		    var host = defineHost(protocol) + window.location.host + '/websocket/${userId}';
 		    var useEncryptZipForEmail = "${useEncryptZipForEmail}";
+		    var uploading = "uploading";
 			var useMailBoxBackUp = "${useMailBoxBackUp}";
 			var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정 useMailWriteSenderClick추가
 		    var enc = "encrypt";

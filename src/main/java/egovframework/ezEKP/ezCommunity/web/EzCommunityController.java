@@ -259,7 +259,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 커뮤니티만들기 싱청 함수
+	 * 커뮤니티만들기 신청 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/commMakeOk.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -2552,6 +2552,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityClubVO clubVO = ezCommunityService.adminLogoGet(code, userInfo.getPrimary(), userInfo.getTenantId());
+		CommunityClubVO clubVO2 = ezCommunityService.adminLogoGet2(code, userInfo.getTenantId());
 		String copType = ezCommunityService.commHomeGet4(code, userInfo.getTenantId());
 		
 		clubVO.setC_Type(copType);
@@ -2562,6 +2563,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("code", code);
 		model.addAttribute("clubVO", clubVO);
+		model.addAttribute("clubVO2", clubVO2);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "ezCommunity/communityAdminLogo";
@@ -2593,8 +2595,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("result======" + result);
 		return "json";
 	}
-	
-	
+		
 	/**
 	 * 커뮤니티 환경설정화면 IE9 로고 업테이트 실행함수
 	 */
@@ -2621,6 +2622,33 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		logger.debug("adminLogoUploadIE9 ended.");
+		return "json";
+	}
+	
+	/**
+	 * 커뮤니티 환경설정화면 썸네일 temp파일 저장 실행함수
+	 */
+	@RequestMapping(value = "ezCommunity/adminThumbUpload.do")
+	public String adminThumbUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
+		logger.debug("adminThumbUpload started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		String thumbPath = commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId());
+		MultipartFile thumbFile = request.getFile("thumbFile");
+		String code = request.getParameter("code");
+		String result = "";
+		
+		if (!thumbFile.isEmpty()) {
+			result = thumbPath + commonUtil.separator + ezCommunityService.adminThumbUpload(code, realPath, thumbPath, thumbFile, userInfo.getTenantId());
+		}
+		
+		//cache 문제로 인한 ? 랜덤값 추가
+		result = result + "?" + new Random().nextInt(50);
+
+		model.addAttribute("tempThumbPath", result);
+		logger.debug("adminThumbUpload ended.");
+		logger.debug("result======" + result);
 		return "json";
 	}
 	
