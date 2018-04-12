@@ -422,7 +422,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String copType = ezCommunityService.commHomeGet4(code, userInfo.getTenantId());
 		
 		if (copType == null) {
-			copType = "type1";
+			copType = "type5";
 		}
 		
 		//사용하는곳이 없다
