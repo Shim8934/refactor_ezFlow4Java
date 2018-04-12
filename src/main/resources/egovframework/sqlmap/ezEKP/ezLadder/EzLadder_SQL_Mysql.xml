@@ -210,8 +210,8 @@
             <![CDATA[
 				(
 					CASE E.WRITERID
-					WHEN #userId# THEN 1
-					ELSE 2
+					WHEN #userId# THEN 2
+					ELSE 1
 					END
 				)
 			]]>
@@ -322,8 +322,8 @@
             <![CDATA[
 				(
 					CASE A.WRITERID
-					WHEN #userId# THEN 1
-					ELSE 2
+					WHEN #userId# THEN 2
+					ELSE 1
 					END
 				)
 			]]>
@@ -500,8 +500,8 @@
             <![CDATA[
 				(
 					CASE A.WRITERID
-					WHEN #userId# THEN 1
-					ELSE 2
+					WHEN #userId# THEN 2
+					ELSE 1
 					END
 				)
 			]]>
@@ -610,8 +610,8 @@
             <![CDATA[
 				(
 					CASE A.WRITERID
-					WHEN #userId# THEN 1
-					ELSE 2
+					WHEN #userId# THEN 2
+					ELSE 1
 					END
 				)
 			]]>
@@ -824,8 +824,8 @@
             <![CDATA[
 				(
 					CASE D.WRITERID
-					WHEN #userId# THEN 1
-					ELSE 2
+					WHEN #userId# THEN 2
+					ELSE 1
 					END
 				)
 			]]>
@@ -950,8 +950,8 @@
             <![CDATA[
 				(
 					CASE D.WRITERID
-					WHEN #userId# THEN 1
-					ELSE 2
+					WHEN #userId# THEN 2
+					ELSE 1
 					END
 				)
 			]]>
