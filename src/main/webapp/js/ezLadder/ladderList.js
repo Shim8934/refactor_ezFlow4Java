@@ -219,6 +219,10 @@ function listSort(num) {
 }
 
 function view() {
+	if(mode === "pre") {
+		sort ='date';
+		sortFlag = 'desc';
+	}
 	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=" + searchInput + "&sort=" + sort + "&sortFlag=" + sortFlag;
 	document.location.href = szUrl;
 }

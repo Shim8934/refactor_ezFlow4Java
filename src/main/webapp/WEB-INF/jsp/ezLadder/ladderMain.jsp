@@ -106,14 +106,14 @@
 		<h1><spring:message code="ezLadder.t001"/>
 			<span id="mailBoxInfo"></span>
 			<span style="float: right; font-weight:normal;color:black; margin-right: 30px;">
-				<select id="searchOption">
+				<select id="searchOption" style="height:24px;">
 				  <option value="title" <c:if test = "${searchSelect eq 'title' }" >selected="selected"</c:if>><spring:message code="ezLadder.t125"/></option>
 				  <option value="kind" <c:if test = "${searchSelect eq 'kind' }" >selected="selected"</c:if>><spring:message code="ezLadder.t126"/></option>
 				  <option value="writer" <c:if test = "${searchSelect eq 'writer' }" >selected="selected"</c:if>><spring:message code="ezLadder.t004"/></option>
 				  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>><spring:message code="ezLadder.t127"/></option>
 				</select>
 
-				<select id="ladderType">
+				<select id="ladderType" style="margin-left: 10px; height: 24px;">
 				  <option value="0" <c:if test = "${searchInput eq '0' }" >selected="selected"</c:if>><spring:message code="ezLadder.t101"/></option>
 				  <option value="1" <c:if test = "${searchInput eq '1' }" >selected="selected"</c:if>><spring:message code="ezLadder.t102"/></option>
 				  <option value="2" <c:if test = "${searchInput eq '2' }" >selected="selected"</c:if>><spring:message code="ezLadder.t103"/></option>

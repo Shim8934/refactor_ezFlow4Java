@@ -125,9 +125,6 @@
 				<![CDATA[
 				A.WRITERID = #userId# 
             )
-            ORDER BY 
-				E.LADDERID 
-			DESC
 		]]>
 	</select>
 	
@@ -211,17 +208,22 @@
 			</isEqual>
 			<isEqual property="sort" compareValue="deleteFlag">
             <![CDATA[
-				E.DELETEFLAG 
+				(
+					CASE E.WRITERID
+					WHEN #userId# THEN 1
+					ELSE 2
+					END
+				)
 			]]>
 			</isEqual>
 			<isEqual property="sortFlag" compareValue="desc">
             <![CDATA[
-				DESC
+				DESC, E.LADDERID DESC
 			]]>
 			</isEqual>
 			<isNotEqual property="sortFlag" compareValue="desc">
 			 <![CDATA[
-				ASC
+				ASC, E.LADDERID ASC
 			]]>
 			</isNotEqual>
 			LIMIT 
@@ -251,9 +253,6 @@
                                     B.LADDERID = C.LADDERID
 								WHERE 
 									C.USERID = #userId#) 
-			ORDER BY 
-				A.LADDERID 
-			DESC
 		]]>
 	</select>
 	
@@ -321,17 +320,22 @@
 			</isEqual>
 			<isEqual property="sort" compareValue="deleteFlag">
             <![CDATA[
-				A.DELETEFLAG 
+				(
+					CASE A.WRITERID
+					WHEN #userId# THEN 1
+					ELSE 2
+					END
+				)
 			]]>
 			</isEqual>
 			<isEqual property="sortFlag" compareValue="desc">
             <![CDATA[
-				DESC
+				DESC, , A.LADDERID DESC
 			]]>
 			</isEqual>
 			<isNotEqual property="sortFlag" compareValue="desc">
 			 <![CDATA[
-				ASC
+				ASC, , A.LADDERID ASC
 			]]>
 			</isNotEqual>
 			LIMIT 
@@ -371,9 +375,6 @@
 			AND 
 				D.USERNAME
 			LIKE CONCAT('%', #searchInput#, '%')
-			ORDER BY 
-				A.LADDERID 
-			DESC
 		]]>
 		</isEqual>
 		<isNotEqual property="searchSelect" compareValue="participant">
@@ -420,11 +421,6 @@
 					LIKE CONCAT('%', #searchInput#, '%')
 				]]>	  
 				</isEqual>
-				<![CDATA[
-					ORDER BY 
-						A.LADDERID 
-					DESC
-				]]>
         </isNotEqual> 
 	</select>
 	
@@ -502,11 +498,25 @@
 			</isEqual>
 			<isEqual property="sort" compareValue="deleteFlag">
             <![CDATA[
-				A.DELETEFLAG 
+				(
+					CASE A.WRITERID
+					WHEN #userId# THEN 1
+					ELSE 2
+					END
+				)
 			]]>
 			</isEqual>
+			<isEqual property="sortFlag" compareValue="desc">
+            <![CDATA[
+				DESC, A.LADDERID DESC
+			]]>
+			</isEqual>
+			<isNotEqual property="sortFlag" compareValue="desc">
+			 <![CDATA[
+				ASC, A.LADDERID ASC
+			]]>
+			</isNotEqual>
 			<![CDATA[
-			DESC
 			LIMIT 
 				#startPoint#, #endPoint# 
 		]]>
@@ -598,11 +608,25 @@
 			</isEqual>
 			<isEqual property="sort" compareValue="deleteFlag">
             <![CDATA[
-				A.DELETEFLAG 
+				(
+					CASE A.WRITERID
+					WHEN #userId# THEN 1
+					ELSE 2
+					END
+				)
 			]]>
 			</isEqual>
+			<isEqual property="sortFlag" compareValue="desc">
+            <![CDATA[
+				DESC, A.LADDERID DESC
+			]]>
+			</isEqual>
+			<isNotEqual property="sortFlag" compareValue="desc">
+			 <![CDATA[
+				ASC, A.LADDERID ASC
+			]]>
+			</isNotEqual>
 			<![CDATA[
-					DESC
 					LIMIT 
 						#startPoint#, #endPoint# 
 				]]>
@@ -650,9 +674,6 @@
 			AND 
 				E.USERNAME
 			LIKE CONCAT('%', #searchInput#, '%')
-			ORDER BY
-				D.LADDERID
-			DESC
 		]]>
 		</isEqual>
 		<isNotEqual property="searchSelect" compareValue="participant">
@@ -715,11 +736,6 @@
 					LIKE CONCAT('%', #searchInput#, '%')
 				]]>	  
 				</isEqual>
-				<![CDATA[
-					ORDER BY 
-						D.LADDERID 
-					DESC
-				]]>
         </isNotEqual> 
 	</select>
 	
@@ -806,11 +822,25 @@
 			</isEqual>
 			<isEqual property="sort" compareValue="deleteFlag">
             <![CDATA[
-				D.DELETEFLAG 
+				(
+					CASE D.WRITERID
+					WHEN #userId# THEN 1
+					ELSE 2
+					END
+				)
 			]]>
 			</isEqual>
+			<isEqual property="sortFlag" compareValue="desc">
+            <![CDATA[
+				DESC, D.LADDERID DESC
+			]]>
+			</isEqual>
+			<isNotEqual property="sortFlag" compareValue="desc">
+			 <![CDATA[
+				ASC, D.LADDERID ASC
+			]]>
+			</isNotEqual>
 			<![CDATA[
-			DESC
 			LIMIT 
 				#startPoint#, #endPoint# 
 		]]>
@@ -918,11 +948,25 @@
 			</isEqual>
 			<isEqual property="sort" compareValue="deleteFlag">
             <![CDATA[
-				D.DELETEFLAG 
+				(
+					CASE D.WRITERID
+					WHEN #userId# THEN 1
+					ELSE 2
+					END
+				)
 			]]>
 			</isEqual>
+			<isEqual property="sortFlag" compareValue="desc">
+            <![CDATA[
+				DESC, D.LADDERID DESC
+			]]>
+			</isEqual>
+			<isNotEqual property="sortFlag" compareValue="desc">
+			 <![CDATA[
+				ASC, D.LADDERID ASC
+			]]>
+			</isNotEqual>
 			<![CDATA[
-					DESC
 					LIMIT 
 						#startPoint#, #endPoint# 
 				]]>
