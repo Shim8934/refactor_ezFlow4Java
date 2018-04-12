@@ -15,6 +15,9 @@
 			#tblPageRayer .pagenavi span{
 				margin : 0px;
 			}
+			.popuplist tr:nth-child(even) td{
+				background-color : #f8f8fa;
+			}
 		</style>
 		<script type="text/javascript">
 		    window.onload = function () {
@@ -46,9 +49,9 @@
 				            <c:forEach items="${viewerList }" var="viewer" varStatus="status">
 								<tr userid="${viewer.userId }" onclick="show_info(this);" style="background-color: rgb(255, 255, 255);">
 									<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.userName }</td>
-									<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.deptName }</td>
-									<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.jikwi }</td>
-									<td align="left" style="width: 130px; text-align: center; cursor: pointer;">${viewer.date }</td>
+									<td align="left" style="width: 120px; text-align: center; cursor: pointer;">${viewer.deptName }</td>
+									<td align="left" style="width: 80px; text-align: center; cursor: pointer;">${viewer.jikwi }</td>
+									<td align="left" style="width: 150px; text-align: center; cursor: pointer;">${viewer.date }</td>
 								</tr>
 				            </c:forEach>
 						</table>
@@ -64,7 +67,7 @@
 	        </div>
 	        <div id='runtime' style="color:#666;padding-top:5px"></div>
 			<c:if test="${paging.endPage>0 }">
-				<div id="tblPageRayer" style="width:470px; margin:6px auto;">
+				<div id="tblPageRayer" style="width:470px; height:24px; margin:6px auto;">
 					<div class="pagenavi">   
 						<c:choose>
 								<c:when test="${paging.currentPage gt 1}">   

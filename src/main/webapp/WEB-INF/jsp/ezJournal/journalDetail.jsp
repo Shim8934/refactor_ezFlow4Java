@@ -381,7 +381,7 @@
 		        var left = (width - 500) / 2;
 		        var top = (heigth - 300) / 2;
 		        var szHref = "/ezJournal/JournalViewerList.do?journalId=" + journalId+"&currentPage="+currentPage;
-	            DivPopUpShow(520, 430, szHref);
+	            DivPopUpShow(600, 415, szHref);
 		    }
 		    
 		    //엑셀로 저장
@@ -462,7 +462,7 @@
 		        var left = (width - 500) / 2;
 		        var top = (heigth - 300) / 2;
 		        var szHref = "/ezJournal/JournalReceiverList.do?typeId=" + typeId + "&journalId=" + journalId + "&currentPage=" + currentPage;
-	            DivPopUpShow(520, 430, szHref);
+	            DivPopUpShow(600, 415, szHref);
 		    }
 		    
 		    //인쇄

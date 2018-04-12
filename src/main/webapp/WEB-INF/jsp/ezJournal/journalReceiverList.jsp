@@ -15,6 +15,9 @@
 			#tblPageRayer .pagenavi span{
 				margin : 0px;
 			}
+			.popuplist tr:nth-child(odd) td{
+				background-color : #f8f8fa;
+			}
 		</style>
 		<script type="text/javascript">
 		    window.onload = function () {
@@ -69,7 +72,7 @@
 	        </div>
 	        <div id='runtime' style="color:#666;padding-top:5px"></div>
 	        <c:if test="${paging.endPage>0 }">
-				<div id="tblPageRayer" style="width:470px; margin:6px auto;">
+				<div id="tblPageRayer" style="width:470px; height:24px; margin:6px auto;">
 					<div class="pagenavi">   
 						<c:choose>
 								<c:when test="${paging.currentPage gt 1}">   
