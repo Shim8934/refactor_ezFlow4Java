@@ -427,7 +427,7 @@
 										<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
 										<option value="userName"><spring:message code='ezWebFolder.t143' /></option>
 									</select>
-									<input id="inputSearch" type="text" style="width: 270px; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ccc;">
+									<input id="inputSearch" type="text" style="width: 250px; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ccc;">
 								</td>
 							</tr>
 							<tr>

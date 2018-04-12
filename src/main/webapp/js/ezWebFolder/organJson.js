@@ -486,7 +486,7 @@ function cnsearch_click() {
 	$.ajax({
 		type : "POST",
 		dataType : "text",
-		url : "/ezOrgan/getSearchList.do",
+		url : "/ezOrgan/getSearchList.do?company=" + pCompanyID,
 		async : false,
 		data : {search :"displayname::" + cnkeyword.value, cell : 'company;description;title;displayName;mail', prop : 'department', type : 'user'},
 		success : function(result) {
