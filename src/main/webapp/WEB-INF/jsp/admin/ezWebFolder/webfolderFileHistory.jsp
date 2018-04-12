@@ -173,6 +173,9 @@
 							case "R":
 								tdElmt5.textContent = "<spring:message code='ezWebFolder.t111' />";
 								break;
+							case "P":
+								tdElmt5.textContent = "<spring:message code='ezWebFolder.t19' />";
+								break;
 						}
 						
 						tdElmt6.setAttribute("style","text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");

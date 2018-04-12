@@ -212,6 +212,7 @@ public class EzOrganController {
         logger.debug("tenantID=" + tenantID);       
 		
 		String searchlist = request.getParameter("search").trim();
+		String companyId  = request.getParameter("company") == null ? "" : request.getParameter("company");
 		String celllist = request.getParameter("cell");
 		String proplist = request.getParameter("prop");
 		String listtype = request.getParameter("type");
@@ -220,10 +221,15 @@ public class EzOrganController {
 		String infoXML = "";
 		
 		logger.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
-		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page);
+		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page + ",companyId=" + companyId);
 		
 		if (page == null) {
-			infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
+			if (companyId.equals("")) {
+				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
+			}
+			else {
+				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID);
+			}
 		} else {
 			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID);
 		}

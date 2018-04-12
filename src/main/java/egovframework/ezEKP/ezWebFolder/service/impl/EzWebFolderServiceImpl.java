@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -715,11 +716,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		List<FileVO> list = new ArrayList<FileVO>();
 		
 		for (int i = 0; i < cnt; i++) {
-			fileSize[i]   = multiFileLists.get(i).getSize();
-			String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+			fileSize[i]    = multiFileLists.get(i).getSize();
+			String extend  = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+			String newName = UUID.randomUUID().toString() + "." + extend;
 			
 			if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {
-				writeUploadedFile(multiFileLists.get(i), pFileName[i], pDirPath);
+				writeUploadedFile(multiFileLists.get(i), newName, pDirPath);
 				FileTypeVO fileType = getFileTypeByFileExt(extend.toLowerCase(), tenantId);
 				
 				if (fileType == null) {
@@ -735,7 +737,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				fileVO.setFileExt(extend);
 				fileVO.setFileName(pFileName[i]);
 				fileVO.setDownloadCnt(0);
-				fileVO.setFilePath(getWebFolderDirPath(tenantId) + pFileName[i]);
+				fileVO.setFilePath(getWebFolderDirPath(tenantId) + newName);
 				fileVO.setFileSize(Long.toString(fileSize[i]));
 				fileVO.setFolderId(folder.getFolderId());
 				fileVO.setTenantId(tenantId);
@@ -823,13 +825,14 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				//Setting headers
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-				zipOutputStream = new ZipOutputStream(response.getOutputStream());
+				zipOutputStream          = new ZipOutputStream(response.getOutputStream());
+				HashSet<String> nameList = new HashSet<>();
 				
 				//Package files
 				for (int i = 0; i < fileIDList.length; i++) {
 					//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
-					FileVO fileVO = getFileByFileId(fileIDList[i], offset, tenantId);
-					File file     = new File(realPath + fileVO.getFilePath());
+					FileVO fileVO    = getFileByFileId(fileIDList[i], offset, tenantId);
+					File file        = new File(realPath + fileVO.getFilePath());
 					
 					if (!file.exists()) {
 						throw new FileNotFoundException(fileVO.getFileName());
@@ -839,7 +842,26 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 						throw new FileNotFoundException(fileVO.getFileName());
 					}
 					
-					zipOutputStream.putNextEntry(new ZipEntry(fileVO.getFileName()));
+					String zFileName = fileVO.getFileName();
+					
+					if (!nameList.contains(zFileName)) {
+						nameList.add(zFileName);
+					}
+					else {
+						int pos         = zFileName.lastIndexOf(".");
+						String extend   = zFileName.substring(pos + 1);
+						String mainName = zFileName.substring(0, pos);
+						int k           = 1;
+						zFileName       = mainName + "(" + Integer.toString(k) + ")." + extend;
+						
+						while (nameList.contains(zFileName)) {
+							zFileName = mainName + "(" + Integer.toString(++k) + ")." + extend;
+						}
+						
+						nameList.add(zFileName);
+					}
+					
+					zipOutputStream.putNextEntry(new ZipEntry(zFileName));
 					fileInputStream = new FileInputStream(file);
 					
 					IOUtils.copy(fileInputStream, zipOutputStream);
