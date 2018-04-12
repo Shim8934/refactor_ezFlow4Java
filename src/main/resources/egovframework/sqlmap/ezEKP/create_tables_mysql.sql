@@ -8711,7 +8711,7 @@ CREATE TABLE `tbl_journal` (
   PRIMARY KEY (`journal_id`,`tenant_id`),
   KEY `FK_tbl_journal_form_id_tbl_journal_form_form_id` (`form_id`),
   CONSTRAINT `FK_tbl_journal_form_id_tbl_journal_form_form_id` FOREIGN KEY (`form_id`) REFERENCES `tbl_journal_form` (`form_id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지';
 
 -- jmocha.tbl_journal_recv_favorite Table Create SQL
 CREATE TABLE `tbl_journal_recv_favorite` (
@@ -8810,3 +8810,4 @@ CREATE TABLE `tbl_journal_view` (
   KEY `FK_tbl_journal_view_journal_id_tbl_journal_journal_id` (`journal_id`),
   CONSTRAINT `FK_tbl_journal_view_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지조회';
+
