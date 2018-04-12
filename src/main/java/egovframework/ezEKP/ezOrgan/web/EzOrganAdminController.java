@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezOrgan.web;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
@@ -1607,10 +1608,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 			writeUploadedFile(multiFile, fileName + extension, tempPath);
 			File imageFile = new File(tempPath + fileName + extension);			
-			
+
 			BufferedImage bi = ImageIO.read(imageFile);
-            BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
-            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
+			/*2018-04-12이효진  bi.getType으로 지정시 color변경되어 TYPE_4BYTE_ABGR로 지정*/
+//            BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
+            BufferedImage bufferedImage = new BufferedImage(119, 128, BufferedImage.TYPE_4BYTE_ABGR);
+            /*2018-04-12이효진  PNG파일 배경지정*/
+//            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
+            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, Color.WHITE, null);
             
             File file2 = new File(serverPath + fileName + "png");
             ImageIO.write(bufferedImage, "png", file2);

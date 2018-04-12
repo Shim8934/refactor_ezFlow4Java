@@ -770,6 +770,10 @@
                     img.style.height = "60px";
                     var dd = document.createElement("DD");
                     var strong = document.createElement("STRONG");
+                    strong.setAttribute("code", clubVO.c_ClubNo.trim());
+                    strong.setAttribute("type", clubVO.c_ClubConfirmType);
+                    strong.style.cursor = "pointer";
+                    strong.onclick = function () { move_cop(this); };
                     
                     if (primary == "1") {
                         strong.innerHTML = clubVO.c_ClubName;
