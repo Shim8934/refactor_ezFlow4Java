@@ -34,7 +34,7 @@ public interface EzWebFolderService_m {
 
 	public String getFolderPath (String folderId, int tenantId) throws Exception;
 
-	public void permanetDeleteSelectedFiles (String[] fileIDList, LoginVO userInfo, String realPath) throws Exception;
+	public void permanetDeleteSelectedFiles (String[] fileIDList,String[] folderIDList ,LoginVO userInfo, String realPath) throws Exception;
 
 	public void realFileDelete(String fileName, String realPath, LoginVO userInfo) throws Exception;
 	

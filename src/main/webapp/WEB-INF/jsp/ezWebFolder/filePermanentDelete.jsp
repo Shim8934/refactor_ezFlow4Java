@@ -14,6 +14,7 @@
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript">
 		var fileList = "<c:out value="${fileList}"/>";
+		var folderList = "<c:out value="${folderList}"/>";
 		
 		var userInfo = {
 	   			id: 		"${userInfo.id}",
@@ -37,7 +38,8 @@
 				type: "POST",
 				url: "/ezWebFolder/pemanentDeleteFile.do",
 				data: {
-					"fileList" : fileList
+					"fileList" : fileList,
+					"folderList" : folderList
 				},
 				dataType: "JSON",
 				async: true,

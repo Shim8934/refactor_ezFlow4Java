@@ -54,6 +54,7 @@ public class EzWebFolderController_m {
 			HttpServletResponse response, Model model) throws Exception {
 		logger.debug("permanentDeleteConfirm Started.");
 		String fileList = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
+		String folderList = request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
 		
 		if (fileList.equals("")) {
 			logger.debug("Delete File Confirm illegal arguments!");
@@ -62,6 +63,8 @@ public class EzWebFolderController_m {
 		
 		model.addAttribute("userInfo", commonUtil.userInfoSimple(loginCookie));
 		model.addAttribute("fileList", fileList);
+		model.addAttribute("folderList", folderList);
+		
 		logger.debug("permanentDeleteConfirm ended.");
 		return "ezWebFolder/filePermanentDelete";
 	}
@@ -72,7 +75,8 @@ public class EzWebFolderController_m {
 		logger.debug("pemanentDeleteFile Started.");
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String listFileId = request.getParameter("fileList");
+		String fileList = request.getParameter("fileList");
+		String folderList = request.getParameter("folderList");
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/file-permanent-delete";
 		
@@ -81,7 +85,8 @@ public class EzWebFolderController_m {
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())
 										.queryParam("lang", user.getLang())
-										.queryParam("fileList", listFileId);
+										.queryParam("fileList", fileList)
+										.queryParam("folderList", folderList);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

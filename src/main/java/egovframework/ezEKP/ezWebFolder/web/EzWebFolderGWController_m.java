@@ -376,15 +376,19 @@ public class EzWebFolderGWController_m {
 	@RequestMapping(value = "/rest/ezwebfolder/file-permanent-delete", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject filePermanetDelete(Locale locale, HttpServletRequest request) {
 		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";
-		String listFileId   = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
+		String fileList   = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
+		String folderList   = request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
 		String userId       = request.getParameter("userId")       != null ? request.getParameter("userId")   	  : "";
 		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
 		String lang         = request.getParameter("lang")     != null ? request.getParameter("lang")     : "";
 		
 		logger.debug("filePermanetDelete Started.");
-		logger.debug("offset=" + offset + ",listFileId=" + listFileId + ",userId=" + userId + ",serverName=" + serverName + ",lang=" + lang);
+		logger.debug("offset=" + offset + ",fileList=" + fileList);
+		logger.debug("userId=" + userId + ",serverName=" + serverName);
+		logger.debug("lang=" + lang + ",folderList=" + folderList);
 		
-		String[] fileIDList = listFileId.split(",");
+		String[] fileIDList = fileList.split(",");
+		String[] folderIDList = folderList.split(",");
 		String realPath = request.getServletContext().getRealPath("");
 		JSONObject result   = new JSONObject();
 		
@@ -398,7 +402,7 @@ public class EzWebFolderGWController_m {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
-			ezWebFolderService.permanetDeleteSelectedFiles(fileIDList, userInfo, realPath);
+			ezWebFolderService.permanetDeleteSelectedFiles(fileIDList, folderIDList, userInfo, realPath);
 			
 			result.put("status", "ok");
 			result.put("code", "0");

@@ -474,7 +474,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 
 	@Override
-	public void permanetDeleteSelectedFiles(String[] fileIDList, LoginVO userInfo, String realPath) throws Exception {
+	public void permanetDeleteSelectedFiles(String[] fileIDList, String[] folderIDList ,LoginVO userInfo, String realPath) throws Exception {
 		LOGGER.debug("permanetDeleteSelectedFiles Started.");
 		LOGGER.debug("fileIDList=" + fileIDList + ",userInfo=" + userInfo + ",realPath=" + realPath);
 		
@@ -485,20 +485,24 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		String offset    = userInfo.getOffset();
 		String userId    = userInfo.getId();
 		
-		for (int i = 0; i < fileIDList.length; i++) {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(fileIDList[i], offset, tenantId);
+		for (String file : fileIDList ) {
+			FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 			
-			if (fileVO == null) {
-				FolderVO folderVO = ezWebFolderService.getFolderByFolderId(fileIDList[i], offset, tenantId);
-				updateFolderUseStatus(folderVO);
-				updateStatusAllFilesInFolder(folderVO);
-				realFileDeleteInFolder(folderVO.getFolderPath(), companyId, realPath, userInfo, offset, tenantId);
-			} else {
-				updateFileUseStatus(fileIDList[i], tenantId);
+			if (fileVO != null) {
+				updateFileUseStatus(file, tenantId);
 				ezWebFolderService.saveLog("P", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 				realFileDelete(fileVO.getFileName(), realPath, userInfo);
 			}
+		}
+		
+		for (String folder : folderIDList) {
+			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
 			
+			if (folderVO != null) {
+				updateFolderUseStatus(folderVO);
+				updateStatusAllFilesInFolder(folderVO);
+				realFileDeleteInFolder(folderVO.getFolderPath(), companyId, realPath, userInfo, offset, tenantId);
+			}
 		}
 		
 	LOGGER.debug("permanetDeleteSelectedFiles ended");

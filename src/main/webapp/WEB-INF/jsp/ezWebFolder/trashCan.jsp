@@ -61,6 +61,7 @@
 		var fileCnt = 0;
 		var folderCnt = 0;
 		var checkedArr	= [];
+		var folderArr = [];
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -194,6 +195,7 @@
 					var inputElmt = document.createElement("input");
 					inputElmt.setAttribute("type", "checkbox");
 					inputElmt.setAttribute("value", resultElement["trashCanId"]);
+					inputElmt.setAttribute("ext", resultElement["trashCanExt"]);
 					inputElmt.setAttribute("class", "checkBnk");			
 					inputElmt.addEventListener("change", function() {getChecked(this);});
 					
@@ -434,60 +436,51 @@
          
      
        function refreshView() {
-    	   console.log("Run here!");
     	   renderFileList();
        }
        
        function filePermanentDelete() {
-    	   if (checkedArr.length <= 0) {
+    	   if (checkedArr.length <= 0 && folderArr.length <= 0) {
     		   alert("<spring:message code = 'ezWebFolder.t108'/>");
     		   return;
     	   }
     	   
-	       var checkedList = checkedArr[0];
-	    	
+	       var checkedFileList = checkedArr[0];
+	       var checkedFolderList = folderArr[0];
+	       
     	   for (var i = 1; i < checkedArr.length; i++) {
-    	   	   checkedList = checkedList + "," + checkedArr[i];	    			
+    		   checkedFileList = checkedFileList + "," + checkedArr[i];	    			
     	   }
     	   
-    	   $.ajax({
-				type: "POST",
-				url: "/ezWebFolder/checkPermission.do",
-				data: {
-					"fileList" : checkedList
-				},
-				dataType: "JSON",
-				async: true,
-				success : function(data) {
-					var result = data.resultValue;
-					
-					if (result != "ok") {
-						alert("<spring:message code='ezWebFolder.t243'/>");
-					}
-					else {
-						DivPopUpShow(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + checkedList);
-					}
-					renderFileList();
-				},
-				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134'/>" + error);
-				}
-			});
+    	   for (var i = 1; i < folderArr.length; i++) {
+    		   checkedFolderList = checkedFolderList + "," + folderArr[i];
+    	   }
     	   
-    	   //DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList);
+    	   DivPopUpShow(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + checkedFileList + "&folderList=" + checkedFolderList);	   
+   
        }
        
        function getChecked(obj) {
     	   var id = obj.getAttribute("value");
     	   if (obj.checked == true) {
-    		   checkedArr.push(id);
+    		   if (obj.getAttribute("ext") == "folder"){
+    			   folderArr.push(id);
+    		   } else {
+	    		   checkedArr.push(id);
+    		   }
     	   }
     	   else {
-    		   var pos = checkedArr.indexOf(id);
-	    		
-    		   if (pos != -1) {
-    			   checkedArr.splice(pos, 1);
+    		   if (obj.getAttribute("ext") == "folder"){
+    			   folderArr.push(id);
+    		   } else {
+	    		   var pos = checkedArr.indexOf(id);
+	    		   checkedArr.push(id);
+	    		   
+	    		   if (pos != -1) {
+	    			   checkedArr.splice(pos, 1);
+	    		   }
     		   }
+	    		
     	   }
        }
        
@@ -498,7 +491,11 @@
     	   if (obj.checked == true) {
     		   for (var i = 0; i < listInputs.length; i++) {
 	    			listInputs[i].checked = true;
-	    			checkedArr.push(listInputs[i].value);	    		
+	    			if (listInputs[i].ext == 'folder') {
+	    				folderArr.push(listInputs[i].value);
+	    			} else {
+		    			checkedArr.push(listInputs[i].value);	    		
+	    			}
 	    		}		    	
     	   }
     	   else {
@@ -507,6 +504,7 @@
 	    		}
     	   }
        }
+       
        function changeCount(value) {
     	   blockSize = value;
     	   currentPage = 1;
