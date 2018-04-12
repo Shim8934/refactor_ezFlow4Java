@@ -9,6 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
+		<link rel="stylesheet" href="/css/font-awesome-4.7.0/css/font-awesome.css">
 		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
 		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -167,7 +168,7 @@
 								showVotesObj.style.cssText = "display: block; color: "+ colors[i % 30] +"; font-weight: bold;";
 							}
 							
-							showVotesObj.innerHTML = "<img id='selectAnsImg_"+ _optId +"' class='selectAnsImg' src='/images/icon/check.gif'/>"
+							showVotesObj.innerHTML = "<i class='fa fa-check' style='font-size:15px; color:" + colors[i % 30] + ";'></i>"
 							   					   + "<spring:message code = 'ezBoard.t47'/>";
 							document.getElementById(voteInfo).style.display = "none";
 						}
@@ -553,7 +554,7 @@
 			        		var showVotesObj = document.getElementById(showVotes);
 			        		if("${question.resultFirst}" !== "1"){
 			        			$("#selectAnsImg_" + optId).css("display","block");
-			        			showVotesObj.innerHTML = "<img id='selectAnsImg_"+ optId +"' class='selectAnsImg' src='/images/icon/check.gif'/>"
+			        			showVotesObj.innerHTML = "<i class='fa fa-check' style='font-size:15px; color:" + colors[(optId - 1) % 30] + ";'></i>"
 			        								   + "<spring:message code = 'ezBoard.t47'/>";
 			        			showVotesObj.style.fontWeight = "bold";
 			        		}
