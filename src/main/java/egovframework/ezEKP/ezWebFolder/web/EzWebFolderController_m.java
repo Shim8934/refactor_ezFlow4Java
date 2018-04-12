@@ -61,7 +61,6 @@ public class EzWebFolderController_m {
 			return "cmm/error/egovError";
 		}
 		
-		model.addAttribute("userInfo", commonUtil.userInfoSimple(loginCookie));
 		model.addAttribute("fileList", fileList);
 		model.addAttribute("folderList", folderList);
 		

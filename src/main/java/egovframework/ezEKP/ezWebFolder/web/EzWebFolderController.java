@@ -5,10 +5,13 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -40,8 +43,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
@@ -52,6 +58,9 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@Autowired
 	private Properties config;
 	
+	@Autowired
+    private EzCommonService ezCommonService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController.class);
 
 	@RequestMapping(value = "/ezWebFolder/webfolderMain.do")
@@ -61,6 +70,10 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 	@RequestMapping(value="/ezWebFolder/webfolderLeft.do")
 	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie,ModelMap modelMap, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String useBottomFrameOnly = ezCommonService.getTenantConfig("useBottomFrameOnly", loginInfo.getTenantId());
+		
+		model.addAttribute("useBottomFrameOnly", useBottomFrameOnly);
 		return "ezWebFolder/webfolderLeft";
 	}
 

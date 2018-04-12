@@ -16,15 +16,8 @@
 		var fileList = "<c:out value="${fileList}"/>";
 		var folderList = "<c:out value="${folderList}"/>";
 		
-		var userInfo = {
-	   			id: 		"${userInfo.id}",
-	   			lang:		"${userInfo.lang}",
-	   			offset: 	"${userInfo.offset}",
-	   			tenantId : 	"${userInfo.tenantId}"
-	    	};
-		
 		function wClose() {
-			parent.DivPopUpHidden();
+			parent.hiddenPanel();
 			window.close();
 		}
 		
