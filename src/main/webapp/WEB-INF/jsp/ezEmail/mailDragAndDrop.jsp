@@ -19,6 +19,7 @@
 		<script type="text/javascript">
 		    var lstAttachLink = document.getElementById("lstAttachLink");
 		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
+		    var status = 0; // 일반-대용량 첨부파일 구분 상태값  
 		    
 		    function onDragEnter(evt) {
 		        evt.dataTransfer.dropEffect = "copy";
@@ -33,15 +34,14 @@
 		
 		    var filesize = 0;
 		    var bigfilesize = 0;
-		
 		    var file = new Array;
 		    var bigfile = new Array;
 		    var xhr = new XMLHttpRequest();
 		    var filelist;
 		    var isfileup = false;
-		
 		    var isbigyn = "N";
-		
+			var alertCnt = 1;
+		    
 		    function onDrop(evt) {
 		        if (evt != undefined) {
 		            evt.stopPropagation();
@@ -84,20 +84,24 @@
 		
 		        var filecnt = file.length;
 		        var bigFileCheck = false;
+		        
+		        if (status == 1) {
+		        	isbigyn = "Y";
+		        	status = 0;
+		        }
+		        
 		        for (var i = 0; i < filelist.length; i++) {
 		            if (filelist[i].size / 1024 / 1024 > window.parent.BigSizeAttachMBSize || isbigyn == "Y") {
 		                bigFileCheck = true;
 		                bigfile[filecnt + i] = filelist[i];
 		                tempbigfilesize += filelist[i].size;
-		            }
-		            else {
+		            } else {
 		                file[filecnt + i] = filelist[i];
 		                tempfilesize += filelist[i].size;
 		            }
 		        }
 				
-		        if (isbigyn == "Y")
-		        {
+		        if (isbigyn == "Y") {
 		            bigFileCheck = true;
 		        }
 		
@@ -111,22 +115,34 @@
 		            return;
 		        }
 		        
-		        if (bigFileCheck)
+		        if (bigFileCheck && alertCnt < 2) {
 		            alert(strLangKMS01+window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
-
-		        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize) {
-		            if(window.parent.FtotBigSizeAttachSize == 0){
-		            	if("${ userInfo.lang }" == "2")
+		            alertCnt++;
+		        }
+		        
+		        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize && isbigyn == "N") {
+		           
+		        	/* 일반첨부파일용량 초과인경우 맨 마지막 파일을 대용량 첨부로 전환시킨다. 기존에는 return으로 종료했었음.
+		        	if (window.parent.FtotBigSizeAttachSize == 0) {
+		            	
+		            	if ("${ userInfo.lang }" == "2") {
 			                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + strLang76);
-			            else
+		            	} else {
 			                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
-		            }else if("${ userInfo.lang }" == "2")
+		            	}
+		            	
+		            } else if ("${ userInfo.lang }" == "2") {
 		                alert(strLang75 + window.parent.totSizeAttachMBSize + strLang76);
-		            else
+		        	} else {
 		                alert(strLang75 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
-		
-		            file.splice(file.length - filelist.length, filelist.length);
-		            return;
+		            }
+		            
+		        	file.splice(file.length - filelist.length, filelist.length);
+		            */
+		            
+		            status = 1;
+		            
+		            return status;
 		        }
 
 		        if ((bigfilesize + tempbigfilesize) / 1024 / 1024 > window.parent.totBigSizeAttachMBSize) {
@@ -355,7 +371,12 @@
 		    }
 		
 		    function filechange(e) {
-		        onDrop();
+		        var stt = onDrop();
+		        
+		        if (stt == 1) {
+		        	onDrop();
+		        }
+		        
 		    }
 		
 		    function btnfiledel() {

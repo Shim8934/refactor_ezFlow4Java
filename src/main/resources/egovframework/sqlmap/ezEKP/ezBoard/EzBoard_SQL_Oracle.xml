@@ -593,6 +593,8 @@
             ON 
                 A.itemid = C.itemid
             AND
+                C.ReadDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)
+            AND
                 C.tenant_id = #v_TENANTID#
             AND
                 C.userid = #v_pUserID#
@@ -992,7 +994,8 @@
 	      							 	S.TENANT_ID = #v_TENANTID#
 	      							 AND
 	      							 	S.USERID = #v_PUSERID# 
-	      							 ))) T1
+	      							 AND 
+	      							 	S.READDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)))) T1
       				WHERE RNUM <= #v_PENDROW# ) T2 
       		WHERE 
       			RNUM >= #v_PSTARTROW#
@@ -4206,7 +4209,6 @@
 		    	UpdateDate = #writeDate#,
 		    	Importance = #importance#,
 	          	Title = #title#,
-	          	StartDate = #startDate#,
 	          	EndDate = #endDate#,
 	          	Abstract = #ABSTRACT#,
 	          	Attachments = #hasAttach#,
