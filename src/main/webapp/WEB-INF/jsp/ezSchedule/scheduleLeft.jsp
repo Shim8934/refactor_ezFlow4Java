@@ -109,29 +109,29 @@
 	            var ua = navigator.userAgent;
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {	    
 	                if ("2" == _funCode) {
-	                    document.getElementById('Schedule_Main').parentElement.onclick();
+	                    //document.getElementById('Schedule_Main').parentElement.onclick();
 	                    document.getElementById('Schedule_Main').onclick();
 	                }
 	                else if ("6" == _funCode) {
-	                    document.getElementById('Schedule_Search').parentElement.onclick();
+	                    //document.getElementById('Schedule_Search').parentElement.onclick();
 	                    document.getElementById('Schedule_Search').onclick();
 	                }
 	                else if ("10" == _funCode) {
-	                    document.getElementById('Schedule_Public_Search').parentElement.onclick();
+	                    //document.getElementById('Schedule_Public_Search').parentElement.onclick();
 	                    document.getElementById('Schedule_Public_Search').onclick();
 	                }
 	                else if ("3" == _funCode) {
-	                    document.getElementById('Task').parentElement.onclick();
+	                    //document.getElementById('Task').parentElement.onclick();
 	                    document.getElementById('Task').onclick();
 	                }
 	                else if ("7" == _funCode) {
-	                    document.getElementById('Task').parentElement.onclick();
+	                    //document.getElementById('Task').parentElement.onclick();
 	                    document.getElementById('Task').onclick();
-	                    document.getElementById('Task_Search').parentElement.onclick();
+	                    //document.getElementById('Task_Search').parentElement.onclick();
 	                    document.getElementById('Task_Search').onclick();
 	                }
 	                else if ("11" == _funCode) {
-	                	document.getElementById('Schedule_Config').parentElement.onclick();
+	                	//document.getElementById('Schedule_Config').parentElement.onclick();
 	                    document.getElementById('Schedule_Config').onclick();
 	                }
 	            }
