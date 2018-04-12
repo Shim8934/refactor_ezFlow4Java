@@ -2704,7 +2704,7 @@
     			setDateTimeValue();	
     			
     			$("#endDate").click(function() {
-    				if($("#_dateTimePicker").css("display") != "block"){
+    				if($("#_dateTimePicker").css("display") == "none"){
 	    				$("#_dateTimePicker").css("display", "inline-block");
 	    				$(".ui-datepicker-trigger").click();
     				}
@@ -2758,12 +2758,8 @@
 	  						$("#Edatepicker, #eTimePicker").css("color", "#000000");
 		        		}
 		        		
-		        		if($("#_dateTimePicker").css("display") != "block"){
-		    				$("#_dateTimePicker").css("display", "inline-block");
-	    				}
-	    				else{
-		    				$("#_dateTimePicker").css("display", "none");
-	    				}
+		        		$("#_dateTimePicker").toggle();
+		        		
         			}, 500);
 		  	}
 		  	
