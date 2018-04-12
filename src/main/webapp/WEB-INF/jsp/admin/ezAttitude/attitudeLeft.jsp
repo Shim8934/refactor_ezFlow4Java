@@ -11,6 +11,10 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
+			window.onload = function() {
+				moveToPage(1);
+			}
+			
 			function moveToPage(idx)
 			{
 				var url = "";
@@ -47,7 +51,7 @@
 		</div>
 		
 		<script type="text/javascript">
-			initToggleList(document.getElementById("left"), "h2", "ul", "li");
+			//initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		</script>
 	</body>
 </html>

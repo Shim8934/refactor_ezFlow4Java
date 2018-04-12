@@ -492,13 +492,29 @@ public class EzAttitudeBHSController {
 			JSONObject attitudeVO = new JSONObject();
 			if (status.equals("ok")) {
 				attitudeVO = (JSONObject) resultBody.get("data");
-				LOGGER.debug("attitudeVO1 : " + attitudeVO);
 				model.addAttribute("attitudeInfo", attitudeVO);
-				
 			}
 		} 
 		
 		LOGGER.debug("/ezAttitude/attitudeItemView ended");
 		return "/ezAttitude/attitudeItemView";
+	}
+	
+	/**
+	 * 근태 삭제
+	 */
+	@RequestMapping(value = "/ezAttitude/attitudeDeleteItem.do")
+	@ResponseBody
+	public void attitudeDeleteItem(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeDeleteItem started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String attitudeId = request.getParameter("attitudeId");
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl;
+		
+		LOGGER.debug("/ezAttitude/attitudeDeleteItem started");
 	}
 }

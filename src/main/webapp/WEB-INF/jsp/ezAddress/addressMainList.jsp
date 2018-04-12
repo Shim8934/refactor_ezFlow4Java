@@ -940,7 +940,7 @@
 				</table>
 			</div>
 		</div>
-		<div class="shadow"></div>		
+		<div class="shadow"></div>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
