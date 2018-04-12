@@ -2659,7 +2659,7 @@
 		  		
 		  		xhr1.open("POST", "/ezPoll/updateEndDateForQst.do", false);
 	    	    xhr1.send(fd);
-	    	    window.parent.frames["right"].location.href = "/ezPoll/pollVote.do?brdID="+"${question.qstId}";
+	    	    window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6";
 		  	}
 		  	
 		  	function dateTimePickerSetting(){
