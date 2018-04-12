@@ -129,6 +129,7 @@ function getSelected(obj) {
 	obj.style.color = "#e04343";
 	
 	window.parent.frames["right"].folderId = selectedFolder;
+	window.parent.frames["right"].toggleUploadBttn(obj.getAttribute("level"));
 	window.parent.frames["right"].search_Set("1");
 }
 

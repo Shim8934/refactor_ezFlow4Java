@@ -392,6 +392,10 @@
 			function refreshView() {
 				search_Set(currentPage);
 			}
+			
+			function toggleUploadBttn(levelValue) {
+				document.getElementById("uploadBttn").style.display = levelValue == '0' ? 'none' : "";
+			}
 		</script>
 	</head>
 	<body class="mainbody" onresize="preProcessing();">
@@ -411,7 +415,7 @@
 		<div id="mainmenu2" style="position: relative;">
 			<ul>
 				<li id=""><a onClick="fileDownload()"    style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-				<li id=""><a onClick="fileUpload()"      style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+				<li id="uploadBttn" style="display: ${level == 0 ? 'none' : ''}"><a onClick="fileUpload()"      style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
 				<li id=""><a onClick="fileDelete()"      style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t117'/></span></a></li>
 				<li id=""><a onClick="fileRename()"      style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t118'/></span></a></li>
 				<li id=""><a onClick="fileMove()"        style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>

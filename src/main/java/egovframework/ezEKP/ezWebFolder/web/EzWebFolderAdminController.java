@@ -266,6 +266,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			model.addAttribute("primary", user.getLang());
 			model.addAttribute("folderId", folderId);
 			model.addAttribute("rootFolder", rootFolder);
+			model.addAttribute("level", 0);
 		}
 		
 		return "admin/ezWebFolder/webfolderCompanyFile";
@@ -1026,6 +1027,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			model.addAttribute("list", companyList);
 			model.addAttribute("primary", user.getLang());
 			model.addAttribute("folderId", folderId);
+			model.addAttribute("level", 0);
 		}
 		
 		return "admin/ezWebFolder/webfolderDeptFile";
