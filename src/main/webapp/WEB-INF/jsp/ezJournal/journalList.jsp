@@ -27,7 +27,7 @@
 				</c:if>
 				<c:if test="${listType eq 'mine' }">
 					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center; width:20px;" class="h5_center">
-						<img src="/images/lock_icon.png">
+						<img src="/images/lock_icon.png" style="vertical-align: middle;">
 					</th>
 				</c:if>
 				<!-- 취합여부아이콘 -->
