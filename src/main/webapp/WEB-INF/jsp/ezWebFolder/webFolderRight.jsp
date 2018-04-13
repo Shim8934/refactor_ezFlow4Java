@@ -303,14 +303,10 @@
 					
 					if(result[i]["typeId"] == "folder") {
 						//trElmt.setAttribute("value", result[i]["fileId"]);
-						trElmt.setAttribute("_fileType", "D");
-						
 						trElmt.ondblclick = function() {
 							//var val = $(this).attr('value');
 							dbClickFunction(this);							
 						};
-					} else {
-						trElmt.setAttribute("_fileType", "F");
 					}
 					
 					trElmt.appendChild(tdElmt1);
@@ -693,7 +689,10 @@
 		
         function toggleFavorite(rowElement, addHandler, deleteHandler) {
         	var targetId = rowElement.getAttribute("_fileId");
-        	var targetType = rowElement.getAttribute("_fileType");
+        	var targetType = rowElement.getAttribute("_type");
+        	
+        	// favorite type mapping
+        	targetType = targetType === "folder" ? targetType = "D" : targetType = "F";
         	
         	if (rowElement.hasAttribute("favorite")) {
         		deleteFavorite(targetId, targetType, deleteHandler);
