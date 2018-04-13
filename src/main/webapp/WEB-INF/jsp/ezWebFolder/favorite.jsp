@@ -233,18 +233,17 @@
 	    	var startIndex = (blockSize * (currentPage - 1))
 	    	
 			$.ajax ({
-				type: "get",
+				type: "post",
 				async: false,
-				url : "/rest/ezwebfolder/users/" + userInfo.id + "/favorites",
+				url : "/ezWebFolder/getFavorites.do",
 				dataType: "json",
 				
 				data : {
-					offset : userInfo.offset,
-					primary   : userInfo.primary,
-					tenantId : userInfo.tenantId,
 					searchExt : $('#searchExt').val(),
 					searchFileName : $('#searchFileName').val(),
 					searchCreatorName : $('#searchCreateName').val(),
+					searchStartDate: $('#Sdatepicker').val(),
+					searchEndDate: $('#Edatepicker').val(),
 					startIndex : startIndex,
 					endIndex : startIndex + blockSize
 				},
@@ -258,9 +257,8 @@
 					renderList(result.targetList, false);
 					makePageSelPage();
 					
-					// TODO: resultCount 리펙토링
-					dom.mailBoxInfo.innerHTML = " - [" + message.total + " 파일 수 " + "<span style='color:#017BEC;'>" 
-					+ result.fileCount +"</span>"+", " + message.total + " 폴더 수 " + "<span style='color:#017BEC;'>" + result.folderCount +" </span>" + message.count + "]";
+					dom.mailBoxInfo.innerHTML = " - [" + message.total + " <spring:message code='ezWebFolder.t277'/> " + "<span style='color:#017BEC;'>" 
+						+ result.fileCount + "</span>, " + message.total + " <spring:message code='ezWebFolder.t276'/> " + "<span style='color:#017BEC;'>" + result.folderCount +" </span>" + message.count + "]";
 				},
 				
 				error : function(error) {
@@ -311,8 +309,8 @@
 					makePageSelPage();
 					namePath(result.folderPath, result.originalPath);
 					
-					dom.mailBoxInfo.innerHTML = " - [" + message.total + " 파일 수 " + "<span style='color:#017BEC;'>" 
-						+ fileCount +"</span>"+", " + message.total + " 폴더 수 " + "<span style='color:#017BEC;'>" + folderCount +" </span>" + message.count + "]";
+					dom.mailBoxInfo.innerHTML = " - [" + message.total + " <spring:message code='ezWebFolder.t277'/> " + "<span style='color:#017BEC;'>" 
+						+ fileCount + "</span>, " + message.total + " <spring:message code='ezWebFolder.t276'/> " + "<span style='color:#017BEC;'>" + folderCount +" </span>" + message.count + "]";
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
@@ -444,7 +442,7 @@
 				
 				fileIconElement = document.createElement("img");
 				fileIconElement.setAttribute("class", "webFolderImg");
-				fileIconElement.addEventListener("click", function() {fileToggleFavorite(this);});
+				fileIconElement.addEventListener("click", function() {fileToggleFavorite(event);});
 				
 				if (isFromFolder && resultJson[columnMap.favoriteStatus] === "0") {
 					fileIconElement.src = "/images/webfolder/favourite.png";
@@ -702,12 +700,16 @@
  			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList);
         }
         
-        function fileToggleFavorite(imgElement) {
-        	var rowElement = imgElement.parentElement.parentElement;
+        function fileToggleFavorite(event) {
+        	event.stopPropagation();
+        	
+        	var imageElement = event.target;
+        	
+        	var rowElement = imageElement.parentElement.parentElement;
         	var targetId = rowElement.getAttribute("targetId");
         	var targetType = rowElement.getAttribute("targetType");
         	
-        	if (imgElement.hasAttribute("favorite")) {
+        	if (imageElement.hasAttribute("favorite")) {
         		fileDeleteFavorite(targetId, targetType, function() {
            			context.refreshList();
         		});
@@ -721,15 +723,12 @@
         function fileAddFavorite(targetId, targetType, successHandler) {
         	$.ajax({
         		type: "POST",
-        		url: "/rest/ezwebfolder/users/" + userInfo.id + "/favorites",
+        		url: "/ezWebFolder/addFavorite.do",
         		dataType: "json",
         		data: {
         			targetId: targetId,
-        			targetType: targetType,
-        			offset: userInfo.offset,
-        			tenantId: userInfo.tenantId
+        			targetType: targetType
         		},
-        		
         		success: function(result) {
         			if (result.status === "error") {
         				return;
@@ -747,16 +746,13 @@
         
         function fileDeleteFavorite(targetId, targetType, successHandler) {
         	$.ajax({
-        		type: "DELETE",
-        		url: "/rest/ezwebfolder/users/" + userInfo.id + "/favorites",
-        		contentType: "application/json; charset=UTF-8",
+        		type: "POST",
+        		url: "/ezWebFolder/deleteFavorite.do",
         		dataType: "json",
-        		data: JSON.stringify({
+        		data: {
         			targetId: targetId,
         			targetType: targetType,
-        			tenantId: userInfo.tenantId
-        		}),
-        		
+        		},
         		success: function(result) {
         			if (result.status === "error") {
         				return;
@@ -768,6 +764,9 @@
         			}
 
         			successHandler();
+        		},
+        		error: function(error) {
+        			console.log(error);
         		}
         	});
         }

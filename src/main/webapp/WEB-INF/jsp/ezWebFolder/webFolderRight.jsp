@@ -251,12 +251,15 @@
 					
 					var faImgElmt = document.createElement("img");
 					faImgElmt.setAttribute("class", "webFolderImg");
+					faImgElmt.addEventListener("click", function() {fileToggleFavorite(event);});
+					
 					if (result[i]["favouriteStatus"] == "0") {
 						faImgElmt.src = "/images/webfolder/favourite.png";
 						tdElmt2.appendChild(faImgElmt);
 					}
 					else {
 						faImgElmt.src = "/images/webfolder/favourite2.png";
+						faImgElmt.setAttribute("favorite", "");
 						tdElmt2.appendChild(faImgElmt);
 					}
 					
@@ -290,11 +293,14 @@
 					
 					if(result[i]["typeId"] == "folder") {
 						//trElmt.setAttribute("value", result[i]["fileId"]);
+						trElmt.setAttribute("_fileType", "D");
 						
 						trElmt.ondblclick = function() {
 							//var val = $(this).attr('value');
 							dbClickFunction(this);							
 						};
+					} else {
+						trElmt.setAttribute("_fileType", "F");
 					}
 					
 					trElmt.appendChild(tdElmt1);
@@ -629,6 +635,77 @@
 			
 			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList);
        }
+       
+		function fileToggleFavorite(event) {
+	       	event.stopPropagation();
+	       	
+	       	var imageElement = event.target;
+	       	
+	       	var rowElement = imageElement.parentElement.parentElement;
+			var targetId = rowElement.getAttribute("_fileId");
+			var targetType = rowElement.getAttribute("_fileType");
+			
+			if (imageElement.hasAttribute("favorite")) {
+				fileDeleteFavorite(targetId, targetType, function() {
+		   			refreshView();
+				});
+			} else {
+				fileAddFavorite(targetId, targetType, function() {
+					refreshView();
+				});
+			}
+		}
+		
+        function fileAddFavorite(targetId, targetType, successHandler) {
+        	$.ajax({
+        		type: "POST",
+        		url: "/ezWebFolder/addFavorite.do",
+        		dataType: "json",
+        		data: {
+        			targetId: targetId,
+        			targetType: targetType
+        		},
+        		success: function(result) {
+        			if (result.status === "error") {
+        				return;
+        			}
+        			
+        			if (result.code === 1) {
+        				alert("이미 즐겨찾기 대상입니다.");
+        				return;
+        			} 
+
+        			successHandler();
+        		}
+        	});
+        }
+        
+        function fileDeleteFavorite(targetId, targetType, successHandler) {
+        	$.ajax({
+        		type: "POST",
+        		url: "/ezWebFolder/deleteFavorite.do",
+        		dataType: "json",
+        		data: {
+        			targetId: targetId,
+        			targetType: targetType
+        		},
+        		success: function(result) {
+        			if (result.status === "error") {
+        				return;
+        			}
+        			
+        			if (result.code === 1) {
+        				alert("이미 즐겨찾기 대상이 아닙니다.");
+        				return;
+        			}
+
+        			successHandler();
+        		},
+        		error: function(error) {
+        			console.log(error);
+        		}
+        	});
+        }
        
        function changeCount(value) {
     	   blockSize = value;
