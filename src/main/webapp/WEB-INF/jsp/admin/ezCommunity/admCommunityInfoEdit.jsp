@@ -138,7 +138,7 @@
 					<td><input type="text" style="width:100%" name="txt_CommunityName" maxlength="50" value="${club.c_ClubName}"></td>
 				</tr>
 				<tr>
-					<th><spring:message code = 'ezCommunity.t11' />					</th>
+					<th><spring:message code = 'ezCommunity.t11' /></th>
 					<td><span id="idSpan">${idSpanValue }</span></td>
 				</tr>
 				<tr>
@@ -189,7 +189,9 @@
 				</tr>
 				<tr>
 					<th>Community <spring:message code = 'ezCommunity.t18' /></th>
-					<td><textarea name="c_clubdesc" style="Width:320px; Height:120px; font: 9pt <spring:message code = 'ezCommunity.t19' />" readonly><c:out value = '${club.c_ClubDesc}' /></textarea></td>
+					<td style="padding:0px 0px 0px 2px;">
+					<textarea name="c_clubdesc" style="Width:97%; Height:120px; margin-bottom: -3px; cursor:default; border:none; 
+						font: 9pt <spring:message code = 'ezCommunity.t19' /> resize:none;" readonly><c:out value = '${club.c_ClubDesc}' /></textarea></td>
 				</tr>
 			</table>
 
