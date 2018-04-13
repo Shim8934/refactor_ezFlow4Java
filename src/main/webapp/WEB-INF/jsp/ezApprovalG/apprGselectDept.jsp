@@ -91,9 +91,9 @@
 		        arrDeptInfo[0] = GetAttribute(tr, "DATA2");
 		        arrDeptInfo[1] = tr.cells[0].innerText;
 		        if(CrossYN())
-		            tdSelDept.textContent = ReplaceText(arrDeptInfo[1], "&", "&amp;");
+		            tdSelDept.textContent = arrDeptInfo[1];
 		        else
-		            tdSelDept.innerText = ReplaceText(arrDeptInfo[1], "&", "&amp;");
+		            tdSelDept.innerText = arrDeptInfo[1];
 		    }
 		    function cmdCancel_onclick() {
 		        rtnVal[0] = "FALSE";
