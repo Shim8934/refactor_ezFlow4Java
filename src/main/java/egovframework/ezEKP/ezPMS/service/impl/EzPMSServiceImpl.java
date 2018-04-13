@@ -7,7 +7,6 @@ import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPMSService")
-public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements
-		EzPMSService, EzPMSAdminService {
+public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSService {
 
 }
