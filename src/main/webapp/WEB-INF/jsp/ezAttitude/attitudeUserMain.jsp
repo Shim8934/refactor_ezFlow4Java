@@ -139,8 +139,8 @@
 					var objTr = "";
 					var objTd = "";
 					var calendarHeight = $("#attiCalendar").css("height");
-					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1));
-					
+					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length - 1));
+
 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":tdHeight, "background-color": "#edf4fd"}).text($("#calTitle").text())));
 					for (var i = 0; i < result.length; i++) {
 						if (result[i].typeId != 'A01' && result[i].typeId != 'A03') {
