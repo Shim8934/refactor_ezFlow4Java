@@ -5,9 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 </head>
 <body>
-ezPMS Left
+mainPage
 </body>
 </html>
