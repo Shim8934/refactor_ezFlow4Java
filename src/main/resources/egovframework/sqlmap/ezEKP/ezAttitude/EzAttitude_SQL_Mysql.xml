@@ -47,6 +47,7 @@
 		<result  property="typeId" 				column="TYPE_ID"				columnIndex="15"/>
 		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
+		<result  property="writerName"			column="WRITER_NAME"			columnIndex="18"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -77,9 +78,10 @@
 		<result property="apprUserName"		column="APPR_USER_NAME" columnIndex="3"/>
 		<result property="originDate"		column="START_DATE" 	columnIndex="4"/> 		
 		<result property="apprStatus"		column="APPR_STATUS" 	columnIndex="5"/>
-		<result property="typeName"			column="TYPE_NAME" 		columnIndex="6"/> 		
-		<result property="typeName2"		column="TYPE_NAME2" 	columnIndex="7"/>
-		<result property="content"			column="CONTENT" 		columnIndex="8"/>
+		<result property="typeId"			column="TYPE_ID" 		columnIndex="6"/>
+		<result property="typeName"			column="TYPE_NAME" 		columnIndex="7"/> 		
+		<result property="typeName2"		column="TYPE_NAME2" 	columnIndex="8"/>
+		<result property="content"			column="CONTENT" 		columnIndex="9"/>
 	</resultMap>
 	
 	<resultMap id="getFormBody" class="AttitudeFormVO">
@@ -128,20 +130,49 @@
 				  ) AS END_DATE,
 				MODAPPL,
 				REGION,
-				MOBILE,
+				A.MOBILE,
 				BIZSUB,
 				CONTENT,
 				IP,
 				DATE_TYPE,
 				A.TYPE_ID,
 				B.TYPE_NAME,
-				B.IMG_PATH
+				B.IMG_PATH,
+				C.DISPLAYNAME AS WRITER_NAME
 			FROM   
-				tbl_attitude A INNER JOIN tbl_attitude_type B ON (A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
-			WHERE  
-				WRITER_ID = #pidList#
-			AND    
+				tbl_attitude A 
+			INNER JOIN 
+				tbl_attitude_type B 
+			ON 
+				(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
+			INNER JOIN 
+				tbl_usermaster C
+			ON
+				(C.CN = A.WRITER_ID AND A.COMPANY_ID = C.PHYSICALDELIVERYOFFICENAME AND A.TENANT_ID = C.TENANT_ID)
+			WHERE
+			]]>
+			(
+			<isNotEmpty property="pidListArr">
+				<iterate prepend="WRITER_ID IN" property="pidListArr" open="(" close=")" conjunction=",">
+			      		#pidListArr[]#
+				</iterate>
+				<isNotEmpty property="deptIdArr" prepend="or">
+					<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+			      		#deptIdArr[]#
+					</iterate>
+				</isNotEmpty> 
+			</isNotEmpty>
+			<isEmpty property="pidListArr">
+				<isNotEmpty property="deptIdArr">
+					<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+			      		#deptIdArr[]#
+					</iterate>
+				</isNotEmpty>
+			</isEmpty>
+			)
+			AND
 				A.TENANT_ID = #tenantId#
+			<![CDATA[
 			AND  
 				(
 					(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
@@ -340,6 +371,7 @@
 					a.appr_user_name as APPR_USER_NAME,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(b.start_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
 					a.appr_status as APPR_STATUS,
+					c.type_id as TYPE_ID,
 					c.type_name as TYPE_NAME,
 					c.type_name2 as TYPE_NAME2,
 					a.content as CONTENT
@@ -366,7 +398,7 @@
 		]]>
 	</select>
 	
-	<select id="ezAttitudeDAO.getAttitudeStatisList" parameterClass="Map" resultMap="attitudeStatis">
+	<select id="ezAttitudeDAO.getAttitudeStatisList" parameterClass="Map" resultMap="attitudeStatis" remapResults="true">
 		<![CDATA[
 			SELECT SUM(to_days(
 								IF(
@@ -388,11 +420,31 @@
 			FROM   
 				jmocha.tbl_attitude
 			WHERE  
-				WRITER_ID = #pidList#
+				(
+			]]>
+			<isNotEmpty property="pidListArr">
+				<iterate prepend="WRITER_ID IN" property="pidListArr" open="(" close=")" conjunction=",">
+			      		#pidListArr[]#
+				</iterate>
+				<isNotEmpty property="deptIdArr" prepend="or">
+					<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+			      		#deptIdArr[]#
+					</iterate>
+				</isNotEmpty> 
+			</isNotEmpty>
+			<isEmpty property="pidListArr">
+				<isNotEmpty property="deptIdArr">
+					<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+			      		#deptIdArr[]#
+					</iterate>
+				</isNotEmpty>
+			</isEmpty>
+			<![CDATA[
+			)
 			AND
 				TENANT_ID = #tenantId#
 			AND
-				TYPE_ID NOT IN ('A01', 'A02', 'A03')
+				TYPE_ID NOT IN ('A01', 'A03')
 			AND    
 				(
 					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
@@ -635,4 +687,13 @@
 		      #ids[]# 
 		</iterate>
 	</insert>
+	
+	<delete id="ezAttitude.deleteAttitude" parameterClass="Map">
+		DELETE FROM
+			tbl_attitude
+		WHERE
+			ATTITUDE_ID = #attitudeId#
+		AND
+			TENANT_ID = #tenantId#
+	</delete>
 </sqlMap>

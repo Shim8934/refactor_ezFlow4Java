@@ -43,6 +43,8 @@ public class AttitudeApplicationVO {
 	private String apprStatus;
 	/** 사유 */
 	private String content;
+	/** 타입 아이디 */
+	private String typeId;
 	/** 타입명 */
 	private String typeName;
 	/** 타입명2 */
@@ -204,5 +206,11 @@ public class AttitudeApplicationVO {
 	}
 	public void setTypeName2(String typeName2) {
 		this.typeName2 = typeName2;
+	}
+	public String getTypeId() {
+		return typeId;
+	}
+	public void setTypeId(String typeId) {
+		this.typeId = typeId;
 	}
 }

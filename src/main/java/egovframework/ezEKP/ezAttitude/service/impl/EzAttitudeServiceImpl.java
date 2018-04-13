@@ -82,7 +82,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				
 				LOGGER.debug("isValue : " + isValue + "////////" + resultVO.getWorkStartTime());
 				//시간을 비교해서 근태설정 시간보다 늦으면 지각 처리
-				LOGGER.debug(compareDate + "," + resultConfDate + ":배현상");
+				
 				SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
 				
 				Date userConfTime = f.parse(resultConfDate);
@@ -114,8 +114,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeVO> getAttitudeList(String pidList, String yrmh,
-		String typeId, String startDate, String endDate, String offset, int tenantId) throws Exception {
+	public List<AttitudeVO> getAttitudeList(String pidList, String deptIdList, String yrmh,
+		String typeId, String startDate, String endDate, String offset, int tenantId, String deptFlag) throws Exception {
 		LOGGER.debug("getAttitudeList started");
 		Map<String, Object> map = new HashMap<String,Object>();
 		//if써서 하루꺼를 가져오려는 건지 한달꺼를 가져오려는 건지를 구분해야 될 꺼 같다.
@@ -133,13 +133,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			endDate = endDate + " 23:59:59";
 		}
 		
+		String[] pidListArr = pidList.split(",");
+		String[] deptIdArr = deptIdList.split(",");
+		
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
 		map.put("offsetMin", offsetMin);
 		map.put("typeId", typeId);
-		map.put("pidList", pidList);
-		
+		if (!pidList.trim().equals("")){
+			map.put("pidListArr", pidListArr);
+		}
+		if (!deptIdList.trim().equals("")){
+			map.put("deptIdArr", deptIdArr);
+		}
+	
 		List<AttitudeVO> resultList = ezAttitudeDAO.getAttitudeList(map);
 		
 		LOGGER.debug("getAttitudeList ended");
@@ -147,19 +155,27 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String offset,
-			String startDate, String endDate, int tenantId) throws Exception {
+	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String deptIdList, String offset,
+			String startDate, String endDate, int tenantId, String deptFlag) throws Exception {
 		LOGGER.debug("getAttitudeStatisticsList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		map.put("pidList", pidList);
+		String[] pidListArr = pidList.split(",");
+		String[] deptIdArr = deptIdList.split(",");
+
 		map.put("offsetMin", offsetMin);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
 		
+		if (!pidList.trim().equals("")){
+			map.put("pidListArr", pidListArr);
+		}
+		if (!deptIdList.trim().equals("")){
+			map.put("deptIdArr", deptIdArr);
+		}
 		
 		LOGGER.debug("getAttitudeStatisticsList ended");
 		return ezAttitudeDAO.getAttitudeStatisList(map);
@@ -209,7 +225,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void deleteAttitude(String attitudeId, int tenantId)
 			throws Exception {
-		// TODO Auto-generated method stub
+		LOGGER.debug("deleteAttitude started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("attitudeId", attitudeId);
+		map.put("tenantId", tenantId);
+		
+		ezAttitudeDAO.deleteAttitude(map);
+		LOGGER.debug("deleteAttitude ended");
 		
 	}
 

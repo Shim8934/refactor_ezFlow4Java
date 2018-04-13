@@ -975,4 +975,27 @@ public class EzAttitudeKMSController {
 		
 		return "/ezAttitude/attModAppMod";
 	}
+	
+	/**
+	 * 개인근태현황 main
+	 */
+	@RequestMapping(value = "/ezAttitude/attitudeDeptMain.do")
+	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeUserMain started");
+		
+		String adminFlag = "false";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		if (userInfo.getRollInfo().indexOf("wa=1") != -1) {
+			adminFlag = "true";
+		}
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("deptFlag", "true");
+		model.addAttribute("adminFlag", adminFlag);
+		
+		LOGGER.debug("/ezAttitude/attitudeUserMain ended");
+		return "/ezAttitude/attitudeUserMain";
+	}
 }

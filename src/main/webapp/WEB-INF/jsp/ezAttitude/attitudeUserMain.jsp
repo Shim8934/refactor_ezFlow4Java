@@ -44,6 +44,8 @@
 		<script>
 			var pMode = "";
 			var uselang = "<c:out value='${userInfo.lang}'/>";
+			var deptFlag = "${deptFlag}";
+			var adminFlag = "${adminFlag}";
 			
 			$(function(){
 				$(document).on('dblclick', '.td_day td', function(){
@@ -137,12 +139,17 @@
 					var objTr = "";
 					var objTd = "";
 					var calendarHeight = $("#attiCalendar").css("height");
-					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1));
-					
+					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length - 1));
+
 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":tdHeight, "background-color": "#edf4fd"}).text($("#calTitle").text())));
 					for (var i = 0; i < result.length; i++) {
-						objTr = $("<tr></tr>").append($("<th></th>").text(result[i].typeName));
-						objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일");
+						if (result[i].typeId != 'A01' && result[i].typeId != 'A03') {
+							objTr = $("<tr></tr>").append($("<th></th>").text(result[i].typeName));
+							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일");	
+						} else {
+							objTr = $("<tr style='display:none;'></tr>").append($("<th></th>").text(result[i].typeName));
+							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일");
+						}
 						
 						objTr.append(objTd);
 						objTbody.append(objTr);
@@ -169,7 +176,8 @@
 					async : true,
 					url : "/ezAttitude/attitudeStatisList.do",
 					data : {
-						date : pDate
+						date : pDate,
+						deptFlag : deptFlag
 					},
 					success : function(result) {
 						$("#attiStatis td").text("0일");
@@ -224,7 +232,8 @@
 					url : "/ezAttitude/getAttitudeList.do",
 					data : {
 						startDate : startDate,
-						endDate : endDate
+						endDate : endDate,
+						deptFlag : deptFlag
 					},
 					success : function(result) {
 						$("span[name=span_list] table tbody").remove();
@@ -240,31 +249,61 @@
 				var betweenDate = ""; // 연속일자의 일자 저장
 				var subDate = "";     // 연속일자로 등록된 근태의 날짜 차이를 저장
 				var imgPath = "";	  // 이미지 경로
-				
-				for (var i = 0; i < result.length; i++) {
-					startDate = result[i].startDate.split(" ")[0];
-					endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
-					imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>";
-					
-					if (result[i].dateType == '4' || result[i].dateType == '5') {
-						subDate = calDateRange(startDate, endDate);
-						betweenDate = new Date(startDate);
-						
-						for (var j = 0; j<= subDate; j++) {
-							betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1));
-							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
-							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" 
-									+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].region + "</td></tr>");
+				if (deptFlag == false){
+					for (var i = 0; i < result.length; i++) {
+						startDate = result[i].startDate.split(" ")[0];
+						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
+						imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>";
+
+						if (result[i].dateType == '4' || result[i].dateType == '5') {
+							subDate = calDateRange(startDate, endDate);
+							betweenDate = new Date(startDate);
+							
+							for (var j = 0; j<= subDate; j++) {
+								betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1));
+								var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
+								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
+										"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" 
+										+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].region + "</td></tr>");
+							}
+						} else if (result[i].dateType == '3') {
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>");
+						} else if (result[i].dateType == '1') {
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>");
+						} else {
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1] + "</td></tr>");
 						}
-					} else if (result[i].dateType == '3') {
-						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-								"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>");
-					} else if (result[i].dateType == '1') {
-						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-								"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>");
-					} else {
-						$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1] + "</td></tr>");
+					}	
+				} else {
+					for (var i = 0; i < result.length; i++) {
+						if (result[i].typeId != 'A01' && result[i].typeId != 'A03') {
+							startDate = result[i].startDate.split(" ")[0];
+							endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
+							imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>";
+							
+							if (result[i].dateType == '4' || result[i].dateType == '5') {
+								subDate = calDateRange(startDate, endDate);
+								betweenDate = new Date(startDate);
+								
+								for (var j = 0; j<= subDate; j++) {
+									betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1));
+									var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
+									$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
+											"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" 
+											+ (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+								}
+							} else if (result[i].dateType == '3') {
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+							} else if (result[i].dateType == '1') {
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + "</td></tr>");
+							} else {
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+							}	
+						}
 					}
 				}
 			}
@@ -299,11 +338,11 @@
 				var date = $(obj).attr("dispdate");
 				
 				if (CrossYN()) {
-                    var OpenWin = window.open("/ezAttitude/attitudeNewItem.do?date=" + date, "attitudeNewItem", GetOpenWindowfeature(650, 580));
+                    var OpenWin = window.open("/ezAttitude/attitudeNewItem.do?date=" + date + "&mode=new", "attitudeNewItem", GetOpenWindowfeature(650, 580));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
-                	rtnValue = window.showModalDialog("/ezAttitude/attitudeNewItem.do?date=" + date, "",
+                	rtnValue = window.showModalDialog("/ezAttitude/attitudeNewItem.do?date=" + date + "&mode=new", "",
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
 	                
 	                if (typeof (rtnValue) != "undefined") {
@@ -343,13 +382,35 @@
 			function layerHidden() {
 		        $.modal.close();
 		    }
-
+			
+			function searchDept() {
+				
+			}
+			
+			function excelDown() {
+				
+			}
+			
+			function sendMail() {
+	
+			}
+        	
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">
-		<h1 id="titleimg">개인근태현황</h1>
+		<c:if test="${deptFlag != 'true'}">
+			<h1 id="titleimg">개인근태현황</h1>
+		</c:if>
+		<c:if test="${deptFlag == 'true'}">
+			<h1 id="titleimg">부서근태현황</h1>
+		</c:if>
 		<div id="mainmenu">
 			<ul>
+				<c:if test="${adminFlag == 'true'}">
+					<li id="reply"><span onClick="searchDept()">부서검색</span></li>
+		        	<li id="search"><span onClick="excelDown()">엑셀다운로드</span></li>
+		        	<li id="search"><span onClick="sendMail()">근태미입력자 메일발송</span></li>
+				</c:if>
 			</ul>
 		</div>
 		

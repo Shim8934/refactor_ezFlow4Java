@@ -37,52 +37,6 @@
 		var m_strColorDefault = "#ffffff";
 		var adminFlag = "${adminFlag}";
 		
-		$(document).ready(function() {
-	    	var clickOutside;
-	    	
-	    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) {
-	    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
-	    	} else {
-	    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
-	    	}	    	
-	    	
-	    	clickOutside.mouseup(function (e) {
-	    		searchHiddenOutside(e);
-	    	});
-	    	
-	    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
-	    		searchHiddenOutside(e);
-	    	});
-	    	
-	    	$(parent.document).mouseup(function (e) {
-	    		searchHiddenOutside(e);
-	    	});
-	    	
-	    	$(document).mouseup(function (e) {
-	    		searchHiddenOutside(e);
-	    	});
-	    	
-	    	$(window.frames['ifrmPreViewH']).mouseup(function (e) {
-	    		searchHiddenOutside(e);
-	    	});
-	    	
-	    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
-	    		searchHiddenOutside(e);
-	    	});
-	    	
-	    });
-		
-		function searchHiddenOutside(e) {
-			var container = $('#layer_popup');
-			var maillistoptionmode = $('#layer_popup').css('display');
-
-			if (maillistoptionmode != "none") {
-				if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'search') {
-					$('#layer_popup').hide();
-				}
-			}
-		}
-		
 		$(function(){
 			$(document).on('click', '#AttList th', function(){
 				if (!($(this).find("input[type=checkbox]").length) && ($(this).attr("colname") != "NO") ) { // checkbox는 sort에서 제외
@@ -906,7 +860,7 @@
         <ul id="tb_Parent">
         <c:if test="${adminFlag == 'true'}">
 			<li id="reply"><span onClick="modApprove()">승인</span></li>
-          <li id="search"><span onClick="modReturn()">반려</span></li>
+        	<li id="search"><span onClick="modReturn()">반려</span></li>
 		</c:if>
           <li><span onClick="attList_del()">삭제</span></li>
           <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
@@ -920,7 +874,7 @@
 		  </li> 
         </ul>
         </div>
-        <div id="layer_popup" style="width:400px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+        <div id="layer_popup" style="width:460px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
           <div class="popupwrap1" style="background-color:#ffffff; position: relative;">
             <div class="popupwrap2">
               <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="content">
