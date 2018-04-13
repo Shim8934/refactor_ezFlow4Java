@@ -249,9 +249,27 @@
 			var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
 		
-			// TODO: 언어 설정
-			var lang = "kr"; // 언어
-			var userLang = "${userInfo.lang}"; // 사용자 언어
+			// 언어 설정 > 쿠쿠닥스에서 아직 kr만 지원
+			var lang = "";
+			var userLang = "${userInfo.lang}";
+			
+			switch (userLang) {
+		    	case "1": 
+		    		lang = "kr";
+		    		break;
+		    	case "2": 
+		    		lang = "us";
+		    		break;
+		    	case "3": 
+		    		lang = "jp";
+		    		break;
+		    	case "4": 
+		    		lang = "cn";
+		    		break;
+		    	default :
+		    		lang = "us";
+		    		break;
+	    	}
 			
 			// html 모드 사용 여부 설정
 			var useHTMLMode = true;
@@ -261,8 +279,9 @@
 				useHTMLMode = false;
 	        }
 			
+			// TODO: 메뉴 줄 설정
 			// 메뉴 설정			
-			var customAlignMenu = ['print','menu_line','undo','redo','menu_line','text_paste','menu_line','textFormatCopy','textFormatPaste','menu_line','link','unlink','menu_line','image','image_modify','menu_line','symbol','horizontal','menu_line',
+			var customAlignMenu = ['print','menu_line','undo','redo','menu_line','text_paste','menu_line','textFormatCopy','textFormatPaste','menu_line','link','unlink','menu_line','image','menu_line','symbol','horizontal','menu_line',
 								   'numbered_list','bullet_list','menu_line','outdent','indent','menu_line',
 								   'table','menu_line','table_insert_left','table_insert_right','table_insert_top','table_insert_bottom','menu_line','table_remove_col','table_remove_row','table_remove_table','menu_line',
 								   'table_merge','table_split_col','table_split_row','menu_line','table_background_color','table_border_style','menu_line','align_left','align_center','align_right','align_justify','menu_line','paragraph_margin','menu_line',

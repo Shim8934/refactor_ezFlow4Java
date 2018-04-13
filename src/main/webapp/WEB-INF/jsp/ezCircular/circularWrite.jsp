@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html style="height:100%">
+<html style="height:100%"> 
 	<head>
 		<c:choose>
 			<c:when test="${mode eq 'reuse'}">
@@ -168,6 +168,7 @@
 				var receiverList = document.getElementById("receiverlist").innerHTML;
 				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
 				var receiverID = document.getElementById("receiverID").innerHTML;
+				
 
 				if (receiverList.indexOf(userMyName) == -1) {
 					receiverList += ", " + userMyName;
@@ -259,9 +260,7 @@
 						receiverList = userMyName;
 						receiverList2 = userMyName2;
 						receiverID = userMyID;
-					}
-
-					if (receiverList.indexOf(userMyName) == -1) {
+					} else {
 						receiverList += ", " + userMyName;
 						receiverList2 += ", " + userMyName2;
 						receiverID += ", " + userMyID;

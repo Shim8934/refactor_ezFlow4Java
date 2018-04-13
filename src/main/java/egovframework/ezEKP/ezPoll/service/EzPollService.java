@@ -109,4 +109,7 @@ public interface EzPollService {
 	public void deleteAnsFiles(Map<String, Object> map) throws Exception;
 	
 	public void deleteCmtFiles(Map<String, Object> map) throws Exception;
+	
+	public void sendPostNotiMail(LoginVO userInfo, String loginCookie, PollQuestionVO pollQuestion) throws Exception;
+	
 }

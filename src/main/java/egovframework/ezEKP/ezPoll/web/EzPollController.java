@@ -547,6 +547,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int isSorting = Integer.parseInt(req.getParameter("hidIsSorting"));
 		int isSelOnlyOnce = Integer.parseInt(req.getParameter("hidIsSelOnlyOnce"));
 		String OptImgFilePath = req.getParameter("hidOptImgFilePath");
+		int sendPostNotice = Integer.parseInt(req.getParameter("hidSendPostNotice"));
 		String[] OptRowArr = OptImgFilePath.split("\\|");
 		
 		Map<String, String> filePathMap = new HashMap<String, String>();
@@ -569,7 +570,6 @@ public class EzPollController extends EgovFileMngUtil {
 				listOptions.add(option);
 			}*/
 			
-			//test
 			if (option != null && option.equals(filePathMap.get(optName))) {
 				listOptions.add("");
 			}else if(option != null && !option.equals("")){
@@ -612,6 +612,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO.setSetDate(setDate);
 		pollQuestionVO.setIsSorting(isSorting);
 		pollQuestionVO.setIsSelOnlyOnce(isSelOnlyOnce);
+		pollQuestionVO.setSendPostNotice(sendPostNotice);
 		
 		
 		if (!qstModifyInfo.equals("")) {
@@ -637,7 +638,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Insert question in database
 		saveQuestion(pollQuestionVO, range, loginVO);
-
+		
 		//Insert answers/options in database		
 		pollAnswerVO.setQstId(pollQuestionVO.getQstId());
 		pollAnswerVO.setTenantId(tenantID);
@@ -656,6 +657,12 @@ public class EzPollController extends EgovFileMngUtil {
 			}
 		}	
 		
+		//Send posting notification mail
+		//메일 발송 체크되어 있고, 투표 등록이나 재사용일 경우 => true
+		if(sendPostNotice == 1 && qstModifyInfo.equals("")){
+			ezPollService.sendPostNotiMail(loginVO, loginCookie, pollQuestionVO);
+		}
+		
 		logger.debug("Question complete finishes!");
 		return "forward:/ezPoll/pollList.do";
 	}
@@ -668,7 +675,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
 		int totalUsers = 0;		
 		int totalVotes = 0;
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		int compareEnd = 0;
 		int compareStart = 0;
 		int numberOfVotedUsers = 0;
@@ -1643,7 +1650,7 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			//Get string of time now
 			Date date = new Date();
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String dateNow = formatter.format(date);
 			
 			//Get all of voted users
@@ -2016,7 +2023,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Close the vote by update the end date		
 		Date date = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateNow = formatter.format(date);
 		
 		try {
@@ -2629,7 +2636,7 @@ public class EzPollController extends EgovFileMngUtil {
 						pollQstVO.setStatus(2); // reserve poll
 					}
 					else {
-						pollQstVO.setStatus(1); // processing poll
+						pollQstVO.setStatus(1); // ssing pollproce
 					}					
 				}
 				else {
@@ -2924,6 +2931,20 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		return listSimpleUser;
+	}
+	
+	@RequestMapping(value="/ezPoll/updateEndDateForQst.do", method = RequestMethod.POST)
+	public String updateEndDateForQst(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, ModelMap model, HttpServletResponse response) throws Exception {		
+		logger.debug("Updating question end-date is running!");		
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		int tenantID = loginVO.getTenantId();
+		int qstId = Integer.parseInt(req.getParameter("qstId"));
+		String endDate = req.getParameter("endDate");
+		
+		ezPollService.updateEndDateForQst(qstId, tenantID, endDate);
+		
+		logger.debug("Updating question end-date finishes!");
+		return "forward:/ezPoll/pollList.do";
 	}
 
 }

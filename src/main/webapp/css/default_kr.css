@@ -1574,7 +1574,7 @@ form{display:inline;margin:0}
 
 .main_community{padding:15px 20px 0px 20px;}
 .main_communityTop{table-layout:fixed; height:205px; overflow:hidden;}
-.main_communityContent{table-layout:fixed; margin:18px 0px 0px 0px;}
+.main_communityContent{table-layout:fixed; margin:12px 0px 0px 0px;}
 
 #left .community_lt {
 	position:relative;
@@ -1667,7 +1667,7 @@ form{display:inline;margin:0}
 	margin-left:10px;
 	margin-right:10px;
 	display:inline-block;
-	
+	margin-top:3px;	
 }
 #left .list_thumbnail  li .name {
 	display:inline;
@@ -1722,7 +1722,7 @@ form{display:inline;margin:0}
 
 
 .tabpartMycommunity{}
-.tabpartMycommunity .tabpartMycommunityTitle{padding:25px 0px 5px 0px; margin:0; overflow:hidden; width:100%;}
+.tabpartMycommunity .tabpartMycommunityTitle{padding:10px 5px 5px 5px; margin:0; margin-top:20px; overflow:hidden; border-top:1px solid #e8e8ea; height:25px; background-color: #f8f8fa;}
 .tabpartMycommunity .tabpartMycommunityTitle dt{float:left; width:75%; height:20px; line-height:20px; background:url(../images/ezCommunity/comm_title1.png) no-repeat 2px 50%; padding:0px 0px 0px 32px; font-size:13px; font-weight:bold; color:black; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .tabpartMycommunity .tabpartMycommunityTitle dd{float:right; font-size:11px; color:#666; margin:-2px 0 0 0; padding:0; height:20px; line-height:2;}
 .tabpartMycommunity .tabpartMycommunityTitle dd .icon_community01{display:inline-block; padding:0px 0px 0px 24px; background:url(../images/kr/community/icon_Community01.png) no-repeat left 0px; font-weight:bold; font-size:11px;}
@@ -1730,7 +1730,7 @@ form{display:inline;margin:0}
 .tabpartMycommunity .tabpartMycommunityTitle dd .line{display:inline-block; width:1px; height:12px; color:#f8f8f8; margin:0px 5px 0px 3px; background:#f8f8f8; overflow:hidden;}
 .tabpartMycommunity .tabpartMycommunityTitle dd .btn_community01{display:inline-block; padding:0px 0px 0px 0px;}
 .tabpartMycommunity .tabpartMycommunityTitle dd .btn_community01 span{display:inline-block; padding:0px 10px 0px 10px; height:22px; background:#f7f7f7;; color:#333; border:1px solid #d2d2d2;border-radius:3px; cursor:pointer;}
-.tabpartMycommunityList{clear:both; padding:0px; border-top:1px solid #e2e2e2;border-bottom:1px solid #e2e2e2; min-height:180px;}
+.tabpartMycommunityList{clear:both; padding:0px; border-top:1px solid #e8e8ea;border-bottom:1px solid #e8e8ea; min-height:180px;}
 .tabpartMycommunityList table{table-layout:fixed;}
 .tabpartMycommunityList table td{height:32px;padding:2px}
 .tabpartMycommunityList table .text{padding:0 0 0 9px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
@@ -1766,13 +1766,13 @@ form{display:inline;margin:0}
 .right_tabpartList dd strong{color:#666;}
 
 .right_tabpartList01{font-family:Gulim, Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
-.right_tabpartList01 dt{float:right; font-size:12px; color:#666; margin:0; padding:0; line-height:2;}
-.right_tabpartList01 dt .icon_community01{display:inline-block; padding:0px 0px 0px 24px; background:url(../images/kr/community/icon_Community01.png) no-repeat left 3px; font-weight:bold;}
+.right_tabpartList01 dt{float:right; font-size:12px; color:#666; margin:0; padding:0; line-height:28px;}
+.right_tabpartList01 dt .icon_community01{display:inline-block; padding:0px 8px 0px 24px; background:url(../images/kr/community/icon_Community01.png) no-repeat left 3px; font-weight:bold;}
 .right_tabpartList01 dt .icon_community02{display:inline-block; padding:0px 0px 0px 24px; background:url(../images/kr/community/icon_Community02.png) no-repeat left 3px; font-weight:bold;}
 .right_tabpartList01 dd{float:right; clear:both; font-size:12px; color:#666; margin:0; padding:0; line-height:2;}
 .right_tabpartList01 dd span{font-size:11px;}
 .right_tabpartList01 dd .btn_community01{display:inline-block; padding:0px 0px 0px 0px;}
-.right_tabpartList01 dd .btn_community01 span{display:inline-block; padding:0px 10px 0px 10px; background:#f7f7f7; color:#333; border:1px solid #d2d2d2; font-size:12px; border-radius:3px; cursor:pointer;}
+.right_tabpartList01 dd .btn_community01 span{display:inline-block; padding:0px 10px 0px 10px; color:#333; border:1px solid #d2d2d2; font-size:12px; border-radius:3px; cursor:pointer;}
 
 
 .receiver_tltype01 {height:28px!important;  padding:0px 0px 0px 15px !important; background:url(../images/kr/cm/tltype01_bgl.gif) no-repeat left; display:block; line-height:28px; margin:0px;border-bottom:1px solid #565b66; }
@@ -1794,7 +1794,7 @@ form{display:inline;margin:0}
 .address_boxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
 .address_boxlist .back { border: 1px solid #dedede; height:138px; vertical-align:top; border-radius:5px; }
 .address_boxlist .topinfo {height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#333; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.address_boxlist ul { margin:12px 10px 0px 19px; padding:0px; list-style:none;}
+.address_boxlist ul { margin:0px 0px 0px 19px; padding:0px; list-style:none;}
 .address_boxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_boxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_boxlist ul .company { color:#393939; margin-bottom: 10px;}
@@ -1804,7 +1804,7 @@ form{display:inline;margin:0}
 .address_onboxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
 .address_onboxlist .back { border: 1px solid #888; height:138px; vertical-align:top; border-radius:5px;}
 .address_onboxlist .topinfo {background-color:rgb(0,72,149); height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.address_onboxlist ul { margin:12px 10px 0px 19px; padding:0px; list-style:none;}
+.address_onboxlist ul { margin:0px 0px 0px 19px; padding:0px; list-style:none;}
 .address_onboxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_onboxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_onboxlist ul .company { color:#393939; margin-bottom: 10px;}

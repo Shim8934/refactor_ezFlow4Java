@@ -381,7 +381,13 @@
 
 // 		        if (!clickFlag) {
 //					$(".on").attr("class", "off"); 게시물 등록,수정,삭제 등의 작업 완료시, 왼쪽 게시판 리스트가 초기화되는 버그때문에 주석처리
-					$(".fList h2").attr("class", "off");
+
+				//TopBoard가 아닌 게시판의 왼쪽 게시판 리스트를 닫는다.
+				$(".fList h2").attr("class", "off");
+				$(".qst h2").attr("class", "off");
+				$(".pollDiv h2").attr("class", "off");
+				$(".myb h2").attr("class", "off");
+				$(".myb").next().attr("class", "off");//마이게시판 하위 ul off
 					
 		            var rootBoardID = ID;
 		            var num = obj.split("TreeCtrl");
@@ -448,7 +454,10 @@
 		        }
 		    }
 		    function Open_Func(idx) {
-		    	
+		    	$(".on").attr("class", "off");
+		    	$(".qst h2").attr("class", "on");
+				$(".qst").next().attr("class", "on");
+				
 		        if (CrossYN()) {
 		            if (idx == 1) {
 		                window.parent.frames["right"].location.href = "/ezQuestion/qstList.do?brdID=5";
@@ -498,8 +507,8 @@
 		    	if( prevSelMenu != null )
 		    		prevSelMenu.className = "off";
 		    	
-		    	prevSelMenu = $(".qst").next().children().get(0);
-		    	prevSelMenu.className = "on";
+		    	/* prevSelMenu = $(".qst").next().children().get(0);
+		    	prevSelMenu.className = "on"; */
 		    }
 
 		    function WebPartToggle(obj) {
@@ -630,12 +639,13 @@
 		    	<div class="qst" onclick="Open_Func(1)">
 		        	<h2><span><spring:message code="ezBoard.t365" /></span></h2>		        
 		    	</div>
-		    	<ul>
+		    	<ul></ul>
+		    	<%-- <ul>
 	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li>
 	            	<c:if test="${questionAdmin == 'true' }">
 	            		<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
 	            	</c:if>
-	        	</ul>
+	        	</ul> --%>
 		    </c:if>
 		    <div class="pollDiv" onclick="Poll_Open(1)" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
 	        	<h2><span><spring:message code="ezBoard.t371" /></span></h2>

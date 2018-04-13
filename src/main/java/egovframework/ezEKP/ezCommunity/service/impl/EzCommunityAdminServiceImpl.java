@@ -79,6 +79,10 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("v_SORT2", sort2);
 		map.put("tenantID", tenantID);
 		
+		if (!sRadio.equals("") && sRadio.equals("C_SysopID")){
+			map.put("v_S_RADIO", "USERNAME");
+		}
+		
 		List<CommunityCComCloseVO> list = null;
 		
 		if (!keyword.equals("") || !sRadio.equals("")) {
@@ -219,6 +223,10 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("v_SORT1", sort1);
 		map.put("v_SORT2", sort2);
 		map.put("tenantID", tenantID);
+		
+		if (!sRadio.equals("") && sRadio.equals("C_SysopID")){
+			map.put("v_S_RADIO", "USERNAME");
+		}
 		
 		List<CommunityClubVO> list = null;
 		

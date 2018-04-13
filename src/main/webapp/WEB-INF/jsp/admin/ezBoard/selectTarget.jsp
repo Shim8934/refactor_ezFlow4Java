@@ -138,6 +138,7 @@
 			        	type : "POST",
 			        	dataType : "text",
 			        	url : "/ezOrgan/getDeptMemberList.do",
+			        	async : false,
 			        	data : {
 			        		deptID : DeptID, 
 			        		cell : "displayname;description;title;telephonenumber", 
@@ -171,10 +172,10 @@
 							listview.DataSource(listv);
 							listview.RowDataBind();
 						},
-							error : function(error) {
-								alert("<spring:message code='ezBoard.t22'/>" + error);
-							}
-						});
+						error : function(error) {
+							alert("<spring:message code='ezBoard.t22'/>" + error);
+						}
+					});
 			}
 
 			function RequestData(pNodeID, pTreeID) {
@@ -204,8 +205,7 @@
 						treeView.SetUseAgency(true);
 						treeView.SetRequestData("RequestData");
 						treeView.SetNodeClick("TreeViewNodeClick");
-						treeView
-								.DataSource(loadXMLString(g_xmlHTTP.responseText));
+						treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 						treeView.DataBind("TreeView");
 
 					} else {
@@ -262,11 +262,7 @@
 					}
 					var objTr = listview.AddRow(MaxID);
 					SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID)
-							.substring(
-									0,
-									listview.GetSelectedRowID(MaxID)
-											.lastIndexOf('_') + 1)
-							+ eval(MaxID + 1));
+							.substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1)+ eval(MaxID + 1));
 					listview.AddDataRow(objTr, Resultxml);
 				}
 			}
@@ -302,8 +298,7 @@
 					if (document.getElementById(Title).getAttribute("DATA4") == "DEPT") {
 						admin_OK.disabled = false;
 						admin_NO.disabled = false;
-						var _data5 = document.getElementById(Title)
-								.getAttribute("DATA5");
+						var _data5 = document.getElementById(Title).getAttribute("DATA5");
 
 						if (_data5 == "Y") {
 							admin_OK.checked = true;
@@ -377,11 +372,8 @@
 							var InitTr = listview.GetDataRows();
 
 							for (var j = 0; j < InitTr.length; j++) {
-								var curnum = Number(listview
-										.GetSelectedRowID(j).substring(
-												listview.GetSelectedRowID(j)
-														.lastIndexOf('_') + 1),
-										listview.GetSelectedRowID(j).length);
+								var curnum = Number(listview.GetSelectedRowID(j).substring(
+										listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
 								if (MaxID < curnum)
 									MaxID = curnum;
 							}
@@ -432,11 +424,8 @@
 							var InitTr = listview.GetDataRows();
 
 							for (var j = 0; j < InitTr.length; j++) {
-								var curnum = Number(listview
-										.GetSelectedRowID(j).substring(
-												listview.GetSelectedRowID(j)
-														.lastIndexOf('_') + 1),
-										listview.GetSelectedRowID(j).length);
+								var curnum = Number(listview.GetSelectedRowID(j).substring(
+									listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
 								if (MaxID < curnum)
 									MaxID = curnum;
 							}
@@ -514,13 +503,6 @@
 							
 							//getSearchList실행 뒤에 동작해야 하므로, success 시 실행한다.
 							if (adCount == 1) {
-								bSearch = true;
-								g_xmlHTTP = createXMLHttpRequest();
-								var strQuery = "<DATA><DEPTID>"+ getNodeText(GetElementsByTagName(xmlDOM, "DATA3")[0])
-										+ "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-								g_xmlHTTP.open("POST","/ezOrgan/getDeptTreeInfo.do",false);
-								g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-								g_xmlHTTP.send(strQuery);
 								displayUserOne(userID, deptID);
 							}
 						},
@@ -540,8 +522,7 @@
 					rgParams["deptid"] = "";
 					checkname2_cross_dialogArguments[0] = rgParams;
 					checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
-					var checkName2 = window.open("/admin/ezBoard/checkName.do",
-							"checkName2", GetOpenWindowfeature(630, 352));
+					var checkName2 = window.open("/admin/ezBoard/checkName.do", "checkName2", GetOpenWindowfeature(900, 430));
 					try {
 						checkName2.focus();
 					} catch (e) {
@@ -551,16 +532,9 @@
 
 			//검색한 여러명 중 한 명을 선택할 경우
 			function cnsearch_click_Complete(RetValue) {
-				if (RetValue["deptid"] != "") {
-					bSearch = true;
-					g_xmlHTTP = createXMLHttpRequest();
-					var strQuery = "<DATA><DEPTID>"
-							+ RetValue["deptid"]
-							+ "</DEPTID><TOPID>Top</TOPID><PROP>mail;displayName</PROP></DATA>";
-					g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-					g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-					g_xmlHTTP.send(strQuery);
-				}
+				if ((RetValue["deptid"] != "") && (RetValue["userid"] != "")) {
+					displayUserOne(RetValue["userid"], RetValue["deptid"]);
+				}		
 			}
 
 			function Key_Down(e) {
@@ -596,15 +570,13 @@
 
 				if (checkFlag == "N") {
 					if (CrossYN()) {
-						SetAttribute(arrRows[0].childNodes[0], "style",
-								"color:red;");
+						SetAttribute(arrRows[0].childNodes[0], "style", "color:red;");
 					} else {
 						arrRows[0].childNodes[0].style.color = "red";
 					}
 				} else {
 					if (CrossYN()) {
-						SetAttribute(arrRows[0].childNodes[0], "style",
-								"color:;");
+						SetAttribute(arrRows[0].childNodes[0], "style", "color:;");
 					} else {
 						arrRows[0].childNodes[0].style.color = "";
 					}
@@ -649,7 +621,7 @@
 		<table>
 			<tr align=left>
 		    	<td  colspan=3 id="cnblock" align=right height="30">
-		        	<input type="text" id="cnkeyword" style="WIDTH:100px" name="Input" onkeydown='Key_Down(event)'>
+		        	<input type="text" id="cnkeyword" style="WIDTH:124px" name="Input" onkeydown='Key_Down(event)'>
 		        	<a class="imgbtn"  name="button"><span onClick='cnsearch_click("displayName")'><spring:message code='ezBoard.t42' /></span></a>
 		    	</td>
 		  	</tr>  
@@ -661,12 +633,12 @@
 		                  		<table>
 		                      		<tr>
 		                            	<td>
-		                                	<div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:225px;HEIGHT:370px;BACKGROUND-COLOR:#ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
+		                                	<div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:270px;HEIGHT:440px;BACKGROUND-COLOR:#ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
 		                            	</td>
 		                            	<td width="5"></td>
 		                            	<td>
 		                                	<div class="listview">
-		                	                <div id=OrganListView style ="OVERFLOW:auto; WIDTH:310px; HEIGHT:370px; border:0"></div></div>
+		                	                <div id=OrganListView style ="OVERFLOW:auto; WIDTH:100%; min-width:612px; HEIGHT:440px; border:0"></div></div>
 		                    	        </td>
 		                      		</tr>
 		                 		</table>
@@ -686,7 +658,7 @@
 		            	<tr>
 		                	<td>
 		                		<div class="listview">
-		                    		<div id=ListViewMsgTo style ="BORDER:0;HEIGHT: 340px; WIDTH:200px;overflow:auto"></div>
+		                    		<div id=ListViewMsgTo style ="BORDER:0;HEIGHT: 410px; WIDTH:200px;overflow:auto"></div>
 		                		</div>
 		                	</td>
 		            	</tr>
@@ -705,7 +677,7 @@
 		    	</td>
 		  	</tr>
 		</table>
-		<div class="btnposition" style="float:right">
+		<div class="btnposition" style="float:right; margin-right:45px;">
 			<a class="imgbtn"><span onclick="confirm_onClick()" ><spring:message code='ezBoard.t48' /></span></a>
 			<a class="imgbtn"><span onclick="return window.close()" ><spring:message code='ezBoard.t49' /></span></a>
 		</div>
