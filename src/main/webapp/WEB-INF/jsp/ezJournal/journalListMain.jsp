@@ -188,6 +188,8 @@
 				searchStartDate = "";
 				searchEndDate = "";  
 				setJournalList();
+				onPreview = false;
+				journalPreviewRayerChange(pPreviewShow_HOW);
 			}
 			
 			//검색에 의한 셋팅
@@ -426,7 +428,9 @@
 				searchStartDate = "";
 				searchEndDate = "";  
 				setFormName();
-				setJournalList()
+				setJournalList();
+				onPreview = false;
+				journalPreviewRayerChange(pPreviewShow_HOW);
 			}
 			
 			//tr선택시

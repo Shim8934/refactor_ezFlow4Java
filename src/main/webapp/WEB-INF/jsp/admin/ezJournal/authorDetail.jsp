@@ -37,7 +37,7 @@
 	   		function setDeptList(){
 				$('#treeview').on('changed.jstree', function (e, data) {
 			     	var id = data.instance.get_node(data.selected).id;
-			     	var deptName = $("#"+id).text();
+			     	var deptName = $("#"+id+" a:first").text();
 					setUserList("DEPARTMENT", id,deptName);
 				  })
 				.jstree({ 
