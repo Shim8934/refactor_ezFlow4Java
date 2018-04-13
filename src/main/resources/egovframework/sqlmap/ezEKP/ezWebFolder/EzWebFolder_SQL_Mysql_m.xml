@@ -763,6 +763,11 @@
 					FOLDER.CREATE_NAME1 LIKE CONCAT ('%', #searchCreateName#, '%')
 				]]>
 		</isNotEqual>
+		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+				<![CDATA[
+					FILE_TYPE.TYPE_NAME LIKE CONCAT ('%', #searchFileType#, '%')
+				]]>
+		</isNotEqual>
 		<isNotEqual property="endrollStartDate" compareValue="">
 			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
 				<![CDATA[
@@ -796,7 +801,6 @@
 			FROM
 				tbl_webfolder_file AS FILES
 				INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
-				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
 			WHERE
 				FILES.USE_STATUS = 'T' AND
 				FILES.DELETER_ID = #userId# AND
@@ -815,6 +819,12 @@
 		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 				<![CDATA[
 					FILES.CREATE_NAME1 LIKE CONCAT ('%', #searchCreateName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+				<![CDATA[
+					FILE_TYPE.TYPE_NAME LIKE CONCAT ('%', #searchFileType#, '%') AND
+					FILE_TYPE.TYPE_ID = FILES.TYPE_ID
 				]]>
 		</isNotEqual>
 		<isNotEqual property="endrollStartDate" compareValue="">

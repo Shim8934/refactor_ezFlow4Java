@@ -30,7 +30,7 @@ public interface EzWebFolderService_m {
 	
 	void delShare(String companyId, String folderFileId, String folderFileType, String createId, int tenantId) throws Exception;
 	
-	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int pStart, int pEnd, String searchExt, String searchFileName, String searchCreateName, String endrollStartDate, String endrollEndDate, String delStartDate, String delEndDate) throws Exception;
+	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int pStart, int pEnd, String searchExt, String searchFileName, String searchFileType, String searchCreateName, String endrollStartDate, String endrollEndDate, String delStartDate, String delEndDate) throws Exception;
 
 	public String getFolderPath(String folderId, int tenantId) throws Exception;
 

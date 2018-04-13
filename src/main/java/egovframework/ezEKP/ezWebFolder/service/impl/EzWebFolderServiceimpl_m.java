@@ -394,7 +394,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int pStart, int pEnd, 
-			String searchExt, String searchFileName, String searchCreateName, String endrollStartDate, String endrollEndDate,
+			String searchExt, String searchFileName, String searchCreateName,String searchFileType, String endrollStartDate, String endrollEndDate,
 			String delStartDate, String delEndDate) throws Exception {
 		LOGGER.debug("getTrashCanList Started.");
 		LOGGER.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId);
@@ -411,6 +411,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("searchExt", searchExt);
 		map.put("searchFileName", searchFileName);
 		map.put("searchCreateName", searchCreateName);
+		map.put("searchFileType", searchFileType);
 		map.put("endrollStartDate", endrollStartDate);
 		map.put("endrollEndDate", endrollEndDate);
 		map.put("delStartDate", delStartDate);

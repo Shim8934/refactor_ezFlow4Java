@@ -27,6 +27,7 @@
 	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+	<script type="text/javascript" src="/js/ezWebFolder/bnk.js" ></script>
     <script type="text/javascript">
    		var userInfo = {
    			id: 		"${userInfo.id}",
@@ -62,6 +63,7 @@
 		var checkedArr	= [];
 		var folderArr = [];
 		var trashCanList = [];
+		var searchFileType = "";
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -78,7 +80,23 @@
 		window.onload = function () {
 			renderFileList();
 			window.onresize();
+			$('#idSelect').ddslick({
+				onSelected: function(selectedElmt){
+					//callback function: do something with selectedData;
+					document.getElementById("idSelect").value = selectedElmt.selectedData["value"];
+					changeValue(document.getElementById("idSelect").value);
+				}
+			});
 	    };
+	    
+	    function changeValue(value) {
+	    	   searchFileType = value;
+	    	   if( value == "all" ) {
+	    		   searchFileType = ""
+	    	   };
+	    	   currentPage = 1;
+	    	   refreshView();
+	    }
 	    
 	    // 폴더관리
 	    function openfolderManage() {
@@ -104,6 +122,7 @@
 					"enrollEndDate" : $('#enrollEndDate').val(),
 					"delStartDate" : $('#delStartDate').val(),
 					"delEndDate" : $('#delEndDate').val(),
+					"searchFileType" : searchFileType,
 					"pStart" : pStart,
 					"listCount" : blockSize,
 					"totalPages" : totalPages
@@ -565,30 +584,29 @@
 </head>
 <body class="mainbody">
     <h1>휴지통   <span id="mailBoxInfo"></span></h1>
-	<div id="mainmenu">
+	<div id="mainmenu2">
 		<ul>
 			<li id=""><a onClick="fileDownload()" style="margin-top: 3px;"><span>복원</span></a></li>
 			<li id=""><a onClick="filePermanentDelete()"   style="margin-top: 3px;"><span>영구삭제</span></a></li>
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span>검색</span></a></li>
 			<li id="right" style="float:right;">보기설정&nbsp;<img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
 			<li id="right" style="float:right;">
-				<select class ="select" id ="idSelect" onchange="IDChange()" style="background-image:url(/images/webfolder/pdf.png);
-				 background-position: right;margin-right:30px; width:100px;background-repeat: no-repeat;">
-					<option selected>전체</option>
-					<option style="background-image:url(/images/webfolder/pdf.png);
-				 background-position: right;margin-right:30px; width:100px;background-repeat: no-repeat;">문서</option>
-					<option>음악</option>
-					<option>영상</option>
-					<option>그림</option>
-					<option>폴더</option>
-					<option>압축파일</option>
+				<select class="select" id="idSelect" onchange="idChange(this.value);" style="width:100px; display:none;">
+					<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
+					<option value="document" data-imagesrc="/images/webfolder/msWord.png"       ><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
+					<option value="music" data-imagesrc="/images/webfolder/mp3.png"      ><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
+					<option value="video" data-imagesrc="/images/webfolder/mp4.png"      ><spring:message code='ezWebFolder.t194'/></option><!-- 영상 -->
+					<option value="image" data-imagesrc="/images/webfolder/jpg.png"      ><spring:message code='ezWebFolder.t195'/></option><!-- 그림 -->
+					<option value="folder" data-imagesrc="/images/webfolder/fldr.png"    ><spring:message code='ezWebFolder.t213'/></option><!-- 폴더 -->
+					<option value="zip" data-imagesrc="/images/webfolder/zip.png"        ><spring:message code='ezWebFolder.t196'/></option><!-- 압축파일 -->
 				</select>
+			
 			</li>
 		</ul>
 	</div>
 	
 	<script type="text/javascript">
-		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
 	</script>
  	
     <div id="progress-wrp" style="display: none;">
