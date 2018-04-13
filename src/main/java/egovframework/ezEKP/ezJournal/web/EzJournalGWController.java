@@ -315,8 +315,6 @@ public class EzJournalGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-		//	String companyId = request.getParameter("companyId");
-
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
 			
@@ -380,7 +378,6 @@ public class EzJournalGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
@@ -397,7 +394,7 @@ public class EzJournalGWController {
 				result.put("data", selId);
 			// 선택된 양식 가져오기	
 			} else {
-				JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalFormInfo(formId, companyId, info.getTenantId(),lang);
+				JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalFormInfo(formId, companyId, info.getTenantId(), lang);
 				
 				result.put("status", "ok");
 				result.put("code", 0);
@@ -818,20 +815,6 @@ public class EzJournalGWController {
 	}
 	
 	/**
-	 * 업무일지 G/W [POST] 업무일지 읽음 처리
-	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/readers/{userId}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
-	public JSONObject readJournal(@PathVariable String typeId, @PathVariable String journalId, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W readJournal started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId + ",userId=" + userId);
-		
-		JSONObject result = new JSONObject();
-		
-		LOGGER.debug("ezJournal G/W readJournal ended.");
-		return result;
-	}
-	
-	/**
 	 * 업무일지 G/W [PUT] 수신 확인 처리
 	 */
 	@SuppressWarnings("unchecked")
@@ -1089,10 +1072,10 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [DELETE] 첨부파일 삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
-	public JSONObject deleteFile(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/attachfiles", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	public JSONObject deleteFile(@PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W deleteFile started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
+		LOGGER.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1160,10 +1143,10 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 첨부파일 다운로드
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/attachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject downloadFile(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/attachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject downloadFile(@PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W downloadFile started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
+		LOGGER.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1217,10 +1200,10 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 일지 수신자 리스트 
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/receivers", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject getReceiverList(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/receivers", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getReceiverList(@PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getReceiverList started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
+		LOGGER.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1231,8 +1214,7 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName,  userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			LOGGER.debug("lang확인 : " + lang);
-			List<JournalReceiverVO> receiverList = ezJournalService.getReceiverList(journalId, startCount,listCnt,info.getTenantId(),lang);
+			List<JournalReceiverVO> receiverList = ezJournalService.getReceiverList(journalId, startCount, listCnt, info.getTenantId(), lang);
 		
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1251,10 +1233,10 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 일지 수신자 명수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/receivers-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject getReceiverCount(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/receivers-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getReceiverCount(@PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W getReceiverCount started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
+		LOGGER.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1503,21 +1485,6 @@ public class EzJournalGWController {
 	}
 	
 	/**
-	 * 업무일지 G/W [PUT] 댓글 수정
-	 */
-	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/replies/{replyId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
-	public JSONObject updateReply(@PathVariable String journalId, @PathVariable String replyId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W updateReply started.");
-		LOGGER.debug("journalId=" + journalId + ",replyId=" + replyId);
-		
-		JSONObject result = new JSONObject();
-		
-		
-		LOGGER.debug("ezJournal G/W updateReply ended.");
-		return result;
-	}
-	
-	/**
 	 * 업무일지 G/W [DELETE] 댓글 삭제
 	 */
 	@SuppressWarnings("unchecked")
@@ -1550,20 +1517,6 @@ public class EzJournalGWController {
 	}
 	
 	/**
-	 * 업무일지 G/W [GET] 댓글 수 카운트
-	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/replies-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject getReplyCount(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getReplyCount started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
-		
-		JSONObject result = new JSONObject();
-		
-		LOGGER.debug("ezJournal G/W getReplyCount ended.");
-		return result;
-	}
-	
-	/**
 	 * 업무일지 G/W [POST] 환경설정 정보 저장
 	 */
 	@SuppressWarnings("unchecked")
@@ -1591,19 +1544,6 @@ public class EzJournalGWController {
 		}
 		
 		LOGGER.debug("ezJournal G/W saveOption ended.");
-		return result;
-	}
-	
-	/**
-	 * 업무일지 G/W [PUT] 환경설정 정보 수정
-	 */
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/options", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
-	public JSONObject updateOption(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W updateOption started.");
-		
-		JSONObject result = new JSONObject();
-		
-		LOGGER.debug("ezJournal G/W updateOption ended.");
 		return result;
 	}
 	
@@ -1683,7 +1623,6 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			List<JournalReceiverVO> viewerList= ezJournalService.getJournalViewerList(journalId,startCount,listCnt, info.getTenantId(),lang);
-			LOGGER.debug("viewerList.size***********" + viewerList.size());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", viewerList);

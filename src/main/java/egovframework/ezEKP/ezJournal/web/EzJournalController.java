@@ -386,7 +386,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			}
 			
 			// 수신자 리스트 가져오기
-			restUrl = "/rest/ezjournal/types/" + typeId + "/journals/" + journalId + "/receivers";
+			restUrl = "/rest/ezjournal/journals/" + journalId + "/receivers";
 			result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 			
 			status = result.get("status").toString();
@@ -396,7 +396,6 @@ public class EzJournalController extends EgovFileMngUtil {
 				if (receiver.size() > 0 && receiver != null) {
 					
 					for (int i = 0; i < receiver.size(); i++) {
-					    logger.debug("receiver확인용 : " + receiver.get(i));
 						JSONObject obj = (JSONObject) receiver.get(i);
 						
 						receiverIds += obj.get("userId") + ", ";
@@ -919,7 +918,6 @@ public class EzJournalController extends EgovFileMngUtil {
 		String fileList = request.getParameter("fileList");
 		
 		String mode = "";
-		String typeId = request.getParameter("typeId");
 		String journalId = "";
 		String filePath = "";
 		
@@ -949,7 +947,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		param.put("filePath", filePath);
 		param.put("fileList", fileList);
 		
-		String restUrl = "/rest/ezjournal/types/" + typeId + "/journals/" + journalId + "/attachfiles";
+		String restUrl = "/rest/ezjournal/journals/" + journalId + "/attachfiles";
 		JSONObject result = commonUtil.getJsonFromRestApi(restUrl, param, request, "delete", null);
 		
 		String status = result.get("status").toString();
@@ -1151,7 +1149,6 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		String typeId = request.getParameter("typeId");
 		String journalId = request.getParameter("journalId");
 		String filePath = request.getParameter("filePath");
 		String fileName = request.getParameter("fileName");
@@ -1161,7 +1158,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		param.put("filePath", filePath);
 		param.put("fileName", fileName);
 		
-		String restUrl = "/rest/ezjournal/types/" + typeId + "/journals/" + journalId + "/attachfiles";
+		String restUrl = "/rest/ezjournal/journals/" + journalId + "/attachfiles";
 		JSONObject result = new JSONObject();
 		
 		result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
@@ -1494,11 +1491,10 @@ public class EzJournalController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String journalId = request.getParameter("journalId");
-		String typeId = request.getParameter("typeId");
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types/" + typeId + "/journals/" + journalId + "/receivers-count", param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/" + journalId + "/receivers-count", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		String currentPageStr = request.getParameter("currentPage");
@@ -1517,7 +1513,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		param.put("startCount", paging.getStartCount());
 		param.put("listCnt", listCnt);
 		
-		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types/" + typeId + "/journals/" + journalId + "/receivers", param, request, "get", null);
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/" + journalId + "/receivers", param, request, "get", null);
 		status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {			

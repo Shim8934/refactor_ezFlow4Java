@@ -82,7 +82,7 @@
 			                location.href = GetAttribute(checks.item(suffix++), "filepath");
 			            } else {
 			            //	console.log("filePath : " + GetAttribute(checks.item(suffix), "filePath"));
-		                	location.href = "/ezJournal/journalAttachDown.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName") + "&typeId=" + typeId + "&journalId=" + journalId;
+		                	location.href = "/ezJournal/journalAttachDown.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName") + "&journalId=" + journalId;
 			            }
 	                	setTimeout(function () { downloadAll(checks) }, 1000);
 		            }
@@ -242,7 +242,7 @@
 										<c:if test="${file.fileType == 'ecm'}">
 											<c:set var="imagePath" value="/images/ecm.png" />
 										</c:if>
-										<img src="${imagePath}" />&nbsp; <a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&typeId=${journal.typeId}&journalId=${journal.journalId}">${file.fileName }&nbsp;(${file.fileTransSize })</a><br>
+										<img src="${imagePath}" />&nbsp; <a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&journalId=${journal.journalId}">${file.fileName }&nbsp;(${file.fileTransSize })</a><br>
 									</div>
 								</c:forEach>
 							</div>
@@ -461,7 +461,7 @@
 		        var width = window.screen.availWidth;
 		        var left = (width - 500) / 2;
 		        var top = (heigth - 300) / 2;
-		        var szHref = "/ezJournal/JournalReceiverList.do?typeId=" + typeId + "&journalId=" + journalId + "&currentPage=" + currentPage;
+		        var szHref = "/ezJournal/JournalReceiverList.do?journalId=" + journalId + "&currentPage=" + currentPage;
 	            DivPopUpShow(600, 415, szHref);
 		    }
 		    

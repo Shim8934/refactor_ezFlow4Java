@@ -22,7 +22,7 @@
 	   				$("#txtlist_Layer").css("display","none");
 	   				$("#txtlist").attr("src","/images/kr/cm/btn_list.gif");
 	   				$("#imglist").attr("src","/images/kr/cm/btn_onimglist.gif");
-	   			}
+    			}
 	   		}
 	   		
 		</script>
