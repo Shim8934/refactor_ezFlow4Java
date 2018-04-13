@@ -1,43 +1,3 @@
-/*var dropzone = document.getElementById("dropzone"); // id of drag/drop zone
-var listing = document.getElementById("listing");   // id of table to show the result
-
-function scanFiles(item, container) {
-  let elem = document.createElement("li");
-  elem.innerHTML = item.name;
-  container.appendChild(elem);
- 
- if (item.isDirectory) {
-    let directoryReader = item.createReader();
-    let directoryContainer = document.createElement("ul");
-    container.appendChild(directoryContainer);
-    
-    directoryReader.readEntries(function(entries) {
-        entries.forEach(function(entry) {
-          scanFiles(entry, directoryContainer);
-      });
-    });
-  }
-}
-
-dropzone.addEventListener("dragover", function(event) {
-    event.preventDefault();
-}, false);
-
-dropzone.addEventListener("drop", function(event) {
-  var items = event.dataTransfer.items;
-
-  event.preventDefault();
-  listing.innerHTML = "";
- 
-  for (var i = 0; i < items.length; i++) {
-    var item = items[i].webkitGetAsEntry();
-    
-    if (item) {
-        scanFiles(item, listing);
-    }
-  }
-}, false);*/
-
 function onDragEnter(evt) {
 	evt.dataTransfer.dropEffect = "copy";
 	evt.stopPropagation();
@@ -185,15 +145,15 @@ function renderResult(result) {
 			var cell10 = row.insertCell(9);
 			
 			row.setAttribute("_fileId", jsObj["fileId"]);
-			row.setAttribute("_filePath", jsObj["filePath"]);
+			row.setAttribute("_type", 'file');
 			row.setAttribute("class", "bnkWebFolder");
-			row.onclick = function(event) {clickRow(this, event);};
+			row.onclick = function(event) {clickRow(event);};
 			
 			var inputElmt = document.createElement("INPUT");
 			inputElmt.setAttribute("type", "checkbox");
 			inputElmt.setAttribute("value", jsObj["fileId"]);
 			inputElmt.setAttribute("class", "checkBnk");
-			inputElmt.onclick = function(e){getChecked(this, e);};
+			inputElmt.onclick = function(e){getChecked(e);};
 			cell1.appendChild(inputElmt);
 			
 			var faImgElmt = document.createElement("img");
@@ -272,15 +232,15 @@ function renderResult2(result) {
 			var cell9  = row.insertCell(8);
 			
 			row.setAttribute("_fileId", jsObj["fileId"]);
-			row.setAttribute("_filePath", jsObj["filePath"]);
+			row.setAttribute("_type", 'file');
 			row.setAttribute("class", "bnkWebFolder");
-			row.onclick = function(event) {clickRow(this, event);};
+			row.onclick = function(event) {clickRow(event);};
 			
 			var inputElmt = document.createElement("INPUT");
 			inputElmt.setAttribute("type", "checkbox");
 			inputElmt.setAttribute("value", jsObj["fileId"]);
 			inputElmt.setAttribute("class", "checkBnk");
-			inputElmt.onclick = function(e){getChecked(this, e);};
+			inputElmt.onclick = function(e){getChecked(e);};
 			cell1.appendChild(inputElmt);
 			
 			var fileIconElmt = document.createElement("IMG");

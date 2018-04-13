@@ -232,15 +232,18 @@ function getSelected(obj) {
 	
 	if (previousElmt != null) {
 		if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {
-			previousElmt.style.color = "";
+			previousElmt.style.color      = "";
+			previousElmt.style.fontWeight = "normal";
 		}
 		else {
 			return;
 		}
 	}
 	
-	selectedDept    = obj.getAttribute("name");
-	obj.style.color = "#e04343";
+	selectedDept         = obj.getAttribute("name");
+	obj.style.color      = "#004a87";
+	obj.style.fontWeight = "bold";
+	
 	
 	$.ajax({
 		type: "POST",
@@ -820,15 +823,17 @@ function getSelectedDept(obj) {
 	
 	if (previousElmt != null) {
 		if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {
-			previousElmt.style.color = "";
+			previousElmt.style.color      = "";
+			previousElmt.style.fontWeight = "normal";
 		}
 		else {
 			return;
 		}
 	}
 	
-	selectedDept    = obj.getAttribute("name");
-	obj.style.color = "#e04343";
+	selectedDept         = obj.getAttribute("name");
+	obj.style.color      = "#004a87";
+	obj.style.fontWeight = "bold";
 }
 
 function add_dept2() {

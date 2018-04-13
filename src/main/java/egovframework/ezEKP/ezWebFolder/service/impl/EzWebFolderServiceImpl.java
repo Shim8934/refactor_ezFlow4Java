@@ -764,7 +764,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public void getDownloadedFiles(String[] fileIDList, String realPath, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void getDownloadedFiles(String[] folderIdList, String[] fileIDList, String realPath, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String userName1 = userInfo.getDisplayName1();
 		String userName2 = userInfo.getDisplayName2();
 		String offset    = userInfo.getOffset();
@@ -772,7 +772,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		String companyId = userInfo.getCompanyID();
 		int tenantId     = userInfo.getTenantId();
 		
-		if (fileIDList.length == 1) {
+		if (fileIDList.length == 1 && folderIdList.length == 0) {
 			FileVO fileVO    = getFileByFileId(fileIDList[0], offset, tenantId);
 			String _fileName = fileVO.getFileName();
 			_fileName        = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), _fileName);
@@ -871,6 +871,58 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 					
 					updateDownCnt(fileVO.getFileId(), tenantId);
 					saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				}
+				
+				//Package folders
+				for (int i = 0; i < folderIdList.length; i++) {
+					HashSet<String> inernameList = new HashSet<>();
+					FolderVO folder              = getFolderByFolderId(folderIdList[i], offset, tenantId);
+					List<FileVO> filesInFolder   = getAllFilesInFolder(folderIdList[i], "", "0", "", "", "", "", "", "1", 0, 0, userInfo.getPrimary(), offset, tenantId);
+					String folderName            = userInfo.getPrimary().equals("1") ? folder.getFolderName1() : folder.getFolderName2();
+					zipOutputStream.putNextEntry(new ZipEntry(folderName + commonUtil.separator));
+					zipOutputStream.closeEntry();
+					
+					for (FileVO innerFile : filesInFolder) {
+						File file = new File(realPath + innerFile.getFilePath());
+						
+						if (!file.exists()) {
+							throw new FileNotFoundException(innerFile.getFileName());
+						}
+						
+						if (!file.isFile()) {
+							throw new FileNotFoundException(innerFile.getFileName());
+						}
+						
+						String zFileName = innerFile.getFileName();
+						
+						if (!inernameList.contains(zFileName)) {
+							inernameList.add(zFileName);
+						}
+						else {
+							int pos         = zFileName.lastIndexOf(".");
+							String extend   = zFileName.substring(pos + 1);
+							String mainName = zFileName.substring(0, pos);
+							int k           = 1;
+							zFileName       = mainName + "(" + Integer.toString(k) + ")." + extend;
+							
+							while (inernameList.contains(zFileName)) {
+								zFileName = mainName + "(" + Integer.toString(++k) + ")." + extend;
+							}
+							
+							inernameList.add(zFileName);
+						}
+						
+						zipOutputStream.putNextEntry(new ZipEntry(folderName + commonUtil.separator + zFileName));
+						fileInputStream = new FileInputStream(file);
+						
+						IOUtils.copy(fileInputStream, zipOutputStream);
+						
+						fileInputStream.close();
+						zipOutputStream.closeEntry();
+						
+						updateDownCnt(innerFile.getFileId(), tenantId);
+						saveLog("D", companyId, offset, userId, userName1, userName2, innerFile.getFileName(), innerFile.getFileSize(), innerFile.getFileExt(), innerFile.getFileTypeName(), tenantId);
+					}
 				}
 				
 				zipOutputStream.close();
