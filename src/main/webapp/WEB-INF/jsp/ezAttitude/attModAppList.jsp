@@ -371,7 +371,7 @@
 	    	    	htmlStr += 'value=' + attList[i].attitudeId ;
 	    	    	htmlStr += ' onclick="event_listCheckboxclick(this)"/></td>';	
 	    		}
-    			htmlStr += '<td>' + (parseInt(i) + 1) + '</td>';
+    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 15) + '</td>';
     			htmlStr += '<td>' + attList[i].changeDate.substring(0,10) + '</td>';
     			htmlStr += '<td>' + attList[i].apprUserName + '</td>';
     			htmlStr += '<td>' + attList[i].originDate.substring(0,19) + '</td>';
