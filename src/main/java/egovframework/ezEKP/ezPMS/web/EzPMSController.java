@@ -40,7 +40,7 @@ public class EzPMSController {
 	/**
 	 * 메인페이지화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPMS/mainPage.do")
+	@RequestMapping(value = "/ezPMS/pmsMainPage.do")
 	public String mainPage(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
