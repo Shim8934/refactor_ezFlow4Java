@@ -475,7 +475,10 @@ public class EzWebFolderGWController_m {
 				for (TrashCanVO trashCan : trashCanList) {
 					trashCanPath = trashCan.getTrashCanPath().substring(1);
 					
-					trashCanPath = getFolderPath(trashCanPath.split("\\|"), primary, offset, tenantId);
+					logger.debug("trashCanPath=" + trashCanPath);
+					logger.debug("offset=" + offset);
+					
+					trashCanPath = getFolderPath(trashCanPath.split("\\|"), offset, primary, tenantId);
 					
 					// is folder
 					if ("folder".equalsIgnoreCase(trashCan.getTrashCanExt())) {

@@ -130,8 +130,18 @@
 					folderPath = result.folderPath;
 					originalPath = result.originalPath;
 					folderUpp = result.folderUpp;
+					var dragDropAreaElmt = document.getElementById("dragDropArea");
+					
 					if (folderUpp != 'root') {
 						$('#upload').css('display','inline');
+						dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
+						dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
+						dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
+					}
+					else {
+						dragDropAreaElmt.ondragenter = null;
+						dragDropAreaElmt.ondragover  = null;
+						dragDropAreaElmt.ondragover  = null;
 					}
 					
 // 					$("#originalPath").text(originalPath); 
@@ -804,7 +814,7 @@
     <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
     <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 	
-	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;overflow:auto;">
+	<div id="dragDropArea" style="margin: 10px 0px;overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
 				<th width="20px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
