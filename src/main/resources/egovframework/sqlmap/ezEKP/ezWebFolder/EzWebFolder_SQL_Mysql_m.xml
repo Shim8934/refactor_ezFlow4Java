@@ -720,34 +720,64 @@
 		</isNotEmpty>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.getFolderList" parameterClass="Map" resultMap="trashCanVO">
-		<![CDATA[	
+	<select id="EzWebFolderDAO_m.getTrashCanList" parameterClass="Map" resultMap="trashCanVO">
+		<![CDATA[
 			SELECT
-				distinct
-				FOLDER.FOLDER_id    AS TRASHCAN_ID,     
-				FOLDER.FOLDER_NAME1 AS TRASHCAN_NAME,
-				FOLDER.FOLDER_PATH 	AS TRASHCAN_PATH,
-				FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
-	            'folder'	AS TRASHCAN_EXT,
-				0 	AS TRASHCAN_SIZE,
-				DATE_ADD(FOLDER.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				DATE_ADD(FOLDER.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				FOLDER.CREATE_NAME1 AS CREATE_NAME1,
-	            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
-	            '' AS FILE_FOLDER_ID,
-	            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
-			FROM
-				tbl_webfolder_folder AS FOLDER
-				INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
-				ON FILE_TYPE.TYPE_NAME = 'folder'
-			WHERE
-				FOLDER.USE_STATUS = 'T' AND
-				FOLDER.DELETER_ID = #userId# AND
-				FOLDER.TENANT_ID = #tenantId#
+				*
+			FROM (
+				SELECT
+					distinct
+					FOLDER.FOLDER_id    AS TRASHCAN_ID,     
+					FOLDER.FOLDER_NAME1 AS TRASHCAN_NAME,
+					FOLDER.FOLDER_PATH 	AS TRASHCAN_PATH,
+					FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
+		            'folder'	AS TRASHCAN_EXT,
+					0 	AS TRASHCAN_SIZE,
+					DATE_ADD(FOLDER.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+					DATE_ADD(FOLDER.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+					FOLDER.CREATE_NAME1 AS CREATE_NAME1,
+		            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
+		            '' AS FILE_FOLDER_ID,
+		            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
+				FROM
+					tbl_webfolder_folder AS FOLDER
+					INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+					ON FILE_TYPE.TYPE_NAME = 'folder'
+				WHERE
+					FOLDER.USE_STATUS = 'T' AND
+					FOLDER.DELETER_ID = #userId# AND
+					FOLDER.TENANT_ID = #tenantId#
 		]]>
-	</select>
-	
-	<select id="EzWebFolderDAO_m.getFileList" resultMap="trashCanVO">
+		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+				<![CDATA[
+					'folder' LIKE CONCAT ('%', #searchExt#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+				<![CDATA[
+					FOLDER.FOLDER_NAME1 LIKE CONCAT ('%', #searchFileName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+				<![CDATA[
+					FOLDER.CREATE_NAME1 LIKE CONCAT ('%', #searchCreateName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="endrollStartDate" compareValue="">
+			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					(DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d') >= #endrollStartDate# AND DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d')<= #endrollEndDate#)
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+		<isNotEqual property="delStartDate" compareValue="">
+			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					(DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d') >= #delStartDate# AND DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d')<= #delEndDate#)
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+				UNION
 		<![CDATA[	
 			SELECT
 				distinct
@@ -764,7 +794,7 @@
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
 	            '' as FOLDER_UPPER
 			FROM
-				jmocha.tbl_webfolder_file AS FILES
+				tbl_webfolder_file AS FILES
 				INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
 				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
 			WHERE
@@ -772,6 +802,41 @@
 				FILES.DELETER_ID = #userId# AND
 				FILES.TENANT_ID = #tenantId#
 		]]>
+		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.FILE_EXT LIKE CONCAT ('%', #searchExt#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.FILE_NAME LIKE CONCAT ('%', #searchFileName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.CREATE_NAME1 LIKE CONCAT ('%', #searchCreateName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="endrollStartDate" compareValue="">
+			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.CREATE_DATE >= #endrollStartDate# AND FILES.CREATE_DATE <= #endrollEndDate#)
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+		<isNotEqual property="delStartDate" compareValue="">
+			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.UPDATE_DATE >= #delStartDate# AND FILES.UPDATE_DATE <= #delEndDate#)
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	 	<![CDATA[
+				) R
+			GROUP BY R.TRASHCAN_ID
+			ORDER BY R.UPDATE_DATE DESC
+			LIMIT #pStart#, #pEnd#
+		]]> 
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getFileListByFolderId" parameterClass="Map" resultMap="trashCanVO">

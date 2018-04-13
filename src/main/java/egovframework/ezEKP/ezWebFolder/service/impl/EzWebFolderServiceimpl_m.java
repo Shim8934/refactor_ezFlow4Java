@@ -393,94 +393,73 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getTrashCanList(String userId, String offset, int tenantId) throws Exception {
+	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int pStart, int pEnd, 
+			String searchExt, String searchFileName, String searchCreateName, String endrollStartDate, String endrollEndDate,
+			String delStartDate, String delEndDate) throws Exception {
 		LOGGER.debug("getTrashCanList Started.");
 		LOGGER.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId);
+		LOGGER.debug("pStart=" + pStart + ",pEnd=" + pEnd);
+		LOGGER.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName);
+		LOGGER.debug("endrollStartDate=" + endrollStartDate + ",endrollEndDate=" + delStartDate + ",delStartDate=" + delStartDate + ",delEndDate=" + delEndDate);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("offset", offset);
 		map.put("tenantId", tenantId);
+		map.put("pStart", pStart);
+		map.put("pEnd", pEnd);
+		map.put("searchExt", searchExt);
+		map.put("searchFileName", searchFileName);
+		map.put("searchCreateName", searchCreateName);
+		map.put("endrollStartDate", endrollStartDate);
+		map.put("endrollEndDate", endrollEndDate);
+		map.put("delStartDate", delStartDate);
+		map.put("delEndDate", delEndDate);
 		
-		List<TrashCanVO> folderList = ezWebFolderDAO.getFolderList(map);
-		List<TrashCanVO> fileList = ezWebFolderDAO.getFileList(map);
-		List<TrashCanVO> trashCanList = new ArrayList<TrashCanVO>();
+		List<TrashCanVO> trashCanList = ezWebFolderDAO.getTrashCanList(map);
+		List<TrashCanVO> resultList = new ArrayList<TrashCanVO>();
 		
 		JSONObject result = new JSONObject();
 		int fileCnt = 0;
 		int folderCnt = 0;
 		
-		if (folderList != null) {
-			for (TrashCanVO folder : folderList) {
-				if (folder != null) {
-					FolderVO upperFolder = ezWebFolderService.getFolderByFolderId(folder.getFolderUpper(), offset, tenantId);
+		if (trashCanList != null) {
+			for (TrashCanVO trashCan : trashCanList) {
+				if (trashCan.getTrashCanExt().equals("folder")) {
+					FolderVO upperFolder = ezWebFolderService.getFolderByFolderId(trashCan.getFolderUpper(), offset, tenantId);
 					
 					if (upperFolder.getUseStatus().equals("Y")) {
-						trashCanList.add(folder);
+						resultList.add(trashCan);
 						folderCnt += 1;
 					} 
-				}
-			}
-		}
-		
-		if (fileList != null) {
-			for (TrashCanVO file : fileList) {
-					map.put("folderId", file.getFileFolderId());
+					
+				} else {
+					map.put("folderId", trashCan.getFileFolderId());
 					String folderPath = ezWebFolderDAO.getFolderPath(map);
 					
 					if (folderPath != null) {
-						file.setTrashCanPath(folderPath);
+						trashCan.setTrashCanPath(folderPath);
 					}
 					
-					FolderVO folder = ezWebFolderService.getFolderByFolderId(file.getFileFolderId(), offset, tenantId);
+					FolderVO folder = ezWebFolderService.getFolderByFolderId(trashCan.getFileFolderId(), offset, tenantId);
 					
 					if (folder != null && folder.getUseStatus().equals("Y")) {
-						trashCanList.add(file);
+						resultList.add(trashCan);
 						fileCnt += 1;
 					}
+				}
 			}
 		}
 		
 		result.put("fileCnt", fileCnt);
 		result.put("folderCnt", folderCnt);
-		result.put("trashCanList", trashCanList);
+		result.put("trashCanList", resultList);
 		
 		LOGGER.debug("result=" + result);
 		LOGGER.debug("getTrashCanList ended.");
 		return result;
 	}
 
-	@Override
-	public List<TrashCanVO> getFolderList(String userId, String offset, int tenantId) throws Exception {
-		LOGGER.debug("getFolderList Started.");
-		LOGGER.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("offset", offset);
-		map.put("tenantId", tenantId);
-
-		List<TrashCanVO> folderList = ezWebFolderDAO.getFolderList(map); 
-		
-		LOGGER.debug("getFolderList ended.");
-		return folderList;
-	}
-
-	@Override
-	public List<TrashCanVO> getFileList(String userId, String offset, int tenantId) throws Exception {
-		LOGGER.debug("getFileList Started.");
-		LOGGER.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId);
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("offset", offset);
-		map.put("tenantId", tenantId);
-
-		List<TrashCanVO> fileList = ezWebFolderDAO.getFileList(map); 
-		
-		LOGGER.debug("getFileList ended.");
-		return fileList;
-	}
 
 	@Override
 	public String getFolderPath(String folderId, int tenantId) throws Exception {

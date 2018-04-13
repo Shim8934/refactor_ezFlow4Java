@@ -163,15 +163,48 @@ public class EzWebFolderController_m {
 		int tenantId = request.getParameter("tenantId") !=null ? Integer.parseInt(request.getParameter("tenantId")) : 1;
 		String offset = request.getParameter("offset") !=null ? request.getParameter("offset") : "";
 		
+		int listCount 	        = request.getParameter("listCount")         != null ? Integer.parseInt(request.getParameter("listCount")) 	: 0;
+		int currPage 	        = request.getParameter("currPage")	        != null ? Integer.parseInt(request.getParameter("currPage")) 	: 1;
+		int totalPages 	        = request.getParameter("totalpages")        != null ? Integer.parseInt(request.getParameter("totalpages")) 	: 1;
+		int pStart 		        = request.getParameter("pStart")	        != null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
+		
+		String searchExt 		= request.getParameter("searchExt")			!= null ? request.getParameter("searchExt") 		            : "" ;
+		String searchFileName 	= request.getParameter("searchFileName") 	!= null ? request.getParameter("searchFileName")	            : "" ;
+		String searchCreateName = request.getParameter("searchCreateName") 	!= null ? request.getParameter("searchCreateName") 	            : "" ;
+		String endrollStartDate = request.getParameter("enrollStartDate")	!= null ? request.getParameter("enrollStartDate") 	            : "" ;
+		String endrollEndDate 	= request.getParameter("enrollEndDate")		!= null ? request.getParameter("enrollEndDate") 	            : "" ;
+		String delStartDate 	= request.getParameter("delStartDate")		!= null ? request.getParameter("delStartDate") 	            	: "" ;
+		String delEndDate 		= request.getParameter("delEndDate")		!= null ? request.getParameter("delEndDate") 	            	: "" ;
+		
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/" + userId + "/getTrashCanList";
 		
 		logger.debug("getTrashCanList Started.");
-		logger.debug("userId=" + userId + ",tenantId=" + userId + ",offset=" + offset);
+		logger.debug("tenantId=" + userId + ",offset=" + offset);
+		logger.debug("userId=" + userId + ",listCount=" + listCount + ",currPage=" + currPage + ",totalPages=" + totalPages + ",pStart=" + pStart);
+		
+		if ( currPage == 0 ) {
+			currPage = 1;
+		} 
+		
+		if ( totalPages == 0 ) {
+			totalPages = 1;
+		}
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", tenantId)
-										.queryParam("offset", offset);
+										.queryParam("offset", offset)
+										.queryParam("currPage", currPage)                   
+										.queryParam("listCount", listCount)                 
+										.queryParam("totalPages", totalPages)               
+										.queryParam("pStart", pStart)
+										.queryParam("searchExt", searchExt)               
+										.queryParam("searchFileName", searchFileName)               
+										.queryParam("searchCreateName", searchCreateName)               
+										.queryParam("endrollStartDate", endrollStartDate)               
+										.queryParam("endrollEndDate", endrollEndDate)               
+										.queryParam("delStartDate", delStartDate)               
+										.queryParam("delEndDate", delEndDate);               
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -189,8 +222,6 @@ public class EzWebFolderController_m {
 			model.addAttribute("status","ok");
 			model.addAttribute("code",0);
 			model.addAttribute("data",resultBody.get("data"));
-			model.addAttribute("fileCnt",resultBody.get("fileCnt"));
-			model.addAttribute("folderCnt",resultBody.get("folderCnt"));
 		}else {
 			model.addAttribute("status","error");
 			model.addAttribute("code",1);
@@ -198,6 +229,7 @@ public class EzWebFolderController_m {
 		}
 		
 		logger.debug("status=" + status);
+		logger.debug("data=" + resultBody.get("data"));
 		logger.debug("getTrashCanList ended");
 		
 		return "json";
