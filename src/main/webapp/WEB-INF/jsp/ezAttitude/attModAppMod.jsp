@@ -144,12 +144,23 @@
 				var obj = new Object();
 		    	
 			    var cDate = $("#Cdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-
 			    var cYear = cDate.split("-")[0];
 			    var cMonth = cDate.split("-")[1];
 			    var cDay = cDate.split("-")[2];
 			    var chour, cminute;
 			    var ctime = $('#Ctimepicker').val()
+			    var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
+
+			    if ("${data.changeDate}".substring(0,10) != cDate && "${data.typeId}" == "A02") {
+			    	alert("날짜는 수정하실 수 없습니다.");
+			    	return;
+			    }
+			    
+			    if (!timeValid.test(ctime)) {
+			    	alert("올바른 시간을 지정해야 합니다.");
+			    	return;
+			    }
+			    
 		    	obj.attId = attid;
 		    	obj.changeDate = cDate + " " + ctime + ":00";
 		    	obj.content = message.GetEditorContent();
@@ -232,14 +243,14 @@
 	                                    <tr>
 	                                        <th>기존시각</th>
 	                                        <td colspan="2">
-	                                        	<input type="text" id="Odatepicker" style="width:80px;text-align:center" disabled readonly="readonly"><input id="Otimepicker" disabled readonly="readonly" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	                                        	<input type="text" id="Odatepicker" style="width:80px;text-align:center" disabled><input id="Otimepicker" disabled readonly="readonly" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
 	                                        <th>변경시각</th>
 	                                        <td colspan="2">
 	                                        	<span id="periodblock">
-	                                           		<input type="text" id="Cdatepicker" style="width:80px;text-align:center" disabled readonly="readonly"><input id="Ctimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	                                           		<input type="text" id="Cdatepicker" style="width:80px;text-align:center" disabled><input id="Ctimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                            </span>
 	                                        </td>
 	                                    </tr>

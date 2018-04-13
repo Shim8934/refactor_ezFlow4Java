@@ -860,7 +860,7 @@
         <ul id="tb_Parent">
         <c:if test="${adminFlag == 'true'}">
 			<li id="reply"><span onClick="modApprove()">승인</span></li>
-          <li id="search"><span onClick="modReturn()">반려</span></li>
+        	<li id="search"><span onClick="modReturn()">반려</span></li>
 		</c:if>
           <li><span onClick="attList_del()">삭제</span></li>
           <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
@@ -874,7 +874,7 @@
 		  </li> 
         </ul>
         </div>
-        <div id="layer_popup" style="width:400px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+        <div id="layer_popup" style="width:460px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
           <div class="popupwrap1" style="background-color:#ffffff; position: relative;">
             <div class="popupwrap2">
               <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="content">

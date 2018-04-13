@@ -382,7 +382,19 @@
 			function layerHidden() {
 		        $.modal.close();
 		    }
-
+			
+			function searchDept() {
+				
+			}
+			
+			function excelDown() {
+				
+			}
+			
+			function sendMail() {
+	
+			}
+        	
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">
@@ -394,6 +406,11 @@
 		</c:if>
 		<div id="mainmenu">
 			<ul>
+				<c:if test="${adminFlag == 'true'}">
+					<li id="reply"><span onClick="searchDept()">부서검색</span></li>
+		        	<li id="search"><span onClick="excelDown()">엑셀다운로드</span></li>
+		        	<li id="search"><span onClick="sendMail()">근태미입력자 메일발송</span></li>
+				</c:if>
 			</ul>
 		</div>
 		
