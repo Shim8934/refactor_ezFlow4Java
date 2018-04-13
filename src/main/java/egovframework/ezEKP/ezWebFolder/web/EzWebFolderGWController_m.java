@@ -447,11 +447,12 @@ public class EzWebFolderGWController_m {
 		String searchExt 		= request.getParameter("searchExt")			!= null ? request.getParameter("searchExt") 		            : "" ;
 		String searchFileName 	= request.getParameter("searchFileName") 	!= null ? request.getParameter("searchFileName")	            : "" ;
 		String searchCreateName = request.getParameter("searchCreateName") 	!= null ? request.getParameter("searchCreateName") 	            : "" ;
+		String searchFileType  = request.getParameter("searchFileType")		!= null ? request.getParameter("searchFileType") 	            : "" ;
 		String endrollStartDate = request.getParameter("enrollStartDate")	!= null ? request.getParameter("enrollStartDate") 	            : "" ;
 		String endrollEndDate 	= request.getParameter("enrollEndDate")		!= null ? request.getParameter("enrollEndDate") 	            : "" ;
 		String delStartDate 	= request.getParameter("delStartDate")		!= null ? request.getParameter("delStartDate") 	            	: "" ;
 		String delEndDate 		= request.getParameter("delEndDate")		!= null ? request.getParameter("delEndDate") 	            	: "" ;
-		
+
 		// TODO primary 수정
 		String primary;
 		
@@ -465,7 +466,7 @@ public class EzWebFolderGWController_m {
 		logger.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId + ",serverName=" + serverName);
 		logger.debug("currPage=" + currPage + ",totalpages=" + totalpages);
 		logger.debug("pStart=" + pStart + ",pEnde=" + pEnd + ",listCount=" + listCount);
-		logger.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName);
+		logger.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName + ",searchFileType=" + searchFileType);
 		logger.debug("endrollStartDate=" + endrollStartDate + ",endrollEndDate=" + delStartDate + ",delStartDate=" + delStartDate + ",delEndDate=" + delEndDate);
 		
 		JSONObject result = new JSONObject();
@@ -482,7 +483,7 @@ public class EzWebFolderGWController_m {
 		try {
 			List<TrashCanVO> trashCanList = null;
 			JSONObject resultList = ezWebFolderService_m.getTrashCanList(userId, offset, tenantId, pStart, pEnd,
-										searchExt, searchFileName, searchCreateName, endrollStartDate, endrollEndDate, delStartDate, delEndDate );
+										searchExt, searchFileName, searchCreateName, searchFileType, endrollStartDate, endrollEndDate, delStartDate, delEndDate);
 			int fileCnt = 0;
 			int folderCnt = 0;
 			

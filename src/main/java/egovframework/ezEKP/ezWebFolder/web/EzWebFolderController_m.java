@@ -174,6 +174,7 @@ public class EzWebFolderController_m {
 		String searchExt 		= request.getParameter("searchExt")			!= null ? request.getParameter("searchExt") 		            : "" ;
 		String searchFileName 	= request.getParameter("searchFileName") 	!= null ? request.getParameter("searchFileName")	            : "" ;
 		String searchCreateName = request.getParameter("searchCreateName") 	!= null ? request.getParameter("searchCreateName") 	            : "" ;
+		String searchFileType  = request.getParameter("searchFileType")		!= null ? request.getParameter("searchFileType") 	            : "" ;
 		String endrollStartDate = request.getParameter("enrollStartDate")	!= null ? request.getParameter("enrollStartDate") 	            : "" ;
 		String endrollEndDate 	= request.getParameter("enrollEndDate")		!= null ? request.getParameter("enrollEndDate") 	            : "" ;
 		String delStartDate 	= request.getParameter("delStartDate")		!= null ? request.getParameter("delStartDate") 	            	: "" ;
@@ -204,6 +205,7 @@ public class EzWebFolderController_m {
 										.queryParam("searchExt", searchExt)               
 										.queryParam("searchFileName", searchFileName)               
 										.queryParam("searchCreateName", searchCreateName)               
+										.queryParam("searchFileType", searchFileType)               
 										.queryParam("endrollStartDate", endrollStartDate)               
 										.queryParam("endrollEndDate", endrollEndDate)               
 										.queryParam("delStartDate", delStartDate)               
