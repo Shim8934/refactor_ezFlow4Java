@@ -189,4 +189,8 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void deleteAttitude(Map<String, Object> map) throws Exception {
 		delete("ezAttitude.deleteAttitude", map);
 	}
+	
+	public void updateAttitude(Map<String, Object> map) throws Exception {
+		update("ezAttitude.updateAttitude", map);
+	}
 }

@@ -141,7 +141,7 @@
 					selectType = typeId;
 					if ($("#selectAtti option[value='" + selectType + "']").length == 0) {
 						$("#selectAtti").val("A05");
-						$("#subSelectAtti").val(selectType);
+						$("#subSelectAtti").css("display","").val(selectType);
 					} else {
 						$("#selectAtti").val(selectType);
 					}
@@ -173,6 +173,7 @@
 							$("input[name=mobile]").val(mobile);
 							$("input[name=bizsub]").val(bizSub);
 							//content
+							$("textarea[name=content]").val(content);
 						}
 					}
 				})
@@ -211,18 +212,22 @@
 			
 			//저장
 			function save_attitude() {
+				alert($("textarea[name=content]").val());
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezAttitude/attitudeSave.do",
 		        	async : false,
 		        	data : {
+		        		attitudeId : attitudeId,
 		        		typeId : selectType,
 		        		region : $("input[name=region]").val(),
 		        		mobile : $("input[name=mobile]").val(),
 		        		bizSub : $("input[name=bizsub]").val(),
+		        		content : $("textarea[name=content]").val(),
 		        		dateType : $("#periodblock").attr("datetype"),
 		        		startDate : startDate,
-		        		endDate : endDate
+		        		endDate : endDate,
+		        		mode : mode
 		        	},
 		        	success : function (result) {
 		        		alert("근태가 저장되었습니다.");
@@ -271,9 +276,10 @@
 	  			</tr>
   			</tbody>
 		</table>
-		<table id="content" class="content" style="width:100%; margin-top: 10px;">
+		<table class="content" style="width:100%; margin-top: 10px;">
 		  	<tr>
-  				<td style="height: 300px;">
+  				<td style="height: 300px; margin:0px; padding:0px;">
+  					<textarea name="content" class="textarea" style="width:100%; height:300px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea>
   				</td>  
   			</tr>
 		</table>

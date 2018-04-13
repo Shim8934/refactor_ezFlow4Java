@@ -218,13 +218,27 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [POST] 근태수정
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateAttitudeInfo(@PathVariable String attitudeId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String typeId = request.getParameter("typeId");
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			String region = request.getParameter("region");
+			String mobile = request.getParameter("mobile");
+			String bizSub = request.getParameter("bizSub");
+			String content = request.getParameter("content");
+			String dateType = request.getParameter("dateType");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

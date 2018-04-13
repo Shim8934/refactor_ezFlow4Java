@@ -47,7 +47,7 @@
 				$("#region").text(" " + region);
 				$("#mobile").text(" " + mobile);
 				$("#bizsub").text(" " + bizSub);
-				//$("#content").text(" ");
+				$("textarea[name=content]").val(content);
 				
 				var showTime = "";
 				switch (dateType) {
@@ -91,18 +91,17 @@
 			}
 			
 			function modifyAttitude() {
+				var openWin = null;
 				if (CrossYN()) {
-                    var OpenWin = window.open("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(650, 580));
+                    openWin = window.open("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(650, 580));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
-                	rtnValue = window.showModalDialog("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "",
+                	openWin = window.showModalDialog("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "",
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
-	                
-	                if (typeof (rtnValue) != "undefined") {
-	                	
-	                }
+                	 try { OpenWin.focus(); } catch (e) { }
 	            }
+				openWin.opener = window.opener;
 				window.close();
 			}
 			
@@ -138,11 +137,12 @@
 		  			</tr>
 	  			</tbody>
 			</table>
-			<table id="content" class="content" style="width:100%; margin-top: 10px;">
-			  	<tr>
-	  				<td style="height: 300px;">
-	  				</td>  
-	  			</tr>
+			<table class="content" style="width:100%; margin-top: 10px;">
+				<tr>
+				  	<td style="height: 300px; margin:0px; padding:0px;">
+	  					<textarea name="content" class="textarea" style="width:100%; height:300px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;" readonly></textarea>
+	  				</td>
+	  			</tr>  
 			</table>
 		</div>
 	</body>

@@ -674,4 +674,21 @@
 		AND
 			TENANT_ID = #tenantId#
 	</delete>
+	
+	<insert id="ezAttitude.updateAttitude" parameterClass="Map">
+		UPDATE 
+			tbl_attitude
+		SET
+			TYPE_ID = #typeId#,
+		    REGION = #region#,
+		    MOBILE = #mobile#,
+		    BIZSUB = #bizSub#,
+		    CONTENT = #content#,
+		    DATE_TYPE = #dateType#,
+		    IP = #ipAddress#,
+		    START_DATE = date_add(#startDate#, INTERVAL -#offsetMin# minute),
+		    END_DATE = IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute))
+		WHERE
+			ATTITUDE_ID = #attitudeId#
+	</insert>
 </sqlMap>

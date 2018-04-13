@@ -59,7 +59,7 @@
 	<div class="left_pims" title="근태관리"><span>근태관리</span></div>
 	<article class="time">
 		<p class="title"><spring:message code='main.t00023' /></p>
-		<div style=" margin-left:52px ;width:110px; height:67px; border:2px solid rgb(102,180,255); border-radius:27px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px; background-color:rgb(255,255,255);">
+		<div style=" margin-left:52px ;width:110px; height:67px; border:2px solid grey; border-radius:27px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px; background-color:rgb(255,255,255);">
 			<p id="timeinput" style="margin:21px 0px 0px 2px;"></p>
 		</div>
 			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; overflow:hidden;">
@@ -162,7 +162,8 @@
 	    		url : "/ezAttitude/attitudeSave.do",
 	    		data : {
 	    			typeId : pTypeId,
-	    			dateType : pDateType
+	    			dateType : pDateType,
+	    			mode : "new"
 	    		},
 	    		success : function() {
 	    			getAttitudeList();

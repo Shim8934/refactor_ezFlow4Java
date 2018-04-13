@@ -206,12 +206,29 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void updateAttitude(String attitudeId, String startdate,
-			String enddate, String starttime, String endtime, String region,
-			String mobile, String bizsub, String content, String ip,
-			String typeId, String companyId, int tenantId) throws Exception {
-		// TODO Auto-generated method stub
+	public void updateAttitude(String attitudeId, String startDate,
+			String endDate, String region, String mobile, String bizSub, String content, 
+			String offset, String ip, String typeId, String dateType, int tenantId) throws Exception {
+		LOGGER.debug("updateAttitude started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("attitudeId", attitudeId);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("region", region);
+		map.put("mobile", mobile);
+		map.put("bizSub", bizSub);
+		map.put("content", content);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
+		map.put("ipAddress", ip);
+		map.put("typeId", typeId);
+		map.put("dateType", dateType);
+		map.put("tenantId", tenantId);
+		
+		ezAttitudeDAO.updateAttitude(map);
+		
+		LOGGER.debug("updateAttitude ended");
 	}
 
 	@Override

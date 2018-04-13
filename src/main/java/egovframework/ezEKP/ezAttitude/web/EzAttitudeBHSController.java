@@ -100,7 +100,7 @@ public class EzAttitudeBHSController {
 	}
 	
 	/**
-	 * 사용자 근태 추가 
+	 * 사용자 근태 추가 및 수정
 	 */
 	@RequestMapping(value = "/ezAttitude/attitudeSave.do")
 	@ResponseBody
@@ -109,6 +109,7 @@ public class EzAttitudeBHSController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String attitudeId = request.getParameter("attitudeId");
 		String typeId = request.getParameter("typeId");
 		String region = request.getParameter("region");
 		String mobile = request.getParameter("mobile");
@@ -116,10 +117,19 @@ public class EzAttitudeBHSController {
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		String dateType = request.getParameter("dateType");
+		String mode = request.getParameter("mode");
+		String content = request.getParameter("content");
 		String userId = userInfo.getId();
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/attitudes";
+		String url = gwServerUrl;
+		
+		if (mode.equals("new")) {
+			url += "/rest/ezattitude/users/" + userId + "/attitudes";
+		} else if (mode.equals("mod")){
+			url += "/rest/ezattitude/attitudes/" + attitudeId; // update GW url
+		}
+			
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -128,17 +138,19 @@ public class EzAttitudeBHSController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId)
 				.queryParam("typeId", typeId)
 				.queryParam("region", region)
 				.queryParam("mobile", mobile)
 				.queryParam("startDate", startDate)
 				.queryParam("endDate", endDate)
 				.queryParam("bizSub", bizSub)
+				.queryParam("content", content)
 				.queryParam("dateType", dateType);
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), (mode.equals("new")) ? HttpMethod.POST : HttpMethod.PUT, entity, String.class);
 		
 		JSONParser jp = new JSONParser();
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());

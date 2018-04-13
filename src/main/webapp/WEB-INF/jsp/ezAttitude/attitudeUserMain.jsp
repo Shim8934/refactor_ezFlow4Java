@@ -108,10 +108,6 @@
 			    
 			    $("#Sdatepicker").datepicker('disable');
 			});
-   /////////////////////
-			
-			///////////////
-			
 			
 			/**
 			* 근태유형 메소드
@@ -138,10 +134,13 @@
 					var objTr = "";
 					var objTd = "";
 					var calendarHeight = $("#attiCalendar").css("height");
-					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1));
+					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1 - 2));
 					
 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":tdHeight, "background-color": "#edf4fd"}).text($("#calTitle").text())));
 					for (var i = 0; i < result.length; i++) {
+						if (result[i].typeId == 'A01' || result[i].typeId == 'A03') {
+							continue;
+						}
 						objTr = $("<tr></tr>").append($("<th></th>").text(result[i].typeName));
 						objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일");
 						
@@ -244,58 +243,58 @@
 				var imgPath = "";	  // 이미지 경로
 				if (deptFlag == false){
 					for (var i = 0; i < result.length; i++) {
-						startDate = result[i].startDate.split(" ")[0];
-						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
-						imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>";
-
-						if (result[i].dateType == '4' || result[i].dateType == '5') {
-							subDate = calDateRange(startDate, endDate);
-							betweenDate = new Date(startDate);
-							
-							for (var j = 0; j<= subDate; j++) {
-								betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1));
-								var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
-								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" 
-										+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].region + "</td></tr>");
-							}
-						} else if (result[i].dateType == '3') {
-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>");
-						} else if (result[i].dateType == '1') {
-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>");
-						} else {
-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1] + "</td></tr>");
-						}
+						startDate = result[i].startDate.split(" ")[0]; 
+						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : ""); 
+						imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>"; 
+						 
+						if (result[i].dateType == '4' || result[i].dateType == '5') { 
+						subDate = calDateRange(startDate, endDate); 
+						betweenDate = new Date(startDate); 
+						 
+						for (var j = 0; j<= subDate; j++) { 
+							betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
+							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2); 
+							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
+									"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>"  
+									+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].region + "</td></tr>"); 
+						} 
+						} else if (result[i].dateType == '3') { 
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1] + "</td></tr>"); 
+						} else if (result[i].dateType == '1') { 
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>"); 
+						} else { 
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
+						} 
 					}	
 				} else {
 					for (var i = 0; i < result.length; i++) {
 						if (result[i].typeId != 'A01' && result[i].typeId != 'A03') {
-							startDate = result[i].startDate.split(" ")[0];
-							endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
-							imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>";
-							
-							if (result[i].dateType == '4' || result[i].dateType == '5') {
-								subDate = calDateRange(startDate, endDate);
-								betweenDate = new Date(startDate);
-								
-								for (var j = 0; j<= subDate; j++) {
-									betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1));
-									var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
-									$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
-											"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" 
-											+ (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
-								}
-							} else if (result[i].dateType == '3') {
-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
-							} else if (result[i].dateType == '1') {
-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + "</td></tr>");
-							} else {
-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
-							}	
+							startDate = result[i].startDate.split(" ")[0]; 
+							endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : ""); 
+							imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>"; 
+							 
+							if (result[i].dateType == '4' || result[i].dateType == '5') { 
+							subDate = calDateRange(startDate, endDate); 
+							betweenDate = new Date(startDate); 
+							 
+							for (var j = 0; j<= subDate; j++) { 
+								betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
+								var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2); 
+								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
+										"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>"  
+										+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].region + "</td></tr>"); 
+							} 
+							} else if (result[i].dateType == '3') { 
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
+							} else if (result[i].dateType == '1') { 
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>"); 
+							} else { 
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0,5) + "</td></tr>"); 
+							} 
 						}
 					}
 				}
@@ -438,7 +437,10 @@
 					</tr>
 					<tr>
 <!-- 						<td colspan="2"><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%; height:90px; box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td> -->
-						<td colspan="2"><textarea class="textarea" style="width:98%; height:90px; box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px; resize:none;"></textarea></td>
+						<td colspan="2" style="margin:0px; padding:0px;"><textarea class="textarea" style="width:100%; height:120px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea></td>
+<!-- 						<td style="vertical-align:top;height:100%;" id="EdtorSize" colspan="2"> -->
+<!-- 		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe> -->
+<!-- 	                    </td> -->
 					</tr>
 				</table>
 				<!-- /내용 -->
