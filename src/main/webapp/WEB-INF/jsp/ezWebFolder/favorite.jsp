@@ -65,9 +65,9 @@
     	    // TODO: 리펙토링
     	    function tempSetPage(totalCount) {
     	    	totalRows = totalCount;
-    	    	totalPages = totalRows / blockSize;
+    	    	totalPages = Math.max(~~(totalRows / blockSize), 1);
     	    	
-    	    	if (totalRows % blockSize !== 0) {
+    	    	if (totalPages * blockSize < totalRows) {
     	    		totalPages++;
     	    	}
     	    }
@@ -230,23 +230,20 @@
         }
 	    
 	    function loadListAsFavorite() {
-	    	var startIndex = (blockSize * (currentPage - 1))
-	    	
 			$.ajax ({
-				type: "get",
+				type: "post",
 				async: false,
-				url : "/rest/ezwebfolder/users/" + userInfo.id + "/favorites",
+				url : "/ezWebFolder/getFavorites.do",
 				dataType: "json",
 				
 				data : {
-					offset : userInfo.offset,
-					primary   : userInfo.primary,
-					tenantId : userInfo.tenantId,
 					searchExt : $('#searchExt').val(),
 					searchFileName : $('#searchFileName').val(),
 					searchCreatorName : $('#searchCreateName').val(),
-					startIndex : startIndex,
-					endIndex : startIndex + blockSize
+					searchStartDate: $('#Sdatepicker').val(),
+					searchEndDate: $('#Edatepicker').val(),
+					startIndex : pagination.startIndex,
+					endIndex : blockSize
 				},
 				
 				success : function (result) {
@@ -258,9 +255,8 @@
 					renderList(result.targetList, false);
 					makePageSelPage();
 					
-					// TODO: resultCount 리펙토링
-					dom.mailBoxInfo.innerHTML = " - [" + message.total + " 파일 수 " + "<span style='color:#017BEC;'>" 
-					+ result.fileCount +"</span>"+", " + message.total + " 폴더 수 " + "<span style='color:#017BEC;'>" + result.folderCount +" </span>" + message.count + "]";
+					dom.mailBoxInfo.innerHTML = " - [" + message.total + " <spring:message code='ezWebFolder.t277'/> " + "<span style='color:#017BEC;'>" 
+						+ result.fileCount + "</span>, " + message.total + " <spring:message code='ezWebFolder.t276'/> " + "<span style='color:#017BEC;'>" + result.folderCount +" </span>" + message.count + "]";
 				},
 				
 				error : function(error) {
@@ -274,8 +270,6 @@
 	    		return;
 	    	}
 	    	
-			var startIndex = (blockSize * (currentPage - 1))
-	    	
 			$.ajax ({
 				type:"POST",
 				async: false,
@@ -287,8 +281,8 @@
 					 "folderType" : "d",
 					 "currPage"   : currentPage,
 					 "listCount"  : blockSize,
-					 "pStart" : startIndex,
-					 "pEnd" : startIndex + blockSize,
+					 "pStart" : pagination.startIndex,
+					 "pEnd" : blockSize,
 					 "searchExt" : $('#searchExt').val(),
 					 "searchFileName" : $('#searchFileName').val(),
 					 "searchCreateName" : $('#searchCreateName').val()
@@ -311,8 +305,8 @@
 					makePageSelPage();
 					namePath(result.folderPath, result.originalPath);
 					
-					dom.mailBoxInfo.innerHTML = " - [" + message.total + " 파일 수 " + "<span style='color:#017BEC;'>" 
-						+ fileCount +"</span>"+", " + message.total + " 폴더 수 " + "<span style='color:#017BEC;'>" + folderCount +" </span>" + message.count + "]";
+					dom.mailBoxInfo.innerHTML = " - [" + message.total + " <spring:message code='ezWebFolder.t277'/> " + "<span style='color:#017BEC;'>" 
+						+ fileCount + "</span>, " + message.total + " <spring:message code='ezWebFolder.t276'/> " + "<span style='color:#017BEC;'>" + folderCount +" </span>" + message.count + "]";
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
@@ -444,13 +438,14 @@
 				
 				fileIconElement = document.createElement("img");
 				fileIconElement.setAttribute("class", "webFolderImg");
-				fileIconElement.addEventListener("click", function() {fileToggleFavorite(this);});
+				fileIconElement.addEventListener("click", function() {onFavoriteImageClick(event);});
+				fileIconElement.addEventListener("dblclick", function(event) {event.stopPropagation();})
 				
 				if (isFromFolder && resultJson[columnMap.favoriteStatus] === "0") {
 					fileIconElement.src = "/images/webfolder/favourite.png";
 				} else {
 					fileIconElement.src = "/images/webfolder/favourite2.png";
-					fileIconElement.setAttribute("favorite", "");
+					row.setAttribute("favorite", "");
 				}
 				
 				favoriteIconColumn.appendChild(fileIconElement);
@@ -702,41 +697,44 @@
  			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList);
         }
         
-        function fileToggleFavorite(imgElement) {
-        	var rowElement = imgElement.parentElement.parentElement;
+        function onFavoriteButtonClick() {
+        }
+        
+        function onFavoriteImageClick(event) {
+        	event.stopPropagation();
+        	
+        	var imageElement = event.target;
+        	var rowElement = imageElement.parentElement.parentElement;
+        	
+        	toggleFavorite(rowElement, context.refreshList, context.refreshList);
+        }
+        
+        function toggleFavorite(rowElement, addHandler, deleteHandler) {
         	var targetId = rowElement.getAttribute("targetId");
         	var targetType = rowElement.getAttribute("targetType");
         	
-        	if (imgElement.hasAttribute("favorite")) {
-        		fileDeleteFavorite(targetId, targetType, function() {
-           			context.refreshList();
-        		});
+        	if (rowElement.hasAttribute("favorite")) {
+        		deleteFavorite(targetId, targetType, deleteHandler);
         	} else {
-        		fileAddFavorite(targetId, targetType, function() {
-        			context.refreshList();
-        		});
+        		addFavorite(targetId, targetType, addHandler);
         	}
         }
         
-        function fileAddFavorite(targetId, targetType, successHandler) {
+        function addFavorite(targetId, targetType, successHandler) {
         	$.ajax({
         		type: "POST",
-        		url: "/rest/ezwebfolder/users/" + userInfo.id + "/favorites",
+        		url: "/ezWebFolder/addFavorite.do",
         		dataType: "json",
         		data: {
         			targetId: targetId,
-        			targetType: targetType,
-        			offset: userInfo.offset,
-        			tenantId: userInfo.tenantId
+        			targetType: targetType
         		},
-        		
         		success: function(result) {
         			if (result.status === "error") {
         				return;
         			}
         			
         			if (result.code === 1) {
-        				alert("이미 즐겨찾기 대상입니다.");
         				return;
         			} 
 
@@ -745,25 +743,21 @@
         	});
         }
         
-        function fileDeleteFavorite(targetId, targetType, successHandler) {
+        function deleteFavorite(targetId, targetType, successHandler) {
         	$.ajax({
-        		type: "DELETE",
-        		url: "/rest/ezwebfolder/users/" + userInfo.id + "/favorites",
-        		contentType: "application/json; charset=UTF-8",
+        		type: "POST",
+        		url: "/ezWebFolder/deleteFavorite.do",
         		dataType: "json",
-        		data: JSON.stringify({
+        		data: {
         			targetId: targetId,
         			targetType: targetType,
-        			tenantId: userInfo.tenantId
-        		}),
-        		
+        		},
         		success: function(result) {
         			if (result.status === "error") {
         				return;
         			}
         			
         			if (result.code === 1) {
-        				alert("이미 즐겨찾기 대상이 아닙니다.");
         				return;
         			}
 
@@ -877,18 +871,18 @@
 	</div>
 	<div id="mainmenu2" favoritemode>
 		<ul>
-			<li id="" favoritemenu><a onClick="fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-			<li id=""><a onClick="fileUpload()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-			<li id=""><a onClick="fileDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
-			<li id=""><a onClick="fileRename()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
-			<li id=""><a onClick="fileMove()"     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
+			<li id="" favoritemenu onClick="fileDownload()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
+			<li id="" onClick="fileUpload()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+			<li id="" onClick="fileDelete()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
+			<li id="" onClick="fileRename()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
+			<li id="" onClick="fileMove()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
 			<li id=""><img src="/images/i_bar.gif"></li>
-			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t271'/></span></a></li>
-			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li>
+			<li id="" onClick="fileAllFavorite()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t281'/></span></a></li>
+<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
 			<li id=""><img src="/images/i_bar.gif"></li>
 			<li id="SearchOption" favoritemenu mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
 			<li id=""><img src="/images/i_bar.gif"></li>
-			<li id=""><a onClick="contet.refreshList()"style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
+			<li id="" onClick="contet.refreshList()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 			<li id="right" favoritemenu style="float:right;"><span><spring:message code='ezWebFolder.t215'/></span><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" onclick="optionView(this);"></li>
 			<li id="right" favoritemenu style="float:right;">
 				<select class="select" id="idSelect" onchange="idChange(this.value);" style="width:100px; display:none;">

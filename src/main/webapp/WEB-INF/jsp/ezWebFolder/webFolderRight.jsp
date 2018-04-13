@@ -25,7 +25,6 @@
 		var strShared1	= "<spring:message code = 'ezWebFolder.t105'/>";
 		var strShared2	= "<spring:message code = 'ezWebFolder.t106'/>";
 		var strErr		= "<spring:message code = 'ezWebFolder.t107'/>";
-		var checkedArr	= [];
 		var appType     = "user";
 		var userName = "${userInfo.userName}";
 		var currentPage = "1";
@@ -130,13 +129,24 @@
 					folderPath = result.folderPath;
 					originalPath = result.originalPath;
 					folderUpp = result.folderUpp;
+					var dragDropAreaElmt = document.getElementById("dragDropArea");
+					
 					if (folderUpp != 'root') {
 						$('#upload').css('display','inline');
+						dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
+						dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
+						dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
+					}
+					else {
+						dragDropAreaElmt.ondragenter = null;
+						dragDropAreaElmt.ondragover  = null;
+						dragDropAreaElmt.ondragover  = null;
 					}
 					
 // 					$("#originalPath").text(originalPath); 
 					$('#tblFileList tr td').parent().remove();
 					renderData(filelist);
+					
 					makePageSelPage();
 					namePath(folderPath,originalPath);
 					document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " <spring:message code='ezWebFolder.t277'/>" + "<span style='color:#017BEC;'>" 
@@ -239,26 +249,29 @@
 					
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("_fileId", result[i]["fileId"]);
-					trElmt.setAttribute("_filePath", result[i]["filePath"]);
-					trElmt.onclick = function(event) {clickRow(this, event);};
+					trElmt.setAttribute("_type", result[i]["fileTypeName"] == 'folder' ? 'folder' : 'file');
+					trElmt.onclick = function(event) {clickRow(event);};
 					
 					var inputElmt = document.createElement("input");
 					inputElmt.setAttribute("type", "checkbox");
 					inputElmt.setAttribute("value", result[i]["fileId"]);
-					inputElmt.setAttribute("class", "checkBnk");			
-					inputElmt.onclick = function(e){getChecked(this, e);};
+					inputElmt.setAttribute("class", "checkBnk");
+					inputElmt.onclick = function(e){getChecked(e);};
 					tdElmt1.appendChild(inputElmt);
 					
 					var faImgElmt = document.createElement("img");
 					faImgElmt.setAttribute("class", "webFolderImg");
+					faImgElmt.addEventListener("click", function() {onFavoriteImageClick(event);});
+					faImgElmt.addEventListener("dblclick", function(event) {event.stopPropagation();})
+					
 					if (result[i]["favouriteStatus"] == "0") {
 						faImgElmt.src = "/images/webfolder/favourite.png";
-						tdElmt2.appendChild(faImgElmt);
-					}
-					else {
+					} else {
 						faImgElmt.src = "/images/webfolder/favourite2.png";
-						tdElmt2.appendChild(faImgElmt);
+						trElmt.setAttribute("favorite", "");
 					}
+					
+					tdElmt2.appendChild(faImgElmt);
 					
 					var fileIconElmt = document.createElement("img");
 					fileIconElmt.setAttribute("class", "webFolderImg");
@@ -290,7 +303,6 @@
 					
 					if(result[i]["typeId"] == "folder") {
 						//trElmt.setAttribute("value", result[i]["fileId"]);
-						
 						trElmt.ondblclick = function() {
 							//var val = $(this).attr('value');
 							dbClickFunction(this);							
@@ -396,73 +408,48 @@
 	        getFileList(folderId);
 	   }
 	    
-		function clickRow(obj, e) {
+		function clickRow(e) {
 			e.stopPropagation();
 			e.preventDefault();
-			
-			var inputElmt = obj.firstElementChild.firstElementChild;
-			var id        = inputElmt.getAttribute("value");
+			var trElmt    = e.currentTarget;
+			var inputElmt = trElmt.firstElementChild.firstElementChild;
 			
 			if (inputElmt.checked == true) {
 				inputElmt.checked = false;
-				
-				var pos = checkedArr.indexOf(id);
-				
-				if (pos != -1) {
-					checkedArr.splice(pos, 1);
-					obj.setAttribute("style", "");
-				}
+				trElmt.setAttribute("class", "bnkWebFolder");
 			}
 			else {
 				inputElmt.checked = true;
-				checkedArr.push(id);
-				obj.setAttribute("style", "background-color: #e9f1ff;");
+				trElmt.setAttribute("class", "bnkWebFolder2");
 			}
 		}
 		
-		function getChecked(obj, event) {
+		function getChecked(event) {
 			event.stopPropagation();
-			
-			var id     = obj.getAttribute("value");
-			var trElmt = obj.parentElement.parentElement;
-			
-			if (obj.checked == true) {
-				//Double click problem in IE
-				var pos = checkedArr.indexOf(id);
-				
-				if (pos == -1) {
-					checkedArr.push(id);
-				}
-				
-				trElmt.setAttribute("style", "background-color: #e9f1ff;");
-			}
-			else {
-				var pos = checkedArr.indexOf(id);
-				
-				if (pos != -1) {
-					checkedArr.splice(pos, 1);
-					trElmt.setAttribute("style", "");
-				}
-			}
+			var checkboxElmt = event.currentTarget;
+			var trElmt       = checkboxElmt.parentElement.parentElement;
+			trElmt.setAttribute("class", checkboxElmt.checked == true ? "bnkWebFolder2" : "bnkWebFolder");
 		}
+		
 		function getCheckAll(obj) {
-	    	   var listInputs = document.getElementsByClassName("checkBnk");
-	    	   checkedArr = [];
-	    	   if (obj.checked == true) {
-	    		   for (var i = 0; i < listInputs.length; i++) {
-		    			listInputs[i].checked = true;
-		    			checkedArr.push(listInputs[i].value);	    		
-		    		}
-	    		   $('.bnkWebFolder').css('background-color','#e9f1ff');
-	    	   }
-	    	   else {
-	    		   for (var i = 0; i < listInputs.length; i++) {
-		    			listInputs[i].checked = false;	    				    		
-		    		}
-	    		   $('.bnkWebFolder').css('background-color','#ffffff');
-	    	   }
-	       }
-   	   function doLayerPopup(obj) {
+    		var listInputs = document.getElementsByClassName("checkBnk");
+    		
+    		if (obj.checked == true) {
+    			for (var i = 0; i < listInputs.length; i++) {
+	    			listInputs[i].checked = true;
+	    		}
+    			
+    			$('.bnkWebFolder').css('class', 'bnkWebFolder2');
+    		}
+    		else {
+    			for (var i = 0; i < listInputs.length; i++) {
+	    			listInputs[i].checked = false;
+	    		}
+    			$('.bnkWebFolder2').css('class', 'bnkWebFolder');
+    		}
+		}
+		
+		function doLayerPopup(obj) {
 	        btn_PostDate_Clear();
 	        document.getElementById("searchExt").value = "";
 	        document.getElementById("searchFileName").value = "";
@@ -510,21 +497,31 @@
 	 	}
 	 	
        function fileDownload() {
-    	   if (checkedArr.length <= 0) {
-    		   alert("<spring:message code = 'ezWebFolder.t108'/>");
-    		   return;
-    	   }
+    		var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
     	   
-	    	var checkedList = checkedArr[0];
-	    	
-    		for (var i = 1; i < checkedArr.length; i++) {
-    			checkedList = checkedList + "," + checkedArr[i];	    			
+    		if (listOfChecked.length <= 0) {
+    			alert("<spring:message code = 'ezWebFolder.t108'/>");
+    			return;
     		}
     		
-    		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + checkedList;
-        	        	
-            AttachDownFrame.location.href = downloadUrl;
-    	   
+    		var filesList  = [];
+    		var folderList = [];
+    		
+    		for (var i = 0; i < listOfChecked.length; i++) {
+    			var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+    			
+    			if (listOfChecked[i].getAttribute("_type") == 'folder') {
+    				folderList.push(fileFolderId);
+    			}
+    			else {
+    				filesList.push(fileFolderId);
+    			}
+    		}
+    		
+    		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString() +"&folderList=" + folderList.toString();
+			
+			AttachDownFrame.location.href = downloadUrl;
+			
        }
        
        function fileUpload() {
@@ -533,27 +530,41 @@
        }
        
        function refreshView() {
-    	   checkedArr	= [];
     	   getFileList(folderId);
        }
        
        function fileDelete() {
-    	   if (checkedArr.length <= 0) {
-    		   alert("<spring:message code = 'ezWebFolder.t108'/>");
-    		   return;
-    	   }
-    	   
-	       var checkedList = checkedArr[0];
-	    	
-    	   for (var i = 1; i < checkedArr.length; i++) {
-    	   	   checkedList = checkedList + "," + checkedArr[i];	    			
-    	   }
-    	   
-    	   $.ajax({
+			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+			
+			if (listOfChecked.length <= 0) {
+				alert("<spring:message code = 'ezWebFolder.t108'/>");
+				return;
+			}
+			
+			var filesList  = [];
+			var folderList = [];
+			
+			for (var i = 0; i < listOfChecked.length; i++) {
+				var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+				
+				if (listOfChecked[i].getAttribute("_type") == 'folder') {
+					folderList.push(fileFolderId);
+				}
+				else {
+					filesList.push(fileFolderId);
+				}
+			}
+			
+			if (folderList.length > 0) {
+				alert("<spring:message code = 'ezWebFolder.t20'/>");
+				return;
+			}
+			
+			$.ajax({
 				type: "POST",
 				url: "/ezWebFolder/checkPermission.do",
 				data: {
-					"fileList" : checkedList
+					"fileList" : filesList.toString()
 				},
 				dataType: "JSON",
 				async: true,
@@ -564,7 +575,7 @@
 						alert("<spring:message code='ezWebFolder.t243'/>");
 					}
 					else {
-						DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList);
+						DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
 					}
 					refreshView();
 				},
@@ -572,24 +583,45 @@
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			});
-    	   
-    	   //DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList);
-       }
-       
-       function fileRename() {
-    	   if (checkedArr.length <= 0) {
-    		   alert("<spring:message code = 'ezWebFolder.t108'/>");
-    		   return;
-    	   }
-    	   
-    	   if (checkedArr.length > 1) {
-    		   alert("<spring:message code = 'ezWebFolder.t115'/>");
-    		   return;
-    	   }
-    	   
-	       var fileId = checkedArr[0];
-    	   
-	       $.ajax({
+			
+			
+		}
+		
+		function fileRename() {
+			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+			
+			if (listOfChecked.length <= 0) {
+				alert("<spring:message code = 'ezWebFolder.t108'/>");
+				return;
+			}
+			
+			var filesList  = [];
+			var folderList = [];
+			
+			for (var i = 0; i < listOfChecked.length; i++) {
+				var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+				
+				if (listOfChecked[i].getAttribute("_type") == 'folder') {
+					folderList.push(fileFolderId);
+				}
+				else {
+					filesList.push(fileFolderId);
+				}
+			}
+			
+			if (folderList.length > 0) {
+				alert("<spring:message code = 'ezWebFolder.t20'/>");
+				return;
+			}
+			
+			if (filesList.length > 1) {
+				alert("<spring:message code = 'ezWebFolder.t115'/>");
+				return;
+			}
+			
+			var fileId = filesList[0];
+			
+			$.ajax({
 				type: "POST",
 				url: "/ezWebFolder/checkPermission.do",
 				data: {
@@ -611,25 +643,110 @@
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			});
-	       
-    	   //DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
-       }
-       
-       function fileMove() {
-    	   if (checkedArr.length <= 0) {
-    		   alert("<spring:message code = 'ezWebFolder.t108'/>");
-    		   return;
-    	   }
-    	   
-			var checkedList = checkedArr[0];
+		}
+		
+		function fileMove() {
+			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
 			
-			for (var i = 1; i < checkedArr.length; i++) {
-				checkedList = checkedList + "," + checkedArr[i];
+			if (listOfChecked.length <= 0) {
+				alert("<spring:message code = 'ezWebFolder.t108'/>");
+				return;
 			}
 			
-			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList);
-       }
-       
+			var filesList  = [];
+			var folderList = [];
+			
+			for (var i = 0; i < listOfChecked.length; i++) {
+				var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+				
+				if (listOfChecked[i].getAttribute("_type") == 'folder') {
+					folderList.push(fileFolderId);
+				}
+				else {
+					filesList.push(fileFolderId);
+				}
+			}
+			
+			if (folderList.length > 0) {
+				alert("<spring:message code = 'ezWebFolder.t20'/>");
+				return;
+			}
+			
+			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString());
+		}
+
+		function onFavoriteButtonClick() {
+		}
+		
+		function onFavoriteImageClick(event) {
+			event.stopPropagation();
+			
+			var imageElement = event.target;
+			var rowElement = imageElement.parentElement.parentElement;
+			
+			toggleFavorite(rowElement, refreshView, refreshView);
+		}
+		
+        function toggleFavorite(rowElement, addHandler, deleteHandler) {
+        	var targetId = rowElement.getAttribute("_fileId");
+        	var targetType = rowElement.getAttribute("_type");
+        	
+        	// favorite type mapping
+        	targetType = targetType === "folder" ? targetType = "D" : targetType = "F";
+        	
+        	if (rowElement.hasAttribute("favorite")) {
+        		deleteFavorite(targetId, targetType, deleteHandler);
+        	} else {
+        		addFavorite(targetId, targetType, addHandler);
+        	}
+        }
+		
+        function addFavorite(targetId, targetType, successHandler) {
+        	$.ajax({
+        		type: "POST",
+        		url: "/ezWebFolder/addFavorite.do",
+        		dataType: "json",
+        		data: {
+        			targetId: targetId,
+        			targetType: targetType
+        		},
+        		success: function(result) {
+        			if (result.status === "error") {
+        				return;
+        			}
+        			
+        			if (result.code === 1) {
+        				return;
+        			} 
+
+        			successHandler();
+        		}
+        	});
+        }
+        
+        function deleteFavorite(targetId, targetType, successHandler) {
+        	$.ajax({
+        		type: "POST",
+        		url: "/ezWebFolder/deleteFavorite.do",
+        		dataType: "json",
+        		data: {
+        			targetId: targetId,
+        			targetType: targetType
+        		},
+        		success: function(result) {
+        			if (result.status === "error") {
+        				return;
+        			}
+        			
+        			if (result.code === 1) {
+        				return;
+        			}
+        			
+        			successHandler();
+        		}
+        	});
+        }
+
        function changeCount(value) {
     	   blockSize = value;
     	   currentPage = 1;
@@ -727,7 +844,7 @@
     <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
     <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 	
-	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;overflow:auto;">
+	<div id="dragDropArea" style="margin: 10px 0px;overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
 				<th width="20px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>

@@ -661,7 +661,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
-		parameterMap.put("offset", commonUtil.getMinuteUTC(offset));
+		parameterMap.put("offset", offset);
 		parameterMap.put("tenantId", tenantId);
 		// search info
 		parameterMap.put("searchExt", searchInfo.getSearchExt());
@@ -683,7 +683,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
-		parameterMap.put("offset", commonUtil.getMinuteUTC(offset));
+		parameterMap.put("offset", offset);
 		parameterMap.put("tenantId", tenantId);
 		// search info
 		parameterMap.put("searchExt", searchInfo.getSearchExt());

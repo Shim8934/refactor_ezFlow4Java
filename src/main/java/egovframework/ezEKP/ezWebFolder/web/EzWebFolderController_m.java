@@ -19,14 +19,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
+@SuppressWarnings("unchecked")
 @Controller
 public class EzWebFolderController_m {
 	@Autowired
@@ -303,5 +306,108 @@ public class EzWebFolderController_m {
 
 		logger.debug("favorite ended.");
 		return "ezWebFolder/favorite";
+	}
+
+	@RequestMapping(value = "/ezWebFolder/getFavorites.do", method = RequestMethod.POST)
+	public @ResponseBody String getUserFavorites(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getUserFavorites started.");
+		
+		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
+		
+		String gwServerUrl	= config.getProperty("config.webfolderGwServerURL");
+		String requestUrl	= gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/favorites";
+		
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(requestUrl)
+				// user info
+				.queryParam("offset", commonUtil.getMinuteUTC(user.getOffset()))
+				.queryParam("primary", commonUtil.getPrimaryData(user.getLang(), user.getTenantId()))
+				.queryParam("tenantId", user.getTenantId())
+				// search info
+				.queryParam("searchExt", orElse(request.getParameter("searchExt"), ""))
+				.queryParam("searchFileName", orElse(request.getParameter("searchFileName"), ""))
+				.queryParam("searchCreatorName", orElse(request.getParameter("searchCreatorName"), ""))
+				.queryParam("searchStartDate", orElse(request.getParameter("searchStartDate"), ""))
+				.queryParam("searchEndDate", orElse(request.getParameter("searchEndDate"), ""))
+				// limit info
+				.queryParam("startIndex", orElse(request.getParameter("startIndex"), ""))
+				.queryParam("endIndex", orElse(request.getParameter("endIndex"), ""));
+		
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		logger.debug("getUserFavorites ended.");
+		return result.getBody();
+	}
+	
+	@RequestMapping(value = "/ezWebFolder/addFavorite.do", method = RequestMethod.POST)
+	public @ResponseBody String addUserFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getFavorites started.");
+		
+		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
+		
+		String gwServerUrl	= config.getProperty("config.webfolderGwServerURL");
+		String requestUrl	= gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/favorites";
+		
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(requestUrl)
+				// user info
+				.queryParam("offset", commonUtil.getMinuteUTC(user.getOffset()))
+				.queryParam("tenantId", user.getTenantId())
+				// target info
+				.queryParam("targetId", orElse(request.getParameter("targetId"), ""))
+				.queryParam("targetType", orElse(request.getParameter("targetType"), ""));
+		
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		logger.debug("getFavorites ended.");
+		return result.getBody();
+	}
+	
+	@RequestMapping(value = "/ezWebFolder/deleteFavorite.do", method = RequestMethod.POST)
+	public @ResponseBody String deleteUserFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("deleteUserFavorite started.");
+		
+		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
+		
+		JSONObject requesetObject = new JSONObject();
+		requesetObject.put("targetId", orElse(request.getParameter("targetId"), ""));
+		requesetObject.put("targetType", orElse(request.getParameter("targetType"), ""));
+		requesetObject.put("tenantId", user.getTenantId());
+		
+		String gwServerUrl	= config.getProperty("config.webfolderGwServerURL");
+		String requestUrl	= gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/favorites";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(requesetObject.toJSONString(), headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(requestUrl);
+		
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		
+		logger.debug("deleteUserFavorite ended.");
+		return result.getBody();
+	}
+	
+	private <T> T orElse(T value, T other) {
+		if (other == null) {
+			throw new IllegalArgumentException("other is null!");
+		}
+		
+		return value != null ? value : other;
 	}
 }

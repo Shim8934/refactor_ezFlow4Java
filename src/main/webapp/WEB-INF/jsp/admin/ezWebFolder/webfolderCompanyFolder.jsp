@@ -138,7 +138,8 @@
 				
 				if (previousElmt != null) {
 					if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {
-						previousElmt.style.color = "";
+						previousElmt.style.color      = "";
+						previousElmt.style.fontWeight = "normal";
 						document.getElementById("listBttn1").style.display = "";
 						document.getElementById("listBttn2").style.display = "none";
 					}
@@ -147,8 +148,9 @@
 					}
 				}
 				
-				selectedFolder  = obj.getAttribute("name");
-				obj.style.color = "#e04343";
+				selectedFolder       = obj.getAttribute("name");
+				obj.style.color      = "#004a87";
+				obj.style.fontWeight = "bold";
 				
 				if (compFolderId == selectedFolder) {
 					document.getElementById("fldName").value  = obj.getAttribute("fldName1");

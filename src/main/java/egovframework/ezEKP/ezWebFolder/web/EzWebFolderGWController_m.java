@@ -37,6 +37,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @RestController
+@SuppressWarnings(value="unchecked")
 public class EzWebFolderGWController_m {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderGWController_m.class);
@@ -276,8 +277,9 @@ public class EzWebFolderGWController_m {
 	 */
 	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorites", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getFavoriteList(@PathVariable String userId, HttpServletRequest request) {
+		logger.debug("REST | getUserFavorites started.");
 
-		String offset = request.getParameter("offset");
+		String offset = orElse(request.getParameter("offset"), "");
 		String primaryLang = orElse(request.getParameter("primary"), "1");
 		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
 
@@ -332,6 +334,8 @@ public class EzWebFolderGWController_m {
 			result.put("data", "");
 		}
 
+		logger.debug(String.format("result: %s", result.toJSONString()));
+		logger.debug("REST | getUserFavorites ended.");
 		return result;
 	}
 	
@@ -350,10 +354,11 @@ public class EzWebFolderGWController_m {
 	 */
 	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorites", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject addFavorite(@PathVariable String userId, HttpServletRequest request) {
-
+		logger.debug("REST | addUserFavorite started.");
+		
 		String targetId = request.getParameter("targetId");
-		String offset = request.getParameter("offset");
 		String targetType = request.getParameter("targetType");
+		String offset = request.getParameter("offset");
 		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
 
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -376,6 +381,8 @@ public class EzWebFolderGWController_m {
 			result.put("code", 1);
 		}
 
+		logger.debug(String.format("result: %s", result.toJSONString()));
+		logger.debug("REST | addUserFavorite ended.");
 		return result;
 	}
 	
@@ -394,10 +401,11 @@ public class EzWebFolderGWController_m {
 	 */
 	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorites", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteFavorite(@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonObject) {
+		logger.debug("REST | deleteUserFavorite started.");
 
 		String targetId = (String) jsonObject.get("targetId");
 		String targetType = (String) jsonObject.get("targetType");
-		int tenantId = Integer.parseInt((String) jsonObject.get("tenantId"));
+		int tenantId = (Integer) jsonObject.get("tenantId");
 
 		JSONObject result = new JSONObject();
 
@@ -416,10 +424,11 @@ public class EzWebFolderGWController_m {
 			result.put("code", 1);
 		}
 
+		logger.debug(String.format("result: %s", result.toJSONString()));
+		logger.debug("REST | deleteUserFavorite ended.");
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/{userId}/getTrashCanList", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
 	public JSONObject getTrashCanList (@PathVariable String userId, HttpServletRequest request, Locale locale) {
 		String offset = request.getParameter("offset") != null ? request.getParameter("offset") : "";
@@ -539,7 +548,6 @@ public class EzWebFolderGWController_m {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezwebfolder/file-permanent-delete", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject filePermanetDelete(Locale locale, HttpServletRequest request) {
 		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";
@@ -572,8 +580,7 @@ public class EzWebFolderGWController_m {
 			
 			result.put("status", "ok");
 			result.put("code", "0");
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 			result.put("status", "error");
