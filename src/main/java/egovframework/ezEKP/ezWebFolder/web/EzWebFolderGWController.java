@@ -493,16 +493,18 @@ public class EzWebFolderGWController {
 
 	@RequestMapping(value = "/rest/ezwebfolder/filemanage/file-download", method=RequestMethod.GET, produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE})
 	public void getFileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";
-		String listFileId   = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
-		String userId       = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
-		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
-		String lang         = request.getParameter("lang")     != null ? request.getParameter("lang")     : "";
-		String[] fileIDList = listFileId.split(",");
+		String offset       = request.getParameter("offset")     != null ? request.getParameter("offset")     : "";
+		String listFileId   = request.getParameter("fileList")   != null ? request.getParameter("fileList")   : "";
+		String listFolderId = request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
+		String userId       = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+		String serverName   = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String lang         = request.getParameter("lang")       != null ? request.getParameter("lang")       : "";
+		String[] fileIDList = listFileId.equals("")   ? new String[0] : listFileId.split(",");
+		String[] folderList = listFolderId.equals("") ? new String[0] : listFolderId.split(",");
 		
-		logger.debug("serverName: " + serverName + " || Lang: " + lang + " || listFileId: " + listFileId + " || Offset: " + offset + " || UserId: " + userId);
+		logger.debug("serverName: " + serverName + " || Lang: " + lang + " || listFileId: " + listFileId + " || listFolderId: " + listFolderId + " || Offset: " + offset + " || UserId: " + userId);
 		
-		if (fileIDList.length <= 0 || offset.equals("") || serverName.equals("") || userId.equals("") || lang.equals("")) {
+		if ((fileIDList.length == 0 && folderList.length == 0) || offset.equals("") || serverName.equals("") || userId.equals("") || lang.equals("")) {
 			logger.debug("downloadAttach illegal arguments!");
 			return;
 		}
@@ -510,7 +512,7 @@ public class EzWebFolderGWController {
 		//Get absolute path of the application
 		String realPath  = request.getServletContext().getRealPath("");
 		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
-		ezWebFolderService.getDownloadedFiles(fileIDList, realPath, userInfo, request, response);
+		ezWebFolderService.getDownloadedFiles(folderList, fileIDList, realPath, userInfo, request, response);
 		
 		logger.debug("File Download Finish!");
 		return;

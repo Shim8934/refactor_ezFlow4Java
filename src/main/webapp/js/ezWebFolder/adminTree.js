@@ -42,7 +42,8 @@ function renderData(result, mode, rootDiv) {
 	var spanCompany = document.getElementById(compFolderId).nextSibling.nextSibling;
 	
 	if (mode == "") {
-		spanCompany.style.color = "#e04343";
+		spanCompany.style.color      = "#004a87";
+		spanCompany.style.fontWeight = "bold";
 		//window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId, "right");
 	}
 	else {
@@ -118,15 +119,17 @@ function getSelected(obj) {
 	
 	if (previousElmt != null) {
 		if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {
-			previousElmt.style.color = "";
+			previousElmt.style.color      = "";
+			previousElmt.style.fontWeight = "normal";
 		}
 		else {
 			return;
 		}
 	}
 	
-	selectedFolder  = obj.getAttribute("name");
-	obj.style.color = "#e04343";
+	selectedFolder       = obj.getAttribute("name");
+	obj.style.color      = "#004a87";
+	obj.style.fontWeight = "bold";
 	
 	window.parent.frames["right"].folderId = selectedFolder;
 	window.parent.frames["right"].toggleUploadBttn(obj.getAttribute("level"));
@@ -236,7 +239,8 @@ function renderData2(result, mode, rootDiv) {
 	var spanFirstDept = document.getElementById(selectedFolder).nextSibling.nextSibling;
 	
 	if (mode == "") {
-		spanFirstDept.style.color = "#e04343";
+		spanFirstDept.style.color      = "#004a87";
+		spanFirstDept.style.fontWeight = "bold";
 		//window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder, "right");
 	}
 	else {

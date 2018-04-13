@@ -232,15 +232,17 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Download attach is running!");
 		
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String listFileId  = request.getParameter("fileList");
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/filemanage/file-download";
+		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
+		String listFileId   = request.getParameter("fileList");
+		String listFolderId = request.getParameter("folderList");
+		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
+		String url          = gwServerUrl + "/rest/ezwebfolder/filemanage/file-download";
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())
 										.queryParam("lang", user.getLang())
+										.queryParam("folderList", listFolderId)
 										.queryParam("fileList", listFileId);
 		
 		RestTemplate rest               = new RestTemplate();

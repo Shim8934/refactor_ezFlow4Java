@@ -134,15 +134,17 @@
 			
 			if (previousElmt != null) {
 				if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {
-					previousElmt.style.color = "";
+					previousElmt.style.color      = "";
+					previousElmt.style.fontWeight = "normal";
 				}
 				else {
 					return;
 				}
 			}
 			
-			selectedFolder  = obj.getAttribute("name");
-			obj.style.color = "#e04343";
+			selectedFolder       = obj.getAttribute("name");
+			obj.style.color      = "#004a87";
+			obj.style.fontWeight = "bold";
 		}
 		
 		function getDetailTree(obj) {

@@ -32,7 +32,6 @@
 			var fileNameStr  = "";
 			var userNameStr  = "";
 			var folderId     = "<c:out value='${folderId}'/>";
-			var checkedArr   = [];
 			var folderType   = "company";
 			var rootFolder   = "<c:out value='${rootFolder}'/>";
 			
@@ -113,7 +112,6 @@
 						
 						makePageSelPage();
 						renderData(result);
-						checkedArr = [];
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -158,13 +156,13 @@
 						trElmt.setAttribute("class", "bnkWebFolder");
 						trElmt.setAttribute("_fileId", result[i]["fileId"]);
 						trElmt.setAttribute("_filePath", result[i]["filePath"]);
-						trElmt.onclick = function(event) {clickRow(this, event);};
+						trElmt.onclick = function(event) {clickRow(event);};
 						
 						var inputElmt = document.createElement("input");
 						inputElmt.setAttribute("type", "checkbox");
 						inputElmt.setAttribute("value", result[i]["fileId"]);
 						inputElmt.setAttribute("class", "checkBnk");
-						inputElmt.onclick = function(e){getChecked(this, e);};
+						inputElmt.onclick = function(e){getChecked(e);};
 						tdElmt1.appendChild(inputElmt);
 						
 						var fileIconElmt = document.createElement("img");
@@ -202,27 +200,19 @@
 				} 
 			}
 			
-			function clickRow(obj, e) {
+			function clickRow(e) {
 				e.stopPropagation();
 				e.preventDefault();
-				
-				var inputElmt = obj.firstElementChild.firstElementChild;
-				var id        = inputElmt.getAttribute("value");
+				var trElmt    = e.currentTarget;
+				var inputElmt = trElmt.firstElementChild.firstElementChild;
 				
 				if (inputElmt.checked == true) {
 					inputElmt.checked = false;
-					
-					var pos = checkedArr.indexOf(id);
-					
-					if (pos != -1) {
-						checkedArr.splice(pos, 1);
-						obj.setAttribute("style", "");
-					}
+					trElmt.setAttribute("class", "bnkWebFolder");
 				}
 				else {
 					inputElmt.checked = true;
-					checkedArr.push(id);
-					obj.setAttribute("style", "background-color: #e9f1ff;");
+					trElmt.setAttribute("class", "bnkWebFolder2");
 				}
 			}
 			
@@ -267,21 +257,22 @@
 			}
 			
 			function fileDownload() {
-				if (checkedArr.length <= 0) {
+				var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+				
+				if (listOfChecked.length <= 0) {
 					alert("<spring:message code='ezWebFolder.t108'/>");
 					return;
 				}
 				
-				var checkedList = checkedArr[0];
+				var filesList = [];
 				
-				for (var i = 1; i < checkedArr.length; i++) {
-					checkedList = checkedList + "," + checkedArr[i];
+				for (var i = 0; i < listOfChecked.length; i++) {
+					var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+					filesList.push(fileFolderId);
 				}
 				
-				var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + checkedList;
-				
+				var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
 				AttachDownFrame.location.href = downloadUrl;
-				
 			}
 			
 			function fileUpload() {
@@ -289,144 +280,80 @@
 			}
 			
 			function fileDelete() {
-				if (checkedArr.length <= 0) {
+				var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+				
+				if (listOfChecked.length <= 0) {
 					alert("<spring:message code='ezWebFolder.t108'/>");
 					return;
 				}
 				
-				var checkedList = checkedArr[0];
+				var filesList = [];
 				
-				for (var i = 1; i < checkedArr.length; i++) {
-					checkedList = checkedList + "," + checkedArr[i];
+				for (var i = 0; i < listOfChecked.length; i++) {
+					var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+					filesList.push(fileFolderId);
 				}
 				
-				//added to test
- 				/*$.ajax({
-					type: "POST",
-					url: "/ezWebFolder/checkPermission.do",
-					data: {
-						"fileList" : checkedList
-					},
-					dataType: "JSON",
-					async: true,
-					success : function(data) {
-						var result = data.resultValue;
-						
-						if (result != "ok") {
-							alert("<spring:message code='ezWebFolder.t243'/>");
-						}
-						else {
-							DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList);
-						}
-					},
-					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134'/>" + error);
-					}
-				});*/
-				//end
-				
-				DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList);
+				DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
 			}
 			
 			function fileRename() {
-				if (checkedArr.length <= 0) {
+				var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+				
+				if (listOfChecked.length <= 0) {
 					alert("<spring:message code='ezWebFolder.t108'/>");
 					return;
 				}
 				
-				if (checkedArr.length > 1) {
+				if (listOfChecked.length > 1) {
 					alert("<spring:message code='ezWebFolder.t115'/>");
 					return;
 				}
 				
-				var fileId = checkedArr[0];
-				
-				//added to test
-				/* $.ajax({
-					type: "POST",
-					url: "/ezWebFolder/checkPermission.do",
-					data: {
-						"fileId" : fileId
-					},
-					dataType: "JSON",
-					async: true,
-					success : function(data) {
-						var result = data.resultValue;
-						
-						if (result != "ok") {
-							alert("<spring:message code='ezWebFolder.t243'/>");
-						}
-						else {
-							DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
-						}
-					},
-					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134'/>" + error);
-					}
-				}); */
-				//end
-				
+				var fileId = listOfChecked[0].getAttribute("_fileId");
 				DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 			}
 			
 			function fileMove() {
-				if (checkedArr.length <= 0) {
+				var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+				
+				if (listOfChecked.length <= 0) {
 					alert("<spring:message code='ezWebFolder.t108'/>");
 					return;
 				}
 				
-				var checkedList = checkedArr[0];
+				var filesList = [];
 				
-				for (var i = 1; i < checkedArr.length; i++) {
-					checkedList = checkedList + "," + checkedArr[i];
+				for (var i = 0; i < listOfChecked.length; i++) {
+					var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+					filesList.push(fileFolderId);
 				}
 				
-				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList + "&mode=admin");
+				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString() + "&mode=admin");
 			}
 			
-			function getChecked(obj, event) {
+			function getChecked(event) {
 				event.stopPropagation();
-				
-				var id     = obj.getAttribute("value");
-				var trElmt = obj.parentElement.parentElement;
-				
-				if (obj.checked == true) {
-					//Double click problem in IE
-					var pos = checkedArr.indexOf(id);
-					
-					if (pos == -1) {
-						checkedArr.push(id);
-					}
-					
-					trElmt.setAttribute("style", "background-color: #e9f1ff;");
-				}
-				else {
-					var pos = checkedArr.indexOf(id);
-					
-					if (pos != -1) {
-						checkedArr.splice(pos, 1);
-						trElmt.setAttribute("style", "");
-					}
-				}
+				var checkboxElmt = event.currentTarget;
+				var trElmt       = checkboxElmt.parentElement.parentElement;
+				trElmt.setAttribute("class", checkboxElmt.checked == true ? "bnkWebFolder2" : "bnkWebFolder");
 			}
 			
 			function getCheckAll(obj) {
 				var listInputs = document.getElementsByClassName("checkBnk");
 				
-				checkedArr = [];
 				if (obj.checked == true) {
 					for (var i = 0; i < listInputs.length; i++) {
 						listInputs[i].checked = true;
 						var trElmt            = listInputs[i].parentElement.parentElement;
-						checkedArr.push(listInputs[i].value);
-						trElmt.setAttribute("style", "background-color: #e9f1ff;");
+						trElmt.setAttribute("class", "bnkWebFolder2");
 					}
 				}
 				else {
 					for (var i = 0; i < listInputs.length; i++) {
 						var trElmt            = listInputs[i].parentElement.parentElement;
 						listInputs[i].checked = false;
-						trElmt.setAttribute("style", "");
+						trElmt.setAttribute("class", "bnkWebFolder");
 					}
 				}
 			}
