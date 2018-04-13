@@ -741,10 +741,11 @@ function ListView() {
                     objTd.style.color = "RED";
                 }
 
+                objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
                     objTd.style.margin = "0";
                     objTd.style.width = "50%";
-                    objTd.className = "h5_center";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
@@ -772,29 +773,21 @@ function ListView() {
                     
                 }
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "BOARDNAME") {
-                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
-                	objTd.className = "h5_center";
                     objTd.style.textAlign = "left";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
                 } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
-                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
-                	objTd.className = "h5_center";
                     objTd.style.textAlign = "left";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
                 } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITEDATE') > -1) {
-                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
-                	objTd.className = "h5_center";
                 	objTd.style.textAlign = "left";
                 	objTd.style.overflow = "hidden";
                 	objTd.style.whiteSpace = "nowrap";
                 	objTd.style.width = "120px";
                 } else {
-                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
-                	objTd.className = "h5_center";
                 	objTd.style.textAlign = "left";
                 	objTd.style.overflow = "hidden";
                 	objTd.style.whiteSpace = "nowrap";
