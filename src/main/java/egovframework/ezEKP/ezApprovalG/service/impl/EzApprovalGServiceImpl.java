@@ -20154,15 +20154,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		resultXML.append("<RESULT>");
 		resultXML.append("<RECORDID>" + makeListField(docXML.getElementsByTagName("RECORDID").item(0).getTextContent()) + "</RECORDID>");
-		resultXML.append("<TITLE>"  + makeListField(docXML.getElementsByTagName("TITLE").item(0).getTextContent()) + "</TITLE>");
+		resultXML.append("<TITLE><![CDATA["  + makeListField(docXML.getElementsByTagName("TITLE").item(0).getTextContent()) + "]]></TITLE>");
 		resultXML.append("<NUMOFPAGE>" + makeListField(docXML.getElementsByTagName("NUMOFPAGE").item(0).getTextContent()) + "</NUMOFPAGE>");
-		resultXML.append("<REGISTERTYPE>" + makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(0).getTextContent()) + "</REGISTERTYPE>");
+		resultXML.append("<REGISTERTYPE><![CDATA[" + makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(0).getTextContent()) + "]]></REGISTERTYPE>");
 		resultXML.append("<REGISTERDATE>" + formatDateForView(makeListField(docXML.getElementsByTagName("REGISTERDATE").item(0).getTextContent()),1) + "</REGISTERDATE>");
 		resultXML.append("<REGISTERDATERAW>" + formatDateForView(makeListField(docXML.getElementsByTagName("REGISTERDATE").item(0).getTextContent()),0) + "</REGISTERDATERAW>");
-		resultXML.append("<APRMEMBER>" + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent()) + "</APRMEMBER>");
-		resultXML.append("<DRAFTER>" + makeListField(docXML.getElementsByTagName("DRAFTERNAME").item(0).getTextContent()) + "</DRAFTER>");
+		resultXML.append("<APRMEMBER><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent()) + "]]></APRMEMBER>");
+		resultXML.append("<DRAFTER><![CDATA[" + makeListField(docXML.getElementsByTagName("DRAFTERNAME").item(0).getTextContent()) + "]]></DRAFTER>");
 		resultXML.append("<EXECUTEDATE>" + formatDateForTrans(makeListField(docXML.getElementsByTagName("EXECUTEDATE").item(0).getTextContent()),0) + "</EXECUTEDATE>");
-		resultXML.append("<RECEIPTMEMBER>" + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME").item(0).getTextContent()) + "</RECEIPTMEMBER>");
+		resultXML.append("<RECEIPTMEMBER><![CDATA[" + makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME").item(0).getTextContent()) + "]]></RECEIPTMEMBER>");
 		resultXML.append("<ELECTRONICRECFLAG>" + makeListField(docXML.getElementsByTagName("ELECTRONICRECFLAG").item(0).getTextContent()) + "</ELECTRONICRECFLAG>");
 		resultXML.append("<SPECIALRECCODE>" + makeListField(docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()) + "</SPECIALRECCODE>");
 		resultXML.append("<PUBLICCODE>" + makeListField(docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent()) + "</PUBLICCODE>");
