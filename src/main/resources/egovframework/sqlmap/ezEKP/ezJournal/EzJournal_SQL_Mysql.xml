@@ -302,7 +302,7 @@
 	<select id="getFormList" parameterClass="map" resultMap="formInfoVO">
 		<isEmpty property="deptId">
 				<![CDATA[
-					select distinct
+					select
 						a.form_id,
 						a.form_name,
 						a.form_status,
@@ -310,7 +310,7 @@
 					from 
 						tbl_journal_form a join tbl_journal_form_type b 
 					on 
-						(a.company_id = b.company_id and a.tenant_id = b.tenant_id)
+						(a.company_id = b.company_id and a.tenant_id = b.tenant_id and a.type_id = b.type_id)
 					where 
 						b.used = 'use'
 					and
