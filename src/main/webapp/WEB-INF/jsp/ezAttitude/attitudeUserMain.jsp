@@ -44,7 +44,8 @@
 		<script>
 			var pMode = "";
 			var uselang = "<c:out value='${userInfo.lang}'/>";
-			var deptFlag = "${deptFlag}"
+			var deptFlag = "${deptFlag}";
+			var adminFlag = "${adminFlag}";
 			
 			$(function(){
 				$(document).on('dblclick', '.td_day td', function(){
@@ -142,8 +143,13 @@
 					
 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":tdHeight, "background-color": "#edf4fd"}).text($("#calTitle").text())));
 					for (var i = 0; i < result.length; i++) {
-						objTr = $("<tr></tr>").append($("<th></th>").text(result[i].typeName));
-						objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일");
+						if (result[i].typeId != 'A01' && result[i].typeId != 'A03') {
+							objTr = $("<tr></tr>").append($("<th></th>").text(result[i].typeName));
+							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일");	
+						} else {
+							objTr = $("<tr style='display:none;'></tr>").append($("<th></th>").text(result[i].typeName));
+							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일");
+						}
 						
 						objTr.append(objTd);
 						objTbody.append(objTr);
@@ -170,7 +176,8 @@
 					async : true,
 					url : "/ezAttitude/attitudeStatisList.do",
 					data : {
-						date : pDate
+						date : pDate,
+						deptFlag : deptFlag
 					},
 					success : function(result) {
 						$("#attiStatis td").text("0일");

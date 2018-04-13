@@ -490,7 +490,13 @@ public class EzAttitudeGWController {
 			String startDate = date + "-01 00:00:00";
 			String endDate = date + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
 			
-			List<AttitudeStatisVO> resultList = ezAttitudeService.getAttitudeStatisticsList(userId, offset, startDate, endDate, info.getTenantId());
+			List<AttitudeStatisVO> resultList;
+			
+			if (deptFlag.equals("false")){
+				resultList = ezAttitudeService.getAttitudeStatisticsList(userId, "", offset, startDate, endDate, info.getTenantId(), deptFlag);
+			} else {
+				resultList = ezAttitudeService.getAttitudeStatisticsList("", info.getDeptId(),offset, startDate, endDate, info.getTenantId(), deptFlag);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

@@ -418,7 +418,27 @@
 			FROM   
 				jmocha.tbl_attitude
 			WHERE  
-				WRITER_ID = #pidList#
+				(
+			]]>
+			<isNotEmpty property="pidListArr">
+				<iterate prepend="WRITER_ID IN" property="pidListArr" open="(" close=")" conjunction=",">
+			      		#pidListArr[]#
+				</iterate>
+				<isNotEmpty property="deptIdArr" prepend="or">
+					<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+			      		#deptIdArr[]#
+					</iterate>
+				</isNotEmpty> 
+			</isNotEmpty>
+			<isEmpty property="pidListArr">
+				<isNotEmpty property="deptIdArr">
+					<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+			      		#deptIdArr[]#
+					</iterate>
+				</isNotEmpty>
+			</isEmpty>
+			<![CDATA[
+			)
 			AND
 				TENANT_ID = #tenantId#
 			AND

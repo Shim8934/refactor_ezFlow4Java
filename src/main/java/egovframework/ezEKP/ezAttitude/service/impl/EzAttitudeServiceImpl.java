@@ -155,19 +155,27 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String offset,
-			String startDate, String endDate, int tenantId) throws Exception {
+	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String deptIdList, String offset,
+			String startDate, String endDate, int tenantId, String deptFlag) throws Exception {
 		LOGGER.debug("getAttitudeStatisticsList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		map.put("pidList", pidList);
+		String[] pidListArr = pidList.split(",");
+		String[] deptIdArr = deptIdList.split(",");
+
 		map.put("offsetMin", offsetMin);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
 		
+		if (!pidList.trim().equals("")){
+			map.put("pidListArr", pidListArr);
+		}
+		if (!deptIdList.trim().equals("")){
+			map.put("deptIdArr", deptIdArr);
+		}
 		
 		LOGGER.debug("getAttitudeStatisticsList ended");
 		return ezAttitudeDAO.getAttitudeStatisList(map);
