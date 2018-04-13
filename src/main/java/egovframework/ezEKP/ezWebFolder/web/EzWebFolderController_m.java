@@ -292,7 +292,7 @@ public class EzWebFolderController_m {
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(requestUrl)
 				// user info
-				.queryParam("offset", user.getOffset())
+				.queryParam("offset", commonUtil.getMinuteUTC(user.getOffset()))
 				.queryParam("primary", commonUtil.getPrimaryData(user.getLang(), user.getTenantId()))
 				.queryParam("tenantId", user.getTenantId())
 				// search info
@@ -328,7 +328,7 @@ public class EzWebFolderController_m {
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(requestUrl)
 				// user info
-				.queryParam("offset", user.getOffset())
+				.queryParam("offset", commonUtil.getMinuteUTC(user.getOffset()))
 				.queryParam("tenantId", user.getTenantId())
 				// target info
 				.queryParam("targetId", orElse(request.getParameter("targetId"), ""))
@@ -363,12 +363,6 @@ public class EzWebFolderController_m {
 		HttpEntity<?> entity = new HttpEntity<>(requesetObject.toJSONString(), headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(requestUrl);
-//				// user info
-//				.queryParam("offset", user.getOffset())
-//				.queryParam("tenantId", user.getTenantId())
-//				// target info
-//				.queryParam("targetId", orElse(request.getParameter("targetId"), ""))
-//				.queryParam("targetType", orElse(request.getParameter("targetType"), ""));
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);

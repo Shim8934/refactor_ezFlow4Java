@@ -279,7 +279,7 @@ public class EzWebFolderGWController_m {
 	public JSONObject getFavoriteList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("REST | getUserFavorites started.");
 
-		String offset = request.getParameter("offset");
+		String offset = orElse(request.getParameter("offset"), "");
 		String primaryLang = orElse(request.getParameter("primary"), "1");
 		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
 
