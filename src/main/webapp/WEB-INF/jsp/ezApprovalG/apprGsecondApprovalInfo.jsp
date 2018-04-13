@@ -20,10 +20,10 @@
 		    }
 		</script>
 	</head>
-	<body class="popup">
+	<body class="popup" >
 		<h1>&nbsp;<spring:message code='ezApprovalG.t1776'/></h1>
-		    <div style="overflow:auto;height:145px;">
-		<table  class="content">
+		    <div style="overflow:auto;">
+		<table  class="content" >
 		    <tr>
 		        <th style='width:100px'><spring:message code='ezApprovalG.t1777'/></th>
 		        <th style='width:100px'><spring:message code='ezApprovalG.t1778'/></th>
@@ -55,8 +55,5 @@
 	    	</c:if>
 		</table>
 		        </div>
-		<div class="btnposition btnpositionNew" >    
-		    <input type="submit" name="Submit2" value="<spring:message code='ezApprovalG.t64'/>" onClick="return btncancel_onclick()">
-		</div>
 	</body>
 </html>
