@@ -435,6 +435,23 @@ public class EzWebFolderGWController_m {
 		int tenantId = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : 0;
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		
+		int totalCount =  0;
+		int currPage = request.getParameter("currPage") 					!= null ? Integer.parseInt(request.getParameter("currPage")) 	: 1;
+		int totalpages = request.getParameter("totalpages") 				!= null ? Integer.parseInt(request.getParameter("totalpages"))	: 1;
+		
+		int usrListCnt = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+		int listCount = Integer.parseInt(request.getParameter("listCount")) != 0 ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
+		int pStart  =request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
+		int pEnd = listCount;
+		
+		String searchExt 		= request.getParameter("searchExt")			!= null ? request.getParameter("searchExt") 		            : "" ;
+		String searchFileName 	= request.getParameter("searchFileName") 	!= null ? request.getParameter("searchFileName")	            : "" ;
+		String searchCreateName = request.getParameter("searchCreateName") 	!= null ? request.getParameter("searchCreateName") 	            : "" ;
+		String endrollStartDate = request.getParameter("enrollStartDate")	!= null ? request.getParameter("enrollStartDate") 	            : "" ;
+		String endrollEndDate 	= request.getParameter("enrollEndDate")		!= null ? request.getParameter("enrollEndDate") 	            : "" ;
+		String delStartDate 	= request.getParameter("delStartDate")		!= null ? request.getParameter("delStartDate") 	            	: "" ;
+		String delEndDate 		= request.getParameter("delEndDate")		!= null ? request.getParameter("delEndDate") 	            	: "" ;
+		
 		// TODO primary 수정
 		String primary;
 		
@@ -446,8 +463,13 @@ public class EzWebFolderGWController_m {
 
 		logger.debug("getTrashCanList Started.");
 		logger.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId + ",serverName=" + serverName);
+		logger.debug("currPage=" + currPage + ",totalpages=" + totalpages);
+		logger.debug("pStart=" + pStart + ",pEnde=" + pEnd + ",listCount=" + listCount);
+		logger.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName);
+		logger.debug("endrollStartDate=" + endrollStartDate + ",endrollEndDate=" + delStartDate + ",delStartDate=" + delStartDate + ",delEndDate=" + delEndDate);
 		
 		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
 		
 		if (userId.equals("") || offset.equals("") || userId.equals("") || serverName.equals("")) {
 			logger.debug("Parameter error!");
@@ -459,15 +481,18 @@ public class EzWebFolderGWController_m {
 
 		try {
 			List<TrashCanVO> trashCanList = null;
-			JSONObject trashCanResult = ezWebFolderService_m.getTrashCanList(userId, offset, tenantId);
+			JSONObject resultList = ezWebFolderService_m.getTrashCanList(userId, offset, tenantId, pStart, pEnd,
+										searchExt, searchFileName, searchCreateName, endrollStartDate, endrollEndDate, delStartDate, delEndDate );
 			int fileCnt = 0;
 			int folderCnt = 0;
 			
-			if (trashCanResult != null) {
-				trashCanList = (List<TrashCanVO>) trashCanResult.get("trashCanList");
-				fileCnt = (int) trashCanResult.get("fileCnt");
-				folderCnt = (int) trashCanResult.get("folderCnt");
+			if (result != null) {
+				trashCanList = (List<TrashCanVO>) resultList.get("trashCanList");
+				fileCnt = (int) resultList.get("fileCnt");
+				folderCnt = (int) resultList.get("folderCnt");
 			}
+			
+			totalCount = fileCnt + folderCnt;
 			
 			String trashCanPath = "";
 			
@@ -492,11 +517,25 @@ public class EzWebFolderGWController_m {
 				}
 			}
 			
+			totalCount = trashCanList.size();
+			
+			if (totalCount % listCount == 0) {
+				totalpages = (totalCount / listCount);
+			} else {
+				totalpages = (totalCount / listCount) + 1;
+			}
+			
+			data.put("trashCanList", trashCanList);
+			data.put("fileCnt", fileCnt);
+			data.put("folderCnt", folderCnt);
+			data.put("totalRows", fileCnt + folderCnt);
+			data.put("totalPages", totalpages);
+			data.put("listCount", listCount);
+			data.put("currPage", currPage);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", trashCanList);
-			result.put("fileCnt", fileCnt);
-			result.put("folderCnt", folderCnt);
+			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -519,9 +558,8 @@ public class EzWebFolderGWController_m {
 		String lang         = request.getParameter("lang")     != null ? request.getParameter("lang")     : "";
 		
 		logger.debug("filePermanetDelete Started.");
-		logger.debug("offset=" + offset + ",fileList=" + fileList);
-		logger.debug("userId=" + userId + ",serverName=" + serverName);
-		logger.debug("lang=" + lang + ",folderList=" + folderList);
+		logger.debug("userId=" + userId  + ",offset=" + offset + ",lang=" + lang + ",offset=" + offset + ",serverName=" + serverName);
+		logger.debug("fileList=" + fileList + ",folderList=" + folderList);
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");

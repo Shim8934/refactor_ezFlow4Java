@@ -54,13 +54,14 @@
 		var currentPage = "1";
 		var totalPages = 0 ;
 		var totalRows = 0 ;
-		var blockSize = 10;
+		var blockSize = 0;
 		var pStart = 0;
 		var pEnd =10;
 		var fileCnt = 0;
 		var folderCnt = 0;
 		var checkedArr	= [];
 		var folderArr = [];
+		var trashCanList = [];
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -98,15 +99,29 @@
 					"currentPage"   : pagination.currentPage,
 					"searchExt" : $('#searchExt').val(),
 					"searchFileName" : $('#searchFileName').val(),
-					"searchCreateName" : $('#searchCreateName').val()
+					"searchCreateName" : $('#searchCreateName').val(),
+					"enrollStartDate" : $('#enrollStartDate').val(),
+					"enrollEndDate" : $('#enrollEndDate').val(),
+					"delStartDate" : $('#delStartDate').val(),
+					"delEndDate" : $('#delEndDate').val(),
+					"pStart" : pStart,
+					"listCount" : blockSize,
+					"totalPages" : totalPages
 				},
 				success : function (data) {
 					result = data.data;
-					fileCnt = data.fileCnt;
-					folderCnt = data.folderCnt;
+					
+					trashCanList = result.trashCanList;
+					fileCnt = result.fileCnt;
+					folderCnt = result.folderCnt;
+					
+					currentPage = result.currPage;
+					totalPages = result.totalPages;
+					totalRows = result.totalRows;
+					blockSize = result.listCount;
 					
 					$('#tblFileList tr td').remove();
-					renderFileListElement(result);
+					renderFileListElement(trashCanList);
 					makePageSelPage();
 					document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " 파일 수 " + "<span style='color:#017BEC;'>" 
 					+ fileCnt +"</span>"+", " +strLang41 + " 폴더 수 " + "<span style='color:#017BEC;'>" + folderCnt +" </span>" + strLang42 + "]";
@@ -248,7 +263,7 @@
 		}
 		
 	   	$(function() {
-	        $("#Sdatepicker").datepicker({
+	        $(".Sdatepicker").datepicker({
 	            changeMonth: true,
 	            changeYear: true,
 	            autoSize: true,
@@ -257,7 +272,7 @@
 	            buttonImageOnly: true
 	        });
 	        
-	        $("#Edatepicker").datepicker({
+	        $(".Edatepicker").datepicker({
 	            changeMonth: true,
 	            changeYear: true,
 	            autoSize: true,
@@ -266,17 +281,17 @@
 	            buttonImageOnly: true
 	        });
 	
-	        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	        $("#Sdatepicker").datepicker('setDate', "");
+	        $(".Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $(".Sdatepicker").datepicker('setDate', "");
 	
-	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	        $("#Edatepicker").datepicker('setDate', "");
+	        $(".Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $(".Edatepicker").datepicker('setDate', "");
 	     });
 	   	
 	   	// 날짜 초기화 버튼
 	   	function btn_PostDate_Clear() {
-	        $("#Sdatepicker").datepicker('setDate', "");
-	        $("#Edatepicker").datepicker('setDate', "");
+	        $(".Sdatepicker").datepicker('setDate', "");
+	        $(".Edatepicker").datepicker('setDate', "");
 	
 	    }
 	    
@@ -284,27 +299,40 @@
 	    	currentPage = Value;
 	        pStart = (blockSize * (currentPage))- blockSize;
 	        pEnd = blockSize;
-	        getFileList(folderId);
+	        renderFileList();
 	    }
 	    
 	   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
    		function search(type) {
 	        if (type == "basic") {
 	
-	           if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	           if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" 
+	        		   && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 	                alert("<spring:message code='ezBoard.t192' />");// 검색조건을 입력하세요 
 	                return;
 	            }
 	
-	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	            if ($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 	                alert("<spring:message code='ezBoard.t189' />");
 	                return;
 	            }
-	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
+	            if ($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
 	                alert("<spring:message code='ezBoard.t189' />");
 	                return;
 	            }
-	            if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+	            if ($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	                alert("<spring:message code='ezBoard.t189' />");
+	                return;
+	            }
+	            if ($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
+	                alert("<spring:message code='ezBoard.t189' />");
+	                return;
+	            }
+	            if (new Date($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+	                alert("<spring:message code='ezBoard.t191' />");
+	                return;
+	            }
+	            if (new Date($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
 	                alert("<spring:message code='ezBoard.t191' />");
 	                return;
 	            }
@@ -316,8 +344,7 @@
 	            }
 	        }
 	        searchOptionHidden();
-// 	        MakeSubCondition();
-	        getFileList(folderId);
+	        renderFileList();
 	    }
    		function clickRow(obj, e) {
 	        e.stopPropagation();
@@ -630,35 +657,31 @@
 			        <tr>
 			           <th style="text-align:center"><spring:message code='ezWebFolder.t190' /></th>
 			           <td>
-			               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-<!-- 			               <img class="ui-datepicker-trigger" src="/images/ImgIcon/calendar-month.gif" alt title> -->
+			               <input type="text" class="Sdatepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
 			                ~
-			               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-<!-- 			               <img class="ui-datepicker-trigger" src="/images/ImgIcon/calendar-month.gif" alt title>  -->
+			               <input type="text" class="Edatepicker" id="enrollEndDate" style="width:80px;text-align:center" readonly="readonly">
 			           </td>
 			       </tr>
 			        <tr>
 			           <th style="text-align:center">삭제일</th>
 			           <td>
-			               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-<!-- 			               <img class="ui-datepicker-trigger" src="/images/ImgIcon/calendar-month.gif" alt title> -->
+			               <input type="text" class="Sdatepicker" id="delStartDate" style="width:80px;text-align:center" readonly="readonly">
 			                ~
-			               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-<!-- 			               <img class="ui-datepicker-trigger" src="/images/ImgIcon/calendar-month.gif" alt title>  -->
+			               <input type="text" class="Edatepicker" id="delEndDate" style="width:80px;text-align:center" readonly="readonly">
 			           </td>
 			       </tr>
 			       
 			        <tr>
 			            <th style="text-align:center">확장자</th>
-			            <td><input type="text" id="searchExt" style="width:100%" value="" name="searchExt"></td>
+			            <td><input type="text" id="searchExt" style="width:100%" value=""></td>
 			        </tr>
 			        <tr>
 			            <th style="text-align:center">파일명</th>
-			            <td><input type="text" id="searchFileName" style="width:100%" value="" name="searchFileName"></td>
+			            <td><input type="text" id="searchFileName" style="width:100%" value=""></td>
 			        </tr>  
 			         <tr>
 			            <th style="text-align:center">작성자</th>
-			            <td><input type="text" id="searchCreateName" style="width:100%" value="" name="searchCreateName"></td>
+			            <td><input type="text" id="searchCreateName" style="width:100%" value=""></td>
 			        </tr>    
 			       
 		   		 </table>
