@@ -19,6 +19,12 @@
 			var xSelB = "";
 			var xSelC = "";
 			
+			window.onload = function(){
+				var agent = navigator.userAgent.toLowerCase(); 
+				if (!CrossYN() || agent.search( "trident" ) > -1 ) {
+					document.getElementById("c_clubdesc").style.marginBottom = "0px";
+				}
+			}
 			
 			function btn_CommSave() {
 				if (document.frmCommunityBasicInfo.txt_CommunityName.value == "") {
@@ -189,8 +195,8 @@
 				</tr>
 				<tr>
 					<th>Community <spring:message code = 'ezCommunity.t18' /></th>
-					<td style="padding:0px 0px 0px 2px;">
-					<textarea name="c_clubdesc" style="Width:97%; Height:120px; margin-bottom: -3px; cursor:default; border:none; 
+					<td style="padding:0px;">
+					<textarea id="c_clubdesc" name="c_clubdesc" style="Width:97%; Height:120px; margin-bottom: -3px; cursor:default; border:none; 
 						font: 9pt <spring:message code = 'ezCommunity.t19' /> resize:none;" readonly><c:out value = '${club.c_ClubDesc}' /></textarea></td>
 				</tr>
 			</table>
