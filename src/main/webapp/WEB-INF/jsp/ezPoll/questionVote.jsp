@@ -82,7 +82,8 @@
             
 			window.onload = function() {				
 				commentCheck();				
- 				getConnect(); 			
+ 				getConnect();
+ 				stompDisConnProcess()
  				
 	            var doc = document.getElementById("message_test").contentWindow.document;	        
 				doc.open();
@@ -2206,7 +2207,7 @@
                 	var pForTd2 = document.createElement("p");  
                 	//pForTd2.innerHTML = txtContent;
                 	pForTd2.textContent = txtContent;
-                	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;");
+                	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap; word-break: break-all;");
                 	pForTd2.setAttribute("id", "cmtArea" + commentIndex);
                 	div2ForTd2.appendChild(pForTd2);
                 }
@@ -2761,6 +2762,16 @@
 		        		$("#_dateTimePicker").toggle();
 		        		
         			}, 500);
+		  	}
+		  	
+		  	//웹소켓이 끊길 경우 처리.
+		  	function stompDisConnProcess(){
+		  		var qstId = "${question.qstId}";
+		  		setInterval(function(){
+		  			if(stompClient.connected === false){
+		  				window.parent.frames["right"].location.href = "/ezPoll/pollVote.do?qstId=" + qstId;
+		  			}
+		  		}, 1000)
 		  	}
 		  	
 		</script>
