@@ -261,17 +261,17 @@
 					
 					var faImgElmt = document.createElement("img");
 					faImgElmt.setAttribute("class", "webFolderImg");
-					faImgElmt.addEventListener("click", function() {fileToggleFavorite(event);});
+					faImgElmt.addEventListener("click", function() {onFavoriteImageClick(event);});
+					faImgElmt.addEventListener("dblclick", function(event) {event.stopPropagation();})
 					
 					if (result[i]["favouriteStatus"] == "0") {
 						faImgElmt.src = "/images/webfolder/favourite.png";
-						tdElmt2.appendChild(faImgElmt);
-					}
-					else {
+					} else {
 						faImgElmt.src = "/images/webfolder/favourite2.png";
-						faImgElmt.setAttribute("favorite", "");
-						tdElmt2.appendChild(faImgElmt);
+						trElmt.setAttribute("favorite", "");
 					}
+					
+					tdElmt2.appendChild(faImgElmt);
 					
 					var fileIconElmt = document.createElement("img");
 					fileIconElmt.setAttribute("class", "webFolderImg");
@@ -646,27 +646,30 @@
 			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList);
        }
        
-		function fileToggleFavorite(event) {
-	       	event.stopPropagation();
-	       	
-	       	var imageElement = event.target;
-	       	
-	       	var rowElement = imageElement.parentElement.parentElement;
-			var targetId = rowElement.getAttribute("_fileId");
-			var targetType = rowElement.getAttribute("_fileType");
-			
-			if (imageElement.hasAttribute("favorite")) {
-				fileDeleteFavorite(targetId, targetType, function() {
-		   			refreshView();
-				});
-			} else {
-				fileAddFavorite(targetId, targetType, function() {
-					refreshView();
-				});
-			}
+		function onFavoriteButtonClick() {
 		}
 		
-        function fileAddFavorite(targetId, targetType, successHandler) {
+		function onFavoriteImageClick(event) {
+			event.stopPropagation();
+			
+			var imageElement = event.target;
+			var rowElement = imageElement.parentElement.parentElement;
+			
+			toggleFavorite(rowElement, refreshView, refreshView);
+		}
+		
+        function toggleFavorite(rowElement, addHandler, deleteHandler) {
+        	var targetId = rowElement.getAttribute("_fileId");
+        	var targetType = rowElement.getAttribute("_fileType");
+        	
+        	if (rowElement.hasAttribute("favorite")) {
+        		deleteFavorite(targetId, targetType, deleteHandler);
+        	} else {
+        		addFavorite(targetId, targetType, addHandler);
+        	}
+        }
+		
+        function addFavorite(targetId, targetType, successHandler) {
         	$.ajax({
         		type: "POST",
         		url: "/ezWebFolder/addFavorite.do",
@@ -681,7 +684,6 @@
         			}
         			
         			if (result.code === 1) {
-        				alert("이미 즐겨찾기 대상입니다.");
         				return;
         			} 
 
@@ -690,7 +692,7 @@
         	});
         }
         
-        function fileDeleteFavorite(targetId, targetType, successHandler) {
+        function deleteFavorite(targetId, targetType, successHandler) {
         	$.ajax({
         		type: "POST",
         		url: "/ezWebFolder/deleteFavorite.do",
@@ -705,7 +707,6 @@
         			}
         			
         			if (result.code === 1) {
-        				alert("이미 즐겨찾기 대상이 아닙니다.");
         				return;
         			}
 
