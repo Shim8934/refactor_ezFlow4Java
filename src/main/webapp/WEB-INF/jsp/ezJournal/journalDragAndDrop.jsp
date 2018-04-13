@@ -219,7 +219,6 @@
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		        var strRet = "";
 		        var fileList = "";
-		        var typeId = parent.typeId;
 	
 		        var isFileDelete = false;
 		        for (var i = 1; i < filecnt; i++) {
@@ -267,7 +266,6 @@
 	                type : 'POST',
 	                dataType : 'text',
 	                data : {
-	                	typeId	 : typeId,
 	                	fileList : fileList
 	                },
 	                success: function() {
