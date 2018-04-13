@@ -19059,7 +19059,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		   }
 		   
 		   rtn = rtn + ")";
-		   rtn.replace(",)", ")");
+		   rtn = rtn.replace(",)", ")");
 	   }
 	   
 	   if(rtn == null) {

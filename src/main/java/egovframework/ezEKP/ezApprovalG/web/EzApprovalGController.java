@@ -2271,8 +2271,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String realPath = commonUtil.getRealPath(request);
 		String result = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String checkLine = "";
+		
 		// 결재 문서의 첨부를 다운받으려 하는사람이 결재라인에 있는지 체크 추가 2018-04-10 천성준
-		String checkLine = ezApprovalGService.checkAprLine(docID.trim(), docStatus, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		if (docID != null && docStatus != null) {
+			checkLine = ezApprovalGService.checkAprLine(docID.trim(), docStatus, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		}
 
 		logger.debug("docID : " + docID);
 		logger.debug("docStatus : " + docStatus);
