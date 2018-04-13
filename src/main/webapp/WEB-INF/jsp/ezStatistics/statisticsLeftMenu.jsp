@@ -49,6 +49,9 @@
 	        case "WEBLOG":
 	            parent.frames[1].location.href = "WebLog_Statistics/WebLog_Main.aspx";
 	            break;
+	        case "ATTITUDE": //개인별 근태통계
+	            parent.frames[1].location.href = "/ezStatistics/statisticsAttitudeMain.do";
+	            break;
 	    }
     }
 
@@ -123,6 +126,9 @@
 	        case 23:
 	        	url = "/ezStatistics/statisticsMailSendLogList.do";
 	        	break;
+	        case 24: //부서별 근태통계
+	        	url = ".do";
+	        	break;
 	    }
 
 	    window.open(url,"stat_main");
@@ -174,6 +180,11 @@
             </ul>
             -->
             </c:if>
+            <h2><span id="ATTITUDE" style="display:inline-block;width:100%;" onClick="menu_change('ATTITUDE')">근태 통계</span></h2>
+		    <ul>
+			    <li><span style="display:inline-block;width:100%;" onClick="menu_change('ATTITUDE')">개인별 통계 출력</span></li>
+			    <li><span style="display:inline-block;width:100%;" onClick="goPage(24)">부서별 통계 출력</span></li>
+		    </ul>
 	    </div>
         <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
