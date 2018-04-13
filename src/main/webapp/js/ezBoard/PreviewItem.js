@@ -1011,28 +1011,31 @@ function Set_BoardConfig() {
 //레프트 메뉴카운트 업뎃용
 function leftCountRf() {
 	var pDiv, pId, pValue, pNodeID, pTreeID;
-    var h2 = window.parent.frames["left"].document.getElementsByTagName("h2");
-    var span = window.parent.frames["left"].document.getElementsByTagName("span");
-    
-    // 2018-02-23 천성준 
-    /* 게시판  게시물 등록, 삭제, 복사, 이동시 왼쪽 게시판 폴더 볼드 해제되는 버그 수정 */
-    for (var j = 0; j < span.length; j++) {
-    	if (span[j].className == "node_selected") {
-    		pNodeID = span[j].id.replace("spn_","");
-    		pTreeID = pNodeID.split("_")[0];
-    	}
-    }
-    
-    for (var i = 0; i < h2.length; i++) {
-        if (h2[i].className == "on") {
-            pId = h2[i].getElementsByTagName("div")[0].id;
-            pId = pId.replace("TreeCtr", "TreeCtrl");
-            pValue = h2[i].getElementsByTagName("div")[0].getAttribute("value");
-            window.parent.frames["left"].TopBoard_onclick(pId, pValue);
-            window.parent.frames["left"].node_select(pNodeID, "", pTreeID, "");
-            break;
-        }
-    }
+
+	if (window.parent.frames["left"] != undefined) {
+	    var h2 = window.parent.frames["left"].document.getElementsByTagName("h2");
+	    var span = window.parent.frames["left"].document.getElementsByTagName("span");
+	    
+	    // 2018-02-23 천성준 
+	    /* 게시판  게시물 등록, 삭제, 복사, 이동시 왼쪽 게시판 폴더 볼드 해제되는 버그 수정 */
+	    for (var j = 0; j < span.length; j++) {
+	    	if (span[j].className == "node_selected") {
+	    		pNodeID = span[j].id.replace("spn_","");
+	    		pTreeID = pNodeID.split("_")[0];
+	    	}
+	    }
+	    
+	    for (var i = 0; i < h2.length; i++) {
+	        if (h2[i].className == "on") {
+	            pId = h2[i].getElementsByTagName("div")[0].id;
+	            pId = pId.replace("TreeCtr", "TreeCtrl");
+	            pValue = h2[i].getElementsByTagName("div")[0].getAttribute("value");
+	            window.parent.frames["left"].TopBoard_onclick(pId, pValue);
+	            window.parent.frames["left"].node_select(pNodeID, "", pTreeID, "");
+	            break;
+	        }
+	    }
+	}
 }
 
 //무적의 자바 인코더

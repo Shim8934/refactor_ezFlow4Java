@@ -193,6 +193,11 @@
 					$('#isSelOnlyOnce ').attr('checked', true);
 				}
 				
+				//Hide sending notification mail option.
+				if(mode === "modify"){
+					$('#sendPostNotiMailDiv').hide();
+				}
+				
 		    	$("#Sdatepicker").datepicker({
 		        	changeMonth: true,
 		        	changeYear: true,
@@ -716,6 +721,13 @@
 	        	$('#hidIsSelOnlyOnce').val("0");	
 	        }
 	        
+	        if ($('#sendPostMail').is(':checked')) {
+	        	$('#hidSendPostNotice').val("1");	
+	        }
+	        else{
+	        	$('#hidSendPostNotice').val("0");	
+	        }
+	        
 	        
     		if (form_check() == false) {
         		return;
@@ -1223,7 +1235,11 @@
 							<option value="1"><spring:message code="ezPoll.t238" /></option>
 						</select>	
 						<a class="pollImgbtn1" id="receiverBttn" style="display: none;"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
-						<div style="display:none; position: absolute; left: 190px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 1400px; white-space: nowrap;" id="newTargetDiv"></div>																		
+						<div style="display:none; position: absolute; left: 190px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 60%; white-space: nowrap;" id="newTargetDiv"></div>																		
+						<div id="sendPostNotiMailDiv" style="display: inline-block; float: right;">
+							<input id="sendPostMail" type="checkbox">
+							<span style="vertical-align: middle;"><spring:message code="ezCommunity.t553"/></span>
+						</div>
 					</div>
 					<div style="display:none">
 						<input type="text" name="hidStartDate" id="hidStartDate" style="display:none"> 
@@ -1244,6 +1260,7 @@
 						<input type="text" name="hidIsSorting" id="hidIsSorting" value="" style="display:none">		
 						<input type="text" name="hidIsSelOnlyOnce" id="hidIsSelOnlyOnce" value="" style="display:none">		
 						<input type="text" name="hidOptImgFilePath" id="hidOptImgFilePath" value="" style="display:none">		
+						<input type="text" name="hidSendPostNotice" id="hidSendPostNotice" value="" style="display:none">		
 						
 					</div>
 					</td>

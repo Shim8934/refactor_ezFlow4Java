@@ -9,12 +9,19 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
+		<link rel="stylesheet" href="/css/font-awesome-4.7.0/css/font-awesome.css">
+		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
 		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
 		<script src="/js/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>	
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		
 		<script type="text/javascript">	
 			var filesize 				= 0;
@@ -75,7 +82,8 @@
             
 			window.onload = function() {				
 				commentCheck();				
- 				getConnect(); 			
+ 				getConnect();
+ 				stompDisConnProcess()
  				
 	            var doc = document.getElementById("message_test").contentWindow.document;	        
 				doc.open();
@@ -157,10 +165,18 @@
 						for (var i = 0; i < numberOptions; i++) {
 							var _optId = votesArr[i][0];
 							var graphId = "graph" + _optId;
-							var showVotes = "voterNumber_" + _optId;	
+							var showVotes = "voterNumber_" + _optId;
+							var showVotesObj = document.getElementById(showVotes);
 							var voteInfo = "voteInfo" + _optId;							
 							document.getElementById(graphId).style.display = "none";
-							document.getElementById(showVotes).style.display = "none";
+							
+							//투표 수가 있고 내가 투표한 항목일 경우
+							if(votesArr[i][1] > 0 && selectedList.indexOf(_optId) != -1){
+								showVotesObj.style.cssText = "display: block; color: "+ colors[i % 30] +"; font-weight: bold;";
+							}
+							
+							showVotesObj.innerHTML = "<i class='fa fa-check' style='font-size:15px; color:" + colors[i % 30] + ";'></i>"
+							   					   + "<spring:message code = 'ezBoard.t47'/>";
 							document.getElementById(voteInfo).style.display = "none";
 						}
 					}					
@@ -181,6 +197,7 @@
 				emoticonPanelClose();
 				optImgSearch();
 				addThumbnailEvent();
+				dateTimePickerSetting()
 				
 			}
 			
@@ -329,8 +346,9 @@
 							if (!selectedFlag) {
 								var showVotes = document.getElementById("voterNumber_" + _optId);																	
 				   				showVotes.innerHTML = "<spring:message code='ezPoll.t249'/>";	
-			   					showVotes.style.color = colors[i % 30];
-								showVotes.style.display = "block";
+			   					/* showVotes.style.color = colors[i % 30];
+								showVotes.style.display = "block"; */
+								showVotes.style.cssText = "display: block; color:" + colors[i % 30] + ";";
 								
 								document.getElementById(graphId).style.display = "none";
 								//document.getElementById(voteInfo).style.display = "block";
@@ -541,7 +559,16 @@
 			        	if (mode == 1) {							
 			        		//In adding mode
 			        		var showVotes = "voterNumber_" + optId;
-			        		document.getElementById(showVotes).style.display = "none";				        		
+			        		var showVotesObj = document.getElementById(showVotes);
+			        		if("${question.resultFirst}" !== "1"){
+			        			$("#selectAnsImg_" + optId).css("display","block");
+			        			showVotesObj.innerHTML = "<i class='fa fa-check' style='font-size:15px; color:" + colors[(optId - 1) % 30] + ";'></i>"
+			        								   + "<spring:message code = 'ezBoard.t47'/>";
+			        			showVotesObj.style.fontWeight = "bold";
+			        		}
+			        		else{
+			        			showVotesObj.style.display = "none";
+			        		}
 			        		totalVotes = totalVotes + 1;
 			        		
 			        		if (user == curentUser) {
@@ -911,8 +938,10 @@
 		    }
 		    
 		    function finishVote() {	    	
-		    	var tenantId = "<c:out value='${question.tenantId}'/>";
-		    	stompClient.send("/app/finish", {}, JSON.stringify({'question': qstId, 'tenant': tenantId}));		    	
+		    	if(window.confirm("<spring:message code = 'ezPoll.hdp06'/>")){
+			    	var tenantId = "<c:out value='${question.tenantId}'/>";
+			    	stompClient.send("/app/finish", {}, JSON.stringify({'question': qstId, 'tenant': tenantId}));		    	
+		    	}
 		    }
 		    
 		    function menuQst_DetailUserInfo(pUserID) {
@@ -975,7 +1004,7 @@
 		    	var nChilds = div2Cmt.childElementCount;		    	
 		    	var editDiv2Cmt = document.getElementById("editCmtDiv" + id.slice(8));	    	
 		    	var innerDiv1 = document.createElement("div");
-		    	innerDiv1.setAttribute("style", "display: inline-block;");		    	
+		    	//innerDiv1.setAttribute("style", "display: inline-block;");		    	
 		    	var innerDiv2 = document.createElement("div");	
 		    	innerDiv2.setAttribute("id", "descriptCmt" + id.slice(8));
 		    	innerDiv2.setAttribute("style", "display: none; padding-left: 10px; position: relative;");	
@@ -992,12 +1021,12 @@
 		    	
 		    	//Copy text comment
 		    	var innInnerDiv1 = document.createElement("div");
-		    	innInnerDiv1.setAttribute("style", "display: block; float:left; border:1px solid #ddd;padding-left: 0px;margin-left: 20px; width: 1310px; border-radius: 3px;");
+		    	innInnerDiv1.setAttribute("style", "display: block; float:left; border:1px solid #ddd;padding-left: 0px;margin-left: 20px; width: 105%; border-radius: 3px;");
 		    	var editTxtArea = document.createElement("textarea");
 		    	editTxtArea.setAttribute("id", "editCmtArea" + id.slice(8));
 		    	editTxtArea.setAttribute("cols", "20");
 		    	editTxtArea.setAttribute("rows", "1");
-		    	editTxtArea.setAttribute("style", "display: inline-block; overflow: hidden; outline: none; border: none; resize:none; padding: 5px 5px; width: 1300px;");
+		    	editTxtArea.setAttribute("style", "display: inline-block; overflow: hidden; outline: none; border: none; resize:none; padding: 5px 5px; width: 98%; min-width: 600px; word-break: break-all;");
 		    	editTxtArea.oninput =  function () { editAutoGrow(this); }	
 		    	
 		    	innInnerDiv1.appendChild(editTxtArea);		
@@ -1120,7 +1149,7 @@
 		    	innerDiv3.appendChild(tagA2);
 		    	
 		    	editDiv2Cmt.appendChild(innerDiv3);		    			    	
-		    	editDiv2Cmt.style.display = "inline-block";	 
+		    	editDiv2Cmt.style.display = "block";	 
 		    	
 		    	editAutoGrow(editTxtArea);    	
 		    	editTxtArea.focus(); 
@@ -1970,6 +1999,13 @@
 				
 		    	element.style.height = "1px";    	
 		        element.style.height = (element.scrollHeight - 10) + "px";		        
+		        
+		        //내용 길이 제한 로직 추가. 2018-04-09 홍대표
+		        var maxLen = 500;
+	  			if($(element).val().length > maxLen){
+	  				alert(maxLen + " <spring:message code = 'ezPoll.t212'/>");
+	  				$(element).val($(element).val().substring(0, maxLen));
+	  			}
 		    }
 			
 		    function checkScrollBars() {		
@@ -2160,7 +2196,7 @@
                 editDiv2ForTd2.setAttribute("id", "editCmtDiv" + commentIndex);   
                 editDiv2ForTd2.style.display = "none"; 
                 
-                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;");               
+                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 98%;");               
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = userName;
                 div1ForTd2.setAttribute("style", "display: block; color:#0470e4; font-size:16px; padding:5px 0px 0px 20px;");       
@@ -2171,7 +2207,7 @@
                 	var pForTd2 = document.createElement("p");  
                 	//pForTd2.innerHTML = txtContent;
                 	pForTd2.textContent = txtContent;
-                	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;");
+                	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap; word-break: break-all;");
                 	pForTd2.setAttribute("id", "cmtArea" + commentIndex);
                 	div2ForTd2.appendChild(pForTd2);
                 }
@@ -2287,7 +2323,7 @@
 		    		if (div2Cmt.firstElementChild.tagName.toLowerCase() == "p") {
 		    			//div2Cmt.firstElementChild.innerHTML = txtContent;
 		    			div2Cmt.firstElementChild.textContent = txtContent;
-		    			div2Cmt.firstElementChild.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap;");
+		    			div2Cmt.firstElementChild.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap; word-break: break-all;");
 		    		}
 		    		else {
 		    			var pForTd2 = document.createElement("p");  
@@ -2592,6 +2628,152 @@
 		    		$("#imgPopup").removeAttr("src");
 				});
 		    }
+		  	
+		  	//종료일 변경 기능
+		  	function updateEndDate(){
+		  		var fd = new FormData();
+		  		var qstId = ${question.qstId};
+				var N_EndTime   = $( "#eTimePicker option:selected" ).text() + ":59"; //20180109
+	    		var N_EndDate   = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+				var L_StartDateTime = "${question.startDate}";
+		  		var L_StartTime = L_StartDateTime.substring(L_StartDateTime.indexOf(" ") + 1, L_StartDateTime.length);
+		  		var L_StartDate = L_StartDateTime.substring(0, 10);
+				var N_EndDateTime = N_EndDate + " " + N_EndTime;
+				
+				//종료일 유효성 체크
+				if (L_StartDate > N_EndDate) {
+		        	alert('<spring:message code="ezPoll.t236" />\n<spring:message code="ezPoll.t160" /> : ' + L_StartDateTime);
+		        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        	$("#Edatepicker").datepicker('setDate', "${question.endDate}");
+		            return false;
+		        }
+		        else if (L_StartDate == N_EndDate) {
+		        	if (L_StartTime >= N_EndTime) {
+		        		alert('<spring:message code="ezPoll.t236" />\n<spring:message code="ezPoll.t160" /> : ' + L_StartDateTime);
+			            return false;
+		        	}
+		        }
+				
+		  		fd.append("qstId", qstId);
+		  		fd.append("endDate", N_EndDateTime);
+		  		
+		  		xhr1.open("POST", "/ezPoll/updateEndDateForQst.do", false);
+	    	    xhr1.send(fd);
+	    	    window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6";
+		  	}
+		  	
+		  	function dateTimePickerSetting(){
+				$("#Edatepicker").datepicker({
+			        changeMonth: true,
+		    	    changeYear: true,
+		        	autoSize: true,
+		        	showOn: "both",
+		        	format: 'yyyy-mm-dd',
+		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        	buttonImageOnly: true,
+		        	onSelect: endDateModifyConfirm
+		    	});		
+		
+				var _endD = "<c:out value='${question.endDate}'/>";
+				
+		        
+		        var eYear = _endD.substring(0, 4);
+				var eMonth = _endD.substring(5, 7);
+				var eDay = _endD.substring(8, 10);
+				var eHour = _endD.substring(11, 13);
+				var eMin = _endD.substring(14, 16);				
+	        	EDate = new Date(eYear, eMonth-1, eDay);
+	        	
+	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        	$("#Edatepicker").datepicker('setDate', EDate);
+	        	
+	        	eHourMinute = eHour + eMin;	  
+	        	
+	        	var selection = "";
+	        	var i = 0;
+	        	for (var i = 0; i < 24; i++) {
+	        	    var j = zeroFill(i, 2);
+	        	    selection += "<option value='"+ j +"00'>"+ j + ":00" + "</option>";
+	        	    selection += "<option value='"+ j +"30'>"+ j + ":30" + "</option>";
+	        	} 
+	        	
+	        	$("#eTimePicker").html(selection);   	
+	        	
+	        	$("#eTimePicker").val(eHourMinute).change();
+	        	
+	        	//Set time
+    			setDateTimeValue();	
+    			
+    			$("#endDate").click(function() {
+    				if($("#_dateTimePicker").css("display") == "none"){
+	    				$("#_dateTimePicker").css("display", "inline-block");
+	    				$(".ui-datepicker-trigger").click();
+    				}
+    				else{
+	    				$("#_dateTimePicker").css("display", "none");
+	    				$("#Edatepicker").datepicker('setDate', EDate);
+    				}
+    			});
+		  	}
+		  	
+		  	function setDateTimeValue() {
+				
+				var NowDate = new Date(new Date().getTime());
+				var NextWeek = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
+				
+	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        	$("#Edatepicker").datepicker('setDate', "${question.endDate}");			
+	        	
+	        	var selection = "";
+	        	var i = 0;
+	        	
+	        	for (var i = 0; i < 24; i++) {
+	        	    var j = zeroFill(i, 2);
+	        	    selection += "<option value='"+ j +"00'>"+ j + ":00" + "</option>";
+	        	    selection += "<option value='"+ j +"30'>"+ j + ":30" + "</option>";
+	        	} 
+	        	
+	        	$("#eTimePicker").html(selection); 
+			}	
+		  	
+		  	function zeroFill( number, width ) {
+				  width -= number.toString().length;
+				  
+				  if ( width > 0 ) {
+				    return new Array( width + (/\./.test( number ) ? 2 : 1) ).join( '0' ) + number;
+				  }
+				  
+				  return number + "";
+			}
+		  	
+		  	//종료일 변경 다이얼로그창 띄움.
+		  	function endDateModifyConfirm(){
+  				$("#Edatepicker, #eTimePicker").css("color", "#0000FF");
+	  			window.setTimeout(
+       				function(){
+		        		if(window.confirm("<spring:message code = 'ezPoll.hdp05'/>")){
+		        			updateEndDate();
+		        		}
+		        		else{
+		        			$("#Edatepicker").datepicker('setDate', EDate);	
+	  						$("#Edatepicker, #eTimePicker").css("color", "#000000");
+		        		}
+		        		
+		        		$("#_dateTimePicker").toggle();
+		        		
+        			}, 500);
+		  	}
+		  	
+		  	//웹소켓이 끊길 경우 처리.
+		  	function stompDisConnProcess(){
+		  		var qstId = "${question.qstId}";
+		  		setInterval(function(){
+		  			if(stompClient.connected === false){
+		  				window.parent.frames["right"].location.href = "/ezPoll/pollVote.do?qstId=" + qstId;
+		  			}
+		  		}, 1000)
+		  	}
+		  	
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -2669,11 +2851,26 @@
 									<img src="/images/poll/reuseVote.png" class="voteIconImg nosecret" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
 								</li>
 							</ul>
+							<c:if test="${(curentUser eq question.creator || adminPrivilege == 1)}">
+								<ul class="voteIcon_ul">
+									<li class="voteIconImg_li icon">
+										<img id="endDate" src="/images/poll/endDateModify.png" class="voteIconImg nosecret" style="width:45px" title="<spring:message code = 'ezPoll.hdp04'/>" onmouseover="this.src = '/images/poll/endDateModify_hover.png'" onmouseout="this.src = '/images/poll/endDateModify.png'" />
+									</li>
+								</ul>
+								<div id="_dateTimePicker" style="display: none; position: absolute; top: 125px; right: 10px; height: 221px; width: 223px; background: white; border-radius: 10px; padding-top: 20px; border:1px solid #ddd;">										
+									<input type="text" id="Edatepicker" style="width:80px; height: 20px; text-align:center; margin-left: 18px; margin-right: 5px; float: left;" readonly >
+									<select id="eTimePicker" style="float:left"></select>						
+									<!-- <div style="height: 40px;width: 100%;position: relative;margin-top: 70px;">
+										<img src="/images/ImgIcon/mtg-accept.png" style="width: 30px;margin-left: 50px;">
+										<img src="/images/ImgIcon/mtg-decline.png" style="width: 30px; margin-left: 50px;">
+									</div> -->			
+								</div>
+							</c:if>
 					  </div>
 					  
 				</div>
 				<div id="titleAndContent">				
-					<div id="title" class="questionTitle" style="width:100%; "><!--<font size="5"><c:out value='${question.title}'/></font>-->
+					<div id="title" class="questionTitle" ><!--<font size="5"><c:out value='${question.title}'/></font>-->
 						<div class="baonkTest" title="<c:out value='${question.title}'/>"><c:out value='${question.title}'/></div>
 						<div style="height: 40px; float:left; display:none;">
 							<span id="status" style="font-weight: bold; color: #FFF;">
@@ -2694,58 +2891,58 @@
 								</span> 			
 							</c:if>
 						</div>			
+				  		<ul style="float:right; padding:0px; margin:9px 9px 0px 10px;">
+				  			<c:choose>
+								<c:when test="${question.multiSelect == 0}">
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : <spring:message code = 'ezEmail.lhm67'/>" >
+									</li>
+								</c:when>
+								<c:otherwise>
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : ${question.multiSelect}" >
+									</li>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${question.resultFirst == 1}">
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t258'/>" >
+									</li>
+								</c:when>
+								<c:otherwise>
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t256'/>" >
+									</li>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${question.secretVote == 1}">
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/anonymousVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t253'/>" >
+									</li>
+								</c:when>
+								<c:otherwise>
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
+									</li>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${question.isSelOnlyOnce == 1}">
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/selOnlyOnce_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.hdp01'/>" >
+									</li>
+								</c:when>
+								<c:otherwise>
+									<li class="voteIconImg_li_info icon">
+										<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.hdp02'/>" >
+									</li>
+								</c:otherwise>
+							</c:choose>
+				  		</ul>
 					</div>
 					
-			  		<ul style="width:100%; float:left; padding:0px 0px 0px 6px; border-bottom:1px solid #eee">
-			  			<c:choose>
-							<c:when test="${question.multiSelect == 0}">
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : <spring:message code = 'ezEmail.lhm67'/>" >
-								</li>
-							</c:when>
-							<c:otherwise>
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : ${question.multiSelect}" >
-								</li>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${question.resultFirst == 1}">
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t258'/>" >
-								</li>
-							</c:when>
-							<c:otherwise>
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t256'/>" >
-								</li>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${question.secretVote == 1}">
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/anonymousVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t253'/>" >
-								</li>
-							</c:when>
-							<c:otherwise>
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
-								</li>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${question.isSelOnlyOnce == 1}">
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/selOnlyOnce_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t260'/> <spring:message code = 'ezPoll.hdp01'/>" >
-								</li>
-							</c:when>
-							<c:otherwise>
-								<li class="voteIconImg_li_info icon">
-									<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t260'/> <spring:message code = 'ezPoll.hdp02'/>" >
-								</li>
-							</c:otherwise>
-						</c:choose>
-			  		</ul>
 					
 					<div class="pad1" style="vertical-align: top; padding-top:10px; width: 100%; border: none; display:inline-block; min-height: 150px;" id="messagetd">
 		               <iframe onload="resizeFrame()" id="message_test" style="border: none; overflow: hidden; width: 100%; background-color: #FFF;"></iframe>   	                                 
@@ -2852,7 +3049,7 @@
 			               			</div>
 			               		</div>          		
 			               </td>		               
-				          <td style="width:80px; border:1px solid #DDD; border-left:none;">	   	               		
+				          <td style="width:85px; border:1px solid #DDD; border-left:none;">	   	               		
 				               	<div id="_resultPercentage<c:out value ="${_option.ansId}"/>" class="_resultPercentage" ></div>           		
 				          </td>		               
 			            </tr>
@@ -2893,9 +3090,9 @@
 										</c:otherwise>
 									</c:choose>							
 									
-									<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >
+									<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; width: 100%;" >
 										<c:if test="${_comt.textContent != ''}">
-											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;"><c:out value ="${_comt.textContent}" /></p>
+											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px; width: 98%;"><c:out value ="${_comt.textContent}" /></p>
 										</c:if>
 										<c:if test="${_comt.imageAttach != ''}">
 											<div style="padding-top: 5px;">
@@ -2921,7 +3118,7 @@
 								<td style="width: 145px; position:relative;">
 									<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;"><c:out value ="${_comt.cmtTime}" /></div>
 									<c:if test="${_comt.userId == curentUser}">								
-										<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
+										<img src="/images/option3.png" style="margin:30px 10px 0px 0px; cursor: pointer; height: 25px; width: 25px; position: absolute; top: 0px; right: 0px;" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
 										<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; width: 120px;" tabindex=0>							
 											<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
 											<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>

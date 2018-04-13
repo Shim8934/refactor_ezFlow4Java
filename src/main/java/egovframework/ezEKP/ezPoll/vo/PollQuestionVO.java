@@ -29,6 +29,7 @@ public class PollQuestionVO implements Serializable {
 	private int setDate;
 	private int isSorting;
 	private int isSelOnlyOnce;
+	private int sendPostNotice;
 	
 	public int getQstId() {
 		return qstId;
@@ -220,6 +221,14 @@ public class PollQuestionVO implements Serializable {
 
 	public void setIsSelOnlyOnce(int isSelOnlyOnce) {
 		this.isSelOnlyOnce = isSelOnlyOnce;
+	}
+
+	public int getSendPostNotice() {
+		return sendPostNotice;
+	}
+
+	public void setSendPostNotice(int sendPostNotice) {
+		this.sendPostNotice = sendPostNotice;
 	}
 
 	public boolean equals(Object object) {

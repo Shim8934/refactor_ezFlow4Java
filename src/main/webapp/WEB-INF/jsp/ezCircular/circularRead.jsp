@@ -438,7 +438,7 @@
                 	    	</c:if>
                 	    	
                	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
-	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/ImgIcon/circular_bar.gif"></li>
+	                        <li style="background:none; padding-right:2px;margin-left:3px" class="off"><img src="/images/ImgIcon/circular_bar.gif"></li>
 	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
 		                        <li><span onclick="circularModify()"><spring:message code='ezCircular.t184' /></span></li>
