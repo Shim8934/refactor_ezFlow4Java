@@ -504,7 +504,13 @@ public class EzAttitudeGWController {
 			String startDate = date + "-01 00:00:00";
 			String endDate = date + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
 			
-			List<AttitudeStatisVO> resultList = ezAttitudeService.getAttitudeStatisticsList(userId, offset, startDate, endDate, info.getTenantId());
+			List<AttitudeStatisVO> resultList;
+			
+			if (deptFlag.equals("false")){
+				resultList = ezAttitudeService.getAttitudeStatisticsList(userId, "", offset, startDate, endDate, info.getTenantId(), deptFlag);
+			} else {
+				resultList = ezAttitudeService.getAttitudeStatisticsList("", info.getDeptId(),offset, startDate, endDate, info.getTenantId(), deptFlag);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -932,7 +938,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/users-attitude-confs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject userAttitudeConfInfo(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/users-attitude-confs] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/users-attitude-confs] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -966,7 +972,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/users-attitude-confs] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/users-attitude-confs] ended.");
 		return result;
 	}
 	

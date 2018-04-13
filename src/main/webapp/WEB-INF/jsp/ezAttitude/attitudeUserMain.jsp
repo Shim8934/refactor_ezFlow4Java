@@ -44,7 +44,8 @@
 		<script>
 			var pMode = "";
 			var uselang = "<c:out value='${userInfo.lang}'/>";
-			var deptFlag = "${deptFlag}"
+			var deptFlag = "${deptFlag}";
+			var adminFlag = "${adminFlag}";
 			
 			$(function(){
 				$(document).on('dblclick', '.td_day td', function(){
@@ -143,6 +144,7 @@
 						}
 						objTr = $("<tr></tr>").append($("<th></th>").text(result[i].typeName));
 						objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일");
+
 						
 						objTr.append(objTd);
 						objTbody.append(objTr);
@@ -169,7 +171,8 @@
 					async : true,
 					url : "/ezAttitude/attitudeStatisList.do",
 					data : {
-						date : pDate
+						date : pDate,
+						deptFlag : deptFlag
 					},
 					success : function(result) {
 						$("#attiStatis td").text("0일");
@@ -374,7 +377,19 @@
 			function layerHidden() {
 		        $.modal.close();
 		    }
-
+			
+			function searchDept() {
+				
+			}
+			
+			function excelDown() {
+				
+			}
+			
+			function sendMail() {
+	
+			}
+        	
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">
@@ -386,6 +401,11 @@
 		</c:if>
 		<div id="mainmenu">
 			<ul>
+				<c:if test="${adminFlag == 'true'}">
+					<li id="reply"><span onClick="searchDept()">부서검색</span></li>
+		        	<li id="search"><span onClick="excelDown()">엑셀다운로드</span></li>
+		        	<li id="search"><span onClick="sendMail()">근태미입력자 메일발송</span></li>
+				</c:if>
 			</ul>
 		</div>
 		

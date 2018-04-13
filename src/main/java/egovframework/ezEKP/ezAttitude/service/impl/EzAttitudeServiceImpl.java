@@ -155,19 +155,27 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String offset,
-			String startDate, String endDate, int tenantId) throws Exception {
+	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String deptIdList, String offset,
+			String startDate, String endDate, int tenantId, String deptFlag) throws Exception {
 		LOGGER.debug("getAttitudeStatisticsList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		map.put("pidList", pidList);
+		String[] pidListArr = pidList.split(",");
+		String[] deptIdArr = deptIdList.split(",");
+
 		map.put("offsetMin", offsetMin);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("tenantId", tenantId);
 		
+		if (!pidList.trim().equals("")){
+			map.put("pidListArr", pidListArr);
+		}
+		if (!deptIdList.trim().equals("")){
+			map.put("deptIdArr", deptIdArr);
+		}
 		
 		LOGGER.debug("getAttitudeStatisticsList ended");
 		return ezAttitudeDAO.getAttitudeStatisList(map);
@@ -539,27 +547,29 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String companyId, String userIdList, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigInfo started");
 		
-		List<AttitudeUserConfigVO> userList = new ArrayList<AttitudeUserConfigVO>();
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("offsetMin", offsetMin);
 		
-		String[] userIdArray = userIdList.split(","); 
 		
-		for (int i = 0; i < userIdArray.length; i++) {
-			map.put("userId", userIdArray[i]);
-			
-			AttitudeUserConfigVO vo = new AttitudeUserConfigVO();
-			vo = ezAttitudeDAO.getAttitudeUserConfigInfo(map);
-			if (vo != null) {
-				userList.add(vo);
-			}
-		}
+		String[] userList = userIdList.split(",");
+		map.put("userId", userList);
+//		for (int i = 0; i < userIdArray.length; i++) {
+//			map.put("userId", userIdArray[i]);
+//			
+//			AttitudeUserConfigVO vo = new AttitudeUserConfigVO();
+//			vo = ezAttitudeDAO.getAttitudeUserConfigInfo(map);
+//			if (vo != null) {
+//				userList.add(vo);
+//			}
+//		}
+		//+++++++++++
+		List<AttitudeUserConfigVO> userConfList = ezAttitudeDAO.getAttitudeUserConfigInfo(map);
+		
 		LOGGER.debug("getAttitudeUserConfigInfo ended");
-		return userList;
+		return userConfList;
 	}
 
 	@Override
@@ -847,10 +857,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		List<AdminAttitudeVO> resultList = new ArrayList<AdminAttitudeVO>();
 		if (userIdList != null && userIdList != "") {
 			String[] userList = userIdList.split(",");
-			for (int i = 0; i < userList.length; i++) {
-				map.put("userId", userList[i]);
-				resultList.addAll(ezAttitudeDAO.getAttitudeList2(map));
-			}
+			map.put("userId", userList);
+			resultList = ezAttitudeDAO.getAttitudeList2(map);
 		} else {
 			resultList = ezAttitudeDAO.getAttitudeList2(map);
 		}
@@ -886,10 +894,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String resultCount = "0";
 		if (userIdList != null && !userIdList.equals("")) {
 			String[] userList = userIdList.split(",");
-			for (int i = 0; i < userList.length; i++) {
-				map.put("userId", userList[i]);
-				resultCount = String.valueOf((Integer.valueOf(resultCount) + Integer.valueOf(ezAttitudeDAO.getAttitudeCount2(map))));
-			}
+			map.put("userId", userList);
+			resultCount = String.valueOf((Integer.valueOf(resultCount) + Integer.valueOf(ezAttitudeDAO.getAttitudeCount2(map))));
 		} else {
 			resultCount = ezAttitudeDAO.getAttitudeCount2(map);
 		}
