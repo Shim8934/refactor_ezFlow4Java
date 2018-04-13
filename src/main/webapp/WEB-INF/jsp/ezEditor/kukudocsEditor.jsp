@@ -61,9 +61,6 @@
 	<body>
 		<textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>
 		<script type="text/javascript">
-			var defaultFontFamily = "${defaultFontFamily}";
-			var defaultFontSize = "${defaultFontSize}";
-		
 			// 언어 설정
 			var lang = "";
 			var userLang = "${userInfo.lang}";
@@ -87,12 +84,7 @@
 	    	}
 			
 			// html 모드 사용 여부 설정
-			var useHTMLMode = true;
-			var useHTMLModeStr = "${useHTMLMode}";
-			
-			if (useHTMLModeStr == "NO") {
-				useHTMLMode = false;
-	        }
+			var useHTMLMode = "${useHTMLMode}" == "NO" ? false : true;
 			
 			// 메뉴 설정			
 			var customAlignMenu = [['about','print','undo','redo','text_paste','textFormatCopy','textFormatPaste','link','unlink','image','symbol','horizontal','numbered_list','bullet_list','outdent','indent'],
