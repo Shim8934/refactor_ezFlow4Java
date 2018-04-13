@@ -708,7 +708,7 @@ public class EzLadderController {
 		if (status.equals("ok")) {
 			if(allData.get(5).equals("back")) {
 				return "redirect:/ezLadder/ladderMain.do?mode=" + allData.get(3) + ""
-						+ "&currPage=" + allData.get(4) + "&searchSelect=" + allData.get(1) + "&searchInput=" + allData.get(2);
+						+ "&currPage=" + allData.get(4) + "&searchSelect=" + allData.get(1) + "&searchInput=" + allData.get(2)  + "&sort=writeDate&sortFlag=desc";
 			}
 			logger.debug("ezLadder/deleteLadder ended.");
 			return "json";
