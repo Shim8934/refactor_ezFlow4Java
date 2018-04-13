@@ -818,20 +818,6 @@ public class EzJournalGWController {
 	}
 	
 	/**
-	 * 업무일지 G/W [DELETE] 업무일지 삭제 (단일건삭제로 사용하려했으나 사용안함)
-	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
-	public JSONObject deleteJournal(@PathVariable String typeId, @PathVariable String journalId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W deleteJournal started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
-		
-		JSONObject result = new JSONObject();
-		
-		LOGGER.debug("ezJournal G/W deleteJournal ended.");
-		return result;
-	}
-	
-	/**
 	 * 업무일지 G/W [POST] 업무일지 읽음 처리
 	 */
 	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/readers/{userId}", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
@@ -1224,20 +1210,6 @@ public class EzJournalGWController {
 		}
 		
 		LOGGER.debug("ezJournal G/W downloadFile ended.");
-		return result;
-	}
-	
-	/**
-	 * 업무일지 G/W [POST] 일지 수신자 저장
-	 */
-	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId}/receivers", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
-	public JSONObject saveReceiver(@PathVariable String typeId, @PathVariable String journalId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W saveReceiver started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
-		
-		JSONObject result = new JSONObject();
-		
-		LOGGER.debug("ezJournal G/W saveReceiver ended.");
 		return result;
 	}
 	
