@@ -5,7 +5,7 @@ public class ShareVO {
 	private String fileName;
 	private String folderFileType;
 	private String folderType;
-	private String filePath;
+	private String filePosition;
 	private String fileSize;
 	private String fileExt;
 	private String folderPath;
@@ -18,7 +18,7 @@ public class ShareVO {
 	private String updateDate;
 	private String typeId;
 	private String typeName;
-	private String typeIcon;
+	private String fileIconUrl;
 	private String shareStatus;
 	private String favouriteStatus;
 	private String sharerId;
@@ -52,11 +52,11 @@ public class ShareVO {
 	public void setFolderType(String folderType) {
 		this.folderType = folderType;
 	}
-	public String getFilePath() {
-		return filePath;
+	public String getFilePosition() {
+		return filePosition;
 	}
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+	public void setFilePosition(String filePosition) {
+		this.filePosition = filePosition;
 	}
 	public String getFileSize() {
 		return fileSize;
@@ -130,11 +130,11 @@ public class ShareVO {
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
 	}
-	public String getTypeIcon() {
-		return typeIcon;
+	public String getFileIconUrl() {
+		return fileIconUrl;
 	}
-	public void setTypeIcon(String typeIcon) {
-		this.typeIcon = typeIcon;
+	public void setFileIconUrl(String fileIconUrl) {
+		this.fileIconUrl = fileIconUrl;
 	}
 	public String getShareStatus() {
 		return shareStatus;

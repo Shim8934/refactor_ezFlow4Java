@@ -145,9 +145,9 @@
 	border-color: rgb(0, 72, 149);
 }
 
-
-
-
+#mainmenu2[favoritemode] li:not([favoritemenu]) {
+	display: none;
+}
 
 
 

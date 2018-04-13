@@ -80,18 +80,18 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "ezWebFolder/webfolderTest";
 	}
 
-	@RequestMapping(value="/ezWebFolder/getShareListPage.do")
-	public String getShareListPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+	@RequestMapping(value="/ezWebFolder/webfolderSharedList.do")
+	public String webfolderSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
-		return "ezWebFolder/fileFolderShare";
+		return "ezWebFolder/webfolderSharedList";
 	}
 
-	@RequestMapping(value="/ezWebFolder/getGivenShareList.do")
-	public String getGivenShareList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+	@RequestMapping(value="/ezWebFolder/webfolderSharingList.do")
+	public String webfolderSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
-		return "ezWebFolder/fileFolderGivenShare";
+		return "ezWebFolder/webfolderSharingList";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/webfolderConfig.do")

@@ -28,11 +28,13 @@
 		    $(function() { 
 				folderList('C');
 		    	folderType = 'C';
-			});		
+			});
+		    
 		    function refreshView(){
 		    	$.jstree.destroy()
 		    	folderList(folderType);
 		    }
+		    
 		    function folderList(obj) {
 		    	$($element).jstree('destroy');
 				if ( obj == 'C') {
@@ -102,8 +104,6 @@
 						alert("<spring:message code='ezWebFolder.t134' />" + error);
 					}
 				});
-				
-
 		    }
 		    
 			function drawVolume() {
@@ -174,12 +174,16 @@
 		    function treeTest() {
 		    	window.parent.frames["right"].location.href = "/ezWebFolder/treeTest.do";
 		    }
-		    function getReceivedShare() {
-				window.parent.frames["right"].location.href = "/ezWebFolder/getShareListPage.do";
+		    function getSharedList() {
+				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderSharedList.do";
 			}
 			
-			function getGivenShare() {
-				window.parent.frames["right"].location.href = "/ezWebFolder/getGivenShareList.do";
+			function getSharingList() {
+				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderSharingList.do";
+			}
+			
+			function moveFavorPage() {
+				setRightFrame("/ezWebFolder/favorite.do");
 			}
 			
 			function wfConfig() {
@@ -205,6 +209,10 @@
 				if (useBottomFrameOnly == "NO") {
 					parent.parent.frames["topFrame"].contentWindow.hideProgress();
 				}
+			}
+			
+			function setRightFrame(url) {
+				window.parent.frames["right"].location.href = url;
 			}
 		</script>
 	</head>
@@ -237,15 +245,15 @@
 		    </ul>  
 		    
 		    <h2>
-				<span style="display:inline-block;width:100%;" onclick="getReceivedShare();"><spring:message code='ezWebFolder.t266' /></span>
+				<span style="display:inline-block;width:100%;" onclick="getSharedList();"><spring:message code='ezWebFolder.t266' /></span>
 			</h2>
 			<ul>
-				<li><span style="width: 100%; display: inline-block;" onclick="getReceivedShare();"><spring:message code='ezWebFolder.t214' /></span></li>
-				<li><span style="width: 100%; display: inline-block;" onclick="getGivenShare();"   ><spring:message code='ezWebFolder.t266' /></span></span></li>
+				<li><span style="width: 100%; display: inline-block;" onclick="getSharedList();"><spring:message code='ezWebFolder.t214' /></span></li>
+				<li><span style="width: 100%; display: inline-block;" onclick="getSharingList();"><spring:message code='ezWebFolder.t267' /></span></li>
 			</ul>
 		    
 		    <h2>
-  				<span style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t216'/></span>
+  				<span style="display:inline-block;width:100%;" onclick="moveFavorPage();"><spring:message code='ezWebFolder.t216'/></span>
   			</h2>  
     		<ul>
 		    </ul>
