@@ -52,14 +52,28 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	private CommonUtil commonUtil;
 	
 	@Override
-	public List<ShareVO> getSharingList(String userId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception {
+	public List<ShareVO> getSharingList(String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+		String searchStartDate = searchInfo.getSearchStartDate();
+		String searchEndDate = searchInfo.getSearchEndDate();
+		
+		if (!searchStartDate.equals("") && !searchEndDate.equals("")) {
+			searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>(); 
-		map.put("userId",		userId);
-		map.put("primary",		primary);
-		map.put("offset",		offset);
-		map.put("startPoint",	startPoint);
-		map.put("pageSize",		pageSize);
-		map.put("tenantId",		tenantId);
+		map.put("userId",		     userId);
+		map.put("primary",		     primary);
+		map.put("offset",		     commonUtil.getMinuteUTC(offset));
+		map.put("startPoint",	     startPoint);
+		map.put("pageSize",		     pageSize);
+		map.put("tenantId",		     tenantId);
+		map.put("searchExt",         searchInfo.getSearchExt());
+		map.put("searchFileName",    searchInfo.getSearchFileName());
+		map.put("searchCreatorName", searchInfo.getSearchCreateName());
+		map.put("searchFileType",    searchInfo.getSearchFileType());
+		map.put("searchStartDate",   searchStartDate);
+		map.put("searchEndDate",     searchEndDate);
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getSharingList(map);
 		
@@ -80,17 +94,31 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public List<ShareVO> getSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception {
+	public List<ShareVO> getSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+		String searchStartDate = searchInfo.getSearchStartDate();
+		String searchEndDate = searchInfo.getSearchEndDate();
+		
+		if (!searchStartDate.equals("") && !searchEndDate.equals("")) {
+			searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+		}
+		
 		List<String> idList = getPermissionIdList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId",		userId);
-		map.put("primary",		primary);
-		map.put("offset",		offset);
-		map.put("startPoint",	startPoint);
-		map.put("pageSize",		pageSize);
-		map.put("idList",		idList);
-		map.put("tenantId",		tenantId);
+		map.put("userId",	         userId);
+		map.put("primary",	         primary);
+		map.put("offset",	         commonUtil.getMinuteUTC(offset));
+		map.put("startPoint",        startPoint);
+		map.put("pageSize",	         pageSize);
+		map.put("idList",	         idList);
+		map.put("tenantId",	         tenantId);
+		map.put("searchExt",         searchInfo.getSearchExt());
+		map.put("searchFileName",    searchInfo.getSearchFileName());
+		map.put("searchCreatorName", searchInfo.getSearchCreateName());
+		map.put("searchFileType",    searchInfo.getSearchFileType());
+		map.put("searchStartDate",   searchStartDate);
+		map.put("searchEndDate",     searchEndDate);
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getSharedList(map);
 		
@@ -111,12 +139,26 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public Map<String, Integer> getSharingCount(String userId, String primary, String offset, int pageSize, int tenantId) throws Exception {
+	public Map<String, Integer> getSharingCount(String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+		String searchStartDate = searchInfo.getSearchStartDate();
+		String searchEndDate = searchInfo.getSearchEndDate();
+		
+		if (!searchStartDate.equals("") && !searchEndDate.equals("")) {
+			searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>(); 
-		map.put("userId",	userId);
-		map.put("primary",	primary);
-		map.put("offset",	offset);
-		map.put("tenantId",	tenantId);
+		map.put("userId",	         userId);
+		map.put("primary",	         primary);
+		map.put("offset",	         commonUtil.getMinuteUTC(offset));
+		map.put("tenantId",	         tenantId);
+		map.put("searchExt",         searchInfo.getSearchExt());
+		map.put("searchFileName",    searchInfo.getSearchFileName());
+		map.put("searchCreatorName", searchInfo.getSearchCreateName());
+		map.put("searchFileType",    searchInfo.getSearchFileType());
+		map.put("searchStartDate",   searchStartDate);
+		map.put("searchEndDate",     searchEndDate);
 		
 		List<Map<String, Object>> list = ezWebFolderDAO_m.getSharingCount(map);
 		
@@ -143,20 +185,34 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		countInfo.put("totalCount", totalCount);
 		countInfo.put("totalPage", totalPage);
 		
-		LOGGER.debug("fileCount: " + fileCount + " || folderCount: " + folderCount + " || totalCount: " + totalCount + " || totalPage: " + totalPage);
+		LOGGER.debug("countInfo: " + countInfo);
 		return countInfo;
 	}
 	
 	@Override
-	public Map<String, Integer> getSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception {
+	public Map<String, Integer> getSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+		String searchStartDate = searchInfo.getSearchStartDate();
+		String searchEndDate = searchInfo.getSearchEndDate();
+		
+		if (!searchStartDate.equals("") && !searchEndDate.equals("")) {
+			searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+		}
+		
 		List<String> idList = getPermissionIdList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId",	userId);
 		map.put("primary",	primary);
-		map.put("offset",	offset);
+		map.put("offset",	commonUtil.getMinuteUTC(offset));
 		map.put("idList",	idList);
 		map.put("tenantId",	tenantId);
+		map.put("searchExt",         searchInfo.getSearchExt());
+		map.put("searchFileName",    searchInfo.getSearchFileName());
+		map.put("searchCreatorName", searchInfo.getSearchCreateName());
+		map.put("searchFileType",    searchInfo.getSearchFileType());
+		map.put("searchStartDate",   searchStartDate);
+		map.put("searchEndDate",     searchEndDate);
 		
 		List<Map<String, Object>> list = ezWebFolderDAO_m.getSharedCount(map);
 		
@@ -183,7 +239,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		countInfo.put("totalCount", totalCount);
 		countInfo.put("totalPage", totalPage);
 		
-		LOGGER.debug("fileCount: " + fileCount + " || folderCount: " + folderCount + " || totalCount: " + totalCount + " || totalPage: " + totalPage);
+		LOGGER.debug("countInfo: " + countInfo);
 		return countInfo;
 	}
 	

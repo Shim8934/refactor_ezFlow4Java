@@ -67,19 +67,20 @@ public class EzWebFolderGWController_m {
 	public JSONObject getSharingList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("getSharingList started.");
 		
-		String serverName 	= request.getHeader("host-name") 		!= null ? request.getHeader("host-name")		: "";
-		String fileType 	= request.getParameter("fileType")		!= null ? request.getParameter("fileType")		: "";
-		String pageNum 		= request.getParameter("pageNum")		!= null ? request.getParameter("pageNum")		: "1";
-		String pageSize 	= request.getParameter("pageSize")		!= null ? request.getParameter("pageSize")		: "0";
-		String fileName 	= request.getParameter("fileName")		!= null ? request.getParameter("fileName")		: "";
-		String createName 	= request.getParameter("createName")	!= null ? request.getParameter("createName")	: "";
-		String fileExt 		= request.getParameter("fileExt")		!= null ? request.getParameter("fileExt")		: "";
-		String startDate 	= request.getParameter("startDate")		!= null ? request.getParameter("startDate")		: "";
-		String endDate 		= request.getParameter("endDate")		!= null ? request.getParameter("endDate")		: "";
+		String serverName 	= orElse(request.getHeader("host-name"), "");
+		String pageNum 		= orElse(request.getHeader("pageNum"), "1");
+		String pageSize 	= orElse(request.getHeader("pageSize"), "0");
 		
-		logger.debug("userId: " + userId + " || serverName: " + serverName);
-		logger.debug("fileType: " + fileType + " || pageNum: " + pageNum + " || pageSize: " + pageSize + " || fileName: " + fileName + " || createName: " + createName
-				 + " || fileExt: " + fileExt + " || startDate: " + startDate + " || endDate: " + endDate);
+		SearchVO searchInfo = new SearchVO();
+		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
+		searchInfo.setSearchFileName(orElse(request.getParameter("searchFileName"), ""));
+		searchInfo.setSearchCreateName(orElse(request.getParameter("searchCreatorName"), ""));
+		searchInfo.setSearchFileType(orElse(request.getParameter("searchFileType"), ""));
+		searchInfo.setSearchStartDate(orElse(request.getParameter("searchStartDate"), ""));
+		searchInfo.setSearchEndDate(orElse(request.getParameter("searchEndDate"), ""));
+		
+		logger.debug("userId: " + userId + " || serverName: " + serverName + " || pageNum: " + pageNum + " || pageSize: " + pageSize);
+		logger.debug("searchInfo: " + searchInfo);
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -112,8 +113,8 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getSharingList(userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, userInfo.getTenantId());
-			Map<String, Integer> countInfo = ezWebFolderService_m.getSharingCount(userId, userInfo.getPrimary(), offset, pageSizeInt, userInfo.getTenantId());
+			List<ShareVO> list = ezWebFolderService_m.getSharingList(userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, userInfo.getTenantId());
+			Map<String, Integer> countInfo = ezWebFolderService_m.getSharingCount(userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, userInfo.getTenantId());
 			
 			data.put("list", list);
 			data.putAll(countInfo);
@@ -141,19 +142,20 @@ public class EzWebFolderGWController_m {
 	public JSONObject getSharedList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("getSharedList started.");
 		
-		String serverName 	= request.getHeader("host-name") 		!= null ? request.getHeader("host-name")		: "";
-		String fileType 	= request.getParameter("fileType")		!= null ? request.getParameter("fileType")		: "";
-		String pageNum 		= request.getParameter("pageNum")		!= null ? request.getParameter("pageNum")		: "1";
-		String pageSize 	= request.getParameter("pageSize")		!= null ? request.getParameter("pageSize")		: "0";
-		String fileName 	= request.getParameter("fileName")		!= null ? request.getParameter("fileName")		: "";
-		String createName 	= request.getParameter("createName")	!= null ? request.getParameter("createName")	: "";
-		String fileExt 		= request.getParameter("fileExt")		!= null ? request.getParameter("fileExt")		: "";
-		String startDate 	= request.getParameter("startDate")		!= null ? request.getParameter("startDate")		: "";
-		String endDate 		= request.getParameter("endDate")		!= null ? request.getParameter("endDate")		: "";
+		String serverName 	= orElse(request.getHeader("host-name"), "");
+		String pageNum 		= orElse(request.getHeader("pageNum"), "1");
+		String pageSize 	= orElse(request.getHeader("pageSize"), "0");
 		
-		logger.debug("userId: " + userId + " || serverName: " + serverName);
-		logger.debug("fileType: " + fileType + " || pageNum: " + pageNum + " || pageSize: " + pageSize + " || fileName: " + fileName + " || createName: " + createName
-				 + " || fileExt: " + fileExt + " || startDate: " + startDate + " || endDate: " + endDate);
+		SearchVO searchInfo = new SearchVO();
+		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
+		searchInfo.setSearchFileName(orElse(request.getParameter("searchFileName"), ""));
+		searchInfo.setSearchCreateName(orElse(request.getParameter("searchCreatorName"), ""));
+		searchInfo.setSearchFileType(orElse(request.getParameter("searchFileType"), ""));
+		searchInfo.setSearchStartDate(orElse(request.getParameter("searchStartDate"), ""));
+		searchInfo.setSearchEndDate(orElse(request.getParameter("searchEndDate"), ""));
+		
+		logger.debug("userId: " + userId + " || serverName: " + serverName + " || pageNum: " + pageNum + " || pageSize: " + pageSize);
+		logger.debug("searchInfo: " + searchInfo);
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -186,8 +188,8 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, userInfo.getTenantId());
-			Map<String, Integer> countInfo = ezWebFolderService_m.getSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, userInfo.getTenantId());
+			List<ShareVO> list = ezWebFolderService_m.getSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, userInfo.getTenantId());
+			Map<String, Integer> countInfo = ezWebFolderService_m.getSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, userInfo.getTenantId());
 			
 			data.put("list", list);
 			data.putAll(countInfo);

@@ -95,13 +95,13 @@
 					type: "POST",
 					url: "/ezWebFolder/getSharedList.do",
 					data: {
-						"fileType"    : document.getElementById("fileTypeSelect").value,
-						"pageNum"     : pPage,
-						"fileName"    : fileNameStr,
-						"createName"  : userNameStr,
-						"fileExt"     : fileExtStr,
-						"startDate"   : startDateStr,
-						"endDate"     : endDateStr
+						"pageNum"           : pPage,
+						"searchFileType"    : document.getElementById("fileTypeSelect").value,
+						"searchExt"         : fileExtStr,
+						"searchFileName"    : fileNameStr,
+						"searchCreatorName" : userNameStr,
+						"searchStartDate"   : startDateStr,
+						"searchEndDate"     : endDateStr
 					},
 					dataType: "JSON",
 					async: true,
@@ -477,13 +477,13 @@
 			</ul>
 			<div style="position: absolute; top: 0px; right: 85px;">
 				<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect" onchange="refresh();">
-					<option value="1"><spring:message code='ezWebFolder.t191'/></option>
-					<option value="2"><spring:message code='ezWebFolder.t192'/></option>
-					<option value="3"><spring:message code='ezWebFolder.t193'/></option>
-					<option value="4"><spring:message code='ezWebFolder.t194'/></option>
-					<option value="5"><spring:message code='ezWebFolder.t195'/></option>
-					<option value="6"><spring:message code='ezWebFolder.t196'/></option>
-					<option value="7"><spring:message code='ezWebFolder.t213'/></option>
+					<option value=""><spring:message code='ezWebFolder.t191'/></option>
+					<option value="document"><spring:message code='ezWebFolder.t192'/></option>
+					<option value="music"><spring:message code='ezWebFolder.t193'/></option>
+					<option value="video"><spring:message code='ezWebFolder.t194'/></option>
+					<option value="image"><spring:message code='ezWebFolder.t195'/></option>
+					<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
+					<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
 				</select>
 			</div>
 		</div>

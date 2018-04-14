@@ -42,18 +42,9 @@ public class EzWebFolderController_m {
 	public @ResponseBody String getSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getSharingList started.");
 		
-		String fileType 	= request.getParameter("fileType")		!= null ? request.getParameter("fileType")		: "";
-		String pageNum 		= request.getParameter("pageNum")		!= null ? request.getParameter("pageNum")		: "1";
-		String pageSize 	= request.getParameter("pageSize")		!= null ? request.getParameter("pageSize")		: "0";
-		String fileName 	= request.getParameter("fileName")		!= null ? request.getParameter("fileName")		: "";
-		String createName 	= request.getParameter("createName")	!= null ? request.getParameter("createName")	: "";
-		String fileExt 		= request.getParameter("fileExt")		!= null ? request.getParameter("fileExt")		: "";
-		String startDate 	= request.getParameter("startDate")		!= null ? request.getParameter("startDate")		: "";
-		String endDate 		= request.getParameter("endDate")		!= null ? request.getParameter("endDate")		: "";
-		
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/sharing-list";
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
+		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/sharing-list";
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -61,14 +52,14 @@ public class EzWebFolderController_m {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("fileType", fileType)
-				.queryParam("pageNum", pageNum)
-				.queryParam("pageSize", pageSize)
-				.queryParam("fileName", fileName)
-				.queryParam("createName", createName)
-				.queryParam("fileExt", fileExt)
-				.queryParam("startDate", startDate)
-				.queryParam("endDate", endDate);
+				.queryParam("pageNum",           orElse(request.getParameter("pageNum"), "1"))
+				.queryParam("pageSize",          orElse(request.getParameter("pageSize"), "0"))
+				.queryParam("searchFileType",    orElse(request.getParameter("searchFileType"), ""))
+				.queryParam("searchExt",         orElse(request.getParameter("searchExt"), ""))
+				.queryParam("searchFileName",    orElse(request.getParameter("searchFileName"), ""))
+				.queryParam("searchCreatorName", orElse(request.getParameter("searchCreatorName"), ""))
+				.queryParam("searchStartDate",   orElse(request.getParameter("searchStartDate"), ""))
+				.queryParam("searchEndDate",     orElse(request.getParameter("searchEndDate"), ""));
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -81,18 +72,9 @@ public class EzWebFolderController_m {
 	public @ResponseBody String getSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getSharedList started.");
 		
-		String fileType 	= request.getParameter("fileType")		!= null ? request.getParameter("fileType")		: "";
-		String pageNum 		= request.getParameter("pageNum")		!= null ? request.getParameter("pageNum")		: "1";
-		String pageSize 	= request.getParameter("pageSize")		!= null ? request.getParameter("pageSize")		: "0";
-		String fileName 	= request.getParameter("fileName")		!= null ? request.getParameter("fileName")		: "";
-		String createName 	= request.getParameter("createName")	!= null ? request.getParameter("createName")	: "";
-		String fileExt 		= request.getParameter("fileExt")		!= null ? request.getParameter("fileExt")		: "";
-		String startDate 	= request.getParameter("startDate")		!= null ? request.getParameter("startDate")		: "";
-		String endDate 		= request.getParameter("endDate")		!= null ? request.getParameter("endDate")		: "";
-		
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/shared-list";
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
+		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/shared-list";
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -100,14 +82,14 @@ public class EzWebFolderController_m {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("fileType", fileType)
-				.queryParam("pageNum", pageNum)
-				.queryParam("pageSize", pageSize)
-				.queryParam("fileName", fileName)
-				.queryParam("createName", createName)
-				.queryParam("fileExt", fileExt)
-				.queryParam("startDate", startDate)
-				.queryParam("endDate", endDate);
+				.queryParam("pageNum",           orElse(request.getParameter("pageNum"), "1"))
+				.queryParam("pageSize",          orElse(request.getParameter("pageSize"), "0"))
+				.queryParam("searchFileType",    orElse(request.getParameter("searchFileType"), ""))
+				.queryParam("searchExt",         orElse(request.getParameter("searchExt"), ""))
+				.queryParam("searchFileName",    orElse(request.getParameter("searchFileName"), ""))
+				.queryParam("searchCreatorName", orElse(request.getParameter("searchCreatorName"), ""))
+				.queryParam("searchStartDate",   orElse(request.getParameter("searchStartDate"), ""))
+				.queryParam("searchEndDate",     orElse(request.getParameter("searchEndDate"), ""));
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
