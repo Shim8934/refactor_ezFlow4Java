@@ -106,23 +106,27 @@
 					},
 					dataType: "JSON",
 					async: true,
-					success : function(data) {
-						var result  = data.list;
-						currentPage = pPage;
-						totalPages  = data.totalPage;
-						fileRows    = data.fileCount;
-						folderRows  = data.folderCount;
-						totalRows   = data.totalCount;
-						
-						makePageSelPage();
-						renderData(result);
-						checkedArr = [];
-						
-						document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " <spring:message code='ezWebFolder.t276'/>" + " <span style='color:#017BEC;'>" 
-						+ folderRows + "</span> " + strLang42 + " / " + "<spring:message code='ezWebFolder.t277'/>" + " <span style='color:#017BEC;'>" + fileRows +" </span>" + strLang42 + "]";
+					success : function(result) {
+						if (result.status == "ok") {
+							var data = result.data;
+							currentPage = pPage;
+							totalPages  = data.totalPage;
+							fileRows    = data.fileCount;
+							folderRows  = data.folderCount;
+							totalRows   = data.totalCount;
+							
+							makePageSelPage();
+							renderData(data.list);
+							checkedArr = [];
+							
+							document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " <spring:message code='ezWebFolder.t276'/>" + " <span style='color:#017BEC;'>" 
+								+ folderRows + "</span> " + strLang42 + " / " + "<spring:message code='ezWebFolder.t277'/>" + " <span style='color:#017BEC;'>" + fileRows +" </span>" + strLang42 + "]";
+						} else {
+							alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
+						}
 					},
 					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134'/>" + error);
+						alert("<spring:message code='ezWebFolder.t134'/> - " + error);
 					}
 				});
 			}

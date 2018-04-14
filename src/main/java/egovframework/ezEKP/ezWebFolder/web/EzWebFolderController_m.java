@@ -5,7 +5,6 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -19,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,7 +39,7 @@ public class EzWebFolderController_m {
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController_m.class);
 	
 	@RequestMapping(value="/ezWebFolder/getSharingList.do")
-	public String getSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public @ResponseBody String getSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getSharingList started.");
 		
 		String fileType 	= request.getParameter("fileType")		!= null ? request.getParameter("fileType")		: "";
@@ -75,24 +73,12 @@ public class EzWebFolderController_m {
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		String status                 = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			model.addAttribute("list", (JSONArray) resultBody.get("data"));
-			model.addAttribute("totalPage", (Long) resultBody.get("totalPage"));
-			model.addAttribute("totalCount", (Long) resultBody.get("totalCount"));
-			model.addAttribute("fileCount", (Long) resultBody.get("fileCount"));
-			model.addAttribute("folderCount", (Long) resultBody.get("folderCount"));
-		}
-		
 		logger.debug("getSharingList ended.");
-		return "json";
+		return result.getBody();
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getSharedList.do")
-	public String getSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public @ResponseBody String getSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getSharedList started.");
 		
 		String fileType 	= request.getParameter("fileType")		!= null ? request.getParameter("fileType")		: "";
@@ -126,20 +112,8 @@ public class EzWebFolderController_m {
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		String status                 = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			model.addAttribute("list", (JSONArray) resultBody.get("data"));
-			model.addAttribute("totalPage", (Long) resultBody.get("totalPage"));
-			model.addAttribute("totalCount", (Long) resultBody.get("totalCount"));
-			model.addAttribute("fileCount", (Long) resultBody.get("fileCount"));
-			model.addAttribute("folderCount", (Long) resultBody.get("folderCount"));
-		}
-		
 		logger.debug("getSharedList ended.");
-		return "json";
+		return result.getBody();
 	}
 	
 	@RequestMapping(value="/ezWebFolder/trashCan.do")

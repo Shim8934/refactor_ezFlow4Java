@@ -82,6 +82,7 @@ public class EzWebFolderGWController_m {
 				 + " || fileExt: " + fileExt + " || startDate: " + startDate + " || endDate: " + endDate);
 		
 		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
 		if (userId.equals("") || serverName.equals("")) {
@@ -114,10 +115,12 @@ public class EzWebFolderGWController_m {
 			List<ShareVO> list = ezWebFolderService_m.getSharingList(userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, userInfo.getTenantId());
 			Map<String, Integer> countInfo = ezWebFolderService_m.getSharingCount(userId, userInfo.getPrimary(), offset, pageSizeInt, userInfo.getTenantId());
 			
+			data.put("list", list);
+			data.putAll(countInfo);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", list);
-			result.putAll(countInfo);
+			result.put("data", data);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -153,6 +156,7 @@ public class EzWebFolderGWController_m {
 				 + " || fileExt: " + fileExt + " || startDate: " + startDate + " || endDate: " + endDate);
 		
 		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
 		if (userId.equals("") || serverName.equals("")) {
@@ -185,11 +189,12 @@ public class EzWebFolderGWController_m {
 			List<ShareVO> list = ezWebFolderService_m.getSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, userInfo.getTenantId());
 			Map<String, Integer> countInfo = ezWebFolderService_m.getSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, userInfo.getTenantId());
 			
+			data.put("list", list);
+			data.putAll(countInfo);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", list);
-			result.putAll(countInfo);
-			
+			result.put("data", data);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
