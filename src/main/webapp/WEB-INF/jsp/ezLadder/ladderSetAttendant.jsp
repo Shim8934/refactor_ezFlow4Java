@@ -1283,11 +1283,11 @@
 								if(group.count === 0) {
 									html += "<td style='width:22%'>" + group.userName + "</td>";
 								} else {
-									html += "<td style='width:22%'>" + group.userName + " <spring:message code='ezLadder.t070'> " + group.count + " <spring:message code='ezLadder.t105'></td>";
+									html += "<td style='width:22%'>" + group.userName + " <spring:message code='ezLadder.t070' /> " + group.count + " <spring:message code='ezLadder.t105' /></td>";
 								}
 								html += "<td style='width:6%'><img class='editBmIcon' src='/images/option3.png' name='editBmGroup_" + index + "' height='25' width='25'>";
-								html += "<div id='editBmGroup_" + index + "' style='display: none; position: absolute; background: #f8f8f8; z-index: 10; border: 1px solid #cfcfcf; text-align: center;'><div name='modify' style='width: 150px; padding: 8px 10px; border-bottom: 1px solid #cfcfcf;'><spring:message code='ezLadder.t061'></div>";
-								html += "<div name='delete' style='width: 150px; padding: 8px 10px;'><spring:message code='ezLadder.t062'></div></div>";
+								html += "<div id='editBmGroup_" + index + "' style='display: none; position: absolute; background: #f8f8f8; z-index: 10; border: 1px solid #cfcfcf; text-align: center;'><div name='modify' style='width: 150px; padding: 8px 10px; border-bottom: 1px solid #cfcfcf;'><spring:message code='ezLadder.t061' /></div>";
+								html += "<div name='delete' style='width: 150px; padding: 8px 10px;'><spring:message code='ezLadder.t062' /></div></div>";
 					    		html += "</td></tr>";
 							});
 				    	
