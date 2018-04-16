@@ -120,7 +120,7 @@
 							select dept.cn 		
 							from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
 							where addj.cn = #userId# 
-							union 
+							union all 
 							select owner_id 
 							from tbl_webfolder_folderuser user inner join tbl_webfolder_folder folder on user.folder_id = folder.folder_id  
                				where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
@@ -151,10 +151,10 @@
 			where ff.tenant_id = #tenantId#
 			and ff.owner_id = #comId#
 			and ff.use_status = 'Y'
-		union 
+		union all 
 			 select ff.FOLDER_ID as id ,if( ff.folder_upper = 'root', '##', ff.FOLDER_UPPER )as parent,
 				if ( ff.FOLDER_UPPER = 'root', true, false) as selected,
-				if ( '1' = '1' , ff.FOLDER_NAME1, ff.FOLDER_NAME2) as text,
+				if ( #primary# = '1' , ff.FOLDER_NAME1, ff.FOLDER_NAME2) as text,
 				ff.create_id as createId 
 			from tbl_webfolder_folder ff 
 			where ff.tenant_id = #tenantId#
@@ -180,8 +180,8 @@
    		<![CDATA[
    		SELECT DISTINCT
 				type.TYPE_ICON    ,
-				t.FOLDER_PATH	  as FOLDER_PATH,
-				t.FOLDER_NAME1    as FOLDER_NAME1,
+				folder.FOLDER_PATH	  as FOLDER_PATH,
+				folder.FOLDER_NAME1    as FOLDER_NAME1,
 				file.FILE_ID 	  ,
 				file.FILE_NAME 	  ,
 				file.FILE_PATH	  ,
@@ -203,10 +203,18 @@
 					where fav.USER_ID = #userId# and fav.tenant_id = #tenantId# and file.file_id = fav.target_id 
 						and fav.target_type = 'F'),'1','0')as FAVORITE_STATUS,
 				if (EXISTS (
-					select *
+	                select *
 					from tbl_webfolder_share sh
-					where sh.USER_ID = #userId# and sh.tenant_id = #tenantId# and file.file_id = sh.FOLDERFILE_ID 
-						and sh.folderfile_type = 'F'),'1','0')as FILESHARE_STATUS ,
+					where (sh.FOLDERFILE_ID regexp (
+							(select SUBSTR(folder_path ,2 ,LENGTH(folder_path)-2) 
+							from tbl_webfolder_folder 
+							where folder_id= file.FOLDER_ID and tenant_id = #tenantId# and user_id = #userId#)
+							
+						) and sh.folderfile_type = 'D')
+						or (sh.USER_ID = #userId# and sh.tenant_id = #tenantId# and file.file_id = sh.FOLDERFILE_ID 
+						and sh.folderfile_type = 'F')
+	                ),'1','0')as FILESHARE_STATUS,		
+						
 				if (file.FILE_EXT = 'folder',0,1) as FOLDER_SORT,
 				type.TYPE_NAME 	AS filetype_name    		
 		]]>	
@@ -215,8 +223,8 @@
 				from tbl_webfolder_file file inner join (
 					select *
 					from tbl_webfolder_folder  
-					where folder_id = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path) as t 
-						on t.folder_id  = file.folder_id
+					where folder_id = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path) as folder 
+						on folder.folder_id  = file.folder_id
 				inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = #tenantId#
 				where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'  
 				
@@ -225,7 +233,7 @@
 		<isEqual property="parentId" compareValue="root" >
 			<isEqual property="folderType" compareValue="C" >
 	   			<![CDATA[
-	   			from tbl_webfolder_file as file  inner join  (
+	   			from tbl_webfolder_folder as folder  left join  (
 				
 					select 	
 						SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
@@ -238,39 +246,35 @@
 						from 
 							tbl_webfolder_folderuser  
 						where 
-							tenant_id = #tenantId# 
+							tenant_id = #tenantId#
 							and 
 								USER_ID in (
 									select dept.cn 		
 									from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
 									where addj.cn = #userId# 
-									union 
+									union all
 									select owner_id 
 									from tbl_webfolder_folderuser user inner join tbl_webfolder_folder folder on user.folder_id = folder.folder_id  
-		               				where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
+									where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
 								)
 							or user_id = #userId# or user_id= #deptId#
 						
 					) as user on fld.folder_id = user.folder_id 
+		
 					where fld.folder_type = #folderType#
+					
 					and user.tenant_id = #tenantId#
-					union all
-                    select SUBSTRING_INDEX(SUBSTRING_INDEX(FOLDER_PATH, '|', 2),'|',-1) as a ,
-                    	folder_id , folder_name1, folder_path, folder_type , tenant_id
-                    from
-                    	tbl_webfolder_folder 
-                    where 
-                    	FOLDER_UPPER = 'root' and COMPANY_ID=#comId# and OWNER_ID =#comId#
-                    	and tenant_id = #tenantId#
-				)as t on t.folder_id = file.folder_id 
-				or t.folder_id = file.folder_id
+					
+				)as t on folder.FOLDER_PATH like concat('%',t.folder_path,'%') 
+		        
+				inner join tbl_webfolder_file file on folder.FOLDER_ID = file.folder_id
 				inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID and type.tenant_id = #tenantId# 
+		        
 				
-				where 
-					file.tenant_id = #tenantId#
-				and file.use_status ='Y'
-				and t.tenant_id = #tenantId#
-
+			where 
+			file.tenant_id = #tenantId#
+			and file.use_status ='Y'
+			and t.tenant_id = #tenantId#
 				]]>	
 	   		</isEqual>
 	   		<isNotEqual property="folderType" compareValue="C">
@@ -281,7 +285,7 @@
 							select concat(FOLDER_PATH,'%') 
 							from tbl_webfolder_folder 
 							where FOLDER_ID = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path )
-						and tenant_id = #tenantId# and folder_type = #folderType#) as t on file.folder_id = t.folder_id and t.tenant_id = file.tenant_id
+						and tenant_id = #tenantId# and folder_type = #folderType#) as folder on file.folder_id = folder.folder_id and folder.tenant_id = file.tenant_id
 					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
 				]]>
@@ -369,8 +373,8 @@
 		<![CDATA[
    		SELECT DISTINCT
 				type.TYPE_ICON    ,
-				t.FOLDER_PATH	  as FOLDER_PATH,
-				t.FOLDER_NAME1    as FOLDER_NAME1,
+				folder.FOLDER_PATH	  as FOLDER_PATH,
+				folder.FOLDER_NAME1    as FOLDER_NAME1,
 				file.FILE_ID 	  ,
 				file.FILE_NAME 	  ,
 				file.FILE_PATH	  ,
@@ -404,8 +408,8 @@
 				from tbl_webfolder_file file inner join (
 					select *
 					from tbl_webfolder_folder  
-					where folder_id = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path) 
-						as t on t.folder_id  = file.folder_id
+					where folder_path like concat(#folderPath#,'%') and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path) 
+						as folder on folder.folder_id  = file.folder_id
 				inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 				where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
 				
@@ -414,11 +418,11 @@
 		<isEqual property="parentId" compareValue="root" >
 			<isEqual property="folderType" compareValue="C" >
 	   			<![CDATA[
-	   			from tbl_webfolder_file as file  inner join  (
+	   			from tbl_webfolder_folder as folder  left join  (
 				
 					select 	
 						SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
-						fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type
+						fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type, fld.tenant_id
 					from tbl_webfolder_folder fld inner join 
 				
 					(
@@ -427,34 +431,35 @@
 						from 
 							tbl_webfolder_folderuser  
 						where 
-							tenant_id = #tenantId# 
+							tenant_id = #tenantId#
 							and 
 								USER_ID in (
 									select dept.cn 		
 									from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
 									where addj.cn = #userId# 
-									union 
+									union all
 									select owner_id 
 									from tbl_webfolder_folderuser user inner join tbl_webfolder_folder folder on user.folder_id = folder.folder_id  
-		               				where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
+									where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
 								)
 							or user_id = #userId# or user_id= #deptId#
 						
 					) as user on fld.folder_id = user.folder_id 
+		
 					where fld.folder_type = #folderType#
-					union all
-                    select SUBSTRING_INDEX(SUBSTRING_INDEX(FOLDER_PATH, '|', 2),'|',-1) as a ,
-                    	folder_id , folder_name1, folder_path, folder_type 
-                    from
-                    	tbl_webfolder_folder 
-                    where 
-                    	(FOLDER_UPPER = 'root' and COMPANY_ID=#comId# and OWNER_ID =#comId# and folder_type = #folderType#)
-				)as t on t.folder_id = file.folder_id 
-				or t.folder_id = file.folder_id
-				inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID
+					
+					and user.tenant_id = #tenantId#
+					
+				)as t on folder.FOLDER_PATH like concat('%',t.folder_path,'%') 
+		        
+				inner join tbl_webfolder_file file on folder.FOLDER_ID = file.folder_id
+				inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID and type.tenant_id = #tenantId# 
+		        
 				
-				where file.tenant_id = #tenantId#
-				and file.use_status ='Y'
+			where 
+			file.tenant_id = #tenantId#
+			and file.use_status ='Y'
+			and t.tenant_id = #tenantId#
 
 				]]>	
 	   		</isEqual>
@@ -466,7 +471,7 @@
 							select concat(FOLDER_PATH,'%') 
 							from tbl_webfolder_folder 
 							where FOLDER_ID = #folderId# and tenant_id = #tenantId#  group by folder_path )
-						and tenant_id = #tenantId# and folder_type = #folderType#) as t on file.folder_id = t.folder_id
+						and tenant_id = #tenantId# and folder_type = #folderType#) as folder on file.folder_id = folder.folder_id
 					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
 				]]>
@@ -523,10 +528,10 @@
 				      
 			]]>
 		</isNotEqual>   
-			<![CDATA[	       
-				) as t
+			<![CDATA[
+				) as t 
 				
-				where folder_path like concat('%',#folderPath#,'%') 
+				where folder_path like concat(#folderPath#,'%') 
 			]]>
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
 			<![CDATA[
@@ -634,8 +639,8 @@
 		<![CDATA[
    		SELECT DISTINCT
 				type.TYPE_ICON    ,
-				t.FOLDER_PATH	  as FOLDER_PATH,
-				t.FOLDER_NAME1    as FOLDER_NAME1,
+				folder.FOLDER_PATH	  as FOLDER_PATH,
+				folder.FOLDER_NAME1    as FOLDER_NAME1,
 				file.FILE_ID 	  ,
 				file.FILE_NAME 	  ,
 				file.FILE_PATH	  ,
@@ -669,8 +674,8 @@
 				from tbl_webfolder_file file inner join (
 					select *
 					from tbl_webfolder_folder  
-					where folder_id = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path) 
-						as t on t.folder_id  = file.folder_id
+					where folder_path like concat(#folderPath#,'%') and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path) 
+						as folder on folder.folder_id  = file.folder_id
 				inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 				where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
 				
@@ -679,11 +684,11 @@
 		<isEqual property="parentId" compareValue="root" >
 			<isEqual property="folderType" compareValue="C" >
 	   			<![CDATA[
-	   			from tbl_webfolder_file as file  inner join  (
+	   			from tbl_webfolder_folder as folder  left join  (
 				
 					select 	
 						SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
-						fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type
+						fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type, fld.tenant_id
 					from tbl_webfolder_folder fld inner join 
 				
 					(
@@ -692,36 +697,35 @@
 						from 
 							tbl_webfolder_folderuser  
 						where 
-							tenant_id = #tenantId# 
+							tenant_id = #tenantId#
 							and 
 								USER_ID in (
 									select dept.cn 		
 									from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
 									where addj.cn = #userId# 
-									union 
+									union all
 									select owner_id 
 									from tbl_webfolder_folderuser user inner join tbl_webfolder_folder folder on user.folder_id = folder.folder_id  
-		               				where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
+									where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
 								)
 							or user_id = #userId# or user_id= #deptId#
 						
 					) as user on fld.folder_id = user.folder_id 
+		
 					where fld.folder_type = #folderType#
+					
 					and user.tenant_id = #tenantId#
-					union all
-                    select SUBSTRING_INDEX(SUBSTRING_INDEX(FOLDER_PATH, '|', 2),'|',-1) as a ,
-                    	folder_id , folder_name1, folder_path, folder_type 
-                    from
-                    	tbl_webfolder_folder 
-                    where 
-                    	(FOLDER_UPPER = 'root' and COMPANY_ID=#comId# and OWNER_ID =#comId#)
-				)as t on t.folder_id = file.folder_id 
-				or t.folder_id = file.folder_id
-				inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID
+					
+				)as t on folder.FOLDER_PATH like concat('%',t.folder_path,'%') 
+		        
+				inner join tbl_webfolder_file file on folder.FOLDER_ID = file.folder_id
+				inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID and type.tenant_id = #tenantId# 
+		        
 				
-				where file.tenant_id = #tenantId#
-				and file.use_status ='Y'
-
+			where 
+			file.tenant_id = #tenantId#
+			and file.use_status ='Y'
+			and t.tenant_id = #tenantId#
 				]]>	
 	   		</isEqual>
 	   		<isNotEqual property="folderType" compareValue="C">
@@ -732,7 +736,7 @@
 							select concat(FOLDER_PATH,'%') 
 							from tbl_webfolder_folder 
 							where FOLDER_ID = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path )
-						and tenant_id = #tenantId# and folder_type = #folderType#) as t on file.folder_id = t.folder_id
+						and tenant_id = #tenantId# and folder_type = #folderType#) as folder on file.folder_id = folder.folder_id
 					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
 				]]>
@@ -793,41 +797,48 @@
 		<isEqual property="parentId" compareValue="root" >
 			<isEqual property="folderType" compareValue="C" >
 	   			<![CDATA[
-		   			from tbl_webfolder_file as file inner join  (
-					
-						select 	
-							SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
-							fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type
-						from tbl_webfolder_folder fld inner join 
-						(
-							select 
-								*
-							from 
-								tbl_webfolder_folderuser  
-							where 
+		   			from tbl_webfolder_folder as folder  left join  (
+				
+					select 	
+						SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
+						fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type, fld.tenant_id
+					from tbl_webfolder_folder fld inner join 
+				
+					(
+						select 
+							*
+						from 
+							tbl_webfolder_folderuser  
+						where 
+							tenant_id = #tenantId#
+							and 
 								USER_ID in (
 									select dept.cn 		
 									from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
 									where addj.cn = #userId# 
-									union 
+									union all
 									select owner_id 
 									from tbl_webfolder_folderuser user inner join tbl_webfolder_folder folder on user.folder_id = folder.folder_id  
-		               				where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
+									where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
 								)
-								or user_id = #userId# or user_id= #deptId#
-						) as user on fld.folder_id = user.folder_id 
-						where fld.folder_type = #folderType#
-						and user.tenant_id = #tenantId#
-						union all
-	                    select SUBSTRING_INDEX(SUBSTRING_INDEX(FOLDER_PATH, '|', 2),'|',-1) as a , 
-	                    	folder_id , folder_name1, folder_path, folder_type 
-	                    from tbl_webfolder_folder 
-	                    where (FOLDER_UPPER = 'root' and COMPANY_ID=#comId# and OWNER_ID =#comId#)
-					)as t on t.folder_id = file.folder_id 
-					or t.folder_id = file.folder_id
-					inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID
-					where file.tenant_id = #tenantId# and type.tenant_id = #tenantId#
-					and file.use_status ='Y'
+							or user_id = #userId# or user_id= #deptId#
+						
+					) as user on fld.folder_id = user.folder_id 
+		
+					where fld.folder_type = #folderType#
+					
+					and user.tenant_id = #tenantId#
+					
+				)as t on folder.FOLDER_PATH like concat('%',t.folder_path,'%') 
+		        
+				inner join tbl_webfolder_file file on folder.FOLDER_ID = file.folder_id
+				inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID and type.tenant_id = #tenantId# 
+		        
+				
+			where 
+			file.tenant_id = #tenantId#
+			and file.use_status ='Y'
+			and t.tenant_id = #tenantId#
 					
 					
 				]]>	
@@ -924,7 +935,7 @@
 								from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
 								where addj.cn = #userId# or folder.owner_id = #deptId#)
 						and folder.use_status = 'Y'
-	        union 
+	        union all 
 	        select 
 	        	f.folder_id as id ,if( f.folder_upper = 'root', '##', f.folder_upper )  as parent,
 				f.owner_id as owner, f.FOLDER_PATH, f.CREATE_ID as createId,

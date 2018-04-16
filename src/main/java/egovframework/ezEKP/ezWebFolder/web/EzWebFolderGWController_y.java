@@ -500,6 +500,7 @@ public class EzWebFolderGWController_y {
 							file_path += filePathMap.get(fldPathArr[i]) + "/";
 						}
 						if ( !file.getTypeId().equals("folder") ){
+							file_path = file_path.substring(1, file_path.length());
 							file.setFilePosition(file_path + file.getFileName());
 						}else {
 							file_path = file_path.substring(1, file_path.length() - 1);
