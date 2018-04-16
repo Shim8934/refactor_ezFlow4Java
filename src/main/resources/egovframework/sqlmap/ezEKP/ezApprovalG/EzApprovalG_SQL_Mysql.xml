@@ -7786,6 +7786,9 @@
 		SELECT 
 			* 
 		FROM (
+		SELECT 
+			* 
+		FROM (
 			SELECT 
 				TBL_ENDAPRDOCINFO.DOCID,
 		   		TBL_ENDAPRDOCINFO.ORGDOCID, 
@@ -7882,7 +7885,7 @@
 		   				ENDDATE $v_BASICORDER$
 		   	</isEmpty>
 		   	<![CDATA[
-		   	)A 
+		   	LIMIT #v_PAGESIZE# )A 
 		   	]]>
 		   	<isNotEmpty property="v_ORDEROPTION">
 		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
@@ -7902,9 +7905,11 @@
 		   	</isNotEmpty>
 		   	<isEmpty property="v_ORDEROPTION">
 		   	 ORDER BY 
-		   	 	ENDDATE $v_BASICORDER2$
+		   	 	ENDDATE $v_BASICORDER2$ 
 		   	</isEmpty>
-		   	LIMIT #v_PAGESIZE#
+		   	LIMIT #v_PAGESIZE2# )B
+		   	
+		   	
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO"> -->

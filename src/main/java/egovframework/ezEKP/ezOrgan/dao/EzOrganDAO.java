@@ -278,6 +278,10 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return getSearchListCountForLocal(map);                       
 	}
 	
+	public int checkRetired(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganDAO.checkRetired", map);
+	}
+	
     private void updatePropertyForLocal(Map<String, Object> map) throws Exception{
         update("EzOrganDAO.updateProperty", map);
     }

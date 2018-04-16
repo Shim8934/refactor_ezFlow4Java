@@ -1085,4 +1085,19 @@
 				QST_ID    = #qst_id#
 		]]>			
     </select>
+    
+    <update id="EzPollDAO.updateQuestionEndDate" parameterClass="Map">
+   		<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION
+	            SET 
+	            	 END_DATE = #end_date#
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+		]]>
+    </update>   
 </sqlMap>

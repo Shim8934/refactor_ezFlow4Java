@@ -9,10 +9,16 @@
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		
 		<script type="text/javascript">
 			window.onload = function () {	        	
 	        	window.resizeTo(550, 360 + window.outerHeight - window.innerHeight);
+	        	
+				var agent = navigator.userAgent.toLowerCase(); 
+				if (!CrossYN() || agent.search( "trident" ) > -1 ) {
+					document.getElementById("c_clubdesc").style.marginBottom = "0px";
+				}
 			}
 			
 			var code = "<c:out value = '${code}' />";
@@ -137,12 +143,14 @@
 					<c:choose>
 						<c:when test="${type == 'Del' }">
 							<th>Community<br><spring:message code = 'ezCommunity.t71' /></th>
-							<td> <textarea name="c_clubdesc" style="background-color:#ffffff; Width:95%; Height:120px;" readonly><c:out value = '${delReason}' /></textarea></td>
+							<td style="padding:0px 2px 0px 0px;"> <textarea id="c_clubdesc" name="c_clubdesc" style="background-color:#ffffff; Width:98%; Height:120px; margin-bottom: -3px; cursor:default;
+								 border:none; resize:none;" readonly><c:out value = '${delReason}' /></textarea></td>
 						</c:when>
 						
 						<c:otherwise>
 							<th>Community<spring:message code = 'ezCommunity.t18' /></th>
-							<td> <textarea name="c_clubdesc" style="background-color:#ffffff; Width:95%; Height:120px;" readonly><c:out value = '${newInfo}' /></textarea></td>
+							<td style="padding:0px 2px 0px 0px;"> <textarea id="c_clubdesc" name="c_clubdesc" style="background-color:#ffffff;Width:98%; Height:120px; margin-bottom: -3px; cursor:default;
+								 border:none; resize:none;" readonly><c:out value = '${newInfo}' /></textarea></td>
 						</c:otherwise>
 					</c:choose>
 				</tr>

@@ -7834,6 +7834,8 @@
 	<select id="EzApprovalG.getSendOutDocList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
 		SELECT * FROM (
+		SELECT * FROM (
+		SELECT * FROM (
 			SELECT 
 				TBL_ENDAPRDOCINFO.DOCID,
 		   		TBL_ENDAPRDOCINFO.ORGDOCID, 
@@ -7934,7 +7936,7 @@
 		   	<![CDATA[
 		   	)A 
 		   		WHERE 
-		   			ROWNUM <= #v_PAGESIZE#
+		   			ROWNUM <= #v_PAGESIZE# )B
 		   	]]>
 		   	<isNotEmpty property="v_ORDEROPTION">
 		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
@@ -7956,6 +7958,10 @@
 		   	 ORDER BY 
 		   	 	ENDDATE $v_BASICORDER2$
 		   	</isEmpty>
+		   	<![CDATA[
+		   	)C 
+		   	WHERE ROWNUM <= #v_PAGESIZE2# 
+		   	]]>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO"> -->
@@ -8832,7 +8838,7 @@
    			WHERE 
    				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
    			AND 
-   				TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'ADDRESS%'
+   				TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'Address%'
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
    			AND 
@@ -16012,7 +16018,7 @@
              EXECUTEDATE ,
              RECEIPTMEMBERNAME ,
              RECEIPTMEMBERNAME2 ,
-             TO_DATE(MODIFYDATE) MODIFYDATE  ,
+             TO_DATE(MODIFYDATE,'YYYY-MM-DD') MODIFYDATE ,
              MODIFYREASON ,
              MODIFIERNAME ,
              MODIFIERNAME2 ,
@@ -23744,7 +23750,7 @@
 	  			TBL_APRRECEIPTPROCESSINFO 
 	  		(RECEIVESN, DOCID, SENTDEPTID, SENTDEPTNAME, SENTDEPTNAME2, RECEIVEDDEPTID, RECEIVEDDEPTNAME, RECEIVEDDEPTNAME2, DOCSTATE, APRSTATE, PROCESSDATE, PROCESSYN, PROCESSDOCID, PROCESSORID, PROCESSORNAME, PROCESSORNAME2 , PROCESSORJOBTITLE, PROCESSORJOBTITLE2, PARENTSDOCID, COMPANYID, TENANT_ID)
 			VALUES 
-				(1, #NEWID#, #FROMDEPTID#, #FROMDEPTNAME#, #FROMDEPTNAME#, #TODEPTID#, #TODEPTNAME#, #TODEPTNAME#, '011', '011', #RECDATE#, 'N', '', '', '', '', '', '', #XDOCID#, #companyID#, #v_TENANTID#)
+				(1, #NEWID#, #FROMDEPTID#, #FROMDEPTNAME#, #FROMDEPTNAME#, #TODEPTID#, #TODEPTNAME#, #TODEPTNAME#, '011', '011', TO_DATE(#RECDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N', '', '', '', '', '', '', #XDOCID#, #companyID#, #v_TENANTID#)
 	  </insert>
 		
 	  <update id="EzApprovalG.updateRecRelayInfo" parameterClass="Map">
@@ -24370,12 +24376,12 @@
 	  			DOCID = #v_habDocID#
 	  </select>
 	  
-	  <update id="EzApprovalG.updateSusinState" parameterClass="Map">1
+	  <update id="EzApprovalG.updateSusinState" parameterClass="Map">
 	  	<![CDATA[
 	  		UPDATE
 	  			TBL_ENDRECEIPTPOINTINFO
 			SET
-				processdate = #processDate#,
+				processdate = TO_DATE(#processDate#,'YYYY-MM-DD HH24:MI:SS'),
 				processyn = #processYN#
 			WHERE
 				tenant_id = #tenantID#

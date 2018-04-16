@@ -11,7 +11,6 @@
 		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
 		<style>
 		</style>
 		<script type="text/javascript">
@@ -71,7 +70,7 @@
   				</c:if>
         	</div>
 			<div class="btnposition btnpositionNew">
-				<input type="button" name="Submit" style="color:white;background-color: #004896;border:1px solid #004896" value="<spring:message code='ezPoll.t228' />" onclick="btn_Delete()"> 
+				<input type="button" name="Submit" style="color:white;background-color: #0470e4;border:1px solid #0470e4" value="<spring:message code='ezPoll.t228' />" onclick="btn_Delete()"> 
         		<input type="button" name="Submit2" style="color:#333;" value="<spring:message code='ezPoll.t139' />" onclick="window.close()">
         	</div>
 		</form> 

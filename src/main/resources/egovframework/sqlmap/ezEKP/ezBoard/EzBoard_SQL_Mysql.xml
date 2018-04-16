@@ -567,36 +567,44 @@
                   AND
                   	UserID = #v_pUserID# ) B   
             ON 
-            	A.TENANT_ID = B.TENANT_ID
-            AND
-            	A.BoardID = B.boardid
-            JOIN 
-                TBL_Board_BoardInfo P   
-           	ON 
-           		P.TENANT_ID = B.TENANT_ID
-           	AND
-           		P.BoardID = B.boardid
-       		LEFT JOIN
-                TBL_Board_Item_Read C  
-            ON 
-                A.itemid = C.itemid
-            AND
-                C.ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
-            AND
-                C.tenant_id = #v_TENANTID#
-            AND
-                C.userid = #v_pUserID#
-            WHERE  
-                C.itemid IS NULL  
-            AND 
-            	A.StartDate <= #nowDate#
-            AND 
-            	A.StartDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
-            AND 
-            	A.EndDate > #nowDate#
-            AND 
-            	( A.APPRFLAG = 'Y'
-                  OR A.APPRFLAG IS NULL )
+				A.TENANT_ID = B.TENANT_ID
+			AND
+			  	A.BOARDID = B.BOARDID                
+			INNER JOIN 
+			  	TBL_BOARD_BOARDINFO P  
+			ON 
+			  	A.TENANT_ID = P.TENANT_ID
+			AND
+			  	A.BOARDID = P.BOARDID
+			AND 
+			  	A.TENANT_ID = #v_TENANTID#
+			AND
+			  	(A.APPRFLAG = 'Y' 
+			     OR A.APPRFLAG IS NULL)
+			AND 
+			  	A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY) 
+			AND 
+			  	A.STARTDATE <= #nowDate#
+			AND 
+			  	A.ENDDATE > #nowDate#					
+			AND 
+			  	(NOT EXISTS
+							(SELECT 
+								USERID 
+							 FROM 
+							 	TBL_BOARD_ITEM_READ S 
+							 WHERE 
+							 	S.TENANT_ID = A.TENANT_ID
+							 AND
+							 	S.BOARDID = A.BOARDID 
+							 AND 
+							 	S.ITEMID = A.ITEMID 
+							 AND 
+							 	S.TENANT_ID = #v_TENANTID#
+							 AND
+							 	S.USERID = #v_pUserID# 
+							 AND 
+							 	S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
 		]]>
 <!-- 		테스트해보고 안되면 이걸로 대체 -->
 <!--             	A.StartDate > DATE_SUB(DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL 5 DAY) -->
@@ -878,7 +886,7 @@
 	
 	<select id="EzBoardDAO.getNewItemList" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
-			  SELECT
+			  	SELECT
      				A.BOARDID,
      				B.BOARDNAME AS BOARDNAME,		
      				A.ITEMID,						
@@ -1908,6 +1916,11 @@
   					A.UPPERITEMIDTREE,
   					A.DOCNO,
   			    	'' AS NOTICE,
+  			    	A.EXTENSIONATTRIBUTE6, 
+       				A.EXTENSIONATTRIBUTE7, 
+       				A.EXTENSIONATTRIBUTE8, 
+       				A.EXTENSIONATTRIBUTE9, 
+       				A.EXTENSIONATTRIBUTE10, 
   			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
   			    	I.GUBUN
 				  FROM 
@@ -4076,7 +4089,6 @@
 		    	UpdateDate = #writeDate#,
 		    	Importance = #importance#,
 	          	Title = #title#,
-	          	StartDate = #startDate#,
 	          	EndDate = #endDate#,
 	          	Abstract = #ABSTRACT#,
 	          	Attachments = #hasAttach#,

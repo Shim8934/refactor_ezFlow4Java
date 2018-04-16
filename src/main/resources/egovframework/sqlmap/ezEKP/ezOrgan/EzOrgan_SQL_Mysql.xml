@@ -1567,4 +1567,15 @@
 		AND
 			EXTENSIONATTRIBUTE2 = #v_COMPANYID#		
 	</select>
+	
+	<select id="EzOrganDAO.checkRetired" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_USERMASTER_RETIRE
+		WHERE
+			tenant_id = #tenantID#
+		AND
+			cn = #userID#
+	</select>
 </sqlMap>

@@ -675,7 +675,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
 		int totalUsers = 0;		
 		int totalVotes = 0;
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		int compareEnd = 0;
 		int compareStart = 0;
 		int numberOfVotedUsers = 0;
@@ -1650,7 +1650,7 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			//Get string of time now
 			Date date = new Date();
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String dateNow = formatter.format(date);
 			
 			//Get all of voted users
@@ -2023,7 +2023,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Close the vote by update the end date		
 		Date date = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateNow = formatter.format(date);
 		
 		try {
@@ -2636,7 +2636,7 @@ public class EzPollController extends EgovFileMngUtil {
 						pollQstVO.setStatus(2); // reserve poll
 					}
 					else {
-						pollQstVO.setStatus(1); // processing poll
+						pollQstVO.setStatus(1); // ssing pollproce
 					}					
 				}
 				else {
@@ -2931,6 +2931,20 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		return listSimpleUser;
+	}
+	
+	@RequestMapping(value="/ezPoll/updateEndDateForQst.do", method = RequestMethod.POST)
+	public String updateEndDateForQst(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, ModelMap model, HttpServletResponse response) throws Exception {		
+		logger.debug("Updating question end-date is running!");		
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		int tenantID = loginVO.getTenantId();
+		int qstId = Integer.parseInt(req.getParameter("qstId"));
+		String endDate = req.getParameter("endDate");
+		
+		ezPollService.updateEndDateForQst(qstId, tenantID, endDate);
+		
+		logger.debug("Updating question end-date finishes!");
+		return "forward:/ezPoll/pollList.do";
 	}
 
 }

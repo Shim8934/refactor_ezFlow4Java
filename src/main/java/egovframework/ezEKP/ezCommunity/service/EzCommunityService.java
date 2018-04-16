@@ -67,6 +67,8 @@ public interface EzCommunityService {
 	
 	public CommunityClubVO adminLogoGet(String code, String primary, int tenantID) throws Exception;
 	
+	public CommunityClubVO adminLogoGet2(String code, int tenantId) throws Exception;
+	
 	public CommunityClubVO adminCommCloseOkGet2(String code, int tenantID) throws Exception;
 		
 	public CommunityClubVO adminNoticeMailOkGet1(String code, int tenantID) throws Exception;
@@ -237,6 +239,8 @@ public interface EzCommunityService {
 	
 	public String adminLogoUpload(String code, String realPath, String logoPath, MultipartFile logoFile, int tenantId) throws Exception;
 	
+	public String adminThumbUpload(String code, String realPath,String thumbPath, MultipartFile thumbFile, int tenantId) throws Exception;
+	
 	public String getMyCoummunityBoardList(LoginVO userInfo, String clubNo) throws Exception;
 	
 //	public String getContentInfo(String type, String itemID, int tenantID) throws Exception;
@@ -359,5 +363,6 @@ public interface EzCommunityService {
 
 	public String getOneLineReplyCount(String pBoardID, String pItemID,int tenantId) throws Exception;
 	
-	public int getReaderListCount(String boardID, String itemID, String userID, int tenantID) throws Exception;
+	public int getReaderListCount(String boardID, String itemID, String userID, int tenantID) throws Exception;	
+
 }
