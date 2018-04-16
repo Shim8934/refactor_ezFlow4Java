@@ -1102,6 +1102,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 					fileVO.setFileId(getMaxFileID(tenantId));
 					fileVO.setCreateDate(timeUTC);
 					fileVO.setCreateId(userId);
+					fileVO.setCreateName1(userName1);
+					fileVO.setCreateName2(userName2);
 					fileVO.setUpdateId(userId);
 					fileVO.setUpdateDate(timeUTC);
 					insertFile(fileVO);
@@ -1130,5 +1132,14 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("tenantId", tenantId);
 		
 		return ezWebFolderDAO.getAllFolderNameMap(map);
+	}
+
+	@Override
+	public List<String> getFolderListFromFileId(List<String> fileIds, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileIds",  fileIds);
+		map.put("tenantId", tenantId);
+		
+		return ezWebFolderDAO.getFolderListFromFileId(map);
 	}
 }

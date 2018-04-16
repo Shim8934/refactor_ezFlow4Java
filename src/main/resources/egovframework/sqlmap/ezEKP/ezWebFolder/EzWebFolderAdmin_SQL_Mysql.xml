@@ -437,6 +437,8 @@
 									WHERE
 										FOLDER_ID = #folderId#
 									AND
+										((OWNER_ID  = #ownerId# AND FOLDER_UPPER = 'root') OR (FOLDER_UPPER != 'root'))
+									AND
 										TENANT_ID = #tenantId#
 								)
 			]]>

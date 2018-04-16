@@ -1409,4 +1409,17 @@
 			TENANT_ID = #tenantId#
 	</select>
 	
+	<select id="EzWebFolderDAO.getFolderListFromFileId" resultClass="String">
+		SELECT
+			DISTINCT F1.FOLDER_ID AS FOLDER_ID
+		FROM
+			TBL_WEBFOLDER_FOLDER F1 JOIN TBL_WEBFOLDER_FILE F2 ON F2.FILE_ID IN
+			<iterate property="fileIds" open="(" close=")" conjunction=",">
+				#fileIds[]#
+			</iterate>
+			AND F1.FOLDER_ID = F2.FOLDER_ID AND F1.TENANT_ID = F2.TENANT_ID
+		WHERE
+			F1.TENANT_ID = #tenantId#
+	</select>
+	
 </sqlMap>
