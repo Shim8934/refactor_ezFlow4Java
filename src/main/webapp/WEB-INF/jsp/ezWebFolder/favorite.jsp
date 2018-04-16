@@ -123,7 +123,7 @@
     			isFavoriteMode = false;
     			onListTypeChangeEvent(false);
     			
-    			loadList(folderId);
+    			loadList(currentFolderId, currentFolderType);
     		};
     		
     		var refreshList = function() {
@@ -171,7 +171,7 @@
     			size: "fileSize",
     			creatorName: userInfo.primary === "1" ? "createName1" : "createName2",
     			createDate: "createDate",
-    			type: "typeId"
+    			type: "fileTypeName"
     		}
     	};
     	
@@ -265,7 +265,7 @@
 			})
 		};
 		
-		function loadList(folderId) {
+		function loadList(folderId, folderType) {
 	    	if(folderId === undefined || folderId == "") {
 	    		return;
 	    	}
@@ -278,7 +278,7 @@
 				
 				data : { 
 					 "folderId"   : folderId,
-					 "folderType" : "d",
+					 "folderType" : folderType,
 					 "currPage"   : currentPage,
 					 "listCount"  : blockSize,
 					 "pStart" : pagination.startIndex,
@@ -698,6 +698,16 @@
         }
         
         function onFavoriteButtonClick() {
+        	var checkedLength = checkedArr.length;
+        	
+			if (checkedLength <= 0) {
+				alert("<spring:message code = 'ezWebFolder.t108'/>");
+				return;
+			}
+			
+			for (var index = 0; index < checkedLength; index++) {
+				
+			}
         }
         
         function onFavoriteImageClick(event) {
