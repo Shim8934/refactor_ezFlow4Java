@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bouncycastle.asn1.x509.qualified.TypeOfBiometricData;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
-import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
@@ -27,6 +25,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -522,7 +521,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId,
 			String companyId, String searchUserName, String searchDeptName, String pageNum,
-			String listSize, String order, String offsetMin) throws Exception {
+			String listSize, String orderCell, String orderOption, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigList started");
 		
 		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
@@ -534,7 +533,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchDeptName", searchDeptName);
 		map.put("limit", limit);
 		map.put("listSize", listSize);
-		map.put("order", order.trim());
+		map.put("orderCell", orderCell);
+		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);
 		
 		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfigList(map);
