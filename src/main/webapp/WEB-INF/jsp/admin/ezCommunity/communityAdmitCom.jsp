@@ -58,10 +58,10 @@
 			
 			function open_info( code ) {
 				if (CrossYN() && new RegExp(/Chrome/).test(navigator.userAgent)) {
-					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=400,height=370";
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=400,height=375";
 				    feature = feature + GetOpenPosition(380, 350);
 				} else {
-					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=380,height=350";
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=380,height=355";
 				    feature = feature + GetOpenPosition(380, 350);
 				}
 			    

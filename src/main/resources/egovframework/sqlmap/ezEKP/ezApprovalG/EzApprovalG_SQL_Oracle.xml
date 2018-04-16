@@ -8832,7 +8832,7 @@
    			WHERE 
    				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
    			AND 
-   				TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'ADDRESS%'
+   				TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID LIKE 'Address%'
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
    			AND 
@@ -24370,12 +24370,12 @@
 	  			DOCID = #v_habDocID#
 	  </select>
 	  
-	  <update id="EzApprovalG.updateSusinState" parameterClass="Map">1
+	  <update id="EzApprovalG.updateSusinState" parameterClass="Map">
 	  	<![CDATA[
 	  		UPDATE
 	  			TBL_ENDRECEIPTPOINTINFO
 			SET
-				processdate = #processDate#,
+				processdate = TO_DATE(#processDate#,'YYYY-MM-DD HH24:MI:SS'),
 				processyn = #processYN#
 			WHERE
 				tenant_id = #tenantID#
