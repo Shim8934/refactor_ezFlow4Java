@@ -331,8 +331,8 @@ public class EzWebFolderController_m {
 				.queryParam("searchStartDate", orElse(request.getParameter("searchStartDate"), ""))
 				.queryParam("searchEndDate", orElse(request.getParameter("searchEndDate"), ""))
 				// limit info
-				.queryParam("startIndex", orElse(request.getParameter("startIndex"), ""))
-				.queryParam("endIndex", orElse(request.getParameter("endIndex"), ""));
+				.queryParam("startIndex", orElse(request.getParameter("startIndex"), "0"))
+				.queryParam("listCount", orElse(request.getParameter("listCount"), "0"));
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -348,7 +348,7 @@ public class EzWebFolderController_m {
 		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl	= config.getProperty("config.webfolderGwServerURL");
-		String requestUrl	= gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/favorites";
+		String requestUrl	= gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/favorite";
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -357,7 +357,7 @@ public class EzWebFolderController_m {
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(requestUrl)
 				// user info
-				.queryParam("offset", user.getOffset())
+				.queryParam("offset", user.getOffset()) 
 				.queryParam("tenantId", user.getTenantId())
 				// target info
 				.queryParam("targetId", orElse(request.getParameter("targetId"), ""))
@@ -382,7 +382,7 @@ public class EzWebFolderController_m {
 		requesetObject.put("tenantId", user.getTenantId());
 		
 		String gwServerUrl	= config.getProperty("config.webfolderGwServerURL");
-		String requestUrl	= gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/favorites";
+		String requestUrl	= gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/favorite";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);

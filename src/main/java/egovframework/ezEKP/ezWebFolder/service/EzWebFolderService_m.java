@@ -50,7 +50,7 @@ public interface EzWebFolderService_m {
 
 	public List<TrashCanVO> getFolderByFolderPath(String folderPath, int tenantId, String companyId) throws Exception;
 	
-	List<FavoriteFileVO> getFavorites(String userId, String offset, int tenantId, SearchVO searchInfo, String startIndex, String endIndex) throws Exception;
+	List<FavoriteFileVO> getFavorites(String userId, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception;
 	
 	Map<String, Integer> getFavoriteCount(String userId, String offset, int tenantId, SearchVO searchInfo) throws Exception;
 	
