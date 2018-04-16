@@ -47,10 +47,10 @@
 	        function listSet(result) {
                 var html = "";
                 for (var i = 0; i < result.length; i++) {
-                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='height:50px; cursor: pointer;'>";
-                    html += "<td style='width:50%;color:gray;'>" + result[i].typeName + "</td>";
-                    html += "<td style='width:30%;color:gray;'><select name='useSelectBox'><option value='1'>사용</option><option value='0'>사용안함</option></select></td>";
-                    html += "<td style='width:20%;color:gray;'><img id='icon' src='"+ result[i].imgPath +"' width='40px;' height='40px;' alt='' border='0'></td>";
+                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='cursor: pointer;'>";
+                    html += "<td style='width:35%;color:gray;'>" + result[i].typeName + "</td>";
+                    html += "<td style='width:45%;color:gray;'><input type='radio' name='useRadio"+ i +"' value='1' /> 사용 <input type='radio' name='useRadio"+ i +"' value='0' />사용안함</td>";
+                    html += "<td style='width:20%;color:gray;'><img id='icon' src='"+ result[i].imgPath +"' width='16px;' height='16px;' alt='' border='0'></td>";
                     html += "</tr>";
                 }
                 $("#contentlist table.mainlist").html(html);
@@ -58,16 +58,16 @@
 	        
 	        function useSelect(result) {
 	        	for (var i = 0; i < result.length; i++) {
-	        		$('table.mainlist select[name=useSelectBox]').eq(i).val(result[i].isuse);
-	        	}
+	        		$('table.mainlist input[name=useRadio'+ i +']:input[value=' + result[i].isuse + ']').prop('checked', true);
+ 	        	}
 	        }
 	        
 	        function save_config() {
-	        	var length = $('table.mainlist select[name=useSelectBox]').length;
+	        	var length = $('table.mainlist input[name^=useRadio]').length / 2;
 	        	var list = [];
 	        	for (var i = 0; i < length; i++) {
-	        		var typeId = $('table.mainlist select[name=useSelectBox]').eq(i).closest('tr').attr('id');
-	        		var isuse = $('table.mainlist select[name=useSelectBox]').eq(i).val();
+	        		var typeId = $('table.mainlist input[name=useRadio' + i + ']').closest('tr').attr('id');
+	        		var isuse = $('table.mainlist input[name=useRadio' + i + ']:checked').val();
 	        		var obj = '';
 	        		obj += typeId + ',' + isuse + ";";
 	        		if (i == (length-1)) {
@@ -86,10 +86,10 @@
 	            		"companyId" : encodeURI($("#ListCompany").val())
 	            	},
 	            	success : function() {
-// 	            		alert('성공');
+	            		alert('저장되었습니다');
 	            	},
 	            	error : function() {
-// 	            		alert('실패');
+	            		alert('저장하는 중 오류 발생');
 	            	}
 	            });        	
 	        }
@@ -140,18 +140,18 @@
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
 	      	</ul>
 	  	</div>
-	  	<table style="width: 950px; height: 485px;" >
+	  	<table style="width: 500px; height: 380px;" >
             <tr>
                 <td>
                     <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 100%;">
                         <table class="mainlist" style="width: 100%;">
                             <tr>
-                                <th style="width: 50%;"><span><spring:message code='ezAttitude.t35' /></span></th>
-                                <th style="width: 30%;"><span><spring:message code='ezAttitude.t36' /></span></th>
+                                <th style="width: 35%;"><span><spring:message code='ezAttitude.t35' /></span></th>
+                                <th style="width: 45%;"><span><spring:message code='ezAttitude.t36' /></span></th>
                                 <th style="width: 20%;"><span><spring:message code='ezAttitude.t37' /></span></th>
                             </tr>
                         </table>
-                        <div id="contentlist" name="contentlist" style="height: 454px; overflow-y: auto;">
+                        <div id="contentlist" name="contentlist" style="height: 400px; overflow-y: auto;">
                             <table class="mainlist" style="width: 100%;">
 <!--                                 <tr> -->
 <!--                                     <td style="text-align: center;"> -->
