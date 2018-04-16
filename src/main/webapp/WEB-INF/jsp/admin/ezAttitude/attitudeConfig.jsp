@@ -8,10 +8,13 @@
 	    <title>attitudeConfig</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
+	    <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <!-- time picker-->		
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	    <script type="text/javascript">
 	    	var adminCompany = "${adminCompany}";
 	    
@@ -26,6 +29,10 @@
 		    		}
 		            company_change();
 		        }
+		        
+		        //timepicker
+        		$('#start_hr').timepicker({ 'timeFormat': 'H' });
+        		$('#start_min').timepicker({ 'timeFormat': 'i' });
 	        });
 	        
 	        function company_change() {
@@ -135,6 +142,7 @@
 					<spring:message code='ezAttitude.t17' />
 	            </th>
 	            <td style="width: 500px; text-align:left; padding-left: 5px;">
+<%-- 	            	<input id="start_hr" type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' /><input id="start_min" type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' /> ~ <input id="end_hr" type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' /><input id="end_min" type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' /> --%>
 	            	<input id="start_hr" type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' /><input id="start_min" type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' /> ~ <input id="end_hr" type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' /><input id="end_min" type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' />
 	            </td>
 	        </tr>
@@ -154,20 +162,20 @@
 	        </tr>
 	        <tr style="height:30px;">
 	        	<th style="width: 70px; text-align:center">
-					<spring:message code='ezAttitude.t28' />
-	            </th>
-	            <td style="width: 500px; text-align:left">
-	            	<input type="radio" name="attitude_mod_appl" value="1"/><spring:message code='ezAttitude.t29' />
-	            	<input type="radio" name="attitude_mod_appl" value="0"/><spring:message code='ezAttitude.t30' />
-	            </td>
-	        </tr>
-	        <tr style="height:30px;">
-	        	<th style="width: 70px; text-align:center">
 					<spring:message code='ezAttitude.t31' />
 	            </th>
 	            <td style="width: 500px; text-align:left">
 	            	<input type="radio" name="close_date_attitude" value="1"/><spring:message code='ezAttitude.t29' />
 	            	<input type="radio" name="close_date_attitude" value="0"/><spring:message code='ezAttitude.t30' />
+	            </td>
+	        </tr>
+	        <tr style="height:30px;">
+	        	<th style="width: 70px; text-align:center">
+					<spring:message code='ezAttitude.t28' />
+	            </th>
+	            <td style="width: 500px; text-align:left">
+	            	<input type="radio" name="attitude_mod_appl" value="1"/><spring:message code='ezAttitude.t29' />
+	            	<input type="radio" name="attitude_mod_appl" value="0"/><spring:message code='ezAttitude.t30' />
 	            </td>
 	        </tr>
 		</table>
