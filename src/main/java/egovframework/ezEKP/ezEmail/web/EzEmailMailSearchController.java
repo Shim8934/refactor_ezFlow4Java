@@ -544,6 +544,8 @@ public class EzEmailMailSearchController {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
 			
+			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+						
 			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
 				String folderAndMsgId = folderAndMsgIdArray[i];
 				String folderId = folderAndMsgId.split("/")[0];	
@@ -556,11 +558,20 @@ public class EzEmailMailSearchController {
 				Message message = sourceFolder.getMessageByUID(uid);
 				
 				if (message != null) {
-					IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);			
-					sourceFolder.copyUIDMessages(new Message[]{message}, movefolder);
+					IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);		
 					
-					if (cmd.equalsIgnoreCase("MOVE")) {
-						message.setFlag(Flags.Flag.DELETED, true);
+					if (useImapMoveCommand.equals("YES")) {
+						if (cmd.equalsIgnoreCase("MOVE")) {
+							sourceFolder.moveUIDMessages(new Message[]{message}, movefolder);
+						} else {
+							sourceFolder.copyUIDMessages(new Message[]{message}, movefolder);
+						}
+					} else {					
+						sourceFolder.copyUIDMessages(new Message[]{message}, movefolder);
+						
+						if (cmd.equalsIgnoreCase("MOVE")) {
+							message.setFlag(Flags.Flag.DELETED, true);
+						}
 					}
 				}
 				

@@ -270,4 +270,7 @@ public interface EzBoardService {
 	//2018.02.05 김보미
 	public int getReaderListCount(String boardID, String itemID, String userID, String lang, int tenantID) throws Exception;
 
+	//2018.04.16 홍승비
+	public void setAsReadNew(LoginVO userInfo, String pBoardID, String string) throws Exception;
+
 }

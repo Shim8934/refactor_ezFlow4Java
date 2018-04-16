@@ -7834,6 +7834,8 @@
 	<select id="EzApprovalG.getSendOutDocList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
 		SELECT * FROM (
+		SELECT * FROM (
+		SELECT * FROM (
 			SELECT 
 				TBL_ENDAPRDOCINFO.DOCID,
 		   		TBL_ENDAPRDOCINFO.ORGDOCID, 
@@ -7934,7 +7936,7 @@
 		   	<![CDATA[
 		   	)A 
 		   		WHERE 
-		   			ROWNUM <= #v_PAGESIZE#
+		   			ROWNUM <= #v_PAGESIZE# )B
 		   	]]>
 		   	<isNotEmpty property="v_ORDEROPTION">
 		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
@@ -7956,6 +7958,10 @@
 		   	 ORDER BY 
 		   	 	ENDDATE $v_BASICORDER2$
 		   	</isEmpty>
+		   	<![CDATA[
+		   	)C 
+		   	WHERE ROWNUM <= #v_PAGESIZE2# 
+		   	]]>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO"> -->
