@@ -70,8 +70,8 @@ body{
 .kk_editor .kk_editView .kk_contentView .kk_contents p { padding:0;margin: 0px; }
 .kk_editor .kk_editView .kk_contentView .kk_contents a[filedata="kk_type_file"]:after { content : '💾';color: #0000ff; font-weight: bold;}
 
-.kk_editor .kk_editView .kk_contentView .kk_contents .kk_bookmark_view { display: inline-block !important; border: none; -ms-user-select: none; cursor: default;}
-.kk_editor .kk_editView .kk_contentView .kk_contents .kk_bookmark_view:after { content : '✎';color: #FF0000; font-weight: bold;}
+.kk_editor .kk_editView .kk_contentView .kk_contents .kk_bookmark_view { display: inline !important; border: none; background: url(../images/wysiwygeditor.png) no-repeat -184px -211px; padding:0 0px 3px 12px;margin-left: 2px;margin-right: 2px;user-select: none;}
+/*.kk_editor .kk_editView .kk_contentView .kk_contents .kk_bookmark_view:after { content : '✎';color: #FF0000; font-weight: bold;}*/
 
 .kk_editor .kk_editView .kk_contentView .kk_contents .kk_page_break:before { content: ''; display:block; border: 1px dotted #65c4e0 !important; background-color: #ffffff; background-repeat: no-repeat; background-position: top center; width:100%; height:12px; margin-top:2px;margin-bottom:2px;}
 /*.kk_editor .kk_editView .kk_contentView .kk_contents .kk_page_break { border: 1px dotted #65c4e0 !important; background-color: #ffffff; background-repeat: no-repeat; background-position: top center; width:100%; height:12px; margin-top:2px;margin-bottom:2px;}*/
@@ -267,13 +267,35 @@ body{
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox { display: block; float: left; margin: -2px; padding: 2px; background-color: #ffffff; height:22px; border: 1px solid #dedede; box-shadow: 0 2px #eee; border-radius: 3px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox:hover { border: 1px solid #0e0e0e; margin: -2px; padding: 2px; cursor: pointer;}
+
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="heading"],
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="fontFamily"],
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="fontSize"] {float: left; }
+
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="heading"] {width: 100px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="heading"] .ui_select_list {min-width: 100px; }
+
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="fontFamily"] {width: 115px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="fontFamily"] .ui_select_list {min-width: 115px; }
+
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="fontSize"] {width: 65px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="fontSize"] .ui_select_list {min-width: 65px; }
+
+
+
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox { cursor: pointer; position: relative; display: block; height: 23px; line-height: 23px; margin: 0 3px 0 0; background-image: none; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .i-arrow-down { margin-left: -5px; background-position: -150px -120px; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ margin-top: -3px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox label { cursor: pointer; position: relative; display: block; height: 21px; line-height: 21px; margin: 0; padding: 0 15px 0 5px; font-size: 12px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .arrow { position: absolute; top: 0; right: 0; width: 15px; height: 20px; margin-top: 0; font-size: 14px; color: #999; }
-.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list { display: none; position: absolute; top: 25px; left: -3px; background-color: #fff; border: 1px solid #B9B9B9; box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.3); z-index: 100; padding : 0; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list { display: none; position: absolute; top: 25px; left: -3px; background-color: #fff; border: 1px solid #B9B9B9; box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.3); z-index: 100; padding : 0; max-height: 300px; overflow-y: auto;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_active .ui_select_list { display: block; }
-.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list > li { display: block; height: 20px; line-height: 20px; font-size: 12px; padding: 3px 30px 3px 10px; cursor: pointer; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list > li { display: block; height: auto; line-height: normal; font-size: 12px; padding: 3px 10px 3px 10px; cursor: pointer; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list > li h1,
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list > li h2,
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list > li h3,
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list > li h4,
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list > li h5,
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list > li h6 { padding: 0; margin: 5px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list > li:hover { background: #eee; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox .ui_select_list > li[selected] { background: #B9B9B9; }
 /*.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox .ui_selectbox:hover { background: #b8e8f4; }*/
@@ -303,6 +325,7 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_custombox .ui_custombox .border_style {display: block; float: left; width : 65px; margin-right:3px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_custombox .ui_custombox .border_style .ui_selectbox{ float: left; width: 60px; height: 27px; border: 1px solid #eee; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_custombox .ui_custombox .border_style .ui_selectbox .ui_select_list{ text-align: left; }
+
 .kk_editor .kk_editor_toolbar .menus .menu .menu_custombox .ui_custombox .border_type {display: block; float: left; width : 90px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_custombox .ui_custombox .border_type .menu_button{ padding : 5px 2px; }
 
@@ -889,7 +912,7 @@ body{
 .kk_editor .kk_editor_dialog .kk_dialog_symbols .symbols_contents_wrap .symbols_contents ul li a.active{ background-color: #ffffff; font-weight: bold;}
 .kk_editor .kk_editor_dialog .kk_dialog_symbols .symbols_contents_wrap .symbols_contents ul li a span{display:inline-block;zoom:1;*display:inline/*IE7 HACK*/; padding:4px 12px; letter-spacing:-1px; cursor:pointer;font-size:11px;}
 .kk_editor .kk_editor_dialog .kk_dialog_symbols .symbols_contents_wrap .symbols_contents .symbol_item_list{display:none; width:100%; position:absolute; top:22px; left:0; list-style:none; border:0; margin:0; padding:0; white-space:nowrap; overflow:hidden;border:1px solid #ccc;padding:3px 0;text-align:center;}
-.kk_editor .kk_editor_dialog .kk_dialog_symbols .symbols_contents_wrap .symbols_contents .symbol_item_list .symbol_item_contents div{ width: 24px; height: 22px; /*border: 1px solid #cccccc;*/ float:left; margin:1px; cursor:default; line-height: 27px; font-size: 17px; font-family: "MalgunGothic", "NanumGothic", "AppleGothic"; }
+.kk_editor .kk_editor_dialog .kk_dialog_symbols .symbols_contents_wrap .symbols_contents .symbol_item_list .symbol_item_contents div{ width: 24px; height: 22px; /*border: 1px solid #cccccc;*/ float:left; margin:1px; cursor:default; line-height: 21px; font-size: 17px; font-family: "MalgunGothic", "NanumGothic", "AppleGothic"; }
 .kk_editor .kk_editor_dialog .kk_dialog_symbols .symbols_contents_wrap .symbols_contents .symbol_item_list .symbol_item_contents div:hover{ background: #cccccc;}
 .kk_editor .kk_editor_dialog .kk_dialog_symbols .symbols_contents_wrap .symbols_footer { text-align: center; padding-bottom: 8px; }
 .kk_editor .kk_editor_dialog .kk_dialog_symbols .symbols_contents_wrap .symbols_footer input { width:500px; height:20px; border: 1px solid #dddddd;font-size: 14px;}
@@ -1317,6 +1340,10 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .directionLabelArea,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .inputArea,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .buttonArea { font-size: 12px; padding:5px; }
+
+.kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox button { background-color: #dddddd; height: 19px; border: 1px solid #000000; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox button:hover { background-color: #eeeeee;  }
+
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .labelArea{ width:30%; text-align: right;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .directionLabelArea{ width:30%; text-align: left;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .ui_find_replace_box .findreplace_contents .findreplace_items .findreplaceArea .optionLabelArea{ width:30%; text-align: left; padding-left: 70px;}
@@ -1422,11 +1449,12 @@ body{
 .kk_context_menu .context-menu-icon-text_paste:before { background-position: -0px -180px;}
 .kk_context_menu .context-menu-icon-all_select:before { background-position: -330px -150px;}
 .kk_context_menu .context-menu-icon-link:before { background-position: -330px -30px;}
+.kk_context_menu .context-menu-icon-unlink:before { background-position:-360px -30px;}
 
 .kk_context_menu .context-menu-icon-image:before { background-position: -390px -30px;}
-.kk_context_menu .context-menu-icon-image_modify:before { background-position: -390px -30px; }
+.kk_context_menu .context-menu-icon-image_modify:before { background-position: -121px -211px; }
 
-.kk_context_menu .context-menu-icon-video_modify:before { background-position: -240px -181px; }
+.kk_context_menu .context-menu-icon-video_modify:before { background-position: -150px -211px; }
 
 .kk_context_menu .context-menu-icon-align_left:before { background-position: -210px -30px;}
 .kk_context_menu .context-menu-icon-align_center:before { background-position: -240px -30px;}
@@ -1480,7 +1508,7 @@ body{
   position: absolute;
   width: 8px;
   height: 8px;
-  z-index: 10000;
+  z-index: 29;
   border-radius: 6px;
   background: #2570ba !important;
   background: -moz-linear-gradient( top, #92b9ea, #2570ba) !important;
@@ -1518,9 +1546,9 @@ body{
 
 .kk_editor_menubar { -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: -moz-none; -o-user-select: none; user-select: none; max-width: 100%; display: block; height: 30px; min-width: 400px; background: #f3f3f3; border-bottom: 1px solid #c8c8c8; font-size: 12px;}
 .kk_editor_menubar .menu-tab-wrapper {margin:0; padding:0;cursor:default;}
-.kk_editor_menubar .menu-tab-wrapper .menu-tab-item { -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: -moz-none; -o-user-select: none; user-select: none; list-style: none; display: inline-block; width: 50px; padding-left: 0px; padding-right: 0px; height: 25px; line-height: 26px; text-align: center; border: 1px solid transparent; cursor: pointer; }
+.kk_editor_menubar .menu-tab-wrapper .menu-tab-item { -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: -moz-none; -o-user-select: none; user-select: none; list-style: none; display: inline-block; min-width: 50px; padding-left: 0px; padding-right: 0px; height: 25px; line-height: 26px; text-align: center; border: 1px solid transparent; cursor: pointer; margin-right: 10px;}
 .kk_editor_menubar .menu-tab-wrapper .menu-tab-item:hover {background:#b8e8f4; height:25px; border:1px solid gray;}
-.kk_editor_menubar .menu-tab-wrapper .menu-tab-on {margin:0; padding:0; background:#b8e8f4; height:25px;border:1px solid gray;}
+.kk_editor_menubar .menu-tab-wrapper .menu-tab-on {margin:0; margin-right:10px; padding:0; background:#b8e8f4; height:25px;border:1px solid gray;}
 
 .kk_editor_menubar .menubar-dropdown-wrapper {display:none;}
 .kk_editor_menubar .menubar-dropdown-wrapper .menu-item-wrapper {background:#f3f3f3; position:absolute; width:200px; border:1px solid gray; z-index:12000000;}
