@@ -57,19 +57,17 @@
 	   			var flag = true;
 	   			for (var i = 0; i < lpDepts.length ; i++) {
 					if(lpDepts[i] == lpDeptId){
-						alert("<spring:message code='ezJournal.t127'/>");
+		   				alert("<spring:message code='ezJournal.t127'/>");
 						flag=false;
 					}
 				}
 	   			if(flag){
-		   			if (lpDeptId==opener.userDeptId) {
-			   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='display:none; cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
-			   			lpDepts.push(lpDeptId);
-			   			lpDeptNames.push(lpDeptName);
-					} else {
+		   			if (lpDeptId!=opener.userDeptId) {
 			   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
 			   			lpDepts.push(lpDeptId);
 			   			lpDeptNames.push(lpDeptName);
+					} else {
+		   				alert("<spring:message code='ezApprovalG.t2000'/>");
 					}
 	   			}
 	   		}

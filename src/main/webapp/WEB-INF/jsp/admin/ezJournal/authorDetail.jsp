@@ -29,6 +29,8 @@
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
+	   		//선택된 유저으,ㅣ부서
+	   		var userDeptId;
 	   	
 	   		function close_Click(){
 	   			window.close();
@@ -55,7 +57,12 @@
 	   				url:"/admin/ezJournal/userList.do",
 	   				data:{"key":key, "value":value,"deptName":deptName},
 	   				success: function(result){
-	   					$("#orglistView").html(result);
+	   					var picList = $(result).find(".organwrap");
+	   					if(picList.length==0 && key!="DEPARTMENT"){
+	   						alert("<spring:message code='ezCommunity.t1379'/>");
+	   					} else {
+		   					$("#orglistView").html(result);
+	   					}
 	   				}
 	   			});
 	   		}
@@ -78,6 +85,8 @@
 	   						if($(this).attr("mine")!='Y'){
 		   						lpDepts.push($(this).attr("targetId"));
 		   						lpDeptNames.push($(this).find("td").text());
+	   						} else {
+	   							userDeptId=$(this).attr("targetId");
 	   						}
 	   					})
 	   				}
@@ -86,8 +95,12 @@
 	   		//검색
 	   		function search_click(){
 	   			var key = $("#search_type").val();
-	   			var value = $("#keyword").val();
-	   			setUserList(key,value);
+	   			var value = $("#keyword").val().trim();
+	   			if(value){
+		   			setUserList(key, value);
+	   			} else {
+	   				alert("<spring:message code='ezSchedule.t8'/>")
+	   			}
 	   		}
 	   		
 	   		//사원선택
@@ -99,6 +112,7 @@
 // 		   			opener.deptIds = lpDepts;  
 // 		   			opener.deptNames = lpDeptNames;
 		   			opener.setDeptName(JSON.stringify(lpDepts), JSON.stringify(lpDeptNames));
+		   			opener.userDeptId = userDeptId;
 					window.close();
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
