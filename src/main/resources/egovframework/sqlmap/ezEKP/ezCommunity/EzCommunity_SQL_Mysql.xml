@@ -1506,6 +1506,20 @@
 		]]>
 	</select>
 	
+	<select id="EzCommunityDAO.adminLogoGet2"					parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
+		<![CDATA[
+			SELECT
+				c_logo,
+				c_logo_thumbnail
+			FROM
+				TBL_C_CLUB 
+			WHERE
+				RTRIM(c_clubno) = #v_CODE#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</select>
+	
 <!-- 	<procedure id="EzCommunityDAO.getBoardList"					parameterClass="Map"		resultClass="CommunityBoardInfoVO"> -->
 <!-- 		{CALL EZSP_GETBOARDLIST(#v_CODE#, #v_LANG#, #v_POSITION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -4659,7 +4673,7 @@
 <!-- 	<procedure id="EzCommunityDAO.commMakeOkSet1"				parameterClass="Map"> -->
 <!-- 		{CALL EZSP_COMM_MAKE_OK_SET1(#v_LOGOFILENAME#, #v_LOGOFILENAME_THUMBNAIL#, #v_FILENAME#, #v_FILESIZE#)} -->
 <!-- 	</procedure> -->
-	<update id="EzCommunityDAO.commMakeOkSet1Update"				parameterClass="Map">
+  	<update id="EzCommunityDAO.commMakeOkSet1Update"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				TBL_C_CLUB
@@ -4684,10 +4698,9 @@
 				#tenantID#)
 		]]>
 	</insert>
-	
-<!-- 	<procedure id="EzCommunityDAO.commMAkeOkSet2"				parameterClass="Map"> -->
-<!-- 		{CALL EZSP_COMM_MAKE_OK_SET2(#v_BANNERFILENAME#, #v_FILENAME#, #v_FILESIZE#)} -->
-<!-- 	</procedure> -->
+	<procedure id="EzCommunityDAO.commMAkeOkSet2"				parameterClass="Map">
+		{CALL EZSP_COMM_MAKE_OK_SET2(#v_BANNERFILENAME#, #v_FILENAME#, #v_FILESIZE#)}
+	</procedure>
 	<update id="EzCommunityDAO.commMAkeOkSet2Update"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -4717,7 +4730,7 @@
 			UPDATE
 				TBL_LOGO_SIZE
 			SET
-				banner_size = v_FILESIZE
+				banner_size = #v_FILESIZE#
 			WHERE
 				tenant_id = #tenantID#
 		]]>
@@ -4734,10 +4747,35 @@
 				#tenantID#)
 		]]>
 	</insert>
-	
 <!-- 	<procedure id="EzCommunityDAO.commMakeOkInsert2"			parameterClass="Map"> -->
 <!-- 		{CALL EZSP_COMM_MAKE_OK_INSERT2(#v_TMP_CLUBID#, #v_DATETIME_NOW1#, #v_CLUBNAME#, #v_CLUBNAME2#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_CLUBTYPE#, #v_CLUBCONFIRMTYPE#, #v_INTRO#, #v_ISIN#, #v_LOGO#, #v_LOGO_THUMBNAIL#, #v_BANNER#, #v_B_BOARD_NAME1#, #v_B_BOARD_NAME2#, #v_COMATT#, #v_CODE#, #v_B_NOTI_NAME1#, #v_B_NOTI_NAME2#, #v_PNEWID#, #v_BOARDNO#, #v_USERINFO_USERID#, #v_USERINFO_DISPLAYNAME#, #v_USERINFO_COMPANYNAME#, #v_USERINFO_DEPTNAME#, #v_PNEW_SUBID#, #v_DATETIME_NOW2#, #v_OPENEMAIL#, #v_OPENHP#, #v_OPENCOMP#, #v_OPENHOUSE#, #v_OPENJOB#, #v_OPENBIRTH#, #v_OPENSEX#, #v_USERINFO_COMPANYID#)} -->
 <!-- 	</procedure> -->
+
+<update id="EzCommunityDAO.commMakeOkSet3Update"				parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUB
+			SET
+				c_logo = #v_LOGOFILENAME#
+			WHERE
+				c_clubno = #v_FILENAME#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+	<update id="EzCommunityDAO.commMakeOkSet4Update"				parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUB
+			SET
+				c_logo_thumbnail = #v_THUMBFILENAME#
+			WHERE
+				RTRIM(c_clubno) = #v_FILENAME#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+
 	<update id="EzCommunityDAO.updateClubID"	parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -5477,7 +5515,19 @@
 			UPDATE
 				TBL_C_CLUB
 			SET
-				c_clubbanner = #v_BANNERFILENAME#
+				c_logo = #v_LOGOFILENAME#
+			WHERE
+				RTRIM(c_clubno) = #v_FILENAME#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+	<update id="EzCommunityDAO.adminLogoOkUpdate3"			parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUB
+			SET
+				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
 			WHERE
 				RTRIM(c_clubno) = #v_FILENAME#
 			AND
@@ -6834,5 +6884,18 @@
 			   						ITEMID = #itemID# )
 
 		]]>
+ 	</select>
+ 	
+ 	<select id="EzCommunityDAO.getWriterID" parameterClass="Map" resultClass="String">
+ 		<![CDATA[
+ 			SELECT
+ 				WRITERID
+ 			FROM
+ 				TBL_COMM_ITEM
+ 			WHERE
+ 				TENANT_ID = #tenantID#
+ 			AND
+ 				ITEMID = #v_pItemID#
+ 		]]>
  	</select>
 </sqlMap>

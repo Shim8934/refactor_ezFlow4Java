@@ -50,9 +50,9 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 
 /** 
  * @Description [Controller] 메일 리스트
@@ -117,6 +117,7 @@ public class EzEmailMailListController {
 		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
 		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", userInfo.getTenantId());
 		String useReSend = ezCommonService.getTenantConfig("useReSend", userInfo.getTenantId());
+		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", userInfo.getTenantId()); // 수아 수정(useMailWriteSenderClick 추가)
 		
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
@@ -124,6 +125,11 @@ public class EzEmailMailListController {
 		
 		if (useMailBoxBackUp.equals("")) {
 			useMailBoxBackUp = "NO";
+		}
+		
+		//수아 수정
+		if (useMailWriteSenderClick.equals("")) {
+			useMailWriteSenderClick = "NO";
 		}
 		
 		if (dispname != null) {
@@ -168,6 +174,7 @@ public class EzEmailMailListController {
 		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
 		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
 		model.addAttribute("useReSend", useReSend);
+		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 수정 (useMailWriteSenderClick 추가)
 		
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
@@ -387,7 +394,13 @@ public class EzEmailMailListController {
 				
 				sb.append("<response>");
 				sb.append(String.format("<href><![CDATA[%s/%s]]></href>", folderId, uidFolder.getUID(message)));
-				sb.append("<fromemail><![CDATA[]]></fromemail>");
+
+				/*String fromEmail = ((InternetAddress)message.getFrom()[0]).getAddress();
+				if (fromEmail == null) {
+					sb.append("<fromemail><![CDATA[]]></fromemail>");
+				} else {
+					sb.append(String.format("<fromemail><![CDATA[%s]]></fromemail>", fromEmail));
+				}*/
 				
 				// importance
 				String[] headers = message.getHeader("X-Priority");
@@ -415,44 +428,66 @@ public class EzEmailMailListController {
 				int attached = isAttached ? 1 : 0;
 				sb.append(String.format("<attach><![CDATA[%d]]></attach>", attached));
 				
-				String addressStr = "";
+				String msgto = "";
 				Address[] addresses = null;
+
+				int addressCount = 1;
+				String name = "";
+				
 				if (!viewSelectIndex.equals("3")) {
-					addressStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+					name = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+					String senderEmail = ezEmailUtil.getFromEmailAddressOfMessage(message);
+					
+					msgto = String.format("%s <%s>", name, senderEmail);
 				}
 				// in case of Sent mailbox
 				else {
 					addresses = message.getRecipients(Message.RecipientType.TO);
+					
 					if (addresses != null) {
+						addressCount = addresses.length;
 						String toHeader = message.getHeader("To")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
 						
-						StringBuilder addressBuilder = new StringBuilder();
+						String recipientName = "";
+						
+						StringBuilder msgtoBuilder = new StringBuilder();
+						
 						for (Address address : addresses) {
-							addressStr = ((InternetAddress)address).getPersonal(); // name part
-							if (addressStr == null) {
-								addressStr = ((InternetAddress)address).getAddress(); // email address part
-							}
-							else {
-								if (!isAscii) {
-									byte[] rawBytes = addressStr.getBytes("iso-8859-1");
-									
-									addressStr = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								}
-								else {
-									// decoding is needed for the name part
-									addressStr = MimeUtility.decodeText(addressStr);
-								}
-							}						
-							addressBuilder.append(addressStr);
-							addressBuilder.append("; ");
-						}
-						addressStr = addressBuilder.toString();
-						addressStr = addressStr.substring(0, addressStr.length() - 2);
-					}								
-				}			
-				sb.append(String.format("<sender><![CDATA[%s]]></sender>", addressStr));
+							recipientName = ((InternetAddress) address).getPersonal(); // name part
+							String receiverUserEmail = ((InternetAddress) address).getAddress(); // email address part
 							
+							if (recipientName == null) {
+								recipientName = receiverUserEmail;
+							}
+							
+							if (receiverUserEmail != null) {
+								
+								if (!isAscii) {
+									byte[] rawBytes = receiverUserEmail.getBytes("iso-8859-1");
+									receiverUserEmail = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+								} else {
+									// decoding is needed for the name part
+									receiverUserEmail = MimeUtility.decodeText(receiverUserEmail);
+								}
+							}
+							
+							msgtoBuilder.append(String.format("%s <%s>", recipientName, receiverUserEmail));
+							msgtoBuilder.append(",");
+							
+							name += recipientName;
+							name += "; ";
+						}
+						
+						msgto = msgtoBuilder.toString();
+						msgto = msgto.substring(0, msgto.length() - 1);
+						name = name.substring(0, name.length() - 2);
+					}
+				}
+				
+				sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
+				sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
+
 				// subject
 				String subject = ezEmailUtil.getSubject(message);								
 				subject = (subject != null) ? subject : "";
@@ -614,26 +649,37 @@ public class EzEmailMailListController {
 				deleteMsgs = sourceFolder.getMessagesByUID(uids);
 			}
 			
-			if (cmd.equalsIgnoreCase("BMOVE")) {
-				// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
-				Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(deleteMsgs, userEmail, domainName, ia);
-				
-				if (adjustQuotaData[0] != null) {
-					isNewUserQuotaNeeded = true;
-					
-					userQuota = adjustQuotaData[0];
-					userWarn = adjustQuotaData[1];
-				}
-
-				if (adjustQuotaData[2] != null) {
-					isThereUserLevelQuota = true;
-				}
-								
-				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
-				sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
-			}
+			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
 			
-			sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+			if (useImapMoveCommand.equals("YES")) {
+				if (cmd.equalsIgnoreCase("BMOVE")) {
+					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
+					sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
+				} else {			
+					sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+				}
+			} else {
+				if (cmd.equalsIgnoreCase("BMOVE")) {
+					// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+					Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(deleteMsgs, userEmail, domainName, ia);
+					
+					if (adjustQuotaData[0] != null) {
+						isNewUserQuotaNeeded = true;
+						
+						userQuota = adjustQuotaData[0];
+						userWarn = adjustQuotaData[1];
+					}
+
+					if (adjustQuotaData[2] != null) {
+						isThereUserLevelQuota = true;
+					}
+									
+					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
+					sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
+				}
+				
+				sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);				
+			}
 					
 			sourceFolder.close(true);		
 		} catch (Exception e) {
@@ -715,29 +761,39 @@ public class EzEmailMailListController {
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);
 			
-			Message[] messages = sourceFolder.getMessagesByUID(uids);
-			
-			if (cmd.equalsIgnoreCase("MOVE")) {
-				// 이동시킬 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
-				Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userEmail, domainName, ia);
-				
-				if (adjustQuotaData[0] != null) {
-					isNewUserQuotaNeeded = true;
-					
-					userQuota = adjustQuotaData[0];
-					userWarn = adjustQuotaData[1];
-				}
-
-				if (adjustQuotaData[2] != null) {
-					isThereUserLevelQuota = true;
-				}				
-			}
-			
+			Message[] messages = sourceFolder.getMessagesByUID(uids);						
 			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);			
-			sourceFolder.copyUIDMessages(messages, movefolder);
 			
-			if (cmd.equalsIgnoreCase("MOVE")) {
-				sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+			
+			if (useImapMoveCommand.equals("YES")) {			
+				if (cmd.equalsIgnoreCase("MOVE")) {
+					sourceFolder.moveUIDMessages(messages, movefolder);
+				} else {					
+					sourceFolder.copyUIDMessages(messages, movefolder);					
+				}
+			} else {
+				if (cmd.equalsIgnoreCase("MOVE")) {
+					// 이동시킬 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+					Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userEmail, domainName, ia);
+					
+					if (adjustQuotaData[0] != null) {
+						isNewUserQuotaNeeded = true;
+						
+						userQuota = adjustQuotaData[0];
+						userWarn = adjustQuotaData[1];
+					}
+
+					if (adjustQuotaData[2] != null) {
+						isThereUserLevelQuota = true;
+					}				
+				}
+				
+				sourceFolder.copyUIDMessages(messages, movefolder);
+				
+				if (cmd.equalsIgnoreCase("MOVE")) {
+					sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+				}									
 			}
 			
 			sourceFolder.close(true);		
