@@ -14,10 +14,8 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-		<!-- <script type="text/javascript" src="/js/ezLadder/string_component.js"></script> -->
 		<script type="text/javascript" src="/js/ezLadder/ladderSetting.js"></script>
 		<script type="text/javascript" src="/js/ezLadder/ladder.js"></script>
-		<!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"> -->
 		
 		<script type="text/javascript">
 			var ladderId;
@@ -697,7 +695,7 @@
 					<td>
 						<div style="height: 50px; margin-bottom: 10px;">
 							<div style="float: left; height: 40px; line-height: 50px;">
-								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px;" placeholder="<spring:message code='ezLadder.t070 = 외' />"/>
+								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px;" placeholder="<spring:message code='ezLadder.t071' />"/>
 							</div>
 							<div style="float: right;">
 									<div id="ladderTypeOption" style='display: inline-block; margin-right: 30px; height: 50px;'></div>
@@ -715,7 +713,7 @@
 									</div>
 									<div class="ladderType" _num="3">
 										<img src="/images/ezLadder/icon_handwork.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_game03.png.png" class="select icon"/>
+										<img src="/images/ezLadder/icon_game03.png" class="select icon"/>
 									</div>
 								<input name="type" style="display: none;" />
 							</div>
