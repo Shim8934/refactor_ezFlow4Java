@@ -714,7 +714,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 		
 	@Override
-	public List<FavoriteFileVO> getFavorites(String userId, String offset, int tenantId, SearchVO searchInfo, String startIndex, String endIndex) throws Exception {
+	public List<FavoriteFileVO> getFavorites(String userId, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception {
 
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
@@ -728,7 +728,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("searchStartDate", searchInfo.getSearchStartDate());
 		parameterMap.put("searchEndDate", searchInfo.getSearchEndDate());
 		parameterMap.put("startIndex", startIndex);
-		parameterMap.put("endIndex", endIndex);
+		parameterMap.put("listCount", listCount);
 
 		List<FavoriteFileVO> result = ezWebFolderDAO.getFavorites(parameterMap);
 

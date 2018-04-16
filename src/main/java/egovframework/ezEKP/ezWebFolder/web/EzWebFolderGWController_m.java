@@ -290,8 +290,8 @@ public class EzWebFolderGWController_m {
 		String primaryLang = orElse(request.getParameter("primary"), "1");
 		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
 
-		String startIndex = orElse(request.getParameter("startIndex"), "");
-		String endIndex = orElse(request.getParameter("endIndex"), "");
+		int startIndex = Integer.parseInt(orElse(request.getParameter("startIndex"), "0"));
+		int listCount = Integer.parseInt(orElse(request.getParameter("listCount"), "0"));
 		
 		SearchVO searchInfo = new SearchVO();
 		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
@@ -301,11 +301,20 @@ public class EzWebFolderGWController_m {
 		searchInfo.setSearchStartDate(orElse(request.getParameter("searchStartDate"), ""));
 		searchInfo.setSearchEndDate(orElse(request.getParameter("searchEndDate"), ""));
 		
+		// list count
+		int userListCount = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+		
+		if (listCount == 0) {
+			listCount = userListCount;
+		}
+		
+		ezWebFolderService_y.insertEnv(userId, tenantId, listCount);
+		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 
 		try {
-			List<FavoriteFileVO> favoriteFiles = ezWebFolderService_m.getFavorites(userId, offset, tenantId, searchInfo, startIndex, endIndex);
+			List<FavoriteFileVO> favoriteFiles = ezWebFolderService_m.getFavorites(userId, offset, tenantId, searchInfo, startIndex, listCount);
 			String targetPath;
 			
 			for (FavoriteFileVO favoriteFile : favoriteFiles) {
@@ -328,6 +337,7 @@ public class EzWebFolderGWController_m {
 			data.put("totalCount", favoriteCountMap.get("totalCount"));
 			data.put("folderCount", favoriteCountMap.get("folderCount"));
 			data.put("fileCount", favoriteCountMap.get("fileCount"));
+			data.put("listCount", listCount);
 			
 			data.put("targetList", favoriteFiles);
 			
@@ -359,7 +369,7 @@ public class EzWebFolderGWController_m {
 	 * 
 	 * @return JSONObject
 	 */
-	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorites", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorite", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject addFavorite(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("REST | addUserFavorite started.");
 		
@@ -406,7 +416,7 @@ public class EzWebFolderGWController_m {
 	 * 
 	 * @return JSONObject
 	 */
-	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorites", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorite", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteFavorite(@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonObject) {
 		logger.debug("REST | deleteUserFavorite started.");
 

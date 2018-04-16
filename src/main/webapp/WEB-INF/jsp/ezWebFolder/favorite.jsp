@@ -39,7 +39,7 @@
     	/* pagination variable: 리팩토링, 함수도 포함 대상임.	*/
     		var pagination = {
     			startIndex: 0,
-    			endIndex: 10
+    			listCount: 0
     		};
     	
 			function setBlockSize(changedSize) {
@@ -50,20 +50,21 @@
 			}
     	
     		var currentPage = 1;
-    		var blockSize = 10;
+    		var blockSize = 0;
     		var totalPages = 0;
     		var totalRows = 0;
     		
     	    function goToPageByNum(page) {
     	    	currentPage = page;
     	        pagination.startIndex = (blockSize * (currentPage - 1));
-    	        pagination.endIndex = blockSize;
+    	        pagination.listCount = blockSize;
 
     	        context.refreshList();
     	    }
     	    
     	    // TODO: 리펙토링
-    	    function tempSetPage(totalCount) {
+    	    function tempSetPage(totalCount, listCount) {
+    	    	blockSize = listCount;
     	    	totalRows = totalCount;
     	    	totalPages = Math.max(~~(totalRows / blockSize), 1);
     	    	
@@ -243,20 +244,21 @@
 					searchStartDate: $('#Sdatepicker').val(),
 					searchEndDate: $('#Edatepicker').val(),
 					startIndex : pagination.startIndex,
-					endIndex : blockSize
+					listCount : blockSize
 				},
 				
 				success : function (result) {
 					result = result.data;
 					
 					// TODO: 리펙토링
-					tempSetPage(result.totalCount);
+					tempSetPage(result.totalCount, result.listCount);
 					
 					renderList(result.targetList, false);
 					makePageSelPage();
 					
 					dom.mailBoxInfo.innerHTML = " - [" + message.total + " <spring:message code='ezWebFolder.t277'/> " + "<span style='color:#017BEC;'>" 
 						+ result.fileCount + "</span>, " + message.total + " <spring:message code='ezWebFolder.t276'/> " + "<span style='color:#017BEC;'>" + result.folderCount +" </span>" + message.count + "]";
+					$("#listcount").val(blockSize).prop("selected", true);
 				},
 				
 				error : function(error) {
@@ -282,7 +284,6 @@
 					 "currPage"   : currentPage,
 					 "listCount"  : blockSize,
 					 "pStart" : pagination.startIndex,
-					 "pEnd" : blockSize,
 					 "searchExt" : $('#searchExt').val(),
 					 "searchFileName" : $('#searchFileName').val(),
 					 "searchCreateName" : $('#searchCreateName').val()
@@ -293,25 +294,25 @@
 					
 					currentPage = result.currPage;
 					totalRows = result.totalRows;
-					var fileCount = result.fileCnt;
-					var folderCount = result.fldCnt;
-					
  					blockSize = result.listCount;
 					totalPages = result.totalPages;
-// 					folderPath = result.folderPath;
-// 					originalPath = result.originalPath;
-					$('#tblFileList tr td').parent().remove();
+					
 					renderList(result.fileList, true);
 					makePageSelPage();
 					namePath(result.folderPath, result.originalPath);
 					
-					dom.mailBoxInfo.innerHTML = " - [" + message.total + " <spring:message code='ezWebFolder.t277'/> " + "<span style='color:#017BEC;'>" 
-						+ fileCount + "</span>, " + message.total + " <spring:message code='ezWebFolder.t276'/> " + "<span style='color:#017BEC;'>" + folderCount +" </span>" + message.count + "]";
+					setMailBoxInfo(result.fldCnt, result.fileCnt);
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
 				}
 			});
+		}
+		
+		function setMailBoxInfo(folderCount, fileCount) {
+			dom.mailBoxInfo.innerHTML = " - [" + message.total + " <spring:message code='ezWebFolder.t277'/> " + "<span style='color:#017BEC;'>" 
+			+ fileCount + "</span>, " + message.total + " <spring:message code='ezWebFolder.t276'/> " + "<span style='color:#017BEC;'>" + folderCount +" </span>" + message.count + "]";
+			$("#listcount").val(blockSize).prop("selected", true);
 		}
 		
 		// originalPath 는 한글 path
