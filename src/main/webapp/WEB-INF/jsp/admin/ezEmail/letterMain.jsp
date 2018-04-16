@@ -27,11 +27,11 @@
 	        	if (companyID != company) {
 	        		companyID = company;
 	        		
-	        		var letteIfr = document.getElementById("Letter_ifrm").src;
+	        		var letteIfr = document.getElementById("Letter_ifrm");
 	        		if (Tab1_SelectID == 'tagsub1') {
-	        			letteIfr = "/admin/ezEmail/letterBoxManager.do?companyId=" + companyID;
+	        			letteIfr.src = "/admin/ezEmail/letterBoxManager.do?companyId=" + companyID;
 	        		} else {
-	        			letteIfr = "/admin/ezEmail/letterAdminPage.do?companyId=" + companyID;
+	        			letteIfr.src = "/admin/ezEmail/letterAdminPage.do?companyId=" + companyID;
 	        		}
 	        		
 	        	}
