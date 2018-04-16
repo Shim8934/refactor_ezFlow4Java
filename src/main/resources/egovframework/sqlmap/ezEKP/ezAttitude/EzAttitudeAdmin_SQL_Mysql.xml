@@ -19,6 +19,7 @@
 		<result property="userTitle"				column="TITLE"					columnIndex="4"/>
 		<result property="userName" 				column="DISPLAYNAME" 			columnIndex="5"/>
 		<result property="deptName" 				column="DESCRIPTION" 			columnIndex="6"/>
+		<result property="compareTime"				column="compareTime"/>
 	</resultMap>
 	
 	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
@@ -172,7 +173,8 @@
 				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) as work_endtime,
 				TBL_USERMASTER.title,
 				TBL_USERMASTER.displayname,
-				TBL_USERMASTER.description
+				TBL_USERMASTER.description,
+				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime, '0', '1') AS compareTime
 			FROM
 				TBL_USERMASTER
 			LEFT JOIN
