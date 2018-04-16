@@ -571,8 +571,8 @@
 						document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
 						g_bPrevShow = false;
 						onPreview=false;
-						$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezBoard.t10022' /></span>");
-						$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezBoard.t10022' /></span>");
+						$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
+						$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
 					} else if (pGubun == "W") {
 						document.getElementById("MailListRayer").style.display = "inline-block";
 						document.getElementById("PreviewRayerW").style.display = "block";
@@ -601,8 +601,8 @@
 						g_bPrevShow = true;
 						
 						if(onPreview==false){
-							$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezBoard.t10022' /></span>");
-							$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezBoard.t10022' /></span>");
+							$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
+							$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
 // 							ifrmPreViewW.document
 // 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 						}
@@ -650,8 +650,8 @@
 						g_bPrevShow = true;
 						
 						if(onPreview==false){
-							$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezBoard.t10022' /></span>");
-							$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezBoard.t10022' /></span>");
+							$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
+							$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
 // 							ifrmPreViewH.documentr.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 						}
 						onPreview=true;
