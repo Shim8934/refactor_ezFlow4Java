@@ -685,7 +685,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String status                 = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
-			String currFolder = (String)resultBody.get("currentFolder");
+			JSONArray currFolders = (JSONArray)resultBody.get("currentFolders");
 			
 			if (!type.equals("dept")) {
 				JSONObject folderTree = (JSONObject) resultBody.get("data");
@@ -696,8 +696,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 				model.addAttribute("folderTree", folderTree);
 			}
 			
-			if (!currFolder.equals("")) {
-				model.addAttribute("currentFolder", currFolder);
+			if (currFolders != null && currFolders.size() > 0) {
+				model.addAttribute("currentFolders", currFolders);
 			}
 			
 		}

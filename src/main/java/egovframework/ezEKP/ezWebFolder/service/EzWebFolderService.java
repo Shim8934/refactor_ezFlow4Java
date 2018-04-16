@@ -70,4 +70,5 @@ public interface EzWebFolderService {
 	String getMaxFileID(int tenantId) throws Exception;
 	JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, Locale locale, LoginVO userInfo) throws Exception;
 	Map<String, String> getAllFolderNameMap(List<String> testbnk, String primary, int tenantId);
+	List<String> getFolderListFromFileId(List<String> fileIds, int tenantId) throws Exception;
 }

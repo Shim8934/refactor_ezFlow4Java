@@ -197,6 +197,8 @@ function renderResult(result) {
 	catch (e) {
 		alert("returnvalue :: " + e.description);
 	}
+	
+	window.parent.frames["left"].drawVolume();
 }
 
 //관리자

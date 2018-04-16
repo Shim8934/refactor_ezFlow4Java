@@ -418,6 +418,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		if (deptsList != null && deptsList.size() > 0) {
 			//Add new dept list
 			for (String deptId : deptsList) {
+				logger.debug("deptId: " + deptId);
 				FolderVO folderVO = ezWebFolderService.getRootFolderId(deptId, "D", userInfo.getOffset(), tenantId);
 						
 				if (folderVO == null) {
@@ -570,6 +571,8 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		folder.setOwnerId(parentFolder.getOwnerId());
 		folder.setFolderType(parentFolder.getFolderType());
 		folder.setCreateId(userId);
+		folder.setCreateName1(userInfo.getDisplayName1());
+		folder.setCreateName2(userInfo.getDisplayName2());
 		folder.setUpdateId(userId);
 		folder.setUpdateDate(timeUTC);
 		folder.setFolderUpper(parentFolder.getFolderId());
@@ -600,6 +603,9 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 				subFld.setFolderType(folderType);
 				subFld.setOwnerId(ownerId);
 				subFld.setUpdateDate(timeUTC);
+				subFld.setCreateId(userInfo.getId());
+				subFld.setCreateName1(userInfo.getDisplayName1());
+				subFld.setCreateName2(userInfo.getDisplayName2());
 				subFld.setUpdateId(userInfo.getId());
 				subFld.setFolderLevel(subFld.getFolderLevel() + levelDistance);
 				subFld.setFolderId(newSubId);
@@ -630,6 +636,8 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 				file.setUpdateDate(timeUTC);
 				file.setCreateId(userInfo.getId());
 				file.setUpdateId(userInfo.getId());
+				file.setCreateName1(userInfo.getDisplayName1());
+				file.setCreateName2(userInfo.getDisplayName2());
 				file.setFileId(ezWebFolderService.getMaxFileID(userInfo.getTenantId()));
 				ezWebFolderService.insertFile(file);
 				ezWebFolderService.saveLog("C", userInfo.getCompanyID(), userInfo.getOffset(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), file.getFileName(), file.getFileSize(), file.getFileExt(), file.getFileTypeName(), userInfo.getTenantId());

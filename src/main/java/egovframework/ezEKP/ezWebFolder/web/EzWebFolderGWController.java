@@ -1852,9 +1852,10 @@ public class EzWebFolderGWController {
 		logger.debug("Mode: " + mode + " || fileList: " + fileList + " || type: " + type + " || companyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset);
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, primary, offset);
-			int tenantId     = userInfo.getTenantId();
-			FileVO file      = ezWebFolderService.getFileByFileId(fileArr[0], offset, tenantId);
+			LoginVO userInfo     = commonUtil.getUserForGw(userId, serverName, primary, offset);
+			int tenantId         = userInfo.getTenantId();
+			List<String> fileIds = Arrays.asList(fileArr);
+			List<String> folders = ezWebFolderService.getFolderListFromFileId(fileIds, tenantId);
 			
 			switch (type) {
 				case "comp":
@@ -1905,7 +1906,7 @@ public class EzWebFolderGWController {
 					break;
 			}
 			
-			result.put("currentFolder", file.getFolderId());
+			result.put("currentFolders", folders);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 

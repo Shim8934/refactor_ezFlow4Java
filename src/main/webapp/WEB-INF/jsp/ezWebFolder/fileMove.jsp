@@ -17,7 +17,7 @@
 		var fileList       = "<c:out value='${fileIdList}'/>";
 		var selectedFolder = null;
 		var selectedLevel  = null;
-		var currentFolder  = null;
+		var currentFolders = [];
 		var arrSubFolder   = [];
 		var mode           = "<c:out value='${mode}'/>";
 		
@@ -29,7 +29,7 @@
 			arrSubFolder   = [];
 			selectedFolder = null;
 			selectedLevel  = null;
-			currentFolder  = null;
+			currentFolders = [];
 			var type       = document.querySelector('input[name=treeType]:checked').value;
 			
 			$.ajax({
@@ -44,8 +44,8 @@
 				dataType: "JSON",
 				async: true,
 				success : function(data) {
-					var result    = data.folderTree;
-					currentFolder = data.currentFolder;
+					var result     = data.folderTree;
+					currentFolders = data.currentFolders;
 					
 					renderData(result, type == "dept" ? "0" : "1");
 				},
@@ -243,7 +243,7 @@
 				return;
 			}
 			
-			if (selectedFolder == currentFolder) {
+			if (currentFolders.indexOf(selectedFolder) > -1) {
 				alert("<spring:message code='ezWebFolder.t210'/>");
 				return;
 			}
@@ -279,7 +279,7 @@
 				return;
 			}
 			
-			if (selectedFolder == currentFolder) {
+			if (currentFolders.indexOf(selectedFolder) > -1) {
 				alert("<spring:message code='ezWebFolder.t210'/>");
 				return;
 			}
