@@ -55,7 +55,12 @@
 	   				url:"/admin/ezJournal/userList.do",
 	   				data:{"key":key, "value":value,"deptName":deptName},
 	   				success: function(result){
-	   					$("#orglistView").html(result);
+	   					var picList = $(result).find(".organwrap");
+	   					if(picList.length==0 && key!="DEPARTMENT"){
+	   						alert("<spring:message code='ezCommunity.t1379'/>");
+	   					} else {
+		   					$("#orglistView").html(result);
+	   					}
 	   				}
 	   			});
 	   		}
@@ -86,8 +91,12 @@
 	   		//검색
 	   		function search_click(){
 	   			var key = $("#search_type").val();
-	   			var value = $("#keyword").val();
-	   			setUserList(key,value);
+	   			var value = $("#keyword").val().trim();
+	   			if(value){
+		   			setUserList(key, value);
+	   			} else {
+	   				alert("<spring:message code='ezSchedule.t8'/>")
+	   			}
 	   		}
 	   		
 	   		//사원선택
