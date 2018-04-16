@@ -7833,6 +7833,9 @@
 <!--  민원인 주소 여러개 추가 가능하도록 처리 -->
 	<select id="EzApprovalG.getSendOutDocList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
+		SELECT
+			*
+		FROM (
 		SELECT * FROM (
 			SELECT 
 				TBL_ENDAPRDOCINFO.DOCID,
@@ -7956,6 +7959,31 @@
 		   	 ORDER BY 
 		   	 	ENDDATE $v_BASICORDER2$
 		   	</isEmpty>
+		   	<isNotEmpty property="v_ORDEROPTION2">
+				<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="11">
+					<isEqual compareValue="v_ORDEROPTION2VALUE" compareProperty="enddate">
+						ORDER BY 
+								$v_ORDEROPTION2$
+					</isEqual>
+					<isNotEqual compareValue="v_ORDEROPTION2VALUE" compareProperty="enddate">
+						ORDER BY 
+								$v_ORDEROPTION2$, ENDDATE $v_BASICORDER2$
+					</isNotEqual>
+				</isGreaterEqual>
+				<isLessThan  property="v_ORDEROPTION2LENGTH" compareValue="11">
+						 ORDER BY 
+						 		$v_ORDEROPTION2$, ENDDATE $v_BASICORDER2$
+				</isLessThan>
+			</isNotEmpty>
+			<isEmpty property="v_ORDEROPTION2">
+					ORDER BY 
+							ENDDATE $v_BASICORDER2$
+			</isEmpty>
+			<![CDATA[
+			)B
+			ROWNUM <=  #v_PAGESIZE2#
+			
+			]]>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO"> -->
