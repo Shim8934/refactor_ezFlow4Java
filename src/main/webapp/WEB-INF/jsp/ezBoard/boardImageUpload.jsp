@@ -31,8 +31,8 @@
 	                imageWidth = temp.split("*")[0];
 	                imageHeight = temp.split("*")[1];
 	
-	                document.getElementById("imagewidth").value = imageWidth
-	                document.getElementById("imageheight").value = imageHeight
+	                document.getElementById("imagewidth").value = imageWidth;
+	                document.getElementById("imageheight").value = imageHeight;
 	
 	                tempfilename = filepath.substr(filepath.lastIndexOf("\\") + 1);
 	                var strXML = "<IMAGE><OLDFILENAME>" + tempfilename + "</OLDFILENAME><FILENAME>" + guid + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
@@ -45,7 +45,8 @@
 		    }
 		
 		    function changeSliderImage_end() {
-		        if (g_xmlhttp.readyState != 4) return;
+		        if (g_xmlhttp.readyState != 4)
+		        	return;
 		        UploadSliderImage.src = "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDBACKGROUND&ATTID=" + g_xmlhttp.responseText;
 		        savefilename = g_xmlhttp.responseText;
 		    }
@@ -70,8 +71,7 @@
 	            xhr.addEventListener("load", UploadComplete, false);
 	            xhr.open("POST", "/ezBoard/uploadBackImage.do");
 	            xhr.send(fd);
-	            
-		        document.form.file1.value = "";
+
 		    }
 		    var fileinfo = new Array();
 		    function UploadComplete() {
