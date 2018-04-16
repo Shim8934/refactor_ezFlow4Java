@@ -204,9 +204,15 @@
 		<isNotEmpty prepend="AND" property="searchUserName">
 			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
-		<isNotEmpty prepend="" property="order">
-			ORDER BY $order$
+		
+		<isNotEmpty property="orderCell">
+			ORDER BY
+				$orderCell$ $orderOption$,
+				TBL_USERMASTER.displayname
 		</isNotEmpty>
+		<isEmpty property="orderCell">
+			ORDER BY TBL_USERMASTER.displayname
+		</isEmpty>
 		
 		<![CDATA[
 			LIMIT #limit#, #listSize#

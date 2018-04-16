@@ -904,15 +904,12 @@ public class EzAttitudeGWController {
 			String orderCell = request.getParameter("orderCell");
 			String orderOption = request.getParameter("orderOption");
 			String offsetMin = request.getParameter("offsetMin");
-			String order = orderCell + " " + orderOption;
-			
-			LOGGER.debug("order : " + order);
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
 			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(tenantId, companyId, searchUserName, searchDeptName);
-			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(tenantId, companyId, searchUserName, searchDeptName, pageNum, listSize, order, offsetMin);
+			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(tenantId, companyId, searchUserName, searchDeptName, pageNum, listSize, orderCell, orderOption, offsetMin);
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
