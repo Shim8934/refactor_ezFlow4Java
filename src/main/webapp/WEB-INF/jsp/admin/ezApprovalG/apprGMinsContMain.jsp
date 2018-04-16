@@ -352,7 +352,7 @@
 	                <a class="imgbtn"><span id="btnDeldept" onClick="return btnDeldept_onclick()"><spring:message code='ezApprovalG.t1650'/></span></a><br/>
 				</td>
 				<td style="vertical-align:top;">
-					<select id="selUseDept" name="selUseDept" style="WIDTH: 240px; HEIGHT: 235px" size="2"></select>
+					<select id="selUseDept" name="selUseDept" style="background:none; WIDTH: 240px; HEIGHT: 235px" size="2"></select>
 				</td>
 			</tr>
 		</table>
