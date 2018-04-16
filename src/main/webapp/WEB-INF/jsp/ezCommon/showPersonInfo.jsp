@@ -167,7 +167,7 @@
 						</td>
 					</tr>
 					<tr>
-					  	<th><spring:message code='main.t85' /></th>
+					  	<th><spring:message code='ezPersonal.t1820' /><br><spring:message code='main.t85' /></th>
 						<td colspan="2">
 							<div id="litrealInfo" style="WIDTH:100%;HEIGHT:80px;overflow:auto; line-height:18px">
 					        	${LiteralInfo }
