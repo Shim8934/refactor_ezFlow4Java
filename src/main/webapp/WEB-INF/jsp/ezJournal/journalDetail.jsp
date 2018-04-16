@@ -321,39 +321,6 @@
                 sizeOn();
 	        }
 		    
-		    //프린터
-		    var boarditemview_cross_print_option_dialogArguments = new Array();
-		    var url = window.location.href;
-		    function btn_Print_Onclick() {
-		        if (CrossYN()) {
-		            url = window.location.href;
-		            url = url.replace(".do", "PrintOption.do");
-		            boarditemview_cross_print_option_dialogArguments[1] = btn_Print_Onclick_Complete;
-		            var OpenWin = window.open(url, "boarditemview_print_option", GetOpenWindowfeature(380, 200));
-		            try { OpenWin.focus(); } catch (e) { }
-		        }
-		        else {
-		            var parameter = "";
-		            url = window.location.href;
-		            url = url.replace(".do", "PrintOption.do");
-		            var feature = "status:no;dialogWidth:380px;dialogHeight:200px;help:no;";
-		            feature = feature + GetShowModalPosition(380, 200);
-		            var RtnVal = window.showModalDialog(url, parameter, feature);
-		            if (RtnVal[0] != "0" && RtnVal[1] != "0") {
-		                url = url.replace("PrintOption.do", "Print.do");
-		                url = url + "&oneLine=" + RtnVal[0] + "&attach=" + RtnVal[1];
-		                window.open(url, "", "top=0, left=0, height=700px, width=840px, location=0, menubar=0, toolbar=1, resizable=1, scrollbars=1");
-		            }
-		        }
-		    }
-		    function btn_Print_Onclick_Complete(RtnVal) {
-		        if (RtnVal[0] != "0" && RtnVal[1] != "0") {
-		            url = url.replace("PrintOption.do", "Print.do");
-		            url = url + "&oneLine=" + RtnVal[0] + "&attach=" + RtnVal[1];
-		            window.open(url, "", "top=0, left=0, height=700px, width=840px, location=0, menubar=0, toolbar=1, resizable=1, scrollbars=1");
-		        }
-		    }
-		    
 		    //작성자 정보창
 		    function OpenUserInfo(pUserID) {
 		        GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
@@ -384,7 +351,7 @@
 	            DivPopUpShow(600, 415, szHref);
 		    }
 		    
-		    //엑셀로 저장
+		    //엑셀로 저장 (미구현)
 		    function convertToExcel(elem){
 		    	var title = $("#journalTitle").text().trim();
 	    		var browser = navigator.userAgent.toLowerCase();
