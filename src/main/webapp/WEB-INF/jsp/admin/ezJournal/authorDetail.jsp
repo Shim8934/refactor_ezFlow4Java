@@ -29,6 +29,8 @@
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
+	   		//선택된 유저으,ㅣ부서
+	   		var userDeptId;
 	   	
 	   		function close_Click(){
 	   			window.close();
@@ -83,6 +85,8 @@
 	   						if($(this).attr("mine")!='Y'){
 		   						lpDepts.push($(this).attr("targetId"));
 		   						lpDeptNames.push($(this).find("td").text());
+	   						} else {
+	   							userDeptId=$(this).attr("targetId");
 	   						}
 	   					})
 	   				}
@@ -108,6 +112,7 @@
 // 		   			opener.deptIds = lpDepts;  
 // 		   			opener.deptNames = lpDeptNames;
 		   			opener.setDeptName(JSON.stringify(lpDepts), JSON.stringify(lpDeptNames));
+		   			opener.userDeptId = userDeptId;
 					window.close();
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");

@@ -65,22 +65,26 @@
 	    	
 	    	//열람권한 저장
 	    	function insertAuthDept(){
-				$.ajax({
-	   				type:"POST",
-	   				dataType:"text",
-	   				url:"/admin/ezJournal/saveAuthor.do",
-	   				data:{
-	   					userId:selectedUser,
-	   					depts:JSON.stringify(deptIds)
-	   				},
-	   				success: function(result) {
-	   					if (result == "ok") {
-		   					alert("<spring:message code='ezJournal.t137'/>");
-	   						opener.location.reload();
-	   						window.close();
-	   					}
-	   				}
-	   			});
+	    		if(deptIds.length!=0){
+					$.ajax({
+		   				type:"POST",
+		   				dataType:"text",
+		   				url:"/admin/ezJournal/saveAuthor.do",
+		   				data:{
+		   					userId:selectedUser,
+		   					depts:JSON.stringify(deptIds)
+		   				},
+		   				success: function(result) {
+		   					if (result == "ok") {
+			   					alert("<spring:message code='ezJournal.t137'/>");
+		   						opener.location.reload();
+		   						window.close();
+		   					}
+		   				}
+		   			});
+	    		} else {
+   					alert("<spring:message code='ezJournal.t168'/>");
+	    		}
 	   		}
 	    	
 	    	$(document).ready(function(){
