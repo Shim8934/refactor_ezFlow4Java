@@ -445,6 +445,11 @@
 	
 		        if (tr) {
 		            document.getElementById('descrip').innerHTML = GetAttribute(tr, "DATA2");
+		            if ((GetAttribute(tr, "DATA4") != null ? GetAttribute(tr, "DATA4").toLowerCase().indexOf(".hwp") : -1) > 0) {
+		               $("#btnFormListView").hide();
+		            } else {
+		            	$("#btnFormListView").show();
+		            }
 		        }
 		    }
 	
