@@ -300,8 +300,8 @@
 					"<canvas id='ladderCanvas' width='0' height='800'></canvas>"
 				);
 				$(".directionBtn").html(
-						'<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 0;"><div class="direcTextDiv"><spring:message code="ezLadder.t106" /></div></button>' +
-						'<button id="autoDirection" class="direcDiv" align="center" style="right: 160px;"><div class="direcTextDiv"><spring:message code="ezLadder.t107" /></div></button>'
+						'<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code="ezLadder.t106" /></div></button>' +
+						'<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code="ezLadder.t107" /></div></button>'
 				);
 			}
 			
@@ -402,8 +402,8 @@
 						html += '<div style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap">' + line.userName + '</span></div></div></li>';
 					});
 					$("#attendantList").html(html);
-					$(".directionBtn").html('<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 0;"><div class="direcTextDiv"><spring:message code="ezLadder.t106" /></div></button>' +
-							'<button id="autoDirection" class="direcDiv" align="center" style="right: 160px;"><div class="direcTextDiv"><spring:message code="ezLadder.t107" /></div></button>');
+					/* $(".directionBtn").html('<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 0;"><div class="direcTextDiv"><spring:message code="ezLadder.t106" /></div></button>' +
+							'<button id="autoDirection" class="direcDiv" align="center" style="right: 160px;"><div class="direcTextDiv"><spring:message code="ezLadder.t107" /></div></button>'); */
 					$("#blackBox, #startButton").remove();
 				}
 			});
@@ -768,8 +768,8 @@
 							
 						<c:if test="${vo.status eq 1}">
 							<div class="directionBtn">
-								<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 0;"><div class="direcTextDiv"><spring:message code='ezLadder.t106' /></div></button>
-								<button id="autoDirection" class="direcDiv" align="center" style="right: 160px;"><div class="direcTextDiv"><spring:message code='ezLadder.t107' /></div></button>
+								<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code='ezLadder.t106' /></div></button>
+								<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code='ezLadder.t107' /></div></button>
 							</div>
 							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF;">
 								<div style="height: 140px;">

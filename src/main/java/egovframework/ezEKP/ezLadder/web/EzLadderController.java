@@ -1,12 +1,7 @@
 package egovframework.ezEKP.ezLadder.web;
 
 
-import java.lang.annotation.Native;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -15,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,37 +18,23 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.Headers;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import com.google.gson.JsonObject;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezLadder.service.EzLadderService;
 import egovframework.ezEKP.ezLadder.vo.LadderBmUserVO;
 import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
-import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
-import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderOrderVO;
-import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -409,28 +389,6 @@ public class EzLadderController {
 		return "json";
 	}
 	
-	/** 웹소켓테스트 */
-	@SuppressWarnings("unchecked")
-	@MessageMapping("/ladtest")
-	public void stopmtestcont(/*String msg*/JSONObject reqjson) {
-		logger.debug("### 웹소켓 send 테스트");
-//		logger.debug("### " + msg);
-//		
-//		msg += "-----return"; 
-//		logger.debug("### " + msg);
-		logger.debug("### " + reqjson);
-		
-		reqjson.put("add", ".....");
-		logger.debug("### " + reqjson);
-		
-		// subscribe test
-		JSONObject json = new JSONObject();
-//		json.put("retmsg", msg);
-		this.template.convertAndSend("/ladcmt/subscribe/test", reqjson);
-		logger.debug("### 웹소켓 send 테스트 끝");
-		
-	}
-	
 	/**
 	 * 추가, 수정 한 댓글 조회
 	 * @throws Exception 
@@ -538,20 +496,6 @@ public class EzLadderController {
 		}
 		
 		logger.debug("setLadderComment.do ended.");
-		return "json";
-	}
-	
-	/**
-	 * 이전 사다리 미리보기
-	 * @throws Exception 
-	 * */
-	@RequestMapping(value = "/ezLadder/getPreLadder.do")
-	public String getPreLadder(@CookieValue("loginCookie") String loginCookie, String ladderId, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("setListOrder.do started.");
-		
-		// 게임페이지 조회하는 gwcontroller 가져오기
-		
-		logger.debug("setListOrder.do ended.");
 		return "json";
 	}
 	

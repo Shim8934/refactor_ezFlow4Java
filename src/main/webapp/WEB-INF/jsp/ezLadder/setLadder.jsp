@@ -10,6 +10,7 @@
 		<title><spring:message code="ezLadder.t060" /></title>
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 		<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
+		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
 		<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -622,14 +623,6 @@
 					items[randomIdx] = temp;
 				});
 				
-				/* if(ladderType == "0") {
-					items.fill("꽝!", 0, bombnum);
-					items.fill("패스", bombnum)
-				} else if(ladderType == "2") {
-					items.forEach(function(item, index) {
-						items[index] = index + 1;
-					});
-				} */
 				items.forEach(function(item, index) {
 					$("[_itemindex='" + index + "']").val(item);
 				});
@@ -641,6 +634,9 @@
 
 		</script>
 		<style type="text/css">
+			.ui-widget-header {
+				background: #ddeeff;
+			}
 			.ladderType, .ladderSecret {
 				width: 50px;
 				height: 50px;
@@ -652,11 +648,9 @@
 				display: none;
 			}
 			.default {
-				/* display: inline; */
 				border: 2px solid #dddddd; 
 			}
 			.select {
-				/* display: none; */
 				border: 2px solid #0470e4; 
 			}
 			.typeOpbtn {
@@ -700,19 +694,19 @@
 							<div style="float: right;">
 									<div id="ladderTypeOption" style='display: inline-block; margin-right: 30px; height: 50px;'></div>
 									<div class="ladderType" _num="0">
-										<img src="/images/ezLadder/icon_bomb.png" class="default icon"/>
+										<img src="/images/ezLadder/icon_game00_no.png" class="default icon"/>
 										<img src="/images/ezLadder/icon_game00.png" class="select icon"/>
 									</div>
 									<div class="ladderType" _num="1">
-										<img src="/images/ezLadder/icon_money.png" class="default icon"/>
+										<img src="/images/ezLadder/icon_game01_no.png" class="default icon"/>
 										<img src="/images/ezLadder/icon_game01.png" class="select icon"/>
 									</div>
 									<div class="ladderType" _num="2">
-										<img src="/images/ezLadder/icon_order.png" class="default icon"/>
+										<img src="/images/ezLadder/icon_game02_no.png" class="default icon"/>
 										<img src="/images/ezLadder/icon_game02.png" class="select icon"/>
 									</div>
 									<div class="ladderType" _num="3">
-										<img src="/images/ezLadder/icon_handwork.png" class="default icon"/>
+										<img src="/images/ezLadder/icon_game03_no.png" class="default icon"/>
 										<img src="/images/ezLadder/icon_game03.png" class="select icon"/>
 									</div>
 								<input name="type" style="display: none;" />
