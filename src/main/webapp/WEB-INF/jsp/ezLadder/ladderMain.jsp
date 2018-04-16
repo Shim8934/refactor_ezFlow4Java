@@ -105,7 +105,7 @@
 	<body class="mainbody" style="min-width: 750px;">
 		<h1><spring:message code="ezLadder.t001"/>
 			<span id="mailBoxInfo"></span>
-			<span style="float: right; font-weight:normal;color:black; margin-right: 30px;">
+			<span style="float: right; font-weight:normal;color:black;">
 				<select id="searchOption" style="height:24px;">
 				  <option value="title" <c:if test = "${searchSelect eq 'title' }" >selected="selected"</c:if>><spring:message code="ezLadder.t125"/></option>
 				  <option value="kind" <c:if test = "${searchSelect eq 'kind' }" >selected="selected"</c:if>><spring:message code="ezLadder.t126"/></option>
@@ -125,8 +125,8 @@
 			</span>
 		</h1>
 		<div id="mainmenu">
-			<ul style="width:98%;">
-				<li id="btnInsert" onClick="newLad()" style="margin-left: 10px"><a><span><spring:message code="ezLadder.t013"/></span></a></li>
+			<ul style="width:100%;">
+				<li id="btnInsert" onClick="newLad()" ><a><span><spring:message code="ezLadder.t013"/></span></a></li>
 				<li style="float:right; font-weight:normal; ">
 					<button class="participantBtn" id="part" onclick="participant(this.value)" value="part" style="position:relative; left:6px;"><spring:message code="ezLadder.t012"/></button>
 					<button class="participantBtn" id="all" onclick="participant(this.value)" value="all"><spring:message code="ezLadder.t011"/></button>
@@ -135,7 +135,7 @@
 		</div>
 		
 		<div class="div_scroll" style="width:100%; overflow: auto" id="divList">
-			 <table class="mainlist" style="width:98%; margin-left: 10px; margin-right: 10px; overflow: auto"> 
+			 <table class="mainlist" style="width:100%; overflow: auto"> 
 			    <tr class="header" style="height=20px;"> 
 					<th width="20px" onClick="listSort(0)"><spring:message code="ezLadder.t002"/><span id="sort_0" ></span></th> 
 					<th width="80px" onClick="listSort(1)"><spring:message code="ezLadder.t003"/><span id="sort_1" ></span></th> 
