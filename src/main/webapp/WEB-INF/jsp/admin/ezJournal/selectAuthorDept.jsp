@@ -57,6 +57,7 @@
 	   			var flag = true;
 	   			for (var i = 0; i < lpDepts.length ; i++) {
 					if(lpDepts[i] == lpDeptId){
+						alert("<spring:message code='ezJournal.t127'/>");
 						flag=false;
 					}
 				}
