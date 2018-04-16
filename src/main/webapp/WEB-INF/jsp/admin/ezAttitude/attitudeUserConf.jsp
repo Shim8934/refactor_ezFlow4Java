@@ -43,6 +43,7 @@
 	    		} else {
 		            document.getElementById("ListCompany").selectedIndex = 0;
 	    		}
+	    		
 	            company_change();
 	        }
     		
@@ -62,6 +63,7 @@
 	    				src = '/images/etc/view-sortdown.gif';
 	    				orderOption = "DESC";
 	    			}
+	    			
 	    			$("#attiBoardList th").find("img").remove();
 	    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
 	    			
@@ -76,25 +78,29 @@
     		}
     		
     		pCompanyId = $("select[name=ListCompany]").val();
+    		
     		getUserConfList();
     	}
     	
     	function getUserConfList(){
     		$.ajax({
-    			data : "GET",
+    			data : "POST",
     			dataType : "json",
     			async : false,
     			url : "/admin/ezAttitude/attitudeUserConfList.do",
-    			data : {companyId : pCompanyId, 
-    					userName : searchUserName, 
-    					deptName : searchDeptName, 
-    					pageNum : pageNum, 
-    					listSize : listSize,
-    					orderCell : orderCell,
-    					orderOption : orderOption},
-    			success : function(result){
+    			data : {
+    				companyId : pCompanyId,
+   					userName : searchUserName,
+   					deptName : searchDeptName,
+   					pageNum : pageNum,
+   					listSize : listSize,
+   					orderCell : orderCell,
+   					orderOption : orderOption
+   				},
+   				success : function(result){
     				totalCount = result.totalCount;
     				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
+    				
     				getUserConfList_after(result.list);
     				//더블클릭 이벤트
     				addTrDblclickEvent(userDbClick);
@@ -112,6 +118,7 @@
     			   			+ "<td>" + result[resultLeng].userTitle+ "</td>"
     			   			+ "<td>" + result[resultLeng].deptName+ "</td>"
     			   			+ "<td>" + result[resultLeng].workStartTime + " ~ " + result[resultLeng].workEndTime + "</td></tr>";
+    			   			//회사근태와 다른애들 체크해서 아이콘이든 뭐든 구분가능한 컬럼하나추가
     		}
     		
     		if (resultHtml == "") {

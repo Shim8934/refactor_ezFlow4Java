@@ -893,7 +893,7 @@ public class EzAttitudeGWController {
 		
 		JSONObject result = new JSONObject();
 		
-		try{
+		try {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
 			String userId = request.getParameter("userId");
@@ -905,32 +905,32 @@ public class EzAttitudeGWController {
 			String orderOption = request.getParameter("orderOption");
 			String offsetMin = request.getParameter("offsetMin");
 			String order = orderCell + " " + orderOption;
+			
 			LOGGER.debug("order : " + order);
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
 			
-			
-			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(info.getTenantId(), companyId, searchUserName, searchDeptName, pageNum, listSize, order, offsetMin);
-			
-			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(info.getTenantId(), companyId, searchUserName, searchDeptName);
+			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(tenantId, companyId, searchUserName, searchDeptName);
+			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(tenantId, companyId, searchUserName, searchDeptName, pageNum, listSize, order, offsetMin);
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
 			data.put("totalCount", totalCount);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
+		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users-attitude-confs] ended.");
+		
 		return result;
 	}
-	
-	
 	
 	/**
 	 * G/W 근태관리 [GET] 사용자별 근태설정 정보 조회

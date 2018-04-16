@@ -521,13 +521,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId,
-			String companyId, String searchUserName, String searchDeptName, String pageNum, 
-			String listSize, String order, String offsetMin)
-			throws Exception {
+			String companyId, String searchUserName, String searchDeptName, String pageNum,
+			String listSize, String order, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigList started");
-		Map<String, Object> map = new HashMap<String, Object>();
 		
 		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("searchUserName", searchUserName);
@@ -538,7 +538,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offsetMin", offsetMin);
 		
 		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfigList(map);
-		LOGGER.debug("getAttitudeUserConfigList ended");
+		
+		LOGGER.debug("getAttitudeUserConfigList ended. resultList size = " + resultList.size());
+		
 		return resultList;
 	}
 
@@ -577,24 +579,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getCompanyList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("lang", lang);
 		map.put("tenantId", tenantId);
 		
 		List<AttitudeDeptVO> companyList = ezAttitudeDAO.getCompanyList(map);
 		
 		LOGGER.debug("getCompanyList ended");
+		
 		return companyList;
 	}
 
 	@Override
-	public String getAttitudeUserConfigCount(int tenantId,
-			String companyId, String searchUserName, String searchDeptName)
-			throws Exception {
+	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigListCount started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("searchUserName", searchUserName);
@@ -602,7 +601,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		String totalCount = ezAttitudeDAO.getAttitudeUserConfigCount(map);
 		
-		LOGGER.debug("getAttitudeUserConfigListCount ended");
+		LOGGER.debug("getAttitudeUserConfigListCount ended. totalCount = " + totalCount);
+		
 		return totalCount;
 	}
 

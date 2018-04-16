@@ -167,66 +167,81 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultMap="attitudeUserConfig">
 		<![CDATA[
 			SELECT
-				A.USER_ID,
-				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_STARTTIME), INTERVAL #offsetMin# minute), 12, 5) as WORK_STARTTIME,
-				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_ENDTIME), INTERVAL #offsetMin# minute), 12, 5) as WORK_ENDTIME,
-				B.TITLE,
-				B.DISPLAYNAME,
-				B.DESCRIPTION
+				TBL_USERMASTER.cn AS user_id,
+				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) as work_starttime,
+				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) as work_endtime,
+				TBL_USERMASTER.title,
+				TBL_USERMASTER.displayname,
+				TBL_USERMASTER.description
 			FROM
-				tbl_attitude_user_conf A
-			INNER JOIN 
-				tbl_usermaster B 
+				TBL_USERMASTER
+			LEFT JOIN
+				TBL_ATTITUDE_USER_CONF
 			ON 
-				A.USER_ID = B.CN
+				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_USER_CONF.tenant_id
 			AND
-				A.TENANT_ID = B.TENANT_ID
+				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_USER_CONF.company_id
+			AND
+				TBL_USERMASTER.cn = TBL_ATTITUDE_USER_CONF.user_id
+			LEFT JOIN
+				TBL_ATTITUDE_CONF
+			ON
+				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_CONF.tenant_id
+			AND
+				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_CONF.company_id
 			WHERE
-				A.TENANT_ID = #tenantId#
+				TBL_USERMASTER.tenant_id = #tenantId#
+			AND 
+				cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
 		]]>
-			<isNotEmpty prepend="AND" property="companyId">
-				A.COMPANY_ID = #companyId#
-			</isNotEmpty>
-			<isNotEmpty prepend="AND" property="searchDeptName">
-				B.DESCRIPTION like CONCAT('%', #searchDeptName#, '%')
-			</isNotEmpty>
-			<isNotEmpty prepend="AND" property="searchUserName">
-				B.DISPLAYNAME like CONCAT('%', #searchUserName#, '%')
-			</isNotEmpty>
-			<isNotEmpty prepend="" property="order">
-				ORDER BY $order$
-			</isNotEmpty>
+		
+		<isNotEmpty prepend="AND" property="companyId">
+			TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			TBL_USERMASTER.description LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="" property="order">
+			ORDER BY $order$
+		</isNotEmpty>
+		
 		<![CDATA[
 			LIMIT #limit#, #listSize#
 		]]>
 	</select>
-	
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigCount" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				COUNT(*)
 			FROM
-				tbl_attitude_user_conf A 
-			INNER JOIN 
-				tbl_usermaster B 
-			ON 
-				A.USER_ID = B.CN
+				TBL_USERMASTER
+			LEFT JOIN
+				TBL_ATTITUDE_USER_CONF
+			ON
+				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_USER_CONF.tenant_id
 			AND
-				A.TENANT_ID = B.TENANT_ID
+				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_USER_CONF.company_id
+			AND
+				TBL_USERMASTER.cn = TBL_ATTITUDE_USER_CONF.user_id
 			WHERE
-				A.TENANT_ID = #tenantId#
+				TBL_USERMASTER.tenant_id = #tenantId#
+			AND 
+				TBL_USERMASTER.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
 		]]>
-			<isNotEmpty prepend="AND" property="companyId">
-				A.COMPANY_ID = #companyId#
-			</isNotEmpty>
-			<isNotEmpty prepend="AND" property="searchDeptName">
-				B.DESCRIPTION like CONCAT('%', #searchDeptName#, '%')
-			</isNotEmpty>
-			<isNotEmpty prepend="AND" property="searchUserName">
-				B.DISPLAYNAME like CONCAT('%', #searchUserName#, '%')
-			</isNotEmpty>
 		
+		<isNotEmpty prepend="AND" property="companyId">
+			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #companyId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			TBL_USERMASTER.description LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeTypeList" parameterClass="Map" resultMap="attitudeType">
