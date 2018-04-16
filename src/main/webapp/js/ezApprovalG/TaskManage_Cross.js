@@ -30,7 +30,7 @@ function GetTaskFullList() {
             	{
             		NodeListLen = 0;
             	}
-            document.getElementById("listcount").innerHTML =  "&nbsp;-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + NodeListLen + " </span>" + strLang943 + "]";
+            document.getElementById("listcount").innerHTML =  "<b>"+arr_userinfo[15]+"</b>&nbsp;"+strLang444+"&nbsp;" + strLang440 + " : <span style='color:#017BEC;font-weight:bold;'> " + NodeListLen + " </span>" + strLang943;
             
 
         }
