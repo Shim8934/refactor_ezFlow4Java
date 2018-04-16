@@ -344,7 +344,9 @@
 				var level    = spanName.getAttribute("level");
 				
 				if (level == null || level == '0') {
-					return;
+					if (checkValidDept() == false) {
+						return;
+					}
 				}
 				
 				var folderName  = document.getElementById("fldName").value;
@@ -384,6 +386,28 @@
 				});
 			}
 			
+			function checkValidDept() {
+				var returnVal = false;
+				$.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/checkValidDept.do",
+					data: {
+						"folderId" : selectedFolder
+					},
+					dataType: "JSON",
+					async: false,
+					success: function(data) {
+						var result = data.result;
+						returnVal = result == "ok" ? true : false;
+					},
+					error: function (xhr, status, e){
+						alert("<spring:message code='ezWebFolder.t134'/>");
+					}
+				});
+				
+				return returnVal;
+			}
+			
 			function moveFolder() {
 				if (!selectedFolder) {
 					alert("<spring:message code='ezWebFolder.t181'/>");
@@ -394,8 +418,10 @@
 				var level    = spanName.getAttribute("level");
 				
 				if (level == null || level == '0') {
-					alert("<spring:message code='ezWebFolder.t223'/>");
-					return;
+					if (checkValidDept() == false) {
+						alert("<spring:message code='ezWebFolder.t223'/>");
+						return;
+					}
 				}
 				
 				DivPopUpShow(450, 480, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder);
@@ -411,8 +437,10 @@
 				var level    = spanName.getAttribute("level");
 				
 				if (level == null || level == '0') {
-					alert("<spring:message code='ezWebFolder.t221'/>");
-					return;
+					if (checkValidDept() == false) {
+						alert("<spring:message code='ezWebFolder.t221'/>");
+						return;
+					}
 				}
 				
 				DivPopUpShow(450, 140, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder);

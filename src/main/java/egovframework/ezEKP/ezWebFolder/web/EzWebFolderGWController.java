@@ -1736,7 +1736,7 @@ public class EzWebFolderGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="rest/ezwebfolderadmin/company-folder/{companyid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/company-folder/{companyid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postMakeCompanyFolder(@PathVariable(value="companyid") String companyId, HttpServletRequest request) throws Exception {
 		String serverName   = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String offset       = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
@@ -1796,7 +1796,7 @@ public class EzWebFolderGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="rest/ezwebfolderadmin/dept-folder/{companyid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/dept-folder/{companyid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postMakeDepartmentFolder(@PathVariable(value="companyid") String companyId, HttpServletRequest request) throws Exception {
 		String serverName   = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String offset       = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
@@ -2181,6 +2181,46 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezwebfolderadmin/dept-check/{folderid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject getCheckValidDept(@PathVariable(value="folderid") String folderId, HttpServletRequest request, Locale locale) throws Exception {
+		String serverName   = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
+		String offset       = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
+		String primary      = request.getParameter("primary")   != null ? request.getParameter("primary")   : "";
+		JSONObject result   = new JSONObject();
+		
+		logger.debug("serverName: " + serverName + " || offset: " + offset + " || folderId: " + folderId);
+		
+		if (serverName.equals("") || offset.equals("") || folderId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			int tenantId     = loginService.getTenantId(serverName);
+			FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			
+			OrganDeptVO dept = ezOrganService.getDeptInfo(folder.getOwnerId(), primary, tenantId);
+			
+			if (dept == null) {
+				result.put("status", "ok");
+				result.put("code", 0);
+			}
+			else {
+				result.put("status", "error");
+				result.put("code", 0);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
 		}
 		
 		return result;
