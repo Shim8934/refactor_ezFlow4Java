@@ -118,7 +118,7 @@
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t142' /></th>
 	            <td>
 	                <textarea rows="3" id="txtdept" style="margin-bottom:2px; width:77%" onfocus="this.blur();" readonly="readonly" ></textarea>
-	                <a href="#" class="imgbtn" style="margin-left: 20px;"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:15px;"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	    </table>
