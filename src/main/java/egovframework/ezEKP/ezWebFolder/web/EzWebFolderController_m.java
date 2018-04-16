@@ -130,7 +130,7 @@ public class EzWebFolderController_m {
 		String searchExt 		= request.getParameter("searchExt")			!= null ? request.getParameter("searchExt") 		            : "" ;
 		String searchFileName 	= request.getParameter("searchFileName") 	!= null ? request.getParameter("searchFileName")	            : "" ;
 		String searchCreateName = request.getParameter("searchCreateName") 	!= null ? request.getParameter("searchCreateName") 	            : "" ;
-		String searchFileType  = request.getParameter("searchFileType")		!= null ? request.getParameter("searchFileType") 	            : "" ;
+		String searchFileType   = request.getParameter("searchFileType")	!= null ? request.getParameter("searchFileType") 	            : "" ;
 		String endrollStartDate = request.getParameter("enrollStartDate")	!= null ? request.getParameter("enrollStartDate") 	            : "" ;
 		String endrollEndDate 	= request.getParameter("enrollEndDate")		!= null ? request.getParameter("enrollEndDate") 	            : "" ;
 		String delStartDate 	= request.getParameter("delStartDate")		!= null ? request.getParameter("delStartDate") 	            	: "" ;
@@ -253,6 +253,45 @@ public class EzWebFolderController_m {
 		
 		logger.debug("status=" + status);
 		logger.debug("pemanentDeleteFile ended");
+		return "json";
+	}
+	
+	@RequestMapping(value="ezWebFolder/restoreFile.do", method= RequestMethod.POST)
+	public String restoreFile (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("restoreFile Started");
+		
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String fileList = request.getParameter("fileList") != null ? request.getParameter("request") : "";
+		String folderList = request.getParameter("folderList") != null ? request.getParameter("request") : "";
+		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String url = gwServerUrl + "/rest/ezwebfolder/file-restore";
+		
+		UriComponentsBuilder butilder = UriComponentsBuilder.fromHttpUrl(url)
+											.queryParam("tenantId", user.getTenantId())
+											.queryParam("userId", user.getId())
+											.queryParam("fileList", fileList)
+											.queryParam("folderList", folderList);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(butilder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		String status = resultBody.get("status").toString();
+		
+		if (!status.equals("ok")) {
+			String reason = resultBody.get("reason").toString();
+			model.addAttribute("reason", reason);
+		}
+		
+		
+		logger.debug("status=" + status);
+		logger.debug("restoreFile ended");
 		return "json";
 	}
 	

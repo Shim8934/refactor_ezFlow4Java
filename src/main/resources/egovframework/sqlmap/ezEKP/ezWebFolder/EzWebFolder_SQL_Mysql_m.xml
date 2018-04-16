@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
-<sqlMap namespace="ezWebFolder_m">
 
+<sqlMap namespace="ezWebFolder_m">
 	<!-- FolderFile typeAlias  -->
 	<typeAlias alias="TrashCanVO"             type="egovframework.ezEKP.ezWebFolder.vo.TrashCanVO"/>
 	<typeAlias alias="ShareVO"                type="egovframework.ezEKP.ezWebFolder.vo.ShareVO"/>
@@ -71,7 +71,7 @@
         <result property="tenantId"               column="tenant_id"              columnIndex="27" />
     </resultMap>
 	
-	<sql id="searchTerm">
+<sql id="searchTerm">
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 				<![CDATA[
 					FT2.TYPE_NAME = #searchFileType#
@@ -695,7 +695,7 @@
 		            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
 				FROM
 					tbl_webfolder_folder AS FOLDER
-					INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+					JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
 					ON FILE_TYPE.TYPE_NAME = 'folder'
 				WHERE
 					FOLDER.USE_STATUS = 'T' AND
@@ -743,7 +743,10 @@
 				FILES.FILE_id       AS TRASHCAN_ID,
 				FILES.FILE_NAME 	AS TRASHCAN_NAME,
 				FILES.FILE_PATH 	AS TRASHCAN_PATH,
-				FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
+				CASE WHEN FILE_TYPE.TYPE_ICON IS NULL 
+				THEN (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) 
+				ELSE FILE_TYPE.TYPE_ICON 
+				END  AS TRASHCAN_ICON_URL,
 				FILES.FILE_EXT		AS TRASHCAN_EXT,
 				FILES.FILE_SIZE 	AS TRASHCAN_SIZE,
 				DATE_ADD(FILES.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
@@ -754,7 +757,8 @@
 	            '' as FOLDER_UPPER
 			FROM
 				tbl_webfolder_file AS FILES
-				INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+				LEFT JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
 			WHERE
 				FILES.USE_STATUS = 'T' AND
 				FILES.DELETER_ID = #userId# AND
@@ -777,8 +781,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 				<![CDATA[
-					FILE_TYPE.TYPE_NAME LIKE CONCAT ('%', #searchFileType#, '%') AND
-					FILE_TYPE.TYPE_ID = FILES.TYPE_ID
+					FILE_TYPE.TYPE_NAME LIKE CONCAT ('%', #searchFileType#, '%')
 				]]>
 		</isNotEqual>
 		<isNotEqual property="endrollStartDate" compareValue="">
@@ -820,7 +823,7 @@
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
 	            "" as FOLDER_UPPER
 			FROM
-				jmocha.tbl_webfolder_file AS FILES
+				tbl_webfolder_file AS FILES
 				INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
 				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
 			WHERE
@@ -1091,4 +1094,5 @@
 			USER_ID = #userId# AND
 			TENANT_ID = #tenantId#
 	</delete>
+
 </sqlMap>

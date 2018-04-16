@@ -515,7 +515,6 @@ public class EzWebFolderGWController_m {
 					
 					// is folder
 					if ("folder".equalsIgnoreCase(trashCan.getTrashCanExt())) {
-						// cut end slash
 						trashCanPath = trashCanPath.substring(0, trashCanPath.length() - 1);
 					} else {
 						trashCanPath += trashCan.getTrashCanName();
@@ -532,7 +531,7 @@ public class EzWebFolderGWController_m {
 			} else {
 				totalpages = (totalCount / listCount) + 1;
 			}
-			
+
 			data.put("trashCanList", trashCanList);
 			data.put("fileCnt", fileCnt);
 			data.put("folderCnt", folderCnt);

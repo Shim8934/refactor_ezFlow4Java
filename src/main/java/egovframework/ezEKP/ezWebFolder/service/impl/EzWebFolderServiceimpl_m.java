@@ -455,7 +455,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		LOGGER.debug("getTrashCanList Started.");
 		LOGGER.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId);
 		LOGGER.debug("pStart=" + pStart + ",pEnd=" + pEnd);
-		LOGGER.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName);
+		LOGGER.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName + ",searchFileType=" + searchFileType);
 		LOGGER.debug("endrollStartDate=" + endrollStartDate + ",endrollEndDate=" + delStartDate + ",delStartDate=" + delStartDate + ",delEndDate=" + delEndDate);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
