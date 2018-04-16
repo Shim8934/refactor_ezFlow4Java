@@ -57,6 +57,10 @@
 				
 				$("#btn_SaveAprLineTempletName").on("click", function() {
 					var bmName = $("#TxtAprLineTempletName").val();
+					if(bmName == "") {
+						alert("<spring:message code='ezLadder.t059' />");
+						return;
+					}
 					if(retFunc !== null || retFunc !== "") {
 						retFunc(bmName, retVal);
 					}
@@ -71,44 +75,44 @@
 	<body class="popup">
 			<c:choose>
 				<c:when test="${popupType == 'add'}">
-					<h1 id="h1Title">사다리 즐겨찾기 그룹 추가</h1>
-					<span>▒ 저장할 즐겨찾기 그룹의 이름을 입력하세요.</span>
+					<h1 id="h1Title"><spring:message code="ezLadder.t021" /></h1>
+					<span>▒ <spring:message code="ezLadder.t065" /><spring:message code="ezLadder.t059" /></span>
 					<div class="nobox" style="margin-top:10px">
-						<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="7">
+						<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="20">
 					</div>
 				</c:when>
 				<c:when test="${popupType == 'modify'}">
-					<h1 id="h1Title">사다리 즐겨찾기 그룹 수정</h1> 
-					<span>▒ 수정할 즐겨찾기 그룹의 이름을 입력하세요.</span>
+					<h1 id="h1Title"><spring:message code="ezLadder.t061" /></h1> 
+					<span>▒ <spring:message code="ezLadder.t066" /><spring:message code="ezLadder.t059" /></span>
 					<div class="nobox" style="margin-top:10px">
-						<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="7">
+						<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="20">
 					</div>
 				</c:when>
 				<c:when test="${popupType == 'delete'}">
-					<h1 id="h1Title" style="margin-bottom: 30px;">사다리 즐겨찾기 그룹 삭제</h1>
-					<span>▒ 즐겨찾기 그룹을 삭제하시겠습니까?</span>
+					<h1 id="h1Title" style="margin-bottom: 30px;"><spring:message code="ezLadder.t062" /></h1>
+					<span>▒ <spring:message code="ezLadder.t067" /></span>
 				</c:when>
 				<c:when test="${popupType == 'overlap'}">
-					<h1 id="h1Title" style="margin-bottom: 30px;">중복 유저 추가</h1>
-					<span>▒ 이미 추가된 유저입니다.</span>
+					<h1 id="h1Title" style="margin-bottom: 30px;"><spring:message code="ezLadder.t063" /></h1>
+					<span>▒ <spring:message code="ezLadder.t064" /></span>
 					<!-- <span id="usernames"></span> -->
 				</c:when>
 				<c:when test="${popupType == 'cmtdelete'}">
-					<h1 id="h1Title" style="margin-bottom: 30px;">댓글 삭제</h1>
-					<span>▒ 이 댓글을 삭제하시겠습니까?</span>
+					<h1 id="h1Title" style="margin-bottom: 30px;"><spring:message code="ezLadder.t053" /></h1>
+					<span>▒ <spring:message code="ezLadder.t051" /></span>
 				</c:when>
 			</c:choose>
 			
 		<div class="btnposition btnpositionNew">
 			<c:choose>
 				<c:when test="${popupType == 'overlap'}">
-					<input type="submit" value="조직도에서 추가" id="btn_addRealUser">
-					<input type="submit" value="익명으로 추가" id="btn_addAnonyUser">
-					<input type="submit" value="취소" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
+					<input type="submit" value="<spring:message code="ezLadder.t068" />" id="btn_addRealUser">
+					<input type="submit" value="<spring:message code="ezLadder.t069" />" id="btn_addAnonyUser">
+					<input type="submit" value="<spring:message code="ezLadder.t109" />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
 				</c:when>
 				<c:otherwise>
-					<input type="submit" value="확인" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName">
-					<input type="submit" value="취소" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
+					<input type="submit" value="<spring:message code="ezLadder.t108" />" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName">
+					<input type="submit" value="<spring:message code="ezLadder.t109" />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
 				</c:otherwise>
 			</c:choose>
 		</div>

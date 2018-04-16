@@ -1064,6 +1064,8 @@
 			L.TENANT_ID = #tenantId#
 		AND 
 			L.WRITERID = #userId#
+		AND
+			L.DELETEFLAG = 0
 		ORDER BY 
 			ORIG_ID DESC
 		LIMIT 

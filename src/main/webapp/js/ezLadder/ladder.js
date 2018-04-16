@@ -137,7 +137,12 @@ function ladderDrawInitSettingVar() {
 
 function moveUserPicImg(type) {
 	pathUser = checkUserPath[clickUserOrder];
-	var userImgHtml = $("#drag" + clickUserOrder + " span").html();
+	var userImgHtml;
+	if($("#drag" + clickUserOrder + " span").hasClass("userPicWraper_d")) {
+		userImgHtml = '<span class="userPicWraper" style="border-color: #2568b3"><img src="/images/ezLadder/icon_defaultAttendant_hover.png" width="60px" height="60px" style="display: block;"></span>';
+	} else {
+		userImgHtml = document.getElementById("drag"+clickUserOrder).childNodes[1].outerHTML;
+	}
 	if($("[_result='0']").length > 0) {
 		userStatus[$("[_result='0']").attr("id").slice(11)] = 0;
 		$("[_result='0']").remove();
@@ -152,32 +157,32 @@ function moveUserPicImg(type) {
 			
 			moveLeft = canvasLeft + wSize * resultOrder;
 			
-			$("#lineDiv span").append(userImgHtml);
-			$("#lineDiv img:last")
+			$("#lineDiv span:eq(0)").append(userImgHtml);
+			$("#lineDiv span:last")
 				.attr({"id": "moveImgUser" + clickUserOrder, "_result": userStatus[clickUserOrder]})
 				.css({"position": "absolute", "top": canvasBottom, "left": moveLeft});
 			userStatus[clickUserOrder] = 1;
-			
-			ladderAnimationComplete();
+			ladderAnimationComplete(type);
 		}
+		
 	} else {
 		
 		moveLeft = canvasLeft + wSize * clickUserOrder;
 		moveTop = canvasTop;
 		
-		$("#lineDiv span").append(userImgHtml);
+		$("#lineDiv span:eq(0)").append(userImgHtml);
 		if(userStatus[clickUserOrder] == 0) {
-			$("#lineDiv img:last")
+			$("#lineDiv span:last")
 				.attr({"id": "moveImgUser" + clickUserOrder, "_result": userStatus[clickUserOrder]})
-				.css({"position": "absolute", "top": canvasTop - 80, "left": moveLeft});
+				.css({"position": "absolute", "top": canvasTop - 80, "left": moveLeft, "border-color": "#2568b3"});
 			
 			$moveImg = $("#moveImgUser" + clickUserOrder);
 			
 			userStatus[clickUserOrder] = 1;
 		} else {
-			$("#lineDiv img:last")
+			$("#lineDiv span:last")
 				.attr({"id": "copyUser", "_result": "0"})
-				.css({"position": "absolute", "top": canvasTop - 80, "left": moveLeft});
+				.css({"position": "absolute", "top": canvasTop - 80, "left": moveLeft, "border-color": "#2568b3"});
 			
 			$moveImg = $("#copyUser");
 		}
@@ -255,7 +260,7 @@ function printUserPath(locX, locY, moveX, moveY, type) { // 유저 경로 그리
 		if(locY >= hInfo) { 
 			drawStatus = false;
 			resultOrder = locX;
-			ladderAnimationComplete(); // ladderGame.jsp
+			ladderAnimationComplete(type); // ladderGame.jsp
 			
 			if(typeStr2 == 'all' && clickUserOrder + 1 < wInfo) {
 				clickUserOrder++;

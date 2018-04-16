@@ -9,8 +9,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezLadder.t009" /></title>
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
-		<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css" type="text/css">
-		<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">	
+		<!-- <link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css" type="text/css"> -->
+		<link rel="stylesheet" href="/css/ezLadder/ladderPreList.css" type="text/css">
+		<!-- <link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css"> -->	
 		<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
@@ -40,7 +41,44 @@
 			var droploc = {};
 			var changeLadId1;
 			var changeLadId2;
-						
+			
+			document.onkeydown = function (evt) {
+	            var e = evt;
+	            if (e == null) e = window.event;
+	            if (new RegExp(/Safari/).test(navigator.userAgent) && navigator.userAgent.indexOf("Chrome") == -1) {
+	                if ((e.keyCode > 47) && (e.keyCode < 58)) {
+	                    e.preventDefault();
+	                }
+	                else if ((e.keyCode > 95) && (e.keyCode < 106)) {
+	                    e.preventDefault();
+	                }
+	                else if ((e.keyCode > 64) && (e.keyCode < 91)) {
+	                    e.preventDefault();
+	                }
+	                else if ((e.keyCode == 106) ||
+	                    (e.keyCode == 107) ||
+	                    (e.keyCode == 109) ||
+	                    (e.keyCode == 110) ||
+	                    (e.keyCode == 111) ||
+	                    (e.keyCode == 186) ||
+	                    (e.keyCode == 187) ||
+	                    (e.keyCode == 188) ||
+	                    (e.keyCode == 189) ||
+	                    (e.keyCode == 190) ||
+	                    (e.keyCode == 191) ||
+	                    (e.keyCode == 192) ||
+	                    (e.keyCode == 219) ||
+	                    (e.keyCode == 220) ||
+	                    (e.keyCode == 221) ||
+	                    (e.keyCode == 222)) {
+	                    e.preventDefault();
+	                }
+	                else if ((e.keyCode == 229)) {
+	                    e.returnValue = false;
+	                }
+	            }
+	        }
+			
 			function changeListOrder() {
 				console.log(dragloc["id"]);
 				console.log(droploc["id"]);
@@ -69,18 +107,10 @@
 					},
 					success: function(result) {
 						var lines = "";
-						var cnt =0;
-						lines += "<ul id='columnsbnk' class='content' style='border-bottom: none;'>"
 				
-						$.each(result.list, function(key, value) {
-					
-							lines += "<li class='myBorder' name='preladder_" + cnt + "' id='" + value.ladderId + "' style='cursor: pointer;'>";
-							lines += "<span>" + cnt + "</span>";
-							lines += "<div class='prelist' style='width: 15%'>" + value.type + "</div>";
-							lines += "<div class='prelist' style='width: 60%'>" + value.title + "</div></li>";
-							cnt++;
+						$.each(result.list, function(index, value) {
+							lines += '<li name="preladder_' + index + '" id="' + value.ladderId + '" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0' + value.type + '.png"></span><span class="txt">' + value.title + '</span></li>';
 						});
-						lines +="</ul>"
 						$("#columnsbnk").html(lines);
 						drag(); 
 	
@@ -91,10 +121,10 @@
 			function showLadderPreview() {
 				var previewSrc = "/ezLadder/getLadderGame.do?ladderId=" + ladderID + "&mode=preview";
 				
-				$("#ladPreviewWrap").scrollTop(0);
+				$(".ladderPreList_right").scrollTop(0);
 				$("#ladderPreview").attr("src", previewSrc);
 				if($("#ladderPreview").css("height") === "0px") {
-					$("#ladderPreview").css("height", "1100px");
+					$("#ladderPreview").css("height", "1440px");
 				}
 			}
 			
@@ -120,23 +150,8 @@
 				var origColor = "#FFF";
 				$(document)
 					.on("click", ".myBorder", function() {
-						$(".myBorder").removeClass("clickactive");
-						$(this).addClass("clickactive");
-						$(".myBorder").css("background", origColor);
-						$(this).css("background", selecColor);
-						
 						ladderID = $(this).attr("id");
 						showLadderPreview();
-					})
-					.on("mouseenter", ".myBorder", function() {
-						$(this).css("background", overColor);
-					})
-					.on("mouseleave", ".myBorder", function() {
-						if($(this).hasClass("clickactive")) {
-							$(this).css("background", selecColor);
-						} else {
-							$(this).css("background", origColor);
-						}
 					});
 				
 				/** sort list */
@@ -155,19 +170,13 @@
 				$("#columnsbnk").disableSelection();
 				*/
 				/** 이전 리스트 순서 바꾸기 */
-			
-				$("#searchInput").on("keyup", function(e) {
-					if(e.keyCode == "13") {
-						searchLadder();
-					}
-				});
-				
 				$("#btn_SaveAprLineTempletName").on("click", function() {
 					loadPreLadderSetting();
 				});
 				$("#btn_CancelAprLineTempletName").on("click", function() {
 					window.close();
 				});
+				
 				drag();
 			});
 			
@@ -181,10 +190,7 @@
 				totalLadder = ladderList["totalLadder"];
 
 				ladderList["list"].forEach(function(ladder, index) {
-					html += '<li class="myBorder" name="preladder_' + index + '" id="' + ladder["ladderId"] + '" style="cursor: pointer;">';
-					html += '<span>' + index + '</span>';
-					html += '<div class="prelist" style="width: 15%">' + ladder["type"] + '</div>';
-					html += '<div class="prelist" style="width: 60%">' + ladder["title"] + '</div></li>';
+					html += '<li name="preladder_' + index + '" id="' + ladder["ladderId"] + '" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0' + ladder["type"] + '.png"></span><span class="txt">' + ladder["title"] + '</span></li>';
 				});
 				
 				$("#columnsbnk").html(html);
@@ -210,38 +216,35 @@
 					axis: "y",
 					addClasses: false,
 					start: function(event, ui) {
-						$("#columnsbnk").css("background", "#ddd");
 						var divEl = $(this);
-						$(this).css("border", "1px solid #ddd");
-						//dragloc = {"id": $(this).attr("id"), "top": $(this).css("top")};
+						
+						divEl.css("border-top", "1px solid #CCC");
 						dragloc = {"id": $(this).attr("id"), "top": divEl.offset().top}; 
 						
 					}, 
 					stop: function() {
-						$(this).css("border", "");
-						$(this).css("border-bottom", "1px solid #ddd");
+						var divEl = $(this);
+						
+						divEl.css("border-top", "");
 					}
 				});
 				$(".myBorder").droppable({ // 드랍 리스트
 					accept: ".myBorder",
 					addClasses: false,
-					hoverClass: "nowOver",
 					over: function(event, ui) {
-						console.log("-");
-						$(".myBorder").css("background", "white");
 						$(this).css("background", "beige");
 					},
+					out: function() {
+						$(this).css("background", "#FFFFFF");
+					},
 					drop: function(event, ui) {
-						//droploc = {"id": $(this).attr("id"), "top": $(this).css("top")};
 						var divEl = $(this);
 						droploc = {"id": $(this).attr("id"), "top": divEl.offset().top}; 
 						
 						$("#" + dragloc["id"]).css("z-index", "10").animate({"top": droploc["top"]}, 10, function() {
-							//$("#" + dragloc["id"]).css("z-index", "0")
 							$("#" + dragloc["id"]).css("top", (droploc["top"]-dragloc["top"]));
 						});
 						$("#" + droploc["id"]).css("z-index", "10").animate({"top": dragloc["top"]}, 10, function() {
-							//$("#" + droploc["id"]).css("z-index", "0")
 							$("#" + droploc["id"]).css("top", (dragloc["top"]-droploc["top"]));
 						});
 						changeListOrder();
@@ -249,163 +252,54 @@
 				}); 
 			}
 			
+			function Key_event(event) {
+				if (window.event) {
+					if (window.event.keyCode == 13) {
+						searchLadder();
+					}
+				}
+				else {
+					if (e.which == 13)
+						searchLadder();
+				}
+				/* if(event.keyCode == "13") {
+					searchLadder();
+				} */
+			}
+			
+			function keyword_Clear() {
+				$("#searchInput").val("");
+			}
+			
 		</script>
-		<style type="text/css">
-			.allWrapDiv {
-			    height:  620px;
-			    display: block;
-			}
-			
-			.listWrapDiv {
-			    position:  relative;
-			    height: 500px;
-			    overflow-y:  auto;
-			    border:  1px solid black;
-			}
-			
-			.rowDiv {
-				position: absolute;
-				width: 100%;
-				height: 60px;
-				padding: 5px 20px;
-				outline:  1px solid black;
-				background: white;
-			}
-			
-			#title {padding-left:  20px;display:  table-cell;vertical-align:  middle;}
-			
-			.rowDiv .icondiv {display:  table-cell;}
-			
-			.rowWrap {position:  relative;width:  100%;height:  100%;display: table;}
-			
-			.popupWrap {
-				margin-top: 30px;
-			    padding: 10px 25px;
-			}
-			
-			.nowOver {
-				background: beige;
-			}
-			
-			.nowMove {
-				background: beige;
-				z-index: 100;
-			}
-			
-			#columnsbnk .prelist  {
-			    display: inline-block;
-			    border: none;
-			    height: 28px;
-			    line-height: 30px;
-			    margin: -2px 0px 0px 0px;
-			    padding: 0px 7px 0px 7px;
-			}
-			
-			.clickactive {
-				background-color: rgb(233, 241, 255);
-			}
-			
-	
-			
-			#pollTd01 {
-				margin-top: -50px;
-			}
-		</style>
-		
 </head>
 	<body class="popup">
 		<h1 id="h1Title">이전 사다리 불러오기</h1>
-		
-		<table>
-			<tbody>
-				<tr>
-					<td style="overflow: auto; width: 300px;">
-						<table style="width: 99%; margin:10px 0px 10px 2px;"> 
-							<tr>
-								<td style="padding: 0px; border-bottom: none;" class="pollTd01">
-									<div style="min-width: 300px;">
-									<input id="searchInput" class="input" type="text" placeholder="제목 검색" style="margin-bottom: 10px; width: 273px; float:left; border:1px solid #ccc;">
-									<input id="searchOption" value="title" style="display: none;">
-									<a style="width:27px; height: 24px; float: right;" onclick="searchLadder()"><img src="/images/ezLadder/btn_search.png" width='24px' height='24px'></a>
-									</div>
-									<ul id="columnsbnk" class="content" style="border-bottom: none;">
-										<c:forEach items="${list}" var="prelist" varStatus="status">
-											<li class="myBorder" name="preladder_${status.index}" id="${prelist.ladderId}" style="cursor: pointer;">
-												<span>${status.index }</span>
-												<div class="prelist" style="width: 15%">${prelist.type}</div>
-												<div class="prelist" style="width: 60%">${prelist.title}</div>
-											</li>
-										</c:forEach>
-									</ul>
-									<div id="tblPageRayer" style="margin-top: 10px;"></div>
-								</td>
-							</tr>
-						</table>
-			
-			
-						<%-- <div class="listview" style="overflow: auto;">
-							<div id="ListViewid" style="overflow: auto; height: 500px; border: 0px;" >
-								<table id="DLList" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="change_onClick" width="100%" border="0" class="mainlist" lastselectedrowid="DLList_TR_2">
-									<thead id="DLList_THEAD">
-										<tr id="DLList_TH" selected="false" class="" style="background-color: rgb(255, 255, 255);">
-											<th id="DLList_TH_0" class="h4_center" bgcolor="#CCCCCC" width="30px">No</th>
-											<th id="DLList_TH_1" class="h5_center" width="100px">타입</th>
-											<th id="DLList_TH_2" class="h5_center" width="170px">제목</th>
-										</tr>
-									</thead>
-									<tbody style="background-color: rgb(255, 255, 255);">
-										<c:forEach items="${list}" var="prelist" varStatus="status">
-											<tr id="DLList_TR_${status.index }" selected="false" style="cursor: pointer; background-color: rgb(255, 255, 255);">
-												<td height="24" align="left" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${status.index }</td>
-												<td height="24" align="left" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${prelist.type}</td>
-												<td height="24" align="left" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${prelist.title}</td>
-											</tr>
-										</c:forEach>
-									</tbody>
-								</table>
+			<!-- 다시 -->
+				<div class="ladderPreList_wrap">
+					<div class="ladderPreList_contents">
+						<div class="ladderPreList_left">
+							<div class="search_title">
+								<input type="text" id="searchInput" class="input_text" placeholder="검색 단어 입력" onfocus="this.className='input_text focus';" onkeyup="Key_event(event);" onmousedown="keyword_Clear();" />
+								<input id="searchOption" value="title" style="display: none;">
+								<input type="image" src="/images/ezLadder/search_btn.gif" alt="" class="search_btn" onclick="searchLadder();" />
 							</div>
-						</div> --%>
-					</td>
-					<td>
-						<div id="ladPreviewWrap" style="margin-left: 20px; width: 1000px; height: 700px; border: 1px solid #ddd; overflow-x: hidden; overflow-y: auto;">
-							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 1000px; height: 1400px;"></iframe>
+							<ul id="columnsbnk" class="game_list content">
+								<c:forEach items="${list}" var="prelist" varStatus="status">
+									<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png"></span><span class="txt">${prelist.title}</span></li>
+								</c:forEach>
+							</ul>
+							<div id="tblPageRayer" style="margin-top: 10px;"></div>
 						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-			
-			<div class="btnposition btnpositionNew">
-				<input type="submit" value="확인" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName">
-				<input type="submit" value="취소" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
-			</div>
-		
-			<%-- <div class="popupWrap">
-			<button onclick="changeListOrderComplete()">순서바꾸기 테스트</button>
-			    <table style="width:  100%;">
-			        <tbody>
-			        	<tr>
-							<td style="width:  300px; min-width: 200px;">
-								<div class="allWrapDiv">
-									<div class="listWrapDiv">
-										<c:forEach items="${list}" var="prelist" varStatus="status">
-											<div class="rowDiv" id="prelistId${prelist.ladderId}" style="top: ${60 * status.index}px">
-												<div class="rowWrap">
-													<div class="icondiv">${prelist.type}</div>
-													<div id="title">${prelist.title}</div>
-												</div>
-											</div>
-										</c:forEach>
-									</div>
-								</div>
-							</td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
-			</div> --%>
-			    
-			                    
-		
+						<div class="ladderPreList_right" style="position: relative;">
+							<div style="width: 794px; height: 1440px; position: absolute; z-index: 1000;"></div>
+							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 777px;"></iframe>
+						</div>
+					</div>
+				</div>
+				<div class="btnposition btnpositionNew">
+					<input type="submit" value="확인" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName">
+					<input type="submit" value="취소" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
+				</div>
 	</body>
 </html>

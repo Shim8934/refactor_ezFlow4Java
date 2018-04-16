@@ -735,7 +735,7 @@
 					bindAllUser(false);
 				}
 	            
-		        _RowObjectID = null;
+		        /* _RowObjectID = null; */
                 
                 function bindAllUser(value, type) {
 					if(value) {
@@ -749,10 +749,6 @@
 		    
 			function parsingXMLUserList(userlist) {
 				DivPopUpHidden();
-				
-				/* if(RetValue["maxAttendant"]) {
-					
-				} */
 				
 				var listid = "MsgToList"; // 추가된 유저목록 테이블 아이디
 				var i = 0;
@@ -773,10 +769,11 @@
 				listview.LoadFromID(listid);
 				var totalRow = listview.GetDataRows().length;
 				
-				if(totalRow + userlist.length > RetValue["maxAttendant"]) {
+				/* 사람 수 제한 */
+				/* if(totalRow + userlist.length > RetValue["maxAttendant"]) {
 					alert(RetValue["maxAttendant"] + "<spring:message code='ezLadder.t048' />");
 					userlist.splice(RetValue["maxAttendant"] - totalRow);
-				}
+				} */
 				
 				for(; i < len; i++) {
 					var user = userlist[i]["data"];
@@ -835,7 +832,7 @@
 					}
 				}
 				var listid ="MsgToList";
-				_RowObjectID = null;
+				/* _RowObjectID = null; */
 			}	
 	    
 		    function CheckMailReceiver(selRow, option) {
@@ -1212,6 +1209,11 @@
 		    function setBmGroup(type, ladderBmId) {
 		    	save_userlist();
 		    	
+		    	if(type !== "delete" && !rtn.length){
+		    		alert("<spring:message code='ezLadder.t058' />");
+		    		return;
+		    	}
+		    	
 		    	retAttendantPopInfo[0] = type;
 		    	retAttendantPopInfo[1] = setBmGroupComp;
 		    	retAttendantPopInfo[2] = ladderBmId
@@ -1281,11 +1283,11 @@
 								if(group.count === 0) {
 									html += "<td style='width:22%'>" + group.userName + "</td>";
 								} else {
-									html += "<td style='width:22%'>" + group.userName + " 외 " + group.count + " 명</td>";
+									html += "<td style='width:22%'>" + group.userName + " <spring:message code='ezLadder.t070'> " + group.count + " <spring:message code='ezLadder.t105'></td>";
 								}
 								html += "<td style='width:6%'><img class='editBmIcon' src='/images/option3.png' name='editBmGroup_" + index + "' height='25' width='25'>";
-								html += "<div id='editBmGroup_" + index + "' style='display: none; position: absolute; background: #f8f8f8; z-index: 10; border: 1px solid #cfcfcf; text-align: center;'><div name='modify' style='width: 150px; padding: 8px 10px; border-bottom: 1px solid #cfcfcf;'>즐겨찾기 그룹 수정</div>";
-								html += "<div name='delete' style='width: 150px; padding: 8px 10px;'>즐겨찾기 그룹 삭제</div></div>";
+								html += "<div id='editBmGroup_" + index + "' style='display: none; position: absolute; background: #f8f8f8; z-index: 10; border: 1px solid #cfcfcf; text-align: center;'><div name='modify' style='width: 150px; padding: 8px 10px; border-bottom: 1px solid #cfcfcf;'><spring:message code='ezLadder.t061'></div>";
+								html += "<div name='delete' style='width: 150px; padding: 8px 10px;'><spring:message code='ezLadder.t062'></div></div>";
 					    		html += "</td></tr>";
 							});
 				    	

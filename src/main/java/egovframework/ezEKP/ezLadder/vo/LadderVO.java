@@ -50,17 +50,11 @@ public class LadderVO {
 	public void setTenant_id(int tenant_id) {
 		this.tenant_id = tenant_id;
 	}
-	public void setTenant_id(String tenant_id) {
-		this.tenant_id = Integer.parseInt(tenant_id);
-	}
 	public int getLadderId() {
 		return ladderId;
 	}
 	public void setLadderId(int ladderId) {
 		this.ladderId = ladderId;
-	}
-	public void setLadderId(String ladderId) {
-		this.ladderId = Integer.parseInt(ladderId);
 	}
 	public String getTitle() {
 		return title;
@@ -189,18 +183,4 @@ public class LadderVO {
 	public void setPic(String pic) {
 		this.pic = pic;
 	}
-	
-	@Override
-	public String toString() {
-		return "LadderVO [tenant_id=" + tenant_id + ", ladderId=" + ladderId
-				+ ", title=" + title + ", type=" + type + ", status=" + status
-				+ ", secretFlag=" + secretFlag + ", writerId=" + writerId
-				+ ", writerName=" + writerName + ", writerName2=" + writerName2
-				+ ", deptName=" + deptName + ", deptName2=" + deptName2
-				+ ", lineCnt=" + lineCnt + ", lineArray=" + lineArray
-				+ ", deleteFlag=" + deleteFlag + ", writeDate=" + writeDate
-				+ ", startDate=" + startDate + ", deleteDate=" + deleteDate
-				+ ", lang=" + lang + ", offset=" + offset + ", userId=" + userId + "]";
-	}
-
 }
