@@ -79,44 +79,6 @@ public class EzJournalGWController {
 	private EzEmailService ezEmailService;
 	
 	/**
-	 * 업무일지 G/W [GET] 일지함 조회 / 사용하는 일지함 조회
-	 */
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezjournal/types", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public Object journalTypeList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W JOURNAL [GET /rest/ezjournal/types] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try {
-			String used = request.getParameter("used");
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			
-			String companyId = request.getParameter("companyId");
-			if (companyId == null || companyId.equals("")) {
-				companyId = info.getCompanyId();
-			}
-			
-			LOGGER.debug("companyId : " + companyId);
-
-			List<JournaltypeVO> typeList = ezJournalService.getJournaltypeList(companyId, info.getTenantId(), used);
-	
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", typeList);
-		} catch (Exception e) {
-			result.put("code", 1);
-			result.put("status", "error");
-			result.put("data", "");
-		}
-
-		LOGGER.debug("G/W JOURNAL [GET /rest/ezjournal/types] ended.");
-		
-		return result;
-	}
-	
-	/**
 	 * 업무일지 G/W [POST] 일지함 생성
 	 */
 	@SuppressWarnings("unchecked")
@@ -195,6 +157,44 @@ public class EzJournalGWController {
 	}
 	
 	/**
+	 * 업무일지 G/W [GET] 일지함 조회 / 사용하는 일지함 조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezjournal/types", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public Object journalTypeList(HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W JOURNAL [GET /rest/ezjournal/types] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String used = request.getParameter("used");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			String companyId = request.getParameter("companyId");
+			if (companyId == null || companyId.equals("")) {
+				companyId = info.getCompanyId();
+			}
+			
+			LOGGER.debug("companyId : " + companyId);
+			
+			List<JournaltypeVO> typeList = ezJournalService.getJournaltypeList(companyId, info.getTenantId(), used);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", typeList);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W JOURNAL [GET /rest/ezjournal/types] ended.");
+		
+		return result;
+	}
+	
+	/**
 	 * 업무일지 G/W [POST] 일지함 사용여부 수정
 	 */
 	@SuppressWarnings("unchecked")
@@ -210,7 +210,6 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
 		
 			ArrayList<Map<String, String>> journaltypeList = (ArrayList<Map<String, String>>) jsonParam.get("journaltypeList");
-			
 			ezJournalService.updateJournaltype(journaltypeList, companyId, info.getTenantId());
 			
 			result.put("status", "ok");
@@ -388,7 +387,6 @@ public class EzJournalGWController {
 			// 마지막 사용양식 id 가져오기
 			if (request.getParameter("isGetForm") != null ) {
 				String selId = ezJournalService.getJournalLastFormId(typeId, formId, userId, companyId, info.getTenantId());
-				LOGGER.debug("formId : " + selId);
 				result.put("status", "ok");
 				result.put("code", 0);
 				result.put("data", selId);
@@ -427,7 +425,7 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			List<JournalAuthorVO> authList = ezJournalService.getAuthorList(companyId, info.getTenantId(),lang);
+			List<JournalAuthorVO> authList = ezJournalService.getAuthorList(companyId, info.getTenantId(), lang);
 		
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -457,7 +455,7 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			List<JournalAuthorVO> deptList = ezJournalService.getAuthDeptList(info.getTenantId(), userId,lang);
+			List<JournalAuthorVO> deptList = ezJournalService.getAuthDeptList(info.getTenantId(), userId, lang);
 	
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -473,7 +471,7 @@ public class EzJournalGWController {
 	}
 	
 	/**
-	 * 업무일지 G/W [POST] 열람권한 저장
+	 * 업무일지 G/W [POST] 열람권한 저장 or 수정
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/authors", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
@@ -510,7 +508,7 @@ public class EzJournalGWController {
 		LOGGER.debug("ezJournal G/W deleteAuthorDepts started.");
 		
 		JSONObject result = new JSONObject();
-		LOGGER.debug(request.getParameter("userId"));
+		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));

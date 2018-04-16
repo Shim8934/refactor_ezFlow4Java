@@ -168,7 +168,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		String isDeptChanged = (String) jsonParam.get("isDeptChanged");
 		
 		if (isDeptChanged.equals("Y")) {
-			logger.debug((String)jsonParam.get("useDept"));
+		//	logger.debug("****" + (String)jsonParam.get("useDept"));
 			
 			if (jsonParam.get("useDept") != null) {
 				Gson gson = new Gson();
@@ -285,7 +285,6 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("lang", lang);
 		
 		JournalFormInfoVO journalFormInfoVO = ezJournalDAO.getJournalFormInfo(map);
-		logger.debug("formStatus : " + journalFormInfoVO.getFormStatus());
 		
 		List<DeptInfoVO> deptList = ezJournalDAO.getFormUseDeptList(map);
 		if (deptList.size() > 0) {
@@ -318,10 +317,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 		ezJournalDAO.updateJournalForm(map);
 		
 		if (isDeptChanged.equals("Y")) {
-//			logger.debug("depts확인 : " + jsonParam.get("useDept"));
 			
 			ezJournalDAO.deleteFormUseDept(map);
-//			List<Map<String, Object>> depts = JsonUtil.JsonToList((String) jsonParam.get("useDept")); 
 			
 			if (jsonParam.get("useDept") != null) {
 				Gson gson = new Gson();
@@ -371,7 +368,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		List<String> deptList = gson.fromJson(jsonParam.get("depts").toString(), new TypeToken<List<String>>(){}.getType());
 		for (int i = 0; i < deptList.size(); i++) {
 			try {
-				logger.debug(deptList.get(i));
+			//	logger.debug("****" + deptList.get(i));
 				Map<String, Object> insertMap = new HashMap<String, Object>();
 				insertMap.put("tenantId", jsonParam.get("tenantId"));
 				insertMap.put("userId", ((String) jsonParam.get("userId")).trim());
