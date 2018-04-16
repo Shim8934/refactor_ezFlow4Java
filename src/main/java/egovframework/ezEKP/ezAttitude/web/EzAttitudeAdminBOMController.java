@@ -572,7 +572,7 @@ public class EzAttitudeAdminBOMController {
 	
 	/**
 	 * 관리자 사용자별 근태설정 메인화면 호출
-	 */
+	 *//*
 	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConf.do")
 	public String attitudeUserConf(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
 		LOGGER.debug("/admin/ezAttitude/attitudeUserConf started");
@@ -623,9 +623,9 @@ public class EzAttitudeAdminBOMController {
 		return "/admin/ezAttitude/attitudeUserConf";
 	}
 	
-	/**
+	*//**
 	 * 사용자별 근태설정 리스트 출력
-	 */
+	 *//*
 	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConfList.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject getAttitudeUserConfList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
@@ -684,14 +684,14 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("/admin/ezAttitude/attitudeUserConfList ended");
 		return jObject;
 	}
-	/**
+	*//**
 	 * 사용자 근무시간 설정 화면 출력(조직도 회사/부서리스트 포함)
 	 * @param loginCookie
 	 * @param request
 	 * @param model
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeUserConf.do")
 	public String saveAttitudeUserConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		
@@ -804,7 +804,7 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("/admin/ezAttitude/saveAttitudeUserConf ended");
 		
 		return "admin/ezAttitude/saveAttitudeUserConf";
-	}
+	}*/
 	
 	/**
 	 * 사원리스트(조직도)
@@ -1324,6 +1324,248 @@ public class EzAttitudeAdminBOMController {
 		workbook.close();
 		
 		LOGGER.debug("excelFileExport ended.");
-	}	
+	}
+	
+	
+	
+	
+	
+	//여기밑으로 제자리요
+	
 
+	/**
+	 * 관리자 사용자별 근태설정 메인화면 호출
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConf.do")
+	public String attitudeUserConf(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
+		LOGGER.debug("/admin/ezAttitude/attitudeUserConf started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONArray list = new JSONArray();
+		JSONObject data = new JSONObject();
+		String adminCompany = "";
+		if (status.equals("ok")) {
+		
+			data = (JSONObject) resultBody.get("data");
+			list = (JSONArray) data.get("list");
+			adminCompany = (String) data.get("adminCompany");
+			
+			model.addAttribute("list", list);
+			model.addAttribute("adminCompany", adminCompany);
+		}
+		
+		LOGGER.debug("/admin/ezAttitude/attitudeUserConf ended");
+		
+		return "/admin/ezAttitude/attitudeUserConf";
+	}
+	
+	/**
+	 * 사용자별 근태설정 리스트 출력
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConfList.do", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public JSONObject getAttitudeUserConfList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		LOGGER.debug("/admin/ezAttitude/attitudeUserConfList started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String userId = userInfo.getId();
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		LOGGER.debug(companyId);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/user-attitude-confs";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption)
+				.queryParam("offsetMin", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		
+		JSONObject jObject = new JSONObject();
+		if(status.equals("ok")){
+			jObject = (JSONObject) resultBody.get("data");
+		}
+		
+		LOGGER.debug("/admin/ezAttitude/attitudeUserConfList ended");
+		return jObject;
+	}
+	/**
+	 * 사용자 근무시간 설정 화면 출력(조직도 회사/부서리스트 포함)
+	 * @param loginCookie
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeUserConf.do")
+	public String saveAttitudeUserConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		
+		LOGGER.debug("/admin/ezAttitude/saveAttitudeUserConf started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		String userList = request.getParameter("userList");
+		
+		//조직도 회사,부서 리스트
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/organtree/depts";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		
+		JSONObject jObject = new JSONObject();
+		if (status.equals("ok")) {
+			JSONArray deptList = (JSONArray) resultBody.get("data");
+			
+			for (int i = 0; i < deptList.size(); i++) {
+				JSONObject dept =  (JSONObject) deptList.get(i);
+				if (dept.get("isComp").equals("comp")) {
+					dept.put("icon", "icon-company");
+				} else{
+					dept.put("icon", "icon-dept");
+				}
+				if (dept.get("myDept").equals("yes")) {
+					JSONObject state = new JSONObject();
+					state.put("opened", "true");
+					state.put("selected", "true");
+					dept.put("state", state);
+				}
+			}
+			
+			model.addAttribute("deptList", deptList);
+			model.addAttribute("companyId", companyId);
+		}
+		
+		//회사 근무시간 정보
+		url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudereg";
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userInfo.getId());
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		if(status.equals("ok")){
+			jObject = (JSONObject) resultBody.get("data");
+			
+			String workStartTime = (String) jObject.get("workStartTime");
+			String workEndTime = (String) jObject.get("workEndTime");
+			
+			model.addAttribute("workStartTime", workStartTime);
+			model.addAttribute("workEndTime", workEndTime);
+		}
+		
+		//선택된 유저 리스트 정보
+		if (userList != null) {
+			String offset = userInfo.getOffset();
+			String offsetMin = commonUtil.getMinuteUTC(offset);
+			
+			url = gwServerUrl + "/rest/ezattitude/users/users-attitude-confs";
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("userId", userInfo.getId())
+					.queryParam("userIdList", userList)
+					.queryParam("offsetMin", offsetMin);
+
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			LOGGER.debug("status : " + status);
+			
+			if(status.equals("ok")){
+				JSONArray jArray = (JSONArray) resultBody.get("data");
+				
+				model.addAttribute("userList", jArray);
+			}
+		} else {
+			model.addAttribute("userList", "null");
+		}
+		
+		LOGGER.debug("/admin/ezAttitude/saveAttitudeUserConf ended");
+		
+		return "admin/ezAttitude/saveAttitudeUserConf";
+	}
 }
