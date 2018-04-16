@@ -203,10 +203,26 @@
 				})
 				.on("click", "#immediatelyDirection", function() {
 					// 사다리 바로 보기
+					/* var $immediatelyDirection = $("#immediatelyDirection");
+					$immediatelyDirection.attr("disabled", "disabled"); */
 					clickUserOrder = 0;
 					popAllUser();
-				});
-			
+					/* $immediatelyDirection.removeAttr("disabled"); */
+				})
+				.on("mouseenter", "[id^='drag']", function() {
+					var $this = $(this);
+					$this.find("span").css("border-color", "#2568b3");
+					if($this.find("span").hasClass("userPicWraper_d")) {
+						$this.find("img").attr("src", "/images/ezLadder/icon_defaultAttendant_hover.png");
+					}
+				})
+				.on("mouseleave", "[id^='drag']", function() {
+					var $this = $(this);
+					$this.find("span").css("border-color", "#9e9e9e");
+					if($this.find("span").hasClass("userPicWraper_d")) {
+						$(this).find("img").attr("src", "/images/ezLadder/icon_defaultAttendant.png");
+					}
+				})
 			$("#usePreladder").on("click", function() {
 				window.location.href = "/ezLadder/setLadder.do?ladderId=" + ${vo.ladderId};
 			});
@@ -283,9 +299,9 @@
 					"<canvas id='ladderCanvasLine' width='0' height='800'></canvas>" +
 					"<canvas id='ladderCanvas' width='0' height='800'></canvas>"
 				);
-				$("#directionBtn").html(
-					'<div id="immediatelyDirection" align="center">바로 보기</div>' + 
-					'<div id="autoDirection" align="center">자동 진행</div>'
+				$(".directionBtn").html(
+						'<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 0;"><div class="direcTextDiv"><spring:message code="ezLadder.t106" /></div></button>' +
+						'<button id="autoDirection" class="direcDiv" align="center" style="right: 160px;"><div class="direcTextDiv"><spring:message code="ezLadder.t107" /></div></button>'
 				);
 			}
 			
@@ -310,19 +326,30 @@
 				}
 			});
 		}
-		function ladderAnimationComplete() {
-			$("#copyUser").remove();
-			
-			$("#lineDiv img:last").attr("_result", userStatus[clickUserOrder]);
-			
+		function ladderAnimationComplete(type) {
 			if($("#itemList li:eq(" + resultOrder + ") div").length == 1) {
 				var html = "<div style='line-height: 30px; height: 30px; background: #ddd; margin-top: 10px; border-radius: 15px;'>" + _ladderLine[clickUserOrder].userName + "</div>";
 				$("#itemList li:eq(" + resultOrder + ")").append(html);
 			}
 			
-			var scrollval = resultOrder * 150 - $("#ladderLineBox").width()/2;
-			$("#ladderLineBox").animate({"scrollLeft": scrollval}, 400);
+			if(type.substring(0, 3) == "ani" || type.substring(3, 6) == "one") {
+				var scrollval = (resultOrder * 150 - $("#ladderLineBox").width()/2) + 75;
+				$("#ladderLineBox").animate({"scrollLeft": scrollval}, 400);
+			}
+			
+			var $moveImgUser = $("#moveImgUser" + clickUserOrder);
+			var $copyUser = $("#copyUser");
+			if(!$copyUser.length) {
+				$moveImgUser.animate({top:$moveImgUser.position().top - moveImgHalfHeight}, 400);
+			} else {
+				$copyUser.animate({top:$moveImgUser.position().top - moveImgHalfHeight}, 400, function() {
+					$copyUser.remove();
+				});
+			}
+			
+			$moveImgUser.attr("_result", userStatus[clickUserOrder]);
 		}
+		
 		/** 삭제 */
 		function deleteLadder(idx) {
 			allData = [idx, searchSelect, searchInput, mode, currPage, back ];	
@@ -343,9 +370,6 @@
 					async: false,
 					data: {
 						"allData": allData
-					},
-					success: function() {
-						/* loadLadder(); */
 					}
 				});
 			}
@@ -369,12 +393,17 @@
 					canvasSetting();
 					var html = '';
 					_ladderLine.forEach(function(line, index) {
-						html += '<li><div id="drag' + index + '" style="height: 140px; padding-top:  20px; cursor: pointer;">';
-						html += '<span><img src="' + line.pic + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" /></span>';
-						html += '<div style="line-height: 30px; height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>' + line.userName + '</span></div></div></li>';
+						html += '<li><div id="drag' + index + '" style="padding-top:  20px; cursor: pointer;">';
+						if(!line.pic) {
+							html += '<span class="userPicWraper_d"><img src="/images/ezLadder/icon_defaultAttendant.png" width="60px" height="60px" style="display: block;" /></span>';
+						} else {
+							html += '<span class="userPicWraper"><img src="' + line.pic + '" width="60px" height="60px" /></span>';
+						}
+						html += '<div style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap">' + line.userName + '</span></div></div></li>';
 					});
 					$("#attendantList").html(html);
-					$(".directionBtn").html('<div id="immediatelyDirection" align="center">바로 보기</div><div id="autoDirection" align="center">자동 진행</div>');
+					$(".directionBtn").html('<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 0;"><div class="direcTextDiv"><spring:message code="ezLadder.t106" /></div></button>' +
+							'<button id="autoDirection" class="direcDiv" align="center" style="right: 160px;"><div class="direcTextDiv"><spring:message code="ezLadder.t107" /></div></button>');
 					$("#blackBox, #startButton").remove();
 				}
 			});
@@ -529,41 +558,18 @@
 
 		}
 		function auto_grow(element) {
-			if (element.value == "" && document.getElementById("uploadedFile").style.display == "none") {
+			if (element.value == "") {
 				document.getElementById("sendBttn").style.backgroundColor = "#d0d0d0";
 				document.getElementById("sendBttn").disabled = true;
 			}
 			else {
 				document.getElementById("sendBttn").style.backgroundColor = "#004896";
-		    	document.getElementById("sendBttn").disabled = false;
-			        element.style.height = "1px"; 			        
-			        var value = element.scrollHeight;
-		        element.style.height = (element.scrollHeight - 32) + "px";			        
-		        document.getElementById("sendComment").style.height = value + 18 + "px";
+				document.getElementById("sendBttn").disabled = false;
 			}
-	    }
+		}
 		
 	</script>
 	<style type="text/css">
-		#autoDirection {
-			background: #fff;
-			border: 6px solid #ded;
-			width: 100px;
-			height: 50px;
-			float: right;
-			margin-right: 5px;
-			line-height:30px;
-		}
-		
-		#immediatelyDirection {
-			background: #fff;
-			border: 6px solid #def;
-			width: 100px;
-			height: 50px;
-			float:right;
-			margin-right: 20px;
-			line-height:30px;
-		}
 		.dim{
     		width: 100%;
     		height: 100%;
@@ -610,9 +616,28 @@
 		}
 		
 		.directionBtn {
-			position: relative; top:70px; right:10px;
-			vertical-align: middle;
-			
+			height: 50px;
+			position: relative;
+		}
+		
+		.direcDiv {
+			height: 80px;
+			width: 150px;
+			position: absolute;
+			top: 0;
+			border-radius: 15px;
+			cursor: pointer; 
+			padding: 0;
+			border: 0;
+		}
+		
+		.direcTextDiv {
+			width: 100%;
+			height: 37px;
+			top: 13px;
+			background: #EEE;
+			line-height: 37px;
+			position: absolute;
 		}
 		
 		.resultUsers {
@@ -634,12 +659,6 @@
 	</style>
 </head>
 	<body class="mainbody">
-		<div class="directionBtn">
-			<c:if test="${vo.status eq 1 }">
-					<div id="immediatelyDirection" align="center"><spring:message code='ezLadder.t106' /></div>
-					<div id="autoDirection" align="center"><spring:message code='ezLadder.t107' /></div>
-			</c:if>
-		</div>
 		<h1><spring:message code='ezLadder.t001' /></h1>
 		<div class="fullwidth">
 			<table class="setTable" style="position: relative;">
@@ -703,34 +722,43 @@
 									</c:otherwise>
 								</c:choose>
 						</div>
-							<div id="ladderLineBox" style="border: 1px solid #ddd;">
+							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF;">
 								<div style="height: 140px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
 											<li _attendantIndex="${status.index}">
-												<div class="ladderDrag" id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer; left: 0px; border-radius: 5px;">
-													<div>
-														<span><img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #a9a9a9; border-radius: 40px;" /></span>
-														<div style="line-height: 30px; height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
-													</div>
+												<div class="ladderDrag" id="drag${status.index}" style="padding-top:  20px; cursor: pointer; left: 0px; border-radius: 5px;">
+													<c:choose>
+														<c:when test="${empty line.pic}">
+															<span class="userPicWraper_d">
+																<img src="/images/ezLadder/icon_defaultAttendant.png" width="60px" height="60px" style="display: block;" />
+															</span>
+														</c:when>
+														<c:otherwise>
+															<span class="userPicWraper">
+																<img src="${line.pic}" width="60px" height="60px" />
+															</span>
+														</c:otherwise>
+													</c:choose>
+													<div style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
 												</div>
 											</li>
 										</c:forEach>
 									</ul>
 								</div>
-								<div id="lineDiv" style="position: relative; height: 800px;">
+								<div id="lineDiv" style="position: relative; height: 800px; z-index: 1;">
 									<div id="blackBox" style="height: 800px;background: darkgray;position: absolute;left: -50px;right: 0;">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
-									<span id="moveUser"></span>
+									<span></span>
 									<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
 									<canvas id='ladderCanvas' width='0' height='800'></canvas>
 								</div>
 								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
 										<li>
-											<div style="line-height: 30px; height:30px; outline: 1px solid #ddd;">
-												<span>${line.item}</span>
+											<div style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
+												<span style="white-space: nowrap;">${line.item}</span>
 											</div>
 										</li>
 									</c:forEach>
@@ -739,29 +767,44 @@
 						</c:if>
 							
 						<c:if test="${vo.status eq 1}">
-							<div id="ladderLineBox" style="border: 1px solid #ddd;">
+							<div class="directionBtn">
+								<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 0;"><div class="direcTextDiv"><spring:message code='ezLadder.t106' /></div></button>
+								<button id="autoDirection" class="direcDiv" align="center" style="right: 160px;"><div class="direcTextDiv"><spring:message code='ezLadder.t107' /></div></button>
+							</div>
+							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF;">
 								<div style="height: 140px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
 											<li>
-												<div id="drag${status.index}" style="height: 140px; padding-top:  20px; cursor: pointer;">
-													<span><img src="${line.pic}" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;"/></span>
-													<div style="line-height: 30px; height: 30px; outline: 1px solid #ddd; margin-top: 10px;"><span>${line.userName}</span></div>
+												<div id="drag${status.index}" style="padding-top:  20px; cursor: pointer;">
+														<c:choose>
+															<c:when test="${empty line.pic}">
+																<span class="userPicWraper_d">
+																	<img src="/images/ezLadder/icon_defaultAttendant.png" width="60px" height="60px" style="display: block;" />
+																</span>
+															</c:when>
+															<c:otherwise>
+																<span class="userPicWraper">
+																	<img src="${line.pic}" width="60px" height="60px" />
+																</span>
+															</c:otherwise>
+														</c:choose>
+													<div style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
 												</div>
 											</li>
 										</c:forEach>
 									</ul>
 								</div>
-								<div id="lineDiv" style="position: relative; /* z-index: -1; */">
-									<span id="moveUser"></span>
+								<div id="lineDiv" style="position: relative; z-index: 1;">
+									<span></span>
 									<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
 									<canvas id='ladderCanvas' width='0' height='800'></canvas>
 								</div>
 								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
 										<li>
-											<div style="line-height: 30px; height:30px; outline: 1px solid #ddd;">
-												<span>${line.item}</span>
+											<div style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
+												<span style="white-space: nowrap;">${line.item}</span>
 											</div>
 										</li>
 									</c:forEach>
@@ -776,9 +819,9 @@
 		</div>
 		<c:if test="${mode != 'preview' }">
 			<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
-				<div id="sendComment" class="voteComment" style="width:100%;">
+				<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none;">
 					<div class="sendComment_layout">
-						<div class="comment_input_layout">
+						<div class="comment_input_layout" style="border: none; width: 86%;">
 							<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
 						</div>
 						<div class="commentBtn">

@@ -97,6 +97,18 @@ public class EzLadderController {
 		logger.debug("searchInput : " + searchInput);
 		logger.debug("sort : " + sort);
 		logger.debug("sortFlag : " + sortFlag);
+		
+		String brdID = "7";
+		
+		if (request.getParameter("brdID") != null) {
+			brdID = request.getParameter("brdID");
+		}
+		mode = mode != null ? mode : "all";
+		currPage = currPage != null ? currPage : "1";
+		searchSelect = searchSelect != null ? searchSelect : "";
+		searchInput = searchInput != null ? searchInput : "";
+		sort = sort != null ? sort : "writeDate";
+		sortFlag = sortFlag != null ? sortFlag : "desc";
 	
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
@@ -144,6 +156,7 @@ public class EzLadderController {
 			model.addAttribute("searchInput", searchInput);
 			model.addAttribute("sort", sort);
 			model.addAttribute("sortFlag", sortFlag);
+			model.addAttribute("brdID", brdID);
 		} else {
 			return "error";
 		}
@@ -640,7 +653,7 @@ public class EzLadderController {
 		
 		String status = jsonResult.get("status").toString();
 		
-		JSONObject vo = (JSONObject) jsonResult.get("data");
+		JSONObject vo = (JSONObject) jsonResult.get("ladder");
 		JSONArray list = (JSONArray) jsonResult.get("participant");
 		JSONArray cmtlist = (JSONArray) jsonResult.get("cmtlist");
 		

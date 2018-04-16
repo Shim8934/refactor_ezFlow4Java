@@ -7,17 +7,17 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code="ezLadder.t009" /></title>
+		<title><spring:message code="ezLadder.t060" /></title>
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 		<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
 		<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-		<script type="text/javascript" src="/js/ezLadder/string_component.js"></script>
+		<!-- <script type="text/javascript" src="/js/ezLadder/string_component.js"></script> -->
 		<script type="text/javascript" src="/js/ezLadder/ladderSetting.js"></script>
 		<script type="text/javascript" src="/js/ezLadder/ladder.js"></script>
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+		<!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"> -->
 		
 		<script type="text/javascript">
 			var ladderId;
@@ -26,6 +26,8 @@
 			var ladderType;
 			var lineCnt;
 			var maxAttendant = 50;
+			var maxname = 30;
+			var maxitem = 50;
 		
 			function ladder_window_resize() {
 				var win_width = $(window).width();
@@ -46,10 +48,9 @@
 					slide: function( event, ui ) {
 						$("#amount").text(ui.value);
 					},
-					change: function(event, ui) {
-						if(!!ladderId) {
-							lineCnt = ui.value;
-						}
+					stop: function(event, ui) {
+						console.log(ui.value);
+						lineCnt = ui.value;
 					}
 				});
 				
@@ -60,6 +61,13 @@
 				$("#makeLad").on("click", function(e) {
 					makeLadder();
 					return false;
+				});
+				$("#title").on("input", function() {
+					if($("#title").val() == "") {
+						$("#makeLad").attr("disabled", "disabled").css({"background": "#dddddd", "cursor": "default"});
+					} else {
+						$("#makeLad").removeAttr("disabled").css({"background": "#0470e4", "cursor": "pointer"});
+					}
 				});
 				$("#ladderPreList").on("click", function() {
 					preLadderList();
@@ -95,7 +103,29 @@
 					$("#ladderSecret img").toggleClass("active");
 				});
 				
+				var timer;
+				var scrollCnt = 0;
 				$(document)
+					.on("click", function() {
+						
+					})
+					/* .on("scroll", function() {
+						scrollCnt++;
+						if(scrollCnt == 1) {
+							console.log("시작해따");
+						}
+						timer = setTimeout(function() {
+							
+						}, 150);
+						clearTimeout(timer);
+						timer = setTimeout(function() {
+							var focusClass = document.activeElement.getAttribute("class");
+							var focusId = document.activeElement.getAttribute("id");
+							if(focusClass == "input") {
+								$("#" + focusId).blur();
+							}
+						}, 150);
+					}) */
 					.on("click", "#removeIcon", function() {
 						attendant_remove($(this).closest("li").index());
 					})
@@ -109,9 +139,6 @@
 						if(ladderType == "1") {
 							getMoney();
 							$("#totalmoney span").text(totalmoney);
-							
-							/* setInputValue(false);
-							setLadderTypeDiv(); */
 						}
 					});
 				
@@ -142,7 +169,7 @@
 					}
 					$("#itemList").empty();
 					for(var i = 0; i < len; i++) {
-						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' /></li>");
+						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' maxlength='" + maxitem + "' /></li>");
 						$("input[name='items']:eq(" + i + ")").val(items[i]);
 					}
 				}
@@ -210,7 +237,7 @@
 				ladder_pre_set_dialogArguments[0] = "";
 				ladder_pre_set_dialogArguments[1] = preLadderListComplete;
 				
-				GetOpenWindow("/ezLadder/ladderMain.do?mode=pre&currPage=1&searchSelect=&searchInput=", "ladder_pre_set", 1342, 822);
+				GetOpenWindow("/ezLadder/ladderMain.do?mode=pre&currPage=1&searchSelect=&searchInput=", "ladder_pre_set", 1155, 813);
 			}			
 			function preLadderListComplete(ladderInfo, lineInfo) {
 				title = ladderInfo["title"];
@@ -227,8 +254,8 @@
 				}
 				
 				ladderSetInitView();
-				
 				checkAttendant(lineInfo);
+				$("#makeLad").removeAttr("disabled").css({"background": "#0470e4", "cursor": "pointer"});
 			}
 			
 			/** 참여자, 아이템 배열을 현재 input box 정보로 셋팅 */
@@ -246,7 +273,7 @@
 						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
 							name = $(".attendant:eq(" + i + ") input").val();
 							attendants["name"][i] = name;
-							attendants["name2"][i] = name;						
+							attendants["name2"][i] = name;
 						}
 					}
 					if($("#itemList li").length != 0 && $("#itemList li input").attr("readonly") != "readonly") {
@@ -264,7 +291,8 @@
 			function manage_attendant_after() {
 				setInputValue(true);
 				
-				ladder_select_attendant_dialogArguments[0] = {"attendants": attendants, "maxAttendant": maxAttendant};
+				/* ladder_select_attendant_dialogArguments[0] = {"attendants": attendants, "maxAttendant": maxAttendant}; */
+				ladder_select_attendant_dialogArguments[0] = {"attendants": attendants};
 				ladder_select_attendant_dialogArguments[1] = checkAttendant;
 
 			    GetOpenWindow("/ezLadder/setLadderAttendant.do", "ladder_select_attendant", 970, 680);
@@ -305,6 +333,8 @@
 				changeUser(attendants["id"].length);
 				setLadderTypeDiv();
 			}
+			
+			
 
 			/** 아이디+이름 검사 (익명인지 아닌지) */
 			var attendants = null;
@@ -332,7 +362,7 @@
 					
 					addIndex = attendants["id"].length;
 					for (; i < len; i++) {
-						names[i] = TrimText(names[i]);
+						names[i] = names[i].trim();
 						
 						if(names[i] == "") {
 							continue;
@@ -372,6 +402,7 @@
 					
 					$("#inputAttendant").val("");
 					
+					console.log(overlapuser.length);
 					if(!!overlapuser.length) { // 중복유저 팝업
 						retAttendantPopInfo[0] = true;
 						retAttendantPopInfo[1] = bindAllUser;
@@ -423,10 +454,11 @@
 				var totallen = 0;
 				var user = {};
 				
-				if(attendantlen + userdata.length > maxAttendant) {
+				/* 사람 수 제한시 */
+				/* if(attendantlen + userdata.length > maxAttendant) {
 					alert(maxAttendant + "<spring:message code='ezLadder.t048' />");
 					userdata.splice(maxAttendant - attendantlen);
-				}
+				} */
 				
 				userdata.forEach(function(_user, index) {
 					totallen = attendantlen + index;
@@ -452,11 +484,11 @@
 						attendants["pic"][totallen] = "";
 						attendants["order"][totallen] = totallen;
 						if(flag[1] === "xml") { // xml
-							attendants["name"][totallen] = getNodeText(user.getElementsByTagName("DATA3")[0]);
-							attendants["name2"][totallen] = getNodeText(user.getElementsByTagName("DATA3")[0]);
+							attendants["name"][totallen] = getNodeText(user.getElementsByTagName("DATA3")[0]).substring(0, maxname);
+							attendants["name2"][totallen] = getNodeText(user.getElementsByTagName("DATA3")[0]).substring(0, maxname);
 						} else { // json
-							attendants["name"][totallen] = user["name"];
-							attendants["name2"][totallen] = user["name2"];
+							attendants["name"][totallen] = user["name"].substring(0, maxname);
+							attendants["name2"][totallen] = user["name2"].substring(0, maxname);
 						}
 					}
 					if(items[totallen] == null) {
@@ -479,13 +511,13 @@
 					
 					for(var i = 0; i < len; i++) {
 						html = "";
-						picsrc = "/images/ezLadder/icon_defaultuser.png";
+						picsrc = "/images/ezLadder/icon_defaultAttendant.png";
 						
 						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
 							html += '<li class="attendant"><div style="height: 140px; padding-top:  20px;">';
-							html += '<img src="' + picsrc + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />';
+							html += '<div class="userPicWraper"><img src="' + picsrc + '" width="60px" height="60px" /></div>';
 							html += '<div style="margin-top: 10px;"><span>'
-							html += '<input type="text" class="input" name="userNames" style="line-height: 30px;" /></span></div>';
+							html += '<input type="text" class="input" name="userNames" style="line-height: 30px;" id="userNames' + i + '" maxlength="' + maxname + '" /></span></div>';
 							html += '<input type="text" name="userName2s" style="display: none;" />';
 							html += '<input type="text" name="userIds" style="display: none;" />';
 							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 22px; right: 10px; cursor: pointer;"></span></div></li>';
@@ -495,7 +527,7 @@
 							}
 							
 							html += '<li class="attendant"><div style="height: 140px; padding-top:  20px;">';
-							html += '<img src="' + picsrc + '" width="60px" height="60px" style="border: 3px solid #2568b3; border-radius: 40px;" />';
+							html += '<div class="userPicWraper"><img src="' + picsrc + '" width="60px" height="60px" /></div>';
 							html += '<div style="margin-top: 10px;"><span>'
 							html += '<input type="text" class="input" readonly="readonly" name="userNames" style="line-height: 30px; background: rgb(244, 245, 245)" /></span></div>';
 							html += '<input type="text" name="userName2s" style="display: none;" />';
@@ -514,7 +546,7 @@
 							$("#itemList").append("<li class='item'><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' /><input style='display: none;' name='items' _itemindex='" + i + "' /></li>");
 							$(".tempItem:eq(" + i + ")").val("?");
 						} else {
-							$("#itemList").append("<li class='item'><input type='text' class='input' name='items' /></li>");
+							$("#itemList").append("<li class='item'><input type='text' class='input' name='items' id='items" + i + "' maxlength='" + maxitem + "' /></li>");
 							$("#itemList li:eq(" + i + ") input").val(items[i]);
 						}
 						
@@ -562,13 +594,22 @@
 					alert("<spring:message code='ezLadder.t020'/>");
 					return;
 				}
+				$("[name='userNames']").each(function(){
+					if(this.value == "") {
+						alert("<spring:message code='ezLadder.t055'/>");
+						return;
+					}
+				});
+				
+				$("#makeLad").attr("disabled", "disabled");
+				
 				$("input[name='secretFlag']").val($("#ladderSecret .active").attr("_flag"));
 				$("input[name='type']").val(ladderType);
 				$("input[name='lineCnt']").val($("#amount").text());
 				
 				items.forEach(function(item, index) {
 					if(ladderType == "0") {
-						items[index] = index < bombnum ? "꽝!" : "패스";
+						items[index] = index < bombnum ? "<spring:message code='ezLadder.t056'/>" : "<spring:message code='ezLadder.t057'/>";
 					} else if(ladderType == "2") {
 						items[index] = index + 1;
 					}
@@ -634,7 +675,7 @@
 		</style>
 	</head>
 	<body class="mainbody">
-		<h1>사다리 게임</h1>
+		<h1><spring:message code="ezLadder.t100" /></h1>
 		<form id="ladMakeForm" method="post" action="/ezLadder/setLadder.do" name="ladMakeForm">
 			<table class="setTable">
 				<tr>
@@ -642,7 +683,7 @@
 						<div style="height: 50px; line-height: 50px; margin-bottom: 10px; position: relative;">
 							<div style="height: 40px; position: absolute; left: 0; right: 65px;">
 								<input type="text" class="input" name="title" id="title" style="height: 100%; width: 100%;" placeholder="<spring:message code="ezLadder.t019"/>" maxlength="166"/>
-								<div id="ladderPreList" style="top: 0;"><img src="/images/ezLadder/icon_preLadder.png"/></div>
+								<div id="ladderPreList" style="top: 7px; right: 11px;"><img src="/images/ezLadder/icon_preLadder.png"/></div>
 							</div>
 							<div id="ladderSecret" style="position: absolute; right: 0;">
 								<img src="/images/ezLadder/icon_public.png" class="default icon" _flag="0"/>
@@ -656,25 +697,25 @@
 					<td>
 						<div style="height: 50px; margin-bottom: 10px;">
 							<div style="float: left; height: 40px; line-height: 50px;">
-								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px;" placeholder="참여자추가"/>
+								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px;" placeholder="<spring:message code='ezLadder.t070 = 외' />"/>
 							</div>
 							<div style="float: right;">
 									<div id="ladderTypeOption" style='display: inline-block; margin-right: 30px; height: 50px;'></div>
 									<div class="ladderType" _num="0">
 										<img src="/images/ezLadder/icon_bomb.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_bomb_c.png" class="select icon"/>
+										<img src="/images/ezLadder/icon_game00.png" class="select icon"/>
 									</div>
 									<div class="ladderType" _num="1">
 										<img src="/images/ezLadder/icon_money.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_money_c.png" class="select icon"/>
+										<img src="/images/ezLadder/icon_game01.png" class="select icon"/>
 									</div>
 									<div class="ladderType" _num="2">
 										<img src="/images/ezLadder/icon_order.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_order_c.png" class="select icon"/>
+										<img src="/images/ezLadder/icon_game02.png" class="select icon"/>
 									</div>
 									<div class="ladderType" _num="3">
 										<img src="/images/ezLadder/icon_handwork.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_handwork_c.png" class="select icon"/>
+										<img src="/images/ezLadder/icon_game03.png.png" class="select icon"/>
 									</div>
 								<input name="type" style="display: none;" />
 							</div>
@@ -711,27 +752,13 @@
 					</td>
 				</tr>
 			</table>
-			<div class="wrap center">
-				<div class="ladderBtn" id="makeLad" style="float: right; cursor: pointer;"><spring:message code="ezLadder.t018"/></div>
+			<div class="wrap">
+				<input type="button" class="ladderBtn" id="makeLad" disabled="disabled" value="<spring:message code="ezLadder.t018"/>">
 			</div>
-				<!-- <table>
-					
-					<tr>
-						<td>
-							<button id="bmtest">bmtest</button>
-						</td>
-					</tr>
-				</table> -->
 		</form>
-		<%-- <canvas id='ladderCanvas' width="500px" height="500px" style="border: 1px solid black"></canvas> --%>
-		
-		<span id="tetetest"><h3>만들기</h3></span>
-		
-		<!-- popup start -->
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
-	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
-	    </div>
-	    <!-- end -->
+			<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

@@ -70,9 +70,9 @@ public class EzLadderGWController {
 	@Autowired
 	private EzOrganService ezOrganService;
 	
-	public int[] paging(int currPage,int total) {
+	public int[] paging(int currPage, int total, int newBlock) {
 		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
-		int block = 10;
+		int block = newBlock;
 		pages[0] = (int) Math.ceil(total/(double) block);	// totalPage
 		if( currPage > pages[0]) {
 			currPage = pages[0];
@@ -114,21 +114,23 @@ public class EzLadderGWController {
 	
 		int totalLadder = 0;
 		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
+		int listNumPerPage = 10;
 		
 		try {
 			List<LadderVO> list;
 			if(searchSelect.equals("")) {	// 비검색
 				if(mode.equals("part")){		// 일부 참여자 선택
 					totalLadder = ezLadderService.partLadderCount(vo);
-					pages = paging(page, totalLadder);
+					pages = paging(page, totalLadder, listNumPerPage);
 					list = ezLadderService.getPartLadderList(vo, pages[1], pages[2], sort, sortFlag);
 				} else if(mode.equals("pre")) { // 이전 사다리 리스트 출력 
+					listNumPerPage = 20;
 					totalLadder = ezLadderService.ladderCount(vo, mode);
-					pages = paging(page, totalLadder);
+					pages = paging(page, totalLadder, listNumPerPage);
 					list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode, sort, sortFlag);
 				} else {						// 전체 참여자 선택
 					totalLadder = ezLadderService.ladderCount(vo, mode);
-					pages = paging(page, totalLadder);
+					pages = paging(page, totalLadder, listNumPerPage);
 					list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode, sort, sortFlag);
 				}
 			} else {							// 검색
@@ -137,7 +139,7 @@ public class EzLadderGWController {
 				allData.add(searchInput);
 				allData.add(mode);
 				totalLadder = ezLadderService.searchLadderCount(vo, allData);
-				pages = paging(page, totalLadder);
+				pages = paging(page, totalLadder, listNumPerPage);
 				list = ezLadderService.searchLadderList(vo, allData, pages[1], pages[2], sort, sortFlag);
 			}
 		
@@ -340,6 +342,7 @@ public class EzLadderGWController {
 	/**
 	 * 댓글 조회
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ladder/ladders/{ladderId}/comment/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwSelectComment(@PathVariable String userId, @PathVariable String ladderId, LadderCommentVO cmtVO, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [GET /ladder/ladders/" + ladderId + "/comment/users/" + userId + "] started.");
@@ -493,21 +496,23 @@ public class EzLadderGWController {
 		
 		int totalLadder = 0;
 		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
+		int listNumPerPage = 10;
 		
 		try {
 			List<LadderVO> list;
 			ezLadderService.changePreLadderList(ladOrderVO);
 			if(searchInput.equals("")) {	// 이전 사다리 비검색
 				totalLadder = ezLadderService.ladderCount(vo, mode);
-				pages = paging(page, totalLadder);
+				pages = paging(page, totalLadder, listNumPerPage);
 				list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode, "date", "desc");
 			} else {						// 이전 사다리 검색
 				List<String> allData = new ArrayList<String>();
 				allData.add(searchSelect);
 				allData.add(searchInput);
 				allData.add(mode);
+				listNumPerPage = 20;
 				totalLadder = ezLadderService.searchLadderCount(vo, allData);
-				pages = paging(page, totalLadder);
+				pages = paging(page, totalLadder, listNumPerPage);
 				list = ezLadderService.searchLadderList(vo, allData, pages[1], pages[2], "date", "desc");
 			}
 			
@@ -535,83 +540,61 @@ public class EzLadderGWController {
 	public JSONObject gwGetLadderGame(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request, LadderVO ladVO, LadderCommentVO cmtVO) {
 		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
 		
-		int ladId = Integer.parseInt(ladderId);
 		JSONObject result = new JSONObject();
 		
 
-		ladVO.setLadderId(ladId);
 		try {
 			LadderVO vo = ezLadderService.getLadderGame(ladVO);
 			List<LadderLineVO> list = ezLadderService.getLadderLineParticipant(ladVO);
 			List<LadderCommentVO> cmtlist = ezLadderService.selectComments(cmtVO);
 			
-			String imagePath = ezOrganService.getPropertyValue(vo.getWriterId(), "extensionAttribute2", vo.getTenant_id());
+			String imagePath = "";
+			String realPath = "";
+			String fullPath = "";
+			
+			imagePath = ezOrganService.getPropertyValue(userId, "extensionAttribute2", ladVO.getTenant_id());
 			if (imagePath != null && !imagePath.equals("")) {
-				String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", vo.getTenant_id())+ commonUtil.separator + imagePath;
-				String fullPath = request.getServletContext().getRealPath(realPath);
+				realPath = commonUtil.getUploadPath("upload_personal.PHOTO", vo.getTenant_id())+ commonUtil.separator + imagePath;
+				fullPath = request.getServletContext().getRealPath(realPath);
 				
 				if (checkExist(fullPath)) {
 					vo.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
 				}
-				else {
-					vo.setPic("/images/ezLadder/icon_defaultuser.png");
-				}
 			} 
-			else {
-				vo.setPic("/images/ezLadder/icon_defaultuser.png");
-			}
-			
-			for (LadderCommentVO commentVO : cmtlist) {
-				imagePath = ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id());
-				
-				if (imagePath != null && !imagePath.equals("")) {
-					String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", commentVO.getTenant_id())+ commonUtil.separator + imagePath;
-					String fullPath = request.getServletContext().getRealPath(realPath);
-					
-					if (checkExist(fullPath)) {
-						commentVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
-					}
-					else {
-						commentVO.setPic("/images/ezLadder/icon_defaultuser.png");
-					}
-				} 
-				else {
-					commentVO.setPic("/images/ezLadder/icon_defaultuser.png");
-				}
-			}
-			
 			for(LadderLineVO lineVO : list) {
 				imagePath = ezOrganService.getPropertyValue(lineVO.getUserId(), "extensionAttribute2", lineVO.getTenant_id());
 				
 				if (imagePath != null && !imagePath.equals("")) {
-					String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", lineVO.getTenant_id())+ commonUtil.separator + imagePath;
-					String fullPath = request.getServletContext().getRealPath(realPath);
+					realPath = commonUtil.getUploadPath("upload_personal.PHOTO", lineVO.getTenant_id())+ commonUtil.separator + imagePath;
+					fullPath = request.getServletContext().getRealPath(realPath);
 					
 					if (checkExist(fullPath)) {
 						lineVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
 					}
-					else {
-						lineVO.setPic("/images/ezLadder/icon_defaultuser.png");
+				} 
+			}
+			for (LadderCommentVO commentVO : cmtlist) {
+				imagePath = ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id());
+				
+				if (imagePath != null && !imagePath.equals("")) {
+					realPath = commonUtil.getUploadPath("upload_personal.PHOTO", commentVO.getTenant_id())+ commonUtil.separator + imagePath;
+					fullPath = request.getServletContext().getRealPath(realPath);
+					
+					if (checkExist(fullPath)) {
+						commentVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
 					}
 				} 
-				else {
-					lineVO.setPic("/images/ezLadder/icon_defaultuser.png");
-				}
 			}
 			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", vo);
+			result.put("ladder", vo);
 			result.put("participant", list);
 			result.put("cmtlist", cmtlist);
 			
-			logger.debug("###data: "+vo);
-			logger.debug("###list: "+list);
-	
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
 		}
 		
 		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId + "users/" + userId + "] ended.");
