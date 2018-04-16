@@ -19,7 +19,7 @@
 			var pageChange = 1;
 			var totalPage = ${totalPage};
 			var totalLadder = ${totalLadder};
-			var blockSize = 7;
+			var blockSize = 10;
 			var mode = "";
 			var modeCheck = "${mode}";
 			var searchSelect = "${searchSelect}";
@@ -81,9 +81,9 @@
 			
 		</script>
 		<style type="text/css">
-			.effect img {
-				width:30px;
-				height:30px;
+			.effect {
+				width:45px;
+				height:45px;
 				border:1px solid #a9a9a9;
 				border-radius:30px;
 			}
@@ -137,59 +137,59 @@
 		<div class="div_scroll" style="width:100%; overflow: auto" id="divList">
 			 <table class="mainlist" style="width:100%; overflow: auto"> 
 			    <tr class="header" style="height=20px;"> 
-					<th width="20px" onClick="listSort(0)"><spring:message code="ezLadder.t002"/><span id="sort_0" ></span></th> 
-					<th width="80px" onClick="listSort(1)"><spring:message code="ezLadder.t003"/><span id="sort_1" ></span></th> 
-					<th width="40px" onClick="listSort(2)"><spring:message code="ezLadder.t004"/><span id="sort_2" ></span></th>
-					<th width="40px" onClick="listSort(3)"><spring:message code="ezLadder.t005"/><span id="sort_3" ></span></th> 
-					<th width="30px" onClick="listSort(4)"><spring:message code="ezLadder.t006"/><span id="sort_4" ></span></th> 
-					<th width="30px" onClick="listSort(5)"><spring:message code="ezLadder.t007"/><span id="sort_5" ></span></th>
-					<th width="30px" onClick="listSort(6)"><spring:message code="ezLadder.t008"/><span id="sort_6" ></span></th>
+					<th onClick="listSort(0)" width="80px"><spring:message code="ezLadder.t002"/><span id="sort_0" ></span></th> 
+					<th onClick="listSort(1)"><spring:message code="ezLadder.t003"/><span id="sort_1" ></span></th> 
+					<th onClick="listSort(2)" width="140px"><spring:message code="ezLadder.t004"/><span id="sort_2" ></span></th>
+					<th onClick="listSort(3)" width="140px"><spring:message code="ezLadder.t005"/><span id="sort_3" ></span></th> 
+					<th onClick="listSort(4)" width="80px"><spring:message code="ezLadder.t006"/><span id="sort_4" ></span></th> 
+					<th onClick="listSort(5)" width="80px"><spring:message code="ezLadder.t007"/><span id="sort_5" ></span></th>
+					<th onClick="listSort(6)" width="80px"><spring:message code="ezLadder.t008"/><span id="sort_6" ></span></th>
 			    </tr>
 				 <c:forEach items="${list }" var="vo">
 					<tr class="black" style="height=30px;" onClick="getLadderGame(${vo.ladderId})">
 						<c:choose>
 							<c:when test="${vo.type eq 0 }">
-								<td><div class="effect"><img src ='/images/ezLadder/icon_bomb.png' /></div></td>
+								<td><img class="effect" src ='/images/ezLadder/icon_bomb.png' /></td>
 							</c:when>
 							<c:when test="${vo.type eq 1 }">
-								<td><div class="effect"><img src ='/images/ezLadder/icon_money.png' /></div></td>
+								<td><img class="effect" src ='/images/ezLadder/icon_money.png' /></td>
 							</c:when>
 							<c:when test="${vo.type eq 2 }">
-								<td><div class="effect"><img src ='/images/ezLadder/icon_order.png' /></div></td>
+								<td><img class="effect" src ='/images/ezLadder/icon_order.png' /></td>
 							</c:when>
 							<c:otherwise>
-								<td><div class="effect"><img src ='/images/ezLadder/icon_handwork.png' /></div></td>
+								<td><img class="effect" src ='/images/ezLadder/icon_handwork.png' /></td>
 							</c:otherwise>
 						</c:choose>
 						
-						<td><div class="effect">${vo.title }</div></td>
-						<td><div class="effect">${vo.writerName }</div></td>
-						<td><div class="effect">${vo.writeDate.substring(0,16) }</div></td>
+						<td>${vo.title }</td>
+						<td>${vo.writerName }</td>
+						<td>${vo.writeDate.substring(0,16) }</td>
 						
 						<c:choose>
 							<c:when test="${vo.status eq 0 }">
-								<td><div class="effect"><img src ='/images/ezLadder/icon_wait.png' /></div></td>
+								<td><img class="effect" src ='/images/ezLadder/icon_wait.png' /></td>
 							</c:when>
 							<c:otherwise>
-								<td><div class="effect"><img src ='/images/ezLadder/icon_complete.png' /></div></td>
+								<td><img class="effect" src ='/images/ezLadder/icon_complete.png' /></td>
 							</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
 							<c:when test="${vo.secretFlag eq 0 }">
-								<td><div class="effect"><img src ='/images/ezLadder/icon_public.png' /></div></td>
+								<td><img class="effect" src ='/images/ezLadder/icon_public.png' /></td>
 							</c:when>
 							<c:otherwise>
-								<td><div class="effect"><img src ='/images/ezLadder/icon_private.png' /></div></td>
+								<td><img class="effect" src ='/images/ezLadder/icon_private.png' /></td>
 							</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
 							<c:when test="${id eq vo.writerId}">
-								<td><div class="effect"><img src ='/images/ezLadder/icon_posDelete.png' class="deleteLadder" _ladderId="<c:out value='${vo.ladderId}' />" /></div></td>
+								<td><img class="effect" src ='/images/ezLadder/icon_posDelete.png' class="deleteLadder" _ladderId="<c:out value='${vo.ladderId}' />" /></td>
 							</c:when>
 							<c:otherwise>
-								<td><div class="effect"><img src ='/images/ezLadder/icon_imposDelete.png' /></div></td>
+								<td><img class="effect" src ='/images/ezLadder/icon_imposDelete.png' /></td>
 							</c:otherwise>
 						</c:choose>
 					</tr>

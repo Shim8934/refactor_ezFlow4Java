@@ -1,10 +1,10 @@
 var strLang1 = "사다리";
-var strLang2 = "사다리종류";
+var strLang2 = "종류";
 var strLang3 = "제목";
 var strLang4 = "작성자";
 var strLang5 = "등록날짜";
 var strLang6 = "상태";
-var strLang7 = "공개여부";
+var strLang7 = "공개";
 var strLang8 = "삭제(임시)";
 var strLang9 = "사다리목록";
 var strLang10 = "등록된 사다리가 없습니다";
