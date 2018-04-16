@@ -549,7 +549,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 			
 			if (fileVO != null) {
-				updateFileUseStatus(file, tenantId);
+				deleteFile(file, tenantId);
 				ezWebFolderService.saveLog("P", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 				realFileDelete(fileVO.getFileName(), realPath, userInfo);
 			}
@@ -559,8 +559,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
 			
 			if (folderVO != null) {
-				updateFolderUseStatus(folderVO);
-				updateStatusAllFilesInFolder(folderVO);
+				deleteFolder(folderVO);
+				deleteAllFilesInFolder(folderVO);
 				realFileDeleteInFolder(folderVO.getFolderPath(), companyId, realPath, userInfo, offset, tenantId);
 			}
 		}
@@ -617,29 +617,32 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		LOGGER.debug("realFileDeleteInFolder ended.");
 	}
 	
+	
+	
+	
 	@Override
-	public void updateFileUseStatus(String fileId, int tenantId) throws Exception {
-		LOGGER.debug("updateFileUseStatus Started.");
+	public void deleteFile(String fileId, int tenantId) throws Exception {
+		LOGGER.debug("deleteFile Started.");
 		LOGGER.debug("fildId=" + fileId + ",tenantId=" + tenantId);
 
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("fileId", fileId);
 		map.put("tenantId", tenantId);
 		
-		int result = ezWebFolderDAO.updateFileUseStatus(map);
+		int result = ezWebFolderDAO.deleteFile(map);
 		
 		if (result > 0) {
-			LOGGER.debug("updateFileUseStatus is success");
+			LOGGER.debug("deleteFile is success");
 		} else {
-			LOGGER.debug("updateFileUseStatus is fail");
+			LOGGER.debug("deleteFile is fail");
 		}
 		
-		LOGGER.debug("updateFileUseStatus ended.");
+		LOGGER.debug("deleteFile ended.");
 	}
 
 	@Override
-	public void updateFolderUseStatus(FolderVO folderVO) throws Exception {
-		LOGGER.debug("updateFolderUseStatus Started.");
+	public void deleteFolder (FolderVO folderVO) throws Exception {
+		LOGGER.debug("deleteFolder Started.");
 		LOGGER.debug("folderVO="  + folderVO);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -647,20 +650,20 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("tenantId", folderVO.getTenantId());
 		map.put("companyId", folderVO.getCompanyId());
 		
-		int result = ezWebFolderDAO.updateFolderUseStatus(map);
+		int result = ezWebFolderDAO.deleteFolder(map);
 		
 		if (result > 0) {
-			LOGGER.debug("updateFolderUseStatus is success");
+			LOGGER.debug("deleteFolder is success");
 		} else {
-			LOGGER.debug("updateFolderUseStatus is fail");
+			LOGGER.debug("deleteFolder is fail");
 		}
 		
-		LOGGER.debug("updateFolderUseStatus ended.");
+		LOGGER.debug("deleteFolder ended.");
 	}
 
 	@Override
-	public void updateStatusAllFilesInFolder(FolderVO folderVO) throws Exception {
-		LOGGER.debug("updateStatusAllFilesInFolder Started.");
+	public void deleteAllFilesInFolder(FolderVO folderVO) throws Exception {
+		LOGGER.debug("deleteAllFilesInFolder Started.");
 		LOGGER.debug("folderVO="  + folderVO);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -668,15 +671,15 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("tenantId", folderVO.getTenantId());
 		map.put("companyId", folderVO.getCompanyId());
 		
-		int result = ezWebFolderDAO.updateStatusAllFilesInFolder(map);
+		int result = ezWebFolderDAO.deleteAllFilesInFolder(map);
 		
 		if (result > 0) {
-			LOGGER.debug("updateFolderUseStatus is success");
+			LOGGER.debug("deleteAllFilesInFolder is success");
 		} else {
-			LOGGER.debug("updateFolderUseStatus is fail");
+			LOGGER.debug("deleteAllFilesInFolder is fail");
 		}
 		
-		LOGGER.debug("updateStatusAllFilesInFolder ended.");
+		LOGGER.debug("deleteAllFilesInFolder ended.");
 	}
 
 	@Override

@@ -583,7 +583,7 @@ public class EzWebFolderGWController_m {
 		String realPath = request.getServletContext().getRealPath("");
 		JSONObject result   = new JSONObject();
 		
-		if (fileIDList.length == 0 || serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("")) {
+		if (fileIDList.length == 0 & folderIDList.length == 0|| serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
@@ -605,6 +605,48 @@ public class EzWebFolderGWController_m {
 		}
 		
 		logger.debug("filePermanetDelete ended");
+		return result;
+	}
+	
+	@RequestMapping(value="rest/ezwebfolder/restore-trashCan", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject restoreTrashCan(Locale locale, HttpServletRequest request) {
+		int tenantId = request.getParameter("tenantId") !=null ? Integer.parseInt(request.getParameter("tenantId")) : 0;
+		String userId = request.getParameter("userId") !=null ? request.getParameter("userId") : "";
+		String offset = request.getParameter("offset") !=null ? request.getParameter("offset") : "";
+		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		String fileList = request.getParameter("fileList") !=null ? request.getParameter("fileList") : "";
+		String folderList = request.getParameter("folderList") !=null ? request.getParameter("folderList") : "";
+
+		logger.debug("restoreTrashCan Started.");
+		logger.debug("tenantId=" + tenantId + ",userId=" + userId + ",offset=" + offset + ",serverName=" + serverName);
+		logger.debug("fileList=" + fileList + ",folderList=" + folderList);
+		
+		String[] fileIDList = fileList.split(",");
+		String[] folderIDList = folderList.split(",");
+		JSONObject result = new JSONObject();
+		
+		if (fileIDList.length == 0 & folderIDList.length == 0|| serverName.equals("") || offset.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t314", locale));
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		
+		
+		logger.debug("restoreTrashCan ended");
 		return result;
 	}
 	
