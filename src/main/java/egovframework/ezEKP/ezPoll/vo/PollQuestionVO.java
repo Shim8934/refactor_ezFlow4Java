@@ -30,6 +30,7 @@ public class PollQuestionVO implements Serializable {
 	private int isSorting;
 	private int isSelOnlyOnce;
 	private int sendPostNotice;
+	private int openToAll;
 	
 	public int getQstId() {
 		return qstId;
@@ -229,6 +230,14 @@ public class PollQuestionVO implements Serializable {
 
 	public void setSendPostNotice(int sendPostNotice) {
 		this.sendPostNotice = sendPostNotice;
+	}
+
+	public int getOpenToAll() {
+		return openToAll;
+	}
+
+	public void setOpenToAll(int openToAll) {
+		this.openToAll = openToAll;
 	}
 
 	public boolean equals(Object object) {
