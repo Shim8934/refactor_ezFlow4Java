@@ -29,7 +29,6 @@
 	   		var selUserName = "";
 	   		// 현재 로그인된 사용자 아이디
 	   		var userId = "<c:out value='${userId}'/>";
-	   		console.log(userId);
 	   		// 즐겨찾기 아이디
 	   		var favoriteId = "";
 	   		// 즐겨찾기 저장, 수정 flag
@@ -204,8 +203,10 @@
 	   				success : function(result){
 	   					$("#List_TBODY").html(result);
 	   					favoriteId = $(result).filter("tr").attr("favoriteid");
-			   			getFavoriteUser($("#List_TBODY tr:first"));
-			   			$("#journalFavorite").scrollTop();
+	   					if (favoriteId != undefined) {
+				   			getFavoriteUser($("#List_TBODY tr:first"));
+				   			$("#journalFavorite").scrollTop();
+	   					}
 	   				},
 	   				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);
@@ -240,46 +241,58 @@
 	   		
 	   		// 즐겨찾기 적용하기
 	   		function applyFavorite() {
-	   			$.ajax({
-	   				type : "POST",
-	   				dataType : "json",
-	   				url : "/ezJournal/applyFavoriteUser.do",
-	   				data : {"userId" : userId,
-   							"favoriteId" : favoriteId},
-   					success : function(result){
-   						receiverList = result.slice();
-   						drawReceiverList();
-	   				},
-	   				error : function(request, status, error) {
-		    			alert("code : " + request.status + "\nerror : " + error);
-	   				}
-	   			});
-	   		}
-	   		
-	   		// 즐겨찾기 수정
-	   		function modifyFavorite() {
-	   			type = "mod";
-	   			saveFavoriteLine();
-	   		}
-	   		
-	   		// 즐겨찾기 삭제
-	   		function deleteFavorite() {
-	   			var delCheck = confirm("<spring:message code='ezJournal.t139'/>");
-	   			
-	   			if (delCheck) {
+	   			if (favoriteId != undefined) {
 		   			$.ajax({
 		   				type : "POST",
-		   				url : "/ezJournal/deleteFavorite.do",
+		   				dataType : "json",
+		   				url : "/ezJournal/applyFavoriteUser.do",
 		   				data : {"userId" : userId,
 	   							"favoriteId" : favoriteId},
-	   					success : function(){
-	   						alert("<spring:message code='ezJournal.t138'/>");
-	   						getFavoriteList();
+	   					success : function(result){
+	   						receiverList = result.slice();
+	   						drawReceiverList();
 		   				},
 		   				error : function(request, status, error) {
 			    			alert("code : " + request.status + "\nerror : " + error);
 		   				}
 		   			});
+	   			} else {
+	   				alert("<spring:message code='ezJournal.t173'/>");
+	   			}
+	   		}
+	   		
+	   		// 즐겨찾기 수정
+	   		function modifyFavorite() {
+	   			if (favoriteId != undefined) {
+		   			type = "mod";
+		   			saveFavoriteLine();
+	   			} else {
+	   				alert("<spring:message code='ezJournal.t173'/>");
+	   			}
+	   		}
+	   		
+	   		// 즐겨찾기 삭제
+	   		function deleteFavorite() {
+	   			if (favoriteId != undefined) {
+		   			var delCheck = confirm("<spring:message code='ezJournal.t139'/>");
+		   			
+		   			if (delCheck) {
+			   			$.ajax({
+			   				type : "POST",
+			   				url : "/ezJournal/deleteFavorite.do",
+			   				data : {"userId" : userId,
+		   							"favoriteId" : favoriteId},
+		   					success : function(){
+		   						alert("<spring:message code='ezJournal.t138'/>");
+		   						getFavoriteList();
+			   				},
+			   				error : function(request, status, error) {
+				    			alert("code : " + request.status + "\nerror : " + error);
+			   				}
+			   			});
+		   			}
+	   			} else {
+	   				alert("<spring:message code='ezJournal.t173'/>");
 	   			}
 	   		}
 	   		
