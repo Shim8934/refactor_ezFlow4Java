@@ -209,6 +209,7 @@
 			searchEndDate = "";
 			searchStartDate = "";
 			getFileList(param);
+			$('#idSelect').ddslick('select', {index: 0 });
 		}
 		
 		function renderData(result) {

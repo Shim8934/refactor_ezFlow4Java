@@ -1048,7 +1048,7 @@
 			RESULT.TARGET_EXT LIKE CONCAT('%', #searchExt#, '%') AND
 			RESULT.TARGET_NAME LIKE CONCAT('%', #searchFileName#, '%') AND
 			RESULT.CREATE_NAME1 LIKE CONCAT('%', #searchCreatorName#, '%') AND
-			RESULT.TARGET_TYPE LIKE CONCAT('%', #searchFileType#, '%')
+			RESULT.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
 		ORDER BY
 			RESULT.TARGET_TYPE ASC, CREATE_DATE DESC
 		LIMIT
@@ -1063,6 +1063,7 @@
 				FOLDER.FOLDER_NAME1 AS TARGET_NAME,
 				CONCAT('D_', FOLDER.FOLDER_TYPE) AS TARGET_TYPE,
 				'folder' 		AS TARGET_EXT,
+				FILE_TYPE.TYPE_NAME,
 				FOLDER.CREATE_NAME1,
 				FOLDER.CREATE_NAME2,
 				DATE_ADD(FAVOR.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE
@@ -1082,7 +1083,7 @@
 			RESULT.TARGET_EXT LIKE CONCAT('%', #searchExt#, '%') AND
 			RESULT.TARGET_NAME LIKE CONCAT('%', #searchFileName#, '%') AND
 			RESULT.CREATE_NAME1 LIKE CONCAT('%', #searchCreatorName#, '%') AND
-			RESULT.TARGET_TYPE LIKE CONCAT('%', #searchFileType#, '%')
+			RESULT.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getFavoriteFileCount" parameterClass="Map" resultClass="Integer">
@@ -1093,6 +1094,7 @@
 				FILES.FILE_NAME 	AS TARGET_NAME,
 				FAVOR.TARGET_TYPE 	AS TARGET_TYPE,
 				FILES.FILE_EXT		AS TARGET_EXT,
+				FILE_TYPE.TYPE_NAME,
 				FILES.CREATE_NAME1,
 				FILES.CREATE_NAME2,
 				DATE_ADD(FAVOR.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE
@@ -1112,7 +1114,7 @@
 			RESULT.TARGET_EXT LIKE CONCAT('%', #searchExt#, '%') AND
 			RESULT.TARGET_NAME LIKE CONCAT('%', #searchFileName#, '%') AND
 			RESULT.CREATE_NAME1 LIKE CONCAT('%', #searchCreatorName#, '%') AND
-			RESULT.TARGET_TYPE LIKE CONCAT('%', #searchFileType#, '%')
+			RESULT.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
 	</select>
 	
 	<select id="EzWebFolderDAO_m.isExistsFavorite" parameterClass="Map" resultClass="Integer">
