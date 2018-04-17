@@ -313,6 +313,13 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		
 		try{
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			 
+			String changeDate = request.getParameter("changeDate");
+			String content = request.getParameter("content");
+	        
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

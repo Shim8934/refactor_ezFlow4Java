@@ -21,6 +21,8 @@
 		<!-- data picker-->		
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<!-- time picker-->		
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<style>
 			#attiStatis table td {
 				color : #777;
@@ -50,6 +52,9 @@
 			var companyHoliday = "";        // 회사 휴무일
 			var closedDateAttitude = true;  // 휴일근태등록 유무
 			var attitudeModAppl = true;     // 근태수정신청 유무
+			var modAttitudeId = "";         // 수정신청 근태ID
+			var modChangeDate = "";         // 수정신청 변경일자
+			var modContent = "";            // 수정신청 내용
 			
 			$(function(){
 				$(document).on('dblclick', '.td_day td', function(){
@@ -63,7 +68,7 @@
 				
 				//근태수정신청 팝업창
 				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02]', function(){
-					showDialog();
+					showDialog(this);
 				})
 			})
 			
@@ -89,26 +94,26 @@
 			var monthStr = monthMsg.split(";");		    
 			var dayMsg = "일;월;화;수;목;금;토";
 			var dayStr = dayMsg.split(";");
-			    
+			
 			$(function () {
-			    $.datepicker.regional["ko"] = {
-			    	closeText: "닫기",
-			        prevText: "이전달",
-			        nextText: "다음달",
-				currentText: "오늘",
-			        monthNames: monthStr,
-			        monthNamesShort: monthStr,
-			        dayNames: dayStr,
-			        dayNamesShort: dayStr,
-			        dayNamesMin: dayStr,
-			        weekHeader: 'Wk',
-			        dateFormat: 'yy-mm-dd',
-			        firstDay: 0,
-			        isRTL: false,
-			        duration: 200,
-			        showAnim: 'show',
-			        showMonthAfterYear: true
-			    };
+				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+		            monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
 			    $.datepicker.setDefaults($.datepicker.regional["ko"]);
 			    
 			    $("#Sdatepicker").datepicker('disable');
@@ -368,7 +373,7 @@
 			}
 			
 			//수정신청 레이어 팝업띄우깅
-			function showDialog() {
+			function showDialog(obj) {
 				if (attitudeModAppl) {
 					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
 		        	
@@ -381,6 +386,22 @@
 						  clickClose: false,
 						  showClose: false
 					});
+					
+					$("#originInCom").text($(obj).parents("td").attr("day") + $(obj).text().split(" :")[1]);
+					
+					var uploadSDate = $(obj).parents("td").attr("day") + " 00:00:00";
+					var sYear = uploadSDate.substring(0, 4);
+					var sMonth = uploadSDate.substring(5, 7);
+					var sDay = uploadSDate.substring(8, 10);
+					var sHour = uploadSDate.substring(11, 13);
+					var sMin = uploadSDate.substring(14, 16);
+					
+			        var SDate = new Date();
+			        SDate.setFullYear(sYear, sMonth-1, sDay);
+			        SDate.setHours(sHour, sMin, 0, 0);
+			        
+			        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+			        $("#Sdatepicker").datepicker('setDate', SDate);
 				} else {
 					 alert("수정신청이 불가능합니다.");
 				}
@@ -402,6 +423,22 @@
 	
 			}
         	
+			function attiModAppl() {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/a.do",
+					data : {
+						attitudeId : modAttitudeId,
+						changeDate : modChangeDate,
+						content : modContent
+					},
+					success : function() {
+						alert("근태 수정이 신청되었습니다.");
+					}
+				})
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">
@@ -452,34 +489,30 @@
 					</tr>
 					<tr>
 			  			<th style="width:90px;height:30px">출근시각</th>
-						<td>오늘날짜 (공백) 출근시각</td>
+						<td id="originInCom"></td>
 					</tr>
 					<tr>
 			  			<th style="width:90px;height:30px">변경시각</th>
-						<td>
-							<span id="periodblock" datetype="3">
+						<td id="transInCom">
+							<span id="periodblock">
 								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-								<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+								<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> :<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 							</span>
 						</td>
 					</tr>
 					<tr>
 						<th style="width:90px;height:30px">승인상태</th>
-						<td>상태(진행, 반려)</td>
+						<td id="apprStatus">상태(진행, 반려)</td>
 					</tr>
 					<tr>
-<!-- 						<td colspan="2"><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%; height:90px; box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td> -->
 						<td colspan="2" style="margin:0px; padding:0px;"><textarea class="textarea" style="width:100%; height:120px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea></td>
-<!-- 						<td style="vertical-align:top;height:100%;" id="EdtorSize" colspan="2"> -->
-<!-- 		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe> -->
-<!-- 	                    </td> -->
 					</tr>
 				</table>
 				<!-- /내용 -->
 				<br />
 				<div style="text-align:center;">
-					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
-					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
+					<a class="imgbtn"><span onclick="attiModAppl()" >신청</span></a>
+					<a class="imgbtn" rel="modal:close"><span>취소</span></a>
 			    </div>
 			</div>
 			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>

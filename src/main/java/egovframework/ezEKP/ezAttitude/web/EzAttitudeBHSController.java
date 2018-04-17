@@ -384,6 +384,7 @@ public class EzAttitudeBHSController {
 		String mode = request.getParameter("mode");
 		String attitudeId = request.getParameter("attitudeId");
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String userOffset = userInfo.getOffset().split("\\|")[1];
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() +"/attitudetypes";
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -432,6 +433,7 @@ public class EzAttitudeBHSController {
 			}
 		}
 		
+		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attitudeTypeList", attitudeTypeList);
 		model.addAttribute("date", date);
@@ -628,5 +630,50 @@ public class EzAttitudeBHSController {
 		}
 		LOGGER.debug("/ezAttitude/getAttitudeConf ended");
 		return attitudeConfigVO;
+	}
+	
+	/**
+	 * 수정신청 저장
+	 */
+	@RequestMapping(value = "/ezAttitude/saveAttModApp.do")
+	@ResponseBody
+	public void modApplicationSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/modApplicationSave started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String attitudeId = request.getParameter("attitudeId");
+		String changeDate = request.getParameter("changeDate");
+		String content = request.getParameter("content");
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId + "/modify-applications";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId)
+				.queryParam("changeDate", changeDate)
+				.queryParam("content", content);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		if (status.equals("ok")) {
+			
+		}
+		
+		LOGGER.debug("/ezAttitude/modApplicationSave ended");
 	}
 }

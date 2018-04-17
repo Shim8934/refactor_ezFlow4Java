@@ -85,7 +85,7 @@
 		</ul>
 	</div>
 	<script type="text/javascript">
-		var UserOffset = "${userOffset}";
+		var userOffset = "${userOffset}";
 		var uselang = "${uselang}";
 		var closedDay = "";
 		var checkClosedToday = false;
@@ -106,7 +106,7 @@
 	        var h, m;
 	        var s;
 	        var time = " ";		        
-	        time = getWorldTime(parseInt(UserOffset.split(':')[0]),parseInt(UserOffset.split(':')[1]));
+	        time = getWorldTime(parseInt(userOffset.split(':')[0]),parseInt(userOffset.split(':')[1]));
 	        document.getElementById("timeinput").innerHTML = time;
 	        gizmo = setTimeout("yourClock()", 1000);
 	    }
@@ -159,7 +159,7 @@
 	    
 		function checkHoliday(obj) {
 			var now = new Date();
-			var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (parseInt(UserOffset.split(':')[0]) * 3600000) + (parseInt(UserOffset.split(':')[1]) * 60000);
+			var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (parseInt(userOffset.split(':')[0]) * 3600000) + (parseInt(userOffset.split(':')[1]) * 60000);
 			now.setTime(tz);
 			$.ajax({
 				type:"POST",
