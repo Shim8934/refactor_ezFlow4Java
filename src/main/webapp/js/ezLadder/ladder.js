@@ -253,7 +253,10 @@ function printUserPath(locX, locY, moveX, moveY, type) { // 유저 경로 그리
 		drawPathLine(clickUserOrder, moveX, moveY, typeStr2);
 		
 		$moveImg.css({"top": moveTop, "left": moveLeft});
-		
+		/*if($moveImg.offset().top >= $(window).height()) {
+			$(window).scrollTop($moveImg.offset().top);
+		}
+		*/
 		if(locY >= hInfo) { 
 			drawStatus = false;
 			resultOrder = locX;

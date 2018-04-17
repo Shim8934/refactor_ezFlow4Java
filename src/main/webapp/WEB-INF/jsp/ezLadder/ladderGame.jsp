@@ -51,9 +51,11 @@
 			/* var win_width = $(window).width() - 70; */
 			var win_width = $(window).width() - 70;
 			var line_width = $("#attendantList").css("width").replace(/[^0-9]/g,'') * 1;
+			var title_width = win_width - $(".ladderGame_info").width();
 			
 			/* $(".setTable").css("width", win_width + "px"); */
 			$("#ladderLineBox").css("width", win_width + "px");
+			$(".ladderGame_title").css("width", title_width);
 			
 			if(line_width > win_width) {
 				$("#blackBox").css("width", (line_width + 100) + "px");

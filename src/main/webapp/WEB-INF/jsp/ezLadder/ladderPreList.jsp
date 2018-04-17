@@ -121,8 +121,8 @@
 				$(".ladderPreList_right").scrollTop(0);
 				$ladderPreview.attr("src", previewSrc);
 				if($ladderPreview.css("height") === "0px") {
-					$ladderPreview.css("height", "1440px");
-					$("#ladderPreviewLayer").css("height", "1390px");
+					$ladderPreview.css("height", "1360px");
+					$("#ladderPreviewLayer").css("height", "1320px");
 				}
 			}
 			
@@ -290,8 +290,8 @@
 							<div id="tblPageRayer" style="margin-top: 10px;"></div>
 						</div>
 						<div class="ladderPreList_right" style="position: relative;">
-							<div id="ladderPreviewLayer" style="width: 794px; position: absolute; z-index: 1000;"></div>
-							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 777px;"></iframe>
+							<div id="ladderPreviewLayer" style="width: 894px; position: absolute; z-index: 1000;"></div>
+							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 877px;"></iframe>
 						</div>
 					</div>
 				</div>
