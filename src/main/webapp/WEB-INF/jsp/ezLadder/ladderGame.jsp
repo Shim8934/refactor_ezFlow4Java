@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 	<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css" type="text/css">
 	<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
+	<link rel="stylesheet" href="/css/ezLadder/ladderPreList.css" type="text/css">
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 	<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
@@ -19,33 +20,25 @@
 	
 	<script type="text/javascript">
 	
-		var _ladder = {};
-		var _ladderLine = [];
-		
-		var _ladderOrder = [];
-		
+		var _ladder;
+		var _ladderLine;
+		var ladderId;
+		var writerId;
+		var status;
+		var lineCnt;
 		var id = "${id}";
-		var writerId = "${vo.writerId}";
-		var status = "${vo.status}";
 		var searchSelect = "${searchSelect}";
 		var searchInput =  "${searchInput}";
 		var mode = "${mode}";
 		var currPage = "${currPage}";
 		var back = "back";
 		var allData = [];
-		var size = "${fn:length(list)}";
-		var lineCnt = "${vo.lineCnt}"
-		var ladderId = "${vo.ladderId}";
 		var dragloc = {};
 		var droploc = {};
 		var stompClient = null;
 		var servername = null;
-		var attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
-		var items = []; 
-		var height = 10;
-		var resultUser = new Array;
-		var seeAllcnt = 0;
-		var pathColor = new Array;
+		
+		
 		
 		$(window).unload(function() {
 			if (stompClient !== null) {
@@ -55,10 +48,11 @@
 	
 		
 		function ladder_window_resize() {
+			/* var win_width = $(window).width() - 70; */
 			var win_width = $(window).width() - 70;
 			var line_width = $("#attendantList").css("width").replace(/[^0-9]/g,'') * 1;
 			
-			$(".setTable").css("width", win_width + "px");
+			/* $(".setTable").css("width", win_width + "px"); */
 			$("#ladderLineBox").css("width", win_width + "px");
 			
 			if(line_width > win_width) {
@@ -74,7 +68,10 @@
 			_ladder = ${vo};
 			_ladderLine = ${list};
 			
-			ladderlinecnt = _ladder.lineCnt;
+			ladderId = _ladder.ladderId;
+			writerId = _ladder.writerId;
+			status = _ladder.status;
+			lineCnt = _ladder.lineCnt;
 		}
 		
 		function afterDrag() {
@@ -275,9 +272,11 @@
 						$(moveDropObj).css("z-index", "10").css("position", "relative").animate({"left": moveDropLeft * 150}, 400);
 					}
 				});
-				stompClient.subscribe("/lad/start/" + ladderId, function(startFlag) {	
-					if(startFlag.body == "start") {
-						loadLadder();
+				stompClient.subscribe("/lad/start/" + ladderId, function(result) {	
+					loadLadder();
+					
+					if(result.body == id) {
+						$(".ladderDrag").draggable("destroy");
 					}
 				});
 			});
@@ -285,24 +284,11 @@
 		function canvasSetting() {
 			wInfo = _ladderLine.length;
 			lad = _ladder["lineArray"];
-			ladderlinecnt = _ladder["lineCnt"];
+			lineCnt = _ladder["lineCnt"];
 			
 			if(!!lad) {
-				if(id == lad.writerId) {
-					$(".ladderDrag").draggable("destroy");
-				}
-				
 				ladArr = lad.split('');
 				clickUserLadderAnimation();
-				$("#lineDiv").html(
-					"<span></span>" +
-					"<canvas id='ladderCanvasLine' width='0' height='800'></canvas>" +
-					"<canvas id='ladderCanvas' width='0' height='800'></canvas>"
-				);
-				$(".directionBtn").html(
-						'<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code="ezLadder.t106" /></div></button>' +
-						'<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code="ezLadder.t107" /></div></button>'
-				);
 			}
 			
 			$("canvas").attr("width", (wInfo * wSize));
@@ -327,9 +313,14 @@
 			});
 		}
 		function ladderAnimationComplete(type) {
+			var $moveImgUser;
+			
 			if($("#itemList li:eq(" + resultOrder + ") div").length == 1) {
 				var html = "<div style='line-height: 30px; height: 30px; background: #ddd; margin-top: 10px; border-radius: 15px;'>" + _ladderLine[clickUserOrder].userName + "</div>";
 				$("#itemList li:eq(" + resultOrder + ")").append(html);
+				$moveImgUser = $("#moveImgUser" + clickUserOrder);
+			} else {
+				$moveImgUser = $("#copyUser");
 			}
 			
 			if(type.substring(0, 3) == "ani" || type.substring(3, 6) == "one") {
@@ -337,16 +328,11 @@
 				$("#ladderLineBox").animate({"scrollLeft": scrollval}, 400);
 			}
 			
-			var $moveImgUser = $("#moveImgUser" + clickUserOrder);
-			var $copyUser = $("#copyUser");
-			if(!$copyUser.length) {
+			if($moveImgUser.attr("_result") == "0") {
 				$moveImgUser.animate({top:$moveImgUser.position().top - moveImgHalfHeight}, 400);
-			} else {
-				$copyUser.animate({top:$moveImgUser.position().top - moveImgHalfHeight}, 400, function() {
-					$copyUser.remove();
-				});
 			}
 			
+			$("#copyUser").remove();
 			$moveImgUser.attr("_result", userStatus[clickUserOrder]);
 		}
 		
@@ -360,7 +346,7 @@
 		}
 		/** 사다리 시작 (대기->완료) */
 		function start(idx) {
-			allData = [idx, searchSelect, searchInput, mode, currPage, size, lineCnt ];	
+			allData = [idx, searchSelect, searchInput, mode, currPage, _ladderLine.length, lineCnt ];	
 			if (confirm('시작하시겠습니까?')) {
 				jQuery.ajaxSettings.traditional = true;
 				$.ajax({
@@ -389,8 +375,17 @@
 				success: function(ladderInfo) {
 					_ladder = ladderInfo["vo"];
 					_ladderLine = ladderInfo["list"];
+					status = _ladder.status;
 					
-					canvasSetting();
+					$("#lineDiv").html(
+							"<span></span>" +
+							"<canvas id='ladderCanvasLine' width='0' height='800'></canvas>" +
+							"<canvas id='ladderCanvas' width='0' height='800'></canvas>"
+						);
+					$(".directionBtn").html(
+							'<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code="ezLadder.t106" /></div></button>' +
+							'<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code="ezLadder.t107" /></div></button>'
+					);
 					var html = '';
 					_ladderLine.forEach(function(line, index) {
 						html += '<li><div id="drag' + index + '" style="padding-top:  20px; cursor: pointer;">';
@@ -402,8 +397,7 @@
 						html += '<div style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap">' + line.userName + '</span></div></div></li>';
 					});
 					$("#attendantList").html(html);
-					/* $(".directionBtn").html('<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 0;"><div class="direcTextDiv"><spring:message code="ezLadder.t106" /></div></button>' +
-							'<button id="autoDirection" class="direcDiv" align="center" style="right: 160px;"><div class="direcTextDiv"><spring:message code="ezLadder.t107" /></div></button>'); */
+					canvasSetting();
 					$("#blackBox, #startButton").remove();
 				}
 			});
@@ -467,32 +461,7 @@
 				}
 			});
 		}
-		/* function showNewComment(addCommentView) {
-			var cmt = addCommentView["contents"];
-			var html = "";
-			
-			html += '<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="' + cmt["id"] + '">';
-			html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><img src="' + cmt["pic"] + '" style="padding-top: 10px; height: 38px; width:38px; cursor: pointer; " onclick="menuQst_DetailUserInfo(' + cmt["userId"] + ');"></td>';
-			html += '<td><div class="userName">' + cmt["userName"] + '</div>';
-			html += '<div id="div2Cmt' + cmt["id"] + '" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >';
-			html += '<p id="cmtArea' + cmt["id"] + '" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;">' + cmt["comment"] + '</p></div>';
-			html += '<div id="editCmtDiv' + cmt["id"] + '" style="display: none;"></div></td>';
-			html += '<td style="width: 145px; position:relative;">';
-			html += '<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;">' + cmt["writeDate"] + '</div>';
-			html += '<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" name="editComtButton" _comtIndex="editComt' + cmt["id"] + '" />';
-			html += '<div id="editComt' + cmt["id"] + '" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; width: 120px;" tabindex=0>';
-			html += '<div id="_eCmt' + cmt["id"] + '" _comtIndex="editComt' + cmt["id"] + '" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;"><spring:message code="ezLadder.t052" /></div>';
-			html += '<div id="_dCmt' + cmt["id"] + '" _comtIndex="' + cmt["id"] + '" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;"><spring:message code="ezLadder.t053" /></div></div></td></tr>';
-			
-			$("#commentArea table").prepend(html);
-			
-			if(id == cmt["userId"]) {
-				var comtInputTop = $("#sendComment").offset().top;
-				$(document).scrollTop(comtInputTop); 
-			}
-			
-			addCommentView = [];
-		} */
+		
 		/** 댓글 편집 패널 토글 */
 		var editComtFlag = -1;
 		function showEditPanel(editComtID) {
@@ -539,8 +508,8 @@
 				html += '<textarea id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow: hidden; outline: none; border: none; resize: none; padding: 5px; width: 1300px; height: 14px;">';
 				html += $("#cmtArea" + editComtFlag).text() + '</textarea></div></div>';
 				html += '<div style="padding: 5px 0px 5px 20px; clear: both;">';
-				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '">취소</button>';
-				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '" style="background-color: rgb(0, 72, 150);">저장</button></div>';
+				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '"><spring:message code="ezLadder.t109" /></button>';
+				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '" style="background-color: rgb(0, 72, 150);"><spring:message code="ezLadder.t072" /></button></div>';
 			} 
 			
 			$("#div2Cmt" + comtIndex).toggle();
@@ -570,6 +539,20 @@
 		
 	</script>
 	<style type="text/css">
+		ul {
+		    list-style:none;
+		    margin:0;
+		    padding:0;
+		    float: left;
+		}
+		
+		li {
+		    margin: 0 0 0 0;
+		    padding: 0 0 0 0;
+		    border : 0;
+		    float: left;
+		    text-align: center;
+		}
 		.dim{
     		width: 100%;
     		height: 100%;
@@ -592,22 +575,6 @@
 		    margin-left: 50px;
 		    z-index: 0;
 		}
-		
-		ul {
-		    list-style:none;
-		    margin:0;
-		    padding:0;
-		    float: left;
-		}
-		
-		li {
-		    margin: 0 0 0 0;
-		    padding: 0 0 0 0;
-		    border : 0;
-		    float: left;
-		    text-align: center;
-		}
-		
 		.cmtdelete, .cmtmodify {
 			cursor: pointer;
 		}
@@ -618,6 +585,7 @@
 		.directionBtn {
 			height: 50px;
 			position: relative;
+			margin-top: 20px;
 		}
 		
 		.direcDiv {
@@ -661,27 +629,46 @@
 	<body class="mainbody">
 		<h1><spring:message code='ezLadder.t001' /></h1>
 		<div class="fullwidth">
-			<table class="setTable" style="position: relative;">
+			<table class="setTable" style="position: relative; width: 100%;">
 				<tr>
 					<td>
-						<div style="overflow: hidden; margin-bottom: 20px; margin-top: 30px;">
+						<div class="ladderPreList_right" style="width: 100%; min-width: 800px; border: 0; height: auto;">
+							<h2 style="border: 1px solid #DDD;">
+								<p class="ladderGame_title">${vo.title}</p>
+								<div class="ladderGame_info">
+									<ul class="attribute">
+										<li><img src="/images/ezLadder/icon_game0${vo.type}.png" width="45px;" height="45px;"></li>
+										<li><img src="/images/ezLadder/icon_status0${vo.status}.png" width="45px;" height="45px;"></li>
+										<li><img src="/images/ezLadder/icon_secretflag0${vo.secretFlag}.png" width="45px;" height="45px;"></li>
+									</ul>
+									<p class="pic"><img src="${vo.pic}" width="60px;" height="60px;" style="position: relative;top: -2px;left: -2px;"></p>
+									<div class="txt">
+										<span class="name">${vo.writerName}</span>
+										<span class="team">${vo.deptName}</span>
+										<span class="date">${vo.writeDate}</span>
+									</div>
+									<ul class="edit">
+										<li style="cursor: pointer;"><img src="/images/ezLadder/icon_reuse.png" width="45px;" height="45px;" id="usePreladder"></li>
+										<c:choose>
+											<c:when test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:when>
+											<c:when test="${vo.writerId != id}"><li><img src="/images/ezLadder/icon_imposDelete.png" width="45px;" height="45px;"></li></c:when>
+										</c:choose>
+									</ul>
+								</div>
+							</h2>
+							<!-- <div class="ladderGame_view">
+								
+							</div> -->
+						</div>
+						
+						
+						<%-- <div style="overflow: hidden; margin-bottom: 20px; margin-top: 30px;">
 							<div style="float: left; height: 70px; width: 70%; line-height: 70px;">
 								<div style="display: inline-block; margin-right: 20px; padding-left: 20px;">${vo.title}</div>
 								<div style="float: right; padding-top: 12px; padding-right: 20px; border-right: 1px solid #dddddd; line-height: 0; height: 60px;">
-									<c:choose>
-										<c:when test="${vo.type eq 0}"><img src="/images/ezLadder/icon_bombSelected.png" class="icon"/></c:when>
-										<c:when test="${vo.type eq 1}"><img src="/images/ezLadder/icon_moneySelected.png" class="icon"/></c:when>
-										<c:when test="${vo.type eq 2}"><img src="/images/ezLadder/icon_orderSelected.png" class="icon"/></c:when>
-										<c:when test="${vo.type eq 3}"><img src="/images/ezLadder/icon_handworkSelected.png" class="icon"/></c:when>
-									</c:choose>
-									<c:choose>
-										<c:when test="${vo.status eq 0}"><img src="/images/ezLadder/icon_wait.png" class="icon"/></c:when>
-										<c:when test="${vo.status eq 1}"><img src="/images/ezLadder/icon_complete.png" class="icon"/></c:when>
-									</c:choose>
-									<c:choose>
-										<c:when test="${vo.secretFlag eq 0}"><img src="/images/ezLadder/icon_public.png" class="icon"/></c:when>
-										<c:when test="${vo.secretFlag eq 1}"><img src="/images/ezLadder/icon_private.png" class="icon"/></c:when>
-									</c:choose>
+									<img src="/images/ezLadder/icon_game0${vo.type}.png" class="icon"/>
+									<img src="/images/ezLadder/icon_status0${vo.status}.png" class="icon"/>
+									<img src="/images/ezLadder/icon_secretflag0${vo.secretFlag}.png" class="icon"/>
 								</div>
 							</div>
 							<div style="float: left; width: 30%;">
@@ -701,7 +688,7 @@
 									</c:choose>
 								</div>
 							</div>
-						</div>
+						</div> --%>
 					</td>
 				</tr>
 				<tr>
@@ -722,7 +709,8 @@
 									</c:otherwise>
 								</c:choose>
 						</div>
-							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF;">
+							<div class="directionBtn"></div>
+							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px;">
 								<div style="height: 140px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
@@ -771,7 +759,7 @@
 								<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code='ezLadder.t106' /></div></button>
 								<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code='ezLadder.t107' /></div></button>
 							</div>
-							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF;">
+							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px;">
 								<div style="height: 140px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
@@ -818,7 +806,7 @@
 			
 		</div>
 		<c:if test="${mode != 'preview' }">
-			<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
+			<div id="commentArea" style="border:1px solid #DDD; margin:15px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
 				<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none;">
 					<div class="sendComment_layout">
 						<div class="comment_input_layout" style="border: none; width: 86%;">

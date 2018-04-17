@@ -42,10 +42,6 @@
 						searchLadder();
 					}
 				});
-				$(".deleteLadder").on("click", function(e) {
-					e.stopPropagation();
-					deleteLadder($(this).attr("_ladderId"));
-				});
 				
 				ladder_main_resize();
 				$(window).resize(function() {
@@ -187,7 +183,7 @@
 						
 						<c:choose>
 							<c:when test="${id eq vo.writerId}">
-								<td><img class="effect" src ='/images/ezLadder/icon_posDelete.png' class="deleteLadder" _ladderId="<c:out value='${vo.ladderId}' />" /></td>
+								<td><img class="effect" src ='/images/ezLadder/icon_posDelete.png' onclick="deleteLadder(${vo.ladderId}, event);" /></td>
 							</c:when>
 							<c:otherwise>
 								<td><img class="effect" src ='/images/ezLadder/icon_imposDelete.png' /></td>

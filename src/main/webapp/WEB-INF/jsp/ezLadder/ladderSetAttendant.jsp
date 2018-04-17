@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code="ezLadder.t009" /></title>
+		<title><spring:message code="ezLadder.t071" /></title>
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
@@ -1499,23 +1499,16 @@
 		                displayUserList();
 		        }
 		    }
-		    
-	    	
-	    	
-	    	
-		    
 		    function event_Mover(obj) {
 		        if (obj != _RowObject) {
 		        	obj.style.backgroundColor = "#EDEDED";
 		        }
 		    }
-			
 		    function event_Mout(obj) {
 		        if (obj != _RowObject) {
 		        	obj.style.backgroundColor = "#FFFFFF";
 		        }
 		    }
-		    
 		    var _RowObject = null;
 		    var _RowObjectID = null;
 		    var _RowObjectName = null;
@@ -1570,13 +1563,6 @@
 		                break;
 		    	}
 		    }
-		    
-		    /* function bmTabInit() {
-		    	$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
-                $("div[id^='editBmGroup_']").hide();
-                _RowObjectID = null;
-		    } */
-		        
 	        function Tab1_MouseClick(obj) {
 	            obj.className = "tabon";
 	            if (obj.id != Tab1_SelectID) {
@@ -1592,7 +1578,7 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
-		<h1 id="h1Title" style="height: 20px;"><spring:message code='ezLadder.t036' /></h1>
+		<h1 id="h1Title" style="height: 20px;"><spring:message code="ezLadder.t071" /></h1>
 		<table style="width:100%">
 			<tr>
 				<td>

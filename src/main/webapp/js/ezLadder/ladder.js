@@ -1,5 +1,4 @@
 var userDiv = 101;
-var ladderlinecnt = 0;
 var clickUserOrder = -1;
 var resultOrder = -1;
 var startXPoint = userDiv/2; // 시작 위치 왼쪽부터 떨어진 거리
@@ -16,8 +15,6 @@ var checkUserPath = []; // 유저별 사다리 이동 방향 정보
 var userStatus = []; // 유저의 사다리 실행 상태 (처음 실행 : 0, 다시 실행 : 1)
 var drawStatus = false; // true:애니메이션 진행 false:애니메이션 정지
 var beforeStatus = 0; // 0: 직전에 애니메이션 진행 1: 직전에 팝 진행
-function ladderInitSettingVar() {
-}
 
 function changeUser(len) {
 	wInfo = len;
@@ -141,7 +138,7 @@ function moveUserPicImg(type) {
 	if($("#drag" + clickUserOrder + " span").hasClass("userPicWraper_d")) {
 		userImgHtml = '<span class="userPicWraper" style="border-color: #2568b3"><img src="/images/ezLadder/icon_defaultAttendant_hover.png" width="60px" height="60px" style="display: block;"></span>';
 	} else {
-		userImgHtml = document.getElementById("drag"+clickUserOrder).childNodes[1].outerHTML;
+		userImgHtml = document.getElementById("drag"+clickUserOrder).children[0].outerHTML;
 	}
 	if($("[_result='0']").length > 0) {
 		userStatus[$("[_result='0']").attr("id").slice(11)] = 0;
@@ -162,9 +159,9 @@ function moveUserPicImg(type) {
 				.attr({"id": "moveImgUser" + clickUserOrder, "_result": userStatus[clickUserOrder]})
 				.css({"position": "absolute", "top": canvasBottom, "left": moveLeft});
 			userStatus[clickUserOrder] = 1;
-			ladderAnimationComplete(type);
 		}
 		
+		ladderAnimationComplete(type);
 	} else {
 		
 		moveLeft = canvasLeft + wSize * clickUserOrder;

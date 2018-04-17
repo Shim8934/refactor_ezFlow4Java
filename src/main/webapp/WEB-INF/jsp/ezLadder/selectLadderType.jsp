@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -7,8 +6,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code="ezLadder.t009" /></title>
-		<%-- <link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css"> --%>
+		<title><spring:message code="ezLadder.t001" /></title>
+		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
@@ -16,46 +15,8 @@
 			function selectLadType(type) {
 				window.location.href = "/ezLadder/setLadder.do?type="+type;
 			}
-			$(function() {
-			
-				ladder_main_resize();
-				$(window).resize(function() {
-					ladder_main_resize();
-				});
-			});
-			// 윈도우 창 조절
-			function ladder_main_resize() {
-				var win_width = $(window).width();
-				var win_height = $(window).height();
-			/* 	$("#ladderGame").css("margin-top", win_height/25 + "px");
-				$("#ladderGameCard").css("margin-top", win_height/12 + "px");
-				$(".effect img").css("width", win_width/5 + "px");
-				$(".effect img").css("height", win_height/2 + "px"); */
-			}
 		</script>
 		<style type="text/css">
-			/* ul {
-			    list-style:none;
-			    margin:0;
-			    padding:0;
-			    text-align: center;
-			}
-			
-			li {
-			    border : 2px solid grey;
-			    display:inline-block;
-			    margin-left:15px;
-			    border-radius:20px;
-			}
-			
-			h2 {
-				font-size:20px;
-				font-family: 'Gulim', 'arial', 'verdana';
-				color: #393939;
-				text-decoration: none;
-				ime-mode:active;
-			} */
-			
 			.gameType_wrap{margin:0px; padding:0px;}
 			.gameType_wrap h2{margin:38px 0px; padding:0px; text-align:center; font-size:24px; color:#323333; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
 			.gameType_wrap ul{overflow:hidden; list-style:none; width:968px; margin:0px auto; padding:0px;}
@@ -77,55 +38,37 @@
 			
 		</style>
 	</head>
-	<body>
-		<%-- <div id="ladderGame" align="center">
-			<h3><spring:message code='ezLadder.t100' /></h3>
-		</div> --%>
-		<%-- <div class="gameType_wrap">
-			<ul>
-				<li class="gameType01" onClick='selectLadType(0)'>
-					<h2><spring:message code='ezLadder.t101' /></h2><br>
-					<h3><spring:message code='ezLadder.t113' /></h3><h3><spring:message code='ezLadder.t114' /></h3><br></li>
-				<li class="gameType02" onClick='selectLadType(1)'>
-					<h2><spring:message code='ezLadder.t102' /></h2><br>
-					<h3><spring:message code='ezLadder.t115' /></h3><h3><spring:message code='ezLadder.t116' /></h3><br></li>
-				<li class="gameType03" onClick='selectLadType(2)'>
-					<h2><spring:message code='ezLadder.t103' /></h2><br>
-					<h3><spring:message code='ezLadder.t117' /></h3><h3><spring:message code='ezLadder.t118' /></h3><br></li>
-				<li class="gameType04" onClick='selectLadType(3)'><img src ='/images/ezLadder/img_handwork.png' />
-					<h2><spring:message code='ezLadder.t104' /></h2><br>
-					<h3><spring:message code='ezLadder.t119' /></h3><h3><spring:message code='ezLadder.t120' /></h3><br></li>
-			</ul>
-		</div> --%>
-	<div class="gameType_wrap">
-	    <h2><spring:message code='ezLadder.t100' /></h2>
-	    <ul>
-	    	<li class="gameType0" onClick='selectLadType(0)'>
-	        	<dl>
-	            	<dt><spring:message code='ezLadder.t101' /></dt>
-	                <dd><spring:message code='ezLadder.t113' /><br><spring:message code='ezLadder.t114' /></dd>
-	            </dl>
-	        </li>
-	        <li class="gameType1" onClick='selectLadType(1)'>
-	        	<dl>
-	            	<dt><spring:message code='ezLadder.t102' /></dt>
-	                <dd><spring:message code='ezLadder.t115' /><br><spring:message code='ezLadder.t116' /></dd>
-	            </dl>
-	        </li>
-	        <li class="gameType2" onClick='selectLadType(2)'>
-	        	<dl>
-	            	<dt><spring:message code='ezLadder.t103' /></dt>
-	                <dd><spring:message code='ezLadder.t117' /><br><spring:message code='ezLadder.t118' /></dd>
-	            </dl>
-	        </li>
-	        <li class="gameType3" onClick='selectLadType(3)'>
-	        	<dl>
-	            	<dt><spring:message code='ezLadder.t104' /></dt>
-	                <dd><spring:message code='ezLadder.t119' /><br><spring:message code='ezLadder.t120' /></dd>
-	            </dl>
-	        </li>
-	    </ul>
-	</div>
+	<body class="mainbody">
+		<h1><spring:message code="ezLadder.t018" /></h1>
+		<div class="gameType_wrap">
+		    <h2><spring:message code='ezLadder.t100' /></h2>
+		    <ul>
+		    	<li class="gameType0" onClick='selectLadType(0)'>
+		        	<dl>
+		            	<dt><spring:message code='ezLadder.t101' /></dt>
+		                <dd><spring:message code='ezLadder.t113' /><br><spring:message code='ezLadder.t114' /></dd>
+		            </dl>
+		        </li>
+		        <li class="gameType1" onClick='selectLadType(1)'>
+		        	<dl>
+		            	<dt><spring:message code='ezLadder.t102' /></dt>
+		                <dd><spring:message code='ezLadder.t115' /><br><spring:message code='ezLadder.t116' /></dd>
+		            </dl>
+		        </li>
+		        <li class="gameType2" onClick='selectLadType(2)'>
+		        	<dl>
+		            	<dt><spring:message code='ezLadder.t103' /></dt>
+		                <dd><spring:message code='ezLadder.t117' /><br><spring:message code='ezLadder.t118' /></dd>
+		            </dl>
+		        </li>
+		        <li class="gameType3" onClick='selectLadType(3)'>
+		        	<dl>
+		            	<dt><spring:message code='ezLadder.t104' /></dt>
+		                <dd><spring:message code='ezLadder.t119' /><br><spring:message code='ezLadder.t120' /></dd>
+		            </dl>
+		        </li>
+		    </ul>
+		</div>
 		
 	</body>
 </html>
