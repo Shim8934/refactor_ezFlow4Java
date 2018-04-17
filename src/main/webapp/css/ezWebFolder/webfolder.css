@@ -150,7 +150,9 @@
 	display: none;
 }
 
-
+#mainmenu2 > ul > li[hidden] {
+	display: none;
+}
 
 
 

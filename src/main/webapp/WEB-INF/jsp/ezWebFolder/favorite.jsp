@@ -93,7 +93,6 @@
     		// event listener
     		var onListTypeChangeEvent = function(isFavoriteMode) {};
     		
-    		// private
     		var checkAccessFolderInfo = function() {
     			if (isFavoriteMode) {
     				throw "page is favorite mode."
@@ -189,13 +188,13 @@
     		count:			"<spring:message code = 'ezWebFolder.t138'/>",	// 개
     		noData:			"<spring:message code = 'ezWebFolder.t144'/>"	// 데이터 없습니다.
     	};
-
-    	var dom = {};
+    	
+    	var dom;
     	var checkedArr = [];
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function() {
-			var divList          = document.getElementById("dragDropArea");
+			var divList          = dom.dragDropArea;
 			var reheight         = document.documentElement.clientHeight - 220;
 			divList.style.height = reheight + "px";
 		};
@@ -203,45 +202,65 @@
 		document.onselectstart = function() {
 			return false;
 		}
-		
-		// fileList 화면 
-		window.onload = function() {
+	    
+		$(function() {
+			// dom elements setup
 			initDomElement();
 			
+			// file type filter setup
 			$('#idSelect').ddslick({
 				onSelected: function(selectedElmt) {
 					//callback function: do something with selectedData;
 					document.getElementById("idSelect").value = selectedElmt.selectedData["value"];
-					onChangeFileType(document.getElementById("idSelect").value);
+					onFileTypeChange(document.getElementById("idSelect").value);
 				}
 			});
 			
+			// context event handle setup
 			context.setOnListTypeChangeEventListener(function(isFavoriteMode) {
 				// TODO: 즐겨찾기 메뉴 보이기/숨기기 html, js 소스 정리
 				if (isFavoriteMode) {
-					dom.originalPath.style.display = "none";
+					dom.originalPathWrapper.style.display = "none";
 					dom.mainmenu2.setAttribute("favoritemode", "");
 				} else {
-					dom.originalPath.style.display = "";
+					dom.originalPathWrapper.style.display = "";
 					dom.mainmenu2.removeAttribute("favoritemode");
 				}
 			});
 			
+			// load favorite list
 			context.setListAsFavorite();
 			window.onresize();
-	    };
+			
+			// datepicker setup
+			$(".datepicker").datepicker({
+				changeMonth: true,
+				changeYear: true,
+				autoSize: true,
+				showOn: "both",
+				buttonImage: "/images/ImgIcon/calendar-month.gif",
+				buttonImageOnly: true
+			});
+			
+			$(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+			$(".datepicker").datepicker('setDate', "");
+		});
 	    
 	    function initDomElement() {
-	    	dom.mailBoxInfo = document.getElementById("mailBoxInfo");
-	    	dom.originalPath = document.getElementById("originalPath");
-	    	dom.mainmenu2 = document.getElementById("mainmenu2");
+	    	dom = (function(){
+	    		return {
+	    			mailBoxInfo : document.getElementById("mailBoxInfo"),
+	    	    	mainmenu2 : document.getElementById("mainmenu2"),
+	    	    	upload : document.getElementById("upload"),
+	    	    	originalPath : document.getElementById("originalPath"),
+	    	    	originalPathWrapper : document.getElementById("originalPathWrapper"),
+	    	    	dragDropArea : document.getElementById("dragDropArea"),
+	    	    	
+	    	    	allCheckBox : document.getElementById("_checkAll"),
+	    	    	listTable : document.getElementById("tblFileList")
+	    		};
+	    	}());
 	    }
-	    
-	    // 폴더관리
-	    function openfolderManage() {
-        	var popupWindow = window.open("/ezWebFolder/folderManage.do", "", GetOpenWindowfeature(500, 500));
-            try { popupWindow.focus(); } catch (e) { }
-        }
 	    
 	    function loadListAsFavorite() {
 			$.ajax ({
@@ -288,7 +307,6 @@
 				async: false,
 				url : "/ezWebFolder/fileList.do",
 				dataType: "json",
-				
 				data : { 
 					 "folderId"   : folderId,
 					 "folderType" : folderType,
@@ -300,7 +318,6 @@
 					 "searchCreateName" : $('#searchCreateName').val(),
 					 searchFileType : searchInfo.fileType
 				},
-				
 				success : function (result) {
 					result = result.data;
 					
@@ -309,9 +326,23 @@
  					blockSize = result.listCount;
 					totalPages = result.totalPages;
 					
+					var dragDropArea = dom.dragDropArea;
+					
+					if (result.folderUpp == "root") {
+						dom.upload.setAttribute("hidden", "");
+						dragDropArea.ondragenter = null;
+						dragDropArea.ondragover  = null;
+						dragDropArea.ondragover  = null;
+					} else {
+						dom.upload.removeAttribute("hidden");
+						dragDropArea.ondragenter = function(e) {onDragEnter(e)};
+						dragDropArea.ondragover  = function(e) {onDragOver(e)};
+						dragDropArea.ondrop      = function(e) {onDrop(e)};
+					}
+					
 					renderList(result.fileList, true);
 					makePageSelPage();
-					namePath(result.folderPath, result.originalPath);
+					setNamePath(result.folderPath, result.originalPath);
 					
 					setMailBoxInfo(result.fldCnt, result.fileCnt);
 				},
@@ -329,8 +360,7 @@
 		
 		// originalPath 는 한글 path
 		// folderPath 는 숫자 
-		function namePath(folderPath, originalPath) {
-			var orginalPathElmt = document.getElementById("originalPath");
+		function setNamePath(folderPath, originalPath) {
 			var nameTag = document.createElement("span");
 			var detailName = [];
 			var imgElmt;
@@ -339,7 +369,7 @@
 			originPath = folderPath.split("|");
 			$('#originalPath').empty();
 			
-			orginalPathElmt.appendChild(nameTag);
+			dom.originalPath.appendChild(nameTag);
 			
 			for (var i = 1; i < path.length - 1; i++) {
 				detailName = document.createElement("span");
@@ -368,8 +398,7 @@
 			checkedArr = [];
 			$('#tblFileList tr').not(":first").remove();
 			
-			document.getElementById("_checkAll").checked = false;
-			var tableList = document.getElementById("tblFileList");
+			dom.allCheckBox.checked = false;
 			
 			if (result == null || result.length == 0) {
 				var row = document.createElement("tr");
@@ -382,7 +411,7 @@
 				column.setAttribute("id", "nodataRow");
 				
 				row.appendChild(column);
-				tableList.appendChild(row);
+				dom.listTable.appendChild(row);
 				
 				return;
 			}
@@ -391,14 +420,8 @@
 			var resultJson;
 			
 			var row
-			var checkboxColumn;
-			var favoriteIconColumn;
-			var fileIconColumn;
-			var nameColumn;
-			var sizeColumn;
-			var creatorColumn;
-			var createDateColumn;
-			var absolutePathColumn
+			var checkboxColumn, favoriteIconColumn, fileIconColumn, nameColumn, 
+				sizeColumn, creatorColumn, createDateColumn, absolutePathColumn;
 			
 			var inputElement;
 			var fileIconElement;
@@ -481,7 +504,7 @@
 				
 				if(isFolder) {
 					row.ondblclick = function() {
-						dbClickFunction(this);							
+						onFolderDoubleClick(this);							
 					};
 				}
 				
@@ -494,12 +517,11 @@
 				row.appendChild(createDateColumn);
 				row.appendChild(absolutePathColumn);
 				
-				tableList.appendChild(row);
+				dom.listTable.appendChild(row);
 			}
 		}
 		
-		function dbClickFunction(obj) {
-			// TODO 폴더 더블클릭 접근 구현
+		function onFolderDoubleClick(obj) {
 			var folderId = obj.getAttribute("targetId");
 			var folderType = obj.getAttribute("folderType");
 			
@@ -510,22 +532,8 @@
 			context.setList(folderId, folderType);
 		}
 		
-		$(function() {
-			$(".datepicker").datepicker({
-				changeMonth: true,
-				changeYear: true,
-				autoSize: true,
-				showOn: "both",
-				buttonImage: "/images/ImgIcon/calendar-month.gif",
-				buttonImageOnly: true
-			});
-			
-			$(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-			$(".datepicker").datepicker('setDate', "");
-		});
-	   	
 		// 날짜 초기화 버튼
-		function btn_PostDate_Clear() {
+		function clearDatepicker() {
 			$(".datepicker").datepicker('setDate', "");
 		}
 	    
@@ -560,7 +568,7 @@
 	    }
 	    
 		function doLayerPopup(obj) {
-			btn_PostDate_Clear();
+			clearDatepicker();
 			document.getElementById("searchExt").value = "";
 			document.getElementById("searchFileName").value = "";
 			document.getElementById("searchCreateName").value = "";
@@ -639,7 +647,6 @@
 				},
 				dataType: "JSON",
 				async: true,
-				
 				success : function(data) {
 					var result = data.resultValue;
 					
@@ -651,7 +658,6 @@
 					
 					context.refreshList();
 				},
-				
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
@@ -883,7 +889,7 @@
 			});
 		};
 		
-		function onChangeFileType(value) {
+		function onFileTypeChange(value) {
 			searchInfo.fileType = value;
 			
 			if (value == "all") {
@@ -900,13 +906,13 @@
     
     <span id="mailBoxInfo"></span>
 	
-	<div style="height:40px;">
+	<div id="originalPathWrapper" style="height:40px;">
 		<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;" id ="originalPath"></span>
 	</div>
 	<div id="mainmenu2" favoritemode>
 		<ul>
 			<li id="" favoritemenu onClick="fileDownload()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-			<li id="" onClick="fileUpload()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+			<li id="upload" onClick="fileUpload()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
 			<li id="" onClick="fileDelete()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
 			<li id="" onClick="fileRename()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 			<li id="" onClick="fileMove()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
@@ -972,7 +978,7 @@
     <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
     <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 	
-	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;overflow:auto;">
+	<div id="dragDropArea" style="margin: 10px 0px; overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
 				<th width="20px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
@@ -984,7 +990,6 @@
 				<th width="80px" ><spring:message code='ezWebFolder.t190'/></th>
 				<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
 			</tr>
-			
 		</table>
 	</div>
 	<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px; display:none" /> 
@@ -1026,7 +1031,7 @@
 			    <table style="width:100%">
 			        <tr>
 			            <td style="text-align:center;">
-			                <a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a><!-- 날짜초기화 -->
+			                <a class="imgbtn"><span onClick="clearDatepicker()"><spring:message code='ezBoard.t220' /></span></a><!-- 날짜초기화 -->
 			                <a class="imgbtn"><span onClick="search('basic');doLayerPopup(document.getElementById('SearchOption'));"><spring:message code='ezBoard.t188' /></span></a><!-- 검색 -->
 			                <a class="imgbtn"><span onClick="searchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a><!-- 취소 -->
 			            </td>
