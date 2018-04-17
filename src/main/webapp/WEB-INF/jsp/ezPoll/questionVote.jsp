@@ -1009,9 +1009,9 @@
 		    	//innerDiv1.setAttribute("style", "display: inline-block;");		    	
 		    	var innerDiv2 = document.createElement("div");	
 		    	innerDiv2.setAttribute("id", "descriptCmt" + id.slice(8));
-		    	innerDiv2.setAttribute("style", "display: none; padding-left: 10px; position: relative;");	
+		    	innerDiv2.setAttribute("class", "descriptCmt");
 		    	var innerDiv3 = document.createElement("div");	
-		    	innerDiv3.setAttribute("style", "padding: 5px 0px 5px 20px; clear: both;");			    	
+		    	innerDiv3.setAttribute("class", "cmtEditBtnDiv");
 		    	editDiv2Cmt.appendChild(innerDiv1);
 		    	editDiv2Cmt.appendChild(innerDiv2);
 		    	
@@ -1035,7 +1035,7 @@
 		    	innerDiv1.appendChild(innInnerDiv1);	
 		    	
 	    		var innInnerDiv2 = document.createElement("div");
-	    		innInnerDiv2.setAttribute("style", "display: none; float:left;");
+	    		innInnerDiv2.setAttribute("style", "display: none;");
 	    		innInnerDiv2.setAttribute("id", "toolCmt" + id.slice(8));
 	    		var divFile = document.getElementById("_addFile");
 	    		var divSticker = document.getElementById("_stickerArea");
@@ -1044,7 +1044,7 @@
 	    		/* 이모티콘 패널 위치 수정 제거. */
 	    		/* var childElemt = cloneOfDivSticker.firstElementChild; //baonk changed
 	    		childElemt.style.marginLeft = "-39px"; //baonk changed */
-	    		cloneOfDivFile.setAttribute("style", "float:left; display:block; height:25px; width:25px; cursor: pointer; padding-left: 10px;");
+	    		cloneOfDivFile.setAttribute("class", "cmtAddFile");
 	    		cloneOfDivSticker.setAttribute("style", "float:left; display:block; padding: 0px;");
 	    		innInnerDiv2.appendChild(cloneOfDivFile);
 	    		innInnerDiv2.appendChild(cloneOfDivSticker);
@@ -2181,8 +2181,7 @@
 		    	
 		    	//Process td1 (user image) element
 		    	var objTd = document.createElement("td");
-		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");                  
-		    	objTd.setAttribute("class", "userPhotoTd");                  
+		    	objTd.setAttribute("class", "userPhotoTd");
                 var image_tag = document.createElement("img");                
                 image_tag.src = userPhoto;
                 image_tag.setAttribute("class", "userPhotoImg");
@@ -2198,10 +2197,11 @@
                 editDiv2ForTd2.setAttribute("id", "editCmtDiv" + commentIndex);   
                 editDiv2ForTd2.style.display = "none"; 
                 
-                div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 98%;");               
+                //div2ForTd2.setAttribute("style", "display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 98%;");               
+                div2ForTd2.setAttribute("class", "div2cmt");              
                 div2ForTd2.setAttribute("id", "div2Cmt" + commentIndex);                
                 div1ForTd2.innerHTML = userName;
-                div1ForTd2.setAttribute("style", "display: block; color:#0470e4; font-size:16px; padding:5px 0px 0px 20px;");       
+                div1ForTd2.setAttribute("class", "userNameNewCmt");
                 
                 //Add text comment if exists
                 if (txtContent.length > 0) {
@@ -2209,7 +2209,7 @@
                 	var pForTd2 = document.createElement("p");  
                 	//pForTd2.innerHTML = txtContent;
                 	pForTd2.textContent = txtContent;
-                	pForTd2.setAttribute("style", "word-wrap: break-word; margin-top: 0px;margin-bottom: 0px; white-space: pre-wrap; word-break: break-all;");
+                	pForTd2.setAttribute("class", "cmtArea");
                 	pForTd2.setAttribute("id", "cmtArea" + commentIndex);
                 	div2ForTd2.appendChild(pForTd2);
                 }
@@ -2269,9 +2269,9 @@
               	
                 //Process td3 (comment time and edit comment) element
                 var objTd3 = document.createElement("td");
-                objTd3.setAttribute("style", "width: 145px; position: relative;");                
+                objTd3.setAttribute("class", "cmtTdRight");
                 var fistChildForTd3 = document.createElement("div");
-                fistChildForTd3.setAttribute("style", "position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;");     
+                fistChildForTd3.setAttribute("class", "cmtCreateTime");  
                 fistChildForTd3.innerHTML = cmtTime;
                 objTd3.appendChild(fistChildForTd3); 
                 
@@ -2280,27 +2280,24 @@
                     imagForTd3.src = "/images/option3.png";
                     imagForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);
                     imagForTd3.setAttribute("_inner", "innerEditComment" + commentIndex);
-                    imagForTd3.setAttribute("height", "25");
-                    imagForTd3.setAttribute("width", "25");
-                    imagForTd3.setAttribute("vertical-align", "middle");
-                    imagForTd3.setAttribute("style", "margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;");
+                    imagForTd3.setAttribute("class", "editCmtBtnImg");
                     imagForTd3.onclick = function (event) { event.stopPropagation(); showEditPanel(this); };
                     objTd3.appendChild(imagForTd3);
                     
                     var div1ForTd3 = document.createElement("div");
-                    div1ForTd3.setAttribute("style", "float:right; display: none; position: absolute; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; top: 30px; right: 28px; width: 120px;");
                     div1ForTd3.setAttribute("id", "editComt" + commentIndex);
+                    div1ForTd3.setAttribute("class", "editComt");
                     div1ForTd3.setAttribute("tabindex", "0");        
                     var innerDiv1ForTd3 = document.createElement("div");
                     innerDiv1ForTd3.setAttribute("id", "_eCmt" + commentIndex);
+                    innerDiv1ForTd3.setAttribute("class", "_eCmt");
                     innerDiv1ForTd3.innerHTML = "<spring:message code = 'ezPoll.t125'/>";
                     innerDiv1ForTd3.setAttribute("_comtIndex", "editComt" + commentIndex);               
-                    innerDiv1ForTd3.setAttribute("style", "border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;");
                     innerDiv1ForTd3.onclick = function (event) { editComment(this); };
                     var innerDiv2ForTd3 = document.createElement("div");                
                     innerDiv2ForTd3.innerHTML = "<spring:message code = 'ezPoll.t126'/>";
-                    innerDiv2ForTd3.setAttribute("_comtIndex", commentIndex);  
-                    innerDiv2ForTd3.setAttribute("style", "text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;");         
+                    innerDiv2ForTd3.setAttribute("class", "_dCmt");
+                    innerDiv2ForTd3.setAttribute("_comtIndex", commentIndex);
                     innerDiv2ForTd3.onclick = function (event) { deleteComment(this); };
                     div1ForTd3.appendChild(innerDiv1ForTd3);
                     div1ForTd3.appendChild(innerDiv2ForTd3);
@@ -3094,9 +3091,9 @@
 										</c:otherwise>
 									</c:choose>							
 									
-									<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; width: 100%;" >
+									<div id="div2Cmt<c:out value ="${_comt.cmtId}" />" class="div2cmt">
 										<c:if test="${_comt.textContent != ''}">
-											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px; width: 98%;"><c:out value ="${_comt.textContent}" /></p>
+											<p id="cmtArea<c:out value ="${_comt.cmtId}" />" class="cmtArea"><c:out value ="${_comt.textContent}" /></p>
 										</c:if>
 										<c:if test="${_comt.imageAttach != ''}">
 											<div style="padding-top: 5px;">
@@ -3119,13 +3116,13 @@
 									</div>
 									<div id="editCmtDiv<c:out value ="${_comt.cmtId}" />" style="display: none;"></div>
 								</td>
-								<td style="width: 145px; position:relative;">
-									<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;"><c:out value ="${_comt.cmtTime}" /></div>
+								<td class="cmtTdRight">
+									<div class="cmtCreateTime"><c:out value ="${_comt.cmtTime}" /></div>
 									<c:if test="${_comt.userId == curentUser}">								
-										<img src="/images/option3.png" style="margin:30px 10px 0px 0px; cursor: pointer; height: 25px; width: 25px; position: absolute; top: 0px; right: 0px;" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
-										<div id="editComt<c:out value ="${_comt.cmtId}" />" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; width: 120px;" tabindex=0>							
-											<div id="_eCmt<c:out value ="${_comt.cmtId}" />" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
-											<div _comtIndex="<c:out value ="${_comt.cmtId}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>
+										<img src="/images/option3.png" class="editCmtBtnImg" _comtIndex="editComt<c:out value ="${_comt.cmtId}"/>" onclick="(function(e){e.stopPropagation();})(event); showEditPanel(this);" >
+										<div id="editComt<c:out value ="${_comt.cmtId}" />" class="editComt" tabindex=0>
+											<div id="_eCmt<c:out value ="${_comt.cmtId}" />" class="_eCmt" _comtIndex="editComt<c:out value ="${_comt.cmtId}" />" onclick="editComment(this);"><spring:message code = 'ezPoll.t125'/></div>
+											<div class="_dCmt" _comtIndex="<c:out value ="${_comt.cmtId}" />" onclick="deleteComment(this);"><spring:message code = 'ezPoll.t126'/></div>
 										</div>
 									</c:if>
 								</td>
@@ -3134,72 +3131,72 @@
 					</table>
 				</div>
 				<c:if test="${!(hasVotePrivilege != 1 && question.status != 0) || adminPrivilege == 1 || curentUser == question.creator}">
-				<div id="sendComment" class="voteComment" style="width:100%;">
-	            	<div class="sendComment_layout">
-					<div class="send_attach">
-						<img id="_addFile" src="/images/poll/add_vote.png" style="height:24px; width:22px; cursor: pointer;" onclick="addFileComment();">
-					</div>
-					<div id ="_stickerArea">					
-						<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-left: -39px; background-color: #fff; border:1px solid #ddd; position: absolute;">
-							<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #ddd;">
-								<div style="float:left; display:block;">
-									<img id="previousEmoticon" src="/images/previous1.png" height=40 width=30 style="padding-top: 3px; ">
+					<div id="sendComment" class="voteComment">
+		            	<div class="sendComment_layout">
+						<div class="send_attach">
+							<img id="_addFile" class="cmtAddFile" src="/images/poll/add_vote.png" onclick="addFileComment();">
+						</div>
+						<div id ="_stickerArea">					
+							<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-left: -39px; background-color: #fff; border:1px solid #ddd; position: absolute;">
+								<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #ddd;">
+									<div style="float:left; display:block;">
+										<img id="previousEmoticon" src="/images/previous1.png" height=40 width=30 style="padding-top: 3px; ">
+									</div>
+									<div id="_ePresentors" style="float:left; display:block; ">
+										<div id="_group1" style="background-color: #d9d9d9; float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/girl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<!-- <div id="_group2" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group3" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group4" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group5" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group6" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group7" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group8" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div> -->
+								   <!-- <div id="_group9" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group10" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>  -->
+									</div>
+									<div style="float: right; display:block;">
+										<img id="nextEmoticon" src="/images/next1.png" height=40 width=30 style="padding-top: 3px; ">
+									</div>
+								</div>						
+								<div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
+									<div id="_listG1" style="height:310px; overflow-y: auto; overflow-x: hidden; display: block;">
+										<table id="_listG1Table">
+											<tr style="width:100%; height:45px;">
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set001.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set002.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set003.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set004.png);" onclick="displaySticker(this);"></div></td>
+											</tr>
+											<tr style="width:100%; height:45px;">
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set005.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set006.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set007.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set008.png);" onclick="displaySticker(this);"></div></td>
+											</tr>
+											<tr style="width:100%; height:45px;">
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set009.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set010.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set011.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set012.png);" onclick="displaySticker(this);"></div></td>
+											</tr>
+										</table>
+									</div>
 								</div>
-								<div id="_ePresentors" style="float:left; display:block; ">
-									<div id="_group1" style="background-color: #d9d9d9; float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/girl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-									<!-- <div id="_group2" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-									<div id="_group3" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-									<div id="_group4" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-									<div id="_group5" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-									<div id="_group6" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-									<div id="_group7" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-									<div id="_group8" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div> -->
-							   <!-- <div id="_group9" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-									<div id="_group10" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>  -->
-								</div>
-								<div style="float: right; display:block;">
-									<img id="nextEmoticon" src="/images/next1.png" height=40 width=30 style="padding-top: 3px; ">
-								</div>
-							</div>						
-							<div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
-								<div id="_listG1" style="height:310px; overflow-y: auto; overflow-x: hidden; display: block;">
-									<table id="_listG1Table">
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set001.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set002.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set003.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set004.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set005.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set006.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set007.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set008.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-										<tr style="width:100%; height:45px;">
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set009.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set010.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set011.png);" onclick="displaySticker(this);"></div></td>
-											<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set012.png);" onclick="displaySticker(this);"></div></td>
-										</tr>
-									</table>
-								</div>
-							</div>
-						</div>					
-						<img id="_addEmoticon" src="/images/poll/add_emo_vote.png" style="display:block; height:20px; width:20px; padding-left:20px; padding-top:3px; cursor: pointer;" onclick="addSticker()">
-					</div >				
-					<div class="comment_input_layout">
-						<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
+							</div>					
+							<img id="_addEmoticon" class="cmtAddEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker()">
+						</div >				
+						<div class="comment_input_layout">
+							<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
+						</div>
+						<div class="commentBtn">
+							<div id="uploadedFile" style="display:none; border:1px solid #ddd; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
+								<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer; z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
+								<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>
+							</div>	
+							<button id="sendBttn" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;" onclick="sendComment(); return false;"><spring:message code="ezPoll.t144"/></button>						
+						</div>
+						</div>
 					</div>
-					<div class="commentBtn">
-						<div id="uploadedFile" style="display:none; border:1px solid #ddd; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
-							<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer; z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
-							<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>
-						</div>	
-						<button id="sendBttn" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;" onclick="sendComment(); return false;"><spring:message code="ezPoll.t144"/></button>						
-					</div>
-					</div>
-				</div>
 				</c:if>
 				<input id="fileInput" type="file" onchange="uploadFileCmt();" class="voteFileInput" />
 			</div>	
