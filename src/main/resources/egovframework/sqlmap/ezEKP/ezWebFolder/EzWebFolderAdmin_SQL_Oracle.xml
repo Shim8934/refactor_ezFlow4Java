@@ -525,10 +525,6 @@
 									FROM
 										TBL_WEBFOLDER_FOLDER 
 									WHERE
-										FOLDER_NAME1 = #folerName1#
-									AND
-										FOLDER_NAME2 = #folerName2#
-									AND
 										OWNER_ID     = #ownerId#
 									AND
 										COMPANY_ID   = #companyId#
@@ -558,6 +554,8 @@
 				UPDATE
 					TBL_WEBFOLDER_FOLDER
 				SET
+					FOLDER_NAME1 = #folerName1#,
+					FOLDER_NAME2 = #folerName2#,
 					UPDATE_ID    = #updateId#,
 					UPDATE_DATE  = TO_DATE(#updateDate#,'yyyy-mm-dd hh24:mi:ss'),
 					DELETER_ID   = #deleterId#

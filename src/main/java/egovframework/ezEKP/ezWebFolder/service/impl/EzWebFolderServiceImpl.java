@@ -307,7 +307,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public int getTotalFileCnt(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, int tenantId) throws Exception {
+	public int getTotalFileCnt(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId",   folderId);
 		map.put("fileType",   fileType);
@@ -317,15 +317,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("fileExt",    fileExt);
 		map.put("fileName",   fileName);
 		map.put("userName",   userName);
-		map.put("startPoint", startPoint);
-		map.put("pageSize",   pageSize);
 		map.put("primary",    primary);
 		map.put("tenantId",   tenantId);
 		return ezWebFolderDAO.getTotalFileCnt(map);
 	}
 
 	@Override
-	public int getTotalFileCnt2(String folderPath, String searchChk, String startDate, String endDate, String fileExt, String fileName,	String userName, String fileType, int startPoint, int pageSize, String primary, int tenantId) throws Exception {
+	public int getTotalFileCnt2(String folderPath, String searchChk, String startDate, String endDate, String fileExt, String fileName,	String userName, String fileType, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath);
 		map.put("fileType",   fileType);
@@ -335,8 +333,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("fileExt",    fileExt);
 		map.put("fileName",   fileName);
 		map.put("userName",   userName);
-		map.put("startPoint", startPoint);
-		map.put("pageSize",   pageSize);
 		map.put("primary",    primary);
 		map.put("tenantId",   tenantId);
 		return ezWebFolderDAO.getTotalFileCnt2(map);

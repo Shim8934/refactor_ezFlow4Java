@@ -1413,7 +1413,7 @@ public class EzWebFolderGWController {
 		int totalRows     = 0;
 		int totalPages    = 0;
 		int pageSize      = 10;
-		int startPoint    = (currPage - 1) * pageSize;
+		int startPoint    = 0;
 		
 		JSONObject result = new JSONObject();
 		
@@ -1424,7 +1424,7 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		logger.debug("FolderId: " + folderId + " || serverName: " + serverName);
+		logger.debug("FolderId: " + folderId + " || serverName: " + serverName + " || Current Page: " + currPage);
 		
 		try {
 			int tenantId = loginService.getTenantId(serverName);
@@ -1463,32 +1463,11 @@ public class EzWebFolderGWController {
 			
 			if (folder.getFolderUpper().equals("root")) {
 				Map<String, String> filePathMap = new LinkedHashMap<String, String>();
+				totalRows                       = ezWebFolderService.getTotalFileCnt2(folder.getFolderPath(), searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, tenantId);
+				totalPages                      = (totalRows + pageSize - 1)/pageSize;
+				currPage                        = currPage > totalPages ? totalPages : currPage;
+				startPoint                      = (currPage - 1) * pageSize;
 				fileList                        = ezWebFolderService.getAllFiles(folder.getFolderPath(), originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
-				totalRows                       = ezWebFolderService.getTotalFileCnt2(folder.getFolderPath(), searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, tenantId);
-				
-				//Old way
-				/*for (FileVO file : fileList) {
-					if (file.getFilePosition().equals("")) {
-						String file_path    = originalPath;
-						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
-						String[] fldPathArr = fldPath.split("\\|");
-						
-						for (int i = rootPath.length; i < fldPathArr.length - 1; i++) {
-							if (filePathMap.containsKey(fldPathArr[i])) {
-								file_path += filePathMap.get(fldPathArr[i]) + "/";
-							}
-							else {
-								FolderVO _folder   = ezWebFolderService.getFolderByFolderId(fldPathArr[i], offset, tenantId);
-								String _folderName = primary.equals("1") ? _folder.getFolderName1() : _folder.getFolderName2();
-								file_path         += _folderName + "/";
-								filePathMap.put(fldPathArr[i], _folderName);
-							}
-						}
-						
-						file_path += file.getFolderName() + "/";
-						file.setFilePosition(file_path + file.getFileName());
-					}
-				}*/
 				
 				//New way 30-50% faster
 				if (fileList.size() > 0) {
@@ -1520,11 +1499,12 @@ public class EzWebFolderGWController {
 				}
 			}
 			else {
-				fileList  = ezWebFolderService.getAllFilesInFolder(folderId, originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
-				totalRows = ezWebFolderService.getTotalFileCnt(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, tenantId);
+				totalRows  = ezWebFolderService.getTotalFileCnt(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, tenantId);
+				totalPages = (totalRows + pageSize - 1)/pageSize;
+				currPage   = currPage > totalPages ? totalPages : currPage;
+				startPoint = (currPage - 1) * pageSize;
+				fileList   = ezWebFolderService.getAllFilesInFolder(folderId, originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
 			}
-			
-			totalPages  = (totalRows + pageSize - 1)/pageSize;
 			
 			result.put("data", fileList);
 			result.put("totalPages", totalPages);
