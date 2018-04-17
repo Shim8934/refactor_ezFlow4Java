@@ -100,12 +100,12 @@
 	            if (CrossYN()) {
 	            	saveType_dialogArguments[0] = $("#ListCompany").val();
 // 	            	saveType_dialogArguments[1] = save_type_Complete;
-                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", GetOpenWindowfeature(800, 520));
+                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=540px, height=185px', GetOpenWindowfeature(800, 520));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
                 	rtnValue = window.showModalDialog("/admin/ezAttitude/addAttitudeType.do", $("#ListCompany").val(),
-                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+                        "dialogHeight:185px;dialogwidth:540px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
@@ -140,7 +140,7 @@
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
 	      	</ul>
 	  	</div>
-	  	<table style="width: 500px; height: 380px;" >
+	  	<table style="width: 450px; height: 380px;" >
             <tr>
                 <td>
                     <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 100%;">

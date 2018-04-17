@@ -447,7 +447,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public void insertAttitudeType(String typeId, String typeName, String typeName2,
-			String imgPath, String formId, int tenantId,
+			String imgPath, int tenantId,
 			String companyId) throws Exception {
 		LOGGER.debug("insertAttitudeType started");
 		
@@ -463,9 +463,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			imgPath = imgPath.substring(idx+1);
 			map.put("imgPath", imgPath);
 		}
-//		map.put("typeName2", typeName2);
-//		map.put("imgPath", imgPath);
-		map.put("formId", formId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		

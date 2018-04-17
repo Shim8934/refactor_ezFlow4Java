@@ -380,15 +380,15 @@ public class EzAttitudeAdminBOMController {
 		String status = resultBody.get("status").toString();
 		
 		JSONObject data = new JSONObject();
-		JSONArray formList = new JSONArray();
+//		JSONArray formList = new JSONArray();
 		String typeId = "";
 		
 		if (status.equals("ok")) {
 			data = (JSONObject) resultBody.get("data");
-			formList = (JSONArray) data.get("formList");
+//			formList = (JSONArray) data.get("formList");
 			typeId = (String) data.get("typeId");
 			
-			model.addAttribute("formList", formList);
+//			model.addAttribute("formList", formList);
 			model.addAttribute("typeId", typeId);
 			model.addAttribute("companyId", companyId);
 		}
@@ -528,7 +528,6 @@ public class EzAttitudeAdminBOMController {
 		String typeName = request.getParameter("typeName");
 		String typeName2 = request.getParameter("typeName2");
 		String imgPath = request.getParameter("imgPath");
-		String formId = request.getParameter("formId");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
 		String url = "";
@@ -549,8 +548,7 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("typeId", typeId)
 				.queryParam("typeName", typeName)
 				.queryParam("typeName2", typeName2)
-				.queryParam("imgPath", imgPath)
-				.queryParam("formId", formId);
+				.queryParam("imgPath", imgPath);
 		
 		RestTemplate rest = new RestTemplate();
 		

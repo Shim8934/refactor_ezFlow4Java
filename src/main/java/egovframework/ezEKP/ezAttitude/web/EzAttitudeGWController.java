@@ -722,11 +722,11 @@ public class EzAttitudeGWController {
 			} else {
 				typeId = "A" + MaxTypeId;
 			}
-			//formList 구하기
-			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
+//			//formList 구하기
+//			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
 			
 			data.put("typeId", typeId);
-			data.put("formList", formList);
+//			data.put("formList", formList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -757,9 +757,8 @@ public class EzAttitudeGWController {
 			String typeName = request.getParameter("typeName");
 			String typeName2 = request.getParameter("typeName2");
 			String imgPath = request.getParameter("imgPath");
-			String formId = request.getParameter("formId");
 			
-			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, imgPath, formId, info.getTenantId(), companyId);
+			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, imgPath, info.getTenantId(), companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

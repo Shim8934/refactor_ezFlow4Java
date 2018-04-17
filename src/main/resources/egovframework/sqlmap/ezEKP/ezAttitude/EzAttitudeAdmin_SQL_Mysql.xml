@@ -369,7 +369,16 @@
 			INSERT INTO TBL_ATTITUDE_TYPE
 				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, IMG_PATH, PARENT_ID, FORM_ID)
 			VALUES
-				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #imgPath#, 'A05', #formId#)
+				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #imgPath#, 'A05', (SELECT 
+																									FORM_ID
+																								FROM 
+																									TBL_ATTITUDE_TYPE
+																								WHERE 
+																									TENANT_ID = #tenantId#
+																								AND 
+																									COMPANY_ID = #companyId#
+																								AND 
+																									TYPE_ID = 'A11'))
 		]]>
 	</insert>
 	
