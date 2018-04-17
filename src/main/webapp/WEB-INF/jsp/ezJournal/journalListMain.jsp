@@ -690,6 +690,29 @@
 				$("#Edatepicker").datepicker('setDate', "");
 			});
 			
+			var monthMsg = "<spring:message code='ezBoard.t218' />";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "<spring:message code='ezBoard.t216' />";
+		    var dayStr = dayMsg.split(";");
+		    
+		    $(function () {
+		        $.datepicker.regional["ko"] = {
+		        	monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		    });			
+			
 			//정렬에 의한 리스트 셋팅
 			function setListOrder(elem){
 				
