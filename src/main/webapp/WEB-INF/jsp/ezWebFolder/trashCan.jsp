@@ -30,10 +30,7 @@
 	<script type="text/javascript" src="/js/ezWebFolder/bnk.js" ></script>
     <script type="text/javascript">
    		var userInfo = {
-   			id: 		"${userInfo.id}",
-   			lang:		"${userInfo.lang}",
-   			offset: 	"${userInfo.offset}",
-   			tenantId : 	"${userInfo.tenantId}"
+   			lang:		"${userInfo.lang}"
     	};
     
     	var pagination = {
@@ -55,7 +52,7 @@
 		var currentPage = "1";
 		var totalPages = 0 ;
 		var totalRows = 0 ;
-		var blockSize = 0;
+		var blockSize = 10;
 		var pStart = 0;
 		var pEnd =10;
 		var fileCnt = 0;
@@ -92,8 +89,8 @@
 	    function changeValue(value) {
 	    	   searchFileType = value;
 	    	   if( value == "all" ) {
-	    		   searchFileType = ""
-	    	   };
+	    		   searchFileType = "";
+	    	   }
 	    	   currentPage = 1;
 	    	   refreshView();
 	    }
@@ -111,10 +108,7 @@
 				url : "/ezWebFolder/getTrashCanList.do",
 				dataType: "json",
 				data : {
-					"userId" : userInfo.id,
-					"offset" : userInfo.offset,
-					"tenantId" : userInfo.tenantId,
-					"currentPage"   : pagination.currentPage,
+					"currPage"   : pagination.currentPage,
 					"searchExt" : $('#searchExt').val(),
 					"searchFileName" : $('#searchFileName').val(),
 					"searchCreateName" : $('#searchCreateName').val(),
@@ -133,11 +127,18 @@
 					trashCanList = result.trashCanList;
 					fileCnt = result.fileCnt;
 					folderCnt = result.folderCnt;
-					
 					currentPage = result.currPage;
 					totalPages = result.totalPages;
 					totalRows = result.totalRows;
 					blockSize = result.listCount;
+					
+					if (fileCnt == null) {
+						fileCnt = 0;
+					}
+					
+					if (folderCnt == null) {
+						folderCnt = 0;
+					}
 					
 					$('#tblFileList tr td').remove();
 					renderFileListElement(trashCanList);
@@ -151,37 +152,6 @@
 			})
 			
 		};
-		
-		// originalPath 는 한글 path
-		// folderPath 는 숫자 
-		function namePath(folderPath,originalPath) {
-			var orginalPathElmt = document.getElementById("originalPath");
-			path = originalPath.split("/");
-			originPath = folderPath.split("|");
-			$('#originalPath').empty();
-			var nameTag = document.createElement("span");
-			orginalPathElmt.appendChild(nameTag);
-			
-			for ( var i = 1; i< path.length - 1; i++) {
-				var detailName = [];
-				detailName = document.createElement("span");
-				
-				detailName.className = "aName";
-				detailName.id = originPath[i];
-				detailName.onclick = function() {getFileList(this.id)};
-				detailName.textContent = path[i];
-				detailName.setAttribute("style", "font-size:22px; ");
-				
-				nameTag.appendChild(detailName);
-				var imgElmt = document.createElement("img");
-				imgElmt.setAttribute("style", "height: 18px; width: 18px; display: inline-block;");
-				imgElmt.src = "/images/webfolder/arrow.png";
-				
-				if (i != path.length - 2) {
-					nameTag.appendChild(imgElmt);
-				}	
-			}
-		}
 		
 		function renderFileListElement(result) {
 			document.getElementById("_checkAll").checked = false;
@@ -412,28 +382,6 @@
     	   }
        }
 	    
-	   function getCheckAll(obj) {
-    	   var listInputs = document.getElementsByClassName("checkBnk");
-    	   
-    	   checkedArr = [];
-    	   if (obj.checked == true) {
-    		   for (var i = 0; i < listInputs.length; i++) {
-	    			listInputs[i].checked = true;
-	    			var newUser = {};
-		 		    newUser["userId"]      = listInputs[i].getAttribute("userId");
-		 		    newUser["usedAmount"]  = listInputs[i].getAttribute("usedAmount");			 		    		
-		 		    listInputs[i].parentElement.parentElement.setAttribute("style", "background-color: #e9f1ff;");
-	    			checkedArr.push(newUser);	    		
-	    		}		    	
-    	   }
-    	   else {
-    		   for (var i = 0; i < listInputs.length; i++) {
-    			    listInputs[i].parentElement.parentElement.setAttribute("style", "");
-	    			listInputs[i].checked = false;	    				    		
-	    		}
-    	   }
-	   }
-	   
    	   function doLayerPopup(obj) {
 	        btn_PostDate_Clear();
 	        document.getElementById("searchExt").value = "";
@@ -514,29 +462,17 @@
 	    		   checkedArr.push(id);
     		   }
     	   }
-    	   else {
-    		   if (obj.getAttribute("ext") == "folder"){
-    			   folderArr.push(id);
-    		   } else {
-	    		   var pos = checkedArr.indexOf(id);
-	    		   checkedArr.push(id);
-	    		   
-	    		   if (pos != -1) {
-	    			   checkedArr.splice(pos, 1);
-	    		   }
-    		   }
-	    		
-    	   }
        }
        
        function getCheckAll(obj) {
     	   var listInputs = document.getElementsByClassName("checkBnk");
     	   
     	   checkedArr = [];
+    	   folderArr = [];
     	   if (obj.checked == true) {
     		   for (var i = 0; i < listInputs.length; i++) {
 	    			listInputs[i].checked = true;
-	    			if (listInputs[i].ext == 'folder') {
+	    			if (listInputs[i].getAttribute("ext") == 'folder') {
 	    				folderArr.push(listInputs[i].value);
 	    			} else {
 		    			checkedArr.push(listInputs[i].value);	    		
@@ -579,14 +515,87 @@
     	        parent.frames["left"].hiddenPanel();
     	    } catch (e) {}
        }
+		
+       function restoreTrashCan() {
+    	   if (checkedArr.length <= 0 && folderArr.length <= 0) {
+    		   alert("<spring:message code = 'ezWebFolder.t108'/>");
+    		   return;
+    	   }
+    	   
+	       var checkedFileList = checkedArr[0];
+	       var checkedFolderList = folderArr[0];
+	       
+    	   for (var i = 1; i < checkedArr.length; i++) {
+    		   checkedFileList = checkedFileList + "," + checkedArr[i];	    			
+    	   }
+    	   
+    	   for (var i = 1; i < folderArr.length; i++) {
+    		   checkedFolderList = checkedFolderList + "," + folderArr[i];
+    	   }
+    	   
+    		$.ajax ({
+				type: "POST",
+				async: false,
+				url : "/ezWebFolder/restoreTrashCan.do",
+				dataType: "json",
+				data : {
+					"fileList" : checkedFileList,
+					"folderList" :checkedFolderList
+				},
+				success : function (data) {
+					alert('복원 되었습니다.');
+					refreshView();
+				},
+				error : function(error) {
+					alert("복원을 실패하였습니다. 선택한 파일 및 폴더의 상위 폴더가 존재하지 않습니다.");
+				}
+			})
+       }
        
+       function moveTraschCan() {
+    	   if (checkedArr.length <= 0 && folderArr.length <= 0) {
+    		   alert("<spring:message code = 'ezWebFolder.t108'/>");
+    		   return;
+    	   }
+    	   
+	       var checkedFileList = checkedArr[0];
+	       var checkedFolderList = folderArr[0];
+	       
+    	   for (var i = 1; i < checkedArr.length; i++) {
+    		   checkedFileList = checkedFileList + "," + checkedArr[i];	    			
+    	   }
+    	   
+    	   for (var i = 1; i < folderArr.length; i++) {
+    		   checkedFolderList = checkedFolderList + "," + folderArr[i];
+    	   }
+    	   
+    		$.ajax ({
+				type: "POST",
+				async: false,
+				url : "/ezWebFolder/moveTrashCan.do",
+				dataType: "json",
+				data : {
+					"fileList" : checkedFileList,
+					"folderList" :checkedFolderList
+				},
+				success : function (data) {
+					alert('이동을 완료하였습니다..');
+					refreshView();
+				},
+				error : function(error) {
+					alert("이동을 실패하였습니다." + error);
+				}
+			})
+    	   
+       }
     </script>
 </head>
 <body class="mainbody">
     <h1>휴지통   <span id="mailBoxInfo"></span></h1>
 	<div id="mainmenu2">
 		<ul>
-			<li id=""><a onClick="fileDownload()" style="margin-top: 3px;"><span>복원</span></a></li>
+			<li id=""><a onClick="restoreTrashCan()" style="margin-top: 3px;"><span>복원</span></a></li>
+			<li id=""><a onClick="moveTraschCan()" style="margin-top: 3px;"><span>이동</span></a></li>
 			<li id=""><a onClick="filePermanentDelete()"   style="margin-top: 3px;"><span>영구삭제</span></a></li>
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span>검색</span></a></li>
 			<li id="right" style="float:right;">보기설정&nbsp;<img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>

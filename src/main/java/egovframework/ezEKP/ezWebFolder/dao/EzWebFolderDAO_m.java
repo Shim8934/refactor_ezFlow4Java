@@ -92,15 +92,27 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	}
 	
 	public int deleteFile (Map<String, Object> map) {
-		return  delete ("EzWebFolderDAO_m.deleteFileUseStatus", map); 
+		return  delete ("EzWebFolderDAO_m.deleteFile", map); 
 	}
 	
 	public int deleteFolder (Map<String, Object> map) {
-		return delete("EzWebFolderDAO_m.deleteFolderUseStatus", map);
+		return delete("EzWebFolderDAO_m.deleteFolder", map);
 	}
 	
 	public int deleteAllFilesInFolder (Map<String, Object> map) {
 		return delete("EzWebFolderDAO_m.deleteAllFilesInFolder", map);
+	}
+	
+	public int restoreFile (Map<String, Object> map){
+		return update ("EzWebFolderDAO_m.restoreFile", map);
+	}
+	
+	public int restoreFolder(Map<String, Object> map) {
+		return update ("EzWebFolderDAO_m.restoreFolder", map);
+	}
+	
+	public int restoreAllFilesInFolder (Map<String, Object> map) {
+		return update ("EzWebFolderDAO_m.restoreAllFilesInFolder", map);
 	}
 	
 	public List<TrashCanVO> getFileListByFolderId (Map<String, Object> map) {
