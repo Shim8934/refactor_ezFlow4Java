@@ -29,8 +29,6 @@
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
-	   		//선택된 js트리 노드
-	   		var selTreeNode;
 	   		
 	   		function setLpDeptId(elem){
 	   			lpDeptId = $(elem).attr("targetId");
@@ -45,7 +43,6 @@
 				$('#treeview').on('changed.jstree', function (e, data) {
 					lpDeptId = data.instance.get_node(data.selected).id;
 					lpDeptName = data.instance.get_node(data.selected).text;
-					selTreeNode = data.instance.get_node(data.selected);
 				  }).on('dblclick.jstree', function (e, data) {
 						addDeptInLP();
 				}).jstree({ 
@@ -55,29 +52,28 @@
 				});
 	   		}
 	   		
+	   		var currentNode;
 	   		//부서 리스트 오른쪽에 이동!
 	   		function addDeptInLP(){
 	   			if($("#withChild").is(":checked")){
-   					var currentNode = $("#treeview").jstree("get_selected");
-   			    	var childrens = $("#treeview").jstree("get_children_dom",currentNode);
-   			    	
-   			    	for (var i = 0; i < childrens.length; i++) {
-						var childrenId = childrens[i].id;
-						var childrenName = childrens[i].innerText;
-						var flag = true;
+	   				$('#treeview').jstree('open_all');
+	   				$("#"+lpDeptId).find("a").each(function(){
+	   					var childrenId = $(this).parent("li").attr("id");
+	   					var childrenName = $(this).text();
+			   			var flag = true;
 			   			for (var i = 0; i < lpDepts.length ; i++) {
-							if(lpDepts[i] == lpDeptId){
+							if(lpDepts[i] == childrenId){
 								flag=false;
 							}
 						}
 			   			if(flag){
-							if (childrenId!=opener.userDeptId) {
+				   			if (childrenId!=opener.userDeptId) {
 					   			$("#lplistView .mainlist_free").append("<tr targetId="+childrenId+" targetName="+childrenName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+childrenName+"</td></tr>");
 					   			lpDepts.push(childrenId);
 					   			lpDeptNames.push(childrenName);
-							}
+							} 
 			   			}
-					}
+	   				});
 	   			} else {
 		   			var flag = true;
 		   			for (var i = 0; i < lpDepts.length ; i++) {
@@ -182,7 +178,7 @@
             </tr>
             <tr>
             	<td class="box" style="width: 250px;">
-            		<div><input type="checkbox" id="withChild" name="withChild" /><label for="withChild">"<spring:message code='ezSchedule.t39' />"</label></div>
+            		<div><input type="checkbox" id="withChild" name="withChild" /><label for="withChild"><spring:message code='ezSchedule.t39' /></label></div>
             	</td>
             </tr>
         </table>
