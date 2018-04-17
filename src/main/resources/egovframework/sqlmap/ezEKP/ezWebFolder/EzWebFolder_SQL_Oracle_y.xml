@@ -1255,10 +1255,18 @@
 		]]>
 	</select>
 	<insert id="EzWebFolderDAO_y.envInsert" parameterClass="Map">
-		INSERT INTO tbl_webfolder_env (cn, env_type,env_value,tenant_id) 
-		value (#userId#,'P',#listCount#, #tenantId#)
-		ON DUPLICATE KEY UPDATE env_value = #listCount#
-		
+		<![CDATA[
+			MERGE INTO TBL_WEBFOLDER_ENV TRG
+				USING (
+				    SELECT #userId# CN, 'P' ENV_TYPE, #tenantId# TENANT_ID FROM DUAL
+				) SRC
+			ON (TRG.CN = SRC.CN AND TRG.ENV_TYPE = SRC.ENV_TYPE AND TRG.TENANT_ID = SRC.TENANT_ID)
+			WHEN MATCHED THEN
+			    UPDATE SET ENV_VALUE = #listCount#
+			WHEN NOT MATCHED THEN
+			    INSERT (CN, ENV_TYPE, ENV_VALUE, TENANT_ID)
+			    VALUES(SRC.CN, SRC.ENV_TYPE, #listCount#, SRC.TENANT_ID)
+		]]>
 	</insert>
 </sqlMap>
 
