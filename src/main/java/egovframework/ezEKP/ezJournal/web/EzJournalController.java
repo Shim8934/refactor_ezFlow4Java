@@ -1415,20 +1415,22 @@ public class EzJournalController extends EgovFileMngUtil {
 		param.put("startCount", paging.getStartCount());
 		param.put("listCnt", listCnt);
 		
-		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/" + journalId + "/viewer", param, request, "get", null);
-		status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {			
-			JSONArray viewerList=  (JSONArray) resultBody.get("data");
+		if (totalCount>0) {
+			resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/" + journalId + "/viewer", param, request, "get", null);
+			status = resultBody.get("status").toString();
 			
-			for (Object viewer : viewerList) {
-				JSONObject JOViewer = (JSONObject)viewer;
-				String viewDate = (String) JOViewer.get("date");
-				viewDate = commonUtil.getDateStringInUTC(viewDate, userInfo.getOffset(), false);
-				JOViewer.put("date", viewDate);
+			if (status.equals("ok")) {			
+				JSONArray viewerList=  (JSONArray) resultBody.get("data");
+				
+				for (Object viewer : viewerList) {
+					JSONObject JOViewer = (JSONObject)viewer;
+					String viewDate = (String) JOViewer.get("date");
+					viewDate = commonUtil.getDateStringInUTC(viewDate, userInfo.getOffset(), false);
+					JOViewer.put("date", viewDate);
+				}
+				
+				model.addAttribute("viewerList", viewerList);
 			}
-			
-			model.addAttribute("viewerList", viewerList);
 		}
 		
 		logger.debug("getJournalViewerList ended");

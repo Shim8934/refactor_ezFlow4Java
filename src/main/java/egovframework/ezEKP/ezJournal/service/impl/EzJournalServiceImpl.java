@@ -806,33 +806,36 @@ public class EzJournalServiceImpl implements EzJournalService {
 		Element formBody = formDoc.body();
 		Element formThis = formBody.getElementById("thisJournal");
 		Element formNext = formBody.getElementById("nextJournal");
-		String formThisHtml = "";
-		String formNextHtml = "";
+		StringBuilder formThisHtml = new StringBuilder();
+		StringBuilder formNextHtml = new StringBuilder();
+		
+		String journalIdS = "";
+		
 		for (int i = 0; i < journalIdList.size(); i++) {
-			param.put("journalId", journalIdList.get(i));
+			if(i==0){
+				journalIdS = journalIdList.get(i);
+			} else {
+				journalIdS += ","+journalIdList.get(i);
+			}
+		}
+		param.put("journalIdS", journalIdS);
+		
+		List<JournalVO> journalList = ezJournalDAO.selectSumJournalList(param);
 			
-			JournalVO journal = ezJournalDAO.selectJournal(param);
-			
+		for (JournalVO journal : journalList) {
 			String journalContent = journal.getJournalContent();
 			String thisContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").html();
 			String nextContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("nextJournal").html();
-//			String thisContent = journalDoc.body().getElementById("thisJournal").html();
-//			String nextContent = journalDoc.body().getElementById("nextJournal").html();
 			
-//			Element thisElem = journalBody.getElementById("thisJournal");
-//			String thisContent = thisElem.html();
-//			Element nextElem = journalBody.getElementById("nextJournal");
-//			String nextContent = nextElem.html();
+			formThisHtml.append("<p> - " + journal.getJournalTitle().trim() + " - </p>");
+			formThisHtml.append(thisContent.trim() + "<p></p><p></p>");
 			
-			formThisHtml += "<p> - " + journal.getJournalTitle().trim() + " - </p>";
-			formThisHtml += thisContent.trim() + "<p></p><p></p>";
-			
-			formNextHtml += "<p> - " + journal.getJournalTitle().trim() + " - </p>";   
-			formNextHtml += nextContent.trim() + "<p></p><p></p>";
+			formNextHtml.append("<p> - " + journal.getJournalTitle().trim() + " - </p>");   
+			formNextHtml.append(nextContent.trim() + "<p></p><p></p>");
 		}
 		
-		formThis.append(formThisHtml);
-		formNext.append(formNextHtml);
+		formThis.append(formThisHtml.toString());
+		formNext.append(formNextHtml.toString());
 		form.setFormContent(formDoc.toString());
 		
 		logger.debug("getJournalDivideThisNext ended.");
