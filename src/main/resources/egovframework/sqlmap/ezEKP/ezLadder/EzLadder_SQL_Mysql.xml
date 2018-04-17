@@ -346,35 +346,41 @@
 	<select id="EzLadderDAO.searchSPartLadderCount" resultClass="Integer">
 		<isEqual property="searchSelect" compareValue="participant">
 		<![CDATA[
-			SELECT
-			DISTINCT 
+			SELECT 
 				COUNT(*)
-			FROM 
-				TBL_LADDER A 
-			JOIN 
-				TBL_LADDER_LINE D
-			ON
-				A.LADDERID = D.LADDERID
-			WHERE
-				A.DELETEFLAG = 0
-			AND 
-				A.TENANT_ID = #tenantId#
-			AND 
-				A.LADDERID = ANY(
-								SELECT 
-									B.LADDERID 
-                                FROM 
-                                    TBL_LADDER B 
-                                JOIN 
-                                    TBL_LADDER_LINE C
-                                ON 
-                                    B.LADDERID = C.LADDERID
-								WHERE 
-									C.USERID = #userId#
-								) 
-			AND 
-				D.USERNAME
-			LIKE CONCAT('%', #searchInput#, '%')
+			FROM
+				TBL_LADDER E 
+			WHERE 
+				E.LADDERID = ANY (
+									SELECT
+										DISTINCT A.LADDERID
+									FROM 
+										TBL_LADDER A 
+									JOIN 
+										TBL_LADDER_LINE D
+									ON
+										A.LADDERID = D.LADDERID
+									WHERE
+										A.DELETEFLAG = 0
+									AND 
+										A.TENANT_ID = #tenantId#
+									AND 
+										A.LADDERID = ANY(
+														SELECT 
+															B.LADDERID 
+						                                FROM 
+						                                    TBL_LADDER B 
+						                                JOIN 
+						                                    TBL_LADDER_LINE C
+						                                ON 
+						                                    B.LADDERID = C.LADDERID
+														WHERE 
+															C.USERID = #userId#
+														) 
+									AND 
+										D.USERNAME
+									LIKE CONCAT('%', #searchInput#, '%')
+								)
 		]]>
 		</isEqual>
 		<isNotEqual property="searchSelect" compareValue="participant">
@@ -636,44 +642,50 @@
 	<select id="EzLadderDAO.searchAllSLadderCount" resultClass="Integer">
 		<isEqual property="searchSelect" compareValue="participant">
 		<![CDATA[
-			SELECT
-			DISTINCT
+			SELECT 
 				COUNT(*)
 			FROM
-				TBL_LADDER D
-			JOIN
-				TBL_LADDER_LINE E
-			ON
-				D.LADDERID = E.LADDERID
-			WHERE
-				D.DELETEFLAG = 0
-			AND 
-				D.TENANT_ID = #tenantId#
-			AND
-				D.LADDERID IN 
-							(
-							SELECT 
-								A.LADDERID
-							FROM 
-								TBL_LADDER A
-							WHERE 
-								A.SECRETFLAG = 0 or A.LADDERID = ANY(
-																SELECT 
-																	B.LADDERID 
-																FROM 
-																	TBL_LADDER B 
-																JOIN 
-																	TBL_LADDER_LINE C
-																ON 
-																	B.LADDERID = C.LADDERID
-																WHERE 
-																	C.USERID = #userId#)
-							OR
-								A.WRITERID = #userId#
-							)
-			AND 
-				E.USERNAME
-			LIKE CONCAT('%', #searchInput#, '%')
+				TBL_LADDER F 
+			WHERE 
+				F.LADDERID = ANY (
+									SELECT
+										DISTINCT D.LADDERID
+									FROM
+										TBL_LADDER D
+									JOIN
+										TBL_LADDER_LINE E
+									ON
+										D.LADDERID = E.LADDERID
+									WHERE
+										D.DELETEFLAG = 0
+									AND 
+										D.TENANT_ID = #tenantId#
+									AND
+										D.LADDERID IN 
+													(
+													SELECT 
+														A.LADDERID
+													FROM 
+														TBL_LADDER A
+													WHERE 
+														A.SECRETFLAG = 0 or A.LADDERID = ANY(
+																						SELECT 
+																							B.LADDERID 
+																						FROM 
+																							TBL_LADDER B 
+																						JOIN 
+																							TBL_LADDER_LINE C
+																						ON 
+																							B.LADDERID = C.LADDERID
+																						WHERE 
+																							C.USERID = #userId#)
+													OR
+														A.WRITERID = #userId#
+													)
+									AND 
+										E.USERNAME
+									LIKE CONCAT('%', #searchInput#, '%')
+								)
 		]]>
 		</isEqual>
 		<isNotEqual property="searchSelect" compareValue="participant">
