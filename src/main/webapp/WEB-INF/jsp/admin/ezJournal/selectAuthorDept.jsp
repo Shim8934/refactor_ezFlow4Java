@@ -29,6 +29,8 @@
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
+	   		//선택된 js트리 노드
+	   		var selTreeNode;
 	   		
 	   		function setLpDeptId(elem){
 	   			lpDeptId = $(elem).attr("targetId");
@@ -43,6 +45,7 @@
 				$('#treeview').on('changed.jstree', function (e, data) {
 					lpDeptId = data.instance.get_node(data.selected).id;
 					lpDeptName = data.instance.get_node(data.selected).text;
+					selTreeNode = data.instance.get_node(data.selected);
 				  }).on('dblclick.jstree', function (e, data) {
 						addDeptInLP();
 				}).jstree({ 
@@ -54,21 +57,44 @@
 	   		
 	   		//부서 리스트 오른쪽에 이동!
 	   		function addDeptInLP(){
-	   			var flag = true;
-	   			for (var i = 0; i < lpDepts.length ; i++) {
-					if(lpDepts[i] == lpDeptId){
-		   				alert("<spring:message code='ezJournal.t127'/>");
-						flag=false;
+	   			if($("#withChild").is(":checked")){
+   					var currentNode = $("#treeview").jstree("get_selected");
+   			    	var childrens = $("#treeview").jstree("get_children_dom",currentNode);
+   			    	
+   			    	for (var i = 0; i < childrens.length; i++) {
+						var childrenId = childrens[i].id;
+						var childrenName = childrens[i].innerText;
+						var flag = true;
+			   			for (var i = 0; i < lpDepts.length ; i++) {
+							if(lpDepts[i] == lpDeptId){
+								flag=false;
+							}
+						}
+			   			if(flag){
+							if (childrenId!=opener.userDeptId) {
+					   			$("#lplistView .mainlist_free").append("<tr targetId="+childrenId+" targetName="+childrenName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+childrenName+"</td></tr>");
+					   			lpDepts.push(childrenId);
+					   			lpDeptNames.push(childrenName);
+							}
+			   			}
 					}
-				}
-	   			if(flag){
-		   			if (lpDeptId!=opener.userDeptId) {
-			   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
-			   			lpDepts.push(lpDeptId);
-			   			lpDeptNames.push(lpDeptName);
-					} else {
-		   				alert("<spring:message code='ezApprovalG.t2000'/>");
+	   			} else {
+		   			var flag = true;
+		   			for (var i = 0; i < lpDepts.length ; i++) {
+						if(lpDepts[i] == lpDeptId){
+			   				alert("<spring:message code='ezJournal.t127'/>");
+							flag=false;
+						}
 					}
+		   			if(flag){
+			   			if (lpDeptId!=opener.userDeptId) {
+				   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
+				   			lpDepts.push(lpDeptId);
+				   			lpDeptNames.push(lpDeptName);
+						} else {
+			   				alert("<spring:message code='ezApprovalG.t2000'/>");
+						}
+		   			}
 	   			}
 	   		}
 	   		
@@ -143,16 +169,21 @@
                 <td class="box" style="width: 250px; height: 465px;">
                     <div style="width: 100%; height: 100%; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
                 </td>
-                <td style="width: 30px; text-align: center;">                            
+                <td style="width: 30px; text-align: center;" rowspan="2">                            
                       <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
                       <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept(targetDept)">
                  		</td>
-                <td class="listview" style="width: 250px; height: 465px; vertical-align: top;" id="lplistView">
+                <td class="listview" style="width: 250px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
                 	<div style="width: 100%; height: 100%; overflow: auto;">
 	                	<table class="mainlist_free">
 						</table>
 					</div>
                 </td>    
+            </tr>
+            <tr>
+            	<td class="box" style="width: 250px;">
+            		<div><input type="checkbox" id="withChild" name="withChild" /><label for="withChild">"<spring:message code='ezSchedule.t39' />"</label></div>
+            	</td>
             </tr>
         </table>
 	</body>

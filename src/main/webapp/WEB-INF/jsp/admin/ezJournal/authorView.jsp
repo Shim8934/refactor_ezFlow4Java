@@ -41,7 +41,7 @@
 	    		}else{
 		    		var url = "/admin/ezJournal/selectAuthorDept.do";
 					url+="?companyId="+companyId+"&userId="+selectedUser;
-					window.open(url, "authorDept", GetOpenWindowfeature(500, 550));
+					window.open(url, "authorDept", GetOpenWindowfeature(500, 560));
 	    		}
 	    	}
 	    	 

@@ -236,6 +236,8 @@
 			
 			function quickSearch() {
 				var searchFlag = $("input[type='radio'][name='searchKey']:checked").val();
+				searchWriter = "";
+				searchTitle = "";
 				if(searchFlag == 'journalWriter'){
 					searchWriter = $("#searchValue").val().trim();
 					if (searchWriter == "") {
@@ -243,7 +245,6 @@
 	                	return;
 					}
 					setJournalList();
-					searchWriter = "";
 					$("#searchValue").val("");
 				} else if(searchFlag == 'journalTitle'){
 					searchTitle = $("#searchValue").val().trim();
@@ -252,7 +253,6 @@
 	                	return;
 					}
 					setJournalList();
-					searchTitle = "";
 					$("#searchValue").val("");
 				}
 			}
@@ -265,11 +265,13 @@
 	        	
 	        	$("#srarchpopup").css("left", popupX);
 	        	
-				$("#srarchpopup").modal({
-					  escapeClose: false,
-					  clickClose: false,
-					  showClose: false
-					});
+				$("#srarchpopup").modal(
+// 						{
+// 					  escapeClose: false,
+// 					  clickClose: false,
+// 					  showClose: false
+// 					}
+						);
 	        	
 // 	        	$(".jquery-modal").on('hide', function(e){
 // 					BoardSearchOptionHidden();
@@ -377,11 +379,13 @@
 		        	
 		        	$("#sumpopup").css("left", popupX);
 		        	
-					$("#sumpopup").modal({
-						  escapeClose: false,
-						  clickClose: false,
-						  showClose: false
-						});
+					$("#sumpopup").modal(
+// 							{
+// 						  escapeClose: false,
+// 						  clickClose: false,
+// 						  showClose: false
+// 						}
+							);
 					
 // 					$("#sumpopup").on('hide', function(e){
 // 						sumSearchOptionHidden();
