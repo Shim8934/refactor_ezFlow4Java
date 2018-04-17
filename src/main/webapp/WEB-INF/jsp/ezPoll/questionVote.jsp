@@ -2048,6 +2048,7 @@
 			    	
 			    	document.getElementById("emoticonPanel").style.display = "block";
 			    	checkScrollBars();
+			    	emoticonPanelClose();
 		    	}
 		    }
 		    
@@ -3183,7 +3184,7 @@
 									</div>
 								</div>
 							</div>					
-							<img id="_addEmoticon" class="cmtAddEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker()">
+							<img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker()">
 						</div >				
 						<div class="comment_input_layout">
 							<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
