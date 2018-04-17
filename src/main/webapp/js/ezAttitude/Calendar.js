@@ -92,7 +92,6 @@ function CalendarView(pTargetID) {
  * tBody td로 month 반환
  */
 function getMonthBodyObj() {
-	// 지금은 test라 sData가지고 하는데 navi에 있는 걸로 해야된다.
 	var year = sDate.getFullYear();
 	var month = sDate.getMonth();
 	
@@ -126,13 +125,13 @@ function getMonthBodyObj() {
 		var className = "";
 		
 		//defaultView == 0인 경우는 0번째가 일요일 , defaultView == 1인 경우는 6번째가 일요일
-		if (defaultView == 0 && j == 0 || defaultView == 1 && j == 6) {
-			objTh.className = "sun";
-			className = "sun";
-		} else if (defaultView == 0 && j == 6 || defaultView == 1 && j == 5) {
+		if (defaultView == 0 && j == 6 || defaultView == 1 && j == 5) {
 			objTh.className = "sat";
 			className = "sat";
-		}
+		} else if (defaultView == 0 && j == 0 || defaultView == 1 && j == 6 || companyHoliday[j] == "1") {
+			objTh.className = "sun";
+			className = "sun";
+		} 
 		
 		objTh.appendChild(oText);
 		objTr.appendChild(objTh);
@@ -247,10 +246,10 @@ function monthDate(oThisDate, TDIndex) {
 	var className = "";
 	if (oThisMonth != oThisDate.getMonth()) {
 		className = " gray";
-	} else if (oThisDate.getDay() == 0 || isholiday) {
-		className = " sun";
 	} else if (oThisDate.getDay() == 6) {
 		className = " sat";
+	} else if (oThisDate.getDay() == 0 || isholiday || companyHoliday[oThisDate.getDay()] == "1") {
+		className = " sun";
 	}
 	
 	//각 나라별로 오늘을 구하기 위해 다음 로직 사용

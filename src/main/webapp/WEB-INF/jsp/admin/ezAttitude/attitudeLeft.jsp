@@ -24,10 +24,10 @@
 						url = "/admin/ezAttitude/attitudeConfig.do";
 						break;
 					case 2:
-						url = "/admin/ezAttitude/attitudeUserConf.do";
+						url = "/admin/ezAttitude/attitudeTypeConfig.do";
 						break;
 					case 3:
-						url = "/admin/ezAttitude/attitudeTypeConfig.do";
+						url = "/admin/ezAttitude/attitudeUserConf.do";
 						break;
 					case 4:
 						url = "/admin/ezAttitude/attitudeCheck.do";
@@ -44,8 +44,8 @@
 		<div id="left">
 			<div class="left_admin" title="attitude"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='ezAttitude.t1'/></div>
 			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(1)"><spring:message code = 'ezAttitude.t10' /></span><ul></ul></h2>
-			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(2)"><spring:message code = 'ezAttitude.t11' /></span><ul></ul></h2>
-			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(3)"><spring:message code = 'ezAttitude.t12' /></span><ul></ul></h2>
+			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(2)"><spring:message code = 'ezAttitude.t12' /></span><ul></ul></h2>
+			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(3)"><spring:message code = 'ezAttitude.t11' /></span><ul></ul></h2>
 			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(4)"><spring:message code = 'ezAttitude.t13' /></span><ul></ul></h2>
 			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(4)"><spring:message code = 'ezAttitude.t14' /></span><ul></ul></h2>
 		</div>

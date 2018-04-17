@@ -516,9 +516,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId,
-			String companyId, String searchUserName, String searchDeptName, String pageNum,
-			String listSize, String orderCell, String orderOption, String offsetMin) throws Exception {
+	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId,
+			String searchUserName, String searchDeptName, String searchTitle, String searchStartTime,
+			String searchEndTime, String searchCompareValue, String pageNum, String listSize,
+			String orderCell, String orderOption, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigList started");
 		
 		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
@@ -528,6 +529,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
+		map.put("searchTitle", searchTitle);
+		map.put("searchStartTime", searchStartTime);
+		map.put("searchEndTime", searchEndTime);
+		map.put("searchCompareValue", searchCompareValue);
 		map.put("limit", limit);
 		map.put("listSize", listSize);
 		map.put("orderCell", orderCell);
@@ -587,7 +592,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName) throws Exception {
+	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName,
+			String searchTitle, String searchStartTime, String searchEndTime, String searchCompareValue, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigListCount started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -595,6 +601,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
+		map.put("searchTitle", searchTitle);
+		map.put("searchStartTime", searchStartTime);
+		map.put("searchEndTime", searchEndTime);
+		map.put("searchCompareValue", searchCompareValue);
+		map.put("offsetMin", offsetMin);
 		
 		String totalCount = ezAttitudeDAO.getAttitudeUserConfigCount(map);
 		

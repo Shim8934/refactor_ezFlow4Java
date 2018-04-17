@@ -898,6 +898,10 @@ public class EzAttitudeGWController {
 			String userId = request.getParameter("userId");
 			String searchUserName = request.getParameter("searchUserName");
 			String searchDeptName = request.getParameter("searchDeptName");
+			String searchTitle = request.getParameter("searchTitle");
+			String searchStartTime = request.getParameter("searchStartTime");
+			String searchEndTime = request.getParameter("searchEndTime");
+			String searchCompareValue = request.getParameter("searchCompareValue");
 			String pageNum = request.getParameter("pageNum");
 			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
@@ -907,8 +911,8 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(tenantId, companyId, searchUserName, searchDeptName);
-			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(tenantId, companyId, searchUserName, searchDeptName, pageNum, listSize, orderCell, orderOption, offsetMin);
+			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchCompareValue, offsetMin);
+			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchCompareValue, pageNum, listSize, orderCell, orderOption, offsetMin);
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
