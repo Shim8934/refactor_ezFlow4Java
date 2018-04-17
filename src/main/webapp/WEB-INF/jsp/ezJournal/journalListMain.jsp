@@ -377,7 +377,11 @@
 		        	
 		        	$("#sumpopup").css("left", popupX);
 		        	
-					$("#sumpopup").modal();
+					$("#sumpopup").modal({
+						  escapeClose: false,
+						  clickClose: false,
+						  showClose: false
+						});
 					
 // 					$("#sumpopup").on('hide', function(e){
 // 						sumSearchOptionHidden();
