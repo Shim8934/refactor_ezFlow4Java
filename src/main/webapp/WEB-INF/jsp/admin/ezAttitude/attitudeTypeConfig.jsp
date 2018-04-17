@@ -153,11 +153,11 @@
                         </table>
                         <div id="contentlist" name="contentlist" style="height: 400px; overflow-y: auto;">
                             <table class="mainlist" style="width: 100%;">
-<!--                                 <tr> -->
-<!--                                     <td style="text-align: center;"> -->
-<!--                                         <img src="/images/email/progress_img.gif" /> -->
-<!--                                     </td> -->
-<!--                                 </tr> -->
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <img src="/images/email/progress_img.gif" />
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                     </div>
