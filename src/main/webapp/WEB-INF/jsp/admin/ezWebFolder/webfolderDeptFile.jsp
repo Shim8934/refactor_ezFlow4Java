@@ -67,7 +67,7 @@
 					}
 				});
 				
-				search_Set("1");
+				//search_Set("1");
 				preProcessing();
 			}
 			
