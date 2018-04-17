@@ -428,7 +428,7 @@
 				                                </td>
 				                                <td>
 				                                    <div style="float: right; margin-right: 5px; position: relative;">
-				                                        <a class="imgbtn"><span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span></a>
+				                                       
 				                                    </div>
 				                                </td> 
 				                                <td></td>   
@@ -438,8 +438,8 @@
 			                  	</div>
 								<table style="margin-top: 3px;">
 						            <tr>
-						                <td class="box" style="border-right: 0px;">
-						                    <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+						                <td class="box" style="border-right: 0px; height: 465px;">
+						                    <div style="width: 250px; height: 100%; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
 						                </td>
 						                <td></td>
 						                <td class="listview" style="width: 426px" id="orglistView">
@@ -503,9 +503,14 @@
 	                            <img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver()">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-									<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
-								</h2>
+	                        	<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
+		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
+										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
+									</h2>
+								 	<a class="imgbtn" style="margin-top: 5px; margin-left: 65px;">
+								 		<span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span>
+								 	</a>
+								</div>
 								<div class="receiver_borderbox">
 									<div id="receiverList" style="width: 250px; Height: 478px; overflow-x: auto; overflow-y: auto;">
 									</div>
