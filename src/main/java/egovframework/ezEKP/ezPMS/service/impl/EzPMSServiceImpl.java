@@ -215,4 +215,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return 0;
 	}
 
+	@Override
+	public String getUserRole(String userId, int projectId, int tenantId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

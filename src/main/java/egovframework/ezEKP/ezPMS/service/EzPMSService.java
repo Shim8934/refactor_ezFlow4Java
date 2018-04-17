@@ -80,4 +80,6 @@ public interface EzPMSService {
 	public int updateGroup(ProjectGroupVO group);
 	
 	public int deleteGroup(int groupId);
+	
+	public String getUserRole(String userId, int projectId, int tenantId);
 }
