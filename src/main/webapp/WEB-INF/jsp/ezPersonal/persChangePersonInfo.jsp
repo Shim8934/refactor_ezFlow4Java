@@ -30,7 +30,6 @@
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			
 			$(function () {
-				console.log('익명함수 실행1');
 				document.getElementById("TempCalImage").style.display = "none";
 			    $("#txtBirth").datepicker({
 			    	changeMonth: true,
@@ -56,7 +55,6 @@
 			    var dayStr = dayMsg.split(";");
 			    
 			    $(function () {
-			    	console.log('익명함수 실행2');
 			        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
 			        	closeText: "<spring:message code='main.t3' />",
 			            prevText: "<spring:message code='main.t0604' />",
@@ -79,7 +77,6 @@
 			    });
 			    
 			    window.onload = function () {
-			    	console.log('window.onload 함수 실행');
 			    	rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 			    	
 			    	//익스플로러일때 css수정
@@ -404,7 +401,7 @@
 		            </td>
 		        </tr>
         		<tr> 
-            		<th><spring:message code='ezPersonal.t1820'/>/<br><spring:message code='ezPersonal.t182'/></th> 
+            		<th><spring:message code='ezPersonal.t1820'/><br><spring:message code='ezPersonal.t182'/></th> 
             		<td colspan="3"><textarea id="txtInfo" style="WIDTH:99.3%;HEIGHT:80px;margin-top:3px;margin-bottom:3px" maxlength="450">${txtInfo}</textarea></td> 
         		</tr> 
     		</table> 
