@@ -28,7 +28,7 @@
 			var region = "<c:out value='${attitudeInfo.region}'/>";
 			var mobile = "<c:out value='${attitudeInfo.mobile}'/>";
 			var bizSub = "<c:out value='${attitudeInfo.bizSub}'/>";
-			var content = "<c:out value='${attitudeInfo.content}'/>";
+			var content = '${attitudeInfo.content}';
 			var attitudeId = "<c:out value='${attitudeInfo.attitudeId}'/>";
 			var dateType = "<c:out value='${attitudeInfo.dateType}'/>";
 			var startDate = "<c:out value='${attitudeInfo.startDate}'/>";
@@ -47,7 +47,11 @@
 				$("#region").text(" " + region);
 				$("#mobile").text(" " + mobile);
 				$("#bizsub").text(" " + bizSub);
-				$("textarea[name=content]").val(content);
+				
+				var doc = document.getElementById('message').contentWindow.document;
+				doc.open();
+				doc.write(content);
+				doc.close();
 				
 				var showTime = "";
 				switch (dateType) {
@@ -110,40 +114,77 @@
 			}
 		</script>
 	</head>
-	<body class = "popup">
-<!-- 		<h1>근태 작성</h1> -->
-		<div id="menu">
-			<ul>
-				<li><span onClick="sendMailAttitude()">메일로 발송</span></li>
-			</ul>
-			<ul>
-				<li><span onClick="modifyAttitude()">수정</span></li>
-			</ul>
-			<ul>
-				<li><span onClick="deleteAttitude()">삭제</span></li>
-			</ul>
-		</div>
-		<div id="close">
-			<ul>
-				<li><span onClick="window.close()">닫기</span></li>
-			</ul>
-		</div>
-		<div id="contentDiv">
-			<table id="attiInfoView" class="content">
-				<tbody>
-					<tr>
-		    			<th>구분</th> 
-		    			<td id="typeName"></td> 
-		  			</tr>
-	  			</tbody>
-			</table>
-			<table class="content" style="width:100%; margin-top: 10px;">
-				<tr>
-				  	<td style="height: 300px; margin:0px; padding:0px;">
-	  					<textarea name="content" class="textarea" style="width:100%; height:300px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;" readonly></textarea>
-	  				</td>
-	  			</tr>  
-			</table>
-		</div>
+	<body class="popup" style="overflow:hidden;">
+		<form method="post">
+	        <div id="main_body">
+	            <table id="normalScreen" class="layout">
+	                <tr>
+	                    <td style="height: 20px">
+	                        <div id="menu">
+	                            <ul id="menuTable">
+	                            	<li><span onclick="sendMailAttitude()">메일로 발송</span></li>
+	                                <li><span onclick="modifyAttitude()">수정</span></li>
+	                            	<li><span onclick="deleteAttitude()">삭제</span></li>
+	                            </ul>
+	                        </div>
+	                        <div id="close">
+	                            <ul>
+	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
+	                            </ul>
+	                        </div>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td style="height: 20px">
+	                        <table id="attiInfoView" class="content">
+	                               <tr id="HolderWrite">
+	                                   <th>구분</th>
+	                                   <td id="typeName" colspan="2">
+	                                   </td>
+	                               </tr>
+	                        </table>
+	                    </td>
+	                </tr>
+	                <tr>
+		                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
+		                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 600px; background-color: white"></iframe>	                    
+		                </td>
+	            	</tr>
+	            </table>
+	        </div>
+	    </form>
+<!-- 		<div id="menu"> -->
+<!-- 			<ul> -->
+<!-- 				<li><span onClick="sendMailAttitude()">메일로 발송</span></li> -->
+<!-- 			</ul> -->
+<!-- 			<ul> -->
+<!-- 				<li><span onClick="modifyAttitude()">수정</span></li> -->
+<!-- 			</ul> -->
+<!-- 			<ul> -->
+<!-- 				<li><span onClick="deleteAttitude()">삭제</span></li> -->
+<!-- 			</ul> -->
+<!-- 		</div> -->
+<!-- 		<div id="close"> -->
+<!-- 			<ul> -->
+<!-- 				<li><span onClick="window.close()">닫기</span></li> -->
+<!-- 			</ul> -->
+<!-- 		</div> -->
+<!-- 		<div id="contentDiv"> -->
+<!-- 			<table id="attiInfoView" class="content"> -->
+<!-- 				<tbody> -->
+<!-- 					<tr> -->
+<!-- 		    			<th>구분</th>  -->
+<!-- 		    			<td id="typeName"></td>  -->
+<!-- 		  			</tr> -->
+<!-- 	  			</tbody> -->
+<!-- 			</table> -->
+<!-- 			<table class="content" style="width:100%; margin-top: 10px;"> -->
+<!-- 				<tr> -->
+<!-- 				  	<td style="height: 300px; margin:0px; padding:0px;"> -->
+<!-- 	  					<textarea name="content" class="textarea" style="width:100%; height:300px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;" readonly></textarea> -->
+<!-- 	  				</td> -->
+<!-- 	  			</tr>   -->
+<!-- 			</table> -->
+<!-- 		</div> -->
 	</body>
 </html>

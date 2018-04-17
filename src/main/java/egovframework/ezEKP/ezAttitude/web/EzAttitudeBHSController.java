@@ -191,6 +191,7 @@ public class EzAttitudeBHSController {
 		}
 		
 		model.addAttribute("userOffset", userOffset);
+		model.addAttribute("uselang", userInfo.getLang());
 		model.addAttribute("attitudeAdminCheck", attitudeAdminCheck);
 		
 		LOGGER.debug("/ezAttitude/attitudeLeft ended"); 
@@ -309,11 +310,11 @@ public class EzAttitudeBHSController {
 	}
 	
 	/**
-	 * 회사 기념일리스트 
+	 * 회사 휴일정보
 	 */
 	@RequestMapping(value = "/ezAttitude/getHolidayList.do")
 	@ResponseBody
-	public JSONArray getHolidayList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+	public JSONObject getHolidayList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/getHolidayList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -341,12 +342,32 @@ public class EzAttitudeBHSController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 		
-		JSONArray list = new JSONArray();
+		JSONObject returnValue = new JSONObject();
+		JSONArray holidayList = new JSONArray();
 		if (status.equals("ok")) {
-			list = (JSONArray) resultBody.get("data");
+			holidayList = (JSONArray) resultBody.get("data");
+			returnValue.put("holidayList", holidayList);
+			
+			url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudereg";
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userId);
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			LOGGER.debug("status : " + status);
+			
+			JSONObject attitudeConfigVO = new JSONObject();
+			if (status.equals("ok")) {
+				attitudeConfigVO = (JSONObject) resultBody.get("data");
+				returnValue.put("attitudeConfigVO", attitudeConfigVO);
+			}
 		}
 		LOGGER.debug("/ezAttitude/getHolidayList ended");
-		return list;
+		return returnValue;
 	}
 	
 	/**
@@ -566,5 +587,46 @@ public class EzAttitudeBHSController {
 		}
 		
 		LOGGER.debug("/ezAttitude/attitudeDeleteItem ended");
+	}
+	
+	/**
+	 * 사원이 속한 회사의 근태규율을 가져오는 메소드
+	 */
+	@RequestMapping(value = "/ezAttitude/getAttitudeConf.do")
+	@ResponseBody
+	public JSONObject getAttitudeConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/getAttitudeConf started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudereg";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject attitudeConfigVO = new JSONObject();
+		if (status.equals("ok")) {
+			attitudeConfigVO = (JSONObject) resultBody.get("data");
+		}
+		LOGGER.debug("/ezAttitude/getAttitudeConf ended");
+		return attitudeConfigVO;
 	}
 }
