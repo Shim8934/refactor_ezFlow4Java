@@ -241,7 +241,7 @@
 	    			window.open("/ezAttitude/attModAppList.do", "right");
 	    			break;
 	    		case 4:	// 신청관리현황
-	    			window.open("/admin/ezAttitude/attModAppList.do", "right");
+	    			window.open("/ezAttitude/manageAttModAppList.do", "right");
 	    			break;
 	    	}
 	    }

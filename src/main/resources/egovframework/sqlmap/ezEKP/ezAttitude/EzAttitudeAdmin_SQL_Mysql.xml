@@ -11,6 +11,7 @@
 	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO" />
 	<typeAlias alias="AttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
 	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>
+	<typeAlias alias="AttitudeAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO"/>
 	
 	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
 		<result property="userId" 					column="USER_ID" 				columnIndex="1"/>
@@ -96,6 +97,17 @@
 		<result  property="userName"			column="USER_NAME"				columnIndex="15"/>
 		<result  property="deptName"			column="DEPT_NAME"				columnIndex="16"/>
 		<result  property="userTitle"			column="USER_TITLE"				columnIndex="17"/>
+	</resultMap>
+	
+	<resultMap id="attitudeAuthor" class="AttitudeAuthorVO">
+		<result  property="userId" 				column="USER_ID"				columnIndex="1"/>
+		<result  property="tenantId" 			column="TENANT_ID"				columnIndex="2"/>
+		<result  property="companyId" 			column="COMPANY_ID"				columnIndex="3"/>
+		<result  property="authDeptId" 			column="AUTH_DEPT_ID"			columnIndex="4"/>
+		<result  property="userName" 			column="USERNAME"				columnIndex="5"/>
+		<result  property="userTitle" 			column="USERTITLE"				columnIndex="6"/>
+		<result  property="userDeptName" 		column="USERDAPTNAME"			columnIndex="7"/>
+		<result  property="authDeptName" 		column="AUTHDEPTNAME"			columnIndex="8"/>
 	</resultMap>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
@@ -206,6 +218,22 @@
 		<isNotEmpty prepend="AND" property="searchUserName">
 			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			TBL_USERMASTER.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchStartTime">
+			<![CDATA[
+				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) >= #searchStartTime#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchEndTime">
+			<![CDATA[
+				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) <= #searchEndTime#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchCompareValue">
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime, '0', '1') = #searchCompareValue#
+		</isNotEmpty>
 		
 		<isNotEmpty property="orderCell">
 			ORDER BY
@@ -235,6 +263,12 @@
 				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_USER_CONF.company_id
 			AND
 				TBL_USERMASTER.cn = TBL_ATTITUDE_USER_CONF.user_id
+			LEFT JOIN
+				TBL_ATTITUDE_CONF
+			ON
+				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_CONF.tenant_id
+			AND
+				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_CONF.company_id
 			WHERE
 				TBL_USERMASTER.tenant_id = #tenantId#
 			AND 
@@ -249,6 +283,22 @@
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			TBL_USERMASTER.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchStartTime">
+			<![CDATA[
+				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) >= #searchStartTime#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchEndTime">
+			<![CDATA[
+				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) <= #searchEndTime#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchCompareValue">
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime, '0', '1') = #searchCompareValue#
 		</isNotEmpty>
 	</select>
 	
@@ -369,7 +419,16 @@
 			INSERT INTO TBL_ATTITUDE_TYPE
 				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, IMG_PATH, PARENT_ID, FORM_ID)
 			VALUES
-				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #imgPath#, 'A05', #formId#)
+				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #imgPath#, 'A05', (SELECT 
+																									A.FORM_ID
+																								FROM 
+																									TBL_ATTITUDE_TYPE A
+																								WHERE 
+																									A.TENANT_ID = #tenantId#
+																								AND 
+																									A.COMPANY_ID = #companyId#
+																								AND 
+																									A.TYPE_ID = 'A11'))
 		]]>
 	</insert>
 	
@@ -614,4 +673,43 @@
 		</isNotEmpty>
 	</select>
 	
+	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultMap="attitudeAuthor">
+		<![CDATA[
+			SELECT 
+				A.USER_ID,
+			    A.TENANT_ID,
+			    A.COMPANY_ID,
+			    A.AUTH_DEPT_ID,
+			    B.DISPLAYNAME AS USERNAME,
+			    B.TITLE AS USERTITLE,
+			    B.DESCRIPTION AS USERDAPTNAME,
+			    C.DISPLAYNAME AS AUTHDEPTNAME
+			FROM 
+				TBL_ATTITUDE_AUTH A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				(A.USER_ID = B.CN)
+			INNER JOIN
+				TBL_DEPTMASTER C 
+			ON
+				(A.AUTH_DEPT_ID = C.CN)
+			WHERE
+				A.COMPANY_ID = #companyId#
+			AND
+				A.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	<delete id="ezAttitudeAdminDAO.deleteAttitudeAuth" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_ATTITUDE_AUTH
+          	WHERE
+          		TENANT_ID = #tenantId#
+          	AND
+          		COMPANY_ID = #companyId#
+          	AND
+        		USER_ID = #selectUserId#
+		]]>
+	</delete>
 </sqlMap>

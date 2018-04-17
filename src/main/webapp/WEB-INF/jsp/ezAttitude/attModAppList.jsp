@@ -13,12 +13,15 @@
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>		
+		<script type="text/javascript" src="/js/Common.js"></script>
+		<!-- modal -->
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<script type="text/javascript">
 		var totalAtt 		  = ${totalAtt};
 		var startDate		  = "<c:out value='${startDate}'/>";
@@ -139,7 +142,7 @@
 	        var strtext;
 	        var PagingHTML = "";
 	        document.getElementById("tblPageRayer").innerHTML = "";
-	        document.getElementById("mailBoxInfo").innerHTML = " - [" + "총"  + "<span style='color:#017BEC;'> " + totalAtt + " </span>" + "개]";
+	        document.getElementById("mailBoxInfo").innerHTML = " [" + "총"  + "<span style='color:#017BEC;'> " + totalAtt + " </span>" + "개]";
 	        strtext = "<div class='pagenavi'>";
 	        PagingHTML += strtext;
 	        var pageNum = currentPage;
@@ -340,7 +343,7 @@
 		    	totalPages = data.totalPages;
 		    	makePageSelPage();
 		    	
-		    	infoStr += ' - [총 <span style="color:#017BEC;">' + data.totalAtt;
+		    	infoStr += ' [총 <span style="color:#017BEC;">' + data.totalAtt;
 		    	
 		    	if (data.startDate != null && data.endDate != null) {
 		    		infoStr += '</span> 개 - ';
@@ -368,23 +371,33 @@
 	    		} else {
 	    			htmlStr += '<td style="padding:0"> <input type="checkbox" class="checkAtt"' 
 	    	    	htmlStr += 'id="attCheck_' + attList[i].attitudeId + '"';
-	    	    	htmlStr += 'value=' + attList[i].attitudeId ;
+	    	    	htmlStr += 'value="' + attList[i].attitudeId + '"';
+	    	    	htmlStr += 'status="' + attList[i].apprStatus + '"';
 	    	    	htmlStr += ' onclick="event_listCheckboxclick(this)"/></td>';	
 	    		}
     			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 15) + '</td>';
-    			htmlStr += '<td>' + attList[i].changeDate.substring(0,10) + '</td>';
-    			htmlStr += '<td>' + attList[i].apprUserName + '</td>';
-    			htmlStr += '<td>' + attList[i].originDate.substring(0,19) + '</td>';
-    			htmlStr += '<td>' + attList[i].changeDate.substring(11,19) + '</td>';
+    			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';
+    			
+    			if (adminFlag == 'true') {
+    				htmlStr += '<td>' + attList[i].writerName + '</td>';
+    				htmlStr += '<td>' + attList[i].writerDeptName + '</td>';
+    			}
+    			
+    			htmlStr += '<td>' + attList[i].originDate.substring(11,19) + ' -> ' + attList[i].changeDate.substring(11,19) + '</td>';
     			
     			if (attList[i].apprStatus == 0) {
-    				htmlStr += '<td>진행</td>';	
+    				htmlStr += '<td id="attStauts">진행</td>';	
     			}
     			if (attList[i].apprStatus == 1) {
-    				htmlStr += '<td>승인</td>';	
+    				htmlStr += '<td id="attStauts">승인</td>';	
     			}
     			if (attList[i].apprStatus == 2) {
-    				htmlStr += '<td>반려</td>';	
+    				htmlStr += '<td id="attStauts">반려</td>';	
+    			}
+    			htmlStr += '<td>' + attList[i].apprUserName + '</td>';
+    			
+    			if  (excel != true) {
+    				htmlStr += '<td><a class="imgbtn" id="mailInBtn" onclick="getHistory(this)"><span>내역확인</span></a></td>';	
     			}
     			
     			htmlStr += '</tr>';
@@ -660,6 +673,11 @@
 	    	var attList = $(".checkAtt:checked");
 	    	var idList = "";
 	    	
+	    	if (attList.length == 0) {
+	    		alert("삭제할 수정신청을 선택해주세요");
+	    		return;
+	    	}
+	    	
 	    	for (var i = 0; i < attList.length; i++) {
 	    		idList += attList[i].getAttribute("id").split("_")[1] + ","
 	    	}
@@ -695,7 +713,21 @@
 	    	var idList = "";
 	    	
 	    	for (var i = 0; i < attList.length; i++) {
-	    		idList += attList[i].getAttribute("id").split("_")[1] + ","
+	    		console.log(attList[i].getAttribute("status"));
+	    		if (attList[i].getAttribute("status") != "1") {
+	    			idList += attList[i].getAttribute("id").split("_")[1] + ",";	
+	    		}
+	    	}
+	    	
+	    	if (idList == "") {
+    			if (attList.length == 0) {
+    				alert("승인할 수정신청을 선택해주세요");	
+    			} else {
+    				alert("이미 승인된 항목입니다.");
+    			}
+	    		get_att_list(currentPage);
+	    		HiddenAttProgress();
+	    		return;
 	    	}
 	    	
 	    	var obj = new Object();
@@ -730,7 +762,21 @@
 	    	var idList = "";
 	    	
 	    	for (var i = 0; i < attList.length; i++) {
-	    		idList += attList[i].getAttribute("id").split("_")[1] + ","
+	    		console.log(attList[i].getAttribute("status"));
+	    		if (attList[i].getAttribute("status") != "2") {
+	    			idList += attList[i].getAttribute("id").split("_")[1] + ",";	
+	    		}
+	    	}
+	    	
+	    	if (idList == "") {
+    			if (attList.length == 0) {
+    				alert("반려할 수정신청을 선택해주세요");	
+    			} else {
+    				alert("이미 반려된 항목입니다.");
+    			}
+	    		get_att_list(currentPage);
+	    		HiddenAttProgress();
+	    		return;
 	    	}
 	    	
 	    	var obj = new Object();
@@ -802,10 +848,6 @@
 	    
 	    function event_listCheckboxclick(obj) {
 	        if (obj.checked) {
-	        	console.log(obj.parentElement.parentElement.getElementsByTagName("td").length);
-// 	            for (var RowCnt = 0; RowCnt < obj.parentElement.parentElement.getElementsByTagName("td").length; RowCnt++) {
-// 	                obj.parentElement.parentElement.getElementsByTagName("td").item(RowCnt).style.backgroundColor = m_strColorSelect;
-// 	            }
 				obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
 	            listContentArry[listContentArry.length] = obj.parentElement.parentElement.getAttribute("id");
 	        }
@@ -814,9 +856,6 @@
 	            for (var i = 0; i < listContentArry.length; i++) {
 	            	console.log(obj.parentElement.parentElement.getAttribute("id"));
 	                if (obj.parentElement.parentElement.getAttribute("id") == listContentArry[i]) {
-// 	                    for (var RowCnt = 0; RowCnt < obj.parentElement.parentElement.getElementsByTagName("td").length; RowCnt++) {
-// 	                        obj.parentElement.parentElement.getElementsByTagName("td").item(RowCnt).style.backgroundColor = m_strColorDefault;
-// 	                    }
 	                	obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
 	                }
 	                else {
@@ -847,14 +886,74 @@
 			 			"height = 830px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 			}
 	    }
+	    
+	    function getHistory(t) {
+			
+			var obj = new Object();
+	    	
+		    obj.attModId = $(t).parent().parent().find('td input').attr("value");
+			
+			$.ajax({
+				type : 'get',
+			    url : '/ezAttitude/getAttHistory.do',
+			    data : obj,
+			    dataType : "json",
+			    error: function(xhr, status, error){
+			    	ajaxRunning = false;
+			    },
+			    success : function(json){
+			    	$('#addpopup_list tbody').children('tr').remove();
+			    	
+			    	if (json.length == 0) {
+			    		var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:  center;'></td>").text("내역이 없습니다."));
+			    		
+			    		$("#addpopup_list tbody").append(objTr);
+			    	}
+			    	
+			    	for(var i = 0; i < json.length; i++) {
+			    		
+			    		if (json[i].apprStatus == 1) {
+			    			json[i].apprStatus = "승인";
+			    		} else {
+			    			json[i].apprStatus = "반려";
+			    		}
+			    		
+			    		var objTr = $("<tr></tr>").append($("<td></td>").text(json[i].apprDate));
+			    		
+			    		objTr.append($("<td></td>").text(json[i].apprUserName));
+			    		objTr.append($("<td></td>").text(json[i].apprStatus));
+			    		
+			    		$("#addpopup_list tbody").append(objTr);
+			    	}
+			    },
+			    complete : function() {
+					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+		        	
+		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+		        	
+		        	$("#popup").css("left", popupX);
+		        	
+					$("#popup").modal({
+						  escapeClose: false,
+						  clickClose: false,
+						  showClose: false
+					});
+			    }
+		    });
+	    }
+	    
+	    function layerHidden() {
+	        $.modal.close();
+	        $('#addpopup_list tbody').children('tr').remove();
+	    }
 		</script>
 </head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
 	<c:if test="${adminFlag == 'true'}">
-		<h1>근태수정관리현황<span id="mailBoxInfo">-신청관리현황[총 xxx개-xxxx년 xx월 xx일~xxxx년 xx월 xx일]</span></h1>
+		<h1>근태수정현황 - 신청관리현황<span id="mailBoxInfo">[총 xxx개-xxxx년 xx월 xx일~xxxx년 xx월 xx일]</span></h1>
 	</c:if>
 	<c:if test="${adminFlag == 'false'}">
-		<h1>근태수정현황<span id="mailBoxInfo">-신청관리현황[총 xxx개-xxxx년 xx월 xx일~xxxx년 xx월 xx일]</span></h1>
+		<h1>근태수정현황 - 신청현황<span id="mailBoxInfo">[총 xxx개-xxxx년 xx월 xx일~xxxx년 xx월 xx일]</span></h1>
 	</c:if>
         <div id="mainmenu">
         <ul id="tb_Parent">
@@ -908,33 +1007,44 @@
 							<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
 						</th> 
 						<th width="60px" colname="NO">NO.</th> 
-						<th style="cursor:pointer" colname="CHANGE_DATE">변경일자</th> 					
-						<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th> 
-						<th width="180px" style="cursor:pointer" colname="START_DATE">출근시각</th>
-						<th width="180px" style="cursor:pointer" colname="CHANGE_DATE">변경시각</th> 
-						<th width="80px" style="cursor:pointer" colname="APPR_STATUS" >승인상태</th> 
-<%-- 						<th width="60px"><spring:message code="ezPoll.t109"/></th>			 --%>
+						<th style="cursor:pointer" colname="CHANGE_DATE">일자</th>
+						<c:if test="${adminFlag == true}">
+							<th style="cursor:pointer" colname="CHANGE_DATE">신청자</th>
+							<th style="cursor:pointer" colname="CHANGE_DATE">신청 부서</th>
+						</c:if>
+						<th width="250px" style="cursor:pointer" colname="START_DATE">시각</th>
+						<th width="80px" style="cursor:pointer" colname="APPR_STATUS" >승인상태</th>
+						<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th>
+						<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">내역확인</th> 
 			    	</tr>
 			    	
 			    	<c:forEach var="list" items="${list}" varStatus="i"> 
 				        <tr id = "attList_${i.count}" class="white" draggable="true" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" style="cursor:pointer;">
-							<td style="padding:0"><input type="checkbox" class="checkAtt" id="attCheck_<c:out value ="${list.attitudeId}"/>" value=<c:out value="${list.attitudeId}" /> onclick="event_listCheckboxclick(this)"/></td>
+							<td style="padding:0"><input type="checkbox" class="checkAtt" id="attCheck_<c:out value ="${list.attitudeId}"/>" value=<c:out value="${list.attitudeId}" /> status=<c:out value="${list.apprStatus}"/> onclick="event_listCheckboxclick(this)"/></td>
 				          	<td>${i.count}</td>
 				          	<c:set var="changeDate" value="${list.changeDate}"/>
 				          	<c:set var="originDate" value="${list.originDate}"/>
-							<td>${fn:substring(changeDate,0,10) }</td>
-							<td>${list.apprUserName}</td>
-							<td>${fn:substring(originDate,0,19) }</td>
-							<td>${fn:substring(changeDate,11,19) }</td>
+							<td>${fn:substring(originDate,0,10) }</td>
+							<c:if test="${adminFlag == true}">
+								<td>${list.writerName}</td>
+								<td>${list.writerDeptName}</td>
+							</c:if>
+							<td>${fn:substring(originDate,11,19) } -> ${fn:substring(changeDate,11,19) }</td>
 							<c:if test="${list.apprStatus == 0}">
-				          		<td>진행</td>	
+				          		<td id="attStauts">진행</td>	
 				          	</c:if>
 				          	<c:if test="${list.apprStatus == 1}">
-				          		<td>승인</td>	
+				          		<td id="attStauts">승인</td>	
 				          	</c:if>
 				          	<c:if test="${list.apprStatus == 2}">
-				          		<td>반려</td>	
+				          		<td id="attStauts">반려</td>	
 				          	</c:if>
+				          	<td>${list.apprUserName}</td>
+				          	<td>
+				          		<a class="imgbtn" id="mailInBtn" onclick="getHistory(this)">
+				          			<span>내역확인</span>
+				          		</a>
+				          	</td>
 	<%-- 		          		<c:choose> --%>
 	<%-- 							<c:when test="${primary == '1'}"> --%>
 	<%-- 								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName1} </a> </td> --%>
@@ -962,15 +1072,95 @@
 		<div id ="forExcel">
 		</div>
         <table class="mainlist" style="width:100%;display:none;" id="ExcelAttList">
-        	<tr>
-				<th width="60px">NO.</th>
-				<th>변경일자</th>
-				<th width="150px">승인자</th>
-				<th width="180px">출근시각</th>
-				<th width="180px">변경시각</th>
-				<th width="80px">승인상태</th>
+	       	<tr>
+				<th>NO.</th>
+				<th>일자</th>
+				<c:if test="${adminFlag == true}">
+					<th>신청자</th>
+					<th>신청 부서</th>
+				</c:if>
+				<th>시각</th>
+				<th>승인상태</th>
+				<th>승인자</th>				
 			</tr>
 		</table>
+		
+		<div id="popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+			<div class="popupwrap3">
+				<!-- 내용 -->
+			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
+				    <thead>
+				    	<tr>
+						<th class="layerHeader" colspan="3">
+							<img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>
+							&nbsp;근태내역확인
+						</th>
+						</tr>
+						<tr>
+				  			<th style="width:50%;height:30px">승인일시</th>
+				  			<th style="width:25%;height:30px">승인자</th>
+				  			<th style="width:25%;height:30px">승인 상태</th>
+						</tr>
+				    </thead>
+				    <tbody>
+				    </tbody>
+				</table>
+				<!-- /내용 -->
+				<br />
+				<div style="text-align:center;">
+					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
+					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
+			    </div>
+			</div>
+			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
+		</div>
+		
+		<!-- 근태수정신청 팝업창 -->
+		<div id="mod_popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+			<div class="popupwrap3">
+				<!-- 내용 -->
+			    <table class="popuplist" id="modpopup_table" style="width:440px;margin:10px 0px 0px 1px;">
+			    	<tr>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태수정신청</th>
+					</tr>
+					<tr>
+			  			<th style="width:90px;height:30px">구분
+						<td>지각</td>
+					</tr>
+					<tr>
+			  			<th style="width:90px;height:30px">출근시각</th>
+						<td>오늘날짜 (공백) 출근시각</td>
+					</tr>
+					<tr>
+			  			<th style="width:90px;height:30px">변경시각</th>
+						<td>
+							<span id="periodblock" datetype="3">
+								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+								<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<th style="width:90px;height:30px">승인상태</th>
+						<td>상태(진행, 반려)</td>
+					</tr>
+					<tr>
+<!-- 						<td colspan="2"><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%; height:90px; box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td> -->
+						<td colspan="2" style="margin:0px; padding:0px;"><textarea class="textarea" style="width:100%; height:120px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea></td>
+<!-- 						<td style="vertical-align:top;height:100%;" id="EdtorSize" colspan="2"> -->
+<!-- 		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe> -->
+<!-- 	                    </td> -->
+					</tr>
+				</table>
+				<!-- /내용 -->
+				<br />
+				<div style="text-align:center;">
+					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
+					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
+			    </div>
+			</div>
+			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
+		</div>
 		
 		<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezAttitude/saticGetXlsAtt.do">
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value=""/>

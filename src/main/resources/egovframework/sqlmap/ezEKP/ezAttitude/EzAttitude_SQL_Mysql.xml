@@ -13,11 +13,13 @@
 	<typeAlias alias="attitudeFormVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO"/>
 	
 	<resultMap id="attitudeApplicationVO" class="AttitudeApplicationVO">
-		<result property="attitudeId"		column="ATTITUDE_ID" 	columnIndex="1"/>
-		<result property="changeDate"		column="CHANGE_DATE" 	columnIndex="2"/>
-		<result property="apprUserName"		column="APPR_USER_NAME" columnIndex="3"/>
-		<result property="originDate"		column="START_DATE" 	columnIndex="4"/> 		
-		<result property="apprStatus"		column="APPR_STATUS" 	columnIndex="5"/>
+		<result property="attitudeId"		column="ATTITUDE_ID" 		columnIndex="1"/>
+		<result property="changeDate"		column="CHANGE_DATE" 		columnIndex="2"/>
+		<result property="apprUserName"		column="APPR_USER_NAME"		columnIndex="3"/>
+		<result property="originDate"		column="START_DATE" 		columnIndex="4"/> 		
+		<result property="apprStatus"		column="APPR_STATUS" 		columnIndex="5"/>
+		<result property="writerName"		column="WRITER_NAME" 		columnIndex="6"/>
+		<result property="writerDeptName"	column="WRITER_DEPT_NAME" 	columnIndex="7"/>
 	</resultMap>
 		
 	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
@@ -82,6 +84,14 @@
 		<result property="typeName"			column="TYPE_NAME" 		columnIndex="7"/> 		
 		<result property="typeName2"		column="TYPE_NAME2" 	columnIndex="8"/>
 		<result property="content"			column="CONTENT" 		columnIndex="9"/>
+	</resultMap>
+	
+	<resultMap id="attitudeApplicationHistoryVO" class="AttitudeApplicationVO">
+		<result property="attitudeId"		column="ATTITUDE_ID" 	columnIndex="1"/>
+		<result property="apprDate"			column="APPR_DATE" 		columnIndex="2"/>
+		<result property="apprUserName"		column="APPR_USER_NAME" columnIndex="3"/>
+		<result property="apprStatus"		column="APPR_STATUS" 	columnIndex="4"/> 		
+		<result property="content"			column="CONTENT" 		columnIndex="5"/>
 	</resultMap>
 	
 	<resultMap id="getFormBody" class="AttitudeFormVO">
@@ -277,6 +287,11 @@
 		<isNotEmpty property="userId" prepend="and"> 
 				a.WRITER_ID = #userId#
 		</isNotEmpty>
+		<isNotEmpty property="deptIdList" prepend="and">
+			<iterate prepend="WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+	      		#deptIdList[]#
+			</iterate>
+		</isNotEmpty>
 		<isNotEmpty property="apprUserName" prepend="and">
 			<isNotEmpty property="apprUserName" >
 				<isEqual property="sysLang" compareValue="primary" >
@@ -325,7 +340,9 @@
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
 					a.appr_user_name as APPR_USER_NAME,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(b.start_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
-					a.appr_status as APPR_STATUS
+					a.appr_status as APPR_STATUS,
+					a.writer_name as WRITER_NAME,
+					a.writer_dept_name as WRITER_DEPT_NAME
 			FROM 
 				jmocha.tbl_attitude_modappl a 
 			inner 
@@ -347,7 +364,9 @@
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
 					a.appr_user_name as APPR_USER_NAME,
 					b.start_date as START_DATE,
-					a.appr_status as APPR_STATUS
+					a.appr_status as APPR_STATUS,
+					a.writer_name as WRITER_NAME,
+					a.writer_dept_name as WRITER_DEPT_NAME
 			FROM 
 				jmocha.tbl_attitude_modappl a 
 			inner 
@@ -607,6 +626,10 @@
 				2
 			</isEqual>
 		<![CDATA[
+			,APPR_DATE = DATE_FORMAT(#apprDate#, '%Y-%m-%d %H:%i:%S')
+			,APPR_USER_ID = #userId#
+			,APPR_USER_NAME = #displayName#
+			,APPR_USER_NAME2 = #displayName2#
 	        WHERE
 	        	TENANT_ID = #tenantId#
 		]]>	        	
@@ -637,6 +660,8 @@
 			CHANGE_DATE,
 			DELFLAG,
 			APPR_USER_ID,
+			APPR_USER_NAME,
+			APPR_USER_NAME2,
 			APPR_DATE,
 			APPR_STATUS,
 			CONTENT
@@ -668,6 +693,8 @@
 			CHANGE_DATE,
 			DELFLAG,
 			APPR_USER_ID,
+			APPR_USER_NAME,
+			APPR_USER_NAME2,
 			APPR_DATE,
 			<isEqual property="changeStatus" compareValue="appr">
 				1
@@ -713,4 +740,23 @@
 		WHERE
 			ATTITUDE_ID = #attitudeId#
 	</insert>
+	
+	<select id="ezAttitudeDAO.attModGetHistory" parameterClass="Map" resultMap="attitudeApplicationHistoryVO">
+		<![CDATA[
+			SELECT
+					ATTITUDE_ID,
+					DATE_FORMAT(DATE_ADD(DATE_FORMAT(APPR_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS APPR_DATE,
+					APPR_USER_NAME,
+					APPR_STATUS,
+					CONTENT
+			FROM 
+				jmocha.tbl_attitude_modappl_history 
+			where 
+				COMPANY_ID = #companyId#
+			and 
+				TENANT_ID = #tenantId#
+			and
+				ATTITUDE_ID = #attModId#
+		]]>
+	</select>
 </sqlMap>

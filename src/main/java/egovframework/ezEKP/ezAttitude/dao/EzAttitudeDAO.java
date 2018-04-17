@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
@@ -192,5 +193,20 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	
 	public void updateAttitude(Map<String, Object> map) throws Exception {
 		update("ezAttitude.updateAttitude", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<AttitudeAuthorVO> getAttitudeAuthList(Map<String, Object> map) {
+		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getAttitudeAuthList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void deleteAttitudeAuth(Map<String, Object> map) {
+		delete("ezAttitudeAdminDAO.deleteAttitudeAuth", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<AttitudeApplicationVO> attModGetHistory(Map<String, Object> map) {
+		return (List<AttitudeApplicationVO>) list("ezAttitudeDAO.attModGetHistory", map);
 	}
 }

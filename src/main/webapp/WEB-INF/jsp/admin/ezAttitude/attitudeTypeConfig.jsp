@@ -12,6 +12,7 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
 	    <script type="text/javascript">
 	    	var adminCompany = "${adminCompany}";
 	    
@@ -39,19 +40,23 @@
 	            		useSelect(result);
 	            	},
 	            	error : function() {
-	            		 //휴가유형이 없습니다 는 멘트를 출력시키자.****************************************
+	            		alert("리스트를 가져오는 도중 에러 발생");
 	            	}
 	            });
 	        }
 	        
 	        function listSet(result) {
                 var html = "";
-                for (var i = 0; i < result.length; i++) {
-                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='cursor: pointer;'>";
-                    html += "<td style='width:35%;color:gray;'>" + result[i].typeName + "</td>";
-                    html += "<td style='width:45%;color:gray;'><input type='radio' name='useRadio"+ i +"' value='1' /> 사용 <input type='radio' name='useRadio"+ i +"' value='0' />사용안함</td>";
-                    html += "<td style='width:20%;color:gray;'><img id='icon' src='"+ result[i].imgPath +"' width='16px;' height='16px;' alt='' border='0'></td>";
-                    html += "</tr>";
+                if (result.length != null && result.lenth != 0) {
+	                for (var i = 0; i < result.length; i++) {
+	                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='cursor: pointer;'>";
+	                    html += "<td style='width:35%;color:gray;'>" + result[i].typeName + "</td>";
+	                    html += "<td style='width:45%;color:gray;'><input type='radio' name='useRadio"+ i +"' value='1' /> 사용 <input type='radio' name='useRadio"+ i +"' value='0' />사용안함</td>";
+	                    html += "<td style='width:20%;color:gray;'><img id='icon' src='"+ result[i].imgPath +"' width='16px;' height='16px;' alt='' border='0'></td>";
+	                    html += "</tr>";
+	                }
+                } else {
+    	    		html = "<tr><td colspan='3' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
                 }
                 $("#contentlist table.mainlist").html(html);
 	        }
@@ -100,12 +105,12 @@
 	            if (CrossYN()) {
 	            	saveType_dialogArguments[0] = $("#ListCompany").val();
 // 	            	saveType_dialogArguments[1] = save_type_Complete;
-                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", GetOpenWindowfeature(800, 520));
+                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=540px, height=185px', GetOpenWindowfeature(800, 520));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
                 	rtnValue = window.showModalDialog("/admin/ezAttitude/addAttitudeType.do", $("#ListCompany").val(),
-                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+                        "dialogHeight:185px;dialogwidth:540px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
@@ -127,12 +132,18 @@
 	<body class="mainbody">
 	    <h1><spring:message code='ezAttitude.t12' /></h1>
 		<div id="mainmenu">
-			<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
-				<c:forEach var="item" items="${list}">
-				<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-	      	</select>
+			<ul>
+	        	<li style="background: none;">
+				<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
+				</li>
+				<li>
+				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+					<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+					</c:forEach>
+	      		</select>
+	      		</li>
+	      	</ul>
 	      	<ul>
 	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.t33' /></span></li>
 	      		<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
@@ -153,11 +164,11 @@
                         </table>
                         <div id="contentlist" name="contentlist" style="height: 400px; overflow-y: auto;">
                             <table class="mainlist" style="width: 100%;">
-<!--                                 <tr> -->
-<!--                                     <td style="text-align: center;"> -->
-<!--                                         <img src="/images/email/progress_img.gif" /> -->
-<!--                                     </td> -->
-<!--                                 </tr> -->
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <img src="/images/email/progress_img.gif" />
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                     </div>

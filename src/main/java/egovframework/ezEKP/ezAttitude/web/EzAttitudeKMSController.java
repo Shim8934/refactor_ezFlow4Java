@@ -242,7 +242,7 @@ public class EzAttitudeKMSController {
 	/**
 	 * 근태 수정 신청 현황
 	 */
-	@RequestMapping(value="/admin/ezAttitude/attModAppList.do")
+	@RequestMapping(value="/ezAttitude/manageAttModAppList.do")
 	public String adminGetAttModAppList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=false)String pageNum,
 			@RequestParam(required=false)String apprUserName,
@@ -264,7 +264,7 @@ public class EzAttitudeKMSController {
 		if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
-		
+        
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
@@ -712,6 +712,9 @@ public class EzAttitudeKMSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
@@ -977,7 +980,7 @@ public class EzAttitudeKMSController {
 	}
 	
 	/**
-	 * 개인근태현황 main
+	 * 부서근태현황 main
 	 */
 	@RequestMapping(value = "/ezAttitude/attitudeDeptMain.do")
 	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -997,5 +1000,54 @@ public class EzAttitudeKMSController {
 		
 		LOGGER.debug("/ezAttitude/attitudeUserMain ended");
 		return "/ezAttitude/attitudeUserMain";
+	}
+	
+	@RequestMapping(value="/ezAttitude/getAttHistory.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONArray getAttHistory(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
+		@RequestParam(required=true)String attModId) throws Exception {
+				
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/modifyattitude/" + attModId + "/history";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("offset", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray data = new JSONArray();
+		
+		if(status.equals("ok")){
+			data = (JSONArray) resultBody.get("data");
+		}
+		
+		return data;
 	}
 }
