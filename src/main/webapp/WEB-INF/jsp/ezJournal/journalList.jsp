@@ -32,7 +32,7 @@
 				</c:if>
 				<!-- 취합여부아이콘 -->
 					<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center; padding: 0px 3px;" class="h5_center">
-						<img src="/images/ImgIcon/icon-flag.gif" style="vertical-align: middle;">
+						<img src="/images/ImgIcon/addon.png" style="vertical-align: middle;">
 					</th>
 					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center; padding: 0px 3px;" class="h5_center">
 						<img src="/images/newAttach.gif" style="vertical-align: middle;">
@@ -107,12 +107,12 @@
 					<c:choose>
 						<c:when test="${journal.isSum eq 'Y'}">
 							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  padding: 0px 3px;">
-								<img src="/images/ImgIcon/icon-flag.gif" style="vertical-align: middle;">
+								<img src="/images/ImgIcon/addon.png" style="vertical-align: middle;">
 							</td>
 						</c:when>
 						<c:otherwise>
 							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  padding: 0px 3px;">
-								<img src="/images/ImgIcon/view-flag.gif" style="vertical-align: middle;">
+								<img src="/images/ImgIcon/addoff.png" style="vertical-align: middle;">
 							</td>
 						</c:otherwise>
 					</c:choose>
