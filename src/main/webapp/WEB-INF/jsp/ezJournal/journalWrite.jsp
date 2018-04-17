@@ -211,16 +211,22 @@
     			var total = $(selReceiver).length;
 	    		$.each(selReceiver, function(index, item) {
 					if (index == total - 1) {
-						strReceiver += item.userName;	
+						strReceiver += '<span style="cursor:pointer;" onclick=OpenUserInfo("'+item.userId+'");>'+item.userName+'</span>';
 						strReceiverID += item.userId;
 					} else {
-						strReceiver += item.userName + ", ";
+						strReceiver += '<span style="cursor:pointer;" onclick=OpenUserInfo("'+item.userId+'");>'+item.userName+', </span>';
 						strReceiverID += item.userId + ", ";
 					}
 	    		});
 	    		$("#receiverlist").html(strReceiver);
 	    		$("#receiverID").html(strReceiverID);
 	    	}
+			
+	    	 //수신자 정보창
+		    function OpenUserInfo(pUserID) {
+		        GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
+		    }
+			
 	     	
 	    	window.onload = function () {
 	    		
