@@ -19,16 +19,16 @@ public class ProjectGroupVO {
     private Long upperGroupId;
 
     // 계획 시작 일 
-    private Date planStartDate;
+    private String planStartDate;
 
     // 계획 종료 일 
-    private Date planEndDate;
+    private String planEndDate;
 
     // 실제 시작 일 
-    private Date realStartDate;
+    private String realStartDate;
 
     // 실제 종료 일 
-    private Date realEndDate;
+    private String realEndDate;
 
     // 실제 진행률 
     private Float realProgress;
@@ -58,7 +58,7 @@ public class ProjectGroupVO {
     private String creatorId;
 
     // 생성 일 
-    private Date createDate;
+    private String createDate;
 
     // 생성자 명 
     private String creatorName;
@@ -128,38 +128,6 @@ public class ProjectGroupVO {
 
     public void setUpperGroupId(Long upperGroupId) {
         this.upperGroupId = upperGroupId;
-    }
-
-    public Date getPlanStartDate() {
-        return planStartDate;
-    }
-
-    public void setPlanStartDate(Date planStartDate) {
-        this.planStartDate = planStartDate;
-    }
-
-    public Date getPlanEndDate() {
-        return planEndDate;
-    }
-
-    public void setPlanEndDate(Date planEndDate) {
-        this.planEndDate = planEndDate;
-    }
-
-    public Date getRealStartDate() {
-        return realStartDate;
-    }
-
-    public void setRealStartDate(Date realStartDate) {
-        this.realStartDate = realStartDate;
-    }
-
-    public Date getRealEndDate() {
-        return realEndDate;
-    }
-
-    public void setRealEndDate(Date realEndDate) {
-        this.realEndDate = realEndDate;
     }
 
     public Float getRealProgress() {
@@ -232,14 +200,6 @@ public class ProjectGroupVO {
 
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
     }
 
     public String getCreatorName() {
@@ -321,5 +281,45 @@ public class ProjectGroupVO {
     public void setRestDueday(int restDueday) {
         this.restDueday = restDueday;
     }
+
+	public String getPlanStartDate() {
+		return planStartDate;
+	}
+
+	public void setPlanStartDate(String planStartDate) {
+		this.planStartDate = planStartDate;
+	}
+
+	public String getPlanEndDate() {
+		return planEndDate;
+	}
+
+	public void setPlanEndDate(String planEndDate) {
+		this.planEndDate = planEndDate;
+	}
+
+	public String getRealStartDate() {
+		return realStartDate;
+	}
+
+	public void setRealStartDate(String realStartDate) {
+		this.realStartDate = realStartDate;
+	}
+
+	public String getRealEndDate() {
+		return realEndDate;
+	}
+
+	public void setRealEndDate(String realEndDate) {
+		this.realEndDate = realEndDate;
+	}
+
+	public String getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
+	}
 
 }

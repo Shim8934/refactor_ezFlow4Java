@@ -23,16 +23,16 @@ public class ProjectTaskVO {
     private String status;
 
     // 계획 시작 일 
-    private Date planStartDate;
+    private String planStartDate;
 
     // 계획 종료 일 
-    private Date planEndDate;
+    private String planEndDate;
 
     // 실제 시작 일 
-    private Date realStartDate;
+    private String realStartDate;
 
     // 실제 종료 일 
-    private Date realEndDate;
+    private String realEndDate;
 
     // 실제 진행률 
     private Float realProgress;
@@ -65,7 +65,7 @@ public class ProjectTaskVO {
     private Long writerId;
 
     // 게시 일 
-    private Date writeDate;
+    private String writeDate;
 
     // 게시자 명 
     private String writerName;
@@ -96,6 +96,12 @@ public class ProjectTaskVO {
 
     // 업무관리 업무 아이디 
     private Long linkTaskId;
+    
+    // 선행작업
+    private String pretask;
+    
+    // 선행업무
+    private String pregroup;
 
     // 삭제 상태 
     private int delStatus;
@@ -146,38 +152,6 @@ public class ProjectTaskVO {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Date getPlanStartDate() {
-        return planStartDate;
-    }
-
-    public void setPlanStartDate(Date planStartDate) {
-        this.planStartDate = planStartDate;
-    }
-
-    public Date getPlanEndDate() {
-        return planEndDate;
-    }
-
-    public void setPlanEndDate(Date planEndDate) {
-        this.planEndDate = planEndDate;
-    }
-
-    public Date getRealStartDate() {
-        return realStartDate;
-    }
-
-    public void setRealStartDate(Date realStartDate) {
-        this.realStartDate = realStartDate;
-    }
-
-    public Date getRealEndDate() {
-        return realEndDate;
-    }
-
-    public void setRealEndDate(Date realEndDate) {
-        this.realEndDate = realEndDate;
     }
 
     public Float getRealProgress() {
@@ -258,14 +232,6 @@ public class ProjectTaskVO {
 
     public void setWriterId(Long writerId) {
         this.writerId = writerId;
-    }
-
-    public Date getWriteDate() {
-        return writeDate;
-    }
-
-    public void setWriteDate(Date writeDate) {
-        this.writeDate = writeDate;
     }
 
     public String getWriterName() {
@@ -355,4 +321,61 @@ public class ProjectTaskVO {
     public void setDelStatus(int delStatus) {
         this.delStatus = delStatus;
     }
+
+	public String getPlanStartDate() {
+		return planStartDate;
+	}
+
+	public void setPlanStartDate(String planStartDate) {
+		this.planStartDate = planStartDate;
+	}
+
+	public String getPlanEndDate() {
+		return planEndDate;
+	}
+
+	public void setPlanEndDate(String planEndDate) {
+		this.planEndDate = planEndDate;
+	}
+
+	public String getRealStartDate() {
+		return realStartDate;
+	}
+
+	public void setRealStartDate(String realStartDate) {
+		this.realStartDate = realStartDate;
+	}
+
+	public String getRealEndDate() {
+		return realEndDate;
+	}
+
+	public void setRealEndDate(String realEndDate) {
+		this.realEndDate = realEndDate;
+	}
+
+	public String getWriteDate() {
+		return writeDate;
+	}
+
+	public void setWriteDate(String writeDate) {
+		this.writeDate = writeDate;
+	}
+
+	public String getPretask() {
+		return pretask;
+	}
+
+	public void setPretask(String pretask) {
+		this.pretask = pretask;
+	}
+
+	public String getPregroup() {
+		return pregroup;
+	}
+
+	public void setPregroup(String pregroup) {
+		this.pregroup = pregroup;
+	}
+    
 }
