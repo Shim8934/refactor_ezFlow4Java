@@ -3327,6 +3327,40 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		logger.debug("setAsRead ended");
 	}
+	/**
+	 * 게시판 읽음표시 실행//새게시물 전용
+	 */
+	@RequestMapping(value="/ezBoard/setReadNew.do")
+	public void setAsReadNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginVO userInfo) throws Exception {
+		logger.debug("setAsReadNew started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pBoardID = "";
+		String pBoardIDList = "";
+		String pItemIDList = "";
+		
+		if (request.getParameter("boardID") != null) {
+			pBoardID = request.getParameter("boardID");
+		}
+		if (request.getParameter("pBoardIDList") != null) {
+			pBoardIDList = request.getParameter("pBoardIDList");
+		}
+		
+		if (request.getParameter("itemIDList") != null) {
+			pItemIDList = request.getParameter("itemIDList");
+		}
+		
+		String[] boardIDs = pBoardIDList.split(";");
+		String[] itemIDs = pItemIDList.split(";");
+		
+		for (int k = 0; k < itemIDs.length; k++) {
+			ezBoardService.setAsRead(userInfo, pBoardID, itemIDs[k]);
+			ezBoardService.setAsReadNew(userInfo, boardIDs[k], itemIDs[k]);
+		}
+
+		logger.debug("setAsReadNew ended");
+	}
 	
 	/**
 	 * 게시판 새게시물,임시게시물게시하기 호출 Method

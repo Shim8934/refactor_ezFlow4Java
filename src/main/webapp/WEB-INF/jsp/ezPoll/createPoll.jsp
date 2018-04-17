@@ -692,7 +692,12 @@
     			$('#hidResultFirst').val("1");
     		}
     		else {
-    			$('#hidResultFirst').val("0");
+    			if($("#seeResultCreator").is(":checked")){
+	    			$('#hidResultFirst').val("2");
+    			}
+    			else{
+	    			$('#hidResultFirst').val("0");
+    			}
     		} 
     		
 	        if ($('#multipleCheck').is(':checked')) {
@@ -1087,6 +1092,16 @@
 			}
 	  	}
 	  	
+	  	function seeResultOptAdd(){
+	  		if($("#seeResultCreatorDiv").css("display") == "none"){
+		  		$("#seeResultCreatorDiv").css("display", "inline-block");	  			
+	  		}
+	  		else{
+		  		$("#seeResultCreatorDiv").css("display", "none");	  			
+		  		$("#seeResultCreator").prop("checked", false);
+	  		}
+	  	}
+	  	
 	</script>
 </head>
 <xmp id="sigBody3" style="display: none;">${targetPath}</xmp>
@@ -1183,8 +1198,12 @@
 					</div>
 
 					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
-						<input id="seeResultFirst" type="checkbox" checked> 
+						<input id="seeResultFirst" type="checkbox" onchange="seeResultOptAdd()" checked> 
 						<span><spring:message code="ezPoll.t157"/></span>
+						<div id="seeResultCreatorDiv" style="display:none;">
+							<input id="seeResultCreator" type="checkbox">
+							<span><spring:message code="ezPoll.hdp07"/></span>
+						</div>
 					</div>
 					
 					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">

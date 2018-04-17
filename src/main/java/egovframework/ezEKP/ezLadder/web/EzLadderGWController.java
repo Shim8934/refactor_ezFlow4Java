@@ -125,6 +125,9 @@ public class EzLadderGWController {
 					list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode, sort, sortFlag);
 				}
 			} else {							// 검색
+				if(mode.equals("pre")) {
+					listNumPerPage = 20;
+				}
 				List<String> allData = new ArrayList<String>();
 				allData.add(searchSelect);
 				allData.add(searchInput);
@@ -133,7 +136,7 @@ public class EzLadderGWController {
 				pages = paging(page, totalLadder, listNumPerPage);
 				list = ezLadderService.searchLadderList(vo, allData, pages[1], pages[2], sort, sortFlag);
 			}
-		
+			 
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", list);
@@ -487,8 +490,8 @@ public class EzLadderGWController {
 		
 		int totalLadder = 0;
 		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
-		int listNumPerPage = 10;
-		
+		int listNumPerPage = 20;
+		System.out.println("listNumPerPage ==========================" + listNumPerPage);
 		try {
 			List<LadderVO> list;
 			ezLadderService.changePreLadderList(ladOrderVO);
@@ -501,7 +504,7 @@ public class EzLadderGWController {
 				allData.add(searchSelect);
 				allData.add(searchInput);
 				allData.add(mode);
-				listNumPerPage = 20;
+			
 				totalLadder = ezLadderService.searchLadderCount(vo, allData);
 				pages = paging(page, totalLadder, listNumPerPage);
 				list = ezLadderService.searchLadderList(vo, allData, pages[1], pages[2], "date", "desc");

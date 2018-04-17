@@ -20,7 +20,7 @@
 			var pageChange = 1;
 			var totalPage = ${totalPage};
 			var totalLadder = ${totalLadder};
-			var blockSize = 7;
+			var blockSize = 10;
 			var mode = "";
 			var modeCheck = "${mode}";
 			var searchSelect = "${searchSelect}";
