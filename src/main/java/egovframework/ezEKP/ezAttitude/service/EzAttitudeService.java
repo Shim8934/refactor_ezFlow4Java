@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
@@ -117,4 +118,8 @@ public interface EzAttitudeService {
 	public String getAttitudeCount2(int tenantId, String companyId, String typeId, String userIdList, String startDate, String endDate, String offset) throws Exception;
 	
 	public void changeUsersModifyAtt(String companyId, int tenantId, String[] ids, String changeStatus) throws Exception;
+
+	public List<AttitudeAuthorVO> getAttitudeAuthList(int tenantId,	String companyId) throws Exception;
+
+	public void deleteAttitudeAuth(String selectUserId, int tenantId, String companyId) throws Exception;
 }

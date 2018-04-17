@@ -18,6 +18,7 @@ import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO;
@@ -925,5 +926,29 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		//수정이 완료 되면 히스토리 기록
 		ezAttitudeDAO.addUsersModifyAttHistory(map);
+	}
+
+	@Override
+	public List<AttitudeAuthorVO> getAttitudeAuthList(int tenantId,
+			String companyId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		return ezAttitudeDAO.getAttitudeAuthList(map);
+	}
+
+	@Override
+	public void deleteAttitudeAuth(String selectUserId, int tenantId,
+			String companyId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("selectUserId", selectUserId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezAttitudeDAO.deleteAttitudeAuth(map);
+		
 	}
 }

@@ -12,6 +12,7 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
 	    <script type="text/javascript">
 	    	var adminCompany = "${adminCompany}";
 	    
@@ -39,19 +40,23 @@
 	            		useSelect(result);
 	            	},
 	            	error : function() {
-	            		 //휴가유형이 없습니다 는 멘트를 출력시키자.****************************************
+	            		alert("리스트를 가져오는 도중 에러 발생");
 	            	}
 	            });
 	        }
 	        
 	        function listSet(result) {
                 var html = "";
-                for (var i = 0; i < result.length; i++) {
-                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='cursor: pointer;'>";
-                    html += "<td style='width:35%;color:gray;'>" + result[i].typeName + "</td>";
-                    html += "<td style='width:45%;color:gray;'><input type='radio' name='useRadio"+ i +"' value='1' /> 사용 <input type='radio' name='useRadio"+ i +"' value='0' />사용안함</td>";
-                    html += "<td style='width:20%;color:gray;'><img id='icon' src='"+ result[i].imgPath +"' width='16px;' height='16px;' alt='' border='0'></td>";
-                    html += "</tr>";
+                if (result.length != null && result.lenth != 0) {
+	                for (var i = 0; i < result.length; i++) {
+	                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='cursor: pointer;'>";
+	                    html += "<td style='width:35%;color:gray;'>" + result[i].typeName + "</td>";
+	                    html += "<td style='width:45%;color:gray;'><input type='radio' name='useRadio"+ i +"' value='1' /> 사용 <input type='radio' name='useRadio"+ i +"' value='0' />사용안함</td>";
+	                    html += "<td style='width:20%;color:gray;'><img id='icon' src='"+ result[i].imgPath +"' width='16px;' height='16px;' alt='' border='0'></td>";
+	                    html += "</tr>";
+	                }
+                } else {
+    	    		html = "<tr><td colspan='3' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
                 }
                 $("#contentlist table.mainlist").html(html);
 	        }

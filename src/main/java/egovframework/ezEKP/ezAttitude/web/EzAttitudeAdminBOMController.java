@@ -1632,9 +1632,16 @@ public class EzAttitudeAdminBOMController {
 		return "admin/ezAttitude/attitudeAuthorManage";
 	}
 	
+	/**
+	 * 관리자 근태권한관리 리스트 조회하는 함수
+	 * @param loginCookie
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthList.do")
 	@ResponseBody
-	public JSONObject getAttitudeAuthList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public JSONArray getAttitudeAuthList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/admin/ezAttitude/getAttitudeAuthList started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -1642,7 +1649,7 @@ public class EzAttitudeAdminBOMController {
 		String companyId = request.getParameter("companyId");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/";
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitude-auth";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1650,7 +1657,6 @@ public class EzAttitudeAdminBOMController {
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", companyId)
 				.queryParam("userId", userInfo.getId());
 		
 		RestTemplate rest = new RestTemplate();
@@ -1664,14 +1670,50 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("status : " + status);
 		
-		JSONObject jObject = new JSONObject();
+		JSONArray jArray = new JSONArray();
 		
 		if(status.equals("ok")){
-			jObject = (JSONObject) resultBody.get("data");
+			jArray = (JSONArray) resultBody.get("data");
 		}
 		
 		LOGGER.debug("/admin/ezAttitude/getAttitudeAuthList ended");
 		
-		return jObject;
+		return jArray;
 	} 
+	
+	@RequestMapping(value = "/admin/ezAttitude/deleteAttitudeAuth.do")
+	@ResponseBody
+	public void deleteAttitudeAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/admin/ezAttitude/deleteAttitudeAuth started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String selectUserId = request.getParameter("selectUserId");
+		String companyId = request.getParameter("companyId");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitude-auth";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("selectUserId", selectUserId)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		LOGGER.debug("status : " + status);
+		
+		LOGGER.debug("/admin/ezAttitude/deleteAttitudeAuth ended");	
+	}
 }
