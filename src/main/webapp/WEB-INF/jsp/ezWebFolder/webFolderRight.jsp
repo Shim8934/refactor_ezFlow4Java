@@ -11,14 +11,9 @@
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
-	<!-- date Picker -->
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-	<script type="text/javascript" src="/js/ezWebFolder/bnk.js"                         ></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+	<!-- date Picker -->
     <script type="text/javascript">
     	var file 		 = new Array();
 		var primary      = "<c:out value='${primary}'/>";
@@ -78,7 +73,7 @@
 			});
 			
 			pEnd= pStart + blockSize;
-			getFileList(folderId);
+// 			getFileList(folderId);
 			var divList          = document.getElementById("dragDropArea");
 			var reheight         = document.documentElement.clientHeight - 220;
 			divList.style.height = reheight + "px";
@@ -921,5 +916,12 @@
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
+	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+	<script type="text/javascript" src="/js/ezWebFolder/bnk.js"                         ></script>
+	
+	
 </body>
 </html>

@@ -91,13 +91,15 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			String searchPageCount, int pStart , int pEnd , String offset , String primary) {
 		
 		String parentId = "";
-		
+		LOGGER.debug("getFileToTalCount start ");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId",folderId);
 		map.put("tenantId",tenantId);
 		map.put("comId",companyId);
 		String flag = "0";
+		LOGGER.debug("getFolderDetail start ");
 		FolderVO detailFld = ezWebFolderDAO_y.getFolderDetail(map);
+		LOGGER.debug("getFolderDetail End ");
 		parentId = detailFld.getFolderUpper();
 		String folderPath = detailFld.getFolderPath();
 		map.put("userId", userId);
@@ -124,11 +126,17 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		try {
 			map.put("flag", flag);
 			if (flag.equals("1")) {
+				LOGGER.debug("searchFileToTalCount start ");
 				fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount(map);
+				LOGGER.debug("searchFileToTalCount end ");
 			}else {
+				LOGGER.debug("getFileTotalCount start ");
 				fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
+				LOGGER.debug("getFileTotalCount end ");
 			}
+			LOGGER.debug("getFldTotalCount start ");
 			fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount(map);
+			LOGGER.debug("getFldTotalCount end ");
 			
 		} catch (Exception e) {
 			if (fileTotalCnt < 0) {
@@ -553,7 +561,6 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 
 	@Override
 	public int getUsrListCount(int tenantId, String userId) {
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantId", tenantId);
@@ -566,11 +573,13 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 
 	@Override
 	public void insertEnv(String userId, int tenantId, int listCount) {
+		LOGGER.debug("insertEnv Start");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("listCount", listCount);
 		ezWebFolderDAO_y.insertEnv(map);
+		LOGGER.debug("insertEnv End");
 	}
 	
 }

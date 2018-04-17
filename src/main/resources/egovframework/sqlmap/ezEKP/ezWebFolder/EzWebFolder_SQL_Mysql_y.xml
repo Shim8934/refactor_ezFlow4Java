@@ -223,7 +223,10 @@
 				from tbl_webfolder_file file inner join (
 					select *
 					from tbl_webfolder_folder  
-					where folder_id = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path) as folder 
+					where 	folder_id = #folderId# 
+						and tenant_id = #tenantId# 
+						and folder_type = #folderType# 
+					group by folder_path) as folder 
 						on folder.folder_id  = file.folder_id
 				inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = #tenantId#
 				where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'  
@@ -280,12 +283,14 @@
 	   		<isNotEqual property="folderType" compareValue="C">
 				<![CDATA[
 					FROM tbl_webfolder_file as file inner join (
-					select * from tbl_webfolder_folder 
-						where folder_path like (
-							select concat(FOLDER_PATH,'%') 
-							from tbl_webfolder_folder 
-							where FOLDER_ID = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path )
-						and tenant_id = #tenantId# and folder_type = #folderType#) as folder on file.folder_id = folder.folder_id and folder.tenant_id = file.tenant_id
+					select 
+						* 
+					from 
+						tbl_webfolder_folder 
+					where 
+							folder_path like concat(#folderPath#,'%') 
+						and tenant_id = #tenantId# 
+						and folder_type = #folderType#) as folder on file.folder_id = folder.folder_id and folder.tenant_id = file.tenant_id
 					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
 				]]>
@@ -371,7 +376,7 @@
 			(
 		]]>
 		<![CDATA[
-   		SELECT DISTINCT
+   		SELECT 
 				type.TYPE_ICON    ,
 				folder.FOLDER_PATH	  as FOLDER_PATH,
 				folder.FOLDER_NAME1    as FOLDER_NAME1,
@@ -466,21 +471,24 @@
 	   		<isNotEqual property="folderType" compareValue="C">
 				<![CDATA[
 					FROM tbl_webfolder_file as file inner join (
-					select * from tbl_webfolder_folder 
-						where folder_path like (
-							select concat(FOLDER_PATH,'%') 
-							from tbl_webfolder_folder 
-							where FOLDER_ID = #folderId# and tenant_id = #tenantId#  group by folder_path )
-						and tenant_id = #tenantId# and folder_type = #folderType#) as folder on file.folder_id = folder.folder_id
+					select 
+						* 
+					from 
+						tbl_webfolder_folder 
+					where 
+							folder_path like concat(#folderPath#,'%') 
+						and tenant_id = #tenantId# 
+						and folder_type = #folderType#
+					) as folder on file.folder_id = folder.folder_id
 					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
 				]]>
 			</isNotEqual>
 		</isEqual>
 		<isNotEqual property="parentId" compareValue="root" >
-			<![CDATA[			
+			<![CDATA[
 				union all 
-					select DISTINCT
+					select 
 						type.TYPE_ICON		AS TYPE_ICON    ,     
 						folder.FOLDER_PATH  AS FOLDER_PATH  ,     
 						folder.FOLDER_NAME1 AS FOLDER_NAME1 ,    
@@ -524,7 +532,8 @@
 		                and 
 		                	folder.USE_STATUS = 'Y'
 		                and 
-		                	folder.company_id = #comId#					
+		                	folder.company_id = #comId#		
+		            group by FILE_ID		
 				      
 			]]>
 		</isNotEqual>   
@@ -569,7 +578,7 @@
 	<select id="EzWebFolderDAO_y.getFldToTalCount" resultClass="Integer" parameterClass="Map">   
 		<isNotEqual property="parentId" compareValue="root" >
 			<![CDATA[
-	           	SELECT distinct count(*)
+	           	SELECT count(folder.folder_id)
 	            from 
 		            tbl_webfolder_filetype AS type inner JOIN  tbl_webfolder_folder as folder ON type.TYPE_NAME = 'folder'
 	            where 
@@ -627,6 +636,7 @@
 			where 1=0
 		</isEqual>
 		<![CDATA[
+			group by folder.folder_id
 			ORDER BY CREATE_DATE desc
 		]]>
 	</select>
@@ -635,47 +645,34 @@
 		SELECT distinct count(*)
 		from 
 			(
-		]]>
+		]]>       
 		<![CDATA[
    		SELECT DISTINCT
-				type.TYPE_ICON    ,
-				folder.FOLDER_PATH	  as FOLDER_PATH,
 				folder.FOLDER_NAME1    as FOLDER_NAME1,
 				file.FILE_ID 	  ,
 				file.FILE_NAME 	  ,
-				file.FILE_PATH	  ,
-				file.FILE_SIZE	  ,
-				file.TYPE_ID	  ,
-				file.DOWN_COUNT	  ,
 				file.FILE_EXT	  AS FILE_EXT,
 				file.FOLDER_ID	  ,
 				file.USE_STATUS   ,
-				file.CREATE_ID	  ,
 				if ( #primary# = '1' , file.CREATE_NAME1, file.CREATE_NAME2) as CREATE_NAME1,
 				DATE_ADD(file.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				file.UPDATE_ID	  ,
-				DATE_ADD(file.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,       	 
 				file.TENANT_ID    ,
-				if (EXISTS (
-					select *
-					from tbl_webfolder_favor fav 
-					where fav.USER_ID = #userId# and fav.tenant_id = #tenantId# and file.file_id = fav.target_id 
-						and fav.target_type = 'F'),'1','0')as FAVORITE_STATUS,
-				if (EXISTS (
-					select *
-					from tbl_webfolder_share sh
-					where sh.USER_ID = #userId# and sh.tenant_id = #tenantId# and file.file_id = sh.FOLDERFILE_ID 
-						and sh.folderfile_type = 'F'),'1','0')as FILESHARE_STATUS ,
-				if (file.FILE_EXT = 'folder',0,1) as FOLDER_SORT,
-				type.TYPE_NAME 	AS filetype_name    		
+				type.TYPE_NAME 	AS filetype_name    	   		
 		]]>	
         <isNotEqual property="parentId" compareValue="root" >
 			<![CDATA[
 				from tbl_webfolder_file file inner join (
-					select *
-					from tbl_webfolder_folder  
-					where folder_path like concat(#folderPath#,'%') and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path) 
+					select 
+						* 
+					from 
+						tbl_webfolder_folder 
+					where 
+							folder_path like concat(#folderPath#,'%') 
+						and tenant_id = #tenantId# 
+						and folder_type = #folderType#
+					) 
 						as folder on folder.folder_id  = file.folder_id
+						
 				inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 				where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
 				
@@ -693,7 +690,8 @@
 				
 					(
 						select 
-							*
+							folder_id,
+							tenant_id
 						from 
 							tbl_webfolder_folderuser  
 						where 
@@ -731,12 +729,15 @@
 	   		<isNotEqual property="folderType" compareValue="C">
 				<![CDATA[
 					FROM tbl_webfolder_file as file inner join (
-					select * from tbl_webfolder_folder 
-						where folder_path like (
-							select concat(FOLDER_PATH,'%') 
-							from tbl_webfolder_folder 
-							where FOLDER_ID = #folderId# and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path )
-						and tenant_id = #tenantId# and folder_type = #folderType#) as folder on file.folder_id = folder.folder_id
+						select 
+							* 
+						from 
+							tbl_webfolder_folder 
+						where 
+								folder_path like concat(#folderPath#,'%') 
+							and tenant_id = #tenantId# 
+							and folder_type = #folderType#
+						) as folder on file.folder_id = folder.folder_id
 					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
 				]]>
@@ -773,14 +774,11 @@
 				(DATE_FORMAT(t.CREATE_DATE, '%Y-%m-%d') >= #searchStartDate# AND DATE_FORMAT(t.CREATE_DATE, '%Y-%m-%d')<= #searchEndDate#)
 			]]>
 		</isNotEqual>	
-			<![CDATA[
-				group by t.FILE_ID
-			]]>
 		
 	</select>
 	<select id="EzWebFolderDAO_y.getFileToTalCount" resultClass="Integer" parameterClass="Map">   
    		<![CDATA[
-   		select distinct count(*) from ( 
+   		select count(*) from ( 
    			SELECT file.file_id
 		]]>	
 		<isNotEqual property="parentId" compareValue="root" >
@@ -806,7 +804,8 @@
 				
 					(
 						select 
-							*
+							folder_id,
+							tenant_id
 						from 
 							tbl_webfolder_folderuser  
 						where 
@@ -846,12 +845,14 @@
 	   		<isNotEqual property="folderType" compareValue="C">
 				<![CDATA[
 					FROM tbl_webfolder_file as file inner join (
-					select * from tbl_webfolder_folder 
-						where folder_path like (
-							select concat(FOLDER_PATH,'%') 
-							from tbl_webfolder_folder 
-							where FOLDER_ID = #folderId# and tenant_id = #tenantId#  group by folder_path )
-						and tenant_id = #tenantId#) as t on file.folder_id = t.folder_id
+					select 
+						* 
+					from 
+						tbl_webfolder_folder 
+					where 
+							folder_path like concat(#folderPath#,'%') 
+						and tenant_id = #tenantId# 
+						and folder_type = #folderType#) as t on file.folder_id = t.folder_id
 					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
 					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
 				]]>
@@ -864,7 +865,6 @@
 		</isNotEqual>
 		<![CDATA[
 			group by file.file_id)as totalCount
-			
 		]]>
 	</select>
 	
@@ -955,7 +955,8 @@
 	
 	<select id="EzWebFolderDAO_y.getFolderDetail" parameterClass="Map" resultMap="folderVO">
 		<![CDATA[
-			SELECT *
+			SELECT 
+				*
 			FROM TBL_WEBFOLDER_FOLDER
 			WHERE TENANT_ID = #tenantId# and COMPANY_ID = #comId# and FOLDER_ID = #folderId# 
 		]]>

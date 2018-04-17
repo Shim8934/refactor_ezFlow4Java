@@ -435,22 +435,20 @@ public class EzWebFolderGWController_y {
 			int pStart  =request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
 			int pEnd = listCount;
 			
-			LOGGER.debug("listCount : " + listCount + " currPage" + currPage+ " totalpages"+ totalpages + " pEnd" + pEnd );
-			LOGGER.debug("folderId : " + folderId + " folderType : " + folderType + " deptId : "+ deptId + "offset" + offset );
-			LOGGER.debug("pStart : " + pStart + " pEnd : " + pEnd);
+			if (usrListCnt != listCount) {
+				service.insertEnv(userId, tenantId, listCount);
+			}
 			
-			service.insertEnv(userId, tenantId, listCount);
-			
-			fileList = service.getFileList(folderId, folderType, userId, deptId, tenantId , comId,
-					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
-					searchPageCount, pStart, pEnd, offset, primary);
-			LOGGER.debug("fileListSize : " + fileList.size()+ "searchStartDate" +searchStartDate+"searchEndDate"+searchEndDate );
+			LOGGER.debug("listCount : " + listCount + ", currPage" + currPage+ ", totalpages"+ totalpages + ", pEnd" + pEnd );
+			LOGGER.debug("folderId : " + folderId + ", folderType : " + folderType + ", deptId : "+ deptId + ", offset" + offset );
+			LOGGER.debug("pStart : " + pStart + ", pEnd : " + pEnd);
 			
 			// fileCnt : 파일 개수 , fldCnt : 폴더 개수 , totalCount : 파일, 폴더 둘다 합한 개수 ( 페이징 하기 위해 필요 ) 
 			Map<String, Integer> cnt = service.getFileToTalCount(folderId,folderType,userId,deptId,tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset , primary);
-			LOGGER.debug("fileListSize : " + fileList.size()+ "searchStartDate" +searchStartDate+"searchEndDate"+searchEndDate );
+			
+			LOGGER.debug("fileListSize : " + cnt + ", searchStartDate" +searchStartDate+", searchEndDate"+searchEndDate );
 			
 			int fileCnt = cnt.get("fileTotalCnt");
 			int fldCnt  = cnt.get("fldTotalCnt");
@@ -461,6 +459,22 @@ public class EzWebFolderGWController_y {
 			} else {
 				totalpages = (totalCount/listCount)+1;
 			}
+			if ( currPage > totalpages ) {
+				currPage = totalpages;
+				pStart = (listCount*currPage )-listCount;
+				pEnd = listCount;
+			}else {
+				currPage = currPage;
+				pStart = (listCount*currPage )-listCount;
+				pEnd = listCount;
+			}
+			
+			
+			fileList = service.getFileList(folderId, folderType, userId, deptId, tenantId , comId,
+					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
+					searchPageCount, pStart, pEnd, offset, primary);
+			LOGGER.debug("fileListSize : " + fileList.size()+ ", searchStartDate : " +searchStartDate+", searchEndDate : "+searchEndDate );
+			
 			
 			FolderVO folder       = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			String folderPath     = folder.getFolderPath();
@@ -494,7 +508,6 @@ public class EzWebFolderGWController_y {
 						String file_path    = originalPath;
 						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
 						String[] fldPathArr = fldPath.split("\\|");
-						LOGGER.debug("FilePath: " + fldPath.toString());
 						
 						for (int i = rootPath.length; i < fldPathArr.length; i++) {
 							file_path += filePathMap.get(fldPathArr[i]) + "/";
