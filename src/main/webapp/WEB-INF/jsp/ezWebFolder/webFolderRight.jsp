@@ -412,7 +412,7 @@
 			
 			if (inputElmt.checked == true) {
 				inputElmt.checked = false;
-				trElmt.setAttribute("class", "bnkWebFolder");
+				trElmt.setAttribute("class", "bnkWebFolder2");
 			}
 			else {
 				inputElmt.checked = true;
@@ -428,23 +428,23 @@
 		}
 		
 		function getCheckAll(obj) {
-    		var listInputs = document.getElementsByClassName("checkBnk");
-    		
-    		if (obj.checked == true) {
-    			for (var i = 0; i < listInputs.length; i++) {
-	    			listInputs[i].checked = true;
-	    		}
-    			
-    			$('.bnkWebFolder').css('class', 'bnkWebFolder2');
-    		}
-    		else {
-    			for (var i = 0; i < listInputs.length; i++) {
-	    			listInputs[i].checked = false;
-	    		}
-    			$('.bnkWebFolder2').css('class', 'bnkWebFolder');
-    		}
+			var listInputs = document.getElementsByClassName("checkBnk");
+			
+			if (obj.checked == true) {
+				for (var i = 0; i < listInputs.length; i++) {
+					listInputs[i].checked = true;
+					var trElmt            = listInputs[i].parentElement.parentElement;
+					trElmt.setAttribute("class", "bnkWebFolder2");
+				}
+			}
+			else {
+				for (var i = 0; i < listInputs.length; i++) {
+					var trElmt            = listInputs[i].parentElement.parentElement;
+					listInputs[i].checked = false;
+					trElmt.setAttribute("class", "bnkWebFolder");
+				}
+			}
 		}
-		
 		function doLayerPopup(obj) {
 	        btn_PostDate_Clear();
 	        document.getElementById("searchExt").value = "";
