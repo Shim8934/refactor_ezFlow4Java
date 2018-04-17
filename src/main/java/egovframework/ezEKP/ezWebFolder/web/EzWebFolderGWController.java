@@ -1466,6 +1466,7 @@ public class EzWebFolderGWController {
 				totalRows                       = ezWebFolderService.getTotalFileCnt2(folder.getFolderPath(), searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, tenantId);
 				totalPages                      = (totalRows + pageSize - 1)/pageSize;
 				currPage                        = currPage > totalPages ? totalPages : currPage;
+				currPage                        = currPage == 0         ? 1          : currPage;
 				startPoint                      = (currPage - 1) * pageSize;
 				fileList                        = ezWebFolderService.getAllFiles(folder.getFolderPath(), originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
 				
@@ -1502,6 +1503,7 @@ public class EzWebFolderGWController {
 				totalRows  = ezWebFolderService.getTotalFileCnt(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, tenantId);
 				totalPages = (totalRows + pageSize - 1)/pageSize;
 				currPage   = currPage > totalPages ? totalPages : currPage;
+				currPage   = currPage == 0         ? 1          : currPage;
 				startPoint = (currPage - 1) * pageSize;
 				fileList   = ezWebFolderService.getAllFilesInFolder(folderId, originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
 			}
