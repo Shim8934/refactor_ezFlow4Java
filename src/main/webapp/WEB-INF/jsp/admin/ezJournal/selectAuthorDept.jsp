@@ -140,16 +140,18 @@
 	    </div>
        	<table>
             <tr>
-                <td class="box">
-                    <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+                <td class="box" style="width: 250px; height: 465px;">
+                    <div style="width: 100%; height: 100%; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
                 </td>
                 <td style="width: 30px; text-align: center;">                            
                       <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
                       <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept(targetDept)">
                  		</td>
-                <td class="listview" style="width: 250px; vertical-align: top;" id="lplistView">
-                	<table class="mainlist_free">
-					</table>
+                <td class="listview" style="width: 250px; height: 465px; vertical-align: top;" id="lplistView">
+                	<div style="width: 100%; height: 100%; overflow: auto;">
+	                	<table class="mainlist_free">
+						</table>
+					</div>
                 </td>    
             </tr>
         </table>

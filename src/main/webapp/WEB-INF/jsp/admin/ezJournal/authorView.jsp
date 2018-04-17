@@ -21,10 +21,10 @@
 	    	var userDeptName;
 	    
 	    	//사원 세팅
-	    	function setSelectedUser(userId,userName){
-	    		selectedUserName=userName;
+	    	function setSelectedUser(userId, userName){
+	    		selectedUserName = userName;
 	    		selectedUser = userId;
-	    		$("#txtuser").val(userName);
+	    		$("#txtuser").val(" " + userName);
 	    	} 
 	    	
 	    	//사원선택
@@ -54,7 +54,7 @@
 				var deptString;
 	    		for (var i = 0; i < deptNames.length; i++) {
 	    			if(i!=0){
-			    		deptString += " ,"+deptNames[i];
+			    		deptString += ", "+deptNames[i];
 	    			} else {
 	    				deptString=deptNames[i];
 	    			}

@@ -20,7 +20,7 @@
 		        receiverFavoriteName = $("#receiverFavoriteName").val().trim();
 		        
 		        if (receiverFavoriteName == "" || receiverFavoriteName == null) {
-	        		alert("<spring:message code='ezJournal.t91'/>");
+	        		alert("<spring:message code='ezJournal.t94'/>");
 		
 		        } else {
 		        	saveReceiverLine();

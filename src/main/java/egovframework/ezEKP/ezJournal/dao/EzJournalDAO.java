@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezJournal.dao;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -504,6 +502,16 @@ public class EzJournalDAO extends EgovAbstractDAO{
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	/**
+	 * 취합할 일지의 내용들 가져오기
+	 * @param param
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<JournalVO> selectSumJournalList(Map<String, Object> param) {
+		return (List<JournalVO>) list("selectSumJournalList",param);
 	}
 
 }

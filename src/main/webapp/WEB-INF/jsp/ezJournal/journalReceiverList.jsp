@@ -71,7 +71,8 @@
 	            </c:choose>
 	        </div>
 	        <div id='runtime' style="color:#666;padding-top:5px"></div>
-	        <c:if test="${paging.endPage>0 }">
+	        <c:choose>
+	        <c:when test="${paging.endPage>0 }">
 				<div id="tblPageRayer" style="width:470px; height:24px; margin:6px auto;">
 					<div class="pagenavi">   
 						<c:choose>
@@ -120,7 +121,21 @@
 						</c:choose>
 					</div>
 				</div>
-			</c:if>
+			</c:when>
+			<c:otherwise>
+			<div id="tblPageRayer" style="width:470px; height:24px; margin:6px auto;">
+				<div class="pagenavi">  
+					<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>
+					<span class="btnimg"><img src="/images/sub/btn_prev01.gif" width="16" height="16"></span>
+					<span class="ptxt"> <spring:message code='ezApproval.t931'/></span>  
+					<span class="on">1</span> 
+					<span class="ptxt"><spring:message code='ezApproval.t932'/></span>
+					<span class="btnimg"><img src="/images/sub/btn_next01.gif" width="16" height="16"></span>
+					<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" width="16" height="16"></span>
+				</div>
+			</div>
+			</c:otherwise>
+		</c:choose>
 		</form>
 	</body>
 </html>

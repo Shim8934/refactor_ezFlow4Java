@@ -31,10 +31,10 @@
 					</th>
 				</c:if>
 				<!-- 취합여부아이콘 -->
-					<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
+					<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center; padding: 0px 3px;" class="h5_center">
 						<img src="/images/ImgIcon/icon-flag.gif" style="vertical-align: middle;">
 					</th>
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center;" class="h5_center">
+					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: center; padding: 0px 3px;" class="h5_center">
 						<img src="/images/newAttach.gif" style="vertical-align: middle;">
 					</th>
 				<c:if test="${listType eq 'recv' or listType eq 'temp' }">
@@ -106,12 +106,12 @@
 					<!-- 취합여부아이콘 -->
 					<c:choose>
 						<c:when test="${journal.isSum eq 'Y'}">
-							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;">
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  padding: 0px 3px;">
 								<img src="/images/ImgIcon/icon-flag.gif" style="vertical-align: middle;">
 							</td>
 						</c:when>
 						<c:otherwise>
-							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px;">
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  padding: 0px 3px;">
 								<img src="/images/ImgIcon/view-flag.gif" style="vertical-align: middle;">
 							</td>
 						</c:otherwise>
@@ -196,7 +196,8 @@
 	</div>
 </div>
 <div id='runtime' style="color: #666; padding-top: 5px"></div>
-<c:if test="${paging.endPage>0 }">
+<c:choose>
+<c:when test="${paging.endPage>0 }">
 <div id="tblPageRayer" style="width:470px; margin:6px auto;">
 	<div class="pagenavi">   
 		<c:choose>
@@ -245,4 +246,18 @@
 		</c:choose>
 	</div>
 </div>
-</c:if>
+</c:when>
+<c:otherwise>
+<div id="tblPageRayer" style="width:470px; margin:6px auto;">
+	<div class="pagenavi">  
+		<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>
+		<span class="btnimg"><img src="/images/sub/btn_prev01.gif" width="16" height="16"></span>
+		<span class="ptxt"> <spring:message code='ezApproval.t931'/></span>  
+		<span class="on">1</span> 
+		<span class="ptxt"><spring:message code='ezApproval.t932'/></span>
+		<span class="btnimg"><img src="/images/sub/btn_next01.gif" width="16" height="16"></span>
+		<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" width="16" height="16"></span>
+	</div>
+</div>
+</c:otherwise>
+</c:choose>
