@@ -205,13 +205,12 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="pad1" style="vertical-align: top;">
+			<td style="vertical-align: top; paddin-top: 5px;">
 				<table class="file">
 					<tr class="pos1">
 						<th><spring:message code='ezJournal.t105' /></th>
 						<td>
-							<div id="lstAttachLink"
-								style="OVERFLOW: auto; HEIGHT: 50px; background-color: white; text-align: left">
+							<div id="lstAttachLink" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white; text-align: left">
 								<c:forEach items="${journal.fileList }" var="file">
 									<div style="margin-top: 3px; height: 20px">
 										<c:set var="imagePath" value="/images/file.gif" />
@@ -247,12 +246,11 @@
 								</c:forEach>
 							</div>
 						</td>
-						<td class="pos2">
+						<td class="pos2" style="white-space: normal; overflow: hidden;">
 							<a class="imgbtn"><span style="width: 57px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a>
 							<br /> 
 							<a class="imgbtn"><span style="width: 57px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 						</td>
-						<td id="Td2" style="display: none"></td>
 					</tr>
 				</table>
 			</td>
@@ -292,7 +290,7 @@
 		    }
 		    
 		    function sizeOn(){
-		    	var contentHeight = document.documentElement.clientHeight - 240;
+		    	var contentHeight = document.documentElement.clientHeight - 230;
 	            document.getElementById("pad1").style.height = contentHeight + "PX";
 	            var contentWidth = document.documentElement.clientWidth - 20;
 	            document.getElementById("pad1").style.width = contentWidth + "PX";
