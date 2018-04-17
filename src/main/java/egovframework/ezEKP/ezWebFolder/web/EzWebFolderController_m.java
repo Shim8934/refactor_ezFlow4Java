@@ -328,6 +328,7 @@ public class EzWebFolderController_m {
 				.queryParam("searchExt", orElse(request.getParameter("searchExt"), ""))
 				.queryParam("searchFileName", orElse(request.getParameter("searchFileName"), ""))
 				.queryParam("searchCreatorName", orElse(request.getParameter("searchCreatorName"), ""))
+				.queryParam("searchFileType", orElse(request.getParameter("searchFileType"), ""))
 				.queryParam("searchStartDate", orElse(request.getParameter("searchStartDate"), ""))
 				.queryParam("searchEndDate", orElse(request.getParameter("searchEndDate"), ""))
 				// limit info

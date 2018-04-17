@@ -11,20 +11,12 @@
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
-<!-- 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script> -->
-	<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	<!-- date Picker -->
-	
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-	<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-	<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
-	
-	<!-- time picker-->
-	<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/bnk.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
     <script type="text/javascript">
@@ -41,6 +33,19 @@
     			startIndex: 0,
     			listCount: 0
     		};
+    	
+    		var searchInfo = (function() {
+    			var fileType = "";
+    			
+    			var clear = function() {
+    				fileType = "";
+    			};
+    		
+    			return {
+    				fileType: fileType,
+    				clear: clear
+    			};
+    		}());
     	
 			function setBlockSize(changedSize) {
 				blockSize = changedSize;
@@ -86,7 +91,7 @@
     		var currentFolderType = "";
     		
     		// event listener
-    		var onListTypeChangeEvent;
+    		var onListTypeChangeEvent = function(isFavoriteMode) {};
     		
     		// private
     		var checkAccessFolderInfo = function() {
@@ -147,7 +152,7 @@
 				setList: setList,
 				refreshList: refreshList,
 				setOnListTypeChangeEventListener: setOnListTypeChangeEventListener
-			}
+			};
     	}());
 
    		// TODO: 리펙토링
@@ -203,6 +208,14 @@
 		window.onload = function() {
 			initDomElement();
 			
+			$('#idSelect').ddslick({
+				onSelected: function(selectedElmt) {
+					//callback function: do something with selectedData;
+					document.getElementById("idSelect").value = selectedElmt.selectedData["value"];
+					onChangeFileType(document.getElementById("idSelect").value);
+				}
+			});
+			
 			context.setOnListTypeChangeEventListener(function(isFavoriteMode) {
 				// TODO: 즐겨찾기 메뉴 보이기/숨기기 html, js 소스 정리
 				if (isFavoriteMode) {
@@ -238,6 +251,7 @@
 				dataType: "json",
 				
 				data : {
+					searchFileType : searchInfo.fileType,
 					searchExt : $('#searchExt').val(),
 					searchFileName : $('#searchFileName').val(),
 					searchCreatorName : $('#searchCreateName').val(),
@@ -249,16 +263,13 @@
 				
 				success : function (result) {
 					result = result.data;
-					
 					// TODO: 리펙토링
 					tempSetPage(result.totalCount, result.listCount);
 					
 					renderList(result.targetList, false);
 					makePageSelPage();
 					
-					dom.mailBoxInfo.innerHTML = " - [" + message.total + " <spring:message code='ezWebFolder.t277'/> " + "<span style='color:#017BEC;'>" 
-						+ result.fileCount + "</span>, " + message.total + " <spring:message code='ezWebFolder.t276'/> " + "<span style='color:#017BEC;'>" + result.folderCount +" </span>" + message.count + "]";
-					$("#listcount").val(blockSize).prop("selected", true);
+					setMailBoxInfo(result.folderCount, result.fileCount);
 				},
 				
 				error : function(error) {
@@ -286,7 +297,8 @@
 					 "pStart" : pagination.startIndex,
 					 "searchExt" : $('#searchExt').val(),
 					 "searchFileName" : $('#searchFileName').val(),
-					 "searchCreateName" : $('#searchCreateName').val()
+					 "searchCreateName" : $('#searchCreateName').val(),
+					 searchFileType : searchInfo.fileType
 				},
 				
 				success : function (result) {
@@ -870,6 +882,17 @@
 				document.getElementById('progress-wrp').style.display = "none";
 			});
 		};
+		
+		function onChangeFileType(value) {
+			searchInfo.fileType = value;
+			
+			if (value == "all") {
+				searchInfo.fileType = ""
+			};
+			
+			goToPageByNum(1);
+			searchInfo.clear();
+		}
     </script>
 </head>
 <body class="mainbody">
@@ -897,13 +920,13 @@
 			<li id="right" favoritemenu style="float:right;"><span><spring:message code='ezWebFolder.t215'/></span><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" onclick="optionView(this);"></li>
 			<li id="right" favoritemenu style="float:right;">
 				<select class="select" id="idSelect" onchange="idChange(this.value);" style="width:100px; display:none;">
-					<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
-					<option value="document" data-imagesrc="/images/webfolder/msWord.png"       ><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
-					<option value="music" data-imagesrc="/images/webfolder/mp3.png"      ><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
-					<option value="video" data-imagesrc="/images/webfolder/mp4.png"      ><spring:message code='ezWebFolder.t194'/></option><!-- 영상 -->
-					<option value="image" data-imagesrc="/images/webfolder/jpg.png"      ><spring:message code='ezWebFolder.t195'/></option><!-- 그림 -->
-					<option value="folder" data-imagesrc="/images/webfolder/fldr.png"    ><spring:message code='ezWebFolder.t213'/></option><!-- 폴더 -->
-					<option value="zip" data-imagesrc="/images/webfolder/zip.png"        ><spring:message code='ezWebFolder.t196'/></option><!-- 압축파일 -->
+					<option value="all" data-imagesrc="/images/webfolder/allTypes.png" selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
+					<option value="document" data-imagesrc="/images/webfolder/msWord.png"><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
+					<option value="music" data-imagesrc="/images/webfolder/mp3.png"><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
+					<option value="video" data-imagesrc="/images/webfolder/mp4.png"><spring:message code='ezWebFolder.t194'/></option><!-- 영상 -->
+					<option value="image" data-imagesrc="/images/webfolder/jpg.png"><spring:message code='ezWebFolder.t195'/></option><!-- 그림 -->
+					<option value="folder" data-imagesrc="/images/webfolder/fldr.png"><spring:message code='ezWebFolder.t213'/></option><!-- 폴더 -->
+					<option value="zip" data-imagesrc="/images/webfolder/zip.png"><spring:message code='ezWebFolder.t196'/></option><!-- 압축파일 -->
 				</select>
 			</li>
 		</ul>
