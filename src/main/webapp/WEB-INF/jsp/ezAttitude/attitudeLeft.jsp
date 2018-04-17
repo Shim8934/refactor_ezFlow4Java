@@ -12,7 +12,9 @@
 		<link rel="stylesheet" href="/css/main.css" type="text/css"/>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/Holiday.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
 		<style>
 			.time {
 				font-family: Gulim, Dotum, Arial, Helvetica, sans-serif;
@@ -65,8 +67,8 @@
 			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; overflow:hidden;">
 			<p id="inAttiClock" style="margin:5px 0px 0px 0px; font-size:13px;">출근 : 00:00:00</p>
 			<p id="outAttiClock" style="margin:5px 0px 8px 0px;  font-size:13px;">퇴근 : 00:00:00</p>
-			<span id="inAttiBtn" type="A01" datetype="2" onclick="addAttitude(this)" style="margin-left:0px;">출근</span>
-			<span id="outAttiBtn" type="A03" datetype="2" onclick="addAttitude(this)">퇴근</span>
+			<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)" style="margin-left:0px;">출근</span>
+			<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span>
 		</div>
 	</article>
 	<div id="left" style="border-top:1px solid #dedede">
@@ -84,12 +86,15 @@
 	</div>
 	<script type="text/javascript">
 		var UserOffset = "${userOffset}";
-		
+		var uselang = "${uselang}";
+		var closedDay = "";
+		var checkClosedToday = false;
 		
 		window.onload = function(){
 			setAttiBtnHover();
 			getAttitudeList();
 		    yourClock();
+		    select_memorialDays(uselang);
 		    
 		    document.getElementById('userAttitude').onclick();
 		    
@@ -152,6 +157,48 @@
 	    	})
 	    }
 	    
+		function checkHoliday(obj) {
+			var now = new Date();
+			var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (parseInt(UserOffset.split(':')[0]) * 3600000) + (parseInt(UserOffset.split(':')[1]) * 60000);
+			now.setTime(tz);
+			$.ajax({
+				type:"POST",
+				dataType : "json",
+				async : true,
+				url : "/ezAttitude/getHolidayList.do",
+				data : {},
+				success : function(result) {
+					for (var i = 0; i < result.holidayList.length; i++) {
+						if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+							memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+															  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+															  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+						} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+							yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+																	  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+																	  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+																	  result.holidayList[i].isRest == 1 ? true : false));
+						}
+					}
+					
+					var todayLunar = lunarCalc(now.getFullYear(), now.getMonth() + 1, now.getDate(), 1);
+					var todayMemorialDayList = memorialDayCheck(now, todayLunar);
+					var todayYearMemorialDayList = yearmemorialDayCheck(now, todayLunar);
+					
+					if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) {
+						checkClosedToday = true;
+					}
+					
+					closedDay = result.attitudeConfigVO.closedDay.split(",");
+					if (closedDay[now.getDay()] == "1" || checkClosedToday) {
+			    		alert("휴일은 출/퇴근을 등록할 수 없습니다.");
+					} else {
+						addAttitude(obj);
+					}
+				}
+			});
+		}
+		
 	    function addAttitude(obj) {
 	    	var pTypeId = obj.getAttribute("type");
 	    	var pDateType = obj.getAttribute("datetype");

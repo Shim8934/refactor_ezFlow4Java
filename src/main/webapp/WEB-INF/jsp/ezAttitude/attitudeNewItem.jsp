@@ -34,17 +34,29 @@
 			var region = "<c:out value='${attitudeInfo.region}'/>";
 			var mobile = "<c:out value='${attitudeInfo.mobile}'/>";
 			var bizSub = "<c:out value='${attitudeInfo.bizSub}'/>";
-			var content = "<c:out value='${attitudeInfo.content}'/>";
+			var content = '${attitudeInfo.content}';
 			var attitudeId = "<c:out value='${attitudeInfo.attitudeId}'/>";
 			var dateType = "<c:out value='${attitudeInfo.dateType}'/>";
 			
 			window.onload = function () {
+				if (navigator.userAgent.indexOf('Firefox') != -1) {
+		            document.body.style.MozUserSelect = 'none';
+		            document.body.style.WebkitUserSelect = 'none';
+		            document.body.style.khtmlUserSelect = 'none';
+		            document.body.style.oUserSelect = 'none';
+		            document.body.style.UserSelect = 'none';
+		        }
+				
 				form_change();
 			}
 			
-		    var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
+			window.onresize = function () {   	
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 250 + "PX";
+		    }
+			
+		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
 		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "일;월;화;수;목;금;토";
+		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
 		    var dayStr = dayMsg.split(";");
 		    
 			function setDatePicker(type) {
@@ -102,11 +114,11 @@
 			        }
 		        }
 		        
-		        $.datepicker.regional["ko"] = {
-			        	closeText: "닫기",
-			            prevText: "이전달",
-			            nextText: "다음달",
-						currentText: "오늘",
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+			        	closeText: "<spring:message code='main.t3' />",
+			            prevText: "<spring:message code='main.t0604' />",
+			            nextText: "<spring:message code='main.t0605' />",
+						currentText: "<spring:message code='main.t0606' />",
 			            monthNames: monthStr,
 			            monthNamesShort: monthStr,
 			            dayNames: dayStr,
@@ -122,6 +134,10 @@
 			        };
 		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
 			}
+			
+			function Editor_Complete() {
+				message.SetEditorContent(content);
+		    }
 			
 			var selectType = "";
 			function form_change(obj) {
@@ -163,7 +179,7 @@
 					},
 					success : function (result) {
 						$("#attiwriteForm tr").not("tr:first").remove();
-						$("#attiwriteForm tbody").append(result.formHtml);
+						$("#attiwriteForm tbody").after(result.formHtml);
 						$("#writerName").text(writerName);
 						
 						setDatePicker($("#periodblock").attr("datetype"));
@@ -172,8 +188,6 @@
 							$("input[name=region]").val(region);
 							$("input[name=mobile]").val(mobile);
 							$("input[name=bizsub]").val(bizSub);
-							//content
-							$("textarea[name=content]").val(content);
 						}
 					}
 				})
@@ -212,7 +226,6 @@
 			
 			//저장
 			function save_attitude() {
-				alert($("textarea[name=content]").val());
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezAttitude/attitudeSave.do",
@@ -223,7 +236,7 @@
 		        		region : $("input[name=region]").val(),
 		        		mobile : $("input[name=mobile]").val(),
 		        		bizSub : $("input[name=bizsub]").val(),
-		        		content : $("textarea[name=content]").val(),
+		        		content : message.GetEditorContent().replace(/(^\s+)|(\s+$)/gi, ""),
 		        		dateType : $("#periodblock").attr("datetype"),
 		        		startDate : startDate,
 		        		endDate : endDate,
@@ -241,47 +254,117 @@
 			
 		</script>
 	</head>
-	<body class = "popup">
-<!-- 		<h1>근태 작성</h1> -->
-		<div id="menu">
-			<ul>
-				<li><span onClick="dateTypeCheck()">저장후닫기</span></li>
-			</ul>
-		</div>
-		<div id="close">
-			<ul>
-				<li><span onClick="window.close()">닫기</span></li>
-			</ul>
-		</div>
-		<table id="attiwriteForm" class="content">
-			<tbody>
-				<tr> 
-	    			<th>구분</th> 
-	    			<td>
-						<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
-							<c:forEach var="item" items="${attitudeTypeList }">
-								<c:if test="${item.parentId ne 'A05' && item.typeId ne 'A01' && item.typeId ne 'A02' && item.typeId ne 'A03'}">
-									<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
-								</c:if>
-							</c:forEach>
-						</select>
-						<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)">
-							<c:forEach var="item" items="${attitudeTypeList }">
-								<c:if test="${item.parentId eq 'A05'}">
-									<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
-								</c:if>
-							</c:forEach>
-						</select>
-					</td> 
-	  			</tr>
-  			</tbody>
-		</table>
-		<table class="content" style="width:100%; margin-top: 10px;">
-		  	<tr>
-  				<td style="height: 300px; margin:0px; padding:0px;">
-  					<textarea name="content" class="textarea" style="width:100%; height:300px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea>
-  				</td>  
-  			</tr>
-		</table>
+	<body class="popup" style="overflow:hidden;">
+		<form method="post">
+	        <div id="main_body">
+	            <table id="normalScreen" class="layout">
+	                <tr>
+	                    <td style="height: 20px">
+	                        <div id="menu">
+	                            <ul id="menuTable">	
+	                                <li><span onclick="dateTypeCheck()">저장 후 닫기</span></li>
+	                            </ul>
+	                        </div>
+	                        <div id="close">
+	                            <ul>
+	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
+	                            </ul>
+	                        </div>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td style="height: 20px">
+	                        <table id="attiwriteForm" class="content">
+								<tr id="selectTR">
+									<th>구분</th>
+									<td colspan="2">
+										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
+											<c:forEach var="item" items="${attitudeTypeList }">
+												<c:if test="${item.parentId ne 'A05' && item.typeId ne 'A01' && item.typeId ne 'A02' && item.typeId ne 'A03'}">
+													<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
+												</c:if>
+											</c:forEach>
+										</select>
+									<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)">
+										<c:forEach var="item" items="${attitudeTypeList }">
+											<c:if test="${item.parentId eq 'A05'}">
+												<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
+											</c:if>
+										</c:forEach>
+									</select>
+									</td>
+								</tr>
+	                        </table>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td style="vertical-align:top;height:100%;" id="EdtorSize">
+		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe>
+	                    </td>
+	                </tr>
+	            </table>
+	        </div>
+	        <script type="text/javascript">
+		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 250 + "PX";
+		    </script>
+	    </form>
+<!-- 		<form method="post"> -->
+<!-- 			<div id="main_body"> -->
+<!-- 				<div id="menu"> -->
+<!-- 					<ul> -->
+<!-- 						<li><span onClick="dateTypeCheck()">저장후닫기</span></li> -->
+<!-- 					</ul> -->
+<!-- 				</div> -->
+<!-- 				<div id="close"> -->
+<!-- 					<ul> -->
+<!-- 						<li><span onClick="window.close()">닫기</span></li> -->
+<!-- 					</ul> -->
+<!-- 				</div> -->
+<!-- 				<table id="attiwriteForm" class="content"> -->
+<!-- 					<tbody> -->
+<!-- 						<tr>  -->
+<!-- 			    			<th>구분</th>  -->
+<!-- 			    			<td> -->
+<!-- 								<select id="selectAtti" style="width:80px;" onchange="form_change(this)"> -->
+<%-- 									<c:forEach var="item" items="${attitudeTypeList }"> --%>
+<%-- 										<c:if test="${item.parentId ne 'A05' && item.typeId ne 'A01' && item.typeId ne 'A02' && item.typeId ne 'A03'}"> --%>
+<%-- 											<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option> --%>
+<%-- 										</c:if> --%>
+<%-- 									</c:forEach> --%>
+<!-- 								</select> -->
+<!-- 								<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)"> -->
+<%-- 									<c:forEach var="item" items="${attitudeTypeList }"> --%>
+<%-- 										<c:if test="${item.parentId eq 'A05'}"> --%>
+<%-- 											<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option> --%>
+<%-- 										</c:if> --%>
+<%-- 									</c:forEach> --%>
+<!-- 								</select> -->
+<!-- 							</td>  -->
+<!-- 			  			</tr> -->
+<!-- 			  			<tr> -->
+<!-- 							<td style="vertical-align:top;height:100%;" id="EdtorSize" colspan="2"> -->
+<!-- 				            	<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe> -->
+<!-- 				            </td> -->
+<!-- 						</tr> -->
+<!-- 		  			</tbody> -->
+<!-- 				</table> -->
+<!-- 			</div> -->
+<!-- 		</form> -->
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
+	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
+	    </div>
+<!-- 		<table class="content" style="width:100%; margin-top: 10px;"> -->
+<!-- 			<tr> -->
+<!-- 				<td style="vertical-align:top;height:100%;" id="EdtorSize"> -->
+<!-- 	            	<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe> -->
+<!-- 	            </td> -->
+<!-- 			</tr> -->
+<!-- 		  	<tr> -->
+<!--   				<td style="height: 300px; margin:0px; padding:0px;"> -->
+<!--   					<textarea name="content" class="textarea" style="width:100%; height:300px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea> -->
+<!--   				</td>   -->
+<!--   			</tr> -->
+<!-- 		</table> -->
 	</body>
 </html>
