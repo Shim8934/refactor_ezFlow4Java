@@ -439,7 +439,7 @@
 	    <script type="text/javascript">
 	    	var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
-		
+			
 	        CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        CKEDITOR.config.height = parseInt("${height}") - 120 + "px";
 	        CKEDITOR.config.font_defaultLabel = defaultFontFamily;

@@ -80,8 +80,10 @@
     		    }
         	}; 
             
-			window.onload = function() {				
-				commentCheck();				
+			window.onload = function() {
+				if(document.getElementById("sendBttn") != null){
+					commentCheck();				
+				}
  				getConnect();
  				stompDisConnProcess()
  				
@@ -2176,14 +2178,14 @@
 		    	
 		    	//Create the tr element
 		    	objTr = document.createElement("tr");
-		    	objTr.setAttribute("style", "border-bottom: 1px dotted #ddd");
 		    	
 		    	//Process td1 (user image) element
 		    	var objTd = document.createElement("td");
 		    	objTd.setAttribute("style", "padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ");                  
+		    	objTd.setAttribute("class", "userPhotoTd");                  
                 var image_tag = document.createElement("img");                
                 image_tag.src = userPhoto;
-                image_tag.setAttribute("style", "padding-top: 10px; height: 38px; width:38px; cursor: pointer; "); 
+                image_tag.setAttribute("class", "userPhotoImg");
                 image_tag.onclick = function () { menuQst_DetailUserInfo(userId); };
                 objTd.appendChild(image_tag);
                 objTr.appendChild(objTd);
@@ -2564,15 +2566,17 @@
 		    
 		    //이모티콘 패널이 아닌 영역을 선택하면 패널이 닫힘
 		    function emoticonPanelClose(){
-		    	var emoticonPanel = document.getElementById('emoticonPanel');
-		        $(document).click(function(e){
-		            var target = e.target;
-		            var onOff = emoticonPanel.getAttribute('style').indexOf('display: block')!=-1?true:false;
-		            
-		            if(onOff && target.id != "_addEmoticon"){
-                        addSticker();
-		            }
-		        });
+		    	var emoticonPanel = document.getElementById("emoticonPanel");
+		    	if(emoticonPanel){
+			        $(document).click(function(e){
+			            var target = e.target;
+			            var onOff = emoticonPanel.getAttribute("style").indexOf("display: block")!= -1 ? true : false;
+			            
+			            if(onOff && target.id != "_addEmoticon"){
+	                        addSticker();
+			            }
+			        });
+		    	}
 		    }
 		    
 		    //투표 버튼 누를 때 선택한 리스트의 정보를 바꾸어 줌.
@@ -2591,7 +2595,7 @@
 		    	
 		    	if(isSelOnlyOnce === 1){ //낙장불입 Y
 		    		if(idx === -1){ //remove 일경우 		
-		    			alert('<spring:message code = 'ezPoll.t261'/>');
+		    			alert("<spring:message code = 'ezPoll.t261'/>");
 		    		}
 	    			return true;
 		    	}else{ //낙장불입 N
@@ -3076,9 +3080,9 @@
 				<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
 					<table style="width: 100%;" id="commentListView">
 						<c:forEach var="_comt" items="${listComments}">
-							<tr style="border-bottom: 1px dotted #ddd;">
-								<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
-									<img src="${_comt.userImage}" style="padding-top: 10px; height: 38px; width:38px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
+							<tr>
+								<td class="userPhotoTd">
+									<img class="userPhotoImg" src="${_comt.userImage}" onclick="menuQst_DetailUserInfo('${_comt.userId}');">
 								</td>
 								<td>
 									<c:choose>
@@ -3129,6 +3133,7 @@
 						</c:forEach>					
 					</table>
 				</div>
+				<c:if test="${!(hasVotePrivilege != 1 && question.status != 0) || adminPrivilege == 1 || curentUser == question.creator}">
 				<div id="sendComment" class="voteComment" style="width:100%;">
 	            	<div class="sendComment_layout">
 					<div class="send_attach">
@@ -3195,6 +3200,7 @@
 					</div>
 					</div>
 				</div>
+				</c:if>
 				<input id="fileInput" type="file" onchange="uploadFileCmt();" class="voteFileInput" />
 			</div>	
 		</form>
