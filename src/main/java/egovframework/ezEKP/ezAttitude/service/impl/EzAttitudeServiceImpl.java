@@ -616,7 +616,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId,
-			String userId, String startDate, String endDate, String apprUserName, String sysLang, String offset,String startPoint, String endPoint, String type, String order, String adminFlag) throws Exception {
+			String userId, String startDate, String endDate, String apprUserName, String sysLang, 
+			String offset,String startPoint, String endPoint, String type, String order, String adminFlag, boolean checkAdmin) throws Exception {
 		LOGGER.debug("getUsersModiyAtt started");
 		
 		if (adminFlag == null) {
@@ -629,6 +630,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		if (!adminFlag.trim().equals("true")){
 			map.put("userId", userId);
+		} else if (checkAdmin == false) {
+			String[] deptIdList = {"approval"};
+			map.put("deptIdList", deptIdList);
 		}
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
@@ -679,7 +683,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public int getUsersModiyAttCount(String companyId, int tenantId,
 			String userId, String startDate, String endDate,
-			String apprUserName, String sysLang, String offset, String type, String adminFlag)
+			String apprUserName, String sysLang, String offset, String type, String adminFlag, boolean checkAdmin)
 			throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -688,10 +692,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			adminFlag = "false";
 		}
 		
+		LOGGER.debug("checkAdmin : " + checkAdmin);
+		LOGGER.debug("adminFlag : " + adminFlag);
+		
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		if (!adminFlag.trim().equals("true")){
 			map.put("userId", userId);
+		} else if (checkAdmin == false) {
+			LOGGER.debug("#############################################false true####################################");
+			String[] deptIdList = {"approval"};
+			map.put("deptIdList", deptIdList);
 		}
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);

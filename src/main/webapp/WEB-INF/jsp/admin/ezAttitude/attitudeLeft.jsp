@@ -33,7 +33,7 @@
 						url = "/admin/ezAttitude/attitudeCheck.do";
 						break;
 					case 5:
-						url = "";
+						url = "/admin/ezAttitude/manageAttModAppList.do";
 						break;
 					case 6:
 						url = "/admin/ezAttitude/attitudeAuthorManage.do";

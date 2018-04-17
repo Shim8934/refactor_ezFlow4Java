@@ -242,7 +242,7 @@ public class EzAttitudeKMSController {
 	/**
 	 * 근태 수정 신청 현황
 	 */
-	@RequestMapping(value="/admin/ezAttitude/attModAppList.do")
+	@RequestMapping(value="/ezAttitude/manageAttModAppList.do")
 	public String adminGetAttModAppList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=false)String pageNum,
 			@RequestParam(required=false)String apprUserName,
@@ -264,7 +264,7 @@ public class EzAttitudeKMSController {
 		if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
-		
+        
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
