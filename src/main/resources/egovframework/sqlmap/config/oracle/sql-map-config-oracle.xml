@@ -37,6 +37,10 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezTask/EzTask_SQL_Oracle.xml"/>
 	<!-- 웹폴더 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Oracle.xml"/>
+    <!-- 웹폴더 _y -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Oracle_y.xml"/>
+	<!-- 웹폴더 (이효민, 조영훈, 서재원) -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Oracle_m.xml"/>
 
 	<!-- 2.관리자 모듈관리 SQL쿼리 XML -->
 	

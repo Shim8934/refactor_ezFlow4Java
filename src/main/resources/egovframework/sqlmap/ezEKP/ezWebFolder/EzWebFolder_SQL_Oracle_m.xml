@@ -1,0 +1,1150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezWebFolder_m">
+	<!-- FolderFile typeAlias  -->
+	<typeAlias alias="TrashCanVO"             type="egovframework.ezEKP.ezWebFolder.vo.TrashCanVO"/>
+	<typeAlias alias="ShareVO"                type="egovframework.ezEKP.ezWebFolder.vo.ShareVO"/>
+	<typeAlias alias="FolderFileVO"           type="egovframework.ezEKP.ezWebFolder.vo.FolderFileVO"/>
+	<typeAlias alias="FavoriteFileVO"         type="egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO"/>
+	
+	<!-- TrashFile resultMap -->
+	<resultMap id="trashCanVO" class="TrashCanVO">
+		<result property="trashCanId"      column="TRASHCAN_ID"        columnIndex="1"/>
+		<result property="trashCanName"    column="TRASHCAN_NAME"      columnIndex="2"/>
+		<result property="trashCanIconUrl" column="TRASHCAN_ICON_URL"  columnIndex="3"/>
+		<result property="trashCanPath"    column="TRASHCAN_PATH"      columnIndex="4"/>
+		<result property="trashCanExt"     column="TRASHCAN_EXT"       columnIndex="5"/>
+		<result property="trashCanSize"    column="TRASHCAN_SIZE"      columnIndex="6"/>
+		<result property="createId"        column="TRASHCAN_ID"        columnIndex="7"/>
+		<result property="createName1"     column="CREATE_NAME1"       columnIndex="8"/>
+		<result property="createName2"     column="CREATE_NAME2"       columnIndex="9"/>
+		<result property="createDate"      column="CREATE_DATE"        columnIndex="10"/>
+		<result property="updateDate"      column="UPDATE_DATE"        columnIndex="11"/>
+		<result property="fileFolderId"    column="FILE_FOLDER_ID"     columnIndex="12"/>
+		<result property="folderUpper"     column="FOLDER_UPPER"       columnIndex="13"/>
+	</resultMap>
+	
+	<!-- FavoriteFile resultMap -->
+	<resultMap id="favoriteFileVO" class="FavoriteFileVO">
+		<result property="targetId"        column="TARGET_ID"        columnIndex="1"/>
+		<result property="targetName"      column="TARGET_NAME"      columnIndex="2"/>
+		<result property="targetType"      column="TARGET_TYPE"      columnIndex="3"/>
+		<result property="targetIconUrl"   column="TARGET_ICON_URL"  columnIndex="4"/>
+		<result property="targetPath"      column="TARGET_PATH"      columnIndex="5"/>
+		<result property="targetExt"       column="TARGET_EXT"       columnIndex="6"/>
+		<result property="targetSize"      column="TARGET_SIZE"      columnIndex="7"/>
+		<result property="createId"        column="CREATE_ID"        columnIndex="8"/>
+		<result property="createName1"     column="CREATE_NAME1"     columnIndex="9"/>
+		<result property="createName2"     column="CREATE_NAME2"     columnIndex="10"/>
+		<result property="createDate"      column="CREATE_DATE"      columnIndex="11"/>
+		<result property="tenantId"        column="TENANT_ID"        columnIndex="12"/>
+	</resultMap>
+
+	<!-- ShareFile resultMap -->
+    <resultMap id="shareVO" class="ShareVO">
+        <result property="fileId"                 column="file_id"                columnIndex="1"  />
+        <result property="fileName"               column="file_name"              columnIndex="2"  />
+        <result property="folderFileType"         column="folderfile_type"        columnIndex="3"  />
+        <result property="folderType"             column="folder_type"            columnIndex="4"  />
+        <result property="filePosition"           column="file_path"              columnIndex="5"  />
+        <result property="fileSize"               column="file_size"              columnIndex="6"  />
+        <result property="fileExt"                column="file_ext"               columnIndex="7"  />
+        <result property="folderPath"             column="folder_path"            columnIndex="8"  />
+        <result property="ownerId"                column="owner_id"               columnIndex="9"  />
+        <result property="useStatus"              column="use_status"             columnIndex="10" />
+        <result property="createId"               column="create_id"              columnIndex="11" />
+        <result property="createName"             column="create_name"            columnIndex="12" />
+        <result property="createDate"             column="create_date"            columnIndex="13" />
+        <result property="updateId"               column="update_id"          	  columnIndex="14" />
+        <result property="updateDate"             column="update_date"            columnIndex="15" />
+        <result property="typeId"                 column="type_id"                columnIndex="16" />
+        <result property="typeName"               column="type_name"              columnIndex="17" />        
+        <result property="fileIconUrl"            column="type_icon"              columnIndex="18" />
+<!--    <result property="shareStatus"            column="share_status"        	  columnIndex="19" /> -->
+        <result property="favouriteStatus"        column="favorite_status"        columnIndex="20" />
+        <result property="sharerId"               column="sharer_id"  		      columnIndex="22" />
+        <result property="sharerName"             column="sharer_name"		      columnIndex="23" />
+        <result property="userList"               column="user_list"			  columnIndex="24" />
+        <result property="shareDate"              column="share_date"             columnIndex="25" />
+        <result property="subStatus"              column="sub_status"             columnIndex="26" />
+        <result property="tenantId"               column="tenant_id"              columnIndex="27" />
+    </resultMap>
+	
+<sql id="searchTerm">
+		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+				<![CDATA[
+					FT2.TYPE_NAME = #searchFileType#
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+				<![CDATA[
+					DF.FILE_EXT LIKE CONCAT ('%', #searchExt#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+				<![CDATA[
+					DF.FILE_NAME1 LIKE CONCAT ('%', #searchFileName#, '%') OR DF.FILE_NAME2 LIKE CONCAT ('%', #searchFileName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchCreatorName" compareValue="" prepend="AND">
+				<![CDATA[
+					DF.CREATE_NAME1 LIKE CONCAT ('%', #searchCreatorName#, '%') OR DF.CREATE_NAME2 LIKE CONCAT ('%', #searchCreatorName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchStartDate" compareValue="">
+			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					(DF.CREATE_DATE >= DATE_FORMAT(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND DF.CREATE_DATE <= DATE_FORMAT(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</sql>
+	
+	<select id="EzWebFolderDAO_m.getSharingList" parameterClass="Map" resultMap="shareVO">
+		<![CDATA[
+			SELECT
+				DF.FILE_ID,
+				CASE #primary#
+					WHEN '1'
+					THEN DF.FILE_NAME1
+					ELSE DF.FILE_NAME2
+				END FILE_NAME,
+				DF.FOLDERFILE_TYPE,
+				DF.FOLDER_TYPE,
+				DF.FILE_PATH,
+				DF.FILE_SIZE,
+				DF.FILE_EXT,
+				DF.FOLDER_PATH,
+				DF.OWNER_ID,
+				DF.USE_STATUS,
+				DF.CREATE_ID,
+				CASE #primary#
+					WHEN '1'
+					THEN DF.CREATE_NAME1
+					ELSE DF.CREATE_NAME2
+				END CREATE_NAME,
+				DATE_FORMAT(DATE_ADD(DF.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+				DF.UPDATE_ID,
+				DATE_FORMAT(DATE_ADD(DF.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
+				DF.TYPE_ID,
+				FT2.TYPE_NAME,
+				FT2.TYPE_ICON,
+				CASE WHEN FV.USER_ID IS NULL
+					THEN '0'
+					ELSE '1'
+				END FAVORITE_STATUS,
+				S.SHARER_ID,
+				'' AS SHARER_NAME,
+				GROUP_CONCAT(S.USER_ID) AS USER_LIST,
+				DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
+				S.SUB_STATUS,
+				S.TENANT_ID
+			FROM (
+				SELECT
+					D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
+					'D' AS FOLDERFILE_TYPE,     D.FOLDER_TYPE,                   '' AS FILE_PATH,
+					'' AS FILE_SIZE,            FT.FILE_EXT,                     D.FOLDER_PATH,
+					D.OWNER_ID,                 D.USE_STATUS,                    D.CREATE_ID,
+					D.CREATE_NAME1,             D.CREATE_NAME2,                  D.CREATE_DATE,
+					D.UPDATE_ID,                D.UPDATE_DATE,                   FT.TYPE_ID,
+					D.TENANT_ID
+				FROM TBL_WEBFOLDER_FOLDER AS D
+				JOIN TBL_WEBFOLDER_FILETYPE AS FT
+				ON FT.FILE_EXT = 'folder'
+				AND D.TENANT_ID = FT.TENANT_ID
+				UNION
+				SELECT
+					F.FILE_ID AS FILE_ID,       F.FILE_NAME AS FILE_NAME1,       F.FILE_NAME AS FILE_NAME2,
+					'F' AS FOLDERFILE_TYPE,     D2.FOLDER_TYPE,                  F.FILE_PATH,
+					F.FILE_SIZE,                F.FILE_EXT,                      D2.FOLDER_PATH,
+					D2.OWNER_ID,                F.USE_STATUS,                    F.CREATE_ID,
+					F.CREATE_NAME1,             F.CREATE_NAME2,                  F.CREATE_DATE,
+					F.UPDATE_ID,                F.UPDATE_DATE,                   F.TYPE_ID,
+					F.TENANT_ID
+				FROM TBL_WEBFOLDER_FILE AS F
+				JOIN TBL_WEBFOLDER_FOLDER AS D2
+				ON F.FOLDER_ID = D2.FOLDER_ID
+				AND F.TENANT_ID = D2.TENANT_ID ) AS DF
+			JOIN TBL_WEBFOLDER_FILETYPE FT2
+			ON DF.TYPE_ID = FT2.TYPE_ID
+			AND DF.TENANT_ID = FT2.TENANT_ID
+			LEFT JOIN TBL_WEBFOLDER_FAVOR AS FV
+			ON DF.FILE_ID = FV.TARGET_ID
+			AND DF.FOLDERFILE_TYPE = FV.TARGET_TYPE
+			AND DF.TENANT_ID = FV.TENANT_ID
+			AND FV.USER_ID = #userId#
+			JOIN TBL_WEBFOLDER_SHARE AS S
+			ON S.FOLDERFILE_ID = DF.FILE_ID
+		    AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
+			AND S.TENANT_ID = DF.TENANT_ID
+			WHERE DF.USE_STATUS = 'Y'
+		]]>
+			<include refid="searchTerm"/>
+		<![CDATA[	
+			AND DF.TENANT_ID = #tenantId#
+			GROUP BY S.FOLDERFILE_ID, S.FOLDERFILE_TYPE, S.SHARER_ID
+		    HAVING SHARER_ID = #userId#
+		    ORDER BY FOLDERFILE_TYPE, FILE_NAME
+			LIMIT #startPoint#, #pageSize#
+		]]>
+	</select>
+
+	<select id="EzWebFolderDAO_m.getSharedList" parameterClass="Map" resultMap="shareVO">
+		<![CDATA[
+			SELECT DISTINCT
+				DF.FILE_ID,
+				CASE #primary#
+					WHEN '1'
+					THEN DF.FILE_NAME1
+					ELSE DF.FILE_NAME2
+				END FILE_NAME,
+				DF.FOLDERFILE_TYPE,
+				DF.FOLDER_TYPE,
+				DF.FILE_PATH,
+				DF.FILE_SIZE,
+				DF.FILE_EXT,
+				DF.FOLDER_PATH,
+				DF.OWNER_ID,
+				DF.USE_STATUS,
+				DF.CREATE_ID,
+				CASE #primary#
+					WHEN '1'
+					THEN DF.CREATE_NAME1
+					ELSE DF.CREATE_NAME2
+				END CREATE_NAME,
+				DATE_FORMAT(DATE_ADD(DF.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+				DF.UPDATE_ID,
+				DATE_FORMAT(DATE_ADD(DF.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
+				DF.TYPE_ID,
+				FT2.TYPE_NAME,
+				FT2.TYPE_ICON,
+				CASE WHEN FV.USER_ID IS NULL
+					THEN '0'
+					ELSE '1'
+				END FAVORITE_STATUS,
+				S.SHARER_ID,
+		        CASE #primary#
+					WHEN '1'
+					THEN U.DISPLAYNAME
+					ELSE U.DISPLAYNAME2
+				END SHARER_NAME,
+				( SELECT 
+					GROUP_CONCAT(USER_ID ORDER BY SEQ_ID)
+				  FROM TBL_WEBFOLDER_SHARE 
+				  WHERE FOLDERFILE_ID = S.FOLDERFILE_ID
+				  AND FOLDERFILE_TYPE = S.FOLDERFILE_TYPE
+				  AND SHARER_ID = S.SHARER_ID ) AS USER_LIST,
+				DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
+				S.SUB_STATUS,
+				S.TENANT_ID
+			FROM (
+				SELECT
+					D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
+					'D' AS FOLDERFILE_TYPE,     D.FOLDER_TYPE,                   '' AS FILE_PATH,
+					'' AS FILE_SIZE,            FT.FILE_EXT,                     D.FOLDER_PATH,
+					D.OWNER_ID,                 D.USE_STATUS,                    D.CREATE_ID,
+					D.CREATE_NAME1,             D.CREATE_NAME2,                  D.CREATE_DATE,
+					D.UPDATE_ID,                D.UPDATE_DATE,                   FT.TYPE_ID,
+					D.TENANT_ID
+				FROM TBL_WEBFOLDER_FOLDER AS D
+				JOIN TBL_WEBFOLDER_FILETYPE AS FT
+				ON FT.FILE_EXT = 'folder'
+				AND D.TENANT_ID = FT.TENANT_ID
+				UNION
+				SELECT
+					F.FILE_ID AS FILE_ID,       F.FILE_NAME AS FILE_NAME1,       F.FILE_NAME AS FILE_NAME2,
+					'F' AS FOLDERFILE_TYPE,     D2.FOLDER_TYPE,                  F.FILE_PATH,
+					F.FILE_SIZE,                F.FILE_EXT,                      D2.FOLDER_PATH,
+					D2.OWNER_ID,                F.USE_STATUS,                    F.CREATE_ID,
+					F.CREATE_NAME1,             F.CREATE_NAME2,                  F.CREATE_DATE,
+					F.UPDATE_ID,                F.UPDATE_DATE,                   F.TYPE_ID,
+					F.TENANT_ID
+				FROM TBL_WEBFOLDER_FILE AS F
+				JOIN TBL_WEBFOLDER_FOLDER AS D2
+				ON F.FOLDER_ID = D2.FOLDER_ID
+				AND F.TENANT_ID = D2.TENANT_ID ) AS DF
+			JOIN TBL_WEBFOLDER_FILETYPE FT2
+			ON DF.TYPE_ID = FT2.TYPE_ID
+			AND DF.TENANT_ID = FT2.TENANT_ID
+			LEFT JOIN TBL_WEBFOLDER_FAVOR AS FV
+			ON DF.FILE_ID = FV.TARGET_ID
+			AND DF.FOLDERFILE_TYPE = FV.TARGET_TYPE
+			AND DF.TENANT_ID = FV.TENANT_ID
+			AND FV.USER_ID = #userId#
+			JOIN TBL_WEBFOLDER_SHARE AS S
+			ON S.FOLDERFILE_ID = DF.FILE_ID
+		    AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
+			AND S.TENANT_ID = DF.TENANT_ID
+			LEFT JOIN TBL_WEBFOLDER_SHARE_DEL AS SD
+			ON DF.FILE_ID = SD.FOLDERFILE_ID
+			AND DF.FOLDERFILE_TYPE = SD.FOLDERFILE_TYPE
+			AND DF.TENANT_ID = SD.TENANT_ID
+			AND SD.USER_ID = #userId#
+			JOIN TBL_USERMASTER AS U
+		    ON S.SHARER_ID = U.CN
+		    AND S.TENANT_ID = U.TENANT_ID
+			WHERE DF.USE_STATUS = 'Y'
+			AND SD.USER_ID IS NULL
+			AND S.USER_ID IN
+		]]>
+			<iterate property="idList" open="(" close=")" conjunction=",">
+				#idList[]#
+			</iterate>
+			<include refid="searchTerm"/>
+		<![CDATA[
+			AND DF.TENANT_ID = #tenantId#
+			ORDER BY FOLDERFILE_TYPE, FILE_NAME
+			LIMIT #startPoint#, #pageSize#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getSharingCount" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+				UU.FOLDERFILE_TYPE,
+				COUNT(UU.FOLDERFILE_TYPE) AS COUNT
+			FROM (
+				SELECT
+					DF.FILE_ID,
+					CASE #primary#
+						WHEN '1'
+						THEN DF.FILE_NAME1
+						ELSE DF.FILE_NAME2
+					END FILE_NAME,
+					DF.FOLDERFILE_TYPE,
+					DF.FOLDER_TYPE,
+					DF.FILE_PATH,
+					DF.FILE_SIZE,
+					DF.FILE_EXT,
+					DF.FOLDER_PATH,
+					DF.OWNER_ID,
+					DF.USE_STATUS,
+					DF.CREATE_ID,
+					CASE #primary#
+						WHEN '1'
+						THEN DF.CREATE_NAME1
+						ELSE DF.CREATE_NAME2
+					END CREATE_NAME,
+					DATE_FORMAT(DATE_ADD(DF.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+					DF.UPDATE_ID,
+					DATE_FORMAT(DATE_ADD(DF.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
+					DF.TYPE_ID,
+					FT2.TYPE_NAME,
+					FT2.TYPE_ICON,
+					CASE WHEN FV.USER_ID IS NULL
+						THEN '0'
+						ELSE '1'
+					END FAVORITE_STATUS,
+					S.SHARER_ID,
+					'' AS SHARER_NAME,
+					GROUP_CONCAT(S.USER_ID) AS USER_LIST,
+					DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
+					S.SUB_STATUS,
+					S.TENANT_ID
+				FROM (
+					SELECT
+						D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
+						'D' AS FOLDERFILE_TYPE,     D.FOLDER_TYPE,                   '' AS FILE_PATH,
+						'' AS FILE_SIZE,            FT.FILE_EXT,                     D.FOLDER_PATH,
+						D.OWNER_ID,                 D.USE_STATUS,                    D.CREATE_ID,
+						D.CREATE_NAME1,             D.CREATE_NAME2,                  D.CREATE_DATE,
+						D.UPDATE_ID,                D.UPDATE_DATE,                   FT.TYPE_ID,
+						D.TENANT_ID
+					FROM TBL_WEBFOLDER_FOLDER AS D
+					JOIN TBL_WEBFOLDER_FILETYPE AS FT
+					ON FT.FILE_EXT = 'folder'
+					AND D.TENANT_ID = FT.TENANT_ID
+					UNION
+					SELECT
+						F.FILE_ID AS FILE_ID,       F.FILE_NAME AS FILE_NAME1,       F.FILE_NAME AS FILE_NAME2,
+						'F' AS FOLDERFILE_TYPE,     D2.FOLDER_TYPE,                  F.FILE_PATH,
+						F.FILE_SIZE,                F.FILE_EXT,                      D2.FOLDER_PATH,
+						D2.OWNER_ID,                F.USE_STATUS,                    F.CREATE_ID,
+						F.CREATE_NAME1,             F.CREATE_NAME2,                  F.CREATE_DATE,
+						F.UPDATE_ID,                F.UPDATE_DATE,                   F.TYPE_ID,
+						F.TENANT_ID
+					FROM TBL_WEBFOLDER_FILE AS F
+					JOIN TBL_WEBFOLDER_FOLDER AS D2
+					ON F.FOLDER_ID = D2.FOLDER_ID
+					AND F.TENANT_ID = D2.TENANT_ID ) AS DF
+				JOIN TBL_WEBFOLDER_FILETYPE FT2
+				ON DF.TYPE_ID = FT2.TYPE_ID
+				AND DF.TENANT_ID = FT2.TENANT_ID
+				LEFT JOIN TBL_WEBFOLDER_FAVOR AS FV
+				ON DF.FILE_ID = FV.TARGET_ID
+				AND DF.FOLDERFILE_TYPE = FV.TARGET_TYPE
+				AND DF.TENANT_ID = FV.TENANT_ID
+				AND FV.USER_ID = #userId#
+				JOIN TBL_WEBFOLDER_SHARE AS S
+				ON S.FOLDERFILE_ID = DF.FILE_ID
+			    AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
+				AND S.TENANT_ID = DF.TENANT_ID
+				WHERE DF.USE_STATUS = 'Y'
+		]]>
+				<include refid="searchTerm"/>
+		<![CDATA[	
+				AND DF.TENANT_ID = #tenantId#
+				GROUP BY S.FOLDERFILE_ID, S.FOLDERFILE_TYPE, S.SHARER_ID
+			    HAVING SHARER_ID = #userId# ) AS UU
+			GROUP BY UU.FOLDERFILE_TYPE
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getSharedCount" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+				UU.FOLDERFILE_TYPE,
+				COUNT(UU.FOLDERFILE_TYPE) AS COUNT
+			FROM (
+				SELECT DISTINCT
+					DF.FILE_ID,
+					CASE #primary#
+						WHEN '1'
+						THEN DF.FILE_NAME1
+						ELSE DF.FILE_NAME2
+					END FILE_NAME,
+					DF.FOLDERFILE_TYPE,
+					DF.FOLDER_TYPE,
+					DF.FILE_PATH,
+					DF.FILE_SIZE,
+					DF.FILE_EXT,
+					DF.FOLDER_PATH,
+					DF.OWNER_ID,
+					DF.USE_STATUS,
+					DF.CREATE_ID,
+					CASE #primary#
+						WHEN '1'
+						THEN DF.CREATE_NAME1
+						ELSE DF.CREATE_NAME2
+					END CREATE_NAME,
+					DATE_FORMAT(DATE_ADD(DF.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+					DF.UPDATE_ID,
+					DATE_FORMAT(DATE_ADD(DF.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
+					DF.TYPE_ID,
+					FT2.TYPE_NAME,
+					FT2.TYPE_ICON,
+					CASE WHEN FV.USER_ID IS NULL
+						THEN '0'
+						ELSE '1'
+					END FAVORITE_STATUS,
+					S.SHARER_ID,
+			        CASE #primary#
+						WHEN '1'
+						THEN U.DISPLAYNAME
+						ELSE U.DISPLAYNAME2
+					END SHARER_NAME,
+					( SELECT 
+						GROUP_CONCAT(USER_ID ORDER BY SEQ_ID)
+					  FROM TBL_WEBFOLDER_SHARE 
+					  WHERE FOLDERFILE_ID = S.FOLDERFILE_ID
+					  AND FOLDERFILE_TYPE = S.FOLDERFILE_TYPE
+					  AND SHARER_ID = S.SHARER_ID ) AS USER_LIST,
+					DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
+					S.SUB_STATUS,
+					S.TENANT_ID
+				FROM (
+					SELECT
+						D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
+						'D' AS FOLDERFILE_TYPE,     D.FOLDER_TYPE,                   '' AS FILE_PATH,
+						'' AS FILE_SIZE,            FT.FILE_EXT,                     D.FOLDER_PATH,
+						D.OWNER_ID,                 D.USE_STATUS,                    D.CREATE_ID,
+						D.CREATE_NAME1,             D.CREATE_NAME2,                  D.CREATE_DATE,
+						D.UPDATE_ID,                D.UPDATE_DATE,                   FT.TYPE_ID,
+						D.TENANT_ID
+					FROM TBL_WEBFOLDER_FOLDER AS D
+					JOIN TBL_WEBFOLDER_FILETYPE AS FT
+					ON FT.FILE_EXT = 'folder'
+					AND D.TENANT_ID = FT.TENANT_ID
+					UNION
+					SELECT
+						F.FILE_ID AS FILE_ID,       F.FILE_NAME AS FILE_NAME1,       F.FILE_NAME AS FILE_NAME2,
+						'F' AS FOLDERFILE_TYPE,     D2.FOLDER_TYPE,                  F.FILE_PATH,
+						F.FILE_SIZE,                F.FILE_EXT,                      D2.FOLDER_PATH,
+						D2.OWNER_ID,                F.USE_STATUS,                    F.CREATE_ID,
+						F.CREATE_NAME1,             F.CREATE_NAME2,                  F.CREATE_DATE,
+						F.UPDATE_ID,                F.UPDATE_DATE,                   F.TYPE_ID,
+						F.TENANT_ID
+					FROM TBL_WEBFOLDER_FILE AS F
+					JOIN TBL_WEBFOLDER_FOLDER AS D2
+					ON F.FOLDER_ID = D2.FOLDER_ID
+					AND F.TENANT_ID = D2.TENANT_ID ) AS DF
+				JOIN TBL_WEBFOLDER_FILETYPE FT2
+				ON DF.TYPE_ID = FT2.TYPE_ID
+				AND DF.TENANT_ID = FT2.TENANT_ID
+				LEFT JOIN TBL_WEBFOLDER_FAVOR AS FV
+				ON DF.FILE_ID = FV.TARGET_ID
+				AND DF.FOLDERFILE_TYPE = FV.TARGET_TYPE
+				AND DF.TENANT_ID = FV.TENANT_ID
+				AND FV.USER_ID = #userId#
+				JOIN TBL_WEBFOLDER_SHARE AS S
+				ON S.FOLDERFILE_ID = DF.FILE_ID
+			    AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
+				AND S.TENANT_ID = DF.TENANT_ID
+				LEFT JOIN TBL_WEBFOLDER_SHARE_DEL AS SD
+				ON DF.FILE_ID = SD.FOLDERFILE_ID
+				AND DF.FOLDERFILE_TYPE = SD.FOLDERFILE_TYPE
+				AND DF.TENANT_ID = SD.TENANT_ID
+				AND SD.USER_ID = #userId#
+				JOIN TBL_USERMASTER AS U
+			    ON S.SHARER_ID = U.CN
+			    AND S.TENANT_ID = U.TENANT_ID
+				WHERE DF.USE_STATUS = 'Y'
+				AND SD.USER_ID IS NULL
+				AND S.USER_ID IN
+		]]>
+				<iterate property="idList" open="(" close=")" conjunction=",">
+					#idList[]#
+				</iterate>
+				<include refid="searchTerm"/>
+		<![CDATA[
+				AND DF.TENANT_ID = #tenantId# ) AS UU
+			GROUP BY UU.FOLDERFILE_TYPE
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getUserNameList" resultClass="String">
+		<![CDATA[
+			SELECT
+				CASE #primary#
+					WHEN '1' 
+					THEN DISPLAYNAME 
+					ELSE DISPLAYNAME2
+				END AS DISPLAYNAME
+			FROM (
+				SELECT
+					CN,
+					DISPLAYNAME,
+					DISPLAYNAME2,
+					TENANT_ID
+				FROM TBL_USERMASTER
+				UNION
+				SELECT
+					CN,
+					DISPLAYNAME,
+					DISPLAYNAME2,
+					TENANT_ID
+				FROM TBL_DEPTMASTER ) AS A
+			WHERE CN IN
+		]]>
+			<iterate property="idList" open="(" close=")" conjunction=",">
+				#idList[]#
+			</iterate>
+		<![CDATA[
+			AND TENANT_ID = #tenantId#
+			ORDER BY DISPLAYNAME
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getFolderUserIdList_D" resultClass="String">
+		<![CDATA[
+			SELECT DISTINCT
+				USER_ID
+			FROM TBL_WEBFOLDER_FOLDERUSER FU
+			JOIN TBL_WEBFOLDER_FOLDER F
+			ON FU.FOLDER_ID = F.FOLDER_ID
+			AND FU.TENANT_ID = F.TENANT_ID
+			WHERE F.FOLDER_TYPE = 'D'
+			AND FU.CREATE_ID = #userId#
+			AND FU.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.isShared" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM TBL_WEBFOLDER_SHARE
+			WHERE ((FOLDERFILE_TYPE = 'D' AND FOLDERFILE_ID = #folderId#)
+			OR (FOLDERFILE_TYPE = 'D' AND SUB_STATUS = 'Y'
+		]]>
+			<isNotEmpty prepend="AND" property="parentIdList">
+				<iterate prepend="FOLDERFILE_ID IN " property="parentIdList" open="(" close=")" conjunction=",">
+					#parentIdList[]#
+				</iterate>
+			</isNotEmpty>
+		<![CDATA[
+			)
+		]]>
+			<isEqual property="folderFileType" compareValue="F">
+				OR (FOLDERFILE_TYPE = 'F' AND FOLDERFILE_ID = #fileId#)
+			</isEqual>
+		<![CDATA[
+			) AND TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.isFileShared" resultClass="String">
+		<![CDATA[
+			SELECT DISTINCT
+				USER_ID
+			FROM TBL_WEBFOLDER_FOLDERUSER FU
+			JOIN TBL_WEBFOLDER_FOLDER F
+			ON FU.FOLDER_ID = F.FOLDER_ID
+			AND FU.TENANT_ID = F.TENANT_ID
+			WHERE F.FOLDER_TYPE = 'D'
+			AND FU.CREATE_ID = #userId#
+			AND FU.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<delete id="EzWebFolderDAO_m.delShare">
+		<![CDATA[
+			DELETE FROM tbl_webfolder_share 
+			WHERE
+				FOLDERFILE_ID   = #folderFileId#
+			AND 
+				FOLDERFILE_TYPE = #folderFileType#
+			AND 
+				TENANT_ID       = #tenantId#
+		]]>
+	</delete>
+	
+	<select id="EzWebFolderDAO_m.getShareSeq" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(IFNULL(MAX(CONVERT(SEQ_ID, UNSIGNED INTEGER)) , 0) + 1)
+			FROM
+				TBL_WEBFOLDER_SHARE
+			WHERE
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+
+	<insert id="EzWebFolderDAO_m.insertShare" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_WEBFOLDER_SHARE (
+				SEQ_ID,           USER_ID,    USER_TYPE,   FOLDERFILE_ID,
+				FOLDERFILE_TYPE,  CREATE_ID,  CREATE_DATE, TENANT_ID
+			)
+			VALUES (
+				#seqId#,          #userId#,   #userType#,  #folderFileId#,
+				#folderFileType#, #createId#, NOW(),       #tenantId#
+			)
+		]]>
+	</insert>
+	
+	<select id="EzWebFolderDAO_m.userDeptList" parameterClass="Map" resultClass="String">
+			SELECT
+			TU.DEPARTMENT 
+			FROM
+			TBL_USERMASTER TU 
+			WHERE 1=1
+			AND TU.CN = #userId#
+			AND TU.TENANT_ID = #tenantId#
+		<isNotEmpty property="notInDept">
+			AND TU.DEPARTMENT NOT IN ($notInDept$)	
+		</isNotEmpty>	
+
+			UNION
+			
+			SELECT
+			TA.DEPTID
+			FROM
+			TBL_ADDJOBMASTER TA
+			WHERE 1=1
+			AND TA.CN = #userId#
+			AND TA.TENANT_ID = #tenantId#
+		<isNotEmpty property="notInDept">
+			AND TA.CN NOT IN ($notInDept$)	
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.chiefDeptPath" parameterClass="Map" resultClass="String">
+			SELECT
+			TD.DEPT_CD_PATH
+			FROM
+			TBL_DEPTMASTER TD
+			WHERE
+				TD.EXTENSIONATTRIBUTE9 = #userId#
+			AND 
+				TD.TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzWebFolderDAO_m.chiefDeptList" parameterClass="Map" resultClass="String">
+			SELECT
+			TD.CN
+			FROM
+			TBL_DEPTMASTER TD
+			WHERE 1=1
+			AND TD.DEPT_CD_PATH LIKE CONCAT(#deptCdPath#,'%')
+			AND TD.TENANT_ID = #tenantId#
+		<isNotEmpty property="notInDept">
+			AND TD.CN NOT IN ($notInDept$)	
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getTrashCanList" parameterClass="Map" resultMap="trashCanVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM (
+				SELECT
+					distinct
+					FOLDER.FOLDER_id    AS TRASHCAN_ID,     
+					FOLDER.FOLDER_NAME1 AS TRASHCAN_NAME,
+					FOLDER.FOLDER_PATH 	AS TRASHCAN_PATH,
+					FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
+		            'folder'	AS TRASHCAN_EXT,
+					0 	AS TRASHCAN_SIZE,
+					DATE_ADD(FOLDER.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+					DATE_ADD(FOLDER.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+					FOLDER.CREATE_NAME1 AS CREATE_NAME1,
+		            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
+		            '' AS FILE_FOLDER_ID,
+		            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
+				FROM
+					tbl_webfolder_folder AS FOLDER
+					JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+					ON FILE_TYPE.TYPE_NAME = 'folder'
+				WHERE
+					FOLDER.USE_STATUS = 'T' AND
+					FOLDER.DELETER_ID = #userId# AND
+					FOLDER.TENANT_ID = #tenantId#
+		]]>
+		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+				<![CDATA[
+					'folder' LIKE CONCAT ('%', #searchExt#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+				<![CDATA[
+					FOLDER.FOLDER_NAME1 LIKE CONCAT ('%', #searchFileName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+				<![CDATA[
+					FOLDER.CREATE_NAME1 LIKE CONCAT ('%', #searchCreateName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+				<![CDATA[
+					FILE_TYPE.TYPE_NAME LIKE CONCAT ('%', #searchFileType#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="endrollStartDate" compareValue="">
+			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					(DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d') >= #endrollStartDate# AND DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d')<= #endrollEndDate#)
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+		<isNotEqual property="delStartDate" compareValue="">
+			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					(DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d') >= #delStartDate# AND DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d')<= #delEndDate#)
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+				UNION
+		<![CDATA[	
+			SELECT
+				distinct
+				FILES.FILE_id       AS TRASHCAN_ID,
+				FILES.FILE_NAME 	AS TRASHCAN_NAME,
+				FILES.FILE_PATH 	AS TRASHCAN_PATH,
+				CASE WHEN FILE_TYPE.TYPE_ICON IS NULL 
+				THEN (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) 
+				ELSE FILE_TYPE.TYPE_ICON 
+				END  AS TRASHCAN_ICON_URL,
+				FILES.FILE_EXT		AS TRASHCAN_EXT,
+				FILES.FILE_SIZE 	AS TRASHCAN_SIZE,
+				DATE_ADD(FILES.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				DATE_ADD(FILES.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+	            FILES.CREATE_NAME1 AS CREATE_NAME1,
+	            FILES.CREATE_NAME1 AS CREATE_NAME2,
+	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
+	            '' as FOLDER_UPPER
+			FROM
+				tbl_webfolder_file AS FILES
+				LEFT JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
+			WHERE
+				FILES.USE_STATUS = 'T' AND
+				FILES.DELETER_ID = #userId# AND
+				FILES.TENANT_ID = #tenantId#
+		]]>
+		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.FILE_EXT LIKE CONCAT ('%', #searchExt#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.FILE_NAME LIKE CONCAT ('%', #searchFileName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.CREATE_NAME1 LIKE CONCAT ('%', #searchCreateName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+				<![CDATA[
+					FILE_TYPE.TYPE_NAME LIKE CONCAT ('%', #searchFileType#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="endrollStartDate" compareValue="">
+			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.CREATE_DATE >= #endrollStartDate# AND FILES.CREATE_DATE <= #endrollEndDate#)
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+		<isNotEqual property="delStartDate" compareValue="">
+			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.UPDATE_DATE >= #delStartDate# AND FILES.UPDATE_DATE <= #delEndDate#)
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	 	<![CDATA[
+				) R
+			GROUP BY R.TRASHCAN_ID
+			ORDER BY R.UPDATE_DATE DESC
+			LIMIT #pStart#, #pEnd#
+		]]> 
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getFileListByFolderId" parameterClass="Map" resultMap="trashCanVO">
+		<![CDATA[
+			SELECT
+				distinct
+				FILES.FILE_id       AS TRASHCAN_ID,
+				FILES.FILE_NAME 	AS TRASHCAN_NAME,
+				FILES.FILE_PATH 	AS TRASHCAN_PATH,
+				FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
+				FILES.FILE_EXT		AS TRASHCAN_EXT,
+				FILES.FILE_SIZE 	AS TRASHCAN_SIZE,
+				DATE_ADD(FILES.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				DATE_ADD(FILES.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+	            FILES.CREATE_NAME1 AS CREATE_NAME1,
+	            FILES.CREATE_NAME1 AS CREATE_NAME2,
+	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
+	            "" as FOLDER_UPPER
+			FROM
+				tbl_webfolder_file AS FILES
+				INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
+			WHERE
+				FILES.USE_STATUS = 'T' AND
+				FILES.DELETER_ID = #userId# AND
+				FILES.TENANT_ID = #tenantId# AND
+				FILES.FOLDER_ID = #folderId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getFolderPath" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		
+		    SELECT
+				FOLDER.FOLDER_PATH
+			FROM 
+				TBL_WEBFOLDER_FOLDER AS FOLDER
+			where
+				FOLDER.FOLDER_ID = #folderId# AND 
+				FOLDER.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<delete id="EzWebFolderDAO_m.deleteFile" parameterClass="Map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_WEBFOLDER_FILE
+			WHERE
+				FILE_ID    = #fileId#
+			AND
+				TENANT_ID  = #tenantId#
+			AND
+				COMPANY_ID = #companyId#	
+			AND 
+				USE_STATUS = 'T'
+		]]>
+	</delete>
+	
+	<delete id="EzWebFolderDAO_m.deleteFolder" parameterClass="Map" >
+	<![CDATA[
+			DELETE
+			FROM
+				TBL_WEBFOLDER_FOLDER
+			WHERE
+				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+			AND
+				TENANT_ID = #tenantId# 
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				USE_STATUS = 'T'
+		]]>
+	</delete>
+	
+	<delete id="EzWebFolderDAO_m.deleteAllFilesInFolder" parameterClass="Map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_WEBFOLDER_FILE f JOIN
+					(
+					SELECT
+					  *
+					FROM
+						TBL_WEBFOLDER_FOLDER
+								WHERE
+									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+								AND
+									TENANT_ID = #tenantId#
+								AND
+									COMPANY_ID = #companyId#	
+					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
+			WHERE
+				f.TENANT_ID = #tenantId#
+			AND
+				f.USE_STATUS = 'T'
+		]]>
+	</delete>
+	
+	<select id="EzWebFolderDAO_m.getFolderByFolderPath"  parameterClass="Map" resultMap="trashCanVO">
+		<![CDATA[
+			SELECT
+				 distinct
+				FOLDER.FOLDER_ID    AS TRASHCAN_ID,     
+				FOLDER.FOLDER_NAME1 AS TRASHCAN_NAME,
+				FOLDER.FOLDER_PATH 	AS TRASHCAN_PATH,
+				FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
+	            'folder'	AS TRASHCAN_EXT,
+				0 	AS TRASHCAN_SIZE,
+				DATE_ADD(FOLDER.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				DATE_ADD(FOLDER.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				FOLDER.CREATE_NAME1 AS CREATE_NAME1,
+	            FOLDER.CREATE_NAME1 AS CREATE_NAME2,
+	            "" AS FILE_FOLDER_ID,
+	            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
+			FROM
+				TBL_WEBFOLDER_FOLDER AS FOLDER
+				LEFT JOIN TBL_WEBFOLDER_FILETYPE AS FILE_TYPE
+				ON FILE_TYPE.TYPE_NAME = 'folder'
+			WHERE
+				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				COMPANY_ID = #companyId#
+			]]>	
+	</select>
+	
+	<update id="EzWebFolderDAO_m.restoreFile" parameterClass="Map">
+		UPDATE
+			TBL_WEBFOLDER_FILE
+		SET
+			USE_STATUS = 'Y'
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			FILE_ID = #fileId#
+		AND
+			DELETER_ID = #userId#
+	</update>
+	
+	<update id="EzWebFolderDAO_m.restoreFolder" parameterClass="Map">
+		UPDATE
+			TBL_WEBFOLDER_FOLDER
+		SET
+			USE_STATUS = 'Y'
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+		AND
+			DELETER_ID = #userId#
+		AND
+			COMPANY_ID = #companyId#	
+	</update>
+	
+	<update id="EzWebFolderDAO_m.restoreAllFilesInFolder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FILE f JOIN
+					(
+					SELECT
+					  *
+					FROM
+						TBL_WEBFOLDER_FOLDER
+								WHERE
+									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+								AND
+									TENANT_ID = #tenantId#
+					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
+			SET
+				f.USE_STATUS = 'Y',
+				f.DELETER_ID = #userId#
+			WHERE
+				f.TENANT_ID = #tenantId#
+			AND
+				f.USE_STATUS = 'T'
+		]]>
+	</update>
+	
+	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteFileVO">
+		SELECT
+			*
+		FROM (
+			SELECT
+				FAVOR.TARGET_ID,
+				FILES.FILE_NAME 	AS TARGET_NAME,
+				FAVOR.TARGET_TYPE 	AS TARGET_TYPE,
+				FILE_TYPE.TYPE_ICON AS TARGET_ICON_URL,
+				FILE_TYPE.TYPE_NAME,
+				FOLDER.FOLDER_PATH 	AS TARGET_PATH,
+				FILES.FILE_EXT		AS TARGET_EXT,
+				FILES.FILE_SIZE 	AS TARGET_SIZE,
+				FILES.CREATE_ID,
+				FILES.CREATE_NAME1,
+				FILES.CREATE_NAME2,
+				DATE_ADD(FAVOR.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				FAVOR.TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FAVOR AS FAVOR
+				INNER JOIN TBL_WEBFOLDER_FILE AS FILES
+				ON FILES.FILE_ID = FAVOR.TARGET_ID AND FILES.TENANT_ID = FAVOR.TENANT_ID
+					INNER JOIN TBL_WEBFOLDER_FOLDER FOLDER
+					ON FOLDER.FOLDER_ID = FILES.FOLDER_ID AND FOLDER.TENANT_ID = FAVOR.TENANT_ID
+						INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+						ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID AND FILE_TYPE.TENANT_ID = FAVOR.TENANT_ID
+			WHERE
+				FAVOR.TARGET_TYPE = 'F' AND
+				FAVOR.USER_ID = #userId# AND
+				FAVOR.TENANT_ID = #tenantId# AND
+				FILES.USE_STATUS = 'Y'
+				
+			UNION
+				
+			SELECT
+				FAVOR.TARGET_ID,
+				FOLDER.FOLDER_NAME1 AS TARGET_NAME,
+				CONCAT('D_', FOLDER.FOLDER_TYPE) AS TARGET_TYPE,
+				FILE_TYPE.TYPE_ICON AS TARGET_ICON_URL,
+				FILE_TYPE.TYPE_NAME,
+				FOLDER.FOLDER_PATH AS TARGET_PATH,
+				'folder' 		AS TARGET_EXT,
+				0				AS TARGET_SIZE,
+				FOLDER.CREATE_ID,
+				FOLDER.CREATE_NAME1,
+				FOLDER.CREATE_NAME2,
+				DATE_ADD(FAVOR.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				FAVOR.TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FAVOR AS FAVOR
+				INNER JOIN TBL_WEBFOLDER_FILETYPE AS FILE_TYPE
+				ON FILE_TYPE.TYPE_NAME = 'folder' AND FILE_TYPE.TENANT_ID = FAVOR.TENANT_ID
+					INNER JOIN TBL_WEBFOLDER_FOLDER AS FOLDER
+					ON FOLDER.FOLDER_ID = FAVOR.TARGET_ID AND FOLDER.TENANT_ID = FAVOR.TENANT_ID
+			WHERE
+				FAVOR.TARGET_TYPE = 'D' AND
+				FAVOR.USER_ID = #userId# AND
+				FAVOR.TENANT_ID = #tenantId# AND
+				FOLDER.USE_STATUS = 'Y'
+		) AS RESULT
+		WHERE
+			RESULT.TARGET_EXT LIKE CONCAT('%', #searchExt#, '%') AND
+			RESULT.TARGET_NAME LIKE CONCAT('%', #searchFileName#, '%') AND
+			RESULT.CREATE_NAME1 LIKE CONCAT('%', #searchCreatorName#, '%') AND
+			RESULT.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+		ORDER BY
+			RESULT.TARGET_TYPE ASC, CREATE_DATE DESC
+		LIMIT
+			#startIndex#, #listCount#
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getFavoriteFolderCount" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(RESULT.TARGET_NAME) COUNT
+		FROM (
+			SELECT
+				FOLDER.FOLDER_NAME1 AS TARGET_NAME,
+				CONCAT('D_', FOLDER.FOLDER_TYPE) AS TARGET_TYPE,
+				'folder' 		AS TARGET_EXT,
+				FILE_TYPE.TYPE_NAME,
+				FOLDER.CREATE_NAME1,
+				FOLDER.CREATE_NAME2,
+				DATE_ADD(FAVOR.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE
+			FROM
+				TBL_WEBFOLDER_FAVOR AS FAVOR
+				INNER JOIN TBL_WEBFOLDER_FILETYPE AS FILE_TYPE
+				ON FILE_TYPE.TYPE_NAME = 'folder' AND FILE_TYPE.TENANT_ID = FAVOR.TENANT_ID
+					INNER JOIN TBL_WEBFOLDER_FOLDER AS FOLDER
+					ON FOLDER.FOLDER_ID = FAVOR.TARGET_ID AND FOLDER.TENANT_ID = FAVOR.TENANT_ID
+			WHERE
+				FAVOR.TARGET_TYPE = 'D' AND
+				FAVOR.USER_ID = #userId# AND
+				FAVOR.TENANT_ID = #tenantId# AND
+				FOLDER.USE_STATUS = 'Y'
+		) AS RESULT
+		WHERE
+			RESULT.TARGET_EXT LIKE CONCAT('%', #searchExt#, '%') AND
+			RESULT.TARGET_NAME LIKE CONCAT('%', #searchFileName#, '%') AND
+			RESULT.CREATE_NAME1 LIKE CONCAT('%', #searchCreatorName#, '%') AND
+			RESULT.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getFavoriteFileCount" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(RESULT.TARGET_NAME) COUNT
+		FROM (
+			SELECT
+				FILES.FILE_NAME 	AS TARGET_NAME,
+				FAVOR.TARGET_TYPE 	AS TARGET_TYPE,
+				FILES.FILE_EXT		AS TARGET_EXT,
+				FILE_TYPE.TYPE_NAME,
+				FILES.CREATE_NAME1,
+				FILES.CREATE_NAME2,
+				DATE_ADD(FAVOR.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE
+			FROM
+				TBL_WEBFOLDER_FAVOR AS FAVOR
+				INNER JOIN TBL_WEBFOLDER_FILE AS FILES
+				ON FILES.FILE_ID = FAVOR.TARGET_ID AND FILES.TENANT_ID = FAVOR.TENANT_ID
+					INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+					ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID AND FILE_TYPE.TENANT_ID = FAVOR.TENANT_ID
+			WHERE
+				FAVOR.TARGET_TYPE = 'F' AND
+				FAVOR.USER_ID = #userId# AND
+				FAVOR.TENANT_ID = #tenantId# AND
+				FILES.USE_STATUS = 'Y'
+		) AS RESULT
+		WHERE
+			RESULT.TARGET_EXT LIKE CONCAT('%', #searchExt#, '%') AND
+			RESULT.TARGET_NAME LIKE CONCAT('%', #searchFileName#, '%') AND
+			RESULT.CREATE_NAME1 LIKE CONCAT('%', #searchCreatorName#, '%') AND
+			RESULT.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+	</select>
+	
+	<select id="EzWebFolderDAO_m.isExistsFavorite" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(FAVOR.TARGET_ID) COUNT
+		FROM
+			TBL_WEBFOLDER_FAVOR AS FAVOR
+		WHERE
+			FAVOR.TARGET_ID = #targetId# AND
+			FAVOR.TARGET_TYPE = #targetType# AND
+			FAVOR.USER_ID = #userId# AND
+			FAVOR.TENANT_ID = #tenantId#
+	</select>
+	
+	<insert id="EzWebFolderDAO_m.addFavorite">
+		INSERT INTO
+			TBL_WEBFOLDER_FAVOR
+		VALUES
+			(#targetId#, #userId#, #targetType#, #createDate#, #tenantId#)
+	</insert>
+	
+	<delete id="EzWebFolderDAO_m.deleteFavorite">
+		DELETE
+		FROM
+			TBL_WEBFOLDER_FAVOR
+		WHERE
+			TARGET_ID = #targetId# AND
+			TARGET_TYPE = #targetType# AND
+			USER_ID = #userId# AND
+			TENANT_ID = #tenantId#
+	</delete>
+
+</sqlMap>
