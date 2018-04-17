@@ -8,5 +8,7 @@
 </head>
 <body>
 mainPage
+<br><br>
+status = ${status}
 </body>
 </html>

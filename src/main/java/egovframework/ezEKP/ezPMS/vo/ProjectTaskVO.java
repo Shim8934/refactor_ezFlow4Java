@@ -1,0 +1,358 @@
+package egovframework.ezEKP.ezPMS.vo;
+
+import java.sql.Date;
+
+//업무 관련 VO
+public class ProjectTaskVO {
+	 // 업무 아이디 
+    private Long taskId;
+
+    // 테넌트 아이디 
+    private int tenantId;
+
+    // 프로젝트 아이디 
+    private Long projectId;
+
+    // 그룹 아이디 
+    private Long groupId;
+
+    // 업무 명 
+    private String taskName;
+
+    // 상태 
+    private String status;
+
+    // 계획 시작 일 
+    private Date planStartDate;
+
+    // 계획 종료 일 
+    private Date planEndDate;
+
+    // 실제 시작 일 
+    private Date realStartDate;
+
+    // 실제 종료 일 
+    private Date realEndDate;
+
+    // 실제 진행률 
+    private Float realProgress;
+
+    // 가중치 
+    private Float weight;
+
+    // 개요 
+    private String overview;
+
+    // 참여 인원수 
+    private int memberCount;
+
+    // 총괄 담당자 아이디 
+    private String headManagerId;
+
+    // 총괄 담당자 명 
+    private String headManagerName;
+
+    // 총괄 담당자 명다국어 
+    private String headManagerName2;
+
+    // 총괄 담당자 부서 
+    private String headManagerDeptname;
+
+    // 총괄 담당자 부서다국어 
+    private String headManagerDeptname2;
+
+    // 게시자 아이디 
+    private Long writerId;
+
+    // 게시 일 
+    private Date writeDate;
+
+    // 게시자 명 
+    private String writerName;
+
+    // 게시자 명다국어 
+    private String writerName2;
+
+    // 게시자 부서 
+    private String writerDeptname;
+
+    // 게시자 부서다국어 
+    private String writerDeptname2;
+
+    // 트리 깊이 
+    private int treeDepth;
+
+    // 조상 그룹 
+    private String ancesterGroup;
+
+    // 정렬 순서 
+    private int sortOrder;
+
+    // 업무일 
+    private int workingday;
+
+    // 남은 기한 
+    private int restDueday;
+
+    // 업무관리 업무 아이디 
+    private Long linkTaskId;
+
+    // 삭제 상태 
+    private int delStatus;
+
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
+    }
+
+    public int getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(int tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getPlanStartDate() {
+        return planStartDate;
+    }
+
+    public void setPlanStartDate(Date planStartDate) {
+        this.planStartDate = planStartDate;
+    }
+
+    public Date getPlanEndDate() {
+        return planEndDate;
+    }
+
+    public void setPlanEndDate(Date planEndDate) {
+        this.planEndDate = planEndDate;
+    }
+
+    public Date getRealStartDate() {
+        return realStartDate;
+    }
+
+    public void setRealStartDate(Date realStartDate) {
+        this.realStartDate = realStartDate;
+    }
+
+    public Date getRealEndDate() {
+        return realEndDate;
+    }
+
+    public void setRealEndDate(Date realEndDate) {
+        this.realEndDate = realEndDate;
+    }
+
+    public Float getRealProgress() {
+        return realProgress;
+    }
+
+    public void setRealProgress(Float realProgress) {
+        this.realProgress = realProgress;
+    }
+
+    public Float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Float weight) {
+        this.weight = weight;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public int getMemberCount() {
+        return memberCount;
+    }
+
+    public void setMemberCount(int memberCount) {
+        this.memberCount = memberCount;
+    }
+
+    public String getHeadManagerId() {
+        return headManagerId;
+    }
+
+    public void setHeadManagerId(String headManagerId) {
+        this.headManagerId = headManagerId;
+    }
+
+    public String getHeadManagerName() {
+        return headManagerName;
+    }
+
+    public void setHeadManagerName(String headManagerName) {
+        this.headManagerName = headManagerName;
+    }
+
+    public String getHeadManagerName2() {
+        return headManagerName2;
+    }
+
+    public void setHeadManagerName2(String headManagerName2) {
+        this.headManagerName2 = headManagerName2;
+    }
+
+    public String getHeadManagerDeptname() {
+        return headManagerDeptname;
+    }
+
+    public void setHeadManagerDeptname(String headManagerDeptname) {
+        this.headManagerDeptname = headManagerDeptname;
+    }
+
+    public String getHeadManagerDeptname2() {
+        return headManagerDeptname2;
+    }
+
+    public void setHeadManagerDeptname2(String headManagerDeptname2) {
+        this.headManagerDeptname2 = headManagerDeptname2;
+    }
+
+    public Long getWriterId() {
+        return writerId;
+    }
+
+    public void setWriterId(Long writerId) {
+        this.writerId = writerId;
+    }
+
+    public Date getWriteDate() {
+        return writeDate;
+    }
+
+    public void setWriteDate(Date writeDate) {
+        this.writeDate = writeDate;
+    }
+
+    public String getWriterName() {
+        return writerName;
+    }
+
+    public void setWriterName(String writerName) {
+        this.writerName = writerName;
+    }
+
+    public String getWriterName2() {
+        return writerName2;
+    }
+
+    public void setWriterName2(String writerName2) {
+        this.writerName2 = writerName2;
+    }
+
+    public String getWriterDeptname() {
+        return writerDeptname;
+    }
+
+    public void setWriterDeptname(String writerDeptname) {
+        this.writerDeptname = writerDeptname;
+    }
+
+    public String getWriterDeptname2() {
+        return writerDeptname2;
+    }
+
+    public void setWriterDeptname2(String writerDeptname2) {
+        this.writerDeptname2 = writerDeptname2;
+    }
+
+    public int getTreeDepth() {
+        return treeDepth;
+    }
+
+    public void setTreeDepth(int treeDepth) {
+        this.treeDepth = treeDepth;
+    }
+
+    public String getAncesterGroup() {
+        return ancesterGroup;
+    }
+
+    public void setAncesterGroup(String ancesterGroup) {
+        this.ancesterGroup = ancesterGroup;
+    }
+
+    public int getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
+    public int getWorkingday() {
+        return workingday;
+    }
+
+    public void setWorkingday(int workingday) {
+        this.workingday = workingday;
+    }
+
+    public int getRestDueday() {
+        return restDueday;
+    }
+
+    public void setRestDueday(int restDueday) {
+        this.restDueday = restDueday;
+    }
+
+    public Long getLinkTaskId() {
+        return linkTaskId;
+    }
+
+    public void setLinkTaskId(Long linkTaskId) {
+        this.linkTaskId = linkTaskId;
+    }
+
+    public int getDelStatus() {
+        return delStatus;
+    }
+
+    public void setDelStatus(int delStatus) {
+        this.delStatus = delStatus;
+    }
+}
