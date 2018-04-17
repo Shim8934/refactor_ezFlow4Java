@@ -79,7 +79,6 @@ public class EzPMSController {
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		
 		String status = result.get("status").toString();
-		System.out.println(result.get("status").toString());
 		
 		model.addAttribute("status", status);
 		
@@ -155,8 +154,7 @@ public class EzPMSController {
 		System.out.println(result);
 		model.addAttribute("test", result.get("status").toString());
 		model.addAttribute("result", result);
-		System.out.println(result.get("status").toString());
-//		model.addAttribute("list", list);
+		
 		LOGGER.debug("ezPMS addNewProject ended");
 		return result;
 	}

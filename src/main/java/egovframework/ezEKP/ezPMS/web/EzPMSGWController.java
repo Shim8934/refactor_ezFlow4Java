@@ -55,29 +55,28 @@ public class EzPMSGWController {
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String status = request.getParameter("status");
 			
 			Map<String, Object> search = new HashMap<>();
 			
 			//프로젝트 리스트 가져오기
-			List<ProjectListVO> projectList = ezPMSService.getProjectList(info.getTenantId(), info, status, search, info.getOffSet(), lang);
+			//List<ProjectListVO> projectList = ezPMSService.getProjectList(info.getTenantId(), info, status, search, info.getOffSet(), lang);
 			
 			//프로젝트 리스트 환경설정 가져오기
-			ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, info.getTenantId());
+			//ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, info.getTenantId());
 			
 			
 			JSONObject data = new JSONObject();
 			
 			result.put("status", "ok");
-			result.put("code", 0);
+			result.put("code", 0);			
 			result.put("data", data);
-			
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");
+			result.put("data", e.getMessage());
 		}
 		
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/userId/" + userId + "] ended.");
@@ -96,9 +95,9 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			ProjectListVO newProject = new ProjectListVO();
+			//ProjectListVO newProject = new ProjectListVO();
 			
-			ezPMSService.addNewProject(newProject, info.getTenantId());
+			//ezPMSService.addNewProject(newProject, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -151,7 +150,7 @@ public class EzPMSGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			ProjectMainSettingVO project = new ProjectMainSettingVO();
 			
@@ -210,7 +209,7 @@ public class EzPMSGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
 			ProjectListVO project = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang);
@@ -302,7 +301,7 @@ public class EzPMSGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String orderStatus = request.getParameter("orderStatus");
 			
 			ezPMSService.changeKanbanOrder(projectId, userId, orderStatus, info.getTenantId());
@@ -332,7 +331,7 @@ public class EzPMSGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			ezPMSService.addFavoriteProject(projectId, userId, info.getTenantId());
 			
@@ -361,7 +360,7 @@ public class EzPMSGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			ezPMSService.deleteFavortieProject(projectId, userId, info.getTenantId());
 			
@@ -457,7 +456,7 @@ public class EzPMSGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			ProjectListVO project = new ProjectListVO();
 			
