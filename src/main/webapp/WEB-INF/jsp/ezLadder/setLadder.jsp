@@ -68,9 +68,16 @@
 						$("#makeLad").removeAttr("disabled").css({"background": "#0470e4", "cursor": "pointer"});
 					}
 				});
-				$("#ladderPreList").on("click", function() {
-					preLadderList();
-				});
+				$("#ladderPreList")
+					.on("click", function() {
+						preLadderList();
+					})
+					.on("mouseenter", function() {
+						$(this).children("img").attr("src", "/images/ezLadder/icon_preLadder_hover.png");
+					})
+					.on("mouseleave", function() {
+						$(this).children("img").attr("src", "/images/ezLadder/icon_preLadder.png");
+					});
 				$("#addAttendant")
 					.on("click", function() {
 						_manage_attendant();
@@ -246,7 +253,7 @@
 				if(ladderType == "0") {
 					bombnum = 0;
 					lineInfo.forEach(function(line, index) {
-						if(line["item"] == "꽝") {
+						if(line["item"] == "<spring:message code='ezLadder.t056' />") {
 							bombnum++;
 						}
 					});
@@ -667,9 +674,9 @@
 		</style>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code="ezLadder.t100" /></h1>
+		<h1><spring:message code="ezLadder.t018" /></h1>
 		<form id="ladMakeForm" method="post" action="/ezLadder/setLadder.do" name="ladMakeForm">
-			<table class="setTable">
+			<table class="setTable" style="min-width: 750px;">
 				<tr>
 					<td>
 						<div style="height: 50px; line-height: 50px; margin-bottom: 10px; position: relative;">
@@ -731,20 +738,20 @@
 							<img src="/images/ezLadder/icon_addAttendant.png" style="padding-left: 2px; padding-top: 2px; display: block"/>
 							<img src="/images/ezLadder/icon_addAttendant_hover.png" style="padding-left: 2px; padding-top: 2px; display: none"/>
 						</div>
-						<div id="ladderLineBox" style="border: 1px solid #ddd;">
+						<div id="ladderLineBox" style="border: 1px solid #ddd; height: 450px; overflow-y: hidden; overflow-x: auto; min-width: 750px;">
 							<div style="height: 140px;">
 								<ul id="attendantList"></ul>
 							</div>
 							<div id="lineDiv" style="position: relative; z-index: -1;">
-								<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
-								<canvas id='ladderCanvas' width='0' height='800'></canvas>
+								<canvas id='ladderCanvasLine' width='0' height='250'></canvas>
+								<canvas id='ladderCanvas' width='0' height='250'></canvas>
 							</div>
 							<ul id="itemList" style="margin-top: 10px; height: 50px;"></ul>
 						</div>
 					</td>
 				</tr>
 			</table>
-			<div class="wrap">
+			<div class="wrap" style="min-width: 800px;">
 				<input type="button" class="ladderBtn" id="makeLad" disabled="disabled" value="<spring:message code="ezLadder.t018"/>">
 			</div>
 		</form>

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -7,26 +6,14 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code="ezLadder.t009" /></title>
-		<%-- <link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css"> --%>
+		<title><spring:message code="ezLadder.t001" /></title>
+		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
 			function selectLadType(type) {
 				window.location.href = "/ezLadder/setLadder.do?type="+type;
-			}
-			$(function() {
-			
-				ladder_main_resize();
-				$(window).resize(function() {
-					ladder_main_resize();
-				});
-			});
-			// 윈도우 창 조절
-			function ladder_main_resize() {
-				var win_width = $(window).width();
-				var win_height = $(window).height();
 			}
 		</script>
 		<style type="text/css">
@@ -51,36 +38,36 @@
 			
 		</style>
 	</head>
-	<body>
-	<div class="gameType_wrap">
-	    <h2><spring:message code='ezLadder.t100' /></h2>
-	    <ul>
-	    	<li class="gameType0" onClick='selectLadType(0)'>
-	        	<dl>
-	            	<dt><spring:message code='ezLadder.t101' /></dt>
-	                <dd><spring:message code='ezLadder.t113' /><br><spring:message code='ezLadder.t114' /></dd>
-	            </dl>
-	        </li>
-	        <li class="gameType1" onClick='selectLadType(1)'>
-	        	<dl>
-	            	<dt><spring:message code='ezLadder.t102' /></dt>
-	                <dd><spring:message code='ezLadder.t115' /><br><spring:message code='ezLadder.t116' /></dd>
-	            </dl>
-	        </li>
-	        <li class="gameType2" onClick='selectLadType(2)'>
-	        	<dl>
-	            	<dt><spring:message code='ezLadder.t103' /></dt>
-	                <dd><spring:message code='ezLadder.t117' /><br><spring:message code='ezLadder.t118' /></dd>
-	            </dl>
-	        </li>
-	        <li class="gameType3" onClick='selectLadType(3)'>
-	        	<dl>
-	            	<dt><spring:message code='ezLadder.t104' /></dt>
-	                <dd><spring:message code='ezLadder.t119' /><br><spring:message code='ezLadder.t120' /></dd>
-	            </dl>
-	        </li>
-	    </ul>
-	</div>
-		
+	<body class="mainbody">
+		<h1><spring:message code="ezLadder.t018" /></h1>
+		<div class="gameType_wrap">
+		    <h2><spring:message code='ezLadder.t100' /></h2>
+		    <ul>
+		    	<li class="gameType0" onClick='selectLadType(0)'>
+		        	<dl>
+		            	<dt><spring:message code='ezLadder.t101' /></dt>
+		                <dd><spring:message code='ezLadder.t113' /><br><spring:message code='ezLadder.t114' /></dd>
+		            </dl>
+		        </li>
+		        <li class="gameType1" onClick='selectLadType(1)'>
+		        	<dl>
+		            	<dt><spring:message code='ezLadder.t102' /></dt>
+		                <dd><spring:message code='ezLadder.t115' /><br><spring:message code='ezLadder.t116' /></dd>
+		            </dl>
+		        </li>
+		        <li class="gameType2" onClick='selectLadType(2)'>
+		        	<dl>
+		            	<dt><spring:message code='ezLadder.t103' /></dt>
+		                <dd><spring:message code='ezLadder.t117' /><br><spring:message code='ezLadder.t118' /></dd>
+		            </dl>
+		        </li>
+		        <li class="gameType3" onClick='selectLadType(3)'>
+		        	<dl>
+		            	<dt><spring:message code='ezLadder.t104' /></dt>
+		                <dd><spring:message code='ezLadder.t119' /><br><spring:message code='ezLadder.t120' /></dd>
+		            </dl>
+		        </li>
+		    </ul>
+		</div>
 	</body>
 </html>

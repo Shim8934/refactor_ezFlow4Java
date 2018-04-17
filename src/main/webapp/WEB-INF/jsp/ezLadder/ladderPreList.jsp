@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -7,11 +6,9 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code="ezLadder.t009" /></title>
+		<title><spring:message code="ezLadder.t073" /></title>
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
-		<!-- <link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css" type="text/css"> -->
 		<link rel="stylesheet" href="/css/ezLadder/ladderPreList.css" type="text/css">
-		<!-- <link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css"> -->	
 		<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
@@ -120,11 +117,12 @@
 			
 			function showLadderPreview() {
 				var previewSrc = "/ezLadder/getLadderGame.do?ladderId=" + ladderID + "&mode=preview";
-				
+				var $ladderPreview = $("#ladderPreview");
 				$(".ladderPreList_right").scrollTop(0);
-				$("#ladderPreview").attr("src", previewSrc);
-				if($("#ladderPreview").css("height") === "0px") {
-					$("#ladderPreview").css("height", "1440px");
+				$ladderPreview.attr("src", previewSrc);
+				if($ladderPreview.css("height") === "0px") {
+					$ladderPreview.css("height", "1360px");
+					$("#ladderPreviewLayer").css("height", "1320px");
 				}
 			}
 			
@@ -142,7 +140,7 @@
 	            }
 	            
 				makePageSelPage();
-				$("#ladderPreview").css("height", "0px");
+				$("#ladderPreview, #ladderPreviewLayer").css("height", "0px");
 				
 				/** mouse event */
 				var selecColor = "rgb(233, 241, 255)";
@@ -274,7 +272,7 @@
 		</script>
 </head>
 	<body class="popup">
-		<h1 id="h1Title">이전 사다리 불러오기</h1>
+		<h1 id="h1Title"><spring:message code="ezLadder.t073" /></h1>
 			<!-- 다시 -->
 				<div class="ladderPreList_wrap">
 					<div class="ladderPreList_contents">
@@ -292,8 +290,8 @@
 							<div id="tblPageRayer" style="margin-top: 10px;"></div>
 						</div>
 						<div class="ladderPreList_right" style="position: relative;">
-							<div style="width: 794px; height: 1440px; position: absolute; z-index: 1000;"></div>
-							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 777px;"></iframe>
+							<div id="ladderPreviewLayer" style="width: 894px; position: absolute; z-index: 1000;"></div>
+							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 877px;"></iframe>
 						</div>
 					</div>
 				</div>

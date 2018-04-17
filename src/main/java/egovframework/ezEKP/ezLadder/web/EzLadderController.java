@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.json.JsonString;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +31,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezLadder.service.EzLadderService;
 import egovframework.ezEKP.ezLadder.vo.LadderBmUserVO;
 import egovframework.ezEKP.ezLadder.vo.LadderBmVO;
+import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderOrderVO;
+import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -164,8 +171,8 @@ public class EzLadderController {
 	 * */
 	@RequestMapping(value = "/ezLadder/selectLadderType.do")
 	public String ladderTypeView() {
-		logger.debug("selectLadderType.do started.");
-		logger.debug("selectLadderType.do ended.");
+		logger.debug("selectLadderType started.");
+		logger.debug("selectLadderType ended.");
 		
 		return "ezLadder/selectLadderType";
 	}
@@ -174,14 +181,13 @@ public class EzLadderController {
 	 * 사다리 게임 설정 작성
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.GET)
-	public String setLadderView(@CookieValue("loginCookie") String loginCookie, String type, String ladderId, Model model, HttpServletRequest request) throws Exception {
-		logger.debug("setLadder.do started.");
-		logger.debug("### type: "+type+" :: ladderid: "+ladderId);
+	public String setLadderView(String type, String ladderId, Model model) throws Exception {
+		logger.debug("setLadder started.");
 		
 		model.addAttribute("ladType", type);
 		model.addAttribute("ladderId", ladderId);
 		
-		logger.debug("setLadder.do ended.");
+		logger.debug("setLadder ended.");
 		
 		return "ezLadder/setLadder";
 	}
@@ -190,25 +196,17 @@ public class EzLadderController {
 	 * 참여자 추가 (조직도 호출)
 	 * */
 	@RequestMapping(value = "/ezLadder/setLadderAttendant.do")
-	public String setLadderAttendant(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
-		logger.debug("setLadderAttendant.do started.");
+	public String setLadderAttendant(@CookieValue("loginCookie") String loginCookie, Model model) {
+		logger.debug("setLadderAttendant started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID());
 		
-		logger.debug("setLadderAttendant.do ended.");
+		logger.debug("setLadderAttendant ended.");
 		
 		return "ezLadder/ladderSetAttendant";
-	}
-	
-	/**
-	 * 참여자 검색 시 이름 체크 팝업창
-	 * */
-	@RequestMapping(value = "/ezLadder/checkName.do")
-	public String ladderCheckName() {
-		return "ezLadder/ladderCheckName";
 	}
 	
 	/**
@@ -218,8 +216,9 @@ public class EzLadderController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezLadder/setLadder.do", method = RequestMethod.POST)
 	public String setLadder(@CookieValue("loginCookie") String loginCookie, String title, String type, String secretFlag, String lineCnt, 
-			String [] userIds, String [] userNames, String [] userName2s, String [] items,/*LadderVO ladVO, LadderLineVO ladLineVO,*/ HttpServletRequest request, Model model) throws Exception {
-		logger.debug("setLadder.do started.");
+			String [] userIds, String [] userNames, String [] userName2s, String [] items, 
+			LadderVO ladVO, LadderLineVO ladLineVO, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("setLadder started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -259,8 +258,9 @@ public class EzLadderController {
 			return "error";
 		}
 		
-		logger.debug("setLadder.do ended.");
-		return "forward:/ezLadder/ladderMain.do?mode=all&currPage=1&searchSelect=&searchInput=&sort=writeDate&sortFlag=desc";
+		logger.debug("setLadder ended.");
+		
+		return "forward:/ezLadder/ladderMain.do?brdID=7";
 	}
 	
 	/**
@@ -271,7 +271,8 @@ public class EzLadderController {
 	public String getLadderBM(@CookieValue("loginCookie") String loginCookie, String ladderBmId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getLadderBM.do started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = "";
@@ -305,6 +306,7 @@ public class EzLadderController {
 	
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
+			
 			model.addAttribute("bmList", list);
 		} else {
 			return "error";
@@ -317,10 +319,13 @@ public class EzLadderController {
 	/**
 	 * 모든팝업
 	 * */
-	@RequestMapping(value = "/ezLadder/ladderPopup.do"/*value = "/ezLadder/inputBmName.do"*/)
-	public String setBmName(String popupType, Model model) {
+	@RequestMapping(value = "/ezLadder/ladderPopup.do")
+	public String ladderPopup(String popupType, Model model) {
+		logger.debug("ladderPopup.do started.");
 		
 		model.addAttribute("popupType", popupType);
+		
+		logger.debug("ladderPopup.do ended.");
 		
 		return "ezLadder/ladderPopup";
 	}
@@ -789,7 +794,7 @@ public class EzLadderController {
 		String status = jsonResult.get("status").toString();
 		
 		if (status.equals("ok")) {
-			this.template.convertAndSend(retDestination, jsonResult.get("data").toString());
+			this.template.convertAndSend(retDestination, userInfo.getId());
 		} else {
 			return "error";
 		}

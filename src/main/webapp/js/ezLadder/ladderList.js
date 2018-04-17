@@ -133,7 +133,8 @@ function imposDelete(){
 }
 
 // 삭제 가능
-function deleteLadder(ladderId) {
+function deleteLadder(ladderId, event) {
+	event.stopPropagation();
 	
 	mode = modeCheck;
 	allData = [ ladderId, searchSelect, searchInput, mode, currPage, back ];
