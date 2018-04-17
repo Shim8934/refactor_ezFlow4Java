@@ -553,6 +553,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int isSelOnlyOnce = Integer.parseInt(req.getParameter("hidIsSelOnlyOnce"));
 		String OptImgFilePath = req.getParameter("hidOptImgFilePath");
 		int sendPostNotice = Integer.parseInt(req.getParameter("hidSendPostNotice"));
+		int openToAll = Integer.parseInt(req.getParameter("hidOpenToAll"));
 		String[] OptRowArr = OptImgFilePath.split("\\|");
 		
 		Map<String, String> filePathMap = new HashMap<String, String>();
@@ -618,6 +619,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO.setIsSorting(isSorting);
 		pollQuestionVO.setIsSelOnlyOnce(isSelOnlyOnce);
 		pollQuestionVO.setSendPostNotice(sendPostNotice);
+		pollQuestionVO.setOpenToAll(openToAll);
 		
 		
 		if (!qstModifyInfo.equals("")) {
