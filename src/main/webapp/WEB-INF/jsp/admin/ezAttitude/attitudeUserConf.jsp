@@ -7,10 +7,12 @@
 		<title>사용자별 근태관리</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
+		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
 	    
 	    <style>
@@ -22,12 +24,26 @@
 	    	}
 	    	tr.hover:hover {background:#eee; color:#fff;}
 			.selectTR  {background-color: rgb(233, 241, 255);}
+			#searchTable {
+				border-top: 1px solid #e8e8e8;
+				border-left: 1px solid #e8e8e8;
+				border-right: 1px solid #e8e8e8;
+				background-color: #fcfcfc;
+			}
+			#searchTable td {
+				padding: 8px 5px;
+			}
 	    </style>
 	    
 	    <script type="text/javascript">
 	    	var pCompanyId = ""; //현재 선택된 회사의 아이디
 	    	var searchUserName = ""; // 검색조건 (사원명)
 	    	var searchDeptName = ""; // 검색조건 (부서명)
+	    	var searchTitle = ""; // 검색조건 (직위)
+	    	var searchCompareValue = ""; // 검색조건(구분)
+	    	//검색조건 (근무시간) Hr,Min 묶음으로
+	    	var searchStartTime = "";
+	    	var searchEndTime = "";
 	    	var pageNum = 1; // 페이지 ==> 초기값 설정
 	    	var totalCount = "" // 게시물 총 갯수
 	    	var totalPage = ""; // 게시판의 총 페이지갯수
@@ -37,8 +53,11 @@
 	    	var adminCompany = "${adminCompany}";
 	    	
 	    	//"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"
-	    	
+	    	//레이어 만들고 업데이트하는 로직 추가, 추가,삭제 기존로직 타고 다지우고
 	    	$(function(){
+	    		$('#searchStartTime').timepicker({ 'timeFormat': 'H:i' });
+        		$('#searchEndTime').timepicker({ 'timeFormat': 'H:i' });
+        		
 		        if (document.getElementById("ListCompany").length == 0) {
 		            alert("<spring:message code = 'ezAttitude.t32' />");
 		        } else {
@@ -73,7 +92,7 @@
 		    			
 		    			getUserConfList();
 	    			}
-	    		})
+	    		});
 	    	})
 	    	
 	    	function company_change(){
@@ -96,6 +115,10 @@
 	    				companyId : pCompanyId,
 	   					userName : searchUserName,
 	   					deptName : searchDeptName,
+	   					title : searchTitle,
+	   					startTime : searchStartTime,
+	   					endTime : searchEndTime,
+	   					compareValue : searchCompareValue,
 	   					pageNum : pageNum,
 	   					listSize : listSize,
 	   					orderCell : orderCell,
@@ -116,14 +139,14 @@
 	    		var resultHtml = "";
 	    		$("#attiBoardList tbody").html("");
 	    		
-	    		for (var resultLeng = 0; resultLeng < result.length; resultLeng ++) {
-	    			resultHtml += "<tr userid='" + result[resultLeng].userId + "'><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>"
-	    			resultHtml += "<td>" + result[resultLeng].userName + "</td>";
-	    			resultHtml += "<td>" + result[resultLeng].userTitle + "</td>";
-	    			resultHtml += "<td>" + result[resultLeng].deptName + "</td>";
-	    			resultHtml += "<td>" + result[resultLeng].workStartTime + " ~ " + result[resultLeng].workEndTime + "</td>";
-	    			resultHtml += "<td>" + result[resultLeng].compareTime + "</td></tr>";
-	    		}
+	    		result.forEach(function(vo, index) {
+	    			resultHtml += "<tr userid='" + vo.userId + "'><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>"
+	    			resultHtml += "<td>" + vo.userName + "</td>";
+	    			resultHtml += "<td>" + vo.userTitle + "</td>";
+	    			resultHtml += "<td>" + vo.deptName + "</td>";
+	    			resultHtml += "<td>" + vo.workStartTime + " ~ " + vo.workEndTime + "</td>";
+	    			resultHtml += "<td>" + vo.compareTime + "</td></tr>";
+	    		});
 	    		
 	    		if (resultHtml == "") {
 	    			resultHtml = "<tr><td colspan='5' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
@@ -133,22 +156,26 @@
 	    		makePageSelPageAtti();
 	    	}
 	    	
-	    	function searchUserConf(searchFlag){
-	    		if ($("#layer_popup").css("display") == "none") {
-	    			$("#layer_popup").css("display", "");
+	    	function searchUserConfList(searchType){
+	    		if (searchType == "search") {
+	    			searchUserName = $("#searchUserName").val();
+	    			searchDeptName = $("#searchDeptName").val();
+	    			searchTitle = $("#searchTitle").val();
+	    			searchStartTime = $("#searchStartTime").val();
+	    			searchEndTime = $("#searchEndTime").val();
+	    			searchCompareValue = $("[type='radio']:checked").val();
 	    		} else {
-	    			$("#layer_popup").css("display", "none");
+	    			searchUserName = "";
+	    			searchDeptName = "";
+	    			searchTitle = "";
+	    			searchStartTime = "";
+	    			searchEndTime = "";
+	    			searchCompareValue = "";
 	    		}
 	    		
-	    		if (searchFlag) {
-	    			searchUserName = $("#txtUserName").val();
-	    			searchDeptName = $("#txtDeptName").val();
-	    			$("#txtUserName").val("");
-	    			$("#txtDeptName").val("");
-	    			pageNum = 1;
-	    			
-	    			getUserConfList();
-	    		}
+	    		pageNum = 1;
+    			getUserConfList();
+    			
 	    	}
 	    	
 	    	//페이지 이동 함수
@@ -163,7 +190,31 @@
 	    	}
 	    	
 	    	//추가/변경 버튼 클릭시
-	    	function userConfSave(userid){
+	    	/* function userConfSave(userid) {
+	    		var url = "";
+	    		
+	    		if(userid == null) {
+		    		selectedCheck();
+	    		}
+	    		
+	    		if(selecUserList == "" || selecUserList == null) {
+	    			url = "/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val();
+	    		} else {
+	    			url = "/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val() + "&userList=" + selecUserList;
+	    		}
+	    		
+	    		if (CrossYN()) {
+	    			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
+	    			OpenWin = GetOpenWindow(url, "", "1140", "630");
+	    			
+	    			try { OpenWin.focus();} catch (e) { }
+	    		} else {
+	    			showModalDialog("/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
+	    		}
+	    	} */
+	    	
+	    	//이거 수정해서 edit 레이어로 쓰자
+	    	function userConfSave(userid) {
 	    		var url = "";
 	    		
 	    		if(userid == null) {
@@ -201,7 +252,7 @@
 	    	}
 	    	
 	    	//삭제버튼
-	    	function delUserConf() {
+	    	/* function delUserConf() {
 	    		selectedCheck();
 	    		
 	    		if(selecUserList == "" || selecUserList == null) {
@@ -225,11 +276,11 @@
 			    		});
 					}
 	    		}
-	    	}
+	    	} */
 	    	
 	    	function userDbClick() {
-	    		selecUserList = $(this).attr('userid');
-	    		userConfSave(selecUserList);
+	    		selecUserID = $(this).attr('userid');
+	    		userConfSave(selecUserID);
 	    	}
 	    </script>
 	</head>
@@ -238,26 +289,24 @@
 	    <h1>사용자별 근태관리<span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
-	        	<li style="background: none;">
-				<span style="border: none;"><b>회사선택</b></span>
-				</li>
+	        	<li style="background: none;"><span style="border: none;"><b>회사선택</b></span></li>
 				<li>
-				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
-					<c:forEach var = "companyItem" items="${list }">
-						<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
-					</c:forEach>
-	      		</select>
+					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
+						<c:forEach var = "companyItem" items="${list }">
+							<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
+						</c:forEach>
+	      			</select>
 	      		</li>
 	      	</ul>
 	  	</div>
-	  	<div id="mainmenu">
-	  		<ul class="on">
-	  			<li class="off"><span onclick="userConfSave()">추가/변경</span></li>
-	  			<li class="off"><span onclick="searchUserConf(false)">검색</span></li>
-	  			<li class="off"><span onclick="delUserConf()">삭제</span></li>
-	  		</ul>
-	  	</div>
-	  	<div id="layer_popup" style="width: 500px; position: absolute; left: 10px; top: 130px; background-color: rgb(255, 255, 255); display:none;">
+<!-- 	  	<div id="mainmenu"> -->
+<!-- 	  		<ul class="on"> -->
+<!-- 	  			<li class="off"><span onclick="userConfSave()">추가/변경</span></li> -->
+<!-- 	  			<li class="off"><span onclick="searchUserConf(false)">검색</span></li> -->
+<!-- 	  			<li class="off"><span onclick="delUserConf()">삭제</span></li> -->
+<!-- 	  		</ul> -->
+<!-- 	  	</div> -->
+	  	<!-- <div id="layer_popup" style="width: 500px; position: absolute; left: 10px; top: 130px; background-color: rgb(255, 255, 255); display:none;">
 	  		<div class="popupwrap1">
 	  			<div class="popupwrap2">
 	  				<table class="content">
@@ -287,7 +336,37 @@
 	  		</div>
 	  		<div class="shadow">
 	  		</div>
-	  	</div>
+	  	</div> -->
+	  	
+	  	<table id="searchTable" style="width:100%;">
+			<tbody>
+				<tr>
+					<td style="width: 5%;">부서</td>
+					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;"></td>
+					<td style="width:5.5%;">이름</td>
+					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;"></td>
+					<td style="width: 5%;">근무시간</td>
+					<td style="width: 20%;"><span id="topmenu"><input id="searchStartTime" type="text" style="width:80px;"/>&nbsp; ~ <input id="searchEndTime" type="text" style="width:80px;"/></span></td>
+				</tr>
+				<tr>
+					<td style="width: 5%;">직위</td>
+					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50"></td>
+					<td style="width: 5.5%;">수정된거?</td>
+					<td style="width: 11%;">
+						<span style="width: 90%;">
+							<input type="radio" name="searchCompareValue" id="searchCompareValueAll" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;모두
+							<input type="radio" name="searchCompareValue" id="searchCompareValue0" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;같은
+							<input type="radio" name="searchCompareValue" id="searchCompareValue1" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;다른
+						</span>
+					</td>
+					<td style=" width:*;" colspan=2>
+						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchUserConfList('refresh');">새로고침</span></a>&nbsp;
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
 		<table id="attiBoardList" class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
@@ -305,5 +384,4 @@
 		<div id="tblPageRayer">
 		</div>
 	</body>
-</body>
 </html>

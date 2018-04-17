@@ -1397,6 +1397,10 @@ public class EzAttitudeAdminBOMController {
 		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("userName");
 		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
+		String searchStartTime = request.getParameter("startTime");
+		String searchEndTime = request.getParameter("endTime");
+		String searchCompareValue = request.getParameter("compareValue");
 		String pageNum = request.getParameter("pageNum");
 		String listSize = request.getParameter("listSize");
 		String orderCell = request.getParameter("orderCell");
@@ -1404,7 +1408,7 @@ public class EzAttitudeAdminBOMController {
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		LOGGER.debug("userName : " + searchUserName + " || deptName : " + searchDeptName + " || pageNum : " + pageNum + " || listSize : " + listSize + " || orderCell : " + orderCell + " || orderOption : " + orderOption);
+		LOGGER.debug("userName : " + searchUserName + " || deptName : " + searchDeptName + " + || searchTitle = " + searchTitle + " || searchStartTime = " + searchStartTime + " || searchEndTime = " + searchEndTime + " || searchCompareValue = " + searchCompareValue + " || pageNum : " + pageNum + " || listSize : " + listSize + " || orderCell : " + orderCell + " || orderOption : " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/user-attitude-confs";
@@ -1418,6 +1422,10 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("companyId", companyId)
 				.queryParam("searchUserName", searchUserName)
 				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchTitle", searchTitle)
+				.queryParam("searchStartTime", searchStartTime)
+				.queryParam("searchEndTime", searchEndTime)
+				.queryParam("searchCompareValue", searchCompareValue)
 				.queryParam("userId", userId)
 				.queryParam("pageNum", pageNum)
 				.queryParam("listSize", listSize)

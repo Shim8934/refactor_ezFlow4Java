@@ -206,6 +206,22 @@
 		<isNotEmpty prepend="AND" property="searchUserName">
 			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			TBL_USERMASTER.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchStartTime">
+			<![CDATA[
+				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) >= #searchStartTime#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchEndTime">
+			<![CDATA[
+				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) <= #searchEndTime#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchCompareValue">
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime, '0', '1') = #searchCompareValue#
+		</isNotEmpty>
 		
 		<isNotEmpty property="orderCell">
 			ORDER BY
@@ -235,6 +251,12 @@
 				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_USER_CONF.company_id
 			AND
 				TBL_USERMASTER.cn = TBL_ATTITUDE_USER_CONF.user_id
+			LEFT JOIN
+				TBL_ATTITUDE_CONF
+			ON
+				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_CONF.tenant_id
+			AND
+				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_CONF.company_id
 			WHERE
 				TBL_USERMASTER.tenant_id = #tenantId#
 			AND 
@@ -249,6 +271,22 @@
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			TBL_USERMASTER.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchStartTime">
+			<![CDATA[
+				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) >= #searchStartTime#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchEndTime">
+			<![CDATA[
+				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) <= #searchEndTime#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchCompareValue">
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime, '0', '1') = #searchCompareValue#
 		</isNotEmpty>
 	</select>
 	
