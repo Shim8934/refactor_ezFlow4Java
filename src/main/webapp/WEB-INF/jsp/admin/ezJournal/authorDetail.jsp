@@ -81,14 +81,19 @@
 	   					lpDepts=[];
 	   					lpDeptNames = [];
 	   					$("#authorDeptList").html(result);
-	   					$("#authorDeptList tr").each(function(){
-	   						if($(this).attr("mine")!='Y'){
-		   						lpDepts.push($(this).attr("targetId"));
-		   						lpDeptNames.push($(this).find("td").text());
-	   						} else {
-	   							userDeptId=$(this).attr("targetId");
-	   						}
-	   					})
+	   					var deptList = $("#authorDeptList tr");
+	   					if(deptList.length==1){
+	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezApprovalG.t431"/></td></tr>');
+	   					} else {
+		   					$("#authorDeptList tr").each(function(){
+		   						if($(this).attr("mine")!='Y'){
+			   						lpDepts.push($(this).attr("targetId"));
+			   						lpDeptNames.push($(this).find("td").text());
+		   						} else {
+		   							userDeptId=$(this).attr("targetId");
+		   						}
+		   					})
+	   					}
 	   				}
 	   			});
 	   		}
