@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bouncycastle.asn1.x509.qualified.TypeOfBiometricData;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
-import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
@@ -27,6 +25,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -448,7 +447,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public void insertAttitudeType(String typeId, String typeName, String typeName2,
-			String imgPath, String formId, int tenantId,
+			String imgPath, int tenantId,
 			String companyId) throws Exception {
 		LOGGER.debug("insertAttitudeType started");
 		
@@ -464,9 +463,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			imgPath = imgPath.substring(idx+1);
 			map.put("imgPath", imgPath);
 		}
-//		map.put("typeName2", typeName2);
-//		map.put("imgPath", imgPath);
-		map.put("formId", formId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
@@ -520,25 +516,33 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId,
-			String companyId, String searchUserName, String searchDeptName, String pageNum, 
-			String listSize, String order, String offsetMin)
-			throws Exception {
+	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId,
+			String searchUserName, String searchDeptName, String searchTitle, String searchStartTime,
+			String searchEndTime, String searchCompareValue, String pageNum, String listSize,
+			String orderCell, String orderOption, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigList started");
-		Map<String, Object> map = new HashMap<String, Object>();
 		
 		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
+		map.put("searchTitle", searchTitle);
+		map.put("searchStartTime", searchStartTime);
+		map.put("searchEndTime", searchEndTime);
+		map.put("searchCompareValue", searchCompareValue);
 		map.put("limit", limit);
 		map.put("listSize", listSize);
-		map.put("order", order.trim());
+		map.put("orderCell", orderCell);
+		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);
 		
 		List<AttitudeUserConfigVO> resultList = ezAttitudeDAO.getAttitudeUserConfigList(map);
-		LOGGER.debug("getAttitudeUserConfigList ended");
+		
+		LOGGER.debug("getAttitudeUserConfigList ended. resultList size = " + resultList.size());
+		
 		return resultList;
 	}
 
@@ -577,32 +581,36 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getCompanyList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("lang", lang);
 		map.put("tenantId", tenantId);
 		
 		List<AttitudeDeptVO> companyList = ezAttitudeDAO.getCompanyList(map);
 		
 		LOGGER.debug("getCompanyList ended");
+		
 		return companyList;
 	}
 
 	@Override
-	public String getAttitudeUserConfigCount(int tenantId,
-			String companyId, String searchUserName, String searchDeptName)
-			throws Exception {
+	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName,
+			String searchTitle, String searchStartTime, String searchEndTime, String searchCompareValue, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigListCount started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
+		map.put("searchTitle", searchTitle);
+		map.put("searchStartTime", searchStartTime);
+		map.put("searchEndTime", searchEndTime);
+		map.put("searchCompareValue", searchCompareValue);
+		map.put("offsetMin", offsetMin);
 		
 		String totalCount = ezAttitudeDAO.getAttitudeUserConfigCount(map);
 		
-		LOGGER.debug("getAttitudeUserConfigListCount ended");
+		LOGGER.debug("getAttitudeUserConfigListCount ended. totalCount = " + totalCount);
+		
 		return totalCount;
 	}
 

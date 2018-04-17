@@ -8,10 +8,13 @@
 	    <title>attitudeConfig</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
+	    <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <!-- time picker-->		
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	    <script type="text/javascript">
 	    	var adminCompany = "${adminCompany}";
 	    
@@ -26,6 +29,24 @@
 		    		}
 		            company_change();
 		        }
+		        
+		        //timepicker
+        		$('#start_hr').timepicker({ 
+        			timeFormat: 'H:i',
+        			step: 30,
+        			scrollbar: true
+        		});
+        		$('#end_hr').timepicker({ 
+        			timeFormat: 'H:i',
+        			step: 30,
+        			scrollbar: true
+        		});
+//         		$('#start_min').timepicker({ 
+//         		    timeFormat: 'i',
+//         		    step: 5,
+//         		    maxTime: '00:59am',
+//         		    startTime: '00:00am'
+//         		});
 	        });
 	        
 	        function company_change() {
@@ -45,12 +66,15 @@
 	        
 	        function attitudeConfigSet(result) {
         		//근무시간
-        		var startTime = result.workStartTime.split(':');
-        		var endTime = result.workEndTime.split(':');
-        		$('#start_hr').val(startTime[0]);
-        		$('#start_min').val(startTime[1]);
-        		$('#end_hr').val(endTime[0]);
-        		$('#end_min').val(endTime[1]);
+//         		var startTime = result.workStartTime.split(':');
+//         		var endTime = result.workEndTime.split(':');
+//         		$('#start_hr').val(startTime[0]);
+//         		$('#start_min').val(startTime[1]);
+//         		$('#end_hr').val(endTime[0]);
+//         		$('#end_min').val(endTime[1]);
+				
+        		$('#start_hr').val(result.workStartTime);
+        		$('#end_hr').val(result.workEndTime);
         		//휴무요일
         		var closedDays = result.closedDay.split(',');
         		for (var i = 0; i < closedDays.length; i++) {
@@ -78,6 +102,12 @@
 	        }
 	        
 	        function save_config() {
+	        	//시간
+// 	        	if($("#end_hr").val() > $("#start_hr").val()) {
+// 	        		alert('종료시간은 시작시간보다 늦어야 합니다.');
+// 	        		return;
+// 	        	}
+	        	
 	        	var closedDaysLength = $('#dayChkBox').find('input[type=checkbox]').length;
 	        	var closedDays = "";
 	        	for (var i = 0; i < closedDaysLength; i++) {
@@ -87,16 +117,17 @@
 	            	type : "POST",
 	            	url : "/admin/ezAttitude/updateAttitudeConfInfo.do",
 	            	data : {companyId : encodeURI($("#ListCompany").val()),
-	            			workStartTime : $("#start_hr").val() + ":" + $("#start_min").val(),
-	            			workEndTime : $("#end_hr").val() + ":" + $("#end_min").val(),
+	            			workStartTime : $("#start_hr").val(),
+	            			workEndTime : $("#end_hr").val(),
 	            			closedDay : closedDays.slice(0, -1),
 	            			attitudeModAppl : $('input[name=attitude_mod_appl]:checked').val(),
 	            			closedDateAttitude : $('input[name=close_date_attitude]:checked').val()},
 	            	success : function() {
+	            		alert('설정이 변경되었습니다.');
 	            		company_change();
 	            	},
 	            	error : function() {
-	            		
+	            		alert('에러발생');
 	            	}
 	            });
 	        }
@@ -114,7 +145,7 @@
 	</head>
 	<body class="mainbody">
 	    <h1><spring:message code='ezAttitude.t10' /></h1>
-		<div id="mainmenu">
+	  	<div id="mainmenu">
 			<ul>
 	        	<li style="background: none;">
 				<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
@@ -126,16 +157,20 @@
 					</c:forEach>
 	      		</select>
 	      		</li>
+	      	</ul>
+	      	<ul>
 	      		<li><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></li>
 	      	</ul>
 	  	</div>
+	  	
 		<table class="content" style="width:500px">
 			<tr style="height:30px;">
 	        	<th style="width: 70px; text-align:center">
 					<spring:message code='ezAttitude.t17' />
 	            </th>
 	            <td style="width: 500px; text-align:left; padding-left: 5px;">
-	            	<input id="start_hr" type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' /><input id="start_min" type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' /> ~ <input id="end_hr" type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' /><input id="end_min" type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' />
+<%-- 	            	<input id="start_hr" type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' />&nbsp;<input id="start_min" type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' /> ~ <input id="end_hr" type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' />&nbsp;<input id="end_min" type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' /> --%>
+	            	<input id="start_hr" type="text" style="width:50px;"/> ~ <input id="end_hr" type="text" style="width:50px;"/>
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
@@ -154,20 +189,20 @@
 	        </tr>
 	        <tr style="height:30px;">
 	        	<th style="width: 70px; text-align:center">
-					<spring:message code='ezAttitude.t28' />
-	            </th>
-	            <td style="width: 500px; text-align:left">
-	            	<input type="radio" name="attitude_mod_appl" value="1"/><spring:message code='ezAttitude.t29' />
-	            	<input type="radio" name="attitude_mod_appl" value="0"/><spring:message code='ezAttitude.t30' />
-	            </td>
-	        </tr>
-	        <tr style="height:30px;">
-	        	<th style="width: 70px; text-align:center">
 					<spring:message code='ezAttitude.t31' />
 	            </th>
 	            <td style="width: 500px; text-align:left">
 	            	<input type="radio" name="close_date_attitude" value="1"/><spring:message code='ezAttitude.t29' />
 	            	<input type="radio" name="close_date_attitude" value="0"/><spring:message code='ezAttitude.t30' />
+	            </td>
+	        </tr>
+	        <tr style="height:30px;">
+	        	<th style="width: 70px; text-align:center">
+					<spring:message code='ezAttitude.t28' />
+	            </th>
+	            <td style="width: 500px; text-align:left">
+	            	<input type="radio" name="attitude_mod_appl" value="1"/><spring:message code='ezAttitude.t29' />
+	            	<input type="radio" name="attitude_mod_appl" value="0"/><spring:message code='ezAttitude.t30' />
 	            </td>
 	        </tr>
 		</table>

@@ -68,7 +68,7 @@ public interface EzAttitudeService {
 	
 	public void updateAttitudeTypeConfig(String typeConfigList, String companyId, int tenantId) throws Exception;
 	
-	public void insertAttitudeType(String typeId, String typeName, String typeName2, String imgPath, String formId, int tenantId, String companyId) throws Exception;
+	public void insertAttitudeType(String typeId, String typeName, String typeName2, String imgPath, int tenantId, String companyId) throws Exception;
 	
 	public void insertAttitudeTypeIcon(String typeId, String fileName, String realPath, int tenantId) throws Exception;
 	
@@ -76,7 +76,7 @@ public interface EzAttitudeService {
 	
 	public void updateAttitudeType(String typeId, String typeName, String typeName2, String imgPath, int tenantId, String companyId) throws Exception;
 	
-	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId, String searchUserName, String searchDeptName, String pageNum, String listSize, String order, String offsetMin) throws Exception;
+	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId, String searchUserName, String searchDeptName, String searchTitle, String searchStartTime, String searchEndTime, String searchCompareValue, String pageNum, String listSize, String orderCell, String orderOption, String offsetMin) throws Exception;
 	
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigInfo(int tenantId, String companyId, String userIdList, String offsetMin) throws Exception;
 	
@@ -88,7 +88,7 @@ public interface EzAttitudeService {
 	
 	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId) throws Exception;
 	
-	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName) throws Exception;
+	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName, String searchTitle, String searchStartTime, String searchEndTime, String searchCompareValue, String offsetMin) throws Exception;
 	
 	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String sysLang, String offSet, String startPoint, String endPoint, String type, String order, String adminFlag) throws Exception;
 

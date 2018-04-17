@@ -29,11 +29,12 @@
 				border : 1px solid #dedede;
 			}
 			
-			#attiCalendar table td[typeId=A02], #attiCalendar table td[typeId=A08] {
+			#attiCalendar td[typeId=A02], #attiCalendar td[typeId=A08] {
 				color : red;
 			}
 			
-			#attiCalendar table td[typeId=A01], #attiCalendar table td[typeId=A03] {
+			#attiCalendar td[typeId=A01], #attiCalendar td[typeId=A03] {
+				cursor : context-menu;
 				color : rgb(102,180,255);
 			}
 			
@@ -46,6 +47,9 @@
 			var uselang = "<c:out value='${userInfo.lang}'/>";
 			var deptFlag = "${deptFlag}";
 			var adminFlag = "${adminFlag}";
+			var companyHoliday = "";        // 회사 휴무일
+			var closedDateAttitude = true;  // 휴일근태등록 유무
+			var attitudeModAppl = true;     // 근태수정신청 유무
 			
 			$(function(){
 				$(document).on('dblclick', '.td_day td', function(){
@@ -196,18 +200,22 @@
 						
 					},
 					success : function(result) {
-						for (var i = 0; i < result.length; i++) {
-							if (result[i].isRepeat == 1) { //매년 반복되는 경우
-								memorialDays.push(new memorialDay(result[i].holidayName, result[i].holidayName2, 
-																  result[i].holidayDate.substring(5,7), result[i].holidayDate.substring(8,10),
-																  result[i].isSolar, result[i].isRest == 1 ? true : false));
-							} else if (result[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
-								yearmemorialDays.push(new yearmemorialDay(result[i].holidayName, result[i].holidayName2,
-																		  result[i].holidayDate.substring(0,4), result[i].holidayDate.substring(5,7),
-																		  result[i].holidayDate.substring(8,10), result[i].isSolar,
-																		  result[i].isRest == 1 ? true : false));
+						closedDateAttitude = result.attitudeConfigVO.closedDateAttitude == "0" ? false : true;
+						attitudeModAppl = result.attitudeConfigVO.attitudeModAppl == "0" ? false : true;
+						companyHoliday = result.attitudeConfigVO.closedDay.split(",");
+						for (var i = 0; i < result.holidayList.length; i++) {
+							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+																  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+																		  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+																		  result.holidayList[i].isRest == 1 ? true : false));
 							}
 						}
+						
 						CalendarView("attiCalendar");
 						getAttiTypeList();
 					}
@@ -361,17 +369,21 @@
 			
 			//수정신청 레이어 팝업띄우깅
 			function showDialog() {
-				$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
-	        	
-	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-	        	
-	        	$("#popup").css("left", popupX);
-	        	
-				$("#popup").modal({
-					  escapeClose: false,
-					  clickClose: false,
-					  showClose: false
-				});
+				if (attitudeModAppl) {
+					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+		        	
+		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+		        	
+		        	$("#popup").css("left", popupX);
+		        	
+					$("#popup").modal({
+						  escapeClose: false,
+						  clickClose: false,
+						  showClose: false
+					});
+				} else {
+					 alert("수정신청이 불가능합니다.");
+				}
 			}
 			
 			function layerHidden() {

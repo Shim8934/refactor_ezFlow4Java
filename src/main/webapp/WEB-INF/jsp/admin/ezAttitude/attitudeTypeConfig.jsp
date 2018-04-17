@@ -47,10 +47,10 @@
 	        function listSet(result) {
                 var html = "";
                 for (var i = 0; i < result.length; i++) {
-                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='height:50px; cursor: pointer;'>";
-                    html += "<td style='width:50%;color:gray;'>" + result[i].typeName + "</td>";
-                    html += "<td style='width:30%;color:gray;'><select name='useSelectBox'><option value='1'>사용</option><option value='0'>사용안함</option></select></td>";
-                    html += "<td style='width:20%;color:gray;'><img id='icon' src='"+ result[i].imgPath +"' width='40px;' height='40px;' alt='' border='0'></td>";
+                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='cursor: pointer;'>";
+                    html += "<td style='width:35%;color:gray;'>" + result[i].typeName + "</td>";
+                    html += "<td style='width:45%;color:gray;'><input type='radio' name='useRadio"+ i +"' value='1' /> 사용 <input type='radio' name='useRadio"+ i +"' value='0' />사용안함</td>";
+                    html += "<td style='width:20%;color:gray;'><img id='icon' src='"+ result[i].imgPath +"' width='16px;' height='16px;' alt='' border='0'></td>";
                     html += "</tr>";
                 }
                 $("#contentlist table.mainlist").html(html);
@@ -58,16 +58,16 @@
 	        
 	        function useSelect(result) {
 	        	for (var i = 0; i < result.length; i++) {
-	        		$('table.mainlist select[name=useSelectBox]').eq(i).val(result[i].isuse);
-	        	}
+	        		$('table.mainlist input[name=useRadio'+ i +']:input[value=' + result[i].isuse + ']').prop('checked', true);
+ 	        	}
 	        }
 	        
 	        function save_config() {
-	        	var length = $('table.mainlist select[name=useSelectBox]').length;
+	        	var length = $('table.mainlist input[name^=useRadio]').length / 2;
 	        	var list = [];
 	        	for (var i = 0; i < length; i++) {
-	        		var typeId = $('table.mainlist select[name=useSelectBox]').eq(i).closest('tr').attr('id');
-	        		var isuse = $('table.mainlist select[name=useSelectBox]').eq(i).val();
+	        		var typeId = $('table.mainlist input[name=useRadio' + i + ']').closest('tr').attr('id');
+	        		var isuse = $('table.mainlist input[name=useRadio' + i + ']:checked').val();
 	        		var obj = '';
 	        		obj += typeId + ',' + isuse + ";";
 	        		if (i == (length-1)) {
@@ -86,10 +86,10 @@
 	            		"companyId" : encodeURI($("#ListCompany").val())
 	            	},
 	            	success : function() {
-// 	            		alert('성공');
+	            		alert('저장되었습니다');
 	            	},
 	            	error : function() {
-// 	            		alert('실패');
+	            		alert('저장하는 중 오류 발생');
 	            	}
 	            });        	
 	        }
@@ -100,12 +100,12 @@
 	            if (CrossYN()) {
 	            	saveType_dialogArguments[0] = $("#ListCompany").val();
 // 	            	saveType_dialogArguments[1] = save_type_Complete;
-                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", GetOpenWindowfeature(800, 520));
+                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=540px, height=185px', GetOpenWindowfeature(800, 520));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
                 	rtnValue = window.showModalDialog("/admin/ezAttitude/addAttitudeType.do", $("#ListCompany").val(),
-                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+                        "dialogHeight:185px;dialogwidth:540px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
@@ -127,12 +127,18 @@
 	<body class="mainbody">
 	    <h1><spring:message code='ezAttitude.t12' /></h1>
 		<div id="mainmenu">
-			<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
-				<c:forEach var="item" items="${list}">
-				<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-	      	</select>
+			<ul>
+	        	<li style="background: none;">
+				<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
+				</li>
+				<li>
+				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+					<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+					</c:forEach>
+	      		</select>
+	      		</li>
+	      	</ul>
 	      	<ul>
 	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.t33' /></span></li>
 	      		<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
@@ -140,24 +146,24 @@
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
 	      	</ul>
 	  	</div>
-	  	<table style="width: 950px; height: 485px;" >
+	  	<table style="width: 500px; height: 380px;" >
             <tr>
                 <td>
                     <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 100%;">
                         <table class="mainlist" style="width: 100%;">
                             <tr>
-                                <th style="width: 50%;"><span><spring:message code='ezAttitude.t35' /></span></th>
-                                <th style="width: 30%;"><span><spring:message code='ezAttitude.t36' /></span></th>
+                                <th style="width: 35%;"><span><spring:message code='ezAttitude.t35' /></span></th>
+                                <th style="width: 45%;"><span><spring:message code='ezAttitude.t36' /></span></th>
                                 <th style="width: 20%;"><span><spring:message code='ezAttitude.t37' /></span></th>
                             </tr>
                         </table>
-                        <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">
+                        <div id="contentlist" name="contentlist" style="height: 400px; overflow-y: auto;">
                             <table class="mainlist" style="width: 100%;">
-<!--                                 <tr> -->
-<!--                                     <td style="text-align: center;"> -->
-<!--                                         <img src="/images/email/progress_img.gif" /> -->
-<!--                                     </td> -->
-<!--                                 </tr> -->
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <img src="/images/email/progress_img.gif" />
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                     </div>

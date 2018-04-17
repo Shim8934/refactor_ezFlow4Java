@@ -9,38 +9,22 @@
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 		<script type="text/javascript">
 			var companyId = "${companyId}";
 			var typeId = "${typeInfo.typeId}";
 			var saveMode = "";
-			var formHtmlList = ${formList};
 			
 	        window.onload = window_onload;
 	        function window_onload() {
-	        	form_change();
-	        	
 	            //수정모드일 때
 	            if(typeId != "") {
 	            	saveMode = "modify";
 	            	
 	            	//파일경로
 	            	var imgFilePath = "${typeInfo.imgPath}";
-	            	if (imgFilePath != "/images/default_pic.jpg") {
-		            	var idx = imgFilePath.lastIndexOf("=");
-		            	imgFilePath = imgFilePath.substring(idx+1);
-		            	$('#imagefile').val(imgFilePath);
-	            	}
-	            	
-	            	$('#formSelect').val("<c:out value = '${typeInfo.formId}' />").prop('selected', true);
-	            	$('#formSelect').prop("disabled", true);
 	            } else {
 	    			typeId = "<c:out value = '${typeId}' />";
-	    			
-	            	$('#formSelect').val(0).prop('selected', true);
-	            	
-	            	$('#preview').attr('src','/images/default_pic.jpg');
 	            }
 	        }
 	        
@@ -88,22 +72,12 @@
 	    		}
 	    		return check;
 			}
-//여기까지 파일	    
-	
-			function form_change() {
-				var formValue = $('#formSelect').val();
-				var formHtml = "";
-				$.each(formHtmlList, function(idx, formInfo) {
-					if (formInfo.formId == formValue) {
-						formHtml = formInfo.formHtml;
-					}
-				})
-
-
-				$('#preForm').html(formHtml);
-			}
+//여기까지 파일
 
 			function OK_Click() {
+				var imgPath = $('#preview').attr('src');
+				var idx = imgPath.lastIndexOf('/');
+				imgPath = imgPath.substr(idx+1);
 				$.ajax({
 		        	type : "POST",
 		        	url : "/admin/ezAttitude/saveAttitudeType.do",
@@ -114,12 +88,15 @@
 		        		saveMode : saveMode,
 		        		typeName : $('#typeName').val(),
 		        		typeName2 : $('#typeName2').val(),
-		        		imgPath : $('#imagefile').val(),
-		        		formId : $('#formSelect').val()
+		        		imgPath : imgPath
 		        	},
-		        	success : function (result) {
+		        	success : function(result) {
+		        			alert('추가하였습니다.');
 		        			window.opener.company_change();
 							window.close();
+		        	},
+		        	error : function() {
+		        		alert('추가하는 도중 에러 발생');
 		        	}
 		        });
 			}
@@ -130,7 +107,7 @@
 			
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="popup">
 	    <div id="menu">
 	        <ul>
 	            <li><span onclick="OK_Click()"><spring:message code='ezAttitude.t16' /></span></li>
@@ -160,49 +137,29 @@
     			</td> 
   			</tr>
   			<tr>
-  				<th>
-  					<a class="imgbtn" style="background:none; height:25px; padding-top: 4px;"><span onclick="btnimagefile_onclick()"><spring:message code='ezAttitude.t43' /></span></a>
-  				</th>
-  				<td style="height:45px;">
+  				<th><spring:message code='ezAttitude.t43' /></th>
+  				<td style="">
   					<table width="100%;">
   						<tr>
-	  						<td style="width:88%">사진크기는 ~이하로 해주세요</td>
-	  						<td rowspan="2" style="padding-top: 2px;">
-	  							<img id="preview" name="preview" src="${typeInfo.imgPath}" width="40px;" height="40px;" alt="" border="0">
+	  						<td style="width:20%;">
+	  							<a class="imgbtn" style="background:none;">
+	  								<span onclick="btnimagefile_onclick()">파일추가</span>
+	  							</a>
 	  						</td>
-	  					</tr>
-  						<tr>
-	  						<td colspan="2" width="70%"><input type="text" id="imagefile" name="imagefile" value="" style="width:88%"></td>
+	  						<td style="width:40%">
+	  							<img id="preview" name="preview" src="${typeinfo.imgpath}" width="16px;" height="16px;" alt="" border="0" style="display: block;">
+	  						</td>
+	  						<td>
+	  							★ 아이콘 크기 : 16px * 16px
+	  						</td>
 	  					</tr>
   					</table>
   				</td>
   			</tr>
-  			<tr> 
-    			<th><spring:message code='ezAttitude.t44' /></th> 
-    			<td>
-					<select id="formSelect" style="width:80px;" onchange="form_change()">
-						<c:forEach var="item" items="${formList}">
-							<option value="<c:out value='${item.formId}'/>"><c:out value='${item.formName}'/></option>
-						</c:forEach>
-					</select> 
-				</td> 
-  			</tr>
-  			<tr> 
-    			<th><spring:message code='ezAttitude.t44' /> <spring:message code='ezAttitude.t45' /></th>     
-    			<td id="preForm" style="padding:0px; height:320px"></td>
-  			</tr>
 		</table> 
-<!-- 		<div class="btnposition">  -->
-<!-- 		    <a class="imgbtn"><span onclick="OK_Click()">저장</span></a> -->
-<!-- 		    <a class="imgbtn"><span onclick="window.close()">닫기</span></a> -->
-<!-- 		</div> -->
 		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezAttitude/iconUpload.do" target="ifrm" style="width: 1px; height: 1px;display:none">
         	<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="false" />
     	</form>
-<!-- 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	 -->
-<!-- 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel"> -->
-<%-- 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe> --%>
-<!-- 		</div> -->
 	</body>
 </html>

@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezAttitude.vo;
 
 public class AttitudeUserConfigVO {
-	
 	/** 사원아이디*/
 	private String userId;
 	/** 테넌트 */
@@ -20,6 +19,8 @@ public class AttitudeUserConfigVO {
 	private String userTitle;
 	/** 부서명 */
 	private String deptName;
+	/** 유저별 출퇴근근시간  회사규정과 비교(0 : true, 1 : false) */
+	private String compareTime;
 	
 	public String getUserId() {
 		return userId;
@@ -75,5 +76,10 @@ public class AttitudeUserConfigVO {
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
 	}
-
+	public String getCompareTime() {
+		return compareTime;
+	}
+	public void setCompareTime(String compareTime) {
+		this.compareTime = compareTime;
+	}
 }

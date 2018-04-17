@@ -722,11 +722,11 @@ public class EzAttitudeGWController {
 			} else {
 				typeId = "A" + MaxTypeId;
 			}
-			//formList 구하기
-			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
+//			//formList 구하기
+//			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
 			
 			data.put("typeId", typeId);
-			data.put("formList", formList);
+//			data.put("formList", formList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -757,9 +757,8 @@ public class EzAttitudeGWController {
 			String typeName = request.getParameter("typeName");
 			String typeName2 = request.getParameter("typeName2");
 			String imgPath = request.getParameter("imgPath");
-			String formId = request.getParameter("formId");
 			
-			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, imgPath, formId, info.getTenantId(), companyId);
+			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, imgPath, info.getTenantId(), companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -893,44 +892,45 @@ public class EzAttitudeGWController {
 		
 		JSONObject result = new JSONObject();
 		
-		try{
+		try {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
 			String userId = request.getParameter("userId");
 			String searchUserName = request.getParameter("searchUserName");
 			String searchDeptName = request.getParameter("searchDeptName");
+			String searchTitle = request.getParameter("searchTitle");
+			String searchStartTime = request.getParameter("searchStartTime");
+			String searchEndTime = request.getParameter("searchEndTime");
+			String searchCompareValue = request.getParameter("searchCompareValue");
 			String pageNum = request.getParameter("pageNum");
 			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
 			String orderOption = request.getParameter("orderOption");
 			String offsetMin = request.getParameter("offsetMin");
-			String order = orderCell + " " + orderOption;
-			LOGGER.debug("order : " + order);
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
 			
-			
-			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(info.getTenantId(), companyId, searchUserName, searchDeptName, pageNum, listSize, order, offsetMin);
-			
-			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(info.getTenantId(), companyId, searchUserName, searchDeptName);
+			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchCompareValue, offsetMin);
+			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchCompareValue, pageNum, listSize, orderCell, orderOption, offsetMin);
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
 			data.put("totalCount", totalCount);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
+		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users-attitude-confs] ended.");
+		
 		return result;
 	}
-	
-	
 	
 	/**
 	 * G/W 근태관리 [GET] 사용자별 근태설정 정보 조회
@@ -1272,10 +1272,7 @@ public class EzAttitudeGWController {
     				throw new IOException(e.getMessage());
     			} 
     			BufferedImage destImg = new BufferedImage(119, 128, BufferedImage.TYPE_INT_RGB); 
-    			destImg.setRGB(0, 0, 119, 128, pixels, 0, 119); 
-    			//기존코드	
-//    			BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
-//    			bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
+    			destImg.setRGB(0, 0, 119, 128, pixels, 0, 119);
     			
     			File iconImageFile = new File(realPath + filePath + commonUtil.separator + fileName);
     			if (iconImageFile.exists()) {
@@ -1291,7 +1288,7 @@ public class EzAttitudeGWController {
 			
     		//filePath, filePath2만 가져가면 된다
     		JSONObject data = new JSONObject();
-			data.put("filePath", filePath + commonUtil.separator + fileName);
+//			data.put("filePath", filePath + commonUtil.separator + fileName);
 			data.put("filePath2", filePath2);
 			
 			result.put("status", "ok");
@@ -1636,6 +1633,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="offset", required=true) String offset) throws Exception{
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/" + attModId + "/history started");
 		JSONObject result = new JSONObject();
+		
 		try {
 			List<AttitudeApplicationVO> data = ezAttitudeService.attModGetHistory(companyId, tenantId, userId, attModId, offset);
 			
@@ -1643,13 +1641,97 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+			
+			LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/" + attModId + "/history ended.");
+		}
+		return result;
+	}
+
+	/**
+	 * G/W 근태관리 [GET] 근태권한자 리스트 조회
+	 * @param companyId
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attitudeAuthList(
+			@PathVariable String companyId, HttpServletRequest request) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/{companyId}/attitude-auth] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "success");
+		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/" + attModId + "/history ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/{companyId}/attitude-auth] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [POST] 근태권한자 등록
+	 * @param companyId
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject insertAttitudeAuth(
+			@PathVariable String companyId, HttpServletRequest request) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/{companyId}/attitude-auth] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "success");
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/{companyId}/attitude-auth] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [DELETE] 근태권한자 삭제
+	 * @param companyId
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteAttitudeAuth(
+			@PathVariable String companyId, HttpServletRequest request) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/{companyId}/attitude-auth] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "success");
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/{companyId}/attitude-auth] ended.");
 		return result;
 	}
 }

@@ -19,7 +19,7 @@ $(document).on('click', '#HeaderAllCheckBox', function() {
 })
 
 //tr클릭 시 체크박스 선택/해제
-$(document).on('click', 'tr:not(#attiBoardList tr:eq(0))', function() {
+$(document).on('click', '#attiBoardList tr:not(#attiBoardList tr:eq(0))', function() {
 	if ($(this).parents("#layer_popup").length) {
 		return;
 	}
@@ -35,7 +35,7 @@ $(document).on('click', 'tr:not(#attiBoardList tr:eq(0))', function() {
 })
 
 //tr hover시 배경색 변경
-$(document).on('mouseover mouseleave', 'tr', function(e) {
+$(document).on('mouseover mouseleave', '#attiBoardList tr', function(e) {
 	if ($(this).parents("#layer_popup").length) {
 		return;
 	}
