@@ -193,6 +193,12 @@
 					$('#isSelOnlyOnce ').attr('checked', true);
 				}
 				
+				//Allow selecting option only once.
+				var _openToAll = "<c:out value='${question.openToAll}'/>";
+				if (_openToAll == 1) {
+					$('#openToAll ').attr('checked', true);
+				}
+				
 				//Hide sending notification mail option.
 				if(mode === "modify"){
 					$('#sendPostNotiMailDiv').hide();
@@ -733,6 +739,12 @@
 	        	$('#hidSendPostNotice').val("0");	
 	        }
 	        
+	        if ($('#openToAll').is(':checked')) {
+	        	$('#hidOpenToAll').val("1");
+	        }
+	        else{
+	        	$('#hidOpenToAll').val("0");
+	        }
 	        
     		if (form_check() == false) {
         		return;
@@ -1183,7 +1195,7 @@
 			<table class="content" style="width: 100%; margin:10px 0px 0px 0px;"> 
 				<tr>    <!------------Question setting---------------->
 					<td>
-					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
+					<div class="qstSetting">
 						<input id="multipleCheck" type="checkbox" checked> <span><spring:message code="ezPoll.t154"/></span>
 						<div id="numberOfMultiSelect" style="display: inline-block; margin-left: 5px;">
 							<%-- <span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span> --%>
@@ -1197,7 +1209,7 @@
 						</div>
 					</div>
 
-					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
+					<div class="qstSetting">
 						<input id="seeResultFirst" type="checkbox" onchange="seeResultOptAdd()" checked> 
 						<span><spring:message code="ezPoll.t157"/></span>
 						<div id="seeResultCreatorDiv" style="display:none;">
@@ -1206,7 +1218,7 @@
 						</div>
 					</div>
 					
-					<div class="qstSetting" style="height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;">
+					<div class="qstSetting">
 						<input id="anonymousVote" type="checkbox">
 						<span><spring:message code="ezPoll.t253"/></span>
 						
@@ -1225,6 +1237,11 @@
 							<span>~</span>
 							<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
 							<select id="eTimePicker"></select>						
+						</div>
+						
+						<div id="openToAllDiv" class="qstSettingInnerDivRight">
+							<input id="openToAll" type="checkbox" >
+							<span><spring:message code="ezPoll.hdp09"/></span>
 						</div>
 						
 					</div>
@@ -1255,7 +1272,7 @@
 						</select>	
 						<a class="pollImgbtn1" id="receiverBttn" style="display: none;"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
 						<div style="display:none; position: absolute; left: 190px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 60%; white-space: nowrap;" id="newTargetDiv"></div>																		
-						<div id="sendPostNotiMailDiv" style="display: inline-block; float: right;">
+						<div id="sendPostNotiMailDiv" class="qstSettingInnerDivRight">
 							<input id="sendPostMail" type="checkbox">
 							<span style="vertical-align: middle;"><spring:message code="ezCommunity.t553"/></span>
 						</div>
@@ -1280,6 +1297,7 @@
 						<input type="text" name="hidIsSelOnlyOnce" id="hidIsSelOnlyOnce" value="" style="display:none">		
 						<input type="text" name="hidOptImgFilePath" id="hidOptImgFilePath" value="" style="display:none">		
 						<input type="text" name="hidSendPostNotice" id="hidSendPostNotice" value="" style="display:none">		
+						<input type="text" name="hidOpenToAll" id="hidOpenToAll" value="" style="display:none">		
 						
 					</div>
 					</td>
