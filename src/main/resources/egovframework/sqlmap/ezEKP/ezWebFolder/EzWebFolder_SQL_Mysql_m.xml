@@ -847,37 +847,40 @@
 		]]>
 	</select>
 	
-	<update id="EzWebFolderDAO_m.updateFileUseStatus" parameterClass="Map">
+	<delete id="EzWebFolderDAO_m.deleteFileUseStatus" parameterClass="Map">
 		<![CDATA[
-			UPDATE
+			DELETE
+			FROM
 				TBL_WEBFOLDER_FILE
-			SET
-				USE_STATUS = 'N'
 			WHERE
 				FILE_ID    = #fileId#
 			AND
 				TENANT_ID  = #tenantId#
-		]]>
-	</update>
-	
-	<update id="EzWebFolderDAO_m.updateFolderUseStatus" parameterClass="Map" >
-	<![CDATA[
-			UPDATE
-				TBL_WEBFOLDER_FOLDER
-			SET
+			AND 
 				USE_STATUS = 'N'
+		]]>
+	</delete>
+	
+	<delete id="EzWebFolderDAO_m.deleteFolderUseStatus" parameterClass="Map" >
+	<![CDATA[
+			DELETE
+			FROM
+				TBL_WEBFOLDER_FOLDER
 			WHERE
 				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
 			AND
 				TENANT_ID = #tenantId# 
 			AND
 				COMPANY_ID = #companyId#
+			AND
+				USE_STATUS = 'N'
 		]]>
-	</update>
+	</delete>
 	
-	<update id="EzWebFolderDAO_m.updateStatusAllFilesInFolder" parameterClass="Map">
+	<delete id="EzWebFolderDAO_m.deleteAllFilesInFolder" parameterClass="Map">
 		<![CDATA[
-			UPDATE
+			DELETE
+			FROM
 				TBL_WEBFOLDER_FILE f JOIN
 					(
 					SELECT
@@ -891,14 +894,12 @@
 								AND
 									COMPANY_ID = #companyId#	
 					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
-			SET
-				f.USE_STATUS = 'N'
 			WHERE
 				f.TENANT_ID = #tenantId#
 			AND
 				f.USE_STATUS = 'T'
 		]]>
-	</update>
+	</delete>
 	
 	<select id="EzWebFolderDAO_m.getFolderByFolderPath"  parameterClass="Map" resultMap="trashCanVO">
 		<![CDATA[
@@ -926,6 +927,32 @@
 				COMPANY_ID = #companyId#
 			]]>	
 	</select>
+	
+	<update id="EzWebFolderDAO_m.restoreFile" parameterClass="Map">
+		UPDATE
+			TBL_WEBFOLDER_FILE
+		SET
+			USE_STATUS = 'Y'
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			FILE_ID = #fileId#
+		AND
+			DELETER_ID = #deleterId#
+	</update>
+	
+	<update id="EzWebFolderDAO_m.restoreFolder" parameterClass="Map">
+		UPDATE
+			TBL_WEBFOLDER_FOLDER
+		SET
+			USE_STATUS = 'Y'
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			FOLDER_ID = #folderId#
+		AND
+			DELETER_ID = #deleterId#
+	</update>
 	
 	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteFileVO">
 		SELECT

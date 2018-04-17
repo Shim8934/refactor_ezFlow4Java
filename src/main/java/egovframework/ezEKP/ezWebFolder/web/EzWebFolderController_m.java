@@ -118,10 +118,8 @@ public class EzWebFolderController_m {
 	@RequestMapping(value="/ezWebFolder/getTrashCanList.do", method = RequestMethod.POST)
 	public String getTrashCanList (@CookieValue("loginCookie") String loginCookie, Model model, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String userId = request.getParameter("userId") !=null ? request.getParameter("userId") : "";
-		int tenantId = request.getParameter("tenantId") !=null ? Integer.parseInt(request.getParameter("tenantId")) : 1;
-		String offset = request.getParameter("offset") !=null ? request.getParameter("offset") : "";
 		
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		int listCount 	        = request.getParameter("listCount")         != null ? Integer.parseInt(request.getParameter("listCount")) 	: 0;
 		int currPage 	        = request.getParameter("currPage")	        != null ? Integer.parseInt(request.getParameter("currPage")) 	: 1;
 		int totalPages 	        = request.getParameter("totalpages")        != null ? Integer.parseInt(request.getParameter("totalpages")) 	: 1;
@@ -137,11 +135,10 @@ public class EzWebFolderController_m {
 		String delEndDate 		= request.getParameter("delEndDate")		!= null ? request.getParameter("delEndDate") 	            	: "" ;
 		
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
-		String url = gwServerUrl + "/rest/ezwebfolder/" + userId + "/getTrashCanList";
+		String url = gwServerUrl + "/rest/ezwebfolder/" + user.getId() + "/getTrashCanList";
 		
 		logger.debug("getTrashCanList Started.");
-		logger.debug("tenantId=" + userId + ",offset=" + offset);
-		logger.debug("userId=" + userId + ",listCount=" + listCount + ",currPage=" + currPage + ",totalPages=" + totalPages + ",pStart=" + pStart);
+		logger.debug("listCount=" + listCount + ",currPage=" + currPage + ",totalPages=" + totalPages + ",pStart=" + pStart);
 		
 		if ( currPage == 0 ) {
 			currPage = 1;
@@ -152,8 +149,8 @@ public class EzWebFolderController_m {
 		}
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("tenantId", tenantId)
-										.queryParam("offset", offset)
+										.queryParam("tenantId", user.getTenantId())
+										.queryParam("offset", user.getOffset())
 										.queryParam("currPage", currPage)                   
 										.queryParam("listCount", listCount)                 
 										.queryParam("totalPages", totalPages)               
@@ -256,15 +253,15 @@ public class EzWebFolderController_m {
 		return "json";
 	}
 	
-	@RequestMapping(value="ezWebFolder/restoreFile.do", method= RequestMethod.POST)
-	public String restoreFile (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping(value="ezWebFolder/restoreTrashCan.do", method= RequestMethod.POST)
+	public String restoreTrashCan (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("restoreFile Started");
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String fileList = request.getParameter("fileList") != null ? request.getParameter("request") : "";
 		String folderList = request.getParameter("folderList") != null ? request.getParameter("request") : "";
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
-		String url = gwServerUrl + "/rest/ezwebfolder/file-restore";
+		String url = gwServerUrl + "/rest/ezwebfolder/restore-trashCan";
 		
 		UriComponentsBuilder butilder = UriComponentsBuilder.fromHttpUrl(url)
 											.queryParam("tenantId", user.getTenantId())

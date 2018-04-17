@@ -1060,7 +1060,7 @@
 	</select>
 	<select id="EzWebFolderDAO_y.getDeptSub" parameterClass="Map" resultClass="HashMap"> 
 		<![CDATA[
-			select cn , EXTENSIONATTRIBUTE9 from tbl_deptmaster where DEPT_CD_PATH like concat('%',#deptId#,'%')
+			select cn , EXTENSIONATTRIBUTE9 from tbl_deptmaster where DEPT_CD_PATH like concat('%',#deptId#,'%') and tenant_id =#tenantId#
 		]]>
 	</select>
 	<select id="EzWebFolderDAO_y.existCheck" parameterClass="Map" resultClass="Integer"> 

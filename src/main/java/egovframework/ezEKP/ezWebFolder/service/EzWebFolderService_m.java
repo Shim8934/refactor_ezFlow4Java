@@ -40,11 +40,11 @@ public interface EzWebFolderService_m {
 	
 	public void realFileDeleteInFolder(String folderPath, String comPanyId ,String realPath, LoginVO userInfo, String offset, int tenantId) throws Exception;
 
-	public void updateFileUseStatus(String fileId, int tenantId) throws Exception;
+	public void deleteFile(String fileId, int tenantId) throws Exception;
 
-	public void updateFolderUseStatus(FolderVO folderVO) throws Exception;
+	public void deleteFolder(FolderVO folderVO) throws Exception;
 
-	public void updateStatusAllFilesInFolder(FolderVO folderVO) throws Exception;
+	public void deleteAllFilesInFolder(FolderVO folderVO) throws Exception;
 
 	public List<TrashCanVO> getFileByFolderId(String folderId, int tenantId, String userId) throws Exception;
 

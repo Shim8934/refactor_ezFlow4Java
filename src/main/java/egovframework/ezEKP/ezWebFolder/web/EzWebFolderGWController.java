@@ -1413,7 +1413,7 @@ public class EzWebFolderGWController {
 		int totalRows     = 0;
 		int totalPages    = 0;
 		int pageSize      = 10;
-		int startPoint    = (currPage - 1) * pageSize;
+		int startPoint    = 0;
 		
 		JSONObject result = new JSONObject();
 		
@@ -1424,7 +1424,7 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		logger.debug("FolderId: " + folderId + " || serverName: " + serverName);
+		logger.debug("FolderId: " + folderId + " || serverName: " + serverName + " || Current Page: " + currPage);
 		
 		try {
 			int tenantId = loginService.getTenantId(serverName);
@@ -1463,32 +1463,11 @@ public class EzWebFolderGWController {
 			
 			if (folder.getFolderUpper().equals("root")) {
 				Map<String, String> filePathMap = new LinkedHashMap<String, String>();
+				totalRows                       = ezWebFolderService.getTotalFileCnt2(folder.getFolderPath(), searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, tenantId);
+				totalPages                      = (totalRows + pageSize - 1)/pageSize;
+				currPage                        = currPage > totalPages ? totalPages : currPage;
+				startPoint                      = (currPage - 1) * pageSize;
 				fileList                        = ezWebFolderService.getAllFiles(folder.getFolderPath(), originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
-				totalRows                       = ezWebFolderService.getTotalFileCnt2(folder.getFolderPath(), searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, tenantId);
-				
-				//Old way
-				/*for (FileVO file : fileList) {
-					if (file.getFilePosition().equals("")) {
-						String file_path    = originalPath;
-						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
-						String[] fldPathArr = fldPath.split("\\|");
-						
-						for (int i = rootPath.length; i < fldPathArr.length - 1; i++) {
-							if (filePathMap.containsKey(fldPathArr[i])) {
-								file_path += filePathMap.get(fldPathArr[i]) + "/";
-							}
-							else {
-								FolderVO _folder   = ezWebFolderService.getFolderByFolderId(fldPathArr[i], offset, tenantId);
-								String _folderName = primary.equals("1") ? _folder.getFolderName1() : _folder.getFolderName2();
-								file_path         += _folderName + "/";
-								filePathMap.put(fldPathArr[i], _folderName);
-							}
-						}
-						
-						file_path += file.getFolderName() + "/";
-						file.setFilePosition(file_path + file.getFileName());
-					}
-				}*/
 				
 				//New way 30-50% faster
 				if (fileList.size() > 0) {
@@ -1520,11 +1499,12 @@ public class EzWebFolderGWController {
 				}
 			}
 			else {
-				fileList  = ezWebFolderService.getAllFilesInFolder(folderId, originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
-				totalRows = ezWebFolderService.getTotalFileCnt(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, tenantId);
+				totalRows  = ezWebFolderService.getTotalFileCnt(folderId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, tenantId);
+				totalPages = (totalRows + pageSize - 1)/pageSize;
+				currPage   = currPage > totalPages ? totalPages : currPage;
+				startPoint = (currPage - 1) * pageSize;
+				fileList   = ezWebFolderService.getAllFilesInFolder(folderId, originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
 			}
-			
-			totalPages  = (totalRows + pageSize - 1)/pageSize;
 			
 			result.put("data", fileList);
 			result.put("totalPages", totalPages);
@@ -1736,7 +1716,7 @@ public class EzWebFolderGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="rest/ezwebfolderadmin/company-folder/{companyid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/company-folder/{companyid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postMakeCompanyFolder(@PathVariable(value="companyid") String companyId, HttpServletRequest request) throws Exception {
 		String serverName   = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String offset       = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
@@ -1796,7 +1776,7 @@ public class EzWebFolderGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="rest/ezwebfolderadmin/dept-folder/{companyid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolderadmin/dept-folder/{companyid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postMakeDepartmentFolder(@PathVariable(value="companyid") String companyId, HttpServletRequest request) throws Exception {
 		String serverName   = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String offset       = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
@@ -1852,9 +1832,10 @@ public class EzWebFolderGWController {
 		logger.debug("Mode: " + mode + " || fileList: " + fileList + " || type: " + type + " || companyId: " + companyId + " || serverName: " + serverName + " || Offset: " + offset);
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, primary, offset);
-			int tenantId     = userInfo.getTenantId();
-			FileVO file      = ezWebFolderService.getFileByFileId(fileArr[0], offset, tenantId);
+			LoginVO userInfo     = commonUtil.getUserForGw(userId, serverName, primary, offset);
+			int tenantId         = userInfo.getTenantId();
+			List<String> fileIds = Arrays.asList(fileArr);
+			List<String> folders = ezWebFolderService.getFolderListFromFileId(fileIds, tenantId);
 			
 			switch (type) {
 				case "comp":
@@ -1905,7 +1886,7 @@ public class EzWebFolderGWController {
 					break;
 			}
 			
-			result.put("currentFolder", file.getFolderId());
+			result.put("currentFolders", folders);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 
@@ -2180,6 +2161,46 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezwebfolderadmin/dept-check/{folderid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject getCheckValidDept(@PathVariable(value="folderid") String folderId, HttpServletRequest request, Locale locale) throws Exception {
+		String serverName   = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
+		String offset       = request.getParameter("offset")    != null ? request.getParameter("offset")    : "";
+		String primary      = request.getParameter("primary")   != null ? request.getParameter("primary")   : "";
+		JSONObject result   = new JSONObject();
+		
+		logger.debug("serverName: " + serverName + " || offset: " + offset + " || folderId: " + folderId);
+		
+		if (serverName.equals("") || offset.equals("") || folderId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			int tenantId     = loginService.getTenantId(serverName);
+			FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			
+			OrganDeptVO dept = ezOrganService.getDeptInfo(folder.getOwnerId(), primary, tenantId);
+			
+			if (dept == null) {
+				result.put("status", "ok");
+				result.put("code", 0);
+			}
+			else {
+				result.put("status", "error");
+				result.put("code", 0);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
 		}
 		
 		return result;
