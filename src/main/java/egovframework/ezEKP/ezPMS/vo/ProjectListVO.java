@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPMS.vo;
 
 import java.sql.Date;
+import java.util.List;
 
 //프로젝트 정보 
 public class ProjectListVO {
@@ -79,7 +80,10 @@ public class ProjectListVO {
 
 	    // 알림 메일 상태 
 	    private int alamMailStatus;
-
+	    
+	    // 프로젝트 멤버
+	    private List<ProjectMemberVO> projectMember;
+	    
 	    public int getProjectId() {
 	        return projectId;
 	    }
@@ -278,6 +282,14 @@ public class ProjectListVO {
 
 		public void setCreateDate(String createDate) {
 			this.createDate = createDate;
+		}
+
+		public List<ProjectMemberVO> getProjectMember() {
+			return projectMember;
+		}
+
+		public void setProjectMember(List<ProjectMemberVO> projectMember) {
+			this.projectMember = projectMember;
 		}
 
 }

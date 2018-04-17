@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezPMS.service.EzPMSAdminService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectListVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskListVO;
@@ -24,13 +25,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectListVO> getProjectList(int tenantId, MCommonVO userInfo, String status,
-			Map<String, Object> map) {
+			Map<String, Object> map, String offset, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void addNewProject(JSONObject newProject, int tenantId) {
+	public void addNewProject(ProjectListVO newProject, int tenantId) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -42,7 +43,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void updateMainSetting(JSONObject project, int tenantId) {
+	public void updateMainSetting(ProjectMainSettingVO project, int tenantId) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -54,79 +55,79 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public ProjectListVO getProjectDetails(int projectId, String uerId, int tenantId) {
+	public ProjectListVO getProjectDetails(int projectId, String userId, int tenantId, String offset, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void updateProject(int projectId, Map<String, Object> map) {
+	public void updateProject(ProjectListVO project, int tenantId) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public List<ProjectMemberVO> getProjectMember(int projectId, int roleId) {
+	public List<ProjectMemberVO> getProjectMember(int projectId, int roleId, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ProjectTaskListVO> getMyTasks(int projectid, String status, int tenantId, String suerId) {
+	public List<ProjectTaskListVO> getMyTasks(int projectId, String status, int tenantId, String userId, String offset, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ProjectTaskListVO> getProjectTasks(int projectId, String status, int tenantId) {
+	public List<ProjectTaskListVO> getProjectTasks(int projectId, String status, int tenantId, String offset, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void changeKanbanOrder(int projectId, String userId, String orderStatus) {
+	public void changeKanbanOrder(int projectId, String userId, String orderStatus, int tenantId) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void addFavoriteProject(int projectId, String userId) {
+	public void addFavoriteProject(int projectId, String userId, int tenantId) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void deleteFavortieProject(int projectId, String userId) {
+	public void deleteFavortieProject(int projectId, String userId, int tenantId) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void addTaskLog(JSONObject taskLog, int tenantId, String userId) {
+	public void addTaskLog(TaskLogListVO taskLog, int tenantId, String userId) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public List<TaskLogListVO> getTaskLogList(int taskId, int groupId, Map<String, Object> map) {
+	public List<TaskLogListVO> getTaskLogList(int taskId, int groupId, Map<String, Object> map, String offset, String lang, int tenantId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int getProjectListCount(JSONObject project, int tenantId) {
+	public int getProjectListCount(ProjectListVO project, int tenantId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int getTaskListCount(String status, boolean mytask, int projectId, int tenantId) {
+	public int getTaskListCount(String status, String mytask, int projectId, int tenantId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int getTaskLogListCount(JSONObject taskLog, int tenantId) {
+	public int getTaskLogListCount(TaskLogListVO taskLog, int tenantId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -217,6 +218,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public String getUserRole(String userId, int projectId, int tenantId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
