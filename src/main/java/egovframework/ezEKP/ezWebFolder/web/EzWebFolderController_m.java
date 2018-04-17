@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import egovframework.let.user.login.vo.LoginSimpleVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @SuppressWarnings("unchecked")
@@ -119,50 +120,27 @@ public class EzWebFolderController_m {
 	public String getTrashCanList (@CookieValue("loginCookie") String loginCookie, Model model, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+		logger.debug("getTrashCanList Started.");
+		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		int listCount 	        = request.getParameter("listCount")         != null ? Integer.parseInt(request.getParameter("listCount")) 	: 0;
-		int currPage 	        = request.getParameter("currPage")	        != null ? Integer.parseInt(request.getParameter("currPage")) 	: 1;
-		int totalPages 	        = request.getParameter("totalpages")        != null ? Integer.parseInt(request.getParameter("totalpages")) 	: 1;
-		int pStart 		        = request.getParameter("pStart")	        != null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
-		
-		String searchExt 		= request.getParameter("searchExt")			!= null ? request.getParameter("searchExt") 		            : "" ;
-		String searchFileName 	= request.getParameter("searchFileName") 	!= null ? request.getParameter("searchFileName")	            : "" ;
-		String searchCreateName = request.getParameter("searchCreateName") 	!= null ? request.getParameter("searchCreateName") 	            : "" ;
-		String searchFileType   = request.getParameter("searchFileType")	!= null ? request.getParameter("searchFileType") 	            : "" ;
-		String endrollStartDate = request.getParameter("enrollStartDate")	!= null ? request.getParameter("enrollStartDate") 	            : "" ;
-		String endrollEndDate 	= request.getParameter("enrollEndDate")		!= null ? request.getParameter("enrollEndDate") 	            : "" ;
-		String delStartDate 	= request.getParameter("delStartDate")		!= null ? request.getParameter("delStartDate") 	            	: "" ;
-		String delEndDate 		= request.getParameter("delEndDate")		!= null ? request.getParameter("delEndDate") 	            	: "" ;
-		
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/" + user.getId() + "/getTrashCanList";
-		
-		logger.debug("getTrashCanList Started.");
-		logger.debug("listCount=" + listCount + ",currPage=" + currPage + ",totalPages=" + totalPages + ",pStart=" + pStart);
-		
-		if ( currPage == 0 ) {
-			currPage = 1;
-		} 
-		
-		if ( totalPages == 0 ) {
-			totalPages = 1;
-		}
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
 										.queryParam("offset", user.getOffset())
-										.queryParam("currPage", currPage)                   
-										.queryParam("listCount", listCount)                 
-										.queryParam("totalPages", totalPages)               
-										.queryParam("pStart", pStart)
-										.queryParam("searchExt", searchExt)               
-										.queryParam("searchFileName", searchFileName)               
-										.queryParam("searchCreateName", searchCreateName)               
-										.queryParam("searchFileType", searchFileType)               
-										.queryParam("endrollStartDate", endrollStartDate)               
-										.queryParam("endrollEndDate", endrollEndDate)               
-										.queryParam("delStartDate", delStartDate)               
-										.queryParam("delEndDate", delEndDate);               
+										.queryParam("currPage", Integer.parseInt(orElse(request.getParameter("currPage"), "1")))                   
+										.queryParam("listCount", Integer.parseInt(orElse(request.getParameter("listCount"), "0")))                 
+										.queryParam("totalPages", Integer.parseInt(orElse(request.getParameter("totalpages"), "1")))               
+										.queryParam("pStart", Integer.parseInt(orElse(request.getParameter("pStart"), "0")))
+										.queryParam("searchExt", orElse(request.getParameter("searchExt"), "" ))               
+										.queryParam("searchFileName", orElse(request.getParameter("searchFileName"), ""))               
+										.queryParam("searchCreateName", orElse(request.getParameter("searchCreateName"), ""))               
+										.queryParam("searchFileType", orElse(request.getParameter("searchFileType"), ""))               
+										.queryParam("endrollStartDate", orElse(request.getParameter("enrollStartDate"), ""))               
+										.queryParam("endrollEndDate", orElse(request.getParameter("enrollEndDate"), ""))               
+										.queryParam("delStartDate", orElse(request.getParameter("delStartDate"), ""))               
+										.queryParam("delEndDate", orElse(request.getParameter("delEndDate"), ""));               
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -197,8 +175,8 @@ public class EzWebFolderController_m {
 	public String permanentDeleteConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse response, Model model) throws Exception {
 		logger.debug("permanentDeleteConfirm Started.");
-		String fileList = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
-		String folderList = request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
+		String fileList = orElse(request.getParameter("fileList"), "");
+		String folderList = orElse(request.getParameter("folderList"), "");
 		
 		if (fileList.equals("")) {
 			logger.debug("Delete File Confirm illegal arguments!");
@@ -218,8 +196,6 @@ public class EzWebFolderController_m {
 		logger.debug("pemanentDeleteFile Started.");
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String fileList = request.getParameter("fileList");
-		String folderList = request.getParameter("folderList");
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/file-permanent-delete";
 		
@@ -228,8 +204,8 @@ public class EzWebFolderController_m {
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())
 										.queryParam("lang", user.getLang())
-										.queryParam("fileList", fileList)
-										.queryParam("folderList", folderList);
+										.queryParam("fileList", orElse(request.getParameter("fileList"), ""))
+										.queryParam("folderList", orElse(request.getParameter("folderList"), ""));
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -253,21 +229,22 @@ public class EzWebFolderController_m {
 		return "json";
 	}
 	
-	@RequestMapping(value="ezWebFolder/restoreTrashCan.do", method= RequestMethod.POST)
+	@RequestMapping(value="/ezWebFolder/restoreTrashCan.do", method= RequestMethod.POST)
 	public String restoreTrashCan (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("restoreFile Started");
 		
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String fileList = request.getParameter("fileList") != null ? request.getParameter("request") : "";
-		String folderList = request.getParameter("folderList") != null ? request.getParameter("request") : "";
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/restore-trashCan";
+		
 		
 		UriComponentsBuilder butilder = UriComponentsBuilder.fromHttpUrl(url)
 											.queryParam("tenantId", user.getTenantId())
 											.queryParam("userId", user.getId())
-											.queryParam("fileList", fileList)
-											.queryParam("folderList", folderList);
+											.queryParam("offset", user.getOffset())
+											.queryParam("companyId", user.getCompanyID())
+											.queryParam("fileList", orElse(request.getParameter("fileList"), ""))
+											.queryParam("folderList", orElse(request.getParameter("folderList"), ""));
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

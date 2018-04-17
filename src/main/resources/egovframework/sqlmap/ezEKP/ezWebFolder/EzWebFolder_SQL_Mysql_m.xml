@@ -847,7 +847,7 @@
 		]]>
 	</select>
 	
-	<delete id="EzWebFolderDAO_m.deleteFileUseStatus" parameterClass="Map">
+	<delete id="EzWebFolderDAO_m.deleteFile" parameterClass="Map">
 		<![CDATA[
 			DELETE
 			FROM
@@ -856,12 +856,14 @@
 				FILE_ID    = #fileId#
 			AND
 				TENANT_ID  = #tenantId#
+			AND
+				COMPANY_ID = #companyId#	
 			AND 
-				USE_STATUS = 'N'
+				USE_STATUS = 'T'
 		]]>
 	</delete>
 	
-	<delete id="EzWebFolderDAO_m.deleteFolderUseStatus" parameterClass="Map" >
+	<delete id="EzWebFolderDAO_m.deleteFolder" parameterClass="Map" >
 	<![CDATA[
 			DELETE
 			FROM
@@ -873,7 +875,7 @@
 			AND
 				COMPANY_ID = #companyId#
 			AND
-				USE_STATUS = 'N'
+				USE_STATUS = 'T'
 		]]>
 	</delete>
 	
@@ -918,7 +920,9 @@
 	            "" AS FILE_FOLDER_ID,
 	            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
 			FROM
-				TBL_WEBFOLDER_FOLDER
+				TBL_WEBFOLDER_FOLDER AS FOLDER
+				LEFT JOIN TBL_WEBFOLDER_FILETYPE AS FILE_TYPE
+				ON FILE_TYPE.TYPE_NAME = 'folder'
 			WHERE
 				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
 			AND
@@ -938,7 +942,7 @@
 		AND
 			FILE_ID = #fileId#
 		AND
-			DELETER_ID = #deleterId#
+			DELETER_ID = #userId#
 	</update>
 	
 	<update id="EzWebFolderDAO_m.restoreFolder" parameterClass="Map">
@@ -949,9 +953,35 @@
 		WHERE
 			TENANT_ID = #tenantId#
 		AND
-			FOLDER_ID = #folderId#
+			FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
 		AND
-			DELETER_ID = #deleterId#
+			DELETER_ID = #userId#
+		AND
+			COMPANY_ID = #companyId#	
+	</update>
+	
+	<update id="EzWebFolderDAO_m.restoreAllFilesInFolder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FILE f JOIN
+					(
+					SELECT
+					  *
+					FROM
+						TBL_WEBFOLDER_FOLDER
+								WHERE
+									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+								AND
+									TENANT_ID = #tenantId#
+					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
+			SET
+				f.USE_STATUS = 'Y',
+				f.DELETER_ID = #userId#
+			WHERE
+				f.TENANT_ID = #tenantId#
+			AND
+				f.USE_STATUS = 'T'
+		]]>
 	</update>
 	
 	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteFileVO">

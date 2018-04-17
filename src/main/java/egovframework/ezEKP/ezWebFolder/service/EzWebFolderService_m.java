@@ -59,4 +59,12 @@ public interface EzWebFolderService_m {
 	void addFavorite(String userId, String targetId, String targetType, String createDate, int tenantId) throws Exception;
 	
 	void deleteFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception;
+	
+	public void restoreFile (String fileId, int tenantId, String userId) throws Exception;
+
+	public void restoreFolder (String folderPath, int tenantId, String userId, String companyId) throws Exception;
+	
+	public void restoreTrashCan (String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId) throws Exception;
+	
+	public void restoreFileInFolder(String folderPath, int tenantId, String userId) throws Exception;
 }

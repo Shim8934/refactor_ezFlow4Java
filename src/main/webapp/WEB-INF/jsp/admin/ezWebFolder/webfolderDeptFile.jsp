@@ -107,7 +107,8 @@
 						var result  = data.fileList;
 						totalRows   = data.totalRows;
 						totalPages  = data.totalPages;
-						currentPage = pPage > totalPages ? totalPages : pPage;
+						currentPage = pPage > totalPages                    ? totalPages : pPage;
+						currentPage = (currentPage == 0 && totalPages > 0)  ? 1          : currentPage;
 						
 						makePageSelPage();
 						renderData(result);

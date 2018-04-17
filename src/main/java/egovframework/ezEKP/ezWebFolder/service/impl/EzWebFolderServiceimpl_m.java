@@ -452,12 +452,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int pStart, int pEnd, 
 			String searchExt, String searchFileName, String searchCreateName,String searchFileType, String endrollStartDate, String endrollEndDate,
 			String delStartDate, String delEndDate) throws Exception {
-		LOGGER.debug("getTrashCanList Started.");
-		LOGGER.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId);
-		LOGGER.debug("pStart=" + pStart + ",pEnd=" + pEnd);
-		LOGGER.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName + ",searchFileType=" + searchFileType);
-		LOGGER.debug("endrollStartDate=" + endrollStartDate + ",endrollEndDate=" + delStartDate + ",delStartDate=" + delStartDate + ",delEndDate=" + delEndDate);
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("offset", offset);
@@ -513,31 +507,23 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		result.put("trashCanList", resultList);
 		
 		LOGGER.debug("result=" + result);
-		LOGGER.debug("getTrashCanList ended.");
 		return result;
 	}
 
 
 	@Override
 	public String getFolderPath(String folderId, int tenantId) throws Exception {
-		LOGGER.debug("getFolderPath Started.");
-		LOGGER.debug("folderId=" + folderId + ",tenantId=" + tenantId);
-
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
 		
 		String folderPath = ezWebFolderDAO.getFolderPath(map);
 		
-		LOGGER.debug("getFolderPath ended.");
 		return folderPath;
 	}
 
 	@Override
 	public void permanetDeleteSelectedFiles(String[] fileIDList, String[] folderIDList ,LoginVO userInfo, String realPath) throws Exception {
-		LOGGER.debug("permanetDeleteSelectedFiles Started.");
-		LOGGER.debug("fileIDList=" + fileIDList + ",userInfo=" + userInfo + ",realPath=" + realPath);
-		
 		String userName1 = userInfo.getDisplayName1();
 		String userName2 = userInfo.getDisplayName2();
 		String companyId = userInfo.getCompanyID();
@@ -564,14 +550,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				realFileDeleteInFolder(folderVO.getFolderPath(), companyId, realPath, userInfo, offset, tenantId);
 			}
 		}
-		
-	LOGGER.debug("permanetDeleteSelectedFiles ended");
 	}
 
 	@Override
 	public void realFileDelete(String fileName, String realPath, LoginVO userInfo) throws Exception {
-		LOGGER.debug("realFileDelete Started.");
-		LOGGER.debug("fileName=" + fileName + ",realPath=" + realPath + ",uesrInfo=" + userInfo);
 		
 		String pDirPath = getWebFolderDirPath(userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
@@ -591,15 +573,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		} else {
 			throw new FileNotFoundException(fileName);
 		}
-		
-		LOGGER.debug("realFileDelete ended.");
 	}
 	
 	@Override
 	public void realFileDeleteInFolder(String folderPath, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId) throws Exception {
-		LOGGER.debug("realFileDeleteInFolder Started.");
-		LOGGER.debug("folderPath=" + folderPath + ",companyId=" + companyId + ",realPath=" + realPath + ",uesrInfo=" + userInfo);
-		
 		List<TrashCanVO> innerFolderList = getFolderByFolderPath(folderPath, tenantId, companyId);
 		
 		for (TrashCanVO innerfolder : innerFolderList) {
@@ -614,16 +591,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			}
 		}
 		
-		LOGGER.debug("realFileDeleteInFolder ended.");
 	}
-	
-	
-	
 	
 	@Override
 	public void deleteFile(String fileId, int tenantId) throws Exception {
-		LOGGER.debug("deleteFile Started.");
-		LOGGER.debug("fildId=" + fileId + ",tenantId=" + tenantId);
 
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("fileId", fileId);
@@ -636,14 +607,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		} else {
 			LOGGER.debug("deleteFile is fail");
 		}
-		
-		LOGGER.debug("deleteFile ended.");
 	}
 
 	@Override
 	public void deleteFolder (FolderVO folderVO) throws Exception {
-		LOGGER.debug("deleteFolder Started.");
-		LOGGER.debug("folderVO="  + folderVO);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderVO.getFolderPath());
@@ -657,14 +624,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		} else {
 			LOGGER.debug("deleteFolder is fail");
 		}
-		
-		LOGGER.debug("deleteFolder ended.");
 	}
 
 	@Override
 	public void deleteAllFilesInFolder(FolderVO folderVO) throws Exception {
-		LOGGER.debug("deleteAllFilesInFolder Started.");
-		LOGGER.debug("folderVO="  + folderVO);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderVO.getFolderPath());
@@ -678,8 +641,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		} else {
 			LOGGER.debug("deleteAllFilesInFolder is fail");
 		}
-		
-		LOGGER.debug("deleteAllFilesInFolder ended.");
 	}
 
 	@Override
@@ -699,7 +660,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Override
 	public List<TrashCanVO> getFolderByFolderPath(String folderPath, int tenantId, String companyId) throws Exception {
-		LOGGER.debug("getFolderByFolderPath Started.");
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath);
@@ -708,10 +668,91 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		List<TrashCanVO> folderList = ezWebFolderDAO.getFolderByFolderPath(map);
 		
-		LOGGER.debug("getFolderByFolderPath ended.");
 		return folderList;
 	}
 	
+	@Override
+	public void restoreFile(String fileId, int tenantId, String userId) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("fileId", fileId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		
+		int result = ezWebFolderDAO.restoreFile(map);
+		
+		if (result > 0) {
+			LOGGER.debug("restoreFile is success");
+		} else {
+			LOGGER.debug("restoreFile is fail");
+		}
+	}
+	
+	@Override
+	public void restoreFolder(String folderPath, int tenantId, String userId, String companyId) throws Exception{
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("folderPath", folderPath);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		
+		int result = ezWebFolderDAO.restoreFolder(map);
+		
+		if (result > 0) {
+			LOGGER.debug("restoreFolder is success");
+		} else {
+			LOGGER.debug("restoreFolder is fail");
+		}
+	}
+	
+	@Override
+	public void restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId) throws Exception {
+
+		for (String file : fileIDList) {
+			if (!file.equals("")) {
+				FileVO fileVO  = ezWebFolderService.getFileByFileId(file, offset, tenantId);
+				
+				if (fileVO != null) {
+					FolderVO folderVO = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
+					
+					if (folderVO != null) {
+						restoreFile(file, tenantId, userId);
+					}
+				}
+			}
+		}
+		
+		for (String folder : folderIDList) {
+			if (!folder.equals("")) {
+				FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
+				FolderVO upperFolderVO = ezWebFolderService.getFolderByFolderId(folderVO.getFolderUpper(), offset, tenantId);
+				
+				if (upperFolderVO != null && folderVO.getFolderPath().startsWith(upperFolderVO.getFolderPath())) {
+					restoreFolder(folderVO.getFolderPath(), tenantId, userId, companyId);
+					restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId);
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void restoreFileInFolder(String folderPath, int tenantId, String userId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("folderPath", folderPath);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		
+		int result = ezWebFolderDAO.restoreAllFilesInFolder(map);
+		
+		if (result > 0) {
+			LOGGER.debug("restoreFileInFolder is success");
+		} else {
+			LOGGER.debug("restoreFileInFolder is fail");
+		}
+		
+	}
+			
 	private String getWebFolderDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
 	}

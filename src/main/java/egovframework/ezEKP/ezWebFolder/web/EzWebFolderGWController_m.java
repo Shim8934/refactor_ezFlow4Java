@@ -448,28 +448,28 @@ public class EzWebFolderGWController_m {
 	
 	@RequestMapping(value="/rest/ezwebfolder/{userId}/getTrashCanList", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
 	public JSONObject getTrashCanList (@PathVariable String userId, HttpServletRequest request, Locale locale) {
-		String offset = request.getParameter("offset") != null ? request.getParameter("offset") : "";
-		int tenantId = request.getParameter("tenantId") != null ? Integer.parseInt(request.getParameter("tenantId")) : 0;
-		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String offset =  orElse(request.getParameter("offset"), "");
+		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
+		String serverName =  orElse(request.getHeader("host-name"), "");
 		
 		int totalCount =  0;
-		int currPage = request.getParameter("currPage") 					!= null ? Integer.parseInt(request.getParameter("currPage")) 	: 1;
-		int totalpages = request.getParameter("totalpages") 				!= null ? Integer.parseInt(request.getParameter("totalpages"))	: 1;
 		
-		int usrListCnt = ezWebFolderService_y.getUsrListCount(tenantId, userId);
-		int listCount = Integer.parseInt(request.getParameter("listCount")) != 0 ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
-		int pStart  =request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
+		int listCount 	        = Integer.parseInt(orElse(request.getParameter("listCount"), "0"));
+		int currPage 	        = Integer.parseInt(orElse(request.getParameter("currPage"), "1"));
+		int totalPages 	        = Integer.parseInt(orElse(request.getParameter("totalpages"), "1"));
+		int pStart 		        = Integer.parseInt(orElse(request.getParameter("pStart"), "0"));
 		int pEnd = listCount;
 		
-		String searchExt 		= request.getParameter("searchExt")			!= null ? request.getParameter("searchExt") 		            : "" ;
-		String searchFileName 	= request.getParameter("searchFileName") 	!= null ? request.getParameter("searchFileName")	            : "" ;
-		String searchCreateName = request.getParameter("searchCreateName") 	!= null ? request.getParameter("searchCreateName") 	            : "" ;
-		String searchFileType  = request.getParameter("searchFileType")		!= null ? request.getParameter("searchFileType") 	            : "" ;
-		String endrollStartDate = request.getParameter("enrollStartDate")	!= null ? request.getParameter("enrollStartDate") 	            : "" ;
-		String endrollEndDate 	= request.getParameter("enrollEndDate")		!= null ? request.getParameter("enrollEndDate") 	            : "" ;
-		String delStartDate 	= request.getParameter("delStartDate")		!= null ? request.getParameter("delStartDate") 	            	: "" ;
-		String delEndDate 		= request.getParameter("delEndDate")		!= null ? request.getParameter("delEndDate") 	            	: "" ;
-
+		String searchExt 		= orElse(request.getParameter("searchExt"), "" );
+		String searchFileName 	= orElse(request.getParameter("searchFileName"), "");
+		String searchCreateName = orElse(request.getParameter("searchCreateName"), "");
+		String searchFileType   = orElse(request.getParameter("searchFileType"), "");
+		String endrollStartDate = orElse(request.getParameter("enrollStartDate"), "");
+		String endrollEndDate 	= orElse(request.getParameter("enrollEndDate"), "");
+		String delStartDate 	= orElse(request.getParameter("delStartDate"), "");
+		String delEndDate 		= orElse(request.getParameter("delEndDate"), "");
+		
+		
 		// TODO primary 수정
 		String primary;
 		
@@ -481,7 +481,7 @@ public class EzWebFolderGWController_m {
 
 		logger.debug("getTrashCanList Started.");
 		logger.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId + ",serverName=" + serverName);
-		logger.debug("currPage=" + currPage + ",totalpages=" + totalpages);
+		logger.debug("currPage=" + currPage + ",totalpages=" + totalPages);
 		logger.debug("pStart=" + pStart + ",pEnde=" + pEnd + ",listCount=" + listCount);
 		logger.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName + ",searchFileType=" + searchFileType);
 		logger.debug("endrollStartDate=" + endrollStartDate + ",endrollEndDate=" + delStartDate + ",delStartDate=" + delStartDate + ",delEndDate=" + delEndDate);
@@ -518,9 +518,6 @@ public class EzWebFolderGWController_m {
 				for (TrashCanVO trashCan : trashCanList) {
 					trashCanPath = trashCan.getTrashCanPath().substring(1);
 					
-					logger.debug("trashCanPath=" + trashCanPath);
-					logger.debug("offset=" + offset);
-					
 					trashCanPath = getFolderPath(trashCanPath.split("\\|"), offset, primary, tenantId);
 					
 					// is folder
@@ -537,16 +534,16 @@ public class EzWebFolderGWController_m {
 			totalCount = trashCanList.size();
 			
 			if (totalCount % listCount == 0) {
-				totalpages = (totalCount / listCount);
+				totalPages = (totalCount / listCount);
 			} else {
-				totalpages = (totalCount / listCount) + 1;
+				totalPages = (totalCount / listCount) + 1;
 			}
 
 			data.put("trashCanList", trashCanList);
 			data.put("fileCnt", fileCnt);
 			data.put("folderCnt", folderCnt);
 			data.put("totalRows", fileCnt + folderCnt);
-			data.put("totalPages", totalpages);
+			data.put("totalPages", totalPages);
 			data.put("listCount", listCount);
 			data.put("currPage", currPage);
 			
@@ -567,12 +564,12 @@ public class EzWebFolderGWController_m {
 	
 	@RequestMapping(value = "/rest/ezwebfolder/file-permanent-delete", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject filePermanetDelete(Locale locale, HttpServletRequest request) {
-		String offset       = request.getParameter("offset")   != null ? request.getParameter("offset")   : "";
-		String fileList   = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
-		String folderList   = request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
-		String userId       = request.getParameter("userId")       != null ? request.getParameter("userId")   	  : "";
-		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
-		String lang         = request.getParameter("lang")     != null ? request.getParameter("lang")     : "";
+		String offset       = orElse(request.getParameter("offset"), "");
+		String fileList     = orElse(request.getParameter("fileList"), "");
+		String folderList   = orElse(request.getParameter("folderList"), "");
+		String userId       = orElse(request.getParameter("userId"), "");
+		String serverName   = orElse(request.getHeader("host-name"), "");
+		String lang         = orElse(request.getParameter("lang"), "");
 		
 		logger.debug("filePermanetDelete Started.");
 		logger.debug("userId=" + userId  + ",offset=" + offset + ",lang=" + lang + ",offset=" + offset + ",serverName=" + serverName);
@@ -610,22 +607,24 @@ public class EzWebFolderGWController_m {
 	
 	@RequestMapping(value="rest/ezwebfolder/restore-trashCan", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject restoreTrashCan(Locale locale, HttpServletRequest request) {
-		int tenantId = request.getParameter("tenantId") !=null ? Integer.parseInt(request.getParameter("tenantId")) : 0;
-		String userId = request.getParameter("userId") !=null ? request.getParameter("userId") : "";
-		String offset = request.getParameter("offset") !=null ? request.getParameter("offset") : "";
-		String serverName   = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
-		String fileList = request.getParameter("fileList") !=null ? request.getParameter("fileList") : "";
-		String folderList = request.getParameter("folderList") !=null ? request.getParameter("folderList") : "";
+		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
+		String offset= orElse(request.getParameter("offset"), "");
+		String companyId = orElse(request.getParameter("companyId"), "");
+		String userId = orElse(request.getParameter("userId"), "");
+		String serverName   = orElse(request.getHeader("host-name"), "");
+		String fileList = orElse(request.getParameter("fileList"), "");
+		String folderList = orElse(request.getParameter("folderList"), "");
 
 		logger.debug("restoreTrashCan Started.");
-		logger.debug("tenantId=" + tenantId + ",userId=" + userId + ",offset=" + offset + ",serverName=" + serverName);
+		logger.debug("tenantId=" + tenantId + ",userId=" + userId + ",serverName=" + serverName);
+		logger.debug("offset=" + offset + ",companyId=" + companyId);
 		logger.debug("fileList=" + fileList + ",folderList=" + folderList);
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
 		JSONObject result = new JSONObject();
 		
-		if (fileIDList.length == 0 & folderIDList.length == 0|| serverName.equals("") || offset.equals("") || userId.equals("")) {
+		if (fileIDList.length == 0 & folderIDList.length == 0|| serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
@@ -635,6 +634,8 @@ public class EzWebFolderGWController_m {
 		
 		try {
 			
+			ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId, userId, offset, companyId);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
 		} catch (Exception e) {
@@ -643,8 +644,6 @@ public class EzWebFolderGWController_m {
 			result.put("status", "error");
 			result.put("code", "1");
 		}
-		
-		
 		
 		logger.debug("restoreTrashCan ended");
 		return result;
