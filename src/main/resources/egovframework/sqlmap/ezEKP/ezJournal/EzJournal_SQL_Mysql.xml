@@ -32,6 +32,11 @@
 		<result property="mine" 			column="mine" />
 	</resultMap>
 	
+	<resultMap class="journalVO" id="journalContentMap">
+		<result property="journalContent" 	column="journal_content"/>
+		<result property="journalTitle" 	column="journal_title"/>
+	</resultMap>
+	
 	<resultMap class="journalVO" id="journalMap" groupBy="journalId">
 		<result property="journalId" 		column="journal_id"/>
 		<result property="journalTitle" 	column="journal_title"/>
@@ -1363,5 +1368,12 @@
 		j.journal_id = #journalId#
 		and j.tenant_id = #tenantId#
 		and r.user_id = #userId#
+	</select>
+	
+	<!-- 취합할 일지들 가져오기 -->
+	<select id="selectSumJournalList" parameterClass="map" resultMap="journalContentMap">
+		select journal_content,journal_title from tbl_journal
+		where tenant_id=#tenantId#
+		and journal_id in ($journalIdS$)
 	</select>
 </sqlMap>
