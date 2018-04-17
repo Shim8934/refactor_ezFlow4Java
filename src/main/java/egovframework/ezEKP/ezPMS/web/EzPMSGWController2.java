@@ -47,6 +47,10 @@ public class EzPMSGWController2 {
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
 	
+	
+	/**
+	 * 프로젝트관리 업무 리스트
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/task-list/{projectId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getTaskList(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
@@ -77,7 +81,9 @@ public class EzPMSGWController2 {
 		return result;
 	}
 	
-	
+	/**
+	 * 프로젝트관리 업무 등록
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/tasks/{projectId}/users/{userId}", method = RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject addTask(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonParam) throws Exception {
@@ -173,7 +179,9 @@ public class EzPMSGWController2 {
 		return result;
 	}
 	
-	
+	/**
+	 * 프로젝트관리 업무 삭제
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/users/{userId}", method = RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject deleteTask(@PathVariable String taskId, @PathVariable String userId, HttpServletRequest request) throws Exception {
@@ -200,6 +208,10 @@ public class EzPMSGWController2 {
 		return result;
 	}
 	
+	
+	/**
+	 * 프로젝트관리 그룹 리스트
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/group-list/{projectId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getGroupList(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
@@ -230,6 +242,10 @@ public class EzPMSGWController2 {
 		return result;
 	}
 	
+	
+	/**
+	 * 프로젝트관리 그룹 추가
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/groups/{projectId}/users/{userId}", method = RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject addGroup(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonParam) throws Exception {
