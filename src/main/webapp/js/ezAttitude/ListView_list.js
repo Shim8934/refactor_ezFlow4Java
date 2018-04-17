@@ -33,6 +33,17 @@ $(document).on('click', '#attiBoardList tr:not(#attiBoardList tr:eq(0))', functi
 	}
 	$(this).find("input[type='checkbox']").prop("checked", checkValue);
 })
+//tr클릭 시 - 휴가유형관리, 근태권한 관리
+$(document).on('click', '#contentlist table.mainlist tr', function(e) {
+	if(e.type == "click") {
+		$('#contentlist table.mainlist tr').not(this).attr("class","");
+		$('#contentlist table.mainlist tr').not(this).css("background-color", m_strColorDefault);
+		$(this).css("background-color", m_strColorSelect);
+		$(this).attr("class","selectTR");
+	} else {
+		$(this).css("background-color", m_strColorDefault);
+	}
+})
 
 //tr hover시 배경색 변경
 $(document).on('mouseover mouseleave', '#attiBoardList tr', function(e) {
@@ -45,6 +56,17 @@ $(document).on('mouseover mouseleave', '#attiBoardList tr', function(e) {
 		} else {
 			$(this).css("background-color", m_strColorDefault);
 		}
+	}
+})
+//tr hover시 배경색 변경 - 휴가유형관리, 근태권한 관리
+$(document).on('mouseover mouseleave', '#contentlist table.mainlist tr', function(e) {
+	if($(this).attr("class") == "selectTR") {
+		return;
+	}
+	if (e.type == "mouseover") {
+		$(this).css("background-color", m_strColorOver);
+	} else {
+		$(this).css("background-color", m_strColorDefault);
 	}
 })
 

@@ -6,14 +6,17 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />		
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
+<%-- 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" /> --%>
+<!-- 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />		 -->
+<%-- 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	     --%>
+	    <link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
+	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>	
 	    <script type="text/javascript">
 	    	var adminCompany = "${adminCompany}";
+	    	var selectUserId = "";
 // 			document.onselectstart = function () {
 // 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 // 	            return false;
@@ -44,10 +47,61 @@
 	            		attitudeAuthListSet(result);
 	            	},
 	            	error : function() {
-	            		
+	            		alert("리스트를 가져오는 도중 에러 발생");
 	            	}
 	            });
 	        }
+	        
+	        //권한자 리스트 셋팅
+	        function attitudeAuthListSet(result) {
+                var html = "";
+                if (result.length != null && result.lenth != 0) {
+	                for (var i = 0; i < result.length; i++) {
+	                    html += "<tr id='" + result[i].userId + "' onclick='listClick(this);' style='cursor: pointer;'>";
+	                    html += "<td style='width:28%;color:gray;'>" + result[i].userName + "</td>";
+	                    html += "<td style='width:22%;color:gray;'>" + result[i].userTitle + "</td>";
+	                    html += "<td style='width:25%;color:gray;'>" + result[i].userDeptName + "</td>";
+	                    html += "<td style='width:25%;color:gray;'>" + result[i].authDeptName + "</td>";
+	                    html += "</tr>";
+	                }
+                } else {
+                	html = "<tr><td colspan='4' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";
+                }
+                
+                $("#contentlist table.mainlist").html(html);
+	        }
+	        
+	        //리스트 tr클릭시
+	        function listClick(elem) {
+	        	selectUserId = $(elem).attr('id');
+	        }
+	        
+	        //권한 삭제
+	        function author_delete() {
+	        	if (confirm("정말로 삭제하시겠습니까?")) {
+					$.ajax({
+						type : "POST",
+						url : "/admin/ezAttitude/deleteAttitudeAuth.do",
+						data : {
+							selectUserId : selectUserId,
+							companyId : encodeURI($("#ListCompany").val())
+						},
+						success : function() {
+							alert("삭제되었습니다.");
+							company_change();
+						},
+						error : function() {
+							alert("삭제하는 도중 오류 발생");
+						}
+					})
+	        	}
+	        }
+	        
+	        //권한추가
+	        function author_add() {
+	        	
+	        }
+	        
 		</script>
 	</head>
 	<body class="mainbody">
@@ -66,7 +120,7 @@
 	      		</li>
 	      	</ul>
 		    <ul>
-		        <li><span onClick="author_new()">권한추가</span></li>
+		        <li><span onClick="author_add()">권한추가</span></li>
 		        <li><span onClick="author_delete()">권한삭제</span></li>
 		    </ul>
 		</div>
@@ -83,7 +137,7 @@
                                 <th style="width: 25%;"><span>관리부서</span></th>
                             </tr>
                         </table>
-                        <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">
+                        <div id="contentlist" name="contentlist" style="height: 360px; overflow-y: auto;">
                             <table class="mainlist" style="width: 100%;">
                                 <tr>
                                     <td style="text-align: center;">
