@@ -7165,8 +7165,31 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("itemReadPagingList ended");
 		return resultXML.toString();
 	}
+	
+	/**
+	 * 2018-04-16 홍승비 게시판 환경설정 탭 표출 수정
+	 */
+	@RequestMapping(value="/ezBoard/set_TabUse2.do")
+	public void set_TabUse2(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("set_TabUse2 started");
 
-    
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		
+		String pUserID = loginVO.getId();
+		String pBoardList = request.getParameter("pBoardList");
+		String tabUsed = request.getParameter("tabUsed");
+		int tenantID = loginVO.getTenantId();
+		
+		String[] pBoardLists = pBoardList.split(";");
+		String tabUseds[] = tabUsed.split(";");
+		
+		for (int k = 0; k < pBoardLists.length; k++) {
+			ezBoardService.setTabUsed(pUserID, pBoardLists[k], tabUseds[k], tenantID);
+		}
+
+		logger.debug("set_TabUse2 ended");
+	}
+
     
 }
 
