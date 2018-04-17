@@ -23,15 +23,8 @@
 	            	
 	            	//파일경로
 	            	var imgFilePath = "${typeInfo.imgPath}";
-// 	            	if (imgFilePath != "/images/default_pic.jpg") {
-// 		            	var idx = imgFilePath.lastIndexOf("=");
-// 		            	imgFilePath = imgFilePath.substring(idx+1);
-// 		            	$('#imagefile').val(imgFilePath);
-// 	            	}
 	            } else {
 	    			typeId = "<c:out value = '${typeId}' />";
-	            	
-	            	$('#preview').attr('src','/images/default_pic.jpg');
 	            }
 	        }
 	        
@@ -82,6 +75,9 @@
 //여기까지 파일
 
 			function OK_Click() {
+				var imgPath = $('#preview').attr('src');
+				var idx = imgPath.lastIndexOf('/');
+				imgPath = imgPath.substr(idx+1);
 				$.ajax({
 		        	type : "POST",
 		        	url : "/admin/ezAttitude/saveAttitudeType.do",
@@ -92,11 +88,15 @@
 		        		saveMode : saveMode,
 		        		typeName : $('#typeName').val(),
 		        		typeName2 : $('#typeName2').val(),
-		        		imgPath : $('#imagefile').val()
+		        		imgPath : imgPath
 		        	},
-		        	success : function (result) {
+		        	success : function(result) {
+		        			alert('추가하였습니다.');
 		        			window.opener.company_change();
 							window.close();
+		        	},
+		        	error : function() {
+		        		alert('추가하는 도중 에러 발생');
 		        	}
 		        });
 			}
@@ -146,11 +146,11 @@
 	  								<span onclick="btnimagefile_onclick()">파일추가</span>
 	  							</a>
 	  						</td>
-	  						<td style="width:45%">
+	  						<td style="width:40%">
 	  							<img id="preview" name="preview" src="${typeinfo.imgpath}" width="16px;" height="16px;" alt="" border="0" style="display: block;">
 	  						</td>
 	  						<td>
-	  							아이콘 크기 : 16px * 16px
+	  							★ 아이콘 크기 : 16px * 16px
 	  						</td>
 	  					</tr>
   					</table>

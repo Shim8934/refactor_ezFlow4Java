@@ -1272,10 +1272,7 @@ public class EzAttitudeGWController {
     				throw new IOException(e.getMessage());
     			} 
     			BufferedImage destImg = new BufferedImage(119, 128, BufferedImage.TYPE_INT_RGB); 
-    			destImg.setRGB(0, 0, 119, 128, pixels, 0, 119); 
-    			//기존코드	
-//    			BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
-//    			bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
+    			destImg.setRGB(0, 0, 119, 128, pixels, 0, 119);
     			
     			File iconImageFile = new File(realPath + filePath + commonUtil.separator + fileName);
     			if (iconImageFile.exists()) {
@@ -1291,7 +1288,7 @@ public class EzAttitudeGWController {
 			
     		//filePath, filePath2만 가져가면 된다
     		JSONObject data = new JSONObject();
-			data.put("filePath", filePath + commonUtil.separator + fileName);
+//			data.put("filePath", filePath + commonUtil.separator + fileName);
 			data.put("filePath2", filePath2);
 			
 			result.put("status", "ok");
