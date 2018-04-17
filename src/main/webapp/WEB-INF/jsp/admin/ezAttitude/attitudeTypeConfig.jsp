@@ -127,12 +127,18 @@
 	<body class="mainbody">
 	    <h1><spring:message code='ezAttitude.t12' /></h1>
 		<div id="mainmenu">
-			<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
-				<c:forEach var="item" items="${list}">
-				<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-	      	</select>
+			<ul>
+	        	<li style="background: none;">
+				<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
+				</li>
+				<li>
+				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+					<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+					</c:forEach>
+	      		</select>
+	      		</li>
+	      	</ul>
 	      	<ul>
 	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.t33' /></span></li>
 	      		<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
@@ -140,7 +146,7 @@
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
 	      	</ul>
 	  	</div>
-	  	<table style="width: 450px; height: 380px;" >
+	  	<table style="width: 500px; height: 380px;" >
             <tr>
                 <td>
                     <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 100%;">

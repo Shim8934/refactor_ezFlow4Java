@@ -12,7 +12,8 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
-	    <script type="text/javascript">			
+	    <script type="text/javascript">
+	    	var adminCompany = "${adminCompany}";
 // 			document.onselectstart = function () {
 // 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 // 	            return false;
@@ -20,29 +21,66 @@
 // 	            return true;
 // 			};
 			
-	        window.onload = function() {
-	           
+	        $(document).ready(function() {
+		        if (document.getElementById("ListCompany").length == 0) {
+		            alert("<spring:message code = 'ezAttitude.t32' />");
+		        } else {
+		    		if (adminCompany != null) {
+		    			$('#ListCompany').val(adminCompany);
+		    		} else {
+			            document.getElementById("ListCompany").selectedIndex = 0;
+		    		}
+		            company_change();
+		        }
+	        });
+	        
+	        function company_change() {
+	            $.ajax({
+	            	type : "GET",
+	            	url : "/admin/ezAttitude/attitudeAuthList.do",
+	            	dataType : "json",
+	            	data : {companyId : encodeURI($("#ListCompany").val())},
+	            	success : function(result) {
+	            		attitudeAuthListSet(result);
+	            	},
+	            	error : function() {
+	            		
+	            	}
+	            });
 	        }
 		</script>
 	</head>
 	<body class="mainbody">
 	    <h1>근태권한관리</h1>
 	    <div id="mainmenu">
+			<ul>
+	        	<li style="background: none;">
+				<span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span>
+				</li>
+				<li>
+				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+					<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+					</c:forEach>
+	      		</select>
+	      		</li>
+	      	</ul>
 		    <ul>
 		        <li><span onClick="author_new()">권한추가</span></li>
 		        <li><span onClick="author_delete()">권한삭제</span></li>
 		    </ul>
 		</div>
 	    <br />
-	    <table style="width: 750px; height: 385px;" >
+	    <table style="width: 650px; height: 385px;" >
             <tr>
                 <td>
-                    <div style="border: 1px solid #dbdbda;border-top:0px; width: 750px; height: 396px;">
+                    <div style="border: 1px solid #dbdbda;border-top:0px; width: 650px; height: 396px;">
                         <table class="mainlist" style="width: 100%;">
                             <tr>
-                                <th style="width: 38%;"><span><spring:message code='ezSchedule.t999' /></span></th>
-                                <th style="width: 32%;"><span><spring:message code='ezSchedule.t12' /></span></th>
-                                <th style="width: 30%;"><span><spring:message code='ezSchedule.t205' /><spring:message code='ezSchedule.t12' /></span></th>
+                                <th style="width: 28%;"><span>사용자</span></th>
+                                <th style="width: 22%;"><span>직위</span></th>
+                                <th style="width: 25%;"><span>부서</span></th>
+                                <th style="width: 25%;"><span>관리부서</span></th>
                             </tr>
                         </table>
                         <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">

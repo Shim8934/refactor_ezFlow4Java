@@ -1268,6 +1268,7 @@ public class EzAttitudeAdminBOMController {
 		sheet = workbook.createSheet("report");
 		row = sheet.createRow(0);
 		
+		//header
 		row.createCell(0).setCellValue("이름");
 		row.getCell(0).setCellStyle(headerStyle);
 		row.createCell(1).setCellValue("직급");
@@ -1282,8 +1283,8 @@ public class EzAttitudeAdminBOMController {
 		row.getCell(5).setCellStyle(headerStyle);
 		row.createCell(6).setCellValue("종료시간");
 		row.getCell(6).setCellStyle(headerStyle);
-		  //header
 		
+		//body
 		for (int i = 0 ; i < attitudeList.size(); i++) { 
 			AdminAttitudeVO vo = attitudeList.get(i);
 			row = sheet.createRow(i + 1);
@@ -1311,9 +1312,8 @@ public class EzAttitudeAdminBOMController {
 			}
 			row.getCell(6).setCellStyle(bodyStyle);
 		}
-		//body
 		
-		//날짜는 길면 짤리므로 자동으로 너비조정을 해준다
+		//날짜(4번컬럼)는 길면 짤리므로 자동으로 너비조정을 해준다
 		sheet.autoSizeColumn(4);
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
@@ -1631,4 +1631,47 @@ public class EzAttitudeAdminBOMController {
 		
 		return "admin/ezAttitude/attitudeAuthorManage";
 	}
+	
+	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthList.do")
+	@ResponseBody
+	public JSONObject getAttitudeAuthList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/admin/ezAttitude/getAttitudeAuthList started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		LOGGER.debug("status : " + status);
+		
+		JSONObject jObject = new JSONObject();
+		
+		if(status.equals("ok")){
+			jObject = (JSONObject) resultBody.get("data");
+		}
+		
+		LOGGER.debug("/admin/ezAttitude/getAttitudeAuthList ended");
+		
+		return jObject;
+	} 
 }

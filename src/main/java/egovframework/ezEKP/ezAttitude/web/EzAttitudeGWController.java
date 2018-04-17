@@ -1619,4 +1619,88 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/bombom] ended.");
 		return result;
 	}
+	
+	/**
+	 * G/W 근태관리 [GET] 근태권한자 리스트 조회
+	 * @param companyId
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attitudeAuthList(
+			@PathVariable String companyId, HttpServletRequest request) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/{companyId}/attitude-auth] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "success");
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/{companyId}/attitude-auth] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [POST] 근태권한자 등록
+	 * @param companyId
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject insertAttitudeAuth(
+			@PathVariable String companyId, HttpServletRequest request) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/{companyId}/attitude-auth] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "success");
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/{companyId}/attitude-auth] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [DELETE] 근태권한자 삭제
+	 * @param companyId
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteAttitudeAuth(
+			@PathVariable String companyId, HttpServletRequest request) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/{companyId}/attitude-auth] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "success");
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/{companyId}/attitude-auth] ended.");
+		return result;
+	}
 }
