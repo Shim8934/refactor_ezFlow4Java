@@ -112,9 +112,11 @@ public interface EzAttitudeService {
 	
 	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId, String offset) throws Exception;
 	
+	public List<AttitudeApplicationVO> attModGetHistory(String companyId, int tenantId, String userId, String attModId, String offset) throws Exception;
+			
 	public void attModAppModify(String companyId, int tenantId, String userId, String attModId, String offset, String content, String changeDate) throws Exception;
 
 	public String getAttitudeCount2(int tenantId, String companyId, String typeId, String userIdList, String startDate, String endDate, String offset) throws Exception;
 	
-	public void changeUsersModifyAtt(String companyId, int tenantId, String[] ids, String changeStatus) throws Exception;
+	public void changeUsersModifyAtt(String companyId, int tenantId, String[] ids, String changeStatus, String userId, String userName, String userName2) throws Exception;
 }

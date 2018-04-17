@@ -1458,12 +1458,16 @@ public class EzAttitudeGWController {
 			LOGGER.debug("companyId : " + companyId + ", tenantId : " + tenantId 
 					+ ", idList : " + idList + ", changeStatus : " + changeStatus);
 			
-			ezAttitudeService.changeUsersModifyAtt(companyId, tenantId, ids, changeStatus);
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			ezAttitudeService.changeUsersModifyAtt(companyId, tenantId, ids, changeStatus, userId, info.getUserName(), info.getUserName2());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "fail");
@@ -1620,6 +1624,32 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/bombom] ended.");
+		return result;
+	}
+	
+	@RequestMapping(value = "/rest/ezattitude/modifyattitude/{attModId}/history", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getModAppHistory(
+			@PathVariable String attModId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="userId", required=true) String userId,
+			@RequestParam(value="offset", required=true) String offset) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/" + attModId + "/history started");
+		JSONObject result = new JSONObject();
+		try {
+			List<AttitudeApplicationVO> data = ezAttitudeService.attModGetHistory(companyId, tenantId, userId, attModId, offset);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/" + attModId + "/history ended.");
 		return result;
 	}
 }

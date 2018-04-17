@@ -614,7 +614,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		if (adminFlag == null) {
 			adminFlag = "false";
 		}
-		LOGGER.debug("##############################################################adminFlag : " + adminFlag);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
@@ -904,18 +904,41 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public void changeUsersModifyAtt(String companyId, int tenantId,
-			String[] ids, String changeStatus) throws Exception {
+			String[] ids, String changeStatus, String userId, String userName, String userName2) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("ids", ids);
 		map.put("changeStatus", changeStatus);
-		
+		map.put("apprDate",commonUtil.getTodayUTCTime(""));
+		map.put("userId",userId);
+		map.put("displayName",userName);
+		map.put("displayName2",userName2);
+		LOGGER.debug("############################commonUtil.getTodayUTCTime: "  + commonUtil.getTodayUTCTime("") + userName + userName2);
 		//승인, 반려 기록
 		ezAttitudeDAO.changeUsersModifyAtt(map);
 		
 		//수정이 완료 되면 히스토리 기록
 		ezAttitudeDAO.addUsersModifyAttHistory(map);
+	}
+
+	@Override
+	public List<AttitudeApplicationVO> attModGetHistory(String companyId,
+			int tenantId, String userId, String attModId, String offset)
+			throws Exception {
+		LOGGER.debug("attModGetHistory started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("attModId", attModId);
+		map.put("offset", offset);
+		
+		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.attModGetHistory(map); 
+		
+		LOGGER.debug("attModGetHistory ended");
+		return attAppList;	
 	}
 }
