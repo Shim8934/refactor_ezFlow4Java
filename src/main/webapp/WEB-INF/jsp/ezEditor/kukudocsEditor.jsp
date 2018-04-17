@@ -100,6 +100,14 @@
 			// 이미지 업로드 URL 설정
 			var imageUploadURL = "/ezEditor/kukudocsUpload.do?type=" + type;
 			
+			if (type == "MAILLETTER") { // 편지지 
+	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
+	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	
+	        	imageUploadURL = "/ezEditor/kukudocsUpload.do?type=" + type + "&letterBoxNo=" + letterBoxNo 
+	        			+ "&letterId=" + letterId;
+	        }
+			
 			// 디폴트 폰트 설정
 			var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
@@ -143,6 +151,7 @@
 						 {name : 'Report', type : 'url', value : '/js/ezEditor/kukudocsEditor/template/report.html'},
 						 {name : 'Vacation', type : 'url', value : '/js/ezEditor/kukudocsEditor/template/vacation.html'}]
 			}];
+>>>>>>> master
 			
 			var kukudocsEditor = new KuKudocsEditor('editor1', {
 	            minHeight : 0,
