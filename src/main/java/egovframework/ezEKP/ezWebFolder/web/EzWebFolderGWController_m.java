@@ -452,13 +452,9 @@ public class EzWebFolderGWController_m {
 		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
 		String serverName =  orElse(request.getHeader("host-name"), "");
 		
-		int totalCount =  0;
-		
-		int listCount 	        = Integer.parseInt(orElse(request.getParameter("listCount"), "0"));
+		int listCount 	        = Integer.parseInt(orElse(request.getParameter("listCount"), "10"));
 		int currPage 	        = Integer.parseInt(orElse(request.getParameter("currPage"), "1"));
-		int totalPages 	        = Integer.parseInt(orElse(request.getParameter("totalpages"), "1"));
-		int pStart 		        = Integer.parseInt(orElse(request.getParameter("pStart"), "0"));
-		int pEnd = listCount;
+		
 		
 		String searchExt 		= orElse(request.getParameter("searchExt"), "" );
 		String searchFileName 	= orElse(request.getParameter("searchFileName"), "");
@@ -481,8 +477,8 @@ public class EzWebFolderGWController_m {
 
 		logger.debug("getTrashCanList Started.");
 		logger.debug("userId=" + userId + ",offset=" + offset + ",tenantId=" + tenantId + ",serverName=" + serverName);
-		logger.debug("currPage=" + currPage + ",totalpages=" + totalPages);
-		logger.debug("pStart=" + pStart + ",pEnde=" + pEnd + ",listCount=" + listCount);
+		logger.debug("currPage=" + currPage);
+		logger.debug("listCount=" + listCount);
 		logger.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName + ",searchFileType=" + searchFileType);
 		logger.debug("endrollStartDate=" + endrollStartDate + ",endrollEndDate=" + delStartDate + ",delStartDate=" + delStartDate + ",delEndDate=" + delEndDate);
 		
@@ -499,18 +495,22 @@ public class EzWebFolderGWController_m {
 
 		try {
 			List<TrashCanVO> trashCanList = null;
-			JSONObject resultList = ezWebFolderService_m.getTrashCanList(userId, offset, tenantId, pStart, pEnd,
+			JSONObject resultList = ezWebFolderService_m.getTrashCanList(userId, offset, tenantId, currPage, listCount,
 										searchExt, searchFileName, searchCreateName, searchFileType, endrollStartDate, endrollEndDate, delStartDate, delEndDate);
 			int fileCnt = 0;
 			int folderCnt = 0;
+			int totalCount = 0;
+			int currentPage = 0;
+			int totalPages = 0;
 			
 			if (result != null) {
 				trashCanList = (List<TrashCanVO>) resultList.get("trashCanList");
 				fileCnt = (int) resultList.get("fileCnt");
 				folderCnt = (int) resultList.get("folderCnt");
+				totalCount = (int) resultList.get("totalRows");
+				currentPage = (int) resultList.get("currentPage");
+				totalPages = (int) resultList.get("totalPages");
 			}
-			
-			totalCount = fileCnt + folderCnt;
 			
 			String trashCanPath = "";
 			
@@ -530,22 +530,13 @@ public class EzWebFolderGWController_m {
 					trashCan.setTrashCanPath(trashCanPath);
 				}
 			}
-			
-			totalCount = trashCanList.size();
-			
-			if (totalCount % listCount == 0) {
-				totalPages = (totalCount / listCount);
-			} else {
-				totalPages = (totalCount / listCount) + 1;
-			}
 
 			data.put("trashCanList", trashCanList);
 			data.put("fileCnt", fileCnt);
 			data.put("folderCnt", folderCnt);
-			data.put("totalRows", fileCnt + folderCnt);
+			data.put("totalRows", totalCount);
 			data.put("totalPages", totalPages);
-			data.put("listCount", listCount);
-			data.put("currPage", currPage);
+			data.put("currPage", currentPage);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -605,7 +596,7 @@ public class EzWebFolderGWController_m {
 		return result;
 	}
 	
-	@RequestMapping(value="rest/ezwebfolder/restore-trashCan", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/restore-trashCan", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject restoreTrashCan(Locale locale, HttpServletRequest request) {
 		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
 		String offset= orElse(request.getParameter("offset"), "");
@@ -648,6 +639,31 @@ public class EzWebFolderGWController_m {
 		logger.debug("restoreTrashCan ended");
 		return result;
 	}
+	
+	@RequestMapping(value="/rest/ezwebfolder/getUserListCount", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject getUserListCount (HttpServletRequest request) {
+		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
+		String userId = orElse(request.getParameter("userId"), "");
+		
+		logger.debug("getUserListCount Started.");
+		logger.debug("tenantId=" + tenantId + ",userId=" + userId);
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			int listCount = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+			
+			result.put("listCount", listCount);
+		} catch (Exception e) {
+			result.put("listCount", "10");
+		}
+		
+		logger.debug("getUserListCount ended");
+		
+		return result;
+	}
+	
 	
 	private <T> T orElse(T value, T other) {
 		if (other == null) {

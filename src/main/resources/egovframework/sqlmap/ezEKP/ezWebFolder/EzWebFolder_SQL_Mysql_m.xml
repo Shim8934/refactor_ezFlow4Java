@@ -99,7 +99,81 @@
 				]]>
 			</isNotEqual>
 		</isNotEqual>
-	</sql>
+</sql>
+	
+<sql id ="searchTrashCanFile">
+	<isNotEqual property="searchExt" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.FILE_EXT LIKE CONCAT ('%', #searchExt#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.FILE_NAME LIKE CONCAT ('%', #searchFileName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.CREATE_NAME1 LIKE CONCAT ('%', #searchCreateName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+				<![CDATA[
+					FILE_TYPE.TYPE_NAME LIKE CONCAT ('%', #searchFileType#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="endrollStartDate" compareValue="">
+			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.CREATE_DATE >= #endrollStartDate# AND FILES.CREATE_DATE <= #endrollEndDate#)
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+		<isNotEqual property="delStartDate" compareValue="">
+			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					FILES.UPDATE_DATE >= #delStartDate# AND FILES.UPDATE_DATE <= #delEndDate#)
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+</sql>	
+
+<sql id ="searchTrashCanFolder">
+	<isNotEqual property="searchExt" compareValue="" prepend="AND">
+				<![CDATA[
+					'folder' LIKE CONCAT ('%', #searchExt#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+				<![CDATA[
+					FOLDER.FOLDER_NAME1 LIKE CONCAT ('%', #searchFileName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+				<![CDATA[
+					FOLDER.CREATE_NAME1 LIKE CONCAT ('%', #searchCreateName#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+				<![CDATA[
+					FILE_TYPE.TYPE_NAME LIKE CONCAT ('%', #searchFileType#, '%')
+				]]>
+		</isNotEqual>
+		<isNotEqual property="endrollStartDate" compareValue="">
+			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					(DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d') >= #endrollStartDate# AND DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d')<= #endrollEndDate#)
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+		<isNotEqual property="delStartDate" compareValue="">
+			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					(DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d') >= #delStartDate# AND DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d')<= #delEndDate#)
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+</sql>	
 	
 	<select id="EzWebFolderDAO_m.getSharingList" parameterClass="Map" resultMap="shareVO">
 		<![CDATA[
@@ -702,40 +776,7 @@
 					FOLDER.DELETER_ID = #userId# AND
 					FOLDER.TENANT_ID = #tenantId#
 		]]>
-		<isNotEqual property="searchExt" compareValue="" prepend="AND">
-				<![CDATA[
-					'folder' LIKE CONCAT ('%', #searchExt#, '%')
-				]]>
-		</isNotEqual>
-		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
-				<![CDATA[
-					FOLDER.FOLDER_NAME1 LIKE CONCAT ('%', #searchFileName#, '%')
-				]]>
-		</isNotEqual>
-		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
-				<![CDATA[
-					FOLDER.CREATE_NAME1 LIKE CONCAT ('%', #searchCreateName#, '%')
-				]]>
-		</isNotEqual>
-		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
-				<![CDATA[
-					FILE_TYPE.TYPE_NAME LIKE CONCAT ('%', #searchFileType#, '%')
-				]]>
-		</isNotEqual>
-		<isNotEqual property="endrollStartDate" compareValue="">
-			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
-				<![CDATA[
-					(DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d') >= #endrollStartDate# AND DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d')<= #endrollEndDate#)
-				]]>
-			</isNotEqual>
-		</isNotEqual>
-		<isNotEqual property="delStartDate" compareValue="">
-			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
-				<![CDATA[
-					(DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d') >= #delStartDate# AND DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d')<= #delEndDate#)
-				]]>
-			</isNotEqual>
-		</isNotEqual>
+		<include refid="searchTrashCanFolder"/>
 				UNION
 		<![CDATA[	
 			SELECT
@@ -764,40 +805,7 @@
 				FILES.DELETER_ID = #userId# AND
 				FILES.TENANT_ID = #tenantId#
 		]]>
-		<isNotEqual property="searchExt" compareValue="" prepend="AND">
-				<![CDATA[
-					FILES.FILE_EXT LIKE CONCAT ('%', #searchExt#, '%')
-				]]>
-		</isNotEqual>
-		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
-				<![CDATA[
-					FILES.FILE_NAME LIKE CONCAT ('%', #searchFileName#, '%')
-				]]>
-		</isNotEqual>
-		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
-				<![CDATA[
-					FILES.CREATE_NAME1 LIKE CONCAT ('%', #searchCreateName#, '%')
-				]]>
-		</isNotEqual>
-		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
-				<![CDATA[
-					FILE_TYPE.TYPE_NAME LIKE CONCAT ('%', #searchFileType#, '%')
-				]]>
-		</isNotEqual>
-		<isNotEqual property="endrollStartDate" compareValue="">
-			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
-				<![CDATA[
-					FILES.CREATE_DATE >= #endrollStartDate# AND FILES.CREATE_DATE <= #endrollEndDate#)
-				]]>
-			</isNotEqual>
-		</isNotEqual>
-		<isNotEqual property="delStartDate" compareValue="">
-			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
-				<![CDATA[
-					FILES.UPDATE_DATE >= #delStartDate# AND FILES.UPDATE_DATE <= #delEndDate#)
-				]]>
-			</isNotEqual>
-		</isNotEqual>
+		<include refid="searchTrashCanFile"/>
 	 	<![CDATA[
 				) R
 			GROUP BY R.TRASHCAN_ID
@@ -1147,4 +1155,27 @@
 			TENANT_ID = #tenantId#
 	</delete>
 
+	<select id="EzWebFolderDAO_m.getTrashFileCount" resultClass="Integer">
+		SELECT
+			count(FILES.FILE_id )
+		FROM
+			tbl_webfolder_file AS FILES
+		WHERE
+			FILES.USE_STATUS = 'T' AND
+			FILES.DELETER_ID = #userId# AND
+			FILES.TENANT_ID = #tenantId#
+		<include refid="searchTrashCanFile"/>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getTrashFolderCount" resultClass="Integer">
+		SELECT
+			count(FOLDER.FOLDER_id)    
+		FROM
+			tbl_webfolder_folder AS FOLDER
+		WHERE
+			FOLDER.USE_STATUS = 'T' AND
+			FOLDER.DELETER_ID = #userId# AND
+			FOLDER.TENANT_ID = #tenantId#
+		<include refid="searchTrashCanFolder"/>
+	</select>
 </sqlMap>

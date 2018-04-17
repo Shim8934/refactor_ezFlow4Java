@@ -449,15 +449,17 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int pStart, int pEnd, 
+	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int currPage, int pEnd, 
 			String searchExt, String searchFileName, String searchCreateName,String searchFileType, String endrollStartDate, String endrollEndDate,
 			String delStartDate, String delEndDate) throws Exception {
+		int totalRows  =  0;
+		int totalPages = 0;
+		int pStart 	   = 0;
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("offset", offset);
 		map.put("tenantId", tenantId);
-		map.put("pStart", pStart);
-		map.put("pEnd", pEnd);
 		map.put("searchExt", searchExt);
 		map.put("searchFileName", searchFileName);
 		map.put("searchCreateName", searchCreateName);
@@ -467,12 +469,23 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("delStartDate", delStartDate);
 		map.put("delEndDate", delEndDate);
 		
+		JSONObject result = new JSONObject();
+		int fileCnt = ezWebFolderDAO.getTrashFileCount(map);
+		int folderCnt = ezWebFolderDAO.getTrashFolderCount(map);
+		
+		totalRows  = fileCnt + folderCnt;
+		totalPages = (totalRows + pEnd - 1)/pEnd;
+		currPage   = currPage > totalPages ? totalPages : currPage;
+		currPage   = currPage == 0         ? 1          : currPage;
+		pStart     = (currPage - 1) * pEnd;
+		
+		map.put("pStart", pStart);
+		map.put("pEnd", pEnd);
+		
 		List<TrashCanVO> trashCanList = ezWebFolderDAO.getTrashCanList(map);
 		List<TrashCanVO> resultList = new ArrayList<TrashCanVO>();
 		
-		JSONObject result = new JSONObject();
-		int fileCnt = 0;
-		int folderCnt = 0;
+		currPage = totalPages == 0 ? 0 : currPage;
 		
 		if (trashCanList != null) {
 			for (TrashCanVO trashCan : trashCanList) {
@@ -481,7 +494,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					
 					if (upperFolder.getUseStatus().equals("Y")) {
 						resultList.add(trashCan);
-						folderCnt += 1;
 					} 
 					
 				} else {
@@ -496,7 +508,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					
 					if (folder != null && folder.getUseStatus().equals("Y")) {
 						resultList.add(trashCan);
-						fileCnt += 1;
 					}
 				}
 			}
@@ -505,6 +516,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		result.put("fileCnt", fileCnt);
 		result.put("folderCnt", folderCnt);
 		result.put("trashCanList", resultList);
+		result.put("totalPages", totalPages);
+		result.put("currentPage", currPage);
+		result.put("totalRows", totalRows);
 		
 		LOGGER.debug("result=" + result);
 		return result;
