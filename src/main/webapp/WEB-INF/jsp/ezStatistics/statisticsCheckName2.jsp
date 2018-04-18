@@ -67,11 +67,19 @@
 		    }
 		    
 		    function delete_onClick() {
-		        dialogArguments["recipientTDData"] = "delete";
+		   		if (CrossYN()) {
+		   			RgParams["recipientTDData"] = "delete";
+		   		} else {
+		        	dialogArguments["recipientTDData"] = "delete";
+		    	 }
 		        window.close();
 		    }
 		    function cancel_onClick() {
-		        dialogArguments["recipientTDData"] = "dontprocess";
+		    	if (CrossYN()) {
+		   			RgParams["recipientTDData"] = "dontprocess";
+		   		} else {
+		        	dialogArguments["recipientTDData"] = "dontprocess";
+		   		}
 		        window.close();
 		    }
 		</script>
@@ -106,7 +114,7 @@
 		</script>
 		<h2><spring:message code='ezStatistics.t11' /></h2>
 		<div class="listview">
-		  <div id="ListViewItem" style="Width:587px; Height:195px; border:0px;overflow:auto" ></div>
+		  <div id="ListViewItem" style="width:100%; min-width:587px; Height:210px; border:0px;overflow:auto" ></div>
 		</div>
 		<div class="btnposition">
 		    <a class="imgbtn" onClick="change_onClick()"><span>확인</span></a>
