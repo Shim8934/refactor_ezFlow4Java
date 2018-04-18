@@ -350,20 +350,52 @@ public class EzEmailAdminLetterController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String fileType = "html";
-		String filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
+		String letterFilePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String fileName = "letter." + fileType;
 
-		filePath = filePath + commonUtil.separator + letterBox + "/" + letterId;
+		String filePath = letterFilePath + commonUtil.separator + letterBox + "/"; // + letterId
 		logger.debug(filePath);
 
 		try {
 			ezEmailAdminLetterService.updateLetterMove(letterNo, parentLetterBoxNo);
+			
+			// 이동 할 편지지 디렉토리명 변경하기  (같은 위치에 옮겨졌을때 대비)
+			String exFolder = realPath + filePath + letterId;
+			String changeFolder = realPath + filePath + letterId + "-old"; // 변경할 디렉토리명
+			File exFile = new File(exFolder); // 변경 전
+			File chFile = new File(changeFolder); // 변경 후
+			exFile.renameTo(chFile); // 변경
+			logger.debug("changeFolder=" + changeFolder + ", exFolder=" + exFolder);
 
-			String originPath = realPath + filePath;
+			// 이동하기
+			String originPath = changeFolder; // 이동할 디렉토리
+			String path = realPath + letterFilePath + commonUtil.separator;
+			String folderName = parentLetterBoxNo + "/" + letterId; // 새로 옮길 편지지함(경로) + 폴더명
+			String uploadPath = letterFilePath;
+			logger.debug("originPath(이동할) " + originPath + ", path " + path + ", folderName(새로)" + folderName + ", uploadPath " + uploadPath);
+			
+			String result = moveFile(folderName, fileName, originPath, path, uploadPath, letterBox, letterId);
+			
+			if (result != null) {
+				// File file = new File(path + letterBox + "/" + letterId);
+				File file = new File(changeFolder);
+				
+				if (file.exists()) {
+					deleteDirectory(file);
+				}
+
+				logger.debug("SUCCESS: " + result);
+
+			} else {
+				logger.debug("FAIL");
+			}
+			/*
+			String originPath = realPath + filePath; 
 			String path = realPath + commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId()) + commonUtil.separator;
 			String folderName = parentLetterBoxNo + "/" + letterId;
 			String uploadPath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
+
 			String result = moveFile(folderName, fileName, originPath, path, uploadPath, letterBox, letterId);
 
 			if (result != null) {
@@ -376,7 +408,7 @@ public class EzEmailAdminLetterController {
 
 			} else {
 				logger.debug("FAIL");
-			}
+			}*/
 
 		} catch (Exception e) {
 			returnStr = "ERROR";
@@ -746,7 +778,7 @@ public class EzEmailAdminLetterController {
 		return path.delete();
 	}
 
-	// 폴더 이동할때 fileroot를 옮기는 함수 (재은)
+	// 폴더 이동할때 fileroot를 옮기는 함수 (재은)   folderName, fileName, originPath, path, uploadPath, letterBox, letterId
 	public String moveFile(String folderName, String fileName, String originPath, String copyPath, String uploadPath, String letterBox, String letterId) {
 		String path = copyPath + "/" + folderName;
 		String filePath = path + "/" + fileName;
