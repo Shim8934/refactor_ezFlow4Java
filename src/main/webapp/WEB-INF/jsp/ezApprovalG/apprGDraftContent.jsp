@@ -260,9 +260,14 @@
 	                        if (TDRows.item(i).style.borderRight == "currentColor")
 	                            TDRows.item(i).style.borderRight = "";
 	                    }
+
+	                    //body는 있지만 에디터를 사용하지 않을때
+                        if (document.getElementById("body").getAttribute("editor") == "no") {
+                        	parent.isEditorComplete = true;
+                        }
 	
 	                    if (parent.pDraftFlag != "REDRAFT") {
-  						var Body_innerHTML = "";
+  							var Body_innerHTML = "";
 	                        if (document.getElementById("body") != null) {
 	                            if (document.getElementById("body").getAttribute("class") == "FIELD") {
 	                                Body_innerHTML = document.getElementById("body").innerHTML;
@@ -285,7 +290,7 @@
 	                                BODYTag = document.getElementById("body");
 	                            }
 	                        }
-	
+	                        
 	                        if (document.getElementById("doctitle").getAttribute("class") == "FIELD")
 	                            DocTitleObj = document.getElementById("doctitle");
 	
