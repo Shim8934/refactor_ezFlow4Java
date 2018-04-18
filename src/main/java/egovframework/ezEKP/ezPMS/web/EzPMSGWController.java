@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
-import egovframework.ezEKP.ezPMS.vo.ProjectListVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
@@ -62,10 +62,10 @@ public class EzPMSGWController {
 			Map<String, Object> search = new HashMap<>();
 			
 			//프로젝트 리스트 가져오기
-			//List<ProjectListVO> projectList = ezPMSService.getProjectList(info.getTenantId(), info, status, search, info.getOffSet(), lang);
+			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), info, status, search, info.getOffSet(), lang);
 			
 			//프로젝트 리스트 환경설정 가져오기
-			//ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, info.getTenantId());
+			ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, info.getTenantId());
 			
 			
 			JSONObject data = new JSONObject();
@@ -212,7 +212,7 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			ProjectListVO project = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang);
+			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang);
 			
 			JSONObject data = new JSONObject();
 			
@@ -242,7 +242,7 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			ProjectListVO project = new ProjectListVO();
+			ProjectInfoVO project = new ProjectInfoVO();
 			ezPMSService.updateProject(project, info.getTenantId());
 			
 			result.put("status", "ok");
@@ -458,7 +458,7 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ProjectListVO project = new ProjectListVO();
+			ProjectInfoVO project = new ProjectInfoVO();
 			
 			int projectListCount = ezPMSService.getProjectListCount(project, info.getTenantId());
 			

@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 //프로젝트 정보 
-public class ProjectListVO {
+public class ProjectInfoVO {
 	
 	    // 프로젝트 아이디 
 	    private int projectId;

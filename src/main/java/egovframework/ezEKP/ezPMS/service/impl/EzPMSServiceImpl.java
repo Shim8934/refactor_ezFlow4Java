@@ -9,11 +9,10 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezPMS.service.EzPMSAdminService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
-import egovframework.ezEKP.ezPMS.vo.ProjectListVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
-import egovframework.ezEKP.ezPMS.vo.ProjectTaskListVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
@@ -24,14 +23,14 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSService {
 
 	@Override
-	public List<ProjectListVO> getProjectList(int tenantId, MCommonVO userInfo, String status,
+	public List<ProjectInfoVO> getProjectList(int tenantId, MCommonVO userInfo, String status,
 			Map<String, Object> map, String offset, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void addNewProject(ProjectListVO newProject, int tenantId) {
+	public void addNewProject(ProjectInfoVO newProject, int tenantId) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -55,13 +54,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public ProjectListVO getProjectDetails(int projectId, String userId, int tenantId, String offset, String lang) {
+	public ProjectInfoVO getProjectDetails(int projectId, String userId, int tenantId, String offset, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void updateProject(ProjectListVO project, int tenantId) {
+	public void updateProject(ProjectInfoVO project, int tenantId) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -73,13 +72,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectTaskListVO> getMyTasks(int projectId, String status, int tenantId, String userId, String offset, String lang) {
+	public List<ProjectTaskVO> getMyTasks(int projectId, String status, int tenantId, String userId, String offset, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ProjectTaskListVO> getProjectTasks(int projectId, String status, int tenantId, String offset, String lang) {
+	public List<ProjectTaskVO> getProjectTasks(int projectId, String status, int tenantId, String offset, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -115,7 +114,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getProjectListCount(ProjectListVO project, int tenantId) {
+	public int getProjectListCount(ProjectInfoVO project, int tenantId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

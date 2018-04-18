@@ -6,11 +6,10 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
-import egovframework.ezEKP.ezPMS.vo.ProjectListVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
-import egovframework.ezEKP.ezPMS.vo.ProjectTaskListVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
@@ -18,9 +17,9 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 public interface EzPMSService {
 
-	public List<ProjectListVO> getProjectList(int tenantId, MCommonVO userInfo, String status, Map<String, Object> map, String offset, String lang);
+	public List<ProjectInfoVO> getProjectList(int tenantId, MCommonVO userInfo, String status, Map<String, Object> map, String offset, String lang);
 	
-	public void addNewProject(ProjectListVO newProject, int tenantId);
+	public void addNewProject(ProjectInfoVO newProject, int tenantId);
 	
 	public void deleteProject(int tenantId, int projectId);
 	
@@ -28,15 +27,15 @@ public interface EzPMSService {
 	
 	public void updateProjectStatus(int projectId, String status, int tenantId);
 	
-	public ProjectListVO getProjectDetails(int projectId, String userId, int tenantId, String offset, String lang);
+	public ProjectInfoVO getProjectDetails(int projectId, String userId, int tenantId, String offset, String lang);
 	
-	public void updateProject(ProjectListVO project, int tenantId);
+	public void updateProject(ProjectInfoVO project, int tenantId);
 	
 	public List<ProjectMemberVO> getProjectMember(int projectId, int roleId, String lang);
 	
-	public List<ProjectTaskListVO> getMyTasks(int projectId, String status, int tenantId, String userId, String offset, String lang);
+	public List<ProjectTaskVO> getMyTasks(int projectId, String status, int tenantId, String userId, String offset, String lang);
 	
-	public List<ProjectTaskListVO> getProjectTasks(int projectId, String status, int tenantId, String offset, String lang);
+	public List<ProjectTaskVO> getProjectTasks(int projectId, String status, int tenantId, String offset, String lang);
 	
 	public void changeKanbanOrder(int projectId, String userId, String orderStatus, int tenantId);
 	
@@ -48,7 +47,7 @@ public interface EzPMSService {
 	
 	public List<TaskLogListVO> getTaskLogList(int taskId, int groupId, Map<String, Object> map, String offset, String lang, int tenantId);
 	
-	public int getProjectListCount(ProjectListVO project, int tenantId);
+	public int getProjectListCount(ProjectInfoVO project, int tenantId);
 	
 	public int getTaskListCount(String status, String mytask, int projectId, int tenantId);
 	
