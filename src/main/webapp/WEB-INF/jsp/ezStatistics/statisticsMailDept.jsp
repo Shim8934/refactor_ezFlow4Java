@@ -559,7 +559,7 @@
         }
     }
     
-    function SelelctDept_complite(deptid){
+    function SelelctDept_complite(deptid) {
     	 if (deptid != "") {
              bSearch = true;
              g_xmlHTTP = createXMLHttpRequest();
