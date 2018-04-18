@@ -295,6 +295,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			pidList = "'" + userInfo.getId() + "'";
 		} else if (idList.equals("D")) {
 			pidList = "'" + userInfo.getDeptID() + "'";
+			logger.debug("pidList : " + pidList);
 		} else if (idList.equals("C")) {
 			pidList = "'" + userInfo.getCompanyID() + "'";
 		} else if (idList.equals("G")) {
@@ -318,7 +319,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		} else {
 			pidList = "'" + idList + "'";
 		}		
-		
+		logger.debug("pidList : " + pidList);
 		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId());		
 	
 		return sList;

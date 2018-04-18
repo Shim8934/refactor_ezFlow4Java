@@ -104,6 +104,7 @@ public class EzAttitudeGWController {
 			if (deptFlag.equals("false")) {
 				resultList = ezAttitudeService.getAttitudeList(userId, "", "", typeId, startDate, endDate, offset, info.getTenantId(), deptFlag);
 			} else {
+				// 관리하고 있는 전체 부서 목록을 받아서 dept in iterate를 돌린다.
 				resultList = ezAttitudeService.getAttitudeList("", info.getDeptId(), "", typeId, startDate, endDate, offset, info.getTenantId(), deptFlag);
 			}
 			
@@ -1100,7 +1101,8 @@ public class EzAttitudeGWController {
 			@RequestParam(value="type", required=false) String type,
 			@RequestParam(value="orderCell", required=false) String orderCell,
 			@RequestParam(value="orderOption", required=false) String orderOption,
-			@RequestParam(value="adminFlag", required=false) String adminFlag) {
+			@RequestParam(value="adminFlag", required=false) String adminFlag,
+			@RequestParam(value="checkAdmin", required=false) boolean checkAdmin) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
@@ -1121,7 +1123,7 @@ public class EzAttitudeGWController {
 				}
 			}
 			
-			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint, type, order, adminFlag);
+			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint, type, order, adminFlag, checkAdmin);
 			for (int i = 0 ; i < attList.size(); i++ ) {
 				LOGGER.debug(attList.get(i).toString());
 			}
@@ -1152,7 +1154,8 @@ public class EzAttitudeGWController {
 			@RequestParam(value="sysLang", required=false) String sysLang,
 			@RequestParam(value="offset", required=false) String offset,
 			@RequestParam(value="type", required=false) String type,
-			@RequestParam(value="adminFlag", required=false) String adminFlag) {
+			@RequestParam(value="adminFlag", required=false) String adminFlag,
+			@RequestParam(value="checkAdmin", required=false) boolean checkAdmin) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] started.");
 
 		JSONObject result = new JSONObject();
@@ -1166,7 +1169,7 @@ public class EzAttitudeGWController {
 				}
 			}
 			
-			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, type, adminFlag);
+			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, type, adminFlag, checkAdmin);
 
 			result.put("status", "ok");
 			result.put("code", 0);			

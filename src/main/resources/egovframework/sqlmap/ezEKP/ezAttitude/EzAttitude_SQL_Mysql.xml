@@ -287,6 +287,11 @@
 		<isNotEmpty property="userId" prepend="and"> 
 				a.WRITER_ID = #userId#
 		</isNotEmpty>
+		<isNotEmpty property="deptIdList" prepend="and">
+			<iterate prepend="WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+	      		#deptIdList[]#
+			</iterate>
+		</isNotEmpty>
 		<isNotEmpty property="apprUserName" prepend="and">
 			<isNotEmpty property="apprUserName" >
 				<isEqual property="sysLang" compareValue="primary" >
