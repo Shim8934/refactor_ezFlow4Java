@@ -1,11 +1,15 @@
 package egovframework.ezEKP.ezPMS.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezPMS.dao.EzPMSDAO;
 import egovframework.ezEKP.ezPMS.service.EzPMSAdminService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
@@ -14,6 +18,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -21,6 +26,8 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPMSService")
 public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSService {
+	@Resource(name = "EzPMSDAO")
+	private EzPMSDAO ezPMSDAO;
 
 	@Override
 	public List<ProjectInfoVO> getProjectList(int tenantId, MCommonVO userInfo, String status,
@@ -225,6 +232,21 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("project_Id", projectId);
+		List<ProjectTaskTreeVO> list = ezPMSDAO.getProjectTaskTree(map);
+		System.out.println(list.size());
+		for(int i = 0; i < list.size(); i++) {
+			ProjectTaskTreeVO vo = list.get(i);
+			if(vo.getParent().equals("0")) {
+				vo.setParent("#");
+			}
+		}
+		return list;
 	}
 
 }

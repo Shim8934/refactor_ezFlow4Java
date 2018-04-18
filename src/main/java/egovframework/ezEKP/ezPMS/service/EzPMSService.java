@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -84,4 +85,6 @@ public interface EzPMSService {
 	public String getUserRole(String userId, int projectId, int tenantId);
 	
 	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId);
+	
+	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId);
 }

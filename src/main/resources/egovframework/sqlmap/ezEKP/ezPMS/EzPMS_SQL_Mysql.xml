@@ -11,6 +11,7 @@
 	<typeAlias	alias="ProjectTaskVO"								type="egovframework.ezEKP.ezPMS.vo.ProjectTaskVO"/>
 	<typeAlias	alias="SearchVO"									type="egovframework.ezEKP.ezPMS.vo.SearchVO"/>
 	<typeAlias	alias="TaskLogListVO"								type="egovframework.ezEKP.ezPMS.vo.TaskLogListVO"/>
+	<typeAlias	alias="ProjectTaskTreeVO"								type="egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO"/>
 	
     <resultMap id="projectInfo" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
@@ -158,6 +159,13 @@
     	<result property="userDeptname2"					column="USER_DEPTNAME2"				columnIndex="12"/>
     </resultMap>
     
+    <resultMap id="projectTaskTreeVO" class="ProjectTaskTreeVO">
+    	<result property="id"							column="ID"						columnIndex="1"/>
+    	<result property="parent"							column="PARENT"					columnIndex="2"/>
+    	<result property="text"						column="TEXT"					columnIndex="3"/>
+    	<result property="sort"							column="SORT"					columnIndex="4"/>
+    </resultMap>
+    
     
     <insert id="EzPMSDAO.addNewProject" parameterClass="Map">
     	<![CDATA[
@@ -177,4 +185,18 @@
     		)
     	]]>
     </insert>
+    
+    <select id="EzPMSDAO.getProjectTaskTree" parameterClass="Map" resultMap="projectTaskTreeVO">
+			<![CDATA[
+				SELECT
+					GROUP_ID AS id,
+					UPPER_GROUP_ID AS parent,
+					GROUP_NAME AS text,
+					SORT_ORDER AS sort
+				FROM TBL_PMS_GROUP
+				WHERE PROJECT_ID = #project_Id#
+			]]>
+	</select>
+	
+	
 </sqlMap>
