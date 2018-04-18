@@ -79,6 +79,7 @@
 		<result property="isView" 			column="is_view" />
 		<result property="formStatus" 		column="form_status" />
 		<result property="isSum"	 		column="journal_sum" />
+		<result property="mine"	 			column="mine" />
 	</resultMap>
 
 	<resultMap class="journalEnvVO" id="journalEnvMap">
@@ -736,8 +737,10 @@
 		(select count(jf.file_id) from jmocha.tbl_journal_file jf where
 		jf.journal_id=j.journal_id and jf.tenant_id=j.tenant_id) as
 		file_count,
-		(select count(v.user_id) from (select user_id,journal_id,TENANT_ID from jmocha.tbl_journal_view union select user_id,journal_id,TENANT_ID from jmocha.tbl_journal_recv where recieve_date is not null) v where
-		v.journal_id=j.journal_id and v.tenant_id=j.tenant_id) as view_count,
+		(select count(v.user_id) from (select user_id,journal_id,TENANT_ID from jmocha.tbl_journal_view
+		union select user_id,journal_id,TENANT_ID from jmocha.tbl_journal_recv where recieve_date is not null) v
+		where not(v.user_id = j.journal_writer)
+		and v.journal_id=j.journal_id and v.tenant_id=j.tenant_id) as view_count,
 		(select count(r.user_id) from jmocha.tbl_journal_recv r where
 		r.journal_id=j.journal_id and r.tenant_id=j.tenant_id) as total_recv,
 		(select count(r.recieve_date) from jmocha.tbl_journal_recv r where
@@ -748,12 +751,10 @@
 		union select view_date as is_view
 		from jmocha.tbl_journal_view where user_id=#userId# and
 		tenant_id=j.tenant_id and journal_id=j.journal_id
-		union select journal_date from jmocha.tbl_journal where
-		journal_writer=#userId# and journal_id=j.journal_id and tenant_id =
-		j.tenant_id
 		),'noView') as is_view ,
 		f.form_status as form_status,
-		j.journal_sum as journal_sum
+		j.journal_sum as journal_sum,
+		if(j.journal_writer=#userId#,'Y','N') as mine
 		from jmocha.tbl_journal j
 		inner join jmocha.tbl_journal_form f on (j.form_id=f.form_id and
 		j.tenant_id = f.tenant_id)
@@ -820,7 +821,7 @@
 		<isEqual property="listType" compareValue="department">
 			and dept_share='Y'
 		</isEqual>
-		group by 1,2,3,4,5,6,7,8,14,15,16
+		group by 1,2,3,4,5,6,7,8,14,15,16,17
 		<isEmpty property="orderNum">
 			<isEmpty property="orderHow">
 			order by 3 desc
@@ -1041,25 +1042,25 @@
 		<isEmpty property="isUser">
 			insert into jmocha.tbl_journal_view (user_id,tenant_id,journal_id,
 			view_date)
-			select #userId#,#tenantId#,#journalId#,#viewDate#
-			from dual
-			where not exists(
-			select
-			journal_id
-			from jmocha.tbl_journal where journal_id = #journalId# and journal_writer
-			= #userId# and tenant_id = #tenantId#)
+			values(#userId#,#tenantId#,#journalId#,#viewDate#)
+<!-- 			from dual -->
+<!-- 			where not exists( -->
+<!-- 			select -->
+<!-- 			journal_id -->
+<!-- 			from jmocha.tbl_journal where journal_id = #journalId# and journal_writer -->
+<!-- 			= #userId# and tenant_id = #tenantId#) -->
 			<!-- values (#userId#,#tenantId#,#journalId#,#viewDate#) -->
 			on duplicate key update tenant_id = #tenantId#
 		</isEmpty>
-		<isNotEmpty property="isUser">
-			update jmocha.tbl_journal_recv
-			set
-			recieve_date=#viewDate#
-			where journal_id=#journalId#
-			and
-			tenant_id=#tenantId#
-			and user_id=#userId#
-		</isNotEmpty>
+<!-- 		<isNotEmpty property="isUser"> -->
+<!-- 			update jmocha.tbl_journal_recv -->
+<!-- 			set -->
+<!-- 			recieve_date=#viewDate# -->
+<!-- 			where journal_id=#journalId# -->
+<!-- 			and -->
+<!-- 			tenant_id=#tenantId# -->
+<!-- 			and user_id=#userId# -->
+<!-- 		</isNotEmpty> -->
 	</insert>
 
 	<!-- 일지 상세 내용 -->
@@ -1300,6 +1301,7 @@
 		inner join jmocha.tbl_usermaster u on(v.tenant_id=u.TENANT_ID and u.CN=v.user_id)
 		where v.journal_id=#journalId#
 		and v.tenant_id =#tenantId#
+		and not(v.user_id = (select journal_writer from tbl_journal where journal_id =#journalId# and tenant_id = #tenantId#))
 		union
 		select
 			b.user_id as user_id
@@ -1342,7 +1344,9 @@
 		from jmocha.tbl_journal_view v
 		inner join jmocha.tbl_usermaster u on(v.tenant_id=u.TENANT_ID and u.CN=v.user_id)
 		where v.journal_id=#journalId#
-		and v.tenant_id =#tenantId#)
+		and v.tenant_id =#tenantId#
+		and not(v.user_id = (select journal_writer from tbl_journal where journal_id =#journalId# and tenant_id = #tenantId#))
+		)
 		order by 5 desc
 		limit
 			#startCount#, #listCnt#

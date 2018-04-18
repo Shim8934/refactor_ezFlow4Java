@@ -453,7 +453,9 @@
 	   			var journalId=$(parentElem).attr("id");
 	   			if (pPreviewShow_HOW=='W' || pPreviewShow_HOW=='H') {
 		   			if($(parentElem).hasClass("noView")){
-			   			$(vc).text(parseInt($(vc).text())+1);
+		   				if($(parentElem).attr("mine")=='N'){
+		   	   				$(vc).text(parseInt($(vc).text())+1);
+		   				}
 			   			$(parentElem).removeClass("noView");
 		   			}
 // 	   				$("#ifrmPreViewH").attr("src","/ezJournal/journalPreview.do?journalId="+journalId);
@@ -1196,7 +1198,9 @@
 	function goJournalDetail(elem){
 		var vc = $(elem).find(".viewCount");
 		if($(elem).hasClass("noView")){
-   			$(vc).text(parseInt($(vc).text())+1);
+			if($(elem).attr("mine")=='N'){
+   				$(vc).text(parseInt($(vc).text())+1);
+			}
    			$(elem).removeClass("noView");
 		}
 // 	 	var pheight = window.sc reen.availHeight;
