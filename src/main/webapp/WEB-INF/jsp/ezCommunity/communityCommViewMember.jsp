@@ -35,7 +35,7 @@
 		    var totalCount = "<c:out value = '${keywordCount}' />";
 		    var code = "<c:out value = '${code}' />"
 		    document.onselectstart = function () { return false; };
-		    
+		     
 		    window.onload =function () {		        
 			    makePageSelPage();
 			}
