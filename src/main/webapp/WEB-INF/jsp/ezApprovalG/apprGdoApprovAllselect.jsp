@@ -271,14 +271,14 @@
 		        </tr>
 		        <tr>
 		            <td  style="padding-bottom:10px;text-align:center;">
-		                <div style="OVERFLOW:auto;width:580px;HEIGHT:280px;">
+		                <div style="overflow-y:auto;width:600px;HEIGHT:350px;">
 		                    <table class="mainlist" >
 		                        <tr >
 		                            <th style="padding:0;text-align:center;width:20px;"><input type="checkbox" id="mainChk" onclick="checkAll(this.id)" /></th>
-		                            <th style="width:240px;"><spring:message code='ezApprovalG.t106'/></th>
+		                            <th style="width:280px;"><spring:message code='ezApprovalG.t106'/></th>
 		                            <th style="width:100px;"><spring:message code='ezApprovalG.t1331'/></th>
 		                            <th style="width:80px;"><spring:message code='ezApprovalG.t445'/></th>
-		                            <th style="width:100px;"><spring:message code='ezApprovalG.t9996'/></th>
+		                            <th style="width:140px;"><spring:message code='ezApprovalG.t9996'/></th>
 		                        </tr>
 		                        ${sbStr}
 		                    </table>

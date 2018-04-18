@@ -17,9 +17,8 @@
 	        var g_paramURL = "${url}";
 	        var editor = "${Use_Editor}";
 	        var pNoneActiveX = "${NoneActiveX}";
-		    function window_onload()
-		    {
-		    }
+		    
+	        function window_onload() {}
 		    
 	        //보기설정 레이어팝업 바깥 클릭시 close되게 하기위한 코드 2018.03.05 강민수92
 	        $(document).ready(function() {
@@ -28,6 +27,7 @@
 	        	$(document).mouseup(function(e) {
 	        		var container = $('#layer_popup');
 	        		var maillistoptionmode = $(maillistoption).attr('mode');
+	        		
 	        		if (maillistoptionmode == "on") {
 	        			if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'maillistoptiondiv') {
 	        			    parent.document.getElementById("layer_popup").style.display = "none";
@@ -39,38 +39,79 @@
 	        });
 		    
 		    function AttachDetail_view(obj) {
-		        if (obj.className == "icon_graydown") {
+		       
+		    	if (obj.className == "icon_graydown") {
 		            obj.className = "icon_grayup"
 		            document.getElementById("PreviewAttachList").style.display = "";
-		        }
-		        else {
+		        } else {
 		            obj.className = "icon_graydown"
 		            document.getElementById("PreviewAttachList").style.display = "none";
 		        }
 		    }
+		    
 		    function DownloadAttach(DownloadUrl) {
 		        AttachDownFrame.location.href = DownloadUrl;
 		    }
+		    
+		 	// 메일읽기창에서 "모두저장" 클릭시 압축파일로 내보내는 메서드
 		    var suffix = 0;
 		    function AttachAllDownload() {
-		        if (suffix < document.getElementsByName("MailAttachDownloadItems").length)
-		            setTimeout(function () { FileDownload(document.getElementsByName("MailAttachDownloadItems").item(suffix++).getAttribute("_filehref")) }, 2000);
-		        else {
-		            suffix = 0;
-		            return;
-		        }
+		    	
+		    	var url = "/ezEmail/downloadAttachAll.do";
+		    	var fileLen = document.getElementsByName("MailAttachDownloadItems").length;
+		    	var params = "";
+		    	var folderPath = "";
+		    	var uid = "";
+		    	
+		    	if (suffix < fileLen) {
+		    		
+		    		for (var i = 0; i < fileLen; i++) {
+			    		var fileHref = document.getElementsByName("MailAttachDownloadItems").item(suffix++).getAttribute("_filehref");
+			    		var strArr = fileHref.split('?');
+			    		strArr = strArr[1].split('&'); 
+
+			    		if (i < 1) {
+				    		var tmpStr = strArr[1].split('=');
+				    		folderPath = tmpStr[1];
+				    		
+				    		tmpStr = strArr[2].split('=');
+				    		uid = tmpStr[1];
+				    		
+				    		params = strArr[3] + "&" + strArr[4]; 
+						} else {
+				    		params += "&" + strArr[3] + "&" + strArr[4]; 
+						}
+			    		
+		    		}
+		    		
+		    	}
+		    	
+	    		suffix = 0;
+
+	    		var $frm = $("<form></form>");
+		    	$frm.attr('action', url);
+		    	$frm.attr('method', 'post');
+		    	$frm.appendTo('body');
+
+		    	params = $('<input type="hidden" value="' + decodeURIComponent(params) + '" name="params" />');
+		    	folderPath = $('<input type="hidden" value="' + decodeURIComponent(folderPath) + '" name="folderPath" />');
+		    	uid = $('<input type="hidden" value="' + decodeURIComponent(uid) + '" name="uid" />');
+		    	
+		    	$frm.append(params).append(folderPath).append(uid);
+		    	$frm.submit();
 		    }
+		    
 		    function FileDownload(pFileUrl) {
-		        if (pFileUrl != null) {
-		            AttachDownFrame.location.href = pFileUrl;
-		            AttachAllDownload();
-		        }
-		        else {
+
+		    	if (pFileUrl != null) {
+		            location.href = pFileUrl;
+		        } else {
 		            suffix = 0;
 		            return;
 		        }
-	
+		
 		    }
+		    
 		    function DownloadPC(obj) {
 		        var param = { "href": new Array(), "filesize": new Array(), "name": new Array(), "folderpath": new String() };
 		        var count = 0;
@@ -81,6 +122,7 @@
 		        var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
 		        ezUtil.UseUTF8 = true;
 		        var folderpath = ezUtil.BrowseFolder();
+		        
 		        if (folderpath != "") {
 		            param["folderpath"] = folderpath;
 		            var feature = "dialogWidth:430px; dialogHeight:150px; scroll:no; status:no; help:no; scroll:no; edge:sunken";
@@ -88,11 +130,13 @@
 		            window.showModalDialog("htm/attachdownload.aspx", param, feature);
 		        }
 		    }
+		    
 		    function AttachFile_Delete(obj) {
 	
-		        if (!confirm("<spring:message code='ezEmail.t99000005' />"))
+		        if (!confirm("<spring:message code='ezEmail.t99000005' />")) {
 		            return;
-	
+		        }
+		        
 		        var count = 0;
 		        var param = new Array();
 		        var ArrayDel = new Array();
@@ -113,65 +157,79 @@
 	
 		            if (ret != "FAIL") {
 		            	window.parent.reloadReadContent(ret);
-		            }
-		            else {
+		            } else {
 		                alert(strLang183);
 		            }
 		        }
 		    }
+		    
 	        var nowZoom = 100;
 	        var maxZoom = 200;
 	        var minZoom = 80;
-	
 	        var MozNowZoom = 1;
 	        var MozMaxZoom = 2;
 	        var MozMinZoom = 0.8;
+	        
 	        function Bigger() {
-	            if (navigator.userAgent.indexOf('Firefox') != -1) {
-	                if (MozNowZoom < MozMaxZoom) {
+	           
+	        	if (navigator.userAgent.indexOf('Firefox') != -1) {
+	                
+	        		if (MozNowZoom < MozMaxZoom) {
 	                    MozNowZoom += 0.1;
 	                } else {
 	                    return;
 	                }
+	        		
 	                document.getElementById("normalScreen").style.MozTransform = "scale(" + MozNowZoom + ")";
 	                document.getElementById("normalScreen").style.MozTransformOrigin = "0 0";
-	            }
-	            else {
-	                if (nowZoom < maxZoom) {
+	            } else {
+	                
+	            	if (nowZoom < maxZoom) {
 	                    nowZoom += 10;
 	                } else {
 	                    return;
 	                }
+	            	
 	                document.getElementById("normalScreen").style.zoom = nowZoom + "%";
 	            }
 	        }
+	        
 	        function Smaller() {
-	            if (navigator.userAgent.indexOf('Firefox') != -1) {
-	                if (MozNowZoom > MozMinZoom) {
+	           
+	        	if (navigator.userAgent.indexOf('Firefox') != -1) {
+	                
+	            	if (MozNowZoom > MozMinZoom) {
 	                    MozNowZoom -= 0.1;
 	                } else {
 	                    return;
 	                }
+	                
 	                document.getElementById("normalScreen").style.MozTransform = "scale(" + MozNowZoom + ")";
 	                document.getElementById("normalScreen").style.MozTransformOrigin = "0 0";
 	
-	            }
-	            else {
-	                if (nowZoom > minZoom) {
+	            } else {
+	                
+	            	if (nowZoom > minZoom) {
 	                    nowZoom -= 10;
 	                } else {
 	                    return;
 	                }
+	            	
 	                document.getElementById("normalScreen").style.zoom = nowZoom + "%";
 	            }
 	        }
+	        
 	        function Mail_Acton(Division) {
-	            var pheight = window.screen.availHeight;
+	            
+	        	var pheight = window.screen.availHeight;
 	            var conHeight = pheight * 0.8;
 	            var pwidth = window.screen.availWidth;
 	            var conWidth = pwidth * 0.8;
-	            if (conWidth > 890)
+	            
+	            if (conWidth > 890) {
 	                conWidth = 890;
+	            }
+	            
 	            var pTop = (pheight - conHeight) / 2;
 	            var pLeft = (pwidth - 890) / 2;
 	            var oForm = document.createElement("FORM");
@@ -184,23 +242,25 @@
 	            oInputHidden.value = g_paramURL;
 	            oForm.appendChild(oInputHidden);
 	            window.document.body.appendChild(oForm);
+	            
 	            if (Division == "ALLRE") {
 	                var pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(g_paramURL);
-	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
+	                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	                newwin.focus();	            	
-	            }
-	            else if (Division == "RE") {
+	            } else if (Division == "RE") {
 	                var pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(g_paramURL);
-	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
+	                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	                newwin.focus();
-	            }
-	            else if (Division = "FW") {
+	            } else if (Division = "FW") {
 	            	var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(g_paramURL);
-	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
+	                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	                newwin.focus();
 	            }
-	
 	        }
+	        
 	    </script> 
 	</head>
 

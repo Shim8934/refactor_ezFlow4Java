@@ -1421,10 +1421,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getProxyUserInfo(String userID, int tenantID) throws Exception {
+	public String getProxyUserInfo(String userID, int tenantID, String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_TENANT_ID", tenantID);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
 		List<OrganProxyVO> organProxyVOList = ezOrganDAO.getProxyUserInfo(map);
 		
@@ -1643,6 +1644,30 @@ public class EzOrganServiceImpl implements EzOrganService {
 		List<OrganDeptVO> list = ezOrganDAO.getExtension4ID(map);
 		logger.debug("getExtensionAttr4ID started");
 		return list;
+	}
+	
+	@Override
+	public boolean checkRetired(String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("checkRetired started.");
+		
+		boolean chkValue = false;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		int count = ezOrganDAO.checkRetired(map);
+		
+		logger.debug("count = " + count);
+		
+		if (count != 0) {
+			chkValue = true;
+		}
+		
+		logger.debug("checkRetired ended. chkValue = " + chkValue);
+		
+		return chkValue;
 	}
 	
 	public String getChildrenDeptID(String parentID, String companyID, int tenantID) throws Exception {

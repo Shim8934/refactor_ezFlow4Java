@@ -23,7 +23,8 @@
 		    }
 			
 			function join_OK() {
-				window.location.href="/ezCommunity/agreeOk.do?code=<c:out value = '${no}' />";
+				//자동가입 유형은 상세정보 입력 없이 바로 가입한다.
+				window.location.href="/ezCommunity/joinOk.do?code=<c:out value = '${no}' />";
 			}
 			
 			window.onload = function () {

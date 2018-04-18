@@ -667,6 +667,10 @@ public class CommonUtil {
 			return null;
 		}
 		
+		if (dateStr.equals("0")) {			
+			return dateStr;
+		}
+		
 		if (offset == null || offset.indexOf("|") == -1) {
 			logger.error("offset is null or offset format is wrong.");
 			return dateStr;
@@ -1004,6 +1008,21 @@ public class CommonUtil {
 	}
 	
 	/**
+	 * globals.properties에 있는 
+	 * DataBaseType을 반환
+	 * */
+	public String getDatabaseType() throws Exception {
+		
+		String props = "Globals.DbType";
+		String dbType;
+		
+		dbType = globals.getProperty(props);
+		
+		logger.debug("getDatabase Type = " + dbType);
+		
+		return dbType;
+	}
+	/**
 	 * 테넌트에 따른 설정정보 얻어오는 메서드
 	 */
 	public String getTenantConfigRest(String property, String userId, HttpServletRequest request) throws Exception {
@@ -1039,5 +1058,4 @@ public class CommonUtil {
         
         return propertyValue;
     }
-
 }

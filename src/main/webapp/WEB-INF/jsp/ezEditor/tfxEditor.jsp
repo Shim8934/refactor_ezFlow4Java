@@ -10,6 +10,7 @@
 		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
 		<script  type="text/javascript">
 			var type = "${type}";
+			var editorLoadFlag = false;
 			
 			function SetEditorContent(Data) {
 	            try {
@@ -37,12 +38,12 @@
 			
 			function SetEditorContentURL(pURL) {
                 var tempXML = createXmlDom();
-                var XmlBodyATT = createXmlDom();
+//                 var XmlBodyATT = createXmlDom();
                 var XmlBodyDATA = createXmlDom();
                 var tempStr = "";
                 tempStr = ConvertMHTtoHTML(pURL);
                 tempXML = loadXMLString(tempStr)
-                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//                 XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
                 XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
                 var htmlData = getNodeText(XmlBodyDATA);
                 xfe.setBodyValue(htmlData);
@@ -50,12 +51,12 @@
 		
 			function GetEditorContentURL(url) {
 				var tempXML = createXmlDom();
-                var XmlBodyATT = createXmlDom();
+//                 var XmlBodyATT = createXmlDom();
                 var XmlBodyDATA = createXmlDom();
                 var tempStr = "";
                 tempStr = ConvertMHTtoHTML(url);
                 tempXML = loadXMLString(tempStr)
-                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//                 XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
                 XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 			    return getNodeText(XmlBodyDATA);
 			}
@@ -63,12 +64,12 @@
 			function SetEditorContentURL_Admin(pURL) {
 	            try {
 	                var tempXML = createXmlDom();
-	                var XmlBodyATT = createXmlDom();
+// 	                var XmlBodyATT = createXmlDom();
 	                var XmlBodyDATA = createXmlDom();
 	                var tempStr = "";
 	                tempStr = ConvertMHTtoHTML(pURL);
 	                tempXML = loadXMLString(tempStr)
-	                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	                XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 
 	                var Doc_ContentHtml = document.createElement("DIV");
@@ -91,18 +92,18 @@
 			
 			function SetEditorContentPathSign(url, strMailSign) {
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
 
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            CKEDITOR.instances.editor1.editable().setHtml(getNodeText(XmlBodyDATA) + strMailSign);
-	            for (var i = 0; i < GetChildNodes(XmlBodyATT).length; i++) {
+	            /* for (var i = 0; i < GetChildNodes(XmlBodyATT).length; i++) {
 	                BodySetAttribute(getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODENAME")), getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODEVALUE")))
-	            }
+	            } */
 	        }
 			
 			function GetFieldsList() {           
@@ -163,12 +164,20 @@
 		    		break;
 	    	}
 	    	
+	    	
 	    	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
+
 	    	var uploadFilePath = "/ezEditor/tfxUpload.do?type=" + type;
 	    	var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=" + type;
 	    	
 	    	if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
 	   			uploadPasteContentsPath = "/ezEditor/tfxNoop.do";
+	   		} else if (type == "MAILLETTER") {
+	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
+	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	
+	        	uploadFilePath = "/ezEditor/tfxUpload.do?type=" + type + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
+	        	uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=" + type + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
 	   		}
 	    	
 	        xfe = new XFE({
@@ -196,7 +205,10 @@
 	        	xfe.showTab(1, false);
 	        }
 	        
-	        window.onload = parent.Editor_Complete;
+	        window.onload = function() {
+	        	editorLoadFlag = true;
+	        	parent.Editor_Complete();
+	        };
 	    </script>
 	</body>
 </html>

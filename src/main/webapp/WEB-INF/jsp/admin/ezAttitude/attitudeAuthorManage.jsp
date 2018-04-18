@@ -99,7 +99,10 @@
 	        
 	        //권한추가
 	        function author_add() {
-	        	
+	        	var url = "/admin/ezAttitude/saveAttitudeAuth.do";
+				var companyId = $("#ListCompany").val();
+				url+="?companyId="+companyId;
+				window.open(url, "saveAttitudeAuth", "width=500, height=180");
 	        }
 	        
 		</script>

@@ -280,7 +280,7 @@
 		        // 대리 수신 담당자 지정
 		        if (Roll.toLowerCase().indexOf("a=1;") > -1) {
 		            if (document.getElementById("TextProxyName").value != "") {
-		            	pProxy = proxyuserid + ":" + document.getElementById("TextProxyName").value + ":" + proxydeptid + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
+		            	pProxy = proxyuserid + ":" + document.getElementById("TextProxyName").value + ":" + proxydeptid + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val() + ":";
 		                gIsAppoint = "1";
 		            }
 		            else

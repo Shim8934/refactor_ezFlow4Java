@@ -1698,13 +1698,18 @@ public class EzAttitudeGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/attitude-auth", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertAttitudeAuth(
-			@PathVariable String companyId, HttpServletRequest request) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitude-auth] started.");
+			@RequestBody JSONObject jsonString, HttpServletRequest request) throws Exception{
+		LOGGER.debug("G/W EzAttitude [POST /rest/attitude-auth] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			jsonString.put("tenantId", info.getTenantId());
+			ezAttitudeService.saveAttitudeAuthDept(jsonString);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1715,7 +1720,7 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitude-auth] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitude-auth] ended.");
 		return result;
 	}
 	

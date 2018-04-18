@@ -307,6 +307,7 @@ var strLangKMS07 = "The upload has been canceled by the user or the browser drop
 var strLangKMS08 = "폴더는 업로드 할 수 없습니다."
 var strLangKYJ01 = "Not selected mail.";
 var strLangKYJ02 = "재작성할 메일을 하나만 선택해주세요.";
+var strLangKYJ03 = "공백은 입력할 수 없습니다."
 
 
 function GetLocalTime(Offset , pDateTime)

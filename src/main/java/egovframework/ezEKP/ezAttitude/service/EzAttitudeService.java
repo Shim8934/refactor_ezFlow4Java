@@ -124,5 +124,7 @@ public interface EzAttitudeService {
 	public List<AttitudeAuthorVO> getAttitudeAuthList(int tenantId,	String companyId) throws Exception;
 
 	public void deleteAttitudeAuth(String selectUserId, int tenantId, String companyId) throws Exception;
+
+	public void saveAttitudeAuthDept(JSONObject jsonString) throws Exception;
 	
 }

@@ -294,14 +294,21 @@ function ItemPreviewRead_click(obj) {
 var xmlhttp = createXMLHttpRequest();
 var xmlhttp2 = createXMLHttpRequest();
 function ItemPreviewRead(obj) {
-    obj.childNodes[2].style.fontWeight = "normal";
+	
+	for (var i = 0; i < obj.childNodes.length; i++) {
+		if (obj.childNodes[i].style.fontWeight == "bold") {
+			obj.childNodes[i].style.fontWeight = "normal";
+		} else {
+			obj.childNodes[i].style.fontWeight = "normal";
+		}
+	}
 
     var pboardid = obj.getAttribute("DATA1");
     var pitemid = obj.getAttribute("DATA2");
 
-    if (document.getElementById('spn_title' + obj.id.split('_')[2]) != null) {
+    if (document.getElementById('spn_title' + obj.id.split('_')[2]) != null) { // 다른 게시판에선 이 조건문을 타지않는걸로 보임
         document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
-        document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
+        //document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal"; // 게시판 > 썸네일게시판  > PreViewH사용시 스크립트오류 발생시킨부분 주석
     }
     if (previewType == "PHOTO" || (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4")) {
         clickPreviweType = "PHOTO";
@@ -899,28 +906,31 @@ function Set_BoardConfig() {
 //레프트 메뉴카운트 업뎃용
 function leftCountRf() {
 	var pDiv, pId, pValue, pNodeID, pTreeID;
-    var h2 = window.parent.frames["left"].document.getElementsByTagName("h2");
-    var span = window.parent.frames["left"].document.getElementsByTagName("span");
-    
-    // 2018-02-23 천성준 
-    /* 게시판  게시물 등록, 삭제, 복사, 이동시 왼쪽 게시판 폴더 볼드 해제되는 버그 수정 */
-    for (var j = 0; j < span.length; j++) {
-    	if (span[j].className == "node_selected") {
-    		pNodeID = span[j].id.replace("spn_","");
-    		pTreeID = pNodeID.split("_")[0];
-    	}
-    }
-    
-    for (var i = 0; i < h2.length; i++) {
-        if (h2[i].className == "on") {
-            pId = h2[i].getElementsByTagName("div")[0].id;
-            pId = pId.replace("TreeCtr", "TreeCtrl");
-            pValue = h2[i].getElementsByTagName("div")[0].getAttribute("value");
-            window.parent.frames["left"].TopBoard_onclick(pId, pValue);
-            window.parent.frames["left"].node_select(pNodeID, "", pTreeID, "");
-            break;
-        }
-    }
+
+	if (window.parent.frames["left"] != undefined) {
+	    var h2 = window.parent.frames["left"].document.getElementsByTagName("h2");
+	    var span = window.parent.frames["left"].document.getElementsByTagName("span");
+	    
+	    // 2018-02-23 천성준 
+	    /* 게시판  게시물 등록, 삭제, 복사, 이동시 왼쪽 게시판 폴더 볼드 해제되는 버그 수정 */
+	    for (var j = 0; j < span.length; j++) {
+	    	if (span[j].className == "node_selected") {
+	    		pNodeID = span[j].id.replace("spn_","");
+	    		pTreeID = pNodeID.split("_")[0];
+	    	}
+	    }
+	    
+	    for (var i = 0; i < h2.length; i++) {
+	        if (h2[i].className == "on") {
+	            pId = h2[i].getElementsByTagName("div")[0].id;
+	            pId = pId.replace("TreeCtr", "TreeCtrl");
+	            pValue = h2[i].getElementsByTagName("div")[0].getAttribute("value");
+	            window.parent.frames["left"].TopBoard_onclick(pId, pValue);
+	            window.parent.frames["left"].node_select(pNodeID, "", pTreeID, "");
+	            break;
+	        }
+	    }
+	}
 }
 
 //무적의 자바 인코더
