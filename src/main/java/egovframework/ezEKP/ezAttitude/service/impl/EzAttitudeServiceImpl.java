@@ -619,7 +619,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId,
-			String userId, String startDate, String endDate, String apprUserName, String sysLang, 
+			String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String sysLang, 
 			String offset,String startPoint, String endPoint, String type, String order, String adminFlag, boolean checkAdmin) throws Exception {
 		LOGGER.debug("getUsersModiyAtt started");
 		
@@ -640,6 +640,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("apprUserName", apprUserName);
+		map.put("writerName", writerName);
+		map.put("writerDeptName", writerDeptName);
 		map.put("sysLang", sysLang);
 		map.put("offset", offset);
 		map.put("startPoint", startPoint);
@@ -686,7 +688,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public int getUsersModiyAttCount(String companyId, int tenantId,
 			String userId, String startDate, String endDate,
-			String apprUserName, String sysLang, String offset, String type, String adminFlag, boolean checkAdmin)
+			String apprUserName, String writerName , String writerDeptName,String sysLang, String offset, String type, String adminFlag, boolean checkAdmin)
 			throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -710,6 +712,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("apprUserName", apprUserName);
+		map.put("writerName", writerName);
+		map.put("writerDeptName", writerDeptName);
 		map.put("sysLang", sysLang);
 		map.put("offset", offset);
 		map.put("type", type);

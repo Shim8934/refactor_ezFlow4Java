@@ -39,6 +39,7 @@
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
 		var adminFlag = "${adminFlag}";
+		var checkAdmin = "${checkAdmin}";
 		
 		$(function(){
 			$(document).on('click', '#AttList th', function(){
@@ -254,6 +255,8 @@
 	    function get_att_list(pageNum) {
 	    	ShowAttProgress();
 	    	
+	    	$("#HeaderAllCheckBox").prop("checked",false);
+	    	
 	    	if (usepostDate) {
 	            var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
@@ -266,6 +269,8 @@
 	    	var obj = new Object();
 	    	
 		    obj.apprUserName = $('#appr_search').val();
+		    obj.writerName = $('#writer_search').val();
+		    obj.writerDeptName = $('#writerDept_search').val();
 		    obj.startDate = startDate;
 		    obj.endDate = endDate;
 			obj.pageNum = pageNum;
@@ -597,7 +602,6 @@
 	                        if (Cnt == 0){
 	                            SelectedPreObj = _RowObject;	
 	                        }
-	                        console.log(_RowObject);
 	                        _RowObject.style.backgroundColor = m_strColorDefault;
 	                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
 	                    }
@@ -713,7 +717,6 @@
 	    	var idList = "";
 	    	
 	    	for (var i = 0; i < attList.length; i++) {
-	    		console.log(attList[i].getAttribute("status"));
 	    		if (attList[i].getAttribute("status") != "1") {
 	    			idList += attList[i].getAttribute("id").split("_")[1] + ",";	
 	    		}
@@ -762,7 +765,6 @@
 	    	var idList = "";
 	    	
 	    	for (var i = 0; i < attList.length; i++) {
-	    		console.log(attList[i].getAttribute("status"));
 	    		if (attList[i].getAttribute("status") != "2") {
 	    			idList += attList[i].getAttribute("id").split("_")[1] + ",";	
 	    		}
@@ -821,12 +823,12 @@
 	    	var attNode;
 	    	// tr 노드 개수
 	    	var nodeCount = attNodes.length;
-	    	
+	    	console.log(nodeCount);
 	        if (obj.checked) {
 	        	
 	            for (var i = 0; i < nodeCount; i++) {
 	            	attNode = attNodes.get(i);
-	            	attNode.getElementsByTagName("td").item(0).childNodes.item(0).checked = true;
+	            	attNode.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
 	            	attNode.style.backgroundColor = m_strColorSelect;
 	                //TODO: 테스트해보기 2016-06-02
 	                // dhlee: modified so that existing elements aren't merged with new ones.
@@ -837,8 +839,7 @@
 	        	
 	            for (var i = 0; i < nodeCount; i++) {
 	            	attNode = attNodes.get(i);
-	            	
-	            	attNode.getElementsByTagName("td").item(0).childNodes.item(0).checked = false;
+	            	attNode.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
 	            	attNode.style.backgroundColor = m_strColorDefault;
 	            }
 	            
@@ -854,7 +855,6 @@
 	        else {
 	            var TemplistArray = new Array();
 	            for (var i = 0; i < listContentArry.length; i++) {
-	            	console.log(obj.parentElement.parentElement.getAttribute("id"));
 	                if (obj.parentElement.parentElement.getAttribute("id") == listContentArry[i]) {
 	                	obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
 	                }
@@ -977,10 +977,24 @@
           <div class="popupwrap1" style="background-color:#ffffff; position: relative;">
             <div class="popupwrap2">
               <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="content">
+              	<c:if test="${adminFlag == 'true' || checkAdmin =='true'}">
+					<tr>
+						<th nowrap>신청자명</th>
+						<td style="width:100%;"> 
+							<input id="writer_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
+						</td>
+					</tr>
+					<tr>
+						<th nowrap>신청부서명</th>
+						<td style="width:100%;"> 
+							<input id="writerDept_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
+						</td>
+					</tr>
+              	</c:if>
               	  <tr>
                     <th nowrap>승인자명</th>
                     <td style="width:100%;"> 
-						<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);"/>
+						<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
 	                </td>
                   </tr>
                   <tr>
@@ -1007,15 +1021,15 @@
 							<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
 						</th> 
 						<th width="60px" colname="NO">NO.</th> 
-						<th style="cursor:pointer" colname="CHANGE_DATE">일자</th>
+						<th style="cursor:pointer" colname="START_DATE">일자</th>
 						<c:if test="${adminFlag == true}">
-							<th style="cursor:pointer" colname="CHANGE_DATE">신청자</th>
-							<th style="cursor:pointer" colname="CHANGE_DATE">신청 부서</th>
+							<th style="cursor:pointer" colname="WRITER_NAME">신청자</th>
+							<th style="cursor:pointer" colname="WRITER_DEPT_NAME">신청 부서</th>
 						</c:if>
-						<th width="250px" style="cursor:pointer" colname="START_DATE">시각</th>
+						<th width="250px" style="cursor:pointer" colname="NO">시각</th>
 						<th width="80px" style="cursor:pointer" colname="APPR_STATUS" >승인상태</th>
 						<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th>
-						<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">내역확인</th> 
+						<th width="150px" style="cursor:pointer" colname="NO">내역확인</th> 
 			    	</tr>
 			    	
 			    	<c:forEach var="list" items="${list}" varStatus="i"> 

@@ -423,6 +423,8 @@ public class EzAttitudeKMSController {
 	@ResponseBody
 	public JSONObject getAttModAppList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
 			@RequestParam(required=false)String apprUserName,
+			@RequestParam(required=false)String writerName,
+			@RequestParam(required=false)String writerDeptName,
 			@RequestParam(required=false)String startDate,
 			@RequestParam(required=false)String endDate,
 			@RequestParam(required=false)String pageNum,
@@ -480,6 +482,8 @@ public class EzAttitudeKMSController {
 				.queryParam("companyId", userInfo.getCompanyID())
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("apprUserName", apprUserName)
+				.queryParam("writerName", writerName)
+				.queryParam("writerDeptName", writerDeptName)
 				.queryParam("startDate", startDate)
 				.queryParam("endDate", endDate)
 				.queryParam("sysLang", sysLang)
@@ -538,6 +542,8 @@ public class EzAttitudeKMSController {
 					.queryParam("companyId", userInfo.getCompanyID())
 					.queryParam("tenantId", userInfo.getTenantId())
 					.queryParam("apprUserName", apprUserName)
+					.queryParam("writerName", writerName)
+					.queryParam("writerDeptName", writerDeptName)
 					.queryParam("startDate", startDate)
 					.queryParam("endDate", endDate)
 					.queryParam("sysLang", sysLang)
@@ -551,6 +557,8 @@ public class EzAttitudeKMSController {
 					.queryParam("companyId", userInfo.getCompanyID())
 					.queryParam("tenantId", userInfo.getTenantId())
 					.queryParam("apprUserName", apprUserName)
+					.queryParam("writerName", writerName)
+					.queryParam("writerDeptName", writerDeptName)
 					.queryParam("startDate", startDate)
 					.queryParam("endDate", endDate)
 					.queryParam("sysLang", sysLang)
