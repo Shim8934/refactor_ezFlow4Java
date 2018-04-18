@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
@@ -972,5 +974,34 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("attModGetHistory ended");
 		return attAppList;
+	}
+	
+	@Override
+	public void saveAttitudeAuthDept(JSONObject jsonParam) throws Exception {
+		LOGGER.debug("saveAttitudeAuthDept started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", jsonParam.get("userId"));
+		map.put("tenantId", jsonParam.get("tenantId"));
+		//삭제...?물어보자
+//		ezAttitudeDAO.deleteAuthDept(map);
+//		
+//		Gson gson = new Gson();
+//		
+//		List<String> deptList = gson.fromJson(jsonParam.get("depts").toString(), new TypeToken<List<String>>(){}.getType());
+//		for (int i = 0; i < deptList.size(); i++) {
+//			try {
+//				LOGGER.debug(deptList.get(i));
+//				Map<String, Object> insertMap = new HashMap<String, Object>();
+//				insertMap.put("tenantId", ((String) jsonParam.get("tenantId")).trim());
+//				insertMap.put("userId", ((String) jsonParam.get("userId")).trim());
+//				insertMap.put("deptId", ((String) deptList.get(i)).trim());
+//				ezAttitudeDAO.insertAuthDept(insertMap);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+		
+		LOGGER.debug("saveAttitudeAuthDept ended");
 	}
 }
