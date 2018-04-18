@@ -13,27 +13,18 @@
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />"
 	type="text/css">
 <script type="text/javascript">
-function getTest() {
-	$.ajax({
-		type : "POST",
-		url : "/ezPMS/addNewProject.do",
-		dataType : "json",
-		data : {
-			projectName : "eunjeong Test"
-		},
-		success : function(result) {
-			console.log(result);
-			$("#test").text(result.status);
-		},
-		error : function() {
-			$("#test").text("error");
-		}
-	})	
-}
 
 function goToProjectDetails() {
 	window.open("/ezPMS/getProjectDetails.do", "right");
 }
+
+function addNewProject(){
+	var top = ($(window).height() - $(this).outerHeight()) / 2;
+    var left = ($(window).width() - $(this).outerWidth()) / 2;
+	var feature = GetOpenPosition(top, left);
+ 
+	DivPopUpShow(845, 550, "/ezPMS/newProject.do");
+};
 </script>
 </head>
 <body>
@@ -45,5 +36,12 @@ function goToProjectDetails() {
 	<button onclick="getTest()">click</button>
 	<div id="test">Hi</div>
 	<button onclick="goToProjectDetails()">project</button>
+	<br><br>
+	<button id="newProject" onclick="addNewProject()">new project</button>
+	
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
+	</div>
 </body>
 </html>
