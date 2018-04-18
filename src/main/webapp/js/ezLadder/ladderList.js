@@ -169,8 +169,10 @@ function sortView() {
 		temp=4;
 	} else if(sort==='secretFlag') {
 		temp=5;
-	} else {
+	} else if(sort==='deleteFlag') {
 		temp=6;
+	} else {
+		temp=7;
 	}
 
 	return temp;
@@ -207,7 +209,8 @@ function listSort(num) {
 				break;
 		case 6: sort="deleteFlag";
 				break;
-			
+		default: sort="basic";
+				break;
 	}
 	
 	if((sortFlag == 'desc') && (temp == sort)) {

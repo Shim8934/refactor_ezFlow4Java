@@ -175,7 +175,12 @@
 				A.WRITERID = #userId# 
             )
             ORDER BY
-            ]]> 
+            ]]>
+            <isEqual property="sort" compareValue="basic">
+            <![CDATA[
+				E.WRITEDATE 
+			]]>
+			</isEqual> 
             <isEqual property="sort" compareValue="type">
             <![CDATA[
 				E.TYPE 
@@ -287,7 +292,12 @@
 								WHERE 
 									C.USERID = #userId#)
 			ORDER BY
-			 ]]> 
+			 ]]>
+			<isEqual property="sort" compareValue="basic">
+            <![CDATA[
+				A.WRITEDATE 
+			]]>
+			</isEqual>   
             <isEqual property="sort" compareValue="type">
             <![CDATA[
 				A.TYPE 
@@ -330,12 +340,12 @@
 			</isEqual>
 			<isEqual property="sortFlag" compareValue="desc">
             <![CDATA[
-				DESC, , A.LADDERID DESC
+				DESC, A.LADDERID DESC
 			]]>
 			</isEqual>
 			<isNotEqual property="sortFlag" compareValue="desc">
 			 <![CDATA[
-				ASC, , A.LADDERID ASC
+				ASC, A.LADDERID ASC
 			]]>
 			</isNotEqual>
 			LIMIT 
@@ -471,7 +481,12 @@
 				D.USERNAME
 			LIKE CONCAT('%', #searchInput#, '%')
 			ORDER BY 
-			 ]]> 
+			 ]]>
+			<isEqual property="sort" compareValue="basic">
+            <![CDATA[
+				A.WRITEDATE 
+			]]>
+			</isEqual>   
             <isEqual property="sort" compareValue="type">
             <![CDATA[
 				A.TYPE 
@@ -581,7 +596,12 @@
 				</isEqual>
 				<![CDATA[
 					ORDER BY 
-				 ]]> 
+				 ]]>
+			<isEqual property="sort" compareValue="basic">
+            <![CDATA[
+				A.WRITEDATE 
+			]]>
+			</isEqual> 	  
             <isEqual property="sort" compareValue="type">
             <![CDATA[
 				A.TYPE 
@@ -801,7 +821,12 @@
 				E.USERNAME
 			LIKE CONCAT('%', #searchInput#, '%')
 			ORDER BY
-			 ]]> 
+			 ]]>
+			<isEqual property="sort" compareValue="basic">
+            <![CDATA[
+				D.WRITEDATE 
+			]]>
+			</isEqual>   
             <isEqual property="sort" compareValue="type">
             <![CDATA[
 				D.TYPE 
@@ -927,7 +952,12 @@
 				</isEqual>
 				<![CDATA[
 					ORDER BY 
-					 ]]> 
+					 ]]>
+			<isEqual property="sort" compareValue="basic">
+            <![CDATA[
+				D.WRITEDATE 
+			]]>
+			</isEqual> 		  
             <isEqual property="sort" compareValue="type">
             <![CDATA[
 				D.TYPE 

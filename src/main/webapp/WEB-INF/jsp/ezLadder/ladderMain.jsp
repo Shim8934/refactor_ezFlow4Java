@@ -137,13 +137,13 @@
 		<div class="div_scroll" style="width:100%; overflow: auto" id="divList">
 			 <table class="mainlist" style="width:100%; overflow: auto"> 
 			    <tr class="header" style="height=20px;"> 
-					<th onClick="listSort(0)" width="80px"><spring:message code="ezLadder.t002"/><span id="sort_0" ></span></th> 
-					<th onClick="listSort(1)"><spring:message code="ezLadder.t003"/><span id="sort_1" ></span></th> 
-					<th onClick="listSort(2)" width="140px"><spring:message code="ezLadder.t004"/><span id="sort_2" ></span></th>
-					<th onClick="listSort(3)" width="140px"><spring:message code="ezLadder.t005"/><span id="sort_3" ></span></th> 
-					<th onClick="listSort(4)" width="80px"><spring:message code="ezLadder.t006"/><span id="sort_4" ></span></th> 
-					<th onClick="listSort(5)" width="80px"><spring:message code="ezLadder.t007"/><span id="sort_5" ></span></th>
-					<th onClick="listSort(6)" width="80px"><spring:message code="ezLadder.t008"/><span id="sort_6" ></span></th>
+					<th onClick="listSort(0)" width="80px"><spring:message code="ezLadder.t002"/> <span id="sort_0" ></span></th> 
+					<th onClick="listSort(1)"><spring:message code="ezLadder.t003"/> <span id="sort_1" ></span></th> 
+					<th onClick="listSort(2)" width="140px"><spring:message code="ezLadder.t004"/> <span id="sort_2" ></span></th>
+					<th onClick="listSort(3)" width="140px"><spring:message code="ezLadder.t005"/> <span id="sort_3" ></span></th> 
+					<th onClick="listSort(4)" width="80px"><spring:message code="ezLadder.t006"/> <span id="sort_4" ></span></th> 
+					<th onClick="listSort(5)" width="80px"><spring:message code="ezLadder.t007"/> <span id="sort_5" ></span></th>
+					<th onClick="listSort(6)" width="80px"><spring:message code="ezLadder.t008"/> <span id="sort_6" ></span></th>
 			    </tr>
 				 <c:forEach items="${list }" var="vo">
 					<tr class="black" style="height=30px;" onClick="getLadderGame(${vo.ladderId})">

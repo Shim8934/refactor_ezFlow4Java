@@ -94,7 +94,7 @@ public class EzLadderController {
 		currPage = currPage != null ? currPage : "1";
 		searchSelect = searchSelect != null ? searchSelect : "";
 		searchInput = searchInput != null ? searchInput : "";
-		sort = sort != null ? sort : "writeDate";
+		sort = sort != null ? sort : "basic";
 		sortFlag = sortFlag != null ? sortFlag : "desc";
 	
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
