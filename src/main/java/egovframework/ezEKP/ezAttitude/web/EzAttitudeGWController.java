@@ -1094,6 +1094,8 @@ public class EzAttitudeGWController {
 			@RequestParam(value="startDate", required=false) String startDate,
 			@RequestParam(value="endDate", required=false) String endDate,
 			@RequestParam(value="apprUserName", required=false) String apprUserName,
+			@RequestParam(value="writerName", required=false) String writerName,
+			@RequestParam(value="writerDeptName", required=false) String writerDeptName,
 			@RequestParam(value="sysLang", required=false) String sysLang,
 			@RequestParam(value="offset", required=false) String offset,
 			@RequestParam(value="startPoint", required=false) String startPoint,
@@ -1123,7 +1125,7 @@ public class EzAttitudeGWController {
 				}
 			}
 			
-			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, startPoint, endPoint, type, order, adminFlag, checkAdmin);
+			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, startPoint, endPoint, type, order, adminFlag, checkAdmin);
 			for (int i = 0 ; i < attList.size(); i++ ) {
 				LOGGER.debug(attList.get(i).toString());
 			}
@@ -1151,6 +1153,8 @@ public class EzAttitudeGWController {
 			@RequestParam(value="startDate", required=false) String startDate,
 			@RequestParam(value="endDate", required=false) String endDate,
 			@RequestParam(value="apprUserName", required=false) String apprUserName,
+			@RequestParam(value="writerName", required=false) String writerName,
+			@RequestParam(value="writerDeptName", required=false) String writerDeptName,
 			@RequestParam(value="sysLang", required=false) String sysLang,
 			@RequestParam(value="offset", required=false) String offset,
 			@RequestParam(value="type", required=false) String type,
@@ -1169,7 +1173,7 @@ public class EzAttitudeGWController {
 				}
 			}
 			
-			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, sysLang, offset, type, adminFlag, checkAdmin);
+			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, adminFlag, checkAdmin);
 
 			result.put("status", "ok");
 			result.put("code", 0);			

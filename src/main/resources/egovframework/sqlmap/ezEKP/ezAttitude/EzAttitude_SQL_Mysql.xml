@@ -302,6 +302,26 @@
 				</isNotEqual>
 			</isNotEmpty>
 		</isNotEmpty>
+		<isNotEmpty property="writerName" prepend="and">
+			<isNotEmpty property="writerName" >
+				<isEqual property="sysLang" compareValue="primary" >
+						a.WRITER_NAME LIKE CONCAT('%', #writerName#,'%')
+				</isEqual>
+				<isNotEqual property="sysLang" compareValue="primary">
+						a.WRITER_NAME2 LIKE CONCAT('%', #writerName#,'%')
+				</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="writerDeptName" prepend="and">
+			<isNotEmpty property="writerDeptName" >
+				<isEqual property="sysLang" compareValue="primary" >
+						a.WRITER_DEPT_NAME LIKE CONCAT('%', #writerDeptName#,'%')
+				</isEqual>
+				<isNotEqual property="sysLang" compareValue="primary">
+						a.WRITER_DEPT_NAME2 LIKE CONCAT('%', #writerDeptName#,'%')
+				</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
 			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
