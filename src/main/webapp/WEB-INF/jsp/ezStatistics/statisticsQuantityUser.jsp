@@ -118,8 +118,6 @@
         	async : false,
         	data : {deptID : DeptID, cell : "displayName;description", prop : "department;displayName;description;title", type : "user"},
         	success : function(result){
-        		
-        		console.log("result   :"+result)
         		var retXml = createXmlDom();
 
                 if (document.getElementById("UserList").innerHTML != "")
