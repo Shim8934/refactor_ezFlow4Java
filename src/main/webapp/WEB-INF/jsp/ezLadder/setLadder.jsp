@@ -112,26 +112,10 @@
 				var timer;
 				var scrollCnt = 0;
 				$(document)
-					.on("click", function() {
-						
+					.on("dragstart", ".mainbody img", function() {
+						console.log("드래그 시작");
+						return false;
 					})
-					/* .on("scroll", function() {
-						scrollCnt++;
-						if(scrollCnt == 1) {
-							console.log("시작해따");
-						}
-						timer = setTimeout(function() {
-							
-						}, 150);
-						clearTimeout(timer);
-						timer = setTimeout(function() {
-							var focusClass = document.activeElement.getAttribute("class");
-							var focusId = document.activeElement.getAttribute("id");
-							if(focusClass == "input") {
-								$("#" + focusId).blur();
-							}
-						}, 150);
-					}) */
 					.on("click", "#removeIcon", function() {
 						attendant_remove($(this).closest("li").index());
 					})

@@ -659,10 +659,12 @@
 	            <%-- <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
 	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li> --%>	            
 	        </ul>
-	        <div class="ladder" onclick="ladder_Func(1)">
-	        	<h2><span><spring:message code="ezBoard.l001" /></span></h2>
-	        </div>
-	        <ul></ul>
+	        <c:if test="${userInfo.companyID == 'S907001' || userInfo.deptID == 'datasol' || userInfo.companyID == 'Top' || userInfo.deptID == 'sol1' || userInfo.deptID == 'sol2' || userInfo.deptID == 'newbiz2'}">
+		        <div class="ladder" onclick="ladder_Func(1)">
+		        	<h2><span><spring:message code="ezBoard.l001" /></span></h2>
+		        </div>
+		        <ul></ul>
+	        </c:if>
 	        <h3>
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
