@@ -987,72 +987,81 @@
 	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteFileVO">
 		<![CDATA[
 			SELECT
-				*
+			    * 
 			FROM (
-				SELECT
-					FAVOR.TARGET_ID,
-					FILES.FILE_NAME 	AS TARGET_NAME,
-					FAVOR.TARGET_TYPE 	AS TARGET_TYPE,
-					FILE_TYPE.TYPE_ICON AS TARGET_ICON_URL,
-					FILE_TYPE.TYPE_NAME,
-					FOLDER.FOLDER_PATH 	AS TARGET_PATH,
-					FILES.FILE_EXT		AS TARGET_EXT,
-					FILES.FILE_SIZE 	AS TARGET_SIZE,
-					FILES.CREATE_ID,
-					FILES.CREATE_NAME1,
-					FILES.CREATE_NAME2,
-					FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE')  AS CREATE_DATE,
-					FAVOR.TENANT_ID
-				FROM
-					TBL_WEBFOLDER_FAVOR FAVOR
-					INNER JOIN TBL_WEBFOLDER_FILE FILES
-					ON FILES.FILE_ID = FAVOR.TARGET_ID AND FILES.TENANT_ID = FAVOR.TENANT_ID
-						INNER JOIN TBL_WEBFOLDER_FOLDER FOLDER
-						ON FOLDER.FOLDER_ID = FILES.FOLDER_ID AND FOLDER.TENANT_ID = FAVOR.TENANT_ID
-							INNER JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
-							ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID AND FILE_TYPE.TENANT_ID = FAVOR.TENANT_ID
-				WHERE
-					FAVOR.TARGET_TYPE = 'F' AND
-					FAVOR.USER_ID = #userId# AND
-					FAVOR.TENANT_ID = #tenantId# AND
-					FILES.USE_STATUS = 'Y'
-					
-				UNION
-					
-				SELECT
-					FAVOR.TARGET_ID,
-					FOLDER.FOLDER_NAME1 AS TARGET_NAME,
-					CONCAT('D_', FOLDER.FOLDER_TYPE) AS TARGET_TYPE,
-					FILE_TYPE.TYPE_ICON AS TARGET_ICON_URL,
-					FILE_TYPE.TYPE_NAME,
-					FOLDER.FOLDER_PATH AS TARGET_PATH,
-					'folder' 		AS TARGET_EXT,
-					TO_CHAR(0)		AS TARGET_SIZE,
-					FOLDER.CREATE_ID,
-					FOLDER.CREATE_NAME1,
-					FOLDER.CREATE_NAME2,
-					FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE')  AS CREATE_DATE,
-					FAVOR.TENANT_ID
-				FROM
-					TBL_WEBFOLDER_FAVOR FAVOR
-					INNER JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
-					ON FILE_TYPE.TYPE_NAME = 'folder' AND FILE_TYPE.TENANT_ID = FAVOR.TENANT_ID
-						INNER JOIN TBL_WEBFOLDER_FOLDER FOLDER
-						ON FOLDER.FOLDER_ID = FAVOR.TARGET_ID AND FOLDER.TENANT_ID = FAVOR.TENANT_ID
-				WHERE
-					FAVOR.TARGET_TYPE = 'D' AND
-					FAVOR.USER_ID = #userId# AND
-					FAVOR.TENANT_ID = #tenantId# AND
-					FOLDER.USE_STATUS = 'Y'
-			) RESULT
+			    SELECT 
+			        ROWNUM NUM, RESULT.*
+			    FROM (
+			        SELECT
+			            *
+			        FROM (
+			            SELECT
+			                FAVOR.TARGET_ID,
+			                FILES.FILE_NAME 	AS TARGET_NAME,
+			                FAVOR.TARGET_TYPE 	AS TARGET_TYPE,
+			                FILE_TYPE.TYPE_ICON AS TARGET_ICON_URL,
+			                FILE_TYPE.TYPE_NAME,
+			                FOLDER.FOLDER_PATH 	AS TARGET_PATH,
+			                FILES.FILE_EXT		AS TARGET_EXT,
+			                FILES.FILE_SIZE 	AS TARGET_SIZE,
+			                FILES.CREATE_ID,
+			                FILES.CREATE_NAME1,
+			                FILES.CREATE_NAME2,
+			                FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE')  AS CREATE_DATE,
+			                FAVOR.TENANT_ID
+			            FROM
+			                TBL_WEBFOLDER_FAVOR FAVOR
+			                INNER JOIN TBL_WEBFOLDER_FILE FILES
+			                ON FILES.FILE_ID = FAVOR.TARGET_ID AND FILES.TENANT_ID = FAVOR.TENANT_ID
+			                    INNER JOIN TBL_WEBFOLDER_FOLDER FOLDER
+			                    ON FOLDER.FOLDER_ID = FILES.FOLDER_ID AND FOLDER.TENANT_ID = FAVOR.TENANT_ID
+			                        INNER JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
+			                        ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID AND FILE_TYPE.TENANT_ID = FAVOR.TENANT_ID
+			            WHERE
+			                FAVOR.TARGET_TYPE = 'F' AND
+			                FAVOR.USER_ID = #userId# AND
+			                FAVOR.TENANT_ID = #tenantId# AND
+			                FILES.USE_STATUS = 'Y'
+			                
+			            UNION
+			                
+			            SELECT
+			                FAVOR.TARGET_ID,
+			                FOLDER.FOLDER_NAME1 AS TARGET_NAME,
+			                CONCAT('D_', FOLDER.FOLDER_TYPE) AS TARGET_TYPE,
+			                FILE_TYPE.TYPE_ICON AS TARGET_ICON_URL,
+			                FILE_TYPE.TYPE_NAME,
+			                FOLDER.FOLDER_PATH AS TARGET_PATH,
+			                'folder' 		AS TARGET_EXT,
+			                TO_CHAR(0)		AS TARGET_SIZE,
+			                FOLDER.CREATE_ID,
+			                FOLDER.CREATE_NAME1,
+			                FOLDER.CREATE_NAME2,
+			                FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE')  AS CREATE_DATE,
+			                FAVOR.TENANT_ID
+			            FROM
+			                TBL_WEBFOLDER_FAVOR FAVOR
+			                INNER JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
+			                ON FILE_TYPE.TYPE_NAME = 'folder' AND FILE_TYPE.TENANT_ID = FAVOR.TENANT_ID
+			                    INNER JOIN TBL_WEBFOLDER_FOLDER FOLDER
+			                    ON FOLDER.FOLDER_ID = FAVOR.TARGET_ID AND FOLDER.TENANT_ID = FAVOR.TENANT_ID
+			            WHERE
+			                FAVOR.TARGET_TYPE = 'D' AND
+			                FAVOR.USER_ID = #userId# AND
+			                FAVOR.TENANT_ID = #tenantId# AND
+			                FOLDER.USE_STATUS = 'Y'
+			        )
+				    WHERE
+						TARGET_EXT LIKE '%' || #searchExt# || '%' AND
+						TARGET_NAME LIKE '%' || #searchFileName# || '%' AND
+						CREATE_NAME1 LIKE '%' || #searchCreatorName# || '%' AND
+						TYPE_NAME LIKE '%' || #searchFileType# || '%'
+				    ORDER BY
+				        TARGET_TYPE ASC, CREATE_DATE DESC
+			    ) RESULT
+			)
 			WHERE
-				ROWNUM >= #startIndex# AND ROWNUM < (#startIndex# + #listCount#) AND
-				RESULT.TARGET_EXT LIKE '%' || #searchExt# || '%' AND
-				RESULT.TARGET_NAME LIKE '%' || #searchFileName# || '%' AND
-				RESULT.CREATE_NAME1 LIKE '%' || #searchCreatorName# || '%' AND
-				RESULT.TYPE_NAME LIKE '%' || #searchFileType# || '%'
-			ORDER BY
-				RESULT.TARGET_TYPE ASC, CREATE_DATE DESC
+			    NUM >= #startIndex# + 1 AND NUM < (#startIndex# + #listCount# + 1)
 		]]>
 	</select>
 	
