@@ -257,18 +257,12 @@
     		<ul>
 		    </ul>
 		    <h2>
-  				<span style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span>
-  			</h2>  
-		    <ul>
-		    </ul> 
-
-		    <h2>
   				<span style="display:inline-block;width:100%;" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span>
   			</h2>
     		<ul>
 			</ul>
 			<h3>
-		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span><!-- 파일관리 -->
+		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span><!-- 폴더관리 -->
 		    </h3>
 			<h3>
 				<span onclick="wfConfig();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t236" /></span><!-- 환경설정 -->
