@@ -1,0 +1,308 @@
+/* 재은 style (letterBoxManager.jsp) */
+/* #divTree {
+	
+} */
+#mainmenu li:hover span{
+	color: #0B790E;
+}
+
+#divInput {
+	float: left;
+	width: 350px;
+	height: 350px;
+	margin-left: 20px;
+	position: relative;
+}
+#divInput b {
+	display: inline-block;
+	/* min-width: 90px; */
+	width: 28%;
+	font-size: 13px;
+	letter-spacing: -1px;
+}
+#divInput #myForm > input {
+	width: 70%;
+	box-sizing: border-box;
+	padding-left: 5px;
+	outline: none;	
+}
+#divInput .divInputBtn > input {
+	position: absolute; 
+	bottom: 0; 
+	right: 0;
+	
+    letter-spacing: 2px;
+    cursor: pointer;
+    box-sizing: border-box;
+    padding: 7px;
+    border-radius: 5px;
+    font-weight: bold;
+    outline: none;
+    
+    background: rgb(0, 72, 149);
+    border: 1px solid rgb(0, 72, 149);
+    color: white;
+}
+#divInput .divInputBtn > input:hover {
+	background: white;
+    border: 1px inset rgb(0, 72, 149);
+    color: rgb(0, 72, 149);   
+}
+
+.myScrollableBlock {
+	height: 350px;
+	width: 250px;
+	background-color: #f5f6f6;
+	float: left;
+	display: block;
+	overflow: auto;
+	box-sizing: border-box;
+    padding: 4px;
+}
+
+/* 수아 style (letterManager.jsp) */
+body {
+	margin: 0;
+}
+
+#lmTop {
+	width: 1200px;
+	margin-top: 10px;
+}
+
+#lmTop>div {
+	float: left;
+	height: 600px;
+}
+
+#lmTop button {
+	background: white;
+	border: 1px solid #c6c6c6;
+	border-radius: 3px;
+	font-size: 12px;
+	color: #393939;
+	cursor: pointer;
+	outline: none;
+	height: 20px;
+	line-height: 1;
+}
+
+#lmTop button:hover {
+	color: #0B790E;
+}
+
+.lmtitle {
+	height: 30px;
+	background: #f8f8f8;
+	border-bottom: 1px solid #cbcbcb;
+	font-weight: bold;
+	color: #777;
+	font-size: 12px;
+	line-height: 30px;
+	box-sizing: border-box;
+	padding: 0 4px;
+}
+
+.lmleft {
+	width: 360px;
+	width: 30%;
+	margin-right: 20px;
+}
+
+.lmLetterBox {
+	height: 32%;
+	border: #b6b6b6 1px solid;
+}
+
+.lmLetterBoxList {
+	overflow: auto;
+	font-size: 12px;
+	color: #5b5a5a;
+	box-sizing: border-box;
+	padding: 4px;
+	height: 160px;
+}
+
+.lmLetterBoxTitle>div {
+	width: 70px;
+	border-right: 1px solid #cbcbcb;
+	display: inline-block;
+}
+
+.lmLetterBoxTitle>input {
+	width: 170px;
+	color: #393939;
+	border: 1px solid #cbcbcb;
+}
+
+/* .jstree-clicked {
+	color: #0B790E !important;
+} */
+
+.lmLetter {
+	height: 60%;
+	border: #b6b6b6 1px solid;
+	overflow: auto;
+}
+
+.lmBtns {
+	height: 5%;
+}
+
+.lmleft>div:nth-child(2) {
+	margin: 10px 0;
+}
+
+.lmright {
+	width: 60%;
+	border: #b6b6b6 1px solid;
+}
+
+.lmLetterListUl {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	font-size: 12px;
+	color: #5b5a5a;
+	text-align: left;
+}
+
+.lmNoData {
+	text-align: center;
+	cursor: auto;
+	pointer-events: none;
+}
+
+.lmLetterListWrap li span{
+	width: 69%;
+}
+
+.lmLetterListUl li {
+	height: 30px;
+	line-height: 30px;
+	box-sizing: border-box;
+	border-bottom: 1px solid #ebebed;
+	padding: 0 4px;
+	cursor: pointer;
+}
+
+.lmLetterListUl li span {
+	margin-right: 10px;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	float: left;
+}
+
+.lmLetterListUl li button {
+	margin: 0 2px;
+}
+
+.lmBtns button {
+	height: 25px !important;
+}
+
+.lmBtns div {
+	float: right;
+}
+
+.lmBtns div button, img {
+	float: left;
+	margin: 0 3px;
+}
+
+.lmPreview {
+	height: 100%;
+	overflow: auto;
+	position: relative;
+}
+
+/* 수아 style (letterEditPopUp.jsp) */
+#leTop {
+}
+.leTitle {
+    padding: 3px;
+    font-size: 11pt;
+    font-weight: bold;
+    color: #424959;
+    height: 44px;
+    margin-left: 1px;
+    line-height: 36px;
+}
+.leLetterInfo {
+    height: 50px;
+}
+.leLetterInfo table {
+	width: 100%;
+	border-collapse: collapse;
+    empty-cells: show;
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+    font-family: 'Gulim', 'arial', 'verdana';
+}
+.leLetterInfo th {
+	white-space: nowrap;
+    word-break: keep-all;
+    word-wrap: normal;
+    color: #777;
+    background-color: #f8f8f8;
+    border: 1px solid #b6b6b6;
+    padding: 2px 10px;
+}
+.leLetterInfo td {
+    padding: 0px 2px 0px 2px;
+    background: #FFF;
+    border: 1px solid #b6b6b6;
+    height: 29px;
+    word-break: break-all;
+}
+.leLetterInfo table input {
+	width: 100%;
+	box-sizing: border-box;
+	outline: none;
+	box-sizing: border-box;
+	padding-left: 5px;
+}
+.leLetterEditer {
+	width: 100%;
+	height: 500px;
+	//border: 1px solid black;
+	//clear: both;
+  		margin: 15px 0;
+}
+.leLetterEditer > iframe {
+    border: none;
+   }
+.leLetterBtns {
+	text-align: center;
+}
+.leLetterBtns button {
+	display: inline-block;
+    background: white;
+    border: 1px solid rgba(188, 211, 224, 1);
+    height: 25px;
+    padding: 0px 8px 0px 8px;
+    border-radius: 3px;
+    line-height: 25px;
+    font-size: 12px;
+    color: #333;
+    
+    cursor: pointer;
+    /* background: linear-gradient(white,#f3f2f2);
+    color: #393939;
+    border: 1px solid #a5a3a3;
+    
+    padding: 3px 10px;
+    border-radius: 4px;
+    cursor: pointer; */
+   }
+.leLetterBtns button:hover {
+	color: #2058a6;
+    background: white;
+    border: 1px solid #6793d8;
+	/* background: linear-gradient(#3a5382,#28416d);
+    color: white;
+    border: 1px solid #223151; */
+}
