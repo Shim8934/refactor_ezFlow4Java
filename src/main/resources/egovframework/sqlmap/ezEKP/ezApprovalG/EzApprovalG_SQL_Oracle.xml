@@ -17323,7 +17323,7 @@
              CABINETCLASSNO ,
              TITLE ,
              RECTYPECODE ,
-             TO_DATE(MODIFYDATE) MODIFYDATE ,
+             TO_DATE(MODIFYDATE,'YYYY-MM-DD') MODIFYDATE ,
              MODIFYREASON ,
              MODIFIERNAME ,
              MODIFIERNAME2 ,
