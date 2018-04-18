@@ -7,7 +7,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Insert title here</title>
+	<title>${vo.title}</title>
 	<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 	<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css" type="text/css">
 	<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
