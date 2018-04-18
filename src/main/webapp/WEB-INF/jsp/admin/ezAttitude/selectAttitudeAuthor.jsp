@@ -68,6 +68,7 @@
 	   				}
 	   			});
 	   		}
+	   		
 	   		//선택된 사원의 권한 부서 보여주기
 	   		function setUserAuthorDept(elem){
 	   			selectedUser = $(elem).attr("id");
@@ -77,13 +78,29 @@
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
-	   				url:"/admin/ezJournal/authorDeptList.do",
+	   				url:"/admin/ezAttitude/attitudeAuthorDeptList.do",
 	   				data:{"userId":$(elem).attr("id")},
 	   				success: function(result){
+	   					lpDepts=[];
+	   					lpDeptNames = [];
 	   					$("#authorDeptList").html(result);
+	   					var deptList = $("#authorDeptList tr");
+	   					if(deptList.length==1){
+	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;">해당하는 부서가 없습니다.</td></tr>');
+	   					} else {
+		   					$("#authorDeptList tr").each(function(){
+		   						if($(this).attr("mine")!='Y'){
+			   						lpDepts.push($(this).attr("targetId"));
+			   						lpDeptNames.push($(this).find("td").text());
+		   						} else {
+		   							userDeptId=$(this).attr("targetId");
+		   						}
+		   					})
+	   					}
 	   				}
 	   			});
 	   		}
+	   		
 	   		//검색
 	   		function search_click(){
 	   			var key = $("#search_type").val();

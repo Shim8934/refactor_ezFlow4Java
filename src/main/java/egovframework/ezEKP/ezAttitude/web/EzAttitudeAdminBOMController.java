@@ -1920,7 +1920,7 @@ public class EzAttitudeAdminBOMController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		
 		JSONParser jp = new JSONParser();
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
@@ -1930,6 +1930,44 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("status : " + status);
 		
 		LOGGER.debug("saveAttitudeAuthor ended");
+	}
+	
+	/**
+	 * 해당사원이 열람 할 수 있는 부서 리스트
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthorDeptList.do")
+	public String attitudeAuthorDeptList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		LOGGER.debug("attitudeAuthorDeptList started");
+		String userId = request.getParameter("userId");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/attitude-auth";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		if (status.equals("ok")) {		
+			JSONArray authorDeptList = (JSONArray) resultBody.get("data");
+			
+			model.addAttribute("authorDeptList", authorDeptList);
+		}
+		LOGGER.debug("attitudeAuthorDeptList ended");
+		return "admin/ezAttitude/attitudeAuthorDeptList";
 	}
 	
 }
