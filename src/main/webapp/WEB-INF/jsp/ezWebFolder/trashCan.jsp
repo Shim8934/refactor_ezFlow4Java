@@ -32,16 +32,6 @@
    		var userInfo = {
    			lang:		"${userInfo.lang}"
     	};
-    
-    	var pagination = {
-    		currentPage:	1,
-    		rowLength:		10,
-    		maxPage:		1
-    	};
-    	
-    	var message = {
-    	
-    	};
     	
 		var strErr		= "<spring:message code = 'ezWebFolder.t107'/>";
 		var strLang39	= "<spring:message code = 'ezWebFolder.t135'/>";
@@ -52,7 +42,7 @@
 		var currentPage = "1";
 		var totalPages = 0 ;
 		var totalRows = 0 ;
-		var blockSize = 10;
+		var blockSize = ${listCount};
 		var pStart = 0;
 		var pEnd =10;
 		var fileCnt = 0;
@@ -75,6 +65,7 @@
 		
 		// fileList 화면 
 		window.onload = function () {
+			document.getElementById("listcount").value = blockSize;
 			renderFileList();
 			window.onresize();
 			$('#idSelect').ddslick({
@@ -108,7 +99,7 @@
 				url : "/ezWebFolder/getTrashCanList.do",
 				dataType: "json",
 				data : {
-					"currPage"   : pagination.currentPage,
+					"currPage"   : currentPage,
 					"searchExt" : $('#searchExt').val(),
 					"searchFileName" : $('#searchFileName').val(),
 					"searchCreateName" : $('#searchCreateName').val(),
@@ -117,9 +108,7 @@
 					"delStartDate" : $('#delStartDate').val(),
 					"delEndDate" : $('#delEndDate').val(),
 					"searchFileType" : searchFileType,
-					"pStart" : pStart,
-					"listCount" : blockSize,
-					"totalPages" : totalPages
+					"listCount" : blockSize
 				},
 				success : function (data) {
 					result = data.data;
@@ -130,7 +119,6 @@
 					currentPage = result.currPage;
 					totalPages = result.totalPages;
 					totalRows = result.totalRows;
-					blockSize = result.listCount;
 					
 					if (fileCnt == null) {
 						fileCnt = 0;
@@ -410,10 +398,7 @@
    	   function optionView(obj){
    		 if (obj.getAttribute("mode") == "off") {
    	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-//    	        if(pAdminType == "y")
-   	            document.getElementById("layer_Viewpopup").style.top = "130px";
-//    	        else
-//    	            document.getElementById("layer_Viewpopup").style.top = "100px";
+ 	        document.getElementById("layer_Viewpopup").style.top = "100px";
    	        document.getElementById("layer_Viewpopup").style.display = "";
    	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
    	        obj.setAttribute("mode", "on");
@@ -543,7 +528,7 @@
 					"folderList" :checkedFolderList
 				},
 				success : function (data) {
-					alert('복원 되었습니다.');
+					alert('복원이 완료 되었습니다.');
 					refreshView();
 				},
 				error : function(error) {
@@ -569,6 +554,9 @@
     		   checkedFolderList = checkedFolderList + "," + folderArr[i];
     	   }
     	   
+    	   var OpenWin = window.open("/ezWebFolder/folderManage.do?folderType="+folderType, "", GetOpenWindowfeature(600, 550));
+           try { OpenWin.focus(); } catch (e) { }
+           
     		$.ajax ({
 				type: "POST",
 				async: false,

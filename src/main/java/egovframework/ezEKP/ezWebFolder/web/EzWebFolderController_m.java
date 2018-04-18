@@ -101,7 +101,7 @@ public class EzWebFolderController_m {
 	
 	@RequestMapping(value="/ezWebFolder/trashCan.do")
 	public String trashCan (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
-			HttpServletResponse resp, Model model )throws Exception {
+			HttpServletResponse response, Model model )throws Exception {
 		logger.debug("trashCan Started.");
 		
 		if (loginCookie == null) {
@@ -110,10 +110,41 @@ public class EzWebFolderController_m {
 		}
 		
 		logger.debug("userInfo=" + commonUtil.userInfoSimple(loginCookie));
+		model.addAttribute("listCount", getUsrListCount(loginCookie, request));
 		model.addAttribute("userInfo", commonUtil.userInfoSimple(loginCookie));
 		
 		logger.debug("trashCan ended.");
 		return "ezWebFolder/trashCan";
+	}
+	
+	public String getUsrListCount (@CookieValue ("loginCookie") String loginCookie, HttpServletRequest requset) throws Exception {
+		logger.debug("getUsrListCount Started.");
+
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String url = gwServerUrl + "/rest/ezwebfolder/getUserListCount";
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", user.getTenantId())
+										.queryParam("userId", user.getId());
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", requset.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		String listCount = "10";
+		
+		listCount = (String)resultBody.get("listCount").toString();
+		
+		logger.debug("getUsrListCount ended.");
+		
+		return listCount;
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getTrashCanList.do", method = RequestMethod.POST)
@@ -130,9 +161,7 @@ public class EzWebFolderController_m {
 										.queryParam("tenantId", user.getTenantId())
 										.queryParam("offset", user.getOffset())
 										.queryParam("currPage", Integer.parseInt(orElse(request.getParameter("currPage"), "1")))                   
-										.queryParam("listCount", Integer.parseInt(orElse(request.getParameter("listCount"), "0")))                 
-										.queryParam("totalPages", Integer.parseInt(orElse(request.getParameter("totalpages"), "1")))               
-										.queryParam("pStart", Integer.parseInt(orElse(request.getParameter("pStart"), "0")))
+										.queryParam("listCount", Integer.parseInt(orElse(request.getParameter("listCount"), "0")))
 										.queryParam("searchExt", orElse(request.getParameter("searchExt"), "" ))               
 										.queryParam("searchFileName", orElse(request.getParameter("searchFileName"), ""))               
 										.queryParam("searchCreateName", orElse(request.getParameter("searchCreateName"), ""))               
