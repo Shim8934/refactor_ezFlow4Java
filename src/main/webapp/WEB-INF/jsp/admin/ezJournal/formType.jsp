@@ -7,9 +7,8 @@
 	<head>
 		<title><spring:message code='ezSchedule.t6000' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">		
@@ -53,8 +52,8 @@
 	<body class="mainbody"> 
 		<h1><spring:message code='ezJournal.t2' /></h1>
 		<form class="journalForm">
-			<div id="mainmenu">
-				<span><b><spring:message code = 'ezApprovalG.t1512' /></b></span>
+			<div id="mainmenu" style="padding-left: 5px; padding-bottom: 5px;">
+				<span><b><spring:message code = 'ezJournal.t11' /></b></span>
 	            <select name="companyId" onchange="journal_get_formuse(this.value)">
 	            	<c:forEach items="${compList}" var="company">
 		            	<option value="${company.companyId }"
@@ -64,9 +63,9 @@
 		            	>${company.companyName }</option>
 	            	</c:forEach>
 	            </select>
+	            <br>
 			</div>
-			<br/>
-			<table class="content" style="width: 400px; margin-left: 15px;">
+			<table class="content" style="width: 400px; margin-left: 5px;">
 			    <tr>
 			        <th style="text-align: center; width:250px;"><spring:message code='ezJournal.t12' /></th>
 			        <th style="text-align: center; width:50px;"><spring:message code='ezJournal.t13' /></th>
@@ -97,8 +96,8 @@
 			    </c:forEach>
 			    
 			</table>
-			<div class="btnposition" style="width: 400px">
-			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezJournal.t15' /></span></a>
+			<div class="btnposition" style="width: 400px; margin-left: 15px; text-align: center">
+			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezJournal.t26' /></span></a>
 			    <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code='ezJournal.t16' /></span></a>
 			</div>
 		</form>

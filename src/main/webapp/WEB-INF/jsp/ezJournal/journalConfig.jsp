@@ -110,18 +110,18 @@
     	function saveListEnv() {
     		var listCount = document.getElementById("listcount").value;
  			var preview = document.getElementById("PreviewMode").value;
- 			var previewHContent = document.getElementById("HContent").value;
- 			var previewWContent = document.getElementById("WContent").value;
+ 			var previewHcontent = document.getElementById("HContent").value;
+ 			var previewWcontent = document.getElementById("WContent").value;
  			
  			$.ajax({
- 				url : "/ezJournal/saveJournalConfig.do",
+ 				url : "/ezJournal/saveJournalEnv.do",
  				method : "POST",
  				dataType : "text",
  				data : {
      				listCnt : listCount ,
 	 				viewenv : preview,
-	 				previewHContent : previewHContent,
-	 				previewWContent : previewWContent
+	 				previewHcontent : previewHcontent,
+	 				previewWcontent : previewWcontent
  				},
      			success : function() {
      				alert("<spring:message code='ezJournal.t137'/>");
@@ -137,7 +137,7 @@
     		$.ajax({
     			type : "POST",
     			dataType : "text",
-    			url : "/ezJournal/saveJournalConfig.do",
+    			url : "/ezJournal/saveJournalEnv.do",
     			data : {
     				recvAlert : recvAlert,
     				replyAlert : replyAlert
@@ -188,8 +188,8 @@
                		<span id="PreviewWDiv" style="${journalEnv.viewenv ne 'W' ? 'display: none;' : ''}">                   			
       					&nbsp;<spring:message code="ezCircular.t24" /> :
 						<select id="WContent" name="pPreviewWContent" style="width: 50px;">
-							<c:forEach var="item" begin="36" end="61">
-		  							<option value='${item}' ${item == journalEnv.previewWcontent ? 'selected' : '' }>${item}</option>
+							<c:forEach var="item" begin="35" end="75">
+	  							<option value='${item}' ${item == journalEnv.previewWcontent ? 'selected' : '' }>${item}</option>
 							</c:forEach>
 						</select>		
 					</span>

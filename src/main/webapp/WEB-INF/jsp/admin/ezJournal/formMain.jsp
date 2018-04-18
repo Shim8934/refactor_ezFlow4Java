@@ -7,7 +7,7 @@
 	<head>
 		<title><spring:message code='ezJournal.t3' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -18,7 +18,12 @@
 		    var selFormId = "";
 		    var formStatus = "";
 		    var pEditor = "<c:out value = '${useEditor}'/>";
-	    
+		    // 팝업창 호출위한 변수
+		    var pheight = window.screen.availHeight;
+	        var pwidth = window.screen.availWidth;
+	        var pTop = (pheight - 720) / 2;
+	        var pLeft = (pwidth - 790) / 2;
+    
 			$(document).ready(function() {
 				companyId = $("#SCompID").val();
 			   	var firstType = $("#formType").find("td:first");
@@ -40,6 +45,8 @@
 				typeId = $(val).attr("value");
 				$(".bold").css("font-weight", "normal");
 				$(val).find("span").css("font-weight", "bold");
+				selFormId = "";
+				formStatus = "";
 				
 			    $.ajax({
 		    		type : "POST",
@@ -50,34 +57,10 @@
     						"typeId"	  : typeId},
 		    		success: function(result) {
 		    			$("#formList").html(result);
-		    			/*
-		    			var $formList = $("#formList");
-		    			var listhtml = "";
-		    			$formList.html("");
-		    			if (result.length > 0) {
-			    			$.each(result, function(index, item) {
-				    			listhtml += "<tr formId=" + item.formId + " onclick='listClick(this)'>";
-				    			listhtml += "<td>" + (index + 1) + "</td>";
-				    			listhtml += "<td>" + item.formName + "</td>";
-				    			if (item.depts.length > 1) {
-					    			listhtml += "<td>" + item.depts[0].deptName + " <spring:message code='ezJournal.t124'/> " + (item.depts.length - 1) + "</td>";
-				    			} else {
-					    			listhtml += "<td>" + item.depts[0].deptName + "</td>";
-				    			}
-				    			listhtml += "<td>" + item.formInfo + "</td>";
-				    			listhtml += "<td>" + item.formDate.slice(0, 10) + "</td>";
-				    			listhtml += "</tr>";
-			    			});
-		    			} else {
-		    				listhtml += "<tr><td colspan='5' style='text-align: center;'><spring:message code='ezJournal.t125'/></td></tr>";
-		    			}
-		    			$formList.html(listhtml);
-		    			*/
 		    		},
 		    		error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);
 		    		}
-		    		
 		        });
 			    
 			}			
@@ -90,17 +73,11 @@
 		    
 			// 양식추가버튼
 		    function btnInsForm() {
-		    //	console.log(typeId + " " + companyId + " " + pEditor);
-		    	var url = "";
-		    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId);
+		    	var url = "/admin/ezJournal/insertForm.do";
+		    	url += "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId);
 		    	
-		    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
-		    		url = "/admin/ezJournal/insertFormOther.do"	
-		    	} else {
-			    	url = "/admin/ezJournal/insertForm.do";
-		    	}
-		    	
-		    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "no");
+		    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
+		    //	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
 		    }
 		    
 			// 양식수정버튼
@@ -109,17 +86,18 @@
 				if (formStatus == "basic") {
 					alert("<spring:message code='ezJournal.t143'/>");
 				} else {
-			    	var url = "";
-			    	var parameter = "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
+					
+					if (selFormId == null || selFormId == "") {
+						alert("<spring:message code='ezJournal.t166'/>");
+						return;
+					}
+					
+			    	var url = "/admin/ezJournal/insertForm.do";
+			    	url += "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
 			    			+ "&formId=" + encodeURIComponent(selFormId);
 			    	
-			    	if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
-			    		url = "/admin/ezJournal/insertFormOther.do"	
-			    	} else {
-				    	url = "/admin/ezJournal/insertForm.do";
-			    	}
-			    	
-			    	GetOpenWindow(url + parameter, "FormMain", 830, 950, "no");
+			    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
+			    //	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
 				}
 				
 			}
@@ -130,20 +108,26 @@
 		    	if (formStatus == "basic") {
 					alert("<spring:message code='ezJournal.t144'/>");
 		    	} else {
+
+					if (selFormId == null || selFormId == "") {
+						alert("<spring:message code='ezJournal.t166'/>");
+						return;
+					} else {
 		    		
-		    		if (selFormId != null) {
+		    		// if (selFormId != null) {
 			    		if (confirm("<spring:message code = 'ezApprovalG.t999933' />") == true) {
 			    			
 			    			$.ajax({
 			    				type : "POST",
 			    				url : "/admin/ezJournal/deleteForm.do",
-			    				asnyc : false,
 			    				data : {"formId"	 : selFormId,
 			    						"companyId"  : companyId,
 			    						"typeId" 	 : typeId},
 			    				success : function (result) {
-			    					alert("<spring:message code='ezJournal.t129'/>");
-			    					parent.frames["right"].location.reload();
+			    					if (result === "ok") {
+				    					alert("<spring:message code='ezJournal.t129'/>");
+				    					parent.frames["right"].location.reload();
+			    					}
 			    				},
 			    				error : function(request, status, error) {
 			    					alert("code : " + request.status + "\nerror : " + error);
@@ -198,7 +182,7 @@
 	</head>
 	<body class="mainbody"> 
 		<h1><spring:message code='ezJournal.t3' /></h1>
-		<div id="mainmenu">
+		<div id="mainmenu" style="padding-left: 5px;">
 			<span><b><spring:message code = 'ezJournal.t11' /></b>
 	            <select id="SCompID" name="SCompID" onchange="selectCompanyList(this.value)">
 	            	<c:forEach var="company" items="${companyList}">
@@ -219,9 +203,9 @@
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<table style="margin-top:5px;width:1005px;height:500px">
+		<table style="margin-top:5px;width:1005px;height:500px;">
 			<tr>
-		    	<td style="width:200px; vertical-align:top">
+		    	<td style="width:200px; vertical-align:top; padding-left: 5px;">
 		    		<div class="listview">
 						<div style="vertical-align:top; height:500px; border: none; width:100%; overflow-x:auto;overflow-y:auto;/* BORDER:#b6b6b6 1px solid; */ BACKGROUND-COLOR:#ffffff" >
 							<table id="formType" class="mainlist" style="width: 100%; border-width: 0px 0px 1px 0px;">
@@ -239,7 +223,7 @@
 				</td>
 		    	<td style="width:800px; padding-left:5px; padding-right:5px;vertical-align:top">
 		    		<div class="listview">
-			        	<div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 500px;overflow-x:auto;overflow-y:auto; padding:0px; /* border:1px solid #bdbdbd; */"  >
+			        	<div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 500px;overflow-x:auto;overflow-y:auto; padding:0px;" >
 			        		<table class="mainlist" style="width: 100%;">
 			        			<thead>
 			        				<tr>

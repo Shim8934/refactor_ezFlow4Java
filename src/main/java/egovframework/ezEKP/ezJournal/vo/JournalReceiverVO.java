@@ -4,7 +4,6 @@ public class JournalReceiverVO {
 
 	private String userId;
 	private String userName;
-	private String userName2;
 	private String jikwi;
 	private String mail;
 	private String deptName;
@@ -27,12 +26,6 @@ public class JournalReceiverVO {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
-	}
-	public String getUserName2() {
-		return userName2;
-	}
-	public void setUserName2(String userName2) {
-		this.userName2 = userName2;
 	}
 	public String getJikwi() {
 		return jikwi;

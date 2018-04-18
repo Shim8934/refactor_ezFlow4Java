@@ -234,12 +234,12 @@
 			/* 2018.03.23 서주연 - #12114 */
 	        if (GetAttribute(srcEl,"dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 	            if (GetAttribute(srcEl,"dispTime") != null) {
-	                selsd = srcEl.getAttribute("disptime");
+	                selsd = srcEl.getAttribute("dispTime");
 	                seled = selsd.replace(":00:", ":30:");
 	            }
 	        } else {
-	            selsd = srcEl.getAttribute("dispdate");
-            	seled = srcEl.getAttribute("dispdate");
+	            selsd = srcEl.getAttribute("dispDate");
+            	seled = srcEl.getAttribute("dispDate");
 	        }
 	       
 	        var feature = GetOpenPosition(820, 700);

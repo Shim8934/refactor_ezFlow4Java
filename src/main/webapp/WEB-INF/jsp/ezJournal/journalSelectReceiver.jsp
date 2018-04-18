@@ -7,13 +7,15 @@
 	<head>
 		<title><spring:message code='ezJournal.t88'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
+		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
+		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 	   	<script type="text/javascript">
 	   		//트리조직도 JSON
 	   		var treeContent;
@@ -27,11 +29,13 @@
 	   		var selUserName = "";
 	   		// 현재 로그인된 사용자 아이디
 	   		var userId = "<c:out value='${userId}'/>";
-	   		console.log(userId);
 	   		// 즐겨찾기 아이디
 	   		var favoriteId = "";
 	   		// 즐겨찾기 저장, 수정 flag
 	   		var type = "new";
+	   		//올른쪽 리스트에서 선택된 유저
+	   		var selMainListUserId="";
+	   		var selMainListUserName="";
 	   		
 	   		function close_Click(){
 	   			window.close();
@@ -40,24 +44,32 @@
 	   		function setDeptList(){
 				$('#treeview').on('changed.jstree', function (e, data) {
 			     	var id = data.instance.get_node(data.selected).id;
-					setUserList("DEPARTMENT", id);
+			     	var deptName = $("#"+id+" a:first").text();
+					setUserList("DEPARTMENT", id,deptName);
+					selMainListUserId = "";
+					selUserId = "";
 				  })
 				.jstree({ 
-					'core' 	 : {'data' : treeContent},
+					'core' 	 : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
 				});
 	   		}
 	   		
 	   		//사원 리스트 뿌리기
-	   		function setUserList(key, value){
+	   		function setUserList(key, value,deptName){
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key" : key, "value" : value},
+	   				data:{"key" : key, "value" : value,"deptName":deptName},
 	   				success: function(result){
-	   					$("#orglistView").html(result);
+	   					var picList = $(result).find(".organwrap");
+	   					if(picList.length==0 && key!="DEPARTMENT"){
+	   						alert("<spring:message code='ezCommunity.t1379'/>");
+	   					} else {
+		   					$("#orglistView").html(result);
+	   					}
 	   				}
 	   			});
 	   		}
@@ -65,8 +77,27 @@
 	   		//검색
 	   		function search_click() {
 	   			var key = $("#search_type").val();
-	   			var value = $("#keyword").val();
-	   			setUserList(key, value);
+	   			var value = $("#keyword").val().trim();
+	   			if(value){
+		   			setUserList(key, value);
+	   			} else {
+	   				alert("<spring:message code='ezSchedule.t8'/>")
+	   			}
+	   		}
+	   		
+	   		//오른쪽 리스트에서 클릭이벤트 적용
+	   		function setMainListUserAuthorDept(elem) {
+	   			if ($(elem).parent().attr("id") === "List_TBODY2") {
+	   				$("#List_TBODY2 tr").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "receiverList"){
+		   			$("#receiverList tr").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
+		   			$("#txtlist_Layer tr").removeClass("selectTR");
+	   			}
+	   			$(elem).addClass("selectTR");
+	   			selMainListUserId = $(elem).attr("id");
+	   			selMainListUserName = $(elem).attr("name");
+	   			// console.log("selMainListUserId : " + selMainListUserId)
 	   		}
 	   		
 	   		// 리스트에서 클릭이벤트 적용
@@ -75,50 +106,55 @@
 	   				$("#List_TBODY2 tr").removeClass("selectTR");
 	   			} else if ($(elem).parent().parent().parent().attr("id") === "receiverList"){
 		   			$("#receiverList tr").removeClass("selectTR");
-	   			} else {
-		   			$("*").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
+		   			$("#txtlist_Layer tr").removeClass("selectTR");
 	   			}
 	   			$(elem).addClass("selectTR");
 	   			selUserId = $(elem).attr("id");
 	   			selUserName = $(elem).attr("name");
-	   			console.log("selUserId : " + selUserId)
+	   			// console.log("selUserId : " + selMainListUserId)
 	   		}
 	   		
 	   		// 선택한 사람을 수신자에 추가
 	   		function setAuthorViewUser() {
-	   			var receiverId = selUserId;
-	   			userName = selUserName;
-	   			console.log(userName);
-	   			var chkFlag = true;
-	   			
-	   			if (userId == receiverId) {
-	   				chkFlag = false;
-	   			}
-	   			for(var i = 0; i < receiverList.length; i++) {
-	   				if (receiverList[i].userId == receiverId) {
-	   					chkFlag = false;
-	   				}
-	   			}
-	   			
-	   			if (chkFlag) {
-					receiverList.push({"userName" : userName, "userId" : receiverId});
-					console.log(receiverList);
+	   			// console.log("selUserId확인 : " + selUserId);
+	   			if (selUserId != "" && selUserId != undefined) {
+		   			var receiverId = selUserId;
+		   			userName = selUserName;
+		   			var chkFlag = true;
+	   				
+		   			if (userId == receiverId) {
+		   				chkFlag = false;
+		   			}
+		   			for(var i = 0; i < receiverList.length; i++) {
+		   				if (receiverList[i].userId == receiverId) {
+		   					chkFlag = false;
+		   				}
+		   			}
+		   			
+		   			if (chkFlag) {
+						receiverList.push({"userName" : userName, "userId" : receiverId});
+		   			} else {
+		   				if (userId == receiverId) {
+			   				alert("<spring:message code='ezJournal.t140'/>");
+		   				} else {
+			   				alert("<spring:message code='ezJournal.t127'/>");
+		   				}
+		   			}
+		   			drawReceiverList();
+		   			selMainListUserId = "";
 	   			} else {
-	   				if (userId == receiverId) {
-		   				alert("<spring:message code='ezJournal.t140'/>");
-	   				} else {
-		   				alert("<spring:message code='ezJournal.t127'/>");
-	   				}
+	   				alert("<spring:message code='ezJournal.t136'/>");
 	   			}
-	   			drawReceiverList()
+	   			
 	   		}
 	   		
 	   		// 선택된 수신자배열에서 특정 사원 삭제
 		    function deleteReceiver() {
 		     	for(var j = 0; j < receiverList.length; j++) {
-		    		if (receiverList[j].userId === selUserId) {
-		    			console.log(selUserId);
+		    		if (receiverList[j].userId === selMainListUserId) {
 		    			receiverList.splice(j, 1);
+		    			selMainListUserId = "";
 		    		}
 		    	} 
 		     	drawReceiverList();
@@ -126,13 +162,12 @@
 	   		
 	   		// 선택된 수신자 배열을 토대로 화면에 그리는 곳
 	   		function drawReceiverList() {
-		    	console.log(receiverList);
 		    	
 		    	var $receiverList = $("#receiverList");
 		    	var strHTML = "";     
 		    	for (var i = 0; i < receiverList.length; i++) {
 		    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-		    		strHTML += "<tr id=" + receiverList[i].userId + " class='hover' onclick='setUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
+		    		strHTML += "<tr style='cursor:pointer;' id=" + receiverList[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
 		    		strHTML += "<td>";
 		    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
 		    		strHTML += receiverList[i].userName;
@@ -142,6 +177,11 @@
 		    	}
 		    	$receiverList.html(strHTML);
 		    }
+	   		
+	   		function addFavoriteLine() {
+   				type = "new";
+   				saveFavoriteLine();
+	   		}
 	   		
 	   		// 선택된 수신자리스트 즐겨찾기 저장
 	   		function saveFavoriteLine() {
@@ -163,7 +203,10 @@
 	   				success : function(result){
 	   					$("#List_TBODY").html(result);
 	   					favoriteId = $(result).filter("tr").attr("favoriteid");
-			   			getFavoriteUser($("#List_TBODY tr:first"));
+	   					if (favoriteId != undefined) {
+				   			getFavoriteUser($("#List_TBODY tr:first"));
+				   			$("#journalFavorite").scrollTop();
+	   					}
 	   				},
 	   				error : function(request, status, error) {
 		    			alert("code : " + request.status + "\nerror : " + error);
@@ -178,7 +221,7 @@
 	   			if (elem != null && elem != "") {
 		   			favoriteId = $(elem).attr("favoriteId");
 	   			}
-	   			console.log("userId : " + userId + ", favoriteId : " + favoriteId);
+	   			// console.log("userId : " + userId + ", favoriteId : " + favoriteId);
 	   			$.ajax({
 	   				type : "post",
 	   				dataType : "html",
@@ -192,68 +235,72 @@
 		    			alert("code : " + request.status + "\nerror : " + error);
 	   				}
 	   			});
+	   		 	selMainListUserId = "";
+				selUserId = "";
 	   		}
 	   		
 	   		// 즐겨찾기 적용하기
 	   		function applyFavorite() {
-	   			$.ajax({
-	   				type : "POST",
-	   				dataType : "json",
-	   				url : "/ezJournal/applyFavoriteUser.do",
-	   				data : {"userId" : userId,
-   							"favoriteId" : favoriteId},
-   					success : function(result){
-   						receiverList = result.slice();
-   						drawReceiverList();
-	   				},
-	   				error : function(request, status, error) {
-		    			alert("code : " + request.status + "\nerror : " + error);
-	   				}
-	   			});
-	   		}
-	   		
-	   		// 즐겨찾기 수정
-	   		function modifyFavorite() {
-	   			type = "mod";
-	   			saveFavoriteLine();
-	   		}
-	   		
-	   		// 즐겨찾기 삭제
-	   		function deleteFavorite() {
-	   			var delCheck = confirm("<spring:message code='ezJournal.t139'/>");
-	   			
-	   			if (delCheck) {
+	   			if (favoriteId != undefined) {
 		   			$.ajax({
 		   				type : "POST",
 		   				dataType : "json",
-		   				url : "/ezJournal/deleteFavorite.do",
+		   				url : "/ezJournal/applyFavoriteUser.do",
 		   				data : {"userId" : userId,
 	   							"favoriteId" : favoriteId},
 	   					success : function(result){
-	   						alert("<spring:message code='ezJournal.t138'/>");
-	   						getFavoriteList();
+	   						receiverList = result.slice();
+	   						drawReceiverList();
 		   				},
 		   				error : function(request, status, error) {
 			    			alert("code : " + request.status + "\nerror : " + error);
 		   				}
 		   			});
+	   			} else {
+	   				alert("<spring:message code='ezJournal.t173'/>");
+	   			}
+	   		}
+	   		
+	   		// 즐겨찾기 수정
+	   		function modifyFavorite() {
+	   			if (favoriteId != undefined) {
+		   			type = "mod";
+		   			saveFavoriteLine();
+	   			} else {
+	   				alert("<spring:message code='ezJournal.t173'/>");
+	   			}
+	   		}
+	   		
+	   		// 즐겨찾기 삭제
+	   		function deleteFavorite() {
+	   			if (favoriteId != undefined) {
+		   			var delCheck = confirm("<spring:message code='ezJournal.t139'/>");
+		   			
+		   			if (delCheck) {
+			   			$.ajax({
+			   				type : "POST",
+			   				url : "/ezJournal/deleteFavorite.do",
+			   				data : {"userId" : userId,
+		   							"favoriteId" : favoriteId},
+		   					success : function(){
+		   						alert("<spring:message code='ezJournal.t138'/>");
+		   						getFavoriteList();
+			   				},
+			   				error : function(request, status, error) {
+				    			alert("code : " + request.status + "\nerror : " + error);
+			   				}
+			   			});
+		   			}
+	   			} else {
+	   				alert("<spring:message code='ezJournal.t173'/>");
 	   			}
 	   		}
 	   		
 	   		function applyReceiver() {
-	   			/*
-	   			if (Tab1_SelectID == "1tab1") {
-	   				setAuthorViewUser();
-	   			} else {
-	   				if ($(elem).parent().attr("id") === "List_TBODY2") {
-	   					
-	   				}
-	   			}
-	   			*/
   				setAuthorViewUser();
 	   		}
 	   		
-	   		$(document).ready(function(){
+	   		$(document).ready(function() {
 	   			treeContent = ${deptList};
 	   			$("#1tab1").click();
 	            ChangeTab(document.getElementById("1tab1"));
@@ -285,7 +332,6 @@
 		                    document.getElementById("journalOrgan_content").style.display = "";
 		                    document.getElementById("journalFavorite_content").style.display = "none";
 		                   	$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
-		                   // _RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
 		                    $("#dblarrow").css("display", "none");
 		                }
 		                break;
@@ -299,6 +345,8 @@
 		                }
 		                break;
 		    	}
+		        selMainListUserId = "";
+				selUserId = "";
 		    }
 	   		
 	   		function Tab1_MouseClick(obj) {
@@ -314,16 +362,22 @@
 	        }
 	   		
 	   		function ok_Click() {
-	   			opener.selReceiver = receiverList;
+	   			opener.selReceiver = JSON.stringify(receiverList);
 	   			opener.showReceiver();
 	   			window.close();
 	   		}
 		</script>
 		<style>
-			tr.hover:hover{background:#eee; color:#fff;}
+			tr.hover:not(.selectTR):hover{background:#eee; color:#fff;}
 			
 			.selectTR{
 				background-color: rgb(233, 241, 255);
+			}
+			#List_TBODY2 tr{
+				cursor: pointer;
+			}
+			#List_TBODY tr{
+				cursor: pointer;
 			}
 		</style>
 	</head>
@@ -350,12 +404,12 @@
 					        	</div>
 					        </div>
 				        	<td id="journalOrgan_content" style="display: none;">
-				        		<div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px; padding:0px;">
+				        		<div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px; padding:0px; border-top: none;">
 				                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
 				                        <table style="margin-top: 3px; width: 100%;">
 				                            <tr>
 				                                <td>
-				                                    <div style="float:left">
+				                                    <div style="float: left; margin-left: 5px;">
 				                                        <select id="search_type">
 				                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
 								                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
@@ -368,11 +422,13 @@
 								                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 								                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 				                                        </select>
-				                                        <input type="text" id="keyword" value="" style="width: 130px; margin: 0px;" />
+				                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" value="" style="width: 130px; margin: 0px;" />
 				                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 				                                    </div>
-				                                    <div style="float:right">
-				                                        <a class="imgbtn"><span onclick="saveFavoriteLine()"><spring:message code='ezJournal.t92'/></span></a>
+				                                </td>
+				                                <td>
+				                                    <div style="float: right; margin-right: 5px; position: relative;">
+				                                       
 				                                    </div>
 				                                </td> 
 				                                <td></td>   
@@ -382,8 +438,8 @@
 			                  	</div>
 								<table style="margin-top: 3px;">
 						            <tr>
-						                <td class="box" style="border-right: 0px;">
-						                    <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+						                <td class="box" style="border-right: 0px; height: 465px;">
+						                    <div style="width: 250px; height: 100%; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
 						                </td>
 						                <td></td>
 						                <td class="listview" style="width: 426px" id="orglistView">
@@ -402,7 +458,7 @@
 		                                        <a class="imgbtn"><span onclick="deleteFavorite()"><spring:message code='ezJournal.t97'/></span></a>
 		                                    </div>
 	                                        <div class="border_gray">
-	                                            <div id="journalFavorite" style="Width: 100%; Height: 173px; OVERFLOW: AUTO; padding-top: 0px;">
+	                                            <div id="journalFavorite" style="Width: 100%; Height: 174px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table class="mainlist" id="favoriteList" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
@@ -447,11 +503,16 @@
 	                            <img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver()">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-									<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
-								</h2>
+	                        	<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
+		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
+										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
+									</h2>
+								 	<a class="imgbtn" style="margin-top: 5px; margin-left: 65px;">
+								 		<span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span>
+								 	</a>
+								</div>
 								<div class="receiver_borderbox">
-									<div id="receiverList" style="width: 250px; Height: 473px; overflow-x: auto; overflow-y: auto;">
+									<div id="receiverList" style="width: 250px; Height: 478px; overflow-x: auto; overflow-y: auto;">
 									</div>
 								</div>
 	                        </td>

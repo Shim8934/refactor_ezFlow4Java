@@ -5,12 +5,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title><spring:message code='ezJournal.t164'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
 		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
@@ -25,65 +24,45 @@
 	   		var lpDeptName;
 	   		//레이어팝업의 오른쪽의 부서정보
 	   		var lpDepts=[];
+	   		var lpDeptNames = [];
 	   		//오른쪽에서 없앨 부서
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
+	   		//선택된 유저으,ㅣ부서
+	   		var userDeptId;
 	   	
 	   		function close_Click(){
-	   			opener.location.reload();
 	   			window.close();
 	   		}
 	   		//조직도 뿌리는 펑션
 	   		function setDeptList(){
 				$('#treeview').on('changed.jstree', function (e, data) {
 			     	var id = data.instance.get_node(data.selected).id;
-					setUserList("DEPARTMENT",id);
+			     	var deptName = $("#"+id+" a:first").text();
+					setUserList("DEPARTMENT", id,deptName);
 				  })
 				.jstree({ 
-					'core' : {'data' : treeContent},
+					'core'   : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
-					 'themes' : {'responsive' : true}
+					'themes' : {'responsive' : true}
 				});
 	   		}
 	   		
-// 	   		//레이어팝업의 부서
-// 	   		function setDeptListLayerPopup(){
-// 	   			$('#lptreeview').jstree({ 
-// 					'core' : {'data' : treeContent},
-// 					'plugins': ["wholerow"],
-// 					'themes' : {'responsive' : true}
-// 				}).on('changed.jstree', function (e, data) {
-// 					lpDeptId = data.instance.get_node(data.selected).id;
-// 					lpDeptName = data.instance.get_node(data.selected).text;
-// 				}).on('dblclick.jstree', function (e, data) {
-// 					addDeptInLP();
-// 				});
-// 	   		}
-	   		
-// 	   		//부서 리스트 오른쪽에 이동!
-// 	   		function addDeptInLP(){
-// 	   			var flag = true;
-// 	   			for (var i = 0; i < lpDepts.length ; i++) {
-// 					if(lpDepts[i] == lpDeptId){
-// 						flag=false;
-// 					}
-// 				}
-// 	   			if(flag){
-// 		   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
-// 		   			lpDepts.push(lpDeptId);
-// 	   			}
-// 	   		}
-	   		
 	   		//사원 리스트 뿌리기
-	   		function setUserList(key,value){
+	   		function setUserList(key,value,deptName){
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key":key, "value":value},
+	   				data:{"key":key, "value":value,"deptName":deptName},
 	   				success: function(result){
-	   					$("#orglistView").html(result);
+	   					var picList = $(result).find(".organwrap");
+	   					if(picList.length==0 && key!="DEPARTMENT"){
+	   						alert("<spring:message code='ezCommunity.t1379'/>");
+	   					} else {
+		   					$("#orglistView").html(result);
+	   					}
 	   				}
 	   			});
 	   		}
@@ -99,97 +78,55 @@
 	   				url:"/admin/ezJournal/authorDeptList.do",
 	   				data:{"userId":$(elem).attr("id")},
 	   				success: function(result){
+	   					lpDepts=[];
+	   					lpDeptNames = [];
 	   					$("#authorDeptList").html(result);
+	   					var deptList = $("#authorDeptList tr");
+	   					if(deptList.length==1){
+	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezApprovalG.t431"/></td></tr>');
+	   					} else {
+		   					$("#authorDeptList tr").each(function(){
+		   						if($(this).attr("mine")!='Y'){
+			   						lpDepts.push($(this).attr("targetId"));
+			   						lpDeptNames.push($(this).find("td").text());
+		   						} else {
+		   							userDeptId=$(this).attr("targetId");
+		   						}
+		   					})
+	   					}
 	   				}
 	   			});
 	   		}
 	   		//검색
 	   		function search_click(){
 	   			var key = $("#search_type").val();
-	   			var value = $("#keyword").val();
-	   			setUserList(key,value);
+	   			var value = $("#keyword").val().trim();
+	   			if(value){
+		   			setUserList(key, value);
+	   			} else {
+	   				alert("<spring:message code='ezSchedule.t8'/>")
+	   			}
 	   		}
 	   		
 	   		//사원선택
 	   		function setAuthorViewUser(){
 	   			var userId = selectedUser;
-				var url = "/admin/ezJournal/authorView.do";
-				var companyId = opener.companyId;
-				url+="?companyId="+companyId;
 				if (userId) {
-					url+="&userId="+userId+"&userName="+selectedUserName;
+					opener.setSelectedUser(userId,selectedUserName);
+					//오프너의 부서 이름과 아이디 세팅
+// 		   			opener.deptIds = lpDepts;  
+// 		   			opener.deptNames = lpDeptNames;
+		   			opener.setDeptName(JSON.stringify(lpDepts), JSON.stringify(lpDeptNames));
+		   			opener.userDeptId = userDeptId;
+					window.close();
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
 				}
-				window.open(url, "authorView", "width=500, height=180");
-				window.close();
 	   		}
-// 	   		function initSelectedUser(){
-// 	   			var selectedUser = "<c:out value='${selectedUser}'/>" ;
-// 	   			if(selectedUser !="" ){
-// 			   		var elem = document.getElementById(selectedUser);
-// 			   		setUserAuthorDept(elem,selectedUser);
-// 	   			}
-// 	   		}
-	   		
-// 	   		//레이어 팝업 안에 초기화
-// 	   		function showInsertAuthDept(elem){
-// 	   			journal_layer_popup("#insertAuthorDeptPopup");
-// 	   			userId = $(elem).attr("id");
-// 	   			updateUserId = userId;
-// 				$.ajax({
-// 	   				type:"post",
-// 	   				dataType:"html",
-// 	   				url:"/admin/ezJournal/authorDeptList.do",
-// 	   				data:{"userId":userId},
-// 	   				success: function(result){
-// 	   					lpDepts=[];
-// 	   					$("#lplistView").html(result);
-// 	   					$("#lplistView tr").each(function(){
-// 	   						lpDepts.push($(this).attr("targetId"));
-// 	   					})
-// 	   				}
-// 	   			});
-// 	   		}
-	   		
-// 	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
-// 	   		function delTargetDept(elem){
-// 	   			var targetDeptId = $(elem).attr("targetId");
-//    				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
-//    				$(elem).remove();
-// 	   		}
-	   		
-// 	   		//열람궎란정보 저장
-// 	   		function insertAuthDept(){
-// 	   			var jsonString = JSON.stringify({"userId":updateUserId,"depts":lpDepts});
-// 				$.ajax({
-// 	   				type:"post",
-// 	   				dataType:"html",
-// 	   				url:"/admin/ezJournal/saveAuthor.do",
-// 	   				contentType:"application/json;",
-// 	   				data:jsonString,
-// 	   				success: function(result){
-// 	   					alert(result);
-//    						$('.journal-layer').fadeOut();
-//    						opener.location.reload();
-//    						location.reload(true);
-// 	   				}
-// 	   			});
-// 	   		}
 	   		
 	   		$(document).ready(function(){
 	   			treeContent = ${deptList};
 		   		setDeptList();
-// 		   		setDeptListLayerPopup();
-// 	   			$(function () {
-// 		   			$(document).on({
-// 		   				"dblclick":function(){delTargetDept(this);},
-// 		   				"click":function(){targetDept = this;
-// 			   				$("*").removeClass("selectTR");
-// 				   			$(this).addClass("selectTR");
-// 		   				}
-// 	   				},"#lplistView tr");
-// 	   			});
    			});
 		</script>
 		<style>
@@ -201,7 +138,7 @@
 		</style>
 	</head>
 	<body class="popup"> 
-        <h1><spring:message code='ezJournal.t42'/></h1>
+        <h1><spring:message code='ezJournal.t164'/></h1>
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="setAuthorViewUser()"><spring:message code='main.t4008'/></span></li>
@@ -231,7 +168,7 @@
 					                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 					                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 	                                        </select>
-	                                        <input type="text" id="keyword" value="" style="width: 130px; margin: 0px;" />
+	                                        <input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" id="keyword" value="" style="width: 130px; margin: 0px;" />
 	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 	                                    </div>
 	                                </td>    
@@ -240,10 +177,10 @@
 	                        </table>
 	                    </div>
 	                </div>
-					<table>
+					<table style="margin-top: 3px;">
 			            <tr>
-			                <td class="box">
-			                    <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+			                <td class="box" style="border-right: 0px; height: 465px;">
+			                    <div style="width: 250px; height: 100%; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
 			                </td>
 			                <td></td>
 			                <td class="listview" style="width: 426px" id="orglistView">
@@ -260,7 +197,7 @@
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t41'/> </span>
 									</h2>
 									<div class="receiver_borderbox">
-										<div id="authorDeptList" style="width: 250px; Height: 465px; overflow-x: auto; overflow-y: auto;">
+										<div id="authorDeptList" style="width: 250px; Height: 474px; overflow-x: auto; overflow-y: auto;">
 										</div>
 									</div>
 								</td>

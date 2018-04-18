@@ -322,8 +322,7 @@
 	            if (type == "DEL") {
 	            	// 일지 양식작성에서 사용하는 부분
 	            	if ("${type}" == "JOURNAL") {
-	            		selCell.removeAttribute("id", id);
-	            		selCell.style = "";
+	            		selCell.removeAttribute("id");
 	            		selCell.innerHTML = "";
 	            	} else {
 		                selCell.removeAttribute("id");
@@ -356,7 +355,6 @@
 	            	// 일지양식작성에서 사용하는 부분
 	                if ("${type}" == "JOURNAL") {
 		                selCell.setAttribute("id", id);
-	                	selCell.style.color = "#D8D8D8";
 	                	selCell.innerHTML = "@" + id;
 	                	
 	                } else {
@@ -441,7 +439,7 @@
 	    <script type="text/javascript">
 	    	var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
-		
+			
 	        CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        CKEDITOR.config.height = parseInt("${height}") - 120 + "px";
 	        CKEDITOR.config.font_defaultLabel = defaultFontFamily;

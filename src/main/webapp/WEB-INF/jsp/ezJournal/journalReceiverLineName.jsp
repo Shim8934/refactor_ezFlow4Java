@@ -7,50 +7,35 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1'/>" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/AprLineTempletName_Cross.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var userId = "<c:out value='${userId}'/>";
 		    var receiverLine = [];
 		    var receiverFavoriteName;
 		    
 		    function saveReceiverLineName() {
-		        receiverFavoriteName = $("#receiverFavoriteName").val();
+		        receiverFavoriteName = $("#receiverFavoriteName").val().trim();
 		        
-		        if (receiverFavoriteName == "") {
-	        		alert("<spring:message code='ezJournal.t91'/>");
+		        if (receiverFavoriteName == "" || receiverFavoriteName == null) {
+	        		alert("<spring:message code='ezJournal.t94'/>");
 		
 		        } else {
-		    		/* $.ajax({
-		    			type : "POST",
-		    			dataType : "json",
-		    			async : false,
-		    			url : "/ezJournal/journalFavoriteList.do",
-		    			data : { "userId" : userId },
-		    			success: function(result){
-		    				result = xml;
-		    			}        			
-		    		});	 */
 		        	saveReceiverLine();
 		        }
 		    }
 		    
 		    function saveReceiverLine() {
-		    	console.log(parent.type);
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "json",
-		    		async : false,
 		    		url : "/ezJournal/saveReceiverFavorite.do",
 		    		data : {"favoriteName"	: receiverFavoriteName, 
 		    				"receiverLine"	: JSON.stringify(receiverLine),
 		    				"type"			: parent.type,
 		    				"favoriteId"	: parent.favoriteId},
-    				success : function(result) {
+    				success : function() {
     					alert("<spring:message code='ezJournal.t137'/>");
     					parent.type = "new";
     					parent.DivPopUpHidden();
@@ -69,10 +54,22 @@
 		    //	parent.location.reload();
 		    }
 		
+		    function checkEnterKey() {
+		    	if (window.event.keyCode == 13) {
+		    		saveReceiverLineName();
+		    	}
+		    }
+		    
 		    window.onload = function () {		
+		    	
+		    	if (parent.type == "mod") {
+		    		$("h1").text("<spring:message code='ezJournal.t167'/>");
+		    	}
+		    	
+		    	$("#receiverFavoriteName").focus();
+		    	
 		        try {
 		        	receiverLine = parent.receiverList;
-		        	console.log("receiverLine : " + receiverLine);
 		        } catch (e) {
 		            try {
 		            	receiverLine = opener.receiverList;
@@ -80,7 +77,7 @@
 		        }
 		
 		        // 한글 입력시 maxlength + 1이 입력되는 현상 제어
-			    $("#receiverFavoriteName").keyup( function(e){
+			    $("#receiverFavoriteName").keyup(function(e){
 			    	var maxlength = $(this).prop("maxlength");
 			    	if ($(this).val().length >= maxlength) {
 			    		$(this).val($(this).val().substr(0, maxlength));
@@ -94,7 +91,7 @@
 		<h1><spring:message code='ezJournal.t93'/></h1>
 		<span>▒ <spring:message code='ezJournal.t94'/></span>
 		<div class="nobox" style="margin-top:10px">
-		<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="receiverFavoriteName" name="receiverFavoriteName" maxlength="7">
+		<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="receiverFavoriteName" name="receiverFavoriteName" onkeypress="checkEnterKey()" maxlength="7">
 		</div>		
 			
 		<div class="btnposition btnpositionNew">

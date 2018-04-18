@@ -947,6 +947,22 @@ public class CommonUtil {
 	}
 	
 	/**
+	 * globals.properties에 있는 
+	 * DataBaseType을 반환
+	 * */
+	public String getDatabaseType() throws Exception {
+		
+		String props = "Globals.DbType";
+		String dbType;
+		
+		dbType = globals.getProperty(props);
+		
+		logger.debug("getDatabase Type = " + dbType);
+		
+		return dbType;
+	}
+	
+	/**
 	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
 	 * @param resteUrl
 	 * @param param
@@ -1008,27 +1024,11 @@ public class CommonUtil {
 	}
 	
 	/**
-	 * globals.properties에 있는 
-	 * DataBaseType을 반환
-	 * */
-	public String getDatabaseType() throws Exception {
-		
-		String props = "Globals.DbType";
-		String dbType;
-		
-		dbType = globals.getProperty(props);
-		
-		logger.debug("getDatabase Type = " + dbType);
-		
-		return dbType;
-	}
-	/**
 	 * 테넌트에 따른 설정정보 얻어오는 메서드
 	 */
 	public String getTenantConfigRest(String property, String userId, HttpServletRequest request) throws Exception {
 
-	//	String gwServerUrl = config.getProperty("config.journalGWServerURL");
-		String gwServerUrl = "http://localhost:8080";
+		String gwServerUrl = config.getProperty("config.journalGWServerURL");
 		String url = gwServerUrl + "/rest/ezcommon/configs";
 				
 		HttpHeaders headers = new HttpHeaders();

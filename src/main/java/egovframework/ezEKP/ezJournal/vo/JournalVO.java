@@ -26,6 +26,7 @@ public class JournalVO {
 	private String thisContent;
 	private String nextContent;
 	private String formStatus;
+	private String isSum;
 	
 	public String getFormStatus() {
 		return formStatus;
@@ -158,5 +159,11 @@ public class JournalVO {
 	}
 	public void setCheckRecv(int checkRecv) {
 		this.checkRecv = checkRecv;
+	}
+	public String getIsSum() {
+		return isSum;
+	}
+	public void setIsSum(String isSum) {
+		this.isSum = isSum;
 	}
 }

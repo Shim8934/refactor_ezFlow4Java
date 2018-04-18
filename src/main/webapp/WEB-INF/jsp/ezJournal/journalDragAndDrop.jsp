@@ -4,10 +4,9 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>		
 		<style>
 			#lstAttachLink {
 				height: 117px;
@@ -58,7 +57,7 @@
 		        
 		        for (var i = 0; i < filelist.length; i++) {
 		            if (filelist[i].size / 1024 / 1024 > 5) {
-		                alert(strLang25);
+		                alert("<spring:message code='ezJournal.t162'/>");
 		                return;
 		            }
 		            else {
@@ -113,11 +112,11 @@
 	
 		        var objTh2 = document.createElement("TH");
 		        objTh2.style.width = "87%";
-		        setNodeText(objTh2, strLang260);
+		        setNodeText(objTh2, "<spring:message code='ezBoard.t5008'/>");
 		        objTr.appendChild(objTh2);
 	
 		        var objTh3 = document.createElement("TH");
-		        setNodeText(objTh3, strLang259);
+		        setNodeText(objTh3, "<spring:message code='ezJournal.t85'/>");
 		        objTh3.style.width = "13%";
 		        objTr.appendChild(objTh3);
 	
@@ -146,7 +145,6 @@
 	
 		    function setAttachFileInfo(str) {
 		        var filelist = JSON.parse(str);
-		        console.log("fileList 드래그확인 : " + filelist);
 		        
 		        try {
 		            var listtable;
@@ -221,7 +219,6 @@
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		        var strRet = "";
 		        var fileList = "";
-		        var typeId = parent.typeId;
 	
 		        var isFileDelete = false;
 		        for (var i = 1; i < filecnt; i++) {
@@ -253,23 +250,22 @@
 		        }
 	
 		        if (!isFileDelete) {
-		            alert(strLang271);
+		            alert("<spring:message code='ezJournal.t163'/>");
 		        }
 		        
-		        if (mode == "modify" || mode == "temp") {
- 		        	url = "/ezJournal/tempUploadFileDelete.do?mode=temp&journalId=" + journalId;
- 		        } else {
-		        	url = "/ezJournal/tempUploadFileDelete.do";
- 		        }
+//		        if (mode == "modify" || mode == "temp") {
+// 		        	url = "/ezJournal/tempUploadFileDelete.do?mode=temp&journalId=" + journalId;
+// 		        } else {
+//		        	url = "/ezJournal/tempUploadFileDelete.do";
+// 		        }
 
 		        // upload된 파일 tempUploadFile에서 삭제
 		        $.ajax({
 					async : false,
-					url : url,
+					url : "/ezJournal/tempUploadFileDelete.do",
 	                type : 'POST',
-	                dataType : 'json',
+	                dataType : 'text',
 	                data : {
-	                	typeId	 : typeId,
 	                	fileList : fileList
 	                },
 	                success: function() {
@@ -341,7 +337,7 @@
         </div>
         <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
-        <input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px;height:1px" />
+        <input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px; height:1px; display:none;" />
         <input type="hidden" onclick ="fileupload()" />
   </body>
 </html>
