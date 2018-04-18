@@ -53,16 +53,6 @@
     		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
         	folderList(folderType);
 
-            try {
-                ReturnFunction = parent.mail_movecopy_cross_dialogArguments[1];
-                CancelFunction = parent.mail_movecopy_cross_dialogArguments[2];
-                isDivPopUp = true;
-            } catch (e) {
-                try {
-                    ReturnFunction = opener.mail_movecopy_cross_dialogArguments[1];
-                    CancelFunction = opener.mail_movecopy_cross_dialogArguments[2];
-                } catch (e) { }
-            }
         }
         var inputNameDlg_cross_dialogArguments = new Array();
         function Window_Close() {

@@ -24,6 +24,8 @@
 			var folderType = null;
 	    	var $element ;
 	    	var useBottomFrameOnly = "${useBottomFrameOnly}";
+		    var firFolderId = "";
+		    var flag = "";
 		    
 		    $(function() { 
 				folderList('C');
@@ -55,27 +57,10 @@
 						},
 					dataType: "JSON",
 					success : function (data) {
-						folderId = data.data[0]["id"];
 // 						upperId = data.data[0]["parent"];
 						var firstNode = "#" + folderId;
 						
-						$($element).on('changed.jstree', function (e, data) {
-							var folderId = "";
-							folderId = data.selected[0];
-							if (folderId != undefined) {
-								getFileList(folderId);
-							}
-						})
-						.on('loaded.jstree', function() {
-							var test = "#" + folderId;
-							var elmentTest = document.getElementById(folderId);
-							var childE = document.getElementById(folderId + "_anchor");
-							
-							elmentTest.setAttribute("aria-selected", "true");
-							childE.setAttribute("class", "jstree-anchor jstree-clicked");
-							
-						})
-						.jstree({
+						$($element).jstree({
 							'plugins': ["core","types","json_data","themes","ui"],
 							'core' : {
 								"animation" : 0,
@@ -98,6 +83,20 @@
 								"width"       : "20",
 								"margin-left" : "10"
 							}
+						}).on('loaded.jstree', function() {
+							firFolderId = data.data[0]["id"];
+							var test = "#" + folderId;
+							var elmentTest = document.getElementById(firFolderId);
+							var childE = document.getElementById(firFolderId + "_anchor");
+							childE.setAttribute("class", "jstree-anchor jstree-clicked");
+							elmentTest.setAttribute("aria-selected", "true");
+							folderId = firFolderId;
+							getFileList(folderId);
+						}).on('changed.jstree', function (e, data) {
+							var folderId = "";
+							folderId = data.selected[0];
+							getFileList(folderId);
+							console.log("changed.jstree" + new Date());
 						});
 					},
 					error : function(error) {
