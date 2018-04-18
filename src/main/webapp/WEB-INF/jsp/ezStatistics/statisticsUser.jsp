@@ -25,8 +25,7 @@
 	    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <script type="text/javascript">
 	        var xmlHttp = createXMLHttpRequest();
-	        var rgParams = null;
-			
+
 			document.onselectstart = function () {
 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	            return false;

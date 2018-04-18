@@ -22,7 +22,6 @@
     <script type="text/javascript">
     var xmlHttp = null;
     var Tab1_flag = true;
-    var rgParams = null;
 	
 	document.onselectstart = function () {
         if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -532,7 +531,7 @@
             g_xmlHTTP.send(strQuery);
         }
         else {
-            rgParams = new Array();
+           	var rgParams = new Array();
             rgParams["addrBook"] = xmlDom;
             rgParams["deptid"] = "";
 
