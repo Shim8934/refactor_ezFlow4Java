@@ -169,6 +169,7 @@
 				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
 				var receiverID = document.getElementById("receiverID").innerHTML;
 
+
 				if (receiverList.indexOf(userMyName) == -1) {
 					receiverList += ", " + userMyName;
 					receiverList2 += ", " + userMyName2;
@@ -259,9 +260,7 @@
 						receiverList = userMyName;
 						receiverList2 = userMyName2;
 						receiverID = userMyID;
-					}
-
-					if (receiverList.indexOf(userMyName) == -1) {
+					} else {
 						receiverList += ", " + userMyName;
 						receiverList2 += ", " + userMyName2;
 						receiverID += ", " + userMyID;

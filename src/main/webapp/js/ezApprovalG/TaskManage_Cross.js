@@ -26,7 +26,13 @@ function GetTaskFullList() {
         }
         else {
             DisplayTaskList(Resultxml);
-            document.getElementById("listcount").innerHTML = "<b>" + deptName + "</b>&nbsp;" + strLang444 + "&nbsp;" + ListName + " : <span class='point'>" + NodeListLen + "</span> " + strLang445;
+            if(NodeListLen == null)
+            	{
+            		NodeListLen = 0;
+            	}
+            document.getElementById("listcount").innerHTML =  "<b>"+arr_userinfo[15]+"</b>&nbsp;"+strLang444+"&nbsp;" + strLang440 + " : <span style='color:#017BEC;font-weight:bold;'> " + NodeListLen + " </span>" + strLang943;
+            
+
         }
     }
 }

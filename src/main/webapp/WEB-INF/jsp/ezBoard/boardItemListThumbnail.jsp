@@ -153,9 +153,16 @@
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
-		    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
-		    		MailOptionHiddenOutside(e);
-		    	});
+		    	//즐겨찾기 게시판의 썸네일게시판 스크립트 오류 수정
+		    	if (typeof((($($(window.parent.frames['left']))).context) == "undefined") && (($($(window.parent.frames['left']))).length) == 0) {
+		    		$(parent.parent.frames['left']).mouseup(function (e) {
+			    		MailOptionHiddenOutside(e);
+			    	});
+		    	} else {
+			    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
+				    	MailOptionHiddenOutside(e);
+			    	});
+		    	}
 		    	
 		    	$(parent.document).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
@@ -925,17 +932,17 @@
 		
 		    function search(type) {
 		        if (type == "basic") {
-		            if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-		                alert("<spring:message code='ezBoard.t192'/>");
+		        	if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
+		        			&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+		                alert("<spring:message code='ezBoard.t192' />");
 		                return;
 		            }
-		
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-		                alert("<spring:message code='ezBoard.t189'/>");
+		        		alert("<spring:message code='ezSystem.x0035' />");	
 		                return;
 		            }
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-		                alert("<spring:message code='ezBoard.t189'/>");
+		                alert("<spring:message code='ezSystem.x0036' />");
 		                return;
 		            }
 		            if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
@@ -999,7 +1006,7 @@
 		
 		    function SaveMyBoard() {
 		        if (CrossYN()) {
-		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 450, 415);
+		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 457, 418);
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else

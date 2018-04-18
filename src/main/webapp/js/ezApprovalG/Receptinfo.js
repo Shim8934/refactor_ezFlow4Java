@@ -2247,15 +2247,26 @@ function AprLineAddDeptAddress(AddressName) {
 var SelDivName = "";
 function InsertRecAll() {
     try {
-
-        if (CrossYN()) {
-            var pAlertContent = T1361andT1362;
+    	var deptid = $("#"+nodeIdx).attr("cn");
+    	if (GetEntryInfo(deptid) == "N") {
+    		var pAlertContent = strLang1105;
+    		OpenAlertUI(pAlertContent);
+    		return;
+    	}
+    	if (isReceiverChk(deptid)) {
+            
+	        if (CrossYN()) {
+	            var pAlertContent = T1361andT1362;
+	            var Ans = OpenInformationUI(pAlertContent, InsertRecAll_Complete);
+	        } else {
+	            var pAlertContent = T1361andT1362;
+	            var Ans = OpenInformationUI(pAlertContent);
+	            InsertRecAll_Complete(Ans);
+	        }
+    	} else {
+    		var pAlertContent = strLang1101+strLang1102;
             var Ans = OpenInformationUI(pAlertContent, InsertRecAll_Complete);
-        } else {
-            var pAlertContent = T1361andT1362;
-            var Ans = OpenInformationUI(pAlertContent);
-            InsertRecAll_Complete(Ans);
-        }
+    	}
 
     } catch (e) {
         alert("Receptinfo.js.InsertRecAll()::" + e.description);

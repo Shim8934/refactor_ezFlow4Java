@@ -73,14 +73,14 @@
 					<tr> 
 						<th colspan="3"> 
 							<a id="seenUser_"><spring:message code='ezPoll.t136'/> (<c:out value='${numberOfSeenUsers}'/>)</a>
-							<img style="position: absolute; right: 10px; top: 3px; cursor: pointer; height: 40px; width: 40px;" src="/images/poll/sendMail.png" onClick="sendMailAll1('${qstID}')">
+							<img style="cursor: pointer; float: right;" src="/images/poll/sendMail01.png" onClick="sendMailAll1('${qstID}')">
 						</th> 
 					</tr>
 					<c:forEach var="list1" items="${listOfSeenUsers}"> 
 						<tr id="${list1.id}" class="white" style="border: 1px solid #DDD;">
 							<td style="border-right:none; max-width: 180px;  width: 160px;">
 								<img src="${list1.userFileUrl}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list1.id}')">
-								<a style="cursor:pointer; display:inline-block; float:left; width:80px; line-height:51px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" onClick="menuQst_DetailUserInfo('${list1.id}')">	
+								<a style="cursor:pointer; display:inline-block; float:left; width:80px; line-height:50px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" onClick="menuQst_DetailUserInfo('${list1.id}')">	
 									<c:choose>
 										<c:when test="${list1.primary == '1'}">
 											<c:out value ="${list1.displayName1}"/>
@@ -92,7 +92,7 @@
 								</a>								
 							</td>	
 							<td style="border:none; width: 60px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list1.phone}"/>&nbsp;</td>	
-							<td style="border-left:none; position: relative;border-bottom:1px solid #ddd"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick="sendMail('${list1.id}')"></td>					
+							<td style="border-left:none; position: relative;border-bottom:1px solid #ddd"><img class="voteUserMailImg" src="/images/poll/sendMail.png" onClick="sendMail('${list1.id}')"></td>					
 						</tr>
 					</c:forEach>
 					<c:if test="${empty listOfSeenUsers}">
@@ -104,15 +104,15 @@
 				<table border=1px style="float: left;clear: none;width : 50%; margin:0px 0px 0px -1px;" class="voteUnseenTbl">
 					<tr> 
 						<th colspan="3"> 
-							<a id="unseenUser_" style="color:#000; position: absolute; top:16px; left:15px;"><spring:message code='ezPoll.t137'/> (<c:out value='${numberOfUnseenUsers}'/>)</a>
-							<img style="position: absolute; right: 10px; top: 3px; cursor: pointer; height: 40px; width: 40px;" src="/images/poll/sendMail.png" onClick="sendMailAll2('${qstID}')">
+							<a id="unseenUser_" style="color:#000; float:left; vertical-align:middle; margin-top:8px;"><spring:message code='ezPoll.t137'/> (<c:out value='${numberOfUnseenUsers}'/>)</a>
+							<img style="cursor: pointer; float:right;" src="/images/poll/sendMail.png" onClick="sendMailAll2('${qstID}')">
 						</th> 
 					</tr>
 					<c:forEach var="list2" items="${listOfUnSeenUsers}"> 
 						<tr id="${list2.id}" class="white" style="border: 1px solid #DDD;">
 						   <td style="border-right:none; max-width: 180px; width: 160px;">
 							<img src="${list2.userFileUrl}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list2.id}')">
-								<a style="cursor:pointer; display:inline-block; float:left; line-height:51px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width: 80px;" onClick="menuQst_DetailUserInfo('${list2.id}')">	
+								<a style="cursor:pointer; display:inline-block; float:left; line-height:50px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width: 80px;" onClick="menuQst_DetailUserInfo('${list2.id}')">	
 									<c:choose>
 										<c:when test="${primaryLang == '1'}">
 											<c:out value ="${list2.displayName1}"/>
@@ -124,7 +124,7 @@
 								</a>								
 							</td>	
 							<td style="border:none; width: 60px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list2.phone}"/></td>
-							<td style="border-left:none; position: relative;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick="sendMail('${list2.id}')"></td>											
+							<td style="border-left:none; position: relative;"><img class="voteUserMailImg" src="/images/poll/sendMail.png" onClick="sendMail('${list2.id}')"></td>											
 						</tr>
 					</c:forEach>
 					<c:if test="${empty listOfUnSeenUsers}">

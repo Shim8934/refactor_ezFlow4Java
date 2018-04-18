@@ -11,8 +11,11 @@
 		var userLang = "${userInfo.lang}";
 		var type = "${type}";
 		var height = "${height}";
+		var editorLoadFlag = false;
 		
         function OnInitCompleted(e) {
+        	editorLoadFlag = true;
+        	
             // 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
             if (parent.onloadflag || typeof parent.onloadflag === "undefined") {
                 parent.Editor_Complete();
@@ -154,12 +157,12 @@
         function SetEditorContentURL(pURL) {
             try {
                 var tempXML = createXmlDom();
-                var XmlBodyATT = createXmlDom();
+//                 var XmlBodyATT = createXmlDom();
                 var XmlBodyDATA = createXmlDom();
                 var tempStr = "";
                 tempStr = ConvertMHTtoHTML(pURL);
                 tempXML = loadXMLString(tempStr)
-                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//                 XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
                 XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
                 var htmlData = getNodeText(XmlBodyDATA);
                 CrossEditor.SetBodyValue(htmlData);
@@ -264,12 +267,12 @@
 
         function GetEditorContentURL(url) {
             var tempXML = createXmlDom();
-            var XmlBodyATT = createXmlDom();
+//             var XmlBodyATT = createXmlDom();
             var XmlBodyDATA = createXmlDom();
             var tempStr = "";
             tempStr = ConvertMHTtoHTML(url);
             tempXML = loadXMLString(tempStr);
-            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//             XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
             XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
             return getNodeText(XmlBodyDATA);
         }
@@ -382,6 +385,7 @@
 	        var useHTMLMode = "${useHTMLMode}";
 	        var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
+			var uploadUrl = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
 			
 	        if (type == "APPROVAL" || type == "APPROVALG") {
 				CrossEditor.params.Height = height + "px";
@@ -392,9 +396,14 @@
 	        if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
 	        	//메일 부제중설정, 포토게시판일 경우 시 이미지 업로드 아이콘 제거
 	        	CrossEditor.params.DeleteCommand = ["image"];
+	        } else if (type == "MAILLETTER") {
+	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
+	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	
+	        	uploadUrl += "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
 	        }
 	       	
-	        CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
+	        CrossEditor.params.UploadFileExecutePath = uploadUrl;
 			CrossEditor.params.FullScreen = true;
 	        CrossEditor.params.PutStyleInBody = true;
 	        CrossEditor.params.Font = "<spring:message code='main.t0620' />".split(";");

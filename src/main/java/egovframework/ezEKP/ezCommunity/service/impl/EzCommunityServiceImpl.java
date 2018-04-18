@@ -246,7 +246,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("commMakeOk started.");
 		
 		String clubName2 = "";
-		MultipartFile cClubLogo = null, cClubBanner = null;
+		MultipartFile cClubLogo = null, cClubThumb = null;
 		String cCateA = "", cCateB = "", cCateC = "";
 
 		String clubName = request.getParameter("hiddenClubName");
@@ -256,8 +256,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String pNewID = request.getParameter("sNewID");
 		String pNewSubID = request.getParameter("sNewSubID");
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
-		String logo = "default_logo_type1.jpg";
-		String banner = "default_banner.jpg";
+		String logo = "default_logo_type5.jpg";
+		String thumb = "default_logo_empty.png";
+		
+		logger.debug("logoPath 		::		 " + logoPath);
+			
 		int isIn = 0, boardNo = 0;
 		int tenantID = userInfo.getTenantId();
 		
@@ -276,8 +279,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (request.getFile("logo") != null) {
 			cClubLogo = request.getFile("logo");
 		}
-		if (request.getFile("banner") != null) {
-			cClubBanner = request.getFile("banner");
+		if (request.getFile("thumb") != null) {
+			cClubThumb = request.getFile("thumb");
 		}
 		if (request.getParameter("isIn") != null) {
 			isIn = Integer.parseInt(request.getParameter("isIn"));
@@ -336,7 +339,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		int openSex = 1;
 		int openBirth = 0;
 		
-		commMakeOkInsert2(clubNo, clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, banner, bBoardName[Integer.parseInt(userInfo.getPrimary())].trim(), bBoardName[2].trim(), comatt, code, bNotiName[1].trim(), bNotiName[2].trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID(), tenantID);
+		commMakeOkInsert2(clubNo, clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, thumb, bBoardName[Integer.parseInt(userInfo.getPrimary())].trim(), bBoardName[2].trim(), comatt, code, bNotiName[1].trim(), bNotiName[2].trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID(), tenantID);
 		
 		//TODO 2016-05-03 이효진 Email부분 
 /*		ezCommunityService.commMakeOkGet5()
@@ -429,7 +432,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				new File(logoPath).mkdirs();
 			}
 			
-			File file = new File(logoPath + fileName + "_logo" + "." + extName);
+			File file = new File(logoPath + fileName + "_logo." + extName);
 			cClubLogo.transferTo(file);
 			
 			BufferedImage inputImage = ImageIO.read(file);
@@ -440,19 +443,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
 			
-			File newLogo = new File(logoPath + fileName + "_logo" + ".png");
+			File newLogo = new File(logoPath + fileName + "_logo.png");
 			ImageIO.write(outputImage, "png", newLogo);
-			//썸네일파일 생성
-			outputImage = new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
-			saveImage = outputImage.createGraphics();
-			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
-			
-			File newThumbnail = new File(logoPath + fileName + "_thumbnail" + ".png");
-			ImageIO.write(outputImage, "png", newThumbnail);
 			
 			file.delete();
-			
-			commMakeOkSet1(fileName + "_logo" + ".png", fileName + "_thumbnail" + ".png", fileName, fileSize, userInfo.getTenantId());
+
+			commMakeOkSet3(fileName + "_logo.png", fileName, fileSize, userInfo.getTenantId());
 		} else {
 			//IE9
 			fileName = code;
@@ -461,27 +457,57 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				new File(logoPath).mkdirs();
 			}
 			
-			File logoFile = new File(logoPath + fileName + "_logo" + ".png");
-			File logoThumbnailFile = new File(logoPath + fileName + "_thumbnail" + ".png");
+			File logoFile = new File(logoPath + fileName + "_logo.png");
 			
-			if (logoFile.exists() && logoThumbnailFile.exists()) {
-				commMakeOkSet1(fileName + "_logo" + ".png", fileName + "_thumbnail" + ".png", fileName, (int) logoFile.length(), userInfo.getTenantId());
+			if (logoFile.exists()) {
+				commMakeOkSet3(fileName + "_logo.png", fileName, (int) logoFile.length(), userInfo.getTenantId());
 			}
 		}
 		
 		//TODO 2016-05-03 이효진 뷰에서 banner을 사용하지 않아서 파라미터로 받지 않는다.
-		if (cClubBanner != null && !cClubBanner.isEmpty()) {
+		//2018-04-11 홍승비 thumbnail을 로고와 분리하여 대표 이미지로 사용한다.
+		if (cClubThumb != null && !cClubThumb.isEmpty()) {
 			fileName = code;
-			attachFile = cClubBanner.getOriginalFilename();
-			fileSize = (int) cClubBanner.getSize();
+			attachFile = cClubThumb.getOriginalFilename();
+			fileSize = (int) cClubThumb.getSize();
 			onlyFileName = attachFile;
 			iStart = onlyFileName.lastIndexOf(".");
 			extName = onlyFileName.substring(iStart);
 			
-			File file = new File(logoPath + fileName + "_banner" + "." + extName);
-			cClubBanner.transferTo(file);
+			if (!new File(logoPath).exists()) {
+				new File(logoPath).mkdirs();
+			}
 			
-			commMakeOkSet2(fileName + "_banner" + "." + extName, fileName, fileSize, userInfo.getTenantId());
+			File file = new File(logoPath + fileName + "_thumbnail." + extName);
+			cClubThumb.transferTo(file);
+			
+			BufferedImage inputImage = ImageIO.read(file);
+			BufferedImage outputImage = null;
+			Graphics2D saveImage = null;
+			
+			outputImage= new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
+			saveImage = outputImage.createGraphics();
+			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
+			//썸네일(=대표이미지)파일 생성
+			File newThumbnail = new File(logoPath + fileName + "_thumbnail.png");
+			ImageIO.write(outputImage, "png", newThumbnail);
+			
+			file.delete();
+
+			commMakeOkSet4(fileName + "_thumbnail.png", fileName, fileSize, userInfo.getTenantId());
+		}else {
+			//IE9
+			fileName = code;
+			
+			if (!new File(logoPath).exists()) {
+				new File(logoPath).mkdirs();
+			}
+
+			File thumbnailFile = new File(logoPath + fileName + "_thumbnail.png");
+			
+			if (thumbnailFile.exists()) {
+				commMakeOkSet4(fileName + "_thumbnail.png", fileName, (int) thumbnailFile.length(), userInfo.getTenantId());
+			}
 		}
 		
 		if (clubVO == null) {
@@ -742,6 +768,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	                		strWriterFakeName = item.getWriterName();
 	                	}
                 	}
+                	
+                	
                 }
 
                 if (item.getAttachments() != null && item.getAttachments().length() > 0) {
@@ -1029,7 +1057,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<tr>");
 			/*sb.append("<td align=\"center\">" + item.getPollGroupNo() + "</td>");*/			
 			sb.append("<td style=\"text-overflow:ellipsis;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
-			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" +commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
+			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
 			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", userInfo.getLocale()) + "</td>");
 			sb.append("<td>" + pollState + "</td>");
@@ -1570,7 +1598,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
 			strHTML.append("<th align=\"right\" style=\"text-align:right;\">" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + name + "</th>");
 		} else {
-			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + managerVO.getPollSubject() + "</th>");
+			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
 			strHTML.append("<th align=\"right\" style=\"text-align:right;\">" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + name + "</th>");
 		}
 		
@@ -1726,9 +1754,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String copType = request.getParameter("type");
 		String imageSrc = request.getParameter("imageSrc");
 		MultipartFile logoFile = request.getFile("logo");
+		MultipartFile thumbFile = request.getFile("thumb");
 		
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", tenantID) + commonUtil.separator;
 		
+		//상단 이미지 저장
 		if (!logoFile.isEmpty()) {
 			String fileName = code;
 			attachFile = logoFile.getOriginalFilename();
@@ -1751,6 +1781,33 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			ImageIO.write(outputImage, "png", newLogo);
 			String logoFileNameLogo = fileName + "_logo" + ".png";
 			
+			/*outputImage = new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
+			saveImage = outputImage.createGraphics();
+			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
+			
+			File newThumbnail = new File(logoPath + fileName + "_thumbnail" + ".png");
+			ImageIO.write(outputImage, "png", newThumbnail);
+			String logoFileNameThumbnail = fileName + "_thumbnail" + ".png";
+			*/
+			file.delete();
+			
+			adminLogoOkUpdate2(logoFileNameLogo, fileName, tenantID);
+		}
+		//썸네일 저장
+		if (!thumbFile.isEmpty()) {
+			String fileName = code;
+			attachFile = thumbFile.getOriginalFilename();
+			iStart = attachFile.lastIndexOf(".");
+			extName = attachFile.substring(iStart);
+			String thumbFileName = fileName + "_thumb_Temp" + "." + extName;
+			
+			File file = new File(logoPath + thumbFileName);
+			thumbFile.transferTo(file);
+			
+			BufferedImage inputImage = ImageIO.read(file);
+			BufferedImage outputImage = null;
+			Graphics2D saveImage = null;
+			
 			outputImage = new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
@@ -1761,15 +1818,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			file.delete();
 			
-			adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, fileName, tenantID);
+			adminLogoOkUpdate3(logoFileNameThumbnail, fileName, tenantID);
 		}
+		
 		
 		if (!copType.equals("")) {
 			adminCommType(copType, code, tenantID);
 			
 			if (logoFile.isEmpty()) { 
 				if (imageSrc.indexOf("default_logo_type") > -1) {
-					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", code, tenantID);
+					adminLogoOkUpdate2("default_logo_" + copType + ".jpg", code, tenantID);
 				}
 			}
 		}
@@ -1804,15 +1862,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				ImageIO.write(outputImage, "png", newLogo);
 				String logoFileNameLogo = code + "_logo" + ".png";
 				
-				outputImage = new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
-				saveImage = outputImage.createGraphics();
-				saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
+				adminLogoOkUpdate2(logoFileNameLogo, code, tenantID);
 				
-				File newThumbnail = new File(logoPath + code + "_thumbnail" + ".png");
-				ImageIO.write(outputImage, "png", newThumbnail);
-				String logoFileNameThumbnail = code + "_thumbnail" + ".png";
-				
-				adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, code, tenantID);
 	        } catch (Exception e) {
 	        	throw e;
 	        } finally {
@@ -1826,9 +1877,52 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			if (fileData != null) { 
 				if (imageSrc.indexOf("default_logo_type") > -1) {
-					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", fileName, tenantID);
+					adminLogoOkUpdate2("default_logo_" + copType + ".jpg", fileName, tenantID);
 				}
 			}
+		}
+	}
+	
+	public void adminThumbUploadIE9(String code, String copType, String imageSrc, String thumbPath, String fileName, String fileData, int tenantID) throws Exception {
+		int iStart = 0;
+		if (fileData != null) {
+			iStart = fileName.lastIndexOf(".");
+			String extName = fileName.substring(iStart);
+			String thumbFileName = code + "_thumb_Temp" + "." + extName;
+			
+			File file = new File(thumbPath + thumbFileName);
+	        byte[] byteList = Base64.decodeBase64(fileData);
+	        
+	        FileOutputStream fos = null;
+	        
+	        try {
+	        	fos = new FileOutputStream(file);
+	            IOUtils.write(byteList, fos);
+	            
+	            BufferedImage inputImage = ImageIO.read(file);
+				BufferedImage outputImage = null;
+				Graphics2D saveImage = null;
+				
+				outputImage = new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
+				saveImage = outputImage.createGraphics();
+				saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
+				
+				File newThumbnail = new File(thumbPath + code + "_thumbnail" + ".png");
+				ImageIO.write(outputImage, "png", newThumbnail);
+				String logoFileNameThumbnail = code + "_thumbnail" + ".png";
+
+				adminLogoOkUpdate3(logoFileNameThumbnail, code, tenantID);
+				
+	        } catch (Exception e) {
+	        	throw e;
+	        } finally {
+	        	fos.close();
+	        	file.delete();
+	        }
+		}
+		
+		if (!copType.equals("")) {
+			adminCommType(copType, code, tenantID);
 		}
 	}
 
@@ -2307,13 +2401,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("getCommunityThumInfo started.");
 		
 		String pSignatureDir = ""; 
-		
-		if (pType.equals("COMMUNITYTHUM")) {
-			pSignatureDir = commonUtil.getUploadPath("upload_community.ROOT", tenantID);
-		} else {
-			pSignatureDir = commonUtil.getUploadPath("upload_community.LOGO", tenantID);
-		}
-		
+		pSignatureDir = commonUtil.getUploadPath("upload_community.LOGO", tenantID);		
 		String pResult = pSignatureDir + commonUtil.separator + pFileName;
 		
 		logger.debug("getCommunityThumInfo ended.");
@@ -2778,9 +2866,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				
 				if (temp == 0) {
 					ezCommunityDAO.setAsReadInsert(map);
+					
+					String writerID = ezCommunityDAO.getWriterID(map);
+					
+					if(writerID == null || !writerID.equals(userInfo.getId())) {
+						ezCommunityDAO.setAsReadUpdate(map);
+					}
 				}
 				
-				ezCommunityDAO.setAsReadUpdate(map);
 			}
 			
 			logger.debug("setAsRead ended.");
@@ -3021,7 +3114,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (pMode.equals("modify")) {
 			logger.debug("modifyItem");
 			ezCommunityDAO.brdUpdateItemUpdate(map);
-			ezCommunityDAO.brdUpdateItemDelete(map);
+			//ezCommunityDAO.brdUpdateItemDelete(map);
 		} else {
 			map.put("v_pDocNo", "");
 			ezCommunityDAO.brdNewItemInsert(map);
@@ -3703,19 +3796,28 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
     	}
     	
     	int startRowNum = ((pageNum - 1) * perCount);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("boardID", boardID);
-		map.put("itemID", itemID);
-		map.put("userID", userID);
-		map.put("lang", lang);
-		map.put("tenantID", tenantID);
-		map.put("start", startRowNum);
-		map.put("perCount", perCount);
-		List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
-		
-		StringBuffer resultXML = new StringBuffer();
+    	int endRowNum = (pageNum * perCount);
+
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	map.put("boardID", boardID);
+    	map.put("itemID", itemID);
+    	map.put("userID", userID);
+    	map.put("lang", lang);
+    	map.put("tenantID", tenantID);
+    	
+    	/* MySQL */
+    	map.put("perCount", perCount);
+    	map.put("start", startRowNum);
+    	
+    	/* Oracle */
+    	map.put("startRowNum", startRowNum);
+    	map.put("endRowNum", endRowNum);
+    	
+    	
+    	List<CommunityBoardItemReadVO> readerList = ezCommunityDAO.getReaderList(map);
+    	
+    	StringBuffer resultXML = new StringBuffer();
 		
 		resultXML.append("<DOCLIST>");
 		
@@ -4337,6 +4439,24 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		CommunityClubVO vo = ezCommunityDAO.adminLogoGet(map);
 		
 		logger.debug("adminLogoGet ended.");
+		
+		return vo;
+	}
+	
+	/**
+	 * 로고와 썸네일 이미지 경로를 가져온다.
+	 */
+	@Override
+	public CommunityClubVO  adminLogoGet2(String code, int tenantID) throws Exception {
+		logger.debug("adminLogoGet started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CODE", code);
+		map.put("tenantID", tenantID);
+		
+		CommunityClubVO vo = ezCommunityDAO.adminLogoGet2(map);
+		
+		logger.debug("adminLogoGet2 ended.");
 		
 		return vo;
 	}
@@ -6579,7 +6699,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		ezCommunityDAO.bbsDelOkDel(map);
 	}
 	
-	public void commMakeOkInsert2(int clubNo, String clubName, String clubName2, String cCateA, String cCateB, String cCateC, String clubType, String clubConfirmType, String intro, int isIn, String logo, String banner, String bBoardName1, String bBoardName2, String comatt, String code, String bNotiName1, String bNotiName2, String pNewID, int boardNo, String id, String displayName1, String companyName1, String deptName1, String pNewSubID, int openEmail, int openHp, int openComp, int openHouse, int openJob, int openBirth, int openSex, String companyID, int tenantID) throws Exception {
+	public void commMakeOkInsert2(int clubNo, String clubName, String clubName2, String cCateA, String cCateB, String cCateC, String clubType, String clubConfirmType, String intro, int isIn, String logo, String thumb, String bBoardName1, String bBoardName2, String comatt, String code, String bNotiName1, String bNotiName2, String pNewID, int boardNo, String id, String displayName1, String companyName1, String deptName1, String pNewSubID, int openEmail, int openHp, int openComp, int openHouse, int openJob, int openBirth, int openSex, String companyID, int tenantID) throws Exception {
 		logger.debug("commMakeOkInsert2 started.");
 		logger.debug("clubNo : " + clubNo + ", clubName : " + clubName + ", tenantID : " + tenantID);
 		
@@ -6603,8 +6723,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_INTRO", intro);
 		map.put("v_ISIN", isIn);
 		map.put("v_LOGO", logo);
-		map.put("v_LOGO_THUMBNAIL", logo);
-		map.put("v_BANNER", banner);
+		map.put("v_LOGO_THUMBNAIL", thumb);
+		map.put("v_BANNER", thumb);
 		map.put("v_USERINFO_COMPANYID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -6726,7 +6846,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		logger.debug("commMakeOkInsert2 ended.");
 	}
 	
-	public void commMakeOkSet1(String logoFileName, String thumbnailFileName, String fileName, int fileSize, int tenantID) throws Exception {
+/*	public void commMakeOkSet1(String logoFileName, String thumbnailFileName, String fileName, int fileSize, int tenantID) throws Exception {
 		logger.debug("commMakeOkSet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6765,6 +6885,47 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		logger.debug("commMakeOkSet2 ended.");
 	}
+	*/
+	
+	//logo(상단 이미지) 저장
+	public void commMakeOkSet3(String logoFileName, String fileName, int fileSize, int tenantID) throws Exception {
+		logger.debug("commMakeOkSet3 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LOGOFILENAME", logoFileName);
+		map.put("v_FILENAME", fileName);
+		map.put("v_FILESIZE", fileSize);
+		map.put("tenantID", tenantID);
+		
+		ezCommunityDAO.commMakeOkSet3Update(map);
+		ezCommunityDAO.commMakeOkSet1Insert(map);
+		
+		logger.debug("commMakeOkSet3 ended.");
+	}
+	//thumbnail(대표 이미지) 저장
+	public void commMakeOkSet4(String thumbFileName, String fileName, int fileSize, int tenantID) throws Exception {
+		logger.debug("commMakeOkSet4 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_THUMBFILENAME", thumbFileName);
+		map.put("v_FILENAME", fileName);
+		map.put("v_FILESIZE", fileSize);
+		map.put("tenantID", tenantID);
+		
+		ezCommunityDAO.commMakeOkSet4Update(map);	
+		
+		int count = ezCommunityDAO.commMakeOkSet2Select(map);
+		logger.debug("commMakeOkSet4Select count="+count);
+		
+		if (count > 0 ) {
+			ezCommunityDAO.commMakeOkSet2Update1(map);
+		} else {
+			ezCommunityDAO.commMakeOkSet2Insert(map);
+		}
+		
+		logger.debug("commMakeOkSet4 ended.");
+	}
+	
 	
 	public void guestEditOkDelete(String no, String code, int tenantID) throws Exception {
 		logger.debug("guestEditOkDelete started. no : " + no + ", code : " + code);
@@ -6901,7 +7062,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		ezCommunityDAO.pollEditOkUpdateQuestion(map);
 	}
 	
-	public void adminLogoOkUpdate1(String logoFileNameLogo, String logoFileNameThumbnail, String fileName, int tenantID) throws Exception {
+/*	public void adminLogoOkUpdate1(String logoFileNameLogo, String logoFileNameThumbnail, String fileName, int tenantID) throws Exception {
 		logger.debug("adminLogoOkUpdate1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6913,6 +7074,32 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		ezCommunityDAO.adminLogoOkUpdate1(map);
 		
 		logger.debug("adminLogoOkUpdate1 ended.");
+	}*/
+	//상단 이미지 저장
+	public void adminLogoOkUpdate2(String logoFileNameLogo, String fileName, int tenantID) throws Exception {
+		logger.debug("adminLogoOkUpdate2 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LOGOFILENAME", logoFileNameLogo);
+		map.put("v_FILENAME",  fileName);
+		map.put("tenantID", tenantID);
+		
+		ezCommunityDAO.adminLogoOkUpdate2(map);
+		
+		logger.debug("adminLogoOkUpdate2 ended.");
+	}
+	//썸네일 저장
+	public void adminLogoOkUpdate3(String logoFileNameThumbnail, String fileName, int tenantID) throws Exception {
+		logger.debug("adminLogoOkUpdate3 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LOGOFILENAME_THUMBNAIL", logoFileNameThumbnail);
+		map.put("v_FILENAME",  fileName);
+		map.put("tenantID", tenantID);
+		
+		ezCommunityDAO.adminLogoOkUpdate3(map);
+		
+		logger.debug("adminLogoOkUpdate3 ended.");
 	}
 	
 	public void adminCommType(String copType, String fileName, int tenantID) throws Exception {
@@ -7000,6 +7187,32 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			logoFile.transferTo(logo);
 			
 			result = logoFileName;
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}
+		
+		return result;
+	}
+	
+	public String adminThumbUpload(String code, String realPath, String thumbPath, MultipartFile thumbFile, int tenantId) throws Exception {
+		String oriFileName = thumbFile.getOriginalFilename();
+		String thumbFileName = code + "_thumb_Temp" + oriFileName.substring(oriFileName.lastIndexOf("."));
+		
+		File thumbDir = new File(realPath + commonUtil.separator + thumbPath);
+		File thumb = new File(realPath + commonUtil.separator + thumbPath + commonUtil.separator + thumbFileName);
+		
+		String result = "";
+		try {
+			if (!thumbDir.isDirectory()) {
+				boolean _flag = thumbDir.mkdirs();
+				if (!_flag) {
+				    throw new IOException("Directory creation Failed ");
+				}
+			}
+			
+			thumbFile.transferTo(thumb);
+			
+			result = thumbFileName;
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}

@@ -202,7 +202,7 @@
 			<div class="btnposition"></div>
 			<div style="text-align:center;width:490px;">
 			    <a class="imgbtn" id="ForwardDel" onClick="ButtonSaveAutoForward_Click()"><span><spring:message code='ezEmail.t95' /></span></a>
-			    <a id="btnSave" class="imgbtn" onClick="btnSave_onClick()"><span><spring:message code='ezEmail.t48' /></span></a>
+			    <a id="btnSave" class="imgbtn" onClick="btnSave_onClick()"><span><spring:message code='main.sp09' /></span></a>
 			    <a class="imgbtn" onClick="window.location.href='/ezEmail/mailAutoForward.do'"><span><spring:message code='ezEmail.t39' /></span></a>			    
 			</div>
 			<div style="display:none;">

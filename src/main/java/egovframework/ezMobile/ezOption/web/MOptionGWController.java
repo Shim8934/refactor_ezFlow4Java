@@ -54,7 +54,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 	 * 모바일 G/W 환경설정 [get] 환경설정조회
 	 */
     @SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezoption/option/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezoption/option/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject optionDetail(@PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W OPTION [GET /mobile/ezoption/option/users/{userId}] started.");
 
@@ -92,7 +92,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 	 * 모바일 G/W 환경설정 [post] 환경설정 생성
 	 */
     @SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezoption/option/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezoption/option/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject optionCreate(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W OPTION [POST /mobile/ezoption/option/users/{userId}] started.");
 
@@ -128,7 +128,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 	 * 모바일 G/W 환경설정 [put] 환경설정수정
 	 */
     @SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezoption/option/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezoption/option/users/{userId:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject optionUpdate(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W OPTION [PUT /mobile/ezoption/option/users/{userId}] started.");
 

@@ -55,8 +55,8 @@
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: block; width:100%; text-align:left; padding-left:5px;">
-					<h1><spring:message code='ezPoll.t123'/>&nbsp;(<c:out value='${numberOfUnVotedUsers}'/>)</h1>
-					<img style="position: fixed; right: 15px; top: 4px; cursor: pointer; height: 35px; width: 35px;" src="/images/poll/sendMail.png" onClick="sendMailAll('${qstID}')">
+					<h1 style="display: inline-block;"><spring:message code='ezPoll.t123'/>&nbsp;(<c:out value='${numberOfUnVotedUsers}'/>)</h1>
+					<img style="float: right; margin-right: 10px; cursor: pointer;" src="/images/poll/sendMail01.png" onClick="sendMailAll('${qstID}')">
 			    </div>					
 			</div>
 			<div style="height:365px; overflow-y: auto; overflow-x: hidden;" id="divTbl">
@@ -77,7 +77,7 @@
 								</a>
 							</td>
 							<td style="border:none; width: 60px; max-width: 110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><c:out value ="${list.phone}"/></td>
-							<td style="border-left:none; position: relative; background-clip: padding-box;"><img src="/images/poll/sendMail.png" style="height:40px; width:40px; position: absolute; top: 5px; right: 10px; cursor: pointer;" onClick="sendMail('${list.id}')"></td>		
+							<td style="border-left:none; position: relative; background-clip: padding-box;"><img class="voteUserMailImg" src="/images/poll/sendMail.png" onClick="sendMail('${list.id}')"></td>		
 						</tr>
 					</c:forEach>
 					<c:if test="${empty listOfUnvotedUsers}">

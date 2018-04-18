@@ -427,7 +427,7 @@
 		            //viewtype(기본보기, 안읽은게시물, 만료된게시물)이 바뀔때마다 실행되는 조건
 		            if (viewtypeChangeFlag) {
 		            	document.getElementById("Preview_HeaderW").style.display = "none"; 
-	            		document.getElementById("ifrmPreViewW").src = "/blank.htm";
+	            		document.getElementById("ifrmPreViewW").src = "<spring:message code='main.kms4' />";
 	            		document.getElementById("ifrmPreViewW").onload = function(){
 	            			if (CrossYN()) {
 			                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null){
@@ -440,7 +440,7 @@
 			                }
 	            		}
 	            		document.getElementById("Preview_HeaderH").style.display = "none"; 
-	            		document.getElementById("ifrmPreViewH").src = "/blank.htm";
+	            		document.getElementById("ifrmPreViewH").src = "<spring:message code='main.kms4' />";
 	            		document.getElementById("ifrmPreViewH").onload = function(){
 	            			if (CrossYN()) {
 			                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
@@ -620,8 +620,11 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 790) / 2;
-		        if (obj.getAttribute("DATA9") != "1" && obj.childNodes[2].style.fontWeight == "bold")
-		            obj.childNodes[2].style.fontWeight = "normal";
+		        
+		        for (var i = 0; i < obj.childNodes.length; i++) {
+		        	if (obj.getAttribute("DATA9") != "1" && obj.childNodes[i].style.fontWeight == "bold")
+		        		obj.childNodes[i].style.fontWeight = "normal";
+		        }
 
 		        if (obj.getAttribute("DATA10") == "4" || obj.getAttribute("DATA10") == "3") {
 		            window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=790,top=" + pTop + ",left=" + pLeft, "");
@@ -1045,18 +1048,17 @@
 		    }
 		    function search(type) {
 		        if (type == "basic") {
-		
-		            if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+		            if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
+		            		&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 		                alert("<spring:message code='ezBoard.t192' />");
 		                return;
 		            }
-		
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-		                alert("<spring:message code='ezBoard.t189' />");
+		        		alert("<spring:message code='ezSystem.x0035' />");	
 		                return;
 		            }
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-		                alert("<spring:message code='ezBoard.t189' />");
+		                alert("<spring:message code='ezSystem.x0036' />");
 		                return;
 		            }
 		            if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
@@ -1296,7 +1298,7 @@
 		                    </div>
 		                </span>
 		                
-		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
 		            </span>
 		        </span>
 		    </span>

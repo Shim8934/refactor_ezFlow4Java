@@ -239,6 +239,8 @@ public class LoginController {
 				// 사원번호를 사용한 로그인을 허용하는 경우
 				if (useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
 					
+					String orgId = resultVO.getId();
+					
 					// useMasteradminLogin이 YES일 경우 masteradmin의 암호로 로그인 가능하도록 한다.
 					if (useMasteradminLogin.equals("YES")) {
 						displayName1 = resultVO.getDisplayName1();
@@ -259,7 +261,7 @@ public class LoginController {
 					
 					if (!masteradminLogin) {
 						// 실제 사용자 ID를 사용해 암호가 맞는 지 확인한다.
-						_uid = resultVO.getId();
+						_uid = orgId;
 						_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
 			        	loginVO.setId(_uid);
 			        	loginVO.setPassword(_pwd);

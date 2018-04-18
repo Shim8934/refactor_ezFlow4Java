@@ -1,4 +1,4 @@
-﻿var DefaultView = 0;
+﻿﻿var DefaultView = 0;
 var sStartDate, sEndDate;
 var typeCal = 0;
 var sDate = parent.frames["left"].sDate;
@@ -268,14 +268,13 @@ function CalendarView(pTagetID) {
             oDiv.setAttribute("id", "CalDiv")
         }
 
-
-
         var oTable = document.createElement("TABLE");
         oTable.setAttribute("id", "dayDiv");
         oTable.setAttribute("cellpadding", "0");
         oTable.setAttribute("cellspacing", "0");
         oTable.setAttribute("border", "0");
         oTable.setAttribute("width", "100%");
+        oTable.style.minHeight = "670px";
         if (typeCal == 0)
             oTable.className = "calendar_month";
         else if (typeCal == 1)

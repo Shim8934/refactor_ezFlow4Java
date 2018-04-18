@@ -1,18 +1,29 @@
 package egovframework.ezEKP.ezPoll.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.mail.Message.RecipientType;
+import javax.mail.internet.InternetAddress;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPoll.dao.EzPollDAO;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -20,6 +31,8 @@ import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollUserVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -34,8 +47,20 @@ public class EzPollServiceImpl implements EzPollService{
 	@Resource(name="EzOrganService")
 	private EzOrganService ezOrganService;
 	
+	@Resource(name="loginService")
+	private LoginService loginService;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 
 	@Override
 	public String getQuestionSeq(int tenantID) throws Exception {
@@ -65,6 +90,8 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("set_date", pollQuestionVO.getSetDate());
 		map.put("is_sorting", pollQuestionVO.getIsSorting());		
 		map.put("is_selonlyonce", pollQuestionVO.getIsSelOnlyOnce());		
+		map.put("sendpostnotice", pollQuestionVO.getSendPostNotice());
+		map.put("opentoall", pollQuestionVO.getOpenToAll());
 		ezPollDAO.insertQuestion(map);
 	}
 
@@ -86,6 +113,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("tenant_id", pollAnswerVO.getTenantId());
 		map.put("content", pollAnswerVO.getContent());
 		map.put("vote_number", pollAnswerVO.getVotesNumber());
+		map.put("filePath", pollAnswerVO.getFilePath());
 		ezPollDAO.insertOption(map);
 	}
 
@@ -422,6 +450,8 @@ public class EzPollServiceImpl implements EzPollService{
 		List<PollQuestionVO> listOfQuestion = new ArrayList<PollQuestionVO>();
 		int tenantID = loginvo.getTenantId();
 		String primary = loginvo.getPrimary();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenant_id", tenantID);
 		
 		//Check if user has admin privilege
 		if (loginvo.getRollInfo().indexOf("c=1") == -1 && loginvo.getRollInfo().indexOf("k=1") == -1) {
@@ -443,6 +473,11 @@ public class EzPollServiceImpl implements EzPollService{
 			List<PollQuestionVO> listOfQuestion2 = new ArrayList<PollQuestionVO>();
 			listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr, primary, mode);		
 			set.addAll(listOfQuestion2);
+			
+			List<PollQuestionVO> listOfQuestion3 = new ArrayList<PollQuestionVO>();
+			listOfQuestion3 = ezPollDAO.getOpenToAllQuestion(map);
+			set.addAll(listOfQuestion3);
+			
 		}
 		else {
 			//Get all questions for admin privilege user
@@ -495,6 +530,224 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("user_id", id);
 		map.put("tenant_id", tenantId);
 		return ezPollDAO.getSpecificPollUserAndAnswer(map);
+	}
+
+	@Override
+	public int checkUsingFile(int tenantId, String FilePath) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("tenant_id", tenantId);
+		map.put("file_path", FilePath);
+		return ezPollDAO.checkUsingFile(map);
+	}
+
+	@Override
+	public int checkQstUsingFile(int tenantId, int qstId, String FilePath) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("tenant_id", tenantId);
+		map.put("qst_id", qstId);
+		map.put("file_path", FilePath);
+		return ezPollDAO.checkQstUsingFile(map);
+	}
+	
+	@Override
+	public void deleteAllFilesByQstId(int tenantId, int qstId, String pDirPath, String realPath) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("tenant_id", tenantId);
+		map.put("qst_id", qstId);
+		map.put("realPath", realPath);
+		
+		if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+			pDirPath = pDirPath + commonUtil.separator;
+		}
+		map.put("pDirPath", pDirPath);
+		
+		//투표에 첨부된 파일 체크 및 삭제
+		deleteQstFiles(map);
+		deleteAnsFiles(map);
+		deleteCmtFiles(map);
+		
+	}
+	
+	@Override
+	public void deleteQstFiles(Map<String, Object> map) throws Exception {
+		String qstFileName = "";
+		int fileUsingCheck = 0;
+		int tenantId = (int)map.get("tenant_id");
+		int qstId = (int)map.get("qst_id");
+		String pDirPath = (String)map.get("pDirPath");
+		String qstFile = ezPollDAO.getQuestionFileById(map);
+		
+		if(qstFile != null){
+			String[] qstFilesList = qstFile.split("\\|");
+			for(int i = 0; i < qstFilesList.length; i++){
+				qstFileName = qstFilesList[i];
+				
+				//다른 qstId에서 파일을 사용하고 있는지 체크
+				fileUsingCheck = checkQstUsingFile(tenantId, qstId, qstFileName);
+				if(fileUsingCheck < 1 && qstFileName != null){
+					if(qstFileName != null){
+						qstFileName= qstFileName.split("/")[0];
+					}
+					
+					String absoluteFilePath = pDirPath + "uploadFile/" + qstFileName;
+					
+					try {
+						File file = new File(absoluteFilePath);
+						file.delete();	
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void deleteAnsFiles(Map<String, Object> map) throws Exception {
+		String ansFileName = "";
+		int fileUsingCheck = 0;
+		int tenantId = (int)map.get("tenant_id");
+		String pDirPath = (String)map.get("pDirPath");
+		List<String> ansFilesList = ezPollDAO.getAnswerFilesByQstId(map);
+		
+		for(int i = 0; i < ansFilesList.size(); i++){
+			ansFileName = ansFilesList.get(i);
+			fileUsingCheck = checkUsingFile(tenantId, ansFileName);
+			if(fileUsingCheck <= 1 && ansFileName != null){
+				if(ansFileName != null){
+					ansFileName= ansFileName.split("/")[0];
+				}
+				
+				String absoluteFilePath = pDirPath + "uploadFile/" + ansFileName;
+				
+				try {
+					File file = new File(absoluteFilePath);
+					file.delete();	
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void deleteCmtFiles(Map<String, Object> map) throws Exception {
+		String cmtFileName = "";
+		List<String> cmtFilesList = ezPollDAO.getCommentFilesByQstId(map);
+		List<String> cmtImgFilesList = ezPollDAO.getCommentImgFilesByQstId(map);
+		
+		//일반 파일 삭제
+		if(cmtFilesList != null){
+			for(int i = 0; i < cmtFilesList.size(); i++){
+				cmtFileName = cmtFilesList.get(i);
+				
+				//댓글은 재사용하지 않기 때문에 파일 사용유무 체크하지 않음.
+				if(cmtFileName != null){
+					String pDirPath = (String)map.get("pDirPath");
+					String absoluteFilePath = pDirPath + "uploadFile/" + cmtFileName;
+					
+					try {
+						File file = new File(absoluteFilePath);
+						file.delete();	
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		//이미지 파일 삭제
+		if(cmtImgFilesList != null){
+			for(int i = 0; i < cmtImgFilesList.size(); i++){
+				cmtFileName = cmtImgFilesList.get(i);
+				
+				//댓글은 재사용하지 않기 때문에 파일 사용유무 체크하지 않음.
+				if(cmtFileName != null && cmtFileName.indexOf("commentImages") != -1){
+					/*if(cmtFileName != null && cmtFileName.indexOf("commentImages") != -1){
+						String[] tempArr = cmtFileName.split("/");
+						cmtFileName= tempArr[tempArr.length - 1];
+					}*/
+					
+					String realPath = (String)map.get("realPath");
+					String absoluteFilePath = realPath + cmtFileName;
+					
+					try {
+						File file = new File(absoluteFilePath);
+						file.delete();	
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public void sendPostNotiMail(LoginVO userInfo, String loginCookie, PollQuestionVO pollQuestion) throws Exception {
+		int tenantId = userInfo.getTenantId();
+		String title = pollQuestion.getTitle();
+		int qstId = pollQuestion.getQstId();
+		String toName = "";
+		String toAddress = "";
+		
+		//메일 제목 작성.
+		String subject = egovMessageSource.getMessage("ezPoll.hdp03", userInfo.getLocale());
+		StringBuilder bodyContent = new StringBuilder("");
+		
+		//메일 본문 작성.
+		bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+		bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('../ezPoll/pollVote.do?qstId=" + qstId + "&params=&search=&searchN=', '', 'width=820, height=900, scrollbars=yes, resizable=yes')\">" + commonUtil.cleanValue(title) + "</span></br>");
+		bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getDisplayName() + "</br>");
+		bodyContent.append(" " + egovMessageSource.getMessage("ezAddress.t288", userInfo.getLocale()) + " : " + pollQuestion.getCreateDate());
+		bodyContent.append("</div>");
+		
+		//메일 대상자 선정
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantID", tenantId);
+		map.put("qst_id", qstId);
+		
+		List<PollUserVO> receiverList = ezPollDAO.getListOfUserIdForQstByQstId(map);
+		InternetAddress[] toArr = new InternetAddress[receiverList.size()];
+		InternetAddress from = new InternetAddress();
+		
+		
+		for (int i = 0; i < receiverList.size(); i++) {
+			OrganUserVO AccessUserInfo = null;
+			OrganDeptVO AccessUserGroupInfo = null;
+			InternetAddress to = new InternetAddress();
+			
+			String userType = receiverList.get(i).getUserType();
+			String receiverId = receiverList.get(i).getUserId().trim();
+			
+			
+			if(userType.equals("user")){
+				AccessUserInfo = ezOrganAdminService.getUserInfo(receiverId, userInfo.getPrimary(), userInfo.getTenantId());
+			}
+			else{
+				AccessUserGroupInfo = ezOrganService.getDeptInfo(receiverId, userInfo.getPrimary(), userInfo.getTenantId());
+			}
+			
+			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+			from.setAddress(userInfo.getEmail());
+			
+			if(AccessUserInfo != null){
+				toName = AccessUserInfo.getDisplayName();
+				toAddress = AccessUserInfo.getMail();
+			}
+			else{
+				toName = AccessUserGroupInfo.getDisplayName();
+				toAddress = AccessUserGroupInfo.getMail();
+			}
+			
+			to.setPersonal(toName, "UTF-8");
+			to.setAddress(toAddress);
+			toArr[i] = to;
+		}
+		
+		ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, bodyContent.toString(), false);
 	}
 
 }
