@@ -8,6 +8,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,6 +155,35 @@ public class EzLadderGWController {
 	}
 	
 	/** boh */
+	/***/
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ladder/ladders/writers/{writerId}/searchUser", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject gwSelectSearchUser(@PathVariable String writerId, @RequestBody String [] searchUserName, HttpServletRequest request) {
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, writerId);
+			
+			int tenant_id = userInfo.getTenantId();
+			String lang = userInfo.getLang();
+			
+			List<LadderLineVO> resultUser = ezLadderService.selectSearchUser(searchUserName, tenant_id, lang);
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", resultUser);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		logger.debug("web G/W LADDER [GET /ladder/ladders/writers/" + writerId + "/searchUser] ended.");
+		
+		return result;
+	}
 	/**
 	 * 사다리 게임 추가
 	 * */
@@ -546,7 +576,7 @@ public class EzLadderGWController {
 			String realPath = "";
 			String fullPath = "";
 			
-			imagePath = ezOrganService.getPropertyValue(userId, "extensionAttribute2", ladVO.getTenant_id());
+			imagePath = ezOrganService.getPropertyValue(vo.getWriterId(), "extensionAttribute2", vo.getTenant_id());
 			if (imagePath != null && !imagePath.equals("")) {
 				realPath = commonUtil.getUploadPath("upload_personal.PHOTO", vo.getTenant_id())+ commonUtil.separator + imagePath;
 				fullPath = request.getServletContext().getRealPath(realPath);

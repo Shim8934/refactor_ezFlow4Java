@@ -318,7 +318,7 @@
 			var $moveImgUser;
 			
 			if($("#itemList li:eq(" + resultOrder + ") div").length == 1) {
-				var html = "<div style='line-height: 30px; height: 30px; background: #ddd; margin-top: 10px; border-radius: 15px;'>" + _ladderLine[clickUserOrder].userName + "</div>";
+				var html = "<div title='" + _ladderLine[clickUserOrder].userName + "' style='line-height: 30px; height: 30px; background: #ddd; margin-top: 10px; border-radius: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + _ladderLine[clickUserOrder].userName + "</div>";
 				$("#itemList li:eq(" + resultOrder + ")").append(html);
 				$moveImgUser = $("#moveImgUser" + clickUserOrder);
 			} else {
@@ -396,7 +396,7 @@
 						} else {
 							html += '<span class="userPicWraper"><img src="' + line.pic + '" width="60px" height="60px" /></span>';
 						}
-						html += '<div style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap">' + line.userName + '</span></div></div></li>';
+						html += '<div title="' + line.userName + '" style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap">' + line.userName + '</span></div></div></li>';
 					});
 					$("#attendantList").html(html);
 					canvasSetting();
@@ -429,18 +429,20 @@
 				},
 				success: function(data) {
 					var cmt = data["myComment"];
+					var picsrc = !cmt["pic"] ? "/images/ezLadder/icon_defaultAttendant.png" : cmt["pic"];
 					if(flag == "add") { 
 						// add
 						var html = '<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="' + cmt["id"] + '">';
-						html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><img src="' + cmt["pic"] + '" style="padding-top: 10px; height: 38px; width:38px; cursor: pointer; " onclick="menuQst_DetailUserInfo(' + cmt["userId"] + ');"></td>';
+						html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;"><img src="' + picsrc + '" style="height: 38px; width:38px;"></div></td>';
 						html += '<td><div class="userName">' + cmt["userName"] + '</div>';
 						html += '<div id="div2Cmt' + cmt["id"] + '" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >';
-						html += '<p id="cmtArea' + cmt["id"] + '" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;">' + cmt["comment"] + '</p></div>';
+						html += '<p id="cmtArea' + cmt["id"] + '" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;"></p></div>';
 						html += '<div id="editCmtDiv' + cmt["id"] + '" style="display: none;"></div></td>';
 						html += '<td style="width: 145px; position:relative;">';
 						html += '<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;">' + cmt["writeDate"] + '</div></td></tr>';
 						
 						$("#commentArea table").prepend(html);
+						$("#cmtArea" + cmt["id"]).text(cmt["comment"]);
 						
 						if(id == cmt["userId"]) {
 							html = '<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" name="editComtButton" _comtIndex="editComt' + cmt["id"] + '" />';
@@ -643,7 +645,7 @@
 										<li><img src="/images/ezLadder/icon_status0${vo.status}.png" width="45px;" height="45px;"></li>
 										<li><img src="/images/ezLadder/icon_secretflag0${vo.secretFlag}.png" width="45px;" height="45px;"></li>
 									</ul>
-									<p class="pic"><img src="${vo.pic}" width="60px;" height="60px;" style="position: relative;top: -2px;left: -2px;"></p>
+									<p class="pic"><img src="${empty vo.pic ? '/images/ezLadder/icon_defaultAttendant.png' : vo.pic}" width="60px;" height="60px;" style="position: relative;top: -2px;left: -2px;"></p>
 									<div class="txt">
 										<span class="name">${vo.writerName}</span>
 										<span class="team">${vo.deptName}</span>
@@ -730,7 +732,7 @@
 															</span>
 														</c:otherwise>
 													</c:choose>
-													<div style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
+													<div title="${line.userName}" style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
 												</div>
 											</li>
 										</c:forEach>
@@ -747,7 +749,7 @@
 								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
 										<li>
-											<div style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
+											<div title="${line.item}" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
 												<span style="white-space: nowrap;">${line.item}</span>
 											</div>
 										</li>
@@ -779,7 +781,7 @@
 																</span>
 															</c:otherwise>
 														</c:choose>
-													<div style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
+													<div title="${line.userName}" style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
 												</div>
 											</li>
 										</c:forEach>
@@ -793,7 +795,7 @@
 								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
 										<li>
-											<div style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
+											<div title="${line.item}" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
 												<span style="white-space: nowrap;">${line.item}</span>
 											</div>
 										</li>
@@ -823,7 +825,7 @@
 					<c:forEach var="_comt" items="${cmtlist}">
 						<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="<c:out value ="${_comt.id}" />">
 							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
-								<img src="${_comt.pic}" style="padding-top: 10px; height: 38px; width:38px; cursor: pointer; " onclick="menuQst_DetailUserInfo('${_comt.userId}');">
+								<div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;"><img src="${empty _comt.pic ? '/images/ezLadder/icon_defaultAttendant.png' : _comt.pic}" style="height: 38px; width:38px;"></div>
 							</td>
 							<td>
 								<div class="userName">${_comt.userName}</div>

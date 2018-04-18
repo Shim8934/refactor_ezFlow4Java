@@ -290,7 +290,7 @@
 							<div id="tblPageRayer" style="margin-top: 10px;"></div>
 						</div>
 						<div class="ladderPreList_right" style="position: relative;">
-							<div id="ladderPreviewLayer" style="width: 894px; position: absolute; z-index: 1000;"></div>
+							<div id="ladderPreviewLayer" style="width: 894px; position: absolute; z-index: 1000; background: white; opacity: 0;"></div>
 							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 877px;"></iframe>
 						</div>
 					</div>

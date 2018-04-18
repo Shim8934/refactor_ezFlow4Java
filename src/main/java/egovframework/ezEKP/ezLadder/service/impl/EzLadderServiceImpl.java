@@ -209,6 +209,37 @@ public class EzLadderServiceImpl implements EzLadderService {
 
 	/** boh */
 	@Override
+	public List<LadderLineVO> selectSearchUser(String [] searchUserName, int tenant_id, String lang)  throws Exception {
+		String primaryLang = commonUtil.getMultiData(lang, tenant_id);
+		
+		List<LadderLineVO> resultUser = new ArrayList<>();
+		Map<String, Object> dataMap = new HashMap<>();
+		
+		for(String name : searchUserName) {
+			if(name != null && !name.equals("")) {
+				dataMap.put("name", name);
+				dataMap.put("tenant_id", tenant_id);
+				dataMap.put("lang", primaryLang);
+				
+				LadderLineVO user = ezLadderDAO.selectSearchUser(dataMap);
+				
+				if(user == null) {
+					LadderLineVO noUser = new LadderLineVO(); 
+					noUser.setUserName(name);
+					noUser.setUserName2(name);
+					resultUser.add(noUser);
+				} else {
+					resultUser.add(user);
+				}
+				
+				dataMap.clear();
+			}
+		}
+		
+		return resultUser;
+	}
+	
+	@Override
 	public int insertLadder(LadderVO lad, LadderLineVO ladLines, String logCookie) throws Exception {
 		ezLadderDAO.insertLadderSet(lad);
 		

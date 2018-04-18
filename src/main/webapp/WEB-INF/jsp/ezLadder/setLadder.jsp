@@ -46,6 +46,7 @@
 					max: 0,
 					slide: function( event, ui ) {
 						$("#amount").text(ui.value);
+						console.log("dd");
 					},
 					stop: function(event, ui) {
 						console.log(ui.value);
@@ -93,6 +94,7 @@
 				$("#inputAttendant").on("keyup", function(e) {
 					var inputNames = $("#inputAttendant").val();
 					if(e.keyCode == "13" && inputNames !== "") {
+						$("#inputAttendant").val("");
 						checkAttendant(inputNames);
 					}
 				});
@@ -113,7 +115,6 @@
 				var scrollCnt = 0;
 				$(document)
 					.on("dragstart", ".mainbody img", function() {
-						console.log("드래그 시작");
 						return false;
 					})
 					.on("click", "#removeIcon", function() {
@@ -138,6 +139,9 @@
 				var html = "";
 				var len = $("#itemList li").length;
 				if(ladderType == "0") {
+					if(len > 0 && bombnum > len) {
+						bombnum = len;
+					}
 					html += "<div style='float: right; padding-top: 7px;'><div id='addBomb' class='typeOpbtn' style='margin-right: 10px;' onselectstart='return false'>" + strLang101 + "</div>";	
 					html += "<div id='cutBomb' class='typeOpbtn' style='margin-right: 30px;' onselectstart='return false'>" + strLang102 + "</div>";
 					html += "<div id='bombnum' style='display: inline-block;'>" + strLang103 + "<span style='margin: 0px 5px 0px 15px;'>" + bombnum + "</span>" + strLang104 + "</div></div>";
@@ -285,7 +289,7 @@
 				ladder_select_attendant_dialogArguments[0] = {"attendants": attendants};
 				ladder_select_attendant_dialogArguments[1] = checkAttendant;
 
-			    GetOpenWindow("/ezLadder/setLadderAttendant.do", "ladder_select_attendant", 970, 680);
+			    GetOpenWindow("/ezLadder/setLadderAttendantPopUp.do", "ladder_select_attendant", 970, 680);
 			}
 
 			/** 참여자 변경될때 슬라이더 바 조절 */
@@ -309,6 +313,8 @@
 
 			/** 참여자 삭제 */
 			function attendant_remove(index) {
+				setInputValue(false);
+				
 				attendants["id"].splice(index, 1);
 				attendants["name"].splice(index, 1);
 				attendants["name2"].splice(index, 1);
@@ -348,26 +354,69 @@
 					data = ReplaceText(data, ",", ";");
 					
 					var names = data.split(";");
-					len = names.length;
 					
-					addIndex = attendants["id"].length;
+					getUserArray(names);
+					
+					if(!!nameSearchResult) {
+						len = nameSearchResult.length;
+						
+						nameSearchResult.forEach(function(resultUser, index) {
+							if(!!resultUser["userId"]) {
+								var checkOverlap1 = attendants["id"].indexOf(resultUser["userId"]);
+								var checkOverlap2 = function() {
+									var overlapretvalue = -1;
+									alluser.forEach(function(user, index) {
+										if(user["datatype"].substring(0, 5) !== "anony" && user["data"]["userName"] === resultUser["userName"]) {
+											overlapretvalue = 1;
+										}
+									});
+									return overlapretvalue;
+								}; 
+								
+								if(checkOverlap1 !== -1 || checkOverlap2() !== -1) { // 중복 유저
+									overlapuser[index] = resultUser;
+								
+								} else { // 중복 아닌 유저
+									alluser[index] = { "data": resultUser, "datatype": "real" };
+								}
+							} else {
+								alluser[index] = { "data": resultUser, "datatype": "anony" };
+							}
+						});
+						
+						
+						if(!!overlapuser.length) { // 중복유저 팝업
+							retAttendantPopInfo[0] = true;
+							retAttendantPopInfo[1] = bindAllUser;
+							
+							DivPopUpShow(360, 185, "/ezLadder/ladderPopup.do?popupType=overlap");
+						} else {
+							bindAllUser(false);
+						}
+					}
+					
+					/* addIndex = attendants["id"].length;
 					for (; i < len; i++) {
 						names[i] = names[i].trim();
 						
-						if(names[i] == "") {
+						if(!names[i]) {
 							continue;
 						}
 						
+						
+						
+						nameSearchResult;
+						function getUserArray(names) {
 						getAttendantAJAX(names[i]);
 						
 						if(adCount === 0) { // 검색결과 없음 (완전 익명)
-							alluser[i] = { "data": { "name": names[i], "name2": names[i] }, "datatype": "anony-json" };
+							alluser[addCnt] = { "data": { "name": names[i], "name2": names[i] }, "datatype": "anony-json" };
 						
 						} else if(adCount === 1) { // 검색결과 하나
 							var checkOverlap1 = attendants["id"].indexOf(getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]));
-							/* var checkOverlap1 = attendants["id"].findIndex(function(id) {
+							var checkOverlap1 = attendants["id"].findIndex(function(id) {
 								return id == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]);
-							}); */
+							});
 							var checkOverlap2 = function() {
 								var overlapretvalue = -1;
 								alluser.forEach(function(user, index) {
@@ -379,18 +428,20 @@
 							}; 
 							
 							if(checkOverlap1 !== -1 || checkOverlap2() !== -1) { // 중복 유저
-								overlapuser[i] = xmlDOM;
+								overlapuser[addCnt] = xmlDOM;
 							
 							} else { // 중복 아닌 유저
-								alluser[i] = { "data": xmlDOM, "datatype": "real-xml" };
+								alluser[addCnt] = { "data": xmlDOM, "datatype": "real-xml" };
 							}
 							
 						} else { // 검색결과 여럿
-							alluser[i] = { "data": { "name": names[i], "name2": names[i] }, "datatype": "anony-json" };
+							alluser[addCnt] = { "data": { "name": names[i], "name2": names[i] }, "datatype": "anony-json" };
 						}
-					}
+						
+						addCnt++; 
+					}*/
 					
-					$("#inputAttendant").val("");
+					/* $("#inputAttendant").val("");
 					
 					console.log(overlapuser.length);
 					if(!!overlapuser.length) { // 중복유저 팝업
@@ -400,7 +451,7 @@
 						DivPopUpShow(360, 185, "/ezLadder/ladderPopup.do?popupType=overlap");
 					} else {
 						bindAllUser(false);
-					}
+					} */
 					
 				} else {
 					attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
@@ -409,10 +460,11 @@
 					
 					for(; i < len; i++) {
 						if(data[i]["id"].substring(0, 14) !== "anonyAttendant") {
-							getAttendantAJAX(data[i]["name"]);
-							alluser[i] = { "data": xmlDOM, "datatype": "real-xml" };
+							getUserArray(data[i]["name"]);
+							/* getAttendantAJAX(data[i]["name"]); */
+							alluser[i] = { "data": nameSearchResult[0], "datatype": "real" };
 						} else {
-							overlapuser[i] = data[i];
+							overlapuser[i] = { "userName" : data[i]["name"], "userName2" : data[i]["name2"] };
 						}
 						if(!!data[i]["item"]) {
 							items[i] = data[i]["item"];
@@ -420,7 +472,7 @@
 					}
 					
 					if(!!overlapuser.length) {
-						bindAllUser(true, "anony-json");
+						bindAllUser(true, "anony");
 					} else {
 						bindAllUser(false);
 					}
@@ -452,34 +504,21 @@
 				
 				userdata.forEach(function(_user, index) {
 					totallen = attendantlen + index;
-					flag = _user["datatype"].split("-");
-					
+					flag = _user["datatype"];
 					user = _user["data"];
-					if(flag[0] === "real") {
-						if(flag[1] === "xml"){
-							attendants["id"][totallen] = getNodeText(user.getElementsByTagName("DATA2")[0]);
-							attendants["name"][totallen] = getNodeText(user.getElementsByTagName("DATA6")[0]);
-							attendants["name2"][totallen] = getNodeText(user.getElementsByTagName("DATA7")[0]);
-							attendants["pic"][totallen] = getNodeText(user.getElementsByTagName("DATA5")[0]);	
-							attendants["order"][totallen] = totallen;
-						} else {
-							attendants["id"][totallen] = user["id"];
-							attendants["name"][totallen] = user["name"];
-							attendants["name2"][totallen] = user["name2"];
-							attendants["pic"][totallen] = user["pic"];
-							attendants["order"][totallen] = totallen;
-						}
+					
+					if(flag === "real") {
+						attendants["id"][totallen] = user["userId"];
+						attendants["name"][totallen] = user["userName"];
+						attendants["name2"][totallen] = user["userName2"];
+						attendants["pic"][totallen] = !user["pic"] ? "" : user["pic"];
+						attendants["order"][totallen] = totallen;
 					} else {
 						attendants["id"][totallen] = "anonyAttendant_" + totallen;
+						attendants["name"][totallen] = user["userName"];
+						attendants["name2"][totallen] = user["userName2"];
 						attendants["pic"][totallen] = "";
 						attendants["order"][totallen] = totallen;
-						if(flag[1] === "xml") { // xml
-							attendants["name"][totallen] = getNodeText(user.getElementsByTagName("DATA3")[0]).substring(0, maxname);
-							attendants["name2"][totallen] = getNodeText(user.getElementsByTagName("DATA3")[0]).substring(0, maxname);
-						} else { // json
-							attendants["name"][totallen] = user["name"].substring(0, maxname);
-							attendants["name2"][totallen] = user["name2"].substring(0, maxname);
-						}
 					}
 					if(items[totallen] == null) {
 						items[totallen] = "";
@@ -574,6 +613,25 @@
 		    	});
 			}
 			
+			var nameSearchResult;
+			function getUserArray(names) {
+				$.ajax({
+					type: "POST",
+					url: "/ezLadder/setLadderAttendant.do",
+					dataType: "json",
+					traditional: true,
+					async : false,
+					data: {
+						"searchUserName": names
+					},
+					success: function(resultName) {
+						console.log(resultName);
+						nameSearchResult = resultName.JSONObjectList;
+					}
+					
+				});
+			}
+			
 			/** 사다리 만들기 */
 			function makeLadder() {
 				if(!$("#title").val()) {
@@ -625,6 +683,9 @@
 
 		</script>
 		<style type="text/css">
+			input[type=text]::-ms-clear {
+				display:none;
+			}
 			.ui-widget-header {
 				background: #ddeeff;
 			}

@@ -13,7 +13,6 @@
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezLadder/string_component.js"></script>
 		<script type="text/javascript" src="/js/ezLadder/ladderSetting.js"></script>
 		<script type="text/javascript" src="/js/ezLadder/ladder.js"></script>
 		
@@ -46,12 +45,14 @@
 				
 				$("#btn_addRealUser").on("click", function() {
 					if(typeof retFunc === "function") {
-						retFunc(retVal, "real-xml");
+						/* retFunc(retVal, "real-xml"); */
+						retFunc(retVal, "real");
 					}
 				});
 				$("#btn_addAnonyUser").on("click", function() {
 					if(typeof retFunc === "function") {
-						retFunc(retVal, "anony-xml");
+						/* retFunc(retVal, "anony-xml"); */
+						retFunc(retVal, "anony");
 					}
 				});
 				

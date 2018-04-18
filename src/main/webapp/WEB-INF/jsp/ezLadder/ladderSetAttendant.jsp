@@ -781,7 +781,7 @@
 					strName = user["name1"];
 					strName2 = user["name2"];
 					strEmail = user["name1"];
-					if(userlist[i]["datatype"] === "anony-xml") {
+					if(userlist[i]["datatype"] === "anony") {
 						strId = "anonyAttendant";
 					} else {
 						strId = user["id"];

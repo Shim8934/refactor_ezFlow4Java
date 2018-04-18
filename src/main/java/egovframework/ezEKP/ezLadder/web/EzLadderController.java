@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezLadder.web;
 
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -12,6 +13,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -195,18 +198,61 @@ public class EzLadderController {
 	/** 
 	 * 참여자 추가 (조직도 호출)
 	 * */
-	@RequestMapping(value = "/ezLadder/setLadderAttendant.do")
-	public String setLadderAttendant(@CookieValue("loginCookie") String loginCookie, Model model) {
-		logger.debug("setLadderAttendant started.");
+	@RequestMapping(value = "/ezLadder/setLadderAttendantPopUp.do")
+	public String setLadderAttendantPopUp(@CookieValue("loginCookie") String loginCookie, Model model) {
+		logger.debug("setLadderAttendantPopUp started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID());
 		
-		logger.debug("setLadderAttendant ended.");
+		logger.debug("setLadderAttendantPopUp ended.");
 		
 		return "ezLadder/ladderSetAttendant";
+	}
+	
+	/**
+	 * 사다리 게이머 추가
+	 * @throws ParseException 
+	 * */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezLadder/setLadderAttendant.do")
+	public String setLadderAttendant(@CookieValue("loginCookie") String loginCookie, String [] searchUserName, HttpServletRequest request, Model model) throws ParseException {
+		logger.debug("setLadderAttendant started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
+		String url = gwServerUrl + "/ladder/ladders/writers/" + userInfo.getId() + "/searchUser";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(searchUserName, headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
+		
+		String status = jsonResult.get("status").toString();
+		JSONArray resultSearchName = (JSONArray) jsonResult.get("data");
+	
+		if (status.equals("ok")) {
+			logger.debug("### 오케이");
+			model.addAttribute(resultSearchName);
+		} else {
+			return "error";
+		}
+		
+		logger.debug("setLadderAttendant ended.");
+		return "json";
 	}
 	
 	/**
