@@ -76,6 +76,10 @@
     	    	if (totalPages * blockSize < totalRows) {
     	    		totalPages++;
     	    	}
+    	    	
+    	    	if (currentPage > totalPages) {
+    	    		goToPageByNum(totalPages);
+    	    	}
     	    }
     	    
     		var strLang39	= "<spring:message code = 'ezWebFolder.t135'/>";
