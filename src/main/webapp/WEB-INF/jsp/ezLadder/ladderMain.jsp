@@ -73,30 +73,26 @@
 					$("#searchInput").show();
 				} 
 			}
-			
-			
 		</script>
 		<style type="text/css">
 			.effect {
-				width:45px;
-				height:45px;
-				border:1px solid #a9a9a9;
-				border-radius:30px;
+				width:30px;
+				height:30px;
 			}
-			#mainmenu li span {
-				border-color: #B5B3B3;
+			#mainmenu li {
+				border-color: #ddd;
 				border-radius:0px;
 			}
 			.participantBtn {
 				height:28px;
-				border-color:#B5B3B3; 
+				
 				border:1px solid #B5B3B3;
 			}
 			.mainlist th {
 			    cursor: pointer;
 			}
 			
-			#mainmenu li a:HOVER span{color:#0072c6;}
+			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}
 		</style>
 	</head>
 	<body class="mainbody" style="min-width: 750px;">
@@ -104,22 +100,21 @@
 			<h1><spring:message code="ezLadder.t001"/>
 				<span id="mailBoxInfo"></span>
 				<span style="float: right; font-weight:normal;color:black;">
-					<select id="searchOption" style="height:24px;">
+					<select id="searchOption" style="height:24px; ">
 					  <option value="title" <c:if test = "${searchSelect eq 'title' }" >selected="selected"</c:if>><spring:message code="ezLadder.t003"/></option>
 					  <option value="kind" <c:if test = "${searchSelect eq 'kind' }" >selected="selected"</c:if>><spring:message code="ezLadder.t002"/></option>
 					  <option value="writer" <c:if test = "${searchSelect eq 'writer' }" >selected="selected"</c:if>><spring:message code="ezLadder.t004"/></option>
 					  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>><spring:message code="ezLadder.t127"/></option>
 					</select>
-	
-					<select id="ladderType" style="margin-left: 10px; height: 24px; width:150px;">
+					
+					<a href="#"><img src="/images/ezLadder/btn_search.png" width='24px' height='24px' style="vertical-align:middle; float:right;" onclick="searchLadder()" ></a>
+					<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left:10px; float:right;" value="<c:out value='${searchInput}'/>">
+					<select id="ladderType" style="height: 24px; width:150px;margin-left:10px; float:right;">
 					  <option value="0" <c:if test = "${searchInput eq '0' }" >selected="selected"</c:if>><spring:message code="ezLadder.t101"/></option>
 					  <option value="1" <c:if test = "${searchInput eq '1' }" >selected="selected"</c:if>><spring:message code="ezLadder.t102"/></option>
 					  <option value="2" <c:if test = "${searchInput eq '2' }" >selected="selected"</c:if>><spring:message code="ezLadder.t103"/></option>
 					  <option value="3" <c:if test = "${searchInput eq '3' }" >selected="selected"</c:if>><spring:message code="ezLadder.t104"/></option>
 					</select>
-					
-					<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left: 10px;" value="<c:out value='${searchInput}'/>">
-					<a href="#"><img src="/images/ezLadder/btn_search.png" width='24px' height='24px' style="vertical-align:middle; float:right;" onclick="searchLadder()" ></a>
 				</span>
 			</h1>
 		
@@ -128,8 +123,8 @@
 			<ul style="width:100%;">
 				<li id="btnInsert" onClick="newLad()" ><a><span><spring:message code="ezLadder.t018"/></span></a></li>
 				<li style="float:right; font-weight:normal; ">
-					<button type="button" class="participantBtn" id="part" onclick="participant(this.value)" value="part" style="position:relative; left:6px;"><spring:message code="ezLadder.t012"/></button>
-					<button type="button" class="participantBtn" id="all" onclick="participant(this.value)" value="all"><spring:message code="ezLadder.t011"/></button>
+					<button type="button" class="participantBtn" id="all" onclick="participant(this.value)" value="all" style="float: right;"><spring:message code="ezLadder.t011"/></button>
+					<button type="button" class="participantBtn" id="part" onclick="participant(this.value)" value="part" style="position:relative;"><spring:message code="ezLadder.t012"/></button>
 				</li>
 			</ul>
 		</div>
@@ -149,7 +144,7 @@
 					<tr class="black" style="height=30px;" onClick="getLadderGame(${vo.ladderId})">
 						<td><img class="effect" src ='/images/ezLadder/icon_game0${vo.type}.png' /></td>			
 						
-						<td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${vo.title }</td>
+						<td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><c:out value ="${vo.title }" /></td>
 						<td>${vo.writerName }</td>
 						<td>${vo.writeDate.substring(0,16) }</td>
 						
