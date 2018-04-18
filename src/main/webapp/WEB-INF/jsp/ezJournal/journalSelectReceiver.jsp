@@ -53,10 +53,10 @@
 					'core' 	 : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
-				});
-				
-		//		var node = $("#treeview").tree("getNodeById", id);
-		//		$("#treeview").get_node(node).children('.jstree-anchor').focus();
+				}).on('ready.jstree', function(e, data) {
+					var offset = $(".jstree-clicked").offset();
+		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+			    });
 	   		}
 	   		
 	   		//사원 리스트 뿌리기

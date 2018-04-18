@@ -41,12 +41,19 @@
 			     	var id = data.instance.get_node(data.selected).id;
 			     	var deptName = $("#"+id+" a:first").text();
 					setUserList("DEPARTMENT", id,deptName);
-				  })
-				.jstree({ 
+				  }).jstree({ 
 					'core'   : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
-				});
+				}).on('ready.jstree', function(e, data) {
+					var offset = $(".jstree-clicked").offset();
+		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+			    });
+	   		}
+	   		
+	   		function goScroll(){
+				var offset = $("#opensol").offset();
+	   	        $('html, body').animate({scrollTop : offset.top}, 400);
 	   		}
 	   		
 	   		//사원 리스트 뿌리기
