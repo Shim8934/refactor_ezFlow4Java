@@ -151,7 +151,6 @@
 						 {name : 'Report', type : 'url', value : '/js/ezEditor/kukudocsEditor/template/report.html'},
 						 {name : 'Vacation', type : 'url', value : '/js/ezEditor/kukudocsEditor/template/vacation.html'}]
 			}];
->>>>>>> master
 			
 			var kukudocsEditor = new KuKudocsEditor('editor1', {
 	            minHeight : 0,

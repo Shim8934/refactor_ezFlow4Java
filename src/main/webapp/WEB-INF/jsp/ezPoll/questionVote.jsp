@@ -2615,21 +2615,208 @@
 		    
 		  	//썸네일 이미지에 레이어 팝업 기능 관련
 		    function addThumbnailEvent(){
-		    	$("#ballotSystemBody").append("<div id='imgPopupBox' class='imgPopupBoxOff'><img id='imgPopup' class='imgPopupOff'/></div>");
-		  		$(document).on("mouseover",".thumbnail",function(e){
-					$("#imgPopupBox").removeClass("imgPopupBoxOff").addClass("imgPopupBox");
-		    		$("#imgPopup").removeClass("imgPopupOff").addClass("imgPopup");
-		    		$("#imgPopup").attr("src",e.target.src);
-		    		$("#imgPopupBox").css("left",(window.innerWidth-$("#imgPopupBox").width())/2);
-		    		$("#imgPopupBox").css("top",(window.innerHeight-$("#imgPopupBox").height())/2 + window.pageYOffset);
-		    		$("#imgPopup").css("left",($("#imgPopup").parent().width()-$("#imgPopup").width())/2);
-		    		$("#imgPopup").css("top",($("#imgPopup").parent().width()-$("#imgPopup").height())/2);
-				}).on('mouseout',function(e){
-					$("#imgPopupBox").removeClass("imgPopupBox").addClass("imgPopupBoxOff");
-		    		$("#imgPopup").removeClass("imgPopup").addClass("imgPopupOff");
-		    		$("#imgPopup").removeAttr("src");
+		    	$(document).on("mouseover",".thumbnail",function(e){
+		    		thumbnailImgMouseOver(e);
+		    	}).on("click", ".thumbCloseBtn", function(e){
+					hideImgPopupBox();
+				}).on("click", ".thumbnail", function(e){
+					hideImgPopupBox();
+				}).on("click", "#thumbMagnifyBtn", function(e){
+					magnifyThumbnailSize();
+				}).on("click", "#thumbZoomInBtn", function(e){
+					zoomInImgPopup();
+				}).on("click", "#thumbZoomOutBtn", function(e){
+					zoomOutImgPopup();
 				});
 		    }
+		  	
+		  	//썸네일에 마우스 오버할 때 처리.
+		  	function thumbnailImgMouseOver(e){
+	    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
+		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
+		  		$("#imgPopupBox").removeClass("imgPopupBoxOff imgPopupBoxMagnify").addClass("imgPopupBox");
+	    		$("#imgPopupDiv").removeClass("imgPopupDivMagnify").addClass("imgPopupDiv");
+	    		$("#imgPopup").removeClass("imgPopupOff imgPopupMagnify").addClass("imgPopup");
+	    		$("#imgPopup").attr("src",e.target.src);
+	    		
+	    		var imgPB_LeftOffset = (window.innerWidth-$("#imgPopupBox").width()) / 2;
+	    		var imgPB_TopOffset = (window.innerHeight-$("#imgPopupBox").height()) / 2 + window.pageYOffset;
+	    		var imgP_LeftOffset = ($("#imgPopup").parent().width()-$("#imgPopup").width()) / 2;
+	    		
+	    		$("#imgPopupBox").css("left", imgPB_LeftOffset);
+	    		$("#imgPopupBox").css("top",imgPB_TopOffset);
+	    		$("#imgPopup").css({"left": imgP_LeftOffset, "zoom": ""});
+	    		$("#imgPopup").css("top",(($("#imgPopupBox").height() - $("#imgPopup").height()) / 2) - iPBInnerDivH);
+	    		//$("#imgPopup").css({"left": 0, "zoom": ""});
+	    		$("#thumbMagnifyBtn").removeClass("fa fa-minus-square").addClass("fa fa-plus-square");
+	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().removeClass("iPBInnerDiv_Top").addClass("iPBInnerDiv_TopOff");
+		  	}
+		  	
+		  	//썸네일 원본 크기로 보기 기능.
+		  	function magnifyThumbnailSize(){
+		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
+		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
+	    		var imgPopup = document.getElementById("imgPopup");
+	    		
+		  		if($("#thumbMagnifyBtn").attr("class").indexOf("plus") != -1){
+		  			$("#thumbMagnifyBtn").attr("class","fa fa-minus-square");
+		  		}
+		  		else{
+		  			$("#thumbMagnifyBtn").attr("class","fa fa-plus-square");
+		  			$("#imgPopup").css("zoom","");
+		  		}
+	    		
+	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().toggleClass("iPBInnerDiv_TopOff iPBInnerDiv_Top");
+				$("#imgPopupBox").toggleClass("imgPopupBox imgPopupBoxMagnify");
+	    		$("#imgPopupDiv").toggleClass("imgPopupDiv imgPopupDivMagnify");
+	    		$("#imgPopup").toggleClass("imgPopup imgPopupMagnify");
+	    		
+	    		//imgPopupBox frame 가운데로 위치 조정.
+	    		$("#imgPopupBox").css("left",(window.innerWidth-$("#imgPopupBox").width()) / 2);
+	    		var iPBTopOffset = (window.innerHeight-$("#imgPopupBox").height()) / 2 + window.pageYOffset;
+	    		/* if(window.innerHeight < $("#imgPopupBox").height()){
+	    			$("#imgPopupBox").css("top", 0);
+	    		} */
+	    		if(iPBTopOffset < 0){
+	    			$("#imgPopupBox").css("top", 0);
+	    		}
+	    		else{
+		    		$("#imgPopupBox").css("top", iPBTopOffset);
+	    		}
+	    		$("#imgPopupDiv").width(imgPopup.offsetWidth);	    		
+	    		$("#imgPopup").css("left",($("#imgPopup").parent().width()-$("#imgPopup").width()) / 2);
+	    		
+	    		var imgPopupDivSH = imgPopupDiv.scrollHeight;
+	    		var imgPopupDivCH = imgPopupDiv.clientHeight;
+	    		var imgPopupCH = imgPopup.clientHeight;
+	    		
+	    		//imgPopup 세로 위치 조정.
+	    		if( imgPopupCH > imgPopupDivCH && imgPopup.naturalHeight > 700 ){
+	    			$("#imgPopup").css("top", 0);
+	    		}else{
+	    			$("#imgPopup").css("top",(($("#imgPopupBox").height() - $("#imgPopup").height()) / 2) - iPBInnerDivH);
+	    		}
+	    		
+	    		//imgPopup 가로 위치 조정.
+	    		/* if(imgPopupDivSH == imgPopupDivCH && imgPopup.naturalWidth > 400){
+	    			//$("#imgPopup").css("top",(($("#imgPopupBox").height() - $("#imgPopup").height()) / 2) - iPBInnerDivH);
+	    		}
+	    		else if(imgPopupDivSH != imgPopupDivCH){
+	    			$("#imgPopup").css({"left": "0", "zoom": 1});
+	    		} */
+		  	}
+		  	
+		  	//썸네일 이미지 팝업박스를 숨겨준다.
+		  	function hideImgPopupBox(){
+		  		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
+		  		$("#imgPopupBox").removeClass("imgPopupBox").addClass("imgPopupBoxOff");
+	    		$("#imgPopupDiv").removeClass("imgPopupDivMagnify").addClass("imgPopupDiv");
+	    		$("#imgPopup").removeClass("imgPopup").addClass("imgPopupOff");
+	    		$("#imgPopup").removeAttr("src");
+		  	}
+		  	
+		  	//줌인버튼 기능.
+		  	function zoomInImgPopup(){
+		  		var zoom = 1;
+		  		var zoomOffset = 0.2;
+		  		
+		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
+		  		if($("#imgPopup").css("zoom").indexOf("%") != -1){
+		  			zoom = parseFloat($("#imgPopup").css("zoom").replace("%", "") / 100) + zoomOffset;
+		  		}
+		  		else if($("#imgPopup").css("zoom").indexOf("normal") != -1){
+		  			zoom = 1 + zoomOffset;
+		  		}
+		  		else{
+			  		zoom = parseFloat($("#imgPopup").css("zoom")) + zoomOffset;
+		  		}
+		  		$("#imgPopup").css("zoom", zoom);
+		  		
+		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
+		  		var thumbImgH = $("#imgPopup").prop("naturalHeight") * zoom;
+		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
+	    		var imgPopup = document.getElementById("imgPopup");
+		  		var imgPopupDivCH = imgPopupDiv.clientHeight;
+		  		$("#imgPopupDiv").width(imgPopup.offsetWidth * zoom);
+		  		
+		  		//imgPopup 세로 위치 조정.
+		  		if(thumbImgH < (imgPopupDivCH - 100)){
+		  			var agent = navigator.userAgent.toLowerCase();
+		  			var topOffset = "";
+		  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
+	  					//alert("인터넷 익스플로러 브라우저 입니다.");
+			  			topOffset = ((($("#imgPopupBox").height() - thumbImgH) / 2) - iPBInnerDivH);
+	  				}
+	  				else {
+	  					//alert("인터넷 익스플로러 브라우저가 아닙니다.");
+			  			topOffset = ((($("#imgPopupBox").height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
+	  				}
+		  			$("#imgPopup").css("top", topOffset);
+		  			$("#imgPopupDiv").css("overflow", "hidden");
+		  		}
+		  		else if(thumbImgH > (imgPopupDivCH - 100)){
+		  			$("#imgPopup").css("top", 0);
+		  			$("#imgPopupDiv").css("overflow", "auto");
+		  		}
+		
+		  	}
+		  	
+		  	//줌아웃 버튼 기능.
+		  	function zoomOutImgPopup(){
+		  		var zoom = 1;
+		  		var zoomOffset = 0.1;
+		  		
+		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
+		  		if($("#imgPopup").css("zoom").indexOf("%") != -1){
+		  			zoom = parseFloat($("#imgPopup").css("zoom").replace("%", "") / 100) - zoomOffset;
+		  		}
+		  		else if($("#imgPopup").css("zoom").indexOf("normal") != -1){
+		  			zoom = 1 - zoomOffset;
+		  		}
+		  		else{
+			  		zoom = parseFloat($("#imgPopup").css("zoom")) - zoomOffset;
+		  		}
+		  		
+		  		if( zoom > 0 ){
+			  		$("#imgPopup").css("zoom", zoom);
+		  		}else{
+		  			return;
+		  		}
+		  		
+		  		var thumbImgW = $("#imgPopup").prop("naturalWidth") * zoom;
+		  		var thumbImgH = $("#imgPopup").prop("naturalHeight") * zoom;
+		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
+		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
+	    		var imgPopup = document.getElementById("imgPopup");
+		  		var imgPopupDivCW = imgPopupDiv.clientWidth;
+	    		var imgPopupDivCH = imgPopupDiv.clientHeight;
+	    		$("#imgPopupDiv").width(imgPopup.offsetWidth * zoom);
+	    		
+		  		if(thumbImgW > (imgPopupDivCW - 100)){
+		  			$("#imgPopup").css("left","");
+		  		}
+		  		
+		  		//imgPopup 세로 위치 조정
+		  		if(thumbImgH < (imgPopupDivCH - 100)){
+		  			var agent = navigator.userAgent.toLowerCase();
+		  			var topOffset = "";
+		  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
+	  					//alert("인터넷 익스플로러 브라우저 입니다.");
+			  			topOffset = ((($("#imgPopupBox").height() - thumbImgH) / 2) - iPBInnerDivH);
+	  				}
+	  				else {
+	  					//alert("인터넷 익스플로러 브라우저가 아닙니다.");
+			  			topOffset = ((($("#imgPopupBox").height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
+	  				}
+		  			$("#imgPopup").css("top", topOffset);
+		  			$("#imgPopupDiv").css("overflow", "hidden");
+		  		}
+		  		else if(thumbImgH > (imgPopupDivCH - 100)){
+		  			$("#imgPopup").css("top", 0);
+		  			$("#imgPopupDiv").css("overflow", "auto");
+		  		}
+		  		
+		  	}
 		  	
 		  	//종료일 변경 기능
 		  	function updateEndDate(){
@@ -3203,5 +3390,24 @@
 			</div>	
 		</form>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe> 
+		<div id="imgPopupBox" class="imgPopupBoxOff">
+    		<div style="height:50px;" class="iPBInnerDiv">
+    			<div class="iPBInnerDiv_Top">
+    				<i id="thumbCloseBtn" class="fa fa-times-circle thumbCloseBtn"></i>
+    			</div>
+    			<div class="iPBInnerDiv_Top">
+    				<i id="thumbMagnifyBtn" class="fa fa-plus-square thumbMagnifyBtn"></i>
+    			</div>
+    			<div class="iPBInnerDiv_TopOff">
+    				<i id="thumbZoomInBtn" class="fa fa-search-plus"></i>
+   				</div>
+   				<div class="iPBInnerDiv_TopOff">
+    				<i id="thumbZoomOutBtn" class="fa fa-search-minus"></i>
+   				</div>
+   			</div>
+   			<div id="imgPopupDiv" class="imgPopupDiv">
+				<img id="imgPopup" class="imgPopup">
+   			</div>
+   		</div>
 	</body>
 </html>
