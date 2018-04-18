@@ -13,7 +13,7 @@
 					</c:when>
 					<c:otherwise>
 						<tr targetId="${dept.deptId }" style="cursor: pointer;" class="hover">
-							<td align="left" style="width:250px;">${dept.deptName }</td>
+							<td align="left" style="width:250px; padding : 4px;">${dept.deptName }</td>
 						</tr>
 					</c:otherwise>
 				</c:choose>

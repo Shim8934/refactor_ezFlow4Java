@@ -1820,7 +1820,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 관리자 열람 권한 부서 선택하기
+	 * 관리자 근태권한관리 권한부서 선택하기 (부서리스트)
 	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthorDept.do")
@@ -1889,50 +1889,6 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 권한 저장
-	 * @param request
-	 * @param model
-	 * @param loginCookie
-	 * @param response
-	 * @throws IOException 
-	 * @throws Exception 
-	 */
-	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuthor.do")
-	@ResponseBody
-	public void saveAttitudeAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException, Exception{
-		LOGGER.debug("saveAttitudeAuthor started");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
-		String jsonString = request.getParameter("jsonString");
-		String companyId = request.getParameter("companyId");
-		
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitude-auth";
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(jsonString, headers);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId());
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		String status = resultBody.get("status").toString();
-		
-		LOGGER.debug("status : " + status);
-		
-		LOGGER.debug("saveAttitudeAuthor ended");
-	}
-	
-	/**
 	 * 해당사원이 열람 할 수 있는 부서 리스트
 	 * @throws Exception 
 	 */
@@ -1966,8 +1922,58 @@ public class EzAttitudeAdminBOMController {
 			
 			model.addAttribute("authorDeptList", authorDeptList);
 		}
+		
 		LOGGER.debug("attitudeAuthorDeptList ended");
 		return "admin/ezAttitude/attitudeAuthorDeptList";
 	}
+	
+	/**
+	 * 권한 저장
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @param response
+	 * @throws IOException 
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuthor.do")
+	@ResponseBody
+	public void saveAttitudeAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException, Exception{
+		LOGGER.debug("saveAttitudeAuthor started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String selectedUser = request.getParameter("selectedUser");
+		String companyId = request.getParameter("companyId");
+		String deptIds = request.getParameter("deptIds");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitude-auth";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("selectedUser", selectedUser)
+				.queryParam("deptIds", deptIds)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		LOGGER.debug("status : " + status);
+		
+		LOGGER.debug("saveAttitudeAuthor ended");
+	}
+	
+
 	
 }

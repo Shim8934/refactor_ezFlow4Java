@@ -1699,17 +1699,18 @@ public class EzAttitudeGWController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject insertAttitudeAuth(
-			@RequestBody JSONObject jsonString, @PathVariable String companyId, HttpServletRequest request) throws Exception{
+	public JSONObject insertAttitudeAuth(@PathVariable String companyId, HttpServletRequest request) throws Exception{
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitude-auth] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
+			String selectedUser = request.getParameter("selectedUser");
+			String deptIds = request.getParameter("deptIds");
+			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			jsonString.put("tenantId", info.getTenantId());
-			ezAttitudeService.saveAttitudeAuthDept(jsonString);
+			ezAttitudeService.saveAttitudeAuthDept(info.getTenantId(), selectedUser, deptIds);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

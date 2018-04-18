@@ -713,8 +713,6 @@
           	WHERE
           		TENANT_ID = #tenantId#
           	AND
-          		COMPANY_ID = #companyId#
-          	AND
         		USER_ID = #selectUserId#
 		]]>
 	</delete>
@@ -750,4 +748,13 @@
 				DEPT_NAME
 		]]>
 	</select>
+	
+	<insert id="ezAttitudeAdminDAO.insertAttitudeAuth" parameterClass="Map">
+		<iterate conjunction=";">
+		<![CDATA[
+			INSERT INTO TBL_ATTITUDE_AUTH (USER_ID, TENANT_ID, AUTH_DEPT_ID)
+			VALUES (#userId[]#, #tenantId[]#, #deptId[]#)
+		]]>
+		</iterate>
+	</insert>
 </sqlMap>

@@ -992,31 +992,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public void saveAttitudeAuthDept(JSONObject jsonParam) throws Exception {
+	public void saveAttitudeAuthDept(int tenantId, String selectedUser,
+			String deptIds) throws Exception {
 		LOGGER.debug("saveAttitudeAuthDept started");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", jsonParam.get("userId"));
-		map.put("tenantId", jsonParam.get("tenantId"));
-		//삭제...?물어보자
-//		ezAttitudeDAO.deleteAuthDept(map);
-//		
-//		Gson gson = new Gson();
-//		
-//		List<String> deptList = gson.fromJson(jsonParam.get("depts").toString(), new TypeToken<List<String>>(){}.getType());
-//		for (int i = 0; i < deptList.size(); i++) {
-//			try {
-//				LOGGER.debug(deptList.get(i));
-//				Map<String, Object> insertMap = new HashMap<String, Object>();
-//				insertMap.put("tenantId", ((String) jsonParam.get("tenantId")).trim());
-//				insertMap.put("userId", ((String) jsonParam.get("userId")).trim());
-//				insertMap.put("deptId", ((String) deptList.get(i)).trim());
-//				ezAttitudeDAO.insertAuthDept(insertMap);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-		
+		map.put("selectUserId", selectedUser);
+		map.put("tenantId", tenantId);
+
+		ezAttitudeDAO.deleteAttitudeAuth(map);
+
+		String[] deptList = deptIds.split(",");
+		map.put("deptId", deptList);
+
+		ezAttitudeDAO.insertAttitudeAuth(map);
+
 		LOGGER.debug("saveAttitudeAuthDept ended");
 	}
 

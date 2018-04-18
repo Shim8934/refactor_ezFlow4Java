@@ -34,7 +34,6 @@
 	   		var userDeptId;
 	   	
 	   		function close_Click(){
-	   			opener.location.reload();
 	   			window.close();
 	   		}
 	   		
@@ -135,7 +134,7 @@
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="setAuthorViewUser()">확인</span></li>
-	            <li><span onclick="close_Click()">취소</span></li>
+	            <li><span onclick="close_Click()">닫기</span></li>
 	        </ul>
 	    </div>
 		<table id="TreeViewTD">

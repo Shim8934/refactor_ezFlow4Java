@@ -80,14 +80,17 @@
 	    	
 	    	//권한 저장
 	    	function insertAuthDept(){
-	   			var jsonString = JSON.stringify({"userId":selectedUser,"depts":deptIds});
-	   			alert(jsonString);
+// 	   			var jsonString = JSON.stringify({"userId":selectedUser,"depts":deptIds});
 				$.ajax({
 	   				type:"post",
 	   				url:"/admin/ezAttitude/saveAttitudeAuthor.do",
-	   				data:{jsonString : jsonString, companyId : companyId},
+	   				data:{
+	   					selectedUser : selectedUser,
+	   					companyId : companyId,
+	   					deptIds : deptIds
+	   				},
 	   				success: function(){
-   						opener.location.reload();
+   						opener.company_change();
    						window.close();
 	   				},
 	   				error : function() {
