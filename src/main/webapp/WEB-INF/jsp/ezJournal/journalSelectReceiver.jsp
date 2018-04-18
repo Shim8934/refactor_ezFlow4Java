@@ -54,6 +54,9 @@
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
 				});
+				
+		//		var node = $("#treeview").tree("getNodeById", id);
+		//		$("#treeview").get_node(node).children('.jstree-anchor').focus();
 	   		}
 	   		
 	   		//사원 리스트 뿌리기
