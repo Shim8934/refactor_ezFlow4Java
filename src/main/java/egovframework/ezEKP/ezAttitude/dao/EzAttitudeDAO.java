@@ -209,4 +209,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public List<AttitudeApplicationVO> attModGetHistory(Map<String, Object> map) {
 		return (List<AttitudeApplicationVO>) list("ezAttitudeDAO.attModGetHistory", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(
+			Map<String, Object> map) {
+		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getAttitudeAuthDeptList", map);
+	}
 }

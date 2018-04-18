@@ -1735,7 +1735,7 @@ public class EzAttitudeAdminBOMController {
 			model.addAttribute("selectedUser", request.getParameter("userId"));
 			model.addAttribute("selectedUserName", request.getParameter("userName"));
 			
-			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/"+request.getParameter("userId")+"/author-depts", null, request,"get",null);
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezattitude/users/" + request.getParameter("userId") + "/attitude-auth", null, request,"get",null);
 			
 			String status = resultBody.get("status").toString();
 			
@@ -1899,15 +1899,16 @@ public class EzAttitudeAdminBOMController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuthor.do")
 	@ResponseBody
-	public void saveAttitudeAuthor(@RequestBody JSONObject jsonString, HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException, Exception{
+	public void saveAttitudeAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException, Exception{
 		LOGGER.debug("saveAttitudeAuthor started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
+		String jsonString = request.getParameter("jsonString");
 		String companyId = request.getParameter("companyId");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitude-auth";
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitude-auth";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
 		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 	   	<script type="text/javascript">
-	   		//트리조직도 JSON
+			//트리조직도 JSON
 	   		var treeContent;
 	   		//선택된 사원
 	   		var selectedUser;
@@ -25,10 +25,13 @@
 	   		var lpDeptName;
 	   		//레이어팝업의 오른쪽의 부서정보
 	   		var lpDepts=[];
+	   		var lpDeptNames = [];
 	   		//오른쪽에서 없앨 부서
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
+	   		//선택된 유저의부서
+	   		var userDeptId;
 	   	
 	   		function close_Click(){
 	   			opener.location.reload();
@@ -91,16 +94,14 @@
 	   		//사원선택
 	   		function setAuthorViewUser(){
 	   			var userId = selectedUser;
-				var url = "/admin/ezAttitude/saveAttitudeAuth.do";
-				var companyId = opener.companyId;
-				url+="?companyId="+companyId;
 				if (userId) {
-					url+="&userId="+userId+"&userName="+selectedUserName;
+					opener.setSelectedUser(userId,selectedUserName);
+		   			opener.setDeptName(JSON.stringify(lpDepts), JSON.stringify(lpDeptNames));
+		   			opener.userDeptId = userDeptId;
+					window.close();
 				} else {
-					alert("<spring:message code='ezPortal.t85' />");
+					alert("사원을 선택해 주세요");
 				}
-				window.open(url, "authorView", "width=500, height=180");
-				window.close();
 	   		}
 	   		
 		</script>

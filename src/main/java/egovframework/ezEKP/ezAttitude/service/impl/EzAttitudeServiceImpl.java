@@ -1019,4 +1019,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("saveAttitudeAuthDept ended");
 	}
+
+	@Override
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId,
+			String userId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		
+		return ezAttitudeDAO.getAttitudeAuthDeptList(map);
+	}
 }

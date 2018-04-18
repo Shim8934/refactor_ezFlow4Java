@@ -5,10 +5,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezSchedule.t6' /></title>
+		<title>권한추가</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />		
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
+		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />    
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
@@ -23,27 +22,35 @@
 	    	$(document).ready(function(){
 	    		//만약 권한자 선택시 권한이 있는 부서가 있으면 출력해준다.
 	    		<c:if test="${not empty selectedUser }">
-			    	<c:forEach items="${deptList }" var="dept">
-			    		<c:choose>
-				    		<c:when test="${dept.mine eq 'yes' }">
-				    			userDeptName = '${fn:replace(dept.deptName, "'", "\\'") }';
-				    			userDeptId = '${fn:replace(dept.deptId, "'", "\\'") }';
-					    	</c:when>
-					    	<c:otherwise>
-								deptNames.push('${fn:replace(dept.deptName, "'", "\\'") }');
-								deptIds.push('${fn:replace(dept.deptId, "'", "\\'") }');
-							</c:otherwise>
-						</c:choose>
-			    	</c:forEach>
-		    		setDeptName();
-    			</c:if>
+		    	<c:forEach items="${deptList }" var="dept">
+		    		<c:choose>
+			    		<c:when test="${dept.mine eq 'yes' }">
+			    			userDeptName = '${fn:replace(dept.deptName, "'", "\\'") }';
+			    			userDeptId = '${fn:replace(dept.deptId, "'", "\\'") }';
+				    	</c:when>
+				    	<c:otherwise>
+							deptNames.push('${fn:replace(dept.deptName, "'", "\\'") }');
+							deptIds.push('${fn:replace(dept.deptId, "'", "\\'") }');
+						</c:otherwise>
+					</c:choose>
+		    	</c:forEach>
+		    	setSelectedUser("${selectedUser }","${selectedUserName }");
+	    		setDeptName();
+    		</c:if>
    			});
+	    	
+	    	//사원 세팅
+	    	function setSelectedUser(userId, userName){
+	    		selectedUserName = userName;
+	    		selectedUser = userId;
+	    		$("#txtuser").val(" " + userName);
+	    	} 
 	    	
 	    	//사원선택
 	    	function select_person(){
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthor.do";
 				url+="?companyId="+companyId;
-				window.open(url, "author", "width=735, height=560");
+				window.open(url, "author", GetOpenWindowfeature(950, 600));
 	    	}
 	    	
 	    	//부서선택
@@ -54,19 +61,20 @@
 	    	}
 	    	 
 	    	//부서 이름 세팅
-	    	function setDeptName(){
-				var deptString;
-				if(deptNames.length<4){
-		    		for (var i = 0; i < deptNames.length; i++) {
-		    			if(i!=0){
-				    		deptString += " ,"+deptNames[i];
-		    			} else {
-		    				deptString=deptNames[i];
-		    			}
-					}
-				} else {
-					deptString = deptNames[0]+" <spring:message code='ezJournal.t124' /> "+ (deptNames.length-1);
+	    	function setDeptName(pdeptIds, pdeptNames){
+	    		if (pdeptIds && pdeptNames) {
+					deptIds = eval(pdeptIds);
+					deptNames = eval(pdeptNames);
 				}
+				var deptString;
+	    		for (var i = 0; i < deptNames.length; i++) {
+	    			if(i!=0){
+			    		deptString += ", "+deptNames[i];
+	    			} else {
+	    				deptString=deptNames[i];
+	    			}
+				}
+	    		console.log(deptIds);
 	    		$("#txtdept").val(deptString);
 	    	}	  
 	    	
@@ -77,8 +85,7 @@
 				$.ajax({
 	   				type:"post",
 	   				url:"/admin/ezAttitude/saveAttitudeAuthor.do",
-	   				contentType:"application/json;",
-	   				data:jsonString,
+	   				data:{jsonString : jsonString, companyId : companyId},
 	   				success: function(){
    						opener.location.reload();
    						window.close();

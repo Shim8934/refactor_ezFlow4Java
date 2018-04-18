@@ -1698,10 +1698,10 @@ public class EzAttitudeGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitude-auth", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertAttitudeAuth(
-			@RequestBody JSONObject jsonString, HttpServletRequest request) throws Exception{
-		LOGGER.debug("G/W EzAttitude [POST /rest/attitude-auth] started.");
+			@RequestBody JSONObject jsonString, @PathVariable String companyId, HttpServletRequest request) throws Exception{
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitude-auth] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -1720,7 +1720,7 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitude-auth] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitude-auth] ended.");
 		return result;
 	}
 	
@@ -1755,6 +1755,38 @@ public class EzAttitudeGWController {
 		}
 		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitude-auth] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 근태권한자 상세 조회(권한있는 부서 체크)
+	 * @param companyId
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitude-auth", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attitudeAuthDeptList(@PathVariable String userId, HttpServletRequest request) throws Exception{
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+//			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), userId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", authDeptlist);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth] ended.");
 		return result;
 	}
 }

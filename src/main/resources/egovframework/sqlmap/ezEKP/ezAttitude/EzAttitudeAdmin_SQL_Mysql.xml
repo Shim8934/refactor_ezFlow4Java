@@ -712,4 +712,24 @@
         		USER_ID = #selectUserId#
 		]]>
 	</delete>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map">
+		<![CDATA[
+			SELECT 
+				A.USER_ID,
+				A.TENANT_ID,
+				A.AUTH_DEPT_ID,
+				B.DISPLAYNAME
+			FROM 
+				TBL_ATTITUDE_AUTH A
+			INNER JOIN 
+				TBL_DEPTMASTER B
+			ON
+				(A.AUTH_DEPT_ID = B.CN)
+			WHERE 
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.USER_ID = #userId#
+		]]>
+	</select>
 </sqlMap>
