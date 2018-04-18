@@ -3,7 +3,7 @@
 
 <sqlMap namespace="ezPMS">
 
-	<typeAlias	alias="ProjectListVO"								type="egovframework.ezEKP.ezPMS.vo.ProjectListVO"/>
+	<typeAlias	alias="ProjectInfoVO"								type="egovframework.ezEKP.ezPMS.vo.ProjectInfoVO"/>
 	<typeAlias	alias="ProjectGroupVO"								type="egovframework.ezEKP.ezPMS.vo.ProjectGroupVO"/>
 	<typeAlias	alias="ProjectMainSettingVO"						type="egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO"/>
 	<typeAlias	alias="ProjectMemberScheduleVO"						type="egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO"/>
@@ -12,7 +12,7 @@
 	<typeAlias	alias="SearchVO"									type="egovframework.ezEKP.ezPMS.vo.SearchVO"/>
 	<typeAlias	alias="TaskLogListVO"								type="egovframework.ezEKP.ezPMS.vo.TaskLogListVO"/>
 	
-    <resultMap id="projectList" class="ProjectListVO">
+    <resultMap id="projectInfo" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="3"/>
@@ -124,8 +124,8 @@
     	<result property="writeDate"						column="WRITE_DATE"					columnIndex="21"/>
     	<result property="writerName"						column="WRITER_NAME"				columnIndex="22"/>
     	<result property="writerName2"						column="WRITER_NAME2"				columnIndex="23"/>
-    	<result property="writerDeptName"					column="WRITER_DEPTNAME"			columnIndex="24"/>
-    	<result property="writerDeptName2"					column="WRITER_DEPTNAME2"			columnIndex="25"/>
+    	<result property="writerDeptname"					column="WRITER_DEPTNAME"			columnIndex="24"/>
+    	<result property="writerDeptname2"					column="WRITER_DEPTNAME2"			columnIndex="25"/>
     	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="26"/>
     	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="27"/>
     	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="28"/>
