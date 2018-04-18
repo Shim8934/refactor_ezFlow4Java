@@ -1,7 +1,9 @@
 function mouseCursor() {
 	var overColor = "rgb(244, 245, 245)";
 	var origColor = "#FFF";
-	
+	var id_check;
+	var oriColor;
+
 	$(document)
 	.on("mouseenter", ".black", function() {
 		$(this).css("background", overColor);
@@ -9,6 +11,17 @@ function mouseCursor() {
 	})
 	.on("mouseleave", ".black", function() {
 		$(this).css("background", origColor);
+	})
+	.on("mouseenter", ".participantBtn", function() {
+		 id_check = $(this).attr("id");
+		 oriColor = $("#"+id_check).css("color");
+		 $(this).css("color", "#0072c6");
+		 $(this).css("border-color", "#0072c6");
+	})
+	.on("mouseleave", ".participantBtn", function() {
+		 id_check = $(this).attr("id");
+		 $("#"+id_check).css("color", oriColor);
+		 $("#"+id_check).css("border-color", "#B5B3B3");
 	});
 }
 
@@ -169,8 +182,10 @@ function sortView() {
 		temp=4;
 	} else if(sort==='secretFlag') {
 		temp=5;
-	} else {
+	} else if(sort==='deleteFlag') {
 		temp=6;
+	} else {
+		temp=7;
 	}
 
 	return temp;
@@ -207,7 +222,8 @@ function listSort(num) {
 				break;
 		case 6: sort="deleteFlag";
 				break;
-			
+		default: sort="basic";
+				break;
 	}
 	
 	if((sortFlag == 'desc') && (temp == sort)) {

@@ -97,7 +97,7 @@ public class EzLadderController {
 		currPage = currPage != null ? currPage : "1";
 		searchSelect = searchSelect != null ? searchSelect : "";
 		searchInput = searchInput != null ? searchInput : "";
-		sort = sort != null ? sort : "writeDate";
+		sort = sort != null ? sort : "basic";
 		sortFlag = sortFlag != null ? sortFlag : "desc";
 	
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -133,7 +133,7 @@ public class EzLadderController {
 		String page = jsonResult.get("currPage").toString();
 		String totalLadder = jsonResult.get("totalLadder").toString();
 		String totalPage = jsonResult.get("totalPage").toString();
-	
+		searchInput = searchInput.replaceAll("\"", "&quot;");
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
 			model.addAttribute("id", userInfo.getId());

@@ -709,6 +709,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		bodyContent.append("</div>");
 				
 		// 참여자에게 메일 발송
+		List<String> mail = new ArrayList<String>();
 		for (int i=0; i<cnt; i++) {
 			OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
 			InternetAddress from = new InternetAddress();
@@ -718,7 +719,19 @@ public class EzLadderServiceImpl implements EzLadderService {
 			InternetAddress to = new InternetAddress();
 			to.setPersonal(receiverName[i].trim(), "UTF-8");
 			to.setAddress(AccessUserInfo.getMail());
-									
+			mail.add(to.getAddress());
+			
+			boolean jungbock = false;
+			for(int check=0; check<mail.size()-1; check++) {
+				if(mail.get(check).equals(to.getAddress()))
+				{
+					jungbock = true;
+					break;
+				}
+			}
+			if(jungbock == true) {
+				continue;
+			}
 			ezEmailService.sendMail(logCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
 		}
 	}
