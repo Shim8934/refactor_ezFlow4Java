@@ -724,7 +724,11 @@
 		    function fromAddressChange(val) {
 		    	g_from = val;
 		    }
-		    
+
+		    // 재은 수정(편지지)
+		    function Letter_onClick() {
+		    	DivPopUpShow(583, 485, "/ezEmail/mailLetter.do");
+		    }
 		</script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -745,6 +749,9 @@
 		          <ul>
 		            <li><span onClick="ReserverdMail_Save()"><spring:message code='ezEmail.t48' /></span></li>
 		            <li style="display:none;"><span onClick="Save_onClick('tempsave')"><spring:message code='ezEmail.t48' /></span></li>
+		           	<c:if test="${useLetter == 'YES'}">
+                    <li><span onclick="Letter_onClick()"><spring:message code='ezEmail.t824' /></span></li>
+                    </c:if>
 		            <li style="display:none;"><span onClick="Print_onClick()"><spring:message code='ezEmail.t546' /></span></li>
 		            <li style="display:none;"><span onClick="LoadFormat_onClick()"><spring:message code='ezEmail.t824' /></span></li>
 		            <li><span onClick="NameCertify_onClick()"><spring:message code='ezEmail.t331' /></span></li>

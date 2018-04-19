@@ -307,6 +307,14 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		logger.debug("userPrimary=" + userPrimary + ",userLang=" + userLang + ",userTimeset=" + userTimeset);
 		
         String displayNamePrintable = userInfo.getDisplayName();
+
+		// set useLetter
+		String useLetter = ezCommonService.getTenantConfig("useLetter", loginInfo.getTenantId());
+		if (useLetter == null || useLetter.equals("")) {
+			useLetter = "NO";
+		}
+		
+		logger.debug("useLetter=" + useLetter);
 		
         // set serverName
  		String serverName = loginInfo.getServerName();
@@ -619,6 +627,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("secureMaxReadDate", secureReadDate);
 		model.addAttribute("fromAddressHtml", fromAddressHtml);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
+		model.addAttribute("useLetter", useLetter);
 		
         logger.debug("mailEdit ended.");
         

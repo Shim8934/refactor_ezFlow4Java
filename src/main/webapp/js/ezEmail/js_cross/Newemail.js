@@ -203,6 +203,7 @@ function new_mail_onclick(fromE) {
     myForm.submit();
     
     newwin.focus();
+    newwin.name = "";
 }
 function ReSend(pURL, pEmail) {
     var pheight = window.screen.availHeight;
