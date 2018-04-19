@@ -104,7 +104,7 @@
 				<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"></bean>
 			</websocket:handshake-interceptors>
 		</websocket:stomp-endpoint>
-	    <websocket:simple-broker prefix="/reply, /topic, /message"/>
+	    <websocket:simple-broker prefix="/reply, /topic, /message, /lad"/>
 	</websocket:message-broker>
 		
 </beans>
