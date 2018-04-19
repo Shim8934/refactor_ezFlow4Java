@@ -945,21 +945,23 @@ public class EzJournalGWController {
 			
 	        for (int i = 0; i < cnt; i++) {
 	        	fileSize[i] = (Long) ((JSONObject)fileArray.get(i)).get("fileSize");
+	        	String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+	        	String newFileName = pUploadSN[i] + "." + extend;
         		
 	        	// maxsize를 넘어가는 파일은 저장하지 않는다.
 	            if (fileSize[i] > maxSize && maxSize != 0) {
 	                resultUpload[i] = "overflow";
 	            } else {
 	            	// 허용하는 확장자가 아닌경우 저장하지 않는다.
-                    if (useExtension.toLowerCase().indexOf(pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
+                    if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {
                         resultUpload[i] = "denied";
                     } else {
                         String pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator;
 //                        
                         // 업로드된 파일 데이터를 파일로 저장한다.
-                        journalWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), pUploadSN[i] + ";" + pFileName[i], pAttachPath);
+                        journalWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), newFileName, pAttachPath);
                         
-                        fileLocation[i] = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId()) + commonUtil.separator + "tempUploadFile" + commonUtil.separator + pUploadSN[i] + ";" + pFileName[i];
+                        fileLocation[i] = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId()) + commonUtil.separator + "tempUploadFile" + commonUtil.separator + pUploadSN[i];
                         resultUpload[i] = "true";
                     }
 	            }
@@ -1095,14 +1097,15 @@ public class EzJournalGWController {
 			// journalId가 temp이면 임시파일 삭제의 의미
 			if (journalId.equals("temp")) {
 				if (fileList.length() != 0) {
-					String[] data = fileList.split(","); 
+					String[] data = fileList.split("/"); 
 					
 					for (int i=0; i<data.length; i++) {
-						String sGUID = data[i].split(";")[0];
-						String fileName = data[i].split(";")[1];
+						String sGUID = data[i].split(":")[0];
+						String fileName = data[i].split(":")[1];
+						String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
-						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
 						if(file.exists()){
 							file.delete();
 						}
@@ -1110,14 +1113,15 @@ public class EzJournalGWController {
 				}
 			} else {
 				if (fileList.length() != 0) {
-					String[] data = fileList.split(","); 
+					String[] data = fileList.split("/"); 
 					
 					for (int i=0; i<data.length; i++) {
-						String sGUID = data[i].split(";")[0];
-						String fileName = data[i].split(";")[1];
+						String sGUID = data[i].split(":")[0];
+						String fileName = data[i].split(":")[1];
+						String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
-						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
 						
 						file.delete();
 					}			
@@ -1154,7 +1158,6 @@ public class EzJournalGWController {
 			String realPath = commonUtil.getRealPath(request);
 			String uploadFilePath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
 			String filePath = request.getParameter("filePath");
-		//	String fileName = request.getParameter("fileName");
 			String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;
 
 			LOGGER.debug("fullFilePath : " + fullFilePath);
