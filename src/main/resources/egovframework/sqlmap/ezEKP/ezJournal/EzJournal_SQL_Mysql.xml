@@ -3,18 +3,18 @@
 
 <sqlMap namespace="ezJournal">
 
-	<typeAlias alias="JournaltypeVO" type="egovframework.ezEKP.ezJournal.vo.JournaltypeVO" />
-	<typeAlias alias="JournalFormInfoVO" type="egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO" />
-	<typeAlias alias="companyVO" type="egovframework.ezEKP.ezJournal.vo.JournalCompanyVO" />
-	<typeAlias alias="authorVO" type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
-	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO" />
-	<typeAlias alias="deptInfoVO" type="egovframework.ezEKP.ezJournal.vo.DeptInfoVO" />
-	<typeAlias alias="favoriteVO" type="egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO" />
-	<typeAlias alias="journalEnvVO" type="egovframework.ezEKP.ezJournal.vo.JournalEnvVO" />
-	<typeAlias alias="journalVO" type="egovframework.ezEKP.ezJournal.vo.JournalVO" />
-	<typeAlias alias="fileVO" type="egovframework.ezEKP.ezJournal.vo.JournalFileVO" />
-	<typeAlias alias="journalReplyVO" type="egovframework.ezEKP.ezJournal.vo.JournalReplyVO" />
-	<typeAlias alias="receiverVO" type="egovframework.ezEKP.ezJournal.vo.JournalReceiverVO"/>	
+	<typeAlias alias="JournaltypeVO" 		type="egovframework.ezEKP.ezJournal.vo.JournaltypeVO" />
+	<typeAlias alias="JournalFormInfoVO" 	type="egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO" />
+	<typeAlias alias="companyVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalCompanyVO" />
+	<typeAlias alias="authorVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
+	<typeAlias alias="deptViewVO" 			type="egovframework.ezEKP.ezJournal.vo.DeptViewVO" />
+	<typeAlias alias="deptInfoVO" 			type="egovframework.ezEKP.ezJournal.vo.DeptInfoVO" />
+	<typeAlias alias="favoriteVO" 			type="egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO" />
+	<typeAlias alias="journalEnvVO" 		type="egovframework.ezEKP.ezJournal.vo.JournalEnvVO" />
+	<typeAlias alias="journalVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalVO" />
+	<typeAlias alias="fileVO" 				type="egovframework.ezEKP.ezJournal.vo.JournalFileVO" />
+	<typeAlias alias="journalReplyVO" 		type="egovframework.ezEKP.ezJournal.vo.JournalReplyVO" />
+	<typeAlias alias="receiverVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalReceiverVO"/>	
 	<typeAlias alias="journalAuthCheckVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalAuthCheckVO"/>	
 
 	<resultMap class="journalAuthCheckVO" id="journalAuthCheckMap">
@@ -22,14 +22,14 @@
 		<result property="checkSusin" 	column="check_susin" />
 		<result property="count" 		column="count" />
 	</resultMap>
-
+	
 	<resultMap class="journalReplyVO" id="journalReplyMap">
-		<result property="replyId" column="reply_id" />
-		<result property="replyContent" column="reply_content" />
-		<result property="replyDate" column="reply_date" />
-		<result property="replyWriter" column="reply_writer" />
-		<result property="replyWriterName" column="reply_writer_name" />
-		<result property="mine" column="mine" />
+		<result property="replyId" 			column="reply_id" />
+		<result property="replyContent" 	column="reply_content" />
+		<result property="replyDate" 		column="reply_date" />
+		<result property="replyWriter" 		column="reply_writer" />
+		<result property="replyWriterName" 	column="reply_writer_name" />
+		<result property="mine" 			column="mine" />
 	</resultMap>
 	
 	<resultMap class="journalVO" id="journalContentMap">
@@ -38,106 +38,106 @@
 	</resultMap>
 	
 	<resultMap class="journalVO" id="journalMap" groupBy="journalId">
-		<result property="journalId" column="journal_id"/>
-		<result property="journalTitle" column="journal_title"/>
-		<result property="journalContent" column="journal_content"/>
-		<result property="journalDate" column="journal_date"/>
-		<result property="deptShare" column="dept_share"/>
-		<result property="writerName" column="writer_name"/>
-		<result property="writerId" column="writer_Id"/>
-		<result property="formId" column="form_id"/>
-		<result property="formName" column="form_name"/>
-		<result property="typeId" column="type_id"/>
-		<result property="replyCount" column="reply_count"/>
-		<result property="totalRecv" column="total_recv"/>
-		<result property="checkRecv" column="check_recv"/>
-		<result property="mine" column="mine"/>
+		<result property="journalId" 		column="journal_id"/>
+		<result property="journalTitle" 	column="journal_title"/>
+		<result property="journalContent" 	column="journal_content"/>
+		<result property="journalDate" 		column="journal_date"/>
+		<result property="deptShare" 		column="dept_share"/>
+		<result property="writerName" 		column="writer_name"/>
+		<result property="writerId" 		column="writer_Id"/>
+		<result property="formId" 			column="form_id"/>
+		<result property="formName" 		column="form_name"/>
+		<result property="typeId" 			column="type_id"/>
+		<result property="replyCount" 		column="reply_count"/>
+		<result property="totalRecv" 		column="total_recv"/>
+		<result property="checkRecv" 		column="check_recv"/>
+		<result property="mine" 			column="mine"/>
 		<result property="isSum"	 		column="journal_sum" />
-		<result property="fileList" resultMap="ezJournal.fileMap"/>
+		<result property="fileList" 		resultMap="ezJournal.fileMap"/>
 	</resultMap>
 
 	<resultMap class="fileVO" id="fileMap">
-		<result property="filePath" column="file_path" />
-		<result property="fileSize" column="file_size" />
-		<result property="fileName" column="file_name" />
+		<result property="filePath" 		column="file_path" />
+		<result property="fileSize"			column="file_size" />
+		<result property="fileName" 		column="file_name" />
 	</resultMap>
 
 	<resultMap class="journalVO" id="journalListMap">
-		<result property="journalId" column="journal_id" />
-		<result property="journalTitle" column="journal_title" />
-		<result property="journalDate" column="journal_date" />
-		<result property="deptShare" column="dept_share" />
-		<result property="writerName" column="writer_name" />
-		<result property="deptName" column="dept_name" />
-		<result property="formName" column="form_name" />
-		<result property="typeId" column="type_id" />
-		<result property="replyCount" column="reply_count" />
-		<result property="fileCount" column="file_count" />
-		<result property="viewCount" column="view_count" />
-		<result property="totalRecv" column="total_recv" />
-		<result property="checkRecv" column="check_recv" />
-		<result property="isView" column="is_view" />
-		<result property="formStatus" column="form_status" />
+		<result property="journalId" 		column="journal_id" />
+		<result property="journalTitle" 	column="journal_title" />
+		<result property="journalDate" 		column="journal_date" />
+		<result property="deptShare" 		column="dept_share" />
+		<result property="writerName" 		column="writer_name" />
+		<result property="deptName" 		column="dept_name" />
+		<result property="formName" 		column="form_name" />
+		<result property="typeId" 			column="type_id" />
+		<result property="replyCount" 		column="reply_count" />
+		<result property="fileCount" 		column="file_count" />
+		<result property="viewCount" 		column="view_count" />
+		<result property="totalRecv" 		column="total_recv" />
+		<result property="checkRecv" 		column="check_recv" />
+		<result property="isView" 			column="is_view" />
+		<result property="formStatus" 		column="form_status" />
 		<result property="isSum"	 		column="journal_sum" />
 		<result property="mine"	 			column="mine" />
 	</resultMap>
 
 	<resultMap class="journalEnvVO" id="journalEnvMap">
-		<result property="listCnt" column="list_cnt" />
-		<result property="viewenv" column="viewenv" />
-		<result property="recvAlert" column="recv_alert" />
-		<result property="replyAlert" column="reply_alert" />
-		<result property="previewWcontent" column="preview_wcontent" />
-		<result property="previewHcontent" column="preview_hcontent" />
+		<result property="listCnt" 			column="list_cnt" />
+		<result property="viewenv" 			column="viewenv" />
+		<result property="recvAlert" 		column="recv_alert" />
+		<result property="replyAlert" 		column="reply_alert" />
+		<result property="previewWcontent" 	column="preview_wcontent" />
+		<result property="previewHcontent" 	column="preview_hcontent" />
 		<result property="mail" 			column="mail" />
 		<result property="name" 			column="name" />
 	</resultMap>
 
 	<resultMap class="deptViewVO" id="deptViewMap">
-		<result property="id" column="id" />
-		<result property="parent" column="parent" />
-		<result property="companyId" column="companyId" />
-		<result property="text" column="text" />
-		<result property="isComp" column="isComp" />
-		<result property="myDept" column="myDept" />
+		<result property="id" 				column="id" />
+		<result property="parent" 			column="parent" />
+		<result property="companyId" 		column="companyId" />
+		<result property="text" 			column="text" />
+		<result property="isComp" 			column="isComp" />
+		<result property="myDept" 			column="myDept" />
 	</resultMap>
 
 	<resultMap class="authorVO" id="authorMap">
-		<result property="userName" column="user_name" />
-		<result property="userId" column="user_id" />
-		<result property="jikwi" column="jikwi" />
-		<result property="deptName" column="dept_name" />
-		<result property="authDept" column="auth_dept" />
+		<result property="userName" 		column="user_name" />
+		<result property="userId" 			column="user_id" />
+		<result property="jikwi" 			column="jikwi" />
+		<result property="deptName" 		column="dept_name" />
+		<result property="authDept" 		column="auth_dept" />
 	</resultMap>
 
 	<resultMap class="authorVO" id="userMap">
-		<result property="userName" column="user_name" />
-		<result property="userId" column="user_id" />
-		<result property="jikwi" column="jikwi" />
-		<result property="mail" column="mail" />
-		<result property="deptName" column="dept_name" />
-		<result property="userImg" column="user_img" />
+		<result property="userName"			column="user_name" />
+		<result property="userId" 			column="user_id" />
+		<result property="jikwi" 			column="jikwi" />
+		<result property="mail" 			column="mail" />
+		<result property="deptName" 		column="dept_name" />
+		<result property="userImg" 			column="user_img" />
 	</resultMap>
 
 	<resultMap class="authorVO" id="deptMap">
-		<result property="deptName" column="dept_name" />
-		<result property="deptId" column="dept_id" />
-		<result property="mine" column="mine" />
+		<result property="deptName" 		column="dept_name" />
+		<result property="deptId" 			column="dept_id" />
+		<result property="mine" 			column="mine" />
 	</resultMap>
 
 	<resultMap class="JournaltypeVO" id="JournaltypeMap">
-		<result property="journaltypeId" column="type_id" columnIndex="1" />
-		<result property="journalUse" column="used" columnIndex="2" />
+		<result property="journaltypeId" 	column="type_id" 	columnIndex="1" />
+		<result property="journalUse" 		column="used" 		columnIndex="2" />
 	</resultMap>
 
 	<resultMap class="JournalFormInfoVO" id="JournalFormInfo" groupBy="formId">
-		<result property="formId" column="form_id" />
-		<result property="formName" column="form_name" />
-		<result property="formInfo" column="form_info" />
-		<result property="formDate" column="form_date" />
-		<result property="formWriter" column="form_writer" />
-		<result property="formStatus" column="form_status" />
-		<result property="typeId" column="type_id" />
+		<result property="formId" 			column="form_id" />
+		<result property="formName" 		column="form_name" />
+		<result property="formInfo" 		column="form_info" />
+		<result property="formDate" 		column="form_date" />
+		<result property="formWriter" 		column="form_writer" />
+		<result property="formStatus" 		column="form_status" />
+		<result property="typeId" 			column="type_id" />
 		<result property="depts" 		resultMap="ezJournal.deptInfoVO"/>
 	</resultMap>
 
@@ -157,14 +157,14 @@
 	</resultMap>
 
 	<resultMap class="deptInfoVO" id="deptInfoVO">
-		<result property="deptId" column="dept_id" />
-		<result property="deptName" column="dept_name" />
+		<result property="deptId" 			column="dept_id" />
+		<result property="deptName" 		column="dept_name" />
 	</resultMap>
 
 	<resultMap class="favoriteVO" id="favoriteVO">
-		<result property="favoriteId" column="favorite_id" />
-		<result property="favoriteName" column="favorite_name" />
-		<result property="favoriteDate" column="favorite_date" />
+		<result property="favoriteId" 		column="favorite_id" />
+		<result property="favoriteName" 	column="favorite_name" />
+		<result property="favoriteDate" 	column="favorite_date" />
 	</resultMap>
 
 	<resultMap class="receiverVO" id="receiverMap">
@@ -192,7 +192,7 @@
 		from 
 			tbl_journal_form_type
 		where
-		tenant_id=#tenantId#
+			tenant_id=#tenantId#
 		and 
 			company_id=#companyId#
 		<isNotEmpty property="used">
@@ -208,7 +208,7 @@
 			#typeId#,	#companyId#,	#tenantId#
 		)
 	</insert>
-
+	
 	<!-- 회사 생성시 기본양식 생성 -->
 	<insert id="insertJournalBasicForm" parameterClass="map">
 		insert into jmocha.tbl_journal_form (
@@ -266,66 +266,66 @@
 	<!-- 양식함 사용여부 수정 -->
 	<update id="updateJournalTypeList" parameterClass="Map">
 		update
-		tbl_journal_form_type
+			tbl_journal_form_type
 		set
-		used=#used#
+			used=#used#
 		where
-		type_id = #typeId#
+			type_id = #typeId#
 		and
-		company_id = #companyId#
+			company_id = #companyId#
 		and
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 	</update>
 
 	<!-- 관리자단 양식 리스트 -->
 	<select id="getFormListAdmin" parameterClass="map" resultMap="JournalFormInfo">
-				<![CDATA[
+		<![CDATA[
 			select
-						a.form_id,
-						a.form_name,
-						a.form_info,
-						DATE_ADD(DATE_FORMAT(a.form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
-						a.form_writer,
-						a.form_status,
+				a.form_id,
+				a.form_name,
+				a.form_info,
+				DATE_ADD(DATE_FORMAT(a.form_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as form_date,
+				a.form_writer,
+				a.form_status,
 				a.type_id,
 				b.dept_id,
 				ifnull(d.DISPLAYNAME$lang$,(select DISPLAYNAME$lang$ from tbl_deptmaster dd where dd.CN=#companyId# and dd.tenant_id=#tenantId#)) as dept_name
-					from 
+			from 
 				tbl_journal_form a 
 			left join tbl_journal_form_use_dept b on (a.form_id = b.form_id and a.tenant_id = b.tenant_id)
 			left join tbl_deptmaster d on (d.CN=b.dept_id and d.tenant_id=b.tenant_id)
-					where 
+			where
 				a.type_id = #typeId#
-					and
+			and
 				a.company_id = #companyId#
-					and
-						a.tenant_id = #tenantId#	
+			and
+				a.tenant_id = #tenantId#
 			order by a.form_id desc
-				]]>
+		]]>
 	</select>
 
 	<!-- 양식 리스트 셀렉트 -->
 	<select id="getFormList" parameterClass="map" resultMap="formInfoVO">
 		<isEmpty property="deptId">
-				<![CDATA[
-					select
+			<![CDATA[
+				select
 					a.form_id,
 					a.form_name,
 					a.form_status,
 					a.type_id
-					from 
+				from 
 					tbl_journal_form a join tbl_journal_form_type b 
 				on 
 					(a.company_id = b.company_id and a.tenant_id = b.tenant_id and a.type_id = b.type_id)
-					where
+				where 
 					b.used = 'use'
-					and
+				and
 					a.form_status = 'basic'			
-					and
+				and
 					a.tenant_id = #tenantId#	
 				and
 					a.company_id = #companyId#
-				]]>
+			]]>
 		</isEmpty>
 		<isNotEmpty property="deptId">
 			<![CDATA[
@@ -353,14 +353,14 @@
 	<!-- 해당 양식을 사용할 수 있는 부서 리스트 -->
 	<select id="getFormUseDeptList" parameterClass="map" resultMap="deptInfoVO">
 		select
-		b.dept_id,
+			b.dept_id,
 			a.DISPLAYNAME$lang$ as dept_name
 		from
-		tbl_deptmaster a join tbl_journal_form_use_dept b on a.CN = b.dept_id
+			tbl_deptmaster a join tbl_journal_form_use_dept b on a.CN = b.dept_id
 		where
-		b.form_id = #formId#
+			b.form_id = #formId#
 		and
-		b.tenant_id = #tenantId#
+			b.tenant_id = #tenantId#
 	</select>
 
 	<!-- 양식 등록 하기 -->
@@ -379,9 +379,9 @@
 	<!-- 양식을 사용하는 부서 등록 -->
 	<insert id="insertUseDept" parameterClass="map">
 		insert into tbl_journal_form_use_dept (
-		dept_id, form_id, tenant_id
+			dept_id, 	form_id, 	tenant_id
 		) values (
-		#deptId#, #formId#, #tenantId#
+			#deptId#, 	#formId#, 	#tenantId#
 		)
 	</insert>
 
@@ -389,23 +389,23 @@
 	<select id="selectDeptList" parameterClass="map" resultMap="deptViewMap">
 		select 
 			d.CN as id,
-		IF(d.extensionattribute1=null
-		<isNotEmpty property="companyId">
+			IF(d.extensionattribute1=null
+			<isNotEmpty property="companyId">
 			or d.CN=#companyId#
-		</isNotEmpty>
-		,'##',d.EXTENSIONATTRIBUTE1) as parent,
+			</isNotEmpty>
+			,'##',d.EXTENSIONATTRIBUTE1) as parent,
 			d.extensionattribute2 as companyId,
 			d.DISPLAYNAME$lang$ as text,
 			case d.CN
-		when d.extensionattribute2 then 'comp'
-		else 'dept'
+				when d.extensionattribute2 then 'comp'
+				else 'dept'
 			end as isComp,
 			case d.CN
-		when u.DEPARTMENT then 'yes'
-		else 'no'
-		end as myDept
+				when u.DEPARTMENT then 'yes'
+				else 'no'
+			end as myDept
 		from
-		tbl_deptmaster d
+			tbl_deptmaster d 
 		left join 
 			tbl_usermaster u 
 		on 
@@ -421,13 +421,13 @@
 				((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0 
 			and 
 				d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
-		or
+			or
 				(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
 			)
-		<isNotEmpty property="companyId">
+			<isNotEmpty property="companyId">
 			and 
 				d.EXTENSIONATTRIBUTE2 = #companyId#
-		</isNotEmpty>
+			</isNotEmpty>
 		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
 	</select>
 
@@ -437,9 +437,9 @@
 			d.CN as companyId,
 			d.DISPLAYNAME$lang$ as companyName,
 			case d.CN
-		when #companyId# then 'selected'
-		else 'no'
-		end as selected
+				when #companyId# then 'selected'
+				else 'no'
+			end as selected
 		from 
 			jmocha.tbl_deptmaster d
 		left join
@@ -453,9 +453,9 @@
 		and
 			(
 				((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0 
-		and
+			and
 				d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
-		or
+			or
 				(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
 			)
 		and 
@@ -466,7 +466,7 @@
 	<!-- 권한자 목록 세럭트 -->
 	<select id="selectAuthorList" parameterClass="Map" resultMap="authorMap">
 		select
-		a.user_id as user_id,
+			a.user_id as user_id,
 			u.DISPLAYNAME$lang$ as user_name,
 			u.title$lang$ as jikwi,
 			du.DISPLAYNAME$lang$ as dept_name,
@@ -490,8 +490,8 @@
 	<select id="selectAuthorDept" resultMap="deptMap" parameterClass="Map">
 		select
 			d.DISPLAYNAME$lang$ dept_name,
-		d.CN dept_id,
-		'no' as mine
+			d.CN dept_id,
+			'no' as mine
 		from 
 			jmocha.tbl_deptmaster d
 		left join 
@@ -503,8 +503,8 @@
 		union
 		select
 			d.DISPLAYNAME$lang$ dept_name,
-		d.CN dept_id,
-		'yes' as mine
+			d.CN dept_id,
+			'yes' as mine
 		from 
 			jmocha.tbl_deptmaster d
 		left join 
@@ -520,11 +520,11 @@
 	<select id="selectUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
 		select
 			DISPLAYNAME$lang$ as user_name,
-		CN as user_id,
+			CN as user_id,
 			TITLE$lang$ as jikwi,
-		MAIL as mail,
+			MAIL as mail,
 			DESCRIPTION$lang$ as dept_name,
-		EXTENSIONATTRIBUTE2 as user_img
+			EXTENSIONATTRIBUTE2 as user_img
 		from 
 			tbl_usermaster
 		where
@@ -537,65 +537,65 @@
 			and 
 				$key$ = #value#
 		</isEqual>
-		order by
+		order by 
 			lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME$lang$
 	</select>
 
 	<!-- 양식 상세정보 -->
 	<select id="getJournalFormInfo" parameterClass="map" resultMap="getJournalFormInfoVO">
 		select
-		form_id,
-		form_name,
-		form_info,
-		form_content,
-		form_status
+			form_id,
+			form_name,
+			form_info,
+			form_content,
+			form_status
 		from
-		tbl_journal_form
+			tbl_journal_form
 		where
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 		and
-		company_id = #companyId#
+			company_id = #companyId#
 		and
-		form_id = #formId#
+			form_id = #formId#
 	</select>
 
 	<!-- 양식 수정 -->
 	<update id="updateJournalForm" parameterClass="map">
 		update
-		tbl_journal_form
+			tbl_journal_form
 		set
 			type_id = #typeId#,
-		form_name = #formName#,
-		form_info = #formDescript#,
-		form_content = #formContent#
+			form_name = #formName#,
+			form_info = #formDescript#,
+			form_content = #formContent#
 		where
-		form_id = #formId#
+			form_id = #formId#
 		and
 			company_id = #companyId#
 		and
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 	</update>
 
 	<!-- 양식 사용부서 삭제 -->
 	<delete id="deleteFormUseDept" parameterClass="map">
 		delete from
-		tbl_journal_form_use_dept
+			tbl_journal_form_use_dept
 		where
-		form_id = #formId#
+			form_id = #formId#
 		and
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 	</delete>
 
 	<!-- 양식 삭제 -->
 	<delete id="deleteJournalForm" parameterClass="map">
 		delete from
-		tbl_journal_form
+			tbl_journal_form
 		where
-		form_id = #formId#
+			form_id = #formId#
 		and
-		company_id = #companyId#
+			company_id = #companyId#
 		and
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 	</delete>
 
 	<!-- 사원의 열람권한을 저장하는 쿼리 -->
@@ -604,9 +604,9 @@
 			user_id, 	dept_id, 	tenant_id
 		) 
 		select
-		#userId#, #deptId#, #tenantId#
+			#userId#, 	#deptId#, 	#tenantId#
 		from dual where not exists (
-		select
+			select
 				DISPLAYNAME$lang$
 			from 
 				jmocha.tbl_usermaster 
@@ -626,7 +626,7 @@
 		where 
 			user_id=#userId# 
 		and
-		tenant_id=#tenantId#
+			tenant_id=#tenantId#
 	</delete>
 
 	<!-- 수신일지 수 -->
@@ -654,7 +654,7 @@
 			count(j.journal_id) as totalCount
 		from 
 			jmocha.tbl_journal j 
-		inner join
+		inner join 
 			jmocha.tbl_journal_form f on (j.form_id = f.form_id and j.tenant_id = f.tenant_id)
 		inner join 
 			jmocha.tbl_journal_form_type ft on (f.type_id=ft.type_id and f.tenant_id=ft.tenant_id)
@@ -839,9 +839,9 @@
 	<!-- 수신자 즐겨찾기 추가 -->
 	<insert id="saveReceiverFavorite" parameterClass="map">
 		insert into tbl_journal_recv_favorite (
-		tenant_id, user_id, favorite_name, favorite_date
+			tenant_id, 	user_id, 	favorite_name, 	favorite_date
 		) values (
-		#tenantId#, #userId#, #favoriteName#, #nowDate#
+			#tenantId#, #userId#, 	#favoriteName#, #nowDate#
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
 			select
@@ -852,9 +852,9 @@
 	<!-- 즐겨찾기아이디에 수신자 추가 -->
 	<insert id="insertFavoriteUser" parameterClass="map">
 		insert into tbl_journal_recv_favorite_list (
-		favorite_id, user_id, tenant_id
+			favorite_id, 	user_id, 	tenant_id
 		) values (
-		#favoriteId#, #userId#, #tenantId#
+			#favoriteId#, 	#userId#, 	#tenantId#
 		)
 	</insert>
 
@@ -862,15 +862,15 @@
 	<select id="getReceiverFavoriteList" parameterClass="map"
 		resultMap="favoriteVO">
 		select
-		favorite_id,
-		favorite_name,
-		DATE_ADD(DATE_FORMAT(favorite_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as favorite_date
+			favorite_id,
+			favorite_name,
+			DATE_ADD(DATE_FORMAT(favorite_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as favorite_date
 		from
-		tbl_journal_recv_favorite
+			tbl_journal_recv_favorite
 		where
-		user_id = #userId#
+			user_id = #userId#
 		and
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 		order by favorite_id asc
 	</select>
 
@@ -895,37 +895,37 @@
 	<!-- 즐겨찾기 아이디에 해당되는 수신자 리스트 삭제 -->
 	<delete id="deleteFavoriteUser" parameterClass="map">
 		delete from
-		tbl_journal_recv_favorite_list
+			tbl_journal_recv_favorite_list
 		where
-		favorite_id = #favoriteId#
+			favorite_id = #favoriteId#
 		and
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 	</delete>
 
 	<!-- 즐겨찾기 이름 수정 -->
 	<update id="updateFavoriteName" parameterClass="map">
 		update
-		tbl_journal_recv_favorite
+			tbl_journal_recv_favorite
 		set
-		favorite_name = #favoriteName#
+			favorite_name = #favoriteName#
 		where
-		favorite_id = #favoriteId#
+			favorite_id = #favoriteId#
 		and
-		user_id = #userId#
+			user_id = #userId#
 		and
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 	</update>
 
 	<!-- 즐겨찾기 삭제 -->
 	<delete id="deleteFavorite" parameterClass="map">
 		delete from
-		tbl_journal_recv_favorite
+			tbl_journal_recv_favorite
 		where
-		favorite_id = #favoriteId#
+			favorite_id = #favoriteId#
 		and
-		user_id = #userId#
+			user_id = #userId#
 		and
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 	</delete>
 
 	<!-- 환경설정을 가져오기 -->
@@ -1015,17 +1015,17 @@
 	<!-- 최근사용양식 아이디 가져오기 -->
 	<select id="getJournalLastFormId" parameterClass="map" resultClass="String">
 		select
-		a.form_id
+			a.form_id
 		from
-		tbl_journal a join tbl_journal_form b
+			tbl_journal a join tbl_journal_form b
 		on
-		(a.form_id = b.form_id and a.tenant_id = b.tenant_id)
+			(a.form_id = b.form_id and a.tenant_id = b.tenant_id)
 		where
-		a.journal_writer = #userId#
+			a.journal_writer = #userId#
 		and
-		b.type_id = #typeId#
+			b.type_id = #typeId#
 		and
-		a.tenant_id = #tenantId#
+			a.tenant_id = #tenantId#
 		order by a.journal_id desc limit 1
 	</select>
 
@@ -1052,15 +1052,15 @@
 			<!-- values (#userId#,#tenantId#,#journalId#,#viewDate#) -->
 			on duplicate key update tenant_id = #tenantId#
 		</isEmpty>
-<!-- 		<isNotEmpty property="isUser"> -->
-<!-- 			update jmocha.tbl_journal_recv -->
-<!-- 			set -->
-<!-- 			recieve_date=#viewDate# -->
-<!-- 			where journal_id=#journalId# -->
-<!-- 			and -->
-<!-- 			tenant_id=#tenantId# -->
-<!-- 			and user_id=#userId# -->
-<!-- 		</isNotEmpty> -->
+		<isNotEmpty property="isUser">
+			update jmocha.tbl_journal_recv
+			set
+			recieve_date=#viewDate#
+			where journal_id=#journalId#
+			and
+			tenant_id=#tenantId#
+			and user_id=#userId#
+		</isNotEmpty>
 	</insert>
 
 	<!-- 일지 상세 내용 -->
@@ -1098,17 +1098,17 @@
 	<!-- 업무일지 등록 하기 -->
 	<insert id="insertJournal" parameterClass="map">
 		insert into tbl_journal (
-		tenant_id, journal_title, journal_content, journal_date, journal_writer,
+			tenant_id, 	journal_title, 	journal_content, 	journal_date, 	journal_writer,
 			form_id, 	dept_share, 	journal_dept,		journal_text,	journal_sum
-		<isNotEmpty property="journalStatus">
-			, journal_status
-		</isNotEmpty>
+			<isNotEmpty property="journalStatus">
+				, journal_status
+			</isNotEmpty>
 		) values (
 			#tenantId#,	 #title#, 		#content#, 			#writeDate#, 	#writerId#, 
 			#formId#, 	 #deptShare#,	#deptId#,			#journalText#,	#isSum#
-		<isEqual property="journalStatus" compareValue="temp">
-			, #journalStatus#
-		</isEqual>
+			<isEqual property="journalStatus" compareValue="temp">
+				, #journalStatus#
+			</isEqual>
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
 			select
@@ -1119,25 +1119,25 @@
 	<!-- 일지 등록시 첨부파일 정보 등록 -->
 	<insert id="insertJournalAttach" parameterClass="map">
 		insert into tbl_journal_file (
-		journal_id, file_path, file_size, file_name, tenant_id
+			journal_id, 	file_path, 		file_size, 		file_name, 		tenant_id
 		) values (
-		#journalId#, #filePath#, #fileSize#, #fileName#, #tenantId#
+			#journalId#, 	#filePath#, 	#fileSize#, 	#fileName#, 	#tenantId#
 		)
 	</insert>
 
 	<!-- 일지 등록시 수신자 정보 등록 -->
 	<insert id="insertReceiver" parameterClass="map">
 		insert into tbl_journal_recv (
-		journal_id, user_id, tenant_id
+			journal_id, 	user_id, 		tenant_id
 		) values (
-		#journalId#, #receiverId#, #tenantId#
+			#journalId#, 	#receiverId#, 	#tenantId#
 		)
 	</insert>
 
 	<!-- 업무일지 수정 -->
 	<update id="updateJournal" parameterClass="map">
 		update
-		tbl_journal
+			tbl_journal
 		set
 			journal_title = #title#,
 			form_id = #formId#,
@@ -1151,39 +1151,39 @@
 			,journal_date = #writeDate# 
 			</isEqual>
 		where
-		journal_id = #journalId#
+			journal_id = #journalId#
 		and
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 	</update>
 
 	<!-- 첨부파일 정보 삭제 -->
 	<delete id="deleteJournalAttach" parameterClass="map">
 		delete from
-		tbl_journal_file
+			tbl_journal_file
 		where
-		journal_id = #journalId#
+			journal_id = #journalId#
 		and
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 	</delete>
 
 	<!-- 수신자 정보 삭제 -->
 	<delete id="deleteReceiver" parameterClass="map">
 		delete from
-		tbl_journal_recv
+			tbl_journal_recv
 		where
-		journal_id = #journalId#
+			journal_id = #journalId#
 		and
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 	</delete>
 
 	<!-- 일지 삭제 -->
 	<delete id="deleteJournal" parameterClass="map">
 		delete from
-		tbl_journal
+			tbl_journal
 		where
-		journal_id = #journalId#
+			journal_id = #journalId#
 		and
-		tenant_id = #tenantId#
+			tenant_id = #tenantId#
 	</delete>
 	
 	<!-- 일지 수신자 상태값변경 -->
@@ -1204,20 +1204,20 @@
 	<select id="selectJournalReplyList" parameterClass="map" resultMap="journalReplyMap">
 		select 
 			r.reply_id as reply_id,
-		r.reply_content as reply_content,
-		substring(r.reply_date,1,16) as reply_date,
+			r.reply_content as reply_content,
+			substring(r.reply_date,1,16) as reply_date,
 			u.DISPLAYNAME$lang$ as reply_writer_name,
-		u.CN as reply_writer,
-		case u.CN
+			u.CN as reply_writer,
+			case u.CN
 				when #userId# then 'Y' 
-		else 'N'
-		end as mine
+				else 'N'
+			end as mine
 		from 
 			tbl_journal_reply r inner join tbl_usermaster u on(u.CN = r.reply_writer and u.TENANT_ID = r.tenant_id)
 		where 
 			r.journal_id=#journalId#
 		and
-		r.tenant_id=#tenantId#
+			r.tenant_id=#tenantId#
 	</select>
 
 	<!-- 댓글입력 -->

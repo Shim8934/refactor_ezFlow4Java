@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezJournal.web;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -368,12 +369,15 @@ public class EzJournalController extends EgovFileMngUtil {
 			if (status.equals("ok")) {
 				JSONObject journal = (JSONObject) result.get("data");
 				model.addAttribute("journal", journal);
-				model.addAttribute("content", journal.get("journalContent").toString().replaceAll("\'", "\"").replaceAll("(\r\n|\r|\n|\n\r)", " "));
+				model.addAttribute("content", journal.get("journalContent").toString().replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " "));
 				JSONArray fileList = (JSONArray) journal.get("fileList");
 				if (fileList != null && fileList.size() > 0) {
 					for (int i = 0; i < fileList.size(); i++) {
 						JSONObject file = (JSONObject) fileList.get(i);
+						logger.debug("**fileName:" + file.get("fileName"));
 						file.put("pFileName", file.get("fileName"));
+					//	file.put("pFileName", file.get("fileEncodeName"));
+					//	file.put("fileName", file.get("fileEncodeName"));
 						String filePath = file.get("filePath").toString();
 						filePath = filePath.substring(filePath.indexOf("{"), filePath.indexOf("}") + 1);
 						file.put("pUploadSN", filePath);
@@ -381,7 +385,7 @@ public class EzJournalController extends EgovFileMngUtil {
 //						file.put("fileSize", file.get("fileSize"));
 						fileList.set(i, file);
 					}
-					model.addAttribute("fileList", fileList.toString());
+					model.addAttribute("fileList", URLEncoder.encode(fileList.toString().replaceAll(" ", "&nbsp;"), "UTF-8"));
 				}
 			}
 			
@@ -1006,9 +1010,11 @@ public class EzJournalController extends EgovFileMngUtil {
 		jsonParam.put("fileList", fileList);
 		jsonParam.put("mode", mode);
 		jsonParam.put("isSum", isSum);
+		
 		if (mode.equals("temp")) {
 			jsonParam.put("isTemp", "N");
 		}
+		
 		if (mode.equals("reuse")) {
 			jsonParam.put("originJournalId", originJournalId);
 			originJournalId = "";
@@ -1157,7 +1163,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("filePath", filePath);
-		param.put("fileName", fileName);
+	//	param.put("fileName", fileName);
 		
 		String restUrl = "/rest/ezjournal/journals/" + journalId + "/attachfiles";
 		JSONObject result = new JSONObject();
@@ -1658,7 +1664,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			journal = (JSONObject) resultBody.get("data");
 			String journalDate = (String) journal.get("journalDate");
 			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
-			String journalContent = ((String) journal.get("journalContent")).replaceAll("'","\"").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+			String journalContent = ((String) journal.get("journalContent")).replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 			journal.put("journalContent", journalContent);
 			journal.put("journalDate", journalDate);
 		}

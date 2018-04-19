@@ -496,7 +496,12 @@ function ListView() {
                         objTd.setAttribute("style", strStyle);
                     }
                 }
-
+                
+                // 첨부파일버튼 클릭시 쪽수 안보이게 2018-03-21 강민수92
+                if (strColName == "PageNum") {
+                	objTd.style.display = "none";
+                }
+                
                 if (strColName == "REJECTFLAG")
                     objTd.style.textAlign = "center";
 
@@ -603,6 +608,10 @@ function ListView() {
                     colCount = document.getElementById(_thisID).getElementsByTagName("th").length;
             } catch (e) {}
             
+            if(_thisID == "attachList") {
+            	colCount = 3;
+            }
+            
             objTd.setAttribute("colSpan", colCount);
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
@@ -616,7 +625,7 @@ function ListView() {
 
             objTr.onmouseover = new Function("tr_mouseover(this)");
             objTr.onmouseout = new Function("tr_mouseout(this)");
-
+            
             if (_rowonclick != null)
                 objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
             else
@@ -662,7 +671,7 @@ function ListView() {
 
                 var oText = document.createTextNode(strValue.replace("&amp;", "&").replace("&lt","<").replace("&gt;", ">"));
                 var objTd = document.createElement("TD");
-
+                
                 if (strStyle != "") {
                     if (new RegExp(/MSIE/).test(navigator.userAgent)) {
                         objTd.style.setAttribute("cssText", strStyle);
@@ -794,7 +803,14 @@ function ListView() {
                 else {
                     objTd.appendChild(oText);
                 }
-
+                
+                // 첨부파일리스트에 쪽수 컬럼 제거 2018-03-21 강민수92
+                if (_thisID == "attachList") {
+                	if (j == 3) {
+                		objTd.style.display = "none";
+                	}
+                }
+                
                 objTr.appendChild(objTd);
 
                 objTd = null;

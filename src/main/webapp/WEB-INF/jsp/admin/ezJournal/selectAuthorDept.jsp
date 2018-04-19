@@ -108,12 +108,16 @@
 	   		}
 	   		
 	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
-	   		function delTargetDept(elem){
-	   			var targetDeptId = $(elem).attr("targetId");
-	   			var targetDeptName = $(elem).attr("targetName");
-   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
-   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
-   				$(elem).remove();
+	   		function delTargetDept(){
+	   			var targetDeptId = $(".selectTR").attr("targetId");
+	   			if(targetDeptId){
+		   			var targetDeptName = $(".selectTR").attr("targetName");
+	   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
+	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
+	   				$(".selectTR").remove();
+	   			} else {
+	   				alert("<spring:message code='ezOrgan.t249'/>");
+	   			}
 	   		}
 	   		
 	   		//오프너의 부서 이름과 아이디 세팅
@@ -128,7 +132,7 @@
 		    	
 	   			$(function () {
 		   			$(document).on({
-		   				"dblclick":function(){delTargetDept(this);},
+		   				"dblclick":function(){delTargetDept();},
 		   				"click":function(){targetDept = this;
 			   				$("*").removeClass("selectTR");
 				   			$(this).addClass("selectTR");
@@ -167,7 +171,7 @@
                 </td>
                 <td style="width: 30px; text-align: center;" rowspan="2">                            
                       <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
-                      <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept(targetDept)">
+                      <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept()">
                  		</td>
                 <td class="listview" style="width: 250px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
                 	<div style="width: 100%; height: 100%; overflow: auto;">
