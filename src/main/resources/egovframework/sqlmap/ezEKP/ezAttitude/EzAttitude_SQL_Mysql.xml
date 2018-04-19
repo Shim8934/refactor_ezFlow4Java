@@ -180,6 +180,9 @@
 				</isNotEmpty>
 			</isEmpty>
 			)
+			<isNotEmpty property="typeId" prepend="and">
+				A.TYPE_ID = #typeId#
+			</isNotEmpty>
 			AND
 				A.TENANT_ID = #tenantId#
 			<![CDATA[
@@ -689,7 +692,7 @@
 		SELECT
 			ATTITUDE_ID,
 			(SELECT 
-				count(*) 
+				MAX(MOD_CNT) + 1
 			FROM
 				tbl_attitude_modappl_history
 			WHERE

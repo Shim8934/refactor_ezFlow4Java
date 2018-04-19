@@ -974,359 +974,7 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("delAttitudeUserConf ended");
 	}
 	
-	/**
-	 * 관리자 근태조회 메인화면 호출
-	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeCheck.do")
-	public String attitudeCheck(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf started");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
-		}
-		//회사리스트
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/companies";
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId());
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
-		
-		JSONArray list = new JSONArray();
-		JSONObject data = new JSONObject();
-		String adminCompany = "";
-		String today = "";
-		if (status.equals("ok")) {
-		
-			data = (JSONObject) resultBody.get("data");
-			list = (JSONArray) data.get("list");
-			adminCompany = (String) data.get("adminCompany");
-			today = (String) data.get("today");
-			
-			model.addAttribute("list", list);
-			model.addAttribute("adminCompany", adminCompany);
-			model.addAttribute("today", today);
-		}
-		
-		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf ended");
-		
-		return "/admin/ezAttitude/attitudeCheck";
-	}
-	
-	/**
-	 * 관리자 근태조회 리스트 출력
-	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeCheckList.do", produces = "application/json;charset=utf-8")
-	@ResponseBody
-	public JSONObject getAttitudeCheckList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-//	public JSONArray getAttitudeCheckList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/admin/ezAttitude/attitudeCheckList started");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
-		String companyId = request.getParameter("companyId");
-		String pageNum = request.getParameter("pageNum");
-		String listSize = request.getParameter("listSize");
-		String typeId = request.getParameter("typeId");
-		String userIdList = request.getParameter("userIdList");
-		String orderCell = request.getParameter("orderCell");
-		String orderOption = request.getParameter("orderOption");
-		String startDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
-		String userId = userInfo.getId();
-		String offset = userInfo.getOffset();
-		String offsetMin = commonUtil.getMinuteUTC(offset);
-		
-		LOGGER.debug(companyId);
-		
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; // 부서근태조회는 따로 빼두는것이 좋지 않을까...아닌가 쿼리를 잘짜면 되려나
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", companyId)
-				.queryParam("userId", userId)
-				.queryParam("pageNum", pageNum)
-				.queryParam("listSize", listSize)
-				.queryParam("typeId", typeId)
-				.queryParam("userIdList", userIdList)
-				.queryParam("orderCell", orderCell)
-				.queryParam("orderOption", orderOption)
-				.queryParam("startDate", startDate)
-				.queryParam("endDate", endDate)
-				.queryParam("offsetMin", offsetMin);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
-		
-		
-//		JSONArray jArray = new JSONArray();
-//		if(status.equals("ok")){
-//			jArray = (JSONArray) resultBody.get("data");
-//		}
-		JSONObject jObject = new JSONObject();
-		if(status.equals("ok")){
-			jObject = (JSONObject) resultBody.get("data");
-		}
-		
-		LOGGER.debug("/admin/ezAttitude/attitudeCheckList ended");
-		return jObject;
-//		return jArray;
-	}
-	/**
-	 * 근태조회 > 조회자 검색(조직도) 화면 출력 메서드
-	 */
-	@RequestMapping(value = "/admin/ezAttitude/getSearchList.do")
-	public String attitudeCheckUserSearch(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
-		String companyId = request.getParameter("companyId");
-		String searchIdList = request.getParameter("searchIdList");
-		String searchNameList = request.getParameter("searchNameList");
-		if (searchIdList != null && searchNameList != null) {
-			model.addAttribute("searchIdList", searchIdList);
-			model.addAttribute("searchNameList", searchNameList);
-		}
-		
-		//조직도 회사,부서 리스트
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/organtree/depts";
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", companyId)
-				.queryParam("userId", userInfo.getId());
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
-		
-		
-		JSONObject jObject = new JSONObject();
-		if (status.equals("ok")) {
-			JSONArray deptList = (JSONArray) resultBody.get("data");
-			
-			for (int i = 0; i < deptList.size(); i++) {
-				JSONObject dept =  (JSONObject) deptList.get(i);
-				if (dept.get("isComp").equals("comp")) {
-					dept.put("icon", "icon-company");
-				} else{
-					dept.put("icon", "icon-dept");
-				}
-				if (dept.get("myDept").equals("yes")) {
-					JSONObject state = new JSONObject();
-					state.put("opened", "true");
-					state.put("selected", "true");
-					dept.put("state", state);
-				}
-			}
-			
-			model.addAttribute("deptList", deptList);
-			model.addAttribute("companyId", companyId);
-		}
-		return "admin/ezAttitude/searchAttitudeCheck";
-	}
-	
-	/**
-	 * 근태조회 엑셀 출력
-	 * @param loginCookie
-	 * @param response
-	 * @param request
-	 * @param locale
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/admin/ezAttitude/excelFileExport.do")
-	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request, Locale locale) throws Exception{
-		LOGGER.debug("excelFileExport started."); 
-		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie); 
-		
-		String companyId = request.getParameter("companyId");
-		String pageNum = request.getParameter("pageNum");
-		String listSize = request.getParameter("listSize");
-		String typeId = request.getParameter("typeId");
-		String userIdList = request.getParameter("userIdList");
-		String orderCell = request.getParameter("orderCell");
-		String orderOption = request.getParameter("orderOption");
-		String startDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
-		String userId = userInfo.getId();
-		String offset = userInfo.getOffset();
-		String offsetMin = commonUtil.getMinuteUTC(offset);
-		
-		LOGGER.debug(companyId);
-		
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; // 부서근태조회는 따로 빼두는것이 좋지 않을까
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("companyId", companyId)
-				.queryParam("userId", userId)
-				.queryParam("pageNum", pageNum)
-				.queryParam("listSize", listSize)
-				.queryParam("typeId", typeId)
-				.queryParam("userIdList", userIdList)
-				.queryParam("orderCell", orderCell)
-				.queryParam("orderOption", orderOption)
-				.queryParam("startDate", startDate)
-				.queryParam("endDate", endDate)
-				.queryParam("offsetMin", offsetMin);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
-		
-		JSONObject data = new JSONObject();
-		List<AdminAttitudeVO> attitudeList = new ArrayList<AdminAttitudeVO>();
-		Gson gson = new Gson();
-		if(status.equals("ok")){
-			data = (JSONObject) resultBody.get("data");
-			
-			attitudeList = gson.fromJson(data.get("list").toString(), new TypeToken<List<AdminAttitudeVO>>(){}.getType()) ;
-		}
-		
-	///////    엑 셀        //////////////////////////////////////////////////////////
-		
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet;
-		  
-		HSSFCellStyle headerStyle= workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		  
-		HSSFCellStyle bodyStyle= workbook.createCellStyle();
-		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		
-		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
-		headerStyle.setFont(font);
-		
-		Row row;
-		Cell cell;
-		      
-		String pFileName = "";
-		String strDate = EgovDateUtil.getToday("-");
-		pFileName = strDate+"_Report.xls";
-		
-		sheet = workbook.createSheet("report");
-		row = sheet.createRow(0);
-		
-		//header
-		row.createCell(0).setCellValue("이름");
-		row.getCell(0).setCellStyle(headerStyle);
-		row.createCell(1).setCellValue("직급");
-		row.getCell(1).setCellStyle(headerStyle);
-		row.createCell(2).setCellValue("부서");
-		row.getCell(2).setCellStyle(headerStyle);
-		row.createCell(3).setCellValue("구분");
-		row.getCell(3).setCellStyle(headerStyle);
-		row.createCell(4).setCellValue("날짜");
-		row.getCell(4).setCellStyle(headerStyle);
-		row.createCell(5).setCellValue("시작시간");
-		row.getCell(5).setCellStyle(headerStyle);
-		row.createCell(6).setCellValue("종료시간");
-		row.getCell(6).setCellStyle(headerStyle);
-		
-		//body
-		for (int i = 0 ; i < attitudeList.size(); i++) { 
-			AdminAttitudeVO vo = attitudeList.get(i);
-			row = sheet.createRow(i + 1);
 
-			row.createCell(0).setCellValue(vo.getUserName());
-			row.getCell(0).setCellStyle(bodyStyle);
-			row.createCell(1).setCellValue(vo.getUserTitle());
-			row.getCell(1).setCellStyle(bodyStyle);
-			row.createCell(2).setCellValue(vo.getDeptName());
-			row.getCell(2).setCellStyle(bodyStyle);
-			row.createCell(3).setCellValue(vo.getTypeName());
-			row.getCell(3).setCellStyle(bodyStyle);
-			if (vo.getEndDate() != null && vo.getEndDate() != "") {
-				row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
-			} else {
-				row.createCell(4).setCellValue(vo.getStartDate());
-			}
-			row.getCell(4).setCellStyle(bodyStyle);
-			row.createCell(5).setCellValue(vo.getStartTime());
-			row.getCell(5).setCellStyle(bodyStyle);
-			if (vo.getEndTime() != null && vo.getEndTime() != "") {
-				row.createCell(6).setCellValue(vo.getEndTime());
-			} else {
-				row.createCell(6).setCellValue("");
-			}
-			row.getCell(6).setCellStyle(bodyStyle);
-		}
-		
-		//날짜(4번컬럼)는 길면 짤리므로 자동으로 너비조정을 해준다
-		sheet.autoSizeColumn(4);
-		
-		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
-		workbook.write(response.getOutputStream());
-		  
-		workbook.close();
-		
-		LOGGER.debug("excelFileExport ended.");
-	}
-	
-	
-	
-	
 	
 	//여기밑으로 제자리요
 	
@@ -1572,6 +1220,359 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("/admin/ezAttitude/saveAttitudeUserConf ended");
 		
 		return "admin/ezAttitude/saveAttitudeUserConf";
+	}
+	
+	/**
+	 * 관리자 근태조회 메인화면 호출
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeCheck.do")
+	public String attitudeCheck(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		//회사리스트
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONArray list = new JSONArray();
+		JSONObject data = new JSONObject();
+		String adminCompany = "";
+		String today = "";
+		
+		if (status.equals("ok")) {
+			data = (JSONObject) resultBody.get("data");
+			list = (JSONArray) data.get("list");
+			adminCompany = (String) data.get("adminCompany");
+			today = (String) data.get("today");
+			
+			model.addAttribute("list", list);
+			model.addAttribute("adminCompany", adminCompany);
+			model.addAttribute("today", today);
+		}
+		
+		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf ended");
+		
+		return "/admin/ezAttitude/attitudeCheck";
+	}
+	
+	/**
+	 * 관리자 근태조회 리스트 출력
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeCheckList.do", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public JSONObject getAttitudeCheckList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/admin/ezAttitude/attitudeCheckList started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
+		String searchStartDate = request.getParameter("startDate");
+		String searchEndDate = request.getParameter("endDate");
+		String searchAttitudeType = request.getParameter("attitudeType");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String userId = userInfo.getId();
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		
+		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
+				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
+				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; // 부서근태조회는 따로 빼두는것이 좋지 않을까...아닌가 쿼리를 잘짜면 되려나
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchTitle", searchTitle)
+				.queryParam("searchStartDate", searchStartDate)
+				.queryParam("searchEndDate", searchEndDate)
+				.queryParam("searchAttitudeType", searchAttitudeType)
+				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption)
+				.queryParam("offsetMin", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject jObject = new JSONObject();
+		if(status.equals("ok")){
+			jObject = (JSONObject) resultBody.get("data");
+		}
+		
+		LOGGER.debug("/admin/ezAttitude/attitudeCheckList ended");
+		
+		return jObject;
+	}
+	/**
+	 * 근태조회 > 조회자 검색(조직도) 화면 출력 메서드
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/getSearchList.do")
+	public String attitudeCheckUserSearch(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		String searchIdList = request.getParameter("searchIdList");
+		String searchNameList = request.getParameter("searchNameList");
+		
+		if (searchIdList != null && searchNameList != null) {
+			model.addAttribute("searchIdList", searchIdList);
+			model.addAttribute("searchNameList", searchNameList);
+		}
+		
+		//조직도 회사,부서 리스트
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/organtree/depts";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		
+		JSONObject jObject = new JSONObject();
+		
+		if (status.equals("ok")) {
+			JSONArray deptList = (JSONArray) resultBody.get("data");
+			
+			for (int i = 0; i < deptList.size(); i++) {
+				JSONObject dept =  (JSONObject) deptList.get(i);
+				
+				if (dept.get("isComp").equals("comp")) {
+					dept.put("icon", "icon-company");
+				} else{
+					dept.put("icon", "icon-dept");
+				}
+				if (dept.get("myDept").equals("yes")) {
+					JSONObject state = new JSONObject();
+					state.put("opened", "true");
+					state.put("selected", "true");
+					dept.put("state", state);
+				}
+			}
+			
+			model.addAttribute("deptList", deptList);
+			model.addAttribute("companyId", companyId);
+		}
+		
+		return "admin/ezAttitude/searchAttitudeCheck";
+	}
+	
+	/**
+	 * 근태조회 엑셀 출력
+	 * @param loginCookie
+	 * @param response
+	 * @param request
+	 * @param locale
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/excelFileExport.do")
+	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request, Locale locale) throws Exception{
+		LOGGER.debug("excelFileExport started."); 
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie); 
+		
+		String companyId = request.getParameter("companyId");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
+		String typeId = request.getParameter("typeId");
+		String userIdList = request.getParameter("userIdList");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		String userId = userInfo.getId();
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		LOGGER.debug(companyId);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; // 부서근태조회는 따로 빼두는것이 좋지 않을까
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
+				.queryParam("typeId", typeId)
+				.queryParam("userIdList", userIdList)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate)
+				.queryParam("offsetMin", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject data = new JSONObject();
+		List<AdminAttitudeVO> attitudeList = new ArrayList<AdminAttitudeVO>();
+		Gson gson = new Gson();
+		if(status.equals("ok")){
+			data = (JSONObject) resultBody.get("data");
+			
+			attitudeList = gson.fromJson(data.get("list").toString(), new TypeToken<List<AdminAttitudeVO>>(){}.getType()) ;
+		}
+		
+	///////    엑 셀        //////////////////////////////////////////////////////////
+		
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet;
+		  
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		  
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		
+		HSSFFont font = workbook.createFont();
+		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		headerStyle.setFont(font);
+		
+		Row row;
+		Cell cell;
+		      
+		String pFileName = "";
+		String strDate = EgovDateUtil.getToday("-");
+		pFileName = strDate+"_Report.xls";
+		
+		sheet = workbook.createSheet("report");
+		row = sheet.createRow(0);
+		
+		//header
+		row.createCell(0).setCellValue("이름");
+		row.getCell(0).setCellStyle(headerStyle);
+		row.createCell(1).setCellValue("직급");
+		row.getCell(1).setCellStyle(headerStyle);
+		row.createCell(2).setCellValue("부서");
+		row.getCell(2).setCellStyle(headerStyle);
+		row.createCell(3).setCellValue("구분");
+		row.getCell(3).setCellStyle(headerStyle);
+		row.createCell(4).setCellValue("날짜");
+		row.getCell(4).setCellStyle(headerStyle);
+		row.createCell(5).setCellValue("시작시간");
+		row.getCell(5).setCellStyle(headerStyle);
+		row.createCell(6).setCellValue("종료시간");
+		row.getCell(6).setCellStyle(headerStyle);
+		
+		//body
+		for (int i = 0 ; i < attitudeList.size(); i++) { 
+			AdminAttitudeVO vo = attitudeList.get(i);
+			row = sheet.createRow(i + 1);
+
+			row.createCell(0).setCellValue(vo.getUserName());
+			row.getCell(0).setCellStyle(bodyStyle);
+			row.createCell(1).setCellValue(vo.getUserTitle());
+			row.getCell(1).setCellStyle(bodyStyle);
+			row.createCell(2).setCellValue(vo.getDeptName());
+			row.getCell(2).setCellStyle(bodyStyle);
+			row.createCell(3).setCellValue(vo.getTypeName());
+			row.getCell(3).setCellStyle(bodyStyle);
+			if (vo.getEndDate() != null && vo.getEndDate() != "") {
+				row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
+			} else {
+				row.createCell(4).setCellValue(vo.getStartDate());
+			}
+			row.getCell(4).setCellStyle(bodyStyle);
+			row.createCell(5).setCellValue(vo.getStartTime());
+			row.getCell(5).setCellStyle(bodyStyle);
+			if (vo.getEndTime() != null && vo.getEndTime() != "") {
+				row.createCell(6).setCellValue(vo.getEndTime());
+			} else {
+				row.createCell(6).setCellValue("");
+			}
+			row.getCell(6).setCellStyle(bodyStyle);
+		}
+		
+		//날짜(4번컬럼)는 길면 짤리므로 자동으로 너비조정을 해준다
+		sheet.autoSizeColumn(4);
+		
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		workbook.write(response.getOutputStream());
+		  
+		workbook.close();
+		
+		LOGGER.debug("excelFileExport ended.");
 	}
 	
 	/**
@@ -1981,7 +1982,4 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("saveAttitudeAuthor ended");
 	}
-	
-
-	
 }

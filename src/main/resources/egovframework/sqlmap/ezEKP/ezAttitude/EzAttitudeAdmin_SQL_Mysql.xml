@@ -279,11 +279,10 @@
 				TBL_USERMASTER.tenant_id = #tenantId#
 			AND 
 				TBL_USERMASTER.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+			AND
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #companyId#
 		]]>
 		
-		<isNotEmpty prepend="AND" property="companyId">
-			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #companyId#
-		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			TBL_USERMASTER.description LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
@@ -580,102 +579,121 @@
    	<select id="ezAttitudeAdminDAO.getAttitudeList2" parameterClass="Map" resultMap="adminAttitude">
 		<![CDATA[
 			SELECT 
-				A.ATTITUDE_ID,
-				A.COMPANY_ID,
-				A.TENANT_ID,
-				A.WRITER_ID,
-				A.DEPT_ID,
-				substr(date_add(A.START_DATE, INTERVAL #offsetMin# minute), 1, 11) AS START_DATE,
-                substr(date_add(A.START_DATE, INTERVAL #offsetMin# minute), 12) AS START_TIME,
-                ifnull(substr(date_add(A.END_DATE, INTERVAL #offsetMin# minute), 1, 11),'') AS END_DATE,
-                ifnull(substr(date_add(A.END_DATE, INTERVAL #offsetMin# minute), 12),'') AS END_TIME,
-				A.MODAPPL,
-				A.IP,
-				A.DATE_TYPE,
-				A.TYPE_ID,
-				B.TYPE_NAME,
-				C.DISPLAYNAME AS USER_NAME,
-                C.DESCRIPTION AS DEPT_NAME,
-                C.TITLE AS USER_TITLE
-			FROM   
-				tbl_attitude A 
-			INNER JOIN 
-				tbl_attitude_type B 
-			ON 
-				(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
-			INNER JOIN
-				tbl_usermaster C
+				TBL_ATTITUDE.attitude_id,
+				TBL_ATTITUDE.company_id,
+				TBL_ATTITUDE.tenant_id,
+				TBL_ATTITUDE.writer_id,
+				TBL_ATTITUDE.dept_id,
+				SUBSTR(DATE_ADD(TBL_ATTITUDE.start_date, INTERVAL #offsetMin# minute), 1, 11) AS start_date,
+                SUBSTR(DATE_ADD(TBL_ATTITUDE.start_date, INTERVAL #offsetMin# minute), 12) AS start_time,
+                IFNULL(SUBSTR(DATE_ADD(TBL_ATTITUDE.end_date, INTERVAL #offsetMin# minute), 1, 11),'') AS end_date,
+                IFNULL(SUBSTR(DATE_ADD(TBL_ATTITUDE.end_date, INTERVAL #offsetMin# minute), 12),'') AS end_time,
+				TBL_ATTITUDE.modappl,
+				TBL_ATTITUDE.ip,
+				TBL_ATTITUDE.date_type,
+				TBL_ATTITUDE.type_id,
+				TBL_ATTITUDE_TYPE.type_name,
+				TBL_USERMASTER.displayname as user_name,
+                TBL_USERMASTER.description as dept_name,
+                TBL_USERMASTER.title as user_title
+			FROM
+				TBL_ATTITUDE A
+			JOIN
+				TBL_ATTITUDE_TYPE B
 			ON
-				(A.WRITER_ID = C.CN AND A.TENANT_ID = C.TENANT_ID)
-			WHERE  
-				A.TENANT_ID = #tenantId#
+				TBL_ATTITUDE.type_id = TBL_ATTITUDE_TYPE.type_id
 			AND
-				A.COMPANY_ID = #companyId#
+				TBL_ATTITUDE.company_id = TBL_ATTITUDE_TYPE.company_id
+			AND
+				TBL_ATTITUDE.tenant_id = TBL_ATTITUDE_TYPE.tenant_id
+			JOIN
+				TBL_USERMASTER C
+			ON
+				TBL_ATTITUDE.writer_id = TBL_USERMASTER.cn
+			AND
+				TBL_ATTITUDE.tenant_id = TBL_USERMASTER.tenant_id
+			WHERE
+				TBL_ATTITUDE.tenant_id = #tenantid#
+			AND
+				TBL_ATTITUDE.company_id = #companyId#
 			AND
 				(
-					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
-					or
-					(END_DATE >= #startDate# and END_DATE < #endDate#) 
-					or
-					(START_DATE < #startDate# and END_DATE >= #endDate#)
+					(TBL_ATTITUDE.start_date >= #startDate# AND TBL_ATTITUDE.start_date <= #endDate#) 
+				OR
+					(TBL_ATTITUDE.end_date >= #startDate# AND TBL_ATTITUDE.end_date < #endDate#) 
+				OR
+					(TBL_ATTITUDE.start_date < #startDate# AND TBL_ATTITUDE.end_date >= #endDate#)
 				)
-			]]>
-		<isNotEmpty prepend="AND" property="userId">
-			<iterate prepend="WRITER_ID IN" property="userId" open="(" close=")" conjunction=",">
+		]]>
+			
+		<!-- <isNotEmpty prepend="AND" property="userId">
 			<![CDATA[
-				 #userId[]# 
+				TBL_ATTITUDE.writer_id = #userId#
 			]]>
-			</iterate>				
+		</isNotEmpty> -->
+		<isNotEmpty prepend="AND" property="searchAttitudeType">
+			<![CDATA[
+				TBL_ATTITUDE.type_id = #searchAttitudeType#
+			]]>
 		</isNotEmpty>
-		<isNotEmpty property="typeId">
-		<![CDATA[
-			AND 
-				A.TYPE_ID = #typeId#
-		]]>
+		
+		
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			TBL_USERMASTER.description LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
-		<isNotEmpty prepend="" property="order">
-		<![CDATA[
-			ORDER BY $order$
-		]]>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			TBL_USERMASTER.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		
+		<isNotEmpty property="orderCell">
+			ORDER BY
+				$orderCell$ $orderOption$,
+				TBL_USERMASTER.displayname
+		</isNotEmpty>
+		<isEmpty property="orderCell">
+			ORDER BY
+				TBL_USERMASTER.displayname
+		</isEmpty>
 		<isNotEmpty prepend="" property="limit">
-		<![CDATA[
-			LIMIT 
-				#limit#, #listSize# 
-		]]>
+			<![CDATA[
+				LIMIT 
+					#limit#, #listSize# 
+			]]>
 		</isNotEmpty>
 	</select>
+	
 	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
 		<![CDATA[
-			SELECT 
+			SELECT
 				COUNT(*)
-			FROM   
-				tbl_attitude 
-			WHERE  
-				TENANT_ID = #tenantId#
+			FROM
+				TBL_ATTITUDE
+			WHERE
+				tenant_id = #tenantId#
 			AND
-				COMPANY_ID = #companyId#
+				company_id = #companyId#
 			AND
 				(
-					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
-					or
-					(END_DATE >= #startDate# and END_DATE < #endDate#) 
-					or
-					(START_DATE < #startDate# and END_DATE >= #endDate#)
+					(TBL_ATTITUDE.start_date >= #startDate# and TBL_ATTITUDE.start_date <= #endDate#)
+				OR
+					(TBL_ATTITUDE.end_date >= #startDate# and TBL_ATTITUDE.end_date < #endDate#)
+				OR
+					(TBL_ATTITUDE.start_date < #startDate# and TBL_ATTITUDE.end_date >= #endDate#)
 				)
 		]]>
+		
 		<isNotEmpty prepend="AND" property="userId">
-			<iterate prepend="WRITER_ID IN" property="userId" open="(" close=")" conjunction=",">
 			<![CDATA[
-				 #userId[]# 
+				TBL_ATTITUDE.writer_id = #userId#
 			]]>
-			</iterate>				
 		</isNotEmpty>
-		<isNotEmpty property="typeId">
-		<![CDATA[
-			AND 
-				TYPE_ID = #typeId#
-		]]>
+		<isNotEmpty prepend="AND" property="typeId">
+			<![CDATA[
+				type_id = #typeId#
+			]]>
 		</isNotEmpty>
 	</select>
 	
