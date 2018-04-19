@@ -389,6 +389,14 @@ public class EzPMSGWController2 {
 			
 			List<ProjectTaskTreeVO> list = ezPMSService.getProjectTaskTree(Integer.parseInt(projectId));
 			
+			for(ProjectTaskTreeVO vo : list) {
+				System.out.println("id : " + vo.getId());
+				System.out.println("icon : " + vo.getIcon());
+				System.out.println("parent : " + vo.getParent());
+				System.out.println("text : " + vo.getText());
+				System.out.println("sort : " + vo.getSort());
+			}
+			
 			LOGGER.debug(list.get(0).getText());
 			
 			result.put("status", "ok");

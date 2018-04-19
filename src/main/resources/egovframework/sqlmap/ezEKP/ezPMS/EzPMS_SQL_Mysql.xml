@@ -174,7 +174,7 @@
     	]]>
     </insert>
     
-    <select id="EzPMSDAO.getProjectTaskTree" parameterClass="Map" resultMap="projectTaskTreeVO">
+    <select id="EzPMSDAO.getProjectGroupTree" parameterClass="Map" resultMap="projectTaskTreeVO">
 			<![CDATA[
 				SELECT
 					GROUP_ID AS id,
@@ -182,7 +182,25 @@
 					GROUP_NAME AS text,
 					SORT_ORDER AS sort
 				FROM TBL_PMS_GROUP
-				WHERE PROJECT_ID = #project_Id#
+				WHERE
+					PROJECT_ID = #project_Id#
+						AND
+					DEL_STATUS = 0
+			]]>
+	</select>
+	
+	<select id="EzPMSDAO.getProjectTaskTree" parameterClass="Map" resultMap="projectTaskTreeVO">
+			<![CDATA[
+				SELECT
+					CONCAT('t',TASK_ID) AS id,
+					GROUP_ID AS parent,
+					TASK_NAME AS text,
+					SORT_ORDER AS sort
+				FROM TBL_PMS_TASK
+				WHERE
+					PROJECT_ID = #project_Id#
+						AND
+					DEL_STATUS = 0
 			]]>
 	</select>
 	

@@ -13,6 +13,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	
 	
 	
+	public List<ProjectTaskTreeVO> getProjectGroupTree(Map<String, Object> map) {
+		return (List<ProjectTaskTreeVO>) list("EzPMSDAO.getProjectGroupTree", map);
+	}
+	
 	public List<ProjectTaskTreeVO> getProjectTaskTree(Map<String, Object> map) {
 		return (List<ProjectTaskTreeVO>) list("EzPMSDAO.getProjectTaskTree", map);
 	}

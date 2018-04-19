@@ -14,17 +14,18 @@ function getProjectTaskTree(containerId, projectId) {
 				'core' : {
 					'data' : data.data,
 					'multiple' : false,
-					'animation' : 0
+					'animation' : 0,
+					'themes' : {
+						'responsive' : true,
+						'variant' : 'small',
+						'stripes' : true
+					}
 				},
 				'plugins' : [ 'sort' ],
 				'sort' : function(a, b) {
 					var a1 = this.get_node(a);
 					var b1 = this.get_node(b);
-					if (a1.icon == b1.icon) {
-						return (a1.original.sort > b1.original.sort) ? 1 : -1;
-					} else {
-						return (a1.icon > b1.icon) ? 1 : -1;
-					}
+					return (a1.original.sort > b1.original.sort) ? 1 : -1;
 				}
 			});
 		},
