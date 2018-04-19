@@ -49,6 +49,117 @@
 		var searchEndDate = "";
 		var folderUpp = "";
 		
+		var row = (function() {
+			var className = {
+				selected: "bnkWebFolder2",
+				unselected: "bnkWebFolder"
+			};
+			
+			var selectedClassNameRegExp = new RegExp("\\b" + className.selected + "\\b");
+			
+			var keyDownCtrl = false;
+			var keyDownShift = false;
+			
+			var rowWrapElement;
+			var firstSelected;
+			
+			function documentKeyEvent(event) {
+				keyDownShift = event.shiftKey;
+				keyDownCtrl = event.ctrlKey;
+			}
+
+			window.addEventListener("load", function() {
+				rowWrapElement = document.getElementById("tblFileList");
+				
+				document.addEventListener("keydown", documentKeyEvent);
+				document.addEventListener("keyup", documentKeyEvent);
+			});
+			
+			function clickEvent(rowElement) {
+				var selectedLength = getSelectedRows().length;
+				
+				if (firstSelected === undefined || selectedLength === 0) {
+					firstSelected = rowElement;
+					setSelectState(rowElement, true);
+					
+					return;
+				}
+				
+				if (keyDownShift) {
+					var rows = Array.prototype.slice.call(rowWrapElement.children);
+					var startIndex = rows.indexOf(firstSelected);
+					var endIndex = rows.indexOf(rowElement);
+					var temp;
+					
+					if (startIndex > endIndex) {
+						temp = startIndex;
+						startIndex = endIndex;
+						endIndex = temp;
+					}
+					
+					clearStateRows();
+					
+					for (var i = startIndex; i <= endIndex; i++) {
+						setSelectState(rows[i], true);
+					}
+					
+					return;	
+				}
+				
+				var previousSelectState = isSelected(rowElement);
+				
+				if (keyDownCtrl || (selectedLength === 1 && firstSelected === rowElement)) {
+					setSelectState(rowElement, !previousSelectState);
+				} else {
+					clearStateRows();
+					setSelectState(rowElement, true);
+					
+					firstSelected = rowElement;
+				}
+			}
+			
+			function getSelectedRows() {
+				return rowWrapElement.querySelectorAll("tr." + className.selected);
+			}
+			
+			function getUnselectedRows() {
+				return rowWrapElement.querySelectorAll("tr." + className.unselected);
+			}
+			
+			function isSelected(rowElement) {
+				return rowElement.className.search(selectedClassNameRegExp) >= 0;
+			}
+			
+			function clearStateRows(ignoreRows) {
+				var selectedRows = getSelectedRows();
+				var length = selectedRows.length;
+				
+				for (var i = 0; i < length; i++) {
+					setSelectState(selectedRows[i], false);
+				}
+			}
+			
+			function setSelectState(rowElement, isEnable) {
+				var checkboxElement = rowElement.firstChild.firstChild;
+				
+				checkboxElement.checked = isEnable;
+				rowElement.setAttribute("class", isEnable ? className.selected : className.unselected);
+			}
+			
+			function setSelectStateAll(isEnable) {
+				var targetRows = isEnable ? getUnselectedRows() : getSelectedRows();
+				var length = targetRows.length;
+				
+				for (var i = 0; i < length; i++) {
+					setSelectState(targetRows[i], isEnable);
+				}
+			}
+			
+			return {
+				clickEvent: clickEvent,
+				setSelectStateAll: setSelectStateAll
+			};
+		}());
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -246,13 +357,14 @@
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("_fileId", result[i]["fileId"]);
 					trElmt.setAttribute("_type", result[i]["fileTypeName"] == 'folder' ? 'folder' : 'file');
-					trElmt.onclick = function(event) {clickRow(event);};
+					//trElmt.onclick = function(event) {clickRow(event);};
+					trElmt.addEventListener("click", function(event) {row.clickEvent(this)});
 					
 					var inputElmt = document.createElement("input");
 					inputElmt.setAttribute("type", "checkbox");
 					inputElmt.setAttribute("value", result[i]["fileId"]);
 					inputElmt.setAttribute("class", "checkBnk");
-					inputElmt.onclick = function(e){getChecked(e);};
+					//inputElmt.onclick = function(e){getChecked(e);};
 					tdElmt1.appendChild(inputElmt);
 					
 					var faImgElmt = document.createElement("img");
@@ -843,12 +955,12 @@
 	<div id="dragDropArea" style="margin: 10px 0px;overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
-				<th width="20px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
+				<th width="20px" ><input type="checkbox" onchange="row.setSelectStateAll(this.checked)" id="_checkAll"></th>
 				<th width="40px" ><spring:message code='ezWebFolder.t216'/></th><!-- 즐겨찾기 -->
 				<th width="40px" ><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
-				<th width="160px"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
+				<th width="240px"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 				<th width="60px" ><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
-				<th width="120px"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
+				<th width="80px"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
 				<th width="80px" ><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
 				<th width="80px" ><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
 				<th width="210px"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
