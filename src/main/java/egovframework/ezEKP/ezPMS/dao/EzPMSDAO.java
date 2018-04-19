@@ -64,5 +64,4 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<ProjectUserVO> getDeptUserList(Map<String, Object> map){
 		return (List<ProjectUserVO>) list("selectUserList",map);
 	}
-
 }

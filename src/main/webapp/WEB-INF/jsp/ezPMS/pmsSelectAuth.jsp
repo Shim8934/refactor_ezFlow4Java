@@ -18,7 +18,7 @@
 	   		//트리조직도 JSON
 	   		var treeContent;
 	   		// 선택된 수신자 배열
-	   		var receiverList = [];
+	   		var receiverList;
 	   		// 선택된 수신자 이름
 	   		var userName = "";
 	   		// 선택된 수신자 아이디
@@ -62,15 +62,19 @@
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
-	   				url:"/admin/ezJournal/userList.do",
+	   				url:"/ezPMS/userList.do",
 	   				data:{"key" : key, "value" : value,"deptName":deptName},
 	   				success: function(result){
+	   					console.log(result);
 	   					var picList = $(result).find(".organwrap");
 	   					if(picList.length==0 && key!="DEPARTMENT"){
 	   						alert("<spring:message code='ezCommunity.t1379'/>");
 	   					} else {
 		   					$("#orglistView").html(result);
 	   					}
+	   				},
+	   				fail: function(){
+	   					console.log("error");
 	   				}
 	   			});
 	   		}
@@ -137,15 +141,15 @@
 						receiverList.push({"userName" : userName, "userId" : receiverId});
 		   			} else {
 		   				if (userId == receiverId) {
-			   				alert("<spring:message code='ezJournal.t140'/>");
+			   				alert("본인은 선택할 수 없습니다.");
 		   				} else {
-			   				alert("<spring:message code='ezJournal.t127'/>");
+			   				alert("선택된 항목입니다.");
 		   				}
 		   			}
 		   			drawReceiverList();
 		   			selMainListUserId = "";
 	   			} else {
-	   				alert("<spring:message code='ezJournal.t136'/>");
+	   				alert("수신자를 선택해 주십시오.");
 	   			}
 	   			
 	   		}
@@ -188,7 +192,6 @@
 	   			$("#1tab1").click();
 	            ChangeTab(document.getElementById("1tab1"));
 		   		setDeptList();
-	   			getFavoriteList();
 	   			if ($(opener.selReceiver).length > 0) {
 	   				receiverList = opener.selReceiver;
 	   				drawReceiverList();
@@ -213,18 +216,8 @@
 		            case "journalOrgan":
 		                if (document.getElementById("journalOrgan_content").style.display == "none") {
 		                    document.getElementById("journalOrgan_content").style.display = "";
-		                    document.getElementById("journalFavorite_content").style.display = "none";
 		                   	$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
 		                    $("#dblarrow").css("display", "none");
-		                }
-		                break;
-		            case "journalFavorite":
-		                if (document.getElementById("journalFavorite_content").style.display == "none") {
-		                    document.getElementById("journalOrgan_content").style.display = "none";
-		                    document.getElementById("journalFavorite_content").style.display = "";
-		                    $("#dblarrow").css("display", "");
-		                    getFavoriteList();
-		                    $("#journalFavorite").scrollTop(0);
 		                }
 		                break;
 		    	}
@@ -265,11 +258,11 @@
 		</style>
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
-        <h1 style="height: 20px;"><spring:message code='ezJournal.t88'/></h1>
+        <h1 style="height: 20px;">수신자 선택</h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="ok_Click()"><spring:message code='ezJournal.t15'/></span></li>
-	            <li><span onclick="close_Click()"><spring:message code='ezJournal.t16'/></span></li>
+	            <li><span onclick="ok_Click()">확인</span></li>
+	            <li><span onclick="close_Click()">취소</span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
@@ -282,7 +275,7 @@
 					 	<tr>
 			                <div class="portlet_tabpart01">
 			                	<div class="portlet_tabpart01_top" id="tab1">
-					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t89' /></span></p>
+					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)">조직도</span></p>
 					        	</div>
 					        </div>
 				        	<td id="journalOrgan_content" style="display: none;">
@@ -338,11 +331,8 @@
 	                        <td style="vertical-align: top;">
 	                        	<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
+										<span style="min-width: 45px;" id="PermissionStr">담당자 </span>
 									</h2>
-								 	<a class="imgbtn" style="margin-top: 5px; margin-left: 65px;">
-								 		<span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span>
-								 	</a>
 								</div>
 								<div class="receiver_borderbox">
 									<div id="receiverList" style="width: 250px; Height: 478px; overflow-x: auto; overflow-y: auto;">

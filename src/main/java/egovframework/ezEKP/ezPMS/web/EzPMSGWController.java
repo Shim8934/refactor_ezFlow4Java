@@ -659,7 +659,7 @@ public class EzPMSGWController {
 		 * 프로젝트관리 G/W [GET] 사원리스트 
 		 */
 		@SuppressWarnings("unchecked")
-		@RequestMapping(value="/rest/ezjournal/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+		@RequestMapping(value="/rest/ezPMS/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 		public JSONObject getUserList(HttpServletRequest request) throws Exception {
 			LOGGER.debug("ezJournal G/W getUserList started.");
 			
