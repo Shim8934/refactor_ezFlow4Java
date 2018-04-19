@@ -118,7 +118,7 @@
 	        	var url = "/admin/ezAttitude/saveAttitudeAuth.do";
 				var companyId = $("#ListCompany").val();
 				url+="?companyId="+companyId;
-				window.open(url, "saveAttitudeAuth", "width=500, height=180");
+				window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 200));
 	        }
 	        
 		</script>
