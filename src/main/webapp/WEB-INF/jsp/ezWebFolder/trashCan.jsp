@@ -111,8 +111,6 @@
 				success : function (data) {
 					result = data.data;
 					
-					console.log(result);
-					
 					trashCanList = result.trashCanList;
 					fileCnt = result.fileCnt;
 					folderCnt = result.folderCnt;
@@ -202,7 +200,9 @@
 					tdFileIcon.appendChild(fileIconElmt);
 					
 					tdName.textContent = resultElement["trashCanName"];
-					tdSize.textContent = getFileSize(resultElement["trashCanSize"]);
+					if (resultElement["trashCanExt"] != 'folder') {
+						tdSize.textContent = getFileSize(resultElement["trashCanSize"]);
+					}
 					
 					if (userInfo.lang == "1") {
 						tdCreator.textContent = resultElement["createName1"];
