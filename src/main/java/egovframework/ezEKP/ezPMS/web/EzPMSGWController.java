@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
+import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -55,11 +58,18 @@ public class EzPMSGWController {
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
+<<<<<<< Updated upstream
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String status = request.getParameter("status");
 			
 			Map<String, Object> search = new HashMap<>();
+=======
+			String projectName = request.getParameter("projectName");
+			String planStartDate = request.getParameter("planStartDate");
+			String overview = request.getParameter("overview");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+>>>>>>> Stashed changes
 			
 			//프로젝트 리스트 가져오기
 			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), info, status, search, info.getOffSet(), lang);
@@ -576,4 +586,108 @@ public class EzPMSGWController {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/"+ projectId + "/role/" + roleId + "/count] ended.");
 		return result;
 	}
+	
+	// 공통 부분 API
+		/**
+		 * 프로젝트관리 G/W [GET] 회사리스트 
+		 */
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value="/rest/ezPMS/companies", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+		public JSONObject getCompanyList(HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezJournal G/W getCompanyList started.");
+			
+			JSONObject result = new JSONObject();
+			
+			try {
+				String userId = request.getParameter("userId");
+				String serverName = request.getHeader("x-user-host");
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+				String companyId = request.getParameter("companyId");
+				if (companyId == null || companyId.equals("")) {
+					companyId = info.getCompanyId();
+				}
+				String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+				List<ProjectCompanyVO> compList = ezPMSService.getCompanyList(userId, info.getTenantId(), companyId,lang);
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", compList);
+			} catch (Exception e) {
+				result.put("code", 1);
+				result.put("status", "error");
+				result.put("data", "");
+			}
+			
+			LOGGER.debug("ezJournal G/W getCompanyList ended.");
+			return result;
+		}
+		
+		/**
+		 * 프로젝트관리 G/W [GET] 부서리스트 
+		 */
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value="/rest/ezPMS/depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+		public JSONObject getDeptList(HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezJournal G/W getDeptList started.");
+			
+			JSONObject result = new JSONObject();
+			
+			try {
+				String userId = request.getParameter("userId");
+				String serverName = request.getHeader("x-user-host");
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+				
+				LOGGER.debug("userId : " + userId);
+				String companyId = request.getParameter("companyId");
+				
+				if (companyId == null || companyId.equals("")) {
+					companyId = info.getCompanyId();
+				}
+				String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+				List<DeptViewVO> deptList = ezPMSService.getDeptViewList(userId, companyId, info.getTenantId(),lang);
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", deptList);
+			} catch (Exception e) {
+				result.put("code", 1);
+				result.put("status", "error");
+				result.put("data", "");
+			}
+			
+			LOGGER.debug("ezJournal G/W getDeptList ended.");
+			return result;
+		}
+		
+		/**
+		 * 프로젝트관리 G/W [GET] 사원리스트 
+		 */
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value="/rest/ezjournal/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+		public JSONObject getUserList(HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezJournal G/W getUserList started.");
+			
+			JSONObject result = new JSONObject();
+			
+			try {
+				String key = request.getParameter("key");
+				String value = request.getParameter("value");
+				String serverName = request.getHeader("x-user-host");
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+				String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+				
+				List<ProjectUserVO> userList = ezPMSService.getDeptUserList(info.getTenantId(), key, value,lang);
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", userList);
+			} catch (Exception e) {
+				result.put("code", 1);
+				result.put("status", "error");
+				result.put("data", "");
+			}
+			
+			LOGGER.debug("ezJournal G/W getUserList ended.");
+			return result;
+		}
 }

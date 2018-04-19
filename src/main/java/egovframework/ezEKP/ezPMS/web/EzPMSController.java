@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -129,8 +131,24 @@ public class EzPMSController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userName = userInfo.getDisplayName1();
+		String offset = userInfo.getOffset();
+		String projectId = request.getParameter("taskID");
+		
+		String planStartDate = "";
+		String planEndDate = "";
+		
+		if (projectId == null) {
+			projectId = "";
+			
+			String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+			planStartDate = nowDate.substring(0, 10);
+			
+			planEndDate = nowDate.substring(0, 10);
+		}
 		
 		model.addAttribute("userName", userName);
+		model.addAttribute("planStartDate", planStartDate);
+		model.addAttribute("planEndDate", planEndDate);
 		
 		LOGGER.debug("ezPMS addNewProject ended");
 		return "ezPMS/newProject";
@@ -422,5 +440,47 @@ public class EzPMSController {
 		
 		LOGGER.debug("ezPMS getTaskLogList ended");				
 		return "ezPMS/pmsTaskLogList";
+	}
+	
+	/**
+	 * 수신자 선택화면 호출
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezPMS/pmsSelectAuth.do")
+	public String selectAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+		LOGGER.debug("selectAuth started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezPMS/depts", param, request, "get", null);
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONArray deptList = (JSONArray) result.get("data");
+			
+			for (int i = 0; i < deptList.size(); i++) {
+				JSONObject dept = (JSONObject) deptList.get(i);
+				
+				if (dept.get("isComp").equals("comp")) {
+					dept.put("icon", "icon-company");
+				} else {
+					dept.put("icon", "icon-dept");
+				}
+				
+				if (dept.get("myDept").equals("yes")) {
+					JSONObject state = new JSONObject();
+					state.put("selected", "true");
+					state.put("opened", "true");
+					dept.put("state", state);
+				}
+			}
+			model.addAttribute("deptList", deptList);
+			model.addAttribute("userId", userInfo.getId());
+		}		
+		LOGGER.debug("selectAuth ended");
+		return "/ezPMS/pmsSelectAuth";
 	}
 }

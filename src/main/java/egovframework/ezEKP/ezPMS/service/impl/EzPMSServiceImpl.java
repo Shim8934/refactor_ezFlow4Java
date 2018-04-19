@@ -7,25 +7,33 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezPMS.dao.EzPMSDAO;
 import egovframework.ezEKP.ezPMS.service.EzPMSAdminService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
+import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
+import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPMSService")
 public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MCommonGWController.class);
+	
 	@Resource(name = "EzPMSDAO")
 	private EzPMSDAO ezPMSDAO;
 
@@ -262,5 +270,49 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		return list;
 	}
+	
+	@Override
+	public List<ProjectUserVO> getDeptUserList(int tenantId, String key ,String value, String lang) throws Exception{
+		LOGGER.debug("getDeptUserList started");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("key", key);
+		param.put("value", value);
+		param.put("lang", lang);
+		List<ProjectUserVO> userList = ezPMSDAO.getDeptUserList(param);
+		
+		LOGGER.debug("getDeptUserList ended");
+		return userList;
+	}
+	
+	@Override
+	public List<ProjectCompanyVO> getCompanyList(String userId, int tenantId, String companyId,String lang) throws Exception {
+		LOGGER.debug("getCompanyList started");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("tenantId", tenantId);
+		param.put("companyId", companyId);
+		param.put("lang", lang);
+		List<ProjectCompanyVO> compList = ezPMSDAO.getCompanyList(param);
+		
+		LOGGER.debug("getCompanyList ended");
+		return compList;
+	}
 
+	@Override
+	public List<DeptViewVO> getDeptViewList(String userId,String companyId, int tenantId,String lang) throws Exception {
+		LOGGER.debug("getDeptViewList started");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("userId", userId);
+		param.put("companyId", companyId);
+		param.put("lang", lang);
+		List<DeptViewVO> deptList = ezPMSDAO.getDeptViewVO(param);
+		
+		LOGGER.debug("getDeptViewList ended");
+		return deptList;
+	}
 }
