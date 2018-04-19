@@ -79,7 +79,7 @@ function ezCabMunuCtl(MenuType, selRow) {
     switch (MenuType) {
         case "0":
             if (typeof (tdNewVol) != "undefined" && typeof (tdNewVol) != "unknown") {
-                document.getElementById("tdNewVol").style.display = pMenuFlag;
+                document.getElementById("tdNewVol").style.display = "none"; // 권호수 안보이게
             }
 
             if (typeof (tdModifyCab) != "undefined" && typeof (tdModifyCab) != "unknown") {

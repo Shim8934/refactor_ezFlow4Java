@@ -571,7 +571,7 @@
 	                	<c:if test="${initFlag == '1'}">
 		                    <tr id="trCreateCab">
 		                        <th style="height: 23px; text-align: left; padding-left:3px;"><a class="imgbtn"><span onclick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
-		                            <a class="imgbtn"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a></th>
+		                            <a class="imgbtn" style="display : none;"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a></th>
 		                    </tr>
 		                    <tr id="trCreateCabDummy" style="display: none">
 		                        <td></td>

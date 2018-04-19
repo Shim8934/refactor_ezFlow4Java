@@ -161,7 +161,7 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+    	//pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>50</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
     	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
     	pAttachxml = pAttachxml + "<DATA1>" + MakeXMLString(temppFileLocation) + "</DATA1>";
@@ -199,8 +199,8 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     		strSize = parseInt(temppFileSize) + "B";
     	
     	pAttachxml = pAttachxml + "<VALUE>" + strSize + "</VALUE>";
-    	pAttachxml = pAttachxml + "</CELL><CELL>";
-    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>";
+//    	pAttachxml = pAttachxml + "</CELL><CELL>";
+//    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>";
     	pAttachxml = pAttachxml + "</CELL></ROW></ROWS></LISTVIEWDATA>";
     } else {
     	pAttachxml = "<LISTVIEWDATA><HEADERS>";
@@ -294,7 +294,7 @@ function AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation) {
     pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER>";
     pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER>";
     pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+    //pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>50</WIDTH></HEADER>";
     pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
     pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
     pAttachxml = pAttachxml + "<DATA1>" + MakeXMLString(pFileLocation) + "</DATA1>";
@@ -332,8 +332,8 @@ function AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation) {
         strSize = parseInt(pFileSize) + "B";
 
     pAttachxml = pAttachxml + "<VALUE>" + strSize + "</VALUE>";
-    pAttachxml = pAttachxml + "</CELL><CELL>";
-    pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>";
+//    pAttachxml = pAttachxml + "</CELL><CELL>";
+//    pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>";
     pAttachxml = pAttachxml + "</CELL></ROW></ROWS></LISTVIEWDATA>";
     Resultxml = loadXMLString(pAttachxml);
     return Resultxml;

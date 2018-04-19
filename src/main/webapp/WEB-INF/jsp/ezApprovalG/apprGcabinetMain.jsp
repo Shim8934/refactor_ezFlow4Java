@@ -427,7 +427,7 @@
 		                        document.getElementById("tdRegCabinet").style.display = "none";
 		
 		                    if (ListTypeFlag != "9")
-		                        document.getElementById("tdNewVol").style.display = "";
+		                        document.getElementById("tdNewVol").style.display = "none";
 		                    else
 		                        document.getElementById("tdNewVol").style.display = "none";
 		                    
