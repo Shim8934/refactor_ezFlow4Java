@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -37,6 +39,9 @@ public class EzPMSController {
 	
 	@Autowired
 	private Properties config;
+
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	/**
 	 * 프로젝트 관리 메인화면 호출함수
@@ -482,5 +487,48 @@ public class EzPMSController {
 		}		
 		LOGGER.debug("selectAuth ended");
 		return "/ezPMS/pmsSelectAuth";
+	}
+	
+	/**
+	 * 사원리스트
+	 */
+	@RequestMapping(value = "/ezPMS/userList.do")
+	public String userList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
+		LOGGER.debug("userList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		String key = request.getParameter("key");
+		param.put("key",key );
+		param.put("value", request.getParameter("value"));
+		param.put("userId", userInfo.getId());
+		LOGGER.debug(request.getParameter("key"));
+		LOGGER.debug(request.getParameter("value"));
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/users", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		if (status.equals("ok")) {		
+			JSONArray userList = (JSONArray) resultBody.get("data");
+			
+			model.addAttribute("userList", userList);
+			
+			String keyword = "";
+			if (key.equals("DEPARTMENT")) {
+//				keyword = (String) ((JSONObject)userList.get(0)).get("deptName");
+				keyword = request.getParameter("deptName");
+			} else{
+				keyword = egovMessageSource.getMessage("ezPMS.t1", userInfo.getLocale());
+			}
+			int userCount = 0;
+			if (userList.size() == 0 && !key.equals("DEPARTMENT")) {
+				keyword = egovMessageSource.getMessage("ezPMS.t2", userInfo.getLocale());
+			} else {
+				userCount = userList.size();
+			}
+			model.addAttribute("keyword",keyword);
+			model.addAttribute("userCount",userCount);
+		}
+		
+		LOGGER.debug("userList ended");
+		return "ezPMS/userList";
 	}
 }
