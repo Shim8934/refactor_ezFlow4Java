@@ -5,16 +5,18 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezSchedule.t6' /></title>
+		<title>권한추가</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />		
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
+		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />    
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 	    <script type="text/javascript">	
-	    	var selectedUser = "<c:out value="${selectedUser }" />"
+	    	var selectedUser = "${selectedUser }";
+// 	    	var selectedUser;
+	    	var selectedUserName= "";
 	    	var companyId = "<c:out value="${companyId}" />";
+	    	var deptIdStr = "";
 	    	var deptIds = [];
 	    	var deptNames = [];
 	    	var userDeptId;
@@ -35,52 +37,73 @@
 							</c:otherwise>
 						</c:choose>
 			    	</c:forEach>
+			    	setSelectedUser("${selectedUser }","${selectedUserName }");
 		    		setDeptName();
-    			</c:if>
+	    		</c:if>
    			});
+	    	
+	    	//사원 세팅
+	    	function setSelectedUser(userId, userName){
+	    		selectedUserName = userName;
+	    		selectedUser = userId;
+	    		$("#txtuser").val(" " + userName);
+	    	} 
 	    	
 	    	//사원선택
 	    	function select_person(){
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthor.do";
 				url+="?companyId="+companyId;
-				window.open(url, "author", "width=735, height=560");
+				window.open(url, "author", GetOpenWindowfeature(950, 600));
 	    	}
 	    	
 	    	//부서선택
 	    	function selectDept(){
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthorDept.do";
 				url+="?companyId="+companyId+"&userId="+selectedUser;
-				window.open(url, "authorDept", "width=500, height=550");
+				window.open(url, "authorDept", GetOpenWindowfeature(500, 540));
 	    	}
 	    	 
 	    	//부서 이름 세팅
-	    	function setDeptName(){
-				var deptString;
-				if(deptNames.length<4){
-		    		for (var i = 0; i < deptNames.length; i++) {
-		    			if(i!=0){
-				    		deptString += " ,"+deptNames[i];
-		    			} else {
-		    				deptString=deptNames[i];
-		    			}
-					}
-				} else {
-					deptString = deptNames[0]+" <spring:message code='ezJournal.t124' /> "+ (deptNames.length-1);
+	    	function setDeptName(pdeptIds, pdeptNames){
+	    		if (pdeptIds && pdeptNames) {
+					deptIds = eval(pdeptIds);
+					deptNames = eval(pdeptNames);
 				}
+				var deptString;
+	    		for (var i = 0; i < deptNames.length; i++) {
+	    			if(i!=0){
+			    		deptString += ", " + deptNames[i];
+			    		deptIdStr += "," + deptIds[i];
+	    			} else {
+	    				deptString = deptNames[i];
+	    				deptIdStr = deptIds[i];
+	    			}
+				}
+	    		console.log(deptIds);
 	    		$("#txtdept").val(deptString);
 	    	}	  
 	    	
 	    	//권한 저장
 	    	function insertAuthDept(){
-	   			var jsonString = JSON.stringify({"userId":selectedUser,"depts":deptIds});
-	   			alert(jsonString);
+	    		if (selectedUser == "" || selectedUser == null) {
+	    			alert("권한자를 선택해주세요");
+	    			return;
+	    		}
+	    		if (deptIdStr == "" || deptIdStr == null) {
+	    			alert("권한 부서를 선택해주세요");
+	    			return;
+	    		}
+// 	   			var jsonString = JSON.stringify({"userId":selectedUser,"depts":deptIds});
 				$.ajax({
 	   				type:"post",
 	   				url:"/admin/ezAttitude/saveAttitudeAuthor.do",
-	   				contentType:"application/json;",
-	   				data:jsonString,
+	   				data:{
+	   					selectedUser : selectedUser,
+	   					companyId : companyId,
+	   					deptIds : deptIdStr
+	   				},
 	   				success: function(){
-   						opener.location.reload();
+   						opener.company_change();
    						window.close();
 	   				},
 	   				error : function() {
@@ -97,15 +120,16 @@
 	        <tr>
 	            <th style="width:200px; text-align:center">권한자</th>
 	            <td>
-	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn"><span onclick="select_person()">지정</span></a>                
+	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-top:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
+	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:2px;"><span onclick="select_person()">지정</span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center">권한부서</th>
 	            <td>
-	                <input id="txtdept" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn"><span onclick="selectDept()">지정</span></a>                
+<!-- 	                <input id="txtdept" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" /> -->
+	                <textarea rows="3" id="txtdept" type="text" style="margin-top:2px; width:77%; resize:none;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top: 15px;"><span onclick="selectDept()">지정</span></a>                
 	            </td>
 	        </tr>
 	    </table>

@@ -109,7 +109,7 @@ public interface EzAttitudeService {
 
 	public void deleteAttitudeUserConfig(int tenantId, String selecUserList) throws Exception;
 	
-	public List<AdminAttitudeVO> getAttitudeList2(String companyId, String pageNum, String listSize,String typeId, String userIdList, String order, String startDate, String endDate, String offset, int tenantId) throws Exception;
+	public List<AdminAttitudeVO> getAttitudeList2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId) throws Exception;
 	
 	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId, String offset) throws Exception;
 	
@@ -128,6 +128,9 @@ public interface EzAttitudeService {
 
 	public void deleteAttitudeAuth(String selectUserId, int tenantId, String companyId) throws Exception;
 
-	public void saveAttitudeAuthDept(JSONObject jsonString) throws Exception;
+	public void saveAttitudeAuthDept(int tenantId, String companyId, String selectedUser, String deptIds) throws Exception;
+
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId,	String userId) throws Exception;
+
 	
 }

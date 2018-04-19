@@ -50,10 +50,13 @@
 					selUserId = "";
 				  })
 				.jstree({ 
-					'core' 	 : {'data' : treeContent, 'multiple' : false},
+					'core'   : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
-				});
+				}).on('ready.jstree', function(e, data) {
+					var offset = $(".jstree-clicked").offset();
+		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+			    });
 	   		}
 	   		
 	   		//사원 리스트 뿌리기
@@ -439,7 +442,7 @@
 								<table style="margin-top: 3px;">
 						            <tr>
 						                <td class="box" style="border-right: 0px; height: 465px;">
-						                    <div style="width: 250px; height: 100%; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+						                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
 						                </td>
 						                <td></td>
 						                <td class="listview" style="width: 426px" id="orglistView">

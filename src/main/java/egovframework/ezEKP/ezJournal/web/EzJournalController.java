@@ -461,6 +461,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				if (dept.get("myDept").equals("yes")) {
 					JSONObject state = new JSONObject();
 					state.put("selected", "true");
+					state.put("opened", "true");
 					dept.put("state", state);
 				}
 			}

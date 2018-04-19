@@ -433,7 +433,7 @@
 		    //인쇄
 		    function printJournal(){
 		    	var data = $('#message').contents().find('#journalContent').html();
-		    	var mywindow = window.open('', 'journalContent', 'height=400,width=600');
+		    	var mywindow = window.open('', 'journalContent', 'height=1000,width=1000');
 		    	mywindow.document.write('<html><head><title><spring:message code="ezJournal.t1" /></title>');
 		    	mywindow.document.write('</head><body >');
 		    	mywindow.document.write(data);

@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
 		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
 	   	<script type="text/javascript">
-	   		//트리조직도 JSON
+			//트리조직도 JSON
 	   		var treeContent;
 	   		//선택된 사원
 	   		var selectedUser;
@@ -25,13 +25,15 @@
 	   		var lpDeptName;
 	   		//레이어팝업의 오른쪽의 부서정보
 	   		var lpDepts=[];
+	   		var lpDeptNames = [];
 	   		//오른쪽에서 없앨 부서
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
+	   		//선택된 유저의부서
+	   		var userDeptId;
 	   	
 	   		function close_Click(){
-	   			opener.location.reload();
 	   			window.close();
 	   		}
 	   		
@@ -65,6 +67,7 @@
 	   				}
 	   			});
 	   		}
+	   		
 	   		//선택된 사원의 권한 부서 보여주기
 	   		function setUserAuthorDept(elem){
 	   			selectedUser = $(elem).attr("id");
@@ -74,13 +77,35 @@
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
-	   				url:"/admin/ezJournal/authorDeptList.do",
+	   				url:"/admin/ezAttitude/attitudeAuthorDeptList.do",
 	   				data:{"userId":$(elem).attr("id")},
-	   				success: function(result){
+	   				success: function(result) {
+	   					lpDepts = [];
+	   					lpDeptNames = [];
 	   					$("#authorDeptList").html(result);
+	   					var deptList = $("#authorDeptList tr");
+	   					if (deptList.length == 1) {
+	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;">해당하는 부서가 없습니다.</td></tr>');
+	   						
+	   						$("#authorDeptList tr").each(function(){
+		   						if ($(this).attr("mine") == "Y") {
+		   							userDeptId = $(this).attr("targetId");
+		   						}
+	   						})
+	   					} else {
+		   					$("#authorDeptList tr").each(function(){
+		   						if ($(this).attr("mine") == "Y") {
+		   							userDeptId = $(this).attr("targetId");
+		   						} else {
+			   						lpDepts.push($(this).attr("targetId"));
+			   						lpDeptNames.push($(this).find("td").text());
+		   						}
+		   					})
+	   					}
 	   				}
 	   			});
 	   		}
+	   		
 	   		//검색
 	   		function search_click(){
 	   			var key = $("#search_type").val();
@@ -91,16 +116,14 @@
 	   		//사원선택
 	   		function setAuthorViewUser(){
 	   			var userId = selectedUser;
-				var url = "/admin/ezAttitude/saveAttitudeAuth.do";
-				var companyId = opener.companyId;
-				url+="?companyId="+companyId;
 				if (userId) {
-					url+="&userId="+userId+"&userName="+selectedUserName;
+					opener.setSelectedUser(userId,selectedUserName);
+		   			opener.setDeptName(JSON.stringify(lpDepts), JSON.stringify(lpDeptNames));
+		   			opener.userDeptId = userDeptId;
+					window.close();
 				} else {
-					alert("<spring:message code='ezPortal.t85' />");
+					alert("사원을 선택해 주세요");
 				}
-				window.open(url, "authorView", "width=500, height=180");
-				window.close();
 	   		}
 	   		
 		</script>
@@ -117,7 +140,7 @@
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="setAuthorViewUser()">확인</span></li>
-	            <li><span onclick="close_Click()">취소</span></li>
+	            <li><span onclick="close_Click()">닫기</span></li>
 	        </ul>
 	    </div>
 		<table id="TreeViewTD">
