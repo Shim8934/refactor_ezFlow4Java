@@ -7610,4 +7610,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
+	
+	/**
+	 * 전자결재 민원인주소 우편번호검색 사용 여부 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/getUseZipCodeSearchInApr.do")
+	@ResponseBody
+	public String getUseZipCodeSearchInApr(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getUseZipCodeSearchInApr started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezCommonService.getTenantConfig("useZipCodeSearchInApr", userInfo.getTenantId());
+		
+		logger.debug("getUseZipCodeSearchInApr ended.");
+		
+		return result;
+	}
 }
