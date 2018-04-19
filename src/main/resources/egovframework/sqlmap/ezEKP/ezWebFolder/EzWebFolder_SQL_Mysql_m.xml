@@ -1164,8 +1164,7 @@
 		WHERE
 			FILES.USE_STATUS = 'T' AND
 			FILES.DELETER_ID = #userId# AND
-			FILES.TENANT_ID = #tenantId# AND
-			FILES.FOLDER_ID != #upperFolderId# 
+			FILES.TENANT_ID = #tenantId#
 		<include refid="searchTrashCanFile"/>
 	</select>
 	
@@ -1177,8 +1176,7 @@
 		WHERE
 			FOLDER.USE_STATUS = 'T' AND
 			FOLDER.DELETER_ID = #userId# AND
-			FOLDER.TENANT_ID = #tenantId# AND
-			FOLDER.FOLDER_UPPER != #upperFolderId#
+			FOLDER.TENANT_ID = #tenantId#
 		<include refid="searchTrashCanFolder"/>
 	</select>
 	
