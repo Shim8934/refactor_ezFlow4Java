@@ -58,11 +58,18 @@ public class EzPMSGWController {
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
+<<<<<<< Updated upstream
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String status = request.getParameter("status");
 			
 			Map<String, Object> search = new HashMap<>();
+=======
+			String projectName = request.getParameter("projectName");
+			String planStartDate = request.getParameter("planStartDate");
+			String overview = request.getParameter("overview");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+>>>>>>> Stashed changes
 			
 			//프로젝트 리스트 가져오기
 			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), info, status, search, info.getOffSet(), lang);
