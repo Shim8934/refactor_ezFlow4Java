@@ -6603,7 +6603,6 @@
                             VAPRDOINGDOCLIST 
                          WHERE 
                             DOCSTATE <> '015' 
-       
                          AND
                             TENANT_ID = #v_TENANTID#
                          AND
@@ -6611,12 +6610,8 @@
                          AND 
                             FUNCTIONTYPE IN ('002', '005', '000')
                          AND 
-                            APRMEMBERID IN ($v_USERIDS$)
-                         AND 
                             DOCID = #v_DOCID#
-                            
                          UNION
-                         
                          SELECT 
                             STARTDATE
                          FROM 
@@ -6630,7 +6625,9 @@
                             COMPANYID = #companyID#
                         AND 
                             DOCID = #v_DOCID#  
-                        )    
+                        )
+           ORDER BY 
+                STARTDATE DESC, DOCID DESC                 
    		</isEqual>
    		<isEqual property="v_FLAG" compareValue="2">
 		<![CDATA[
@@ -6641,15 +6638,12 @@
                             VAPRDOINGDOCLIST 
                          WHERE 
                             DOCSTATE <> '015' 
-       
                         AND
                             TENANT_ID = #v_TENANTID#
                         AND
                             COMPANYID = #companyID#
                         AND 
                             FUNCTIONTYPE IN ('002', '005', '000')
-                        AND 
-                            APRMEMBERID IN ($v_USERIDS$)
                         AND 
                             DOCID = #v_DOCID#
                             
@@ -6668,10 +6662,11 @@
                             COMPANYID = #companyID#
                         AND 
                             DOCID = #v_DOCID#  
-                        )    
+                        )
+           ORDER BY 
+                STARTDATE ASC, DOCID ASC                 
    		</isEqual>
-   		ORDER BY 
-   			STARTDATE $v_BASICORDER$, DOCID DESC
+   		
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFindSimpleCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO"> -->
@@ -7791,6 +7786,9 @@
 		SELECT 
 			* 
 		FROM (
+		SELECT 
+			* 
+		FROM (
 			SELECT 
 				TBL_ENDAPRDOCINFO.DOCID,
 		   		TBL_ENDAPRDOCINFO.ORGDOCID, 
@@ -7859,7 +7857,7 @@
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
-		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
 		   	</isEqual>
 		   	<isNotEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
@@ -7887,7 +7885,7 @@
 		   				ENDDATE $v_BASICORDER$
 		   	</isEmpty>
 		   	<![CDATA[
-		   	)A 
+		   	LIMIT #v_PAGESIZE# )A 
 		   	]]>
 		   	<isNotEmpty property="v_ORDEROPTION">
 		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
@@ -7907,9 +7905,11 @@
 		   	</isNotEmpty>
 		   	<isEmpty property="v_ORDEROPTION">
 		   	 ORDER BY 
-		   	 	ENDDATE $v_BASICORDER2$
+		   	 	ENDDATE $v_BASICORDER2$ 
 		   	</isEmpty>
-		   	LIMIT #v_PAGESIZE#
+		   	LIMIT #v_PAGESIZE2# )B
+		   	
+		   	
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO"> -->
@@ -11772,7 +11772,7 @@
 	   	</isEqual>
 	   	LIKE 'ADDRESS%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 	   	<isEqual property="v_MODELENGTH" compareValue="2">
-	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
 	   	</isEqual>
 	   	<isNotEqual  property="v_MODELENGTH" compareValue="2">
 	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)

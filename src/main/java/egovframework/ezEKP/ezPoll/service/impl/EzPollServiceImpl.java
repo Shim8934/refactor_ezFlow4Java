@@ -6,14 +6,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.mail.Message.RecipientType;
+import javax.mail.internet.InternetAddress;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPoll.dao.EzPollDAO;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -21,6 +31,8 @@ import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollUserVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -35,8 +47,20 @@ public class EzPollServiceImpl implements EzPollService{
 	@Resource(name="EzOrganService")
 	private EzOrganService ezOrganService;
 	
+	@Resource(name="loginService")
+	private LoginService loginService;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 
 	@Override
 	public String getQuestionSeq(int tenantID) throws Exception {
@@ -66,6 +90,8 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("set_date", pollQuestionVO.getSetDate());
 		map.put("is_sorting", pollQuestionVO.getIsSorting());		
 		map.put("is_selonlyonce", pollQuestionVO.getIsSelOnlyOnce());		
+		map.put("sendpostnotice", pollQuestionVO.getSendPostNotice());
+		map.put("opentoall", pollQuestionVO.getOpenToAll());
 		ezPollDAO.insertQuestion(map);
 	}
 
@@ -424,6 +450,8 @@ public class EzPollServiceImpl implements EzPollService{
 		List<PollQuestionVO> listOfQuestion = new ArrayList<PollQuestionVO>();
 		int tenantID = loginvo.getTenantId();
 		String primary = loginvo.getPrimary();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenant_id", tenantID);
 		
 		//Check if user has admin privilege
 		if (loginvo.getRollInfo().indexOf("c=1") == -1 && loginvo.getRollInfo().indexOf("k=1") == -1) {
@@ -445,6 +473,11 @@ public class EzPollServiceImpl implements EzPollService{
 			List<PollQuestionVO> listOfQuestion2 = new ArrayList<PollQuestionVO>();
 			listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr, primary, mode);		
 			set.addAll(listOfQuestion2);
+			
+			List<PollQuestionVO> listOfQuestion3 = new ArrayList<PollQuestionVO>();
+			listOfQuestion3 = ezPollDAO.getOpenToAllQuestion(map);
+			set.addAll(listOfQuestion3);
+			
 		}
 		else {
 			//Get all questions for admin privilege user
@@ -652,5 +685,69 @@ public class EzPollServiceImpl implements EzPollService{
 		}
 	}
 
+	@Override
+	public void sendPostNotiMail(LoginVO userInfo, String loginCookie, PollQuestionVO pollQuestion) throws Exception {
+		int tenantId = userInfo.getTenantId();
+		String title = pollQuestion.getTitle();
+		int qstId = pollQuestion.getQstId();
+		String toName = "";
+		String toAddress = "";
+		
+		//메일 제목 작성.
+		String subject = egovMessageSource.getMessage("ezPoll.hdp03", userInfo.getLocale());
+		StringBuilder bodyContent = new StringBuilder("");
+		
+		//메일 본문 작성.
+		bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+		bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('../ezPoll/pollVote.do?qstId=" + qstId + "&params=&search=&searchN=', '', 'width=820, height=900, scrollbars=yes, resizable=yes')\">" + commonUtil.cleanValue(title) + "</span></br>");
+		bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getDisplayName() + "</br>");
+		bodyContent.append(" " + egovMessageSource.getMessage("ezAddress.t288", userInfo.getLocale()) + " : " + pollQuestion.getCreateDate());
+		bodyContent.append("</div>");
+		
+		//메일 대상자 선정
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantID", tenantId);
+		map.put("qst_id", qstId);
+		
+		List<PollUserVO> receiverList = ezPollDAO.getListOfUserIdForQstByQstId(map);
+		InternetAddress[] toArr = new InternetAddress[receiverList.size()];
+		InternetAddress from = new InternetAddress();
+		
+		
+		for (int i = 0; i < receiverList.size(); i++) {
+			OrganUserVO AccessUserInfo = null;
+			OrganDeptVO AccessUserGroupInfo = null;
+			InternetAddress to = new InternetAddress();
+			
+			String userType = receiverList.get(i).getUserType();
+			String receiverId = receiverList.get(i).getUserId().trim();
+			
+			
+			if(userType.equals("user")){
+				AccessUserInfo = ezOrganAdminService.getUserInfo(receiverId, userInfo.getPrimary(), userInfo.getTenantId());
+			}
+			else{
+				AccessUserGroupInfo = ezOrganService.getDeptInfo(receiverId, userInfo.getPrimary(), userInfo.getTenantId());
+			}
+			
+			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+			from.setAddress(userInfo.getEmail());
+			
+			if(AccessUserInfo != null){
+				toName = AccessUserInfo.getDisplayName();
+				toAddress = AccessUserInfo.getMail();
+			}
+			else{
+				toName = AccessUserGroupInfo.getDisplayName();
+				toAddress = AccessUserGroupInfo.getMail();
+			}
+			
+			to.setPersonal(toName, "UTF-8");
+			to.setAddress(toAddress);
+			toArr[i] = to;
+		}
+		
+		ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, bodyContent.toString(), false);
+	}
 
 }

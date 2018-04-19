@@ -398,6 +398,16 @@ public class EzEmailUtil {
                 
                 subject = decodeNonAsciiBytes(rawBytes);
             } else {
+            	
+            	// 일부 Mailer에서 표준을 지키지 않고 큰 따옴표 두개로 감싸서
+            	// Subject를 구성하여 디코딩이 안 되는 경우가 있어 추가함
+            	// ex: "=?euc-kr?B?".Z3ctc25zLW5vZGUyICgyMjAuNzMuMTc4LjE4KSBbMV0gZ3ctc25zLW5vZGUyIENQVSBVc2VkICglKQ==."?="
+            	if (rawHeader.startsWith("\"=?") && rawHeader.endsWith("?=\"")) {
+            		rawHeader = rawHeader.substring(1, rawHeader.length() - 1);
+            		
+            		subject = String.format("\"%s\"", MimeUtility.decodeText(rawHeader));
+            	}
+            	
                 if (rawHeader.startsWith("=?")) {
                     int secondQuestionPos = rawHeader.indexOf("?", 2);
                     int thirdQuestionPos = rawHeader.indexOf("?", secondQuestionPos + 1);
@@ -2243,6 +2253,62 @@ public class EzEmailUtil {
             }                    
         }                 
     }    
+    
+    public Double[] adjustUserQuotaForMessageMove(Message[] msgs, String userEmail, String domainName, IMAPAccess ia) {
+    	Double[] returnData = {null, null, null};
+    	
+    	try {
+			// 이동할 메시지들의 총 크기를 구한다.
+			double messagesTotalSize = 0;
+			
+			for (Message msg : msgs) {
+				messagesTotalSize += msg.getSize();
+			}
+			
+			// in MBs
+			messagesTotalSize /= (1024.0*1024.0);
+			
+			logger.debug("messagesTotalSize=" + messagesTotalSize);
+			
+			// 사용자의 Quota 설정값을 구한다.
+			Double[] userQuotaData = getUserQuota(userEmail);
+			Double userQuota = userQuotaData[0];
+			Double userWarn = userQuotaData[1];
+	        
+	        // 사용자 Quota 설정값이 없을 때는 디폴트 설정값을 적용한다.
+	        if (userQuota == null) {
+	        	Double[] defaultQuotaData = getDefaultQuota(domainName);
+	        	
+	        	userQuota = defaultQuotaData[0];
+	        	userWarn = defaultQuotaData[0];
+	        } else {
+	        	// 사용자 레벨의 Quota 설정값이 있는 경우 1.0 없으면 null임
+	        	returnData[2] = 1.0;
+	        }
+	        
+	        // 사용자의 현재 메일박스 사용량을 구한다.
+	        // in MBs
+	        double mailboxUsage = ia.getStorageUsageAndLimit()[0]/1024.0;
+	        
+	        logger.debug("mailboxUsage=" + mailboxUsage);
+	        
+	        // 지운 편지함으로 복사할 메시지의 크기와 현재 메일박스 사용량을 더한 크기가 Quota를 초과하면 Quota를 증가시킨다.
+	        if ((mailboxUsage + messagesTotalSize) > userQuota) {
+		        double newUserQuota = (mailboxUsage + messagesTotalSize)*1.1;
+		        
+		        logger.debug("newUserQuota=" + newUserQuota);
+		        
+		        setUserQuota(userEmail, String.valueOf(newUserQuota), String.valueOf(userWarn));
+		        
+		        returnData[0] = userQuota;
+		        returnData[1] = userWarn;
+	        }    	
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+        
+    	return returnData;
+    }
     
     /**
      * 비즈메카 스팸편지함과 연동하기 위한 Credential을 반환하는 메소드

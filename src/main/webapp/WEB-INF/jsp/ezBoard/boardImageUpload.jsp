@@ -31,8 +31,8 @@
 	                imageWidth = temp.split("*")[0];
 	                imageHeight = temp.split("*")[1];
 	
-	                document.getElementById("imagewidth").value = imageWidth
-	                document.getElementById("imageheight").value = imageHeight
+	                document.getElementById("imagewidth").value = imageWidth;
+	                document.getElementById("imageheight").value = imageHeight;
 	
 	                tempfilename = filepath.substr(filepath.lastIndexOf("\\") + 1);
 	                var strXML = "<IMAGE><OLDFILENAME>" + tempfilename + "</OLDFILENAME><FILENAME>" + guid + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
@@ -45,18 +45,23 @@
 		    }
 		
 		    function changeSliderImage_end() {
-		        if (g_xmlhttp.readyState != 4) return;
+		        if (g_xmlhttp.readyState != 4)
+		        	return;
 		        UploadSliderImage.src = "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDBACKGROUND&ATTID=" + g_xmlhttp.responseText;
 		        savefilename = g_xmlhttp.responseText;
 		    }
 		
 		    function btn_AttachAdd_onclick() {
-		        var extension = document.getElementById("file1").value.split('.');
+				var file1val = document.getElementById("file1").value;
+		        var exIndex = file1val.lastIndexOf('.');
+				var extension = file1val.substring(exIndex+1, file1val.lenght);
 		        var check = false;
-		        check = compareExtension(check, extension[1]);
-		
+		        check = compareExtension(check, extension);	
+		        
 		        if (!check) {
-		            document.getElementById("file1").value = "";
+		        	document.getElementById("file1").value = "";
+		        	savefilename = "";
+		        	alert("upload error");	
 		        }
 		
 		        var fd = new FormData();
@@ -66,8 +71,7 @@
 	            xhr.addEventListener("load", UploadComplete, false);
 	            xhr.open("POST", "/ezBoard/uploadBackImage.do");
 	            xhr.send(fd);
-	            
-		        document.form.file1.value = "";
+
 		    }
 		    var fileinfo = new Array();
 		    function UploadComplete() {
@@ -75,10 +79,14 @@
 		        fileinfo = filepath.split("|!|");
 		        UploadSliderImage.src = fileinfo[0];
 		        UploadSliderImage.style.display = "";
-		
+		        var widthOrigin = fileinfo[1];
+				var heightOrigin = fileinfo[2];				
+				var per = 720 / widthOrigin;
+				var height = Math.floor(heightOrigin * per);
+
 		        savefilename = fileinfo[0];
-		        document.getElementById("imagewidth").value = fileinfo[1];
-		        document.getElementById("imageheight").value = fileinfo[2];
+		        document.getElementById("imagewidth").value = "720";
+		        document.getElementById("imageheight").value = height;
 		    }
 		
 		    function compareExtension(check, extension) {
@@ -171,7 +179,7 @@
 			</tr>
 	        <tr>
 	            <th><spring:message code='ezBoard.t5002'/></th>
-	            <td>&nbsp;<input type="text" id="imagewidth" />&nbsp;px</td>
+	            <td>&nbsp;<input type="text" id="imagewidth" readonly style="cursor:default; background-color:#f8f8fa;" />&nbsp;px</td>
 	            <th><spring:message code='ezBoard.t5003'/></th>
 	            <td>&nbsp;<input type="text" id="imageheight" />&nbsp;px</td>
 	        </tr>
@@ -181,7 +189,7 @@
 	        <a href="#" class="imgbtn"><span onclick="return window.close();"><spring:message code='ezBoard.t15'/></span></a>
 	    </div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="width:1px;height:1px">
+	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="display:none;">
 	        <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" accept="image/*" />
 	        <input type="hidden" name="boardid" id="boardid" />
 	        <input type="hidden" name="maxsize" id="maxsize" />

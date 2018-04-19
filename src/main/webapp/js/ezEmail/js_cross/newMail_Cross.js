@@ -3084,12 +3084,12 @@ function getEmailAddressList(ReceiverList) {
         receiverPart = receiver.split(" <");
         var pName = receiverPart[0];
         var pEmail = receiverPart[1].replace("<", "").replace(">", "");
-		
+        
         if (g_cmd != "EDIT") {
-            if (pEmail == g_myemail)
-                continue;
+            if (pEmail == g_myemail) 
+            	continue;
         }
-
+        
         retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");
         
         if (receiverPart[1].indexOf('@') > 0) {

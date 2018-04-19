@@ -33,7 +33,7 @@
 			                        var tempi = i + 1;
 			                        _html += "<tr id = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "SAVEFILENAME")[0]) + "' backgroundid = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "BACKGROUNDID")[0]) + "' priority = '" + tempi
 			                                + "' imgwidth = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "WIDTH")[0]) + "' imgheight = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HEIGHT")[0])
-			                                + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>"
+			                                + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);' style='cursor:pointer;'>"
 			                        if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0]) == "1")
 			                            _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' name = 'checkbox' checked = true onclick='event_statuschange(this);'></td>";
 			                        else
@@ -291,7 +291,7 @@
                         		<th style="width:32%;"><span><spring:message code="ezBoard.t5007"/></span></th>
                     		</tr>
                 		</table>
-              			<div id="contentlist" name="contentlist" style="height:353px;overflow-y:auto;">
+              			<div id="contentlist" name="contentlist" style="height:347px;overflow-y:auto;">
                 			<table class="mainlist" style="width:100%;">
                     			<tr>
                         			<td style="text-align:center;">

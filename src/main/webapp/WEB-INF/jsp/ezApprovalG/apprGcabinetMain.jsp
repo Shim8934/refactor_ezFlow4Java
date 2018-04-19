@@ -131,7 +131,7 @@
 		
 		            var height = parseInt(divList.style.height.replace('px', '')) + 200;
 		            var reheight = window.innerHeight - parseInt(height);
-		            document.getElementById('div_AprLine').style.height = reheight + "px";
+		           //document.getElementById('div_AprLine').style.height = reheight + "px";
 		
 		            if (navigator.userAgent.indexOf('Firefox') != -1) {
 		                document.body.style.MozUserSelect = 'none';
@@ -1373,7 +1373,7 @@
 		    window.onresize = function () {
 		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
 		        var reheight = window.innerHeight - parseInt(height);
-		        document.getElementById('div_AprLine').style.height = reheight + "px";
+		        //document.getElementById('div_AprLine').style.height = reheight + "px";
 		    };
 		    function onkeydown_start_search() {
 		        if (window.event.keyCode == "13") {
@@ -1684,7 +1684,7 @@
 			  	</div>	
 			</div>
 	
-	        <div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+	        <div style="WIDTH:100%;HEIGHT:230px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 	            <div id="lvtDetail" style="border: 0;"></div>
 	        </div>
 	    </div>

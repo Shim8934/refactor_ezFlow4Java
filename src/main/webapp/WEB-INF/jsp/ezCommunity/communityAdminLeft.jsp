@@ -315,18 +315,18 @@
 	<body class="leftbody">  
 		<div id="left" style="height:500px;overflow-y:auto;">
 			<div class="left_admin" title="Community Administrator"><spring:message code = 'ezCommunity.t234' /></div>
-			<h2><span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t488' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(2)" id="goPage_2" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t2012' /></span><ul></ul></h2>	
+			<h2><span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t488' /></span><ul></ul></h2>	
 	        <h2><span onClick="goPage(10)" id="goPage_10" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t2014' /></span><ul></ul></h2>
 			<h2><span onClick="Open_Func()" id="BoardList" style="display:inline-block;width:100%"> <spring:message code = 'ezCommunity.t418' /></span></h2>
 			
 			<ul id = "treeUL"></ul>
 			
 			<h2><span onClick="goPage(4)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t490' /></span><ul></ul></h2>	
-			<h2><span onClick="goPage(5)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t491' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(6)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t492' /></span><ul></ul></h2>
 			<h2><span onClick="goPage(7)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t493' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(8)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t494' /></span><ul></ul></h2>	
+			<h2><span onClick="goPage(5)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t491' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(9)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t475' /></span><ul></ul></h2>
 		       
 		</div>

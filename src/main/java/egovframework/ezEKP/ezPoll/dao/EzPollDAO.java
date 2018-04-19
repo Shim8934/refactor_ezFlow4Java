@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPollDAO")
@@ -213,5 +214,15 @@ public class EzPollDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<String> getCommentImgFilesByQstId(Map<String, Object> map) {		
 		return (List<String>) list("EzPollDAO.getCommentImgFilesByQstId", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PollUserVO> getListOfUserIdForQstByQstId(Map<String, Object> map) {		
+		return (List<PollUserVO>) list("EzPollDAO.getListOfUserIdForQstByQstId", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PollQuestionVO> getOpenToAllQuestion(Map<String, Object> map) {		
+		return (List<PollQuestionVO>) list("EzPollDAO.getOpenToAllQuestion", map);
 	}
 }

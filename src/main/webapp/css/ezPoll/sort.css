@@ -175,8 +175,8 @@ input[type=text]::-ms-clear{ display:none;}
 .content .pollButton01{width:129px; height:30px; line-height:28px; font-size:13px; background:#efefef; border:1px solid #dcdcdc; border-radius:5px;}
 .pollButton02 .pollButton03{background:#0470e4; color:#FFF; width:64px; height:30px; line-height:30px; border-radius:5px; text-align:center; margin:0px; padding:0px;}
 .pollButton02 .pollButton03 span{background:#0470e4; color:#FFF; display:block; height:30px; line-height:30px; margin:0px; padding:0px; border-radius:5px;}
-.pollButton02 .pollButton04{background:#efefef; color:#000; border:1px solid #dcdcdc; width:64px; height:28px; line-height:28px; border-radius:5px; text-align:center; margin:0px; padding:0px;}
-.pollButton02 .pollButton04 span{background:#efefef; color:#000; display:block; height:28px; line-height:28px; margin:0px; padding:0px; border-radius:5px;}
+.pollButton02 .pollButton04{background:#efefef; color:#000; border:1px solid #dcdcdc; width:64px; height:30px; line-height:30px; border-radius:5px; text-align:center; margin:0px; padding:0px;}
+.pollButton02 .pollButton04 span{background:#efefef; color:#000; display:block; height:30px; line-height:30px; margin:0px; padding:0px; border-radius:5px;}
 
 .pollAddFile{height:45px; line-height:45px; background:#f9f9f9; border-bottom:1px solid #DDD; padding:0px 10px 0px 10px; color:#818181;}
 
@@ -188,7 +188,7 @@ input[type=text]::-ms-clear{ display:none;}
 
 /* 20171129 showSeenUserInfo */
 .voteSeenTbl th{height:40px; background:#edf5ff; color:#304d7f; border:1px solid #c4d3e6;}
-#seenUser_{ color:#304d7f; float:left; margin-top:13px; display:block;}
+#seenUser_{ color:#304d7f; float:left; margin-top:8px; display:block;}
 .voteUnseenTbl th{height:40px; background:#efefef; color:#000; border:1px solid #ddd;}
 
 #ballotSystemBody{min-width: 800px}
@@ -196,4 +196,9 @@ input[type=text]::-ms-clear{ display:none;}
 .imgPopup{width: auto; height: auto; position: relative; float: left; max-width: 400px; max-height: 400px;}
 .imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 50px;}
 .imgPopupBoxOff, .imgPopupOff{display: none;}
-.thumbnail{cursor: pointer};
+.thumbnail{cursor: pointer}
+
+img.voteUserMailImg{float: right; margin-right: 10px; cursor: pointer;}
+
+.qstSettingInnerDivRight{display: inline-block; float: right;}
+.qstSetting{height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;}
