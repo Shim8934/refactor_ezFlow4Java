@@ -5,12 +5,15 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
@@ -87,4 +90,11 @@ public interface EzPMSService {
 	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId);
 	
 	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId);
+
+	List<ProjectUserVO> getDeptUserList(int tenantId, String key, String value, String lang) throws Exception;
+
+	List<ProjectCompanyVO> getCompanyList(String userId, int tenantId, String companyId, String lang) throws Exception;
+
+	List<DeptViewVO> getDeptViewList(String userId, String companyId, int tenantId, String lang) throws Exception;
+
 }

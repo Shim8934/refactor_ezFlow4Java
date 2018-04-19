@@ -23,7 +23,7 @@ function addNewProject(){
     var left = ($(window).width() - $(this).outerWidth()) / 2;
 	var feature = GetOpenPosition(top, left);
  
-	DivPopUpShow(845, 550, "/ezPMS/newProject.do");
+	DivPopUpShow(845, 555, "/ezPMS/newProject.do");
 };
 </script>
 </head>
