@@ -575,7 +575,7 @@
 	        var strDeptNM2 = "";
 	        var jickwe = "";
 	        var phone = "";
-	        
+            var pic = "";
 		    function InsertReceiver(pListView) {
 	            var pparsingXML = "";
 	            var pparsingXML2 = "";
@@ -646,13 +646,14 @@
 		                    strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 		                    jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 		                    phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+		                    pic = document.getElementById(listContentArry[i]).getAttribute("_data9");
 		
 		                    var IsInsert = CheckMailReceiver(strId, "3"); 
 		                    
 							if(!IsInsert){
-								alluser[i] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real" };
+								alluser[i] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone, "pic": pic}, "datatype": "real" };
 		                    } else {
-		                    	overlapuser[i] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone };
+		                    	overlapuser[i] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone, "pic": pic };
 		                    }
 		                }
 		            } else {
@@ -764,6 +765,7 @@
 				var strDeptNM2 = "";
 				var jickwe = "";
 				var phone = "";
+				var strpic = "";
 				
 				var listview = new ListView();
 				listview.LoadFromID(listid);
@@ -790,6 +792,7 @@
 						jickwe = user["jickwe"];
 						phone = user["phone"]; 
 					}
+					strpic = user["pic"];
 					
 					pparsingXML = "<LISTVIEWDATA2><ROWS>";
 					pparsingXML += "<ROW><CELL><DATA1>" + strId + "</DATA1>";
@@ -800,6 +803,7 @@
 					pparsingXML += "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 					pparsingXML += "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 					pparsingXML += "<DATA8>" + phone + "</DATA8>";
+					pparsingXML += "<DATA9>" + strpic + "</DATA9>";
 					pparsingXML += "<VALUE>"  + strName + "</VALUE></CELL></ROW>";
 					pparsingXML += "</ROWS></LISTVIEWDATA2>";
 				
