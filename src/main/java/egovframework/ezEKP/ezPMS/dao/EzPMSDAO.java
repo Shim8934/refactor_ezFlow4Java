@@ -49,4 +49,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<ProjectUserVO> getDeptUserList(Map<String, Object> map){
 		return (List<ProjectUserVO>) list("selectUserList",map);
 	}
+
+	public List<ProjectTaskTreeVO> getProjectGroupTree(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
