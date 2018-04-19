@@ -27,7 +27,10 @@ function getProjectTaskTree(containerId, projectId) {
 					var b1 = this.get_node(b);
 					return (a1.original.sort > b1.original.sort) ? 1 : -1;
 				}
-			});
+			})
+			.bind("loaded.jstree", function (event, data) {
+		        $(this).jstree("open_all");
+		    })
 		},
 		error : function(request, status, error) {
 			alert("code : " + request.status + "\nerror : " + error);
