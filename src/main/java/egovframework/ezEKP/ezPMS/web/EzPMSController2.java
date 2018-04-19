@@ -136,6 +136,38 @@ public class EzPMSController2 {
 	
 	
 	/**
+	 * 프로젝트관리 업무 등록 화면 호출함수
+	 * @param request
+	 * @param model
+	 * @param vo
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/goAddTask.do")
+	public String goAddTask(HttpServletRequest request, Model model, ProjectTaskVO vo,@CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS addTask started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String writerId = userInfo.getId();
+		String writerName = userInfo.getDisplayName();
+		String writerDeptName = userInfo.getDeptName();
+		
+		String projectId = request.getParameter("projectId");
+		
+		model.addAttribute("projectId", projectId);
+		model.addAttribute("writerId", writerId);
+		model.addAttribute("writerName", writerName);
+		model.addAttribute("writerDeptName", writerDeptName);
+		
+		LOGGER.debug("ezPMS addTask ended");
+		
+		return "/ezPMS/pmsAddTask";
+	}
+	
+	
+	/**
 	 * 프로젝트관리 업무 등록 호출함수
 	 * @param request
 	 * @param model

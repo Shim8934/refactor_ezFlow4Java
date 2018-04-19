@@ -3,7 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html>
+<html style="height: 99%;">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
@@ -89,7 +89,7 @@ function changeTab(clickTabId, nowTabAttr) {
 </head>
 <body class="mainbody" style="height: 95%; overflow: hidden" marginwidth="0" marginheight="0">
 	<h1>Project Details<span id="mailBoxInfo"> - total : 12</span></h1>
-	<div class="portlet_tabpart01">
+	<div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
 	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab">overview</span></p>
 	  	 	<p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab">Gantt</span></p>
