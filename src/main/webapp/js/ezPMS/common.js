@@ -1,5 +1,5 @@
 /**
- * 
+ * 프로젝트 업무트리 가져오기
  */
 function getProjectTaskTree(containerId, projectId) {
 	$.ajax({
@@ -16,7 +16,7 @@ function getProjectTaskTree(containerId, projectId) {
 					'multiple' : false,
 					'animation' : 0,
 					'themes' : {
-						'responsive' : true,
+						'responsive' : false,
 						//'variant' : 'small',
 						'stripes' : false
 					}
