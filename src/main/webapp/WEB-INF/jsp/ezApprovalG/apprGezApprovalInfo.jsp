@@ -1904,7 +1904,7 @@
 		                                        <span id="trCreateCab">
 		                                        	<c:if test="${initFlag == '1'}">
 			                                            <a class="imgbtn" style="margin-top: 3px"><span onclick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
-			                                            <a class="imgbtn" style="margin-top: 3px"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a>
+			                                            <a class="imgbtn" style="margin-top: 3px; display:none;"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a>
 		                                        	</c:if>
 		                                        </span>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
