@@ -120,8 +120,6 @@
 	            return;
             }
             
-            alert('checkedfileList=' + checkedfileList);
-            
             $.ajax ({
             	type : "POST",
             	async : false,
