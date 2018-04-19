@@ -735,6 +735,7 @@
 				        	alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
 				        	isfileup = false;
 				        	
+				        	document.form.file1.value = "";
 				        	return;
 				        } else {
 				        	totalSize += calTotalSize;
@@ -748,7 +749,7 @@
 		        	if (fnl > attachFileNameMaxLength) {
 		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
 		        		isfileup = false;
-		        		
+		        		document.form.file1.value = "";
 		        		return;
 		        	} else {
 		        		fd.append("file1", file[i]);
@@ -780,6 +781,7 @@
 		    			isfileup = false;
 		    		}
 		    	});
+		        document.form.file1.value = "";
 		    }		    
 		</script>
 		<style>
@@ -806,7 +808,7 @@
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm" >
 		    <div class="btnposition btnpositionNew">       
 		        <input id="file1" name="file1" type="file" onchange="onDrop()" multiple="multiple" style="margin-left:100px; display: none;">
-		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd"><spring:message code='ezApprovalG.t268'/></span></label></a>
+		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd" style="cursor:pointer"><spring:message code='ezApprovalG.t268'/></span></label></a>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
 		        <a class="imgbtn"><span id="btn_AttachSaveSure" onClick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 		        <a class="imgbtn"><span id="AttachCancel" onClick="return AttachCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
