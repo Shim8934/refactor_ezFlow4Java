@@ -1160,11 +1160,12 @@
 		SELECT
 			count(FILES.FILE_id )
 		FROM
-			tbl_webfolder_file AS FILES
+			TBL_WEBFOLDER_FILE AS FILES
 		WHERE
 			FILES.USE_STATUS = 'T' AND
 			FILES.DELETER_ID = #userId# AND
-			FILES.TENANT_ID = #tenantId#
+			FILES.TENANT_ID = #tenantId# AND
+			FILES.FOLDER_ID != #upperFolderId# 
 		<include refid="searchTrashCanFile"/>
 	</select>
 	
@@ -1176,11 +1177,12 @@
 		WHERE
 			FOLDER.USE_STATUS = 'T' AND
 			FOLDER.DELETER_ID = #userId# AND
-			FOLDER.TENANT_ID = #tenantId#
+			FOLDER.TENANT_ID = #tenantId# AND
+			FOLDER.FOLDER_UPPER != #upperFolderId#
 		<include refid="searchTrashCanFolder"/>
 	</select>
 	
-		<update id="EzWebFolderDAO_m.moveSubFolders" parameterClass="Map">
+	<update id="EzWebFolderDAO_m.moveSubFolders" parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				tbl_webfolder_folder

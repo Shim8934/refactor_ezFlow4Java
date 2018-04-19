@@ -493,6 +493,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		List<TrashCanVO> resultList = new ArrayList<TrashCanVO>();
 		
 		currPage = totalPages == 0 ? 0 : currPage;
+		fileCnt = 0;
+		folderCnt = 0;
 		
 		if (trashCanList != null) {
 			for (TrashCanVO trashCan : trashCanList) {
@@ -501,6 +503,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					
 					if (upperFolder.getUseStatus().equals("Y")) {
 						resultList.add(trashCan);
+						folderCnt += 1;
 					} 
 					
 				} else {
@@ -515,10 +518,14 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					
 					if (folder != null && folder.getUseStatus().equals("Y")) {
 						resultList.add(trashCan);
+						fileCnt += 1;
 					}
 				}
 			}
 		}
+		
+		totalRows  = fileCnt + folderCnt;
+		totalPages = (totalRows + pEnd - 1)/pEnd;
 		
 		result.put("fileCnt", fileCnt);
 		result.put("folderCnt", folderCnt);
