@@ -262,9 +262,11 @@
 	                    }
 
 	                    //body는 있지만 에디터를 사용하지 않을때
-                        if (document.getElementById("body").getAttribute("editor") == "no") {
-                        	parent.isEditorComplete = true;
-                        }
+	                    if (document.getElementById("body") != null) {
+	                        if (document.getElementById("body").getAttribute("editor") == "no") {
+	                        	parent.isEditorComplete = true;
+	                        }
+	                    }
 	
 	                    if (parent.pDraftFlag != "REDRAFT") {
   							var Body_innerHTML = "";
