@@ -1674,6 +1674,14 @@ public class EzAttitudeAdminBOMController {
 		
 		if(status.equals("ok")){
 			jArray = (JSONArray) resultBody.get("data");
+			
+			for (int i = 0; i < jArray.size(); i++) {				
+				JSONObject jo = (JSONObject) jArray.get(i);
+				String [] authDeptArr = jo.get("authDeptName").toString().split(",");
+				if (authDeptArr.length > 1) {
+					jo.replace("authDeptName", authDeptArr[0] + " 외 " + (authDeptArr.length - 1));
+				}
+			}
 		}
 		
 		LOGGER.debug("/admin/ezAttitude/getAttitudeAuthList ended");

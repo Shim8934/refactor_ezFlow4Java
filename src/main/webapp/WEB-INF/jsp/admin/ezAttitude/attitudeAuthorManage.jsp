@@ -55,13 +55,13 @@
 	        //권한자 리스트 셋팅
 	        function attitudeAuthListSet(result) {
                 var html = "";
-                if (result.length != null && result.lenth != 0) {
+                if (result.length != null && result.length != 0) {
 	                for (var i = 0; i < result.length; i++) {
-	                    html += "<tr id='" + result[i].userId + "' onclick='listClick(this);' style='cursor: pointer;'>";
-	                    html += "<td style='width:28%;color:gray;'>" + result[i].userName + "</td>";
-	                    html += "<td style='width:22%;color:gray;'>" + result[i].userTitle + "</td>";
-	                    html += "<td style='width:25%;color:gray;'>" + result[i].userDeptName + "</td>";
-	                    html += "<td style='width:25%;color:gray;'>" + result[i].authDeptName + "</td>";
+	                    html += "<tr id='" + result[i].userId + "' onclick='listClick(this);' ondblclick='modifyAuth()' style='cursor: pointer;'>";
+	                    html += "<td style='width:20%;color:gray;'>" + result[i].userName + "</td>";
+	                    html += "<td style='width:20%;color:gray;'>" + result[i].userTitle + "</td>";
+	                    html += "<td style='width:30%;color:gray;'>" + result[i].userDeptName + "</td>";
+	                    html += "<td style='width:30%;color:gray;'>" + result[i].authDeptName + "</td>";
 	                    html += "</tr>";
 	                }
                 } else {
@@ -75,6 +75,20 @@
 	        function listClick(elem) {
 	        	selectUserId = $(elem).attr('id');
 	        }
+	        
+	        //리스트 더블클릭
+// 			function modifyAuth() {			
+// 				var userId = selectedUser;
+// 				var url = "/admin/ezAttitude/saveAttitudeAuth.do";
+// 				var companyId = document.getElementById("companyId").value;
+// 				url+="?companyId="+companyId;
+// 				if (userId) {
+// 					url+="&userId="+userId+"&userName="+selectedUserName;
+// 					window.open(url, "authorView", GetOpenWindowfeature(500, 200));
+// 				} else {
+// 					alert("권한설정할 대상을 선택해 주십시오.");
+// 				}
+// 			}
 	        
 	        //권한 삭제
 	        function author_delete() {
@@ -128,16 +142,16 @@
 		    </ul>
 		</div>
 	    <br />
-	    <table style="width: 650px; height: 385px;" >
+	    <table style="width: 700px; height: 396px;" >
             <tr>
                 <td>
-                    <div style="border: 1px solid #dbdbda;border-top:0px; width: 650px; height: 396px;">
+                    <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 100%;">
                         <table class="mainlist" style="width: 100%;">
                             <tr>
-                                <th style="width: 28%;"><span>사용자</span></th>
-                                <th style="width: 22%;"><span>직위</span></th>
-                                <th style="width: 25%;"><span>부서</span></th>
-                                <th style="width: 25%;"><span>관리부서</span></th>
+                                <th style="width: 20%;"><span>사용자</span></th>
+                                <th style="width: 20%;"><span>직위</span></th>
+                                <th style="width: 30%;"><span>부서</span></th>
+                                <th style="width: 30%;"><span>관리부서</span></th>
                             </tr>
                         </table>
                         <div id="contentlist" name="contentlist" style="height: 360px; overflow-y: auto;">

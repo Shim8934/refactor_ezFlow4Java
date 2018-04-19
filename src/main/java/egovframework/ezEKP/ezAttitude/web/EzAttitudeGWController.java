@@ -1710,7 +1710,7 @@ public class EzAttitudeGWController {
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			ezAttitudeService.saveAttitudeAuthDept(info.getTenantId(), selectedUser, deptIds);
+			ezAttitudeService.saveAttitudeAuthDept(info.getTenantId(), companyId, selectedUser, deptIds);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

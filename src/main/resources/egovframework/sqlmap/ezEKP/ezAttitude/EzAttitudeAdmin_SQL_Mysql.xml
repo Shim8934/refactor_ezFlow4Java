@@ -689,7 +689,7 @@
 			    B.DISPLAYNAME AS USERNAME,
 			    B.TITLE AS USERTITLE,
 			    B.DESCRIPTION AS USERDAPTNAME,
-			    C.DISPLAYNAME AS AUTHDEPTNAME
+			    group_concat(C.DISPLAYNAME order by 1) AS AUTHDEPTNAME
 			FROM 
 				TBL_ATTITUDE_AUTH A
 			INNER JOIN
@@ -704,6 +704,10 @@
 				A.COMPANY_ID = #companyId#
 			AND
 				A.TENANT_ID = #tenantId#
+			GROUP BY 
+				A.USER_ID
+			ORDER BY
+				USERNAME
 		]]>
 	</select>
 	<delete id="ezAttitudeAdminDAO.deleteAttitudeAuth" parameterClass="Map">
@@ -750,11 +754,9 @@
 	</select>
 	
 	<insert id="ezAttitudeAdminDAO.insertAttitudeAuth" parameterClass="Map">
-		<iterate conjunction=";">
 		<![CDATA[
-			INSERT INTO TBL_ATTITUDE_AUTH (USER_ID, TENANT_ID, AUTH_DEPT_ID)
-			VALUES (#userId[]#, #tenantId[]#, #deptId[]#)
+			INSERT INTO TBL_ATTITUDE_AUTH (USER_ID, TENANT_ID, COMPANY_ID, AUTH_DEPT_ID)
+			VALUES (#selectUserId#, #tenantId#, #companyId#, #deptId#)
 		]]>
-		</iterate>
 	</insert>
 </sqlMap>

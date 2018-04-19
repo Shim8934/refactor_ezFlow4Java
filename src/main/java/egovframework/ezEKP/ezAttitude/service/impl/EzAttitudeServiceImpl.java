@@ -992,20 +992,24 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public void saveAttitudeAuthDept(int tenantId, String selectedUser,
-			String deptIds) throws Exception {
+	public void saveAttitudeAuthDept(int tenantId, String companyId,
+			String selectedUser, String deptIds) throws Exception {
 		LOGGER.debug("saveAttitudeAuthDept started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
 		map.put("selectUserId", selectedUser);
 		map.put("tenantId", tenantId);
 
 		ezAttitudeDAO.deleteAttitudeAuth(map);
 
 		String[] deptList = deptIds.split(",");
-		map.put("deptId", deptList);
 
-		ezAttitudeDAO.insertAttitudeAuth(map);
+		for (int i = 0; i < deptList.length; i++) {
+			map.put("deptId", deptList[i]);
+
+			ezAttitudeDAO.insertAttitudeAuth(map);
+		}
 
 		LOGGER.debug("saveAttitudeAuthDept ended");
 	}

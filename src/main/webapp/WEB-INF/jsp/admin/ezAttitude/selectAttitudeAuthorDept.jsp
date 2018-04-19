@@ -68,7 +68,7 @@
 							}
 						}
 			   			if(flag){
-							if (childrenId!=opener.userDeptId) {
+							if (childrenId != opener.userDeptId) {
 					   			$("#lplistView .mainlist_free").append("<tr targetId="+childrenId+" targetName="+childrenName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+childrenName+"</td></tr>");
 					   			lpDepts.push(childrenId);
 					   			lpDeptNames.push(childrenName);
@@ -84,7 +84,7 @@
 						}
 					}
 		   			if(flag){
-			   			if (lpDeptId!=opener.userDeptId) {
+			   			if (lpDeptId != opener.userDeptId) {
 				   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
 				   			lpDepts.push(lpDeptId);
 				   			lpDeptNames.push(lpDeptName);

@@ -79,20 +79,26 @@
 	   				dataType:"html",
 	   				url:"/admin/ezAttitude/attitudeAuthorDeptList.do",
 	   				data:{"userId":$(elem).attr("id")},
-	   				success: function(result){
-	   					lpDepts=[];
+	   				success: function(result) {
+	   					lpDepts = [];
 	   					lpDeptNames = [];
 	   					$("#authorDeptList").html(result);
 	   					var deptList = $("#authorDeptList tr");
-	   					if(deptList.length==1){
+	   					if (deptList.length == 1) {
 	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;">해당하는 부서가 없습니다.</td></tr>');
+	   						
+	   						$("#authorDeptList tr").each(function(){
+		   						if ($(this).attr("mine") == "Y") {
+		   							userDeptId = $(this).attr("targetId");
+		   						}
+	   						})
 	   					} else {
 		   					$("#authorDeptList tr").each(function(){
-		   						if($(this).attr("mine")!='Y'){
+		   						if ($(this).attr("mine") == "Y") {
+		   							userDeptId = $(this).attr("targetId");
+		   						} else {
 			   						lpDepts.push($(this).attr("targetId"));
 			   						lpDeptNames.push($(this).find("td").text());
-		   						} else {
-		   							userDeptId=$(this).attr("targetId");
 		   						}
 		   					})
 	   					}
@@ -109,6 +115,8 @@
 	   		
 	   		//사원선택
 	   		function setAuthorViewUser(){
+	   			alert(lpDepts);
+	   			alert(userDeptId);
 	   			var userId = selectedUser;
 				if (userId) {
 					opener.setSelectedUser(userId,selectedUserName);

@@ -12,8 +12,11 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 	    <script type="text/javascript">	
-	    	var selectedUser = "<c:out value="${selectedUser }" />"
+	    	var selectedUser = "${selectedUser }";
+// 	    	var selectedUser;
+	    	var selectedUserName= "";
 	    	var companyId = "<c:out value="${companyId}" />";
+	    	var deptIdStr = "";
 	    	var deptIds = [];
 	    	var deptNames = [];
 	    	var userDeptId;
@@ -22,21 +25,21 @@
 	    	$(document).ready(function(){
 	    		//만약 권한자 선택시 권한이 있는 부서가 있으면 출력해준다.
 	    		<c:if test="${not empty selectedUser }">
-		    	<c:forEach items="${deptList }" var="dept">
-		    		<c:choose>
-			    		<c:when test="${dept.mine eq 'yes' }">
-			    			userDeptName = '${fn:replace(dept.deptName, "'", "\\'") }';
-			    			userDeptId = '${fn:replace(dept.deptId, "'", "\\'") }';
-				    	</c:when>
-				    	<c:otherwise>
-							deptNames.push('${fn:replace(dept.deptName, "'", "\\'") }');
-							deptIds.push('${fn:replace(dept.deptId, "'", "\\'") }');
-						</c:otherwise>
-					</c:choose>
-		    	</c:forEach>
-		    	setSelectedUser("${selectedUser }","${selectedUserName }");
-	    		setDeptName();
-    		</c:if>
+			    	<c:forEach items="${deptList }" var="dept">
+			    		<c:choose>
+				    		<c:when test="${dept.mine eq 'yes' }">
+				    			userDeptName = '${fn:replace(dept.deptName, "'", "\\'") }';
+				    			userDeptId = '${fn:replace(dept.deptId, "'", "\\'") }';
+					    	</c:when>
+					    	<c:otherwise>
+								deptNames.push('${fn:replace(dept.deptName, "'", "\\'") }');
+								deptIds.push('${fn:replace(dept.deptId, "'", "\\'") }');
+							</c:otherwise>
+						</c:choose>
+			    	</c:forEach>
+			    	setSelectedUser("${selectedUser }","${selectedUserName }");
+		    		setDeptName();
+	    		</c:if>
    			});
 	    	
 	    	//사원 세팅
@@ -69,9 +72,11 @@
 				var deptString;
 	    		for (var i = 0; i < deptNames.length; i++) {
 	    			if(i!=0){
-			    		deptString += ", "+deptNames[i];
+			    		deptString += ", " + deptNames[i];
+			    		deptIdStr += "," + deptIds[i];
 	    			} else {
-	    				deptString=deptNames[i];
+	    				deptString = deptNames[i];
+	    				deptIdStr = deptIds[i];
 	    			}
 				}
 	    		console.log(deptIds);
@@ -80,6 +85,14 @@
 	    	
 	    	//권한 저장
 	    	function insertAuthDept(){
+	    		if (selectedUser == "" || selectedUser == null) {
+	    			alert("권한자를 선택해주세요");
+	    			return;
+	    		}
+	    		if (deptIdStr == "" || deptIdStr == null) {
+	    			alert("권한 부서를 선택해주세요");
+	    			return;
+	    		}
 // 	   			var jsonString = JSON.stringify({"userId":selectedUser,"depts":deptIds});
 				$.ajax({
 	   				type:"post",
@@ -87,7 +100,7 @@
 	   				data:{
 	   					selectedUser : selectedUser,
 	   					companyId : companyId,
-	   					deptIds : deptIds
+	   					deptIds : deptIdStr
 	   				},
 	   				success: function(){
    						opener.company_change();
