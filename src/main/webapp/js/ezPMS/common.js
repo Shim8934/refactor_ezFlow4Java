@@ -17,8 +17,8 @@ function getProjectTaskTree(containerId, projectId) {
 					'animation' : 0,
 					'themes' : {
 						'responsive' : true,
-						'variant' : 'small',
-						'stripes' : true
+						//'variant' : 'small',
+						'stripes' : false
 					}
 				},
 				'plugins' : [ 'sort' ],

@@ -15,9 +15,24 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @Repository("EzPMSDAO")
 public class EzPMSDAO extends EgovAbstractDAO {
 	
+	/**
+	 * 업무 트리 가져오기
+	 * @param map
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public List<ProjectTaskTreeVO> getProjectTaskTree(Map<String, Object> map) {
 		return (List<ProjectTaskTreeVO>) list("EzPMSDAO.getProjectTaskTree", map);
+	}
+	
+	/**
+	 * 그룹 트리 가져오기
+	 * @param map
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<ProjectTaskTreeVO> getProjectGroupTree(Map<String, Object> map) {
+		return (List<ProjectTaskTreeVO>) list("EzPMSDAO.getProjectGroupTree", map);
 	}
 
 	/**
@@ -49,4 +64,5 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<ProjectUserVO> getDeptUserList(Map<String, Object> map){
 		return (List<ProjectUserVO>) list("selectUserList",map);
 	}
+
 }
