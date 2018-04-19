@@ -184,12 +184,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId,
-			String isuse, String isAdmin, int tenantId) throws Exception {
+	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeTypeList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("isuse", isuse);
@@ -842,54 +840,61 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		ezAttitudeDAO.attModAppModify(map);
 	}
 
-	public List<AdminAttitudeVO> getAttitudeList2(String companyId, String pageNum,
-			String listSize, String typeId, String userIdList,
-			String order, String startDate,
-			String endDate, String offset, int tenantId) throws Exception {
+	public List<AdminAttitudeVO> getAttitudeList2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeList2 started");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		// if써서 하루꺼를 가져오려는 건지 한달꺼를 가져오려는 건지를 구분해야 될 꺼 같다.
 		// 일단 하루치를 가져오는 것 부터
 		// true면 UTC false면 local
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		// startDate와 endDate가 없는 경우 당일의 근태를 출력
-		LOGGER.debug("startDate : " + (startDate == null) + "startDate : "
-				+ (startDate.equals("")));
-		if (startDate.equals("") && endDate.equals("")) {
-			String localDate = commonUtil.getDateStringInUTC(
-					commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
+		/*if (startDate.equals("") && endDate.equals("")) {
+			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
 			startDate = localDate + " 00:00:00";
 			endDate = localDate + " 23:59:59";
 		} else { // startDate와 endDate가 있는 경우 한달의 근태를 출력
 			startDate = startDate + " 00:00:00";
 			endDate = endDate + " 23:59:59";
+		}*/
+		
+		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
+		
+		if (searchStartDate.equals("")) {
+			searchStartDate = localDate + " 00:00:00";
+		} else {
+			searchStartDate = searchStartDate + " 00:00:00";
+		}
+		
+		if (searchEndDate.equals("")) {
+			searchEndDate = localDate + " 23:59:59";
+		} else {
+			searchEndDate = searchEndDate + " 23:59:59";
 		}
 		
 		int limit = 0;
+		
 		if (pageNum != null && pageNum != "") {
 			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
 			map.put("limit", limit);
 		}
 		
-		map.put("tenantId", tenantId);
-		map.put("companyId", companyId);
+		map.put("searchUserName", searchUserName);
+		map.put("searchDeptName", searchDeptName);
+		map.put("searchTitle", searchTitle);
+		map.put("searchAttitudeType", searchAttitudeType);
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("orderCell", orderCell);
+		map.put("orderOption", orderOption);
 		map.put("listSize", listSize);
-		map.put("typeId", typeId);
-		map.put("order", order.trim());
 		map.put("offsetMin", offsetMin);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
 
-		List<AdminAttitudeVO> resultList = new ArrayList<AdminAttitudeVO>();
-		if (userIdList != null && userIdList != "") {
-			String[] userList = userIdList.split(",");
-			map.put("userId", userList);
-			resultList = ezAttitudeDAO.getAttitudeList2(map);
-		} else {
-			resultList = ezAttitudeDAO.getAttitudeList2(map);
-		}
+		List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeList2(map);
 
-		LOGGER.debug("getAttitudeList2 ended");
+		LOGGER.debug("getAttitudeList2 ended. resultList size = " + resultList.size());
+		
 		return resultList;
 	}
 
