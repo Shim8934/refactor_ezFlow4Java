@@ -900,7 +900,7 @@
 				},
 				success : function(result) {
 					$("#eSubject").val("<spring:message code='ezJournal.t1' /><spring:message code='ezEmail.t674' /> : "+result.journalTitle);
-					var journalContent = "<p></p><p></p><hr>"+result.journalContent;
+					var journalContent = "<p></p><p></p><hr>" + (result.journalContent).replace(/&#39;/gi, "\'");
 					message.SetEditorContent(journalContent);
 					var fileList = result.fileList;
 					
@@ -916,7 +916,7 @@
 			        for (var i = 0; i < fileList.length; i++) {
 			            var filepath = fileList[i].filePath;
 			            var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
-			            var filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));
+			            var filename = fileList[i].fileName;
 			            var filesize = fileList[i].fileSize;
 
 			            pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";

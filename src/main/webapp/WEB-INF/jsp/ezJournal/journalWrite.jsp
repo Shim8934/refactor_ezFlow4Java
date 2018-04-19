@@ -243,7 +243,6 @@
 	    			$("#title").val("${journal.journalTitle}");
 	    			var receiverID = "${receiverIds}";
 	    			var receiverName = "${receiverNames}";
-	    			console.log("receiverId : " + receiverID);
 	    			
 	    			if ((receiverID != null && receiverID != "") && (receiverName != null && receiverName != "")) {
 	    				receiverID = receiverID.slice(0, -2).split(", ");
@@ -256,6 +255,8 @@
 	    			
 	    			var fileList = '${fileList}';
 	    			if (fileList != null && fileList != "") {
+	    				fileList = fileList.replace(/&nbsp;/gi, " ");
+	    				fileList = decodeURIComponent(fileList);
 		    			dadiframe.setAttachFileInfo(fileList);
 	    			}
 	    			
@@ -313,6 +314,7 @@
 			//		getFormList(selectedType);
 					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
 					var content = '${content}';
+					content = content.replace(/&#39;/gi, "\'");
 	    			message.SetEditorContent(content);
 	    			
 	    			if (mode == 'modify') {
@@ -372,9 +374,10 @@
 					if (i == 0) {
 						fileList = GetAttribute(filelist[i + 1], "fileinfo");
 					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
+						fileList += "/" + GetAttribute(filelist[i + 1], "fileinfo");
 	        		}
 				}
+				console.log("fileList : " + fileList);
 				
 				// 수신자 있는 경우 수신자 가져오기
 				var receiverList = $("#receiverlist").html();
@@ -405,7 +408,10 @@
 		                	try {
 								opener.setJournalList();
 							} catch(e) { }
-	          			 	sendJournalRecvMail($("#title").val(), receiverID, result);
+							
+							if (receiverID != null && receiverID != "") {
+		          			 	sendJournalRecvMail($("#title").val(), receiverID, result);
+							}
 	          			 	
 	          			 	setTimeout(function(){
 		          			  	window.close();
