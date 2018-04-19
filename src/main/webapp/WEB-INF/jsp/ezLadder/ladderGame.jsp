@@ -37,8 +37,7 @@
 		var droploc = {};
 		var stompClient = null;
 		var servername = null;
-		
-		
+		var deleteFlag = "${vo.deleteFlag}";
 		
 		$(window).unload(function() {
 			if (stompClient !== null) {
@@ -112,6 +111,9 @@
 		var dragcnt = 0;
 		var originalPosition_left = 0;
 		$(function() {
+			if(deleteFlag == 1) {
+				window.location.href = "/ezLadder/ladderMain.do?brdID=7"; 
+			}
 			initValues();
 			ladder_window_resize();
 			
