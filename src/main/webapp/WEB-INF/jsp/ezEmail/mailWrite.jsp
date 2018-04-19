@@ -147,6 +147,9 @@
 	    var secureReadCount = "0";
 	    var secureReadDate = "";
 	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
+
+	    //업무일지 아이디
+	    var journalId = "${journalId}";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -868,7 +871,12 @@
 	            }
 	            else if (Org_cmd == "CommunityDotNet") {
 	                GetBoardItemInfo_New3_DotNet("${boardID}", "${itemID}");
-	            }	            
+	            }	
+	            //업무일지면...
+	            else if (Org_cmd == "journal") {
+	            	getJournalToMail();
+	            	return;
+	            }
 	            
 	            initFlag = true;
 	            pOrgAttachListXml = pAttachListXml;
@@ -881,6 +889,81 @@
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
 	    }
 	
+	    function getJournalToMail(){
+	    	var journal;
+	    	$.ajax ({
+				type : "POST",
+				async : false,
+				url : "/ezJournal/journalDetailJSON.do",
+				data : {
+					"journalId" : journalId
+				},
+				success : function(result) {
+					$("#eSubject").val("<spring:message code='ezJournal.t1' /><spring:message code='ezEmail.t674' /> : "+result.journalTitle);
+					var journalContent = "<p></p><p></p><hr>"+result.journalContent;
+					message.SetEditorContent(journalContent);
+					var fileList = result.fileList;
+					
+					var pstrXML = "";
+
+					//첨부파일이 있을 경우
+			        if (fileList.length > 0) {
+			            pstrXML += "<LISTVIEWDATA><HEADERS>";
+			            pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+			            pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+			            pstrXML += "</HEADERS><ROWS>";
+			        }
+			        for (var i = 0; i < fileList.length; i++) {
+			            var filepath = fileList[i].filePath;
+			            var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
+			            var filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));
+			            var filesize = fileList[i].fileSize;
+
+			            pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+			            pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+			            pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+			            pstrXML += "<DATA3></DATA3>";
+			            pstrXML += "<DATA4>BOARD</DATA4>";
+			            pstrXML += "<DATA5>N</DATA5>";
+			            pstrXML += "<DATA6>" + filesize + "</DATA6>";
+			            if(filesize > BigSizeAttachSize )
+			                pstrXML += "<DATA7>Y</DATA7>";
+			            else
+			                pstrXML += "<DATA7>N</DATA7>";
+			            pstrXML += "</CELL><CELL>";
+			            pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
+			            pstrXML += "</CELL></ROW>";
+			        }
+			        if (pstrXML != "") {
+			            pstrXML += "</ROWS></LISTVIEWDATA>";
+			            objXML = loadXMLString(pstrXML);
+			            if (pAttachListXml == "") {
+			                pAttachListXml = objXML;
+			            }
+			            else {
+			                if (typeof (pAttachListXml) == "string")
+			                    Rtnxml = loadXMLString(pAttachListXml);
+			                else
+			                    Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+
+			                for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+			                    var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
+//			                    if (CrossYN())
+//			                        var Node = Rtnxml.importNode(objNewAttachNodes, true);
+//			                    else
+			                        GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
+			                }
+			                pAttachListXml = Rtnxml;
+			            }
+			            if (DragDropAttachObjetLoading) {
+//			            	AppendFileAttachInfo(pAttachListXml);
+			            	dadiframe.fileupload2(pAttachListXml,"/ezEmail/mailInterUploadCopyXCKFromJournal.do");
+			            }
+			        }
+				}
+			});
+	    }
+	    
 	    function btn_AttachSelect_onclick() {
 	        document.getElementById('mode').value = "ATT";
 	        document.form.file1.click();

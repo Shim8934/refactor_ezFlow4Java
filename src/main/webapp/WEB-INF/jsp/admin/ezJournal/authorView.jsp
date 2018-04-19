@@ -1,0 +1,135 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><spring:message code='ezJournal.t42' /></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />		
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
+	    <script type="text/javascript">	
+	    	var selectedUser;
+	    	var selectedUserName;
+	    	var companyId = "<c:out value="${companyId}" />";
+	    	var deptIds = [];
+	    	var deptNames = [];
+	    	var userDeptId;
+	    	var userDeptName;
+	    
+	    	//사원 세팅
+	    	function setSelectedUser(userId, userName){
+	    		selectedUserName = userName;
+	    		selectedUser = userId;
+	    		$("#txtuser").val(" " + userName);
+	    	} 
+	    	
+	    	//사원선택
+	    	function select_person(){
+	    		var url = "/admin/ezJournal/authorDetail.do";
+				url+="?companyId="+companyId;
+				window.open(url, "authorDetail", GetOpenWindowfeature(950, 600));
+	    	}
+	    	
+	    	//부서선택
+	    	function selectDept(){
+	    		if(!selectedUser){
+	    			alert("<spring:message code='ezPortal.t23'/>");
+	    		}else{
+		    		var url = "/admin/ezJournal/selectAuthorDept.do";
+					url+="?companyId="+companyId+"&userId="+selectedUser;
+					window.open(url, "authorDept", GetOpenWindowfeature(500, 560));
+	    		}
+	    	}
+	    	 
+	    	//부서 이름 세팅
+	    	function setDeptName(pdeptIds,pdeptNames){
+	    		if (pdeptIds && pdeptNames) {
+					deptIds = eval(pdeptIds);
+					deptNames = eval(pdeptNames);
+				}
+				var deptString;
+	    		for (var i = 0; i < deptNames.length; i++) {
+	    			if(i!=0){
+			    		deptString += ", "+deptNames[i];
+	    			} else {
+	    				deptString=deptNames[i];
+	    			}
+				}
+	    		console.log(deptIds);
+	    		$("#txtdept").val(deptString);
+	    	}	  
+	    	
+	    	//열람권한 저장
+	    	function insertAuthDept(){
+	    		if(deptIds.length!=0){
+					$.ajax({
+		   				type:"POST",
+		   				dataType:"text",
+		   				url:"/admin/ezJournal/saveAuthor.do",
+		   				data:{
+		   					userId:selectedUser,
+		   					depts:JSON.stringify(deptIds)
+		   				},
+		   				success: function(result) {
+		   					if (result == "ok") {
+			   					alert("<spring:message code='ezJournal.t137'/>");
+		   						opener.location.reload();
+		   						window.close();
+		   					}
+		   				}
+		   			});
+	    		} else {
+   					alert("<spring:message code='ezJournal.t168'/>");
+	    		}
+	   		}
+	    	
+	    	$(document).ready(function(){
+	    		<c:if test="${not empty selectedUser }">
+			    	<c:forEach items="${deptList }" var="dept">
+			    		<c:choose>
+				    		<c:when test="${dept.mine eq 'yes' }">
+				    			userDeptName = '${fn:replace(dept.deptName, "'", "\\'") }';
+				    			userDeptId = '${fn:replace(dept.deptId, "'", "\\'") }';
+					    	</c:when>
+					    	<c:otherwise>
+								deptNames.push('${fn:replace(dept.deptName, "'", "\\'") }');
+								deptIds.push('${fn:replace(dept.deptId, "'", "\\'") }');
+							</c:otherwise>
+						</c:choose>
+			    	</c:forEach>
+			    	setSelectedUser("${selectedUser }","${selectedUserName }");
+		    		setDeptName();
+	    		</c:if>
+   			});
+	    	
+		</script>
+	</head>
+	<body class="popup">
+	    <h1><spring:message code='ezJournal.t42' /></h1>
+	    <table class="content">
+	        <tr>
+	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t141' /></th>
+	            <td>
+	                <input id="txtuser" value="" type="text" style="width:80%" onfocus="this.blur();" readonly="readonly" />
+	                <a href="#" class="imgbtn" style="margin-left: 20px;"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	            </td>
+	        </tr>
+	        <tr>
+	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t142' /></th>
+	            <td>
+	                <textarea rows="3" id="txtdept" style="margin-top:4px; width:77%; resize: none;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:15px;"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	            </td>
+	        </tr>
+	    </table>
+	    <div class="btnposition">
+	        <a class="imgbtn"><span onclick="insertAuthDept();" ><spring:message code='ezSchedule.t157' /></span></a>
+	        <a class="imgbtn"><span onclick="window.close();"><spring:message code='ezSchedule.t5' /></span></a>      
+	    </div>
+	</body>
+</html>
+
