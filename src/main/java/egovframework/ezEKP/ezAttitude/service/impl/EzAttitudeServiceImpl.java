@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezAttitude.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
@@ -853,41 +851,41 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public List<AdminAttitudeVO> getAttitudeList2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeList2 started");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		// if써서 하루꺼를 가져오려는 건지 한달꺼를 가져오려는 건지를 구분해야 될 꺼 같다.
-		// 일단 하루치를 가져오는 것 부터
-		// true면 UTC false면 local
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		/*if (startDate.equals("") && endDate.equals("")) {
-			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
-			startDate = localDate + " 00:00:00";
-			endDate = localDate + " 23:59:59";
-		} else { // startDate와 endDate가 있는 경우 한달의 근태를 출력
-			startDate = startDate + " 00:00:00";
-			endDate = endDate + " 23:59:59";
-		}*/
-		
-		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
-		
-		if (searchStartDate.equals("")) {
-			searchStartDate = localDate + " 00:00:00";
-		} else {
-			searchStartDate = searchStartDate + " 00:00:00";
-		}
-		
-		if (searchEndDate.equals("")) {
-			searchEndDate = localDate + " 23:59:59";
-		} else {
-			searchEndDate = searchEndDate + " 23:59:59";
-		}
-		
+		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
 		int limit = 0;
 		
 		if (pageNum != null && pageNum != "") {
 			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
-			map.put("limit", limit);
 		}
 		
+		//날짜
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		
+		if (searchStartDate.equals("") && searchEndDate.equals("")) {
+			searchStartDate = localDate + " 00:00:00";
+			searchEndDate = localDate + " 23:59:59";
+			
+			Date startDate = sdf.parse(searchStartDate);
+			
+			cal = Calendar.getInstance();
+			cal.setTime(startDate);
+			cal.add(Calendar.DAY_OF_MONTH, -7);
+			
+			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false);
+			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, false);
+		} else {
+			if (searchStartDate.equals("")) {
+				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, false);
+			}
+			
+			if (searchEndDate.equals("")) {
+				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, false);
+			}
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchTitle", searchTitle);
@@ -900,6 +898,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("limit", limit);
 
 		List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeList2(map);
 
@@ -909,38 +908,52 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public String getAttitudeCount2(int tenantId, String companyId,
-			String typeId, String userIdList, String startDate, String endDate, String offset)
-			throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-
+	public String getAttitudeCount2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate,
+			String searchEndDate, String searchAttitudeType,String offset, String companyId, int tenantId) throws Exception {
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		if (startDate.equals("") && endDate.equals("")) {
-			String localDate = commonUtil.getDateStringInUTC(
-					commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
-			startDate = localDate + " 00:00:00";
-			endDate = localDate + " 23:59:59";
-		} else {
-			startDate = startDate + " 00:00:00";
-			endDate = endDate + " 23:59:59";
-		}
-
-		map.put("tenantId", tenantId);
-		map.put("companyId", companyId);
-		map.put("typeId", typeId);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
-		map.put("offsetMin", offsetMin);
+		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
 		
-		String resultCount = "0";
-		if (userIdList != null && !userIdList.equals("")) {
-			String[] userList = userIdList.split(",");
-			map.put("userId", userList);
-			resultCount = String.valueOf((Integer.valueOf(resultCount) + Integer.valueOf(ezAttitudeDAO.getAttitudeCount2(map))));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		
+		if (searchStartDate.equals("") && searchEndDate.equals("")) {
+			searchStartDate = localDate + " 00:00:00";
+			searchEndDate = localDate + " 23:59:59";
+			
+			Date startDate = sdf.parse(searchStartDate);
+			
+			cal = Calendar.getInstance();
+			cal.setTime(startDate);
+			cal.add(Calendar.DAY_OF_MONTH, -7);
+			
+			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false);
+			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, false);
 		} else {
-			resultCount = ezAttitudeDAO.getAttitudeCount2(map);
+			if (searchStartDate.equals("")) {
+				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, false);
+			}
+			
+			if (searchEndDate.equals("")) {
+				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, false);
+			}
 		}
-		return resultCount;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchUserName", searchUserName);
+		map.put("searchDeptName", searchDeptName);
+		map.put("searchTitle", searchTitle);
+		map.put("searchAttitudeType", searchAttitudeType);
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("offsetMin", offsetMin);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		String result = ezAttitudeDAO.getAttitudeCount2(map);
+		
+		
+		
+		return result;
 	}
 
 	@Override

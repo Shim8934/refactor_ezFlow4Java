@@ -60,7 +60,6 @@
 		            company_change();
 		        }
 	    		
-alert("" + typeof today);
 	    		//검색시 날짜 오늘날짜로 기본값 적용
 	    		$("#Sdatepicker").val(today);
 	    		$("#Edatepicker").val(today);
@@ -195,8 +194,8 @@ alert("" + typeof today);
     					userIdList : userIdList,
    						orderCell : orderCell,
     					orderOption : orderOption,
-    					startDate : startDate,
-    					endDate : endDate
+    					startDate : '',
+    					endDate : ''
     				},
 	    			success : function(result){
 	    				totalCount = result.totalCount;

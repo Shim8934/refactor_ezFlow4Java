@@ -1606,22 +1606,20 @@ public class EzAttitudeGWController {
 			String isAdmin = request.getParameter("isAdmin");*/
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();
 			
-			//모든근태조회
-			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, info.getTenantId());
-			
-			//리스트 총 갯수
-			String totalCount = ezAttitudeService.getAttitudeCount2(info.getTenantId(), companyId, searchAttitudeType, searchUserName, searchStartDate, searchEndDate, offset);
+			String totalCount = ezAttitudeService.getAttitudeCount2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantID);
+			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID);
 			
 			//구분 리스트
-			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, info.getTenantId());
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, tenantID);
 			
 			JSONObject data = new JSONObject();
-//			data.put("list", list);
-//			data.put("totalCount", totalCount);
-//			data.put("typeList", typeList);
-//			data.put("typeId", typeId);
+			data.put("list", list);
+			data.put("totalCount", totalCount);
+			data.put("typeList", typeList);
+			data.put("typeId", searchAttitudeType);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

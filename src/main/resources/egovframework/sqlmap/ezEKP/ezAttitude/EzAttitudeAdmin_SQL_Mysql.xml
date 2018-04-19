@@ -579,85 +579,77 @@
    	<select id="ezAttitudeAdminDAO.getAttitudeList2" parameterClass="Map" resultMap="adminAttitude">
 		<![CDATA[
 			SELECT 
-				TBL_ATTITUDE.attitude_id,
-				TBL_ATTITUDE.company_id,
-				TBL_ATTITUDE.tenant_id,
-				TBL_ATTITUDE.writer_id,
-				TBL_ATTITUDE.dept_id,
-				SUBSTR(DATE_ADD(TBL_ATTITUDE.start_date, INTERVAL #offsetMin# minute), 1, 11) AS start_date,
-                SUBSTR(DATE_ADD(TBL_ATTITUDE.start_date, INTERVAL #offsetMin# minute), 12) AS start_time,
-                IFNULL(SUBSTR(DATE_ADD(TBL_ATTITUDE.end_date, INTERVAL #offsetMin# minute), 1, 11),'') AS end_date,
-                IFNULL(SUBSTR(DATE_ADD(TBL_ATTITUDE.end_date, INTERVAL #offsetMin# minute), 12),'') AS end_time,
-				TBL_ATTITUDE.modappl,
-				TBL_ATTITUDE.ip,
-				TBL_ATTITUDE.date_type,
-				TBL_ATTITUDE.type_id,
-				TBL_ATTITUDE_TYPE.type_name,
-				TBL_USERMASTER.displayname as user_name,
-                TBL_USERMASTER.description as dept_name,
-                TBL_USERMASTER.title as user_title
+				A.attitude_id,
+				A.company_id,
+				A.tenant_id,
+				A.writer_id,
+				A.dept_id,
+				SUBSTR(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), 1, 10) AS start_date,
+                SUBSTR(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), 12) AS start_time,
+                IFNULL(SUBSTR(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute), 1, 10),'') AS end_date,
+                IFNULL(SUBSTR(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute), 12),'') AS end_time,
+				A.modappl,
+				A.ip,
+				A.date_type,
+				A.type_id,
+				B.type_name,
+				C.displayname as user_name,
+                C.description as dept_name,
+                C.title as user_title
 			FROM
 				TBL_ATTITUDE A
 			JOIN
 				TBL_ATTITUDE_TYPE B
 			ON
-				TBL_ATTITUDE.type_id = TBL_ATTITUDE_TYPE.type_id
+				A.type_id = B.type_id
 			AND
-				TBL_ATTITUDE.company_id = TBL_ATTITUDE_TYPE.company_id
+				A.company_id = B.company_id
 			AND
-				TBL_ATTITUDE.tenant_id = TBL_ATTITUDE_TYPE.tenant_id
+				A.tenant_id = B.tenant_id
 			JOIN
 				TBL_USERMASTER C
 			ON
-				TBL_ATTITUDE.writer_id = TBL_USERMASTER.cn
+				A.writer_id = C.cn
 			AND
-				TBL_ATTITUDE.tenant_id = TBL_USERMASTER.tenant_id
+				A.tenant_id = C.tenant_id
 			WHERE
-				TBL_ATTITUDE.tenant_id = #tenantid#
+				A.tenant_id = #tenantId#
 			AND
-				TBL_ATTITUDE.company_id = #companyId#
+				A.company_id = #companyId#
 			AND
 				(
-					(TBL_ATTITUDE.start_date >= #startDate# AND TBL_ATTITUDE.start_date <= #endDate#) 
+					(A.start_date >= #searchStartDate# AND A.start_date <= #searchEndDate#) 
 				OR
-					(TBL_ATTITUDE.end_date >= #startDate# AND TBL_ATTITUDE.end_date < #endDate#) 
+					(A.end_date >= #searchStartDate# AND A.end_date < #searchEndDate#) 
 				OR
-					(TBL_ATTITUDE.start_date < #startDate# AND TBL_ATTITUDE.end_date >= #endDate#)
+					(A.start_date < #searchStartDate# AND A.end_date >= #searchEndDate#)
 				)
 		]]>
 			
-		<!-- <isNotEmpty prepend="AND" property="userId">
-			<![CDATA[
-				TBL_ATTITUDE.writer_id = #userId#
-			]]>
-		</isNotEmpty> -->
 		<isNotEmpty prepend="AND" property="searchAttitudeType">
 			<![CDATA[
-				TBL_ATTITUDE.type_id = #searchAttitudeType#
+				A.type_id = #searchAttitudeType#
 			]]>
 		</isNotEmpty>
-		
-		
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			TBL_USERMASTER.description LIKE CONCAT('%', #searchDeptName#, '%')
+			C.description LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			C.displayname LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			TBL_USERMASTER.title LIKE CONCAT('%', #searchTitle#, '%')
+			C.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
-		
 		<isNotEmpty property="orderCell">
 			ORDER BY
 				$orderCell$ $orderOption$,
-				TBL_USERMASTER.displayname
+				C.displayname
 		</isNotEmpty>
 		<isEmpty property="orderCell">
 			ORDER BY
-				TBL_USERMASTER.displayname
+				C.displayname
 		</isEmpty>
-		<isNotEmpty prepend="" property="limit">
+		<isNotEmpty property="limit">
 			<![CDATA[
 				LIMIT 
 					#limit#, #listSize# 
@@ -667,33 +659,51 @@
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
 		<![CDATA[
-			SELECT
+			SELECT 
 				COUNT(*)
 			FROM
-				TBL_ATTITUDE
-			WHERE
-				tenant_id = #tenantId#
+				TBL_ATTITUDE A
+			JOIN
+				TBL_ATTITUDE_TYPE B
+			ON
+				A.type_id = B.type_id
 			AND
-				company_id = #companyId#
+				A.company_id = B.company_id
+			AND
+				A.tenant_id = B.tenant_id
+			JOIN
+				TBL_USERMASTER C
+			ON
+				A.writer_id = C.cn
+			AND
+				A.tenant_id = C.tenant_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.company_id = #companyId#
 			AND
 				(
-					(TBL_ATTITUDE.start_date >= #startDate# and TBL_ATTITUDE.start_date <= #endDate#)
+					(A.start_date >= #searchStartDate# AND A.start_date <= #searchEndDate#) 
 				OR
-					(TBL_ATTITUDE.end_date >= #startDate# and TBL_ATTITUDE.end_date < #endDate#)
+					(A.end_date >= #searchStartDate# AND A.end_date < #searchEndDate#) 
 				OR
-					(TBL_ATTITUDE.start_date < #startDate# and TBL_ATTITUDE.end_date >= #endDate#)
+					(A.start_date < #searchStartDate# AND A.end_date >= #searchEndDate#)
 				)
 		]]>
-		
-		<isNotEmpty prepend="AND" property="userId">
+			
+		<isNotEmpty prepend="AND" property="searchAttitudeType">
 			<![CDATA[
-				TBL_ATTITUDE.writer_id = #userId#
+				A.type_id = #searchAttitudeType#
 			]]>
 		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="typeId">
-			<![CDATA[
-				type_id = #typeId#
-			]]>
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			C.description LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			C.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			C.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 	</select>
 	
