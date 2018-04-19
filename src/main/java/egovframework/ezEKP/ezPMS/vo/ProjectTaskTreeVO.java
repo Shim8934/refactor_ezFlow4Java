@@ -6,6 +6,7 @@ public class ProjectTaskTreeVO {
 	private String parent;
 	private String text;
 	private int sort;
+	private String icon;
 	
 	
 	public String getId() {
@@ -32,5 +33,12 @@ public class ProjectTaskTreeVO {
 	public void setSort(int sort) {
 		this.sort = sort;
 	}
+	public String getIcon() {
+		return icon;
+	}
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+	
 
 }

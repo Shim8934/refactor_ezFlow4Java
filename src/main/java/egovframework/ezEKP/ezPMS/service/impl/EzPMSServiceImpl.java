@@ -244,16 +244,30 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId) {
+		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("project_Id", projectId);
-		List<ProjectTaskTreeVO> list = ezPMSDAO.getProjectTaskTree(map);
-		System.out.println(list.size());
+		
+		List<ProjectTaskTreeVO> list = ezPMSDAO.getProjectGroupTree(map);
+		
 		for(int i = 0; i < list.size(); i++) {
 			ProjectTaskTreeVO vo = list.get(i);
+			vo.setIcon("jstree-folder");
 			if(vo.getParent().equals("0")) {
 				vo.setParent("#");
 			}
 		}
+		
+		List<ProjectTaskTreeVO> list2 = ezPMSDAO.getProjectTaskTree(map);
+		
+		System.out.println(list2.size());
+		
+		for(int i = 0; i < list2.size(); i++) {
+			ProjectTaskTreeVO vo = list2.get(i);
+			vo.setIcon("jstree-file");
+			list.add(vo);
+		}
+		
 		return list;
 	}
 	
