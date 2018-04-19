@@ -280,6 +280,7 @@
 			obj.orderCell = orderCell;
 			obj.orderOption = orderOption;
 			obj.adminFlag = adminFlag;
+			obj.checkAdmin = checkAdmin;
 			
 		    $.ajax({
 				type : 'get',
@@ -902,7 +903,7 @@
 			    	ajaxRunning = false;
 			    },
 			    success : function(json){
-			    	$('#addpopup_list tbody').children('tr').remove();
+			    	$('#addpopup_list tbody').children('tr').not(":first").remove();
 			    	
 			    	if (json.length == 0) {
 			    		var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:  center;'></td>").text("내역이 없습니다."));
@@ -917,11 +918,11 @@
 			    		} else {
 			    			json[i].apprStatus = "반려";
 			    		}
+
+			    		var objTr = $("<tr></tr>").append($("<td style='width:50%'></td>").text(json[i].apprDate));
 			    		
-			    		var objTr = $("<tr></tr>").append($("<td></td>").text(json[i].apprDate));
-			    		
-			    		objTr.append($("<td></td>").text(json[i].apprUserName));
-			    		objTr.append($("<td></td>").text(json[i].apprStatus));
+			    		objTr.append($("<td style='width:25%'></td>").text(json[i].apprUserName));
+			    		objTr.append($("<td style='width:25%'></td>").text(json[i].apprStatus));
 			    		
 			    		$("#addpopup_list tbody").append(objTr);
 			    	}
@@ -944,7 +945,7 @@
 	    
 	    function layerHidden() {
 	        $.modal.close();
-	        $('#addpopup_list tbody').children('tr').remove();
+	        $('#addpopup_list tbody').children('tr').not(":first").remove();
 	    }
 		</script>
 </head>
@@ -1102,69 +1103,22 @@
 		<div id="popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
+			    <table class="popuplist" id="addpopup_list" style="display:block; width:440px; margin:10px 0px 0px 1px;">
 				    <thead>
 				    	<tr>
-						<th class="layerHeader" colspan="3">
+						<th class="layerHeader" colspan="4" style="width:440px;">
 							<img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>
 							&nbsp;근태내역확인
 						</th>
 						</tr>
-						<tr>
-				  			<th style="width:50%;height:30px">승인일시</th>
-				  			<th style="width:25%;height:30px">승인자</th>
-				  			<th style="width:25%;height:30px">승인 상태</th>
-						</tr>
 				    </thead>
-				    <tbody>
+				    <tbody style="max-height:500px; width:440px; display:block; overflow-y:auto;">
+				    	<tr>
+				  			<th style="width:220px;height:30px">승인일시</th>
+				  			<th style="height:30px">승인자</th>
+				  			<th style="height:30px">승인 상태</th>
+						</tr>
 				    </tbody>
-				</table>
-				<!-- /내용 -->
-				<br />
-				<div style="text-align:center;">
-					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
-					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
-			    </div>
-			</div>
-			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
-		</div>
-		
-		<!-- 근태수정신청 팝업창 -->
-		<div id="mod_popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
-			<div class="popupwrap3">
-				<!-- 내용 -->
-			    <table class="popuplist" id="modpopup_table" style="width:440px;margin:10px 0px 0px 1px;">
-			    	<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태수정신청</th>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">구분
-						<td>지각</td>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">출근시각</th>
-						<td>오늘날짜 (공백) 출근시각</td>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">변경시각</th>
-						<td>
-							<span id="periodblock" datetype="3">
-								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-								<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
-							</span>
-						</td>
-					</tr>
-					<tr>
-						<th style="width:90px;height:30px">승인상태</th>
-						<td>상태(진행, 반려)</td>
-					</tr>
-					<tr>
-<!-- 						<td colspan="2"><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%; height:90px; box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td> -->
-						<td colspan="2" style="margin:0px; padding:0px;"><textarea class="textarea" style="width:100%; height:120px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea></td>
-<!-- 						<td style="vertical-align:top;height:100%;" id="EdtorSize" colspan="2"> -->
-<!-- 		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe> -->
-<!-- 	                    </td> -->
-					</tr>
 				</table>
 				<!-- /내용 -->
 				<br />

@@ -432,7 +432,8 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String excelReq,
 			@RequestParam(required=false)String orderCell,
 			@RequestParam(required=false)String orderOption,
-			@RequestParam(required=false)String adminFlag) throws Exception {
+			@RequestParam(required=false)String adminFlag,
+			@RequestParam(required=false)String checkAdmin) throws Exception {
 		
 		int currentPage = 1;
 		int pageSize = 15;
@@ -453,6 +454,10 @@ public class EzAttitudeKMSController {
 			adminFlag = "false";
 		}
 		
+		if (checkAdmin == null || checkAdmin.trim().equals("")) {
+			checkAdmin = "false";
+		}
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
@@ -492,12 +497,13 @@ public class EzAttitudeKMSController {
 				.queryParam("type", type)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
-				.queryParam("adminFlag", adminFlag);
+				.queryParam("adminFlag", adminFlag)
+				.queryParam("checkAdmin", checkAdmin);
 		
 		RestTemplate rest = new RestTemplate();
-		
+
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
+
 		JSONParser jp = new JSONParser();
 		
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
@@ -508,7 +514,7 @@ public class EzAttitudeKMSController {
 		JSONArray list = new JSONArray();
 		
 		if(status.equals("ok")){
-			LOGGER.debug(resultBody.toJSONString());
+			LOGGER.debug("!!!!!!!!!!!!!!!!!! : " + resultBody.toJSONString());
 			totalAtt = Integer.parseInt(resultBody.get("data").toString());
 		}
 		totalPages = (totalAtt + pageSize - 1)/pageSize;
@@ -551,7 +557,8 @@ public class EzAttitudeKMSController {
 					.queryParam("type", type)
 					.queryParam("orderCell", orderCell)
 					.queryParam("orderOption", orderOption)
-					.queryParam("adminFlag", adminFlag);
+					.queryParam("adminFlag", adminFlag)
+					.queryParam("checkAdmin", checkAdmin);
 		} else {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", userInfo.getCompanyID())
@@ -568,7 +575,8 @@ public class EzAttitudeKMSController {
 					.queryParam("type", type)
 					.queryParam("orderCell", orderCell)
 					.queryParam("orderOption", orderOption)
-					.queryParam("adminFlag", adminFlag);
+					.queryParam("adminFlag", adminFlag)
+					.queryParam("checkAdmin", checkAdmin);
 		}
 
 		rest = new RestTemplate();
