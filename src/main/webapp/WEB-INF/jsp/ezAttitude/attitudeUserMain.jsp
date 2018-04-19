@@ -52,10 +52,15 @@
 			var attitudeModAppl = true;     // 근태수정신청 유무
 			
 			$(function(){
-				$(document).on('dblclick', '.td_day td', function(){
-					pMode = "new";
-					attitudeNewItem(this);
-				})
+				//개인근태현황에서만 근태 등록 가능
+				if (deptFlag != "true") {
+					$(document).on('dblclick', '.td_day td', function(){
+						pMode = "new";
+						attitudeNewItem(this);
+					})	
+				} else {
+					//부서내 모든 사원의 근태 현황 조회 팝업 
+				}
 				
 				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function(){
 					attitudeItemView(this);
@@ -63,7 +68,8 @@
 				
 				//근태수정신청 팝업창
 				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02]', function(){
-					showDialog();
+// 					showDialog();
+					attitudeModItem(this);
 				})
 			})
 			
@@ -143,13 +149,22 @@
 					
 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":tdHeight, "background-color": "#edf4fd"}).text($("#calTitle").text())));
 					for (var i = 0; i < result.length; i++) {
+						
 						if (result[i].typeId == 'A01' || result[i].typeId == 'A03') {
 							continue;
 						}
 						objTr = $("<tr></tr>").append($("<th></th>").text(result[i].typeName));
-						objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일");
-
-						
+						if (deptFlag == "true") {
+							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px", "cursor" : "pointer"})
+							.attr("id",result[i].typeId).text("0일")
+							.attr("onmouseover","this.style.color='#164aad'")
+							.attr("onmouseout","this.style.color='#666'")
+							.click(function() {
+								searchByTypeId(this);
+							});	
+						} else {
+							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일")
+						}
 						objTr.append(objTd);
 						objTbody.append(objTr);
 					}
@@ -354,6 +369,30 @@
 	            }
 			}
 			
+			/**
+			* 근태수정신청
+			*/
+			function attitudeModItem(obj) {
+				var attitudeId = $(obj).attr("attitudeId"); 
+				var pTypeId = $(obj).attr("typeId");
+				
+				console.log("attitudeId : " + attitudeId);
+				console.log("pTypeId : " + pTypeId);
+				
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "attitudeNewItem", GetOpenWindowfeature(650, 580));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "",
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+	                
+	                if (typeof (rtnValue) != "undefined") {
+	                    company_change();
+	                }
+	            }
+			}
+			
 			function attitudeItemView(obj) {
 				var pAttitudeId = $(obj).attr("attitudeId"); 
 				var pTypeId = $(obj).attr("typeId");
@@ -402,6 +441,31 @@
 	
 			}
         	
+			function searchByTypeId(t) {
+				
+				var pDate = $("#calTitle").text().trim()
+				var startDate = pDate + "-01 00:00:00";
+				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate() + " 23:59:59";
+
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getAttitudeList.do",
+					data : {
+						startDate : pDate + "-01 00:00:00",
+						endDate : endDate,
+						deptFlag : deptFlag,
+						typeId : t.getAttribute("id")
+					},
+					success : function(result) {
+						console.log(result)
+// 						$("span[name=span_list] table tbody").remove();
+// 						getAttitudeMainList_after(result);
+// 						getAttiStatisList();
+					}
+				})
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">

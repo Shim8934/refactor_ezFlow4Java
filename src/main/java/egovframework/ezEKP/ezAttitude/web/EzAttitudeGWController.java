@@ -96,6 +96,7 @@ public class EzAttitudeGWController {
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
 			String deptFlag = request.getParameter("deptFlag");
+			
 			List<AttitudeVO> resultList;
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
@@ -122,6 +123,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);			
 			result.put("data", resultList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1104,7 +1106,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="orderCell", required=false) String orderCell,
 			@RequestParam(value="orderOption", required=false) String orderOption,
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
-			@RequestParam(value="checkAdmin", required=false) boolean checkAdmin) {
+			@RequestParam(value="checkAdmin", required=false) String checkAdmin) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
@@ -1159,7 +1161,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="offset", required=false) String offset,
 			@RequestParam(value="type", required=false) String type,
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
-			@RequestParam(value="checkAdmin", required=false) boolean checkAdmin) {
+			@RequestParam(value="checkAdmin", required=false) String checkAdmin) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] started.");
 
 		JSONObject result = new JSONObject();
@@ -1179,6 +1181,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);			
 			result.put("data", attListCount+"");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");

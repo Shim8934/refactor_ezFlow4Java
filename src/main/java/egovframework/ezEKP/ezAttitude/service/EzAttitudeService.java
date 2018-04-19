@@ -91,13 +91,13 @@ public interface EzAttitudeService {
 	
 	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName, String searchTitle, String searchStartTime, String searchEndTime, String searchCompareValue, String offsetMin) throws Exception;
 	
-	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String sysLang, String offSet, String startPoint, String endPoint, String type, String order, String adminFlag, boolean checkAdmin) throws Exception;
+	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String sysLang, String offSet, String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin) throws Exception;
 
 	public String getAttitudeTypeMaxTypeId(String companyId, int tenantId) throws Exception;
 
 	public List<AttitudeFormVO> getAttitudeFormList(int tenantId) throws Exception;
 
-	public int getUsersModiyAttCount(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName ,String writerDeptName,String sysLang, String offSet, String type, String admin, boolean checkAdmin) throws Exception;
+	public int getUsersModiyAttCount(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName ,String writerDeptName,String sysLang, String offSet, String type, String admin, String checkAdmin) throws Exception;
 	
 	public List<HolidayVO> getHolidayList(String companyId, int tenantId) throws Exception;
 
