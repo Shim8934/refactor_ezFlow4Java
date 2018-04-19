@@ -60,7 +60,7 @@
 	    	function selectDept(){
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthorDept.do";
 				url+="?companyId="+companyId+"&userId="+selectedUser;
-				window.open(url, "authorDept", "width=500, height=550");
+				window.open(url, "authorDept", GetOpenWindowfeature(500, 540));
 	    	}
 	    	 
 	    	//부서 이름 세팅
