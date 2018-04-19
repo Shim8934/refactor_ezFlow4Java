@@ -1,81 +1,108 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezJournal.c1'/>" type="text/css">
-		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
-		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<!-- data picker-->
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
-		<!-- time picker-->
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
-		
-	    <style>
-	    	#layer_Viewpopup { 
-			z-index:1000; 
-			margin:0px; 
-			padding:0px;
-			}
-			#layer_Viewpopup .popupwrap1 {
-				border:1px solid #555a64;
-				padding:0px;
-				margin:0px;
-				
-			}
-			#layer_Viewpopup .shadow {
-				height:2px;
-				background:#d7d7d7;
-				
-			}
-			#layer_Viewpopup .popupwrap2 {
-				border:2px solid #e5e5e5;
-				padding:10px;
-				
-			}
-			#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
-			
-			#layer_Viewpopup .popupwrap3 {
-				position:relative;
-				padding:10px;
-				background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
-			}
-			#layer_Viewpopup .popupwrap3 h1 {
-				font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
-			}
-			#MailListRayer tr:not(.selectTR):hover{
-				background-color: rgb(244,245,245);
-			}
-			#basicFormList td:not(.selectTD):hover{
-				background-color: rgb(244,245,245);
-			}
-			.selectTR{
-				background-color: rgb(233, 241, 255);
-			}
-			.selectTD{
-				background-color: rgb(233, 241, 255);
-			}
-			 #lvBoardList #journalList tr.noView td{
-			 	font-weight: bold;
-			 }
-	    </style>
-	    
-		<script  type="text/javascript">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="<spring:message code='ezJournal.c1'/>"
+	type="text/css">
+<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
+<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
+<script type="text/javascript" src="/js/Common.js"></script>
+<!-- data picker-->
+<script type="text/javascript"
+	src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+<script type="text/javascript"
+	src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+<script type="text/javascript"
+	src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+<link href="/js/jquery/jquery.modal.css" rel="stylesheet"
+	type="text/css" />
+<!-- time picker-->
+<link rel="stylesheet" type="text/css"
+	href="/js/jquery/timeControls/jquery.timepicker.css" />
+<script type="text/javascript"
+	src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+
+<style>
+#layer_Viewpopup {
+	z-index: 1000;
+	margin: 0px;
+	padding: 0px;
+}
+
+#layer_Viewpopup .popupwrap1 {
+	border: 1px solid #555a64;
+	padding: 0px;
+	margin: 0px;
+}
+
+#layer_Viewpopup .shadow {
+	height: 2px;
+	background: #d7d7d7;
+}
+
+#layer_Viewpopup .popupwrap2 {
+	border: 2px solid #e5e5e5;
+	padding: 10px;
+}
+
+#layer_Viewpopup .btn_area {
+	border-top: 1px solid #e5e5e5;
+	margin: 10px 0px 0px 0px;
+	padding: 10px 0px 0px;
+}
+
+#layer_Viewpopup .popupwrap3 {
+	position: relative;
+	padding: 10px;
+	background: url("../images/kr/cm/popup_layerbg.gif") repeat-x;
+}
+
+#layer_Viewpopup .popupwrap3 h1 {
+	font-size: 13px;
+	margin: 0px 0px 10px 0px;
+	height: 24px;
+	line-height: 15px;
+	padding: 0px;
+	color: #fff;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+#MailListRayer tr:not (.selectTR ):hover {
+	background-color: rgb(244, 245, 245);
+}
+
+#basicFormList td:not (.selectTD ):hover {
+	background-color: rgb(244, 245, 245);
+}
+
+.selectTR {
+	background-color: rgb(233, 241, 255);
+}
+
+.selectTD {
+	background-color: rgb(233, 241, 255);
+}
+
+#lvBoardList #journalList tr.noView td {
+	font-weight: bold;
+}
+</style>
+
+<script type="text/javascript">
 			var listType = "${listType}";
 			var typeId = "${typeId}";
 			var pAdminType  = "n";
@@ -804,6 +831,12 @@
 					return;
 				}
 				
+				for (var i = 0; i < journalIdList.length; i++) {
+					if ($("#"+journalIdList[i]).attr("mine")=="N") {
+						alert("<spring:message code='ezBoard.t265'/>");
+						return;
+					}
+				}
 				if (confirm("<spring:message code='ezJournal.t139'/>")) {
 					$.ajax ({
 						type : "POST",
@@ -835,256 +868,330 @@
 // 				journalPreviewResize();
 			});
 		</script>
-	</head>
-	<body class="mainbody" style="overflow:hidden;" onmousemove="journalPreviewResize(event);" onmouseup="journalPreviewEnd(event);">
-			<c:choose>
-				<c:when test="${listType eq 'department' }">
-					<h1><spring:message code='ezJournal.t49'/>
-				</c:when>
-				<c:when test="${listType eq 'mine' }">
-					<h1><spring:message code='ezJournal.t50'/>
-				</c:when>
-				<c:when test="${listType eq 'recv' }">
-					<h1><spring:message code='ezJournal.t51'/>
-				</c:when>
-				<c:when test="${listType eq 'temp' }">
-					<h1><spring:message code='ezJournal.t52'/>
-				</c:when>
-			</c:choose>
-			<c:if test="${typeId ne null && typeId ne 'undefined' }">
-				 - <spring:message code='${typeId }'/> 
+</head>
+<body class="mainbody" style="overflow: hidden;"
+	onmousemove="journalPreviewResize(event);"
+	onmouseup="journalPreviewEnd(event);">
+	<c:choose>
+		<c:when test="${listType eq 'department' }">
+			<h1>
+				<spring:message code='ezJournal.t49' />
+		</c:when>
+		<c:when test="${listType eq 'mine' }">
+			<h1>
+				<spring:message code='ezJournal.t50' />
+		</c:when>
+		<c:when test="${listType eq 'recv' }">
+			<h1>
+				<spring:message code='ezJournal.t51' />
+		</c:when>
+		<c:when test="${listType eq 'temp' }">
+			<h1>
+				<spring:message code='ezJournal.t52' />
+		</c:when>
+	</c:choose>
+	<c:if test="${typeId ne null && typeId ne 'undefined' }">
+				 - <spring:message code='${typeId }' />
+	</c:if>
+	<c:choose>
+		<c:when test="${listType eq 'recv' }">
+			<span id="mailBoxInfo">[<spring:message code='ezJournal.t161' />
+				<span id="recvCount" style="color: #017BEC;"></span> <spring:message
+					code='ezJournal.t55' /> / <spring:message code='ezJournal.t54' /> <span
+				id="totalCount" style="color: #017BEC;"></span> <spring:message
+					code='ezJournal.t55' />]
+			</span>
+		</c:when>
+		<c:otherwise>
+			<span id="mailBoxInfo">[<spring:message code='ezJournal.t54' />
+				<span id="totalCount" style="color: #017BEC;"></span> <spring:message
+					code='ezJournal.t55' />]
+			</span>
+		</c:otherwise>
+	</c:choose>
+	<span style="float: right; font-weight: normal; color: black;">
+		<c:if
+			test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
+			<input name="searchKey" id="Radio1" type="radio" value="journalTitle"
+				checked
+				style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
+			<label for="Radio1">&nbsp;<spring:message code='ezBoard.t208' /></label>
+		</c:if> <c:if test="${listType eq 'department' or listType eq 'recv' }">
+			<input name="searchKey" id="Radio2" type="radio"
+				value="journalWriter"
+				style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
+			<label for="Radio2">&nbsp;<spring:message
+					code='ezJournal.t34' /></label>
+		</c:if> &nbsp; <c:if
+			test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
+			<input id="searchValue"
+				style="width: 150px; height: 20px; border-right: 0px; vertical-align: top"
+				onfocus="journalKeywordClear(this);"
+				onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
+			<a href="#" style="float: right"><img
+				src="../../images/sub/bsearch.gif" border="0"
+				onclick="quickSearch()"></a>
+		</c:if>
+	</span>
+	</h1>
+	<div id="mainmenu">
+		<ul>
+			<!-- 		  	일지쓰기 -->
+			<c:if test="${listType eq 'department' or listType eq 'mine' }">
+				<li><span onClick="writejournal()"><spring:message
+							code='ezJournal.t57' /></span></li>
 			</c:if>
-			<c:choose>
-				<c:when test="${listType eq 'recv' }">
-					<span id="mailBoxInfo">[<spring:message code='ezJournal.t161'/> <span id="recvCount" style="color:#017BEC;"></span> <spring:message code='ezJournal.t55'/> / <spring:message code='ezJournal.t54'/> <span id="totalCount" style="color:#017BEC;"></span> <spring:message code='ezJournal.t55'/>]</span>
-				</c:when>
-				<c:otherwise>
-					<span id="mailBoxInfo">[<spring:message code='ezJournal.t54'/> <span id="totalCount" style="color:#017BEC;"></span> <spring:message code='ezJournal.t55'/>]</span>
-				</c:otherwise>
-			</c:choose>
-			<span style="float:right;font-weight:normal;color:black;">
-			  <c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-	          <input name="searchKey" id="Radio1" type="radio" value="journalTitle" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezBoard.t208' /></label>
-			  </c:if>
-			  <c:if test="${listType eq 'department' or listType eq 'recv' }">
-			  <input name="searchKey" id="Radio2" type="radio" value="journalWriter" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code='ezJournal.t34' /></label>
-			  </c:if>
-			  &nbsp;
-			  <c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-			  <input id="searchValue" style="width:150px;height:20px;border-right:0px;vertical-align: top" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}"> 
-	          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onclick="quickSearch()"></a>
-			  </c:if>
-	        </span>
-		</h1>
-		<div id="mainmenu">
-		  <ul>
-<!-- 		  	일지쓰기 -->
-		  	<c:if test="${listType eq 'department' or listType eq 'mine' }">
-	       	 <li><span onClick="writejournal()"><spring:message code='ezJournal.t57' /></span></li>
-		  	</c:if>
-<!-- 		  	확인완료 -->
-		  	<c:if test="${listType eq 'recv' }">
-	       	 <li><span onClick="doViewJournal();"><spring:message code='ezJournal.t58' /></span></li>
-		  	</c:if>
-<!-- 		  	읽음표시 -->
-		  	<c:if test="${listType eq 'department' }">
-	       	 <li><span onClick="doViewJournal();"><spring:message code='ezBoard.t204' /></span></li>
-		  	</c:if>
-<!-- 		  	수정 -->
-		  	<c:if test="${listType eq 'temp' }">
-	       	 <li><span onClick="modifyJournal()"><spring:message code='ezJournal.t107' /></span></li>
-		  	</c:if>
-<!-- 		  	삭제 -->
-		  	<c:if test="${listType eq 'temp' or listType eq 'recv' or listType eq 'mine'}">
-	       	 <li><span onClick="deleteJournal()"><spring:message code='ezJournal.t108' /></span></li>
-		  	</c:if>
-		  	<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine'}">
-<!-- 		  	상세검색 -->
-	       	 <li><span id="SearchOption" onClick="doLayerPopup(this);" mode="off"><spring:message code='ezJournal.t59' /></span></li>
-<!-- 		  	취합 -->
-	       	 <li><span onClick="doSelectSumJournal();"><spring:message code='ezJournal.t60' /></span></li>
-		  	</c:if>
-		  	<c:if test="${listType eq 'department' or listType eq 'mine'}">
-		  	<li style="background:none; padding-right:2px; "><img src="/images/i_bar.gif" alt=""></li>
-		  	</c:if>
-	        <c:if test="${listType eq 'department'}">
-		        <li style="background:none">
-		            <select id="dept" onchange="goToPageByDeptId();">
-		            	<c:forEach items="${deptList}" var="dept">
-		                <option value="${dept.deptId}" <c:if test="${dept.mine eq 'yes' }">selected</c:if>>${dept.deptName }</option>
-		            	</c:forEach>
-		            </select>
-		        </li>
-	        </c:if>
-	        <c:if test="${listType eq 'department' or listType eq 'mine'}">
-		        <li style="background:none">
-		            <select id="formId" onchange="goToPageByFormName();">
-		            </select>
-		        </li>
-	        </c:if>
-				<li style="">
-				</li>
-		        <li id="right">
-					<img src="/images/kr/cm/btn_noframe.gif"     width="22" height="20" class="btnimg" id="PreViewNone"   status="off" onclick="savePreviewRayer('NONE')">
-					<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" status="off" onclick="savePreviewRayer('W')">
-					<img src="/images/kr/cm/btn_leftframe.gif"   width="22" height="20" class="btnimg" id="PreViewleft"   status="off" onclick="savePreviewRayer('H')">
-		        	<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
-		        </li>         
-		  </ul>
-		</div>
-		<script type="text/javascript">
+			<!-- 		  	확인완료 -->
+			<c:if test="${listType eq 'recv' }">
+				<li><span onClick="doViewJournal();"><spring:message
+							code='ezJournal.t58' /></span></li>
+			</c:if>
+			<!-- 		  	읽음표시 -->
+			<c:if test="${listType eq 'department' or listType eq 'mine'}">
+				<li><span onClick="doViewJournal();"><spring:message
+							code='ezBoard.t204' /></span></li>
+			</c:if>
+			<!-- 		  	수정 -->
+			<c:if test="${listType eq 'temp' }">
+				<li><span onClick="modifyJournal()"><spring:message
+							code='ezJournal.t107' /></span></li>
+			</c:if>
+			<!-- 		  	삭제 -->
+<%-- 			<c:if --%>
+<%-- 				test="${listType eq 'temp' or listType eq 'recv' or listType eq 'mine'}"> --%>
+			<li><span onClick="deleteJournal()"><spring:message
+						code='ezJournal.t108' /></span></li>
+<%-- 			</c:if> --%>
+			<c:if
+				test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine'}">
+				<!-- 		  	상세검색 -->
+				<li><span id="SearchOption" onClick="doLayerPopup(this);"
+					mode="off"><spring:message code='ezJournal.t59' /></span></li>
+				<!-- 		  	취합 -->
+				<li><span onClick="doSelectSumJournal();"><spring:message
+							code='ezJournal.t60' /></span></li>
+			</c:if>
+			<c:if test="${listType eq 'department' or listType eq 'mine'}">
+				<li style="background: none; padding-right: 2px;"><img
+					src="/images/i_bar.gif" alt=""></li>
+			</c:if>
+			<c:if test="${listType eq 'department'}">
+				<li style="background: none"><select id="dept"
+					onchange="goToPageByDeptId();">
+						<c:forEach items="${deptList}" var="dept">
+							<option value="${dept.deptId}"
+								<c:if test="${dept.mine eq 'yes' }">selected</c:if>>${dept.deptName }</option>
+						</c:forEach>
+				</select></li>
+			</c:if>
+			<c:if test="${listType eq 'department' or listType eq 'mine'}">
+				<li style="background: none"><select id="formId"
+					onchange="goToPageByFormName();">
+				</select></li>
+			</c:if>
+			<li style=""></li>
+			<li id="right"><img src="/images/kr/cm/btn_noframe.gif"
+				width="22" height="20" class="btnimg" id="PreViewNone" status="off"
+				onclick="savePreviewRayer('NONE')"> <img
+				src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20"
+				class="btnimg" id="PreViewBottom" status="off"
+				onclick="savePreviewRayer('W')"> <img
+				src="/images/kr/cm/btn_leftframe.gif" width="22" height="20"
+				class="btnimg" id="PreViewleft" status="off"
+				onclick="savePreviewRayer('H')"> <img
+				src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off"
+				id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
+		</ul>
+	</div>
+	<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		    <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
-		        <div class="popupwrap1">
-		            <div class="popupwrap2">
-		                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
-		                    <caption></caption>
-		                    <colgroup>
-		                        <col style="width: 80px;">
-		                        <col>
-		                    </colgroup>
-		                    <tr>
-		                        <th><spring:message code='ezBoard.t10021' /></th>
-		                        <td>
-		                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="goToPageByListCnt(this);">
-		                            	<c:forEach begin="1" end="5" varStatus="status">
-		                            		<c:choose>
-		                            		<c:when test="${journalEnv.listCnt eq  status.index*10}">
-				                                <option selected value="${status.index * 10 }">${status.index * 10 }</option>
-		                            		</c:when>
-		                            		<c:otherwise>
-				                                <option value="${status.index * 10 }">${status.index * 10 }</option>
-		                            		</c:otherwise>
-		                            		</c:choose>
-		                            	</c:forEach>
-		                            </select>    
-		                        </td>
-		                    </tr>
-		                </table>
-		            </div>
-		        </div>
-		        <div class="shadow">
-		        </div>
-		    </div>
-		
-			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
-		    <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
-		    <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
-			
-		    <span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
-		        
-		    </span>
-		    
-<!-- 		    보기설정을 다르게 했을때 보여주는 화면 -->
-		    <span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
-		        <span class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
-		            <p class="hbar_dotted">
-		                <img src="/images/prevview_hbar_dotted.gif">
-		            </p>
-		        </span>
-		        <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
-		            <span style="width: 100%; height: 100px; display: block;">
-<!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
-<!-- 		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;"> -->
-<!-- 		                    </div> -->
-<!-- 		                </span> -->
-		                
-		                <div id="Preview_ContentH" style="text-align: center; border-top: 1px solid #eeeeee;">
-		                </div>
-<!-- 		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe> -->
-		            </span>
-		        </span>
-		    </span>
-		
-		    <span id="PreviewRayerW" style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
-		        <span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
-		            <img src="/images/prevview_bar_dotted.gif">
-		        </span>
-		        <span onmousedown="PreviewW_onMouserDown(event);" style="margin:2px; margin-bottom:-4.9px; cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="">
-		        </span>
-		        <span id="PreContent_RayerW" style="display: block;">
-		            <span style="width: 100%; height: 100px; display: block;">
-<!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
-<!-- 		                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;"> -->
-<!-- 		                    </div> -->
-<!-- 		                </span> -->
-		                
-		                <div id="Preview_ContentW" style="text-align: center;">
-		                </div>
-		            </span>
-		        </span>
-		    </span>
-		    <div id="ListInfo" style="display:none"></div>
+	<div id="layer_Viewpopup"
+		style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
+		<div class="popupwrap1">
+			<div class="popupwrap2">
+				<table
+					style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;"
+					class="list_element">
+					<caption></caption>
+					<colgroup>
+						<col style="width: 80px;">
+						<col>
+					</colgroup>
+					<tr>
+						<th><spring:message code='ezBoard.t10021' /></th>
+						<td><select id="listcount" style="WIDTH: 40px; height: 20px;"
+							onchange="goToPageByListCnt(this);">
+								<c:forEach begin="1" end="5" varStatus="status">
+									<c:choose>
+										<c:when test="${journalEnv.listCnt eq  status.index*10}">
+											<option selected value="${status.index * 10 }">${status.index * 10 }</option>
+										</c:when>
+										<c:otherwise>
+											<option value="${status.index * 10 }">${status.index * 10 }</option>
+										</c:otherwise>
+									</c:choose>
+								</c:forEach>
+						</select></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="shadow"></div>
+	</div>
 
-	<div class="jquery-modal blocker current" id="layer_popup" style="display:none;">
-		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
+	<div
+		style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;"
+		id="mailPanel"></div>
+	<div
+		style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;"
+		id="ResizeBarH"></div>
+	<div
+		style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;"
+		id="ResizeBarW"></div>
+
+	<span id="MailListRayer"
+		style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
+
+	</span>
+
+	<!-- 		    보기설정을 다르게 했을때 보여주는 화면 -->
+	<span id="PreviewRayerH"
+		style="border: 0px solid red; width: 500px; height: 100%; overflow: hidden; vertical-align: top; display: none; margin-left: -5px;">
+		<span class="previewmail_bar_h"
+		onmousedown="PreviewH_onMouserDown(event);"
+		style="cursor: w-resize; display: inline-block;">
+			<p class="hbar_dotted">
+				<img src="/images/prevview_hbar_dotted.gif">
+			</p>
+	</span> <span id="PreContent_RayerH"
+		style="position: absolute; border: 0px solid blue;"> <span
+			style="width: 100%; height: 100px; display: block;"> <!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
+				<!-- 		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;"> -->
+				<!-- 		                    </div> --> <!-- 		                </span> -->
+
+				<div id="Preview_ContentH"
+					style="text-align: center; border-top: 1px solid #eeeeee;"></div> <!-- 		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe> -->
+		</span>
+	</span>
+	</span>
+
+	<span id="PreviewRayerW"
+		style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
+		<span onmousedown="PreviewW_onMouserDown(event);"
+		style="cursor: s-resize; width: 100%; display: list-item;"
+		class="previewmail_bar" name="PreviewBar" id="PreviewBar"> <img
+			src="/images/prevview_bar_dotted.gif">
+	</span> <span onmousedown="PreviewW_onMouserDown(event);"
+		style="margin: 2px; margin-bottom: -4.9px; cursor: s-resize; width: 100%; display: list-item;"
+		class="previewmail_bar" name="PreviewBar" id=""> </span> <span
+		id="PreContent_RayerW" style="display: block;"> <span
+			style="width: 100%; height: 100px; display: block;"> <!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
+				<!-- 		                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;"> -->
+				<!-- 		                    </div> --> <!-- 		                </span> -->
+
+				<div id="Preview_ContentW" style="text-align: center;"></div>
+		</span>
+	</span>
+	</span>
+	<div id="ListInfo" style="display: none"></div>
+
+	<div class="jquery-modal blocker current" id="layer_popup"
+		style="display: none;">
+		<div id="srarchpopup" class="popupwrap1 modal"
+			style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<table class="content">
 				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"> <spring:message code='ezJournal.t1' /> <spring:message code='ezJournal.t43' /></th>
+					<th class="layerHeader" colspan="2"><img
+						src="/images/kr/left/left_mail.png"
+						style="vertical-align: middle; padding-bottom: 1px"> <spring:message
+							code='ezJournal.t1' /> <spring:message code='ezJournal.t43' /></th>
 				</tr>
 				<c:if test="${listType ne 'mine' }">
-				<tr>
-					<th style="text-align: center"><spring:message code='ezJournal.t34' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchWriter" style="width: 98%" value=""></td>
-				</tr>
+					<tr>
+						<th style="text-align: center"><spring:message
+								code='ezJournal.t34' /></th>
+						<td><input type="text" onfocus="journalKeywordClear(this);"
+							onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}"
+							id="searchWriter" style="width: 98%" value=""></td>
+					</tr>
 				</c:if>
 				<tr>
-					<th style="text-align: center"><spring:message code='ezBoard.t208' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 98%" value=""></td>
+					<th style="text-align: center"><spring:message
+							code='ezBoard.t208' /></th>
+					<td><input type="text" onfocus="journalKeywordClear(this);"
+						onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}"
+						id="searchTitle" style="width: 98%" value=""></td>
 				</tr>
 				<tr>
-					<th style="text-align: center"><spring:message code='ezEmail.t649' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchContent" style="width: 98%" value=""></td>
+					<th style="text-align: center"><spring:message
+							code='ezEmail.t649' /></th>
+					<td><input type="text" onfocus="journalKeywordClear(this);"
+						onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}"
+						id="searchContent" style="width: 98%" value=""></td>
 				</tr>
 				<tr>
-					<th style="text-align: center"><spring:message code='ezJournal.t22' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchFormName" style="width: 98%" value=""></td>
+					<th style="text-align: center"><spring:message
+							code='ezJournal.t22' /></th>
+					<td><input type="text" onfocus="journalKeywordClear(this);"
+						onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}"
+						id="searchFormName" style="width: 98%" value=""></td>
 				</tr>
 				<tr>
-					<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>
-					<td>
-						<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly">
-						~ 
-						<input type="text" id="Edatepicker" style="width: 80px; text-align: center" readonly="readonly">
+					<th style="text-align: center"><spring:message
+							code='ezBoard.t210' /></th>
+					<td><input type="text" id="Sdatepicker"
+						style="width: 80px; text-align: center" readonly="readonly">
+						~ <input type="text" id="Edatepicker"
+						style="width: 80px; text-align: center" readonly="readonly">
 					</td>
 				</tr>
 			</table>
-				<br />
-				<table style="width: 100%">
-					<tr>
-						<td style="text-align: center;">
-							<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezBoard.t188' /></span></a> 
-							<a class="imgbtn"><span onClick="BoardSearchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a>
-						</td>
-					</tr>
-				</table>
-		</div>
-	</div>
-	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
-    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel_sub">
-        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer_sub"></iframe>
-    </div>
-	<div class="jquery-modal blocker current" id="selectSumJournal" style="display:none;">
-		<div id="sumpopup" class="popupwrap1 modal popup" style="text-align:center; width:300px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 500px; display: inline-block;">
-<%-- 			<h1 style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic;"><spring:message code='ezJournal.t70' /></h1> --%>
-			<table class="mainlist" id="basicFormList" style="width: 100%; border:1px solid #ddd !important; border-top:none;">
-<!-- 				<tr> -->
-<%-- 					<th style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;"><spring:message code='ezJournal.t70' /></th> --%>
-<!-- 				</tr>			 -->
+			<br />
+			<table style="width: 100%">
+				<tr>
+					<td style="text-align: center;"><a class="imgbtn"><span
+							onClick="goToPageBySearch()"><spring:message
+									code='ezBoard.t188' /></span></a> <a class="imgbtn"><span
+							onClick="BoardSearchOptionHidden()"><spring:message
+									code='ezBoard.t15' /></span></a></td>
+				</tr>
 			</table>
-				<br />
-				<table style="width: 100%">
-					<tr>
-						<td style="text-align: center;">
-							<a class="imgbtn"><span onClick="writeSumJournal();"><spring:message code='ezJournal.t60' /></span></a> 
-							<a class="imgbtn"><span onClick="sumSearchOptionHidden();"><spring:message code='ezBoard.t15' /></span></a>
-						</td>
-					</tr>
-				</table>
 		</div>
 	</div>
-	
+	<div
+		style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;"
+		id="mailPanel_sub">&nbsp;</div>
+	<div class="layerpopup"
+		style="z-index: 2000; position: absolute; display: none;"
+		id="iFramePanel_sub">
+		<iframe src="<spring:message code='main.kms4' />"
+			style="border: none;" id="iFrameLayer_sub"></iframe>
+	</div>
+	<div class="jquery-modal blocker current" id="selectSumJournal"
+		style="display: none;">
+		<div id="sumpopup" class="popupwrap1 modal popup"
+			style="text-align: center; width: 300px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 500px; display: inline-block;">
+			<%-- 			<h1 style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic;"><spring:message code='ezJournal.t70' /></h1> --%>
+			<table class="mainlist" id="basicFormList"
+				style="width: 100%; border: 1px solid #ddd !important; border-top: none;">
+				<!-- 				<tr> -->
+				<%-- 					<th style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;"><spring:message code='ezJournal.t70' /></th> --%>
+				<!-- 				</tr>			 -->
+			</table>
+			<br />
+			<table style="width: 100%">
+				<tr>
+					<td style="text-align: center;"><a class="imgbtn"><span
+							onClick="writeSumJournal();"><spring:message
+									code='ezJournal.t60' /></span></a> <a class="imgbtn"><span
+							onClick="sumSearchOptionHidden();"><spring:message
+									code='ezBoard.t15' /></span></a></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
 	<script type="text/javascript">
 	function journalPreviewEnd(e) {
 	    if (PreviewW_Move || PreviewH_Move) {
@@ -1266,5 +1373,5 @@
 		setRecvCount();
 	</c:if>
 	</script>
-	</body>
+</body>
 </html>
