@@ -13,7 +13,7 @@
 	<typeAlias	alias="TaskLogListVO"								type="egovframework.ezEKP.ezPMS.vo.TaskLogListVO"/>
 	<typeAlias	alias="ProjectTaskTreeVO"								type="egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO"/>
 	
-    <resultMap id="projectInfo" class="ProjectInfoVO">
+    <resultMap id="projectInfoVO" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="3"/>
@@ -41,7 +41,7 @@
     	<result property="alamMailStatus"					column="ALAM_MAIL_STATUS"			columnIndex="25"/>    	
     </resultMap>
     
-    <resultMap id="projectGroup" class="ProjectGroupVO">
+    <resultMap id="projectGroupVO" class="ProjectGroupVO">
     	<result property="groupId"							column="GROUP_ID"					columnIndex="1"/>
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
@@ -73,7 +73,7 @@
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="29"/>
     </resultMap>
     
-    <resultMap id="projectMainSetting" class="ProjectMainSettingVO">
+    <resultMap id="projectMainSettingVO" class="ProjectMainSettingVO">
     	<result property="settingId"						column="SETTING_ID"					columnIndex="1"/>
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
     	<result property="userId"							column="USER_ID"					columnIndex="3"/>
@@ -86,7 +86,7 @@
     	<result property="listNumber"						column="LIST_NUMBER"				columnIndex="10"/>
     </resultMap>
     
-    <resultMap id="projectMember" class="ProjectMemberVO">
+    <resultMap id="projectMemberVO" class="ProjectMemberVO">
     	<result property="memberId"							column="MEMBER_ID"					columnIndex="1"/>
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
@@ -101,7 +101,7 @@
     	<result property="userIdType"						column="USER_ID_TYPE"				columnIndex="12"/>
     </resultMap>
     
-    <resultMap id="projectTask" class="ProjectTaskVO">
+    <resultMap id="projectTaskVO" class="ProjectTaskVO">
     	<result property="taskId"							column="MEMBER_ID"					columnIndex="1"/>
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
@@ -136,15 +136,15 @@
     	<result property="delStatus"						column="DEL_STATUS"					columnIndex="32"/>
     </resultMap>
     
-    <resultMap id="projectMemberSchedule" class="ProjectMemberScheduleVO">
+    <resultMap id="projectMemberScheduleVO" class="ProjectMemberScheduleVO">
     
     </resultMap>
     
-    <resultMap id="search" class="SearchVO">
+    <resultMap id="searchVO" class="SearchVO">
     
     </resultMap>
     
-    <resultMap id="taskLogList" class="TaskLogListVO">
+    <resultMap id="taskLogListVO" class="TaskLogListVO">
     	<result property="logId"							column="LOG_ID"						columnIndex="1"/>
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
