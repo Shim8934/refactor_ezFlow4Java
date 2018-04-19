@@ -123,14 +123,6 @@ function searchLadder() {
 		alert(strLang39);
 		searchSelect = '';
 		return;
-	} else if(searchInput.indexOf('%') >= 0) {
-		alert(strLang40);
-		searchSelect = '';
-		return;
-	} else if(searchInput.indexOf('&') >= 0) {
-		alert(strLang41);
-		searchSelect = '';
-		return;
 	}
 	if(mode === "pre") {
 		viewAjax();
@@ -240,7 +232,12 @@ function view() {
 		sort ='date';
 		sortFlag = 'desc';
 	}
-	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=" + searchInput + "&sort=" + sort + "&sortFlag=" + sortFlag;
+	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=";
+	if(searchInput.indexOf('%') >= 0 || searchInput.indexOf('&') >= 0 || searchInput.indexOf('#') >= 0 || searchInput.indexOf('*') >= 0) {
+		szUrl = szUrl + escape(searchInput) + "&sort=" + sort + "&sortFlag=" + sortFlag;
+	} else {
+		szUrl = szUrl + searchInput + "&sort=" + sort + "&sortFlag=" + sortFlag;
+	}
 	document.location.href = szUrl;
 }
 

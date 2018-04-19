@@ -32,7 +32,6 @@
 			var sortFlag = "${sortFlag}";
 			
 			$(function() {
-				
 				mouseCursor();
 				changeBtnColor();
 				makePageSelPage();

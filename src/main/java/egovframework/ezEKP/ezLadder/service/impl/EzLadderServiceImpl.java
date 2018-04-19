@@ -88,7 +88,10 @@ public class EzLadderServiceImpl implements EzLadderService {
 		String searchInput = allData.get(1);
 		String mode = allData.get(2);
 	
-		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");    
+		searchInput = searchInput.replace("\\","\\\\");
+		searchInput = searchInput.replace("%", "\\%");
+		searchInput = searchInput.replace("_", "\\_");
+		
 		
 		map.put("userId", vo.getUserId());
 		map.put("searchSelect", searchSelect);
@@ -174,7 +177,10 @@ public class EzLadderServiceImpl implements EzLadderService {
 		String searchInput = allData.get(1);
 		String mode = allData.get(2);
 		
-		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
+		searchInput = searchInput.replace("\\","\\\\");
+		searchInput = searchInput.replace("%", "\\%");
+		searchInput = searchInput.replace("_", "\\_");
+		
 	
 		map.put("userId", vo.getUserId());
 		map.put("searchSelect", searchSelect);
