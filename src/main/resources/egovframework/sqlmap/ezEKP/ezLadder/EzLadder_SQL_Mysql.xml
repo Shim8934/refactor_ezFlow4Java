@@ -1058,13 +1058,13 @@
 	<!-- boh -->
 	<select id="EzLadderDAO.selectSearchUser" parameterClass="map" resultClass="LadderLineVO">
 		SELECT 
-			CN AS USERID, DISPLAYNAME$lang$ AS USERNAME, DISPLAYNAME$lang$ AS USERNAME2, EXTENSIONATTRIBUTE2 AS PIC
+			CN AS USERID, DISPLAYNAME$lang$ AS USERNAME, DISPLAYNAME$lang$ AS USERNAME2, DESCRIPTION$lang$ AS DEPTNAME, EXTENSIONATTRIBUTE2 AS PIC
 		FROM 
 			TBL_USERMASTER
 		WHERE 
 			TENANT_ID = #tenant_id#
 		AND 
-			DISPLAYNAME$lang$ = #name#;
+			DISPLAYNAME$lang$ = #name#
 	</select>
 	
  	<insert id="EzLadderDAO.insertLadderSet" parameterClass="LadderVO">

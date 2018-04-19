@@ -310,6 +310,7 @@ function printUserPath(locX, locY, moveX, moveY, type) { // 유저 경로 그리
 }
 
 function drawLadLine(flag, startX, startY) {
+	console.log("draw ladder line");
 	var canvas = document.getElementById('ladderCanvas');
 	
 	if(canvas.getContext) {
@@ -334,6 +335,7 @@ function drawLadLine(flag, startX, startY) {
 }
 
 function drawPathLine(user, moveX, moveY, type) {
+	console.log("draw path line");
 	var canvas = document.getElementById('ladderCanvasLine');
 	
 	if(canvas.getContext) {

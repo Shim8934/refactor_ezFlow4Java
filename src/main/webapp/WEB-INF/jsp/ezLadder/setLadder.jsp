@@ -247,8 +247,19 @@
 					});
 				}
 				
+				attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
+				items = [];
+				
 				ladderSetInitView();
-				checkAttendant(lineInfo);
+				
+				var userdata = [];
+				lineInfo.forEach(function(line, index) {
+					userdata[index] = {"data": line, "datatype": "real"};
+				});
+				
+				setAllUser_(userdata);
+				
+				/* checkAttendant(lineInfo); */
 				$("#makeLad").removeAttr("disabled").css({"background": "#0470e4", "cursor": "pointer"});
 			}
 			
@@ -287,9 +298,19 @@
 				
 				/* ladder_select_attendant_dialogArguments[0] = {"attendants": attendants, "maxAttendant": maxAttendant}; */
 				ladder_select_attendant_dialogArguments[0] = {"attendants": attendants};
-				ladder_select_attendant_dialogArguments[1] = checkAttendant;
+				/* ladder_select_attendant_dialogArguments[1] = checkAttendant; */
+				ladder_select_attendant_dialogArguments[1] = manage_attendant_complete;
 
 			    GetOpenWindow("/ezLadder/setLadderAttendantPopUp.do", "ladder_select_attendant", 970, 680);
+			}
+			
+			function manage_attendant_complete(rtn) {
+				attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
+				if(items == null) {
+					items = [];
+				}
+				
+				setAllUser_(rtn);
 			}
 
 			/** 참여자 변경될때 슬라이더 바 조절 */
@@ -335,6 +356,7 @@
 			/** 아이디+이름 검사 (익명인지 아닌지) */
 			var attendants = null;
 			var items = null;
+			var nameSidD = {};
 			var retAttendantPopInfo = [];
 			function checkAttendant(data) {
 				var alluser = [];
@@ -354,28 +376,63 @@
 					data = ReplaceText(data, ",", ";");
 					
 					var names = data.split(";");
+					names.forEach(function(name, index) {
+						names[index] = name.trim();
+					});
 					
 					getUserArray(names);
 					
 					if(!!nameSearchResult) {
 						len = nameSearchResult.length;
 						
-						nameSearchResult.forEach(function(resultUser, index) {
+						var overNameCnt = 0;
+						nameSearchResult.forEach(function(resultUser, index, resultArray) {
 							if(!!resultUser["userId"]) {
+								/* var allNames = [];
+								resultArray.forEach(function(result, i) {
+									if(index == i) {
+										allNames[i] = "";
+									} else {
+										allNames[i] = result["userName"];
+									}
+								});
+								var nameIdx = allNames.indexOf(resultUser["userName"]);
+								
+								if(nameIdx != -1 && resultArray[nameIdx]["userId"] != resultUser["userId"]) {
+									// 이름만 중복!
+									if(!nameSidD[resultUser["userName"]]) {
+										nameSidD[resultUser["userName"]] = [];
+									}
+									nameSidD[resultUser["userName"]].push({"userName": resultUser["userName"], "userId": resultUser["userId"]}); 
+								} */
+								
 								var checkOverlap1 = attendants["id"].indexOf(resultUser["userId"]);
 								var checkOverlap2 = function() {
 									var overlapretvalue = -1;
 									alluser.forEach(function(user, index) {
-										if(user["datatype"].substring(0, 5) !== "anony" && user["data"]["userName"] === resultUser["userName"]) {
-											overlapretvalue = 1;
-										}
+										if(user["datatype"] === "real" && user["data"]["userName"] === resultUser["userName"]) {
+											if(user["data"]["userId"] === resultUser["userId"]) {
+												overlapretvalue = 1; // 이름+아이디 중복
+											} else {
+												overlapretvalue = 2; // 이름만 중복
+											}
+										} 
+										/* else if(user["data"]["userId"] !== resultUser["userId"]) {
+											if(nameSidD["userName"].indexOf(resultUser["userName"]) == -1) {
+												nameSidD["userId"].push(user["data"]["userId"]);
+												nameSidD["userName"].push(user["data"]["userName"]);
+												nameSidD["status"].push("0");
+											}
+											nameSidD["userId"].push(resultUser["userId"]);
+											nameSidD["userName"].push(resultUser["userName"]);
+											nameSidD["status"].push("0");
+										} */
 									});
 									return overlapretvalue;
 								}; 
 								
-								if(checkOverlap1 !== -1 || checkOverlap2() !== -1) { // 중복 유저
+								if(checkOverlap1 !== -1 || checkOverlap2() == 1) { // 중복 유저
 									overlapuser[index] = resultUser;
-								
 								} else { // 중복 아닌 유저
 									alluser[index] = { "data": resultUser, "datatype": "real" };
 								}
@@ -383,16 +440,20 @@
 								alluser[index] = { "data": resultUser, "datatype": "anony" };
 							}
 						});
-						
+						console.log("------------");
+						console.log(nameSidD);
 						
 						if(!!overlapuser.length) { // 중복유저 팝업
 							retAttendantPopInfo[0] = true;
 							retAttendantPopInfo[1] = bindAllUser;
+							retAttendantPopInfo[2] = nameSidD;
 							
 							DivPopUpShow(360, 185, "/ezLadder/ladderPopup.do?popupType=overlap");
 						} else {
 							bindAllUser(false);
 						}
+						
+						nameSidD = [];
 					}
 					
 					/* addIndex = attendants["id"].length;
@@ -453,7 +514,7 @@
 						bindAllUser(false);
 					} */
 					
-				} else {
+				} /* else {
 					attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
 					
 					len = data.length;
@@ -461,7 +522,6 @@
 					for(; i < len; i++) {
 						if(data[i]["id"].substring(0, 14) !== "anonyAttendant") {
 							getUserArray(data[i]["name"]);
-							/* getAttendantAJAX(data[i]["name"]); */
 							alluser[i] = { "data": nameSearchResult[0], "datatype": "real" };
 						} else {
 							overlapuser[i] = { "userName" : data[i]["name"], "userName2" : data[i]["name2"] };
@@ -475,8 +535,8 @@
 						bindAllUser(true, "anony");
 					} else {
 						bindAllUser(false);
-					}
-				}
+					} 
+				} */
 				
 				function bindAllUser(value, type) {
 					if(value) {
@@ -552,7 +612,11 @@
 							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 22px; right: 10px; cursor: pointer;"></span></div></li>';
 						} else {
 							if(attendants["pic"][i] !== "") {
-								picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
+								if(attendants["pic"][i].substring(0, 10) == "/ezCommon/") {
+									picsrc = attendants["pic"][i];
+								} else {
+									picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
+								}
 							}
 							
 							html += '<li class="attendant"><div style="height: 140px; padding-top:  20px;">';
@@ -589,7 +653,7 @@
 			}
 			
 			/** 유저 정보 xml로 가져오기 */
-			var adCount;        
+			/* var adCount;        
 	        var xmlDOM;
 			function getAttendantAJAX(attendantName) {
 				adCount = 0;
@@ -611,7 +675,7 @@
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
 		    		}    		
 		    	});
-			}
+			} */
 			
 			var nameSearchResult;
 			function getUserArray(names) {
