@@ -33,6 +33,10 @@
 				color : red;
 			}
 			
+			#attiCalendar td[modappl='1'] {
+				color : orange;
+			}
+			
 			#attiCalendar td[typeId=A01], #attiCalendar td[typeId=A03] {
 				cursor : context-menu;
 				color : rgb(102,180,255);
@@ -68,8 +72,10 @@
 				
 				//근태수정신청 팝업창
 				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02]', function(){
-// 					showDialog();
+				//근태수정신청은 개인근태현황에서만 가능
+				if (deptFlag != "true") {
 					attitudeModItem(this);
+				}
 				})
 			})
 			
@@ -277,7 +283,7 @@
 						subDate = calDateRange(startDate, endDate); 
 						betweenDate = new Date(startDate); 
 						 
-						for (var j = 0; j<= subDate; j++) { 
+						for (var j = 0; j<= subDate; j++) {
 							betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
 							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2); 
 							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
@@ -291,7 +297,7 @@
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>"); 
 						} else { 
-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
 						} 
 					}	
 				} else {
@@ -319,7 +325,7 @@
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
 										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + "</td></tr>");
 							} else {
-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
 							}	
 						}
 					}

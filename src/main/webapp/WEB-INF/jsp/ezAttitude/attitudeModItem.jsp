@@ -140,7 +140,7 @@
 				message.SetEditorContent('${data.content}');
 		    }
 
-		    function modify() {
+		    function save() {
 				var obj = new Object();
 		    	
 			    var cDate = $("#Cdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
@@ -150,8 +150,9 @@
 			    var chour, cminute;
 			    var ctime = $('#Ctimepicker').val()
 			    var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
-
-			    if ("${data.changeDate}".substring(0,10) != cDate && "${data.typeId}" == "A02") {
+				console.log("${data.startDate}");
+				console.log(cDate);
+			    if ("${data.startDate}".substring(0,10) != cDate && "${data.typeId}" == "A02") {
 			    	alert("날짜는 수정하실 수 없습니다.");
 			    	return;
 			    }
@@ -167,41 +168,17 @@
 		    	
 			    $.ajax({
 					type : 'post',
-				    url : '/ezAttitude/modAttModApp.do',
+				    url : '/ezAttitude/saveAttModApp.do',
 				    data : obj,
 				    dataType : "text",
 				    error: function(xhr, status, error){
-				    	alert("수정 중 오류 발생")
+				    	alert("저장 중 오류 발생")
 				    },
 				    success : function(json){
-						alert("수정되었습니다.");
+						alert("저장되었습니다.");
 						window.close();
 			            try {
-			                window.opener.att_refresh();
-			            } catch (e) { }
-				    }
-			    });
-		    }
-		    
-		    function del() {
-		    	
-		    	var obj = new Object();
-		    	
-		    	obj.idList = attid; 
-				
-			    $.ajax({
-					type : 'post',
-				    url : '/ezAttitude/delAttModApp.do',
-				    data : obj,
-				    dataType : "text",
-				    error: function(xhr, status, error){
-				    	alert("삭제 중 오류 발생")
-				    },
-				    success : function(json){
-						alert("삭제되었습니다.");
-						window.close();
-			            try {
-			                window.opener.att_refresh();
+			                window.opener.location.reload();
 			            } catch (e) { }
 				    }
 			    });
@@ -217,8 +194,7 @@
 	                    <td style="height: 20px">
 	                        <div id="menu">
 	                            <ul id="menuTable">	
-	                                <li><span onclick="modify()">저장 후 닫기</span></li>
-	                                <li><span onclick="del()">삭제</span></li>
+	                                <li><span onclick="save()">저장 후 닫기</span></li>
 	                            </ul>
 	                        </div>
 	                        <div id="close">
@@ -254,18 +230,18 @@
 	                                            </span>
 	                                        </td>
 	                                    </tr>
-	                                    <tr>
-	                                        <th>승인상태</th>
-                                        	<c:if test="${data.apprStatus == 0}">
-								          		<td colspan="2">진행</td>	
-								          	</c:if>
-								          	<c:if test="${data.apprStatus == 1}">
-								          		<td colspan="2">승인</td>	
-								          	</c:if>
-								          	<c:if test="${data.apprStatus == 2}">
-								          		<td colspan="2">반려</td>	
-								          	</c:if>
-	                                    </tr>
+<!-- 	                                    <tr> -->
+<!-- 	                                        <th>승인상태</th> -->
+<%--                                         	<c:if test="${data.apprStatus == 0}"> --%>
+<!-- 								          		<td colspan="2">진행</td>	 -->
+<%-- 								          	</c:if> --%>
+<%-- 								          	<c:if test="${data.apprStatus == 1}"> --%>
+<!-- 								          		<td colspan="2">승인</td>	 -->
+<%-- 								          	</c:if> --%>
+<%-- 								          	<c:if test="${data.apprStatus == 2}"> --%>
+<!-- 								          		<td colspan="2">반려</td>	 -->
+<%-- 								          	</c:if> --%>
+<!-- 	                                    </tr> -->
 	                                </table>
 	                            </div>
 	                        </div>

@@ -117,6 +117,9 @@ public interface EzAttitudeService {
 			
 	public void attModAppModify(String companyId, int tenantId, String userId, String attModId, String offset, String content, String changeDate) throws Exception;
 
+	public void attSaveAppModify(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
+			String writerDeptId, String writerDeptName, String writerDeptName2 ,String changeDate, String delFlag, String content,String offset) throws Exception;
+	
 	public String getAttitudeCount2(int tenantId, String companyId, String typeId, String userIdList, String startDate, String endDate, String offset) throws Exception;
 
 	public void changeUsersModifyAtt(String companyId, int tenantId, String[] ids, String changeStatus, String userId, String userName, String userName2) throws Exception;

@@ -773,8 +773,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("ids", ids);
 		map.put("delFlag", "1"); //0:삭제안함, 1:삭제
+		map.put("modappl", "0");
 		
 		ezAttitudeDAO.delUsersModifyAtt(map);
+		ezAttitudeDAO.attAppUpdate(map);
 	}
 
 	@Override
@@ -848,6 +850,36 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("changeDate", changeDate);
 		
 		ezAttitudeDAO.attModAppModify(map);
+	}
+	
+	@Override
+	public void attSaveAppModify(String attitudeId, String companyId,
+			int tenantId, String userId, String writerName, String writerName2, String writerTitle
+			, String writerTitle2, String writerDeptId, String writerDeptName, String writerDeptName2
+			,String changeDate, String delFlag, String content,String offset) throws Exception {
+			
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("attitudeId", attitudeId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("writerId", userId);
+		map.put("writerName", writerName);
+		map.put("writerName2", writerName2);
+		map.put("writerTitle", writerTitle);
+		map.put("writerTitle2", writerTitle2);
+		map.put("writerDeptId", writerDeptId);
+		map.put("writerDeptName", writerDeptName);
+		map.put("writerDeptName2", writerDeptName2);
+		map.put("changeDate", changeDate);
+		map.put("delFlag", delFlag);
+		map.put("content", content);
+		map.put("apprStatus", "0");
+		map.put("offset", offset);
+		map.put("modappl", "1");
+		
+		ezAttitudeDAO.attSaveAppModify(map);
+		ezAttitudeDAO.attAppUpdate(map);
 	}
 
 	public List<AdminAttitudeVO> getAttitudeList2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId) throws Exception {
