@@ -3096,7 +3096,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("USERID").item(k).getTextContent()) + "</DATA1>");
 			resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA2>");
 			resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("APRLINESN").item(k).getTextContent()) + "</DATA3>");
-			resultXML.append("<DATA4>" + getCode2Name("A04", docXML.getElementsByTagName("APRSTATE").item(k).getTextContent(), companyID, lang, tenantID) + "</DATA4>");
+			
+			if (approvalFlag.equals("G")) {
+				resultXML.append("<DATA4>" + getCode2Name("A04", docXML.getElementsByTagName("APRSTATE").item(k).getTextContent(), companyID, lang, tenantID) + "</DATA4>");
+			} else {
+				resultXML.append("<DATA4>" + getCode2Name("SA04", docXML.getElementsByTagName("APRSTATE").item(k).getTextContent(), companyID, lang, tenantID) + "</DATA4>");
+			}
 			
 			resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA5>");
 			resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("APRMEMBERISDEPTYN").item(k).getTextContent()) + "</DATA6>");
@@ -3385,7 +3390,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					map.put("v_AprType", getName2Code("SA03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
 				}
 				
-				map.put("v_AprState", getName2Code("A04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
+				if (approvalFlag.equals("G")) {
+					map.put("v_AprState", getName2Code("A04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
+				} else {
+					map.put("v_AprState", getName2Code("SA04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
+				}
 				map.put("v_AprMemberID", rowNode.item(i).getChildNodes().item(9).getTextContent().trim());
 				map.put("v_AprMemberIsDeptYN", rowNode.item(i).getChildNodes().item(10).getTextContent().trim());
 				map.put("v_AprMemberName", rowNode.item(i).getChildNodes().item(18).getTextContent().trim());
@@ -18140,6 +18149,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getListField started");
 
 		String rtnVal = "";
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		
 		switch (fieldName) {
 		case "DOCTYPE" : 
@@ -18153,7 +18163,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			break;
 			
 		case "APRTYPE" :
-			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 			
 			if (approvalFlag.equals("G")) {
 				rtnVal = getCode2Name("A03", fieldValue, companyID, userLang, tenantID);
@@ -18164,12 +18173,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			break;
 			
 		case "APRSTATE" :
-			rtnVal = getCode2Name("A04", fieldValue, companyID, userLang, tenantID);
+			if (approvalFlag.equals("G")) {
+				rtnVal = getCode2Name("A04", fieldValue, companyID, userLang, tenantID);
+			} else {
+				rtnVal = getCode2Name("SA04", fieldValue, companyID, userLang, tenantID);
+			}
 			
 			break;
 			
 		case "FUNCTIONTYPE" :
-			rtnVal = getCode2Name("A04", fieldValue, companyID, userLang, tenantID);
+			if (approvalFlag.equals("G")) {
+				rtnVal = getCode2Name("A04", fieldValue, companyID, userLang, tenantID);
+			} else {
+				rtnVal = getCode2Name("SA04", fieldValue, companyID, userLang, tenantID);
+			}
 			
 			break;
 			
