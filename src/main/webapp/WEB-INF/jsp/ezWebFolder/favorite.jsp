@@ -497,7 +497,6 @@
 				fileIconColumn.appendChild(fileIconElement);
 				
 				nameColumn.textContent = resultJson[columnMap.name];
-				sizeColumn.textContent = getFileSize(resultJson[columnMap.size]);
 				
 				creatorColumn.textContent = resultJson[columnMap.creatorName];
 				
@@ -510,6 +509,10 @@
 					row.ondblclick = function() {
 						onFolderDoubleClick(this);							
 					};
+					
+					sizeColumn.textContent = "";
+				} else {
+					sizeColumn.textContent = getFileSize(resultJson[columnMap.size]);
 				}
 				
 				row.appendChild(checkboxColumn);
