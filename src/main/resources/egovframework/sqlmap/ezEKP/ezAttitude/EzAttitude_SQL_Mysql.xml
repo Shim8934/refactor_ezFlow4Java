@@ -347,6 +347,9 @@
 		<isNotEmpty prepend="" property="order">
 				ORDER BY $order$
 		</isNotEmpty>
+		<isEmpty prepend="" property="order">
+				ORDER BY START_DATE DESC
+		</isEmpty>
 		<isNotEmpty property="startPoint" prepend="limit">
 			<isNotEmpty property="endPoint">
 				<![CDATA[
@@ -556,6 +559,27 @@
 		</iterate>
 	</update>
 	
+	<update id="ezAttitudeDAO.attAppUpdate" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ATTITUDE
+			SET
+				modappl = #modappl#
+          	WHERE
+          		TENANT_ID = #tenantId#
+          	AND
+        		COMPANY_ID = #companyId#
+		]]>
+		<isNotEmpty property="attitudeId" prepend="and">
+				ATTITUDE_ID = #attitudeId#  
+		</isNotEmpty>
+		<isNotEmpty property="ids" prepend="and">
+			<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
+			      #ids[]#
+			</iterate>
+		</isNotEmpty>
+	</update>
+	
 	<select id="ezAttitudeDAO.getFormBody" parameterClass="Map" resultMap="getFormBody">
 		<![CDATA[
 			SELECT 
@@ -575,6 +599,46 @@
 				B.TYPE_ID = #typeId#
 		]]>
 	</select>
+	
+	<insert id="ezAttitudeDAO.attSaveAppModify" parameterClass="map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_ATTITUDE_MODAPPL(
+					ATTITUDE_ID, 
+					COMPANY_ID, 
+					TENANT_ID, 
+					WRITER_ID, 
+					WRITER_NAME, 
+					WRITER_NAME2, 
+					WRITER_TITLE, 
+					WRITER_TITLE2, 
+					WRITER_DEPT_ID, 
+					WRITER_DEPT_NAME,
+					WRITER_DEPT_NAME2,
+					CHANGE_DATE,
+					DELFLAG,
+					APPR_STATUS,
+					CONTENT
+				)
+				VALUES(
+					#attitudeId#, 
+					#companyId#, 
+					#tenantId#, 
+					#writerId#, 
+					#writerName#, 
+					#writerName2#, 
+					#writerTitle#, 
+					#writerTitle2#, 
+					#writerDeptId#, 
+					#writerDeptName#,
+					#writerDeptName2#,
+					DATE_FORMAT(DATE_SUB(DATE_FORMAT(#changeDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S'),
+					#delFlag#,
+					#apprStatus#,
+					#content#
+				)
+		]]>
+	</insert>
 	
 	<update id="ezAttitudeDAO.attModAppModify" parameterClass="map">
 		<![CDATA[
@@ -692,7 +756,7 @@
 		SELECT
 			ATTITUDE_ID,
 			(SELECT 
-				MAX(MOD_CNT) + 1
+				IFNULL(MAX(MOD_CNT) + 1, 0)
 			FROM
 				tbl_attitude_modappl_history
 			WHERE

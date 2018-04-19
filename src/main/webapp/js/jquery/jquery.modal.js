@@ -103,8 +103,12 @@
 
     close: function() {
       if (parent.frames["left"]) {
-    	  if (parent.frames["left"].document.getElementById("blockLeft")) {	
+    	  if (parent.frames["left"].document.getElementById("blockLeft")) {
     		  $(parent.frames["left"].document.getElementById("blockLeft")).remove();
+    	  }
+      }	else if (parent.frames["attitude_menu"]) {
+    	  if (parent.frames["attitude_menu"].document.getElementById("blockLeft")) {
+    		  $(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();
     	  }
       }
       modals.pop();

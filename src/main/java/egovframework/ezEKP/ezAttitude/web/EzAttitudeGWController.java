@@ -311,17 +311,36 @@ public class EzAttitudeGWController {
 	 * G/W 근태관리 [POST] 수정신청 등록
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}/modify-applications", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject modifyApplicationList(@PathVariable String attitudeId, HttpServletRequest request) {
+	public JSONObject modifyApplicationList(@PathVariable String attitudeId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="userId", required=true) String userId,
+			@RequestParam(value="offset", required=true) String offset,
+			@RequestParam(value="content", required=true) String content,
+			@RequestParam(value="changeDate", required=true) String changeDate) {
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try{
+			LOGGER.debug("companyId : " + companyId);
+			LOGGER.debug("tenantId : " + tenantId);
+			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("offset : " + offset);
+			LOGGER.debug("content : " + content);
+			LOGGER.debug("changeDate : " + changeDate);
+			LOGGER.debug("attitudeId : " + attitudeId);
 			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			ezAttitudeService.attSaveAppModify(attitudeId, companyId, tenantId, userId, info.getUserName(), info.getUserName2(), 
+					info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), info.getDeptName2(), changeDate, "0", content, offset);
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");

@@ -974,11 +974,11 @@
               	<li><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li>
               	<li><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li>
               	<li><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
-		      	<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""/></li>
+		      	<li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li>
               	<li><span onClick="PrintSchedule()"><spring:message code='ezSchedule.t217'/></span></li>
               	<li><span onClick="RefreshView()"><spring:message code='ezSchedule.t218'/></span></li>
-              	<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""/></li>
-              	<li style="background:none;padding:0">
+              	<li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li>
+              	<li style="background:none; padding:0; cursor:default;">
               		<select class="select" id="idSelect" onChange="IDChange()" style="width:140px">
 						<option value="T"><spring:message code='ezSchedule.t220'/></option>
 						<option value="P" selected><spring:message code='ezSchedule.t221'/></option>
@@ -986,7 +986,7 @@
 						<option value="C"><spring:message code='ezSchedule.t223'/></option>									            
 					</select>
 				</li>
-              	<li style="background:none;padding:0;">
+              	<li style="background:none; padding:0; cursor:default;">
               		<select class="select" onChange="SecretaryChange()" id="secretarySelect" name="secretarySelect" style="width:140px">
 						<option value="" selected><spring:message code='ezSchedule.t224'/></option>
 						${shareList}

@@ -11,6 +11,7 @@ function letterSearch() {
 	
 	if(search.trim() === "") {
 		alert(searchMsg);
+		searchMode = false;
 		return;
 	}
 	

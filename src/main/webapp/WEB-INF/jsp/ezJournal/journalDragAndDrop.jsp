@@ -160,7 +160,7 @@
 
 		                if (filelist[i].resultUpload == "true") {
 		                    objTr = document.createElement("TR");
-		                    objTr.setAttribute("fileInfo", newFileName + ";" + pFileName + ";" + fileSize);
+		                    objTr.setAttribute("fileInfo", newFileName + ":" + pFileName + ":" + fileSize);
 
 		                    var objTd = document.createElement("TD");
 		                    objTd.style.textAlign = "center";
@@ -234,7 +234,7 @@
 		                if (fileList == "") {
 							fileList = pAttachDelFileName;
 						} else {
-							fileList += "," + pAttachDelFileName;
+							fileList += "/" + pAttachDelFileName;
 						}
 		                
 		                var delfilesize;

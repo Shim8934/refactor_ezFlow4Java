@@ -52,47 +52,24 @@
 				});
 	   		}
 	   		
-	   		//부서 리스트 오른쪽에 이동!
+	   		//부서 리스트 오른쪽에 이동
 	   		function addDeptInLP(){
-	   			if($("#withChild").is(":checked")){
-   					var currentNode = $("#treeview").jstree("get_selected");
-   			    	var childrens = $("#treeview").jstree("get_children_dom",currentNode);
-   			    	
-   			    	for (var i = 0; i < childrens.length; i++) {
-						var childrenId = childrens[i].id;
-						var childrenName = childrens[i].innerText;
-						var flag = true;
-			   			for (var i = 0; i < lpDepts.length ; i++) {
-							if(lpDepts[i] == lpDeptId){
-								flag=false;
-							}
-						}
-			   			if(flag){
-							if (childrenId != opener.userDeptId) {
-					   			$("#lplistView .mainlist_free").append("<tr targetId="+childrenId+" targetName="+childrenName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+childrenName+"</td></tr>");
-					   			lpDepts.push(childrenId);
-					   			lpDeptNames.push(childrenName);
-							}
-			   			}
+		   		var flag = true;
+		   		for (var i = 0; i < lpDepts.length ; i++) {
+					if(lpDepts[i] == lpDeptId){
+			   			alert("선택된 항목입니다.");
+						flag=false;
 					}
-	   			} else {
-		   			var flag = true;
-		   			for (var i = 0; i < lpDepts.length ; i++) {
-						if(lpDepts[i] == lpDeptId){
-			   				alert("선택된 항목입니다.");
-							flag=false;
-						}
+				}
+		   		if(flag){
+			   		if (lpDeptId != opener.userDeptId) {
+				   		$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
+				   		lpDepts.push(lpDeptId);
+				   		lpDeptNames.push(lpDeptName);
+					} else {
+			   			alert("자신의 부서는 추가 할 수 없습니다.");
 					}
-		   			if(flag){
-			   			if (lpDeptId != opener.userDeptId) {
-				   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
-				   			lpDepts.push(lpDeptId);
-				   			lpDeptNames.push(lpDeptName);
-						} else {
-			   				alert("자신의 부서는 추가 할 수 없습니다.");
-						}
-		   			}
-	   			}
+		   		}
 	   		}
 	   		
 	   		//사원 리스트 뿌리기
@@ -110,11 +87,21 @@
 	   		
 	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
 	   		function delTargetDept(elem){
-	   			var targetDeptId = $(elem).attr("targetId");
-	   			var targetDeptName = $(elem).attr("targetName");
-   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
-   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
-   				$(elem).remove();
+// 	   			var targetDeptId = $(elem).attr("targetId");
+// 	   			var targetDeptName = $(elem).attr("targetName");
+//    				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
+//    				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
+//    				$(elem).remove();
+   				//
+	   			var targetDeptId = $(".selectTR").attr("targetId");
+	   			if(targetDeptId){
+		   			var targetDeptName = $(".selectTR").attr("targetName");
+	   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
+	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
+	   				$(".selectTR").remove();
+	   			} else {
+	   				alert("부서를 선택해 주세요");
+	   			}
 	   		}
 	   		
 	   		//오프너의 부서 이름과 아이디 세팅
@@ -176,11 +163,6 @@
 						</table>
 					</div>
                 </td>    
-            </tr>
-            <tr>
-            	<td class="box" style="width: 250px;">
-            		<div><input type="checkbox" id="withChild" name="withChild" /><label for="withChild"><spring:message code='ezSchedule.t39' /></label></div>
-            	</td>
             </tr>
         </table>
 	</body>

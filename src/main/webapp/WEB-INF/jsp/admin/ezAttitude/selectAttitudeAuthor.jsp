@@ -115,8 +115,6 @@
 	   		
 	   		//사원선택
 	   		function setAuthorViewUser(){
-	   			alert(lpDepts);
-	   			alert(userDeptId);
 	   			var userId = selectedUser;
 				if (userId) {
 					opener.setSelectedUser(userId,selectedUserName);

@@ -16,7 +16,8 @@
 	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>	
 	    <script type="text/javascript">
 	    	var adminCompany = "${adminCompany}";
-	    	var selectUserId = "";
+	    	var selectedUserId = "";
+	    	var selectedUserName = "";
 // 			document.onselectstart = function () {
 // 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 // 	            return false;
@@ -57,7 +58,7 @@
                 var html = "";
                 if (result.length != null && result.length != 0) {
 	                for (var i = 0; i < result.length; i++) {
-	                    html += "<tr id='" + result[i].userId + "' onclick='listClick(this);' ondblclick='modifyAuth()' style='cursor: pointer;'>";
+	                    html += "<tr id='" + result[i].userId + "' onclick='listClick(this);' ondblclick='author_modify()' style='cursor: pointer;'>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userName + "</td>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userTitle + "</td>";
 	                    html += "<td style='width:30%;color:gray;'>" + result[i].userDeptName + "</td>";
@@ -73,31 +74,40 @@
 	        
 	        //리스트 tr클릭시
 	        function listClick(elem) {
-	        	selectUserId = $(elem).attr('id');
+	        	selectedUserId = $(elem).attr('id');
+	        	selectedUserName = $(elem).children('td').eq(0).text();
 	        }
 	        
-	        //리스트 더블클릭
-// 			function modifyAuth() {			
-// 				var userId = selectedUser;
-// 				var url = "/admin/ezAttitude/saveAttitudeAuth.do";
-// 				var companyId = document.getElementById("companyId").value;
-// 				url+="?companyId="+companyId;
-// 				if (userId) {
-// 					url+="&userId="+userId+"&userName="+selectedUserName;
-// 					window.open(url, "authorView", GetOpenWindowfeature(500, 200));
-// 				} else {
-// 					alert("권한설정할 대상을 선택해 주십시오.");
-// 				}
-// 			}
+	        //권한수정
+			function author_modify() {
+	        	if (selectedUserId == null || selectedUserId == "") {
+	        		alert("사원을 먼저 선택해 주세요");
+	        		return;
+	        	}
+				var userId = selectedUserId;
+				var url = "/admin/ezAttitude/saveAttitudeAuth.do";
+				var companyId = encodeURI($("#ListCompany").val());
+				url+="?companyId="+companyId;
+				if (userId) {
+					url+="&userId="+userId+"&userName="+selectedUserName;
+					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 200));
+				} else {
+					alert("권한설정할 대상을 선택해 주십시오.");
+				}
+			}
 	        
 	        //권한 삭제
 	        function author_delete() {
+	        	if (selectedUserId == null || selectedUserId == "") {
+	        		alert("사원을 먼저 선택해 주세요");
+	        		return;
+	        	}
 	        	if (confirm("정말로 삭제하시겠습니까?")) {
 					$.ajax({
 						type : "POST",
 						url : "/admin/ezAttitude/deleteAttitudeAuth.do",
 						data : {
-							selectUserId : selectUserId,
+							selectUserId : selectedUserId,
 							companyId : encodeURI($("#ListCompany").val())
 						},
 						success : function() {
@@ -116,7 +126,7 @@
 	        	var url = "/admin/ezAttitude/saveAttitudeAuth.do";
 				var companyId = $("#ListCompany").val();
 				url+="?companyId="+companyId;
-				window.open(url, "saveAttitudeAuth", "width=500, height=180");
+				window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 200));
 	        }
 	        
 		</script>
@@ -138,6 +148,7 @@
 	      	</ul>
 		    <ul>
 		        <li><span onClick="author_add()">권한추가</span></li>
+		        <li><span onClick="author_modify()">권한수정</span></li>
 		        <li><span onClick="author_delete()">권한삭제</span></li>
 		    </ul>
 		</div>
