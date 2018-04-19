@@ -41,12 +41,19 @@
 			     	var id = data.instance.get_node(data.selected).id;
 			     	var deptName = $("#"+id+" a:first").text();
 					setUserList("DEPARTMENT", id,deptName);
-				  })
-				.jstree({ 
+				  }).jstree({ 
 					'core'   : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
-				});
+				}).on('ready.jstree', function(e, data) {
+					var offset = $(".jstree-clicked").offset();
+		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+			    });
+	   		}
+	   		
+	   		function goScroll(){
+				var offset = $("#opensol").offset();
+	   	        $('html, body').animate({scrollTop : offset.top}, 400);
 	   		}
 	   		
 	   		//사원 리스트 뿌리기
@@ -180,7 +187,7 @@
 					<table style="margin-top: 3px;">
 			            <tr>
 			                <td class="box" style="border-right: 0px; height: 465px;">
-			                    <div style="width: 250px; height: 100%; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+			                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
 			                </td>
 			                <td></td>
 			                <td class="listview" style="width: 426px" id="orglistView">
@@ -197,7 +204,7 @@
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t41'/> </span>
 									</h2>
 									<div class="receiver_borderbox">
-										<div id="authorDeptList" style="width: 250px; Height: 474px; overflow-x: auto; overflow-y: auto;">
+										<div id="authorDeptList" style="width: 250px; Height: 475px; overflow-x: auto; overflow-y: auto;">
 										</div>
 									</div>
 								</td>

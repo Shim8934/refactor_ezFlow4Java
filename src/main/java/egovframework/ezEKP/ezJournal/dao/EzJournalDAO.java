@@ -338,7 +338,11 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @param map
 	 */
 	public void insertViewInfo(Map<String, Object> map){
-		insert("insertViewDate",map);
+		try {
+			insert("insertViewDate",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
