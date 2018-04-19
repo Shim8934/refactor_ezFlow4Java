@@ -30,10 +30,14 @@
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			
 			$(function () {
+				var toYear = new Date().getFullYear();
+				var sYear = parseInt(toYear-70);
+				var eYear = parseInt(toYear+10);
 				document.getElementById("TempCalImage").style.display = "none";
 			    $("#txtBirth").datepicker({
 			    	changeMonth: true,
 			        changeYear: true,
+			        yearRange: sYear+":"+eYear,
 			        autoSize: true,
 			        showOn: "both",
 			        buttonImage: "/images/ImgIcon/calendar-month.gif",
@@ -401,7 +405,7 @@
 		            </td>
 		        </tr>
         		<tr> 
-            		<th><spring:message code='ezPersonal.t182'/></th> 
+            		<th><spring:message code='ezPersonal.t1820'/><br><spring:message code='ezPersonal.t182'/></th> 
             		<td colspan="3"><textarea id="txtInfo" style="WIDTH:99.3%;HEIGHT:80px;margin-top:3px;margin-bottom:3px" maxlength="450">${txtInfo}</textarea></td> 
         		</tr> 
     		</table> 

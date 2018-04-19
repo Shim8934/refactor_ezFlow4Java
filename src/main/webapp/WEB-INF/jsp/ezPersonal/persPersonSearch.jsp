@@ -847,6 +847,7 @@
                             			<option selected value="displayname" usedefault="1"><spring:message code='ezPersonal.t9'/></option>
                             			<option value="description" usedefault="1"><spring:message code='ezPersonal.t7'/></option>
                             			<option value="title" usedefault="1"><spring:message code='ezPersonal.t69'/></option>
+                            			<option value="info" usedefault="0"><spring:message code='ezPersonal.t1820'/></option> 
                             			<option value="telephonenumber" usedefault="1"><spring:message code='ezPersonal.t177'/></option>
                             			<option value="mobile" usedefault="0"><spring:message code='ezPersonal.t178'/></option>
                             			<option value="HomePhone" usedefault="0"><spring:message code='ezPersonal.t70'/></option>

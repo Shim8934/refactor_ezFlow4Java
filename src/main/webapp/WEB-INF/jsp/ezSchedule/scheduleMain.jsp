@@ -966,7 +966,7 @@
 		   
 	    </script>				
 	</head>
-	<body class="mainbody" style="overflow: auto">
+	<body class="mainbody" style="overflow: auto; margin-bottom:0px">
         <h1 id="titleimg">${defaultTitle}</h1>
         <div id="mainmenu">
             <ul>
@@ -974,11 +974,11 @@
               	<li><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li>
               	<li><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li>
               	<li><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
-		      	<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""/></li>
+		      	<li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li>
               	<li><span onClick="PrintSchedule()"><spring:message code='ezSchedule.t217'/></span></li>
               	<li><span onClick="RefreshView()"><spring:message code='ezSchedule.t218'/></span></li>
-              	<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""/></li>
-              	<li style="background:none;padding:0">
+              	<li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li>
+              	<li style="background:none; padding:0; cursor:default;">
               		<select class="select" id="idSelect" onChange="IDChange()" style="width:140px">
 						<option value="T"><spring:message code='ezSchedule.t220'/></option>
 						<option value="P" selected><spring:message code='ezSchedule.t221'/></option>
@@ -986,16 +986,16 @@
 						<option value="C"><spring:message code='ezSchedule.t223'/></option>									            
 					</select>
 				</li>
-              	<li style="background:none;padding:0;">
+              	<li style="background:none; padding:0; cursor:default;">
               		<select class="select" onChange="SecretaryChange()" id="secretarySelect" name="secretarySelect" style="width:140px">
 						<option value="" selected><spring:message code='ezSchedule.t224'/></option>
 						${shareList}
 					</select>
 				</li>
-	            <li onClick="IDClick('P')" style="background:none;cursor:pointer;margin-left:5px"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezSchedule.t221'/></li>
+	            <li onClick="IDClick('P')" style="background:none;cursor:pointer;margin-left:7px"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezSchedule.t221'/></li>
 	            <li onClick="IDClick('D')" style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezSchedule.t222'/></li>
 	            <li onClick="IDClick('C')" style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #e01662; background:#ff1c71; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezSchedule.t223'/></li>
-                <li style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='main.t00022'/></li>
+                <li style="background:none;cursor:text"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='main.t00022'/></li>
             </ul>
         </div>
 

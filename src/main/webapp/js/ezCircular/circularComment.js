@@ -83,6 +83,17 @@ function getCircularComment() {
 						}
 					}
 				});
+				//2018-04-11 김보미 검색결과가 없을경우
+				if ($("#searchValue").val() != "" && $("#searchValue").val() != null) {
+					if (list.length == 0) {
+						circularCommentList = "<tr style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#white;'>";
+						circularCommentList += "<td colspan='3' style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:center;background-color:white;'>" + strLang16 + "</td>";
+						circularCommentList += "</tr>";
+						
+						$("#circularUserList").html("");
+						$("#circularUserList").append(circularCommentList);
+					}
+				}
 			} else if (commentType == 'myComment') {
 				circularCommentList = "<colgroup><col width='20%' /><col width='62%' /><col width='18%' /></colgroup>";
 				list = result.circularCommentList;

@@ -666,6 +666,10 @@ public class CommonUtil {
 			return null;
 		}
 		
+		if (dateStr.equals("0")) {			
+			return dateStr;
+		}
+		
 		if (offset == null || offset.indexOf("|") == -1) {
 			logger.error("offset is null or offset format is wrong.");
 			return dateStr;
