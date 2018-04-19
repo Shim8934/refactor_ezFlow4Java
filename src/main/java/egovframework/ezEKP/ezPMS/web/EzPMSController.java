@@ -112,18 +112,28 @@ public class EzPMSController {
 	
 	/**
 	 * 프로젝트 상세 조회 화면 호출
-	 * @param loginCookie
-	 * @param request
-	 * @param resp
-	 * @param model
-	 * @return
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezPMS/getProjectDetails.do")
 	public String getProjectDetails(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS getProjectDetails started");		
 		LOGGER.debug("ezPMS getProjectDetails ended");		
 		return "ezPMS/pmsProjectDetails";
+	}
+	
+	/**
+	 * 새프로젝트 등록 화면 호출
+	 */
+	@RequestMapping(value = "/ezPMS/newProject.do")
+	public String newProject(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		LOGGER.debug("ezPMS addNewProject started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userName = userInfo.getDisplayName1();
+		
+		model.addAttribute("userName", userName);
+		
+		LOGGER.debug("ezPMS addNewProject ended");
+		return "ezPMS/newProject";
 	}
 	
 	/**
@@ -136,17 +146,16 @@ public class EzPMSController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezPMS/addNewProject.do")
-	@ResponseBody
-	public JSONObject addNewProject(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	public String addNewProject(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS addNewProject started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String url = "/rest/ezPMS/projects";
-		
-		int test = 25;
+		String userName = userInfo.getDisplayName1();
+		System.out.println(userInfo.getId());
 		
 		Map<String, Object> param = new HashMap<>();
-		param.put("test", test);
+		
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", null);
 		
@@ -154,9 +163,10 @@ public class EzPMSController {
 		System.out.println(result);
 		model.addAttribute("test", result.get("status").toString());
 		model.addAttribute("result", result);
+		model.addAttribute("userName", userName);
 		
 		LOGGER.debug("ezPMS addNewProject ended");
-		return result;
+		return "ezPMS/newProject";
 	}
 	
 	/**

@@ -36,18 +36,18 @@
 			<isNotEmpty property="search_keyword" >
 				<isEqual property="lang" compareValue="1" >
 					<isEqual property="search_keycode" compareValue="1">
-						USERNM LIKE CONCAT('%', #search_keyword#,'%')
-					</isEqual>
-					<isEqual property="search_keycode" compareValue="2">
-						DEPTNM LIKE CONCAT('%', #search_keyword#,'%')
-					</isEqual>
-				</isEqual>
-				<isNotEqual property="lang" compareValue="1">
-					<isEqual property="search_keycode" compareValue="1">
 						USERNM2 LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="2">
 						DEPTNM2 LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
 				</isNotEqual>
 				<isEqual property="search_keycode" compareValue="3">

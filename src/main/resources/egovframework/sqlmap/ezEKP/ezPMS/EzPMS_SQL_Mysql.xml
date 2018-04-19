@@ -169,8 +169,20 @@
     
     <insert id="EzPMSDAO.addNewProject" parameterClass="Map">
     	<![CDATA[
-    	
-    	
+    		INSERT INTO tbl_pms_project(
+    			tenant_id, 				project_name, 			plan_start_date, 			plan_end_date, 			real_start_date, 
+    			head_manager_id, 		head_manager_name,		head_manager_name2, 		head_manager_deptname, 	head_manager_deptname2, 
+    			status, 				progress, 				overview, 					weight_input, 			creator_id, 
+    			creator_name, 			creator_name2, 			creator_deptname, 			creator_deptname2, 		workingday, 
+    			rest_dueday, 			alam_mail_status
+    		) 
+    		VALUES ( 
+    			#tenantId#,				#projectName#,			#planStartDate#,			#planEndDate#,			#realStartDate#, 
+    			#headManagerId#,		#headManagerName#,		#headManagerName2#,			#headManagerDeptName#,	#headManagerDeptName2#,	
+    			#status#,				#progress#,				#overview#,					#weightInput#,			#creatorId#, 
+    			#creatorName#,			#creatorName2#,			#creatorDeptName#,			#creatorDeptName2#,		#workingday#,
+    			#restDueday#,			#alamMailStatus#
+    		)
     	]]>
     </insert>
     
