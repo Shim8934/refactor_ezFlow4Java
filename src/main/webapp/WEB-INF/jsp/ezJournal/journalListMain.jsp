@@ -860,6 +860,26 @@
 
 			$(document).ready(function() {
 				setJournalList();
+		    	
+		    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(parent.document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(document).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.frames['ifrmPreViewH']).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
+		    	
+		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
+		    		MailOptionHiddenOutside(e);
+		    	});
 // 				if(pPreviewShow_HOW=='H'){
 // 					PreviewH_Move = true;
 // 				} else if(pPreviewShow_HOW=='W'){
