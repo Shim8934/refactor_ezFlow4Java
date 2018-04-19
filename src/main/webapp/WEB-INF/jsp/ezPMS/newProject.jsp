@@ -119,8 +119,8 @@ var endAlamStatus = null;
 	});
  });
  
- function openOrganTree() {
-	 var url = "/ezPMS/pmsSelectAuth.do";
+ function openOrganTree(type) {
+	 var url = "/ezPMS/pmsSelectAuth.do?type=" + type.id;
 	 //	url += "?companyId=" + companyId;
 	 GetOpenWindow(url, "pmsSelectAuth", 980, 610);
  }
@@ -185,13 +185,13 @@ var endAlamStatus = null;
 				<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openOrganTree()"><span>담당자</span></a></th>
+				<th><a class="imgbtn" onclick="openOrganTree(managers)"><span>담당자</span></a></th>
 				<td colspan="3" style="height:70px" id="managers">은정</td>
 			<tr>
-				<th><a class="imgbtn" onclick="openOrganTree()"><span>참여자</span></a></th>
+				<th><a class="imgbtn" onclick="openOrganTree(participants)"><span>참여자</span></a></th>
 				<td colspan="3" style="height:70px" id="participants">은정</td>
 			<tr>
-				<th><a class="imgbtn" onclick="openOrganTree()"><span>조회자</span></a></th>
+				<th><a class="imgbtn" onclick="openOrganTree(viewers)"><span>조회자</span></a></th>
 				<td colspan="3" style="height:70px" id="viewers">은정</td>
 			<tr>
 				<th>개요</th>

@@ -18,7 +18,12 @@
 	   		//트리조직도 JSON
 	   		var treeContent;
 	   		// 선택된 수신자 배열
-	   		var receiverList;
+	   		var receiverList = [];
+	   		
+	   		var managerArray = [];
+	   		var participantArray = [];
+	   		var viewerArray = [];
+	   		
 	   		// 선택된 수신자 이름
 	   		var userName = "";
 	   		// 선택된 수신자 아이디
@@ -29,15 +34,30 @@
 	   		var userId = "<c:out value='${userId}'/>";
 	   		// 즐겨찾기 아이디
 	   		var favoriteId = "";
-	   		// 즐겨찾기 저장, 수정 flag
-	   		var type = "new";
+	   		
+	   		var type = "<c:out value='${type}'/>";
 	   		//올른쪽 리스트에서 선택된 유저
 	   		var selMainListUserId="";
 	   		var selMainListUserName="";
 	   		
+	   		var p_title = null;
+	   		var p_selectedWindow = null;
+	   		var authName = null;
+	   		
+	   		$(function() {
+	   			if (type == "managers") {
+	   				SelectReceiverWindow(manager, managerList);
+	   			} else if (type == "participants") {
+	   				SelectReceiverWindow(participant, participantList);
+	   			} else {
+	   				SelectReceiverWindow(viewer, viewerList);
+	   			}
+	   		});
+	   		
 	   		function close_Click(){
 	   			window.close();
 	   		}
+	   		
 	   		//조직도 뿌리는 펑션
 	   		function setDeptList(){
 				$('#treeview').on('changed.jstree', function (e, data) {
@@ -65,19 +85,16 @@
 	   				url:"/ezPMS/userList.do",
 	   				data:{"key" : key, "value" : value,"deptName":deptName},
 	   				success: function(result){
-	   					console.log(result);
 	   					var picList = $(result).find(".organwrap");
 	   					if(picList.length==0 && key!="DEPARTMENT"){
 	   						alert("<spring:message code='ezCommunity.t1379'/>");
 	   					} else {
 		   					$("#orglistView").html(result);
 	   					}
-	   				},
-	   				fail: function(){
-	   					console.log("error");
 	   				}
 	   			});
 	   		}
+	   		
 	   		
 	   		//검색
 	   		function search_click() {
@@ -90,12 +107,32 @@
 	   			}
 	   		}
 	   		
+	   		//eunjeong
+	   		function SelectReceiverWindow(title, selectedWindow) {
+	   			if (p_title != null && p_selectedWindow != null) {
+	   				p_title.style.fontWeight = "normal";
+	   				p_selectedWindow.style.backgroundColor = "rgb(246, 246, 246)";
+	   			}
+	   			
+	   			title.style.fontWeight = "bold";
+	   			selectedWindow.style.backgroundColor = "white";
+	   			
+	   			p_title = title;
+   				p_selectedWindow = selectedWindow;
+   				type = title.id;
+	   		}
+	   		
+	   		
 	   		//오른쪽 리스트에서 클릭이벤트 적용
 	   		function setMainListUserAuthorDept(elem) {
 	   			if ($(elem).parent().attr("id") === "List_TBODY2") {
 	   				$("#List_TBODY2 tr").removeClass("selectTR");
-	   			} else if ($(elem).parent().parent().parent().attr("id") === "receiverList"){
-		   			$("#receiverList tr").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "managerList"){
+		   			$("#managerList tr").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "participantList"){
+		   			$("#participantList tr").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "viewerList"){
+		   			$("#viewerList tr").removeClass("selectTR");
 	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
 		   			$("#txtlist_Layer tr").removeClass("selectTR");
 	   			}
@@ -109,8 +146,12 @@
 	   		function setUserAuthorDept(elem) {
 	   			if ($(elem).parent().attr("id") === "List_TBODY2") {
 	   				$("#List_TBODY2 tr").removeClass("selectTR");
-	   			} else if ($(elem).parent().parent().parent().attr("id") === "receiverList"){
-		   			$("#receiverList tr").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "managerList"){
+		   			$("#managerList tr").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "participantList"){
+		   			$("#participantList tr").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "viewerList"){
+		   			$("#viewerList tr").removeClass("selectTR");
 	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
 		   			$("#txtlist_Layer tr").removeClass("selectTR");
 	   			}
@@ -120,34 +161,56 @@
 	   			// console.log("selUserId : " + selMainListUserId)
 	   		}
 	   		
-	   		// 선택한 사람을 수신자에 추가
-	   		function setAuthorViewUser() {
-	   			// console.log("selUserId확인 : " + selUserId);
+	   		// 선택한 사람을 권한 추가
+	   		function setAuthorViewUser(authName) {
 	   			if (selUserId != "" && selUserId != undefined) {
 		   			var receiverId = selUserId;
 		   			userName = selUserName;
 		   			var chkFlag = true;
-	   				
-		   			if (userId == receiverId) {
-		   				chkFlag = false;
-		   			}
-		   			for(var i = 0; i < receiverList.length; i++) {
-		   				if (receiverList[i].userId == receiverId) {
-		   					chkFlag = false;
-		   				}
+		   			
+		   			if (authName == "manager") {
+			   			for(var i = 0; i < managerArray.length; i++) {
+			   				if (managerArray[i].userId == receiverId) {
+			   					chkFlag = false;
+			   				}
+			   			}
+			   			
+			   			if (chkFlag) {
+			   				managerArray.push({"userName" : userName, "userId" : receiverId});
+			   			} else {
+				   			alert("선택된 항목입니다.");
+			   			}
+			   			
+			   			drawReceiverList(authName);
+			   			selMainListUserId = "";
+		   			} else if (authName == "participant") {
+		   				for(var i = 0; i < participantArray.length; i++) {
+			   				if (participantArray[i].userId == receiverId) {
+			   					chkFlag = false;
+			   				}
+			   			}
+			   			
+			   			if (chkFlag) {
+			   				participantArray.push({"userName" : userName, "userId" : receiverId});
+			   			} else {
+				   			alert("선택된 항목입니다.");
+			   			}
+			   			drawReceiverList(authName);
+		   			} else {
+		   				for(var i = 0; i < viewerArray.length; i++) {
+			   				if (viewerArray[i].userId == receiverId) {
+			   					chkFlag = false;
+			   				}
+			   			}
+			   			
+			   			if (chkFlag) {
+			   				viewerArray.push({"userName" : userName, "userId" : receiverId});
+			   			} else {
+				   			alert("선택된 항목입니다.");
+			   			}
+			   			drawReceiverList(authName);
 		   			}
 		   			
-		   			if (chkFlag) {
-						receiverList.push({"userName" : userName, "userId" : receiverId});
-		   			} else {
-		   				if (userId == receiverId) {
-			   				alert("본인은 선택할 수 없습니다.");
-		   				} else {
-			   				alert("선택된 항목입니다.");
-		   				}
-		   			}
-		   			drawReceiverList();
-		   			selMainListUserId = "";
 	   			} else {
 	   				alert("수신자를 선택해 주십시오.");
 	   			}
@@ -155,36 +218,83 @@
 	   		}
 	   		
 	   		// 선택된 수신자배열에서 특정 사원 삭제
-		    function deleteReceiver() {
-		     	for(var j = 0; j < receiverList.length; j++) {
-		    		if (receiverList[j].userId === selMainListUserId) {
-		    			receiverList.splice(j, 1);
-		    			selMainListUserId = "";
-		    		}
-		    	} 
-		     	drawReceiverList();
+		    function deleteReceiver(typeName) {
+	   			var authName = typeName.id;
+	   			
+	   			if (authName == "manager") {
+	   				for(var j = 0; j < managerArray.length; j++) {
+			    		if (managerArray[j].userId === selMainListUserId) {
+			    			managerArray.splice(j, 1);
+			    			selMainListUserId = "";
+			    		}
+			    	} 
+			     	drawReceiverList(authName);
+	   			} else if (authName == "participant") {
+	   				for(var j = 0; j < participantArray.length; j++) {
+			    		if (participantArray[j].userId === selMainListUserId) {
+			    			participantArray.splice(j, 1);
+			    			selMainListUserId = "";
+			    		}
+			    	} 
+			     	drawReceiverList(authName);
+	   			} else {
+	   				for(var j = 0; j < viewerArray.length; j++) {
+			    		if (viewerArray[j].userId === selMainListUserId) {
+			    			viewerArray.splice(j, 1);
+			    			selMainListUserId = "";
+			    		}
+			    	} 
+			     	drawReceiverList(authName);
+	   			}
+		     	
 		    }
 	   		
 	   		// 선택된 수신자 배열을 토대로 화면에 그리는 곳
-	   		function drawReceiverList() {
+	   		function drawReceiverList(authName) {
+		    	var strHTML = "";
 		    	
-		    	var $receiverList = $("#receiverList");
-		    	var strHTML = "";     
-		    	for (var i = 0; i < receiverList.length; i++) {
-		    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-		    		strHTML += "<tr style='cursor:pointer;' id=" + receiverList[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
-		    		strHTML += "<td>";
-		    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-		    		strHTML += receiverList[i].userName;
-		    		strHTML += "</td>";
-		    		strHTML += "</tr>";
-		    		strHTML += "</table>";
+		    	if (authName == "manager") {
+		    		for (var i = 0; i < managerArray.length; i++) {
+			    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
+			    		strHTML += "<tr style='cursor:pointer;' id=" + managerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver(manager)'>";
+			    		strHTML += "<td>";
+			    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+			    		strHTML += managerArray[i].userName;
+			    		strHTML += "</td>";
+			    		strHTML += "</tr>";
+			    		strHTML += "</table>";
+			    	}
+		    		$("#managerList").html(strHTML);
+		    	} else if (authName == "participant") {
+		    		for (var i = 0; i < participantArray.length; i++) {
+			    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
+			    		strHTML += "<tr style='cursor:pointer;' id=" + participantArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver(participant)'>";
+			    		strHTML += "<td>";
+			    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+			    		strHTML += participantArray[i].userName;
+			    		strHTML += "</td>";
+			    		strHTML += "</tr>";
+			    		strHTML += "</table>";
+			    	}
+			    	$("#participantList").html(strHTML);
+		    	} else {
+		    		for (var i = 0; i < viewerArray.length; i++) {
+			    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
+			    		strHTML += "<tr style='cursor:pointer;' id=" + viewerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver(viewer)'>";
+			    		strHTML += "<td>";
+			    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+			    		strHTML += viewerArray[i].userName;
+			    		strHTML += "</td>";
+			    		strHTML += "</tr>";
+			    		strHTML += "</table>";
+			    	}
+			    	$("#viewerList").html(strHTML);
 		    	}
-		    	$receiverList.html(strHTML);
+		    	
 		    }
 	   		
-	   		function applyReceiver() {
-  				setAuthorViewUser();
+	   		function applyReceiver(authName) {
+  				setAuthorViewUser(authName.id);
 	   		}
 	   		
 	   		$(document).ready(function() {
@@ -323,20 +433,47 @@
 						        </table>
 		                  	</td>   
 		                  	
-	                        <td style="width: 30px; text-align: center;">                            
-	                            <img src="/images/arr_rr.gif" id="dblarrow" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; display: none;" onclick="applyFavorite()"><br>
-	                            <img src="/images/arr_r.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver()"><br>
-	                            <img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver()">
+	                        <td style="width: 30px; text-align: center;">
+	                        	<div>
+	                            	<img src="/images/arr_r.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver(manager)"><br>
+	                            	<img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver(manager)">
+	                        	</div>                            
+	                            <div style="margin-top:100px;">
+	                            	<img src="/images/arr_r.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver(participant)"><br>
+	                            	<img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver(participant)">
+	                        	</div>
+	                        	<div style="margin-top:100px;">
+	                            	<img src="/images/arr_r.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver(viewer)"><br>
+	                            	<img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver(viewer)">
+	                        	</div>
 	                        </td>
+	                        
 	                        <td style="vertical-align: top;">
 	                        	<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px;" id="PermissionStr">담당자 </span>
+										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="manager" onclick="SelectReceiverWindow(manager,managerList)">담당자 </span>
 									</h2>
 								</div>
 								<div class="receiver_borderbox">
-									<div id="receiverList" style="width: 250px; Height: 478px; overflow-x: auto; overflow-y: auto;">
-									</div>
+									<div id="managerList" style="width: 250px; Height: 134px; overflow-x: auto; overflow-y: auto; background-color: rgb(246, 246, 246); cursor: pointer;" onclick="SelectReceiverWindow(manager,managerList)"></div>
+								</div>
+								
+								<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
+		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
+										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="participant" onclick="SelectReceiverWindow(participant,participantList)">참여자 </span>
+									</h2>
+								</div>
+								<div class="receiver_borderbox">
+									<div id="participantList" style="width: 250px; Height: 134px; overflow-x: auto; overflow-y: auto; background-color: rgb(246, 246, 246); cursor: pointer;" onclick="SelectReceiverWindow(participant,participantList)"></div>
+								</div>
+								
+								<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
+		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
+										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="viewer" onclick="SelectReceiverWindow(viewer,viewerList)">조회자 </span>
+									</h2>
+								</div>
+								<div class="receiver_borderbox">
+									<div id="viewerList" style="width: 250px; Height: 134px; overflow-x: auto; overflow-y: auto; background-color: rgb(246, 246, 246); cursor: pointer;" onclick="SelectReceiverWindow(viewer,viewerList)"></div>
 								</div>
 	                        </td>
 	                    </tr>

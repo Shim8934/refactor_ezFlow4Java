@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -452,7 +453,7 @@ public class EzPMSController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/pmsSelectAuth.do")
-	public String selectAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String selectAuth(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, Model model) {
 		LOGGER.debug("selectAuth started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -482,6 +483,8 @@ public class EzPMSController {
 					dept.put("state", state);
 				}
 			}
+			
+			model.addAttribute("type", request.getParameter("type"));
 			model.addAttribute("deptList", deptList);
 			model.addAttribute("userId", userInfo.getId());
 		}		
