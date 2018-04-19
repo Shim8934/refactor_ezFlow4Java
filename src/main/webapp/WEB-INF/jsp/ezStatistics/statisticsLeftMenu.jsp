@@ -127,7 +127,7 @@
 	        	url = "/ezStatistics/statisticsMailSendLogList.do";
 	        	break;
 	        case 24: //부서별 근태통계
-	        	url = ".do";
+	        	url = "/ezStatistics/statisticsAttitudeDept.do";
 	        	break;
 	    }
 
