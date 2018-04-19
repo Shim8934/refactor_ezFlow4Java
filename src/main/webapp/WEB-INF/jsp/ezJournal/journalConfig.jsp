@@ -206,8 +206,8 @@
                		<span id="PreviewWDiv" style="${journalEnv.viewenv ne 'W' ? 'display: none;' : ''}">                   			
                			&nbsp;<spring:message code="ezCircular.t23" /> :
 						<select id="WList" name="pPreviewWList" style="width: 50px;" onchange="changePreviewVal(this);">
-							<c:forEach var="item" begin="39" end="64">
-	   							<option value='${item}' ${item == journalEnv.previewHcontent ? 'selected' : '' }>${item}</option>
+							<c:forEach var="item" begin="25" end="65">
+	   							<option value='${item}' ${item == 100-journalEnv.previewHcontent ? 'selected' : '' }>${item}</option>
 							</c:forEach>
 						</select>
       					&nbsp;<spring:message code="ezCircular.t24" /> :
@@ -221,7 +221,7 @@
 	       				&nbsp;<spring:message code="ezCircular.t23" /> :
 						<select id="HList" name="pPreviewHList" style="width: 50px;" onchange="changePreviewVal(this);">
 							<c:forEach var="item" begin="39" end="64">
-	   							<option value='${item}' ${item == journalEnv.previewHcontent ? 'selected' : '' }>${item}</option>
+	   							<option value='${item}' ${item == 100-journalEnv.previewHcontent ? 'selected' : '' }>${item}</option>
 							</c:forEach>
 						</select>
 	       				&nbsp;<spring:message code="ezCircular.t24" /> :
