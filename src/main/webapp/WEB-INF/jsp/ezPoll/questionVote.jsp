@@ -2619,9 +2619,9 @@
 		  		$(document).on("mouseover",".thumbnail",function(e){
 		    		thumbnailImgMouseOver(e);
 		    	}).on("click", ".thumbCloseBtn", function(e){
-					hideImgPopupBox();
+					toggleImgPopupBox(e);
 				}).on("click", ".thumbnail", function(e){
-					hideImgPopupBox();
+					toggleImgPopupBox(e);
 				}).on("click", "#thumbMagnifyBtn", function(e){
 					magnifyThumbnailSize();
 				}).on("click", "#thumbZoomInBtn", function(e){
@@ -2663,22 +2663,26 @@
 		  	function thumbnailImgMouseOver(e){
 	    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
 		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
-		  		$("#imgPopupBox").removeClass("imgPopupBoxOff imgPopupBoxMagnify").addClass("imgPopupBox");
-	    		$("#imgPopupDiv").removeClass("imgPopupDivMagnify").addClass("imgPopupDiv");
-	    		$("#imgPopup").removeClass("imgPopupOff imgPopupMagnify").addClass("imgPopup");
-	    		$("#imgPopup").attr("src",e.target.src);
-	    		$("#imgPopup").attr("_filename",e.target.getAttribute("_filename"));
-	    		$("#imgPopup").attr("title",e.target.getAttribute("_filename"));
+		  		var imgPopupBox = $("#imgPopupBox");
+		  		var imgPopupDiv = $("#imgPopupDiv");
+		  		var imgPopup = $("#imgPopup");
+		  		
+		  		imgPopupBox.removeClass("imgPopupBoxOff imgPopupBoxMagnify").addClass("imgPopupBox");
+	    		imgPopupDiv.removeClass("imgPopupDivMagnify").addClass("imgPopupDiv");
+	    		imgPopup.removeClass("imgPopupOff imgPopupMagnify").addClass("imgPopup");
+	    		imgPopup.attr("src",e.target.src);
+	    		imgPopup.attr("_filename",e.target.getAttribute("_filename"));
+	    		imgPopup.attr("title",e.target.getAttribute("_filename"));
 	    		
-	    		var imgPB_LeftOffset = (window.innerWidth-$("#imgPopupBox").width()) / 2;
-	    		var imgPB_TopOffset = (window.innerHeight-$("#imgPopupBox").height()) / 2 + window.pageYOffset;
-	    		var imgP_LeftOffset = ($("#imgPopup").parent().width()-$("#imgPopup").width()) / 2;
+	    		var imgPB_LeftOffset = (window.innerWidth-imgPopupBox.width()) / 2;
+	    		var imgPB_TopOffset = (window.innerHeight-imgPopupBox.height()) / 2 + window.pageYOffset;
+	    		var imgP_LeftOffset = (imgPopup.parent().width()-imgPopup.width()) / 2;
 	    		
-	    		$("#imgPopupBox").css("left", imgPB_LeftOffset);
-	    		$("#imgPopupBox").css("top",imgPB_TopOffset);
-	    		$("#imgPopup").css({"left": imgP_LeftOffset, "zoom": ""});
-	    		$("#imgPopup").css("top",(($("#imgPopupBox").height() - $("#imgPopup").height()) / 2) - iPBInnerDivH);
-	    		//$("#imgPopup").css({"left": 0, "zoom": ""});
+	    		imgPopupBox.css("left", imgPB_LeftOffset);
+	    		imgPopupBox.css("top",imgPB_TopOffset);
+	    		imgPopup.css({"left": imgP_LeftOffset, "zoom": ""});
+	    		imgPopup.css("top",((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH);
+	    		//imgPopup.css({"left": 0, "zoom": ""});
 	    		$("#thumbMagnifyBtn").removeClass("fa fa-minus-square").addClass("fa fa-plus-square");
 	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().removeClass("iPBInnerDiv_Top").addClass("iPBInnerDiv_TopOff");
 		  	}
@@ -2688,34 +2692,37 @@
 		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 	    		var imgPopup = document.getElementById("imgPopup");
+	    		var $imgPopupBox = $("#imgPopupBox");
+		  		var $imgPopupDiv = $("#imgPopupDiv");
+		  		var $imgPopup = $("#imgPopup");
 	    		
 		  		if($("#thumbMagnifyBtn").attr("class").indexOf("plus") != -1){
 		  			$("#thumbMagnifyBtn").attr("class","fa fa-minus-square");
 		  		}
 		  		else{
 		  			$("#thumbMagnifyBtn").attr("class","fa fa-plus-square");
-		  			$("#imgPopup").css("zoom","");
+		  			$imgPopup.css("zoom","");
 		  		}
 	    		
 	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().toggleClass("iPBInnerDiv_TopOff iPBInnerDiv_Top");
-				$("#imgPopupBox").toggleClass("imgPopupBox imgPopupBoxMagnify");
-	    		$("#imgPopupDiv").toggleClass("imgPopupDiv imgPopupDivMagnify");
-	    		$("#imgPopup").toggleClass("imgPopup imgPopupMagnify");
+				$imgPopupBox.toggleClass("imgPopupBox imgPopupBoxMagnify");
+	    		$imgPopupDiv.toggleClass("imgPopupDiv imgPopupDivMagnify");
+	    		$imgPopup.toggleClass("imgPopup imgPopupMagnify");
 	    		
 	    		//imgPopupBox frame 가운데로 위치 조정.
-	    		$("#imgPopupBox").css("left",(window.innerWidth-$("#imgPopupBox").width()) / 2);
-	    		var iPBTopOffset = (window.innerHeight-$("#imgPopupBox").height()) / 2 + window.pageYOffset;
-	    		/* if(window.innerHeight < $("#imgPopupBox").height()){
-	    			$("#imgPopupBox").css("top", 0);
+	    		$imgPopupBox.css("left",(window.innerWidth-$imgPopupBox.width()) / 2);
+	    		var iPBTopOffset = (window.innerHeight-$imgPopupBox.height()) / 2 + window.pageYOffset;
+	    		/* if(window.innerHeight < $imgPopupBox.height()){
+	    			$imgPopupBox.css("top", 0);
 	    		} */
 	    		if(iPBTopOffset < 0){
-	    			$("#imgPopupBox").css("top", 0);
+	    			$imgPopupBox.css("top", 0);
 	    		}
 	    		else{
-		    		$("#imgPopupBox").css("top", iPBTopOffset);
+		    		$imgPopupBox.css("top", iPBTopOffset);
 	    		}
-	    		$("#imgPopupDiv").width(imgPopup.offsetWidth);	    		
-	    		$("#imgPopup").css("left",($("#imgPopup").parent().width()-$("#imgPopup").width()) / 2);
+	    		$imgPopupDiv.width(imgPopup.offsetWidth);	    		
+	    		$imgPopup.css("left",($imgPopup.parent().width()-$imgPopup.width()) / 2);
 	    		
 	    		var imgPopupDivSH = imgPopupDiv.scrollHeight;
 	    		var imgPopupDivCH = imgPopupDiv.clientHeight;
@@ -2723,52 +2730,65 @@
 	    		
 	    		//imgPopup 세로 위치 조정.
 	    		if( imgPopupCH > imgPopupDivCH && imgPopup.naturalHeight > 700 ){
-	    			$("#imgPopup").css("top", 0);
+	    			$imgPopup.css("top", 0);
 	    		}else{
-	    			$("#imgPopup").css("top",(($("#imgPopupBox").height() - $("#imgPopup").height()) / 2) - iPBInnerDivH);
+	    			$imgPopup.css("top",(($imgPopupBox.height() - $imgPopup.height()) / 2) - iPBInnerDivH);
 	    		}
 	    		
 	    		//imgPopup 가로 위치 조정.
 	    		/* if(imgPopupDivSH == imgPopupDivCH && imgPopup.naturalWidth > 400){
-	    			//$("#imgPopup").css("top",(($("#imgPopupBox").height() - $("#imgPopup").height()) / 2) - iPBInnerDivH);
+	    			//$imgPopup.css("top",(($imgPopupBox.height() - $imgPopup.height()) / 2) - iPBInnerDivH);
 	    		}
 	    		else if(imgPopupDivSH != imgPopupDivCH){
-	    			$("#imgPopup").css({"left": "0", "zoom": 1});
+	    			$imgPopup.css({"left": "0", "zoom": 1});
 	    		} */
 		  	}
 		  	
 		  	//썸네일 이미지 팝업박스를 숨겨준다.
-		  	function hideImgPopupBox(){
+		  	function toggleImgPopupBox(e){
+		  		var imgPopupBox = $("#imgPopupBox");
+		  		var imgPopupDiv = $("#imgPopupDiv");
+		  		var imgPopup = $("#imgPopup");
+		  		
 		  		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
-		  		$("#imgPopupBox").removeClass("imgPopupBox").addClass("imgPopupBoxOff");
-	    		$("#imgPopupDiv").removeClass("imgPopupDivMagnify").addClass("imgPopupDiv");
-	    		$("#imgPopup").removeClass("imgPopup").addClass("imgPopupOff");
-	    		$("#imgPopup").removeAttr("src");
+		  		
+		  		if(imgPopup.attr("src")){
+			  		imgPopupBox.removeClass("imgPopupBox").addClass("imgPopupBoxOff");
+			  		imgPopupDiv.removeClass("imgPopupDivMagnify").addClass("imgPopupDiv");
+			  		imgPopup.removeClass("imgPopup").addClass("imgPopupOff");
+			  		imgPopup.removeAttr("src");
+		  		}
+		  		else if(e.target.getAttribute("class") === "thumbnail"){
+		  			thumbnailImgMouseOver(e);
+		  		}
 		  	}
 		  	
 		  	//줌인버튼 기능.
 		  	function zoomInImgPopup(){
 		  		var zoom = 1;
 		  		var zoomOffset = 0.1;
+		  		var $imgPopupBox = $("#imgPopupBox");
+		  		var $imgPopupDiv = $("#imgPopupDiv");
+		  		var $imgPopup = $("#imgPopup");
 		  		
 		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
-		  		if($("#imgPopup").css("zoom").indexOf("%") != -1){
-		  			zoom = parseFloat($("#imgPopup").css("zoom").replace("%", "") / 100) + zoomOffset;
+		  		if($imgPopup.css("zoom").indexOf("%") != -1){
+		  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) + zoomOffset;
 		  		}
-		  		else if($("#imgPopup").css("zoom").indexOf("normal") != -1){
+		  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
 		  			zoom = 1 + zoomOffset;
 		  		}
 		  		else{
-			  		zoom = parseFloat($("#imgPopup").css("zoom")) + zoomOffset;
+			  		zoom = parseFloat($imgPopup.css("zoom")) + zoomOffset;
 		  		}
-		  		$("#imgPopup").css("zoom", zoom);
+		  		$imgPopup.css("zoom", zoom);
 		  		
 		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
-		  		var thumbImgH = $("#imgPopup").prop("naturalHeight") * zoom;
+		  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
 		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 	    		var imgPopup = document.getElementById("imgPopup");
 		  		var imgPopupDivCH = imgPopupDiv.clientHeight;
-		  		$("#imgPopupDiv").width(imgPopup.offsetWidth * zoom);
+		  		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
 		  		
 		  		//imgPopup 세로 위치 조정.
 		  		if(thumbImgH < (imgPopupDivCH - 100)){
@@ -2776,18 +2796,18 @@
 		  			var topOffset = "";
 		  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
 	  					//alert("인터넷 익스플로러 브라우저 입니다.");
-			  			topOffset = ((($("#imgPopupBox").height() - thumbImgH) / 2) - iPBInnerDivH);
+			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
 	  				}
 	  				else {
 	  					//alert("인터넷 익스플로러 브라우저가 아닙니다.");
-			  			topOffset = ((($("#imgPopupBox").height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
+			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
 	  				}
-		  			$("#imgPopup").css("top", topOffset);
-		  			$("#imgPopupDiv").css("overflow", "hidden");
+		  			$imgPopup.css("top", topOffset);
+		  			$imgPopupDiv.css("overflow", "hidden");
 		  		}
 		  		else if(thumbImgH > (imgPopupDivCH - 100)){
-		  			$("#imgPopup").css("top", 0);
-		  			$("#imgPopupDiv").css("overflow", "auto");
+		  			$imgPopup.css("top", 0);
+		  			$imgPopupDiv.css("overflow", "auto");
 		  		}
 		
 		  	}
@@ -2796,35 +2816,38 @@
 		  	function zoomOutImgPopup(){
 		  		var zoom = 1;
 		  		var zoomOffset = 0.1;
+		  		var $imgPopupBox = $("#imgPopupBox");
+		  		var $imgPopupDiv = $("#imgPopupDiv");
+		  		var $imgPopup = $("#imgPopup");
 		  		
 		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
-		  		if($("#imgPopup").css("zoom").indexOf("%") != -1){
-		  			zoom = parseFloat($("#imgPopup").css("zoom").replace("%", "") / 100) - zoomOffset;
+		  		if($imgPopup.css("zoom").indexOf("%") != -1){
+		  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) - zoomOffset;
 		  		}
-		  		else if($("#imgPopup").css("zoom").indexOf("normal") != -1){
+		  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
 		  			zoom = 1 - zoomOffset;
 		  		}
 		  		else{
-			  		zoom = parseFloat($("#imgPopup").css("zoom")) - zoomOffset;
+			  		zoom = parseFloat($imgPopup.css("zoom")) - zoomOffset;
 		  		}
 		  		
 		  		if( zoom > 0 ){
-			  		$("#imgPopup").css("zoom", zoom);
+			  		$imgPopup.css("zoom", zoom);
 		  		}else{
 		  			return;
 		  		}
 		  		
-		  		var thumbImgW = $("#imgPopup").prop("naturalWidth") * zoom;
-		  		var thumbImgH = $("#imgPopup").prop("naturalHeight") * zoom;
+		  		var thumbImgW = $imgPopup.prop("naturalWidth") * zoom;
+		  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
 		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
 	    		var imgPopup = document.getElementById("imgPopup");
 		  		var imgPopupDivCW = imgPopupDiv.clientWidth;
 	    		var imgPopupDivCH = imgPopupDiv.clientHeight;
-	    		$("#imgPopupDiv").width(imgPopup.offsetWidth * zoom);
+	    		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
 	    		
 		  		if(thumbImgW > (imgPopupDivCW - 100)){
-		  			$("#imgPopup").css("left","");
+		  			$imgPopup.css("left","");
 		  		}
 		  		
 		  		//imgPopup 세로 위치 조정
@@ -2833,18 +2856,18 @@
 		  			var topOffset = "";
 		  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
 	  					//alert("인터넷 익스플로러 브라우저 입니다.");
-			  			topOffset = ((($("#imgPopupBox").height() - thumbImgH) / 2) - iPBInnerDivH);
+			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
 	  				}
 	  				else {
 	  					//alert("인터넷 익스플로러 브라우저가 아닙니다.");
-			  			topOffset = ((($("#imgPopupBox").height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
+			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
 	  				}
-		  			$("#imgPopup").css("top", topOffset);
-		  			$("#imgPopupDiv").css("overflow", "hidden");
+		  			$imgPopup.css("top", topOffset);
+		  			$imgPopupDiv.css("overflow", "hidden");
 		  		}
 		  		else if(thumbImgH > (imgPopupDivCH - 100)){
-		  			$("#imgPopup").css("top", 0);
-		  			$("#imgPopupDiv").css("overflow", "auto");
+		  			$imgPopup.css("top", 0);
+		  			$imgPopupDiv.css("overflow", "auto");
 		  		}
 		  		
 		  	}
