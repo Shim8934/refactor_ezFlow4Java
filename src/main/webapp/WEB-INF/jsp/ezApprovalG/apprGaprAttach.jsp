@@ -734,7 +734,7 @@
 			        	if (totalSize + calTotalSize > totMaxSize) {
 				        	alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
 				        	isfileup = false;
-				        	
+				        	// 용량 초과 파일 같은 파일 업로드 시 알러트 다시 뜨게 수정 2018-04-19 강민수92
 				        	document.form.file1.value = "";
 				        	return;
 				        } else {
@@ -781,6 +781,7 @@
 		    			isfileup = false;
 		    		}
 		    	});
+		       	// 같은 파일 업로드 할 수 있게 수정 2018-04-19 강민수92
 		        document.form.file1.value = "";
 		    }		    
 		</script>
