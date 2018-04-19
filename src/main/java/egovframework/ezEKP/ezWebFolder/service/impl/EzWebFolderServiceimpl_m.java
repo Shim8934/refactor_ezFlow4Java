@@ -59,6 +59,32 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	private CommonUtil commonUtil;
 	
 	@Override
+	public void insertIfNotExistRootForder(String userId, String userName1, String userName2, String compId, List<Map<String, String>> permissionIdList, String offset, int tenantId) throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		LOGGER.debug("timeUTC: "+ timeUTC);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId",      userId);
+		map.put("compId",      compId);
+		map.put("createName1", userName1);
+		map.put("createName2", userName2);
+		map.put("timeUTC",     timeUTC);
+		map.put("tenantId",    tenantId);
+		
+		for (Map<String, String> idMap : permissionIdList) {
+			map.put("ownerId",    idMap.get("id"));
+			map.put("folderType", idMap.get("type"));
+			
+			if (ezWebFolderDAO_m.checkRootFolder(map) == 0) {
+				ezWebFolderDAO_m.insertRootFolder(map);
+				LOGGER.debug("root folder created. idMap: " + idMap);
+			}
+		}
+	}
+	
+	@Override
 	public List<ShareVO> getSharingList(String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
@@ -110,7 +136,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		}
 		
-		List<String> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId",	         userId);
@@ -206,7 +232,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		}
 		
-		List<String> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId",	userId);
@@ -278,6 +304,46 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
+	public List<Map<String, String>> getPermissionIdList(String userId, String deptId, String compId, int tenantId) throws Exception {
+		List<Map<String, String>> idList = new ArrayList<Map<String, String>>();
+		
+		List<String> addjobList = ezWebFolderService_y.getAddJobList(tenantId, userId);
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",	userId);
+		map.put("tenantId",	tenantId);
+		
+		List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map);
+		
+		Set<String> idSet = new HashSet<String>();
+		idSet.add(userId);
+		idSet.add(deptId);
+		idSet.add(compId);
+		idSet.addAll(addjobList);
+		idSet.addAll(folderUserIdList);
+		
+		Map<String, String> idMap = null;
+		
+		for (String id : idSet) {
+			idMap = new HashMap<String, String>();
+			idMap.put("id", id);
+			
+			if (id.equals(userId)) {
+				idMap.put("type", "U");
+			} else if (id.equals(compId)) {
+				idMap.put("type", "C");
+			} else {
+				idMap.put("type", "D");
+			}
+			
+			idList.add(idMap);
+		}
+		
+		LOGGER.debug("idList: " + idList);
+		return idList;
+	}
+	
+	@Override
 	public int getShareSeq(int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
@@ -320,30 +386,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		List<String> userNames = ezWebFolderDAO_m.getUserNameList(map);
 		
 		return String.join(",", userNames);
-	}
-	
-	public List<String> getPermissionIdList(String userId, String deptId, String compId, int tenantId) throws Exception {
-		List<String> idList = new ArrayList<String>();
-		
-		List<String> addjobList = ezWebFolderService_y.getAddJobList(tenantId, userId);
-		
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("userId",	userId);
-		map.put("tenantId",	tenantId);
-		
-		List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map);
-		
-		Set<String> idSet = new HashSet<String>();
-		idSet.add(userId);
-		idSet.add(deptId);
-		idSet.add(compId);
-		idSet.addAll(addjobList);
-		idSet.addAll(folderUserIdList);
-		
-		idList.addAll(idSet);
-		
-		LOGGER.debug("idList: " + idList.toString());
-		return idList;
 	}
 	
 	public List<String> userDeptList(String userId, int tenantId) throws Exception {

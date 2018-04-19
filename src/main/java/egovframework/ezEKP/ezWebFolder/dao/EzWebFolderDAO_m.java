@@ -14,7 +14,15 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @Repository("EzWebFolderDAO_m")
 @SuppressWarnings("unchecked")
 public class EzWebFolderDAO_m extends EgovAbstractDAO {
-
+	
+	public int checkRootFolder(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_m.checkRootFolder", map);
+	}
+	
+	public String insertRootFolder(Map<String, Object> map) {
+		return (String) insert("EzWebFolderDAO_m.insertRootFolder", map);
+	}
+	
 	public List<ShareVO> getSharingList(Map<String, Object> map) {
 		return (List<ShareVO>)list("EzWebFolderDAO_m.getSharingList", map);
 	}
