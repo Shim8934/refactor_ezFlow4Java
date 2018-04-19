@@ -2614,8 +2614,9 @@
 		    }
 		    
 		  	//썸네일 이미지에 레이어 팝업 기능 관련
+		    var tempTimer;
 		    function addThumbnailEvent(){
-		    	$(document).on("mouseover",".thumbnail",function(e){
+		  		$(document).on("mouseover",".thumbnail",function(e){
 		    		thumbnailImgMouseOver(e);
 		    	}).on("click", ".thumbCloseBtn", function(e){
 					hideImgPopupBox();
@@ -2625,8 +2626,36 @@
 					magnifyThumbnailSize();
 				}).on("click", "#thumbZoomInBtn", function(e){
 					zoomInImgPopup();
+				}).on("mousedown", "#thumbZoomInBtn", function(e){
+					e.target.style.color = "#0470e4";
+					tempTimer = setInterval(zoomInImgPopup, 150);
+				}).on("mouseup mouseleave", "#thumbZoomInBtn", function(e){
+					e.target.style.color = "";
+					if(tempTimer){
+						clearInterval(tempTimer);
+					}
 				}).on("click", "#thumbZoomOutBtn", function(e){
 					zoomOutImgPopup();
+				}).on("mousedown", "#thumbZoomOutBtn", function(e){
+					e.target.style.color = "#0470e4";
+					tempTimer = setInterval(zoomOutImgPopup, 150);
+				}).on("mouseup mouseleave", "#thumbZoomOutBtn", function(e){
+					e.target.style.color = "";
+					if(tempTimer){
+						clearInterval(tempTimer);
+					}
+				}).on("click", "#imgPopup", function(e){
+					var popupOption = "resizable=yes, scrollbars=yes, location=no, status=no";
+					var title = e.target.getAttribute("_filename");
+					var imgPopupWindow = window.open(title, title, popupOption);
+					imgPopupWindow.document.write(
+							"<table style='width:100%; height:100%;'>"
+						   		+"<td style='vertical-align:middle;'>"
+						   			+"<img src='" + e.target.src + "' title='" + title + "' style='display:block; margin:auto;'/>"
+						   		+"</td>"
+				   		  +"</table>"
+					);
+					imgPopupWindow.document.close();
 				});
 		    }
 		  	
@@ -2638,6 +2667,8 @@
 	    		$("#imgPopupDiv").removeClass("imgPopupDivMagnify").addClass("imgPopupDiv");
 	    		$("#imgPopup").removeClass("imgPopupOff imgPopupMagnify").addClass("imgPopup");
 	    		$("#imgPopup").attr("src",e.target.src);
+	    		$("#imgPopup").attr("_filename",e.target.getAttribute("_filename"));
+	    		$("#imgPopup").attr("title",e.target.getAttribute("_filename"));
 	    		
 	    		var imgPB_LeftOffset = (window.innerWidth-$("#imgPopupBox").width()) / 2;
 	    		var imgPB_TopOffset = (window.innerHeight-$("#imgPopupBox").height()) / 2 + window.pageYOffset;
@@ -2718,7 +2749,7 @@
 		  	//줌인버튼 기능.
 		  	function zoomInImgPopup(){
 		  		var zoom = 1;
-		  		var zoomOffset = 0.2;
+		  		var zoomOffset = 0.1;
 		  		
 		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
 		  		if($("#imgPopup").css("zoom").indexOf("%") != -1){
@@ -3187,7 +3218,7 @@
 				               		</c:if> --%>
 				               		<c:choose>
 				               			<c:when test="${_option.filePath ne null }">
-				               				<img id="_imgOption<c:out value ="${_option.ansId}"/>" class="thumbnail" onclick="" src="/fileroot/${question.tenantId}/files/upload_vote/uploadFile/${fn:split(_option.filePath,'/')[0] }" />	               		             		         		
+				               				<img id="_imgOption<c:out value ="${_option.ansId}"/>" class="thumbnail" onclick="" src="/fileroot/${question.tenantId}/files/upload_vote/uploadFile/${fn:split(_option.filePath,'/')[0] }" _fileName="${fn:split(_option.filePath,'/')[1] }" title="${fn:split(_option.filePath,'/')[1] }"/>
 				               			</c:when>
 				               			<c:otherwise>
 				               				<img class="imgNotAttached" src="/images/poll/no_attachment.png"/>
