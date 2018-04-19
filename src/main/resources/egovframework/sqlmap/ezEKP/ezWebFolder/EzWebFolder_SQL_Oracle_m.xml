@@ -104,35 +104,35 @@
 	<sql id ="searchTrashCanFile">
 	<isNotEqual property="searchExt" compareValue="" prepend="AND">
 				<![CDATA[
-					FILES.FILE_EXT LIKE CONCAT ('%', #searchExt#, '%')
+					FILES.FILE_EXT LIKE '%' || #searchExt# || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 				<![CDATA[
-					FILES.FILE_NAME LIKE CONCAT ('%', #searchFileName#, '%')
+					FILES.FILE_NAME LIKE '%' || #searchFileName# || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 				<![CDATA[
-					FILES.CREATE_NAME1 LIKE CONCAT ('%', #searchCreateName#, '%')
+					FILES.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 				<![CDATA[
-					FILE_TYPE.TYPE_NAME LIKE CONCAT ('%', #searchFileType#, '%')
+					FILE_TYPE.TYPE_NAME LIKE '%' || #searchFileType# || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="endrollStartDate" compareValue="">
 			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					FILES.CREATE_DATE >= #endrollStartDate# AND FILES.CREATE_DATE <= #endrollEndDate#)
+					TO_CHAR(FILES.CREATE_DATE, 'YYYY-MM-DD') >= TO_CHAR(#endrollStartDate#, 'YYYY-MM-DD') AND TO_CHAR(FILES.CREATE_DATE, 'YYYY-MM-DD') <= TO_CHAR(#endrollEndDate#, 'YYYY-MM-DD')
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 		<isNotEqual property="delStartDate" compareValue="">
 			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					FILES.UPDATE_DATE >= #delStartDate# AND FILES.UPDATE_DATE <= #delEndDate#)
+					TO_CHAR(FILES.UPDATE_DATE, 'YYYY-MM-DD') >= TO_CHAR(#delStartDate#, 'YYYY-MM-DD') AND TO_CHAR(FILES.UPDATE_DATE, 'YYYY-MM-DD') <= TO_CHAR(#delEndDate#, 'YYYY-MM-DD')
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -141,35 +141,35 @@
 <sql id ="searchTrashCanFolder">
 	<isNotEqual property="searchExt" compareValue="" prepend="AND">
 				<![CDATA[
-					'folder' LIKE CONCAT ('%', #searchExt#, '%')
+					'folder' LIKE '%' || #searchExt# || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 				<![CDATA[
-					FOLDER.FOLDER_NAME1 LIKE CONCAT ('%', #searchFileName#, '%')
+					FOLDER.FOLDER_NAME1 LIKE '%' || #searchFileName# || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 				<![CDATA[
-					FOLDER.CREATE_NAME1 LIKE CONCAT ('%', #searchCreateName#, '%')
+					FOLDER.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 				<![CDATA[
-					FILE_TYPE.TYPE_NAME LIKE CONCAT ('%', #searchFileType#, '%')
+					FILE_TYPE.TYPE_NAME LIKE '%' || #searchFileType# || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="endrollStartDate" compareValue="">
 			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d') >= #endrollStartDate# AND DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d')<= #endrollEndDate#)
+					TO_CHAR(FOLDER.CREATE_DATE, 'YYYY-MM-DD') >= TO_CHAR(#endrollStartDate#, 'YYYY-MM-DD') AND TO_CHAR(FOLDER.CREATE_DATE, 'YYYY-MM-DD')<= TO_CHAR(#endrollStartDate#, 'YYYY-MM-DD')
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 		<isNotEqual property="delStartDate" compareValue="">
 			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d') >= #delStartDate# AND DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d')<= #delEndDate#)
+					TO_CHAR(FOLDER.UPDATE_DATE, 'YYYY-MM-DD') >= # TO_CHAR(delStartDate#, 'YYYY-MM-DD') AND TO_CHAR(FOLDER.UPDATE_DATE, 'YYYY-MM-DD')<= TO_CHAR(#delEndDate#, 'YYYY-MM-DD')
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -750,8 +750,14 @@
 	
 	<select id="EzWebFolderDAO_m.getTrashCanList" parameterClass="Map" resultMap="trashCanVO">
 		<![CDATA[
+		SELECT B.rnum, B.TRASHCAN_ID, B.TRASHCAN_NAME, B.TRASHCAN_PATH, 
+				B.TRASHCAN_ICON_URL, B.TRASHCAN_EXT, B.CREATE_DATE, B.UPDATE_DATE, 
+				B.CREATE_NAME1, B.CREATE_NAME2, B.FILE_FOLDER_ID, B.FOLDER_UPPER
+		FROM (
 			SELECT
-				*
+				rownum as rnum, A.TRASHCAN_ID, A.TRASHCAN_NAME, A.TRASHCAN_PATH, 
+				A.TRASHCAN_ICON_URL, A.TRASHCAN_EXT, A.CREATE_DATE, A.UPDATE_DATE, 
+				A.CREATE_NAME1, A.CREATE_NAME2, A.FILE_FOLDER_ID, A.FOLDER_UPPER
 			FROM (
 				SELECT
 					distinct
@@ -761,8 +767,8 @@
 					FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
 		            'folder'	AS TRASHCAN_EXT,
 					0 	AS TRASHCAN_SIZE,
-					DATE_ADD(FOLDER.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-					DATE_ADD(FOLDER.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+					FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+					FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
 					FOLDER.CREATE_NAME1 AS CREATE_NAME1,
 		            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
 		            '' AS FILE_FOLDER_ID,
@@ -790,8 +796,8 @@
 				END  AS TRASHCAN_ICON_URL,
 				FILES.FILE_EXT		AS TRASHCAN_EXT,
 				FILES.FILE_SIZE 	AS TRASHCAN_SIZE,
-				DATE_ADD(FILES.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				DATE_ADD(FILES.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+				FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
 	            FILES.CREATE_NAME1 AS CREATE_NAME1,
 	            FILES.CREATE_NAME1 AS CREATE_NAME2,
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
@@ -807,10 +813,11 @@
 		]]>
 		<include refid="searchTrashCanFile"/>
 	 	<![CDATA[
-				) R
-			GROUP BY R.TRASHCAN_ID
-			ORDER BY R.UPDATE_DATE DESC
-			LIMIT #pStart#, #pEnd#
+			GROUP BY TRASHCAN_ID
+			ORDER BY UPDATE_DATE DESC
+				) A
+			WHERE rownum <= #pStart# + #pEnd# ) B
+		WHERE B.rnum >= #pStart# + 1
 		]]> 
 	</select>
 	
@@ -824,12 +831,12 @@
 				FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
 				FILES.FILE_EXT		AS TRASHCAN_EXT,
 				FILES.FILE_SIZE 	AS TRASHCAN_SIZE,
-				DATE_ADD(FILES.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				DATE_ADD(FILES.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+				FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
 	            FILES.CREATE_NAME1 AS CREATE_NAME1,
 	            FILES.CREATE_NAME1 AS CREATE_NAME2,
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
-	            "" as FOLDER_UPPER
+	            '' as FOLDER_UPPER
 			FROM
 				tbl_webfolder_file AS FILES
 				INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
@@ -932,7 +939,7 @@
 				LEFT JOIN TBL_WEBFOLDER_FILETYPE AS FILE_TYPE
 				ON FILE_TYPE.TYPE_NAME = 'folder'
 			WHERE
-				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+				FOLDER_PATH LIKE #folderPath# || '%'
 			AND
 				TENANT_ID = #tenantId#
 			AND
@@ -963,7 +970,7 @@
 		WHERE
 			TENANT_ID = #tenantId#
 		AND
-			FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+			FOLDER_PATH LIKE #folderPath# || '%'
 		AND
 			DELETER_ID = #userId#
 		AND
@@ -980,7 +987,7 @@
 					FROM
 						TBL_WEBFOLDER_FOLDER
 								WHERE
-									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+									FOLDER_PATH LIKE #folderPath# || '%'
 								AND
 									TENANT_ID = #tenantId#
 					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
@@ -1204,7 +1211,7 @@
 				USE_STATUS = 'Y',
 				UPDATE_DATE = #timeUTC#
 			WHERE
-				FOLDER_PATH like concat(concat(#oldPath#, '_'), '%')
+				FOLDER_PATH like #oldPath# || '_' ||  '%'
 			AND
 				TENANT_ID    = #tenantId#
 		]]>

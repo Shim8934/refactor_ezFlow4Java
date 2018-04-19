@@ -125,14 +125,14 @@
 		<isNotEqual property="endrollStartDate" compareValue="">
 			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					FILES.CREATE_DATE >= #endrollStartDate# AND FILES.CREATE_DATE <= #endrollEndDate#)
+					(DATE_FOMAT(FILES.CREATE_DATE, '%Y-%m-%d') >= #endrollStartDate# AND DATE_FORMAT(FILES.CREATE_DATE, '%Y-%m-%d') <= #endrollEndDate#)
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 		<isNotEqual property="delStartDate" compareValue="">
 			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					FILES.UPDATE_DATE >= #delStartDate# AND FILES.UPDATE_DATE <= #delEndDate#)
+					(DATE_FOMAT(FILES.UPDATE_DATE, '%Y-%m-%d') >= #delStartDate# AND DATE_FORMAT(FILES.UPDATE_DATE, '%Y-%m-%d') <= #delEndDate#)
 				]]>
 			</isNotEqual>
 		</isNotEqual>
