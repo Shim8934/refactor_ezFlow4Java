@@ -88,7 +88,10 @@ public class EzLadderServiceImpl implements EzLadderService {
 		String searchInput = allData.get(1);
 		String mode = allData.get(2);
 	
-		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");    
+		searchInput = searchInput.replace("\\","\\\\");
+		searchInput = searchInput.replace("%", "\\%");
+		searchInput = searchInput.replace("_", "\\_");
+		
 		
 		map.put("userId", vo.getUserId());
 		map.put("searchSelect", searchSelect);
@@ -174,7 +177,10 @@ public class EzLadderServiceImpl implements EzLadderService {
 		String searchInput = allData.get(1);
 		String mode = allData.get(2);
 		
-		searchInput = searchInput.replace("%", "\\%").replace("_", "\\_");
+		searchInput = searchInput.replace("\\","\\\\");
+		searchInput = searchInput.replace("%", "\\%");
+		searchInput = searchInput.replace("_", "\\_");
+		
 	
 		map.put("userId", vo.getUserId());
 		map.put("searchSelect", searchSelect);
@@ -622,14 +628,14 @@ public class EzLadderServiceImpl implements EzLadderService {
 				break;
 			}
 
-			jungbockCnt++;// 만들 수 없는 사다리 배제
+			/*jungbockCnt++;// 만들 수 없는 사다리 배제
 			if (jungbockCnt >= 100000) {
 				jungbockCnt = 0;
 				lineCnt = 0;
 				for (int i = 0; i < choice.length; i++) {
 					choice[i] = 0;
 				}
-			}
+			}*/
 		}
 		logger.debug("getLineArray ended.");
 		return choice;

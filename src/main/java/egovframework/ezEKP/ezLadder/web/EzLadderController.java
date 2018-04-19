@@ -133,7 +133,10 @@ public class EzLadderController {
 		String page = jsonResult.get("currPage").toString();
 		String totalLadder = jsonResult.get("totalLadder").toString();
 		String totalPage = jsonResult.get("totalPage").toString();
-		searchInput = searchInput.replaceAll("\"", "&quot;");
+	
+		searchInput = searchInput.replace("\\","\\\\");
+		searchInput = searchInput.replace("\"", "\\" + "\"");
+		
 		if (status.equals("ok")) {
 			list = (JSONArray) jsonResult.get("data");
 			model.addAttribute("id", userInfo.getId());
