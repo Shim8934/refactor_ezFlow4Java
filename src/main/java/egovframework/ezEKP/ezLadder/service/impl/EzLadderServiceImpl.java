@@ -227,15 +227,17 @@ public class EzLadderServiceImpl implements EzLadderService {
 				dataMap.put("tenant_id", tenant_id);
 				dataMap.put("lang", primaryLang);
 				
-				LadderLineVO user = ezLadderDAO.selectSearchUser(dataMap);
+				List<LadderLineVO> user = ezLadderDAO.selectSearchUser(dataMap);
 				
-				if(user == null) {
+				if(user.size() == 0 || user == null) {
 					LadderLineVO noUser = new LadderLineVO(); 
 					noUser.setUserName(name);
 					noUser.setUserName2(name);
 					resultUser.add(noUser);
 				} else {
-					resultUser.add(user);
+					for(LadderLineVO line : user) {
+						resultUser.add(line);
+					}
 				}
 				
 				dataMap.clear();
@@ -710,7 +712,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		String subject = egovMessageSource.getMessage("ezLadder.t111", userInfo.getLocale());	// 메일제목
 		StringBuilder bodyContent = new StringBuilder("");	// 메일 링크
 		bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
-		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t003", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezLadder/getLadderGame.do?ladderId=" + lad.getLadderId() + "&searchSelect=none&searchInput=none&mode=none&currPage=1', '', 'width=820, height=900')\" >" + commonUtil.cleanValue(ladVO.getTitle()) + "</span></br>");
+		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t003", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;\"><a href='/ezLadder/getLadderGame.do?ladderId=" + lad.getLadderId() + "&searchSelect=none&searchInput=none&mode=none&currPage=1'>" + commonUtil.cleanValue(ladVO.getTitle()) + "</a></span></br>");
 		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t112", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
 		bodyContent.append("</div>");
 				

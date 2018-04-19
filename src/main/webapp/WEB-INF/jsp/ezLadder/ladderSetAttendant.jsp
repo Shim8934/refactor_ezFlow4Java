@@ -607,7 +607,7 @@
 		                    var IsInsert = CheckMailReceiver(strId, "3");
 		
 		                    if(strId.substring(0, 14) === "anonyAttendant" || !IsInsert){
-		                    	alluser[i] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real-xml" };
+		                    	alluser[i] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real" };
 		                    } else {
 		                    	overlapuser[i] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }; 
 		                    }
@@ -629,7 +629,7 @@
 	                    var IsInsert = CheckMailReceiver(strId, "3");
 	                    
 	                    if(strId.substring(0, 14) === "anonyAttendant" || !IsInsert){
-	                    	alluser[0] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real-xml" };
+	                    	alluser[0] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real" };
 	                    } else {
 	                    	overlapuser[0] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone };
 	                    }
@@ -650,7 +650,7 @@
 		                    var IsInsert = CheckMailReceiver(strId, "3"); 
 		                    
 							if(!IsInsert){
-								alluser[i] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real-xml" };
+								alluser[i] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real" };
 		                    } else {
 		                    	overlapuser[i] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone };
 		                    }
@@ -1324,9 +1324,20 @@
 		        
 		        for(var i = 0; i < totalLen; i++) {
 		        	if(GetAttribute(totalRows[i], "DATA1").substring(0, 14) === "anonyAttendant") {
-		        		rtn[i] = { "id": "anonyAttendant_" + i, "name": $("#MsgToList tr:eq(" + (i + 1) + ") input").val(), "name2": $("#MsgToList tr:eq(" + (i + 1) + ") input").val(), "pic": "" };
+		        		var anonyName = $("#MsgToList tr:eq(" + (i + 1) + ") input").val();
+		        		rtn[i] = { "data": { "userName": anonyName, "userName2": anonyName }, "datatype": "anony" };
+		        		/* rtn["id"][i] = "anonyAttendant_" + i;
+		        		rtn["name"][i] = anonyName;
+		        		rtn["name2"][i] = anonyName;
+		        		rtn["pic"][i] = ""; */
+		        		/* rtn[i] = { "id": "anonyAttendant_" + i, "name": $("#MsgToList tr:eq(" + (i + 1) + ") input").val(), "name2": $("#MsgToList tr:eq(" + (i + 1) + ") input").val(), "pic": "" }; */
 		        	} else {
-		        		rtn[i] = { "id": GetAttribute(totalRows[i], "DATA1"), "name": GetAttribute(totalRows[i], "DATA2"), "name2": GetAttribute(totalRows[i], "DATA3"), "pic": GetAttribute(totalRows[i], "DATA9") };
+		        		rtn[i] = { "data": { "userId": GetAttribute(totalRows[i], "DATA1"),"userName": GetAttribute(totalRows[i], "DATA2"), "userName2": GetAttribute(totalRows[i], "DATA3"), "pic": GetAttribute(totalRows[i], "DATA9") }, "datatype": "real" };
+		        		/* rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
+		        		rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
+		        		rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3");
+		        		rtn["pic"][i] = GetAttribute(totalRows[i], "DATA9"); */
+		        		/* rtn[i] = { "id": GetAttribute(totalRows[i], "DATA1"), "name": GetAttribute(totalRows[i], "DATA2"), "name2": GetAttribute(totalRows[i], "DATA3"), "pic": GetAttribute(totalRows[i], "DATA9") }; */
 		        	}
 		        }
 		    }

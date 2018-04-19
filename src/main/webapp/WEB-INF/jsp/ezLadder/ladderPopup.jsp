@@ -19,16 +19,24 @@
 		<script type="text/javascript">
 			var retVal;
 			var retFunc;
+			var retVal2;
 			var poptype = "${popupType}";
 			
 			$(function() {
 				try {
 					retVal = parent.retAttendantPopInfo[0];
 					retFunc = parent.retAttendantPopInfo[1];
+					retVal2 = parent.retAttendantPopInfo[2];
 				} catch(e) {
-					retVal = opener.retAttendantPopInfo[0]
-					retFunc = opener.retAttendantPopInfo[1];
-				}
+					try {
+						retVal = opener.retAttendantPopInfo[0]
+						retFunc = opener.retAttendantPopInfo[1];
+						retVal2 = opener.retAttendantPopInfo[2];
+					} catch(e) {
+						retVal2 = "";
+					}
+					console.log(retVal2);
+				} 
 				
 				/* if(poptype === "overlap") {
 					console.log(retVal);

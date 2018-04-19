@@ -92,6 +92,7 @@
 			}
 			
 			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}
+			
 		</style>
 	</head>
 	<body class="mainbody" style="min-width: 750px;">
@@ -106,7 +107,7 @@
 					  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>><spring:message code="ezLadder.t127"/></option>
 					</select>
 					
-					<a href="#"><img src="/images/ezLadder/btn_search.png" width='24px' height='24px' style="vertical-align:middle; float:right;" onclick="searchLadder()" ></a>
+					<a href="#"><img src="/images/ezLadder/btn_search.png" border="0" width='24px' height='24px' style="vertical-align:middle; float:right;" onclick="searchLadder()" ></a>
 					<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left:10px; float:right;" value="<c:out value='${searchInput}'/>">
 					<select id="ladderType" style="height: 24px; width:150px;margin-left:10px; float:right;">
 					  <option value="0" <c:if test = "${searchInput eq '0' }" >selected="selected"</c:if>><spring:message code="ezLadder.t101"/></option>
