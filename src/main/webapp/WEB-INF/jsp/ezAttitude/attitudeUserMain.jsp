@@ -63,7 +63,10 @@
 						attitudeNewItem(this);
 					})	
 				} else {
-					//부서내 모든 사원의 근태 현황 조회 팝업 
+					$(document).on('dblclick', '.td_day td', function(){
+						pMode = "new";
+						alert("부서 -> 근태 조회 구현 해야 함");
+					})
 				}
 				
 				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function(){
@@ -73,8 +76,19 @@
 				//근태수정신청 팝업창
 				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02]', function(){
 				//근태수정신청은 개인근태현황에서만 가능
+				var modappl = $(this).attr('modappl');
+				var attitudeid = $(this).attr('attitudeid');
 				if (deptFlag != "true") {
-					attitudeModItem(this);
+					if (modappl == 0) {
+						attitudeModItem(this);	
+					} else {
+						mod_detail(attitudeid);
+					}
+					
+				} else {
+					if (modappl == 1) {
+						mod_detail(attitudeid);
+					}
 				}
 				})
 			})
@@ -464,14 +478,78 @@
 						deptFlag : deptFlag,
 						typeId : t.getAttribute("id")
 					},
-					success : function(result) {
-						console.log(result)
-// 						$("span[name=span_list] table tbody").remove();
-// 						getAttitudeMainList_after(result);
-// 						getAttiStatisList();
-					}
-				})
+					success : function(json) {
+						
+				    	$('#addpopup_list tbody').children('tr').not(":first").remove();
+				    	
+				    	if (json.length == 0) {
+				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px;'></td>").text("내역이 없습니다."));
+				    		
+				    		$("#addpopup_list tbody").append(objTr);
+				    	}
+				    	
+				    	for(var i = 0; i < json.length; i++) {
+				    		console.log(json[i]);	
+				    		if (json[i].apprStatus == 1) {
+				    			json[i].apprStatus = "승인";
+				    		} else {
+				    			json[i].apprStatus = "반려";
+				    		}
+
+				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i+1)));
+				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
+				    		if (json[i].writerDeptName.length > 6) {
+				    			console.log("길다");
+				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
+				    		} else {
+				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
+				    		}
+				    		if (json[i].endDate == null) {
+				    			objTr.append($("<td style='width:70%'></td>").text("\u00a0" + json[i].startDate));
+				    		} else {
+					    		objTr.append($("<td style='width:70%'></td>").text("\u00a0" + json[i].startDate+ "\u00a0~\u00a0" + json[i].endDate));				    			
+				    		}
+
+				    		$("#addpopup_list tbody").append(objTr);
+				    	}
+				    },
+				    complete : function() {
+				    	console.log(parent.frames["right"]);
+				    	console.log(parent.frames["attitude_main"]);
+				    	try {
+				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);	
+				    	} catch(e) {
+				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);
+				    	}
+			        	
+			        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			        	
+			        	$("#popup").css("left", popupX);
+			        	
+						$("#popup").modal({
+							  escapeClose: false,
+							  clickClose: false,
+							  showClose: false
+						});
+				    }
+			    });
 			}
+			
+			function mod_detail(modAttId) {
+		    	var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 760) / 2;
+		        var pLeft = (pwidth - 790) / 2;
+				var feature = GetOpenPosition(790, 760);
+				
+				if (adminFlag == "true") {
+					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId +"&adminFlag=" + adminFlag, "",
+				 			"height = 830px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				} else {
+					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId, "",
+				 			"height = 830px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
+				}
+		    }
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">
@@ -509,41 +587,26 @@
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		<!-- 근태수정신청 팝업창 -->
-		<div id="popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
-			    	<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태수정신청</th>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">구분
-						<td>지각</td>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">출근시각</th>
-						<td>오늘날짜 (공백) 출근시각</td>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">변경시각</th>
-						<td>
-							<span id="periodblock" datetype="3">
-								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-								<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
-							</span>
-						</td>
-					</tr>
-					<tr>
-						<th style="width:90px;height:30px">승인상태</th>
-						<td>상태(진행, 반려)</td>
-					</tr>
-					<tr>
-<!-- 						<td colspan="2"><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%; height:90px; box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td> -->
-						<td colspan="2" style="margin:0px; padding:0px;"><textarea class="textarea" style="width:100%; height:120px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea></td>
-<!-- 						<td style="vertical-align:top;height:100%;" id="EdtorSize" colspan="2"> -->
-<!-- 		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe> -->
-<!-- 	                    </td> -->
-					</tr>
+			    <table class="popuplist" id="addpopup_list" style="display:block; width:500px; margin:10px 0px 0px 1px;">
+				    <thead>
+				    	<tr>
+						<th class="layerHeader" colspan="4" style="width:500px;">
+							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
+							<span id="popup_title">&nbsp;근태내역확인</span>
+						</th>
+						</tr>
+				    </thead>
+				    <tbody style="max-height:500px; width:500px; display:block; overflow-y:auto;">
+				    	<tr>
+				    		<th style="height:30px">No.</th>
+				    		<th style="height:30px">사원명</th>
+				    		<th style="height:30px">부서명</th>
+				    		<th style="height:30px">일시</th>
+						</tr>
+				    </tbody>
 				</table>
 				<!-- /내용 -->
 				<br />

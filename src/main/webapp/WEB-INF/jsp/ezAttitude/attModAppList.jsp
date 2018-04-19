@@ -368,7 +368,7 @@
 	    	}
 	    	
 	    	if (attList.length == 0) { 
-	    		$('#AttList tbody').append('<tr><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
+	    		$('#AttList tbody').append('<tr><td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
 	    	}
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
@@ -910,7 +910,7 @@
 			    	$('#addpopup_list tbody').children('tr').not(":first").remove();
 			    	
 			    	if (json.length == 0) {
-			    		var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:  center;'></td>").text("내역이 없습니다."));
+			    		var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
 			    		
 			    		$("#addpopup_list tbody").append(objTr);
 			    	}
@@ -1082,8 +1082,8 @@
 		        </c:forEach>
 		        
 			    <c:if test="${list.size() == 0}"> 
-			        <tr> 
-						<td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td>
+			        <tr>
+						<td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td>
 		       		</tr> 
 		        </c:if> 
                 </table>
@@ -1109,7 +1109,7 @@
 				<th>승인자</th>				
 			</tr>
 		</table>
-		
+<!-- 		팝업 -->
 		<div id="popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->

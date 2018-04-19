@@ -638,7 +638,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		if (!adminFlag.trim().equals("true")){
 			map.put("userId", userId);
 		} else if (checkAdmin.equals("false")) {
-			String[] deptIdList = {"approval"};
+			String[] deptIdList = {"4564"};
 			map.put("deptIdList", deptIdList);
 		}
 		map.put("startDate", startDate);
@@ -714,7 +714,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("userId", userId);
 		} else if (checkAdmin.equals("false")) {
 			LOGGER.debug("#############################################false true####################################");
-			String[] deptIdList = {"approval"};
+			String[] deptIdList = {"4564"};
 			map.put("deptIdList", deptIdList);
 		}
 		map.put("startDate", startDate);

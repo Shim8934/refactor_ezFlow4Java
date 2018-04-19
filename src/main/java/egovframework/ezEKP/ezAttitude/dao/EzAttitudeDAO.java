@@ -136,7 +136,7 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	
 	@SuppressWarnings("unchecked")
 	public void delUsersModifyAtt(Map<String, Object> map) throws Exception {
-		update("ezAttitudeDAO.delUsersModifyAtt", map);
+		delete("ezAttitudeDAO.delUsersModifyAtt", map);
 	}
 
 	@SuppressWarnings("unchecked")

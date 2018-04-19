@@ -50,6 +50,7 @@
 		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
 		<result  property="writerName"			column="WRITER_NAME"			columnIndex="18"/>
+		<result  property="writerDeptName"			column="WRITER_DEPT_NAME"			columnIndex="19"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -148,7 +149,8 @@
 				A.TYPE_ID,
 				B.TYPE_NAME,
 				B.IMG_PATH,
-				C.DISPLAYNAME AS WRITER_NAME
+				C.DISPLAYNAME AS WRITER_NAME,
+				C.DESCRIPTION AS WRITER_DEPT_NAME
 			FROM   
 				tbl_attitude A 
 			INNER JOIN 
@@ -542,12 +544,10 @@
 		]]>
 	</select>
 	
-	<update id="ezAttitudeDAO.delUsersModifyAtt" parameterClass="Map">
+	<delete id="ezAttitudeDAO.delUsersModifyAtt" parameterClass="Map">
 		<![CDATA[
-			UPDATE
+			DELETE FROM 
 				TBL_ATTITUDE_MODAPPL
-			SET
-				DELFLAG = #delFlag#
           	WHERE
           		TENANT_ID = #tenantId#
           	AND
@@ -557,7 +557,8 @@
 		<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
 		      #ids[]# 
 		</iterate>
-	</update>
+	</delete>
+
 	
 	<update id="ezAttitudeDAO.attAppUpdate" parameterClass="Map">
 		<![CDATA[
