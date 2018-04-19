@@ -2269,21 +2269,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String checkLine = "";
 		
-		// 결재 문서의 첨부를 다운받으려 하는사람이 결재라인에 있는지 체크 추가 2018-04-10 천성준
-		if (docID != null && docStatus != null) {
-			checkLine = ezApprovalGService.checkAprLine(docID.trim(), docStatus, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
-		}
-
 		logger.debug("docID : " + docID);
 		logger.debug("docStatus : " + docStatus);
 		logger.debug("filePath : " + filePath);
 		logger.debug("fileName : " + fileName);
-		logger.debug("checkLine : " + checkLine);
-		
+
 		//관리자는 권한 제한없도록 추가
 		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+			
 			result = "PERMISSION";
 		} else {
+			// 결재 문서의 첨부를 다운받으려 하는사람이 결재라인에 있는지 체크 추가 2018-04-10 천성준
+			if (docID != null && docStatus != null) {
+				checkLine = ezApprovalGService.checkAprLine(docID.trim(), docStatus, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			}
+			
 			if (docStatus != null && (docStatus.toUpperCase().equals("APR") || docStatus.toUpperCase().equals("TMP"))) {
 				if (docID != null && !docID.equals("")) {
 					String checkMode = "";
@@ -2315,6 +2315,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			logger.debug("docStatus = " + docStatus + "|| result = " + result);
 		}
+		
+
 		
 		//2017-04-02 클라이언트단에서 replace해서 받아와야함.
 		//fileName = fileName.replaceAll("&amp;", "&").replaceAll("&lt", "<").replaceAll("&gt;", ">");
@@ -7605,6 +7607,23 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.updateSusinState(docID, recDate, mode, deptID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("updateSusinState ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 민원인주소 우편번호검색 사용 여부 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/getUseZipCodeSearchInApr.do")
+	@ResponseBody
+	public String getUseZipCodeSearchInApr(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getUseZipCodeSearchInApr started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezCommonService.getTenantConfig("useZipCodeSearchInApr", userInfo.getTenantId());
+		
+		logger.debug("getUseZipCodeSearchInApr ended.");
 		
 		return result;
 	}

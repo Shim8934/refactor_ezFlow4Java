@@ -131,10 +131,10 @@
 		<h1><spring:message code='ezApprovalG.t25004'/></h1>		
 		<span>▒ <spring:message code='ezApprovalG.t292'/></span>		
 		<table class="content" style="margin-top: 15px">		  
-			<tr ${approvalFlag != 'G' ? "style='display:none'" : ""}>
+			<tr style="display: none">
 		    	<th> <spring:message code='ezApprovalG.t293'/></th>
 		    	<td style="width:100%"> 
-		      		<input type="text" name="textfield4" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" id="txtPageNum" />
+		      		<input type="hidden" name="textfield4" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" id="txtPageNum" value="1"/>
 		      	</td>
 		  	</tr>
 		  	<tr> 
