@@ -120,15 +120,16 @@
 	        <tr>
 	            <th style="width:200px; text-align:center">권한자</th>
 	            <td>
-	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn"><span onclick="select_person()">지정</span></a>                
+	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-top:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
+	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:2px;"><span onclick="select_person()">지정</span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center">권한부서</th>
 	            <td>
-	                <input id="txtdept" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn"><span onclick="selectDept()">지정</span></a>                
+<!-- 	                <input id="txtdept" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" /> -->
+	                <textarea rows="3" id="txtdept" type="text" style="margin-top:2px; width:77%; resize:none;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top: 15px;"><span onclick="selectDept()">지정</span></a>                
 	            </td>
 	        </tr>
 	    </table>

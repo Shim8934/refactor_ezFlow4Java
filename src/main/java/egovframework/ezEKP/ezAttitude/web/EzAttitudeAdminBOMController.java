@@ -1739,7 +1739,6 @@ public class EzAttitudeAdminBOMController {
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuth.do")
 	public String saveAttitudeAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		if (request.getParameter("userId")!=null) {
-			LOGGER.debug(request.getParameter("userId")+""+request.getParameter("userName"));
 			
 			model.addAttribute("selectedUser", request.getParameter("userId"));
 			model.addAttribute("selectedUserName", request.getParameter("userName"));
