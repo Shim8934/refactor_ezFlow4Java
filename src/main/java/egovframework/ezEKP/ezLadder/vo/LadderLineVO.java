@@ -12,6 +12,7 @@ public class LadderLineVO {
 	private String userName;
 	/** 참여자 이름(다국어) */
 	private String userName2;
+	private String deptName;
 	/** 게임 아이템 - 결과값 */
 	private String item;
 	/** 순서 */
@@ -26,6 +27,7 @@ public class LadderLineVO {
 	private String writerId;
 	/** 다국어 */
 	private String lang;
+	/** 사진 */
 	private String pic;
 	
 	/** 참여자 아이디 배열 */
@@ -68,6 +70,12 @@ public class LadderLineVO {
 	}
 	public void setUserName2(String userName2) {
 		this.userName2 = userName2;
+	}
+	public String getDeptName() {
+		return deptName;
+	}
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
 	}
 	public String getItem() {
 		return item;

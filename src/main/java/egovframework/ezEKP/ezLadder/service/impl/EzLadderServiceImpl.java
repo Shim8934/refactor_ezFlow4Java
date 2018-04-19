@@ -221,15 +221,17 @@ public class EzLadderServiceImpl implements EzLadderService {
 				dataMap.put("tenant_id", tenant_id);
 				dataMap.put("lang", primaryLang);
 				
-				LadderLineVO user = ezLadderDAO.selectSearchUser(dataMap);
+				List<LadderLineVO> user = ezLadderDAO.selectSearchUser(dataMap);
 				
-				if(user == null) {
+				if(user.size() == 0 || user == null) {
 					LadderLineVO noUser = new LadderLineVO(); 
 					noUser.setUserName(name);
 					noUser.setUserName2(name);
 					resultUser.add(noUser);
 				} else {
-					resultUser.add(user);
+					for(LadderLineVO line : user) {
+						resultUser.add(line);
+					}
 				}
 				
 				dataMap.clear();

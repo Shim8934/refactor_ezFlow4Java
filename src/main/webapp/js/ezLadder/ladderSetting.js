@@ -21,16 +21,17 @@ function getPreLadder(ladderID) {
 		},
 		success: function(result) {
 			ladinfo["lad"] = result.vo;
-			templist = result.list;
+			ladinfo["ladline"] = result.list;
+			/*templist = result.list;
 			
-			console.log(templist);
+			console.log(templist);*/
 		}
 	});
 	
-	ladinfo["ladline"] = [];
+	/*ladinfo["ladline"] = [];
 	for(var i = 0; i < templist.length; i++) {
 		ladinfo["ladline"][i] = { "id": templist[i]["userId"], "name": templist[i]["userName"], "name2": templist[i]["userName2"], "item": templist[i]["item"] };
-	}
+	}*/
 	
 	return ladinfo;
 }
