@@ -811,6 +811,59 @@ public class EzAttitudeKMSController {
 	}
 	
 	/**
+	 * 근태수정현황 등록
+	 */
+	@RequestMapping(value="/ezAttitude/saveAttModApp.do" , method= RequestMethod.POST)
+	@ResponseBody
+	public String saveAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=false)String attId,
+			@RequestParam(required=false)String changeDate,
+			@RequestParam(required=false)String content) throws Exception {
+		LOGGER.debug("modAttModApp started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attId + "/modify-applications";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("content", content)
+				.queryParam("changeDate", changeDate)
+				.queryParam("offset", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+
+		LOGGER.debug("modAttModApp ended");
+		
+		return status;
+	}
+	
+	/**
 	 * 근태수정현황 수정
 	 */
 	@RequestMapping(value="/ezAttitude/modAttModApp.do" , method= RequestMethod.POST)

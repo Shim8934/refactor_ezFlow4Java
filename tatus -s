@@ -1,0 +1,520 @@
+[1mdiff --git a/src/main/java/egovframework/ezEKP/ezAttitude/dao/EzAttitudeDAO.java b/src/main/java/egovframework/ezEKP/ezAttitude/dao/EzAttitudeDAO.java[m
+[1mindex 81ce4f25a..f4f63615a 100644[m
+[1m--- a/src/main/java/egovframework/ezEKP/ezAttitude/dao/EzAttitudeDAO.java[m
+[1m+++ b/src/main/java/egovframework/ezEKP/ezAttitude/dao/EzAttitudeDAO.java[m
+[36m@@ -159,10 +159,20 @@[m [mpublic class EzAttitudeDAO extends EgovAbstractDAO{[m
+ 	}[m
+ 	[m
+ 	@SuppressWarnings("unchecked")[m
+[31m-	public void attModAppModify([m
+[31m-			Map<String, Object> map) {[m
+[32m+[m	[32mpublic void attModAppModify(Map<String, Object> map) throws Exception {[m
+ 		update("ezAttitudeDAO.attModAppModify", map);[m
+ 	}[m
+[32m+[m[41m	[m
+[32m+[m	[32m@SuppressWarnings("unchecked")[m
+[32m+[m	[32mpublic void attSaveAppModify(Map<String, Object> map) throws Exception {[m
+[32m+[m		[32minsert("ezAttitudeDAO.attSaveAppModify", map);[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32m@SuppressWarnings("unchecked")[m
+[32m+[m	[32mpublic void attAppUpdate(Map<String, Object> map) throws Exception {[m
+[32m+[m		[32mupdate("ezAttitudeDAO.attAppUpdate", map);[m
+[32m+[m	[32m}[m
+[32m+[m[41m		[m
+ [m
+ 	@SuppressWarnings("unchecked")[m
+ 	public List<AdminAttitudeVO> getAttitudeList2(Map<String, Object> map) {[m
+[1mdiff --git a/src/main/java/egovframework/ezEKP/ezAttitude/service/EzAttitudeService.java b/src/main/java/egovframework/ezEKP/ezAttitude/service/EzAttitudeService.java[m
+[1mindex 56c1f3943..2b08b61f8 100644[m
+[1m--- a/src/main/java/egovframework/ezEKP/ezAttitude/service/EzAttitudeService.java[m
+[1m+++ b/src/main/java/egovframework/ezEKP/ezAttitude/service/EzAttitudeService.java[m
+[36m@@ -117,6 +117,9 @@[m [mpublic interface EzAttitudeService {[m
+ 			[m
+ 	public void attModAppModify(String companyId, int tenantId, String userId, String attModId, String offset, String content, String changeDate) throws Exception;[m
+ [m
+[32m+[m	[32mpublic void attSaveAppModify(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2,[m[41m [m
+[32m+[m			[32mString writerDeptId, String writerDeptName, String writerDeptName2 ,String changeDate, String delFlag, String content,String offset) throws Exception;[m
+[32m+[m[41m	[m
+ 	public String getAttitudeCount2(int tenantId, String companyId, String typeId, String userIdList, String startDate, String endDate, String offset) throws Exception;[m
+ [m
+ 	public void changeUsersModifyAtt(String companyId, int tenantId, String[] ids, String changeStatus, String userId, String userName, String userName2) throws Exception;[m
+[1mdiff --git a/src/main/java/egovframework/ezEKP/ezAttitude/service/impl/EzAttitudeServiceImpl.java b/src/main/java/egovframework/ezEKP/ezAttitude/service/impl/EzAttitudeServiceImpl.java[m
+[1mindex e33bc572c..0e117f10e 100644[m
+[1m--- a/src/main/java/egovframework/ezEKP/ezAttitude/service/impl/EzAttitudeServiceImpl.java[m
+[1m+++ b/src/main/java/egovframework/ezEKP/ezAttitude/service/impl/EzAttitudeServiceImpl.java[m
+[36m@@ -775,8 +775,10 @@[m [mpublic class EzAttitudeServiceImpl implements EzAttitudeService{[m
+ 		map.put("tenantId", tenantId);[m
+ 		map.put("ids", ids);[m
+ 		map.put("delFlag", "1"); //0:삭제안함, 1:삭제[m
+[32m+[m		[32mmap.put("modappl", "0");[m
+ 		[m
+ 		ezAttitudeDAO.delUsersModifyAtt(map);[m
+[32m+[m		[32mezAttitudeDAO.attAppUpdate(map);[m
+ 	}[m
+ [m
+ 	@Override[m
+[36m@@ -851,6 +853,36 @@[m [mpublic class EzAttitudeServiceImpl implements EzAttitudeService{[m
+ 		[m
+ 		ezAttitudeDAO.attModAppModify(map);[m
+ 	}[m
+[32m+[m[41m	[m
+[32m+[m	[32m@Override[m
+[32m+[m	[32mpublic void attSaveAppModify(String attitudeId, String companyId,[m
+[32m+[m			[32mint tenantId, String userId, String writerName, String writerName2, String writerTitle[m
+[32m+[m			[32m, String writerTitle2, String writerDeptId, String writerDeptName, String writerDeptName2[m
+[32m+[m			[32m,String changeDate, String delFlag, String content,String offset) throws Exception {[m
+[32m+[m[41m			[m
+[32m+[m		[32mMap<String, Object> map = new HashMap<String, Object>();[m
+[32m+[m
+[32m+[m		[32mmap.put("attitudeId", attitudeId);[m
+[32m+[m		[32mmap.put("companyId", companyId);[m
+[32m+[m		[32mmap.put("tenantId", tenantId);[m
+[32m+[m		[32mmap.put("writerId", userId);[m
+[32m+[m		[32mmap.put("writerName", writerName);[m
+[32m+[m		[32mmap.put("writerName2", writerName2);[m
+[32m+[m		[32mmap.put("writerTitle", writerTitle);[m
+[32m+[m		[32mmap.put("writerTitle2", writerTitle2);[m
+[32m+[m		[32mmap.put("writerDeptId", writerDeptId);[m
+[32m+[m		[32mmap.put("writerDeptName", writerDeptName);[m
+[32m+[m		[32mmap.put("writerDeptName2", writerDeptName2);[m
+[32m+[m		[32mmap.put("changeDate", changeDate);[m
+[32m+[m		[32mmap.put("delFlag", delFlag);[m
+[32m+[m		[32mmap.put("content", content);[m
+[32m+[m		[32mmap.put("apprStatus", "0");[m
+[32m+[m		[32mmap.put("offset", offset);[m
+[32m+[m		[32mmap.put("modappl", "1");[m
+[32m+[m[41m		[m
+[32m+[m		[32mezAttitudeDAO.attSaveAppModify(map);[m
+[32m+[m		[32mezAttitudeDAO.attAppUpdate(map);[m
+[32m+[m	[32m}[m
+ [m
+ 	public List<AdminAttitudeVO> getAttitudeList2(String companyId, String pageNum,[m
+ 			String listSize, String typeId, String userIdList,[m
+[1mdiff --git a/src/main/java/egovframework/ezEKP/ezAttitude/web/EzAttitudeGWController.java b/src/main/java/egovframework/ezEKP/ezAttitude/web/EzAttitudeGWController.java[m
+[1mindex ad5345622..8439aedb1 100644[m
+[1m--- a/src/main/java/egovframework/ezEKP/ezAttitude/web/EzAttitudeGWController.java[m
+[1m+++ b/src/main/java/egovframework/ezEKP/ezAttitude/web/EzAttitudeGWController.java[m
+[36m@@ -311,17 +311,36 @@[m [mpublic class EzAttitudeGWController {[m
+ 	 * G/W 근태관리 [POST] 수정신청 등록[m
+ 	 */[m
+ 	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}/modify-applications", method = RequestMethod.POST, produces = "application/json;charset=utf-8")[m
+[31m-	public JSONObject modifyApplicationList(@PathVariable String attitudeId, HttpServletRequest request) {[m
+[32m+[m	[32mpublic JSONObject modifyApplicationList(@PathVariable String attitudeId, HttpServletRequest request,[m
+[32m+[m			[32m@RequestParam(value="companyId", required=true) String companyId,[m
+[32m+[m			[32m@RequestParam(value="tenantId", required=true) int tenantId,[m
+[32m+[m			[32m@RequestParam(value="userId", required=true) String userId,[m
+[32m+[m			[32m@RequestParam(value="offset", required=true) String offset,[m
+[32m+[m			[32m@RequestParam(value="content", required=true) String content,[m
+[32m+[m			[32m@RequestParam(value="changeDate", required=true) String changeDate) {[m
+ 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] started.");[m
+ 		[m
+ 		JSONObject result = new JSONObject();[m
+ 		[m
+ 		try{[m
+[32m+[m			[32mLOGGER.debug("companyId : " + companyId);[m
+[32m+[m			[32mLOGGER.debug("tenantId : " + tenantId);[m
+[32m+[m			[32mLOGGER.debug("userId : " + userId);[m
+[32m+[m			[32mLOGGER.debug("offset : " + offset);[m
+[32m+[m			[32mLOGGER.debug("content : " + content);[m
+[32m+[m			[32mLOGGER.debug("changeDate : " + changeDate);[m
+[32m+[m			[32mLOGGER.debug("attitudeId : " + attitudeId);[m
+ 			[m
+[32m+[m			[32mString serverName = request.getHeader("x-user-host");[m
+[32m+[m			[32mMCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));[m
+[32m+[m[41m			[m
+[32m+[m			[32mezAttitudeService.attSaveAppModify(attitudeId, companyId, tenantId, userId, info.getUserName(), info.getUserName2(),[m[41m [m
+[32m+[m					[32minfo.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), info.getDeptName2(), changeDate, "0", content, offset);[m
+ 			result.put("status", "ok");[m
+ 			result.put("code", 0);			[m
+ 			result.put("data", "");[m
+ 		} catch (Exception e) {[m
+[32m+[m			[32me.printStackTrace();[m
+ 			result.put("status", "error");[m
+ 			result.put("code", 1);			[m
+ 			result.put("data", "");[m
+[1mdiff --git a/src/main/java/egovframework/ezEKP/ezAttitude/web/EzAttitudeKMSController.java b/src/main/java/egovframework/ezEKP/ezAttitude/web/EzAttitudeKMSController.java[m
+[1mindex 9bce32c5a..d9190fa30 100644[m
+[1m--- a/src/main/java/egovframework/ezEKP/ezAttitude/web/EzAttitudeKMSController.java[m
+[1m+++ b/src/main/java/egovframework/ezEKP/ezAttitude/web/EzAttitudeKMSController.java[m
+[36m@@ -811,6 +811,59 @@[m [mpublic class EzAttitudeKMSController {[m
+ 	}[m
+ 	[m
+ 	/**[m
+[32m+[m	[32m * 근태수정현황 등록[m
+[32m+[m	[32m */[m
+[32m+[m	[32m@RequestMapping(value="/ezAttitude/saveAttModApp.do" , method= RequestMethod.POST)[m
+[32m+[m	[32m@ResponseBody[m
+[32m+[m	[32mpublic String saveAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,[m
+[32m+[m			[32m@RequestParam(required=false)String attId,[m
+[32m+[m			[32m@RequestParam(required=false)String changeDate,[m
+[32m+[m			[32m@RequestParam(required=false)String content) throws Exception {[m
+[32m+[m		[32mLOGGER.debug("modAttModApp started");[m
+[32m+[m[41m		[m
+[32m+[m		[32mLoginVO userInfo = commonUtil.userInfo(loginCookie);[m
+[32m+[m		[32mString sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());[m
+[32m+[m
+[32m+[m		[32mif (userInfo.getLang().equals(sysLang))  {[m
+[32m+[m			[32msysLang = "primary";[m
+[32m+[m		[32m}[m
+[32m+[m[41m		[m
+[32m+[m		[32mString offset = userInfo.getOffset();[m
+[32m+[m		[32mString offsetMin = commonUtil.getMinuteUTC(offset);[m
+[32m+[m[41m		[m
+[32m+[m		[32mString gwServerUrl = config.getProperty("config.attitudeGwServerURL");[m
+[32m+[m		[32mString url = gwServerUrl + "/rest/ezattitude/attitudes/" + attId + "/modify-applications";[m
+[32m+[m[41m		[m
+[32m+[m		[32mHttpHeaders headers = new HttpHeaders();[m
+[32m+[m		[32mheaders.set("Accept", MediaType.APPLICATION_JSON_VALUE);[m
+[32m+[m		[32mheaders.set("x-user-host", request.getServerName());[m
+[32m+[m[41m		[m
+[32m+[m		[32mHttpEntity<?> entity = new HttpEntity<>(headers);[m
+[32m+[m[41m		[m
+[32m+[m		[32mUriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)[m
+[32m+[m				[32m.queryParam("companyId", userInfo.getCompanyID())[m
+[32m+[m				[32m.queryParam("tenantId", userInfo.getTenantId())[m
+[32m+[m				[32m.queryParam("userId", userInfo.getId())[m
+[32m+[m				[32m.queryParam("content", content)[m
+[32m+[m				[32m.queryParam("changeDate", changeDate)[m
+[32m+[m				[32m.queryParam("offset", offsetMin);[m
+[32m+[m[41m		[m
+[32m+[m		[32mRestTemplate rest = new RestTemplate();[m
+[32m+[m
+[32m+[m		[32mResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);[m
+[32m+[m[41m		[m
+[32m+[m		[32mJSONParser jp = new JSONParser();[m
+[32m+[m[41m		[m
+[32m+[m		[32mJSONObject resultBody = (JSONObject) jp.parse(result.getBody());[m
+[32m+[m[41m		[m
+[32m+[m		[32mString status = resultBody.get("status").toString();[m
+[32m+[m
+[32m+[m		[32mLOGGER.debug("modAttModApp ended");[m
+[32m+[m[41m		[m
+[32m+[m		[32mreturn status;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32m/**[m
+ 	 * 근태수정현황 수정[m
+ 	 */[m
+ 	@RequestMapping(value="/ezAttitude/modAttModApp.do" , method= RequestMethod.POST)[m
+[1mdiff --git a/src/main/resources/egovframework/sqlmap/ezEKP/ezAttitude/EzAttitude_SQL_Mysql.xml b/src/main/resources/egovframework/sqlmap/ezEKP/ezAttitude/EzAttitude_SQL_Mysql.xml[m
+[1mindex a7f28d9f7..38ae6b433 100644[m
+[1m--- a/src/main/resources/egovframework/sqlmap/ezEKP/ezAttitude/EzAttitude_SQL_Mysql.xml[m
+[1m+++ b/src/main/resources/egovframework/sqlmap/ezEKP/ezAttitude/EzAttitude_SQL_Mysql.xml[m
+[36m@@ -347,6 +347,9 @@[m
+ 		<isNotEmpty prepend="" property="order">[m
+ 				ORDER BY $order$[m
+ 		</isNotEmpty>[m
+[32m+[m		[32m<isEmpty prepend="" property="order">[m
+[32m+[mwarning: LF will be replaced by CRLF in src/main/java/egovframework/ezEKP/ezAttitude/web/EzAttitudeKMSController.java.
+The file will have its original line endings in your working directory.
+				[32mORDER BY START_DATE DESC[m
+[32m+[m		[32m</isEmpty>[m
+ 		<isNotEmpty property="startPoint" prepend="limit">[m
+ 			<isNotEmpty property="endPoint">[m
+ 				<![CDATA[[m
+[36m@@ -556,6 +559,27 @@[m
+ 		</iterate>[m
+ 	</update>[m
+ 	[m
+[32m+[m	[32m<update id="ezAttitudeDAO.attAppUpdate" parameterClass="Map">[m
+[32m+[m		[32m<![CDATA[[m
+[32m+[m			[32mUPDATE[m
+[32m+[m				[32mTBL_ATTITUDE[m
+[32m+[m			[32mSET[m
+[32m+[m				[32mmodappl = #modappl#[m
+[32m+[m[41m          [m	[32mWHERE[m
+[32m+[m[41m          [m		[32mTENANT_ID = #tenantId#[m
+[32m+[m[41m          [m	[32mAND[m
+[32m+[m[41m        [m		[32mCOMPANY_ID = #companyId#[m
+[32m+[m		[32m]]>[m
+[32m+[m		[32m<isNotEmpty property="attitudeId" prepend="and">[m
+[32m+[m				[32mATTITUDE_ID = #attitudeId#[m[41m  [m
+[32m+[m		[32m</isNotEmpty>[m
+[32m+[m		[32m<isNotEmpty property="ids" prepend="and">[m
+[32m+[m			[32m<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">[m
+[32m+[m			[32m      #ids[]#[m
+[32m+[m			[32m</iterate>[m
+[32m+[m		[32m</isNotEmpty>[m
+[32m+[m	[32m</update>[m
+[32m+[m[41m	[m
+ 	<select id="ezAttitudeDAO.getFormBody" parameterClass="Map" resultMap="getFormBody">[m
+ 		<![CDATA[[m
+ 			SELECT [m
+[36m@@ -576,6 +600,46 @@[m
+ 		]]>[m
+ 	</select>[m
+ 	[m
+[32m+[m	[32m<insert id="ezAttitudeDAO.attSaveAppModify" parameterClass="map">[m
+[32m+[m		[32m<![CDATA[[m
+[32m+[m			[32mINSERT INTO[m[41m [m
+[32m+[m				[32mTBL_ATTITUDE_MODAPPL([m
+[32m+[m					[32mATTITUDE_ID,[m[41m [m
+[32m+[m					[32mCOMPANY_ID,[m[41m [m
+[32m+[m					[32mTENANT_ID,[m[41m [m
+[32m+[m					[32mWRITER_ID,[m[41m [m
+[32m+[m					[32mWRITER_NAME,[m[41m [m
+[32m+[m					[32mWRITER_NAME2,[m[41m [m
+[32m+[m					[32mWRITER_TITLE,[m[41m [m
+[32m+[m					[32mWRITER_TITLE2,[m[41m [m
+[32m+[m					[32mWRITER_DEPT_ID,[m[41m [m
+[32m+[m					[32mWRITER_DEPT_NAME,[m
+[32m+[m					[32mWRITER_DEPT_NAME2,[m
+[32m+[m					[32mCHANGE_DATE,[m
+[32m+[m					[32mDELFLAG,[m
+[32m+[m					[32mAPPR_STATUS,[m
+[32m+[m					[32mCONTENT[m
+[32m+[m				[32m)[m
+[32m+[m				[32mVALUES([m
+[32m+[m					[32m#attitudeId#,[m[41m [m
+[32m+[m					[32m#companyId#,[m[41m [m
+[32m+[m					[32m#tenantId#,[m[41m [m
+[32m+[m					[32m#writerId#,[m[41m [m
+[32m+[m					[32m#writerName#,[m[41m [m
+[32m+[m					[32m#writerName2#,[m[41m [m
+[32m+[m					[32m#writerTitle#,[m[41m [m
+[32m+[m					[32m#writerTitle2#,[m[41m [m
+[32m+[m					[32m#writerDeptId#,[m[41m [m
+[32m+[m					[32m#writerDeptName#,[m
+[32m+[m					[32m#writerDeptName2#,[m
+[32m+[m					[32mDATE_FORMAT(DATE_SUB(DATE_FORMAT(#changeDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S'),[m
+[32m+[m					[32m#delFlag#,[m
+[32m+[m					[32m#apprStatus#,[m
+[32m+[m					[32m#content#[m
+[32m+[m				[32m)[m
+[32m+[m		[32m]]>[m
+[32m+[m	[32m</insert>[m
+[32m+[m[41m	[m
+ 	<update id="ezAttitudeDAO.attModAppModify" parameterClass="map">[m
+ 		<![CDATA[[m
+ 			UPDATE TBL_ATTITUDE_MODAPPL[m
+[36m@@ -692,7 +756,7 @@[m
+ 		SELECT[m
+ 			ATTITUDE_ID,[m
+ 			(SELECT [m
+[31m-				MAX(MOD_CNT) + 1[m
+[32m+[m				[32mIFNULL(MAX(MOD_CNT) + 1, 0)[m
+ 			FROM[m
+ 				tbl_attitude_modappl_history[m
+ 			WHERE[m
+[1mdiff --git a/src/main/webapp/WEB-INF/jsp/ezAttitude/attModAppList.jsp b/src/main/webapp/WEB-INF/jsp/ezAttitude/attModAppList.jsp[m
+[1mindex 4f382a6ba..b979a4ed4 100644[m
+[1m--- a/src/main/webapp/WEB-INF/jsp/ezAttitude/attModAppList.jsp[m
+[1m+++ b/src/main/webapp/WEB-INF/jsp/ezAttitude/attModAppList.jsp[m
+[36m@@ -400,7 +400,11 @@[m
+     			if (attList[i].apprStatus == 2) {[m
+     				htmlStr += '<td id="attStauts">반려</td>';	[m
+     			}[m
+[31m-    			htmlStr += '<td>' + attList[i].apprUserName + '</td>';[m
+[32m+[m[41m    [m			[32mif (attList[i].apprUserName == null) {[m
+[32m+[m[41m    [m				[32mhtmlStr += '<td>' + "" + '</td>';[m
+[32m+[m[41m    [m			[32m} else {[m
+[32m+[m[41m    [m				[32mhtmlStr += '<td>' + attList[i].apprUserName + '</td>';[m[41m	[m
+[32m+[m[41m    [m			[32m}[m
+     			[m
+     			if  (excel != true) {[m
+     				htmlStr += '<td><a class="imgbtn" id="mailInBtn" onclick="getHistory(this)"><span>내역확인</span></a></td>';	[m
+[36m@@ -928,7 +932,13 @@[m
+ 			    	}[m
+ 			    },[m
+ 			    complete : function() {[m
+[31m-					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	[m
+[32m+[m			[41m    [m	[32mconsole.log(parent.frames["right"]);[m
+[32m+[m			[41m    [m	[32mconsole.log(parent.frames["attitude_main"]);[m
+[32m+[m			[41m    [m	[32mtry {[m
+[32m+[m			[41m    [m		[32m$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);[m[41m	[m
+[32m+[m			[41m    [m	[32m} catch(e) {[m
+[32m+[m			[41m    [m		[32m$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);[m
+[32m+[m			[41m    [m	[32m}[m
+ 		        	[m
+ 		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;[m
+ 		        	[m
+[1mdiff --git a/src/main/webapp/WEB-INF/jsp/ezAttitude/attitudeModItem.jsp b/src/main/webapp/WEB-INF/jsp/ezAttitude/attitudeModItem.jsp[m
+[1mindex eae3a0802..0dcfedf95 100644[m
+[1m--- a/src/main/webapp/WEB-INF/jsp/ezAttitude/attitudeModItem.jsp[m
+[1m+++ b/src/main/webapp/WEB-INF/jsp/ezAttitude/attitudeModItem.jsp[m
+[36m@@ -140,7 +140,7 @@[m
+ 				message.SetEditorContent('${data.content}');[m
+ 		    }[m
+ [m
+[31m-		    function modify() {[m
+[32m+[m		[32m    function save() {[m
+ 				var obj = new Object();[m
+ 		    	[m
+ 			    var cDate = $("#Cdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();[m
+[36m@@ -150,8 +150,9 @@[m
+ 			    var chour, cminute;[m
+ 			    var ctime = $('#Ctimepicker').val()[m
+ 			    var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;[m
+[31m-[m
+[31m-			    if ("${data.changeDate}".substring(0,10) != cDate && "${data.typeId}" == "A02") {[m
+[32m+[m				[32mconsole.log("${data.startDate}");[m
+[32m+[m				[32mconsole.log(cDate);[m
+[32m+[m			[32m    if ("${data.startDate}".substring(0,10) != cDate && "${data.typeId}" == "A02") {[m
+ 			    	alert("날짜는 수정하실 수 없습니다.");[m
+ 			    	return;[m
+ 			    }[m
+[36m@@ -167,41 +168,17 @@[m
+ 		    	[m
+ 			    $.ajax({[m
+ 					type : 'post',[m
+[31m-				    url : '/ezAttitude/modAttModApp.do',[m
+[32m+[m				[32m    url : '/ezAttitude/saveAttModApp.do',[m
+ 				    data : obj,[m
+ 				    dataType : "text",[m
+ 				    error: function(xhr, status, error){[m
+[31m-				    	alert("수정 중 오류 발생")[m
+[32m+[m				[41m    [m	[32malert("저장 중 오류 발생")[m
+ 				    },[m
+ 				    success : function(json){[m
+[31m-						alert("수정되었습니다.");[m
+[32m+[m						[32malert("저장되었습니다.");[m
+ 						window.close();[m
+ 			            try {[m
+[31m-			                window.opener.att_refresh();[m
+[31m-			            } catch (e) { }[m
+[31m-				    }[m
+[31m-			    });[m
+[31m-		    }[m
+[31m-		    [m
+[31m-		    function del() {[m
+[31m-		    	[m
+[31m-		    	var obj = new Object();[m
+[31m-		    	[m
+[31m-		    	obj.idList = attid; [m
+[31m-				[m
+[31m-			    $.ajax({[m
+[31m-					type : 'post',[m
+[31m-				    url : '/ezAttitude/delAttModApp.do',[m
+[31m-				    data : obj,[m
+[31m-				    dataType : "text",[m
+[31m-				    error: function(xhr, status, error){[m
+[31m-				    	alert("삭제 중 오류 발생")[m
+[31m-				    },[m
+[31m-				    success : function(json){[m
+[31m-						alert("삭제되었습니다.");[m
+[31m-						window.close();[m
+[31m-			            try {[m
+[31m-			                window.opener.att_refresh();[m
+[32m+[m			[32m                window.opener.location.reload();[m
+ 			            } catch (e) { }[m
+ 				    }[m
+ 			    });[m
+[36m@@ -217,8 +194,7 @@[m
+ 	                    <td style="height: 20px">[m
+ 	                        <div id="menu">[m
+ 	                            <ul id="menuTable">	[m
+[31m-	                                <li><span onclick="modify()">저장 후 닫기</span></li>[m
+[31m-	                                <li><span onclick="del()">삭제</span></li>[m
+[32m+[m	[32m                                <li><span onclick="save()">저장 후 닫기</span></li>[m
+ 	                            </ul>[m
+ 	                        </div>[m
+ 	                        <div id="close">[m
+[36m@@ -254,18 +230,18 @@[m
+ 	                                            </span>[m
+ 	                                        </td>[m
+ 	                                    </tr>[m
+[31m-	                                    <tr>[m
+[31m-	                                        <th>승인상태</th>[m
+[31m-                                        	<c:if test="${data.apprStatus == 0}">[m
+[31m-								          		<td colspan="2">진행</td>	[m
+[31m-								          	</c:if>[m
+[31m-								          	<c:if test="${data.apprStatus == 1}">[m
+[31m-								          		<td colspan="2">승인</td>	[m
+[31m-								          	</c:if>[m
+[31m-								          	<c:if test="${data.apprStatus == 2}">[m
+[31m-								          		<td colspan="2">반려</td>	[m
+[31m-								          	</c:if>[m
+[31m-	                                    </tr>[m
+[32m+[m[32m<!-- 	                                    <tr> -->[m
+[32m+[m[32m<!-- 	                                        <th>승인상태</th> -->[m
+[32m+[m[32m<%--                                         	<c:if test="${data.apprStatus == 0}"> --%>[m
+[32m+[m[32m<!-- 								          		<td colspan="2">진행</td>	 -->[m
+[32m+[m[32m<%-- 								          	</c:if> --%>[m
+[32m+[m[32m<%-- 								          	<c:if test="${data.apprStatus == 1}"> --%>[m
+[32m+[m[32m<!-- 								          		<td colspan="2">승인</td>	 -->[m
+[32m+[m[32m<%-- 								          	</c:if> --%>[m
+[32m+[m[32m<%-- 								          	<c:if test="${data.apprStatus == 2}"> --%>[m
+[32m+[m[32m<!-- 								          		<td colspan="2">반려</td>	 -->[m
+[32m+[m[32m<%-- 								          	</c:if> --%>[m
+[32m+[m[32m<!-- 	                                    </tr> -->[m
+ 	                                </table>[m
+ 	                            </div>[m
+ 	                        </div>[m
+[1mdiff --git a/src/main/webapp/WEB-INF/jsp/ezAttitude/attitudeUserMain.jsp b/src/main/webapp/WEB-INF/jsp/ezAttitude/attitudeUserMain.jsp[m
+[1mindex 7385dbb0c..44e4ca878 100644[m
+[1m--- a/src/main/webapp/WEB-INF/jsp/ezAttitude/attitudeUserMain.jsp[m
+[1m+++ b/src/main/webapp/WEB-INF/jsp/ezAttitude/attitudeUserMain.jsp[m
+[36m@@ -33,6 +33,10 @@[m
+ 				color : red;[m
+ 			}[m
+ 			[m
+[32m+[m			[32m#attiCalendar td[modappl='1'] {[m
+[32m+[m				[32mcolor : orange;[m
+[32m+[m			[32m}[m
+[32m+[m[41m			[m
+ 			#attiCalendar td[typeId=A01], #attiCalendar td[typeId=A03] {[m
+ 				cursor : context-menu;[m
+ 				color : rgb(102,180,255);[m
+[36m@@ -68,8 +72,10 @@[m
+ 				[m
+ 				//근태수정신청 팝업창[m
+ 				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02]', function(){[m
+[31m-// 					showDialog();[m
+[32m+[m				[32m//근태수정신청은 개인근태현황에서만 가능[m
+[32m+[m				[32mif (deptFlag != "true") {[m
+ 					attitudeModItem(this);[m
+[32m+[m				[32m}[m
+ 				})[m
+ 			})[m
+ 			[m
+[36m@@ -277,7 +283,7 @@[m
+ 						subDate = calDateRange(startDate, endDate); [m
+ 						betweenDate = new Date(startDate); [m
+ 						 [m
+[31m-						for (var j = 0; j<= subDate; j++) { [m
+[32m+[m						[32mfor (var j = 0; j<= subDate; j++) {[m
+ 							betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); [m
+ 							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betwewarning: LF will be replaced by CRLF in src/main/webapp/WEB-INF/jsp/ezAttitude/attModAppList.jsp.
+The file will have its original line endings in your working directory.
+enDate.getDate(), 2); [m
+ 							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append([m
+[36m@@ -291,7 +297,7 @@[m
+ 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( [m
+ 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>"); [m
+ 						} else { [m
+[31m-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + "</td></tr>"); [m
+[32m+[m							[32m$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + "</td></tr>");[m[41m [m
+ 						} [m
+ 					}	[m
+ 				} else {[m
+[36m@@ -319,7 +325,7 @@[m
+ 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append([m
+ 										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + "</td></tr>");[m
+ 							} else {[m
+[31m-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");[m
+[32m+[m								[32m$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");[m
+ 							}	[m
+ 						}[m
+ 					}[m
+[1mdiff --git a/src/main/webapp/js/jquery/jquery.modal.js b/src/main/webapp/js/jquery/jquery.modal.js[m
+[1mindex 582f5251b..2a9c2000d 100644[m
+[1m--- a/src/main/webapp/js/jquery/jquery.modal.js[m
+[1m+++ b/src/main/webapp/js/jquery/jquery.modal.js[m
+[36m@@ -103,9 +103,13 @@[m
+ [m
+     close: function() {[m
+       if (parent.frames["left"]) {[m
+[31m-    	  if (parent.frames["left"].document.getElementById("blockLeft")) {	[m
+[32m+[m[41m    [m	[32m  if (parent.frames["left"].document.getElementById("blockLeft")) {[m
+     		  $(parent.frames["left"].document.getElementById("blockLeft")).remove();[m
+     	  }[m
+[32m+[m[32m      }	else if (parent.frames["attitude_menu"]) {[m
+[32m+[m[41m    [m	[32m  if (parent.frames["attitude_menu"].document.getElementById("blockLeft")) {[m
+[32m+[m[41m    [m		[32m  $(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();[m
+[32m+[m[41m    [m	[32m  }[m
+       }[m
+       modals.pop();[m
+       this.unblock();[m
+warning: LF will be replaced by CRLF in src/main/webapp/js/jquery/jquery.modal.js.
+The file will have its original line endings in your working directory.

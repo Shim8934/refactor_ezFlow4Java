@@ -400,7 +400,11 @@
     			if (attList[i].apprStatus == 2) {
     				htmlStr += '<td id="attStauts">반려</td>';	
     			}
-    			htmlStr += '<td>' + attList[i].apprUserName + '</td>';
+    			if (attList[i].apprUserName == null) {
+    				htmlStr += '<td>' + "" + '</td>';
+    			} else {
+    				htmlStr += '<td>' + attList[i].apprUserName + '</td>';	
+    			}
     			
     			if  (excel != true) {
     				htmlStr += '<td><a class="imgbtn" id="mailInBtn" onclick="getHistory(this)"><span>내역확인</span></a></td>';	
@@ -928,7 +932,13 @@
 			    	}
 			    },
 			    complete : function() {
-					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+			    	console.log(parent.frames["right"]);
+			    	console.log(parent.frames["attitude_main"]);
+			    	try {
+			    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);	
+			    	} catch(e) {
+			    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);
+			    	}
 		        	
 		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
 		        	
