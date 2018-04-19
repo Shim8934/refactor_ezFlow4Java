@@ -524,7 +524,7 @@
 			
 			if (inputElmt.checked == true) {
 				inputElmt.checked = false;
-				trElmt.setAttribute("class", "bnkWebFolder");
+				trElmt.setAttribute("class", "bnkWebFolder2");
 			}
 			else {
 				inputElmt.checked = true;
@@ -540,23 +540,23 @@
 		}
 		
 		function getCheckAll(obj) {
-    		var listInputs = document.getElementsByClassName("checkBnk");
-    		
-    		if (obj.checked == true) {
-    			for (var i = 0; i < listInputs.length; i++) {
-	    			listInputs[i].checked = true;
-	    		}
-    			
-    			$('.bnkWebFolder').css('class', 'bnkWebFolder2');
-    		}
-    		else {
-    			for (var i = 0; i < listInputs.length; i++) {
-	    			listInputs[i].checked = false;
-	    		}
-    			$('.bnkWebFolder2').css('class', 'bnkWebFolder');
-    		}
+			var listInputs = document.getElementsByClassName("checkBnk");
+			
+			if (obj.checked == true) {
+				for (var i = 0; i < listInputs.length; i++) {
+					listInputs[i].checked = true;
+					var trElmt            = listInputs[i].parentElement.parentElement;
+					trElmt.setAttribute("class", "bnkWebFolder2");
+				}
+			}
+			else {
+				for (var i = 0; i < listInputs.length; i++) {
+					var trElmt            = listInputs[i].parentElement.parentElement;
+					listInputs[i].checked = false;
+					trElmt.setAttribute("class", "bnkWebFolder");
+				}
+			}
 		}
-		
 		function doLayerPopup(obj) {
 	        btn_PostDate_Clear();
 	        document.getElementById("searchExt").value = "";
@@ -974,7 +974,7 @@
 	<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+        <iframe src="" style="border:none;" id="iFrameLayer"></iframe>
     </div>
     
     <span id="mailBoxInfo"></span>

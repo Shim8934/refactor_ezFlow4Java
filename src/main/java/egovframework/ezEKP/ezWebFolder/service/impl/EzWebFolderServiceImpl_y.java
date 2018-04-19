@@ -76,9 +76,17 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		}
 		map.put("flag", flag);
 		if (flag.equals("1")) {
-			filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileList(map);
+			if (parentId.equals("root")) {
+				filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileListR(map);
+			} else {
+				filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileList(map);
+			}
 		}else {
-			filevo = (List<FileVO>) ezWebFolderDAO_y.getFileList(map);
+			if (parentId.equals("root")) {
+				filevo = (List<FileVO>) ezWebFolderDAO_y.getFileListR(map);
+			} else {
+				filevo = (List<FileVO>) ezWebFolderDAO_y.getFileList(map);
+			}
 		}
 		return filevo;
 	}
@@ -127,11 +135,19 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			map.put("flag", flag);
 			if (flag.equals("1")) {
 				LOGGER.debug("searchFileToTalCount start ");
-				fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount(map);
+				if (parentId.equals("root")) {
+					fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCountR(map);
+				}else {
+					fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount(map);
+				}
 				LOGGER.debug("searchFileToTalCount end ");
 			}else {
 				LOGGER.debug("getFileTotalCount start ");
-				fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
+				if (parentId.equals("root")) {
+					fileTotalCnt = ezWebFolderDAO_y.getFileTotalCountR(map);
+				}else {
+					fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
+				}
 				LOGGER.debug("getFileTotalCount end ");
 			}
 			LOGGER.debug("getFldTotalCount start ");
@@ -191,7 +207,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		JSONObject state  = new JSONObject();
 		state.put("selected", "true");
 		
-		folderList.get(0).put("state",state);
+//		folderList.get(0).put("state",state);
 		return folderList;
 	}
 

@@ -615,6 +615,10 @@ public class EzWebFolderGWController_m {
 		String[] folderIDList = folderList.split(",");
 		JSONObject result = new JSONObject();
 		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		
 		if (fileIDList.length == 0 & folderIDList.length == 0|| serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
@@ -625,7 +629,7 @@ public class EzWebFolderGWController_m {
 		
 		try {
 			
-			ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId, userId, offset, companyId);
+			ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId, userId, offset, companyId, timeUTC);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -637,6 +641,55 @@ public class EzWebFolderGWController_m {
 		}
 		
 		logger.debug("restoreTrashCan ended");
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezwebfolder/move-TrashCan", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject moveTrashCan(Locale locale, HttpServletRequest request) {
+		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
+		String offset= orElse(request.getParameter("offset"), "");
+		String lang = orElse(request.getParameter("lang"), "");
+		String userId = orElse(request.getParameter("userId"), "");
+		String folderId = orElse(request.getParameter("folderId"), "");
+		String serverName   = orElse(request.getHeader("host-name"), "");
+		String fileList = orElse(request.getParameter("fileList"), "");
+		String folderList = orElse(request.getParameter("folderList"), "");
+		
+		logger.debug("moveTrashCan Started.");
+		logger.debug("tenantId=" + tenantId + ",userId=" + userId + ",folderId=" + folderId);
+		logger.debug("serverName=" + serverName + ",offset=" + offset + ",companyId=" + lang);
+		logger.debug("fileList=" + fileList + ",folderList=" + folderList);
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		
+		String[] fileIDList = fileList.split(",");
+		String[] folderIDList = folderList.split(",");
+		JSONObject result = new JSONObject();
+		
+		if (fileIDList.length == 0 & folderIDList.length == 0|| serverName.equals("") || userId.equals("") || folderId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			MCommonVO user = mOptionService.commonInfoWeb(serverName, userId);
+			ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, folderId ,tenantId, userId, offset, user.getCompanyId(), user.getUserName(), user.getUserName2(), timeUTC);
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t314", locale));
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		logger.debug("moveTrashCan ended");
 		return result;
 	}
 	

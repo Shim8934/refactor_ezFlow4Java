@@ -109,6 +109,7 @@ public class EzWebFolderController_m {
 			return "cmm/error/egovError";
 		}
 		
+		logger.debug("listCount=" + getUsrListCount(loginCookie, request));
 		logger.debug("userInfo=" + commonUtil.userInfoSimple(loginCookie));
 		model.addAttribute("listCount", getUsrListCount(loginCookie, request));
 		model.addAttribute("userInfo", commonUtil.userInfoSimple(loginCookie));
@@ -408,6 +409,64 @@ public class EzWebFolderController_m {
 		
 		logger.debug("deleteUserFavorite ended.");
 		return result.getBody();
+	}
+	
+	@RequestMapping(value="/ezWebFolder/moveTrashCanManage.do")
+	public String moveTrashCanManage (@CookieValue ("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	 String folderType = request.getParameter("folderType");
+	 String fileList = request.getParameter("fileList");
+	 String folderList = request.getParameter("folderList");
+	 
+	 model.addAttribute("folderType", folderType);
+	 model.addAttribute("fileList", fileList);
+	 model.addAttribute("folderList", folderList);
+	 
+	 logger.debug("fileList", fileList);
+	 logger.debug("folderList", folderList);
+	
+	 logger.debug("folderType=" + folderType);
+	 return "ezWebFolder/moveTrashCanManage";
+	}
+	
+	@RequestMapping(value="/ezWebFolder/moveTrashCan.do", method=RequestMethod.POST)
+	public String moveTrashCan (@CookieValue ("loginCookie")String loginCookie, HttpServletRequest request,
+			HttpServletResponse response, Model model) throws Exception {
+		logger.debug("moveTrashCan Started.");
+		logger.debug("request.getParameter(fileList)=" + request.getParameter("fileList"));
+		
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String url = gwServerUrl + "/rest/ezwebfolder/move-TrashCan";
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("tenantId", user.getTenantId())
+										.queryParam("offset", user.getOffset())
+										.queryParam("userId", user.getId())
+										.queryParam("lang", user.getLang())
+										.queryParam("folderId", orElse(request.getParameter("folderId"), ""))
+										.queryParam("fileList", orElse(request.getParameter("fileList"), ""))
+										.queryParam("folderList", orElse(request.getParameter("folderList"), ""));
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		String status = resultBody.get("status").toString();
+		
+		if (!status.equals("ok")) {
+			String reason = resultBody.get("reason").toString();
+			model.addAttribute("reason", reason);
+		}
+		
+		logger.debug("status=" + status);
+		logger.debug("moveTrashCan ended");
+		return "json";		
 	}
 	
 	private <T> T orElse(T value, T other) {

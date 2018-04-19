@@ -53,16 +53,6 @@
     		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
         	folderList(folderType);
 
-            try {
-                ReturnFunction = parent.mail_movecopy_cross_dialogArguments[1];
-                CancelFunction = parent.mail_movecopy_cross_dialogArguments[2];
-                isDivPopUp = true;
-            } catch (e) {
-                try {
-                    ReturnFunction = opener.mail_movecopy_cross_dialogArguments[1];
-                    CancelFunction = opener.mail_movecopy_cross_dialogArguments[2];
-                } catch (e) { }
-            }
         }
         var inputNameDlg_cross_dialogArguments = new Array();
         function Window_Close() {
@@ -75,6 +65,7 @@
             else
                 window.close();
         }
+        /*
         function folderList(obj) {
 			folderType = obj;
 			$.ajax ({
@@ -126,7 +117,60 @@
 			   parent   = data.node.original.parent; 
 			   console.log("The selected nodes are:" + folderId);
 			});
+	    }*/
+        function folderList(obj) {
+	    	$('#folderTree').jstree('destroy');
+			folderType = obj;
+			$.ajax ({
+				type :"POST",
+				async: false,
+				url  : "/ezWebFolder/folderList.do",
+				data : { 
+						 "folderId"   : folderId
+						,"folderType" : obj
+					},
+				dataType: "JSON",
+				success : function (data) {
+//						upperId = data.data[0]["parent"];
+					var firstNode = "#" + folderId;
+					
+					$('#folderTree').jstree({
+						'plugins': ["core","types","json_data","themes","ui"],
+						'core' : {
+							"animation" : 0,
+							'data' : data.data,
+							"multiple" : false,
+							'themes' : {
+								"theme"      : "default",
+								"dots"       : false,
+								'responsive' : false,
+								'variant'    : 'small',
+								'stripes'    : false
+							}
+						},
+						"types" : {
+							"default": {
+								"icon" :"/images/OrganTree_cross/fldr.gif" 
+							}
+						},
+						"grid": {
+							"width"       : "20",
+							"margin-left" : "10"
+						}
+					}).on('changed.jstree', function (e, data) {
+						folderId = data.selected[0]; 
+						createId = folderId != null ? data.node.original.createId : ""; 
+						parent   = data.node.original.parent; 
+						console.log("The selected nodes are:" + folderId);
+					});
+				},
+				error : function(error) {
+					alert("<spring:message code='ezWebFolder.t134' />" + error);
+				}
+			});
 	    }
+        
+        
         function add_onclick() {
             if (folderId == "") {
                 alert("<spring:message code='ezWebFolder.t257'/>");

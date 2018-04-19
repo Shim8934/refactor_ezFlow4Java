@@ -2,8 +2,10 @@ package egovframework.ezEKP.ezWebFolder.service.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,11 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
@@ -47,6 +51,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Autowired
 	private EzWebFolderService_y ezWebFolderService_y;
+	
+	@Autowired
+	private EzWebFolderAdminService ezWebFolderAdminService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -486,6 +493,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		List<TrashCanVO> resultList = new ArrayList<TrashCanVO>();
 		
 		currPage = totalPages == 0 ? 0 : currPage;
+		fileCnt = 0;
+		folderCnt = 0;
 		
 		if (trashCanList != null) {
 			for (TrashCanVO trashCan : trashCanList) {
@@ -494,6 +503,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					
 					if (upperFolder.getUseStatus().equals("Y")) {
 						resultList.add(trashCan);
+						folderCnt += 1;
 					} 
 					
 				} else {
@@ -508,10 +518,14 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					
 					if (folder != null && folder.getUseStatus().equals("Y")) {
 						resultList.add(trashCan);
+						fileCnt += 1;
 					}
 				}
 			}
 		}
+		
+		totalRows  = fileCnt + folderCnt;
+		totalPages = (totalRows + pEnd - 1)/pEnd;
 		
 		result.put("fileCnt", fileCnt);
 		result.put("folderCnt", folderCnt);
@@ -686,12 +700,13 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public void restoreFile(String fileId, int tenantId, String userId) throws Exception {
+	public void restoreFile(String fileId, int tenantId, String userId, String timeUTC) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("fileId", fileId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
+		map.put("timeUTC", timeUTC);
 		
 		int result = ezWebFolderDAO.restoreFile(map);
 		
@@ -703,13 +718,14 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public void restoreFolder(String folderPath, int tenantId, String userId, String companyId) throws Exception{
+	public void restoreFolder(String folderPath, int tenantId, String userId, String companyId, String timeUTC) throws Exception{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
 		map.put("companyId", companyId);
+		map.put("timeUTC", timeUTC);
 		
 		int result = ezWebFolderDAO.restoreFolder(map);
 		
@@ -721,7 +737,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public void restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId) throws Exception {
+	public void restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC) throws Exception {
 
 		for (String file : fileIDList) {
 			if (!file.equals("")) {
@@ -731,7 +747,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					FolderVO folderVO = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
 					
 					if (folderVO != null) {
-						restoreFile(file, tenantId, userId);
+						restoreFile(file, tenantId, userId, timeUTC);
 					}
 				}
 			}
@@ -743,19 +759,20 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				FolderVO upperFolderVO = ezWebFolderService.getFolderByFolderId(folderVO.getFolderUpper(), offset, tenantId);
 				
 				if (upperFolderVO != null && folderVO.getFolderPath().startsWith(upperFolderVO.getFolderPath())) {
-					restoreFolder(folderVO.getFolderPath(), tenantId, userId, companyId);
-					restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId);
+					restoreFolder(folderVO.getFolderPath(), tenantId, userId, companyId, timeUTC);
+					restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC);
 				}
 			}
 		}
 	}
 	
 	@Override
-	public void restoreFileInFolder(String folderPath, int tenantId, String userId) throws Exception {
+	public void restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
+		map.put("timeUTC", timeUTC);
 		
 		int result = ezWebFolderDAO.restoreAllFilesInFolder(map);
 		
@@ -860,5 +877,94 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("tenantId", tenantId);
 
 		ezWebFolderDAO.deleteFavorite(parameterMap);
+	}
+
+	@Override
+	public void moveTrashCan(String[] fileIDList, String[] folderIDList,String folderId, int tenantId, 
+			String userId, String offset, String companyId, String userName1, String userName2, String timeUTC) throws Exception {
+		for (String file : fileIDList) {
+			if (!file.equals("")) {
+				FileVO fileVO  = ezWebFolderService.getFileByFileId(file, offset, tenantId);
+				
+				if (fileVO != null) {
+					moveFile (file, folderId, tenantId , timeUTC);
+					ezWebFolderService.saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+
+				}
+			}
+		}
+		
+		for (String folder : folderIDList) {
+			if (!folder.equals("")) {
+				FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
+				FolderVO destFolderVO = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+				
+				if (destFolderVO != null) {
+					moveFolder(folderVO, destFolderVO, userId, offset, tenantId, timeUTC);
+					restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC);
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void moveFolder (FolderVO folderVO, FolderVO destFolderVO, String userId, String offset, int tenantId, String timeUTC) throws Exception {
+		String oldPath = folderVO.getFolderPath();
+		String newPath = destFolderVO.getFolderPath() + folderVO.getFolderId() + "|";
+		int levelDistance = destFolderVO.getFolderLevel() + 1 - folderVO.getFolderLevel();
+		
+		if (folderVO.getFolderLevel() == 1) {
+			ezWebFolderAdminService.deleteFolderUsers(folderVO.getFolderId(), tenantId);
+		}
+		
+		if ((folderVO.getFolderLevel() + levelDistance == 1) && destFolderVO.getFolderType().equals("C")) {
+			String folderPath            = folderVO.getFolderPath();
+			folderPath                   = folderPath.substring(1, folderPath.length() - 1);
+			String ancestorId            = folderVO.getFolderType().equals("C") ? folderPath.split("\\|")[1] : folderPath.split("\\|")[0];
+			List<FolderUserVO> listUsers = ezWebFolderService.getFolderUsers(ancestorId, tenantId);
+			
+			for (FolderUserVO folderUser: listUsers) {
+				ezWebFolderAdminService.insertFolderUser(ezWebFolderAdminService.getMaxFolderUserSeq(tenantId), folderUser.getUserId(), folderUser.getUserType(), folderVO.getFolderId(), userId, timeUTC, folderVO.getCompanyId(), tenantId);
+			}
+		}
+		
+		folderVO.setFolderPath(newPath);
+		folderVO.setOwnerId(destFolderVO.getOwnerId());
+		folderVO.setFolderType(destFolderVO.getFolderType());
+		folderVO.setUpdateId(userId);
+		folderVO.setUpdateDate(timeUTC);
+		folderVO.setFolderUpper(destFolderVO.getFolderId());
+		folderVO.setFolderLevel(folderVO.getFolderLevel() + levelDistance);
+		folderVO.setFolderStep(ezWebFolderAdminService.getMaxFolderStep(destFolderVO.getFolderId(), tenantId));
+		folderVO.setUseStatus("Y");
+		ezWebFolderAdminService.insertFolder(folderVO);
+		
+		movSubFolders(userId, destFolderVO.getFolderType(), oldPath, newPath, timeUTC, destFolderVO.getOwnerId(), levelDistance, tenantId);
+	}
+	
+	@Override
+	public void movSubFolders(String userId, String folderType, String oldPath, String newPath, String timeUTC, String ownerId,
+			int levelDistance, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",        userId);
+		map.put("folderType",    folderType);
+		map.put("oldPath",       oldPath);
+		map.put("newPath",       newPath);
+		map.put("timeUTC",    timeUTC);
+		map.put("ownerId",       ownerId);
+		map.put("levelDistance", levelDistance);
+		map.put("tenantId",      tenantId);
+		
+		ezWebFolderDAO.moveSubFolders(map);
+	}
+	
+	public void moveFile (String fileId, String folderId, int tenantId, String timeUTC) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileId",   fileId);
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		map.put("timeUTC",    timeUTC);
+		
+		ezWebFolderDAO.moveFile(map);
 	}
 }

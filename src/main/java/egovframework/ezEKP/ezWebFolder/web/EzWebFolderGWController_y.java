@@ -164,7 +164,6 @@ public class EzWebFolderGWController_y {
 //		
 		String userId = (String) jsonObject.get("id");
 		MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
-		
 		String folderUppId = (String) jsonObject.get("folderUppId");
 		String newFolderName1 = (String) jsonObject.get("newFolderName1");
 		String newFolderName2 = (String) jsonObject.get("newFolderName2");

@@ -47,8 +47,6 @@
 		var pEnd =10;
 		var fileCnt = 0;
 		var folderCnt = 0;
-		var checkedArr	= [];
-		var folderArr = [];
 		var trashCanList = [];
 		var searchFileType = "";
 		
@@ -183,13 +181,14 @@
 					trElement.setAttribute("class", "bnkWebFolder");
 					trElement.setAttribute("targetid", resultElement["trashCanId"]);
 					trElement.setAttribute("targetPath", resultElement["trashCanPath"]);
+					trElement.setAttribute("ext", resultElement["trashCanExt"]);
+					trElement.onclick = function(event) {clickRow(event);};
 					
 					var inputElmt = document.createElement("input");
 					inputElmt.setAttribute("type", "checkbox");
 					inputElmt.setAttribute("value", resultElement["trashCanId"]);
-					inputElmt.setAttribute("ext", resultElement["trashCanExt"]);
 					inputElmt.setAttribute("class", "checkBnk");			
-					inputElmt.addEventListener("change", function() {getChecked(this);});
+					inputElmt.addEventListener("change", function(e) {getChecked(e);});
 					
 					tdCheckbox.appendChild(inputElmt);
 					
@@ -201,7 +200,9 @@
 					tdFileIcon.appendChild(fileIconElmt);
 					
 					tdName.textContent = resultElement["trashCanName"];
-					tdSize.textContent = getFileSize(resultElement["trashCanSize"]);
+					if (resultElement["trashCanExt"] != 'folder') {
+						tdSize.textContent = getFileSize(resultElement["trashCanSize"]);
+					}
 					
 					if (userInfo.lang == "1") {
 						tdCreator.textContent = resultElement["createName1"];
@@ -323,52 +324,48 @@
 	        searchOptionHidden();
 	        renderFileList();
 	    }
-   		function clickRow(obj, e) {
-	        e.stopPropagation();
-	        e.preventDefault();
-	    	
-	    	var inputElmt = obj.firstElementChild.firstElementChild;
-	    	var newUser = {};
-		    newUser["userId"]      = obj.getAttribute("userId");
-		    newUser["usedAmount"]  = obj.getAttribute("usedAmount");
-	    	
-	    	if (inputElmt.checked == true) {
-	    		inputElmt.checked = false;
-	    		
-	    		var pos = null;
-    		    checkedArr.map(function(obj, index) { if(obj["userId"] == newUser["userId"]) { pos = index; return true; }}).filter(isFinite);
-
-    		    if (pos != -1) {
-    			   obj.setAttribute("style", "");
-    			   checkedArr.splice(pos, 1);
-    		    }		    		
-	    	} else {
-	    		inputElmt.checked = true;
-	    		checkedArr.push(newUser);
-	    		obj.setAttribute("style", "background-color: #e9f1ff;");
-	    	}
-	    }
 	    
-	    function getChecked(obj, event) {		       
-	       event.stopPropagation();
-	       
-	       var newUser = {};
-	       newUser["userId"]      = obj.getAttribute("userId");
-	       newUser["usedAmount"]  = obj.getAttribute("usedAmount");		       
-	        	   
-    	   if (obj.checked == true) {
-    		   checkedArr.push(newUser);
-    		   obj.parentElement.parentElement.setAttribute("style", "background-color: #e9f1ff;");
-    	   } else {	    		   
-    		   var pos = null;
-    		   checkedArr.map(function(obj, index) { if(obj["userId"] == newUser["userId"]) { pos = index; return true; }}).filter(isFinite);
-
-    		   if (pos != -1) {
-    			   obj.parentElement.parentElement.setAttribute("style", "");
-    			   checkedArr.splice(pos, 1);
-    		   }
-    	   }
-       }
+   		function clickRow(e) {
+			e.stopPropagation();
+			e.preventDefault();
+			var trElmt    = e.currentTarget;
+			var inputElmt = trElmt.firstElementChild.firstElementChild;
+			
+			if (inputElmt.checked == true) {
+				inputElmt.checked = false;
+				trElmt.setAttribute("class", "bnkWebFolder2");
+			}
+			else {
+				inputElmt.checked = true;
+				trElmt.setAttribute("class", "bnkWebFolder2");
+			}
+		}
+		
+		function getChecked(event) {
+			event.stopPropagation();
+			var checkboxElmt = event.currentTarget;
+			var trElmt       = checkboxElmt.parentElement.parentElement;
+			trElmt.setAttribute("class", checkboxElmt.checked == true ? "bnkWebFolder2" : "bnkWebFolder");
+		}
+		
+		function getCheckAll(obj) {
+			var listInputs = document.getElementsByClassName("checkBnk");
+			
+			if (obj.checked == true) {
+				for (var i = 0; i < listInputs.length; i++) {
+					listInputs[i].checked = true;
+					var trElmt            = listInputs[i].parentElement.parentElement;
+					trElmt.setAttribute("class", "bnkWebFolder2");
+				}
+			}
+			else {
+				for (var i = 0; i < listInputs.length; i++) {
+					var trElmt            = listInputs[i].parentElement.parentElement;
+					listInputs[i].checked = false;
+					trElmt.setAttribute("class", "bnkWebFolder");
+				}
+			}
+		}
 	    
    	   function doLayerPopup(obj) {
 	        btn_PostDate_Clear();
@@ -419,58 +416,30 @@
        }
        
        function filePermanentDelete() {
-    	   if (checkedArr.length <= 0 && folderArr.length <= 0) {
-    		   alert("<spring:message code = 'ezWebFolder.t108'/>");
-    		   return;
-    	   }
+    	   var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
     	   
-	       var checkedFileList = checkedArr[0];
-	       var checkedFolderList = folderArr[0];
-	       
-    	   for (var i = 1; i < checkedArr.length; i++) {
-    		   checkedFileList = checkedFileList + "," + checkedArr[i];	    			
-    	   }
+	   	   if (listOfChecked.length <= 0) {
+	   			alert("<spring:message code = 'ezWebFolder.t108'/>");
+	   			return;
+	   	   }
+	   	   
+		   	var filesList  = [];
+			var folderList = [];
+			
+			for (var i = 0; i < listOfChecked.length; i++) {
+				var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+				
+				if (listOfChecked[i].getAttribute("ext") == 'folder') {
+					folderList.push(fileFolderId);
+				}
+				else {
+					filesList.push(fileFolderId);
+				}
+			}
     	   
-    	   for (var i = 1; i < folderArr.length; i++) {
-    		   checkedFolderList = checkedFolderList + "," + folderArr[i];
-    	   }
-    	   
-    	   showPanel(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + checkedFileList + "&folderList=" + checkedFolderList);
+    	   showPanel(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
        }
-       
-       function getChecked(obj) {
-    	   var id = obj.getAttribute("value");
-    	   if (obj.checked == true) {
-    		   if (obj.getAttribute("ext") == "folder"){
-    			   folderArr.push(id);
-    		   } else {
-	    		   checkedArr.push(id);
-    		   }
-    	   }
-       }
-       
-       function getCheckAll(obj) {
-    	   var listInputs = document.getElementsByClassName("checkBnk");
-    	   
-    	   checkedArr = [];
-    	   folderArr = [];
-    	   if (obj.checked == true) {
-    		   for (var i = 0; i < listInputs.length; i++) {
-	    			listInputs[i].checked = true;
-	    			if (listInputs[i].getAttribute("ext") == 'folder') {
-	    				folderArr.push(listInputs[i].value);
-	    			} else {
-		    			checkedArr.push(listInputs[i].value);	    		
-	    			}
-	    		}		    	
-    	   }
-    	   else {
-    		   for (var i = 0; i < listInputs.length; i++) {
-	    			listInputs[i].checked = false;	    				    		
-	    		}
-    	   }
-       }
-       
+
        function changeCount(value) {
     	   blockSize = value;
     	   currentPage = 1;
@@ -502,33 +471,38 @@
        }
 		
        function restoreTrashCan() {
-    	   if (checkedArr.length <= 0 && folderArr.length <= 0) {
-    		   alert("<spring:message code = 'ezWebFolder.t108'/>");
-    		   return;
-    	   }
+			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
     	   
-	       var checkedFileList = checkedArr[0];
-	       var checkedFolderList = folderArr[0];
-	       
-    	   for (var i = 1; i < checkedArr.length; i++) {
-    		   checkedFileList = checkedFileList + "," + checkedArr[i];	    			
-    	   }
-    	   
-    	   for (var i = 1; i < folderArr.length; i++) {
-    		   checkedFolderList = checkedFolderList + "," + folderArr[i];
-    	   }
-    	   
+	   	   if (listOfChecked.length <= 0) {
+	   			alert("<spring:message code = 'ezWebFolder.t108'/>");
+	   			return;
+	   	   }
+	   	   
+		   	var filesList  = [];
+			var folderList = [];
+			
+			for (var i = 0; i < listOfChecked.length; i++) {
+				var fileFolderId = listOfChecked[i].getAttribute("targetid");
+				
+				if (listOfChecked[i].getAttribute("ext") == 'folder') {
+					folderList.push(fileFolderId);
+				}
+				else {
+					filesList.push(fileFolderId);
+				}
+			}
+    	  
     		$.ajax ({
 				type: "POST",
 				async: false,
 				url : "/ezWebFolder/restoreTrashCan.do",
 				dataType: "json",
 				data : {
-					"fileList" : checkedFileList,
-					"folderList" :checkedFolderList
+					"fileList" : filesList.toString(),
+					"folderList" :  folderList.toString()
 				},
 				success : function (data) {
-					alert('복원이 완료 되었습니다.');
+					alert('복원을 완료 하였습니다.');
 					refreshView();
 				},
 				error : function(error) {
@@ -537,44 +511,32 @@
 			})
        }
        
+       var moveTrashCan_cross_dialogArguments = [];
+       
        function moveTraschCan() {
-    	   if (checkedArr.length <= 0 && folderArr.length <= 0) {
-    		   alert("<spring:message code = 'ezWebFolder.t108'/>");
-    		   return;
-    	   }
+			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
     	   
-	       var checkedFileList = checkedArr[0];
-	       var checkedFolderList = folderArr[0];
-	       
-    	   for (var i = 1; i < checkedArr.length; i++) {
-    		   checkedFileList = checkedFileList + "," + checkedArr[i];	    			
-    	   }
-    	   
-    	   for (var i = 1; i < folderArr.length; i++) {
-    		   checkedFolderList = checkedFolderList + "," + folderArr[i];
-    	   }
-    	   
-    	   var OpenWin = window.open("/ezWebFolder/folderManage.do?folderType="+folderType, "", GetOpenWindowfeature(600, 550));
-           try { OpenWin.focus(); } catch (e) { }
-           
-    		$.ajax ({
-				type: "POST",
-				async: false,
-				url : "/ezWebFolder/moveTrashCan.do",
-				dataType: "json",
-				data : {
-					"fileList" : checkedFileList,
-					"folderList" :checkedFolderList
-				},
-				success : function (data) {
-					alert('이동을 완료하였습니다..');
-					refreshView();
-				},
-				error : function(error) {
-					alert("이동을 실패하였습니다." + error);
+	   	   if (listOfChecked.length <= 0) {
+	   			alert("<spring:message code = 'ezWebFolder.t108'/>");
+	   			return;
+	   	   }
+	   	   
+		   	var filesList  = [];
+			var folderList = [];
+			
+			for (var i = 0; i < listOfChecked.length; i++) {
+				var fileFolderId = listOfChecked[i].getAttribute("targetid");
+				
+				if (listOfChecked[i].getAttribute("ext") == 'folder') {
+					folderList.push(fileFolderId);
 				}
-			})
+				else {
+					filesList.push(fileFolderId);
+				}
+			}
     	   
+    	   var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(420, 490));
+           try { OpenWin.focus(); } catch (e) { }
        }
     </script>
 </head>

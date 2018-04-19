@@ -17,8 +17,14 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public List<FileVO> getFileList(Map<String, Object> map) {
 		return  (List<FileVO>) list("EzWebFolderDAO_y.getFileList",map);
 	}
+	public List<FileVO> getFileListR(Map<String, Object> map) {
+		return  (List<FileVO>) list("EzWebFolderDAO_y.getFileListR",map);
+	}
 	public List<FileVO> searchFileList(Map<String, Object> map) {
 		return  (List<FileVO>) list("EzWebFolderDAO_y.searchFileList",map);
+	}
+	public List<FileVO> searchFileListR(Map<String, Object> map) {
+		return  (List<FileVO>) list("EzWebFolderDAO_y.searchFileListR",map);
 	}
 	
 	public int getFldTotalCount (Map<String, Object> map) {
@@ -27,8 +33,14 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public int getFileTotalCount (Map<String, Object> map) {
 		return (int) select("EzWebFolderDAO_y.getFileToTalCount",map);
 	}
+	public int getFileTotalCountR (Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.getFileToTalCountR",map);
+	}
 	public int searchFileToTalCount (Map<String, Object> map) {
 		return (int) select("EzWebFolderDAO_y.searchFileToTalCount",map);
+	}
+	public int searchFileToTalCountR (Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.searchFileToTalCountR",map);
 	}
 	
 	// jstree사용하기 위해서는 최상단이 #으로 출력되어야합니다. 
@@ -70,17 +82,11 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public int getFolderStep(Map<String, Object> map) {
 		return  (int) select("EzWebFolderDAO_y.getFolderStep", map);
 	}
-	public List<Map<String, Object>> deptTest(Map<String, Object> map) {
-		return  (List<Map<String, Object>>) list("EzWebFolderDAO_y.deptTest",map );
-	}
 	public List<Map<String, Object>> getDeptFolder(Map<String, Object> map) {
 		return  (List<Map<String, Object>>) list("EzWebFolderDAO_y.getFolderList_D",map );
 	}
 	public List<String> getAddJobList(Map<String, Object> map) {
 		return (List<String>) list("EzWebFolderDAO_y.getAddJobList",map);
-	}
-	public List<Map<String, Object>> getDeptAddJobList(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getDeptAddJobList",map );
 	}
 	public List<Map<String, Object>> getDeptSub(Map<String, Object> map) {
 		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getDeptSub",map );
