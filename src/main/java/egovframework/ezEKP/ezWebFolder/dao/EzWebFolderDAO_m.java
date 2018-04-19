@@ -146,4 +146,12 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	public int getTrashFolderCount(Map<String, Object> map) {
 		return (Integer) select("EzWebFolderDAO_m.getTrashFolderCount", map);
 	}
+	
+	public void moveSubFolders(Map<String, Object> map) {
+		update("EzWebFolderDAO_m.moveSubFolders", map);
+	}
+
+	public void moveFile(Map<String, Object> map) {
+		update("EzWebFolderDAO_m.moveFile", map);
+	}
 }

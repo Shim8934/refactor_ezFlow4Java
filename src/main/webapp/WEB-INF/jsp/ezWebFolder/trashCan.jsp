@@ -503,7 +503,7 @@
 		
        function restoreTrashCan() {
     	   if (checkedArr.length <= 0 && folderArr.length <= 0) {
-    		   alert("<spring:message code = 'ezWebFolder.t108'/>");
+    		   alert("파일 및 폴더를 선택하세요.");
     		   return;
     	   }
     	   
@@ -517,7 +517,7 @@
     	   for (var i = 1; i < folderArr.length; i++) {
     		   checkedFolderList = checkedFolderList + "," + folderArr[i];
     	   }
-    	   
+    	  
     		$.ajax ({
 				type: "POST",
 				async: false,
@@ -528,7 +528,7 @@
 					"folderList" :checkedFolderList
 				},
 				success : function (data) {
-					alert('복원이 완료 되었습니다.');
+					alert('복원을 완료 하였습니다.');
 					refreshView();
 				},
 				error : function(error) {
@@ -537,44 +537,15 @@
 			})
        }
        
+       var moveTrashCan_cross_dialogArguments = [];
        function moveTraschCan() {
     	   if (checkedArr.length <= 0 && folderArr.length <= 0) {
-    		   alert("<spring:message code = 'ezWebFolder.t108'/>");
+    		   alert("파일 및 폴더를 선택하세요.");
     		   return;
     	   }
     	   
-	       var checkedFileList = checkedArr[0];
-	       var checkedFolderList = folderArr[0];
-	       
-    	   for (var i = 1; i < checkedArr.length; i++) {
-    		   checkedFileList = checkedFileList + "," + checkedArr[i];	    			
-    	   }
-    	   
-    	   for (var i = 1; i < folderArr.length; i++) {
-    		   checkedFolderList = checkedFolderList + "," + folderArr[i];
-    	   }
-    	   
-    	   var OpenWin = window.open("/ezWebFolder/folderManage.do?folderType="+folderType, "", GetOpenWindowfeature(600, 550));
+    	   var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + checkedArr + "&folderList=" + folderArr, "", GetOpenWindowfeature(420, 490));
            try { OpenWin.focus(); } catch (e) { }
-           
-    		$.ajax ({
-				type: "POST",
-				async: false,
-				url : "/ezWebFolder/moveTrashCan.do",
-				dataType: "json",
-				data : {
-					"fileList" : checkedFileList,
-					"folderList" :checkedFolderList
-				},
-				success : function (data) {
-					alert('이동을 완료하였습니다..');
-					refreshView();
-				},
-				error : function(error) {
-					alert("이동을 실패하였습니다." + error);
-				}
-			})
-    	   
        }
     </script>
 </head>

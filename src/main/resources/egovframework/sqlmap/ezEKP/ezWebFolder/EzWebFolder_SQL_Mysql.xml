@@ -17,7 +17,6 @@
 			f.USE_STATUS = 'Y'
 		AND
 			f.TENANT_ID  = #tenantId#
-		
 		<isEqual property="fileType" compareValue="2" prepend="AND">
 			<![CDATA[
 				t.TYPE_NAME = 'document'
