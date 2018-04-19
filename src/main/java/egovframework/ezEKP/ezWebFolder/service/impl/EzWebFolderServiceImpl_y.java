@@ -242,6 +242,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			map.put("folderStep",	 folderStep );
 			map.put("folderLevel",	 uppFolder.getFolderLevel()+1);
 			map.put("folderPath", 	 uppFolder.getFolderPath());
+			map.put("ownerId", uppFolder.getOwnerId());
 			
 		// uppFolder가 없으면 최상위 폴더를 만드는거 
 		} else if (uppFolder == null ) {
@@ -250,6 +251,13 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			map.put("folderStep", 0);
 			map.put("folderLevel", 0 );
 			map.put("folderPath", "|");
+			if (folderType.equals("C")) {
+				map.put("ownerId", comId);
+			} else if (folderType.equals("D")) {
+				map.put("ownerId",deptId);
+			} else if (folderType.equals("U")) {
+				map.put("ownerId",userId);
+			}
 		}
 		map.put("folderName1", 	 newFolderName1);
 		map.put("folderName2", 	 newFolderName2);
@@ -263,14 +271,6 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			map.put("createName2", loginvo.getDisplayName1());
 		} else {
 			map.put("createName2", loginvo.getDisplayName2() );
-		}
-//		// folderType에 따라서 ownerId 다르게 주어짐 c:company , D:depertment , U:user
-		if (folderType.equals("C")) {
-			map.put("ownerId", comId);
-		} else if (folderType.equals("D")) {
-			map.put("ownerId",deptId);
-		} else if (folderType.equals("U")) {
-			map.put("ownerId",userId);
 		}
 		LOGGER.debug("folderType is " + folderType );
 
@@ -381,8 +381,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 				map.put("folderStep", 0);
 				map.put("folderLevel", 0 );
 				map.put("folderPath", "|");
-				map.put("folderName1", deptInfo.get("displayname").toString());
-				map.put("folderName2", deptInfo.get("displayname2").toString());
+				map.put("folderName1", deptInfo.get("DISPLAYNAME").toString());
+				map.put("folderName2", deptInfo.get("DISPLAYNAME2").toString());
 				map.put("createName1",	 loginvo.getDisplayName1());
 				map.put("userId", 		 userId);
 				map.put("comId",		 comId);
@@ -408,8 +408,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 				map.put("folderStep", 0);
 				map.put("folderLevel", 0 );
 				map.put("folderPath", "|");
-				map.put("folderName1", deptInfo.get("displayname").toString());
-				map.put("folderName2", deptInfo.get("displayname2").toString());
+				map.put("folderName1", deptInfo.get("DISPLAYNAME").toString());
+				map.put("folderName2", deptInfo.get("DISPLAYNAME2").toString());
 				map.put("createName1",	 loginvo.getDisplayName1());
 				map.put("userId", 		 userId);
 				map.put("comId",		 comId);
@@ -461,8 +461,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 					map.put("folderStep", 0);
 					map.put("folderLevel", 0 );
 					map.put("folderPath", "|");
-					map.put("folderName1", deptInfo.get("displayname").toString());
-					map.put("folderName2", deptInfo.get("displayname2").toString());
+					map.put("folderName1", deptInfo.get("DISPLAYNAME").toString());
+					map.put("folderName2", deptInfo.get("DISPLAYNAME2").toString());
 					map.put("createName1",	 loginvo.getDisplayName1());
 					map.put("userId", 		 userId);
 					map.put("comId",		 comId);
@@ -485,8 +485,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 				map.put("folderStep", 0);
 				map.put("folderLevel", 0 );
 				map.put("folderPath", "|");
-				map.put("folderName1", deptInfo.get("displayname").toString());
-				map.put("folderName2", deptInfo.get("displayname2").toString());
+				map.put("folderName1", deptInfo.get("DISPLAYNAME").toString());
+				map.put("folderName2", deptInfo.get("DISPLAYNAME2").toString());
 				map.put("createName1",	 loginvo.getDisplayName1());
 				map.put("userId", 		 userId);
 				map.put("comId",		 comId);

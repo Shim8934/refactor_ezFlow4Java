@@ -838,11 +838,17 @@
 							folder.TENANT_ID = #tenantId# 
 						and folder.folder_type = #folderType# 
 						and folder.company_id = #comId# 
-			            and folder.owner_id in (select dept.cn 
-								from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-								where addj.cn = #userId# or folder.owner_id = #deptId#)
+			            and folder.owner_id in (
+			            	select dept.cn 		
+							from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
+							where addj.cn = #userId# or folder.owner_id = #deptId#
+							union  
+							select owner_id 
+							from tbl_webfolder_folderuser user inner join tbl_webfolder_folder folder on user.folder_id = folder.folder_id  
+               				where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
+			            )
 						and folder.use_status = 'Y'
-	        union all 
+	        union  
 	        select 
 	        	f.folder_id as id ,if( f.folder_upper = 'root', '##', f.folder_upper )  as parent,
 				f.owner_id as owner, f.FOLDER_PATH, f.CREATE_ID as createId,
@@ -997,7 +1003,7 @@
 	<select id="EzWebFolderDAO_y.getdeptInfo" parameterClass="Map" resultClass="HashMap"> 
 		<![CDATA[
 			select
-				cn , displayname, displayname2 ,EXTENSIONATTRIBUTE9 ,EXTENSIONATTRIBUTE1 ,EXTENSIONATTRIBUTE2
+				cn , DISPLAYNAME, DISPLAYNAME2 ,EXTENSIONATTRIBUTE9 ,EXTENSIONATTRIBUTE1 ,EXTENSIONATTRIBUTE2
 			from tbl_deptmaster
 			WHERE tenant_id =#tenantId# and cn =#deptId#
 		]]>
