@@ -52,7 +52,7 @@
 				});
 	   		}
 	   		
-	   		//부서 리스트 오른쪽에 이동!
+	   		//부서 리스트 오른쪽에 이동
 	   		function addDeptInLP(){
 		   		var flag = true;
 		   		for (var i = 0; i < lpDepts.length ; i++) {
@@ -87,11 +87,21 @@
 	   		
 	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
 	   		function delTargetDept(elem){
-	   			var targetDeptId = $(elem).attr("targetId");
-	   			var targetDeptName = $(elem).attr("targetName");
-   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
-   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
-   				$(elem).remove();
+// 	   			var targetDeptId = $(elem).attr("targetId");
+// 	   			var targetDeptName = $(elem).attr("targetName");
+//    				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
+//    				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
+//    				$(elem).remove();
+   				//
+	   			var targetDeptId = $(".selectTR").attr("targetId");
+	   			if(targetDeptId){
+		   			var targetDeptName = $(".selectTR").attr("targetName");
+	   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
+	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
+	   				$(".selectTR").remove();
+	   			} else {
+	   				alert("부서를 선택해 주세요");
+	   			}
 	   		}
 	   		
 	   		//오프너의 부서 이름과 아이디 세팅

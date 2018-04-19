@@ -103,6 +103,7 @@
 	   					deptIds : deptIdStr
 	   				},
 	   				success: function(){
+	   					alert("권한이 등록되었습니다.");
    						opener.company_change();
    						window.close();
 	   				},

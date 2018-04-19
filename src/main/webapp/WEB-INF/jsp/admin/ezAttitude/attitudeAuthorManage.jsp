@@ -79,7 +79,11 @@
 	        }
 	        
 	        //권한수정
-			function author_modify() {			
+			function author_modify() {
+	        	if (selectedUserId == null || selectedUserId == "") {
+	        		alert("사원을 먼저 선택해 주세요");
+	        		return;
+	        	}
 				var userId = selectedUserId;
 				var url = "/admin/ezAttitude/saveAttitudeAuth.do";
 				var companyId = encodeURI($("#ListCompany").val());
@@ -94,12 +98,16 @@
 	        
 	        //권한 삭제
 	        function author_delete() {
+	        	if (selectedUserId == null || selectedUserId == "") {
+	        		alert("사원을 먼저 선택해 주세요");
+	        		return;
+	        	}
 	        	if (confirm("정말로 삭제하시겠습니까?")) {
 					$.ajax({
 						type : "POST",
 						url : "/admin/ezAttitude/deleteAttitudeAuth.do",
 						data : {
-							selectUserId : selectUserId,
+							selectUserId : selectedUserId,
 							companyId : encodeURI($("#ListCompany").val())
 						},
 						success : function() {
