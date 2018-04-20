@@ -324,6 +324,23 @@ public class EzOrganController {
 
 		return strXML;
 	}
+	/**
+	 * 선택한 서브트리정보  함수 
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/ezOrgan/insertAllOrganSubTreeInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String insertAllOrganSubTreeInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo , String deptID) throws Exception{
+		logger.debug("insertAllOrganSubTreeInfo Started (outer)");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String strFilter = "(&(objectclass=ucOrg2)(docsysteminfo=*))";
+		
+		int intScope = 1;
+		String strXML = ezOrganService.getOrganSubTreeInfo(strFilter, deptID, intScope);
+		logger.debug("insertAllOrganSubTreeInfo ended (outer)");
+		
+		return strXML;
+	}
 //	/**
 //	 * 조직도 부서 및 사원정보 함수
 //	 */

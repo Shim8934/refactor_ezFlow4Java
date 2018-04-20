@@ -649,26 +649,37 @@ public class EzEmailMailListController {
 				deleteMsgs = sourceFolder.getMessagesByUID(uids);
 			}
 			
-			if (cmd.equalsIgnoreCase("BMOVE")) {
-				// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
-				Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(deleteMsgs, userEmail, domainName, ia);
-				
-				if (adjustQuotaData[0] != null) {
-					isNewUserQuotaNeeded = true;
-					
-					userQuota = adjustQuotaData[0];
-					userWarn = adjustQuotaData[1];
-				}
-
-				if (adjustQuotaData[2] != null) {
-					isThereUserLevelQuota = true;
-				}
-								
-				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
-				sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
-			}
+			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
 			
-			sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+			if (useImapMoveCommand.equals("YES")) {
+				if (cmd.equalsIgnoreCase("BMOVE")) {
+					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
+					sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
+				} else {			
+					sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+				}
+			} else {
+				if (cmd.equalsIgnoreCase("BMOVE")) {
+					// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+					Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(deleteMsgs, userEmail, domainName, ia);
+					
+					if (adjustQuotaData[0] != null) {
+						isNewUserQuotaNeeded = true;
+						
+						userQuota = adjustQuotaData[0];
+						userWarn = adjustQuotaData[1];
+					}
+
+					if (adjustQuotaData[2] != null) {
+						isThereUserLevelQuota = true;
+					}
+									
+					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
+					sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
+				}
+				
+				sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);				
+			}
 					
 			sourceFolder.close(true);		
 		} catch (Exception e) {
@@ -750,29 +761,39 @@ public class EzEmailMailListController {
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);
 			
-			Message[] messages = sourceFolder.getMessagesByUID(uids);
-			
-			if (cmd.equalsIgnoreCase("MOVE")) {
-				// 이동시킬 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
-				Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userEmail, domainName, ia);
-				
-				if (adjustQuotaData[0] != null) {
-					isNewUserQuotaNeeded = true;
-					
-					userQuota = adjustQuotaData[0];
-					userWarn = adjustQuotaData[1];
-				}
-
-				if (adjustQuotaData[2] != null) {
-					isThereUserLevelQuota = true;
-				}				
-			}
-			
+			Message[] messages = sourceFolder.getMessagesByUID(uids);						
 			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);			
-			sourceFolder.copyUIDMessages(messages, movefolder);
 			
-			if (cmd.equalsIgnoreCase("MOVE")) {
-				sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+			
+			if (useImapMoveCommand.equals("YES")) {			
+				if (cmd.equalsIgnoreCase("MOVE")) {
+					sourceFolder.moveUIDMessages(messages, movefolder);
+				} else {					
+					sourceFolder.copyUIDMessages(messages, movefolder);					
+				}
+			} else {
+				if (cmd.equalsIgnoreCase("MOVE")) {
+					// 이동시킬 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+					Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userEmail, domainName, ia);
+					
+					if (adjustQuotaData[0] != null) {
+						isNewUserQuotaNeeded = true;
+						
+						userQuota = adjustQuotaData[0];
+						userWarn = adjustQuotaData[1];
+					}
+
+					if (adjustQuotaData[2] != null) {
+						isThereUserLevelQuota = true;
+					}				
+				}
+				
+				sourceFolder.copyUIDMessages(messages, movefolder);
+				
+				if (cmd.equalsIgnoreCase("MOVE")) {
+					sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+				}									
 			}
 			
 			sourceFolder.close(true);		

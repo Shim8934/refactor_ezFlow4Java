@@ -125,7 +125,7 @@
 		        try {
 		        	// 수정 수아 재은
 		        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer;' />"
-						html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-left: -4px;' />";
+						html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer;' />";
 						html += "<span id='curZoomSize' style='display:none; float:right;'></span></div>"
 						html += "<br><br>";
 						

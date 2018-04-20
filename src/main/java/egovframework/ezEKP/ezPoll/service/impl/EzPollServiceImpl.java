@@ -91,6 +91,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("is_sorting", pollQuestionVO.getIsSorting());		
 		map.put("is_selonlyonce", pollQuestionVO.getIsSelOnlyOnce());		
 		map.put("sendpostnotice", pollQuestionVO.getSendPostNotice());
+		map.put("opentoall", pollQuestionVO.getOpenToAll());
 		ezPollDAO.insertQuestion(map);
 	}
 
@@ -449,6 +450,8 @@ public class EzPollServiceImpl implements EzPollService{
 		List<PollQuestionVO> listOfQuestion = new ArrayList<PollQuestionVO>();
 		int tenantID = loginvo.getTenantId();
 		String primary = loginvo.getPrimary();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenant_id", tenantID);
 		
 		//Check if user has admin privilege
 		if (loginvo.getRollInfo().indexOf("c=1") == -1 && loginvo.getRollInfo().indexOf("k=1") == -1) {
@@ -470,6 +473,11 @@ public class EzPollServiceImpl implements EzPollService{
 			List<PollQuestionVO> listOfQuestion2 = new ArrayList<PollQuestionVO>();
 			listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr, primary, mode);		
 			set.addAll(listOfQuestion2);
+			
+			List<PollQuestionVO> listOfQuestion3 = new ArrayList<PollQuestionVO>();
+			listOfQuestion3 = ezPollDAO.getOpenToAllQuestion(map);
+			set.addAll(listOfQuestion3);
+			
 		}
 		else {
 			//Get all questions for admin privilege user

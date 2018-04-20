@@ -1646,6 +1646,30 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return list;
 	}
 	
+	@Override
+	public boolean checkRetired(String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("checkRetired started.");
+		
+		boolean chkValue = false;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		int count = ezOrganDAO.checkRetired(map);
+		
+		logger.debug("count = " + count);
+		
+		if (count != 0) {
+			chkValue = true;
+		}
+		
+		logger.debug("checkRetired ended. chkValue = " + chkValue);
+		
+		return chkValue;
+	}
+	
 	public String getChildrenDeptID(String parentID, String companyID, int tenantID) throws Exception {
 		logger.debug("getChildrenDeptID sratred.");
 		

@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.sun.mail.imap.IMAPFolder;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -265,7 +267,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	if (!url.equals("")) {
 	            		String trashFolderName = egovMessageSource.getMessage("ezEmail.t99000028", locale);
             			Folder trashFolder = ia.getFolder(trashFolderName);
-            			Folder folder = ia.getFolder(url);
+            			IMAPFolder folder = (IMAPFolder)ia.getFolder(url);
             			
 	            		if (folder.exists() && trashFolder.exists()) {
             				folder.open(Folder.READ_WRITE);
@@ -285,8 +287,14 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
             					isThereUserLevelQuota = true;
             				}
             				
-            				folder.copyMessages(messages, trashFolder);
-            				folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+            				String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+            				
+            				if (useImapMoveCommand.equals("YES")) {            				
+	            				folder.moveMessages(messages, trashFolder);
+            				} else {            				
+	            				folder.copyMessages(messages, trashFolder);
+	            				folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+            				}
             				
             				folder.close(true);
             				logger.debug(url + " folder's message is moved to " + trashFolderName + ".");
