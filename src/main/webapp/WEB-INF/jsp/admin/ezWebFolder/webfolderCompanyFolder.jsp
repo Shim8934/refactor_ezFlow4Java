@@ -46,7 +46,6 @@
 			}
 			
 			function renderData(result) {
-				//var bttnAdd = document.getElementById("addCompFolder");
 				var divTree = document.getElementById("folderTree");
 				
 				while (divTree.hasChildNodes()) {
@@ -55,11 +54,9 @@
 				
 				if (!result) {
 					//alert("<spring:message code='ezWebFolder.t134'/>");
-					//bttnAdd.style.display = "";
 					return;
 				}
 				
-				//bttnAdd.style.display = "none";
 				var divComp           = document.createElement("div");
 				compFolderId          = result["folderId"];
 				
@@ -502,13 +499,12 @@
 	<body class="mainbody">
 		<h1><spring:message code='ezWebFolder.t126' /></h1>
 		<div id="companySelect" style="margin: 10px 0px;">
-			<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b>회사 선택: </b></span>
-			<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
+			<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b>회사 선택: </b></span>
+			<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="change();">
 				<c:forEach var="item" items="${list}">
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 				</c:forEach>
 			</select>
-			<a class="webfolderBttn3" id="addCompFolder" style=""><span onclick="newCompanyFolder();"><spring:message code='ezWebFolder.t229'/></span></a>
 		</div>
 		
 		<div style="height: 450px; width: 100%;">

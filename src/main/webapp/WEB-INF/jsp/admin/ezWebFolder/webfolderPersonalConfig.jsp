@@ -404,8 +404,8 @@
 			<span id="mailBoxInfo"></span>
 		</h1>
 		<div id="companySelect" style="margin: 10px 0px;">
-			<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
-			<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
+			<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
+			<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="change();">
 				<c:forEach var="item" items="${list}">
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 				</c:forEach>
