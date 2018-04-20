@@ -21,7 +21,7 @@
 					<input type="checkbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 				</th>
 				<c:if test="${listType eq 'recv' }">
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="padding-left: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: left;" class="h5_center">
+					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="padding-left: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:25px; text-align: left;" class="h5_center">
 						<img style="cursor:pointer; vertical-align: middle;" src="/images/ImgIcon/view-document.gif ">
 					</th>
 				</c:if>
@@ -79,7 +79,7 @@
 		<c:choose>
 			<c:when test="${fn:length(journalList) ne 0}">
 				<c:forEach items="${journalList}" var="journal" varStatus="status">
-				<tr class="${journal.isView }" id="${journal.journalId }" mine="${journal.mine }" formStatus="${journal.formStatus }" typeId="${journal.typeId}" formId="${journal.formId}" ondblclick="goJournalDetail(this);" style="cursor: pointer;">
+				<tr <c:if test="${listType ne 'temp' }">class="${journal.isView }"</c:if> id="${journal.journalId }" mine="${journal.mine }" formStatus="${journal.formStatus }" typeId="${journal.typeId}" formId="${journal.formId}" ondblclick="goJournalDetail(this);" style="cursor: pointer;">
 					<td class="cbTD" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><input onchange="checkedCheckbox(this);" type="checkbox" name="journalCheckbox" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>
 					<c:if test="${listType eq 'recv' }">
 						<c:choose>

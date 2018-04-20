@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezJournal.web;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -374,21 +375,14 @@ public class EzJournalController extends EgovFileMngUtil {
 					for (int i = 0; i < fileList.size(); i++) {
 						JSONObject file = (JSONObject) fileList.get(i);
 						file.put("pFileName", file.get("fileName"));
-<<<<<<< HEAD
 					//	file.put("fileName", file.get("fileName"));
-=======
->>>>>>> parent of 142f82500b... 업무일지 > 파일첨부 기능 수정
 						String filePath = file.get("filePath").toString();
 						filePath = filePath.substring(filePath.indexOf("{"), filePath.indexOf("}") + 1);
 						file.put("pUploadSN", filePath);
 						file.put("resultUpload", "true");
 						fileList.set(i, file);
 					}
-<<<<<<< HEAD
 					model.addAttribute("fileList", URLEncoder.encode(fileList.toString(), "UTF-8").replaceAll("\\+", "%20"));
-=======
-					model.addAttribute("fileList", fileList.toString());
->>>>>>> parent of 142f82500b... 업무일지 > 파일첨부 기능 수정
 				}
 			}
 			
