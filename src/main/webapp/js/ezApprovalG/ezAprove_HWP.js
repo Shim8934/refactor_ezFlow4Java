@@ -435,8 +435,9 @@ function openOpinionUI(ret)
 		
 	if (ret != "cancel")	{
 		var Rtnxml = new ActiveXObject("Microsoft.XMLDOM");
-		Rtnxml = loadXMLString(ret);
-			  
+		Rtnxml.async = "false";
+		Rtnxml.loadXML(ret);
+		
 		var NodeList = Rtnxml.selectNodes("LISTVIEWDATA/ROWS/ROW");
 			  
 		if (NodeList.length != 0)
