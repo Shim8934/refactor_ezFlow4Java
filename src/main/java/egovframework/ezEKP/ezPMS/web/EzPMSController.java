@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -170,27 +171,29 @@ public class EzPMSController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezPMS/addNewProject.do")
-	public String addNewProject(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	public String addNewProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param,HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS addNewProject started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String url = "/rest/ezPMS/projects";
-		String userName = userInfo.getDisplayName1();
-		System.out.println(userInfo.getId());
+		String writerName = userInfo.getDisplayName1();
+		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
-		Map<String, Object> param = new HashMap<>();
+		param.put("writerName", writerName);
+		param.put("creatorId", userInfo.getId());
+		param.put("tenantId", userInfo.getTenantId());
+		param.put("createDate", today);
+		param.put("creatorName", userInfo.getDisplayName1());
+		param.put("creatorName2", userInfo.getDisplayName2());
 		
-		
+		System.out.println(userInfo.getTenantId());
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", null);
 		
 //		JSONArray list = new JSONArray();
 		System.out.println(result);
-		model.addAttribute("test", result.get("status").toString());
-		model.addAttribute("result", result);
-		model.addAttribute("userName", userName);
 		
 		LOGGER.debug("ezPMS addNewProject ended");
-		return "ezPMS/newProject";
+		return "json";
 	}
 	
 	/**
@@ -456,7 +459,7 @@ public class EzPMSController {
 	public String selectAuth(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, Model model) {
 		LOGGER.debug("selectAuth started");
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
@@ -484,9 +487,14 @@ public class EzPMSController {
 				}
 			}
 			
+			System.out.println(userInfo.getDeptName1());
+			System.out.println(userInfo.getDeptName());
+			
 			model.addAttribute("type", request.getParameter("type"));
 			model.addAttribute("deptList", deptList);
 			model.addAttribute("userId", userInfo.getId());
+			model.addAttribute("userName", userInfo.getDisplayName1());
+			model.addAttribute("userDept", userInfo.getDeptName1());
 		}		
 		LOGGER.debug("selectAuth ended");
 		return "/ezPMS/pmsSelectAuth";
@@ -533,5 +541,13 @@ public class EzPMSController {
 		
 		LOGGER.debug("userList ended");
 		return "ezPMS/userList";
+	}
+	
+	/**
+	 * 프로젝트 총괄 책임자 선택 화면 호출
+	 */
+	@RequestMapping(value="/ezPMS/selectHeadManager.do")
+	public String selectHeadManager() {
+		return "ezPMS/selectHeadManager";
 	}
 }
