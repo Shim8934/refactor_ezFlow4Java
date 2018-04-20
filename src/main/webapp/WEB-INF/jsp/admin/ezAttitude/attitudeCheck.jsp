@@ -4,6 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
+		<title>근태조회</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -26,26 +27,32 @@
 	    	}
 	    	tr.hover:hover {background:#eee; color:#fff;}
 			.selectTR {background-color: rgb(233, 241, 255);}
+			#searchTable {
+				border-top: 1px solid #e8e8e8;
+				border-left: 1px solid #e8e8e8;
+				border-right: 1px solid #e8e8e8;
+				background-color: #fcfcfc;
+			}
+			#searchTable td {padding: 8px 5px;}
 	    </style>
 	    
 	    <script type="text/javascript">
 	    	var pCompanyId = ""; //현재 선택된 회사의 아이디
+	    	//검색조건 저장 변수
+	    	var searchUserName = ""; // 검색조건 (사원명)
+	    	var searchDeptName = ""; // 검색조건 (부서명)
+	    	var searchTitle = ""; // 검색조건 (직위)
+	    	var searchAttitudeType = ""; // 검색조건(구분)
+	    	//검색조건 (근무시간) Hr,Min 묶음으로
+	    	var searchStartDate = "";
+	    	var searchEndDate = "";
 	    	var pageNum = 1; // 페이지 ==> 초기값 설정
 	    	var totalCount = "" // 게시물 총 갯수
 	    	var totalPage = ""; // 게시판의 총 페이지갯수
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
-	    	var selecUserList = "";//리스트에 선택된 userList(,로 구분)
 	    	var adminCompany = "${adminCompany}";
 	    	var today = "${today}";
-	    	//검색조건 저장 변수
-	    	var sCompanyId = "";
-			var sTypeId = "";
-			var sUserIdList = "";
-			var sStartDate = "";
-			var sEndDate = "";
-	    	
-	    	//"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"
 	    	
 	    	$(function(){
 	    		//회사리스트
@@ -57,6 +64,7 @@
 		    		} else {
 			            document.getElementById("ListCompany").selectedIndex = 0;
 		    		}
+		    		
 		            company_change();
 		        }
 	    		
@@ -80,6 +88,7 @@
 		    				src = '/images/etc/view-sortdown.gif';
 		    				orderOption = "DESC";
 		    			}
+		    			
 		    			$("#attiBoardList th").find("img").remove();
 		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
 		    			
@@ -112,7 +121,7 @@
 			var monthStr = monthMsg.split(";");		    
 			var dayMsg = "일;월;화;수;목;금;토";
 			var dayStr = dayMsg.split(";");
-			    
+			
 			$(function () {
 			    $.datepicker.regional["ko"] = {
 			    	closeText: "닫기",
@@ -132,12 +141,13 @@
 			        showAnim: 'show',
 			        showMonthAfterYear: true
 			    };
+			    
 			    $.datepicker.setDefaults($.datepicker.regional["ko"]);
 			    
 			    $("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');
 			});
-	   /////////////////////
+			
 	    	function company_change(){
 	    		$('#receiverlist').empty();
 	    		pCompanyId = $("select[name=ListCompany]").val();
@@ -152,31 +162,16 @@
 	    			typeId = "";
 	    		}
 	    		
-	    		//조회자 id리스트
-	    		var spanLength = $('#receiverlist').find('span').length;
-	    		var userIdList = "";
-	    		
-	    		if (spanLength > 0) {
-	    			for (var i = 0; i < spanLength; i++) {
-	    				userIdList += $('#receiverlist span').eq(i).attr('id') + ",";
-	    			}
-	    			//마지막 ',' 제거
-	    			userIdList = userIdList.slice(0, -1);
-	    		}
-	    		
 	    		//검색기간 사용 유무
-	    		var startDate = "";
-	    		var endDate = "";
-	    		
 	    		if (usedate) {
-	    			startDate = $("#Sdatepicker").val();
-	    			endDate = $("#Edatepicker").val();
+	    			searchStartDate = $("#Sdatepicker").val();
+	    			searchEndDate = $("#Edatepicker").val();
 	    		} else {
-	    			startDate = today;
-	    			endDate = today;
+	    			searchStartDate = "";
+	    			searchEndDate = "";
 	    		}
 	    		
-	    		if (startDate > endDate) {
+	    		if (searchStartDate > searchEndDate) {
 					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
 		            return;
 				}
@@ -188,14 +183,16 @@
 	    			url : "/admin/ezAttitude/attitudeCheckList.do",
 	    			data : {
 	    				companyId : pCompanyId,
-    					pageNum : pageNum,
-    					listSize : listSize,
-    					typeId : typeId,
-    					userIdList : userIdList,
-   						orderCell : orderCell,
-    					orderOption : orderOption,
-    					startDate : '',
-    					endDate : ''
+	   					userName : searchUserName,
+	   					deptName : searchDeptName,
+	   					title : searchTitle,
+	   					searchStartDate : searchStartDate,
+	   					searchEndDate : searchEndDate,
+	   					searchAttitudeType : searchAttitudeType,
+	   					pageNum : pageNum,
+	   					listSize : listSize,
+	   					orderCell : orderCell,
+	   					orderOption : orderOption
     				},
 	    			success : function(result){
 	    				totalCount = result.totalCount;
@@ -208,8 +205,6 @@
 	    				alert('리스트를 가져오는중 오류 발생');
 	    			}
 	    		});
-	    		//검색했던 조건 저장
-	    		saveSearchRequirement(pCompanyId, typeId, userIdList, startDate, endDate);
 	    	}
 	    	
 	    	//검색 > 구분selectBox
@@ -220,10 +215,10 @@
 	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
 	    		}
 	    		
-	    		$('#attitudeType').html(html);
+	    		$('#searchAttitudeType').html(html);
 	    		
 	    		if (typeId != "") {
-	    			$('#attitudeType').val(typeId);
+	    			$('#searchAttitudeType').val(typeId);
 	    		}
 	    	}
 	    	
@@ -258,7 +253,7 @@
 	    	}
 	    	
 	    	//true = 검색 / false = 취소
-	    	function searchUserConf(searchFlag){
+	    	/* function searchUserConf(searchFlag){
 	    		if ($("#layer_popup").css("display") == "none") {
 	    			$("#layer_popup").css("display", "");
 	    		} else {
@@ -272,10 +267,10 @@
 	    			
 	    			getUserConfList();
 	    		}
-	    	}
+	    	} */
 	    	
 	    	//검색조건 초기화 함수
-	    	function searchReset() {
+	    	/* function searchReset() {
 	    		//조회자 초기화
 	    		$('#receiverlist span').remove();
 	    		//검색기간 초기화
@@ -284,7 +279,7 @@
 	    		
 	//     		$("#Sdatepicker").datepicker('disable');
 	//          $("#Edatepicker").datepicker('disable');  		
-	    	}
+	    	} */
 	    	
 	    	//페이지 이동 함수
 	    	function goToPageByNum(pCurPage){
@@ -298,7 +293,7 @@
 	    	}
 	    	
 	    	//검색 > 조회자검색 버튼 클릭시
-	    	function search_user() {
+	    	/* function search_user() {
 	        	var searchIdList = ""; // 조회자 id 리스트
 	        	var searchNameList = ""; // 조회자 name 리스트
 	        	var spanIdx = $('#receiverlist').find('span').length;
@@ -313,7 +308,7 @@
 	    		
 				var url = "/admin/ezAttitude/getSearchList.do?companyId=" + $('#ListCompany').val() + "&searchIdList=" + searchIdList + "&searchNameList=" + searchNameList;
 	    		window.open(url, "view", "width=940, height=580");
-	    	}
+	    	} */
 	    	
 			var usedate = false;
 			//검색기간 사용 체크박스 클릭시
@@ -330,7 +325,7 @@
 		    }
 			
 			//검색조건 저장(엑셀 다운로드 할때 필요)
-			function saveSearchRequirement(companyId, typeId, userIdList, startDate, endDate) {
+			/* function saveSearchRequirement(companyId, typeId, userIdList, startDate, endDate) {
 				sCompanyId = companyId;
 				
 				if (typeId == null) {
@@ -342,7 +337,39 @@
 				sUserIdList = userIdList;
 				sStartDate = startDate;
 				sEndDate = endDate;
-			}
+			} */
+			
+			function searchUserConfList(searchType){
+	    		if (searchType == "search") {
+	    			searchUserName = $("#searchUserName").val();
+	    			searchDeptName = $("#searchDeptName").val();
+	    			searchTitle = $("#searchTitle").val();
+	    			searchStartDate = $("#searchStartDate").val();
+	    			searchEndDate = $("#searchEndDate").val();
+	    			searchAttitudeType = $("select[id='searchAttitudeType']").val();
+	    			
+// 	    			searchAttitudeType = $("[type='radio']:checked").val();
+	    		} else {
+	    			//새로고침
+	    			$("#searchUserName").val("");
+	    			$("#searchDeptName").val("");
+	    			$("#searchTitle").val("");
+	    			$("#searchStartDate").val("");
+	    			$("#searchEndDate").val("");
+	    			$("select[id='searchAttitudeType']").val('all');
+	    			
+	    			searchUserName = "";
+	    			searchDeptName = "";
+	    			searchTitle = "";
+	    			searchStartDate = "";
+	    			searchEndDate = "";
+	    			searchAttitudeType = "";
+	    		}
+	    		
+	    		pageNum = 1;
+    			getUserConfList();
+    			
+	    	}
 			
 			//엑셀 다운로드
 			function exportExcel() {
@@ -351,8 +378,7 @@
 					return;
 				}
 				
-	// 			alert(sCompanyId + " , " + sTypeId + " , " + sUserIdList + " , " + sStartDate+" , "+ sEndDate);
-		    	exportExcelframe.location.href="/admin/ezAttitude/excelFileExport.do?companyId="+sCompanyId+"&typeId="+sTypeId+"&userIdList="+sUserIdList+"&startDate="+sStartDate+"&endDate="+sEndDate;
+		    	exportExcelframe.location.href="/admin/ezAttitude/excelFileExport.do?companyId="+sCompanyId+"&typeId="+sTypeId+"&userIdList="+sUserIdList+"&startDate="+startDate+"&endDate="+endDate;
 		    	exportExcelframe.target="_blank";
 			}
 	    </script>
@@ -371,13 +397,44 @@
 	      		</li>
 	      	</ul>
 	  	</div>
-	  	<div id="mainmenu">
+	  	
+	  	<table id="searchTable" style="width:100%;">
+			<tbody>
+				<tr>
+					<td style="width: 3%;">부서</td>
+					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;"></td>
+					<td style="width: 3%;">이름</td>
+					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;"></td>
+					<td style="width: 3%">구분</td>
+					<td style="width: 20%;"><select name="attitudeType" id="attitudeType" style="margin-top:4px; padding-right:40px;"></select></td>
+				</tr>
+				<tr>
+					<td style="width: 3%;">직위</td>
+					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50"></td>
+					<td style="width: 3%;">검색기간</td>
+					<td>
+						<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" /><label for="usedate">검색기간 사용&nbsp;</label>
+						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
+						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
+						<div style="margin-top:9px">&nbsp;(검색기간 미지정시 오늘날짜로 검색)</div> 
+					</td>
+					<td style=" width:*;" colspan=2>
+						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchUserConfList('refresh');">새로고침</span></a>&nbsp;
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		
+	  	<!-- <div id="mainmenu">
 	  		<ul class="on">
 	  			<li class="off"><span onclick="searchUserConf(false)">검색</span></li>
 	  			<li class="off"><span onclick="exportExcel()">엑셀다운로드</span></li>
 	  		</ul>
-	  	</div>
-	  	<div id="layer_popup" style="width: 500px; position: absolute; left: 10px; top: 130px; background-color: rgb(255, 255, 255); display:none;">
+	  	</div> -->
+	  	
+	  	<!-- <div id="layer_popup" style="width: 500px; position: absolute; left: 10px; top: 130px; background-color: rgb(255, 255, 255); display:none;">
 	  		<div class="popupwrap1">
 	  			<div class="popupwrap2">
 	  				<table class="content">
@@ -422,7 +479,8 @@
 	  		</div>
 	  		<div class="shadow">
 	  		</div>
-	  	</div>
+	  	</div> -->
+	  	
 		<table id="attiBoardList" class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
