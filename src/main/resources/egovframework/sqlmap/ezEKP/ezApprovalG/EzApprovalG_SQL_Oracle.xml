@@ -7834,6 +7834,8 @@
 	<select id="EzApprovalG.getSendOutDocList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
 		SELECT * FROM (
+		SELECT * FROM (
+		SELECT * FROM (
 			SELECT 
 				TBL_ENDAPRDOCINFO.DOCID,
 		   		TBL_ENDAPRDOCINFO.ORGDOCID, 
@@ -7883,8 +7885,6 @@
 		   		TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID
 		   	AND
 		   		TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID		   		
-		   	WHERE 
-		   		ROWNUM <= #v_PAGESIZE# 
 		   	AND 
 		   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 
 		   	AND
@@ -7904,7 +7904,7 @@
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
-		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
 		   	</isEqual>
 		   	<isNotEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
@@ -7934,7 +7934,7 @@
 		   	<![CDATA[
 		   	)A 
 		   		WHERE 
-		   			ROWNUM <= #v_PAGESIZE#
+		   			ROWNUM <= #v_PAGESIZE# )B
 		   	]]>
 		   	<isNotEmpty property="v_ORDEROPTION">
 		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
@@ -7956,6 +7956,10 @@
 		   	 ORDER BY 
 		   	 	ENDDATE $v_BASICORDER2$
 		   	</isEmpty>
+		   	<![CDATA[
+		   	)C 
+		   	WHERE ROWNUM <= #v_PAGESIZE2# 
+		   	]]>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO"> -->
@@ -11821,7 +11825,7 @@
 	   	</isEqual>
 	   	LIKE 'Address%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 	   	<isEqual property="v_MODELENGTH" compareValue="2">
-	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
 	   	</isEqual>
 	   	<isNotEqual  property="v_MODELENGTH" compareValue="2">
 	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
@@ -17319,7 +17323,7 @@
              CABINETCLASSNO ,
              TITLE ,
              RECTYPECODE ,
-             TO_DATE(MODIFYDATE) MODIFYDATE ,
+             TO_DATE(MODIFYDATE,'YYYY-MM-DD') MODIFYDATE ,
              MODIFYREASON ,
              MODIFIERNAME ,
              MODIFIERNAME2 ,

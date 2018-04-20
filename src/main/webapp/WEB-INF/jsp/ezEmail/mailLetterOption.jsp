@@ -313,7 +313,7 @@
 				<th><spring:message code='ezEmail.t363' /></th>
 				<td>
 					<select name="postType" style="Width:100px;" onChange="" id="postTypeid">
-						<option 1><spring:message code='ezEmail.t361' /></option>
+						<option><spring:message code='ezEmail.t361' /></option>
 						<option><spring:message code='ezEmail.t364' /></option>
 						<option><spring:message code='ezEmail.t365' /></option>
 						<option><spring:message code='ezEmail.t366' /></option>

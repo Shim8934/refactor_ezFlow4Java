@@ -735,6 +735,7 @@ public class MApprovalGGWController {
 			loginVO.setLocale(new Locale(locale));
 			loginVO.setLang(optionInfo.getLang());
 			loginVO.setDeptID(userInfo.getDeptId());
+			loginVO.setDeptName(userInfo.getDeptName());
 			
 			if (type.equals("APR")) {
 				String lineMode = ezApprovalGService.getLineModeFlag(docId, userInfo.getCompanyId(), userInfo.getTenantId());

@@ -164,12 +164,20 @@
 		    		break;
 	    	}
 	    	
+	    	
 	    	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
+
 	    	var uploadFilePath = "/ezEditor/tfxUpload.do?type=" + type;
 	    	var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=" + type;
 	    	
 	    	if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
 	   			uploadPasteContentsPath = "/ezEditor/tfxNoop.do";
+	   		} else if (type == "MAILLETTER") {
+	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
+	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	
+	        	uploadFilePath = "/ezEditor/tfxUpload.do?type=" + type + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
+	        	uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=" + type + "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
 	   		}
 	    	
 	        xfe = new XFE({

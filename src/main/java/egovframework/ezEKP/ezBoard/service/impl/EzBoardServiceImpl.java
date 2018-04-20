@@ -1497,6 +1497,34 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("setAsRead ended");
 	}
+	//조회수를 증가시키지 않는 새게시물 읽음표시 처리
+	public void setAsReadNew(LoginVO userInfo, String boardID, String itemID) throws Exception {
+		logger.debug("setAsReadNew started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardID", boardID);
+		map.put("v_pItemID", itemID);
+		map.put("v_pUserID", userInfo.getId());
+		map.put("v_pUserName", userInfo.getDisplayName1());
+		map.put("v_pUserDeptName", userInfo.getDeptName1());
+		map.put("v_pUserCompanyName", userInfo.getCompanyName1());
+		map.put("v_pUserTitle", userInfo.getTitle1());
+		map.put("v_pUserName2", userInfo.getDisplayName2());
+		map.put("v_pUserDeptName2", userInfo.getDeptName2());
+		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
+		map.put("v_pUserTitle2", userInfo.getTitle2());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		String tempString = ezBoardDAO.getBoardItemRead(map);
+		
+		if (tempString != null && !tempString.equals("")) {
+			ezBoardDAO.setAsRead(map);
+		}
+
+		logger.debug("setAsReadNew ended");
+	}
 
 	@Override
 	public int getCheckApprUserList(String userID, String itemID, int tenantID) throws Exception {
@@ -2881,7 +2909,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			
 			boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
-			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
 			
 			if (doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().equals("")) {
 				boardListVO.setExtensionAttribute1("0");
@@ -3479,6 +3506,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
 		boardListVO.setRealPath(realPath);
 		boardListVO.setTenantID(userInfo.getTenantId());
+		boardListVO.setContent(commonUtil.htmlUnescape(doc.getElementsByTagName("DOCCONTENT").item(0).getTextContent()));
 		
 		if (pMode.equals("copy")) {
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
@@ -3727,6 +3755,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        sb.append("<EXTENSIONATTRIBUTE32>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute32()) + "</EXTENSIONATTRIBUTE32>");
 	        sb.append("<EXTENSIONATTRIBUTE4>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute4()) + "</EXTENSIONATTRIBUTE4>");
 	        sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
+	        sb.append("<DOCCONTENT>" + commonUtil.cleanValue(boardLisitVO.getContent()) + "</DOCCONTENT>");
 	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
 	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
 	        sb.append("<GUBUN>C</GUBUN>");

@@ -138,7 +138,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
 		
+		// set useLetter
+		String useLetter = ezCommonService.getTenantConfig("useLetter", user.getTenantId());
+		if (useLetter == null || useLetter.equals("")) {
+			useLetter = "NO";
+		}
+				
+		logger.debug("useLetter=" + useLetter);
+		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		model.addAttribute("useLetter", useLetter);
 		
 		return "admin/ezOrgan/organLeft";
 	}
