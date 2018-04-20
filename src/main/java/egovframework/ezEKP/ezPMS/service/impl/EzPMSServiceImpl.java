@@ -78,20 +78,23 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		try {
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getPlanEndDate());
+			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getCreateDate());
 			
 			int workingDays = getWorkinDays(startDate, endDate);
-			System.out.println(workingDays);
+			int compareDate = createDate.compareTo(startDate);
+			System.out.println(compareDate);
+			
+			if(compareDate < 0) {
+				map.put("status", "W");
+			} else {
+				map.put("status", "P");
+			}
+			
 			map.put("workingDay", workingDays);
 			map.put("restDueday", workingDays);
 			
 		} catch (ParseException e) {
 			System.out.println(e.getMessage());
-		}
-		
-		if (newProject.getCreateDate().equals(newProject.getPlanStartDate())) {
-			map.put("status", "P");
-		} else {
-			map.put("status", "W");
 		}
 		
 		
