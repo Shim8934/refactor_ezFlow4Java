@@ -150,28 +150,28 @@
 						
 						<c:choose>
 							<c:when test="${vo.status eq 0 }">
-								<td><img class="effect" src ='/images/ezLadder/icon_wait.png' /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t074'/>" src ='/images/ezLadder/icon_wait.png' /></td>
 							</c:when>
 							<c:otherwise>
-								<td><img class="effect" src ='/images/ezLadder/icon_complete.png' /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t075'/>" src ='/images/ezLadder/icon_complete.png' /></td>
 							</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
 							<c:when test="${vo.secretFlag eq 0 }">
-								<td><img class="effect" src ='/images/ezLadder/icon_public.png' /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t007'/>" src ='/images/ezLadder/icon_public.png' /></td>
 							</c:when>
 							<c:otherwise>
-								<td><img class="effect" src ='/images/ezLadder/icon_private.png' /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t076'/>" src ='/images/ezLadder/icon_private.png' /></td>
 							</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
 							<c:when test="${id eq vo.writerId}">
-								<td><img class="effect" src ='/images/ezLadder/icon_posDelete.png' onclick="deleteLadder(${vo.ladderId}, event);" /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t077'/>" src ='/images/ezLadder/icon_posDelete.png' onclick="deleteLadder(${vo.ladderId}, event);" /></td>
 							</c:when>
 							<c:otherwise>
-								<td><img class="effect" src ='/images/ezLadder/icon_imposDelete.png' /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t078'/>" src ='/images/ezLadder/icon_imposDelete.png' /></td>
 							</c:otherwise>
 						</c:choose>
 					</tr>
