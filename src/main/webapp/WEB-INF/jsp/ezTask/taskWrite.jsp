@@ -100,13 +100,13 @@
 					enddate = "${endDate}";
 				}
 
-				//IE계열 브라우저에서 메모가 100자 넘어가면 마우스 커서 default->text
+				// IE계열 브라우저에서 메모가 100자 넘어가면 마우스 커서 default->text
 				var agent = navigator.userAgent.toLowerCase(); 
 				if (!CrossYN() || agent.search( "trident" ) > -1 ) {
 					var cursorIe = document.getElementById("TextMemo");
 					cursorIe.style.cursor = "text";			
 				}
-						
+	
 				// IE에서  new Date 값이 Invalid Date 나와서 수정
 				var startYear = "";
 				var startTime = "";
@@ -630,7 +630,7 @@
 								</div>
 								<div id="close">
 									<ul>
-										<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>&nbsp;
+										<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
 										<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
 									</ul>
 								</div>
