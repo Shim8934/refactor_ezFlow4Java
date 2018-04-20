@@ -2679,8 +2679,9 @@
 	    		var imgP_LeftOffset = (imgPopup.parent().width()-imgPopup.width()) / 2;
 	    		
 	    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
-	    		imgPopupDiv.css({"width": imgPopup.width()});
+	    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
 	    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+	    		
 	    		//imgPopup.css({"left": 0, "zoom": ""});
 	    		$("#thumbMagnifyBtn").removeClass("fa fa-minus-square").addClass("fa fa-plus-square");
 	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().removeClass("iPBInnerDiv_Top").addClass("iPBInnerDiv_TopOff");
@@ -2721,7 +2722,7 @@
 		    		$imgPopupBox.css("top", iPBTopOffset);
 	    		}
 	    		$imgPopupDiv.width(imgPopup.offsetWidth);	    		
-	    		$imgPopup.css("left",($imgPopup.parent().width()-$imgPopup.width()) / 2);
+	    		//$imgPopup.css("left",($imgPopup.parent().width()-$imgPopup.width()) / 2);
 	    		
 	    		var imgPopupDivSH = imgPopupDiv.scrollHeight;
 	    		var imgPopupDivCH = imgPopupDiv.clientHeight;
