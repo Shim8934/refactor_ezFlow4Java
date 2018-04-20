@@ -62,7 +62,7 @@
 						pMode = "new";
 						attitudeNewItem(this);
 					})	
-				} else {
+				} else { // 부서근태현황에서는 당일의 근태를 조회.
 					$(document).on('dblclick', '.td_day td', function(){
 						pMode = "new";
 						alert("부서 -> 근태 조회 구현 해야 함");
@@ -86,7 +86,9 @@
 					}
 					
 				} else {
-					if (modappl == 1) {
+					if (modappl == 0) {
+						console.log(this);
+					} else {
 						mod_detail(attitudeid);
 					}
 				}
@@ -343,6 +345,7 @@
 							}	
 						}
 					}
+					$("td[typeid=A02][modappl=0]").css('cursor','context-menu');
 				}
 			}
 			
@@ -370,7 +373,7 @@
 			
 			
 			/**
-			* 근태작성
+			* 
 			*/
 			function attitudeNewItem(obj) {
 				var date = $(obj).attr("dispdate");
@@ -393,6 +396,12 @@
 			* 근태수정신청
 			*/
 			function attitudeModItem(obj) {
+				var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 760) / 2;
+		        var pLeft = (pwidth - 790) / 2;
+				var feature = GetOpenPosition(790, 760);
+				
 				var attitudeId = $(obj).attr("attitudeId"); 
 				var pTypeId = $(obj).attr("typeId");
 				
@@ -400,12 +409,13 @@
 				console.log("pTypeId : " + pTypeId);
 				
 				if (CrossYN()) {
-                    var OpenWin = window.open("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "attitudeNewItem", GetOpenWindowfeature(650, 580));
+                    var OpenWin = window.open("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "attitudeNewItem",
+                    		"height = 730px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
                 	rtnValue = window.showModalDialog("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "",
-                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+                			"height = 730px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
@@ -462,11 +472,13 @@
 			}
         	
 			function searchByTypeId(t) {
-				
+				var typeName = t.parentElement.getElementsByTagName("th").item(0).innerText;
 				var pDate = $("#calTitle").text().trim()
 				var startDate = pDate + "-01 00:00:00";
 				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate() + " 23:59:59";
 
+				document.getElementById("popup_title").innerText = "근태내역확인 [" + typeName + "]";
+				
 				$.ajax({
 					type : "POST",
 					dataType : "json",
@@ -483,13 +495,17 @@
 				    	$('#addpopup_list tbody').children('tr').not(":first").remove();
 				    	
 				    	if (json.length == 0) {
-				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px;'></td>").text("내역이 없습니다."));
+				    		var uvobjTr = $("<tr></tr>").append($("<td style='width:5%; display:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:20%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:70%; height:0px; display:;'></td>"));
+				    		$("#addpopup_list tbody").append(uvobjTr);
 				    		
+				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px;'></td>").text("내역이 없습니다."));
 				    		$("#addpopup_list tbody").append(objTr);
 				    	}
 				    	
 				    	for(var i = 0; i < json.length; i++) {
-				    		console.log(json[i]);	
 				    		if (json[i].apprStatus == 1) {
 				    			json[i].apprStatus = "승인";
 				    		} else {
@@ -499,7 +515,6 @@
 				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i+1)));
 				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
 				    		if (json[i].writerDeptName.length > 6) {
-				    			console.log("길다");
 				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
 				    		} else {
 				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
@@ -514,8 +529,6 @@
 				    	}
 				    },
 				    complete : function() {
-				    	console.log(parent.frames["right"]);
-				    	console.log(parent.frames["attitude_main"]);
 				    	try {
 				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);	
 				    	} catch(e) {
@@ -544,10 +557,10 @@
 				
 				if (adminFlag == "true") {
 					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId +"&adminFlag=" + adminFlag, "",
-				 			"height = 830px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				 			"height = 730px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 				} else {
 					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId, "",
-				 			"height = 830px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
+				 			"height = 730px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 				}
 		    }
 		</script>
