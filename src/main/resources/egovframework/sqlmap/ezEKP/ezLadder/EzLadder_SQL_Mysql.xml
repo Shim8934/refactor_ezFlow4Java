@@ -128,7 +128,7 @@
 		]]>
 	</select>
 	
-	<select id="EzLadderDAO.getLadderList" resultClass="LadderVO">
+	<select id="EzLadderDAO.getLadderList" remapResults="true" resultClass="LadderVO">
 		<![CDATA[
 			SELECT
 				E.LADDERID, 
@@ -261,7 +261,7 @@
 		]]>
 	</select>
 	
-	<select id="EzLadderDAO.getPartLadderList" resultClass="LadderVO">
+	<select id="EzLadderDAO.getPartLadderList" remapResults="true" resultClass="LadderVO">
 		<![CDATA[
 			SELECT
 				A.LADDERID, 
@@ -440,7 +440,7 @@
         </isNotEqual> 
 	</select>
 	
-	<select id="EzLadderDAO.searchPartLadderList" resultClass="LadderVO">
+	<select id="EzLadderDAO.searchPartLadderList" remapResults="true" resultClass="LadderVO">
 		<isEqual property="searchSelect" compareValue="participant">
 		<![CDATA[
 			SELECT
@@ -771,7 +771,7 @@
         </isNotEqual> 
 	</select>
 	
-	<select id="EzLadderDAO.searchAllLadderList" resultClass="LadderVO">
+	<select id="EzLadderDAO.searchAllLadderList" remapResults="true" resultClass="LadderVO">
 		<isEqual property="searchSelect" compareValue="participant">
 		<![CDATA[
 			SELECT
