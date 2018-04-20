@@ -2060,7 +2060,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						resultUpload = "true";
 					}
 					
-					fileName[i] = fileName[i].substring(fileName[i].lastIndexOf(";")+1);
+				//	fileName[i] = fileName[i].substring(fileName[i].lastIndexOf(";")+1);
 					sb.append("<NODE>");
 					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
 					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
