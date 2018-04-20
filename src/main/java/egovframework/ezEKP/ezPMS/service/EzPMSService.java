@@ -23,7 +23,7 @@ public interface EzPMSService {
 
 	public List<ProjectInfoVO> getProjectList(int tenantId, MCommonVO userInfo, String status, Map<String, Object> map, String offset, String lang);
 	
-	public void addNewProject(ProjectInfoVO newProject, int tenantId);
+	public void addNewProject(ProjectInfoVO newProject, String tenantId);
 	
 	public void deleteProject(int tenantId, int projectId);
 	

@@ -1,5 +1,9 @@
 package egovframework.ezEKP.ezPMS.service.impl;
 
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +13,10 @@ import javax.annotation.Resource;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.ezEKP.ezPMS.dao.EzPMSDAO;
 import egovframework.ezEKP.ezPMS.service.EzPMSAdminService;
@@ -28,11 +35,15 @@ import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPMSService")
 public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MCommonGWController.class);
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	@Resource(name = "EzPMSDAO")
 	private EzPMSDAO ezPMSDAO;
@@ -45,9 +56,51 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void addNewProject(ProjectInfoVO newProject, int tenantId) {
-		// TODO Auto-generated method stub
+	public void addNewProject(ProjectInfoVO newProject, String tenantId) {
+		LOGGER.debug("Service addNewProject started.");
 		
+		System.out.println(newProject.getProjectName());
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("projectName", newProject.getProjectName());
+		map.put("weightInput", newProject.getWeightInput());
+		map.put("planStartDate", newProject.getPlanStartDate());
+		map.put("planEndDate", newProject.getPlanEndDate());
+		map.put("overview", newProject.getOverview());
+		map.put("alamMailStatus", newProject.getAlamMailStatus());
+		map.put("headManagerId", newProject.getHeadManagerId());
+		map.put("tenantId", tenantId);
+		map.put("createDate", newProject.getCreateDate());
+		map.put("creatorName", newProject.getCreatorName());
+		map.put("creatorName2", newProject.getCreatorName2());
+		map.put("creatorId", newProject.getCreatorId());
+		
+		try {
+			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getPlanStartDate());
+			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getPlanEndDate());
+			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getCreateDate());
+			
+			int workingDays = getWorkinDays(startDate, endDate);
+			int compareDate = createDate.compareTo(startDate);
+			System.out.println(compareDate);
+			
+			if(compareDate < 0) {
+				map.put("status", "W");
+			} else {
+				map.put("status", "P");
+			}
+			
+			map.put("workingDay", workingDays);
+			map.put("restDueday", workingDays);
+			
+		} catch (ParseException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		
+		
+		ezPMSDAO.addNewProject(map);
+		LOGGER.debug("Service addNewProject ended.");
 	}
 
 	@Override
@@ -322,5 +375,33 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		LOGGER.debug("getDeptViewList ended");
 		return deptList;
+	}
+	
+	public int getWorkinDays(Date start, Date end){
+	    //Ignore argument check
+
+	    Calendar c1 = GregorianCalendar.getInstance();
+	    c1.setTime(start);
+	    int w1 = c1.get(Calendar.DAY_OF_WEEK);
+	    c1.add(Calendar.DAY_OF_WEEK, -w1 + 1);
+
+	    Calendar c2 = GregorianCalendar.getInstance();
+	    c2.setTime(end);
+	    int w2 = c2.get(Calendar.DAY_OF_WEEK);
+	    c2.add(Calendar.DAY_OF_WEEK, -w2 + 1);
+
+	    //end Saturday to start Saturday 
+	    long days = (c2.getTimeInMillis()-c1.getTimeInMillis())/(1000*60*60*24);
+	    long daysWithoutSunday = days-(days*2/7);
+
+	    if (w1 == Calendar.SUNDAY) {
+	        w1 = Calendar.MONDAY;
+	    }
+	    if (w2 == Calendar.SUNDAY) {
+	        w2 = Calendar.MONDAY;
+	    }
+	    
+	    int workingDays = (int) (daysWithoutSunday-w1+w2);
+	    return workingDays;
 	}
 }

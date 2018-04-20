@@ -31,11 +31,12 @@ var writerName = "${userName}";
 var weightInput = null;
 var planStartDate = "${planStartDate}";
 var planEndDate = "${planEndDate}";
-var managerList = [];
-var participantList = [];
-var viewerList = [];
+var managerList = null;
+var participantList = null;
+var viewerList = null;
 var overview = null;
 var endAlamStatus = null;
+var headManagerId = null;
 
  $(function() {
 	 $("#Sdatepicker").datepicker({
@@ -127,12 +128,9 @@ var endAlamStatus = null;
  
  function addNewProject() {
 	 projectName = $("#projectName").val();
-	 weightInput = $(":input:radio[name=weightInput]:checked").val();
+	 var calcType = $(":input:radio[name=weightInput]:checked").val();
 	 planStartDate = $("#Sdatepicker").val();
 	 planEndDate = $("#Edatepicker").val();
-	 managerList = $("#managers").text();
-	 participantList = $("#participants").text();
-	 viewerList = $("#viewers").text();
 	 overview = $("#overview").val();
 	 
 	 if ($("#endAlam").prop("checked") == false) {
@@ -145,20 +143,81 @@ var endAlamStatus = null;
 		 }
 	 }
 	 
-	 console.log(projectName);
-	 console.log(writerName);
-	 console.log(weightInput);
-	 console.log(planStartDate);
-	 console.log(planEndDate);
-	 console.log(managerList);
-	 console.log(participantList);
-	 console.log(viewerList);
-	 console.log(overview);
-	 console.log(endAlamStatus);
+	 if (calcType == "autoCalc") {
+		 weightInput = 0;
+	 } else {
+		 weightInput = 1;
+	 }
+	
+	data = {
+			projectName : projectName,
+			weightInput : weightInput,
+			planStartDate : planStartDate,
+			planEndDate : planEndDate,
+			overview	 : overview,
+			endAlamStatus : endAlamStatus,
+			headManagerId : headManagerId,
+			managerList : managerList,
+			participantList : participantList,
+			viewerList : viewerList
+	}
+	$.ajax({
+		type : "POST",
+		url : "/ezPMS/addNewProject.do",
+		dataType : "json",
+		contentType: "application/json; charset=UTF-8",
+		data :JSON.stringify(data),
+		success : function(result) {
+			alert("<spring:message code='ezTask.t150' />");
+			
+			try { parent.setProjectList(); } catch (e) { alert("error1")}
+			popupClose();
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert("error2");
+		}
+	});
  }
 
  function popupClose() {
 	parent.DivPopUpHidden();
+ }
+ 
+ function applyList() {
+	 var managerNameList = "";
+	 var participantNameList = "";
+	 var viewerNameList = "";
+	 
+	 for (var i = 0; i < managerList.length; i++) {
+		if(headManagerId == managerList[i].userId) {
+			managerNameList += "<b>"
+			managerNameList += managerList[i].userName;
+			managerNameList += "(" + managerList[i].userDept + ")</b>, ";
+		} else {
+			managerNameList += managerList[i].userName;
+			managerNameList += "(" + managerList[i].userDept + "), ";
+		}
+		
+	 }
+	 
+	 for (var i = 0; i < participantList.length; i++) {
+		participantNameList += participantList[i].userName;
+		participantNameList += "(" + participantList[i].userDept + "), ";
+	}
+	 
+	 for (var i = 0; i < viewerList.length; i++) {
+		viewerNameList += viewerList[i].userName;
+		viewerNameList += "(" + viewerList[i].userDept + "), ";
+	}
+	 
+	 managerNameList = managerNameList.substr(0, managerNameList.length - 2);
+	 participantNameList = participantNameList.substr(0, participantNameList.length - 2);
+	 viewerNameList = viewerNameList.substr(0, viewerNameList.length - 2);
+	 
+	 $("#managers").html(managerNameList);
+	 $("#participants").html(participantNameList);
+	 $("#viewers").html(viewerNameList);
+	 
  }
 </script>
 </head>
@@ -186,7 +245,7 @@ var endAlamStatus = null;
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree(managers)"><span>담당자</span></a></th>
-				<td colspan="3" style="height:70px" id="managers">은정</td>
+				<td colspan="3" style="height:70px" id="managers"><button onclick="test()">test</button></td>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree(participants)"><span>참여자</span></a></th>
 				<td colspan="3" style="height:70px" id="participants">은정</td>
@@ -197,7 +256,6 @@ var endAlamStatus = null;
 				<th>개요</th>
 				<td colspan="3"><textarea id="overview" style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
 			</tr>
-			
 			<tr>
 				<th>종료알림</th>
 				<td style="width:45%"><input type="checkbox" name="endAlam" value="endAlam" id="endAlam" checked>프로젝트 작업 종료 알림메일 발송</td>

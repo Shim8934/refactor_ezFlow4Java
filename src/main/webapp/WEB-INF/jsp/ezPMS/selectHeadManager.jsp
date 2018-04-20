@@ -1,0 +1,118 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />"
+	type="text/css">
+<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
+<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/dist/jstree.js"></script>
+
+<script type="text/javascript">
+var selMainListUserId = null;
+var selMainListUserName = null;
+var managerList = parent.managerArray;
+var participantList = parent.participantArray;
+var viewerList = parent.viewerArray;
+
+$(function() {
+	var strHTML = "";
+	for (var i = 0; i < managerList.length; i++) {
+		console.log(managerList[i].userDept);
+		strHTML += "<tr class='white hover' style='border: 1px solid #ddd; cursor:pointer;' id=" + managerList[i].userId + " onclick='setMainListUserAuthorDept(this)'>";
+		strHTML += "<td style='border-right:none; max-width: 200px; width: 190px;'>";
+		strHTML += "<a style='cursor:pointer; display:inline-block; padding: 0px 10px 0px 10px; float: left; line-height: 40px; overflow: hidden; text-overflow: ellipsis; max-width:120px; white-space: nowrap;' onClick='menuQst_DetailUserInfo(" + managerList[i].userId+ ")'>"
+//		strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+		strHTML += managerList[i].userName;
+		strHTML += "(" + managerList[i].userDept + ")";
+		strHTML += "</a>";
+		strHTML += "</td>";
+		strHTML += "</tr>";
+	}
+	$("#managerName").html(strHTML);
+});
+
+function setMainListUserAuthorDept(elem) {
+		if ($(elem).parent().attr("id") === "List_TBODY2") {
+			$("#List_TBODY2 tr").removeClass("selectTR");
+		} else if ($(elem).parent().parent().attr("id") === "managerName"){
+			$("#managerName tr").removeClass("selectTR");
+		} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
+			$("#txtlist_Layer tr").removeClass("selectTR");
+		}
+		
+		$(elem).addClass("selectTR");
+		selMainListUserId = $(elem).attr("id");
+		selMainListUserName = $(elem).attr("name");
+		// console.log("selMainListUserId : " + selMainListUserId)
+}
+
+
+function menuQst_DetailUserInfo(pUserID) {
+	 var feature = GetOpenPosition(420, 438);
+    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID.id, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+}
+
+function popupClose() {
+	parent.DivPopUpHidden();
+ }
+ 
+ function selectHeadManager() {
+	 parent.opener.headManagerId = selMainListUserId;
+	 parent.opener.managerList = managerList;
+	 parent.opener.participantList = participantList;
+	 parent.opener.viewerList = viewerList;
+	 parent.opener.applyList();
+	 
+	 popupClose();
+	 parent.window.close();
+ }
+ 
+</script>
+<style>
+tr.hover:not (.selectTR ):hover {
+	background: #eee;
+	color: #fff;
+}
+
+.selectTR {
+	background-color: rgb(233, 241, 255);
+}
+
+#List_TBODY2 tr {
+	cursor: pointer;
+}
+
+#List_TBODY tr {
+	cursor: pointer;
+}
+</style>
+</head>
+<body class = "popup" id="mainbody" style="overflow: hidden;">
+		<form method = "POST">
+			<div id="normalScreen" style="overflow: hidden;">
+			    <div id="menu1" style="float: left; display: block; width:100%; text-align:left; padding-left:5px;">
+					<h1 style="display: inline-block;">총괄 담당자 선택</h1>
+			    </div>					
+			</div>
+			<div style="height:203px; overflow-y: auto; overflow-x: hidden;" id="divTbl">
+				<table border=1 style="width : 100%; border-color: grey;" id="managerName">
+				</table>				
+			</div>
+			<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
+			<tr>
+				<td><a class="imgbtn" id="submit" onclick="selectHeadManager()"><span>확인</span></a></td>
+				<td></td>
+				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span>취소</span></a></td>
+			</tr>
+		</table>
+		</form>
+	</body>
+</html>

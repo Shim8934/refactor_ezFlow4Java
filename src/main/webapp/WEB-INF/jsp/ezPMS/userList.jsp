@@ -50,7 +50,7 @@
 					<td style="width: 50%; font-weight: bold;" class="td_gray"><spring:message code='main.t78'/></td>
 		        </tr>
 		        <c:forEach items="${userList}" var="user">
-			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser(type);" style="cursor: pointer;" class="hover">
+			        <tr id="${user.userId }" name="${user.userName }"  dept="${user.deptName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser(type);" style="cursor: pointer;" class="hover">
 						<td><c:out value="${user.userName }" /></td>
 						<td><c:out value="${user.jikwi }" /></td>
 						<td><c:out value="${user.mail }" /></td>

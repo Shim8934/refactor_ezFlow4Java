@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -75,4 +76,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<ProjectMemberVO> getProjectMember(HashMap<String, Object> map) {
 		return (List<ProjectMemberVO>) list("EzPMSDAO.getProjectMember", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public void addNewProject(Map<String, Object> map) {
+		insert("EzPMSDAO.addNewProject", map);
+	}
+	
 }

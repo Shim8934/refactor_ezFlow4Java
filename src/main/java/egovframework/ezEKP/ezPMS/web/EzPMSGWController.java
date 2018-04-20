@@ -62,16 +62,16 @@ public class EzPMSGWController {
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String status = request.getParameter("status");
 			
-			Map<String, Object> search = new HashMap<>();
+//			Map<String, Object> search = new HashMap<>();
 			String projectName = request.getParameter("projectName");
 			String planStartDate = request.getParameter("planStartDate");
-			String overview = request.getParameter("overview");
+			String overview = request.getParameter("overview");			
 			
 			//프로젝트 리스트 가져오기
-			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), info, status, search, info.getOffSet(), lang);
+			//List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), info, status, search, info.getOffSet(), lang);
 			
 			//프로젝트 리스트 환경설정 가져오기
-			ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, info.getTenantId());
+			//ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, info.getTenantId());
 			
 			
 			JSONObject data = new JSONObject();
@@ -97,22 +97,27 @@ public class EzPMSGWController {
 		
 		JSONObject result = new JSONObject();
 		
-		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			//ProjectListVO newProject = new ProjectListVO();
+			ProjectInfoVO newProject = new ProjectInfoVO();
+			newProject.setProjectName(request.getParameter("projectName"));
+			newProject.setWeightInput(Integer.parseInt(request.getParameter("weightInput")));
+			newProject.setPlanStartDate(request.getParameter("planStartDate"));
+			newProject.setPlanEndDate(request.getParameter("planEndDate"));
+			newProject.setOverview(request.getParameter("overview"));
+			newProject.setAlamMailStatus(Integer.parseInt(request.getParameter("endAlamStatus")));
+			newProject.setHeadManagerId(request.getParameter("headManagerId"));
+			newProject.setCreatorName(request.getParameter("writerName"));
+			newProject.setCreatorId(request.getParameter("creatorId"));
+			newProject.setCreateDate(request.getParameter("createDate"));
+			newProject.setCreatorName(request.getParameter("creatorName"));
+			newProject.setCreatorName2(request.getParameter("creatorName2"));
 			
-			//ezPMSService.addNewProject(newProject, info.getTenantId());
+			ezPMSService.addNewProject(newProject, request.getParameter("tenantId"));
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);			
-			result.put("data", "");
-		}
-		
 		
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects] ended.");
 		return result;

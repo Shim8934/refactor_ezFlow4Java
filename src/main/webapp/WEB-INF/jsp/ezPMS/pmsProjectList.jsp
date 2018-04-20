@@ -24,7 +24,12 @@ function addNewProject(){
 	var feature = GetOpenPosition(top, left);
  
 	DivPopUpShow(845, 555, "/ezPMS/newProject.do");
-};
+}
+
+function setProjectList() {
+	$("#test").text("success!!!!");
+}
+
 </script>
 </head>
 <body>
