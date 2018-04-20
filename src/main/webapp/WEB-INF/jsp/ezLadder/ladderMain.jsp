@@ -142,7 +142,7 @@
 			    </tr>
 				 <c:forEach items="${list }" var="vo">
 					<tr class="black" style="height=30px;" onClick="getLadderGame(${vo.ladderId})">
-						<td><img class="effect" src ='/images/ezLadder/icon_game0${vo.type}.png' /></td>			
+						<td><img class="effect" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" src ='/images/ezLadder/icon_game0${vo.type}.png' /></td>			
 						
 						<td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><c:out value ="${vo.title }" /></td>
 						<td>${vo.writerName }</td>
