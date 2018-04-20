@@ -5436,7 +5436,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		doc.getElementsByTagName("ENDDATE").item(0).setTextContent(doc.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 10) + " 23:59:59");
-		doc.getElementsByTagName("CONTENT").item(0).setTextContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace(System.lineSeparator(), "<br>"));
+		doc.getElementsByTagName("CONTENT").item(0).setTextContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
 		
 		if (!mode.equals("temp")) {
 			mode = "New";
@@ -5740,7 +5740,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			String itemID = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
 			String title = doc.getElementsByTagName("TITLE").item(0).getTextContent();
 			boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
-			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace(System.lineSeparator(), "<br>");;
+			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent();
 			
 			ezBoardService.photoListAlbumEdit(boardID, itemID, title, content, userInfo.getTenantId());
 			
@@ -5749,7 +5749,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			String itemID = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
 			String title = doc.getElementsByTagName("TITLE").item(0).getTextContent();
 			boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
-			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace(System.lineSeparator(), "<br>");;
+			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent();
 			
 			ezBoardService.photoListAlbumEditTemp(boardID, itemID, title, content, userInfo.getTenantId());
 			

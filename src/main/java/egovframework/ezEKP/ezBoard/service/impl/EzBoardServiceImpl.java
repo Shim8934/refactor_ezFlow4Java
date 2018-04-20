@@ -2909,7 +2909,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			
 			boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
-			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
 			
 			if (doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().equals("")) {
 				boardListVO.setExtensionAttribute1("0");
