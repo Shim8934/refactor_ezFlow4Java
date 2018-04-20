@@ -2404,6 +2404,7 @@ CREATE TABLE `tbl_board_item` (
   `EXTENSIONATTRIBUTE8` varchar(200) DEFAULT NULL,
   `EXTENSIONATTRIBUTE9` varchar(200) DEFAULT NULL,
   `EXTENSIONATTRIBUTE10` varchar(200) DEFAULT NULL,
+  `CONTENT` longtext,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`ITEMID`),
   KEY `writedate` (`WRITEDATE`,`PARENTWRITEDATE`),
@@ -8811,4 +8812,3 @@ CREATE TABLE `tbl_journal_view` (
   KEY `FK_tbl_journal_view_journal_id_tbl_journal_journal_id` (`journal_id`),
   CONSTRAINT `FK_tbl_journal_view_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지조회';
-
