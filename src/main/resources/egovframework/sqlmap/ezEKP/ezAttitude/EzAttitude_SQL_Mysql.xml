@@ -85,6 +85,7 @@
 		<result property="typeName"			column="TYPE_NAME" 		columnIndex="7"/> 		
 		<result property="typeName2"		column="TYPE_NAME2" 	columnIndex="8"/>
 		<result property="content"			column="CONTENT" 		columnIndex="9"/>
+		<result property="writerId"			column="WRITER_ID" 		columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap id="attitudeApplicationHistoryVO" class="AttitudeApplicationVO">
@@ -421,7 +422,8 @@
 					c.type_id as TYPE_ID,
 					c.type_name as TYPE_NAME,
 					c.type_name2 as TYPE_NAME2,
-					a.content as CONTENT
+					a.content as CONTENT,
+					a.writer_id as WRITER_ID
 			FROM 
 				jmocha.tbl_attitude_modappl a
 			inner 

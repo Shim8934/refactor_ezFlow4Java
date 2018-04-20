@@ -25,7 +25,8 @@
 		<!-- time picker-->		
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
         <script type="text/javascript">
-	        var userid = "<c:out value='${data.writerId}'/>";
+        	var userId = "${userId}";
+	        var writerid = "<c:out value='${data.writerId}'/>";
 	        var username = "<c:out value='${data.writerName}'/>";
 	        var username2 = "<c:out value='${data.writerName2}'/>";
 	        var attid = "<c:out value='${data.attitudeId}'/>";
@@ -55,6 +56,9 @@
 				doc.open();
 				doc.write(content);
 				doc.close();
+				
+				console.log(writerid);
+				console.log(userId);
 		    }
 		    
 		    window.onresize = function () {   	
@@ -154,10 +158,15 @@
 	                            	<li><span onclick="modApprove()">승인</span></li>
 	                                <li><span onclick="modReturn()">반려</span></li>
 	                            	</c:if>
+	                            	<c:if test="${adminFlag == 'true' && userId == data.writerId}">
+	                            	<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+	                            	</c:if>
 <!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
-	                            	<c:if test="${adminFlag != 'true'}">
+	                            	<c:if test="${userId == data.writerId}">
 	                            	<li><span onclick="modify()">수정</span></li>
-	                                <li><span onclick="del()">삭제</span></li>
+	                            	</c:if>
+	                            	<c:if test="${adminFlag == 'true' || userId == data.writerId}">
+	                            	<li><span onclick="del()">삭제</span></li>
 	                            	</c:if>
 	                            </ul>
 	                        </div>
