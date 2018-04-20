@@ -110,17 +110,15 @@ public class EzWebFolderGWController_y {
 	}
 	
 	/**
-	 * 전체 폴더 조회
+	 * 폴더 트리 조회
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/folder-list", method=RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject folderList(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("folderList started.");
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/folder-tree", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFolderTree(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("getFolderTree started.");
 		
 		String serverName 	= orElse(request.getHeader("host-name"), "");
-		String admin 		= orElse(request.getHeader("admin"), "");
-		String folderId 	= orElse(request.getHeader("folderId"), "");
-		String folderType 	= orElse(request.getHeader("folderType"), "");
-		LOGGER.debug("userId: " + userId + " || serverName: " + serverName + " || admin: " + admin + " || folderId: " + folderId + "|| folderType: " + folderType);
+		String folderType 	= orElse(request.getParameter("folderType"), "");
+		LOGGER.debug("userId: " + userId + " || serverName: " + serverName + "|| folderType: " + folderType);
 		
 		JSONObject result = new JSONObject();
 		
@@ -130,32 +128,31 @@ public class EzWebFolderGWController_y {
 			result.put("code", 1);
 			result.put("data", "");
 			
-			LOGGER.debug("parameter error. folderList ended.");
+			LOGGER.debug("parameter error. getFolderTree ended.");
 			return result;
 		}
 		
 		try {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
-			String comId     = common.getCompanyId();
 			String deptId    = common.getDeptId();
-			int tenantId     = common.getTenantId();
-			String offset    = common.getOffSet();
+			String compId    = common.getCompanyId();
 			String primary   = common.getPrimary();
+			int tenantId     = common.getTenantId();
 			
-			List<Map<String, Object>> folderList = service.getFolderList(admin, userId, deptId, comId, folderId, folderType, tenantId, primary);
+			List<Map<String, Object>> folderList = ezWebFolderService_m.getFolderTree(userId, deptId, compId, folderType, primary, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", folderList);
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.debug("common is not comming");
-			result.put("status", "fail");
+			
+			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("folderList ended.");
+		LOGGER.debug("getFolderTree ended.");
 		return result;
 	}
 	

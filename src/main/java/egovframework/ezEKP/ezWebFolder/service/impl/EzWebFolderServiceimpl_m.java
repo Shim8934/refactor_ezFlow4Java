@@ -85,6 +85,66 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
+	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId) throws Exception {
+		List<Map<String, Object>> folderTree = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("primary", primary);
+		map.put("tenantId", tenantId);
+		
+		//TODO: 폴더 트리뷰 정렬 기준?
+		if (folderType.equals("U") || folderType.equals("")) {
+			map.put("userId", userId);
+			List<Map<String, Object>> userFolderTree = ezWebFolderDAO_m.getUserFolderTree(map);
+			folderTree.addAll(userFolderTree);
+		}
+		
+		if (folderType.equals("D") || folderType.equals("")) {
+			List<String> addjobList = ezWebFolderService_y.getAddJobList(tenantId, userId);
+			
+			Map<String,Object> map2 = new HashMap<String, Object>();
+			map2.put("userId",   userId);
+			map2.put("tenantId", tenantId);
+			
+			List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map2);
+			
+			Set<String> idSet = new HashSet<String>();
+			idSet.add(deptId);
+			idSet.addAll(addjobList);
+			idSet.addAll(folderUserIdList);
+			
+			map.put("idList", idSet.toArray(new String[idSet.size()]));
+			List<Map<String, Object>> deptFolderTree = ezWebFolderDAO_m.getDeptFolderTree(map);
+			folderTree.addAll(deptFolderTree);
+		}
+		
+		if (folderType.equals("C") || folderType.equals("")) {
+			List<String> addjobList = ezWebFolderService_y.getAddJobList(tenantId, userId);
+			
+			Map<String,Object> map2 = new HashMap<String, Object>();
+			map2.put("userId",   userId);
+			map2.put("tenantId", tenantId);
+			
+			List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map2);
+			
+			Set<String> idSet = new HashSet<String>();
+			idSet.add(userId);
+			idSet.add(deptId);
+			idSet.add(compId);
+			idSet.addAll(addjobList);
+			idSet.addAll(folderUserIdList);
+			
+			map.put("idList", idSet.toArray(new String[idSet.size()]));
+			map.put("compId", compId);
+			List<Map<String, Object>> compFolderTree = ezWebFolderDAO_m.getCompFolderTree(map);
+			folderTree.addAll(compFolderTree);
+		}
+		
+		LOGGER.debug("folderTree size: " + folderTree.size());
+		return folderTree;
+	}
+	
+	@Override
 	public List<ShareVO> getSharingList(String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();

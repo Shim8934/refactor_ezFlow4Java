@@ -23,6 +23,18 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return (String) insert("EzWebFolderDAO_m.insertRootFolder", map);
 	}
 	
+	public List<Map<String, Object>> getUserFolderTree(Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getUserFolderTree",map);
+	}
+	
+	public List<Map<String, Object>> getDeptFolderTree(Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getDeptFolderTree",map);
+	}
+	
+	public List<Map<String, Object>> getCompFolderTree(Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getCompFolderTree",map);
+	}
+	
 	public List<ShareVO> getSharingList(Map<String, Object> map) {
 		return (List<ShareVO>)list("EzWebFolderDAO_m.getSharingList", map);
 	}
