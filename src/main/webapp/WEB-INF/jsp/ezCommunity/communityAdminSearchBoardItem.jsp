@@ -910,13 +910,13 @@
 				    
 				    <c:choose>
 				    	<c:when test="${pSortBy == 'A.Attachments' }">
-				    		<th style="cursor:pointer;width:20px;" onClick="SortPage('A.Attachments desc')"><img src="/images/file.gif" width="13" height="12"><img src="/images/view-sortup.gif" width="9" height="9"></th>
+				    		<th style="cursor:pointer;width:20px;" onClick="SortPage('A.Attachments desc')"><img src="/images/file.gif"><img src="/images/view-sortup.gif" width="9" height="9"></th>
 				    	</c:when>
 				    	<c:when test="${pSortBy == 'A.Attachments desc' }">
-				    		<th style="cursor:pointer;width:20px;" onClick="SortPage('A.Attachments')"><img src="/images/file.gif" width="13" height="12"><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+				    		<th style="cursor:pointer;width:20px;" onClick="SortPage('A.Attachments')"><img src="/images/file.gif"><img src="/images/view-sortdown.gif" width="9" height="9"></th>
 				    	</c:when>
 				    	<c:otherwise>
-				    		<th style="cursor:pointer;width:20px;" onClick="SortPage('A.Attachments')"><img src="/images/file.gif" width="13" height="12"></th>
+				    		<th style="cursor:pointer;width:20px;" onClick="SortPage('A.Attachments')"><img src="/images/file.gif"></th>
 				    	</c:otherwise>
 				    </c:choose>
 				    
