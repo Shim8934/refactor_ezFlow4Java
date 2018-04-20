@@ -20,10 +20,15 @@
     background-size: 100px;
 }
 
+/* portal area */
 .poll_list1 {margin:0px; padding:0px; font-size:12px;}
 .poll_list1 .graphbar1{margin:3px 0px 10px 0px; padding:0px; border:1px solid #eee; height:7px; background-color:#f8f8fa;}
 .poll_list1 .graphbar1 .gx_bar11 {background:rgb(245, 117, 120); height:7px; margin:0px; padding:0px; border:1px solid rgb(225, 97, 100); margin-top:-1px}
-
+.Pt_QstOptTitleDiv{float:left; display: block; width: 120px; overflow-x: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.Pt_QstInfoDiv{float:right; display: block;}
+.Pt_QstInfoDivOff{float:right; display: none;}
+.Pt_QstInfoVotes{color:#333; letter-spacing: -1px;}
+.Pt_QstInfoPercent{color:rgb(245, 117, 120); letter-spacing: -1px; padding-left: 2px;}
 /* 20171115 */
 .voteInfo{height:68px;}
 .voteTextTest{line-height:20px; margin:1px 8px;}
