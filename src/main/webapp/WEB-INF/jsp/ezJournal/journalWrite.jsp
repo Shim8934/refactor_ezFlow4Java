@@ -162,7 +162,7 @@
    						$("#title").val(result.journalTitle);
    						message.SetEditorContent(result.journalContent);
    					//	opener.journalIdList = [];
-   						opener.journalIdList.length = 0;
+//    						opener.journalIdList.length = 0;
    						if(mode=="sum"){
    			    			setTimeout(function(){
    								$('#loading').hide();
@@ -306,7 +306,7 @@
 					
 					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
 		    		getJournalForm(selFormId);
-		    		opener.sumFormId = "";
+// 		    		opener.sumFormId = "";
 					break;
 					
 				case 'reuse': case 'modify': case 'temp':

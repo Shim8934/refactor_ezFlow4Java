@@ -21,7 +21,7 @@
 					<input type="checkbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 				</th>
 				<c:if test="${listType eq 'recv' }">
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: left;" class="h5_center">
+					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="padding-left: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: left;" class="h5_center">
 						<img style="cursor:pointer; vertical-align: middle;" src="/images/ImgIcon/view-document.gif ">
 					</th>
 				</c:if>
@@ -34,7 +34,7 @@
 					<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:35px; text-align: left; padding: 0px 3px;" class="h5_center">
 						<img src="/images/ImgIcon/addon.png" style="vertical-align: middle;">
 					</th>
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: left; padding: 0px 3px;" class="h5_center">
+					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="padding-left: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: left;" class="h5_center">
 						<img src="/images/newAttach.gif" style="vertical-align: middle;">
 					</th>
 				<c:if test="${listType eq 'recv' or listType eq 'temp' }">

@@ -424,6 +424,7 @@
 			
 			//취합하기
 			function writeSumJournal(){
+				journalIdList.length = 0;
 				if(sumFormId != null && sumFormId != undefined && sumFormId != ""){
 					 $('input:checkbox[name="journalCheckbox"]:checked').each(function() {
 						 var sumJournalId = $(this).parent().parent().attr("id");
