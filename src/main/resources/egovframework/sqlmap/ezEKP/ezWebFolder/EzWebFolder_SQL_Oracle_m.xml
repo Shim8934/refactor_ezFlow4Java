@@ -766,7 +766,7 @@
 					FOLDER.FOLDER_PATH 	AS TRASHCAN_PATH,
 					FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
 		            'folder'	AS TRASHCAN_EXT,
-					0 	AS TRASHCAN_SIZE,
+					'0' 	AS TRASHCAN_SIZE,
 					FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 					FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
 					FOLDER.CREATE_NAME1 AS CREATE_NAME1,
@@ -774,8 +774,8 @@
 		            '' AS FILE_FOLDER_ID,
 		            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
 				FROM
-					tbl_webfolder_folder AS FOLDER
-					JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+					tbl_webfolder_folder FOLDER
+					JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
 					ON FILE_TYPE.TYPE_NAME = 'folder'
 				WHERE
 					FOLDER.USE_STATUS = 'T' AND
@@ -803,8 +803,8 @@
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
 	            '' as FOLDER_UPPER
 			FROM
-				tbl_webfolder_file AS FILES
-				LEFT JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+				tbl_webfolder_file FILES
+				LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
 				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
 			WHERE
 				FILES.USE_STATUS = 'T' AND
@@ -813,9 +813,8 @@
 		]]>
 		<include refid="searchTrashCanFile"/>
 	 	<![CDATA[
-			GROUP BY TRASHCAN_ID
-			ORDER BY UPDATE_DATE DESC
 				) A
+			ORDER BY A.UPDATE_DATE DESC
 			WHERE rownum <= #pStart# + #pEnd# ) B
 		WHERE B.rnum >= #pStart# + 1
 		]]> 
