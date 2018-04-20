@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezJournal.service.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -672,7 +671,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		String journalId = ezJournalDAO.insertJournal(map) + "";
 		
 		String fileList = jsonParam.get("fileList").toString();
-		logger.debug("fileList정보 : " + fileList.toString());
+//		logger.debug("fileList정보 : " + fileList.toString());
 	
 		// 첨부파일 저장
 		Map<String, Object> attachMap = new HashMap<String, Object>();
@@ -695,23 +694,22 @@ public class EzJournalServiceImpl implements EzJournalService {
 				file.mkdir();
 			}
 			
-			String[] attach = fileList.split("/");
+			String[] attach = fileList.split(",");
 			
 			attachMap.put("journalId", journalId);
 			attachMap.put("tenantId", tenantId);
 			
 			for (int i = 0; i < attach.length; i++) {
-				String[] files = attach[i].split(":");
+				String[] files = attach[i].split(";");
 				String filePath = files[0];
 				String fileName = files[1];
 				String fileSize = files[2];
-				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 				
 				logger.debug("filePath : " + filePath + " | fileName : " + fileName + " | fileSize : " + fileSize);
 				
-				String uploadFilePath = commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
-				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "." + extension;
-				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+				String uploadFilePath = commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
 			
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
@@ -728,18 +726,16 @@ public class EzJournalServiceImpl implements EzJournalService {
 					String reuseFileName = "";
 					
 					try {
-						orgFilePath = pDirPath + "uploadFile" + commonUtil.separator + originJournalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+						orgFilePath = pDirPath + "uploadFile" + commonUtil.separator + originJournalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
 					//	filePath = "{" + UUID.randomUUID() + "}";
-						reuseFileName = filePath + "." + extension;
+						reuseFileName = filePath + ";" + fileName;
 						destFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + reuseFileName;
 						
 						FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
 					} catch (Exception e) { }
 				}
 			
-				try {
-					fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
-				} catch (FileNotFoundException e) { }
+				fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
 			}
 			
 		}
@@ -892,21 +888,20 @@ public class EzJournalServiceImpl implements EzJournalService {
 		if (fileList != null && !fileList.equals("")) {
 //			logger.debug("updateJournal fileList : " + fileList);
 			
-			String[] attach = fileList.split("/");
+			String[] attach = fileList.split(",");
 			
 			attachMap.put("journalId", journalId);
 			attachMap.put("tenantId", tenantId);
 			
 			for (int i = 0; i < attach.length; i++) {
-				String[] files = attach[i].split(":");
+				String[] files = attach[i].split(";");
 				String filePath = files[0];
 				String fileName = files[1];
 				String fileSize = files[2];
-				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 				
 				logger.debug("filePath : " + filePath + " | fileName : " + fileName + " | fileSize : " + fileSize);
 				
-				String uploadFilePath = commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+				String uploadFilePath = commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
 				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
@@ -931,12 +926,11 @@ public class EzJournalServiceImpl implements EzJournalService {
 					file.mkdir();
 				}
 				
-				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "." + extension;
-				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
 				
-				try {
-					fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
-				} catch (FileNotFoundException e) { }
+				fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+					
 			}
 		}
 		

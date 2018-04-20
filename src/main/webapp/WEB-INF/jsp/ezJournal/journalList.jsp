@@ -139,7 +139,7 @@
 					<c:if test="${nowDay <= jDay }">
 						<img src="/images/i_new.gif">
 					</c:if>
-						<c:out value="${journal.journalTitle}" />
+						${journal.journalTitle}
 						<c:if test="${journal.replyCount gt 0}">
 							<!-- <a onclick=""><span onclick="quickReply('${journal.journalId }','${journal.journalTitle }');" style="color: #c64200">[${journal.replyCount }]</span></a> -->
 							<a onclick=""><span style="color: #c64200">[${journal.replyCount }]</span></a>
