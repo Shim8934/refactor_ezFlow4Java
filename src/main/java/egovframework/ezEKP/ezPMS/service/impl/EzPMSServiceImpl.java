@@ -82,8 +82,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectMemberVO> getProjectMember(int projectId, int roleId, String lang) {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.debug("getProjectMember started");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("projectId", projectId);
+		param.put("roleId", roleId);
+		param.put("lang", lang);
+		List<ProjectMemberVO> list = ezPMSDAO.getProjectMember(param);
+		
+		LOGGER.debug("getProjectMember ended");
+		return list;
 	}
 
 	@Override

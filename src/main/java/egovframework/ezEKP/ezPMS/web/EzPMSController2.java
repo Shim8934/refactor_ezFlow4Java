@@ -239,6 +239,37 @@ public class EzPMSController2 {
 	}
 	
 	
-	
+	/**
+	 * 프로젝트 참여 멤버 조회
+	 * @param loginCookie
+	 * @param request
+	 * @param resp
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezPMS/getProjectMemberList.do")
+	public String getProjectMemberList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		LOGGER.debug("ezPMS getProjectMemberList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String projectId = request.getParameter("projectId");
+		String roleId = request.getParameter("roleId");
+		
+		String url = "/rest/ezPMS/member-list/" + projectId + "/roles/" + roleId;
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray taskList = (JSONArray) resultBody.get("data");
+			model.addAttribute("taskList", taskList);
+		}
+		
+		
+		LOGGER.debug("ezPMS getProjectMemberList ended");			
+		return null;
+	}
 	
 }

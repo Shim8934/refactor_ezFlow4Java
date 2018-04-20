@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
@@ -389,14 +390,6 @@ public class EzPMSGWController2 {
 			
 			List<ProjectTaskTreeVO> list = ezPMSService.getProjectTaskTree(Integer.parseInt(projectId));
 			
-			for(ProjectTaskTreeVO vo : list) {
-				System.out.println("id : " + vo.getId());
-				System.out.println("icon : " + vo.getIcon());
-				System.out.println("parent : " + vo.getParent());
-				System.out.println("text : " + vo.getText());
-				System.out.println("sort : " + vo.getSort());
-			}
-			
 			LOGGER.debug(list.get(0).getText());
 			
 			result.put("status", "ok");
@@ -412,5 +405,39 @@ public class EzPMSGWController2 {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tree/" + projectId + "/users/" + userId + "] ended.");
 		return result;
 	}
+	
+	
+	//프로젝트 역할별 멤버 보기
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/member-list/{projectId}/roles/{roleId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getProjectMemberList(@PathVariable int projectId, @PathVariable int roleId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			
+			List<ProjectMemberVO> memberList = ezPMSService.getProjectMember(projectId, roleId, lang);
+			
+			JSONObject data = new JSONObject();
+			
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "] ended.");
+		return result;
+	}
+		
 	
 }
