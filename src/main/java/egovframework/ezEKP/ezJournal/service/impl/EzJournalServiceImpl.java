@@ -672,7 +672,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		String journalId = ezJournalDAO.insertJournal(map) + "";
 		
 		String fileList = jsonParam.get("fileList").toString();
-		logger.debug("fileList정보 : " + fileList.toString());
+//		logger.debug("fileList정보 : " + fileList.toString());
 	
 		// 첨부파일 저장
 		Map<String, Object> attachMap = new HashMap<String, Object>();

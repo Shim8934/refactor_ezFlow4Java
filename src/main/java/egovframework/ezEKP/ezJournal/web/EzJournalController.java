@@ -380,7 +380,6 @@ public class EzJournalController extends EgovFileMngUtil {
 						filePath = filePath.substring(filePath.indexOf("{"), filePath.indexOf("}") + 1);
 						file.put("pUploadSN", filePath);
 						file.put("resultUpload", "true");
-//						file.put("fileSize", file.get("fileSize"));
 						fileList.set(i, file);
 					}
 					model.addAttribute("fileList", URLEncoder.encode(fileList.toString(), "UTF-8").replaceAll("\\+", "%20"));

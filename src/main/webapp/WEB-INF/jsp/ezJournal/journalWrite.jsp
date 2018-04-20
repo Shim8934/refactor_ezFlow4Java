@@ -255,7 +255,7 @@
 	    			
 	    			var fileList = '${fileList}';
 	    			if (fileList != null && fileList != "") {
-	    				fileList = fileList.replace(/&nbsp;/gi, " ");
+	    			//	fileList = fileList.replace(/&nbsp;/gi, " ");
 	    				fileList = decodeURIComponent(fileList);
 		    			dadiframe.setAttachFileInfo(fileList);
 	    			}
@@ -310,6 +310,7 @@
 					
 				case 'reuse': case 'modify': case 'temp':
 					selFormId = "${journal.formId}";
+					console.log(selFormId);
 			//		var selectedType = $("#optType");
 			//		getFormList(selectedType);
 					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
@@ -482,7 +483,7 @@
 					if (i == 0) {
 						fileList = GetAttribute(filelist[i + 1], "fileinfo");
 					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
+						fileList += "/" + GetAttribute(filelist[i + 1], "fileinfo");
 	        		}
 				}
 				
@@ -534,7 +535,7 @@
 					if (i == 0) {
 						fileList = GetAttribute(filelist[i + 1], "fileinfo");
 					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
+						fileList += "/" + GetAttribute(filelist[i + 1], "fileinfo");
 	        		}
 				}
 				

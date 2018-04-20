@@ -1339,8 +1339,7 @@
 		var Openwin;
 		if (listType === "temp") {
 			var typeId = $(elem).attr("typeId");
-			var formId = $(elem).attr("formId");
-			Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + typeId + "&formId=" + formId + "&journalId=" + journalId + "&mode=temp", "",
+			Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=temp", "",
 							"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 								+ feature);
 			Openwin.focus();
