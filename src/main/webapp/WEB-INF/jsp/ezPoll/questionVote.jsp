@@ -2744,7 +2744,7 @@
 	    		} */
 		  	}
 		  	
-		  	//썸네일 이미지 팝업박스를 숨겨준다.
+		  	//썸네일 이미지 팝업박스를 토글해준다.
 		  	function toggleImgPopupBox(e){
 		  		var imgPopupBox = $("#imgPopupBox");
 		  		var imgPopupDiv = $("#imgPopupDiv");

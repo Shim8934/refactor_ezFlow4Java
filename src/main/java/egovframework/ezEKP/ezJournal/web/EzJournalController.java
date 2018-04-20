@@ -374,10 +374,8 @@ public class EzJournalController extends EgovFileMngUtil {
 				if (fileList != null && fileList.size() > 0) {
 					for (int i = 0; i < fileList.size(); i++) {
 						JSONObject file = (JSONObject) fileList.get(i);
-						logger.debug("**fileName:" + file.get("fileName"));
 						file.put("pFileName", file.get("fileName"));
-					//	file.put("pFileName", file.get("fileEncodeName"));
-					//	file.put("fileName", file.get("fileEncodeName"));
+					//	file.put("fileName", file.get("fileName"));
 						String filePath = file.get("filePath").toString();
 						filePath = filePath.substring(filePath.indexOf("{"), filePath.indexOf("}") + 1);
 						file.put("pUploadSN", filePath);
@@ -385,7 +383,7 @@ public class EzJournalController extends EgovFileMngUtil {
 //						file.put("fileSize", file.get("fileSize"));
 						fileList.set(i, file);
 					}
-					model.addAttribute("fileList", URLEncoder.encode(fileList.toString().replaceAll(" ", "&nbsp;"), "UTF-8"));
+					model.addAttribute("fileList", URLEncoder.encode(fileList.toString(), "UTF-8").replaceAll("\\+", "%20"));
 				}
 			}
 			

@@ -170,6 +170,10 @@
 				var _seeResultFirst = "<c:out value='${question.resultFirst}'/>";
 				if (_seeResultFirst == 0) {
 					$('#seeResultFirst ').attr('checked', false);
+				}else if(_seeResultFirst === "2"){
+					$('#seeResultFirst ').attr('checked', false);
+					$("#seeResultCreatorDiv").css("display", "inline-block");
+					$("#seeResultCreator").attr("checked", true);
 				}
 				
 				//Allow secret vote
@@ -1104,8 +1108,8 @@
 			}
 	  	}
 	  	
-	  	function seeResultOptAdd(){
-	  		if($("#seeResultCreatorDiv").css("display") == "none"){
+	  	function seeResultOptAdd(chkBox){
+	  		if(chkBox.checked !== true){
 		  		$("#seeResultCreatorDiv").css("display", "inline-block");	  			
 	  		}
 	  		else{
@@ -1210,7 +1214,7 @@
 					</div>
 
 					<div class="qstSetting">
-						<input id="seeResultFirst" type="checkbox" onchange="seeResultOptAdd()" checked> 
+						<input id="seeResultFirst" type="checkbox" onchange="seeResultOptAdd(this)" checked> 
 						<span><spring:message code="ezPoll.t157"/></span>
 						<div id="seeResultCreatorDiv" style="display:none;">
 							<input id="seeResultCreator" type="checkbox">
