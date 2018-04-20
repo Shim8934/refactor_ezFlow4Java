@@ -497,7 +497,7 @@
 		
 		        if (document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight == "bold") {
 		            document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
-		            document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
+		       // document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
 		        }
 		
 		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
