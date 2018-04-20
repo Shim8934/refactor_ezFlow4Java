@@ -574,12 +574,13 @@
 	    }
 
 	    function search_click() {
-	        if (keyword.value == "") {
+	        if (keyword.value.trim() == "") {
 	            alert("<spring:message code='ezPortal.t20'/>");
+	            keyword_Clear();
 	            keyword.focus();
 	            return;
-	        }
-	  
+	        } 
+	        
 	         	$.ajax({
 					url : '/ezOrgan/getSearchList.do',
 					method : 'POST',

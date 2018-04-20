@@ -2499,6 +2499,10 @@ public class EzBoardController extends EgovFileMngUtil{
 					fieldValue = commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get(fieldName)));
 				}
 				
+				if (fieldValue == null || fieldValue.equals(null) || fieldValue.equals("null")) {
+					fieldValue = "";
+				}
+				
 				resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
 				
 				if (i == 0) {
@@ -3322,6 +3326,40 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 
 		logger.debug("setAsRead ended");
+	}
+	/**
+	 * 게시판 읽음표시 실행//새게시물 전용
+	 */
+	@RequestMapping(value="/ezBoard/setReadNew.do")
+	public void setAsReadNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginVO userInfo) throws Exception {
+		logger.debug("setAsReadNew started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pBoardID = "";
+		String pBoardIDList = "";
+		String pItemIDList = "";
+		
+		if (request.getParameter("boardID") != null) {
+			pBoardID = request.getParameter("boardID");
+		}
+		if (request.getParameter("pBoardIDList") != null) {
+			pBoardIDList = request.getParameter("pBoardIDList");
+		}
+		
+		if (request.getParameter("itemIDList") != null) {
+			pItemIDList = request.getParameter("itemIDList");
+		}
+		
+		String[] boardIDs = pBoardIDList.split(";");
+		String[] itemIDs = pItemIDList.split(";");
+		
+		for (int k = 0; k < itemIDs.length; k++) {
+			ezBoardService.setAsRead(userInfo, pBoardID, itemIDs[k]);
+			ezBoardService.setAsReadNew(userInfo, boardIDs[k], itemIDs[k]);
+		}
+
+		logger.debug("setAsReadNew ended");
 	}
 	
 	/**
@@ -7127,8 +7165,31 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("itemReadPagingList ended");
 		return resultXML.toString();
 	}
+	
+	/**
+	 * 2018-04-16 홍승비 게시판 환경설정 탭 표출 수정
+	 */
+	@RequestMapping(value="/ezBoard/set_TabUse2.do")
+	public void set_TabUse2(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("set_TabUse2 started");
 
-    
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		
+		String pUserID = loginVO.getId();
+		String pBoardList = request.getParameter("pBoardList");
+		String tabUsed = request.getParameter("tabUsed");
+		int tenantID = loginVO.getTenantId();
+		
+		String[] pBoardLists = pBoardList.split(";");
+		String tabUseds[] = tabUsed.split(";");
+		
+		for (int k = 0; k < pBoardLists.length; k++) {
+			ezBoardService.setTabUsed(pUserID, pBoardLists[k], tabUseds[k], tenantID);
+		}
+
+		logger.debug("set_TabUse2 ended");
+	}
+
     
 }
 

@@ -232,6 +232,7 @@
 			var useHTMLMode = "${useHTMLMode}";
 			var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
+			var uploadUrl = "/ezEditor/ckSimpleUpload.do?type=" + type;
 			
 			if (type == "APPROVAL" || type == "APPROVALG") {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
@@ -244,6 +245,12 @@
 	            CKEDITOR.config.removePlugins = '_Insert_Image';
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	            
+	        } else if (type == "MAILLETTER") { // 편지지 
+	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
+	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	
+	        	uploadUrl += "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
+	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        } else {
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        }
@@ -252,7 +259,7 @@
 				CKEDITOR.config.removePlugins = "sourcearea";
 			}
 			
-			CKEDITOR.config.imageUploadUrl = "/ezEditor/ckSimpleUpload.do?type=" + type;
+			CKEDITOR.config.imageUploadUrl = uploadUrl;
 			CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
 		    CKEDITOR.config.font_defaultLabel = defaultFontFamily;
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";
