@@ -961,7 +961,6 @@ public class CommonUtil {
 		
 		return dbType;
 	}
-	
 	/*
 	 * 테넌트에 따른 설정정보 얻어오는 메서드
 	 */
@@ -1015,7 +1014,9 @@ public class CommonUtil {
 		html = html.replace("&sup3;", "³");
 		html = html.replace("&acute;", "´");
 		html = html.replace("&mu;", "μ");
-		html = html.replace("&para;", "¶");
+		html = html.replace("&pa "
+				+ " "
+				+ ";", "¶");
 		html = html.replace("&middot;", "·");
 		html = html.replace("&cedil;", "¸");
 		html = html.replace("&sup1;", "¹");
@@ -1040,6 +1041,7 @@ public class CommonUtil {
 		
 		logger.debug("html result : " + result); 
 		return result;
+		
 	}
 	
 	/**

@@ -234,8 +234,12 @@
 			/* 2018.03.23 서주연 - #12114 */
 	        if (GetAttribute(srcEl,"dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 	            if (GetAttribute(srcEl,"dispTime") != null) {
-	                selsd = GetAttribute(srcEl, "dispTime");
-	                seled = selsd.replace(":00:", ":30:");
+
+	                selsd = GetAttribute(srcEl,"dispTime");
+	                
+	                if (selsd != null) { 
+	                	seled = selsd.replace(":00:", ":30:");
+	                }
 	            }
 	        } else {
 	            selsd = GetAttribute(srcEl, "dispDate");
