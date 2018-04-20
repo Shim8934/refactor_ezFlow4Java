@@ -63,7 +63,7 @@
 		<result property="endDate"						column="EndDate"					/>
 		<result property="absTract"						column="Abstract"					/>
 		<result property="attachments"					column="Attachments"				/>
-		<result property="upperItemIDTree"				column="UpperItemIDTree"				javaType="String" jdbcType="CLOB"/>
+		<result property="upperItemIDTree"				column="UpperItemIDTree"		javaType="String" jdbcType="CLOB"/>
 		<result property="itemLevel"					column="ItemLevel"					/>
 		<result property="copiedItem"					column="copiedItem"					/>
 		<result property="extensionAttribute1"			column="ExtensionAttribute1"		/>
@@ -375,6 +375,7 @@
 				step,
 				re_level,
 				ref,
+				filename,
 				charfilename,
 				readnum,
 				writeday,
@@ -1072,7 +1073,7 @@
 					itemid <> #v_previousItemID#
 				AND
 					tenant_id = #tenantID#
-				ORDER BY 
+				ORDER BY
 					parentwritedate DESC,
 					upperitemidtree,
 					startdate DESC
@@ -1496,6 +1497,20 @@
 				c_logo,
 				c_clubbanner,
 				CASE WHEN #primary# = '1' THEN c_clubname ELSE c_clubname2 END
+			FROM
+				TBL_C_CLUB 
+			WHERE
+				RTRIM(c_clubno) = #v_CODE#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzCommunityDAO.adminLogoGet2"					parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
+		<![CDATA[
+			SELECT
+				c_logo,
+				c_logo_thumbnail
 			FROM
 				TBL_C_CLUB 
 			WHERE
@@ -3774,7 +3789,7 @@
 	<select id="EzCommunityDAO.joinGet2"						parameterClass="Map"		resultClass="String"	remapResults="true">
 		<![CDATA[
 			SELECT
-				username$v_USERINFO_LANG$ AS username 
+				username$v_USERINFO_LANG$ AS username
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE
@@ -4592,7 +4607,8 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.bbsDelOkDel"						parameterClass="Map">
 		<![CDATA[
-			DELETE FROM
+			DELETE
+			FROM
 				$v_BNAME$ 
 			WHERE
 				no = CAST(#v_NO# AS INT)
@@ -4657,7 +4673,7 @@
 <!-- 	<procedure id="EzCommunityDAO.commMakeOkSet1"				parameterClass="Map"> -->
 <!-- 		{CALL EZSP_COMM_MAKE_OK_SET1(#v_LOGOFILENAME#, #v_LOGOFILENAME_THUMBNAIL#, #v_FILENAME#, #v_FILESIZE#)} -->
 <!-- 	</procedure> -->
-	<update id="EzCommunityDAO.commMakeOkSet1Update"				parameterClass="Map">
+  	<update id="EzCommunityDAO.commMakeOkSet1Update"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				TBL_C_CLUB
@@ -4682,10 +4698,9 @@
 				#tenantID#)
 		]]>
 	</insert>
-	
-<!-- 	<procedure id="EzCommunityDAO.commMAkeOkSet2"				parameterClass="Map"> -->
-<!-- 		{CALL EZSP_COMM_MAKE_OK_SET2(#v_BANNERFILENAME#, #v_FILENAME#, #v_FILESIZE#)} -->
-<!-- 	</procedure> -->
+	<procedure id="EzCommunityDAO.commMAkeOkSet2"				parameterClass="Map">
+		{CALL EZSP_COMM_MAKE_OK_SET2(#v_BANNERFILENAME#, #v_FILENAME#, #v_FILESIZE#)}
+	</procedure>
 	<update id="EzCommunityDAO.commMAkeOkSet2Update"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -4715,7 +4730,7 @@
 			UPDATE
 				TBL_LOGO_SIZE
 			SET
-				banner_size = v_FILESIZE
+				banner_size = #v_FILESIZE#
 			WHERE
 				tenant_id = #tenantID#
 		]]>
@@ -4732,10 +4747,35 @@
 				#tenantID#)
 		]]>
 	</insert>
-	
 <!-- 	<procedure id="EzCommunityDAO.commMakeOkInsert2"			parameterClass="Map"> -->
 <!-- 		{CALL EZSP_COMM_MAKE_OK_INSERT2(#v_TMP_CLUBID#, #v_DATETIME_NOW1#, #v_CLUBNAME#, #v_CLUBNAME2#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_CLUBTYPE#, #v_CLUBCONFIRMTYPE#, #v_INTRO#, #v_ISIN#, #v_LOGO#, #v_LOGO_THUMBNAIL#, #v_BANNER#, #v_B_BOARD_NAME1#, #v_B_BOARD_NAME2#, #v_COMATT#, #v_CODE#, #v_B_NOTI_NAME1#, #v_B_NOTI_NAME2#, #v_PNEWID#, #v_BOARDNO#, #v_USERINFO_USERID#, #v_USERINFO_DISPLAYNAME#, #v_USERINFO_COMPANYNAME#, #v_USERINFO_DEPTNAME#, #v_PNEW_SUBID#, #v_DATETIME_NOW2#, #v_OPENEMAIL#, #v_OPENHP#, #v_OPENCOMP#, #v_OPENHOUSE#, #v_OPENJOB#, #v_OPENBIRTH#, #v_OPENSEX#, #v_USERINFO_COMPANYID#)} -->
 <!-- 	</procedure> -->
+
+<update id="EzCommunityDAO.commMakeOkSet3Update"				parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUB
+			SET
+				c_logo = #v_LOGOFILENAME#
+			WHERE
+				c_clubno = #v_FILENAME#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+	<update id="EzCommunityDAO.commMakeOkSet4Update"				parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUB
+			SET
+				c_logo_thumbnail = #v_THUMBFILENAME#
+			WHERE
+				RTRIM(c_clubno) = #v_FILENAME#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+
 	<update id="EzCommunityDAO.updateClubID"	parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -5475,7 +5515,19 @@
 			UPDATE
 				TBL_C_CLUB
 			SET
-				c_clubbanner = #v_BANNERFILENAME#
+				c_logo = #v_LOGOFILENAME#
+			WHERE
+				RTRIM(c_clubno) = #v_FILENAME#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+	<update id="EzCommunityDAO.adminLogoOkUpdate3"			parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUB
+			SET
+				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
 			WHERE
 				RTRIM(c_clubno) = #v_FILENAME#
 			AND
@@ -5581,15 +5633,15 @@
 				parentboardid,
 				boardadmin_fg,
 				tenant_id)
-		VALUES
-			(#v_BOARDGROUPID#,
-			#v_USERINFO_USERID#,
-			#v_ACCESSNAME#,
-			1,
-			1,
-			'top',
-			'true',
-			#tenantID#)
+			VALUES
+				(#v_BOARDGROUPID#,
+				#v_USERINFO_USERID#,
+				#v_ACCESSNAME#,
+				1,
+				1,
+				'top',
+				'true',
+				#tenantID#)
 		]]>
 	</insert>
 	
@@ -6758,10 +6810,11 @@
 				itemID = #itemID#
 		]]>
 	</select>
-	  
-  	<delete id="EzCommunityDAO.deleteReservedBoardItem" parameterClass="CommunityBoardDeleteItemVO">
+
+	<delete id="EzCommunityDAO.deleteReservedBoardItem" parameterClass="CommunityBoardDeleteItemVO">
   		<![CDATA[
-  			DELETE FROM TBL_COMM_DELETERESERVEDITEM
+  			DELETE FROM 
+  				TBL_COMM_DELETERESERVEDITEM
   			WHERE
   				TENANT_ID = #tenantID#
   			AND
@@ -6773,18 +6826,19 @@
   
   	<delete id="EzCommunityDAO.deleteReservedBoard" parameterClass="CommunityBoardDeleteItemVO">
   		<![CDATA[
-  			DELETE FROM TBL_COMM_DELETERESERVEDBOARD
+  			DELETE FROM 
+  				TBL_COMM_DELETERESERVEDBOARD
   			WHERE
   				TENANT_ID = #tenantID#
   			AND
   				BOARDID = #boardID#
 		]]>
   	</delete>
-  
 	
 	<delete id="EzCommunityDAO.deleteBoardItemAttach" parameterClass="Map">
 		<![CDATA[
-			DELETE FROM TBL_COMM_Item_Attachments
+			DELETE FROM 
+				TBL_COMM_Item_Attachments
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -6830,5 +6884,18 @@
 			   						ITEMID = #itemID# )
 
 		]]>
+ 	</select>
+ 	
+ 	<select id="EzCommunityDAO.getWriterID" parameterClass="Map" resultClass="String">
+ 		<![CDATA[
+ 			SELECT
+ 				WRITERID
+ 			FROM
+ 				TBL_COMM_ITEM
+ 			WHERE
+ 				TENANT_ID = #tenantID#
+ 			AND
+ 				ITEMID = #v_pItemID#
+ 		]]>
  	</select>
 </sqlMap>

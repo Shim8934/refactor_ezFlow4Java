@@ -39,6 +39,7 @@
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
 		var adminFlag = "${adminFlag}";
+		var checkAdmin = "${checkAdmin}";
 		
 		$(function(){
 			$(document).on('click', '#AttList th', function(){
@@ -254,6 +255,8 @@
 	    function get_att_list(pageNum) {
 	    	ShowAttProgress();
 	    	
+	    	$("#HeaderAllCheckBox").prop("checked",false);
+	    	
 	    	if (usepostDate) {
 	            var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
@@ -266,6 +269,8 @@
 	    	var obj = new Object();
 	    	
 		    obj.apprUserName = $('#appr_search').val();
+		    obj.writerName = $('#writer_search').val();
+		    obj.writerDeptName = $('#writerDept_search').val();
 		    obj.startDate = startDate;
 		    obj.endDate = endDate;
 			obj.pageNum = pageNum;
@@ -275,6 +280,7 @@
 			obj.orderCell = orderCell;
 			obj.orderOption = orderOption;
 			obj.adminFlag = adminFlag;
+			obj.checkAdmin = checkAdmin;
 			
 		    $.ajax({
 				type : 'get',
@@ -362,7 +368,7 @@
 	    	}
 	    	
 	    	if (attList.length == 0) { 
-	    		$('#AttList tbody').append('<tr><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
+	    		$('#AttList tbody').append('<tr><td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
 	    	}
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
@@ -394,7 +400,11 @@
     			if (attList[i].apprStatus == 2) {
     				htmlStr += '<td id="attStauts">반려</td>';	
     			}
-    			htmlStr += '<td>' + attList[i].apprUserName + '</td>';
+    			if (attList[i].apprUserName == null) {
+    				htmlStr += '<td>' + "" + '</td>';
+    			} else {
+    				htmlStr += '<td>' + attList[i].apprUserName + '</td>';	
+    			}
     			
     			if  (excel != true) {
     				htmlStr += '<td><a class="imgbtn" id="mailInBtn" onclick="getHistory(this)"><span>내역확인</span></a></td>';	
@@ -597,7 +607,6 @@
 	                        if (Cnt == 0){
 	                            SelectedPreObj = _RowObject;	
 	                        }
-	                        console.log(_RowObject);
 	                        _RowObject.style.backgroundColor = m_strColorDefault;
 	                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
 	                    }
@@ -713,7 +722,6 @@
 	    	var idList = "";
 	    	
 	    	for (var i = 0; i < attList.length; i++) {
-	    		console.log(attList[i].getAttribute("status"));
 	    		if (attList[i].getAttribute("status") != "1") {
 	    			idList += attList[i].getAttribute("id").split("_")[1] + ",";	
 	    		}
@@ -762,7 +770,6 @@
 	    	var idList = "";
 	    	
 	    	for (var i = 0; i < attList.length; i++) {
-	    		console.log(attList[i].getAttribute("status"));
 	    		if (attList[i].getAttribute("status") != "2") {
 	    			idList += attList[i].getAttribute("id").split("_")[1] + ",";	
 	    		}
@@ -821,12 +828,12 @@
 	    	var attNode;
 	    	// tr 노드 개수
 	    	var nodeCount = attNodes.length;
-	    	
+	    	console.log(nodeCount);
 	        if (obj.checked) {
 	        	
 	            for (var i = 0; i < nodeCount; i++) {
 	            	attNode = attNodes.get(i);
-	            	attNode.getElementsByTagName("td").item(0).childNodes.item(0).checked = true;
+	            	attNode.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
 	            	attNode.style.backgroundColor = m_strColorSelect;
 	                //TODO: 테스트해보기 2016-06-02
 	                // dhlee: modified so that existing elements aren't merged with new ones.
@@ -837,8 +844,7 @@
 	        	
 	            for (var i = 0; i < nodeCount; i++) {
 	            	attNode = attNodes.get(i);
-	            	
-	            	attNode.getElementsByTagName("td").item(0).childNodes.item(0).checked = false;
+	            	attNode.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
 	            	attNode.style.backgroundColor = m_strColorDefault;
 	            }
 	            
@@ -854,7 +860,6 @@
 	        else {
 	            var TemplistArray = new Array();
 	            for (var i = 0; i < listContentArry.length; i++) {
-	            	console.log(obj.parentElement.parentElement.getAttribute("id"));
 	                if (obj.parentElement.parentElement.getAttribute("id") == listContentArry[i]) {
 	                	obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
 	                }
@@ -902,10 +907,10 @@
 			    	ajaxRunning = false;
 			    },
 			    success : function(json){
-			    	$('#addpopup_list tbody').children('tr').remove();
+			    	$('#addpopup_list tbody').children('tr').not(":first").remove();
 			    	
 			    	if (json.length == 0) {
-			    		var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:  center;'></td>").text("내역이 없습니다."));
+			    		var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
 			    		
 			    		$("#addpopup_list tbody").append(objTr);
 			    	}
@@ -917,17 +922,23 @@
 			    		} else {
 			    			json[i].apprStatus = "반려";
 			    		}
+
+			    		var objTr = $("<tr></tr>").append($("<td style='width:50%'></td>").text(json[i].apprDate));
 			    		
-			    		var objTr = $("<tr></tr>").append($("<td></td>").text(json[i].apprDate));
-			    		
-			    		objTr.append($("<td></td>").text(json[i].apprUserName));
-			    		objTr.append($("<td></td>").text(json[i].apprStatus));
+			    		objTr.append($("<td style='width:25%'></td>").text(json[i].apprUserName));
+			    		objTr.append($("<td style='width:25%'></td>").text(json[i].apprStatus));
 			    		
 			    		$("#addpopup_list tbody").append(objTr);
 			    	}
 			    },
 			    complete : function() {
-					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+			    	console.log(parent.frames["right"]);
+			    	console.log(parent.frames["attitude_main"]);
+			    	try {
+			    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);	
+			    	} catch(e) {
+			    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);
+			    	}
 		        	
 		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
 		        	
@@ -944,7 +955,7 @@
 	    
 	    function layerHidden() {
 	        $.modal.close();
-	        $('#addpopup_list tbody').children('tr').remove();
+	        $('#addpopup_list tbody').children('tr').not(":first").remove();
 	    }
 		</script>
 </head>
@@ -977,10 +988,24 @@
           <div class="popupwrap1" style="background-color:#ffffff; position: relative;">
             <div class="popupwrap2">
               <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="content">
+              	<c:if test="${adminFlag == 'true' || checkAdmin =='true'}">
+					<tr>
+						<th nowrap>신청자명</th>
+						<td style="width:100%;"> 
+							<input id="writer_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
+						</td>
+					</tr>
+					<tr>
+						<th nowrap>신청부서명</th>
+						<td style="width:100%;"> 
+							<input id="writerDept_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
+						</td>
+					</tr>
+              	</c:if>
               	  <tr>
                     <th nowrap>승인자명</th>
                     <td style="width:100%;"> 
-						<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);"/>
+						<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
 	                </td>
                   </tr>
                   <tr>
@@ -1007,15 +1032,15 @@
 							<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
 						</th> 
 						<th width="60px" colname="NO">NO.</th> 
-						<th style="cursor:pointer" colname="CHANGE_DATE">일자</th>
+						<th style="cursor:pointer" colname="START_DATE">일자</th>
 						<c:if test="${adminFlag == true}">
-							<th style="cursor:pointer" colname="CHANGE_DATE">신청자</th>
-							<th style="cursor:pointer" colname="CHANGE_DATE">신청 부서</th>
+							<th style="cursor:pointer" colname="WRITER_NAME">신청자</th>
+							<th style="cursor:pointer" colname="WRITER_DEPT_NAME">신청 부서</th>
 						</c:if>
-						<th width="250px" style="cursor:pointer" colname="START_DATE">시각</th>
+						<th width="250px" style="cursor:pointer" colname="NO">시각</th>
 						<th width="80px" style="cursor:pointer" colname="APPR_STATUS" >승인상태</th>
 						<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th>
-						<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">내역확인</th> 
+						<th width="150px" style="cursor:pointer" colname="NO">내역확인</th> 
 			    	</tr>
 			    	
 			    	<c:forEach var="list" items="${list}" varStatus="i"> 
@@ -1057,8 +1082,8 @@
 		        </c:forEach>
 		        
 			    <c:if test="${list.size() == 0}"> 
-			        <tr> 
-						<td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td>
+			        <tr>
+						<td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td>
 		       		</tr> 
 		        </c:if> 
                 </table>
@@ -1084,73 +1109,26 @@
 				<th>승인자</th>				
 			</tr>
 		</table>
-		
+<!-- 		팝업 -->
 		<div id="popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
+			    <table class="popuplist" id="addpopup_list" style="display:block; width:440px; margin:10px 0px 0px 1px;">
 				    <thead>
 				    	<tr>
-						<th class="layerHeader" colspan="3">
+						<th class="layerHeader" colspan="4" style="width:440px;">
 							<img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>
 							&nbsp;근태내역확인
 						</th>
 						</tr>
-						<tr>
-				  			<th style="width:50%;height:30px">승인일시</th>
-				  			<th style="width:25%;height:30px">승인자</th>
-				  			<th style="width:25%;height:30px">승인 상태</th>
-						</tr>
 				    </thead>
-				    <tbody>
+				    <tbody style="max-height:500px; width:440px; display:block; overflow-y:auto;">
+				    	<tr>
+				  			<th style="width:220px;height:30px">승인일시</th>
+				  			<th style="height:30px">승인자</th>
+				  			<th style="height:30px">승인 상태</th>
+						</tr>
 				    </tbody>
-				</table>
-				<!-- /내용 -->
-				<br />
-				<div style="text-align:center;">
-					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
-					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
-			    </div>
-			</div>
-			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
-		</div>
-		
-		<!-- 근태수정신청 팝업창 -->
-		<div id="mod_popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
-			<div class="popupwrap3">
-				<!-- 내용 -->
-			    <table class="popuplist" id="modpopup_table" style="width:440px;margin:10px 0px 0px 1px;">
-			    	<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태수정신청</th>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">구분
-						<td>지각</td>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">출근시각</th>
-						<td>오늘날짜 (공백) 출근시각</td>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">변경시각</th>
-						<td>
-							<span id="periodblock" datetype="3">
-								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-								<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
-							</span>
-						</td>
-					</tr>
-					<tr>
-						<th style="width:90px;height:30px">승인상태</th>
-						<td>상태(진행, 반려)</td>
-					</tr>
-					<tr>
-<!-- 						<td colspan="2"><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%; height:90px; box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td> -->
-						<td colspan="2" style="margin:0px; padding:0px;"><textarea class="textarea" style="width:100%; height:120px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea></td>
-<!-- 						<td style="vertical-align:top;height:100%;" id="EdtorSize" colspan="2"> -->
-<!-- 		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe> -->
-<!-- 	                    </td> -->
-					</tr>
 				</table>
 				<!-- /내용 -->
 				<br />

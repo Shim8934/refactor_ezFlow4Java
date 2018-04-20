@@ -35,6 +35,10 @@
 				color : red;
 			}
 			
+			#attiCalendar td[modappl='1'] {
+				color : orange;
+			}
+			
 			#attiCalendar td[typeId=A01], #attiCalendar td[typeId=A03] {
 				cursor : context-menu;
 				color : rgb(102,180,255);
@@ -57,10 +61,18 @@
 			var modContent = "";            // 수정신청 내용
 			
 			$(function(){
-				$(document).on('dblclick', '.td_day td', function(){
-					pMode = "new";
-					attitudeNewItem(this);
-				})
+				//개인근태현황에서만 근태 등록 가능
+				if (deptFlag != "true") {
+					$(document).on('dblclick', '.td_day td', function(){
+						pMode = "new";
+						attitudeNewItem(this);
+					})	
+				} else { // 부서근태현황에서는 당일의 근태를 조회.
+					$(document).on('dblclick', '.td_day td', function(){
+						pMode = "new";
+						alert("부서 -> 근태 조회 구현 해야 함");
+					})
+				}
 				
 				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function(){
 					attitudeItemView(this);
@@ -68,7 +80,23 @@
 				
 				//근태수정신청 팝업창
 				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02]', function(){
-					showDialog(this);
+					//근태수정신청은 개인근태현황에서만 가능
+					var modappl = $(this).attr('modappl');
+					var attitudeid = $(this).attr('attitudeid');
+					if (deptFlag != "true") {
+						if (modappl == 0) {
+							attitudeModItem(this);	
+						} else {
+							mod_detail(attitudeid);
+						}
+						
+					} else {
+						if (modappl == 0) {
+							console.log(this);
+						} else {
+							mod_detail(attitudeid);
+						}
+					}
 				})
 			})
 			
@@ -148,13 +176,22 @@
 					
 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":tdHeight, "background-color": "#edf4fd"}).text($("#calTitle").text())));
 					for (var i = 0; i < result.length; i++) {
+						
 						if (result[i].typeId == 'A01' || result[i].typeId == 'A03') {
 							continue;
 						}
 						objTr = $("<tr></tr>").append($("<th></th>").text(result[i].typeName));
-						objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일");
-
-						
+						if (deptFlag == "true") {
+							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px", "cursor" : "pointer"})
+							.attr("id",result[i].typeId).text("0일")
+							.attr("onmouseover","this.style.color='#164aad'")
+							.attr("onmouseout","this.style.color='#666'")
+							.click(function() {
+								searchByTypeId(this);
+							});	
+						} else {
+							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일")
+						}
 						objTr.append(objTd);
 						objTbody.append(objTr);
 					}
@@ -267,7 +304,7 @@
 						subDate = calDateRange(startDate, endDate); 
 						betweenDate = new Date(startDate); 
 						 
-						for (var j = 0; j<= subDate; j++) { 
+						for (var j = 0; j<= subDate; j++) {
 							betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
 							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2); 
 							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
@@ -281,7 +318,7 @@
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>"); 
 						} else { 
-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
 						} 
 					}	
 				} else {
@@ -309,10 +346,11 @@
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
 										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + "</td></tr>");
 							} else {
-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
 							}	
 						}
 					}
+					$("td[typeid=A02][modappl=0]").css('cursor','context-menu');
 				}
 			}
 			
@@ -340,7 +378,7 @@
 			
 			
 			/**
-			* 근태작성
+			* 
 			*/
 			function attitudeNewItem(obj) {
 				var date = $(obj).attr("dispdate");
@@ -352,6 +390,37 @@
 	            } else {
                 	rtnValue = window.showModalDialog("/ezAttitude/attitudeNewItem.do?date=" + date + "&mode=new", "",
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+	                
+	                if (typeof (rtnValue) != "undefined") {
+	                    company_change();
+	                }
+	            }
+			}
+			
+			/**
+			* 근태수정신청
+			*/
+			function attitudeModItem(obj) {
+				var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 760) / 2;
+		        var pLeft = (pwidth - 790) / 2;
+				var feature = GetOpenPosition(790, 760);
+				
+				var attitudeId = $(obj).attr("attitudeId"); 
+				var pTypeId = $(obj).attr("typeId");
+				
+				console.log("attitudeId : " + attitudeId);
+				console.log("pTypeId : " + pTypeId);
+				
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "attitudeNewItem",
+                    		"height = 730px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "",
+                			"height = 730px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
@@ -437,8 +506,101 @@
 					success : function() {
 						alert("근태 수정이 신청되었습니다.");
 					}
-				})
+				});
 			}
+			
+			function searchByTypeId(t) {
+				var typeName = t.parentElement.getElementsByTagName("th").item(0).innerText;
+				var pDate = $("#calTitle").text().trim()
+				var startDate = pDate + "-01 00:00:00";
+				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate() + " 23:59:59";
+
+				document.getElementById("popup_title").innerText = "근태내역확인 [" + typeName + "]";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getAttitudeList.do",
+					data : {
+						startDate : pDate + "-01 00:00:00",
+						endDate : endDate,
+						deptFlag : deptFlag,
+						typeId : t.getAttribute("id")
+					},
+					success : function(json) {
+						
+				    	$('#addpopup_list tbody').children('tr').not(":first").remove();
+				    	
+				    	if (json.length == 0) {
+				    		var uvobjTr = $("<tr></tr>").append($("<td style='width:5%; display:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:20%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:70%; height:0px; display:;'></td>"));
+				    		$("#addpopup_list tbody").append(uvobjTr);
+				    		
+				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px;'></td>").text("내역이 없습니다."));
+				    		$("#addpopup_list tbody").append(objTr);
+				    	}
+				    	
+				    	for(var i = 0; i < json.length; i++) {
+				    		if (json[i].apprStatus == 1) {
+				    			json[i].apprStatus = "승인";
+				    		} else {
+				    			json[i].apprStatus = "반려";
+				    		}
+
+				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i+1)));
+				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
+				    		if (json[i].writerDeptName.length > 6) {
+				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
+				    		} else {
+				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
+				    		}
+				    		if (json[i].endDate == null) {
+				    			objTr.append($("<td style='width:70%'></td>").text("\u00a0" + json[i].startDate));
+				    		} else {
+					    		objTr.append($("<td style='width:70%'></td>").text("\u00a0" + json[i].startDate+ "\u00a0~\u00a0" + json[i].endDate));				    			
+				    		}
+
+				    		$("#addpopup_list tbody").append(objTr);
+				    	}
+				    },
+				    complete : function() {
+				    	try {
+				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);	
+				    	} catch(e) {
+				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);
+				    	}
+			        	
+			        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			        	
+			        	$("#popup").css("left", popupX);
+			        	
+						$("#popup").modal({
+							  escapeClose: false,
+							  clickClose: false,
+							  showClose: false
+						});
+				    }
+			    });
+			}
+			
+			function mod_detail(modAttId) {
+		    	var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 760) / 2;
+		        var pLeft = (pwidth - 790) / 2;
+				var feature = GetOpenPosition(790, 760);
+				
+				if (adminFlag == "true") {
+					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId +"&adminFlag=" + adminFlag, "",
+				 			"height = 730px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				} else {
+					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId, "",
+				 			"height = 730px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
+				}
+		    }
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">
@@ -476,9 +638,10 @@
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		<!-- 근태수정신청 팝업창 -->
-		<div id="popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
+<<<<<<< HEAD
 			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
 			    	<tr>
 						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태수정신청</th>
@@ -507,6 +670,25 @@
 					<tr>
 						<td colspan="2" style="margin:0px; padding:0px;"><textarea class="textarea" style="width:100%; height:120px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea></td>
 					</tr>
+=======
+			    <table class="popuplist" id="addpopup_list" style="display:block; width:500px; margin:10px 0px 0px 1px;">
+				    <thead>
+				    	<tr>
+						<th class="layerHeader" colspan="4" style="width:500px;">
+							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
+							<span id="popup_title">&nbsp;근태내역확인</span>
+						</th>
+						</tr>
+				    </thead>
+				    <tbody style="max-height:500px; width:500px; display:block; overflow-y:auto;">
+				    	<tr>
+				    		<th style="height:30px">No.</th>
+				    		<th style="height:30px">사원명</th>
+				    		<th style="height:30px">부서명</th>
+				    		<th style="height:30px">일시</th>
+						</tr>
+				    </tbody>
+>>>>>>> 1085f7d4be69737d00e35b93d0ae9cc715486074
 				</table>
 				<!-- /내용 -->
 				<br />

@@ -608,14 +608,12 @@
 								<div id="menu">
 									<ul>
 				                        <c:choose>
-				                           <c:when test="${taskID == ''}">
-				                              <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
+				                           <c:when test="${taskID == ''}">				                              
 				                              <li style="display:none"><span onClick="check_name()"><spring:message code='ezTask.t11' /></span></li>
 				                              <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
 				                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
 				                           </c:when>
-				                           <c:otherwise>
-				                              <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
+				                           <c:otherwise>				                              
 				                              <%-- <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li> --%>
 				                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
 				                           </c:otherwise>
@@ -632,6 +630,7 @@
 								</div>
 								<div id="close">
 									<ul>
+										<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>&nbsp;
 										<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
 									</ul>
 								</div>
@@ -644,14 +643,12 @@
 										<div id="menu" style="float: right; padding-right: 42px;">
 											<ul>
 						                        <c:choose>
-						                           <c:when test="${taskID == ''}">
-						                              <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
+						                           <c:when test="${taskID == ''}">						                              
 						                              <li style="display:none"><span onClick="check_name()"><spring:message code='ezTask.t11' /></span></li>
 						                              <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
 						                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
 						                           </c:when>
 						                           <c:otherwise>
-						                              <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
 						                              <%-- <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li> --%>
 						                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
 						                           </c:otherwise>
@@ -668,6 +665,7 @@
 										</div>
 										<div id="close">
 											<ul>
+												<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
 												<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
 											</ul>
 										</div>
@@ -687,13 +685,11 @@
 											<ul>
 						                        <c:choose>
 						                           <c:when test="${taskID == ''}">
-						                              <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
 						                              <li style="display:none"><span onClick="check_name()"><spring:message code='ezTask.t11' /></span></li>
 						                              <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
 						                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
 						                           </c:when>
 						                           <c:otherwise>
-						                              <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
 						                              <%-- <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li> --%>
 						                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
 						                           </c:otherwise>
@@ -710,6 +706,7 @@
 										</div>
 										<div id="close">
 											<ul>
+												<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
 												<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
 											</ul>
 										</div>
@@ -835,25 +832,13 @@
 									</tr>
 								</c:if>
 								<!-- 메모  -->
-								<c:if test="${useTodoMemo == 'YES' }">
-									<c:choose>
-										<c:when test="${mode == ''}">				
-											<tr id="menuTaskMemo">
-												<th><spring:message code='ezTask.t170' /></th>
-												<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
-													<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
-												</td>
-											</tr>
-										</c:when>
-										<c:otherwise>
-											<tr id="menuTaskMemo" style="display: none;">
-												<th><spring:message code='ezTask.t170' /></th>
-												<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
-													<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
-												</td>
-											</tr>
-										</c:otherwise>
-									</c:choose>
+								<c:if test="${useTodoMemo == 'YES' && mode == ''}">	
+									<tr id="menuTaskMemo">
+										<th><spring:message code='ezTask.t170' /></th>
+										<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
+											<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
+										</td>
+									</tr>
 								</c:if>
 								<c:if test="${mode == '1' }">
 									<tr>
@@ -882,7 +867,8 @@
 										<th id="editorTitle" colspan="4" style="text-align: center;"><spring:message code = 'ezTask.t2011' /></th>
 									</tr>
 								</c:if>
-								<c:if test="${mode == '1' }">
+								<!-- 메모수정 -->
+								<c:if test="${useTodoMemo == 'YES' && mode == '1' }">
 									<tr>
 										<th><spring:message code='ezTask.t1701' /></th>
 										<td colspan="3" style="height: 40px;">

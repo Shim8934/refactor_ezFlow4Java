@@ -1,11 +1,13 @@
 package egovframework.ezEKP.ezJournal.service.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -26,6 +28,7 @@ import egovframework.ezEKP.ezJournal.dao.EzJournalDAO;
 import egovframework.ezEKP.ezJournal.service.EzJournalService;
 import egovframework.ezEKP.ezJournal.vo.DeptInfoVO;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthCheckVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
@@ -36,11 +39,10 @@ import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.JsonUtil;
 
 
 @Service("ezJournalService")
-public class EzJournalServiceImpl implements EzJournalService{
+public class EzJournalServiceImpl implements EzJournalService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzJournalServiceImpl.class);
 
@@ -51,7 +53,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	private CommonUtil commonUtil;
 	
 	@Override
-	public List<JournaltypeVO> getJournaltypeList(String companyId,String tenantId,String used) throws Exception {
+	public List<JournaltypeVO> getJournaltypeList(String companyId, int tenantId, String used) throws Exception {
 		logger.debug("getJournaltypeList started");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -67,32 +69,54 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void updateJournaltype(ArrayList<Map<String, String>> journaltypeList,String companyId, String tenantId) throws Exception {
+	public void updateJournaltype(ArrayList<Map<String, String>> journaltypeList, String companyId, int tenantId) throws Exception {
 		logger.debug("updateJournaltype started");
+		
 		for (int i = 0; i < journaltypeList.size(); i++) {
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("typeId", journaltypeList.get(i).get("typeId"));
 			param.put("used", journaltypeList.get(i).get("used"));
 			param.put("companyId", companyId);
 			param.put("tenantId", tenantId);
-			logger.debug("typeId : "+param.get("typeId"));
-			logger.debug("used : "+param.get("used"));
-			logger.debug("companyId : "+param.get("companyId"));
-			logger.debug("tenantId : "+param.get("tenantId"));
+			logger.debug("parammap" + param);
 			ezJournalDAO.updateJournaltype(param);
 		}
+		
 		logger.debug("updateJournaltype ended");
 	}
 
 	@Override
-	public void insertJournaltype(String companyId, String tenantId,ArrayList<JournaltypeVO> journaltypeList) {
+	public void insertJournaltype(String companyId, int tenantId, ArrayList<String> journaltypeList) throws Exception {
+		logger.debug("insertJournaltype started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		for (int i = 0; i < journaltypeList.size(); i++) {
+			map.put("typeId", journaltypeList.get(i));
+			ezJournalDAO.insertJournaltype(map);
+			ezJournalDAO.insertJournalBasicForm(map);
+		}
+
+		logger.debug("insertJournaltype ended");
 	}
 	
+	@Override
+	public void deleteJournaltype(String companyId, int tenantId) throws Exception {
+		logger.debug("deleteJournaltype started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		ezJournalDAO.deleteJournaltypeList(map);
+		
+		logger.debug("deleteJournaltype ended");
+	}
 
 	@Override
-	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, String companyName, String tenantId, String offset) throws Exception {
-		logger.debug("getFormList started");
+	public List<JournalFormInfoVO> getFormListAdmin(String typeId, String deptId, String companyId, int tenantId, String offset, String lang) throws Exception {
+		logger.debug("getFormListAdmin started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("typeId", typeId);
@@ -100,35 +124,26 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("lang", lang);
+		
+		List<JournalFormInfoVO> formList = ezJournalDAO.getFormListAdmin(map);
+
+		logger.debug("getFormListAdmin ended");
+		return formList;
+	}
+	
+	@Override
+	public List<JournalFormInfoVO> getFormList(String typeId, String deptId, String companyId, int tenantId) throws Exception {
+		logger.debug("getFormList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("typeId", typeId);
+		map.put("deptId", deptId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
 		
 		List<JournalFormInfoVO> formList = ezJournalDAO.getFormList(map);
 		
-		if ((deptId == null || deptId.equals("")) && !typeId.equals("basic")) {
-			List<JournalFormInfoVO> resultList = new ArrayList<JournalFormInfoVO>();
-			
-			for (int i = 0; i < formList.size(); i++) {
-				JournalFormInfoVO vo = formList.get(i);
-				map.put("formId", vo.getFormId());
-				
-				try {
-					List<DeptInfoVO> useDept = ezJournalDAO.getFormUseDeptList(map);
-	
-					if (useDept.size() < 1) {
-						useDept.clear();
-						DeptInfoVO deptVO = new DeptInfoVO();
-						deptVO.setDeptName(companyName);	
-						useDept.add(deptVO);
-					}
-					vo.setDepts(useDept);
-					resultList.add(vo);
-					
-				} catch (Exception e) { 
-					e.printStackTrace();
-				}
-				
-			}
-			return resultList;
-		}
 		logger.debug("getFormList ended");
 		return formList;
 	}
@@ -154,16 +169,19 @@ public class EzJournalServiceImpl implements EzJournalService{
 		String isDeptChanged = (String) jsonParam.get("isDeptChanged");
 		
 		if (isDeptChanged.equals("Y")) {
-			logger.debug((String)jsonParam.get("useDept"));
+		//	logger.debug("****" + (String)jsonParam.get("useDept"));
 			
-			List<Map<String, Object>> depts = JsonUtil.JsonToList((String) jsonParam.get("useDept")); 
-			
-			if (depts != null) {
-				for (int i = 0; i < depts.size(); i++) {
-					try {
-						insertUseDept(formId, depts.get(i).get("deptId").toString(), tenantId);
-					} catch (Exception e) {
-						e.printStackTrace();
+			if (jsonParam.get("useDept") != null) {
+				Gson gson = new Gson();
+				List<Map<String, Object>> depts = gson.fromJson(jsonParam.get("useDept").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
+				
+				if (depts != null) {
+					for (int i = 0; i < depts.size(); i++) {
+						try {
+							insertUseDept(formId, depts.get(i).get("deptId").toString(), tenantId);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -185,75 +203,89 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public List<JournalCompanyVO> getCompanyList(String userId,
-			String tenantId,String companyId) throws Exception {
+	public List<JournalCompanyVO> getCompanyList(String userId, int tenantId, String companyId,String lang) throws Exception {
 		logger.debug("getCompanyList started");
-		HashMap<String, String> param = new HashMap<String, String>();
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
 		param.put("companyId", companyId);
+		param.put("lang", lang);
 		List<JournalCompanyVO> compList = ezJournalDAO.getCompanyList(param);
+		
 		logger.debug("getCompanyList ended");
 		return compList;
 	}
 
 	@Override
-	public List<JournalAuthorVO> getAuthorList(String companyId, String tenantId)throws Exception {
+	public List<JournalAuthorVO> getAuthorList(String companyId, int tenantId,String lang) throws Exception {
 		logger.debug("getAuthorList started");
-		HashMap<String, String> param = new HashMap<String, String>();
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("companyId", companyId);
+		param.put("lang", lang);
 		List<JournalAuthorVO> authList = ezJournalDAO.getAuthorList(param);
+		
 		logger.debug("getAuthorList ended");
 		return authList;
 	}
 
 	@Override
-	public List<DeptViewVO> getDeptViewList(String userId,String companyId, String tenantId) throws Exception {
+	public List<DeptViewVO> getDeptViewList(String userId,String companyId, int tenantId,String lang) throws Exception {
 		logger.debug("getDeptViewList started");
-		HashMap<String, String> param = new HashMap<String, String>();
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
 		param.put("companyId", companyId);
+		param.put("lang", lang);
 		List<DeptViewVO> deptList = ezJournalDAO.getDeptViewVO(param);
+		
 		logger.debug("getDeptViewList ended");
 		return deptList;
 	}
 
 	@Override
-	public List<JournalAuthorVO> getAuthDeptList(String tenantId, String userId) throws Exception {
+	public List<JournalAuthorVO> getAuthDeptList(int tenantId, String userId, String lang) throws Exception {
 		logger.debug("getAuthDeptList started");
-		HashMap<String, String> param = new HashMap<String, String>();
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
+		param.put("lang", lang);
 		List<JournalAuthorVO> deptList = ezJournalDAO.getAuthDeptList(param);
+		
 		logger.debug("getAuthDeptList ended");
 		return deptList;
 	}
 	
 	@Override
-	public List<JournalAuthorVO> getDeptUserList (String tenantId, String key ,String value) throws Exception{
+	public List<JournalAuthorVO> getDeptUserList(int tenantId, String key ,String value, String lang) throws Exception{
 		logger.debug("getDeptUserList started");
-		HashMap<String, String> param = new HashMap<String, String>();
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("key", key);
 		param.put("value", value);
+		param.put("lang", lang);
 		List<JournalAuthorVO> userList = ezJournalDAO.getDeptUserList(param);
+		
 		logger.debug("getDeptUserList ended");
 		return userList;
 	}
 
 	@Override
-	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, String tenantId) throws Exception {
+	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, int tenantId, String lang) throws Exception {
 		logger.debug("getJournalFormInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("formId", formId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("lang", lang);
 		
 		JournalFormInfoVO journalFormInfoVO = ezJournalDAO.getJournalFormInfo(map);
-		logger.debug("정보확인용 : " + journalFormInfoVO.getFormStatus());
 		
 		List<DeptInfoVO> deptList = ezJournalDAO.getFormUseDeptList(map);
 		if (deptList.size() > 0) {
@@ -286,17 +318,20 @@ public class EzJournalServiceImpl implements EzJournalService{
 		ezJournalDAO.updateJournalForm(map);
 		
 		if (isDeptChanged.equals("Y")) {
-			logger.debug((String)jsonParam.get("useDept"));
 			
 			ezJournalDAO.deleteFormUseDept(map);
-			List<Map<String, Object>> depts = JsonUtil.JsonToList((String) jsonParam.get("useDept")); 
 			
-			if (depts != null) {
-				for (int i = 0; i < depts.size(); i++) {
-					try {
-						insertUseDept(jsonParam.get("formId").toString(), depts.get(i).get("deptId").toString(), tenantId);
-					} catch (Exception e) {
-						e.printStackTrace();
+			if (jsonParam.get("useDept") != null) {
+				Gson gson = new Gson();
+				List<Map<String, Object>> depts = gson.fromJson(jsonParam.get("useDept").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
+				
+				if (depts != null) {
+					for (int i = 0; i < depts.size(); i++) {
+						try {
+							insertUseDept(jsonParam.get("formId").toString(), depts.get(i).get("deptId").toString(), tenantId);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -306,7 +341,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void deleteJournalForm(String formId, String companyId, String tenantId) throws Exception {
+	public void deleteJournalForm(String formId, String companyId, int tenantId) throws Exception {
 		logger.debug("deleteJournalForm started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -334,9 +369,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 		List<String> deptList = gson.fromJson(jsonParam.get("depts").toString(), new TypeToken<List<String>>(){}.getType());
 		for (int i = 0; i < deptList.size(); i++) {
 			try {
-				logger.debug(deptList.get(i));
+			//	logger.debug("****" + deptList.get(i));
 				Map<String, Object> insertMap = new HashMap<String, Object>();
-				insertMap.put("tenantId", ((String) jsonParam.get("tenantId")).trim());
+				insertMap.put("tenantId", jsonParam.get("tenantId"));
 				insertMap.put("userId", ((String) jsonParam.get("userId")).trim());
 				insertMap.put("deptId", ((String) deptList.get(i)).trim());
 				ezJournalDAO.insertAuthDept(insertMap);
@@ -349,7 +384,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void deleteAuthor(String userId, String tenantId) throws Exception {
+	public void deleteAuthor(String userId, int tenantId) throws Exception {
 		logger.debug("deleteAuthor started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -376,7 +411,10 @@ public class EzJournalServiceImpl implements EzJournalService{
 		
 		logger.debug((String)jsonParam.get("receiverList"));
 		
-		List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
+//		List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
+		Gson gson = new Gson();
+		List<Map<String, Object>> receivers = gson.fromJson(jsonParam.get("receiverList").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
+		
 		if (receivers != null) {
 			String favoriteId = ezJournalDAO.saveReceiverFavorite(map) + "";
 			for (int i = 0; i < receivers.size(); i++) {
@@ -404,7 +442,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public List<ReceiverFavoriteVO> getFavoriteList(String userId, String tenantId, String offset) throws Exception {
+	public List<ReceiverFavoriteVO> getFavoriteList(String userId, int tenantId, String offset) throws Exception {
 		logger.debug("getFavoriteList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -413,22 +451,23 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		List<ReceiverFavoriteVO> favoriteList = ezJournalDAO.getFavoriteList(map);
-		logger.debug("즐겨찾기 : " + favoriteList);
+		logger.debug("favoriteList : " + favoriteList);
 		
 		logger.debug("getFavoriteList ended");
 		return favoriteList;
 	}
 
 	@Override
-	public List<JournalReceiverVO> getFavoriteUserList(String favoriteId, String tenantId) throws Exception { 
+	public List<JournalReceiverVO> getFavoriteUserList(String favoriteId, int tenantId, String lang) throws Exception { 
 		logger.debug("getFavoriteUserList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("favoriteId", favoriteId);
 		map.put("tenantId", tenantId);
+		map.put("lang", lang);
 		
 		List<JournalReceiverVO> userList = ezJournalDAO.getFavoriteUserList(map);
-		logger.debug("유저리스트 : " + userList);
+		logger.debug("userList : " + userList);
 		
 		logger.debug("getFavoriteUserList ended");
 		return userList;
@@ -452,7 +491,11 @@ public class EzJournalServiceImpl implements EzJournalService{
 		
 		logger.debug((String)jsonParam.get("receiverList"));
 		
-		List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
+	//	List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
+		Gson gson = new Gson();
+		List<Map<String, Object>> receivers = gson.fromJson(jsonParam.get("receiverList").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
+		
+		logger.debug("receivers : " + receivers);
 		if (receivers != null) {
 			ezJournalDAO.deleteFavoriteUser(map);
 			ezJournalDAO.updateFavoriteName(map);
@@ -468,7 +511,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void deleteFavorite(String favoriteId, String userId, String tenantId) throws Exception {
+	public void deleteFavorite(String favoriteId, String userId, int tenantId) throws Exception {
 		logger.debug("deleteFavorite started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -489,7 +532,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 	
 	@Override
-	public String getRecvJournalCount(String userId, String tenantId) throws Exception {
+	public String getRecvJournalCount(String userId, int tenantId) throws Exception {
 		logger.debug("getRecvJournalCount started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -502,7 +545,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public JournalEnvVO getUserJournalEnv(String userId, String tenantId) throws Exception {
+	public JournalEnvVO getUserJournalEnv(String userId, int tenantId) throws Exception {
 		logger.debug("getUserJournalEnv started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -518,7 +561,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 	@Override
 	public String getTotalListCount(Map<String, Object> map) throws Exception {
 		logger.debug("getTotalListCount started");
+		
 		String result = ezJournalDAO.selectTotalListCount(map);
+		
 		logger.debug("getTotalListCount ended");
 		return result;
 	}
@@ -526,7 +571,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 	@Override
 	public List<JournalVO> getJournalList(Map<String, Object> map) throws Exception {
 		logger.debug("getJournalList started");
+		
 		List<JournalVO> result = ezJournalDAO.selectJournalList(map);
+		
 		logger.debug("getJournalList ended");
 		return result;
 	}
@@ -539,7 +586,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 		
 	@Override
-	public String getJournalLastFormId(String typeId, String formId, String userId, String companyId, String tenantId) throws Exception {
+	public String getJournalLastFormId(String typeId, String formId, String userId, String companyId, int tenantId) throws Exception {
 		logger.debug("getJournalLastFormId started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -562,7 +609,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public JournalVO getJournal(String journalId,String userId, String viewDate, String tenantId) throws Exception {
+	public JournalVO getJournal(String journalId,String userId, String viewDate, int tenantId, String lang) throws Exception {
 		logger.debug("getJournal started");
 		
 		logger.debug("journalId : "+journalId);
@@ -574,10 +621,10 @@ public class EzJournalServiceImpl implements EzJournalService{
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
 		param.put("viewDate", viewDate);
+		param.put("lang", lang);
 		
 		if (!viewDate.equals("")) {
 			ezJournalDAO.insertViewInfo(param);
-			logger.debug("열람정보는 들어가나요?");
 		}
 		JournalVO result = ezJournalDAO.selectJournal(param);
 		logger.debug("getJournal ended");
@@ -586,30 +633,41 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void insertJournal(JSONObject jsonParam, String deptId, int tenantId, String realPath) throws Exception {
+	public String insertJournal(JSONObject jsonParam, String deptId, int tenantId, String realPath) throws Exception {
 		logger.debug("insertJournal started");
 		
 		String mode = jsonParam.get("mode").toString();
+		String journalContent = jsonParam.get("content").toString();
 		String isTemp = "";
+		String originJournalId = "";
 		if (jsonParam.get("isTemp") != null) {
 			isTemp = jsonParam.get("isTemp").toString();
 		}
 		logger.debug("isTemp : " + isTemp + ",mode : " + mode);
 		
+		Document journalDoc = Jsoup.parseBodyFragment(journalContent);
+		Element journalBody = journalDoc.body();
+		String journalText = journalBody.text();
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("writerId", jsonParam.get("userId"));
 		map.put("tenantId", tenantId);
 		map.put("title", jsonParam.get("title"));
-		map.put("content", jsonParam.get("content"));
+		map.put("content", journalContent);
 		map.put("writeDate", commonUtil.getTodayUTCTime(""));
 		map.put("deptId", deptId);
 		map.put("formId", jsonParam.get("formId"));
 		map.put("deptShare", jsonParam.get("deptShare"));
-		if (mode != null && mode.equals("temp") || !isTemp.equals("")) {
+		map.put("journalText", journalText);
+		map.put("isSum", jsonParam.get("isSum"));
+		if ((mode != null && mode.equals("temp")) || !isTemp.equals("")) {
 			map.put("journalStatus", "temp");
 		}
+		if (mode != null && mode.equals("reuse")) {
+			originJournalId = (String) jsonParam.get("originJournalId");
+		}
 		
-		logger.debug("insertJournal map" + map);
+//		logger.debug("insertJournal map" + map);
 		
 		String journalId = ezJournalDAO.insertJournal(map) + "";
 		
@@ -625,8 +683,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 			pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", tenantId);
 			pDirPath = realPath + pDirPath;
 			
-			logger.debug("pDirPath : " + pDirPath + ",reapPath : " + realPath);
-			
+//			logger.debug("pDirPath : " + pDirPath + ",reapPath : " + realPath);
 			
 			if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
 				pDirPath = pDirPath + commonUtil.separator;
@@ -638,22 +695,23 @@ public class EzJournalServiceImpl implements EzJournalService{
 				file.mkdir();
 			}
 			
-			String[] attach = fileList.split(",");
+			String[] attach = fileList.split("/");
 			
 			attachMap.put("journalId", journalId);
 			attachMap.put("tenantId", tenantId);
 			
 			for (int i = 0; i < attach.length; i++) {
-				String[] files = attach[i].split(";");
+				String[] files = attach[i].split(":");
 				String filePath = files[0];
 				String fileName = files[1];
 				String fileSize = files[2];
+				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 				
 				logger.debug("filePath : " + filePath + " | fileName : " + fileName + " | fileSize : " + fileSize);
 				
-				String uploadFilePath = commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
-				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
-				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String uploadFilePath = commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "." + extension;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
 			
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
@@ -662,17 +720,35 @@ public class EzJournalServiceImpl implements EzJournalService{
 				logger.debug("uploadFilePath : " + uploadFilePath);
 				
 				ezJournalDAO.insertJournalAttach(attachMap);
-				
-				fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+			
+				if (mode.equals("reuse")) {
+					
+					String orgFilePath = "";
+					String destFilePath = "";
+					String reuseFileName = "";
+					
+					try {
+						orgFilePath = pDirPath + "uploadFile" + commonUtil.separator + originJournalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+					//	filePath = "{" + UUID.randomUUID() + "}";
+						reuseFileName = filePath + "." + extension;
+						destFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + reuseFileName;
+						
+						FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
+					} catch (Exception e) { }
+				}
+			
+				try {
+					fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+				} catch (FileNotFoundException e) { }
 			}
 			
 		}
 		
 		// 수신자 정보 저장
 		String receiverIDs = jsonParam.get("receiverIDs").toString();
-		String receiverList = jsonParam.get("receiverList").toString();
+//		String receiverList = jsonParam.get("receiverList").toString();
 		
-		logger.debug("receiverIDs : " + receiverIDs + " | receiverList : " + receiverList);
+		logger.debug("receiverIDs : " + receiverIDs);
 		
 		if (receiverIDs != null && !receiverIDs.equals("")) {
 			
@@ -686,12 +762,12 @@ public class EzJournalServiceImpl implements EzJournalService{
 
 			for (int i = 0; i < receiverID.length; i++) {
 				receiverMap.put("receiverId", receiverID[i].trim());
-				
 				ezJournalDAO.insertReceiver(receiverMap);
 			}
 		}
 		
 		logger.debug("insertJournal ended");
+		return journalId;
 	}
 	
 	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
@@ -719,7 +795,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public JournalFormInfoVO getJournalDivideThisNext(List<String> journalIdList,String formId, String companyId,String userId, int tenantId) throws Exception {
+	public JournalFormInfoVO getJournalDivideThisNext(List<String> journalIdList, String formId, String companyId, String userId, int tenantId) throws Exception {
 		logger.debug("getJournalDivideThisNext started.");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -734,33 +810,36 @@ public class EzJournalServiceImpl implements EzJournalService{
 		Element formBody = formDoc.body();
 		Element formThis = formBody.getElementById("thisJournal");
 		Element formNext = formBody.getElementById("nextJournal");
-		for (int i = 0; i < journalIdList.size(); i++) {
-			param.put("journalId", journalIdList.get(i));
-			
-			JournalVO journal = ezJournalDAO.selectJournal(param);
-			
-			String journalContent = journal.getJournalContent();
-			Document journalDoc = Jsoup.parseBodyFragment(journalContent);
-			Element journalBody = journalDoc.body();
-			
-			Element thisElem = journalBody.getElementById("thisJournal");
-			String thisContent = thisElem.html();
-			Element nextElem = journalBody.getElementById("nextJournal");
-			String nextContent = nextElem.html();
-			
-			String title = "<p>"+journal.getJournalTitle()+"</p>";
-			
-			formThis.append(title);
-			formNext.append(title);
-			
-			formThis.append(thisContent);
-			formNext.append(nextContent);
-			
-			formThis.append("</br>");
-			formNext.append("</br>");
-		}
-		logger.debug("여기는 포문이 끝나는곳");
+		StringBuilder formThisHtml = new StringBuilder();
+		StringBuilder formNextHtml = new StringBuilder();
 		
+		String journalIdS = "";
+		
+		for (int i = 0; i < journalIdList.size(); i++) {
+			if(i==0){
+				journalIdS = journalIdList.get(i);
+			} else {
+				journalIdS += ","+journalIdList.get(i);
+			}
+		}
+		param.put("journalIdS", journalIdS);
+		
+		List<JournalVO> journalList = ezJournalDAO.selectSumJournalList(param);
+			
+		for (JournalVO journal : journalList) {
+			String journalContent = journal.getJournalContent();
+			String thisContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").html();
+			String nextContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("nextJournal").html();
+			
+			formThisHtml.append("<p> - " + journal.getJournalTitle().trim() + " - </p>");
+			formThisHtml.append(thisContent.trim() + "<p></p><p></p>");
+			
+			formNextHtml.append("<p> - " + journal.getJournalTitle().trim() + " - </p>");   
+			formNextHtml.append(nextContent.trim() + "<p></p><p></p>");
+		}
+		
+		formThis.append(formThisHtml.toString());
+		formNext.append(formNextHtml.toString());
 		form.setFormContent(formDoc.toString());
 		
 		logger.debug("getJournalDivideThisNext ended.");
@@ -771,18 +850,27 @@ public class EzJournalServiceImpl implements EzJournalService{
 	public void updateJournal(String journalId, JSONObject jsonParam, int tenantId, String realPath) throws Exception {
 		logger.debug("updateJournal started.");
 		
-		String mode = jsonParam.get("mode").toString();
+	//	String mode = jsonParam.get("mode").toString();
+		String journalContent = jsonParam.get("content").toString();
 		String isTemp = "";
+		
+		Document journalDoc = Jsoup.parseBodyFragment(journalContent);
+		Element journalBody = journalDoc.body();
+		String journalText = journalBody.text();
+		
 		if (jsonParam.get("isTemp") != null) {
 			isTemp = jsonParam.get("isTemp").toString().trim();
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", jsonParam.get("title"));
-		map.put("content", jsonParam.get("content"));
+		map.put("formId", jsonParam.get("formId"));
+		map.put("content", journalContent);
 		map.put("deptShare", jsonParam.get("deptShare"));
+		map.put("writeDate", commonUtil.getTodayUTCTime(""));
 		map.put("journalId", journalId);
 		map.put("tenantId", tenantId);
+		map.put("journalText", journalText);
 		
 		if (isTemp != null) {
 			map.put("isTemp", isTemp);
@@ -802,28 +890,29 @@ public class EzJournalServiceImpl implements EzJournalService{
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
 		if (fileList != null && !fileList.equals("")) {
-			logger.debug("updateJournal fileList : " + fileList);
+//			logger.debug("updateJournal fileList : " + fileList);
 			
-			String[] attach = fileList.split(",");
+			String[] attach = fileList.split("/");
 			
 			attachMap.put("journalId", journalId);
 			attachMap.put("tenantId", tenantId);
 			
 			for (int i = 0; i < attach.length; i++) {
-				String[] files = attach[i].split(";");
+				String[] files = attach[i].split(":");
 				String filePath = files[0];
 				String fileName = files[1];
 				String fileSize = files[2];
+				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 				
 				logger.debug("filePath : " + filePath + " | fileName : " + fileName + " | fileSize : " + fileSize);
 				
-				String uploadFilePath = commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String uploadFilePath = commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
 				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", uploadFilePath);
 				
-				logger.debug("uploadFilePath : " + uploadFilePath);
+//				logger.debug("uploadFilePath : " + uploadFilePath);
 				
 				ezJournalDAO.insertJournalAttach(attachMap);
 				
@@ -842,11 +931,12 @@ public class EzJournalServiceImpl implements EzJournalService{
 					file.mkdir();
 				}
 				
-				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
-				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "." + extension;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
 				
-				fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
-					
+				try {
+					fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+				} catch (FileNotFoundException e) { }
 			}
 		}
 		
@@ -893,7 +983,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 		logger.debug("deleteJournalList ended.");
 	}
 	
-	private void deleteDirectory (String journalId, String pDirpath, int tenantID) throws Exception {
+	private void deleteDirectory (String journalId, String pDirpath, int tenantId) throws Exception {
 		logger.debug("deleteDirectory started.");
 		
 		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
@@ -906,7 +996,7 @@ public class EzJournalServiceImpl implements EzJournalService{
 					if (deleteFileList[i].isFile()) {
 						deleteFileList[i].delete();
 					} else {
-						deleteDirectory(journalId, pDirpath, tenantID);
+						deleteDirectory(journalId, pDirpath, tenantId);
 					}
 				}
 			}
@@ -934,12 +1024,14 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId) throws Exception {
+	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId, String lang) throws Exception {
 		logger.debug("getJournalReplyList started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("journalId", journalId);
+		map.put("lang", lang);
 		
 		List<JournalReplyVO> replyList = ezJournalDAO.selectJournalReplyList(map);
 		
@@ -948,8 +1040,9 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 
 	@Override
-	public void saveJorunalReply(String journalId, String userId, String replyContent, String replyDate, int tenantId)throws Exception {
+	public String saveJorunalReply(String journalId, String userId, String replyContent, String replyDate, int tenantId)throws Exception {
 		logger.debug("saveJorunalReply started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("replyContent", replyContent);
@@ -957,14 +1050,16 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("tenantId", tenantId);
 		map.put("journalId", journalId);
 		
-		ezJournalDAO.insertJournalReply(map);
+		String journalWriter = ezJournalDAO.insertJournalReply(map);
 		
 		logger.debug("saveJorunalReply ended.");
+		return journalWriter;
 	}
 
 	@Override
 	public void removeJorunalReply(String journalId, String replyId, String userId, int tenantId) throws Exception {
 		logger.debug("removeJorunalReply started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
@@ -977,31 +1072,35 @@ public class EzJournalServiceImpl implements EzJournalService{
 	}
 	
 	@Override
-	public List<JournalReceiverVO> getReceiverList(String journalId,String startCount, String listCnt, int tenantId) {
+	public List<JournalReceiverVO> getReceiverList(String journalId, String startCount, String listCnt, int tenantId, String lang) {
 		logger.debug("getReceiverList started.");
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("journalId", journalId);
 		map.put("tenantId", tenantId);
+		if (startCount != null && !startCount.equals("") && listCnt != null && !listCnt.equals("")) {
+			map.put("startCount", Integer.parseInt(startCount));
+			map.put("listCnt", Integer.parseInt(listCnt));
+		}
+		map.put("lang", lang);
 		
 		List<JournalReceiverVO> receiverList = ezJournalDAO.getReceiverList(map);
-		logger.debug("수신자리스트 확인용 : " + receiverList);
 		logger.debug("getReceiverList ended.");
 		return receiverList;
 	}
 
 	@Override
-	public List<JournalReceiverVO> getJournalViewerList(String journalId,String startCount, String listCnt, int tenantId) throws Exception {
+	public List<JournalReceiverVO> getJournalViewerList(String journalId,String startCount, String listCnt, int tenantId, String lang) throws Exception {
 		logger.debug("getJournalViewerList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("journalId", journalId);
 		map.put("tenantId", tenantId);
-		map.put("startCount", startCount);
-		map.put("listCnt", listCnt);
+		map.put("startCount", Integer.parseInt(startCount));
+		map.put("listCnt", Integer.parseInt(listCnt));
+		map.put("lang", lang);
 		
 		List<JournalReceiverVO> viewerList = ezJournalDAO.getViewerList(map);
-		logger.debug("조회자리스트 확인용 : " + viewerList);
 		logger.debug("getJournalViewerList ended.");
 		return viewerList;
 	}
@@ -1015,13 +1114,13 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("tenantId", tenantId);
 		
 		String viewerCount = ezJournalDAO.getViewerCount(map);
-		logger.debug("조회자몇명 ?   : " + viewerCount);
+		logger.debug("조회자몇명 ? : " + viewerCount);
 		logger.debug("getJournalViewerCount ended.");
 		return viewerCount;
 	}
 
 	@Override
-	public String getReceiverCount(String journalId, int tenantId) {
+	public String getReceiverCount(String journalId, int tenantId) throws Exception {
 		logger.debug("getReceiverCount started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1029,8 +1128,42 @@ public class EzJournalServiceImpl implements EzJournalService{
 		map.put("tenantId", tenantId);
 		
 		String viewerCount = ezJournalDAO.getReceiverCount(map);
-		logger.debug("수신자몇명 ?   : " + viewerCount);
+		logger.debug("수신자몇명 ? : " + viewerCount);
 		logger.debug("getReceiverCount ended.");
 		return viewerCount;
 	}
+
+	@Override
+	public void saveJournalViewInfo(List<String> journalIdList, String viewDate, String userId, int tenantId) throws Exception {
+		logger.debug("saveJournalViewInfo started");
+		
+		logger.debug("tenantId : "+tenantId);
+		logger.debug("userId : "+userId);
+		logger.debug("viewDate : "+viewDate);
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("userId", userId);
+		param.put("viewDate", viewDate);
+		
+		for (int i = 0; i < journalIdList.size(); i++) {
+			param.put("journalId", journalIdList.get(i));
+			ezJournalDAO.insertViewInfo(param);
+		}
+			
+		logger.debug("saveJournalViewInfo ended");
+	}
+
+	@Override
+	public JournalAuthCheckVO checkJournalAuth(String userId, String journalId, int tenantId) throws Exception {
+		logger.debug("checkJournalAuth started");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("userId", userId);
+		param.put("journalId", journalId);
+		
+		logger.debug("checkJournalAuth ended");
+		return ezJournalDAO.checkJournalAuth(param);
+	}
+	
 }

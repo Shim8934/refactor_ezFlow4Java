@@ -583,15 +583,32 @@
 </head>
 <body class="mainbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
     <h1><spring:message code='ezStatistics.t1012' /></h1>
-    <table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2; margin-bottom: 5px">
+	<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2; margin-bottom: 5px">
         <tr>
             <td style="width: 99%">
-                <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1002' /> :
-             <select id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
-                    <spring:message code='ezStatistics.t55' /> 
-             &nbsp;&nbsp;<spring:message code='ezStatistics.t1013' /> :
-             <input id="deptkeyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
-                    <a class="imgbtn" style="vertical-align: middle"><span onclick="searchdept()"><spring:message code='ezStatistics.t36' /></span></a>
+                <span id="topmenu" style="width: 500px">
+                 	회사선택 : 
+				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
+					<c:forEach var = "companyItem" items="${companyList }">
+						<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
+					</c:forEach>
+	      		</select>
+                 &nbsp;&nbsp;
+                <spring:message code='ezStatistics.t1002' /> : 
+                <select id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
+                    <spring:message code='ezStatistics.t55' />
+		            &nbsp;&nbsp;
+					<select id="searchopt">
+		            	<option value="1"><spring:message code='ezStatistics.t1017' /></option>
+		            	<option value="2"><spring:message code='ezStatistics.t113' /></option>
+					</select>
+                    <input id="keyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
+                    <a class="imgbtn" style="vertical-align: middle"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
+                    &nbsp;&nbsp;
+                    	근태유형 : 
+                    <select>
+                    	<option>구분1</option>
+                    </select>
                 </span>
             </td>
             <td>
@@ -603,15 +620,6 @@
             </td>
         </tr>
     </table>
-    <div class="portlet_tabpart01" style="margin-top: 3px;float:left">
-        <div class="portlet_tabpart01_top" id="tab1">
-            <p><span id="1tab1" divname="passTab"><spring:message code='ezStatistics.t1004' /></span></p>
-            <p><span id="1tab2" divname="bujaeTab"><spring:message code='ezStatistics.t1005' /></span></p>
-            <p><span id="1tab3" divname="bujaeGTab"><spring:message code='ezStatistics.t1006' /></span></p>
-            <p><span id="1tab4" divname="noticeTab"><spring:message code='ezStatistics.t1007' /></span></p>
-        </div>
-    </div>
-    <br />
     <br />
     <h2 id="ToTitle" class="receiver_tltype01" style="border: 0px">
         <span style="min-width: 45px;"><spring:message code='ezStatistics.t1014' /></span>

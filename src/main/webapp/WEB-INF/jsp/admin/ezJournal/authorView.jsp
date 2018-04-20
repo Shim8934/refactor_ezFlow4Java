@@ -5,67 +5,86 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezSchedule.t6' /></title>
+		<title><spring:message code='ezJournal.t42' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />		
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />		
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 	    <script type="text/javascript">	
-	    	var selectedUser = "<c:out value="${selectedUser }" />"
+	    	var selectedUser;
+	    	var selectedUserName;
 	    	var companyId = "<c:out value="${companyId}" />";
 	    	var deptIds = [];
 	    	var deptNames = [];
 	    	var userDeptId;
 	    	var userDeptName;
 	    
+	    	//사원 세팅
+	    	function setSelectedUser(userId, userName){
+	    		selectedUserName = userName;
+	    		selectedUser = userId;
+	    		$("#txtuser").val(" " + userName);
+	    	} 
+	    	
 	    	//사원선택
 	    	function select_person(){
 	    		var url = "/admin/ezJournal/authorDetail.do";
 				url+="?companyId="+companyId;
-				window.open(url, "authorDetail", "width=950, height=600");
+				window.open(url, "authorDetail", GetOpenWindowfeature(950, 600));
 	    	}
 	    	
 	    	//부서선택
 	    	function selectDept(){
-	    		var url = "/admin/ezJournal/selectAuthorDept.do";
-				url+="?companyId="+companyId+"&userId="+selectedUser;
-				window.open(url, "authorDept", "width=500, height=550");
+	    		if(!selectedUser){
+	    			alert("<spring:message code='ezPortal.t23'/>");
+	    		}else{
+		    		var url = "/admin/ezJournal/selectAuthorDept.do";
+					url+="?companyId="+companyId+"&userId="+selectedUser;
+					window.open(url, "authorDept", GetOpenWindowfeature(500, 560));
+	    		}
 	    	}
 	    	 
 	    	//부서 이름 세팅
-	    	function setDeptName(){
-				var deptString;
-				if(deptNames.length<4){
-		    		for (var i = 0; i < deptNames.length; i++) {
-		    			if(i!=0){
-				    		deptString += " ,"+deptNames[i];
-		    			} else {
-		    				deptString=deptNames[i];
-		    			}
-					}
-				} else {
-					deptString = deptNames[0]+" <spring:message code='ezJournal.t124' /> "+ (deptNames.length-1);
+	    	function setDeptName(pdeptIds,pdeptNames){
+	    		if (pdeptIds && pdeptNames) {
+					deptIds = eval(pdeptIds);
+					deptNames = eval(pdeptNames);
 				}
+				var deptString;
+	    		for (var i = 0; i < deptNames.length; i++) {
+	    			if(i!=0){
+			    		deptString += ", "+deptNames[i];
+	    			} else {
+	    				deptString=deptNames[i];
+	    			}
+				}
+	    		console.log(deptIds);
 	    		$("#txtdept").val(deptString);
 	    	}	  
 	    	
 	    	//열람권한 저장
 	    	function insertAuthDept(){
-	   			var jsonString = JSON.stringify({"userId":selectedUser,"depts":deptIds});
-				$.ajax({
-	   				type:"post",
-	   				dataType:"html",
-	   				url:"/admin/ezJournal/saveAuthor.do",
-	   				contentType:"application/json;",
-	   				data:jsonString,
-	   				success: function(result){
-	   					alert(result);
-   						opener.location.reload();
-   						window.close();
-	   				}
-	   			});
+	    		if(deptIds.length!=0){
+					$.ajax({
+		   				type:"POST",
+		   				dataType:"text",
+		   				url:"/admin/ezJournal/saveAuthor.do",
+		   				data:{
+		   					userId:selectedUser,
+		   					depts:JSON.stringify(deptIds)
+		   				},
+		   				success: function(result) {
+		   					if (result == "ok") {
+			   					alert("<spring:message code='ezJournal.t137'/>");
+		   						opener.location.reload();
+		   						window.close();
+		   					}
+		   				}
+		   			});
+	    		} else {
+   					alert("<spring:message code='ezJournal.t168'/>");
+	    		}
 	   		}
 	    	
 	    	$(document).ready(function(){
@@ -82,6 +101,7 @@
 							</c:otherwise>
 						</c:choose>
 			    	</c:forEach>
+			    	setSelectedUser("${selectedUser }","${selectedUserName }");
 		    		setDeptName();
 	    		</c:if>
    			});
@@ -89,20 +109,20 @@
 		</script>
 	</head>
 	<body class="popup">
-	    <h1><spring:message code='ezPortal.t87' /></h1>
+	    <h1><spring:message code='ezJournal.t42' /></h1>
 	    <table class="content">
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t141' /></th>
 	            <td>
-	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <input id="txtuser" value="" type="text" style="width:80%" onfocus="this.blur();" readonly="readonly" />
+	                <a href="#" class="imgbtn" style="margin-left: 20px;"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t142' /></th>
 	            <td>
-	                <input id="txtdept" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <textarea rows="3" id="txtdept" style="margin-top:4px; width:77%; resize: none;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:15px;"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	    </table>

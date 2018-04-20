@@ -79,7 +79,7 @@ function ezCabMunuCtl(MenuType, selRow) {
     switch (MenuType) {
         case "0":
             if (typeof (tdNewVol) != "undefined" && typeof (tdNewVol) != "unknown") {
-                document.getElementById("tdNewVol").style.display = pMenuFlag;
+                document.getElementById("tdNewVol").style.display = "none"; // 권호수 안보이게
             }
 
             if (typeof (tdModifyCab) != "undefined" && typeof (tdModifyCab) != "unknown") {
@@ -1321,7 +1321,7 @@ function OpenWin(wfileLocation, wName, wWidth, wHeigth) {
 }
 
 function HasRecReadRight(pRecID, pSepAttNo, pUserID) {
-    if (GetUserRecRight(pRecID, pSepAttNo, pUserID) == "1")
+    if (GetUserRecRight(pRecID, pSepAttNo, pUserID) != "0")
         return true;
     else
         return false;

@@ -49,21 +49,21 @@
 			) PUBLIC_DEPARTMEN
 		]]>
 	</select>
-	
-	<select id="EzScheduleAdminDAO.scheduleShareCheck" parameterClass="map" resultClass="int">
-		<![CDATA[
-			select        				
-				count(*)				
-			from 
-				tbl_schedule_public_dept
-			where
-				tenant_id = #v_TENANTID#
-			and
-				usercn = #v_USERID#
-			and
-				departmentcn = #v_DEPTID#
-		]]>
-	</select>
+    
+    <select id="EzScheduleAdminDAO.scheduleShareCheck" parameterClass="map" resultClass="int">
+        <![CDATA[
+            select                      
+                count(*)                
+            from 
+                tbl_schedule_public_dept
+            where
+                tenant_id = #v_TENANTID#
+            and
+                usercn = #v_USERID#
+            and
+                departmentcn = #v_DEPTID#
+        ]]>
+    </select>
 	
 	<insert id="EzScheduleAdminDAO.scheduleSaveShareDept" parameterClass="map">
 		<![CDATA[

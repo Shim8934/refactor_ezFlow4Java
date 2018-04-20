@@ -53,10 +53,10 @@
 			
 			function open_info( code ) {
 				if (CrossYN() && new RegExp(/Chrome/).test(navigator.userAgent)) {
-					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=400,height=370";
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=400,height=375";
 				    feature = feature + GetOpenPosition(380, 350);
 				} else {
-					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=380,height=350";
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=380,height=355";
 				    feature = feature + GetOpenPosition(380, 350);
 				}
 				
@@ -118,6 +118,10 @@
                         PagingHTML += strtext;
                     }
                 }
+
+                if (MaxNum == 0) {
+	            	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+	            }
                 
                 if (sTotalPage > BlockSize) {
                     if (sTotalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
@@ -203,7 +207,7 @@
 					<th><spring:message code = 'ezCommunity.t41' /></th>
 				  	<td>
 				  		<select name="s_radio" style="Width:115px; Height:19px;vertical-align:middle"  class="text">
-							<option value = "1"><spring:message code = 'ezCommunity.t29' /></option>
+							<option value = "1"><spring:message code = 'ezCommunity.t33' /></option>
 							<option value = "2" selected ><spring:message code = 'ezCommunity.t9991' /></option>
 						</select>
 						

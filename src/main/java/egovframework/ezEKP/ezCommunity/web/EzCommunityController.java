@@ -259,7 +259,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 커뮤니티만들기 싱청 함수
+	 * 커뮤니티만들기 신청 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/commMakeOk.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -422,7 +422,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String copType = ezCommunityService.commHomeGet4(code, userInfo.getTenantId());
 		
 		if (copType == null) {
-			copType = "type1";
+			copType = "type5";
 		}
 		
 		//사용하는곳이 없다
@@ -1989,7 +1989,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("userLevel", userLevel);
 		model.addAttribute("disable", disable);
-		model.addAttribute("strXML", strXML.replaceAll("&lt;br&gt;", "&nbsp"));
+		model.addAttribute("strXML", strXML); //.replaceAll("&lt;br&gt;", "&nbsp"));
 //		model.addAttribute("chCommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
 		
 		return "ezCommunity/communityPollMain";
@@ -2552,6 +2552,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityClubVO clubVO = ezCommunityService.adminLogoGet(code, userInfo.getPrimary(), userInfo.getTenantId());
+		CommunityClubVO clubVO2 = ezCommunityService.adminLogoGet2(code, userInfo.getTenantId());
 		String copType = ezCommunityService.commHomeGet4(code, userInfo.getTenantId());
 		
 		clubVO.setC_Type(copType);
@@ -2562,6 +2563,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("code", code);
 		model.addAttribute("clubVO", clubVO);
+		model.addAttribute("clubVO2", clubVO2);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "ezCommunity/communityAdminLogo";
@@ -2593,8 +2595,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("result======" + result);
 		return "json";
 	}
-	
-	
+		
 	/**
 	 * 커뮤니티 환경설정화면 IE9 로고 업테이트 실행함수
 	 */
@@ -2621,6 +2622,33 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		logger.debug("adminLogoUploadIE9 ended.");
+		return "json";
+	}
+	
+	/**
+	 * 커뮤니티 환경설정화면 썸네일 temp파일 저장 실행함수
+	 */
+	@RequestMapping(value = "ezCommunity/adminThumbUpload.do")
+	public String adminThumbUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
+		logger.debug("adminThumbUpload started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		String thumbPath = commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId());
+		MultipartFile thumbFile = request.getFile("thumbFile");
+		String code = request.getParameter("code");
+		String result = "";
+		
+		if (!thumbFile.isEmpty()) {
+			result = thumbPath + commonUtil.separator + ezCommunityService.adminThumbUpload(code, realPath, thumbPath, thumbFile, userInfo.getTenantId());
+		}
+		
+		//cache 문제로 인한 ? 랜덤값 추가
+		result = result + "?" + new Random().nextInt(50);
+
+		model.addAttribute("tempThumbPath", result);
+		logger.debug("adminThumbUpload ended.");
+		logger.debug("result======" + result);
 		return "json";
 	}
 	
@@ -3648,21 +3676,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String openJob = "0", openBirth = "0";
 		
 		String code = request.getParameter("code");
-		String cIntro = request.getParameter("cIntro");
-		String birthType = request.getParameter("birthType");
-		String birthYear = request.getParameter("birthYear");
-		String openEmail = request.getParameter("openEmail");
-		String openHp = request.getParameter("openHp");
-		String openComp = request.getParameter("openComp");
-		String openHouse = request.getParameter("openHouse");
-		String openSex = request.getParameter("openSex");
-		String birthDay = request.getParameter("birthDay ");
-		String birthMonth = request.getParameter("birthMonth");
-		String gender = request.getParameter("gender");
-		
-		if(request.getParameter("openBirth") != null) {
-			openBirth = request.getParameter("openBirth");
-		}
+		String cIntro = "0";
+		String openEmail = "0";
+		String openHp = "0";
+		String openComp = "0";
+		String openHouse = "0";
+		String openSex = "0";
+		String birthDay = "0";
+		String gender = "0";
 		
 		String userLevel = ezCommunityService.joinOkGet1(code, id, tenantID);
 		
@@ -3676,11 +3697,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO clubVO = ezCommunityService.joinOkGet3(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), tenantID);
 
 		if(clubVO.getC_ClubConfirmType().equals("1") || clubVO.getC_ClubConfirmType().equals("2")) {
-			if (openBirth.equals("1")) {
-				birthDay = birthType + birthYear + "-" + birthMonth + "-" + birthDay;
-			} else {
-				birthDay = "";
-			}
 			
 			ezCommunityService.joinOkUpdate1(id, code, cIntro, openEmail, openHp, openComp, openBirth, openSex, openHouse, tenantID);
 			CommunityMemberInfoVO memberInfoVO = ezCommunityService.joinOkGet4(userInfo.getCompanyID(), id, tenantID);
@@ -3691,17 +3707,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 				ezCommunityService.joinOkInsert(userInfo.getCompanyID(), id, userInfo.getDisplayName1(), userInfo.getDisplayName2(), userInfo.getCompanyName1(), userInfo.getCompanyName2(), "", "", userInfo.getDeptName1(), userInfo.getDeptName2(), "", "", "", userInfo.getPhone(), userInfo.getEmail(), birthDay, gender, tenantID);
 			}
 			
-			
 		} else {
 			if (clubVO.getC_ClubConfirmType().equals("3")) {
 				ezCommunityService.joinOkUpdate2(id, code, cIntro, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, tenantID);
 
-				if (openBirth.equals("1")) {
-					birthDay = birthType + birthYear + "-" + birthMonth + "-" + birthDay;
-				} else {
-					birthDay = "";
-				}
-				
 				ezCommunityService.joinOkUpdate1(id, code, cIntro, openEmail, openHp, openComp, openBirth, openSex, openHouse, tenantID);
 				CommunityMemberInfoVO memberInfoVO = ezCommunityService.joinOkGet4(userInfo.getCompanyID(), id, tenantID);
 				

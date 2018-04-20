@@ -157,15 +157,9 @@
 		        else
 		            pSusinManagerFlag = "user";
 		
-		        var nowyear = new Date().getFullYear();
-		        var nowmonth = new Date().getMonth() + 1;
-		        var nowday = new Date().getDate();
-		
-		        if (nowmonth < 10)
-		            nowmonth = "0" + nowmonth;
-		
-		        if (nowday < 10)
-		            nowday = "0" + nowday;
+		        var nowyear = nowDate.substring(0,4);
+		        var nowmonth = nowDate.substring(5,7);
+		        var nowday = nowDate.substring(8,10);
 		        
 				if (SQLPARADATA == null || SQLPARADATA == "") {
 			        SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
@@ -262,7 +256,7 @@
 		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
 		        var reheight = document.documentElement.offsetHeight - parseInt(height);
 		
-		        document.getElementById('div_AprLine').style.height = reheight + "px";
+		        //document.getElementById('div_AprLine').style.height = reheight + "px";
 		
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
@@ -273,8 +267,8 @@
 		        }
 		        try {
 		        var toDay = new Date();
-		        var toDayYear = parseInt(toDay.getFullYear());
-		        var minusYear = parseInt(toDay.getFullYear()) - parseInt(pOpenYaer);
+		        var toDayYear = parseInt(nowDate.substring(0,4));
+		        var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
 		        for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
 		            AddOption(sel_year, i, i);
 		            checkBujaeInfo();
@@ -289,17 +283,12 @@
 		        if (GetSelectVal("sel_year") != "ALL")
 		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + GetSelectVal("sel_year") + "-01-01</APRSTARTDATE><APRENDDATE>" + GetSelectVal("sel_year") + "-12-31</APRENDDATE></DATA></ROOT>";
 		        else {
-		            var nowyear = new Date().getFullYear();
-		            var nowmonth = new Date().getMonth() + 1;
-		            var nowday = new Date().getDate();
+		            var nowyear = nowDate.substring(0,4);
+		            var nowmonth = nowDate.substring(5,7);
+		            var nowday = nowDate.substring(8,10);        
 		
-		            if (nowmonth < 10)
-		                nowmonth = "0" + nowmonth;
-		
-		            if (nowday < 10)
-		                nowday = "0" + nowday;
-		
-		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
+		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";		            
+
 		        }
 		
 		        if (pListTypeValue == "1") {
@@ -516,7 +505,7 @@
                                 if (GetAttribute(tr,"data4") == "file") {
                                     window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
                                 } else {
-                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl);
+                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
                                 }
                             }
 
@@ -1195,9 +1184,9 @@
 		            var tr = oArrRows[0];
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
-		            var left = (parseInt(width) - 600) / 2;
-		            var top = (parseInt(heigth) - 270) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=270px,width=793px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            var left = (parseInt(width) - 1155) / 2;
+		            var top = (parseInt(heigth) - 460) / 2;
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    function GetBujaeFlag() {
@@ -1252,8 +1241,8 @@
 		        createNodeAndInsertText(xmlpara, objNode, "ORDEROPTION", OrderOption);
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 
-		        var wWeigth = 600;
-		        var wHeigth = 400;
+		        var wWeigth = 630;
+		        var wHeigth = 450;
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
 		        var left = 0;
@@ -1762,7 +1751,6 @@
 		</div>
 		
 		<div id="tblPageRayer"></div>
-		<br/>
 				
 		<div id="tabnav" class="portlet_tabpart01" style="width:100%">
 			<div class="portlet_tabpart01_top" id="tab1">
@@ -1776,7 +1764,7 @@
 		  	</div>	
 		</div>
 		
-		<div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		<div style="WIDTH:100%;HEIGHT:230px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 			<div id="lvAprLine" ></div>
 		</div>		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

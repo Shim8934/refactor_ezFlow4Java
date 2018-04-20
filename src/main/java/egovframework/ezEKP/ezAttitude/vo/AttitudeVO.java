@@ -41,6 +41,8 @@ public class AttitudeVO {
 	private String imgPath;
 	/** 작성자명*/
 	private String writerName;
+	/** 작성자부서명*/
+	private String writerDeptName;
 	
 	public String getWriterName() {
 		return writerName;
@@ -161,5 +163,11 @@ public class AttitudeVO {
 	}
 	public void setTypeId(String typeId) {
 		this.typeId = typeId;
+	}
+	public String getWriterDeptName() {
+		return writerDeptName;
+	}
+	public void setWriterDeptName(String writerDeptName) {
+		this.writerDeptName = writerDeptName;
 	}
 }

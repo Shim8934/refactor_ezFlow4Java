@@ -62,6 +62,7 @@
 				preProcessing();				
 				makePageSelPage();
 				getConnect();
+				creatorResultAlert();
 			}		
 			
 			function getConnect() {
@@ -435,6 +436,13 @@
 					window.location.href = szUrl;
 				}
 			}
+		    
+		    function creatorResultAlert(){
+		    	var resultFirst = "${resultFirst}" + "";
+		    	if(resultFirst === "2"){
+			    	alert("<spring:message code = 'ezPoll.hdp08'/>");
+		    	}
+		    }
 		    
 		</script>
 	</head>

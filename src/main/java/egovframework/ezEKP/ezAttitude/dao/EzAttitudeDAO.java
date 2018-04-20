@@ -51,7 +51,6 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (List<AttitudeTypeVO>) list("ezAttitudeAdminDAO.getAttitudeTypeList", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void updateAttitudeTypeConfig(Map<String, Object> map) throws Exception {
 		update("ezAttitudeAdminDAO.updateAttitudeTypeConfig", map);
 	}
@@ -65,7 +64,6 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (AttitudeTypeVO) select("ezAttitudeAdminDAO.getAttitudeTypeInfo", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getAttitudeTypeMaxTypeId(Map<String, Object> map) throws Exception {
 		return (String) select("ezAttitudeAdminDAO.getAttitudeTypeMaxTypeId", map);
 	}
@@ -88,7 +86,6 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (String) select("ezAttitude.getIsAttitudeUserConf", map);//TODO  ezAttitude -> ezAttitudeDAO
 	}
 	
-	@SuppressWarnings("unchecked")
 	public AttitudeUserConfigVO getAttitudeConfTime(Map<String,Object> map) throws Exception {
 		return (AttitudeUserConfigVO) select("ezAttitude.getAttitudeUserConfTime",map);//TODO  ezAttitude -> ezAttitudeDAO
 	}
@@ -98,17 +95,14 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (List<AttitudeStatisVO>) list("ezAttitudeDAO.getAttitudeStatisList", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public int getUsersModiyAttCount(Map<String, Object> map) throws Exception {
 		return (int) select("ezAttitudeDAO.getUsersModiyAttCount", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void updateAttitudeType(Map<String, Object> map) throws Exception {
 		update("ezAttitudeAdminDAO.updateAttitudeType", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void insertAttitudeType(Map<String, Object> map) throws Exception {
 		insert("ezAttitudeAdminDAO.insertAttitudeType", map);
 	}
@@ -129,14 +123,12 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (List<JournalAuthorVO>) list("ezAttitudeAdminDAO.getDeptUserList", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void saveAttitudeUserConfig(Map<String, Object> map) throws Exception {
 		insert("ezAttitudeAdminDAO.saveAttitudeUserConfig", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void delUsersModifyAtt(Map<String, Object> map) throws Exception {
-		update("ezAttitudeDAO.delUsersModifyAtt", map);
+		delete("ezAttitudeDAO.delUsersModifyAtt", map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -144,12 +136,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		 return (List<DeptViewVO>) list("ezAttitudeAdminDAO.selectDeptList",map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void deleteAttitudeUserConfig(Map<String, Object> map) throws Exception {
 		delete("ezAttitudeAdminDAO.deleteAttitudeUserConfig", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public AttitudeApplicationVO attModAppDetail(Map<String, Object> map) throws Exception {
 		return (AttitudeApplicationVO) select("ezAttitudeDAO.attModAppDetail", map);
 	}
@@ -158,11 +148,20 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (AttitudeFormVO) select("ezAttitudeDAO.getFormBody", map);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void attModAppModify(
-			Map<String, Object> map) {
+	public void attModAppModify(Map<String, Object> map) throws Exception {
 		update("ezAttitudeDAO.attModAppModify", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void attSaveAppModify(Map<String, Object> map) throws Exception {
+		insert("ezAttitudeDAO.attSaveAppModify", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void attAppUpdate(Map<String, Object> map) throws Exception {
+		update("ezAttitudeDAO.attAppUpdate", map);
+	}
+		
 
 	@SuppressWarnings("unchecked")
 	public List<AdminAttitudeVO> getAttitudeList2(Map<String, Object> map) {
@@ -177,12 +176,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (AttitudeVO) select("ezAttitude.getAttitudeInfo", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void changeUsersModifyAtt(Map<String, Object> map) {		
 		update("ezAttitudeDAO.changeUsersModifyAtt", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void addUsersModifyAttHistory(Map<String, Object> map) throws Exception {
 		insert("ezAttitudeAdminDAO.addUsersModifyAttHistory", map);
 	}
@@ -200,7 +197,6 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getAttitudeAuthList", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void deleteAttitudeAuth(Map<String, Object> map) {
 		delete("ezAttitudeAdminDAO.deleteAttitudeAuth", map);
 	}
@@ -208,5 +204,15 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<AttitudeApplicationVO> attModGetHistory(Map<String, Object> map) {
 		return (List<AttitudeApplicationVO>) list("ezAttitudeDAO.attModGetHistory", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(
+			Map<String, Object> map) {
+		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getAttitudeAuthDeptList", map);
+	}
+
+	public void insertAttitudeAuth(Map<String, Object> map) {
+		insert("ezAttitudeAdminDAO.insertAttitudeAuth", map);
 	}
 }

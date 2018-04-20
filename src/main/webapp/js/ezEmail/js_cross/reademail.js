@@ -1,6 +1,4 @@
-﻿﻿
-
-var m_bPrevNext = false;
+﻿var m_bPrevNext = false;
 var real_href = "";
 
 function get_mail(flag) {
@@ -1056,4 +1054,3 @@ function mail_link(){
 	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(820, 900));
 
 }
-

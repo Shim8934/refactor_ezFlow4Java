@@ -7,8 +7,7 @@
 	<head>
 		<title><spring:message code="ezBoard.t81" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code="ezCircular.c1" />" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
+		<link rel="stylesheet" href="<spring:message code="ezJournal.c1" />" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -60,6 +59,7 @@
 		</style>
 		
 		<script type="text/javascript">
+			var journalId = <c:out value="${journalId}"/>;
 			$(document).ready(function(){
 				
 			});
@@ -75,13 +75,40 @@
 			//댓글 저장
 			function saveJournalReply(){
 				var replyContent = $("#replyContent").val();
+				if(replyContent == null || replyContent==""){
+					alert('<spring:message code='ezBoard.t10049' />');
+				}else{
+					$.ajax({
+						type:"post",
+						async : false,
+						data:{"replyContent":replyContent,"journalId":journalId},
+						url:"/ezJournal/saveJournalReply.do",
+						success: function(result){
+							var journalTitle = parent.journalTitle;
+							try {
+								parent.opener.setJournalList();
+							} catch (e) { }
+							location.reload();
+							parent.addReplyCount();
+							sendJournalReplyMail(replyContent,journalId,result,journalTitle);
+						}
+					});
+				}
+			}
+			
+			// 메일보내기
+			function sendJournalReplyMail(replyContent,journalId,journalWriter,journalTitle){
 				$.ajax({
-					type:"post",
-					data:{"replyContent":replyContent,"journalId":parent.journalId},
-					url:"/ezJournal/saveJournalReply.do",
-					success: function(){
-						parent.openJournalReply();
-						parent.opener.setJournalList();
+					type : "post",
+				//	async : false,
+					data : {
+						"replyContent" : replyContent,
+						"journalId" : journalId,
+						"journalTitle" : journalTitle,
+						"journalWriter" : journalWriter
+					},
+					url : "/ezJournal/sendJournalReplyMail.do",
+					success : function(){
 					}
 				});
 			}
@@ -91,11 +118,15 @@
 				var replyContent = $("#replyContent").val();
 				$.ajax({
 					type:"post",
-					data:{"replyId":replyId,"journalId":parent.journalId},
+					data:{"replyId":replyId,"journalId":journalId},
 					url:"/ezJournal/removeJournalReply.do",
 					success: function(){
-						parent.openJournalReply();
-						parent.opener.setJournalList();
+						try {
+// 							parent.openJournalReply();
+							parent.opener.setJournalList();
+						} catch(e) { }
+						location.reload();
+						parent.minusReplyCount();
 					}
 				});
 			}
@@ -106,12 +137,14 @@
 		    }
 			
 			function closeJournalPopup(){
-				parent.location.reload();
-				closePopup();
+//				if(parent.viewType=='detail'){
+					closePopup();
+//				} else {
+//					parent.setJournalList();
+//					parent.DivPopUpHidden_sub();
+//				}
 			}
-			
 		</script>
-		
 	</head>
 	<body class="popup">
 		<div class="layerpopup"  style="z-index: 1000; position: absolute;display: none;" id="iFramePanel">
@@ -128,7 +161,7 @@
    			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
-		<div style='height:570px;overflow-y:auto;'>
+		<div style='height:100%;overflow-y:auto;'>
 			<table class="mainlist" style="width:99.5%" >
 				<tr>
 					<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">

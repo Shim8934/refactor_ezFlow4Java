@@ -4,25 +4,12 @@
 <html>
 	<head>
 	    <title></title>
-	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
-	    <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 	    <style type="text/css">
-	    	.list {
-	    		font-size:12px;
-				font-family: 'Gulim', 'arial', 'verdana';
-				text-decoration: none;
-	    	}
 	    </style>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 	    <script type="text/javascript">
 	        var nowZoom = 100;
 	        var maxZoom = 200;
 	        var minZoom = 80;
-	
-	        window.onload = function () {
-	        };
 	        
 	        function Bigger() {
                 if (nowZoom < maxZoom) {
@@ -30,7 +17,7 @@
                 } else {
                     return;
                 }
-                $(".txtContent").css("zoom", nowZoom + "%");
+                $('.journalPreviewContentIframe').contents().find('.txtContent').css("zoom",nowZoom + "%");
 	        }
 	
 	        function Smaller() {
@@ -39,12 +26,12 @@
                 } else {
                     return;
                 }
-                $(".txtContent").css("zoom", nowZoom + "%");
+                $('.journalPreviewContentIframe').contents().find('.txtContent').css("zoom",nowZoom + "%");
 	        }
 	    </script>
 	</head>
 	<body>
-		 <span class="previewmail_info" style="display: block; width: 100%;">
+		 <span class="previewmail_info" style="border: none; display: block; width: 100%;">
 			<div style="text-align:left; border-bottom: 1px solid rgb(218, 218, 218); width: 100%;">
 	            <p class="mail_title" style="margin-left: 0px;">
 	                <span class="icon_btn"><span onclick="goJournalDetail(this);" id="${journal.journalId}" style="cursor: pointer; padding-right: 5px;">
@@ -58,16 +45,7 @@
 	            </dl>
 	        </div>
          </span>
-<!-- 		<div style="overflow: auto; height: 300px;"> -->
-			<div style="text-align: left;">
-				<img onclick="Smaller();" style="cursor:pointer; margin:5px;" src="/images/minus.png">
-		        <img onclick="Bigger();" style="cursor:pointer; margin:5px; margin-left:-10px;" src="/images/plus.png">
-			</div>
-			<div class="txtContent" style="height:100%; margin-left:5px; margin-right:5px; overflow: auto;">
-				<div style="height:10px;display:inline-block;">
-					${journal.journalContent }
-				</div>    
-			</div>
-<!-- 		</div> -->
+		<iframe src="" class="journalPreviewContentIframe" style="text-align:center; padding:0; width:100%; height:100%; overflow:auto; border:none;">
+		</iframe>
 	</body>
 </html>

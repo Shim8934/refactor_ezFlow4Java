@@ -4,368 +4,370 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
-	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
-	<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
-    <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<!--     <script type="text/javascript" src="/js/mouseeffect.js"></script> -->
-<!--     <script type="text/javascript" src="/js/Common.js"></script> -->
-    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
-    <!-- data picker-->		
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-    <style>
-    	#attiBoardList td {
-    		overflow : hidden;
-    		white-space : nowrap;
-    		text-overflow : ellipsis;
-    		cursor : pointer;
-    	}
-    </style>
-    
-    <script type="text/javascript">
-    	var pCompanyId = ""; //현재 선택된 회사의 아이디
-    	var pageNum = 1; // 페이지 ==> 초기값 설정
-    	var totalCount = "" // 게시물 총 갯수
-    	var totalPage = ""; // 게시판의 총 페이지갯수
-    	var orderCell = ""; // 정렬 명
-    	var orderOption = ""; // 정렬 형식(ASC, DESC)
-    	var selecUserList = "";//리스트에 선택된 userList(,로 구분)
-    	var adminCompany = "${adminCompany}";
-    	var today = "${today}";
-    	//검색조건 저장 변수
-    	var sCompanyId = "";
-		var sTypeId = "";
-		var sUserIdList = "";
-		var sStartDate = "";
-		var sEndDate = "";
-
-    	
-    	//"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"
-    	
-    	$(function(){
-    		//회사리스트
-	        if (document.getElementById("ListCompany").length == 0) {
-	            alert("<spring:message code = 'ezAttitude.t32' />");
-	        } else {
-	    		if (adminCompany != null) {
-	    			$('#ListCompany').val(adminCompany);
-	    		} else {
-		            document.getElementById("ListCompany").selectedIndex = 0;
-	    		}
-	            company_change();
-	        }
-    		//검색시 날짜 오늘날짜로 기본값 적용
-    		$("#Sdatepicker").val(today);
-    		$("#Edatepicker").val(today);
-    		
-    		//헤더 클릭 시 정렬
-    		$(document).on('click', '#attiBoardList th', function(){
-    			if (!$(this).find("input[type=checkbox]").length) { // checkbox는 sort에서 제외
-    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
-    					src = "";
-    					orderOption = "";
-    					orderCell = $(this).attr("colname");
-    				}
-    			
-	    			if (orderOption == "" || orderOption == "DESC") {
-	    				src = '/images/etc/view-sortup.gif';
-	    				orderOption = "ASC";
-	    			} else {
-	    				src = '/images/etc/view-sortdown.gif';
-	    				orderOption = "DESC";
-	    			}
-	    			$("#attiBoardList th").find("img").remove();
-	    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
+	    <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	<!--     <script type="text/javascript" src="/js/mouseeffect.js"></script> -->
+	<!--     <script type="text/javascript" src="/js/Common.js"></script> -->
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
+	    <!-- data picker-->		
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+	    <style>
+	    	#attiBoardList td {
+	    		overflow : hidden;
+	    		white-space : nowrap;
+	    		text-overflow : ellipsis;
+	    		cursor : pointer;
+	    	}
+	    	tr.hover:hover {background:#eee; color:#fff;}
+			.selectTR {background-color: rgb(233, 241, 255);}
+	    </style>
+	    
+	    <script type="text/javascript">
+	    	var pCompanyId = ""; //현재 선택된 회사의 아이디
+	    	var pageNum = 1; // 페이지 ==> 초기값 설정
+	    	var totalCount = "" // 게시물 총 갯수
+	    	var totalPage = ""; // 게시판의 총 페이지갯수
+	    	var orderCell = ""; // 정렬 명
+	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
+	    	var selecUserList = "";//리스트에 선택된 userList(,로 구분)
+	    	var adminCompany = "${adminCompany}";
+	    	var today = "${today}";
+	    	//검색조건 저장 변수
+	    	var sCompanyId = "";
+			var sTypeId = "";
+			var sUserIdList = "";
+			var sStartDate = "";
+			var sEndDate = "";
+	    	
+	    	//"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"
+	    	
+	    	$(function(){
+	    		//회사리스트
+		        if (document.getElementById("ListCompany").length == 0) {
+		            alert("<spring:message code = 'ezAttitude.t32' />");
+		        } else {
+		    		if (adminCompany != null) {
+		    			$('#ListCompany').val(adminCompany);
+		    		} else {
+			            document.getElementById("ListCompany").selectedIndex = 0;
+		    		}
+		            company_change();
+		        }
+	    		
+	    		//검색시 날짜 오늘날짜로 기본값 적용
+	    		$("#Sdatepicker").val(today);
+	    		$("#Edatepicker").val(today);
+	    		
+	    		//헤더 클릭 시 정렬
+	    		$(document).on('click', '#attiBoardList th', function(){
+	    			if (!$(this).find("input[type=checkbox]").length) { // checkbox는 sort에서 제외
+	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+	    					src = "";
+	    					orderOption = "";
+	    					orderCell = $(this).attr("colname");
+	    				}
 	    			
-	    			getUserConfList();
-    			}
-    		})   		
-    	})
-    	
-    	//datepicker
-    	$(function () {
-		    $("#Sdatepicker").datepicker({
-		        changeMonth: true,
-		        changeYear: true,
-		        autoSize: true,
-		        showOn: "both",
-		        buttonImage: "/images/ImgIcon/calendar-month.gif",
-		        buttonImageOnly: true
-		    });
-		    $("#Edatepicker").datepicker({
-		        changeMonth: true,
-		        changeYear: true,
-		        autoSize: true,
-		        showOn: "both",
-		        buttonImage: "/images/ImgIcon/calendar-month.gif",
-		        buttonImageOnly: true
-		    });
-		});
-		    
-		var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
-		var monthStr = monthMsg.split(";");		    
-		var dayMsg = "일;월;화;수;목;금;토";
-		var dayStr = dayMsg.split(";");
-		    
-		$(function () {
-		    $.datepicker.regional["ko"] = {
-		    	closeText: "닫기",
-		        prevText: "이전달",
-		        nextText: "다음달",
-			currentText: "오늘",
-		        monthNames: monthStr,
-		        monthNamesShort: monthStr,
-		        dayNames: dayStr,
-		        dayNamesShort: dayStr,
-		        dayNamesMin: dayStr,
-		        weekHeader: 'Wk',
-		        dateFormat: 'yy-mm-dd',
-		        firstDay: 0,
-		        isRTL: false,
-		        duration: 200,
-		        showAnim: 'show',
-		        showMonthAfterYear: true
-		    };
-		    $.datepicker.setDefaults($.datepicker.regional["ko"]);
-		    
-		    $("#Sdatepicker").datepicker('disable');
-	        $("#Edatepicker").datepicker('disable');
-		});
-   /////////////////////
-    	function company_change(){
-    		$('#receiverlist').empty();
-    		pCompanyId = $("select[name=ListCompany]").val();
-    		getUserConfList();
-    	}
-    	
-    	function getUserConfList(){
-    		//구분
-    		var typeId = $('#attitudeType').val();
-    		if (typeId == "total") {
-    			typeId = "";
-    		}
-    		
-    		//조회자 id리스트
-    		var spanLength = $('#receiverlist').find('span').length;
-    		var userIdList = "";
-    		if (spanLength > 0) {
-    			for (var i = 0; i < spanLength; i++) {
-    				userIdList += $('#receiverlist span').eq(i).attr('id') + ",";
-    			}
-    			//마지막 ',' 제거
-    			userIdList = userIdList.slice(0, -1);
-    		}
-    		
-    		//검색기간 사용 유무
-    		var startDate = "";
-    		var endDate = "";
-    		if (usedate) {
-    			startDate = $("#Sdatepicker").val();
-    			endDate = $("#Edatepicker").val();
-    		} else {
-    			startDate = today;
-    			endDate = today;
-    		}
-    		
-    		if (startDate > endDate) {
-				alert("시작일을 종료일보다 빠르게 지정해주십시오.");
-	            return;
-			}
-
-    		
-    		$.ajax({
-    			data : "GET",
-    			dataType : "json",
-    			async : false,
-    			url : "/admin/ezAttitude/attitudeCheckList.do",
-    			data : {companyId : pCompanyId,
+		    			if (orderOption == "" || orderOption == "DESC") {
+		    				src = '/images/etc/view-sortup.gif';
+		    				orderOption = "ASC";
+		    			} else {
+		    				src = '/images/etc/view-sortdown.gif';
+		    				orderOption = "DESC";
+		    			}
+		    			$("#attiBoardList th").find("img").remove();
+		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+		    			
+		    			getUserConfList();
+	    			}
+	    		});
+	    	});
+	    	
+	    	//datepicker
+	    	$(function () {
+			    $("#Sdatepicker").datepicker({
+			        changeMonth: true,
+			        changeYear: true,
+			        autoSize: true,
+			        showOn: "both",
+			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImageOnly: true
+			    });
+			    $("#Edatepicker").datepicker({
+			        changeMonth: true,
+			        changeYear: true,
+			        autoSize: true,
+			        showOn: "both",
+			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImageOnly: true
+			    });
+			});
+			    
+			var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
+			var monthStr = monthMsg.split(";");		    
+			var dayMsg = "일;월;화;수;목;금;토";
+			var dayStr = dayMsg.split(";");
+			    
+			$(function () {
+			    $.datepicker.regional["ko"] = {
+			    	closeText: "닫기",
+			        prevText: "이전달",
+			        nextText: "다음달",
+					currentText: "오늘",
+			        monthNames: monthStr,
+			        monthNamesShort: monthStr,
+			        dayNames: dayStr,
+			        dayNamesShort: dayStr,
+			        dayNamesMin: dayStr,
+			        weekHeader: 'Wk',
+			        dateFormat: 'yy-mm-dd',
+			        firstDay: 0,
+			        isRTL: false,
+			        duration: 200,
+			        showAnim: 'show',
+			        showMonthAfterYear: true
+			    };
+			    $.datepicker.setDefaults($.datepicker.regional["ko"]);
+			    
+			    $("#Sdatepicker").datepicker('disable');
+		        $("#Edatepicker").datepicker('disable');
+			});
+	   /////////////////////
+	    	function company_change(){
+	    		$('#receiverlist').empty();
+	    		pCompanyId = $("select[name=ListCompany]").val();
+	    		getUserConfList();
+	    	}
+	    	
+	    	function getUserConfList(){
+	    		//구분
+	    		var typeId = $('#attitudeType').val();
+	    		
+	    		if (typeId == "total") {
+	    			typeId = "";
+	    		}
+	    		
+	    		//조회자 id리스트
+	    		var spanLength = $('#receiverlist').find('span').length;
+	    		var userIdList = "";
+	    		
+	    		if (spanLength > 0) {
+	    			for (var i = 0; i < spanLength; i++) {
+	    				userIdList += $('#receiverlist span').eq(i).attr('id') + ",";
+	    			}
+	    			//마지막 ',' 제거
+	    			userIdList = userIdList.slice(0, -1);
+	    		}
+	    		
+	    		//검색기간 사용 유무
+	    		var startDate = "";
+	    		var endDate = "";
+	    		
+	    		if (usedate) {
+	    			startDate = $("#Sdatepicker").val();
+	    			endDate = $("#Edatepicker").val();
+	    		} else {
+	    			startDate = today;
+	    			endDate = today;
+	    		}
+	    		
+	    		if (startDate > endDate) {
+					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
+		            return;
+				}
+	    		
+	    		$.ajax({
+	    			data : "GET",
+	    			dataType : "json",
+	    			async : false,
+	    			url : "/admin/ezAttitude/attitudeCheckList.do",
+	    			data : {
+	    				companyId : pCompanyId,
     					pageNum : pageNum,
     					listSize : listSize,
     					typeId : typeId,
     					userIdList : userIdList,
-    					orderCell : orderCell,
+   						orderCell : orderCell,
     					orderOption : orderOption,
-    					startDate : startDate,
-    					endDate : endDate},
-    			success : function(result){
-    				totalCount = result.totalCount;
-    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
-    				getUserConfList_after(result.list);
-    				//구분 리스트
-    				getAttitudeTypeList(result.typeList, result.typeId);
-    			},
-    			error : function() {
-    				alert('리스트를 가져오는중 오류 발생');
-    			}
-    		});
-    		//검색했던 조건 저장
-    		saveSearchRequirement(pCompanyId, typeId, userIdList, startDate, endDate);
-    	}
-    	
-    	//검색 > 구분selectBox
-    	function getAttitudeTypeList(typeList, typeId) {
-    		var html = "<option value='total'>전체</option>";
-    		for (var i = 0; i < typeList.length; i ++) {
-    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
-    		}
-    		$('#attitudeType').html(html);
-    		
-    		if (typeId != "") {
-    			$('#attitudeType').val(typeId);
-    		}
-    	}
-    	
-    	function getUserConfList_after(result){
-    		var resultHtml = "";
-    		$("#attiBoardList tbody").html("");
-    		
-    		for (var i = 0; i < result.length; i ++) {
-    			resultHtml += "<tr userid='" + result[i].writerId + "'>"
-    			   			+ "<td>" + result[i].userName + "</td>"
-    			   			+ "<td>" + result[i].userTitle + "</td>"
-    			   			+ "<td>" + result[i].deptName + "</td>"
-    						+ "<td>" + result[i].typeName + "</td>";
-    			if ( result[i].endDate == null || result[i].endDate == "") {
-    				resultHtml += "<td>" + result[i].startDate + "</td>";
-    			} else {
-    				resultHtml += "<td>" + result[i].startDate + " ~ " + result[i].endDate + "</td>";
-    			}
-    			resultHtml += "<td>" + result[i].startTime + "</td>"
-    			   				+ "<td>" + result[i].endTime + "</td>";
-    			+"</tr>";
-    		}
-    		
-    		if (resultHtml == "") {
-    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
-    		}
-    		
-    		$("#attiBoardList tbody").append(resultHtml);
-    		makePageSelPageAtti();
-    	}
-    	
-    	//true = 검색 / false = 취소
-    	function searchUserConf(searchFlag){
-    		if ($("#layer_popup").css("display") == "none") {
-    			$("#layer_popup").css("display", "");
-    		} else {
-    			//취소
-    			$("#layer_popup").css("display", "none");
-//     			searchReset();
-    		}
-    		
-    		if (searchFlag) {
-    			pageNum = 1;
-    			
-    			getUserConfList();
-    		}
-    	}
-    	
-    	//검색조건 초기화 함수
-    	function searchReset() {
-    		//조회자 초기화
-    		$('#receiverlist span').remove();
-    		//검색기간 초기화
-    		DateSearch_Click();
-//     		$('#usedate').prop('ckecked', false);
-    		
-//     		$("#Sdatepicker").datepicker('disable');
-//          $("#Edatepicker").datepicker('disable');  		
-    	}
-    	
-    	//페이지 이동 함수
-    	function goToPageByNum(pCurPage){
-    		if (pCurPage == 0 || totalPage < pCurPage) {
-    			return;
-    		} else {
-	    		pageNum = pCurPage;    			
-    		}
-    		
-    		getUserConfList();
-    	}
-    	
-    	//검색 > 조회자검색 버튼 클릭시
-    	function search_user() {
-        	var searchIdList = ""; // 조회자 id 리스트
-        	var searchNameList = ""; // 조회자 name 리스트
-   			
-        	var spanIdx = $('#receiverlist').find('span').length;
-   			for (var i = 0; i < spanIdx; i++) {
-   				searchIdList += $('#receiverlist span').eq(i).attr('id') + ",";
-   				searchNameList += $('#receiverlist span').eq(i).text() + ",";
-   			}
-   			//마지막 ',' 제거
-   			searchIdList = searchIdList.slice(0, -1);
-   			searchNameList = searchNameList.slice(0, -1);
-    		
-			var url = "/admin/ezAttitude/getSearchList.do?companyId=" + $('#ListCompany').val() + "&searchIdList=" + searchIdList + "&searchNameList=" + searchNameList;
-    		window.open(url, "view", "width=940, height=580");
-    	}
-    	
-		var usedate = false;
-		//검색기간 사용 체크박스 클릭시
-		function DateSearch_Click() {
-	        if(usedate){
-	        	usedate = false;
-	            $("#Sdatepicker").datepicker('disable');
-	            $("#Edatepicker").datepicker('disable');
-	        } else {
-	        	usedate = true;
-	            $("#Sdatepicker").datepicker('enable');
-	            $("#Edatepicker").datepicker('enable');
-	        }
-	    }
-		
-		//검색조건 저장(엑셀 다운로드 할때 필요)
-		function saveSearchRequirement(companyId, typeId, userIdList, startDate, endDate) {
-			sCompanyId = companyId;
-			if (typeId == null) {
-				sTypeId = "";
-			} else{
-				sTypeId = typeId;
-			}
-			sUserIdList = userIdList;
-			sStartDate = startDate;
-			sEndDate = endDate;
-		}
-		
-		//엑셀 다운로드
-		function exportExcel() {
-			if ($('#attiBoardList tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
-				alert('출력할 내용이 없습니다');
-				return;
+    					startDate : '',
+    					endDate : ''
+    				},
+	    			success : function(result){
+	    				totalCount = result.totalCount;
+	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
+	    				getUserConfList_after(result.list);
+	    				//구분 리스트
+	    				getAttitudeTypeList(result.typeList, result.typeId);
+	    			},
+	    			error : function() {
+	    				alert('리스트를 가져오는중 오류 발생');
+	    			}
+	    		});
+	    		//검색했던 조건 저장
+	    		saveSearchRequirement(pCompanyId, typeId, userIdList, startDate, endDate);
+	    	}
+	    	
+	    	//검색 > 구분selectBox
+	    	function getAttitudeTypeList(typeList, typeId) {
+	    		var html = "<option value='total'>전체</option>";
+	    		
+	    		for (var i = 0; i < typeList.length; i ++) {
+	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
+	    		}
+	    		
+	    		$('#attitudeType').html(html);
+	    		
+	    		if (typeId != "") {
+	    			$('#attitudeType').val(typeId);
+	    		}
+	    	}
+	    	
+	    	function getUserConfList_after(result){
+	    		var resultHtml = "";
+	    		
+	    		$("#attiBoardList tbody").html("");
+	    		
+	    		for (var i = 0; i < result.length; i ++) {
+	    			resultHtml += "<tr userid='" + result[i].writerId + "'>"
+	    			   			+ "<td>" + result[i].userName + "</td>"
+	    			   			+ "<td>" + result[i].userTitle + "</td>"
+	    			   			+ "<td>" + result[i].deptName + "</td>"
+	    						+ "<td>" + result[i].typeName + "</td>";
+	    						
+	    			if ( result[i].endDate == null || result[i].endDate == "") {
+	    				resultHtml += "<td>" + result[i].startDate + "</td>";
+	    			} else {
+	    				resultHtml += "<td>" + result[i].startDate + " ~ " + result[i].endDate + "</td>";
+	    			}
+	    			
+	    			resultHtml += "<td>" + result[i].startTime + "</td>"
+    			   				+ "<td>" + result[i].endTime + "</td>" + "</tr>";
+	    		}
+	    		
+	    		if (resultHtml == "") {
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
+	    		}
+	    		
+	    		$("#attiBoardList tbody").append(resultHtml);
+	    		makePageSelPageAtti();
+	    	}
+	    	
+	    	//true = 검색 / false = 취소
+	    	function searchUserConf(searchFlag){
+	    		if ($("#layer_popup").css("display") == "none") {
+	    			$("#layer_popup").css("display", "");
+	    		} else {
+	    			//취소
+	    			$("#layer_popup").css("display", "none");
+	//     			searchReset();
+	    		}
+	    		
+	    		if (searchFlag) {
+	    			pageNum = 1;
+	    			
+	    			getUserConfList();
+	    		}
+	    	}
+	    	
+	    	//검색조건 초기화 함수
+	    	function searchReset() {
+	    		//조회자 초기화
+	    		$('#receiverlist span').remove();
+	    		//검색기간 초기화
+	    		DateSearch_Click();
+	//     		$('#usedate').prop('ckecked', false);
+	    		
+	//     		$("#Sdatepicker").datepicker('disable');
+	//          $("#Edatepicker").datepicker('disable');  		
+	    	}
+	    	
+	    	//페이지 이동 함수
+	    	function goToPageByNum(pCurPage){
+	    		if (pCurPage == 0 || totalPage < pCurPage) {
+	    			return;
+	    		} else {
+		    		pageNum = pCurPage;    			
+	    		}
+	    		
+	    		getUserConfList();
+	    	}
+	    	
+	    	//검색 > 조회자검색 버튼 클릭시
+	    	function search_user() {
+	        	var searchIdList = ""; // 조회자 id 리스트
+	        	var searchNameList = ""; // 조회자 name 리스트
+	        	var spanIdx = $('#receiverlist').find('span').length;
+	        	
+	   			for (var i = 0; i < spanIdx; i++) {
+	   				searchIdList += $('#receiverlist span').eq(i).attr('id') + ",";
+	   				searchNameList += $('#receiverlist span').eq(i).text() + ",";
+	   			}
+	   			//마지막 ',' 제거
+	   			searchIdList = searchIdList.slice(0, -1);
+	   			searchNameList = searchNameList.slice(0, -1);
+	    		
+				var url = "/admin/ezAttitude/getSearchList.do?companyId=" + $('#ListCompany').val() + "&searchIdList=" + searchIdList + "&searchNameList=" + searchNameList;
+	    		window.open(url, "view", "width=940, height=580");
+	    	}
+	    	
+			var usedate = false;
+			//검색기간 사용 체크박스 클릭시
+			function DateSearch_Click() {
+		        if(usedate){
+		        	usedate = false;
+		            $("#Sdatepicker").datepicker('disable');
+		            $("#Edatepicker").datepicker('disable');
+		        } else {
+		        	usedate = true;
+		            $("#Sdatepicker").datepicker('enable');
+		            $("#Edatepicker").datepicker('enable');
+		        }
+		    }
+			
+			//검색조건 저장(엑셀 다운로드 할때 필요)
+			function saveSearchRequirement(companyId, typeId, userIdList, startDate, endDate) {
+				sCompanyId = companyId;
+				
+				if (typeId == null) {
+					sTypeId = "";
+				} else{
+					sTypeId = typeId;
+				}
+				
+				sUserIdList = userIdList;
+				sStartDate = startDate;
+				sEndDate = endDate;
 			}
 			
-// 			alert(sCompanyId + " , " + sTypeId + " , " + sUserIdList + " , " + sStartDate+" , "+ sEndDate);
-	    	exportExcelframe.location.href="/admin/ezAttitude/excelFileExport.do?companyId="+sCompanyId+"&typeId="+sTypeId+"&userIdList="+sUserIdList+"&startDate="+sStartDate+"&endDate="+sEndDate;
-	    	exportExcelframe.target="_blank";
-		}
-    </script>
-	<style>
-		tr.hover:hover{background:#eee; color:#fff;}
-			
-		.selectTR{
-			background-color: rgb(233, 241, 255);
-		}
-	</style>
+			//엑셀 다운로드
+			function exportExcel() {
+				if ($('#attiBoardList tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
+					alert('출력할 내용이 없습니다');
+					return;
+				}
+				
+	// 			alert(sCompanyId + " , " + sTypeId + " , " + sUserIdList + " , " + sStartDate+" , "+ sEndDate);
+		    	exportExcelframe.location.href="/admin/ezAttitude/excelFileExport.do?companyId="+sCompanyId+"&typeId="+sTypeId+"&userIdList="+sUserIdList+"&startDate="+sStartDate+"&endDate="+sEndDate;
+		    	exportExcelframe.target="_blank";
+			}
+	    </script>
 	</head>
-<body>
 	<body class="mainbody">
 	    <h1>근태조회<span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
-	        	<li style="background: none;">
-				<span style="border: none;"><b>회사선택</b></span>
-				</li>
+	        	<li style="background: none;"><span style="border: none;"><b>회사선택</b></span></li>
 				<li>
-				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
-					<c:forEach var = "companyItem" items="${list }">
-						<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
-					</c:forEach>
-	      		</select>
+					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
+						<c:forEach var = "companyItem" items="${list }">
+							<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
+						</c:forEach>
+		      		</select>
 	      		</li>
 	      	</ul>
 	  	</div>
@@ -425,7 +427,7 @@
 			<thead>
 				<tr>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직급</th>
+					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
 					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
 					<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
@@ -440,5 +442,4 @@
 		</div>
 		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
 	</body>
-</body>
 </html>

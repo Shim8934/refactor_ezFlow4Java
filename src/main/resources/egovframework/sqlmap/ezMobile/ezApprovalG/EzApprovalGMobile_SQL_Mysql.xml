@@ -518,8 +518,13 @@
 		   			AND 
 		   				STARTDATE < #nowDate#
 		   			AND
-		   				APRTYPE <> '015') as aprIngCount,
-		]]>
+		   				APRTYPE <> '015'
+			]]>
+					<isEqual property="mainViewYN" compareValue="YES">
+						AND	    
+							AprState != '001'
+				    </isEqual>
+		   				) as aprIngCount,
 			(SELECT
 				COUNT(DISTINCT A.DOCID,
 					  		   B.APRTYPE)

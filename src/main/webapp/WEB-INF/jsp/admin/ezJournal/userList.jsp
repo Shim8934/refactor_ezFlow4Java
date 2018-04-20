@@ -7,23 +7,22 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	   	<script type="text/javascript">
-	   		function ChangeListView_onClick(flag){
-	   			if(flag=='TXT'){
+	   		function ChangeListView_onClick(flag) {
+	   			if (flag == 'TXT') {
 	   				$("#txtlist_Layer").css("display","");
 	   				$("#DeptUserImgList").css("display","none");
 	   				$("#txtlist").attr("src","/images/kr/cm/btn_onlist.gif");
 	   				$("#imglist").attr("src","/images/kr/cm/btn_imglist.gif");
-	   			}else{
+	   			} else {
 	   				$("#DeptUserImgList").css("display","");
 	   				$("#txtlist_Layer").css("display","none");
 	   				$("#txtlist").attr("src","/images/kr/cm/btn_list.gif");
 	   				$("#imglist").attr("src","/images/kr/cm/btn_onimglist.gif");
-	   			}
+    			}
 	   		}
 	   		
 		</script>
@@ -46,9 +45,9 @@
 		<div style="vertical-align: top; height: 440px; overflow: auto; width: 100%;" id="txtlist_Layer">
 			<table style="width:100%; border: 1px solid #B6B6B6;" class="mainlist">
 				<tr>
-					<th style="width: 30%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></th>
-					<th style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></th>
-					<th style="width: 50%; font-weight: bold;"><spring:message code='main.t78'/></th>
+					<td style="width: 30%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
+					<td style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
+					<td style="width: 50%; font-weight: bold;" class="td_gray"><spring:message code='main.t78'/></td>
 		        </tr>
 		        <c:forEach items="${userList}" var="user">
 			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
@@ -61,15 +60,15 @@
 		</div>
 		<div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 100%;" id="DeptUserImgList">
 			<c:forEach items="${userList}" var="user">
-				<table class="organwrap" cellspacing="0" cellpadding="0"
-					style="margin-top: 5px; margin-left: auto; margin-right: auto;">
+				<table class="organwrap" cellspacing="0" cellpadding="0" style="margin-top: 5px; margin-left: auto; margin-right: auto;">
 			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
 						<td class="pictd"><div class="pic">
 						<c:if test="${not empty user.userImg }">
 						<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${user.userImg }" width="90px" height="90px">
 						</c:if>
 						</div></td>
-						<td style="width: 75%;"><table class="organinfo">
+						<td style="width: 75%;">
+							<table class="organinfo">
 								<tr>
 									<td class="name" style="text-align: left;">${user.userName }</td>
 								</tr>
@@ -77,10 +76,10 @@
 									<td style="text-align: left;">${user.deptName }</td>
 								</tr>
 								<tr>
-									<td style="text-align: left;"><img class="icon"
-										src="/images/OrganTree/icon_mail.gif">${user.mail }</td>
+									<td style="text-align: left;"><img class="icon" src="/images/OrganTree/icon_mail.gif">${user.mail }</td>
 								</tr>
-							</table></td>
+							</table>
+						</td>
 					</tr>
 				</table>
 			</c:forEach>

@@ -131,7 +131,7 @@
 		
 		            var height = parseInt(divList.style.height.replace('px', '')) + 200;
 		            var reheight = window.innerHeight - parseInt(height);
-		            document.getElementById('div_AprLine').style.height = reheight + "px";
+		           //document.getElementById('div_AprLine').style.height = reheight + "px";
 		
 		            if (navigator.userAgent.indexOf('Firefox') != -1) {
 		                document.body.style.MozUserSelect = 'none';
@@ -426,7 +426,7 @@
 		                        document.getElementById("tdRegCabinet").style.display = "none";
 		
 		                    if (ListTypeFlag != "9")
-		                        document.getElementById("tdNewVol").style.display = "";
+		                        document.getElementById("tdNewVol").style.display = "none";
 		                    else
 		                        document.getElementById("tdNewVol").style.display = "none";
 		                    
@@ -1224,9 +1224,9 @@
 		            var tr = selRow[0];
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
-		            var left = (parseInt(width) - 600) / 2;
-		            var top = (parseInt(heigth) - 270) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&pDeptID=&docState=015", "", "height=270px,width=793px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            var left = (parseInt(width) - 1155) / 2;
+		            var top = (parseInt(heigth) - 460) / 2;
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&pDeptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    var aprgongramline_cross_dialogArguments = new Array();
@@ -1373,7 +1373,7 @@
 		    window.onresize = function () {
 		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
 		        var reheight = window.innerHeight - parseInt(height);
-		        document.getElementById('div_AprLine').style.height = reheight + "px";
+		        //document.getElementById('div_AprLine').style.height = reheight + "px";
 		    };
 		    function onkeydown_start_search() {
 		        if (window.event.keyCode == "13") {
@@ -1661,8 +1661,7 @@
 	    </div>
 	    <div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">
 	        <div id="lvtDoclist"></div>
-	    </div>
-	    <br>
+	    </div>	    
 	    <div id="tblPageRayer"></div>
 	    <div id="trSubInfoTab">
 	        <%-- <div id="tabnav" style="width: 100%">
@@ -1685,7 +1684,7 @@
 			  	</div>	
 			</div>
 	
-	        <div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+	        <div style="WIDTH:100%;HEIGHT:230px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 	            <div id="lvtDetail" style="border: 0;"></div>
 	        </div>
 	    </div>

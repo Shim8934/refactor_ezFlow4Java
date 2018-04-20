@@ -5,14 +5,14 @@ function ChangeTab(obj) {
             if (document.getElementById("JournalForm_content1").style.display == "none") {
                 document.getElementById("JournalForm_content1").style.display = "";
                 document.getElementById("JournalForm_content2").style.display = "none";
-                document.getElementById("TForm").style.height = "0px";
+                document.getElementById("JournalForm").style.height = "0px";
             }
             break;
         case "JournalForm_div2":
             if (document.getElementById("JournalForm_content2").style.display == "none") {
                 document.getElementById("JournalForm_content1").style.display = "none";
                 document.getElementById("JournalForm_content2").style.display = "";
-                document.getElementById("TForm").style.height = "770px";
+                document.getElementById("JournalForm").style.height = "670px";
             }
             break;
     }

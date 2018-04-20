@@ -149,8 +149,8 @@ function MakeAddressList() {
                 document.getElementById("FolderType").style.display = "";
                 _TR.setAttribute("_FolderType", FolderType);
                 _TR.setAttribute("_FolderID", FolderID);
-                document.getElementById("width1").style.width = "15%";
-                document.getElementById("width2").style.width = "15%";
+                document.getElementById("width1").style.width = "20%";
+                document.getElementById("width2").style.width = "20%";
             } else {
                 document.getElementById("FolderType").style.display = "none";
                 document.getElementById("width1").style.width = "20%";
@@ -165,7 +165,7 @@ function MakeAddressList() {
                 _TR.ondblclick = function () { event_listDBClick(this); };
 
             var _TD1 = document.createElement("TD");
-            _TD1.style.width = "17px";
+            _TD1.style.width = "20px";
             _TD1.style.margin = "0px";
             var _TDCheckBox_Sub = document.createElement("INPUT");
             _TDCheckBox_Sub.type = "checkbox";
@@ -185,10 +185,10 @@ function MakeAddressList() {
             _TR.appendChild(_TD1);
 
             var _TD2 = document.createElement("TD");
-            _TD2.style.width = "24px";
+            _TD2.style.width = "40px";
             _TD2.style.margin = "0px";
             _TD2.style.padding = "2px 0px 0px 0px";
-            _TD2.style.textAlign = "left";
+            _TD2.style.textAlign = "center";
             var _Img = document.createElement("IMG");
             if (SType == "P")
                 _Img.src = "/images/i_individual.gif";
@@ -225,7 +225,7 @@ function MakeAddressList() {
 
             var _TD5 = document.createElement("TD");
             if (searchFlag) {
-                _TD5.style.width = "15%";
+                _TD5.style.width = "20%";
             }
             else
                 _TD5.style.width = "20%";
@@ -243,7 +243,7 @@ function MakeAddressList() {
 
             var _TD6 = document.createElement("TD");
             if (searchFlag) {
-            	_TD6.style.width = "15%";
+            	_TD6.style.width = "20%";
             }
             else
             	_TD6.style.width = "20%";
@@ -339,33 +339,40 @@ function MakeAddressList() {
             var SubDivLayer = document.createElement("DIV");
             SubDivLayer.className = "back";
 
-            var SubPTag = document.createElement("p");
+/*            var SubPTag = document.createElement("p");
             SubPTag.className = "topinfo";
 
             var pContentSub = document.createElement("span");
-            pContentSub.innerText = Sname;
+            pContentSub.innerText = Sname;*/
+            
+            var imgType = "";
             
             if (SType == "P"){
-            		SubPTag.innerHTML = "<img src=\"/images/i_individual.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> ";
+            	imgType = "<img src=\"/images/i_individual.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> ";
             } else {
-                SubPTag.innerHTML = "<img src=\"/images/i_group.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> " + "<c:out value=\"" + Sname + "\" />";
+            	imgType = "<img src=\"/images/i_group.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> ";
             }
-            SubPTag.appendChild(pContentSub);
+            /*SubPTag.appendChild(pContentSub);*/
 
             var ULTag = document.createElement("ul");
+            ULTag.style.marginTop = "12px";
 
             var UITag1 = document.createElement("li");
-            UITag1.className = "name";
-            if (CrossYN())
-                UITag1.textContent = Sname;
-            else
-                UITag1.innerText = Sname;
+            UITag1.className = "name";            
+            UITag1.innerHTML = imgType + Sname;
+            
             var UITag2 = document.createElement("li");
             UITag2.className = "company";
             if (CrossYN())
                 UITag2.textContent = Scompany;
             else
                 UITag2.innerText = Scompany;
+            
+            var ULTag0 = document.createElement("ul");
+            ULTag0.style.margin = "0px";
+            ULTag0.style.padding = "11px 10px 4px 10px";
+            ULTag0.style.backgroundColor = "#fafafa";
+            ULTag0.style.borderRadius = "5px";
             
             var UITag3 = document.createElement("li");
             var span3 = document.createElement("span");
@@ -384,18 +391,19 @@ function MakeAddressList() {
             var UITag5 = document.createElement("li");
             UITag5.innerHTML = CardHeader3 + ":<span class=\"point_txt\">" + Semail + "</span>";
 
-            var EndDiv = document.createElement("DIV");
-            EndDiv.className = "shadow";
+            /*var EndDiv = document.createElement("DIV");
+            EndDiv.className = "shadow";*/
 
             DivLayer.appendChild(SubDivLayer);
-            DivLayer.appendChild(EndDiv);
-            SubDivLayer.appendChild(SubPTag);
+            /*DivLayer.appendChild(EndDiv);*/
+            /*SubDivLayer.appendChild(SubPTag);*/
             SubDivLayer.appendChild(ULTag);
+            SubDivLayer.appendChild(ULTag0);
             ULTag.appendChild(UITag1);
             ULTag.appendChild(UITag2);
-            ULTag.appendChild(UITag3);
-            ULTag.appendChild(UITag4);
-            ULTag.appendChild(UITag5);
+            ULTag0.appendChild(UITag3);
+            ULTag0.appendChild(UITag4);
+            ULTag0.appendChild(UITag5);
             document.getElementById("MailListCard").appendChild(DivLayer);
         }
     }
@@ -533,7 +541,7 @@ function makePageSelPage() {
         document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " <span style='color:#017BEC;'>" + pTotalCnt + "</span> " + strLang42 + "]";
     else {
         document.getElementById("mailBoxInfo").className = "h2_dot"; 
-        document.getElementById("mailBoxInfo").innerHTML = strLang_1 + "<span class='point'>" + pTotalCnt + "</span> " + strLang_2;
+        document.getElementById("mailBoxInfo").innerHTML = strLang_1 + "&nbsp;<span class='point'>" + pTotalCnt + "</span> " + strLang_2;
     }
     if (totalPage > 1 && pageNum != 1) {
         PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\" width=\"16\" height=\"16\"></span>";
@@ -597,22 +605,22 @@ function makePageSelPage() {
 function Window_onresize() {
     if (searchFlag) {
         if (document.getElementById("ListViewType").value == "list") {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 253) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 283) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 283) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 313) + "px";
         }
         else {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 218) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 248) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 245) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 275) + "px";
         }
     }
     else {
         if (document.getElementById("ListViewType").value == "list") {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 213) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 243) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 243) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 273) + "px";
         }
         else {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 178) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 208) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 205) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 235) + "px";
         }
     }
 }

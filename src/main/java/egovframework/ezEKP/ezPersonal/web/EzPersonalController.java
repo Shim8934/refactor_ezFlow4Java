@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPersonal.web;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.Ellipse2D;
@@ -167,7 +168,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			if (proxyInfo.split(":")[0].trim().equals("")) {
 				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
 			} else {
-				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3].replace("/", ":"), proxyInfo.split(":")[4].replace("/", ":"), userInfo.getTenantId(), userInfo.getOffset());
+				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3]+":"+proxyInfo.split(":")[4].replace("/", ":"), proxyInfo.split(":")[5]+":"+proxyInfo.split(":")[6].replace("/", ":"), userInfo.getTenantId(), userInfo.getOffset());
 			}
 		}
 
@@ -332,7 +333,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().toLowerCase().indexOf("a=1;") > -1) {
-			result = ezOrganService.getProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
+			result = ezOrganService.getProxyUserInfo(userInfo.getId(), userInfo.getTenantId(), userInfo.getOffset());
 			
 			Document xmlDom = commonUtil.convertStringToDocument(result);
 			
@@ -1181,14 +1182,14 @@ public class EzPersonalController extends EgovFileMngUtil {
 			} catch (InterruptedException e) {
 				throw new IOException(e.getMessage());
 			} 
-			BufferedImage destImg = new BufferedImage(119, 128, BufferedImage.TYPE_INT_RGB); 
-			destImg.setRGB(0, 0, 119, 128, pixels, 0, 119); 
+//			BufferedImage destImg = new BufferedImage(119, 128, BufferedImage.TYPE_INT_RGB);
+//			destImg.setRGB(0, 0, 119, 128, pixels, 0, 119); 
 			//기존코드	
-//			BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
-//			bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
+			BufferedImage bufferedImage = new BufferedImage(119, 128, BufferedImage.TYPE_4BYTE_ABGR);
+			bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, Color.WHITE, null);
 			
 			File profileImageFile = new File(realPath + filePath);
-			ImageIO.write(destImg, "png", profileImageFile);
+			ImageIO.write(bufferedImage, "png", profileImageFile);
 			
 			File file1 = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator + fileName);
 			if (file1.exists()) {

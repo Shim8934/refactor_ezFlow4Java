@@ -6603,7 +6603,6 @@
                             VAPRDOINGDOCLIST 
                          WHERE 
                             DOCSTATE <> '015' 
-       
                          AND
                             TENANT_ID = #v_TENANTID#
                          AND
@@ -6611,12 +6610,8 @@
                          AND 
                             FUNCTIONTYPE IN ('002', '005', '000')
                          AND 
-                            APRMEMBERID IN ($v_USERIDS$)
-                         AND 
                             DOCID = #v_DOCID#
-                            
                          UNION
-                         
                          SELECT 
                             STARTDATE
                          FROM 
@@ -6630,7 +6625,9 @@
                             COMPANYID = #companyID#
                         AND 
                             DOCID = #v_DOCID#  
-                        )    
+                        )
+           ORDER BY 
+                STARTDATE DESC, DOCID DESC                 
    		</isEqual>
    		<isEqual property="v_FLAG" compareValue="2">
 		<![CDATA[
@@ -6641,15 +6638,12 @@
                             VAPRDOINGDOCLIST 
                          WHERE 
                             DOCSTATE <> '015' 
-       
                         AND
                             TENANT_ID = #v_TENANTID#
                         AND
                             COMPANYID = #companyID#
                         AND 
                             FUNCTIONTYPE IN ('002', '005', '000')
-                        AND 
-                            APRMEMBERID IN ($v_USERIDS$)
                         AND 
                             DOCID = #v_DOCID#
                             
@@ -6668,10 +6662,11 @@
                             COMPANYID = #companyID#
                         AND 
                             DOCID = #v_DOCID#  
-                        )    
+                        )
+           ORDER BY 
+                STARTDATE ASC, DOCID ASC                 
    		</isEqual>
-   		ORDER BY 
-   			STARTDATE $v_BASICORDER$, DOCID DESC
+   		
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFindSimpleCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO"> -->
@@ -7791,6 +7786,9 @@
 		SELECT 
 			* 
 		FROM (
+		SELECT 
+			* 
+		FROM (
 			SELECT 
 				TBL_ENDAPRDOCINFO.DOCID,
 		   		TBL_ENDAPRDOCINFO.ORGDOCID, 
@@ -7859,7 +7857,7 @@
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
-		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
 		   	</isEqual>
 		   	<isNotEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
@@ -7887,7 +7885,7 @@
 		   				ENDDATE $v_BASICORDER$
 		   	</isEmpty>
 		   	<![CDATA[
-		   	)A 
+		   	LIMIT #v_PAGESIZE# )A 
 		   	]]>
 		   	<isNotEmpty property="v_ORDEROPTION">
 		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
@@ -7907,9 +7905,11 @@
 		   	</isNotEmpty>
 		   	<isEmpty property="v_ORDEROPTION">
 		   	 ORDER BY 
-		   	 	ENDDATE $v_BASICORDER2$
+		   	 	ENDDATE $v_BASICORDER2$ 
 		   	</isEmpty>
-		   	LIMIT #v_PAGESIZE#
+		   	LIMIT #v_PAGESIZE2# )B
+		   	
+		   	
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO"> -->
@@ -11772,7 +11772,7 @@
 	   	</isEqual>
 	   	LIKE 'ADDRESS%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 	   	<isEqual property="v_MODELENGTH" compareValue="2">
-	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
 	   	</isEqual>
 	   	<isNotEqual  property="v_MODELENGTH" compareValue="2">
 	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
@@ -11952,7 +11952,7 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getUserRight" parameterClass="Map" resultClass="int">
 		SELECT 
-			count(USERRIGHT) 
+			USERRIGHT
         FROM 
         	TBL_RECROLEINFO 
         WHERE  
@@ -12014,14 +12014,15 @@
                 	CN = #v_UserID#
                 AND
                 	TENANT_ID = #v_TENANTID#
-                AND
-	    			COMPANYID = #companyID# ) DEPTINFO   
+<!--                 AND -->
+<!-- 	    			COMPANYID = #companyID#  -->
+	    			) DEPTINFO   
           ON 
           	DEPTINFO.DEPTID = TBL_RECORD.ProcessDeptCode
           AND
             DEPTINFO.TENANT_ID = TBL_RECORD.TENANT_ID
-          AND
-            DEPTINFO.COMPANYID = TBL_RECORD.COMPANYID 
+<!--           AND -->
+<!--             DEPTINFO.COMPANYID = TBL_RECORD.COMPANYID  -->
        	  WHERE  
        	  	RECORDID = #v_RecID#
        	  AND
@@ -12032,7 +12033,7 @@
 	
 	<select id="EzApprovalG.getUserRecRightCount2" parameterClass="Map" resultClass="String">
 		 SELECT 
-		 	UserRight 
+		 	COUNT(UserRight) 
          FROM 
          	TBL_RECROLEINFO 
          WHERE  
@@ -12044,7 +12045,7 @@
          AND 
          	SeperateAttachNo = #v_SepAttNo#
          AND 
-         	UserID = #v_UserID#
+         	UserID IN (#v_UserID#,'All_User')
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.spRollbackSN" parameterClass="Map" resultClass="int"> -->
@@ -12141,7 +12142,7 @@
 <!-- 	<procedure id="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZSP_GETWEBPARTLISTCOUNT(#v_LISTTYPE#, #v_USERID#, #v_DEPTID#, #v_USERIDS#, #v_DEPTIDS#, #v_USERFLAG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id ="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int">
+	<select id ="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int" remapResults="true">
 		<isEqual property="v_LISTTYPE" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -21636,7 +21637,7 @@
    	 	<isNotEqual property="v_LANGTYPE" compareValue="1">
    	 	<![CDATA[
    	 		SELECT 
-   				TASKNAME2 TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode
+   				TASKNAME2, TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode
 			FROM 
 				TBl_ENDAPRDOCINFO
 			JOIN 
@@ -23134,58 +23135,7 @@
            		A.DocID = #v_DOCID# 
            LIMIT 1
       </select>  
-      
-      <update id="EzApprovalG.updateResetDoc" parameterClass="map">
-      	UPDATE 
-      		TBL_EXPAPRDOCINFO 
-         SET 
-         	CABINETID = C.CABINETID, 
-            TASKCODE = C.TASKCODE, 
-            DOCNUMCODE = C.DOCNUMCODE, 
-            ORGDOCNUMCODE = C.ORGDOCNUMCODE 
-         FROM 
-         	TBL_ENDAPRDOCINFO  A 
-         INNER JOIN  
-           	TBL_APRDOCINFO  B 
-         ON 
-         	A.DOCID = B.ORGDOCID 
-         AND
-         	A.COMPANYID = B.COMPANYID
-         AND
-         	A.TENANT_ID = B.TENANT_ID
-         INNER JOIN 
-         	TBL_EXPENDAPRDOCINFO  C
-         ON 
-         	A.DOCID = C.DOCID 
-         AND
-         	A.COMPANYID = C.COMPANYID
-         AND
-         	A.TENANT_ID = C.TENANT_ID
-         INNER JOIN 
-         	TBL_EXPAPRDOCINFO  D 
-         ON 
-         	B.DOCID = D.DOCID 
-         AND
-         	B.COMPANYID = D.COMPANYID
-         AND
-         	B.TENANT_ID = D.TENANT_ID
-         WHERE 
-         	A.TENANT_ID = #v_TENANTID#
-         AND
-         	A.DOCID IN (SELECT 
-         					ORGDOCID 
-         				FROM 
-         					TBL_APRDOCINFO  
-         				WHERE 
-         					DOCID= #v_DOCID#
-         				AND
-         					COMPANYID = #companyID#
-         				AND
-         					TENANT_ID = #v_TENANTID#) E
-         AND
-         	A.COMPANYID = #companyID#
-      </update>
-      
+            
 	<delete id="EzApprovalG.deleteOpinionTypeInfo" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezJournal.vo.DeptInfoVO;
 import egovframework.ezEKP.ezJournal.vo.DeptViewVO;
+import egovframework.ezEKP.ezJournal.vo.JournalAuthCheckVO;
 import egovframework.ezEKP.ezJournal.vo.JournalAuthorVO;
 import egovframework.ezEKP.ezJournal.vo.JournalCompanyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalEnvVO;
@@ -28,9 +29,33 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<JournaltypeVO> getJournaltypeList(Map<String, Object> param) throws Exception {
+	public List<JournaltypeVO> getJournaltypeList(Map<String, Object> param) {
 		List<JournaltypeVO> list = (List<JournaltypeVO>) list("selectJournalTypeList", param);
 		return list;
+	}
+	
+	/**
+	 * 일지함 생성
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public void insertJournaltype(Map<String, Object> param) {
+		try {
+			insert("insertJournalType", param);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 일지함 삭제
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public void deleteJournaltypeList(Map<String, Object> param) {
+		delete("deleteJournalTypeList", param);
 	}
 	
 	/**
@@ -42,7 +67,17 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	}
 	
 	/**
-	 * 양식 리스트 세럭트
+	 * 관리자단 양식 리스트
+	 * @param map
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<JournalFormInfoVO> getFormListAdmin(Map<String, Object> map) {
+		return (List<JournalFormInfoVO>) list("getFormListAdmin", map);
+	}
+	
+	/**
+	 * 양식 리스트 세럭트 (부서사용가능양식, 기본양식)
 	 * @param map
 	 * @return
 	 */
@@ -59,26 +94,6 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<DeptInfoVO> getFormUseDeptList(Map<String, Object> map) {
 		return (List<DeptInfoVO>) list("getFormUseDeptList", map);
-	}
-
-	/**
-	 * 부서에서 쓸 수 있는 양식 리스트
-	 * @param map
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<JournalFormInfoVO> getDeptUseFormList(Map<String, Object> map) {
-		return (List<JournalFormInfoVO>) list("getDeptUseFormList", map);
-	}
-
-	/**
-	 * 기본양식 리스트
-	 * @param map
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<JournalFormInfoVO> getBasicFormList(Map<String, Object> map) {
-		return (List<JournalFormInfoVO>) list("getBasicFormList", map);
 	}
 
 	/**
@@ -103,7 +118,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<JournalCompanyVO> getCompanyList(Map<String, String> map){
+	public List<JournalCompanyVO> getCompanyList(Map<String, Object> map){
 		return (List<JournalCompanyVO>) list("selectCompanyList",map);
 	}
 	
@@ -113,7 +128,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<JournalAuthorVO> getAuthorList(Map<String, String> map){
+	public List<JournalAuthorVO> getAuthorList(Map<String, Object> map){
 		return (List<JournalAuthorVO>) list("selectAuthorList",map);
 	}
 	
@@ -123,7 +138,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<JournalAuthorVO> getAuthDeptList(Map<String, String> map){
+	public List<JournalAuthorVO> getAuthDeptList(Map<String, Object> map){
 		return (List<JournalAuthorVO>) list("selectAuthorDept",map);
 	}
 	
@@ -133,7 +148,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<DeptViewVO> getDeptViewVO(Map<String, String> map){
+	public List<DeptViewVO> getDeptViewVO(Map<String, Object> map){
 		return (List<DeptViewVO>) list("selectDeptList",map);
 	}
 	
@@ -143,7 +158,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<JournalAuthorVO> getDeptUserList(Map<String, String> map){
+	public List<JournalAuthorVO> getDeptUserList(Map<String, Object> map){
 		return (List<JournalAuthorVO>) list("selectUserList",map);
 	}
 
@@ -323,7 +338,11 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @param map
 	 */
 	public void insertViewInfo(Map<String, Object> map){
-		insert("insertViewDate",map);
+		try {
+			insert("insertViewDate",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -402,8 +421,15 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * 수신자 리스트 가져오기
 	 * @param map
 	 */
+	@SuppressWarnings("unchecked")
 	public List<JournalReceiverVO> getReceiverList(Map<String, Object> map) {
-		return (List<JournalReceiverVO>) list("getReceiverList", map);
+		List<JournalReceiverVO> result = null;
+		try {
+			result= (List<JournalReceiverVO>) list("getReceiverList",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	/**
@@ -419,8 +445,8 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * 댓글 등록
 	 * @param map
 	 */
-	public void insertJournalReply(Map<String, Object>map) {
-		insert("insertJournalReply",map);
+	public String insertJournalReply(Map<String, Object>map) {
+		return (String) insert("insertJournalReply",map);
 	}
 	
 	/**
@@ -438,15 +464,58 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<JournalReceiverVO> getViewerList(Map<String, Object>map) {
-		return (List<JournalReceiverVO>) list("getViewerList",map);
+		List<JournalReceiverVO> result = null;
+		try {
+			result= (List<JournalReceiverVO>) list("getViewerList",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	/**
-	 * 일지 조회자 리스트
+	 * 일지 조회자 명수
 	 * @param map
 	 * @return 
 	 */
 	public String getViewerCount(Map<String, Object>map) {
 		return (String) select("getViewerCount",map);
 	}
+
+	/**
+	 * 기본일지삽입
+	 * @param map
+	 */
+	public void insertJournalBasicForm(Map<String, Object> map) {
+		try {
+			insert("insertJournalBasicForm",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 열람권한체크
+	 * @param map
+	 */
+	public JournalAuthCheckVO checkJournalAuth(Map<String, Object> map) {
+		JournalAuthCheckVO result = null;
+		try {
+			result =  (JournalAuthCheckVO) select("checkJournalAuth",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	/**
+	 * 취합할 일지의 내용들 가져오기
+	 * @param param
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<JournalVO> selectSumJournalList(Map<String, Object> param) {
+		return (List<JournalVO>) list("selectSumJournalList",param);
+	}
+
 }

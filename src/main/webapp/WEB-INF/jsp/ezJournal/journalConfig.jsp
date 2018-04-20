@@ -83,6 +83,8 @@
             }
         }
         
+        var previewHcontent = "<c:out value="${journalEnv.previewHcontent}"/>";
+		var previewWcontent = "<c:out value="${journalEnv.previewWcontent}"/>";
         function PreviewOption(val) {       
         	console.log(val);
         	if (val == "NONE") {
@@ -91,39 +93,44 @@
         	} else if (val == "H") {                	
             	$("#PreviewWDiv").css("display", "none");                	
             	$("#PreviewHDiv").css("display", "");                	
-	        	$("#HContent").val("<c:out value="${journalEnv.previewHcontent}"/>").attr("selected", "selected");
+	        	$("#HContent").val(previewHcontent).attr("selected", "selected");
+	        	$("#HList").val(100-$("#HContent").val()).attr("selected", "selected");
         	} else {
             	$("#PreviewWDiv").css("display", "");                	
             	$("#PreviewHDiv").css("display", "none");                	
-	    		$("#WContent").val("<c:out value="${journalEnv.previewWcontent}"/>").attr("selected", "selected");
+	    		$("#WContent").val(previewWcontent).attr("selected", "selected");
+	    		$("#WList").val(100-$("#WContent").val()).attr("selected", "selected");
         	}
     	}
+        
+    	var viewenv = "${journalEnv.viewenv}";
         // 리스트옵션 화면에서 취소클릭시 원래의 설정으로변경
         function Cancel_Click() {
-    		var viewEnv = "${journalEnv.viewenv}";
-        	document.getElementById("listcount").value = "${journalEnv.listCnt}";
-    		document.getElementById("PreviewMode").value = "${journalEnv.viewenv}";
-			PreviewOption(viewEnv);    		
+        	document.getElementById("listcount").value = listCount;
+    		document.getElementById("PreviewMode").value = viewenv;
+			PreviewOption(viewenv);    		
     	}
         
+        var listCount = ${journalEnv.listCnt };
         // 리스트옵션 저장
     	function saveListEnv() {
-    		var listCount = document.getElementById("listcount").value;
+    		listCount = document.getElementById("listcount").value;
  			var preview = document.getElementById("PreviewMode").value;
- 			var previewHContent = document.getElementById("HContent").value;
- 			var previewWContent = document.getElementById("WContent").value;
+ 			previewHcontent = document.getElementById("HContent").value;
+ 			previewWcontent = document.getElementById("WContent").value;
  			
  			$.ajax({
- 				url : "/ezJournal/saveJournalConfig.do",
+ 				url : "/ezJournal/saveJournalEnv.do",
  				method : "POST",
  				dataType : "text",
  				data : {
      				listCnt : listCount ,
 	 				viewenv : preview,
-	 				previewHContent : previewHContent,
-	 				previewWContent : previewWContent
+	 				previewHcontent : previewHcontent,
+	 				previewWcontent : previewWcontent
  				},
      			success : function() {
+     				viewenv = preview;
      				alert("<spring:message code='ezJournal.t137'/>");
  				}
  			});       
@@ -137,7 +144,7 @@
     		$.ajax({
     			type : "POST",
     			dataType : "text",
-    			url : "/ezJournal/saveJournalConfig.do",
+    			url : "/ezJournal/saveJournalEnv.do",
     			data : {
     				recvAlert : recvAlert,
     				replyAlert : replyAlert
@@ -148,6 +155,17 @@
     		});
     		
     	}
+        
+        function changePreviewVal(elem){
+        	var elemId = $(elem).attr("id");
+        	var targetId = elemId.substring(0,1);
+        	if(elemId.substring(1)=='Content'){
+        		targetId+='List';
+        	} else {
+        		targetId+='Content';
+        	}
+        	$("#"+targetId).val(100-$(elem).val());
+        }
     </script>
 </head>
 <body class="mainbody">
@@ -186,16 +204,28 @@
                			<option value='W' ${journalEnv.viewenv == 'W' ? 'selected' : ''}><spring:message code="ezCircular.t22" /></option>             					                     
                		</select>
                		<span id="PreviewWDiv" style="${journalEnv.viewenv ne 'W' ? 'display: none;' : ''}">                   			
+               			&nbsp;<spring:message code="ezCircular.t23" /> :
+						<select id="WList" name="pPreviewWList" style="width: 50px;" onchange="changePreviewVal(this);">
+							<c:forEach var="item" begin="25" end="65">
+	   							<option value='${item}' ${item == 100-journalEnv.previewHcontent ? 'selected' : '' }>${item}</option>
+							</c:forEach>
+						</select>
       					&nbsp;<spring:message code="ezCircular.t24" /> :
-						<select id="WContent" name="pPreviewWContent" style="width: 50px;">
-							<c:forEach var="item" begin="36" end="61">
-		  							<option value='${item}' ${item == journalEnv.previewWcontent ? 'selected' : '' }>${item}</option>
+						<select id="WContent" name="pPreviewWContent" style="width: 50px;" onchange="changePreviewVal(this);">
+							<c:forEach var="item" begin="35" end="75">
+	  							<option value='${item}' ${item == journalEnv.previewWcontent ? 'selected' : '' }>${item}</option>
 							</c:forEach>
 						</select>		
 					</span>
                		<span id="PreviewHDiv" style="${journalEnv.viewenv ne 'H' ? 'display: none;' : ''}">                   			
+	       				&nbsp;<spring:message code="ezCircular.t23" /> :
+						<select id="HList" name="pPreviewHList" style="width: 50px;" onchange="changePreviewVal(this);">
+							<c:forEach var="item" begin="39" end="64">
+	   							<option value='${item}' ${item == 100-journalEnv.previewHcontent ? 'selected' : '' }>${item}</option>
+							</c:forEach>
+						</select>
 	       				&nbsp;<spring:message code="ezCircular.t24" /> :
-						<select id="HContent" name="pPreviewHContent" style="width: 50px;">
+						<select id="HContent" name="pPreviewHContent" style="width: 50px;" onchange="changePreviewVal(this);">
 							<c:forEach var="item" begin="36" end="61">
 	   							<option value='${item}' ${item == journalEnv.previewHcontent ? 'selected' : '' }>${item}</option>
 							</c:forEach>

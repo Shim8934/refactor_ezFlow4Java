@@ -423,6 +423,8 @@ public class EzAttitudeKMSController {
 	@ResponseBody
 	public JSONObject getAttModAppList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
 			@RequestParam(required=false)String apprUserName,
+			@RequestParam(required=false)String writerName,
+			@RequestParam(required=false)String writerDeptName,
 			@RequestParam(required=false)String startDate,
 			@RequestParam(required=false)String endDate,
 			@RequestParam(required=false)String pageNum,
@@ -430,7 +432,8 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String excelReq,
 			@RequestParam(required=false)String orderCell,
 			@RequestParam(required=false)String orderOption,
-			@RequestParam(required=false)String adminFlag) throws Exception {
+			@RequestParam(required=false)String adminFlag,
+			@RequestParam(required=false)String checkAdmin) throws Exception {
 		
 		int currentPage = 1;
 		int pageSize = 15;
@@ -451,6 +454,10 @@ public class EzAttitudeKMSController {
 			adminFlag = "false";
 		}
 		
+		if (checkAdmin == null || checkAdmin.trim().equals("")) {
+			checkAdmin = "false";
+		}
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
@@ -480,6 +487,8 @@ public class EzAttitudeKMSController {
 				.queryParam("companyId", userInfo.getCompanyID())
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("apprUserName", apprUserName)
+				.queryParam("writerName", writerName)
+				.queryParam("writerDeptName", writerDeptName)
 				.queryParam("startDate", startDate)
 				.queryParam("endDate", endDate)
 				.queryParam("sysLang", sysLang)
@@ -488,12 +497,13 @@ public class EzAttitudeKMSController {
 				.queryParam("type", type)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
-				.queryParam("adminFlag", adminFlag);
+				.queryParam("adminFlag", adminFlag)
+				.queryParam("checkAdmin", checkAdmin);
 		
 		RestTemplate rest = new RestTemplate();
-		
+
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
+
 		JSONParser jp = new JSONParser();
 		
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
@@ -504,7 +514,7 @@ public class EzAttitudeKMSController {
 		JSONArray list = new JSONArray();
 		
 		if(status.equals("ok")){
-			LOGGER.debug(resultBody.toJSONString());
+			LOGGER.debug("!!!!!!!!!!!!!!!!!! : " + resultBody.toJSONString());
 			totalAtt = Integer.parseInt(resultBody.get("data").toString());
 		}
 		totalPages = (totalAtt + pageSize - 1)/pageSize;
@@ -538,6 +548,8 @@ public class EzAttitudeKMSController {
 					.queryParam("companyId", userInfo.getCompanyID())
 					.queryParam("tenantId", userInfo.getTenantId())
 					.queryParam("apprUserName", apprUserName)
+					.queryParam("writerName", writerName)
+					.queryParam("writerDeptName", writerDeptName)
 					.queryParam("startDate", startDate)
 					.queryParam("endDate", endDate)
 					.queryParam("sysLang", sysLang)
@@ -545,12 +557,15 @@ public class EzAttitudeKMSController {
 					.queryParam("type", type)
 					.queryParam("orderCell", orderCell)
 					.queryParam("orderOption", orderOption)
-					.queryParam("adminFlag", adminFlag);
+					.queryParam("adminFlag", adminFlag)
+					.queryParam("checkAdmin", checkAdmin);
 		} else {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", userInfo.getCompanyID())
 					.queryParam("tenantId", userInfo.getTenantId())
 					.queryParam("apprUserName", apprUserName)
+					.queryParam("writerName", writerName)
+					.queryParam("writerDeptName", writerDeptName)
 					.queryParam("startDate", startDate)
 					.queryParam("endDate", endDate)
 					.queryParam("sysLang", sysLang)
@@ -560,7 +575,8 @@ public class EzAttitudeKMSController {
 					.queryParam("type", type)
 					.queryParam("orderCell", orderCell)
 					.queryParam("orderOption", orderOption)
-					.queryParam("adminFlag", adminFlag);
+					.queryParam("adminFlag", adminFlag)
+					.queryParam("checkAdmin", checkAdmin);
 		}
 
 		rest = new RestTemplate();
@@ -790,6 +806,59 @@ public class EzAttitudeKMSController {
 		String status = resultBody.get("status").toString();
 
 		LOGGER.debug("retAttModApp ended");
+		
+		return status;
+	}
+	
+	/**
+	 * 근태수정현황 등록
+	 */
+	@RequestMapping(value="/ezAttitude/saveAttModApp.do" , method= RequestMethod.POST)
+	@ResponseBody
+	public String saveAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=false)String attId,
+			@RequestParam(required=false)String changeDate,
+			@RequestParam(required=false)String content) throws Exception {
+		LOGGER.debug("modAttModApp started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attId + "/modify-applications";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("content", content)
+				.queryParam("changeDate", changeDate)
+				.queryParam("offset", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+
+		LOGGER.debug("modAttModApp ended");
 		
 		return status;
 	}

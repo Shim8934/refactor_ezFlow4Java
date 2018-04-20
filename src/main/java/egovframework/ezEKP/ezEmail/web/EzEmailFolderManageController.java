@@ -24,10 +24,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.sun.mail.imap.IMAPFolder;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -59,6 +62,9 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
 	
 	/**
 	 * 편지함 관리 화면 호출 함수
@@ -138,6 +144,11 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		logger.debug("userEmail=" + userAccount);
 		
 		IMAPAccess ia = null;
+        boolean isNewUserQuotaNeeded = false;	
+        boolean isThereUserLevelQuota = false;
+        Double userQuota = 0.0;
+        Double userWarn = 0.0;        
+		
 		try {
 	        switch (cmd) {
 	            case "NEW": 
@@ -256,13 +267,35 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	if (!url.equals("")) {
 	            		String trashFolderName = egovMessageSource.getMessage("ezEmail.t99000028", locale);
             			Folder trashFolder = ia.getFolder(trashFolderName);
-            			Folder folder = ia.getFolder(url);
+            			IMAPFolder folder = (IMAPFolder)ia.getFolder(url);
             			
 	            		if (folder.exists() && trashFolder.exists()) {
             				folder.open(Folder.READ_WRITE);
             				Message[] messages = folder.getMessages();
-            				folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
-            				folder.copyMessages(messages, trashFolder);
+            				
+            				// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+            				Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userAccount, domainName, ia);
+            				
+            				if (adjustQuotaData[0] != null) {
+            					isNewUserQuotaNeeded = true;
+            					
+            					userQuota = adjustQuotaData[0];
+            					userWarn = adjustQuotaData[1];
+            				}
+
+            				if (adjustQuotaData[2] != null) {
+            					isThereUserLevelQuota = true;
+            				}
+            				
+            				String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+            				
+            				if (useImapMoveCommand.equals("YES")) {            				
+	            				folder.moveMessages(messages, trashFolder);
+            				} else {            				
+	            				folder.copyMessages(messages, trashFolder);
+	            				folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+            				}
+            				
             				folder.close(true);
             				logger.debug(url + " folder's message is moved to " + trashFolderName + ".");
             				returnValue = "OK";
@@ -280,6 +313,16 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 			if (ia != null) {
 				ia.close();
 			}
+			
+			// 사용자 Quota를 변경시켰다면 원래 값으로 복원시킨다.			
+			if (isNewUserQuotaNeeded) {
+				if (isThereUserLevelQuota) {
+					ezEmailUtil.setUserQuota(userAccount, String.valueOf(userQuota), String.valueOf(userWarn));
+				// 사용자 레벨 Quota 설정값이 없었던 경유에는 해당 설정값을 삭제한다.
+				} else {
+					ezEmailUtil.deleteUserQuota(userAccount);
+				}
+			}			
 		}
         
 		logger.debug("returnValue=" + returnValue);

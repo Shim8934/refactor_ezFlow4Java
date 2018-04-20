@@ -3494,9 +3494,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			Message[] messages = sourceFolder.getMessagesByUID(uids);
 			
 			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);			
+			
+			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", info.getTenantId());
+			
+			if (useImapMoveCommand.equals("YES")) {
+				sourceFolder.moveUIDMessages(messages, movefolder);
+			} else {			
 			sourceFolder.copyUIDMessages(messages, movefolder);
 			
 			sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+			}
 			
 			sourceFolder.close(true);
 		
@@ -3652,12 +3659,22 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 
 	        deleteMsgs = sourceFolder.getMessagesByUID(uids);
 	        
-			if (!permanentlyDelete) {
+			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", info.getTenantId());
 				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
+			
+			if (useImapMoveCommand.equals("YES")) {
+				if (!permanentlyDelete) {
+					sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
+				} else {
+					sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+				}
+			} else {
+				if (!permanentlyDelete) {			
 				sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
 			}
 			
 			sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+			}
 
 			sourceFolder.close(true);
 							
@@ -3811,9 +3828,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			if (!pDLSearchList.isEmpty()) {
 				dlXML = getOrganDLSearch(pDLSearchList, info);
 			}
+			int[] searchCount = {0, 0};
 			
 			if (!pAddressFilter.isEmpty()) {
-				addressXML = getAddressSearch("all", "S_NAME", pAddressFilter, info, 0, 100, null);
+				addressXML = getAddressSearch("all", "S_NAME", pAddressFilter, info, 0, 100, searchCount);
 			}
 	        
 	        data.put("organXML", organXML);
@@ -3837,7 +3855,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId}/addressbook", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
 	public Object searchAddressBook(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {		
 		LOGGER.debug("MOBILE G/W MAIL searchAddressBook started.");
 		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
@@ -3905,7 +3923,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId}/addressbook", method= RequestMethod.PUT,  produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook", method= RequestMethod.PUT,  produces="application/json;charset=utf-8")
 	public Object addAddress(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {		
 		LOGGER.debug("MOBILE G/W MAIL addAddress started.");
 		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
@@ -3998,7 +4016,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId}/addressbook/{addressId}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/addressbook/{addressId}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getAddressInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String addressId) {		
 		LOGGER.debug("MOBILE G/W MAIL getAddressInfo started.");
 		LOGGER.debug("userId=" + userId + ",addressId=" + addressId);
@@ -4036,7 +4054,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 메일 책갈피 지정 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}/setFlag", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId:.+}/setFlag", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public Object mailSetFlag(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL mailSetFlag started.");
 		LOGGER.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
@@ -4136,7 +4154,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId}/quota", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/quota", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getQuotaInfo(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL getQuotaInfo started.");
 		LOGGER.debug("userId=" + userId);
@@ -4189,7 +4207,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/users/{userId}/config", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/config", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getConfigInfo(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL getConfigInfo started.");
 		LOGGER.debug("userId=" + userId);

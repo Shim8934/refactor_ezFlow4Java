@@ -7,7 +7,7 @@
 				<c:forEach items="${authorDeptList}" var="dept">
 				<c:choose>
 					<c:when test="${dept.mine eq 'yes' }">
-						<tr targetId="${dept.deptId }" style="display:none; cursor: pointer;" class="hover">
+						<tr targetId="${dept.deptId }" mine="Y" style="display:none; cursor: pointer;" class="hover">
 							<td align="left" style="width:250px;">${dept.deptName }</td>
 						</tr>
 					</c:when>

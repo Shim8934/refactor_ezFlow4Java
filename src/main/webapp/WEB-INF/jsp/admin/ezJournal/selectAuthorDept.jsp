@@ -5,12 +5,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title><spring:message code='ezJournal.t165'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
 		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
@@ -37,7 +36,6 @@
 	   		}
 	   	
 	   		function close_Click(){
-	   			opener.location.reload();
 	   			window.close();
 	   		}
 	   		//조직도 뿌리는 펑션
@@ -48,30 +46,51 @@
 				  }).on('dblclick.jstree', function (e, data) {
 						addDeptInLP();
 				}).jstree({ 
-					'core' : {'data' : treeContent},
+					'core' : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
 					 'themes' : {'responsive' : true}
 				});
 	   		}
 	   		
+	   		var currentNode;
 	   		//부서 리스트 오른쪽에 이동!
 	   		function addDeptInLP(){
-	   			var flag = true;
-	   			for (var i = 0; i < lpDepts.length ; i++) {
-					if(lpDepts[i] == lpDeptId){
-						flag=false;
+	   			if($("#withChild").is(":checked")){
+	   				$('#treeview').jstree('open_all');
+	   				$("#"+lpDeptId).find("a").each(function(){
+	   					var childrenId = $(this).parent("li").attr("id");
+	   					var childrenName = $(this).text();
+			   			var flag = true;
+			   			for (var i = 0; i < lpDepts.length ; i++) {
+							if(lpDepts[i] == childrenId){
+								flag=false;
+							}
+						}
+			   			if(flag){
+				   			if (childrenId!=opener.userDeptId) {
+					   			$("#lplistView .mainlist_free").append("<tr targetId="+childrenId+" targetName="+childrenName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+childrenName+"</td></tr>");
+					   			lpDepts.push(childrenId);
+					   			lpDeptNames.push(childrenName);
+							} 
+			   			}
+	   				});
+	   			} else {
+		   			var flag = true;
+		   			for (var i = 0; i < lpDepts.length ; i++) {
+						if(lpDepts[i] == lpDeptId){
+			   				alert("<spring:message code='ezJournal.t127'/>");
+							flag=false;
+						}
 					}
-				}
-	   			if(flag){
-		   			if (lpDeptId==opener.userDeptId) {
-			   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='display:none; cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
-			   			lpDepts.push(lpDeptId);
-			   			lpDeptNames.push(lpDeptName);
-					} else {
-			   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
-			   			lpDepts.push(lpDeptId);
-			   			lpDeptNames.push(lpDeptName);
-					}
+		   			if(flag){
+			   			if (lpDeptId!=opener.userDeptId) {
+				   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
+				   			lpDepts.push(lpDeptId);
+				   			lpDeptNames.push(lpDeptName);
+						} else {
+			   				alert("<spring:message code='ezApprovalG.t2000'/>");
+						}
+		   			}
 	   			}
 	   		}
 	   		
@@ -89,37 +108,21 @@
 	   		}
 	   		
 	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
-	   		function delTargetDept(elem){
-	   			var targetDeptId = $(elem).attr("targetId");
-	   			var targetDeptName = $(elem).attr("targetName");
-   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
-   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
-   				$(elem).remove();
-	   		}
-	   		
-	   		//열람궎란정보 저장
-	   		function insertAuthDept(){
-	   			var jsonString = JSON.stringify({"userId":updateUserId,"depts":lpDepts});
-				$.ajax({
-	   				type:"post",
-	   				dataType:"html",
-	   				url:"/admin/ezJournal/saveAuthor.do",
-	   				contentType:"application/json;",
-	   				data:jsonString,
-	   				success: function(result){
-	   					alert(result);
-   						$('.journal-layer').fadeOut();
-   						opener.location.reload();
-   						location.reload(true);
-	   				}
-	   			});
+	   		function delTargetDept(){
+	   			var targetDeptId = $(".selectTR").attr("targetId");
+	   			if(targetDeptId){
+		   			var targetDeptName = $(".selectTR").attr("targetName");
+	   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
+	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
+	   				$(".selectTR").remove();
+	   			} else {
+	   				alert("<spring:message code='ezOrgan.t249'/>");
+	   			}
 	   		}
 	   		
 	   		//오프너의 부서 이름과 아이디 세팅
 	   		function setAuthorViewDept(){
-	   			opener.deptIds = lpDepts;  
-	   			opener.deptNames = lpDeptNames;
-	   			opener.setDeptName();
+	   			opener.setDeptName(JSON.stringify(lpDepts),JSON.stringify(lpDeptNames));
 	   			window.close();
 	   		}
 	   		
@@ -129,7 +132,7 @@
 		    	
 	   			$(function () {
 		   			$(document).on({
-		   				"dblclick":function(){delTargetDept(this);},
+		   				"dblclick":function(){delTargetDept();},
 		   				"click":function(){targetDept = this;
 			   				$("*").removeClass("selectTR");
 				   			$(this).addClass("selectTR");
@@ -142,13 +145,8 @@
 	   				addDeptInLP();
 				}
    			});
-// 			<c:forEach items="${authDeptList }" var="dept">
-// 				<c:if test="${dept.mine ne 'yes'}" >
-// 					lpDepts.push("${dept.deptId }");
-// 					lpDeptNames.push("${dept.deptName}");
-// 				</c:if>
-// 			</c:forEach>
 		</script>
+		
 		<style>
 			tr.hover:hover{background:#eee; color:#fff;}
 			
@@ -157,8 +155,9 @@
 			}
 		</style>
 	</head>
+	
 	<body class="popup"> 
-        <h1><spring:message code='ezJournal.t42'/></h1>
+        <h1><spring:message code='ezJournal.t165'/></h1>
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="setAuthorViewDept()"><spring:message code='main.t4008'/></span></li>
@@ -167,33 +166,24 @@
 	    </div>
        	<table>
             <tr>
-                <td class="box">
-                    <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+                <td class="box" style="width: 250px; height: 465px;">
+                    <div style="width: 100%; height: 100%; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
                 </td>
-                <td style="width: 30px; text-align: center;">                            
+                <td style="width: 30px; text-align: center;" rowspan="2">                            
                       <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
-                      <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept(targetDept)">
+                      <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept()">
                  		</td>
-                <td class="listview" style="width: 250px; vertical-align: top;" id="lplistView">
-                	<table class="mainlist_free">
-<%-- 						<c:if test="${not empty authDeptList }"> --%>
-<%-- 							<c:forEach items="${authDeptList}" var="dept"> --%>
-<%-- 							<c:choose> --%>
-<%-- 								<c:when test="${dept.mine eq 'yes' }"> --%>
-<%-- 									<tr targetId="${dept.deptId }" targetName="${dept.deptName }" style="display:none; cursor: pointer;" class="hover"> --%>
-<%-- 										<td align="left" style="width:250px;">${dept.deptName }</td> --%>
-<!-- 									</tr> -->
-<%-- 								</c:when> --%>
-<%-- 								<c:otherwise> --%>
-<%-- 									<tr targetId="${dept.deptId }" targetName="${dept.deptName }" style="cursor: pointer;" class="hover"> --%>
-<%-- 										<td align="left" style="width:250px;">${dept.deptName }</td> --%>
-<!-- 									</tr> -->
-<%-- 								</c:otherwise> --%>
-<%-- 							</c:choose> --%>
-<%-- 							</c:forEach> --%>
-<%-- 						</c:if> --%>
-					</table>
+                <td class="listview" style="width: 250px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
+                	<div style="width: 100%; height: 100%; overflow: auto;">
+	                	<table class="mainlist_free">
+						</table>
+					</div>
                 </td>    
+            </tr>
+            <tr>
+            	<td class="box" style="width: 250px;">
+            		<div><input type="checkbox" id="withChild" name="withChild" /><label for="withChild"><spring:message code='ezSchedule.t39' /></label></div>
+            	</td>
             </tr>
         </table>
 	</body>

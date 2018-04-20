@@ -50,6 +50,7 @@
 		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
 		<result  property="writerName"			column="WRITER_NAME"			columnIndex="18"/>
+		<result  property="writerDeptName"			column="WRITER_DEPT_NAME"			columnIndex="19"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -148,7 +149,8 @@
 				A.TYPE_ID,
 				B.TYPE_NAME,
 				B.IMG_PATH,
-				C.DISPLAYNAME AS WRITER_NAME
+				C.DISPLAYNAME AS WRITER_NAME,
+				C.DESCRIPTION AS WRITER_DEPT_NAME
 			FROM   
 				tbl_attitude A 
 			INNER JOIN 
@@ -180,6 +182,9 @@
 				</isNotEmpty>
 			</isEmpty>
 			)
+			<isNotEmpty property="typeId" prepend="and">
+				A.TYPE_ID = #typeId#
+			</isNotEmpty>
 			AND
 				A.TENANT_ID = #tenantId#
 			<![CDATA[
@@ -302,6 +307,26 @@
 				</isNotEqual>
 			</isNotEmpty>
 		</isNotEmpty>
+		<isNotEmpty property="writerName" prepend="and">
+			<isNotEmpty property="writerName" >
+				<isEqual property="sysLang" compareValue="primary" >
+						a.WRITER_NAME LIKE CONCAT('%', #writerName#,'%')
+				</isEqual>
+				<isNotEqual property="sysLang" compareValue="primary">
+						a.WRITER_NAME2 LIKE CONCAT('%', #writerName#,'%')
+				</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="writerDeptName" prepend="and">
+			<isNotEmpty property="writerDeptName" >
+				<isEqual property="sysLang" compareValue="primary" >
+						a.WRITER_DEPT_NAME LIKE CONCAT('%', #writerDeptName#,'%')
+				</isEqual>
+				<isNotEqual property="sysLang" compareValue="primary">
+						a.WRITER_DEPT_NAME2 LIKE CONCAT('%', #writerDeptName#,'%')
+				</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
 			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
@@ -324,6 +349,9 @@
 		<isNotEmpty prepend="" property="order">
 				ORDER BY $order$
 		</isNotEmpty>
+		<isEmpty prepend="" property="order">
+				ORDER BY START_DATE DESC
+		</isEmpty>
 		<isNotEmpty property="startPoint" prepend="limit">
 			<isNotEmpty property="endPoint">
 				<![CDATA[
@@ -516,12 +544,10 @@
 		]]>
 	</select>
 	
-	<update id="ezAttitudeDAO.delUsersModifyAtt" parameterClass="Map">
+	<delete id="ezAttitudeDAO.delUsersModifyAtt" parameterClass="Map">
 		<![CDATA[
-			UPDATE
+			DELETE FROM 
 				TBL_ATTITUDE_MODAPPL
-			SET
-				DELFLAG = #delFlag#
           	WHERE
           		TENANT_ID = #tenantId#
           	AND
@@ -531,6 +557,28 @@
 		<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
 		      #ids[]# 
 		</iterate>
+	</delete>
+
+	
+	<update id="ezAttitudeDAO.attAppUpdate" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ATTITUDE
+			SET
+				modappl = #modappl#
+          	WHERE
+          		TENANT_ID = #tenantId#
+          	AND
+        		COMPANY_ID = #companyId#
+		]]>
+		<isNotEmpty property="attitudeId" prepend="and">
+				ATTITUDE_ID = #attitudeId#  
+		</isNotEmpty>
+		<isNotEmpty property="ids" prepend="and">
+			<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
+			      #ids[]#
+			</iterate>
+		</isNotEmpty>
 	</update>
 	
 	<select id="ezAttitudeDAO.getFormBody" parameterClass="Map" resultMap="getFormBody">
@@ -552,6 +600,46 @@
 				B.TYPE_ID = #typeId#
 		]]>
 	</select>
+	
+	<insert id="ezAttitudeDAO.attSaveAppModify" parameterClass="map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_ATTITUDE_MODAPPL(
+					ATTITUDE_ID, 
+					COMPANY_ID, 
+					TENANT_ID, 
+					WRITER_ID, 
+					WRITER_NAME, 
+					WRITER_NAME2, 
+					WRITER_TITLE, 
+					WRITER_TITLE2, 
+					WRITER_DEPT_ID, 
+					WRITER_DEPT_NAME,
+					WRITER_DEPT_NAME2,
+					CHANGE_DATE,
+					DELFLAG,
+					APPR_STATUS,
+					CONTENT
+				)
+				VALUES(
+					#attitudeId#, 
+					#companyId#, 
+					#tenantId#, 
+					#writerId#, 
+					#writerName#, 
+					#writerName2#, 
+					#writerTitle#, 
+					#writerTitle2#, 
+					#writerDeptId#, 
+					#writerDeptName#,
+					#writerDeptName2#,
+					DATE_FORMAT(DATE_SUB(DATE_FORMAT(#changeDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S'),
+					#delFlag#,
+					#apprStatus#,
+					#content#
+				)
+		]]>
+	</insert>
 	
 	<update id="ezAttitudeDAO.attModAppModify" parameterClass="map">
 		<![CDATA[
@@ -669,7 +757,7 @@
 		SELECT
 			ATTITUDE_ID,
 			(SELECT 
-				count(*) 
+				IFNULL(MAX(MOD_CNT) + 1, 0)
 			FROM
 				tbl_attitude_modappl_history
 			WHERE
