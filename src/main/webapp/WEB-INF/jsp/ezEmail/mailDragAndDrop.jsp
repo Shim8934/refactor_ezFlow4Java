@@ -466,7 +466,7 @@
 		    }
 		
 		    var xhr2 = new XMLHttpRequest();
-		    function fileupload2(fileXml) {
+		    function fileupload2(fileXml,purl) {
 		    	isfileup = true;
 				
 		        if (!filesizecheck(fileXml)) {
@@ -483,7 +483,13 @@
 		        createNodeAndInsertText(fileXml, objNode, "TXTNAME", window.parent.filedate);
 		        createNodeAndInsertText(fileXml, objNode, "ENDDAY", window.parent.BigSizeMailAttachDelDay);
 		        
-		        xhr2.open("POST", "/ezEmail/mailInterUploadCopyXCK.do?STATUS=" + window.parent.filedate + "&isbigyn=" + isbigyn, false);
+		        var targetUrl_sb="";
+		        if (purl) {
+		        	targetUrl_sb=purl;
+				} else {
+					targetUrl_sb = "/ezEmail/mailInterUploadCopyXCK.do";
+				}
+		        xhr2.open("POST", targetUrl_sb+"?STATUS=" + window.parent.filedate + "&isbigyn=" + isbigyn, false);
 		        xhr2.send(fileXml);
 		        
 		        if (xhr2.status >= 200 && xhr2.status < 300) {

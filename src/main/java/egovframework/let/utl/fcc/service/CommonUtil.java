@@ -34,6 +34,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -960,13 +961,75 @@ public class CommonUtil {
 		
 		return dbType;
 	}
+	
+	/**
+	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
+	 * @param resteUrl
+	 * @param param
+	 * @param request
+	 * @return
+	 */
+	public JSONObject getJsonFromRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
+		logger.debug("getJsonFromRestApi started");
+		String gwServerUrl = config.getProperty("config.journalGWServerURL");
+		String url = gwServerUrl + restUrl ;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		if (param != null) {
+			for(String key : param.keySet()){
+				builder.queryParam(key, param.get(key));
+			}
+		}
+		
+		RestTemplate rest = new RestTemplate();
+		
+		HttpMethod method = null;
+		switch (methodType) {
+		case "get":
+			method = HttpMethod.GET;
+			break;
+		case "put":
+			method = HttpMethod.PUT;
+			break;
+		case "post":
+			method = HttpMethod.POST;
+			break;
+		case "delete":
+			method = HttpMethod.DELETE;
+			break;
+		default:
+			method = HttpMethod.GET;
+			break;
+		}
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = null;
+		
+		try {
+			resultBody = (JSONObject) jp.parse(result.getBody());
+		} catch (org.json.simple.parser.ParseException e) {
+			e.printStackTrace();
+		}
+		logger.debug("getJsonFromRestApi ended");
+		return resultBody;
+	}
+	
+	
 	/*
 	 * 테넌트에 따른 설정정보 얻어오는 메서드
 	 */
 	public String getTenantConfigRest(String property, String userId, HttpServletRequest request) throws Exception {
 
-	//	String gwServerUrl = config.getProperty("config.journalGWServerURL");
-		String gwServerUrl = "http://localhost:8080";
+		String gwServerUrl = config.getProperty("config.journalGWServerURL");
 		String url = gwServerUrl + "/rest/ezcommon/configs";
 				
 		HttpHeaders headers = new HttpHeaders();
@@ -996,4 +1059,5 @@ public class CommonUtil {
         
         return propertyValue;
     }
+
 }

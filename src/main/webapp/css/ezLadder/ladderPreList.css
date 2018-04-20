@@ -1,0 +1,74 @@
+@charset "utf-8";
+/* CSS Document */
+body{margin:0px; padding:0px; font-family: 'Gulim', 'arial', 'verdana';}
+/* .popup{margin:0px; padding:5px 10px 10px; background:url(../images/popup_bg.gif)  #ffffff repeat-x left top;}
+.popup h1{margin:0px 0px 5px 0px; padding:0px 12px; font-size:11pt; font-weight:bold; color:black; height:34px; line-height:34px;} */
+.ladderPreList_wrap{overflow:hidden; width:1216px; margin:20px auto;}
+.ladderPreList_contents{width:1216px; height:670px;}
+.ladderPreList_left{float:left; width:300px; margin:0px 20px 0px 0px;}
+.search_title{position:relative; width:300px; height:30px; margin:0px 0px 12px 0px; padding:0px;}
+.search_title .input_text{float:left; width:256px; height:30px; padding:0px 5px; line-height:28px; border:1px solid #CCC; background:#FFF;}
+.search_title .search_btn{position:absolute; top:0px; right:0px; width:45px; height:30px; border:0;}
+
+.game_list{list-style:none; overflow:auto; width:300px; height:590px; margin:0px 0px 15px 0px; padding:0px; border:1px solid #CCC; font-size:12px; color:#333; background:#CCC; font-family:"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.game_list li{height:49px; line-height:49px; border-bottom:1px solid #CCC; cursor:pointer; background:#FFF; overflow:hidden;}
+.game_list li:hover{background:#eef7ff;}
+.game_list li span{display:inline-block; vertical-align:middle;}
+.game_list li span.icon{width:45px; height:45px; margin:0px 5px;}
+.game_list li span.txt{width: 225px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+
+/* .pagenavi{margin:0px; padding:0px; text-align:center;}
+.pagenavi span{display:inline-block; vertical-align:middle; height:19px; line-height:18px; margin:0px 1px; padding:0px; font-size:12px; border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px; cursor:pointer;}
+.pagenavi span.nav_btn{height:21px;}
+.pagenavi span.txt{padding:0px 6px; border:1px solid #BBB; }
+.pagenavi span.on{border:1px solid #2670b9; } */
+
+.ladderPreList_right{float:left; width:894px; height:668px; background:#FFF; border:1px solid #CCC; overflow-y:auto; overflow-x: hidden;}
+/* .ladderPreList_right h2{width:100%; height:72px; margin:0px; padding:0px; background:#fafafb; border-bottom:1px solid #dcdcdc;} */
+.ladderPreList_right h2{height:90px; margin:0px; padding:0px; background:#fafafb; border-bottom:1px solid #dcdcdc;}
+.ladderGame_title{float:left; min-width: 200px; height: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin:0px; padding:0px 18px; line-height:90px; font-size:16px; font-weight:bold; color:#2568b3; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+
+.ladderGame_info{float:right;}
+.ladderGame_info .attribute{float:left; overflow:hidden; list-style:none; margin:22px 6px; padding:0px 6px; border-right:1px solid #DDD;}
+.ladderGame_info .attribute li{float:left; margin:0px 10px 0px 0px; border: 1px solid #DDD; border-radius: 15px; background: #FFF; width: 45px; height: 45px;}
+.ladderGame_info .pic{float:left; margin:15px 10px; padding:0px; border: 2px solid #DDD; border-radius: 30px; overflow: hidden; width: 56px; height: 56px;}
+.ladderGame_info .txt{float:left; margin: 18px 45px 18px 5px; padding:0px; color:#333; font-size:12px; font-weight:normal; font-family:"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif; clear: none;}
+.ladderGame_info .txt span{display:block; line-height:18px;}
+.ladderGame_info .txt span.name{font-size: 14px; font-weight: bold; color: #2568b3;}
+.ladderGame_info .txt span.date{color: #777;}
+.ladderGame_info .edit{float:left; list-style:none; margin:22px 0px; padding:0px;}
+.ladderGame_info .edit li{float:left; margin:0px 10px 0px 0px; border: 1px solid #DDD; border-radius: 15px; background: #FFF; width: 45px; height: 45px;}
+
+.ladderGame_view{clear:both; width:796px; height:100%;}
+.btn_preview{float:right; margin:12px 20px 0px 0px;}
+.btn_preview input{float:left; margin:0px; padding:8px 10px; background:#fafafb; border:1px solid #DDD; border-bottom:0px;}
+.btn_preview input.on{background:#f8fcfe; border:1px solid #2568b3; border-bottom:0px;}
+.btn_preview input:hover{background:#f8fcfe; border:1px solid #2568b3; border-bottom:0px;}
+.ladderView{clear:both; width:754px; height:512px; margin:0px auto; background:#FFF; border:1px solid #DDD;}
+
+.participation_user{overflow:hidden; list-style:none; width:700px; margin:20px auto 8px; padding:0px;}
+.participation_user li{float:left; margin:0px 3px; padding:0px; font-size:12px; text-align:center; color:#333; font-family:"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.participation_user li dl{margin:0px; padding:0px;}
+.participation_user li dl dt{margin:0px; padding:0px;}
+.participation_user li dl dd{width:92px; height:32px; line-height:32px; margin:0px; padding:0px; background:#f6f5f5; border:1px solid #d5d5d5;}
+.participation_user li.win dl dd{background:#FFF; border:1px solid #2568b3; color:#2568b3;}
+
+.result{overflow:hidden; list-style:none; width:700px; margin:8px auto; padding:0px;}
+.result li{float:left; width:92px; height:32px; line-height:32px; margin:0px 3px; padding:0px; background:#f6f5f5; border:1px solid #d5d5d5; font-size:12px; text-align:center; color:#333; font-family:"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.result li.win{background:#FFF; border:1px solid #2568b3; color:#2568b3;}
+
+.temporarily{width:604px; height:300px; margin:0px auto; padding:0px;}
+
+.popup_btn{width:110px; height:30px; margin:16px auto;}
+.popup_btn input{width:44px; height:30px; margin:0px 4px; padding:0px; line-height:30px; background:#FFF; border:1px solid #BBB; border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px; cursor:pointer;}
+
+
+
+
+
+
+
+
+
+
+

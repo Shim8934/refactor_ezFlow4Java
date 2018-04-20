@@ -234,14 +234,14 @@
 			/* 2018.03.23 서주연 - #12114 */
 	        if (GetAttribute(srcEl,"dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 	            if (GetAttribute(srcEl,"dispTime") != null) {
-
-	                selsd = GetAttribute(srcEl,"dispTime");
+	                selsd = srcEl.getAttribute("dispTime");
 	                seled = selsd.replace(":00:", ":30:");
 	            }
 	        } else {
-	            selsd = GetAttribute(srcEl,"dispDate");
-            	seled = GetAttribute(srcEl,"dispDate");
+	            selsd = srcEl.getAttribute("dispDate");
+            	seled = srcEl.getAttribute("dispDate");
 	        }
+	       
 	        var feature = GetOpenPosition(820, 700);
 	        if (CrossYN() || pNoneActiveX == "YES") {
 	        	window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}&brdName=" + encodeURIComponent("${brdNm}"), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
