@@ -967,8 +967,7 @@ public class CommonUtil {
 	 */
 	public String getTenantConfigRest(String property, String userId, HttpServletRequest request) throws Exception {
 
-	//	String gwServerUrl = config.getProperty("config.journalGWServerURL");
-		String gwServerUrl = "http://localhost:8080";
+		String gwServerUrl = config.getProperty("config.journalGWServerURL");
 		String url = gwServerUrl + "/rest/ezcommon/configs";
 				
 		HttpHeaders headers = new HttpHeaders();
