@@ -499,15 +499,6 @@
 		        }	    
 		    }
 			
-			function ladder_Func(idx) {
-				if (CrossYN()) {
-					window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
-		        } else {
-		        	window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
-		            SetTreeviewUnSelect("");		            
-		        }
-			}
-
 		    function toggleQuestionList() {
 		    	if( prevSelMenu != null )
 		    		prevSelMenu.className = "off";
@@ -659,12 +650,6 @@
 	            <%-- <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
 	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li> --%>	            
 	        </ul>
-	        <c:if test="${userInfo.deptID == 'datasol' || userInfo.deptID == 'sol1' || userInfo.deptID == 'sol2' || userInfo.deptID == 'newbiz2'}">
-		        <div class="ladder" onclick="ladder_Func(1)">
-		        	<h2><span><spring:message code="ezBoard.l001" /></span></h2>
-		        </div>
-		        <ul></ul>
-	        </c:if>
 	        <h3>
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
