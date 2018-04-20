@@ -369,7 +369,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			if (status.equals("ok")) {
 				JSONObject journal = (JSONObject) result.get("data");
 				model.addAttribute("journal", journal);
-				model.addAttribute("content", journal.get("journalContent").toString().replaceAll("\'", "\"").replaceAll("(\r\n|\r|\n|\n\r)", " "));
+				model.addAttribute("content", journal.get("journalContent").toString().replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " "));
 				JSONArray fileList = (JSONArray) journal.get("fileList");
 				if (fileList != null && fileList.size() > 0) {
 					for (int i = 0; i < fileList.size(); i++) {
@@ -1007,9 +1007,11 @@ public class EzJournalController extends EgovFileMngUtil {
 		jsonParam.put("fileList", fileList);
 		jsonParam.put("mode", mode);
 		jsonParam.put("isSum", isSum);
+		
 		if (mode.equals("temp")) {
 			jsonParam.put("isTemp", "N");
 		}
+		
 		if (mode.equals("reuse")) {
 			jsonParam.put("originJournalId", originJournalId);
 			originJournalId = "";
@@ -1158,7 +1160,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("filePath", filePath);
-		param.put("fileName", fileName);
+	//	param.put("fileName", fileName);
 		
 		String restUrl = "/rest/ezjournal/journals/" + journalId + "/attachfiles";
 		JSONObject result = new JSONObject();
@@ -1659,7 +1661,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			journal = (JSONObject) resultBody.get("data");
 			String journalDate = (String) journal.get("journalDate");
 			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
-			String journalContent = ((String) journal.get("journalContent")).replaceAll("'","\"").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+			String journalContent = ((String) journal.get("journalContent")).replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 			journal.put("journalContent", journalContent);
 			journal.put("journalDate", journalDate);
 		}
