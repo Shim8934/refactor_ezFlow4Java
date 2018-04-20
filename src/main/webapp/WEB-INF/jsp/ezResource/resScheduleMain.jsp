@@ -236,7 +236,10 @@
 	            if (GetAttribute(srcEl,"dispTime") != null) {
 
 	                selsd = GetAttribute(srcEl,"dispTime");
-	                seled = selsd.replace(":00:", ":30:");
+	                
+	                if (selsd != null) { 
+	                	seled = selsd.replace(":00:", ":30:");
+	                }
 	            }
 	        } else {
 	            selsd = GetAttribute(srcEl,"dispDate");
