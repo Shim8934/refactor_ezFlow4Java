@@ -2670,18 +2670,17 @@
 		  		imgPopupBox.removeClass("imgPopupBoxOff imgPopupBoxMagnify").addClass("imgPopupBox");
 	    		imgPopupDiv.removeClass("imgPopupDivMagnify").addClass("imgPopupDiv");
 	    		imgPopup.removeClass("imgPopupOff imgPopupMagnify").addClass("imgPopup");
-	    		imgPopup.attr("src",e.target.src);
-	    		imgPopup.attr("_filename",e.target.getAttribute("_filename"));
-	    		imgPopup.attr("title",e.target.getAttribute("_filename"));
+	    		imgPopup.attr("src", e.target.src);
+	    		imgPopup.attr("_filename", e.target.getAttribute("_filename"));
+	    		imgPopup.attr("title", e.target.getAttribute("_filename"));
 	    		
 	    		var imgPB_LeftOffset = (window.innerWidth-imgPopupBox.width()) / 2;
 	    		var imgPB_TopOffset = (window.innerHeight-imgPopupBox.height()) / 2 + window.pageYOffset;
 	    		var imgP_LeftOffset = (imgPopup.parent().width()-imgPopup.width()) / 2;
 	    		
-	    		imgPopupBox.css("left", imgPB_LeftOffset);
-	    		imgPopupBox.css("top",imgPB_TopOffset);
-	    		imgPopup.css({"left": imgP_LeftOffset, "zoom": ""});
-	    		imgPopup.css("top",((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH);
+	    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
+	    		imgPopupDiv.css({"width": imgPopup.width()});
+	    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
 	    		//imgPopup.css({"left": 0, "zoom": ""});
 	    		$("#thumbMagnifyBtn").removeClass("fa fa-minus-square").addClass("fa fa-plus-square");
 	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().removeClass("iPBInnerDiv_Top").addClass("iPBInnerDiv_TopOff");
