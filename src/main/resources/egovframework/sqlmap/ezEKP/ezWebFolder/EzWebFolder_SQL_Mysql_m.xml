@@ -7,6 +7,7 @@
 	<typeAlias alias="ShareVO"                type="egovframework.ezEKP.ezWebFolder.vo.ShareVO"/>
 	<typeAlias alias="FolderFileVO"           type="egovframework.ezEKP.ezWebFolder.vo.FolderFileVO"/>
 	<typeAlias alias="FavoriteFileVO"         type="egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO"/>
+	<typeAlias alias="FolderTreeVO"           type="egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO"/>
 	
 	<!-- TrashFile resultMap -->
 	<resultMap id="trashCanVO" class="TrashCanVO">
@@ -70,6 +71,15 @@
         <result property="subStatus"              column="sub_status"             columnIndex="26" />
         <result property="tenantId"               column="tenant_id"              columnIndex="27" />
     </resultMap>
+	
+	<!-- FolderTree resultMap -->
+	<resultMap id="folderTreeVO" class="FolderTreeVO">
+		<result property="id"        column="ID"        columnIndex="1"/>
+		<result property="text"      column="TEXT"      columnIndex="2"/>
+		<result property="parent"    column="PARENT"    columnIndex="3"/>
+		<result property="selected"  column="SELECTED"  columnIndex="4"/>
+		<result property="createId"  column="CREATEID"  columnIndex="5"/>
+	</resultMap>
 	
 	<sql id="searchTerm">
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -242,7 +252,7 @@
 		AND TENANT_ID = #tenantId#
 	</insert>
 	
-	<select id="EzWebFolderDAO_m.getUserFolderTree" resultClass="HashMap" parameterClass="Map">
+	<select id="EzWebFolderDAO_m.getUserFolderTree" resultMap="folderTreeVO" parameterClass="Map">
 		<![CDATA[
 	        SELECT
 	        	FOLDER_ID AS ID,
@@ -267,7 +277,7 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.getDeptFolderTree" resultClass="HashMap" parameterClass="Map">
+	<select id="EzWebFolderDAO_m.getDeptFolderTree" resultMap="folderTreeVO" parameterClass="Map">
 		<![CDATA[
 	        SELECT
 	        	FOLDER_ID AS ID,
@@ -295,10 +305,10 @@
 			</iterate>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.getCompFolderTree" resultClass="HashMap" parameterClass="Map">
+	<select id="EzWebFolderDAO_m.getCompFolderTree" resultMap="folderTreeVO" parameterClass="Map">
 		<![CDATA[
-	        SELECT
-	        	F.FOLDER_ID AS ID,
+			SELECT DISTINCT
+				F.FOLDER_ID AS ID,
 	        	CASE WHEN F.FOLDER_UPPER = 'root'
 	        		THEN '##'
 	        		ELSE FOLDER_UPPER
@@ -312,19 +322,24 @@
 	        		ELSE F.FOLDER_NAME2
 	        	END TEXT,
 	        	F.CREATE_ID AS CREATEID
-	        FROM TBL_WEBFOLDER_FOLDER F
-	        JOIN TBL_WEBFOLDER_FOLDERUSER FU
-	        ON F.FOLDER_ID = FU.FOLDER_ID
-	        AND F.TENANT_ID = FU.TENANT_ID
-	        AND F.FOLDER_TYPE = 'C'
-	        AND F.USE_STATUS = 'Y'
-	        AND FU.USER_ID IN
-        ]]>
+            FROM TBL_WEBFOLDER_FOLDER F
+            JOIN (
+				SELECT FF.FOLDER_PATH
+				FROM TBL_WEBFOLDER_FOLDER FF
+				JOIN TBL_WEBFOLDER_FOLDERUSER FU
+				ON FF.FOLDER_ID = FU.FOLDER_ID
+				AND FF.TENANT_ID = FU.TENANT_ID
+				AND FF.FOLDER_TYPE = 'C'
+				AND FU.USER_ID IN 
+		]]>
 			<iterate property="idList" open="(" close=")" conjunction=",">
 				#idList[]#
 			</iterate>
-        <![CDATA[
-	        WHERE F.TENANT_ID = #tenantId#
+		<![CDATA[
+				WHERE FF.TENANT_ID = #tenantId# ) AS FP
+            ON F.FOLDER_PATH LIKE CONCAT(FP.FOLDER_PATH, '%')
+			WHERE F.USE_STATUS = 'Y'
+			AND F.TENANT_ID = #tenantId#
 	        UNION
 	        SELECT
 	        	FOLDER_ID AS ID,
