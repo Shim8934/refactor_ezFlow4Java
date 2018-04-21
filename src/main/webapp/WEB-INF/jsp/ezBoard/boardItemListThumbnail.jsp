@@ -153,9 +153,16 @@
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
-		    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
-		    		MailOptionHiddenOutside(e);
-		    	});
+		    	//즐겨찾기 게시판의 썸네일게시판 스크립트 오류 수정
+		    	if (typeof((($($(window.parent.frames['left']))).context) == "undefined") && (($($(window.parent.frames['left']))).length) == 0) {
+		    		$(parent.parent.frames['left']).mouseup(function (e) {
+			    		MailOptionHiddenOutside(e);
+			    	});
+		    	} else {
+			    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
+				    	MailOptionHiddenOutside(e);
+			    	});
+		    	}
 		    	
 		    	$(parent.document).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);

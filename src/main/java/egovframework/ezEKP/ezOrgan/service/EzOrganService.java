@@ -76,4 +76,5 @@ public interface EzOrganService {
 
 	public String getSearchList(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String companyId, int tenantID) throws Exception;
 
+	public boolean checkRetired(String userID, String companyID, int tenantID) throws Exception;
 }

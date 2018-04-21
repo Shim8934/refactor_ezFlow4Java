@@ -3492,10 +3492,17 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			Message[] messages = sourceFolder.getMessagesByUID(uids);
 			
-			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);			
-			sourceFolder.copyUIDMessages(messages, movefolder);
+			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);	
 			
-			sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", info.getTenantId());
+			
+			if (useImapMoveCommand.equals("YES")) {
+				sourceFolder.moveUIDMessages(messages, movefolder);
+			} else {			
+				sourceFolder.copyUIDMessages(messages, movefolder);
+				
+				sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+			}
 			
 			sourceFolder.close(true);
 		
@@ -3651,12 +3658,22 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 
 	        deleteMsgs = sourceFolder.getMessagesByUID(uids);
 	        
-			if (!permanentlyDelete) {
-				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
-				sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
-			}
+			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", info.getTenantId());
+			IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));	
 			
-			sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+			if (useImapMoveCommand.equals("YES")) {
+				if (!permanentlyDelete) {
+					sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
+				} else {
+					sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+				}
+			} else {
+				if (!permanentlyDelete) {			
+					sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
+				}
+				
+				sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+			}
 
 			sourceFolder.close(true);
 							

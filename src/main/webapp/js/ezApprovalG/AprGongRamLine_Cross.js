@@ -804,7 +804,13 @@ function aprLineAddDeptUser(mode, xmlData) {
             pparsingXML = pparsingXML + "</CELL><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(getNodeText(GetElementsByTagName(xmlData, "DATA6")[i])) + "</VALUE>";
             pparsingXML = pparsingXML + "</CELL><CELL>";
-            pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
+            //G일때는 공람, S일떄는 회람으로 표시되게 수정
+            if (approvalFlag == "G") {
+            	pparsingXML = pparsingXML + "<VALUE>" + strLangDocState15 + "</VALUE>";
+        	} else {
+        		pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
+        	}
+            //pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
             pparsingXML = pparsingXML + "</CELL><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + strLang72 + "</VALUE>";
             pparsingXML = pparsingXML + "</CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";	

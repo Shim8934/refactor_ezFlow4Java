@@ -385,6 +385,7 @@
 	        var useHTMLMode = "${useHTMLMode}";
 	        var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
+			var uploadUrl = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
 			
 	        if (type == "APPROVAL" || type == "APPROVALG") {
 				CrossEditor.params.Height = height + "px";
@@ -395,9 +396,14 @@
 	        if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
 	        	//메일 부제중설정, 포토게시판일 경우 시 이미지 업로드 아이콘 제거
 	        	CrossEditor.params.DeleteCommand = ["image"];
+	        } else if (type == "MAILLETTER") {
+	        	var letterBoxNo = parent.popLetterBoxNo; // letterEditPopUp.jsp
+	        	var letterId = parent.popLetterId; // letterEditPopUp.jsp
+	        	
+	        	uploadUrl += "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
 	        }
 	       	
-	        CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
+	        CrossEditor.params.UploadFileExecutePath = uploadUrl;
 			CrossEditor.params.FullScreen = true;
 	        CrossEditor.params.PutStyleInBody = true;
 	        CrossEditor.params.Font = "<spring:message code='main.t0620' />".split(";");

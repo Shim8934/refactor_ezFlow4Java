@@ -135,9 +135,14 @@
 		    }
 		    function getAprovSub_after(xml) {
 		        try {
-		            if (xml == "" || xml == "NOTPERMISSION") return;
+		            if (xml == "") return;
 		
 		            document.getElementById("lvAprLine").innerHTML = "";
+		            
+		            if (xml == "NOTPERMISSION") {
+		            	document.getElementById("lvAprLine").innerHTML = "<div style='height:170px;text-align:center;padding-top:150px;font-size:12px'><spring:message code='main.t00001'/></div>";
+		            	return;
+		            }		            
 		
 		            var listview = new ListView();                          
 		            listview.SetID("AprLine");                              
