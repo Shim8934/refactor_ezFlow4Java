@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezOrgan.web;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
@@ -137,7 +138,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
 		
+		// set useLetter
+		String useLetter = ezCommonService.getTenantConfig("useLetter", user.getTenantId());
+		if (useLetter == null || useLetter.equals("")) {
+			useLetter = "NO";
+		}
+				
+		logger.debug("useLetter=" + useLetter);
+		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		model.addAttribute("useLetter", useLetter);
 		
 		return "admin/ezOrgan/organLeft";
 	}
@@ -290,7 +300,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						try {
 							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
 									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, tenantID, userInfo);
-							result = "OK";	
+							result = "OK";
 						} catch (Exception e) {
 							e.printStackTrace();
 							
@@ -1268,7 +1278,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	        ezOrganAdminService.updateDBData_user(vo);
 	        result = "OK";
 		// 새로운 사용자를 등록한다.
-		} else {		    
+		} else {
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 			String cn = vo.getCn();
 						
@@ -1607,10 +1617,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 			writeUploadedFile(multiFile, fileName + extension, tempPath);
 			File imageFile = new File(tempPath + fileName + extension);			
-			
+
 			BufferedImage bi = ImageIO.read(imageFile);
-            BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
-            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
+			/*2018-04-12이효진  bi.getType으로 지정시 color변경되어 TYPE_4BYTE_ABGR로 지정*/
+//            BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
+            BufferedImage bufferedImage = new BufferedImage(119, 128, BufferedImage.TYPE_4BYTE_ABGR);
+            /*2018-04-12이효진  PNG파일 배경지정*/
+//            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
+            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, Color.WHITE, null);
             
             File file2 = new File(serverPath + fileName + "png");
             ImageIO.write(bufferedImage, "png", file2);
@@ -2432,10 +2446,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 				return returnValue;
 			}
+			int tenantId = userInfo.getTenantId();
 			
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String mail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
-			returnValue = ezEmailService.checkIndividualAlias(mail);
+			returnValue = ezEmailService.checkIndividualAlias(mail,tenantId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2711,7 +2726,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					.replace("${fax}", _vo.getFacsimileTelephoneNumber() == null ? "" : _vo.getFacsimileTelephoneNumber()).replace("${mobile}", _vo.getMobile() == null ? "" : _vo.getMobile())
 					.replace("${zipCode}", _vo.getPostalCode() == null ? "" : _vo.getPostalCode()).replace("${address}", _vo.getStreetAddress() == null ? "" : _vo.getStreetAddress());
 			
-			ezEmailService.setMailSignature(_vo.getTenantId(), _vo.getCn(), mailSignatureVO.getUseFlag(), content1, content2, content3);
+			ezEmailService.setMailSignature(vo.getTenantId(), _vo.getCn(), mailSignatureVO.getUseFlag(), content1, content2, content3);
 			logger.debug("InitMailSign set.");
 		}
 	}

@@ -153,9 +153,16 @@
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
-		    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
-		    		MailOptionHiddenOutside(e);
-		    	});
+		    	//즐겨찾기 게시판의 썸네일게시판 스크립트 오류 수정
+		    	if (typeof((($($(window.parent.frames['left']))).context) == "undefined") && (($($(window.parent.frames['left']))).length) == 0) {
+		    		$(parent.parent.frames['left']).mouseup(function (e) {
+			    		MailOptionHiddenOutside(e);
+			    	});
+		    	} else {
+			    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
+				    	MailOptionHiddenOutside(e);
+			    	});
+		    	}
 		    	
 		    	$(parent.document).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
@@ -490,7 +497,7 @@
 		
 		        if (document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight == "bold") {
 		            document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
-		            document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
+		       // document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
 		        }
 		
 		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
@@ -925,17 +932,17 @@
 		
 		    function search(type) {
 		        if (type == "basic") {
-		            if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-		                alert("<spring:message code='ezBoard.t192'/>");
+		        	if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
+		        			&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+		                alert("<spring:message code='ezBoard.t192' />");
 		                return;
 		            }
-		
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-		                alert("<spring:message code='ezBoard.t189'/>");
+		        		alert("<spring:message code='ezSystem.x0035' />");	
 		                return;
 		            }
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-		                alert("<spring:message code='ezBoard.t189'/>");
+		                alert("<spring:message code='ezSystem.x0036' />");
 		                return;
 		            }
 		            if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
@@ -999,7 +1006,7 @@
 		
 		    function SaveMyBoard() {
 		        if (CrossYN()) {
-		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 450, 415);
+		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 457, 418);
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else
@@ -1041,8 +1048,8 @@
 			          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezBoard.t208'/></label>
 					  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code='ezBoard.t223'/></label>
 					  &nbsp;
-					  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-			          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
+					  <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+			          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onClick="search('quick')"></a>
 			        </span>
 			</h1>
 		</c:when>
@@ -1055,8 +1062,8 @@
 		          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t208'/>
 				  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t223'/>
 				  &nbsp;
-				  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
+				  <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onClick="search('quick')"></a>
 		        </span>
 		</c:otherwise>
 	</c:choose>

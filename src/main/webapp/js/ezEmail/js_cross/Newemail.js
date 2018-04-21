@@ -172,8 +172,22 @@ function MailPreviewResize(e) {
         setTimeout(function () { isScrollMailList(); }, 500);
     }
 }
-function new_mail_onclick() {
-	pUrl = "/ezEmail/mailWrite.do?cmd=NEW";
+// 수아 수정 (매개변수 fromE추가)
+function new_mail_onclick(fromE) {
+	// 수아 수정
+	//var MsgTo = "";
+	var msgto = "";
+	
+
+	if (useMailWriteSenderClick == "YES" && typeof fromE != "undefined" && $(fromE).attr("data-msgto") != "" && fromE.innerHTML != "") {
+		msgto = $(fromE).attr("data-msgto");
+	}
+	
+	var msgStr = msgto !== "" ? msgto : "" ;
+	//pUrl = "/ezEmail/mailWrite.do?cmd=NEW" + msgStr;
+	var myForm = document.mailWriteSenderClick;
+	
+	//pUrl = "/ezEmail/mailWrite.do?cmd=NEW"
 	/*if (CrossYN() || pNoneActiveX == "YES") {
         pUrl = "/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW";
     }
@@ -183,8 +197,13 @@ function new_mail_onclick() {
         else
             pUrl = "/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW";
     }*/
-    var newwin = GetOpenWindow(pUrl, "", 890, 840, "yes");
+    var newwin = GetOpenWindow("", "mailWriteSender", 890, 840, "yes");
+    myForm.target = "mailWriteSender";
+    myForm.msgto.value = msgStr;
+    myForm.submit();
+    
     newwin.focus();
+    newwin.name = "";
 }
 function ReSend(pURL, pEmail) {
     var pheight = window.screen.availHeight;
@@ -473,14 +492,12 @@ function event_xmlhttp_mailMoveDelete_Complete() {
             if(event_xmlhttp_mailMoveDelete_Complete.mode=="MOVE")
                 alert(MoveMsg);
             else if (event_xmlhttp_mailMoveDelete_Complete.mode == "ALL") {
-                parent.frames["left"].LoadEmailTree();
                 alert(strLang215)
             }
             else {
                 if (event_xmlhttp_mailMoveDelete_Complete.mode != "BMOVE")
                     alert(strLang215)
             }
-
         }
         else {
             if (event_xmlhttp_mailMoveDelete_Complete.mode == "MOVE")

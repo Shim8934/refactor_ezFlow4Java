@@ -1,4 +1,5 @@
-﻿function MailToMe_Onclick() {
+﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
+function MailToMe_Onclick() {
     var checked = document.getElementById('toMe').checked;
     var msgDiv = document.getElementById('MsgToGot');
 
@@ -854,14 +855,14 @@ function Save_onClick_Complete(ReturnValue) {
             createNodeAndInsertText(xmlDoc, rootNode, "MAILCMD", g_cmd);
             createNodeAndInsertText(xmlDoc, rootNode, "ORGMAILCMD", gg_cmd);
             createNodeAndInsertText(xmlDoc, rootNode, "AUTHOR", g_szAuthor);
-            createNodeAndInsertText(xmlDoc, rootNode, "SUBJECT", Subject);
+            createNodeAndInsertText(xmlDoc, rootNode, "SUBJECT", Subject.replace(regex, " "));
             createNodeAndInsertText(xmlDoc, rootNode, "TO", GetAddrFormatForSend(MsgToGot));
             createNodeAndInsertText(xmlDoc, rootNode, "CC", GetAddrFormatForSend(MsgCCGot));
             createNodeAndInsertText(xmlDoc, rootNode, "BCC", GetAddrFormatForSend(MsgBCCGot));
             if (document.getElementById("bodyType") != null && document.getElementById("bodyType").value == "1")
                 createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", document.getElementById("plainTextArea").value);
             else
-                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n"));
+                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n").replace(regex, " "));
             createNodeAndInsertText(xmlDoc, rootNode, "FROM", "\"" + g_myname + "\" <" + g_from + ">");
             createNodeAndInsertText(xmlDoc, rootNode, "SENSITIVITY", m_rgParams4PostOption["postType"]);
             createNodeAndInsertText(xmlDoc, rootNode, "REPLYSENDTIME", m_rgParams4PostOption["replySendTime"]);
@@ -1670,12 +1671,12 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
             if (DocHref.toLowerCase().indexOf(".mht") > -1) {
                 var fullPath = encodeURIComponent(DocHref);
                 var tempXML = createXmlDom();
-                var XmlBodyATT = createXmlDom();
+//                var XmlBodyATT = createXmlDom();
                 var XmlBodyDATA = createXmlDom();
                 var tempStr = "";
                 tempStr = ConvertMHTtoHTML(fullPath);
                 tempXML = loadXMLString(tempStr);
-                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
                 XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
                 var htmlData = getNodeText(XmlBodyDATA);
                 document.getElementById('docContent').innerHTML = htmlData;
@@ -1816,13 +1817,13 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
         var fullPath = Rurl;
         var tempXML = createXmlDom();
-        var XmlBodyATT = createXmlDom();
+//        var XmlBodyATT = createXmlDom();
         var XmlBodyDATA = createXmlDom();
         var tempStr = "";
         tempStr = ConvertMHTtoHTML(fullPath);
 
         tempXML = loadXMLString(tempStr);
-        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
         XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
         var htmlData = getNodeText(XmlBodyDATA);
 
@@ -1920,12 +1921,12 @@ function GetBoardItemInfo_New3(pBoardID, pItemID) {
         var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
         var fullPath = Rurl;
         var tempXML = createXmlDom();
-        var XmlBodyATT = createXmlDom();
+//        var XmlBodyATT = createXmlDom();
         var XmlBodyDATA = createXmlDom();
         var tempStr = "";
         tempStr = ConvertMHTtoHTML(fullPath);
         tempXML = loadXMLString(tempStr);
-        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
         XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
         var htmlData = getNodeText(XmlBodyDATA);
         
@@ -2324,7 +2325,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         BodyHTMLContent = ReplaceText(BodyHTMLContent, "\\]\\]>", "");
     } catch (e) { }
     
-    bigMakeXmlNode(xmlDoc, rootNode, "HTMLBODY", BodyHTMLContent);
+    bigMakeXmlNode(xmlDoc, rootNode, "HTMLBODY", BodyHTMLContent.replace(regex, " "));
 
     // 사용되지 않는 부분으로 판단되어 제거함.
     /*
@@ -2334,7 +2335,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         tempDiv.innerHTML = ReplaceText(tempDiv.innerHTML, "<P>", ";crlf;");
     } catch (e) { }
 
-    bigMakeXmlNode(xmlDoc, rootNode, "eContentText", tempDiv.innerHTML);
+    bigMakeXmlNode(xmlDoc, rootNode, "eContentText", tempDiv.innerHTML.replace(regex, " "));
     */
 }
 
@@ -3083,12 +3084,12 @@ function getEmailAddressList(ReceiverList) {
         receiverPart = receiver.split(" <");
         var pName = receiverPart[0];
         var pEmail = receiverPart[1].replace("<", "").replace(">", "");
-		
+        
         if (g_cmd != "EDIT") {
-            if (pEmail == g_myemail)
-                continue;
+            if (pEmail == g_myemail) 
+            	continue;
         }
-
+        
         retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");
         
         if (receiverPart[1].indexOf('@') > 0) {

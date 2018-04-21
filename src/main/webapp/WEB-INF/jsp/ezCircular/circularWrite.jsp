@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html style="height:100%">
+<html style="height:100%"> 
 	<head>
 		<c:choose>
 			<c:when test="${mode eq 'reuse'}">
@@ -70,7 +70,7 @@
 		        	var nameList = userName.split(", ");
 		        	var nameList2 = userName2.split(", ");
 
-		        	// 수정이나 임시저장일경우 작성자는 회람자로 무조건 추가되기때문에 -1
+		        	// 수정이나 임시저장일경우 작성자는 회람자로 무조건 추가되기때문에 -1처리함
 		        	if (mode != "write") {
 		        		listSize = listSize - 1;
 		        	}
@@ -168,6 +168,7 @@
 				var receiverList = document.getElementById("receiverlist").innerHTML;
 				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
 				var receiverID = document.getElementById("receiverID").innerHTML;
+				
 
 				if (receiverList.indexOf(userMyName) == -1) {
 					receiverList += ", " + userMyName;
@@ -259,9 +260,7 @@
 						receiverList = userMyName;
 						receiverList2 = userMyName2;
 						receiverID = userMyID;
-					}
-
-					if (receiverList.indexOf(userMyName) == -1) {
+					} else {
 						receiverList += ", " + userMyName;
 						receiverList2 += ", " + userMyName2;
 						receiverID += ", " + userMyID;

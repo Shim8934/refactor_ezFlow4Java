@@ -529,9 +529,9 @@
 		  <tr>			
 		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t711'/></h2> 
 		      <table>
-		        <tr   id="trCreateCab"> 
-		          <th><a  class="imgbtn"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
-				  <a  class="imgbtn"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a></th>
+		        <tr id="trCreateCab"> 
+		          <th><a  class="imgbtn" style="vertical-align:middle; margin-top:1.5px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
+				  <a  class="imgbtn" style="vertical-align:middle; margin-top:1.5px; display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a></th>
 		        </tr>
 		        <tr id="trCreateCabDummy" style="display:none"> 
 		          <td></td>

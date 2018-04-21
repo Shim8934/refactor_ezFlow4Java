@@ -1,4 +1,4 @@
-﻿var DefaultView = 0;
+﻿﻿var DefaultView = 0;
 var sStartDate, sEndDate;
 var typeCal = 0;
 var sDate = parent.frames["left"].sDate;
@@ -44,7 +44,7 @@ function CalendarView(pTagetID) {
         tDiv.style.position = "absolute";
         tDiv.style.visibility = "hidden";
         tDiv.style.zIndex = "1000";
-        tDiv.style.backgroundColor = "lightyellow";
+        tDiv.style.backgroundColor = "white";
         tDiv.innerHTML = "";
         objElm.appendChild(tDiv);
 
@@ -65,6 +65,7 @@ function CalendarView(pTagetID) {
             oTable.setAttribute("border", "0");
             oTable.setAttribute("width", "100%");
             oTh.setAttribute("id", "calTitle");
+            oTh.style.fontSize = "15px";
             oTh.colSpan = "2";
             if (typeCal == 2) {
                 var tempyear = sDate.getFullYear();
@@ -267,14 +268,13 @@ function CalendarView(pTagetID) {
             oDiv.setAttribute("id", "CalDiv")
         }
 
-
-
         var oTable = document.createElement("TABLE");
         oTable.setAttribute("id", "dayDiv");
         oTable.setAttribute("cellpadding", "0");
         oTable.setAttribute("cellspacing", "0");
         oTable.setAttribute("border", "0");
         oTable.setAttribute("width", "100%");
+        oTable.style.minHeight = "670px";
         if (typeCal == 0)
             oTable.className = "calendar_month";
         else if (typeCal == 1)

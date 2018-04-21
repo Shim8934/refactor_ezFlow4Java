@@ -346,7 +346,11 @@
         <tr>
             <td style="width: 99%">
                 <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t195' /> :
-        <select id="SCompID" name="SCompID" onchange="return getmailstatistics()">${listCompany}</select>
+        		<select id="SCompID" name="SCompID" onchange="return getmailstatistics()">
+			    	<c:forEach var="item" items="${list}">
+			         		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+			       	</c:forEach>
+        		</select>
                     &nbsp;&nbsp;&nbsp;<spring:message code='ezStatistics.t1002' /> : 
             <select id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
                     <spring:message code='ezStatistics.t55' /></span>

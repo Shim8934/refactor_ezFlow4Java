@@ -123,10 +123,28 @@
 	        schedule_get_holiday();
 	    }
 	    
+	    var agent = navigator.userAgent.toLowerCase(); 
 	    window.onload = function () {
 	    	var objRInfo = document.getElementById('ResourceInfo');
 	        if (objRInfo) {
-	            objRInfo.style.height = document.documentElement.clientHeight - 376 + "px";
+	            objRInfo.style.height = document.documentElement.clientHeight - 371 + "px";
+	        }        
+	 		var divH = document.getElementById("divExplain")
+			if(divH){
+				divH.style.height = document.documentElement.clientHeight - 618 + "px";
+				divH.style.minHeight = "0px";			
+			} 
+	        var resDiv = document.getElementById("ResDiv");
+	        if(resDiv){//ie에서의 패딩 조절
+	        	if (!CrossYN() || agent.search( "trident" ) > -1 ) {
+				resDiv.style.padding = "1.8px 5px 0px 5px";
+				}	
+	        }
+	        var resDivTable = document.getElementById("ResDivTable");
+	        if(resDivTable){//ie에서의 스크롤 우측 마진 조절
+				if (!CrossYN() || agent.search( "trident" ) > -1 ) {
+					resDivTable.style.marginRight = "0.1px";
+				}
 	        }
 	        
 	        if (typeCal == "2") {
@@ -212,12 +230,16 @@
 	            srcEl = window.event.srcElement;
 	        }
 	        var selsd = "", seled = "";
-
-	        if (GetAttribute(srcEl,"dispDate") == null) {
+	        
+			/* 2018.03.23 서주연 - #12114 */
+	        if (GetAttribute(srcEl,"dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 	            if (GetAttribute(srcEl,"dispTime") != null) {
 
 	                selsd = GetAttribute(srcEl,"dispTime");
-	                seled = selsd.replace(":00:", ":30:");
+	                
+	                if (selsd != null) { 
+	                	seled = selsd.replace(":00:", ":30:");
+	                }
 	            }
 	        } else {
 	            selsd = GetAttribute(srcEl,"dispDate");
@@ -319,7 +341,7 @@
     </script>
 	
 	</head>
-	<body class="mainbody" style="overflow: auto;" id="BodyTop">
+	<body class="mainbody" style="overflow: auto; margin-bottom:0px;" id="BodyTop">
 		<h1><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -351,14 +373,15 @@
 				</td>
 				<td style="vertical-align:top;width:10px">&nbsp;</td>
 				<td id="calTD2" style="vertical-align:top;width:220px">
-					<div style="padding:15px 10px 15px 10px;border:1px solid #ddd"><div id="CalendarMini"></div></div>
-					<table id="ResourceInfo" name="ResourceInfo" style="width:218px; border-collapse:collapse; border-spacing:0px; margin-top:10px;border:1px solid #ddd">
-						<tr>
+				 <div style="padding:15px 10px 15px 10px;border:1px solid #ddd"><div id="CalendarMini"></div></div>
+					<table id="ResourceInfo" name="ResourceInfo" style="width:218px; border-collapse:collapse; border-spacing:0px; margin-top:5px;border:1px solid #ddd;">
+					<tr>
 							<td height="30" bgcolor="#EFEFEF" class="subtxt" style="padding:3px 0px 0px 12px;border:1px solid #d1ddec; color:#333;background-color:rgb(236, 243, 252);"><spring:message code='ezResource.t271'/></td>
 						</tr>
 						<tr>
-							<td style="padding: 5px; vertical-align:top">
-								<table style="height:100%">
+							<td style="vertical-align:">
+							<div id="ResDiv" style="height:100%; padding: 5px; overflow-x:hidden; overflow-y:auto;">
+								<table id="ResDivTable" style="height:100%;">
 									<tr>
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <spring:message code='ezResource.t153'/> :<a href="#" onClick="MemberInfo_onClick('${ownerID}')"> ${ownerNm}(${ownerPosition}) </a> </td>
 									</tr>
@@ -372,7 +395,7 @@
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <spring:message code='ezResource.t148'/></td>
 									</tr>
 									<tr>
-										<td style="padding:2px 10px; word-break:break-all; height:20px">${resLocation}</td>
+										<td style="padding:2px 10px; word-break:break-all; height:20px;">${resLocation}</td>
 									</tr>
 									<tr>
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t149'/></b></td>
@@ -393,14 +416,15 @@
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t271'/></b></td>
 									</tr>
 									<tr>
-										<td style="padding:2px 10px"><div style="overflow: auto; height: 100%;word-break:break-all"><c:out value='${brdExplain}' /></div></td>
+										<td style="padding:2px 10px; max-width:176px;"><div  id = "divExplain" style="max-width:176px; word-break : break-word; word-wrap : break-word;"><c:out value='${brdExplain}' /></div></td>
 									</tr>
 								</table>
+								</div>
 	                    	</td>
                			</tr>
            			</table>
 				</td>
 			</tr>
-		</table>
+		</table>	
 	</body>
 </html>

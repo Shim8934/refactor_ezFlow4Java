@@ -388,6 +388,15 @@
 	            var seed = now.getMilliseconds();
 	            return Math.random(seed) + 1;
 	        }
+	        
+			var agent = navigator.userAgent.toLowerCase(); 
+			if (!CrossYN() || agent.search( "trident" ) > -1 ) {
+				$("body").ready(function(){
+					$(".imgbtn").css("padding-left" , "13px");
+					$(".imgbtn span").css("padding-right", "13px");
+				});
+			}
+			
 	    </script>
 	</head>
 	<body class="popup">
@@ -397,7 +406,7 @@
 	            <li><span onclick="window.close()"><spring:message code='ezBoard.t12'/></span></li>
 	        </ul>
 	    </div>
-	    <div style="margin-bottom:5px;margin-top:3px">
+	    <div style="margin-bottom:5px;margin-top:3px;">
 	        <a  class="imgbtn"><span onClick="add_onclick('U')"><spring:message code='ezBoard.t10045'/></span></a>
 	        <a  class="imgbtn"><span onClick="add_onclick('C')"><spring:message code='ezBoard.t10046'/></span></a>
 	        <a  class="imgbtn"><span onClick="modify_onclick()"><spring:message code='ezBoard.t316'/></span></a>
@@ -410,7 +419,7 @@
 	    <table class="popuplist" style="width: 100%">
 	        <tr>
 	            <td>
-	                <div class="tree" style='width: auto; overflow-x: auto; overflow-y: auto; margin-left: 5px; height: 285px;' id='TreeCtrl_MyBoardTree'></div>
+	                <div class="tree" style='width: auto; overflow-x: auto; overflow-y: auto; margin-left: 5px; height: 280px;' id='TreeCtrl_MyBoardTree'></div>
 	            </td>
 	        </tr>
 	    </table>

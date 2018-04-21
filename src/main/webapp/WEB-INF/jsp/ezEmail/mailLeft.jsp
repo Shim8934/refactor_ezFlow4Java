@@ -46,7 +46,7 @@
 	        }
 	        
 	        window.onload = function () {
-	        	
+			    
 	        	detailView();
 		    	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -346,7 +346,7 @@
 	        var mail_foldermanage_Cross_dialogArguments = new Array();
 	        function folder_manage() {
 	            mail_foldermanage_Cross_dialogArguments[1] = folder_manager_after;
-	            var OpenWin = window.open("/ezEmail/mailFolderManage.do", "mail_foldermanage_Cross", GetOpenWindowfeature(500, 500));
+	            var OpenWin = window.open("/ezEmail/mailFolderManage.do", "mail_foldermanage_Cross", GetOpenWindowfeature(555, 500));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function folder_manager_after(RtnVal) {
@@ -778,28 +778,177 @@
 	            	console.log("mailbox_import error!");
 	            }
 		    }
+		    
+		   function mailbox_delete() {
+			   try {
+				   var nodeIdx = PostTreeView.selectedIndex();
+		    	   var folderPath = PostTreeView.getvalue(nodeIdx, "href");
+		    	   
+		    	   var trashBoxURL = "${pDeleteBoxID}";
+			        
+			      	//지운편지함의 메일 영구삭제
+			        if (folderPath == trashBoxURL) {
+			            if (confirm("<spring:message code='ezEmail.t470' />")) {
+			                delete_mail(folderPath, true, "");
+			            }
+			        }
+			      	//편지함의 메일 지운편지함으로 이동
+			        else {
+			            if (confirm("<spring:message code='ezEmail.t475' />")) {
+			                delete_mail(folderPath, false, trashBoxURL);
+			            }
+			        }
+			      	
+			   } catch (e) {
+				   console.log("mailbox_delete error!");
+			   }
+		   }
+		   
+		   var xmlHTTP2 = null;
+		   var deltype = null;
+		   function delete_mail(szURL, bDelete, destURL) {
+		    	xmlHTTP2 = createXMLHttpRequest();
+		        var xmlDOM = createXmlDom();
+		        var objNode;
+		        
+		        if (bDelete) {
+		            deltype = "MAILREALDEL";
+		        } else {
+		            deltype = "MAILDEL";
+		        }
+		        
+		        createNodeInsert(xmlDOM, objNode, "DATA");
+		        createNodeAndInsertText(xmlDOM, objNode, "URL", szURL);
+		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
+		        createNodeAndInsertText(xmlDOM, objNode, "CMD", deltype);
+		        
+		        xmlHTTP2.open("POST", "/ezEmail/mailMakeFolder.do", true);
+		        xmlHTTP2.onreadystatechange = delete_mail_complete;
+		        xmlHTTP2.send(xmlDOM);
+		        
+		        ShowMailProgressNew();
+		    }
+		   
+		   function delete_mail_complete() {
+		        if (xmlHTTP2 != null && deltype != null && xmlHTTP2.readyState == 4) {
+		        	var nodeIdx = PostTreeView.selectedIndex();
+		        	 HiddenMailProgressNew();
+		        	 HiddenFolderMenu();
+		        	 
+		            //지운편지함의 메일 영구삭제
+		            if (deltype == "MAILREALDEL") {
+		            	if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
+					    	if (xmlHTTP2.responseText == "OK") {
+					    		alert("<spring:message code='ezEmail.t473' />");
+			 		            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
+
+			 			        if (typeof (parent.frames["right"]) != "undefined")
+			 	                    parent.frames["right"].Window_onunload();
+			 			        
+			 			       if (g_firstOpen) {
+			 		               g_firstOpen = false;
+			 				   } else {
+			 		               window.open(url, "right");
+			 		               get_unreadcount();
+			 				   }
+					    	} else {
+					    		alert("<spring:message code='ezEmail.t472' />");
+					    	}
+					    } else {
+					    	alert("<spring:message code='ezEmail.t472' />");
+					    }
+		            }
+		            //편지함의 메일 지운편지함으로 이동
+		            else {
+		            	if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
+		            		if (xmlHTTP2.responseText == "OK") {
+		            			alert("<spring:message code='ezEmail.t478' />");
+		            			
+		            			 var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
+
+			 			        if (typeof (parent.frames["right"]) != "undefined")
+			 	                    parent.frames["right"].Window_onunload();
+			 			        
+			 			       if (g_firstOpen) {
+			 		               g_firstOpen = false;
+			 				   } else {
+			 		               window.open(url, "right");
+			 		               get_unreadcount();
+			 				   }
+		            		} else if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
+		            			alert(strLang241);
+		            		} else {
+		            			alert("<spring:message code='ezEmail.t477' />");
+		            		}
+		            	} else {
+		            		alert("<spring:message code='ezEmail.t477' />");
+		            	}
+		            }
+		            
+		        }
+		    }
+		   
+		   function HiddenMailProgressNew() {
+				var CurrentHeight = parent.frames["right"].document.CurrentHeight;
+				var CurrenWidth = parent.frames["right"].document.CurrenWidth;
+				
+			   parent.frames["right"].document.getElementById("mailPanel").style.display = "none";
+			   parent.frames["right"].document.getElementById("mailPanel").style.backgroundColor = "";
+			   parent.frames["right"].document.getElementById("MailProgress").style.display = "none";
+			   hideProgress();
+			   
+			   if (useBottomFrameOnly == "NO") {
+					parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+				} 
+			}
+		   
+			function ShowMailProgressNew() {
+				var CurrentHeight = parent.frames["right"].document.CurrentHeight;
+				var CurrenWidth = parent.frames["right"].document.CurrenWidth;
+				
+				parent.frames["right"].document.getElementById("mailPanel").style.display = "block";
+				parent.frames["right"].document.getElementById("mailPanel").style.opacity = 0.5;
+				parent.frames["right"].document.getElementById("mailPanel").style.background = "rgba(0,0,0,0.7)";
+				parent.frames["right"].document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
+				parent.frames["right"].document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+				parent.frames["right"].document.getElementById("MailProgress").style.display = "";
+			    showProgress();
+			    
+			    if (useBottomFrameOnly == "NO") {
+					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+				}
+			}
 	    </script>
 		 <style type="text/css">
+		 		#myBar {		 			
+					margin-left:20px;
+				 	margin-top:-9px;
+		 		}
 				#myProgress {
 				  width: 80%;
-				  height:10px;
-				  background-color: #ddd;
+				  height:7px;
+				  background-color: white;
+				  border: 1px solid #ddd;
 				  overflow:hidden;
 				}
 				.myBar_red {
-				  height: 10px;
+				  height: 7px;
+				  border: 1px solid #ee0606;
 				  background-color: #ff1616;
 				}
 				.myBar_orange {
-				  height: 10px;
+				  height: 7px;
+				  border: 1px solid #ee5e00;
 				  background-color: #ff7f00;
 				}
 				.myBar_yellow {
-				  height: 10px;
+				  height: 7px;
+				  border: 1px solid #eea600;
 				  background-color: #ffb600;
 				}
 				.myBar_green {
-				  height: 10px;
+				  height: 7px;
+				  border: 1px solid #2C8F30;
 				  background-color: #4CAF50;
 				}
 			</style>
@@ -828,16 +977,17 @@
 	        <ul>
 	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #dedede; overflow: auto; padding-left: 20px;" id="AddressTreeView"></div>
 	            <li><span id='Address_Search' onclick="address_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000042" /></span></li>
-	            <li evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
-	        </ul>
-	        <h3><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
-	        
+	            <li style="border-bottom-color:#dedede" evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
+	        </ul>	        
 	    	<!-- 수정 수아 재은 -->
-		     <div id='myProgress' style='margin-left:20px;'>
-		    	<div id='myBar'></div>
+	    	<div style="border:1px solid #ddd;border-radius:3px;margin:10px 10px 2px;background-color: white">
+			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
+			    <div style="width:80%">
+			    	<div id='myBar'></div>
+			    </div>	
+			    <div style='text-align:center; margin-top:10px;margin-bottom:5px;font-weight: bold;font-family: dotum;' class="volumes"></div>
 		    </div>
-		    <div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div>
-	        
+	        <h3 style="border-top:0px"><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>
   				<span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
@@ -889,16 +1039,19 @@
 	    </xml>
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="folderPanel" onclick="HiddenFolderMenu();" >&nbsp;</div>   		    		               
-		 <div id="folderMenuDiv" style="position:absolute;top:180px;z-index:6000;display:none;">
+		<div id="folderMenuDiv" style="position:absolute;top:180px;z-index:6000;display:none;">
 		    <table cellpadding=2 cellspacing=1 border=0 style="width:130px;" class="popuplist">
 		    <tr>
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="folder_ReadChange('R');HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/msg-rd.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.jyh01" /></span></td>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="folder_ReadChange('R');HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/icon-msg-read.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.jyh01" /></span></td>
 		    </tr>
 		    <tr id="mailbox_export" <c:if test="${useMailBoxBackUp ne 'YES'}">style="display:none"</c:if>>
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_export();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_mailreply.gif" alt="" align="absmiddle" border="0" hspace="5"><spring:message code="ezEmail.lhm31" /></span></td>
 		    </tr>
 		    <tr id="mailbox_import" <c:if test="${useMailBoxBackUp ne 'YES'}">style="display:none"</c:if>>
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_import();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_fw.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.lhm32" /></span></td>
+		    </tr>
+		    <tr>
+		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_delete();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/deleted.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.t483" /></span></td>
 		    </tr>
 		    </table>
 		</div>

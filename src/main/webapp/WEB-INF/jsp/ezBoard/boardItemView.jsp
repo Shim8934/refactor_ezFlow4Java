@@ -125,7 +125,7 @@
 		        try {
 		        	// 수정 수아 재은
 		        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer;' />"
-						html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-left: -4px;' />";
+						html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer;' />";
 						html += "<span id='curZoomSize' style='display:none; float:right;'></span></div>"
 						html += "<br><br>";
 						
@@ -671,17 +671,17 @@
 		    function ReaderList() {
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 400) / 2;
+		        var left = (width - 600) / 2;
+		        var top = (heigth - 415) / 2;
 		        var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-		        var strFeature = "status:no;dialogHeight: 400px;dialogWidth: 520px;help: no;resizable:yes";
+		        var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
 		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-		            DivPopUpShow(520, 410, szHref);
+		            DivPopUpShow(600, 415, szHref);
 		        }
 		        else
-		            window.open(szHref, "", "width=520, height=400, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		            window.open(szHref, "", "width=600, height=415, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
 		    }
 		    function ReaderList_Complete() {
 		        DivPopUpHidden();
@@ -993,11 +993,11 @@
 		        }
 		    }
 		    function Retrans_boardContent() {
-		        var feature = GetOpenWindowfeature(765, 820);
+		        var feature = GetOpenWindowfeature(790, 820);
 	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=boardContent&itemID=" + pItemID, "", feature, "");
 		    }
 		    function Retrans_boardAttach() {
-		        var feature = GetOpenWindowfeature(765, 820);
+		        var feature = GetOpenWindowfeature(790, 820);
 	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=boardAttach&itemID=" + pItemID, "", feature, "");
 		    }
 		    function Retrans_mailContent() {

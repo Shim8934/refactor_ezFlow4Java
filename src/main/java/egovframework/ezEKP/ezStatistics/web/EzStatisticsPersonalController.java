@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezStatistics.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -65,19 +66,20 @@ public class EzStatisticsPersonalController {
 		}		
 			
 		try {
-			List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+			List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 			
-			StringBuilder companySel = new StringBuilder();
+			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 			
-			for (OrganDeptVO vo : deptVOs) {
+			for (int i =0 ; i < list.size() ; i++) {
+				OrganDeptVO vo = list.get(i);
+				
 				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-					companySel.append("<option value='" + vo.getCn() + "' value2='" + vo.getDisplayName() + "'>");
-					companySel.append(vo.getDisplayName());
-					companySel.append("</option>");
+					resultList.add(vo);
 				}
 			}
 			
-			model.addAttribute("companySel", companySel);
+			model.addAttribute("list", resultList);
+			model.addAttribute("userCompany", userInfo.getCompanyID());
 			model.addAttribute("userInfo", userInfo);
 		} catch (Exception e) {
 			logger.error("ezStatistics :: ezStatisticsPersonalMain :: " + e.getMessage());
@@ -122,19 +124,20 @@ public class EzStatisticsPersonalController {
 		}		
 				
 		try {
-			List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+			List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+
+			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 			
-			StringBuilder companySel = new StringBuilder();
-			
-			for (OrganDeptVO vo : deptVOs) {
+			for (int i = 0; i < list.size() ; i++) {
+				OrganDeptVO vo = list.get(i);
+				
 				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-					companySel.append("<option value='" + vo.getCn() + "' value2='" + vo.getDisplayName() + "'>");
-					companySel.append(vo.getDisplayName());
-					companySel.append("</option>");
+					resultList.add(vo);
 				}
 			}
 			
-			model.addAttribute("companySel", companySel);
+			model.addAttribute("list", resultList);
+			model.addAttribute("userCompany", userInfo.getCompanyID());
 			model.addAttribute("userInfo", userInfo);
 		} catch (Exception e) {
 			logger.error("ezStatistics :: ezStatisticsPersonalMain :: " + e.getMessage());
@@ -180,19 +183,20 @@ public class EzStatisticsPersonalController {
 		}		
 				
 		try {
-			List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+			List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+
+			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 			
-			StringBuilder companySel = new StringBuilder();
-			
-			for (OrganDeptVO vo : deptVOs) {
+			for (int i = 0 ; i < list.size() ; i++) {
+				OrganDeptVO vo = list.get(i);
+				
 				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-					companySel.append("<option value='" + vo.getCn() + "' value2='" + vo.getDisplayName() + "'>");
-					companySel.append(vo.getDisplayName());
-					companySel.append("</option>");
+					resultList.add(vo);
 				}
 			}
 			
-			model.addAttribute("companySel", companySel);
+			model.addAttribute("list", resultList);
+			model.addAttribute("userCompany", userInfo.getCompanyID());
 			model.addAttribute("userInfo", userInfo);
 		} catch (Exception e) {
 			logger.error("ezStatistics :: ezStatisticsPersonalMain :: " + e.getMessage());

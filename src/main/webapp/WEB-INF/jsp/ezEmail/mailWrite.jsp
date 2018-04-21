@@ -16,6 +16,35 @@
 			.selectbox select { width: 100%; height: auto; /* 높이 초기화 */ line-height: normal; /* line-height 초기화 */ font-family: inherit; /* 폰트 상속 */ border: 0; opacity: 0; /* 숨기기 */ filter:alpha(opacity=0); /* IE8 숨기기 */ -webkit-appearance: none; /* 네이티브 외형 감추기 */ -moz-appearance: none; appearance: none; }
 		</style>
 		</c:if>
+		<!-- 수신인란 height 작업 -->
+		<style>
+			.viewtxtScroller {
+				min-height: 15px;
+				max-height: 15px;
+				overflow-y: auto;
+				margin-bottom: 3px;
+			}
+			.viewtxtWrapper {
+				display: table;
+				height: 100%;
+			}
+			.viewtxt {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.viewtxt > span {
+				display: inline-block;
+				padding-right: 5px;
+			}
+			.viewtxt > span > span {
+				font-size: 14px;
+			}	
+			
+			#menu > ul:nth-child(2) > li {
+				margin: 0 2px !important;
+			}		
+		</style>
+		
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -121,6 +150,7 @@
 	    var securePassword = "";
 	    var secureReadCount = "0";
 	    var secureReadDate = "";
+	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -195,9 +225,11 @@
 	                location.href = location.href + "&attach=1";
 	            }
 	        }        
+	        
 	        if ((g_cmd == "FORWARD" || g_cmd == "EDIT" || g_ReSendFlag == "Y") && document.getElementById("AttachXmlList").innerHTML.trim() != "") {
 	            AddAttachFileInfoXmlParsing(document.getElementById("AttachXmlList").innerHTML);
 	        }
+	        
 	        SelMailSign.value = "${mailSignSel}";
 	        
 			Simple_Choice();		
@@ -234,7 +266,61 @@
 	            	$(this).siblings('label').text(select_name); 
 	            });
             </c:if>
-
+			
+            // 수신인란 스크롤 UX 개선
+            
+            // viewtxtScroll elements (수신, 참조, 숨은참조 총 3개)
+            var viewtxtScrollers = $(".viewtxtScroller");
+            
+            // viewtxtScroll 각각의 element에 이전 스크롤 위치를 저장
+            viewtxtScrollers.each(function(index) {
+            	$(this)[0].previousScrollPos = $(this).scrollTop();
+            });
+            
+            // jquery scrollTop API를 이용한 스크롱이면 true, 아니면 false
+            var scrollTopFlag = false;
+            // 스크롤 단위
+            var scrollFixedSpeed = 16;
+            
+            viewtxtScrollers.on("scroll", function(event) {
+            	// 이벤트 발생 주체
+            	var jqueryElement = $(this);
+            	var domElement = jqueryElement[0];
+            	// 이벤트 밸생 후 현재 스크롤 위치
+            	var currentScrollPos = jqueryElement.scrollTop();
+            	
+            	if(scrollTopFlag) {
+            		return;
+            	}
+            	
+            	// 이벤트 발생 전 스크롤 위치
+            	var previousScrollPos = domElement.previousScrollPos;
+            	// 스크롤 거리
+            	var posDistance = currentScrollPos - previousScrollPos;
+            	
+            	event.preventDefault();
+            	
+            	// 스크롤 거리가 0이면 이벤트 무시
+            	if(posDistance == 0) {
+            		return;
+            	}
+            	
+            	// 다운스크롤, 업스크롤 여부
+            	var isDown = posDistance > 0;
+            	
+            	// jquery scrollTop API를 쓰기 위해 플래그 활성화
+            	scrollTopFlag = true;
+            	
+            	// 항상 고정 위치를 가지고 스크롤 하기 위함
+            	var fixedScrollPos = previousScrollPos + scrollFixedSpeed * (isDown ? 1 : -1);
+            	// 고정 스크롤 위치로 jquery scrollTop 발생
+            	jqueryElement.scrollTop(fixedScrollPos);
+            	scrollTopFlag = false;
+            	
+            	// 현재 스크롤 위치를 저장
+            	currentScrollPos = jqueryElement.scrollTop();
+            	domElement.previousScrollPos = currentScrollPos;
+            });            
 		}
 	    
 		var isAutoSave = false;
@@ -933,12 +1019,12 @@
 	                if (DocHref.toLowerCase().indexOf(".mht") > -1) {
 	                    var fullPath = encodeURIComponent(DocHref);
 	                    var tempXML = createXmlDom();
-	                    var XmlBodyATT = createXmlDom();
+// 	                    var XmlBodyATT = createXmlDom();
 	                    var XmlBodyDATA = createXmlDom();
 	                    var tempStr = "";
 	                    tempStr = ConvertMHTtoHTML(fullPath);
 	                    tempXML = loadXMLString(tempStr);
-	                    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	                    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	                    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	                    var htmlData = getNodeText(XmlBodyDATA);
 	                    document.getElementById('docContent').innerHTML = htmlData;
@@ -1084,13 +1170,13 @@
 	            var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
 	            var fullPath = Rurl;
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(fullPath);
 
 	            tempXML = loadXMLString(tempStr);
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            var htmlData = getNodeText(XmlBodyDATA);
 
@@ -1187,12 +1273,12 @@
 	            var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
 	            var fullPath = Rurl;
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(fullPath);
 	            tempXML = loadXMLString(tempStr);
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            var htmlData = getNodeText(XmlBodyDATA);
 	            
@@ -1275,6 +1361,11 @@
 	        }
 	    }
 	    
+	    // 재은 수정(편지지)
+	    function Letter_onClick() {
+	    	DivPopUpShow(583, 485, "/ezEmail/mailLetter.do");
+	    }
+	    
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -1294,6 +1385,10 @@
 	                    <ul>
 	                        <li><span onclick="Send_onClick()"><spring:message code='ezEmail.t674' /></span></li>
 	                        <li><span onclick="Save_onClick('tempsave')"><spring:message code='ezEmail.t48' /></span></li>
+	                        <!-- 재은 수정(편지지) -->
+	                        <c:if test="${useLetter == 'YES'}">
+	                        <li><span onclick="Letter_onClick()"><spring:message code='ezEmail.t824' /></span></li>
+	                        </c:if>
 	                        <li  style="display:none"><span onclick="Print_onClick()">
 	                            <spring:message code='ezEmail.t546' /></span></li>
 	                        <!-- <li><span onclick="LoadFormat_onClick()">
@@ -1318,7 +1413,7 @@
 	                                <option value="2"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t362' /></option>
 	                            </select>
 	                        </li>
-	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
+	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;  display:none;">
 	                            <img src="/images/pbar.gif"></li> 
 	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
 	                            <select id="SelMailSign" onchange="MailSignSel()" style="vertical-align:top;">
@@ -1332,7 +1427,7 @@
 	                                    <spring:message code='ezEmail.t828' /></option>
 	                            </select>
 	                        </li>
-	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
+	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;  display:none;">
 	                            <img src="/images/pbar.gif"></li> 
 	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
 	                            <select id="bodyType" style="vertical-align:top;width:90px;" onchange="changeTextOption(this.value);">
@@ -1341,7 +1436,7 @@
 	                            </select>
 	                        </li>
 	                        <c:if test="${useOnlyInnerMail != 'YES'}">
-	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;"><img src="/images/pbar.gif"></li>
+	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;"><img src="/images/pbar.gif"></li>
 	                        	<li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
 		                            <select style="vertical-align:top;width:120px;" onchange="ChangeSenderName(this);">
 		                            ${mailSendObject}
@@ -1362,7 +1457,7 @@
 		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		      			
 		      			if (useSecureMail == "YES") {
-		    	        	$('.securemail').css('display', '');
+		    	        	$('.securemail').not('.bar').css('display', '');
 		    	        	
 		    	        	if (isSecureMail == "true") {
 		    	        		document.getElementById("chkSecureMail").checked = true;
@@ -1408,7 +1503,9 @@
 	                    </tr>
 	                    <tr>
 	                        <td colspan="3">
-	                            <div id="MsgToGot" style="overflow-y: auto; height: 17px" class="viewtxt"></div>
+	                        	<div class="viewtxtScroller">
+	                            	<div id="MsgToGot" class="viewtxt"></div>
+	                            </div>
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgCC_TR">
@@ -1433,7 +1530,9 @@
 	                    </tr>
 	                    <tr id="MsgCC_TRu">
 	                        <td colspan="3">
-	                            <div id="MsgCCGot" style="overflow-y: auto; height: 17px" class="viewtxt"></div>
+	                        	<div class="viewtxtScroller">
+	                            	<div id="MsgCCGot" class="viewtxt"></div>
+	                            </div>
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgBCC_TR"  style="display:none;">
@@ -1455,7 +1554,9 @@
 	                    </tr>
 	                    <tr id="MsgBCC_TRu" style="display:none;">
 	                        <td colspan="3">
-	                            <div id="MsgBCCGot" style="overflow-y: auto; height: 17px" class="viewtxt"></div>
+	                        	<div class="viewtxtScroller">
+	                            	<div id="MsgBCCGot" class="viewtxt"></div>
+	                            </div>
 	                        </td>
 	                    </tr>
 	                    <tr style="height:33px">

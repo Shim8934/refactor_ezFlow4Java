@@ -33,6 +33,9 @@
 			var public_result_flg = "${qstListVO.publicResultFlg}";
 			var multi_response_flg = "${qstListVO.multiResponseFlg}";
 	    	var g_windowReference = null;
+	    	var uploadSDate = "${uploadSDate}";
+	    	var uploadEDate = "${uploadEDate}";
+	    	
 	    	window.onload = function () {
 	        	Save_OK_chk();
 	    	}
@@ -54,8 +57,21 @@
 	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
 	            	buttonImageOnly: true
 	        	});
-	        	var NowDate = new Date("${uploadSDate}");
-	        	var NowDate2 = new Date("${uploadEDate}");
+	        	
+	        	if (uploadSDate.split(" ")[0].split("-")[1] == 1) {
+	        		tempSMonth = 11;
+	        	} else {
+	        		tempSMonth = uploadSDate.split(" ")[0].split("-")[1] - 1;
+	        	}
+	        	
+	        	if (uploadEDate.split(" ")[0].split("-")[1] == 1) {
+	        		tempEMonth = 11;
+	        	} else {
+	        		tempEMonth = uploadEDate.split(" ")[0].split("-")[1] - 1;
+	        	}
+	        	
+	        	var NowDate = new Date(uploadSDate.split(" ")[0].split("-")[0], tempSMonth, uploadSDate.split(" ")[0].split("-")[2]);
+	        	var NowDate2 = new Date(uploadEDate.split(" ")[0].split("-")[0], tempEMonth, uploadEDate.split(" ")[0].split("-")[2]);
 	        	
 	        	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        	$("#Sdatepicker").datepicker('setDate', NowDate);
@@ -182,6 +198,12 @@
 
 	        	L_SearchStartDt = L_SearchStartDt.substring(0, 10);
 	        	L_SearchEndDt = L_SearchEndDt.substring(0, 10);
+	        	
+	        	if (L_SearchStartDt > L_SearchEndDt) {
+		        	alert('<spring:message code="ezQuestion.jjs2" />');
+		            return false;
+		        }
+	        	
 	        	if (trim_Cross(document.getElementById("txtExpiredate").value) != "") {
 		            var PollEndDate = L_SearchEndDt
 		            var tempE = PollEndDate.split("-");
@@ -210,7 +232,11 @@
 		            alert("<spring:message code='ezQuestion.t432' />");
 		            return;
 	    	    }
+	        	
 	        	L_SearchStartDt = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	        	L_SearchEndDt = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	        	
+	        	
 	        	if (form_check() == false) {
 	            	return;
 	        	} else {
@@ -300,7 +326,7 @@
 	    		if (ResultYN == "true") {
 	        		document.getElementById("set_anonymity").disabled = true;
 	        		document.getElementById("set_Target").disabled = true;
-	        		document.getElementById("aLinkbtn").style.display = "none";
+// 	        		document.getElementById("aLinkbtn").style.display = "none";
 	    		}
 	    		var tmpChk = '${saveFlg}'
 	    		if (tmpChk == "OK") {

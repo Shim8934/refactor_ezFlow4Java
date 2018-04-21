@@ -367,7 +367,7 @@
 		                                <spring:message code='ezSchedule.jjh04' />
 		                            </th>
 		                            <td colspan="3" style="white-space:nowrap;">
-		                                <div style="cursor: pointer;width:270px">
+		                                <div style="cursor: pointer;width:280px">
 		                                    <c:out value="${scheduleInfo.groupName}" />
 		                                </div>
 		                            </td>                            
@@ -378,7 +378,7 @@
 	                                <spring:message code='ezSchedule.jjh05' />
 	                            </th>
 	                            <td style="white-space:nowrap;">
-	                                <div style="cursor: pointer;width:270px;" onclick="show_personinfo('0')" id="LabelCreator">	                                    
+	                                <div style="cursor: pointer;width:280px;" onclick="show_personinfo('0')" id="LabelCreator">	                                    
 	                                    <c:if test="${primary == '1'}"><c:out value="${scheduleInfo.creatorName}" /></c:if>
 	                                    <c:if test="${primary != '1'}"><c:out value="${scheduleInfo.creatorName2}" /></c:if>	                                    
 	                                </div>

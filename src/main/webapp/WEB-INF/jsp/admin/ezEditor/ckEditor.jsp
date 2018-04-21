@@ -20,8 +20,8 @@
 	        CKEDITOR.on('instanceCreated', function (e) {
 	            e.editor.on('mode', function (e) {
 	                if (e.editor.mode == 'wysiwyg') {
-	                    e.editor.editable().on('keyup', function () { CellCkeckField(); });
-	                    e.editor.editable().on('mouseup', function () { CellCkeckField(); });
+	                    e.editor.editable().on('keyup', function () { CellCheckField(); });
+	                    e.editor.editable().on('mouseup', function () { CellCheckField(); });
 	                }
 	            });
 	        });
@@ -75,26 +75,26 @@
 	
 	        function SetEditorContentURL(url) {
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
 	
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            CKEDITOR.instances.editor1.setData(getNodeText(XmlBodyDATA));
 	        }
 	
 	        function GetEditorContentURL(url) {
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
 	
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            return getNodeText(XmlBodyDATA);
 	        }
@@ -114,18 +114,18 @@
 	        
 	        function SetEditorContentPathSign(url, strMailSign) {
 	            var tempXML = createXmlDom();
-	            var XmlBodyATT = createXmlDom();
+// 	            var XmlBodyATT = createXmlDom();
 	            var XmlBodyDATA = createXmlDom();
 	            var tempStr = "";
 	            tempStr = ConvertMHTtoHTML(url);
 	            tempXML = loadXMLString(tempStr);
 	
-	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	            CKEDITOR.instances.editor1.editable().setHtml(getNodeText(XmlBodyDATA) + strMailSign);
-	            for (var i = 0; i < GetChildNodes(XmlBodyATT).length; i++) {
+	            /* for (var i = 0; i < GetChildNodes(XmlBodyATT).length; i++) {
 	                BodySetAttribute(getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODENAME")), getNodeText(SelectSingleNode(GetChildNodes(XmlBodyATT)[i], "NODEVALUE")))
-	            }
+	            } */
 	        }
 	
 	        function BodySetAttribute(name, Value) {
@@ -248,7 +248,7 @@
 	            return g_toggleFlag;
 	        }
 	
-	        function CellCkeckField() {
+	        function CellCheckField() {
 	            var selectE = null;
 	            if (parent.Attribute_Write != undefined) {
 	                var selection = CKEDITOR.instances.editor1.getSelection();
@@ -426,7 +426,7 @@
 	    <script type="text/javascript">
 	    	var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
-		
+			
 	        CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        CKEDITOR.config.height = parseInt("${height}") - 120 + "px";
 	        CKEDITOR.config.font_defaultLabel = defaultFontFamily;

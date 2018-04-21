@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -83,7 +84,7 @@ public interface EzApprovalGAdminService {
 	
 	public String insertSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String companyID, int tenantID) throws Exception;
 
-	public String getSealDeptList(String listFlag, String deptID, String companyID, String primary, String offset, int tenantID) throws Exception;
+	public String getSealDeptList(String realPath, String listFlag, String deptID, String companyID, String primary, String offset, int tenantID) throws Exception;
 	
 	public String insertDeptSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String deptID, String companyID, int tenantID) throws Exception;
 
@@ -131,7 +132,7 @@ public interface EzApprovalGAdminService {
 
 	public String formMove(String companyID, String contID, String selContID, String formID, int tenantID) throws Exception;
 	
-	public String moveDocList(String xmlPara, String companyID, int tenantID) throws Exception;
+	public String moveDocList(String strMoveListIDInfo, String SourceContID, String TargetContID, String chkAll, String companyID, int tenantID) throws Exception;
 
 	public String deleteDocList(String xmlPara, String offset, String companyID, int tenantID) throws Exception;
 	
@@ -166,4 +167,17 @@ public interface EzApprovalGAdminService {
 	public String formConnSave(String formID, String formText, String path, String companyID) throws Exception;
 	
 	public String getParentContName(String formID, String companyID, int tenantID, String langType) throws Exception;
+	
+	public int getContDocListCountjson(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String companyID, int tenantID) throws Exception;
+	
+	public int getDeleteDocListCountjson(String userID, String userSecurityCode, boolean publicFlag, String subQuery, String companyID, int tenantID) throws Exception;
+	
+	public List<ApprGDocListVO> getContDocList_json(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, int startRow, int pageSize, String pageNum, String orderCell, String orderOption, int totalcnt, String companyID, String lang, int tenantID, String offset, Locale locale) throws Exception;
+
+	public String getIsUse(String code1, String code2, String companyID, String userLang, int tenantID) throws Exception;
+	
+	public String deleteDocListjson(String[] DocDelIDArr, String[] DocDelNoArr, String[] DocDelTitleArr, String[] DocDelWriterNameArr, String[] DocDelDeptNameArr,String deleteDay, String DeluserId, String offset, String companyID, int tenantID) throws Exception;
+
+	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale) throws Exception;
+
 }

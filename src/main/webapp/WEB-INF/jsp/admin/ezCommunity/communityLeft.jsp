@@ -44,7 +44,7 @@
 	<body class="leftbody"> 
 		<div id="left">
 			<div class="left_admin" title="Community"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code = 'ezCommunity.t1529' /></div>
-			<h2><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code = 'ezCommunity.t2001' /></span><ul></ul></h2>	
+	   <%-- <h2><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code = 'ezCommunity.t2001' /></span><ul></ul></h2> --%>	<!-- 알림마당 사용안함 -->
 			<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code = 'ezCommunity.t1117' /></span><ul></ul></h2>	
 			<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code = 'ezCommunity.t39' /></span><ul></ul></h2>	
 			<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code = 'ezCommunity.t25' /></span><ul></ul></h2>			

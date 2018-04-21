@@ -331,7 +331,7 @@
 		    </tr>
 		  </table>
 		  
-		<h2 id="trTransExp"><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1"><spring:message code='ezApprovalG.t1102'/></h2>
+		<h2 id="trTransExp"><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1" style="vertical-align:middle;"><spring:message code='ezApprovalG.t1102'/></h2>
 		<h2 id="trRejectCab" style="display:none"><input type="checkbox" name="chkRejectCab" id="chkRejectCab" value="1"><spring:message code='ezApprovalG.t1103'/></h2>
 		
 		<div class="btnposition btnpositionNew">

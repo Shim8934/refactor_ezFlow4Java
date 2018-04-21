@@ -666,6 +666,10 @@ public class CommonUtil {
 			return null;
 		}
 		
+		if (dateStr.equals("0")) {			
+			return dateStr;
+		}
+		
 		if (offset == null || offset.indexOf("|") == -1) {
 			logger.error("offset is null or offset format is wrong.");
 			return dateStr;
@@ -942,12 +946,26 @@ public class CommonUtil {
 	}
 	
 	/**
+	 * globals.properties에 있는 
+	 * DataBaseType을 반환
+	 * */
+	public String getDatabaseType() throws Exception {
+		
+		String props = "Globals.DbType";
+		String dbType;
+		
+		dbType = globals.getProperty(props);
+		
+		logger.debug("getDatabase Type = " + dbType);
+		
+		return dbType;
+	}
+	/*
 	 * 테넌트에 따른 설정정보 얻어오는 메서드
 	 */
 	public String getTenantConfigRest(String property, String userId, HttpServletRequest request) throws Exception {
 
-	//	String gwServerUrl = config.getProperty("config.journalGWServerURL");
-		String gwServerUrl = "http://localhost:8080";
+		String gwServerUrl = config.getProperty("config.journalGWServerURL");
 		String url = gwServerUrl + "/rest/ezcommon/configs";
 				
 		HttpHeaders headers = new HttpHeaders();
@@ -977,6 +995,49 @@ public class CommonUtil {
         
         return propertyValue;
     }
-
-
+	
+	//html entity unescape 메서드 2018-04-06 강민수92
+	public String htmlUnescape(String html) throws Exception {
+		html = html.replace("&amp;", "&");
+		html = html.replace("&quot;", "\"");
+		html = html.replace("&#39;", "'");
+		html = html.replace("&lt;", "<");
+		html = html.replace("&gt;", ">");
+		html = html.replace("&iexcl;", "¡");
+		html = html.replace("&curren;", "¤");
+		html = html.replace("&sect;", "§");
+		html = html.replace("&ordf;", "ª");
+		html = html.replace("&deg;", "°");
+		html = html.replace("&plusmn;", "±");
+		html = html.replace("&sup2;", "²");
+		html = html.replace("&sup3;", "³");
+		html = html.replace("&acute;", "´");
+		html = html.replace("&mu;", "μ");
+		html = html.replace("&para;", "¶");
+		html = html.replace("&middot;", "·");
+		html = html.replace("&cedil;", "¸");
+		html = html.replace("&sup1;", "¹");
+		html = html.replace("&ordm;", "º");
+		html = html.replace("&frac14;", "¼");
+		html = html.replace("&frac12;", "½");
+		html = html.replace("&frac34;", "¾");
+		html = html.replace("&iquest;", "¿");
+		html = html.replace("&AElig;", "Æ");
+		html = html.replace("&ETH;", "Ð");
+		html = html.replace("&times;", "×");
+		html = html.replace("&Oslash;", "Ø");
+		html = html.replace("&THORN;", "Þ");
+		html = html.replace("&szlig;", "ß");
+		html = html.replace("&aelig;", "æ");
+		html = html.replace("&eth;", "ð");
+		html = html.replace("&divide;", "÷");
+		html = html.replace("&oslash;", "ø");
+		html = html.replace("&thorn;", "þ");
+		
+		String result = html;
+		
+		logger.debug("html result : " + result); 
+		return result;
+		
+	}
 }

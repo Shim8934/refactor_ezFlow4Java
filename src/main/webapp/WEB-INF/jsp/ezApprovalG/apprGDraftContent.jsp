@@ -48,7 +48,7 @@
 	            } catch (e) { }
 	            return ret;
 	        };
-	        var XmlBodyATT = createXmlDom();
+// 	        var XmlBodyATT = createXmlDom();
 	        var pEditor = "${editor}";
 	        var isConDoc = false;
 	        var isEditor = false;
@@ -227,7 +227,7 @@
 	                }
 	                else {
 	                    tempXML = loadXMLString(tempStr);
-	                    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+// 	                    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	                    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 	                    var _DocContentHtml = getNodeText(XmlBodyDATA);
 	                    var ConXmlDiv = document.createElement("DIV");
@@ -260,9 +260,16 @@
 	                        if (TDRows.item(i).style.borderRight == "currentColor")
 	                            TDRows.item(i).style.borderRight = "";
 	                    }
+
+	                    //body는 있지만 에디터를 사용하지 않을때
+	                    if (document.getElementById("body") != null) {
+	                        if (document.getElementById("body").getAttribute("editor") == "no") {
+	                        	parent.isEditorComplete = true;
+	                        }
+	                    }
 	
 	                    if (parent.pDraftFlag != "REDRAFT") {
-  						var Body_innerHTML = "";
+  							var Body_innerHTML = "";
 	                        if (document.getElementById("body") != null) {
 	                            if (document.getElementById("body").getAttribute("class") == "FIELD") {
 	                                Body_innerHTML = document.getElementById("body").innerHTML;
@@ -285,7 +292,7 @@
 	                                BODYTag = document.getElementById("body");
 	                            }
 	                        }
-	
+	                        
 	                        if (document.getElementById("doctitle").getAttribute("class") == "FIELD")
 	                            DocTitleObj = document.getElementById("doctitle");
 	
@@ -310,9 +317,9 @@
 	                    }
 	
 	
-	                    for (var i = 0; i < GetElementsByTagName(XmlBodyATT, "NODE").length; i++) {
+	                    /* for (var i = 0; i < GetElementsByTagName(XmlBodyATT, "NODE").length; i++) {
 	                        SetAttribute(document.getElementById("body"), getNodeText(GetElementsByTagName(XmlBodyATT, "NODENAME")[i]), getNodeText(GetElementsByTagName(XmlBodyATT, "NODEVALUE")[i]));
-	                    }
+	                    } */
 	
 	                    parent.FieldsAvailable();
 	                }

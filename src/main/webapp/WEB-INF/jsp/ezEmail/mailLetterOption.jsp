@@ -26,6 +26,7 @@
 		<script type="text/javascript">
 	
 			var offsetMin = "${offsetMin}";
+			var individualMailUser = parseInt("${individualMailUser}");
 			
 		    var RetValue;
 		    var ReturnFunction;
@@ -140,6 +141,7 @@
 		
 		        var tmpStr = "";
 		        tmpStr = rgParams["delaySendDate"];
+		        
 		        if (rgParams["delaySendDate"] != "") {
 		            document.getElementById("deliverySend").checked = true;
 		            tmpStr = rgParams["delaySendDate"];
@@ -148,18 +150,20 @@
 		            $("#Sdatepicker").datepicker('setDate', SetDate);
 		            $('#Stimepicker').timepicker('setTime', SetDate);
 		            $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
-		        }
-		        else {
+		        } else {
 		            document.getElementById("Stimepicker").disabled = true;
 		            $("#Sdatepicker").datepicker('disable');
-		        }		        
+		        }	
 		        
-		        if (rgParams["EachMail"] == "true") {
-		            document.getElementById("eachMailSend").checked = true;
+		        if (individualMailUser > 0) {
+
+		        	if (rgParams["EachMail"] == "true") {
+			            document.getElementById("eachMailSend").checked = true;
+			        } else {
+			            document.getElementById("eachMailSend").checked = false;
+			        }
 		        }
-		        else {
-		            document.getElementById("eachMailSend").checked = false;
-		        }
+		        
 		    }
 		    
 		    function cancel() {
@@ -277,12 +281,14 @@
 	                return;
 	            }
 		
-		        if (eachMailSend.checked == true) {
-		            RetValue["EachMail"] = "true";
-		        }
-		        else {
-		            RetValue["EachMail"] = "false";
-		        }
+	            if (individualMailUser > 0) {
+	            	
+			        if (eachMailSend.checked == true) {
+			            RetValue["EachMail"] = "true";
+			        } else {
+			            RetValue["EachMail"] = "false";
+			        }
+	            }
 	            
 		        if (ReturnFunction != null)
 		            ReturnFunction(RetValue);
@@ -316,7 +322,7 @@
 				<th><spring:message code='ezEmail.t363' /></th>
 				<td>
 					<select name="postType" style="Width:100px;" onChange="" id="postTypeid">
-						<option 1><spring:message code='ezEmail.t361' /></option>
+						<option><spring:message code='ezEmail.t361' /></option>
 						<option><spring:message code='ezEmail.t364' /></option>
 						<option><spring:message code='ezEmail.t365' /></option>
 						<option><spring:message code='ezEmail.t366' /></option>

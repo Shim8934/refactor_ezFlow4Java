@@ -17,7 +17,7 @@
 				 	<strong id="personName" style="position:absolute; width:240px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${displayName} ${mailAddress } </strong>
 				 </p>
 				<div class="info">
-    				<p class="pic">${userPhoto}</p>
+    				<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/no_image.jpg" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></p>
     				<dl class="info_txt">
         				<dt>${companyNm }<br></dt>
 			 			<dd>${department} ${title}</dd>
@@ -319,7 +319,7 @@
 			                
 			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
 			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')\" title='" + TITLE + "'>";
-			                listHTML += "<nobr><b>&nbsp;" + TITLE + "</b></nobr></span></li>";
+			                listHTML += "<nobr>&nbsp;" + TITLE + "</nobr></span></li>";
 			                count++;
 			        	}
 			        }
