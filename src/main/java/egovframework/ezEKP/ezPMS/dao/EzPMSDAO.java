@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
@@ -65,9 +66,20 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<ProjectUserVO> getDeptUserList(Map<String, Object> map){
 		return (List<ProjectUserVO>) list("selectUserList",map);
 	}
-	
+
+	/**
+	 * 프로젝트 멤버 리스트 가져오기
+	 * @param map
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<ProjectMemberVO> getProjectMember(HashMap<String, Object> map) {
+		return (List<ProjectMemberVO>) list("EzPMSDAO.getProjectMember", map);
+	}
+
 	@SuppressWarnings("unchecked")
 	public void addNewProject(Map<String, Object> map) {
 		insert("EzPMSDAO.addNewProject", map);
 	}
+	
 }

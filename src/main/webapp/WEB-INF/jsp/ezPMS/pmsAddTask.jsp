@@ -122,31 +122,23 @@ var endAlamStatus = null;
 	});
  });
  
- function openOrganTree() {
-	 var url = "/ezPMS/pmsSelectAuth.do";
-	 //	url += "?companyId=" + companyId;
-	 GetOpenWindow(url, "pmsSelectAuth", 980, 610);
- }
+ function openMemberList() {
+		 var win;
+		 var feature = GetOpenPosition(760, 700);
+		 DivPopUpShow($('body').prop('scrollWidth') * 0.5, $('body').prop('scrollHeight') * 0.5, "/ezPMS/newProject.do?projectId=" + projectId, "",
+				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+}
  
  function addTask() {
-	 projectName = $("#projectName").val();
-	 weightInput = $(":input:radio[name=weightInput]:checked").val();
+	 taskName = $("#taskName").val();
 	 planStartDate = $("#Sdatepicker").val();
 	 planEndDate = $("#Edatepicker").val();
 	 managerList = $("#managers").text();
-	 participantList = $("#participants").text();
+	 upperGroup = $("#upperGroup").text();
 	 viewerList = $("#viewers").text();
 	 overview = $("#overview").val();
 	 
-	 if ($("#endAlam").prop("checked") == false) {
-		 endAlamStatus = -1;
-	 } else {
-		 if ($("#daysBeforeAlam option:selected").text() == "직접입력") {
-			 endAlamStatus = $("#write").val();
-		 } else {
-			 endAlamStatus = $("#daysBeforeAlam option:selected").text(); 
-		 }
-	 }
+	 
 	 
 	 console.log(projectName);
 	 console.log(writerName);
@@ -163,6 +155,8 @@ var endAlamStatus = null;
  function popupClose() {
 	parent.DivPopUpHidden();
  }
+ 
+
 </script>
 </head>
 <body class="popup">
@@ -177,7 +171,7 @@ var endAlamStatus = null;
 			</tr>
 			<tr>
 				<th>등록자</th>
-				<td colspan="3">&nbsp;${writerName}(${writerDeptName})</td>
+				<td colspan="3">${writerName}(${writerDeptName})</td>
 			</tr>
 			<tr>
 				<th>계획시작일</th>
@@ -186,28 +180,34 @@ var endAlamStatus = null;
 				<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openOrganTree()"><span>담당자</span></a></th>
+				<th><a class="imgbtn" onclick="openMemberList()"><span>담당자</span></a></th>
 				<td colspan="3" style="height:70px" id="managers">은정</td>
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree()"><span>상위그룹</span></a></th>
-				<td style="width:50%; height:70px;" id="participants">은정</td>
+				<td style="width:50%; height:70px;" id="upperGroup">은정</td>
 				<th><a class="imgbtn" onclick="openOrganTree()"><span>선행작업</span></a></th>
-				<td id="viewers">은정</td>
+				<td id="pretasks">은정</td>
 			</tr>
 			<tr>
 				<th>상태</th>
 				<td style="width:50%">
-				<select name="daysBeforeAlam" id="daysBeforeAlam">
-						<option value="1" selected>대기</option>
-						<option value="3">진행</option>
-						<option value="5">보류</option>
-						<option value="10">지연</option>
-						<option value="write">완료</option>
+				<select name="status" id="status">
+						<option value="W" selected>대기</option>
+						<option value="P">진행</option>
+						<option value="S">보류</option>
+						<option value="L">지연</option>
+						<option value="C">완료</option>
 					</select>
 				<th>가중치</th>
 				<td>
-				<input type="text" style="width:40px;text-align:center"> %
+				<input type="text" id="weight" style="width:40px;text-align:center"> %
+				</td>
+			</tr>
+			<tr>
+				<th>진행률</th>
+				<td colspan="3">
+				<input type="text" id="progress" style="width:40px;text-align:center"> %
 				</td>
 			</tr>
 			<tr>
@@ -217,11 +217,15 @@ var endAlamStatus = null;
 		</table>
 		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="addNewProject()"><span>등록</span></a></td>
+				<td><a class="imgbtn" id="submit" onclick="addTask()"><span>등록</span></a></td>
 				<td></td>
 				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span>취소</span></a></td>
 			</tr>
 		</table>
+	</div>
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
 </body>
 </html>

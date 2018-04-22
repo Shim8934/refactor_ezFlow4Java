@@ -360,5 +360,20 @@
 			]]>
 	</select>
 	
+	<select id="EzPMSDAO.getProjectMember" parameterClass="Map" resultMap="projectMemberVO">
+			<![CDATA[
+				SELECT
+					CONCAT('t',TASK_ID) AS id,
+					GROUP_ID AS parent,
+					TASK_NAME AS text,
+					SORT_ORDER AS sort
+				FROM TBL_PMS_TASK
+				WHERE
+					PROJECT_ID = #project_Id#
+						AND
+					DEL_STATUS = 0
+			]]>
+	</select>
+	
 	
 </sqlMap>
