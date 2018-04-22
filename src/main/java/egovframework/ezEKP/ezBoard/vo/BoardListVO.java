@@ -138,6 +138,8 @@ public class BoardListVO {
 	private int tenantID;
 	/** 메인이미지*/
 	private String mainImageID;
+	/** 게시물 내용*/
+	private String content;
 	
 	public int getrNum() {
 		return rNum;
@@ -546,6 +548,12 @@ public class BoardListVO {
 	}
 	public void setMainImageID(String mainImageID) {
 		this.mainImageID = mainImageID;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
 	}
 	
 }
