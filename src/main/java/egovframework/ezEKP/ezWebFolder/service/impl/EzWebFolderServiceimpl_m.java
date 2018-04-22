@@ -419,6 +419,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("shareDate",      shareDate);
 		map.put("tenantId",       tenantId);
 		
+		//TODO: 폴더 또는 파일이 존재하는지, 사용중인지, 권한이 있는지 확인
+		
 		int shareId = ezWebFolderDAO_m.insertShare(map);
 		
 		Map<String,Object> map2 = new HashMap<String, Object>();
@@ -443,82 +445,64 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public void updateShare(String sharerId, String folderFileId, String folderFileType, List<Map<String, String>> userList, String offset, int tenantId) throws Exception {
+	public void updateShare(String shareId, String sharerId, List<Map<String, String>> userList, String offset, int tenantId) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date            = new Date();
 		String shareDate     = commonUtil.getDateStringInUTC(sdf.format(date), offset, true);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("sharerId",       sharerId);
-		map.put("folderFileId",   folderFileId);
-		map.put("folderFileType", folderFileType);
-		map.put("tenantId",       tenantId);
+		map.put("shareId",       shareId);
+		map.put("tenantId",      tenantId);
 		
-		int shareId = ezWebFolderDAO_m.getShareId(map);
-		
-		Map<String,Object> map2 = new HashMap<String, Object>();
-		map2.put("shareId",       shareId);
-		map2.put("tenantId",      tenantId);
-		
-		ezWebFolderDAO_m.deleteShareSub(map2);
+		ezWebFolderDAO_m.deleteShareSub(map);
 		
 		for (Map<String, String> userInfo : userList) {
-			map2.put("userId",    userInfo.get("id"));
-			map2.put("userType",  userInfo.get("type"));
-			map2.put("subStatus", userInfo.get("subStatus"));
+			map.put("userId",    userInfo.get("id"));
+			map.put("userType",  userInfo.get("type"));
+			map.put("subStatus", userInfo.get("subStatus"));
 			
-			ezWebFolderDAO_m.insertShareSub(map2);
+			ezWebFolderDAO_m.insertShareSub(map);
 		}
 		
-		Map<String,Object> map3 = new HashMap<String, Object>();
-		map3.put("shareId",   shareId);
-		map3.put("shareDate", shareDate);
-		map3.put("idList",    userList);
-		map3.put("tenantId",  tenantId);
-		
-		ezWebFolderDAO_m.updateShareUserNameList(map3);
-	}
-	
-	@Override
-	public void deleteShare(String sharerId, String folderFileId, String folderFileType, String offset, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("sharerId",       sharerId);
-		map.put("folderFileId",   folderFileId);
-		map.put("folderFileType", folderFileType);
-		map.put("tenantId",       tenantId);
-		
-		int shareId = ezWebFolderDAO_m.getShareId(map);
-		
 		Map<String,Object> map2 = new HashMap<String, Object>();
-		map2.put("shareId",       shareId);
-		map2.put("tenantId",      tenantId);
+		map2.put("shareId",   shareId);
+		map2.put("shareDate", shareDate);
+		map2.put("idList",    userList);
+		map2.put("tenantId",  tenantId);
 		
-		ezWebFolderDAO_m.deleteShare(map2);
+		ezWebFolderDAO_m.updateShareUserNameList(map2);
 	}
 	
 	@Override
-	public void hideShare(String userId, String folderFileId, String folderFileType, String offset, int tenantId) throws Exception {
+	public void deleteShare(String shareId, String sharerId, String offset, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("shareId",  shareId);
+		map.put("tenantId", tenantId);
+		
+		ezWebFolderDAO_m.deleteShare(map);
+	}
+	
+	@Override
+	public void hideShare(String shareId, String userId, String offset, int tenantId) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date            = new Date();
 		String shareDate     = commonUtil.getDateStringInUTC(sdf.format(date), offset, true);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderFileId",   folderFileId);
-		map.put("folderFileType", folderFileType);
-		map.put("userId",         userId);
-		map.put("hideDate",       shareDate);
-		map.put("tenantId",       tenantId);
+		map.put("shareId",  shareId);
+		map.put("userId",   userId);
+		map.put("hideDate", shareDate);
+		map.put("tenantId", tenantId);
 		
 		ezWebFolderDAO_m.hideShare(map);
 	}
 	
 	@Override
-	public void showShare(String userId, String folderFileId, String folderFileType, String offset, int tenantId) throws Exception {
+	public void showShare(String shareId, String userId, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderFileId",   folderFileId);
-		map.put("folderFileType", folderFileType);
-		map.put("userId",         userId);
-		map.put("tenantId",       tenantId);
+		map.put("shareId",  shareId);
+		map.put("userId",   userId);
+		map.put("tenantId", tenantId);
 		
 		ezWebFolderDAO_m.showShare(map);
 	}

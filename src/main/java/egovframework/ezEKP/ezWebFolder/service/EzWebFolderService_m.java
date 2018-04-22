@@ -32,13 +32,13 @@ public interface EzWebFolderService_m {
 	
 	public void insertShare(String sharerId, String folderFileId, String folderFileType, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
 	
-	public void updateShare(String sharerId, String folderFileId, String folderFileType, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
+	public void updateShare(String shareId, String sharerId, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
 	
-	public void deleteShare(String sharerId, String folderFileId, String folderFileType, String offset, int tenantId) throws Exception;
+	public void deleteShare(String shareId, String sharerId, String offset, int tenantId) throws Exception;
 	
-	public void hideShare(String userId, String folderFileId, String folderFileType, String offset, int tenantId) throws Exception;
+	public void hideShare(String shareId, String userId, String offset, int tenantId) throws Exception;
 
-	public void showShare(String userId, String folderFileId, String folderFileType, String offset, int tenantId) throws Exception;
+	public void showShare(String shareId, String userId, String offset, int tenantId) throws Exception;
 	
 	int getShareSeq(int tenantId) throws Exception;
 	
