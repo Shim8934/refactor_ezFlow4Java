@@ -833,7 +833,7 @@
 				<tr>
 					<td>
 						<div style="height:50px; margin-bottom: 25px; line-height: 50px;">
-							<div style="height: 50px; width: 50px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 5px;">
+							<div style="height: 50px; width: 50px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 5px;" title="<spring:message code='ezLadder.t081'/>">
 								<span id="amount">0</span>
 							</div>
 							<div id="slider-range-min" style="width: 300px; top: 19px; left: 70px; margin: 0;"></div>
@@ -844,8 +844,8 @@
 				<tr>
 					<td style="position: relative; margin-top: 20px;">
 						<div id="addAttendant" class="icondiv" style="width: 50px; height: 50px; overflow: hidden; border: 2px solid #0470e4; border-radius: 15px; cursor: pointer;">
-							<img src="/images/ezLadder/icon_addAttendant.png" style="padding-left: 2px; padding-top: 2px; display: block"/>
-							<img src="/images/ezLadder/icon_addAttendant_hover.png" style="padding-left: 2px; padding-top: 2px; display: none"/>
+							<img src="/images/ezLadder/icon_addAttendant.png" style="padding-left: 2px; padding-top: 2px; display: block" title="<spring:message code='ezLadder.t080'/>"/>
+							<img src="/images/ezLadder/icon_addAttendant_hover.png" style="padding-left: 2px; padding-top: 2px; display: none" title="<spring:message code='ezLadder.t080'/>"/>
 						</div>
 						<div id="ladderLineBox" style="border: 1px solid #ddd; height: 450px; overflow-y: hidden; overflow-x: auto; min-width: 750px;">
 							<div style="height: 140px;">
