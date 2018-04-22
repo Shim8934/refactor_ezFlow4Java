@@ -228,7 +228,7 @@
 	    	DISPLAYNAME,
 	    	DISPLAYNAME2,
 	    	#folderType#,
-	    	concat('|', #id#, '|'),
+	    	CONCAT('|', #id#, '|'),
 	    	0,
 	    	0,
 	    	'root',
@@ -363,8 +363,7 @@
 		<![CDATA[
 			SELECT
 				DF.FILE_ID,
-				CASE #primary#
-					WHEN '1'
+				CASE WHEN #primary# = '1'
 					THEN DF.FILE_NAME1
 					ELSE DF.FILE_NAME2
 				END FILE_NAME,
@@ -377,8 +376,7 @@
 				DF.OWNER_ID,
 				DF.USE_STATUS,
 				DF.CREATE_ID,
-				CASE #primary#
-					WHEN '1'
+				CASE WHEN #primary# = '1'
 					THEN DF.CREATE_NAME1
 					ELSE DF.CREATE_NAME2
 				END CREATE_NAME,
@@ -452,8 +450,7 @@
 		<![CDATA[
 			SELECT DISTINCT
 				DF.FILE_ID,
-				CASE #primary#
-					WHEN '1'
+				CASE WHEN #primary# = '1'
 					THEN DF.FILE_NAME1
 					ELSE DF.FILE_NAME2
 				END FILE_NAME,
@@ -466,8 +463,7 @@
 				DF.OWNER_ID,
 				DF.USE_STATUS,
 				DF.CREATE_ID,
-				CASE #primary#
-					WHEN '1'
+				CASE WHEN #primary# = '1'
 					THEN DF.CREATE_NAME1
 					ELSE DF.CREATE_NAME2
 				END CREATE_NAME,
@@ -482,8 +478,7 @@
 					ELSE '1'
 				END FAVORITE_STATUS,
 				S.SHARER_ID,
-		        CASE #primary#
-					WHEN '1'
+		        CASE WHEN #primary# = '1'
 					THEN U.DISPLAYNAME
 					ELSE U.DISPLAYNAME2
 				END SHARER_NAME,
@@ -565,8 +560,7 @@
 			FROM (
 				SELECT
 					DF.FILE_ID,
-					CASE #primary#
-						WHEN '1'
+					CASE WHEN #primary# = '1'
 						THEN DF.FILE_NAME1
 						ELSE DF.FILE_NAME2
 					END FILE_NAME,
@@ -579,8 +573,7 @@
 					DF.OWNER_ID,
 					DF.USE_STATUS,
 					DF.CREATE_ID,
-					CASE #primary#
-						WHEN '1'
+					CASE WHEN #primary# = '1'
 						THEN DF.CREATE_NAME1
 						ELSE DF.CREATE_NAME2
 					END CREATE_NAME,
@@ -657,8 +650,7 @@
 			FROM (
 				SELECT DISTINCT
 					DF.FILE_ID,
-					CASE #primary#
-						WHEN '1'
+					CASE WHEN #primary# = '1'
 						THEN DF.FILE_NAME1
 						ELSE DF.FILE_NAME2
 					END FILE_NAME,
@@ -671,8 +663,7 @@
 					DF.OWNER_ID,
 					DF.USE_STATUS,
 					DF.CREATE_ID,
-					CASE #primary#
-						WHEN '1'
+					CASE WHEN #primary# = '1'
 						THEN DF.CREATE_NAME1
 						ELSE DF.CREATE_NAME2
 					END CREATE_NAME,
@@ -687,8 +678,7 @@
 						ELSE '1'
 					END FAVORITE_STATUS,
 					S.SHARER_ID,
-			        CASE #primary#
-						WHEN '1'
+			        CASE WHEN #primary# = '1'
 						THEN U.DISPLAYNAME
 						ELSE U.DISPLAYNAME2
 					END SHARER_NAME,
@@ -764,8 +754,7 @@
 	<select id="EzWebFolderDAO_m.getUserNameList" resultClass="String">
 		<![CDATA[
 			SELECT
-				CASE #primary#
-					WHEN '1' 
+				CASE WHEN #primary# = '1'
 					THEN DISPLAYNAME 
 					ELSE DISPLAYNAME2
 				END AS DISPLAYNAME
