@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Resource;
-
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
+import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
@@ -43,7 +42,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	@Autowired
 	private EzWebFolderDAO_m ezWebFolderDAO_m;
 	
-	@Resource(name = "EzWebFolderDAO_m")
+	@Autowired
 	private EzWebFolderDAO_m ezWebFolderDAO;
 	
 	@Autowired
@@ -51,6 +50,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Autowired
 	private EzWebFolderService_y ezWebFolderService_y;
+	
+	@Autowired
+	private EzWebFolderDAO_y ezWebFolderDAO_y;
 	
 	@Autowired
 	private EzWebFolderAdminService ezWebFolderAdminService;
