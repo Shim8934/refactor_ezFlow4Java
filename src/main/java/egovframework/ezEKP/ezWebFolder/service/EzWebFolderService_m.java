@@ -30,11 +30,17 @@ public interface EzWebFolderService_m {
 	
 	public boolean isShared(String folderFileId, String folderFileType, String folderPath, int tenantId) throws Exception;
 	
+	public void insertShare(String sharerId, String folderFileId, String folderFileType, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
+	
+	public void updateShare(String sharerId, String folderFileId, String folderFileType, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
+	
+	public void deleteShare(String sharerId, String folderFileId, String folderFileType, String offset, int tenantId) throws Exception;
+	
+	public void hideShare(String userId, String folderFileId, String folderFileType, String offset, int tenantId) throws Exception;
+
+	public void showShare(String userId, String folderFileId, String folderFileType, String offset, int tenantId) throws Exception;
+	
 	int getShareSeq(int tenantId) throws Exception;
-	
-	void insertShare(int seqId, String companyId, String userId, String userType, String folderFileId, String folderFileType, String createId, int tenantId) throws Exception;
-	
-	void delShare(String companyId, String folderFileId, String folderFileType, String createId, int tenantId) throws Exception;
 	
 	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int pStart, int pEnd, String searchExt, String searchFileName, String searchFileType, String searchCreateName, String endrollStartDate, String endrollEndDate, String delStartDate, String delEndDate) throws Exception;
 

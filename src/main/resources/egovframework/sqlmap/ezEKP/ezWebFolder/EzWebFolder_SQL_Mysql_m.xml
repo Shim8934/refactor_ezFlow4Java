@@ -204,44 +204,20 @@
 		</selectKey>
 		
 	    INSERT INTO TBL_WEBFOLDER_FOLDER (
-	    	FOLDER_ID,
-	    	FOLDER_NAME1,
-	    	FOLDER_NAME2,
-	    	FOLDER_TYPE,
-	    	FOLDER_PATH,
-	    	FOLDER_STEP,
-	    	FOLDER_LEVEL,
-	    	FOLDER_UPPER,
-	    	USE_STATUS,
-	    	OWNER_ID,
-	    	CREATE_ID,
-	    	CREATE_DATE,
-	    	CREATE_NAME1,
-	    	CREATE_NAME2,
-	    	UPDATE_ID,
-	    	UPDATE_DATE,
-	    	COMPANY_ID,
-	    	TENANT_ID
+	    	FOLDER_ID,                 FOLDER_NAME1,              FOLDER_NAME2,
+	    	FOLDER_TYPE,               FOLDER_PATH,               FOLDER_STEP,
+	    	FOLDER_LEVEL,              FOLDER_UPPER,              USE_STATUS,
+	    	OWNER_ID,                  CREATE_ID,                 CREATE_DATE,
+	    	CREATE_NAME1,              CREATE_NAME2,              UPDATE_ID,
+	    	UPDATE_DATE,               COMPANY_ID,                TENANT_ID
 	    )
 	    SELECT
-	    	#id#,
-	    	DISPLAYNAME,
-	    	DISPLAYNAME2,
-	    	#folderType#,
-	    	CONCAT('|', #id#, '|'),
-	    	0,
-	    	0,
-	    	'root',
-	    	'Y',
-	    	#ownerId#,
-	    	#userId#,
-	    	#timeUTC#,
-	    	#createName1#,
-	    	#createName2#,
-	    	#userId#,
-	    	#timeUTC#,
-	    	#compId#,
-	    	#tenantId#
+	    	#id#,                      DISPLAYNAME,               DISPLAYNAME2,
+	    	#folderType#,              CONCAT('|', #id#, '|'),    0,
+	    	0,                         'root',                    'Y',
+	    	#ownerId#,                 #userId#,                  #timeUTC#,
+	    	#createName1#,             #createName2#,             #userId#,
+	    	#timeUTC#,                 #compId#,                  #tenantId#
 		<isEqual property="folderType" compareValue="U">
 		FROM TBL_USERMASTER
 		</isEqual>
@@ -821,30 +797,124 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.isFileShared" resultClass="String">
-		<![CDATA[
-			SELECT DISTINCT
-				USER_ID
-			FROM TBL_WEBFOLDER_FOLDERUSER FU
-			JOIN TBL_WEBFOLDER_FOLDER F
-			ON FU.FOLDER_ID = F.FOLDER_ID
-			AND FU.TENANT_ID = F.TENANT_ID
-			WHERE F.FOLDER_TYPE = 'D'
-			AND FU.CREATE_ID = #userId#
-			AND FU.TENANT_ID = #tenantId#
-		]]>
+	<insert id="EzWebFolderDAO_m.insertShare" parameterClass="Map">
+		<selectKey keyProperty="id" resultClass="Integer">
+			SELECT 
+				CASE WHEN MAX(SHARE_ID) IS NULL
+					THEN 1
+					ELSE MAX(SHARE_ID) + 1
+				END AS ID
+			FROM TBL_WEBFOLDER_SHARE2
+			WHERE TENANT_ID = #tenantId#;
+		</selectKey>
+		
+		INSERT INTO TBL_WEBFOLDER_SHARE2 (
+			SHARE_ID,              SHARER_ID,             SHARER_NAME1,
+			SHARER_NAME2,          FOLDERFILE_ID,         FOLDERFILE_TYPE,
+			USER_NAME_LIST,        SHARE_DATE,            TENANT_ID
+		)
+		SELECT
+			#id#,                  #sharerId#,              DISPLAYNAME,
+			DISPLAYNAME2,          #folderFileId#,        #folderFileType#,
+			#userNameList#,        #shareDate#,           #tenantId#
+		FROM TBL_USERMASTER
+		WHERE CN = #sharerId#
+		AND TENANT_ID = #tenantId#
+	</insert>
+	
+	<insert id="EzWebFolderDAO_m.insertShareSub" parameterClass="Map">
+		INSERT INTO TBL_WEBFOLDER_SHARE_SUB (
+			SHARE_ID,              USER_ID,               USER_NAME1,
+			USER_NAME2,            USER_TYPE,             SUB_STATUS,
+			TENANT_ID
+		)
+		SELECT
+			#shareId#,             #userId#,              DISPLAYNAME,
+			DISPLAYNAME2,          #userType#,            #subStatus#,
+			#tenantId#
+		<isEqual property="userType" compareValue="U">
+			FROM TBL_USERMASTER
+		</isEqual>
+		<isNotEqual property="userType" compareValue="U">
+			FROM TBL_DEPTMASTER
+		</isNotEqual>
+		WHERE CN = #userId#
+		AND TENANT_ID = #tenantId#
+	</insert>
+	
+	<select id="EzWebFolderDAO_m.getShareId" parameterClass="Map" resultClass="Integer">
+		SELECT SHARE_ID
+		FROM TBL_WEBFOLDER_SHARE2
+		WHERE SHARER_ID     = #sharerId#
+		AND FOLDERFILE_ID   = #folderFileId#
+		AND FOLDERFILE_TYPE = #folderFileType#
+		AND TENANT_ID       = #tenantId#
 	</select>
 	
-	<delete id="EzWebFolderDAO_m.delShare">
-		<![CDATA[
-			DELETE FROM tbl_webfolder_share 
-			WHERE
-				FOLDERFILE_ID   = #folderFileId#
-			AND 
-				FOLDERFILE_TYPE = #folderFileType#
-			AND 
-				TENANT_ID       = #tenantId#
-		]]>
+	<delete id="EzWebFolderDAO_m.deleteShareSub">
+		DELETE FROM TBL_WEBFOLDER_SHARE_SUB
+		WHERE SHARE_ID = #shareId#
+		AND TENANT_ID  = #tenantId#
+	</delete>
+	
+	<update id="EzWebFolderDAO_m.updateShareUserNameList" parameterClass="Map">
+		UPDATE
+			TBL_WEBFOLDER_SHARE2
+		SET
+			USER_NAME_LIST = (
+				SELECT CONCAT(group_concat(DISPLAYNAME), '|', group_concat(DISPLAYNAME2))
+				FROM (
+					SELECT DISPLAYNAME, DISPLAYNAME2
+					FROM TBL_USERMASTER
+					WHERE CN IN
+					<iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[].id#
+					</iterate>
+					AND TENANT_ID = #tenantId#
+					UNION
+					SELECT DISPLAYNAME, DISPLAYNAME2
+					FROM TBL_DEPTMASTER
+					WHERE CN IN
+					<iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[].id#
+					</iterate>
+					AND TENANT_ID = #tenantId#
+				) AS UD
+			),
+			SHARE_DATE = #shareDate#
+		WHERE
+			SHARE_ID = #shareId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+	
+	<delete id="EzWebFolderDAO_m.deleteShare">
+		DELETE FROM TBL_WEBFOLDER_SHARE2
+		WHERE SHARE_ID = #shareId#
+		AND TENANT_ID  = #tenantId#
+	</delete>
+	
+	<insert id="EzWebFolderDAO_m.hideShare" parameterClass="Map">
+		INSERT INTO TBL_WEBFOLDER_SHARE_HIDE (
+			FOLDERFILE_ID,         FOLDERFILE_TYPE,       USER_ID,
+			USER_NAME1,            USER_NAME2,            HIDE_DATE,
+			TENANT_ID
+		)
+		SELECT
+			#folderFileId#,        #folderFileType#,      #userId#,
+			DISPLAYNAME,           DISPLAYNAME2,          #hideDate#,
+			#tenantId#
+		FROM TBL_USERMASTER
+		WHERE CN = #userId#
+		AND TENANT_ID  = #tenantId#
+	</insert>
+	
+	<delete id="EzWebFolderDAO_m.showShare">
+		DELETE FROM TBL_WEBFOLDER_SHARE_HIDE
+		WHERE FOLDERFILE_ID = #folderFileId#
+		AND FOLDERFILE_TYPE  = #folderFileType#
+		AND USER_ID  = #userId#
+		AND TENANT_ID  = #tenantId#
 	</delete>
 	
 	<select id="EzWebFolderDAO_m.getShareSeq" parameterClass="Map" resultClass="Integer">
@@ -858,19 +928,6 @@
 		]]>
 	</select>
 
-	<insert id="EzWebFolderDAO_m.insertShare" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_WEBFOLDER_SHARE (
-				SEQ_ID,           USER_ID,    USER_TYPE,   FOLDERFILE_ID,
-				FOLDERFILE_TYPE,  CREATE_ID,  CREATE_DATE, TENANT_ID
-			)
-			VALUES (
-				#seqId#,          #userId#,   #userType#,  #folderFileId#,
-				#folderFileType#, #createId#, NOW(),       #tenantId#
-			)
-		]]>
-	</insert>
-	
 	<select id="EzWebFolderDAO_m.userDeptList" parameterClass="Map" resultClass="String">
 			SELECT
 			TU.DEPARTMENT 

@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
-import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -63,24 +62,40 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return (Integer) select("EzWebFolderDAO_m.isShared", map);
 	}
 	
-	public List<FolderFileVO> getShareGet(Map<String, Object> map) {
-		return (List<FolderFileVO>) list("EzWebFolderDAO_m.getShareGet", map);
+	public int insertShare(Map<String, Object> map) {
+		return (int) insert("EzWebFolderDAO_m.insertShare", map);
 	}
-
-	public List<FolderFileVO> getShareGive(Map<String, Object> map) {
-		return (List<FolderFileVO>) list("EzWebFolderDAO_m.getShareGive", map);
+	
+	public void insertShareSub(Map<String, Object> map) {
+		insert("EzWebFolderDAO_m.insertShareSub", map);
 	}
-
+	
+	public int getShareId(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_m.getShareId", map);
+	}
+	
+	public void deleteShareSub(Map<String, Object> map) {
+		delete("EzWebFolderDAO_m.deleteShareSub", map);
+	}
+	
+	public void updateShareUserNameList(Map<String, Object> map) {
+		update("EzWebFolderDAO_m.updateShareUserNameList", map);
+	}
+	
+	public void deleteShare(Map<String, Object> map) {
+		delete("EzWebFolderDAO_m.deleteShare", map);
+	}
+	
+	public void hideShare(Map<String, Object> map) {
+		insert("EzWebFolderDAO_m.hideShare", map);
+	}
+	
+	public void showShare(Map<String, Object> map) {
+		delete("EzWebFolderDAO_m.showShare", map);
+	}
+	
 	public int getShareSeq(Map<String, Object> map) {
 		return (int) select("EzWebFolderDAO_m.getShareSeq", map);
-	}
-
-	public void delShare(Map<String, Object> map) {
-		delete("EzWebFolderDAO_m.delShare", map);
-	}
-
-	public void insertShare(Map<String, Object> map) {
-		insert("EzWebFolderDAO_m.insertShare", map);
 	}
 
 	public List<String> userDeptList(Map<String, Object> map) {
@@ -174,4 +189,5 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	public void moveFile(Map<String, Object> map) {
 		update("EzWebFolderDAO_m.moveFile", map);
 	}
+
 }
