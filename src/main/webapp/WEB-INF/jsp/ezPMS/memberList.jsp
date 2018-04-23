@@ -1,0 +1,42 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
+		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<style>
+		</style>
+	</head>
+		<table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
+			<tbody>
+				<tr>
+			    	<th style="white-space:normal">
+			    		<span id="selectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">[<span style="color:#017BEC;">${memberList.size()}명</span>]</span>
+			    		<span style="float:right;">
+                       </span>
+			        </th>
+			    </tr>
+			</tbody>
+		</table>
+		<div style="vertical-align: top; height: 293px; overflow: auto; width: 100%;" id="txtlist_Layer">
+			<table style="width:100%; border: 1px solid #B6B6B6;" class="mainlist">
+				<tr>
+					<td style="width: 40%; font-weight: bold;" class="td_gray">이름</td>
+					<td style="width: 60%; font-weight: bold;" class="td_gray">부서</td>
+		        </tr>
+		        <c:forEach items="${memberList}" var="member">
+			        <tr id="${member.userId }" name="${member.userName }"  dept="${member.userDeptname }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
+						<td><c:out value="${member.userName }" /></td>
+						<td><c:out value="${member.userDeptname }" /></td>
+					</tr>
+		        </c:forEach>
+		    </table>
+		</div>
+</html>
+

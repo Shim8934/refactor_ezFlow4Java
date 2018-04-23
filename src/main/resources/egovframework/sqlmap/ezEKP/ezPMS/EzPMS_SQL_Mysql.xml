@@ -91,18 +91,9 @@
     </resultMap>
     
     <resultMap id="projectMemberVO" class="ProjectMemberVO">
-    	<result property="memberId"							column="MEMBER_ID"					columnIndex="1"/>
-    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
-    	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
-    	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="4"/>
     	<result property="userId"							column="USER_ID"					columnIndex="5"/>
     	<result property="userName"							column="USER_NAME"					columnIndex="6"/>
-    	<result property="userName2"						column="USER_NAME2"					columnIndex="7"/>
     	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="8"/>
-    	<result property="userDeptname2"					column="USER_DEPTNAME2"				columnIndex="9"/>
-    	<result property="userPosition"						column="USER_POSITION"				columnIndex="10"/>
-    	<result property="userPosition2"					column="USER_POSITION2"				columnIndex="11"/>
-    	<result property="userIdType"						column="USER_ID_TYPE"				columnIndex="12"/>
     </resultMap>
     
     <resultMap id="projectTaskVO" class="ProjectTaskVO">
@@ -361,47 +352,55 @@
 	</select>
 	
 	<select id="EzPMSDAO.getProjectMember" parameterClass="Map" resultMap="projectMemberVO" remapResults="true">
-			<![CDATA[
-				SELECT
-					USER_ID AS USER_ID,
-					USER_NAME$lang$ AS USER_NAME,
-					USER_DEPTNAME$lang$ AS USER_DEPTNAME
-				FROM TBL_PMS_MEMBER
-				WHERE
-					PROJECT_ID = #project_Id#
-				AND
-					USER_ID_TYPE = 'user'
-				AND
-					MEMBER_ROLE_ID IN (#member_Role_Id#)
-				AND
-					TENANT_ID = #tenant_Id#
-				UNION
-				SELECT 
-					CN AS USER_ID,
-					DISPLAYNAME$lang$ AS USER_NAME,
-					DESCRIPTION$lang$ AS USER_DEPTNAME
-				FROM TBL_USERMASTER D JOIN
-				(SELECT
-					DISTINCT B.CN AS DEPARTMENT
-				FROM
-					TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
-				ON
-					B.DEPT_CD_PATH LIKE CONCAT('%',A.USER_ID,'%')
-				AND
-					A.TENANT_ID = B.TENANT_ID
-				WHERE
-					A.PROJECT_ID = #project_Id#
-				AND
-					A.USER_ID_TYPE = 'dept'
-				AND
-					A.MEMBER_ROLE_ID IN (#member_Role_Id#)
-				AND
-					A.TENANT_ID = 1) C
-				ON
-					D.DEPARTMENT = C.DEPARTMENT
-				WHERE
-					D.TENANT_ID = #tenant_Id#
-			]]>
+		SELECT
+			USER_ID AS USER_ID,
+			USER_NAME$lang$ AS USER_NAME,
+			USER_DEPTNAME$lang$ AS USER_DEPTNAME
+		FROM TBL_PMS_MEMBER
+		WHERE
+			PROJECT_ID = #project_Id#
+		AND
+			USER_ID_TYPE = 'user'
+		AND
+		<isNotEqual property="role_Id" compareValue="4">
+			MEMBER_ROLE_ID = #role_Id#
+		</isNotEqual>
+		<isEqual property="role_Id" compareValue="4">
+			MEMBER_ROLE_ID IN (1,2)
+		</isEqual>
+		AND
+			TENANT_ID = #tenant_Id#
+		UNION
+		SELECT 
+			CN AS USER_ID,
+			DISPLAYNAME$lang$ AS USER_NAME,
+			DESCRIPTION$lang$ AS USER_DEPTNAME
+		FROM TBL_USERMASTER D JOIN
+		(SELECT
+			DISTINCT B.CN AS DEPARTMENT
+		FROM
+			TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
+		ON
+			B.DEPT_CD_PATH LIKE CONCAT('%',A.USER_ID,'%')
+		AND
+			A.TENANT_ID = B.TENANT_ID
+		WHERE
+			A.PROJECT_ID = #project_Id#
+		AND
+			A.USER_ID_TYPE = 'dept'
+		AND
+		<isNotEqual property="role_Id" compareValue="4">
+			MEMBER_ROLE_ID = #role_Id#
+		</isNotEqual>
+		<isEqual property="role_Id" compareValue="4">
+			MEMBER_ROLE_ID IN (1,2)
+		</isEqual>
+		AND
+			A.TENANT_ID = 1) C
+		ON
+			D.DEPARTMENT = C.DEPARTMENT
+		WHERE
+			D.TENANT_ID = #tenant_Id#
 	</select>
 	
 	

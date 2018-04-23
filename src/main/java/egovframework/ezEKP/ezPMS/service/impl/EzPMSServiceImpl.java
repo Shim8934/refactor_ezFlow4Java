@@ -40,7 +40,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPMSService")
 public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MCommonGWController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzPMSServiceImpl.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -131,14 +131,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("getProjectMemberList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("projectId", projectId);
-		if (roleId == 4) {
-			param.put("roleId", "1,2");			
-		} else {
-			param.put("roleId", roleId);
-		}
+		param.put("project_Id", projectId);
+		param.put("role_Id", roleId);
 		param.put("lang", lang);
-		param.put("tenantId", tenantId);
+		param.put("tenant_Id", tenantId);
+		
 		List<ProjectMemberVO> list = ezPMSDAO.getProjectMemberList(param);
 		
 		LOGGER.debug("getProjectMemberList ended");

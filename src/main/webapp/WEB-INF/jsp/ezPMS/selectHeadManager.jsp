@@ -65,14 +65,23 @@ function popupClose() {
  }
  
  function selectHeadManager() {
-	 parent.opener.headManagerId = selMainListUserId;
-	 parent.opener.managerList = managerList;
-	 parent.opener.participantList = participantList;
-	 parent.opener.viewerList = viewerList;
-	 parent.opener.applyList();
-	 
-	 popupClose();
-	 parent.window.close();
+	 if(parent.document.title == "담당자 지정") {
+		 parent.parent.headManagerId = selMainListUserId;
+		 parent.parent.managerList = managerList;
+		 parent.parent.applyList();
+		 
+		 popupClose();
+		 parent.parent.DivPopUpHidden();
+	 } else {
+		 parent.opener.headManagerId = selMainListUserId;
+		 parent.opener.managerList = managerList;
+		 parent.opener.participantList = participantList;
+		 parent.opener.viewerList = viewerList;
+		 parent.opener.applyList(); 
+		 
+		 popupClose();
+		 parent.window.close();
+	 } 	 
  }
  
 </script>

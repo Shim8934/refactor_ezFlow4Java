@@ -252,12 +252,16 @@ public class EzPMSController2 {
 	public String getProjectMemberList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS getProjectMemberList started");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String projectId = request.getParameter("projectId");
 		String roleId = request.getParameter("roleId");
 		
 		String url = "/rest/ezPMS/member-list/" + projectId + "/roles/" + roleId;
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("userId", userInfo.getId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -269,7 +273,31 @@ public class EzPMSController2 {
 		
 		LOGGER.debug("ezPMS getProjectMemberList ended");
 		
-		return "/ezPMS/setTaskMember";
+		return "ezPMS/memberList";
+	}
+	
+	
+	/**
+	 * 프로젝트관리 멤버리스트 페이지 호출함수
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/goProjectMemberList.do")
+	public String goProjectMemberList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS goProjectMemberList started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String projectId = request.getParameter("projectId");
+		
+		model.addAttribute("projectId", projectId);
+		
+		LOGGER.debug("ezPMS goProjectMemberList ended");
+		
+		return "/ezPMS/pmsSetTaskMember";
 	}
 	
 }

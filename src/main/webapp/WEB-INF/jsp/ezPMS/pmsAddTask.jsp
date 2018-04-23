@@ -34,11 +34,11 @@ var writerDeptName = "${writerDeptName}";
 var weightInput = null;
 var planStartDate = "${planStartDate}";
 var planEndDate = "${planEndDate}";
-var managerList = [];
-var participantList = [];
+var managerList = null;
 var viewerList = [];
 var overview = null;
 var endAlamStatus = null;
+var headManagerId = null;
 
  $(function() {
 	 $("#Sdatepicker").datepicker({
@@ -125,7 +125,7 @@ var endAlamStatus = null;
  function openMemberList() {
 		 var win;
 		 var feature = GetOpenPosition(760, 700);
-		 DivPopUpShow($('body').prop('scrollWidth') * 0.5, $('body').prop('scrollHeight') * 0.5, "/ezPMS/getProjectMemberList.do?projectId=" + projectId, "",
+		 DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.8, "/ezPMS/goProjectMemberList.do?projectId=" + projectId, "",
 				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
  
@@ -138,24 +138,31 @@ var endAlamStatus = null;
 	 viewerList = $("#viewers").text();
 	 overview = $("#overview").val();
 	 
-	 
-	 
-	 console.log(projectName);
-	 console.log(writerName);
-	 console.log(weightInput);
-	 console.log(planStartDate);
-	 console.log(planEndDate);
-	 console.log(managerList);
-	 console.log(participantList);
-	 console.log(viewerList);
-	 console.log(overview);
-	 console.log(endAlamStatus);
  }
 
  function popupClose() {
 	parent.DivPopUpHidden();
  }
  
+ function applyList() {
+	 var managerNameList = "";
+	 
+	 for (var i = 0; i < managerList.length; i++) {
+		if(headManagerId == managerList[i].userId) {
+			managerNameList += "<b>"
+			managerNameList += managerList[i].userName;
+			managerNameList += "(" + managerList[i].userDept + ")</b>, ";
+		} else {
+			managerNameList += managerList[i].userName;
+			managerNameList += "(" + managerList[i].userDept + "), ";
+		}
+		
+	 }
+	 
+	 managerNameList = managerNameList.substr(0, managerNameList.length - 2);
+	 
+	 $("#managers").html(managerNameList);
+ }
 
 </script>
 </head>

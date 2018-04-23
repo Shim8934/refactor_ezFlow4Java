@@ -424,10 +424,17 @@ public class EzPMSGWController2 {
 			
 			List<ProjectMemberVO> memberList = ezPMSService.getProjectMemberList(projectId, roleId, lang, tenantId);
 			
+			for(ProjectMemberVO vo : memberList) {
+				System.out.println(vo.getUserId());
+				System.out.println(vo.getUserName());
+				System.out.println(vo.getUserDeptname());
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", memberList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
