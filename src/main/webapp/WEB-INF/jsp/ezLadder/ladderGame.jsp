@@ -442,9 +442,10 @@
 						html += '<div id="editCmtDiv' + cmt["id"] + '" style="display: none;"></div></td>';
 						html += '<td style="width: 145px; position:relative;">';
 						html += '<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;">' + cmt["writeDate"] + '</div></td></tr>';
-						
+						cmt["comment"] = cmt["comment"].replace(/(?:\r\n|\r|\n)/g, '<br />');
+					
 						$("#commentArea table").prepend(html);
-						$("#cmtArea" + cmt["id"]).text(cmt["comment"]);
+						$("#cmtArea" + cmt["id"]).html(cmt["comment"]);
 						
 						if(id == cmt["userId"]) {
 							html = '<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" name="editComtButton" _comtIndex="editComt' + cmt["id"] + '" />';
@@ -462,7 +463,8 @@
 						if(id == cmt["userId"]) {
 							modifyComt(cmt["id"]);
 						}
-						$("#cmtArea" + cmt["id"]).text(cmt["comment"]);
+						cmt["comment"] = cmt["comment"].replace(/(?:\r\n|\r|\n)/g, '<br />');
+						$("#cmtArea" + cmt["id"]).html(cmt["comment"]);
 					}
 				}
 			});
@@ -508,11 +510,13 @@
 			if(editComtFlag == comtIndex) {
 				$("[id^=div2Cmt], [id^=_eCmt]").show();
 				$("[id^=editCmtDiv]").hide();
+				var editTemp= $("#cmtArea" + editComtFlag).html();
+				editTemp = editTemp.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n');
 				
 				html += '<div style="display: inline-block;">';
 				html += '<div style="display: block; float:left; border:1px solid #ddd;padding-left: 0px;margin-left: 20px; width: 1310px; border-radius: 3px;">';
 				html += '<textarea id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow: hidden; outline: none; border: none; resize: none; padding: 5px; width: 1300px; height: 14px;">';
-				html += $("#cmtArea" + editComtFlag).text() + '</textarea></div></div>';
+				html += editTemp + '</textarea></div></div>';
 				html += '<div style="padding: 5px 0px 5px 20px; clear: both;">';
 				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '"><spring:message code="ezLadder.t109" /></button>';
 				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '" style="background-color: rgb(0, 72, 150);"><spring:message code="ezLadder.t072" /></button></div>';
@@ -831,8 +835,8 @@
 							</td>
 							<td>
 								<div class="userName">${_comt.userName}</div>
-								<div id="div2Cmt<c:out value ="${_comt.id}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >
-									<p id="cmtArea<c:out value ="${_comt.id}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;"><c:out value ="${_comt.comment}" /></p>
+								<div id="div2Cmt<c:out value ="${_comt.id}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" ><% pageContext.setAttribute("br", "\n"); %>
+									<p id="cmtArea<c:out value ="${_comt.id}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;">${fn:replace(_comt.comment, br, '<br/>')}</p>
 								</div>
 								<div id="editCmtDiv<c:out value ="${_comt.id}" />" style="display: none;"></div>
 							</td>
