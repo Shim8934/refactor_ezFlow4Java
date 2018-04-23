@@ -12,22 +12,13 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<!-- date Picker -->
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-	<script type="text/javascript" src="/js/ezWebFolder/bnk.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+	<!-- module -->
+	<script type="text/javascript" src="/js/ezWebFolder/rowModule.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/favoriteModule.js"></script>
     <script type="text/javascript">
-    
-    	var userInfo = {
-   			id: 		"${userInfo.id}",
- 			primary:	"${userInfo.primary}",
-   			offset: 	"${userInfo.offset}",
-   			tenantId : 	"${userInfo.tenantId}"
-    	};
-    	
     	/* pagination variable: 리팩토링, 함수도 포함 대상임.	*/
     		var pagination = {
     			startIndex: 0,
@@ -159,14 +150,14 @@
     	}());
 
    		// TODO: 리펙토링
-    	var resultColumnName = {
+    	var resultColumn = {
     		favorite : {
     			id: "targetId",
     			path: "targetPath",
     			iconUrl: "targetIconUrl",
     			name: "targetName",
     			size: "targetSize",
-    			creatorName: userInfo.primary === "1" ? "createName1" : "createName2",
+    			creatorName: "creatorName",
     			createDate: "createDate",
     			type: "targetType"
     		},
@@ -178,7 +169,7 @@
     			iconUrl: "fileIconUrl",
     			name: "fileName",
     			size: "fileSize",
-    			creatorName: userInfo.primary === "1" ? "createName1" : "createName2",
+    			creatorName: "createName1",
     			createDate: "createDate",
     			type: "fileTypeName"
     		}
@@ -267,6 +258,17 @@
 	    }
 	    
 	    function loadListAsFavorite() {
+	    	var searchStartDate = $('#Sdatepicker').val();
+	    	var searchEndDate = $('#Edatepicker').val();
+	    	
+	    	if (searchStartDate !== "") {
+	    		searchStartDate += " 00:00:00";
+	    	}
+	    	
+	    	if (searchEndDate !== "") {
+	    		searchEndDate += " 23:59:59";
+	    	}
+	    	
 			$.ajax ({
 				type: "post",
 				async: false,
@@ -278,8 +280,8 @@
 					searchExt : $('#searchExt').val(),
 					searchFileName : $('#searchFileName').val(),
 					searchCreatorName : $('#searchCreateName').val(),
-					searchStartDate: $('#Sdatepicker').val(),
-					searchEndDate: $('#Edatepicker').val(),
+					searchStartDate: searchStartDate,
+					searchEndDate: searchEndDate,
 					startIndex : pagination.startIndex,
 					listCount : blockSize
 				},
@@ -397,7 +399,7 @@
 		}
 		
 		function renderList(result, isFromFolder) {
-			var columnMap = isFromFolder ? resultColumnName.folder : resultColumnName.favorite;
+			var columnMap = isFromFolder ? resultColumn.folder : resultColumn.favorite;
 			
 			checkedArr = [];
 			$('#tblFileList tr').not(":first").remove();
@@ -457,6 +459,7 @@
 				row.setAttribute("class", "bnkWebFolder");
 				row.setAttribute("targetId", resultJson[columnMap.id]);
 				row.setAttribute("targetPath", resultJson[columnMap.path]);
+				row.addEventListener("click", function(event) { rowModule.onRowClick(this); });
 				
 				if (!isFromFolder && isFolder) {
 					row.setAttribute("folderType", targetType.charAt(2));
@@ -471,20 +474,22 @@
 				inputElement = document.createElement("input");
 				inputElement.setAttribute("type", "checkbox");
 				inputElement.setAttribute("value", resultJson[columnMap.id]);
-				inputElement.setAttribute("class", "checkBnk");			
-				inputElement.addEventListener("change", function() {getChecked(this);});
+				inputElement.setAttribute("class", "checkBnk");
+				inputElement.addEventListener("change", function(event) { event.stopPropagation(); rowModule.onCheckboxChange(this); });
+				inputElement.addEventListener("click", function(event) { event.stopPropagation(); });
+				inputElement.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 				
 				checkboxColumn.appendChild(inputElement);
 				
 				fileIconElement = document.createElement("img");
-				fileIconElement.setAttribute("class", "webFolderImg");
-				fileIconElement.addEventListener("click", function() {onFavoriteImageClick(event);});
-				fileIconElement.addEventListener("dblclick", function(event) {event.stopPropagation();})
+				fileIconElement.setAttribute("class", "noneDrag");
+				fileIconElement.addEventListener("click", function() { favoriteModule.onImageClick(this); });
+				fileIconElement.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 				
 				if (isFromFolder && resultJson[columnMap.favoriteStatus] === "0") {
-					fileIconElement.src = "/images/webfolder/favourite.png";
+					fileIconElement.src = "/images/ImgIcon/view-flag.gif";
 				} else {
-					fileIconElement.src = "/images/webfolder/favourite2.png";
+					fileIconElement.src = "/images/ImgIcon/icon-flag.gif";
 					row.setAttribute("favorite", "");
 				}
 				
@@ -497,11 +502,10 @@
 				fileIconColumn.appendChild(fileIconElement);
 				
 				nameColumn.textContent = resultJson[columnMap.name];
-				
 				creatorColumn.textContent = resultJson[columnMap.creatorName];
-				
 				createDateColumn.textContent = resultJson[columnMap.createDate].substring(0, 10);
 				absolutePathColumn.textContent = resultJson[columnMap.path];
+				sizeColumn.style.textAlign = "center;"
 				
 				var targetType = resultJson[columnMap.type];
 				
@@ -565,11 +569,11 @@
 					return;
 				}
 			} else if (type == "quick") {
-				if (document.getElementById("txt_keyword").value == "") {
-					alert("<spring:message code='ezBoard.t192' />");
-					return;
-				}
-			}
+	            if (document.getElementById("txt_keyword").value == "") {
+	                alert("<spring:message code='ezBoard.t192' />");
+	                return;
+	            }
+	        }
 	        
 			context.refreshList();
 	    }
@@ -634,23 +638,38 @@
 			context.refreshList();
 	    }
     	
-        function fileDelete() {
-			if (checkedArr.length <= 0) {
+    	function fileDelete() {
+			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+			
+			if (listOfChecked.length <= 0) {
 				alert("<spring:message code = 'ezWebFolder.t108'/>");
 				return;
 			}
- 	   
-			var checkedList = checkedArr[0];
-  	
-			for (var i = 1; i < checkedArr.length; i++) {
-				checkedList = checkedList + "," + checkedArr[i];	    			
+			
+			var filesList  = [];
+			var folderList = [];
+			
+			for (var i = 0; i < listOfChecked.length; i++) {
+				var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+				
+				if (listOfChecked[i].getAttribute("_type") == 'folder') {
+					folderList.push(fileFolderId);
+				}
+				else {
+					filesList.push(fileFolderId);
+				}
 			}
- 	   
+			
+			if (folderList.length > 0) {
+				alert("<spring:message code = 'ezWebFolder.t20'/>");
+				return;
+			}
+			
 			$.ajax({
 				type: "POST",
 				url: "/ezWebFolder/checkPermission.do",
 				data: {
-					"fileList" : checkedList
+					"fileList" : filesList.toString()
 				},
 				dataType: "JSON",
 				async: true,
@@ -660,7 +679,7 @@
 					if (result != "ok") {
 						alert("<spring:message code='ezWebFolder.t243'/>");
 					} else {
-						DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + checkedList);
+						DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
 					}
 					
 					context.refreshList();
@@ -669,169 +688,99 @@
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			});
-        }
-        
-        function fileRename() {
-     	   if (checkedArr.length <= 0) {
-     		   alert("<spring:message code = 'ezWebFolder.t108'/>");
-     		   return;
-     	   }
-     	   
-     	   if (checkedArr.length > 1) {
-     		   alert("<spring:message code = 'ezWebFolder.t115'/>");
-     		   return;
-     	   }
-     	   
- 	       var fileId = checkedArr[0];
-     	   
- 	       $.ajax({
- 				type: "POST",
- 				url: "/ezWebFolder/checkPermission.do",
- 				data: {
- 					"fileId" : fileId
- 				},
- 				dataType: "JSON",
- 				async: true,
- 				success : function(data) {
- 					var result = data.resultValue;
- 					
- 					if (result != "ok") {
- 						alert("<spring:message code='ezWebFolder.t243'/>");
- 					}
- 					else {
- 						DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
- 					}
- 				},
- 				error : function(error) {
- 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
- 				}
- 			});
-        }
-        
-        function fileMove() {
-     	   if (checkedArr.length <= 0) {
-     		   alert("<spring:message code = 'ezWebFolder.t108'/>");
-     		   return;
-     	   }
-     	   
- 			var checkedList = checkedArr[0];
- 			
- 			for (var i = 1; i < checkedArr.length; i++) {
- 				checkedList = checkedList + "," + checkedArr[i];
- 			}
- 			
- 			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + checkedList);
-        }
-        
-        function onFavoriteButtonClick() {
-        	var checkedLength = checkedArr.length;
-        	
-			if (checkedLength <= 0) {
+			
+			
+		}
+		
+		function fileRename() {
+			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+			
+			if (listOfChecked.length <= 0) {
 				alert("<spring:message code = 'ezWebFolder.t108'/>");
 				return;
 			}
 			
-			for (var index = 0; index < checkedLength; index++) {
-				
-			}
-        }
-        
-        function onFavoriteImageClick(event) {
-        	event.stopPropagation();
-        	
-        	var imageElement = event.target;
-        	var rowElement = imageElement.parentElement.parentElement;
-        	
-        	toggleFavorite(rowElement, context.refreshList, context.refreshList);
-        }
-        
-        function toggleFavorite(rowElement, addHandler, deleteHandler) {
-        	var targetId = rowElement.getAttribute("targetId");
-        	var targetType = rowElement.getAttribute("targetType");
-        	
-        	if (rowElement.hasAttribute("favorite")) {
-        		deleteFavorite(targetId, targetType, deleteHandler);
-        	} else {
-        		addFavorite(targetId, targetType, addHandler);
-        	}
-        }
-        
-        function addFavorite(targetId, targetType, successHandler) {
-        	$.ajax({
-        		type: "POST",
-        		url: "/ezWebFolder/addFavorite.do",
-        		dataType: "json",
-        		data: {
-        			targetId: targetId,
-        			targetType: targetType
-        		},
-        		success: function(result) {
-        			if (result.status === "error") {
-        				return;
-        			}
-        			
-        			if (result.code === 1) {
-        				return;
-        			} 
-
-        			successHandler();
-        		}
-        	});
-        }
-        
-        function deleteFavorite(targetId, targetType, successHandler) {
-        	$.ajax({
-        		type: "POST",
-        		url: "/ezWebFolder/deleteFavorite.do",
-        		dataType: "json",
-        		data: {
-        			targetId: targetId,
-        			targetType: targetType,
-        		},
-        		success: function(result) {
-        			if (result.status === "error") {
-        				return;
-        			}
-        			
-        			if (result.code === 1) {
-        				return;
-        			}
-
-        			successHandler();
-        		}
-        	});
-        }
-        
-		function getChecked(obj) {
-			var id = obj.getAttribute("value");
+			var filesList  = [];
+			var folderList = [];
 			
-			if (obj.checked == true) {
-				checkedArr.push(id);
-			} else {
-				var pos = checkedArr.indexOf(id);
+			for (var i = 0; i < listOfChecked.length; i++) {
+				var fileFolderId = listOfChecked[i].getAttribute("_fileId");
 				
-				if (pos != -1) {
-					checkedArr.splice(pos, 1);
+				if (listOfChecked[i].getAttribute("_type") == 'folder') {
+					folderList.push(fileFolderId);
+				}
+				else {
+					filesList.push(fileFolderId);
 				}
 			}
-		}
-       
-		function getCheckAll(obj) {
-			var listInputs = document.getElementsByClassName("checkBnk");
-			checkedArr = [];
-
-			if (obj.checked == true) {
-				for (var i = 0; i < listInputs.length; i++) {
-					listInputs[i].checked = true;
-					checkedArr.push(listInputs[i].value);
-				}
-			} else {
-				for (var i = 0; i < listInputs.length; i++) {
-					listInputs[i].checked = false;
-				}
+			
+			if (folderList.length > 0) {
+				alert("<spring:message code = 'ezWebFolder.t20'/>");
+				return;
 			}
+			
+			if (filesList.length > 1) {
+				alert("<spring:message code = 'ezWebFolder.t115'/>");
+				return;
+			}
+			
+			var fileId = filesList[0];
+			
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/checkPermission.do",
+				data: {
+					"fileId" : fileId
+				},
+				dataType: "JSON",
+				async: true,
+				success : function(data) {
+					var result = data.resultValue;
+					
+					if (result != "ok") {
+						alert("<spring:message code='ezWebFolder.t243'/>");
+					}
+					else {
+						DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
+					}
+					
+					context.refreshList();
+				},
+				error : function(error) {
+					alert("<spring:message code='ezWebFolder.t134'/>" + error);
+				}
+			});
 		}
 		
+		function fileMove() {
+			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+			
+			if (listOfChecked.length <= 0) {
+				alert("<spring:message code = 'ezWebFolder.t108'/>");
+				return;
+			}
+			
+			var filesList  = [];
+			var folderList = [];
+			
+			for (var i = 0; i < listOfChecked.length; i++) {
+				var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+				
+				if (listOfChecked[i].getAttribute("_type") == 'folder') {
+					folderList.push(fileFolderId);
+				} else {
+					filesList.push(fileFolderId);
+				}
+			}
+			
+			if (folderList.length > 0) {
+				alert("<spring:message code = 'ezWebFolder.t20'/>");
+				return;
+			}
+			
+			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString());
+		}
+        
 		// adapter function
 		function refreshView() {
 			context.refreshList();
@@ -924,7 +873,7 @@
 			<li id="" onClick="fileRename()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 			<li id="" onClick="fileMove()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
 			<li id=""><img src="/images/i_bar.gif"></li>
-			<li id="" onClick="fileAllFavorite()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t281'/></span></a></li>
+			<li id="" onClick="favoriteModule.onCheckAllClick()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t281'/></span></a></li>
 <%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
 			<li id=""><img src="/images/i_bar.gif"></li>
 			<li id="SearchOption" favoritemenu mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
@@ -988,8 +937,8 @@
 	<div id="dragDropArea" style="margin: 10px 0px; overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
-				<th width="20px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
-				<th width="40px" ><spring:message code='ezWebFolder.t216'/></th>
+				<th width="15px" ><input type="checkbox" onchange="rowModule.selectAll(this.checked)" id="_checkAll"></th>
+				<th width="20px" ><img src='/images/ImgIcon/icon-flag.gif'/></th>
 				<th width="40px" ><spring:message code='ezWebFolder.t188'/></th>
 				<th width="330px"><spring:message code='ezWebFolder.t156'/></th>
 				<th width="60px" ><spring:message code='ezWebFolder.t157'/></th>
@@ -1014,9 +963,9 @@
 			        <tr>
 			           <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
 			           <td>
-			               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+			               <input type="text" id="Sdatepicker" class="datepicker" style="width:80px;text-align:center" readonly="readonly">
 			                ~
-			               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+			               <input type="text" id="Edatepicker" class="datepicker" style="width:80px;text-align:center" readonly="readonly">
 			           </td>
 			       </tr>
 			       
@@ -1055,5 +1004,11 @@
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
+	
+	<!-- date Picker -->
+	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/bnk.js"></script>
 </body>
 </html>

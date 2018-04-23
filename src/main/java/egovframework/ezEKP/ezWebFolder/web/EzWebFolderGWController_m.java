@@ -23,7 +23,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
-import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
@@ -535,10 +535,10 @@ public class EzWebFolderGWController_m {
 		JSONObject data = new JSONObject();
 
 		try {
-			List<FavoriteFileVO> favoriteFiles = ezWebFolderService_m.getFavorites(userId, offset, tenantId, searchInfo, startIndex, listCount);
+			List<FavoriteVO> favoriteFiles = ezWebFolderService_m.getFavorites(userId, primaryLang, offset, tenantId, searchInfo, startIndex, listCount);
 			String targetPath;
 			
-			for (FavoriteFileVO favoriteFile : favoriteFiles) {
+			for (FavoriteVO favoriteFile : favoriteFiles) {
 				targetPath = favoriteFile.getTargetPath().substring(1);
 				targetPath = getFolderPath(targetPath.split("\\|"), offset, primaryLang, tenantId);
 				
@@ -685,7 +685,6 @@ public class EzWebFolderGWController_m {
 		String endrollEndDate 	= orElse(request.getParameter("enrollEndDate"), "");
 		String delStartDate 	= orElse(request.getParameter("delStartDate"), "");
 		String delEndDate 		= orElse(request.getParameter("delEndDate"), "");
-		
 		
 		// TODO primary 수정
 		String primary;

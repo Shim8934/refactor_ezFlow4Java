@@ -469,6 +469,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String fileExt       = request.getParameter("fileExt")   != null ? request.getParameter("fileExt")   : "";
 		String fileName      = request.getParameter("fileName")  != null ? request.getParameter("fileName")  : "";
 		String userName      = request.getParameter("userName")  != null ? request.getParameter("userName")  : "";
+		String fileType      = request.getParameter("fileType")  != null ? request.getParameter("fileType")  : "";;
 		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/filehistorylist";
 		
@@ -484,6 +485,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("startDate", startDate)
 										.queryParam("fileExt", fileExt)
 										.queryParam("fileName", fileName)
+										.queryParam("fileType", fileType)
 										.queryParam("userName", userName)
 										.queryParam("currentPage", currPage)
 										.queryParam("endDate", endDate);
@@ -1130,5 +1132,4 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		return "json";
 	}
-	
 }

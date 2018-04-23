@@ -12,8 +12,11 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
+	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<!-- date Picker -->
+	<!-- module -->
+	<script type="text/javascript" src="/js/ezWebFolder/rowModule.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/favoriteModule.js"></script>
     <script type="text/javascript">
     	var file 		 = new Array();
 		var primary      = "<c:out value='${primary}'/>";
@@ -48,118 +51,6 @@
 		var searchStartDate = "";
 		var searchEndDate = "";
 		var folderUpp = "";
-		
-		var row = (function() {
-			var className = {
-				selected: "bnkWebFolder2",
-				unselected: "bnkWebFolder"
-			};
-			
-			var selectedClassNameRegExp = new RegExp("\\b" + className.selected + "\\b");
-			
-			var keyDownCtrl = false;
-			var keyDownShift = false;
-			
-			var rowWrapElement;
-			var firstSelected;
-			
-			function documentKeyEvent(event) {
-				keyDownShift = event.shiftKey;
-				keyDownCtrl = event.ctrlKey;
-			}
-
-			window.addEventListener("load", function() {
-				rowWrapElement = document.getElementById("tblFileList");
-				
-				document.addEventListener("keydown", documentKeyEvent);
-				document.addEventListener("keyup", documentKeyEvent);
-			});
-			
-			function clickEvent(rowElement) {
-				var selectedLength = getSelectedRows().length;
-				
-				if (firstSelected === undefined || selectedLength === 0) {
-					firstSelected = rowElement;
-					setSelectState(rowElement, true);
-					
-					return;
-				}
-				
-				if (keyDownShift) {
-					var rows = Array.prototype.slice.call(rowWrapElement.children);
-					var startIndex = rows.indexOf(firstSelected);
-					var endIndex = rows.indexOf(rowElement);
-					var temp;
-					
-					if (startIndex > endIndex) {
-						temp = startIndex;
-						startIndex = endIndex;
-						endIndex = temp;
-					}
-					
-					clearStateRows();
-					
-					for (var i = startIndex; i <= endIndex; i++) {
-						setSelectState(rows[i], true);
-					}
-					
-					return;	
-				}
-				
-				var previousSelectState = isSelected(rowElement);
-				
-				if (keyDownCtrl || (selectedLength === 1 && firstSelected === rowElement)) {
-					setSelectState(rowElement, !previousSelectState);
-				} else {
-					clearStateRows();
-					setSelectState(rowElement, true);
-					
-					firstSelected = rowElement;
-				}
-			}
-			
-			function getSelectedRows() {
-				return rowWrapElement.querySelectorAll("tr." + className.selected);
-			}
-			
-			function getUnselectedRows() {
-				return rowWrapElement.querySelectorAll("tr." + className.unselected);
-			}
-			
-			function isSelected(rowElement) {
-				return rowElement.className.search(selectedClassNameRegExp) >= 0;
-			}
-			
-			function clearStateRows(ignoreRows) {
-				var selectedRows = getSelectedRows();
-				var length = selectedRows.length;
-				
-				for (var i = 0; i < length; i++) {
-					setSelectState(selectedRows[i], false);
-				}
-			}
-			
-			function setSelectState(rowElement, isEnable) {
-				var checkboxElement = rowElement.firstChild.firstChild;
-				
-				checkboxElement.checked = isEnable;
-				rowElement.setAttribute("class", isEnable ? className.selected : className.unselected);
-			}
-			
-			function setSelectStateAll(isEnable) {
-				var targetRows = isEnable ? getUnselectedRows() : getSelectedRows();
-				var length = targetRows.length;
-				
-				for (var i = 0; i < length; i++) {
-					setSelectState(targetRows[i], isEnable);
-				}
-			}
-			
-			return {
-				clickEvent: clickEvent,
-				setSelectStateAll: setSelectStateAll
-			};
-		}());
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -234,8 +125,7 @@
 						dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
 						dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
 						dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
-					}
-					else {
+					} else {
 						dragDropAreaElmt.ondragenter = null;
 						dragDropAreaElmt.ondragover  = null;
 						dragDropAreaElmt.ondragover  = null;
@@ -347,27 +237,29 @@
 					var tdElmt10 = document.createElement("td");
 					
 					trElmt.setAttribute("class", "bnkWebFolder");
-					trElmt.setAttribute("_fileId", result[i]["fileId"]);
-					trElmt.setAttribute("_type", result[i]["fileTypeName"] == 'folder' ? 'folder' : 'file');
-					//trElmt.onclick = function(event) {clickRow(event);};
-					trElmt.addEventListener("click", function(event) {row.clickEvent(this)});
+					trElmt.setAttribute("targetId", result[i]["fileId"]);
+					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'folder' : 'file');
+					trElmt.addEventListener("click", function(event) { rowModule.onRowClick(this); });
 					
 					var inputElmt = document.createElement("input");
 					inputElmt.setAttribute("type", "checkbox");
 					inputElmt.setAttribute("value", result[i]["fileId"]);
 					inputElmt.setAttribute("class", "checkBnk");
-					//inputElmt.onclick = function(e){getChecked(e);};
+					inputElmt.addEventListener("change", function(event) { event.stopPropagation(); rowModule.onCheckboxChange(this); });
+					inputElmt.addEventListener("click", function(event) { event.stopPropagation(); });
+					inputElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
+					
 					tdElmt1.appendChild(inputElmt);
 					
 					var faImgElmt = document.createElement("img");
-					faImgElmt.setAttribute("class", "webFolderImg");
-					faImgElmt.addEventListener("click", function() {onFavoriteImageClick(event);});
-					faImgElmt.addEventListener("dblclick", function(event) {event.stopPropagation();})
+					faImgElmt.setAttribute("class", "noneDrag");
+					faImgElmt.addEventListener("click", function() { favoriteModule.onImageClick(this); });
+					faImgElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 					
 					if (result[i]["favouriteStatus"] == "0") {
-						faImgElmt.src = "/images/webfolder/favourite.png";
+						faImgElmt.src = "/images/ImgIcon/view-flag.gif";
 					} else {
-						faImgElmt.src = "/images/webfolder/favourite2.png";
+						faImgElmt.src = "/images/ImgIcon/icon-flag.gif";
 						trElmt.setAttribute("favorite", "");
 					}
 					
@@ -431,7 +323,7 @@
 		}
 		
 		function dbClickFunction(obj) {
-			var folderId2 = obj.getAttribute("_fileId");
+			var folderId2 = obj.getAttribute("targetId");
 			getFileList(folderId2);
 			
 		}
@@ -488,21 +380,23 @@
 	                alert("<spring:message code='ezBoard.t189' />");
 	                return;
 	            }
+	            
 	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
 	                alert("<spring:message code='ezBoard.t189' />");
 	                return;
 	            }
+	            
 	            if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
 	                alert("<spring:message code='ezBoard.t191' />");
 	                return;
 	            }
+	            
 	            searchExt = $('#searchExt').val();               
 	            searchFileName = $('#searchFileName').val();     
 	            searchCreateName = $('#searchCreateName').val(); 
 	            searchStartDate = $('#Sdatepicker').val(); 
 	            searchEndDate = $('#Edatepicker').val(); 
-	        }
-	        else if (type == "quick") {
+	        } else if (type == "quick") {
 	            if (document.getElementById("txt_keyword").value == "") {
 	                alert("<spring:message code='ezBoard.t192' />");
 	                return;
@@ -513,22 +407,6 @@
 	        getFileList(folderId);
 	   }
 	    
-		function clickRow(e) {
-			e.stopPropagation();
-			e.preventDefault();
-			var trElmt    = e.currentTarget;
-			var inputElmt = trElmt.firstElementChild.firstElementChild;
-			
-			if (inputElmt.checked == true) {
-				inputElmt.checked = false;
-				trElmt.setAttribute("class", "bnkWebFolder2");
-			}
-			else {
-				inputElmt.checked = true;
-				trElmt.setAttribute("class", "bnkWebFolder2");
-			}
-		}
-		
 		function getChecked(event) {
 			event.stopPropagation();
 			var checkboxElmt = event.currentTarget;
@@ -545,8 +423,7 @@
 					var trElmt            = listInputs[i].parentElement.parentElement;
 					trElmt.setAttribute("class", "bnkWebFolder2");
 				}
-			}
-			else {
+			} else {
 				for (var i = 0; i < listInputs.length; i++) {
 					var trElmt            = listInputs[i].parentElement.parentElement;
 					listInputs[i].checked = false;
@@ -554,6 +431,7 @@
 				}
 			}
 		}
+		
 		function doLayerPopup(obj) {
 	        btn_PostDate_Clear();
 	        document.getElementById("searchExt").value = "";
@@ -579,17 +457,16 @@
 	                document.getElementById("layer_popup").style.top = "100px";
 	            document.getElementById("layer_popup").style.display = "";           
 	            obj.setAttribute("mode", "on");
-	        }
-	        else {
+	        } else {
 	        	searchOptionHidden();
 	        }
 	        
 	        
 	    }
+		
 	    function searchOptionHidden() {
 	    	$.modal.close();
 	    }
-   	   
    	   
 	    function optionView(obj){
 	   		 if (obj.getAttribute("mode") == "off") {
@@ -625,9 +502,9 @@
     		var folderList = [];
     		
     		for (var i = 0; i < listOfChecked.length; i++) {
-    			var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+    			var fileFolderId = listOfChecked[i].getAttribute("targetId");
     			
-    			if (listOfChecked[i].getAttribute("_type") == 'folder') {
+    			if (listOfChecked[i].getAttribute("targetType") == 'folder') {
     				folderList.push(fileFolderId);
     			}
     			else {
@@ -665,12 +542,11 @@
 			var folderList = [];
 			
 			for (var i = 0; i < listOfChecked.length; i++) {
-				var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+				var fileFolderId = listOfChecked[i].getAttribute("targetId");
 				
-				if (listOfChecked[i].getAttribute("_type") == 'folder') {
+				if (listOfChecked[i].getAttribute("targetType") == 'folder') {
 					folderList.push(fileFolderId);
-				}
-				else {
+				} else {
 					filesList.push(fileFolderId);
 				}
 			}
@@ -693,8 +569,7 @@
 					
 					if (result != "ok") {
 						alert("<spring:message code='ezWebFolder.t243'/>");
-					}
-					else {
+					} else {
 						DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
 					}
 					refreshView();
@@ -703,8 +578,6 @@
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			});
-			
-			
 		}
 		
 		function fileRename() {
@@ -719,12 +592,11 @@
 			var folderList = [];
 			
 			for (var i = 0; i < listOfChecked.length; i++) {
-				var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+				var fileFolderId = listOfChecked[i].getAttribute("targetId");
 				
-				if (listOfChecked[i].getAttribute("_type") == 'folder') {
+				if (listOfChecked[i].getAttribute("targetType") == 'folder') {
 					folderList.push(fileFolderId);
-				}
-				else {
+				} else {
 					filesList.push(fileFolderId);
 				}
 			}
@@ -754,8 +626,7 @@
 					
 					if (result != "ok") {
 						alert("<spring:message code='ezWebFolder.t243'/>");
-					}
-					else {
+					} else {
 						DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 					}
 				},
@@ -777,12 +648,11 @@
 			var folderList = [];
 			
 			for (var i = 0; i < listOfChecked.length; i++) {
-				var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+				var fileFolderId = listOfChecked[i].getAttribute("targetId");
 				
-				if (listOfChecked[i].getAttribute("_type") == 'folder') {
+				if (listOfChecked[i].getAttribute("targetType") == 'folder') {
 					folderList.push(fileFolderId);
-				}
-				else {
+				} else {
 					filesList.push(fileFolderId);
 				}
 			}
@@ -794,79 +664,7 @@
 			
 			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString());
 		}
-
-		function onFavoriteButtonClick() {
-		}
 		
-		function onFavoriteImageClick(event) {
-			event.stopPropagation();
-			
-			var imageElement = event.target;
-			var rowElement = imageElement.parentElement.parentElement;
-			
-			toggleFavorite(rowElement, refreshView, refreshView);
-		}
-		
-        function toggleFavorite(rowElement, addHandler, deleteHandler) {
-        	var targetId = rowElement.getAttribute("_fileId");
-        	var targetType = rowElement.getAttribute("_type");
-        	
-        	// favorite type mapping
-        	targetType = targetType === "folder" ? targetType = "D" : targetType = "F";
-        	
-        	if (rowElement.hasAttribute("favorite")) {
-        		deleteFavorite(targetId, targetType, deleteHandler);
-        	} else {
-        		addFavorite(targetId, targetType, addHandler);
-        	}
-        }
-		
-        function addFavorite(targetId, targetType, successHandler) {
-        	$.ajax({
-        		type: "POST",
-        		url: "/ezWebFolder/addFavorite.do",
-        		dataType: "json",
-        		data: {
-        			targetId: targetId,
-        			targetType: targetType
-        		},
-        		success: function(result) {
-        			if (result.status === "error") {
-        				return;
-        			}
-        			
-        			if (result.code === 1) {
-        				return;
-        			} 
-
-        			successHandler();
-        		}
-        	});
-        }
-        
-        function deleteFavorite(targetId, targetType, successHandler) {
-        	$.ajax({
-        		type: "POST",
-        		url: "/ezWebFolder/deleteFavorite.do",
-        		dataType: "json",
-        		data: {
-        			targetId: targetId,
-        			targetType: targetType
-        		},
-        		success: function(result) {
-        			if (result.status === "error") {
-        				return;
-        			}
-        			
-        			if (result.code === 1) {
-        				return;
-        			}
-        			
-        			successHandler();
-        		}
-        	});
-        }
-
        function changeCount(value) {
     	   blockSize = value;
     	   currentPage = 1;
@@ -901,7 +699,7 @@
 			<li id=""><a onClick="fileRename()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 			<li id=""><a onClick="fileMove()"     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
 			<li id=""><img src="/images/i_bar.gif"></li>
-			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t281'/></span></a></li>
+			<li id=""><a onClick="favoriteModule.onCheckAllClick()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t281'/></span></a></li>
 <%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
 			<li id=""><img src="/images/i_bar.gif"></li>
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
@@ -967,16 +765,16 @@
 	<div id="dragDropArea" style="margin: 10px 0px;overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
-				<th width="20px" ><input type="checkbox" onchange="row.setSelectStateAll(this.checked)" id="_checkAll"></th>
-				<th width="40px" ><spring:message code='ezWebFolder.t216'/></th><!-- 즐겨찾기 -->
-				<th width="40px" ><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
+				<th width="20px"><input type="checkbox" onchange="rowModule.selectAll(this.checked)" id="_checkAll"></th>
+				<th width="40px"><img src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
+				<th width="40px"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 				<th width="240px"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 				<th width="60px" style="text-align : center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
 				<th width="80px"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-				<th width="80px" ><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
-				<th width="80px" ><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
+				<th width="80px"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+				<th width="80px"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
 				<th width="210px"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-				<th width="40px" ><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
+				<th width="40px"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
 			</tr>
 			
 		</table>
@@ -1041,8 +839,5 @@
 	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 	<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
-<!-- 	<script type="text/javascript" src="/js/ezWebFolder/bnk.js"                         ></script> -->
-	
-	
 </body>
 </html>
