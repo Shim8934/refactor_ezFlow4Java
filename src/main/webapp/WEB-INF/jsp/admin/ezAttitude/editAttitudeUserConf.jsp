@@ -14,19 +14,38 @@
 	</head>
 	
 	<script type="text/javascript">
-		var compareValue = ""; //회사규율과 같으면 0 다르면 1
-		var workStartTime = "${workStartTime}";
-		var workEndTime = "${workEndTime}";
+		var compareTime = "${vo.compareTime}"; //회사규율과 같으면 0 다르면 1
+		var companyStartTime = "${companyStartTime}";
+		var companyEndTime = "${companyEndTime}";
+		var workStartTime = "${vo.workStartTime}";
+		var workEndTime = "${vo.workEndTime}";
+		
+		$(function() {
+			$("#checkCompareValue").on('change', function() {
+				if($("#checkCompareValue").is(":checked") == true) {
+					$("#workStartTime").val(companyStartTime);
+					$("#workEndTime").val(companyEndTime);
+					$("#workStartTime").prop('readonly', true);
+					$("#workEndTime").prop('readonly', true);
+					
+				} else {
+					$("#workStartTime").val(workStartTime);
+					$("#workEndTime").val(workEndTime);
+					$("#workStartTime").prop('readonly', false);
+					$("#workEndTime").prop('readonly', false);
+				}
+			});
+		});
 		
 		function btnOk_onclick() {
 			$.ajax({
    				type:"post",
    				dataType:"json",
-   				url:"/admin/ezAttitude/attitudeUserConfSave.do",
+   				url:"/admin/ezAttitude/saveAttitudeUserConf.do",
    				data:{
    					selectUserId : selectUserId,
-   					workStartTime : workStartTime,
-   					workEndTime : workEndTime
+   					workStartTime : workStartTime.val(),
+   					workEndTime : workEndTime.val()
    				},
    				success: function(result){
    					opener.getUserConfList();
@@ -44,7 +63,6 @@
 		function btncancel_onclick() {
 			window.close();
 		}
-		
 	</script>
 	
 	<body class="popup">
@@ -52,11 +70,11 @@
 		<table class="content"> 
 			<tr>
 				<th>기본값 지정</th>
-				<td><input type="checkbox" id="checkCompareValue" name="checkCompareValue" />설정된 회사 근무시간을 따른다.</td>
+				<td><input type="checkbox" id="checkCompareValue" name="checkCompareValue" <c:if test="${vo.compareTime == '0'}">checked="checked"</c:if> />설정된 회사 근무시간을 따른다.</td>
 			</tr>
 			<tr>
 				<th>근무시간</th>
-				<td><span><input id="workStartTime" type="text" style="width:80px;" value="${workStartTime }"/>&nbsp; ~ <input id="workEndTime" type="text" style="width:80px;" value="${workEndTime }"/></span></td>
+				<td><span><input id="workStartTime" type="text" style="width:80px;" <c:if test="${vo.compareTime == '0'}">readonly="true"</c:if> value="${vo.workStartTime }"/>&nbsp; ~ <input id="workEndTime" type="text" style="width:80px;" <c:if test="${vo.compareTime == '0'}">readonly="true"</c:if> value="${vo.workEndTime }"/></span></td>
 			</tr>
 		</table> 
 		
