@@ -13,16 +13,6 @@
 	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>
 	<typeAlias alias="AttitudeAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO"/>
 	
-	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
-		<result property="userId" 					column="USER_ID" 				columnIndex="1"/>
-		<result property="workStartTime"			column="WORK_STARTTIME"			columnIndex="2"/>
-		<result property="workEndTime" 				column="WORK_ENDTIME" 			columnIndex="3"/>
-		<result property="userTitle"				column="TITLE"					columnIndex="4"/>
-		<result property="userName" 				column="DISPLAYNAME" 			columnIndex="5"/>
-		<result property="deptName" 				column="DESCRIPTION" 			columnIndex="6"/>
-		<result property="compareTime"				column="compareTime"/>
-	</resultMap>
-	
 	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
 		<result property="companyId"				column="COMPANY_ID"				columnIndex="1"/>
 		<result property="tenantId"					column="TENANT_ID"				columnIndex="2"/>
@@ -52,13 +42,6 @@
 		<result property="formName"					column="FORM_NAME"				columnIndex="3"/>
 		<result property="formName2"				column="FORM_NAME2"				columnIndex="4"/>
 		<result property="formHtml"					column="FORM_HTML"				columnIndex="5"/>
-	</resultMap>
-	
-	<resultMap id="attitudeUserConfigInfo" class="AttitudeUserConfigVO">
-		<result property="userId" 					column="USER_ID" 				columnIndex="1"/>
-		<result property="workStartTime"			column="WORK_STARTTIME"			columnIndex="2"/>
-		<result property="workEndTime" 				column="WORK_ENDTIME" 			columnIndex="3"/>
-		<result property="userName" 				column="DISPLAYNAME" 			columnIndex="4"/>
 	</resultMap>
 	
 	<resultMap class="authorVO" id="userMap">
@@ -183,15 +166,15 @@
 		]]>
 	</update>
 
-	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultMap="attitudeUserConfig">
+	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultClass="AttitudeUserConfigVO">
 		<![CDATA[
 			SELECT
-				TBL_USERMASTER.cn AS user_id,
-				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) as work_starttime,
-				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) as work_endtime,
-				TBL_USERMASTER.title,
-				TBL_USERMASTER.displayname,
-				TBL_USERMASTER.description,
+				TBL_USERMASTER.cn AS userid,
+				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) AS workstarttime,
+				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) AS workendtime,
+				TBL_USERMASTER.title AS usertitle,
+				TBL_USERMASTER.displayname AS userName,
+				TBL_USERMASTER.description AS deptName,
 				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime, '0', '1') AS compareTime
 			FROM
 				TBL_USERMASTER
@@ -442,7 +425,7 @@
 		]]>
 	</insert>
 	
-	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigInfo" parameterClass="Map" resultMap="attitudeUserConfigInfo">
+	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigInfo" parameterClass="Map" resultClass="AttitudeUserConfigVO">
 		<!-- <![CDATA[
 			SELECT
 				A.user_id,
@@ -467,12 +450,12 @@
 		
 		<![CDATA[
 			SELECT
-				TBL_USERMASTER.cn AS user_id,
-				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) as work_starttime,
-				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) as work_endtime,
-				TBL_USERMASTER.title,
-				TBL_USERMASTER.displayname,
-				TBL_USERMASTER.description,
+				TBL_USERMASTER.cn AS userid,
+				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) AS workstarttime,
+				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) AS workendtime,
+				TBL_USERMASTER.title AS usertitle,
+				TBL_USERMASTER.displayname AS userName,
+				TBL_USERMASTER.description AS deptName,
 				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime, '0', '1') AS compareTime
 			FROM
 				TBL_USERMASTER
