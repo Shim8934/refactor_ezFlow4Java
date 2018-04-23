@@ -62,26 +62,6 @@
       <result property="myDept"          column="MYDEPT" />
    </resultMap>
    
-   	<resultMap id="adminAttitude" class="AdminAttitudeVO">
-		<result  property="attitudeId" 			column="ATTITUDE_ID"			columnIndex="1"/>
-		<result  property="companyId" 			column="COMPANY_ID"				columnIndex="2"/>
-		<result  property="tenantId" 			column="TENANT_ID"				columnIndex="3"/>
-		<result  property="writerId" 			column="WRITER_ID"				columnIndex="4"/>
-		<result  property="deptId" 				column="DEPT_ID"				columnIndex="5"/>
-		<result  property="startDate" 			column="START_DATE"				columnIndex="6"/>
-		<result  property="startTime" 			column="START_TIME"				columnIndex="7"/>
-		<result  property="endDate" 			column="END_DATE"				columnIndex="8"/>
-		<result  property="endTime" 			column="END_TIME"				columnIndex="9"/>
-		<result  property="modAppl" 			column="MODAPPL"				columnIndex="10"/>
-		<result  property="ip" 					column="IP"						columnIndex="11"/>
-		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="12"/>
-		<result  property="typeId" 				column="TYPE_ID"				columnIndex="13"/>
-		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="14"/>
-		<result  property="userName"			column="USER_NAME"				columnIndex="15"/>
-		<result  property="deptName"			column="DEPT_NAME"				columnIndex="16"/>
-		<result  property="userTitle"			column="USER_TITLE"				columnIndex="17"/>
-	</resultMap>
-	
 	<resultMap id="attitudeAuthor" class="AttitudeAuthorVO">
 		<result  property="userId" 				column="USER_ID"				columnIndex="1"/>
 		<result  property="tenantId" 			column="TENANT_ID"				columnIndex="2"/>
@@ -598,26 +578,26 @@
 		]]>
    </delete>
    
-   	<select id="ezAttitudeAdminDAO.getAttitudeList2" parameterClass="Map" resultMap="adminAttitude">
+   	<select id="ezAttitudeAdminDAO.getAttitudeList2" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
 			SELECT 
-				A.attitude_id,
-				A.company_id,
-				A.tenant_id,
-				A.writer_id,
-				A.dept_id,
-				SUBSTR(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), 1, 10) AS start_date,
-                SUBSTR(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), 12) AS start_time,
-                IFNULL(SUBSTR(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute), 1, 10),'') AS end_date,
-                IFNULL(SUBSTR(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute), 12),'') AS end_time,
+				A.attitude_id AS attitudeid,
+				A.company_id AS companyid,
+				A.tenant_id AS tenantid,
+				A.writer_id AS writerid,
+				A.dept_id AS deptid,
+				SUBSTR(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), 1, 10) AS startdate,
+                SUBSTR(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), 12) AS starttime,
+                IFNULL(SUBSTR(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute), 1, 10),'') AS enddate,
+                IFNULL(SUBSTR(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute), 12),'') AS endtime,
 				A.modappl,
 				A.ip,
-				A.date_type,
-				A.type_id,
-				B.type_name,
-				C.displayname as user_name,
-                C.description as dept_name,
-                C.title as user_title
+				A.date_type AS datetype,
+				A.type_id AS typeid,
+				B.type_name AS typename,
+				C.displayname AS username,
+                C.description AS deptname,
+                C.title AS usertitle
 			FROM
 				TBL_ATTITUDE A
 			JOIN
