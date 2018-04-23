@@ -19,12 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
-import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
-import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
@@ -52,99 +51,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	private EzWebFolderService_y ezWebFolderService_y;
 	
 	@Autowired
-	private EzWebFolderDAO_y ezWebFolderDAO_y;
-	
-	@Autowired
 	private EzWebFolderAdminService ezWebFolderAdminService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Override
-	public void insertIfNotExistRootForder(String userId, String userName1, String userName2, String compId, List<Map<String, String>> permissionIdList, String offset, int tenantId) throws Exception {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-		LOGGER.debug("timeUTC: "+ timeUTC);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId",      userId);
-		map.put("compId",      compId);
-		map.put("createName1", userName1);
-		map.put("createName2", userName2);
-		map.put("timeUTC",     timeUTC);
-		map.put("tenantId",    tenantId);
-		
-		for (Map<String, String> idMap : permissionIdList) {
-			map.put("ownerId",    idMap.get("id"));
-			map.put("folderType", idMap.get("type"));
-			
-			if (ezWebFolderDAO_m.checkRootFolder(map) == 0) {
-				ezWebFolderDAO_m.insertRootFolder(map);
-				LOGGER.debug("root folder created. idMap: " + idMap);
-			}
-		}
-	}
-	
-	@Override
-	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId) throws Exception {
-		List<Map<String, Object>> folderTree = new ArrayList<Map<String, Object>>();
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("primary", primary);
-		map.put("tenantId", tenantId);
-		
-		//TODO: 폴더 트리뷰 정렬 기준?
-		if (folderType.equals("U") || folderType.equals("")) {
-			map.put("userId", userId);
-			List<Map<String, Object>> userFolderTree = ezWebFolderDAO_m.getUserFolderTree(map);
-			folderTree.addAll(userFolderTree);
-		}
-		
-		if (folderType.equals("D") || folderType.equals("")) {
-			List<String> addjobList = ezWebFolderService_y.getAddJobList(tenantId, userId);
-			
-			Map<String,Object> map2 = new HashMap<String, Object>();
-			map2.put("userId",   userId);
-			map2.put("tenantId", tenantId);
-			
-			List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map2);
-			
-			Set<String> idSet = new HashSet<String>();
-			idSet.add(deptId);
-			idSet.addAll(addjobList);
-			idSet.addAll(folderUserIdList);
-			
-			map.put("idList", idSet.toArray(new String[idSet.size()]));
-			List<Map<String, Object>> deptFolderTree = ezWebFolderDAO_m.getDeptFolderTree(map);
-			folderTree.addAll(deptFolderTree);
-		}
-		
-		if (folderType.equals("C") || folderType.equals("")) {
-			List<String> addjobList = ezWebFolderService_y.getAddJobList(tenantId, userId);
-			
-			Map<String,Object> map2 = new HashMap<String, Object>();
-			map2.put("userId",   userId);
-			map2.put("tenantId", tenantId);
-			
-			List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map2);
-			
-			Set<String> idSet = new HashSet<String>();
-			idSet.add(userId);
-			idSet.add(deptId);
-			idSet.add(compId);
-			idSet.addAll(addjobList);
-			idSet.addAll(folderUserIdList);
-			
-			map.put("idList", idSet.toArray(new String[idSet.size()]));
-			map.put("compId", compId);
-			List<Map<String, Object>> compFolderTree = ezWebFolderDAO_m.getCompFolderTree(map);
-			folderTree.addAll(compFolderTree);
-		}
-		
-		LOGGER.debug("folderTree size: " + folderTree.size());
-		return folderTree;
-	}
 	
 	@Override
 	public List<ShareVO> getSharingList(String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
@@ -552,13 +462,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("tenantId", tenantId);
 		
 		ezWebFolderDAO_m.showShare(map);
-	}
-	
-	@Override
-	public int getShareSeq(int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("tenantId", tenantId);
-		return ezWebFolderDAO_m.getShareSeq(map);
 	}
 	
 	public String getUserNameList(String[] userArr, String primary, int tenantId) throws Exception {
@@ -1015,10 +918,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 		
 	@Override
-	public List<FavoriteFileVO> getFavorites(String userId, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception {
+	public List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception {
 
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
+		parameterMap.put("primary", primary);
 		parameterMap.put("offset", commonUtil.getMinuteUTC(offset));
 		parameterMap.put("tenantId", tenantId);
 		// search info
@@ -1031,7 +935,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("startIndex", startIndex);
 		parameterMap.put("listCount", listCount);
 
-		List<FavoriteFileVO> result = ezWebFolderDAO.getFavorites(parameterMap);
+		List<FavoriteVO> result = ezWebFolderDAO.getFavorites(parameterMap);
 
 		return result;
 	}

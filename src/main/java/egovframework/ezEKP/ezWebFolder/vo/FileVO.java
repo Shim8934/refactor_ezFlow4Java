@@ -235,6 +235,4 @@ public class FileVO {
 	public void setFolderSort(int folderSort) {
 		this.folderSort = folderSort;
 	}
-
-	
 }

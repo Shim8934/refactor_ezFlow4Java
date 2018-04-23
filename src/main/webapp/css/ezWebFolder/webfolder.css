@@ -8,7 +8,9 @@
 .bnkWebFolder:hover {background-color: #f4f5f5; cursor: pointer;}
 .bnkWebFolder2 {background-color: #e9f1ff; cursor: pointer;}
 
-.webFolderImg {height: 20px; width: 20px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
+.noneDrag, .webFolderImg {user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
+
+.webFolderImg {height: 20px; width: 20px;}
 
 #progress-wrp {border: 1px solid #0099CC; padding: 1px; position: relative; border-radius: 3px; margin: 10px; text-align: left; background: #fff; box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);}
 #progress-wrp .progress-bar {height: 20px; border-radius: 3px; background-color: #66b3ff; width: 0; box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11); }

@@ -5,7 +5,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
+
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -13,26 +14,6 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @Repository("EzWebFolderDAO_m")
 @SuppressWarnings("unchecked")
 public class EzWebFolderDAO_m extends EgovAbstractDAO {
-	
-	public int checkRootFolder(Map<String, Object> map) {
-		return (int) select("EzWebFolderDAO_m.checkRootFolder", map);
-	}
-	
-	public String insertRootFolder(Map<String, Object> map) {
-		return (String) insert("EzWebFolderDAO_m.insertRootFolder", map);
-	}
-	
-	public List<Map<String, Object>> getUserFolderTree(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getUserFolderTree",map);
-	}
-	
-	public List<Map<String, Object>> getDeptFolderTree(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getDeptFolderTree",map);
-	}
-	
-	public List<Map<String, Object>> getCompFolderTree(Map<String, Object> map) {
-		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getCompFolderTree",map);
-	}
 	
 	public List<ShareVO> getSharingList(Map<String, Object> map) {
 		return (List<ShareVO>)list("EzWebFolderDAO_m.getSharingList", map);
@@ -102,10 +83,6 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		delete("EzWebFolderDAO_m.showShare", map);
 	}
 	
-	public int getShareSeq(Map<String, Object> map) {
-		return (int) select("EzWebFolderDAO_m.getShareSeq", map);
-	}
-
 	public List<String> userDeptList(Map<String, Object> map) {
 		return (List<String>) list("EzWebFolderDAO_m.userDeptList", map);
 	}
@@ -118,8 +95,8 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return (List<String>) list("EzWebFolderDAO_m.chiefDeptList", map);
 	}
 
-	public List<FavoriteFileVO> getFavorites(Map<String, Object> map) {
-		return (List<FavoriteFileVO>) list("EzWebFolderDAO_m.getFavorites", map);
+	public List<FavoriteVO> getFavorites(Map<String, Object> map) {
+		return (List<FavoriteVO>) list("EzWebFolderDAO_m.getFavorites", map);
 	}
 	
 	public Integer getFavoriteFolderCount(Map<String, Object> map) {
@@ -197,5 +174,4 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	public void moveFile(Map<String, Object> map) {
 		update("EzWebFolderDAO_m.moveFile", map);
 	}
-
 }

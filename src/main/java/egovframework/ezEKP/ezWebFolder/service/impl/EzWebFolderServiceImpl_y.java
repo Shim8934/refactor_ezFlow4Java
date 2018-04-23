@@ -1,9 +1,13 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -11,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -22,6 +27,9 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	@Autowired
 	private EzWebFolderDAO_y ezWebFolderDAO_y;
+	
+	@Autowired
+	private EzWebFolderDAO_m ezWebFolderDAO_m;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderServiceImpl_y.class);
 	
@@ -37,6 +45,92 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		LoginVO userInfo = ezWebFolderDAO_y.getUserInfo(map);
 		return userInfo;
+	}
+	
+	@Override
+	public void insertIfNotExistRootForder(String userId, String userName1, String userName2, String compId, List<Map<String, String>> permissionIdList, String offset, int tenantId) throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		LOGGER.debug("timeUTC: "+ timeUTC);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId",      userId);
+		map.put("compId",      compId);
+		map.put("createName1", userName1);
+		map.put("createName2", userName2);
+		map.put("timeUTC",     timeUTC);
+		map.put("tenantId",    tenantId);
+		
+		for (Map<String, String> idMap : permissionIdList) {
+			map.put("ownerId",    idMap.get("id"));
+			map.put("folderType", idMap.get("type"));
+			
+			if (ezWebFolderDAO_y.checkRootFolder(map) == 0) {
+				ezWebFolderDAO_y.insertRootFolder(map);
+				LOGGER.debug("root folder created. idMap: " + idMap);
+			}
+		}
+	}
+	
+	@Override
+	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId) throws Exception {
+		List<Map<String, Object>> folderTree = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("primary", primary);
+		map.put("tenantId", tenantId);
+		
+		//TODO: 폴더 트리뷰 정렬 기준?
+		if (folderType.equals("U") || folderType.equals("")) {
+			map.put("userId", userId);
+			List<Map<String, Object>> userFolderTree = ezWebFolderDAO_y.getUserFolderTree(map);
+			folderTree.addAll(userFolderTree);
+		}
+		
+		if (folderType.equals("D") || folderType.equals("")) {
+			List<String> addjobList = getAddJobList(tenantId, userId);
+			
+			Map<String,Object> map2 = new HashMap<String, Object>();
+			map2.put("userId",   userId);
+			map2.put("tenantId", tenantId);
+			
+			List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map2);
+			
+			Set<String> idSet = new HashSet<String>();
+			idSet.add(deptId);
+			idSet.addAll(addjobList);
+			idSet.addAll(folderUserIdList);
+			
+			map.put("idList", idSet.toArray(new String[idSet.size()]));
+			List<Map<String, Object>> deptFolderTree = ezWebFolderDAO_y.getDeptFolderTree(map);
+			folderTree.addAll(deptFolderTree);
+		}
+		
+		if (folderType.equals("C") || folderType.equals("")) {
+			List<String> addjobList = getAddJobList(tenantId, userId);
+			
+			Map<String,Object> map2 = new HashMap<String, Object>();
+			map2.put("userId",   userId);
+			map2.put("tenantId", tenantId);
+			
+			List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map2);
+			
+			Set<String> idSet = new HashSet<String>();
+			idSet.add(userId);
+			idSet.add(deptId);
+			idSet.add(compId);
+			idSet.addAll(addjobList);
+			idSet.addAll(folderUserIdList);
+			
+			map.put("idList", idSet.toArray(new String[idSet.size()]));
+			map.put("compId", compId);
+			List<Map<String, Object>> compFolderTree = ezWebFolderDAO_y.getCompFolderTree(map);
+			folderTree.addAll(compFolderTree);
+		}
+		
+		LOGGER.debug("folderTree size: " + folderTree.size());
+		return folderTree;
 	}
 	
 	// fileList출력
