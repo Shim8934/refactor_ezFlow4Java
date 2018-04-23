@@ -7,7 +7,8 @@
 	<typeAlias  alias="FolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"/>
 	<typeAlias  alias="FolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
 	<typeAlias  alias="loginVO" 			type="egovframework.let.user.login.vo.LoginVO"/>
-
+	<typeAlias alias="FolderTreeVO"         type="egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO"/>
+	
 	<!-- 로그인 처리를 위한 resultMap -->
 	<resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
 		<result property="id"					column="cn"   						columnIndex="1"/>
@@ -30,6 +31,16 @@
         <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
 	</resultMap>
 	<!-- File resultMap -->
+	
+	<!-- FolderTree resultMap -->
+	<resultMap id="folderTreeVO" class="FolderTreeVO">
+		<result property="id"        column="ID"        columnIndex="1"/>
+		<result property="text"      column="TEXT"      columnIndex="2"/>
+		<result property="parent"    column="PARENT"    columnIndex="3"/>
+		<result property="selected"  column="SELECTED"  columnIndex="4"/>
+		<result property="createId"  column="CREATEID"  columnIndex="5"/>
+	</resultMap>
+	
     <resultMap id="fileVO" class="FileVO">
         <result property="fileId"               column="file_id"                columnIndex="1"  />              
         <result property="fileName"         	column="file_name"              columnIndex="2"  />
@@ -217,6 +228,158 @@
 			or user_id = #userId# or user_id= #deptId#
     </sql>
     
+    <select id="EzWebFolderDAO_y.checkRootFolder" parameterClass="Map" resultClass="Integer"> 
+		<![CDATA[
+			SELECT COUNT(OWNER_ID)
+			FROM TBL_WEBFOLDER_FOLDER
+			WHERE OWNER_ID = #ownerId#
+			AND FOLDER_TYPE = #folderType#
+			AND FOLDER_UPPER = 'root'
+			AND TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<insert id="EzWebFolderDAO_y.insertRootFolder" parameterClass="Map">
+		<selectKey keyProperty="id" resultClass="String">
+			SELECT IF (FOLDER_ID IS NULL, 1, MAX(CONVERT(FOLDER_ID, UNSIGNED)) + 1)
+			FROM TBL_WEBFOLDER_FOLDER 
+			WHERE TENANT_ID = #tenantId# 
+		</selectKey>
+		
+	    INSERT INTO TBL_WEBFOLDER_FOLDER (
+	    	FOLDER_ID,                 FOLDER_NAME1,              FOLDER_NAME2,
+	    	FOLDER_TYPE,               FOLDER_PATH,               FOLDER_STEP,
+	    	FOLDER_LEVEL,              FOLDER_UPPER,              USE_STATUS,
+	    	OWNER_ID,                  CREATE_ID,                 CREATE_DATE,
+	    	CREATE_NAME1,              CREATE_NAME2,              UPDATE_ID,
+	    	UPDATE_DATE,               COMPANY_ID,                TENANT_ID
+	    )
+	    SELECT
+	    	#id#,                      DISPLAYNAME,               DISPLAYNAME2,
+	    	#folderType#,              CONCAT('|', #id#, '|'),    0,
+	    	0,                         'root',                    'Y',
+	    	#ownerId#,                 #userId#,                  #timeUTC#,
+	    	#createName1#,             #createName2#,             #userId#,
+	    	#timeUTC#,                 #compId#,                  #tenantId#
+		<isEqual property="folderType" compareValue="U">
+		FROM TBL_USERMASTER
+		</isEqual>
+		<isNotEqual property="folderType" compareValue="U">
+		FROM TBL_DEPTMASTER
+		</isNotEqual>
+		WHERE CN = #ownerId#
+		AND TENANT_ID = #tenantId#
+	</insert>
+	
+	<select id="EzWebFolderDAO_y.getUserFolderTree" resultMap="folderTreeVO" parameterClass="Map">
+		<![CDATA[
+	        SELECT
+	        	FOLDER_ID AS ID,
+	        	CASE WHEN FOLDER_UPPER = 'root'
+	        		THEN '##'
+	        		ELSE FOLDER_UPPER
+	        	END PARENT,
+	        	CASE WHEN FOLDER_UPPER = 'root'
+	        		THEN TRUE
+	        		ELSE FALSE
+	        	END SELECTED,
+	        	CASE WHEN #primary# = '1'
+	        		THEN FOLDER_NAME1
+	        		ELSE FOLDER_NAME2
+	        	END TEXT,
+	        	CREATE_ID AS CREATEID
+	        FROM TBL_WEBFOLDER_FOLDER
+	        WHERE USE_STATUS = 'Y'
+	        AND FOLDER_TYPE = 'U'
+	        AND TENANT_ID = #tenantId#
+	        AND OWNER_ID = #userId#
+	        ORDER BY SELECTED DESC
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_y.getDeptFolderTree" resultMap="folderTreeVO" parameterClass="Map">
+		<![CDATA[
+	        SELECT
+	        	FOLDER_ID AS ID,
+	        	CASE WHEN FOLDER_UPPER = 'root'
+	        		THEN '##'
+	        		ELSE FOLDER_UPPER
+	        	END PARENT,
+	        	CASE WHEN FOLDER_UPPER = 'root'
+	        		THEN TRUE
+	        		ELSE FALSE
+	        	END SELECTED,
+	        	CASE WHEN #primary# = '1'
+	        		THEN FOLDER_NAME1
+	        		ELSE FOLDER_NAME2
+	        	END TEXT,
+	        	CREATE_ID AS CREATEID
+	        FROM TBL_WEBFOLDER_FOLDER
+	        WHERE USE_STATUS = 'Y'
+	        AND FOLDER_TYPE = 'D'
+	        AND TENANT_ID = #tenantId#
+	        AND OWNER_ID IN
+		]]>
+			<iterate property="idList" open="(" close=")" conjunction=",">
+				#idList[]#
+			</iterate>
+			ORDER BY SELECTED DESC
+	</select>
+	
+	<select id="EzWebFolderDAO_y.getCompFolderTree" resultMap="folderTreeVO" parameterClass="Map">
+		<![CDATA[
+			SELECT DISTINCT
+				F.FOLDER_ID AS ID,
+	        	CASE WHEN F.FOLDER_UPPER = 'root'
+	        		THEN '##'
+	        		ELSE FOLDER_UPPER
+	        	END PARENT,
+	        	CASE WHEN F.FOLDER_UPPER = 'root'
+	        		THEN TRUE
+	        		ELSE FALSE
+	        	END SELECTED,
+	        	CASE WHEN #primary# = '1'
+	        		THEN F.FOLDER_NAME1
+	        		ELSE F.FOLDER_NAME2
+	        	END TEXT,
+	        	F.CREATE_ID AS CREATEID
+            FROM TBL_WEBFOLDER_FOLDER F
+            JOIN (
+				SELECT FF.FOLDER_PATH
+				FROM TBL_WEBFOLDER_FOLDER FF
+				JOIN TBL_WEBFOLDER_FOLDERUSER FU
+				ON FF.FOLDER_ID = FU.FOLDER_ID
+				AND FF.TENANT_ID = FU.TENANT_ID
+				AND FF.FOLDER_TYPE = 'C'
+				AND FU.USER_ID IN 
+		]]>
+			<iterate property="idList" open="(" close=")" conjunction=",">
+				#idList[]#
+			</iterate>
+		<![CDATA[
+				WHERE FF.TENANT_ID = #tenantId# ) AS FP
+            ON F.FOLDER_PATH LIKE CONCAT(FP.FOLDER_PATH, '%')
+			WHERE F.USE_STATUS = 'Y'
+			AND F.TENANT_ID = #tenantId#
+	        UNION
+	        SELECT
+	        	FOLDER_ID AS ID,
+	        	'##' AS PARENT,
+	        	TRUE AS SELECTED,
+	        	CASE WHEN #primary# = '1'
+	        		THEN FOLDER_NAME1
+	        		ELSE FOLDER_NAME2
+	        	END TEXT,
+	        	CREATE_ID AS CREATEID
+	        FROM TBL_WEBFOLDER_FOLDER
+	        WHERE OWNER_ID = #compId#
+	        AND FOLDER_TYPE = 'C'
+	        AND FOLDER_UPPER = 'root'
+	        AND USE_STATUS = 'Y'
+	        AND TENANT_ID = #tenantId#
+	        ORDER BY SELECTED DESC
+		]]>
+	</select>
     
     <select id="EzWebFolderDAO_y.getFolderList" resultClass="HashMap" parameterClass="Map" >
 		<![CDATA[

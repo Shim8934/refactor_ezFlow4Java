@@ -14,10 +14,6 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzWebFolderService_m {
 
-	public void insertIfNotExistRootForder(String userId, String userName1, String userName2, String compId, List<Map<String, String>> permissionIdList, String offset, int tenantId) throws Exception;
-	
-	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId) throws Exception;
-	
 	public List<ShareVO> getSharingList(String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
 	
 	public List<ShareVO> getSharedList(String userId, String  deptId, String compId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
@@ -43,8 +39,6 @@ public interface EzWebFolderService_m {
 	public void hideShare(String shareId, String userId, String offset, int tenantId) throws Exception;
 
 	public void showShare(String shareId, String userId, String offset, int tenantId) throws Exception;
-	
-	int getShareSeq(int tenantId) throws Exception;
 	
 	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int pStart, int pEnd, String searchExt, String searchFileName, String searchFileType, String searchCreateName, String endrollStartDate, String endrollEndDate, String delStartDate, String delEndDate) throws Exception;
 
