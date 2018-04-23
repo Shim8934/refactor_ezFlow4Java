@@ -418,16 +418,15 @@ public class EzPMSGWController2 {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			List<ProjectMemberVO> memberList = ezPMSService.getProjectMember(projectId, roleId, lang);
+			int tenantId = info.getTenantId();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
-			JSONObject data = new JSONObject();
-			
+			List<ProjectMemberVO> memberList = ezPMSService.getProjectMemberList(projectId, roleId, lang, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", data);
+			result.put("data", memberList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			

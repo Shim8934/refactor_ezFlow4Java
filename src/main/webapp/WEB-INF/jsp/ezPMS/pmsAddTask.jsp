@@ -125,7 +125,7 @@ var endAlamStatus = null;
  function openMemberList() {
 		 var win;
 		 var feature = GetOpenPosition(760, 700);
-		 DivPopUpShow($('body').prop('scrollWidth') * 0.5, $('body').prop('scrollHeight') * 0.5, "/ezPMS/newProject.do?projectId=" + projectId, "",
+		 DivPopUpShow($('body').prop('scrollWidth') * 0.5, $('body').prop('scrollHeight') * 0.5, "/ezPMS/getProjectMemberList.do?projectId=" + projectId, "",
 				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
  
@@ -185,29 +185,12 @@ var endAlamStatus = null;
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree()"><span>상위그룹</span></a></th>
-				<td style="width:50%; height:70px;" id="upperGroup">은정</td>
-				<th><a class="imgbtn" onclick="openOrganTree()"><span>선행작업</span></a></th>
-				<td id="pretasks">은정</td>
+				<td colspan="3" style="height:70px;" id="upperGroup"></td>
 			</tr>
 			<tr>
-				<th>상태</th>
-				<td style="width:50%">
-				<select name="status" id="status">
-						<option value="W" selected>대기</option>
-						<option value="P">진행</option>
-						<option value="S">보류</option>
-						<option value="L">지연</option>
-						<option value="C">완료</option>
-					</select>
 				<th>가중치</th>
-				<td>
-				<input type="text" id="weight" style="width:40px;text-align:center"> %
-				</td>
-			</tr>
-			<tr>
-				<th>진행률</th>
-				<td colspan="3">
-				<input type="text" id="progress" style="width:40px;text-align:center"> %
+				<td colspan="3" >
+				<input type="text" id="weight" style="width:40px;text-align:center"> % 잔여 가중치 100%
 				</td>
 			</tr>
 			<tr>

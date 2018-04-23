@@ -168,7 +168,7 @@ public class EzPMSController2 {
 	
 	
 	/**
-	 * 프로젝트관리 업무 등록 호출함수
+	 * 프로젝트관리 업무 등록 함수
 	 * @param request
 	 * @param model
 	 * @param vo
@@ -251,7 +251,7 @@ public class EzPMSController2 {
 	@RequestMapping(value = "/ezPMS/getProjectMemberList.do")
 	public String getProjectMemberList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS getProjectMemberList started");
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String projectId = request.getParameter("projectId");
 		String roleId = request.getParameter("roleId");
 		
@@ -263,13 +263,13 @@ public class EzPMSController2 {
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
-			JSONArray taskList = (JSONArray) resultBody.get("data");
-			model.addAttribute("taskList", taskList);
+			JSONArray memberList = (JSONArray) resultBody.get("data");
+			model.addAttribute("memberList", memberList);
 		}
 		
+		LOGGER.debug("ezPMS getProjectMemberList ended");
 		
-		LOGGER.debug("ezPMS getProjectMemberList ended");			
-		return null;
+		return "/ezPMS/setTaskMember";
 	}
 	
 }
