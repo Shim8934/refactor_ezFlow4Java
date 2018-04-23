@@ -14,6 +14,10 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzWebFolderService_m {
 
+	public void insertIfNotExistRootForder(String userId, String userName1, String userName2, String compId, List<Map<String, String>> permissionIdList, String offset, int tenantId) throws Exception;
+	
+	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId) throws Exception;
+	
 	public List<ShareVO> getSharingList(String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
 	
 	public List<ShareVO> getSharedList(String userId, String  deptId, String compId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
@@ -22,13 +26,21 @@ public interface EzWebFolderService_m {
 	
 	public Map<String, Integer> getSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
 	
+	public List<Map<String, String>> getPermissionIdList(String userId, String deptId, String compId, int tenantId) throws Exception;
+	
 	public boolean isShared(String folderFileId, String folderFileType, String folderPath, int tenantId) throws Exception;
 	
+	public void insertShare(String sharerId, String folderFileId, String folderFileType, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
+	
+	public void updateShare(String shareId, String sharerId, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
+	
+	public void deleteShare(String shareId, String sharerId, String offset, int tenantId) throws Exception;
+	
+	public void hideShare(String shareId, String userId, String offset, int tenantId) throws Exception;
+
+	public void showShare(String shareId, String userId, String offset, int tenantId) throws Exception;
+	
 	int getShareSeq(int tenantId) throws Exception;
-	
-	void insertShare(int seqId, String companyId, String userId, String userType, String folderFileId, String folderFileType, String createId, int tenantId) throws Exception;
-	
-	void delShare(String companyId, String folderFileId, String folderFileType, String createId, int tenantId) throws Exception;
 	
 	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int pStart, int pEnd, String searchExt, String searchFileName, String searchFileType, String searchCreateName, String endrollStartDate, String endrollEndDate, String delStartDate, String delEndDate) throws Exception;
 

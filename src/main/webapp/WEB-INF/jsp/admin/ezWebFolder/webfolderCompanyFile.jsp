@@ -15,7 +15,6 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"              ></script>
 		<script type="text/javascript" src="/js/jquery-ui/jquery-ui.js"                     ></script>
-		<script type="text/javascript" src="/js/ezWebFolder/bnk.js"                         ></script>
 		<script type="text/javascript">
 			var blockSize    = 10;
 			var currentPage  = null;
@@ -60,20 +59,12 @@
 					dateFormat: "yy-mm-dd"
 				});
 				
-				$('#fileTypeSelect').ddslick({
-					onSelected: function(selectedElmt){
-						//callback function: do something with selectedData;
-						document.getElementById("fileTypeSelect").value = selectedElmt.selectedData["value"];
-						refresh();
-					}
-				});
-				
-				//search_Set("1");
+				search_Set("1");
 				preProcessing();
 			}
 			
 			function reloadSelectBox() {
-				$('#fileTypeSelect').ddslick('select', {index: 0 });
+				document.getElementById("fileTypeSelect").selectedIndex = 0;
 			}
 			
 			function preProcessing() {
@@ -173,8 +164,9 @@
 						fileIconElmt.setAttribute("class", "webFolderImg");
 						fileIconElmt.src = result[i]["fileIconUrl"];
 						tdElmt2.appendChild(fileIconElmt);
-						
 						tdElmt3.textContent = result[i]["fileName"];
+						tdElmt3.setAttribute("title", result[i]["fileName"]);
+						tdElmt3.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
 						tdElmt4.textContent = getFileSize(result[i]["fileSize"]);
 						
 						if (primary == "1") {
@@ -187,6 +179,8 @@
 						tdElmt6.textContent = result[i]["createDate"].substring(0, 10);
 						tdElmt7.textContent = result[i]["updateDate"].substring(0, 10);
 						tdElmt8.textContent = result[i]["filePosition"];
+						tdElmt8.setAttribute("title", result[i]["filePosition"]);
+						tdElmt8.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
 						tdElmt9.textContent = result[i]["downloadCnt"];
 						tdElmt9.setAttribute("style","text-align: center;");
 						
@@ -415,26 +409,29 @@
 				<li id=""><a onClick="fileMove()"        style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>
 				<li id=""><a onClick="openSearchPanel()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
 				<li id=""><a onClick="refresh()"         style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
+				<li id="">
+					<select style="height: 29px; border-radius: 3px; padding: 0px; width: 85px;" id="fileTypeSelect" onchange="refresh();">
+						<option value="1" selected><spring:message code='ezWebFolder.t191'/></option>
+						<option value="2"         ><spring:message code='ezWebFolder.t192'/></option>
+						<option value="3"         ><spring:message code='ezWebFolder.t193'/></option>
+						<option value="4"         ><spring:message code='ezWebFolder.t194'/></option>
+						<option value="5"         ><spring:message code='ezWebFolder.t195'/></option>
+						<option value="6"         ><spring:message code='ezWebFolder.t196'/></option>
+					</select>
+				</li>
 			</ul>
-			<div style="position: absolute; top: 0px; right: 10px;">
-				<select style="height: 27px; border-radius: 3px; display: none;" id="fileTypeSelect" onchange="refresh();">
-					<option value="1" data-imagesrc="/images/webfolder/allTypes.png" selected><spring:message code='ezWebFolder.t191'/></option>
-					<option value="2" data-imagesrc="/images/webfolder/msWord.png"           ><spring:message code='ezWebFolder.t192'/></option>
-					<option value="3" data-imagesrc="/images/webfolder/mp3.png"              ><spring:message code='ezWebFolder.t193'/></option>
-					<option value="4" data-imagesrc="/images/webfolder/mp4.png"              ><spring:message code='ezWebFolder.t194'/></option>
-					<option value="5" data-imagesrc="/images/webfolder/jpg.png"              ><spring:message code='ezWebFolder.t195'/></option>
-					<option value="6" data-imagesrc="/images/webfolder/zip.png"              ><spring:message code='ezWebFolder.t196'/></option>
-				</select>
-			</div>
 		</div>
 		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
 		</script>
 		
-		<div id="searchPanel" style="position: fixed; top: 132px; left: 200px; height: 180px; width: 514px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
+		<div id="searchPanel" style="position: fixed; top: 132px; left: 200px; height: auto; width: 514px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
 			<div style="margin: 10px;">
 				<table class="content" style="border-collapse: collapse; width: 100%;">
+					<tr>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t21'/></th>
+					</tr>
 					<tr>
 						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t151'/></th>
 						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
@@ -462,7 +459,7 @@
 						</td>
 					</tr>
 				</table>
-					<div style="margin: 12px 50px 12px 180px;">
+					<div style="margin: 12px 0px; text-align: center;">
 						<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
 						<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
 					</div>

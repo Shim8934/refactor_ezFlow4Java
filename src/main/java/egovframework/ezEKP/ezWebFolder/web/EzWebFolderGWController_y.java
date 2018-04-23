@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
@@ -39,8 +40,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 @RestController
 public class EzWebFolderGWController_y {
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderGWController_y.class);
+	
 	@Autowired
 	private EzWebFolderAdminService ezWebFolderAdminService;
 	
@@ -48,101 +49,111 @@ public class EzWebFolderGWController_y {
 	private EzWebFolderService ezWebFolderService;
 	
 	@Autowired
-	private EzWebFolderService_y service ;
+	private EzWebFolderService_y service;
 	
 	@Autowired
-	private MOptionService mOptionService ;
+	private MOptionService mOptionService;
 	
 	@Autowired
-	private CommonUtil commonutil;
+	private EzWebFolderService_m ezWebFolderService_m;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	@Autowired
 	private EgovMessageSource egovMessageSource;
 	
-	// 전체 폴더 조회
-	@SuppressWarnings("unchecked")
-	@RequestMapping ( value="/rest/ezwebfolder/users/{userId}/folder-list" , method=RequestMethod.GET , produces="application/json;charset=utf-8")
-	public JSONObject folderList (@PathVariable String userId ,HttpServletRequest request) {
-		JSONObject data = new JSONObject();
-		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name") : "";
-		String admin = request.getParameter("admin") != null ? request.getParameter("admin") : "" ;
-		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
-		String folderType = request.getParameter("folderType") != null ? request.getParameter("folderType") : "";
+	/**
+	 * root 폴더 존재 여부 확인 - 존재하지 않을 경우 생성
+	 */
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/checkRootFolder", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject checkRootFolder(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("checkRootFolder started.");
+		
+		String serverName = orElse(request.getHeader("host-name"), "");
+		LOGGER.debug("userId: " + userId + " || serverName: " + serverName);
+		
+		JSONObject result = new JSONObject();
+		
+		// 요청  파라미터 비어있을 경우 에러 리턴
+		if (userId.equals("") || serverName.equals("")) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+			LOGGER.debug("parameter error. checkRootFolder ended.");
+			return result;
+		}
+		
+		try {
+			// TODO: commonInfoWeb 안타도록 수정
+			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId  = common.getTenantId();
+			String offset = common.getOffSet();
+			String lang = common.getLang();
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			
+			List<Map<String, String>> permossionIdList = ezWebFolderService_m.getPermissionIdList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), tenantId);
+			ezWebFolderService_m.insertIfNotExistRootForder(userId, userInfo.getDisplayName1(), userInfo.getDisplayName2(), userInfo.getCompanyID(), permossionIdList, offset, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+		
+		LOGGER.debug("checkRootFolder ended.");
+		return result;
+	}
+	
+	/**
+	 * 폴더 트리 조회
+	 */
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/folder-tree", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFolderTree(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("getFolderTree started.");
+		
+		String serverName 	= orElse(request.getHeader("host-name"), "");
+		String folderType 	= orElse(request.getParameter("folderType"), "");
+		LOGGER.debug("userId: " + userId + " || serverName: " + serverName + "|| folderType: " + folderType);
+		
+		JSONObject result = new JSONObject();
+		
+		// 요청  파라미터 비어있을 경우 에러 리턴
+		if (userId.equals("") || serverName.equals("")) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			
+			LOGGER.debug("parameter error. getFolderTree ended.");
+			return result;
+		}
 		
 		try {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
-			String comId = common.getCompanyId();
-			String deptId = common.getDeptId();
-			int tenantId = common.getTenantId();
-			String offset = common.getOffSet();
-			String primary = common.getPrimary(); 
-			LOGGER.debug("primary : "+ primary);
-			List<Map<String, Object>> folderList = new ArrayList< Map<String,Object>>();
-			FolderVO vo = null;
-			String createName1 = "";
-			String createName2 = "";
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date date                  = new Date();
-			String timeUTC             = commonutil.getDateStringInUTC(formatter.format(date), offset, true);
-			LOGGER.debug("timeUTC"+ timeUTC);
-			// 회사, 부서 , 개인 폴더 본인의 권한을 먼저 조사한 뒤 그것에 맞는 폴더들이 다 있는지 판단 
-			// 회사는 회사폴더가 존재해야함 
-			// 부서는 겸직부서, 부서장을 판단한뒤 하위 부서, 본인부서, 부서장을 판단한뒤 본인의 하위 부서 
-			// 개인은 개인부서가 존재해야함
+			String deptId    = common.getDeptId();
+			String compId    = common.getCompanyId();
+			String primary   = common.getPrimary();
+			int tenantId     = common.getTenantId();
 			
-			if ( folderType.equals("D")) {
-				createName1 = common.getDeptName();
-				createName2 = common.getDeptId();
-				// 부서폴더 폴더 존재하는지 판단 후 존재하지 않으면 생성
-				String chk = service.existFolderChk_D(userId, deptId, comId, folderType, tenantId, timeUTC, primary);
-				LOGGER.debug("primary : "+ primary);
-				if (chk.equals("ok")) {
-					LOGGER.debug("department insert success");
-				}else {
-					LOGGER.debug("department insert fail");
-					data.put("status", "fail");
-					data.put("code", 1);
-					data.put("data", "");
-				}
-			} else if(folderType.equals("")){
-				LOGGER.debug("folderType is not comming");
-			}else {
-				// 회사폴더, 개인폴더 
-				int chk = service.existFolderChk(userId, deptId, comId, folderType, tenantId, primary);
-				if (chk != 0 ) {
-					LOGGER.debug("folder exist");
-				}else {
-					if (folderType.equals("C")) {
-						createName1 = common.getCompanyName();
-						createName2 = common.getCompanyName2();
-					}else if (folderType.equals("U")) {
-						createName1 = common.getUserName();
-						createName2 = common.getUserId();
-					}
-					
-					LOGGER.debug("createName1: "+ createName1 + "createName2" + createName2);
-					
-					String rtFolder = service.insertFolder(tenantId, comId, deptId,userId, folderType,createName1,createName2, vo ,timeUTC);
-					if (rtFolder.equals("fail")) {
-						data.put("status", "fail");
-						data.put("code", 1);
-						data.put("data", "");
-					} 					
-				}
-			}
-			folderList = service.getFolderList(admin,userId,deptId,comId, folderId, folderType, tenantId ,primary);
+			List<Map<String, Object>> folderList = ezWebFolderService_m.getFolderTree(userId, deptId, compId, folderType, primary, tenantId);
 			
-			data.put("status", "ok");
-			data.put("code", 0);
-			data.put("data", folderList);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", folderList);
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.debug("common is not comming");
-			data.put("status", "fail");
-			data.put("code", 1);
-			data.put("data", "");
+			
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
 		}
-		return data;
+		
+		LOGGER.debug("getFolderTree ended.");
+		return result;
 	}
 	
 	// 폴더 하나를 선택했을때 세부 정보 조회
@@ -173,7 +184,7 @@ public class EzWebFolderGWController_y {
 		String offset = common.getOffSet();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
-		String timeUTC             = commonutil.getDateStringInUTC(formatter.format(date), offset, true);
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 		LOGGER.debug("timeUTC"+ timeUTC);
 		// foldervo 가지고 와서 상위의 폴더의 vo를 추린다. 
 		FolderVO foldervo= service.getFolderDetail(folderUppId, userId ,tenantId,comId);
@@ -210,7 +221,7 @@ public class EzWebFolderGWController_y {
 		String offset 				= common.getOffSet();
 		SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  	= new Date();
-		String timeUTC             	= commonutil.getDateStringInUTC(formatter.format(date), offset, true);
+		String timeUTC             	= commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 		
 		service.updateFolder(folderId, tenantId, userId, comId, newFolderName1, newFolderName2, timeUTC);
 		return data;
@@ -234,7 +245,7 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("folderId :"+folderId + "serverName : "+serverName + "lang : " + lang + "userId : "+userId + "tenantId : "+ tenantId
 					+ "comId : " + comId + "offset" + offset);
 			
-			LoginVO userInfo = commonutil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
 			if (folderId.equals("") || serverName.equals("") || uppId.equals("") || offset.equals("") || mode.equals("") ) {
 				LOGGER.debug("Parameter error!");
@@ -309,7 +320,7 @@ public class EzWebFolderGWController_y {
 			String mode ="move";
 			LOGGER.debug("folderId :"+folderId + "serverName : "+serverName + "lang : " + lang + "userId : "+userId + "tenantId : "+ tenantId
 					+ "comId : " + comId + "offset" + offset);
-			LoginVO userInfo = commonutil.getUserForGw(userId, serverName, lang, offset);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
 			if (folderId.equals("") || serverName.equals("") || uppId.equals("") || offset.equals("") || mode.equals("") || uppId.equals("")) {
 				LOGGER.debug("Parameter error!");
@@ -380,7 +391,7 @@ public class EzWebFolderGWController_y {
 			int tenantId = common.getTenantId();
 			String comId = common.getCompanyId();
 			String offset = common.getOffSet();
-			String timeUTC             = commonutil.getDateStringInUTC(formatter.format(date), offset, true);
+			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			service.deleteSubFldAFile(folderId, tenantId, comId, userId, timeUTC);
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
@@ -550,5 +561,13 @@ public class EzWebFolderGWController_y {
 
 		
 		return jsonObj;
+	}
+	
+	private <T> T orElse(T value, T other) {
+		if (other == null) {
+			throw new IllegalArgumentException("other is null!");
+		}
+		
+		return value != null ? value : other;
 	}
 }

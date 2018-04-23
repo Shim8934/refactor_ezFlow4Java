@@ -21,6 +21,7 @@ public class ShareVO {
 	private String fileIconUrl;
 	private String shareStatus;
 	private String favouriteStatus;
+	private String shareId;
 	private String sharerId;
 	private String sharerName;
 	private String userList;
@@ -147,6 +148,12 @@ public class ShareVO {
 	}
 	public void setFavouriteStatus(String favouriteStatus) {
 		this.favouriteStatus = favouriteStatus;
+	}
+	public String getShareId() {
+		return shareId;
+	}
+	public void setShareId(String shareId) {
+		this.shareId = shareId;
 	}
 	public String getSharerId() {
 		return sharerId;

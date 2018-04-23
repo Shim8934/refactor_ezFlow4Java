@@ -56,7 +56,7 @@ public class EzWebFolderController_y {
 		return "ezWebFolder/webFolderRight";
 	}
 	
-	// getFolderList /ezwebfolder/users/{userId}/folder-list에 가는 메소드 
+	// getFolderList /ezwebfolder/users/{userId}/folder-tree에 가는 메소드 
 	@RequestMapping(value = "/ezWebFolder/folderList.do")
 	public String getFolderList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model ){
@@ -66,7 +66,7 @@ public class EzWebFolderController_y {
 		String folderType = request.getParameter("folderType") != null ? request.getParameter("folderType") : "";
 		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
 		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
-		String url = gwServerUrl + "/rest/ezwebfolder/users/" +userInfo.getId() + "/folder-list";
+		String url = gwServerUrl + "/rest/ezwebfolder/users/" +userInfo.getId() + "/folder-tree";
 
 		RestTemplate rest = new RestTemplate();
 		
