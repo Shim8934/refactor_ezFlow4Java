@@ -25,7 +25,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
-import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
@@ -789,10 +789,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 		
 	@Override
-	public List<FavoriteFileVO> getFavorites(String userId, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception {
+	public List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception {
 
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
+		parameterMap.put("primary", primary);
 		parameterMap.put("offset", commonUtil.getMinuteUTC(offset));
 		parameterMap.put("tenantId", tenantId);
 		// search info
@@ -805,7 +806,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("startIndex", startIndex);
 		parameterMap.put("listCount", listCount);
 
-		List<FavoriteFileVO> result = ezWebFolderDAO.getFavorites(parameterMap);
+		List<FavoriteVO> result = ezWebFolderDAO.getFavorites(parameterMap);
 
 		return result;
 	}

@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.vo;
 
-public class FavoriteFileVO {
+public class FavoriteVO {
 	private String targetId;
 	private String targetName;
 	private String targetType;
@@ -9,9 +9,8 @@ public class FavoriteFileVO {
 	private String targetExt;
 	private int targetSize;
 
-	private String createId;
-	private String createName1;
-	private String createName2;
+	private String creatorId;
+	private String creatorName;
 	private String createDate;
 	
 	private int tenantId;
@@ -72,30 +71,22 @@ public class FavoriteFileVO {
 		this.targetSize = targetSize;
 	}
 
-	public String getCreateId() {
-		return createId;
+	public String getCreatorId() {
+		return creatorId;
 	}
 
-	public void setCreateId(String createId) {
-		this.createId = createId;
+	public void setCreatorId(String creatorId) {
+		this.creatorId = creatorId;
 	}
 
-	public String getCreateName1() {
-		return createName1;
+	public String getCreatorName() {
+		return creatorName;
 	}
 
-	public void setCreateName1(String createName1) {
-		this.createName1 = createName1;
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
 	}
-
-	public String getCreateName2() {
-		return createName2;
-	}
-
-	public void setCreateName2(String createName2) {
-		this.createName2 = createName2;
-	}
-
+	
 	public String getCreateDate() {
 		return createDate;
 	}
@@ -115,7 +106,7 @@ public class FavoriteFileVO {
 	@Override
 	public String toString() {
 		return "FavoriteFileVO [targetId=" + targetId + ", targetName=" + targetName + ", targetType=" + targetType + ", targetIconUrl=" + targetIconUrl + ", targetPath=" + targetPath
-				+ ", targetExt=" + targetExt + ", targetSize=" + targetSize + ", createId=" + createId + ", createName1=" + createName1 + ", createName2=" + createName2 + ", createDate=" + createDate
+				+ ", targetExt=" + targetExt + ", targetSize=" + targetSize + ", creatorId=" + creatorId + ", creatorName=" + creatorName + ", createDate=" + createDate
 				+ ", tenantId=" + tenantId + "]";
 	}
 }

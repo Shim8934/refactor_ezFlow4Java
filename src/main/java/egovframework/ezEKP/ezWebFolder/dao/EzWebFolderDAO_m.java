@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderFileVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
@@ -75,8 +75,8 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return (List<String>) list("EzWebFolderDAO_m.chiefDeptList", map);
 	}
 
-	public List<FavoriteFileVO> getFavorites(Map<String, Object> map) {
-		return (List<FavoriteFileVO>) list("EzWebFolderDAO_m.getFavorites", map);
+	public List<FavoriteVO> getFavorites(Map<String, Object> map) {
+		return (List<FavoriteVO>) list("EzWebFolderDAO_m.getFavorites", map);
 	}
 	
 	public Integer getFavoriteFolderCount(Map<String, Object> map) {
