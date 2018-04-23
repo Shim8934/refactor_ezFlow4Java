@@ -213,6 +213,10 @@
 			function setRightFrame(url) {
 				window.parent.frames["right"].location.href = url;
 			}
+			
+			function wfAdministrator() {
+				window.open("/admin/ezWebFolder/webFolderConfig.do", "", GetOpenWindowfeature(1380, 800));
+			}
 		</script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%" onload="drawVolume();">
@@ -267,6 +271,12 @@
 			<h3>
 				<span onclick="wfConfig();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t236" /></span><!-- 환경설정 -->
 			</h3>
+			<c:if test="${isWfAdmin == '1'}">
+				<h3>
+					<span onclick="wfAdministrator();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t25" /></span><!-- 웹폴더 관리자 -->
+				</h3>
+			</c:if>
+
 			<div id='myProgress' style='margin-left:20px;'>
 				<div id='myBar'></div>
 			</div>

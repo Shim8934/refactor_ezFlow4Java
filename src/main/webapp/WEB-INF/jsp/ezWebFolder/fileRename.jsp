@@ -16,7 +16,7 @@
 		var fileId = "<c:out value="${fileId}"/>";
 		
 		function wClose() {
-			parent.DivPopUpHidden();
+			parent.closeAllPopup();
 			window.close();
 		}
 		

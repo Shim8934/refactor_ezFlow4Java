@@ -43,7 +43,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
@@ -66,8 +65,30 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 	@RequestMapping(value="/ezWebFolder/webfolderLeft.do")
 	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie,ModelMap modelMap, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
-		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		String useBottomFrameOnly = ezCommonService.getTenantConfig("useBottomFrameOnly", loginInfo.getTenantId());
+		LoginSimpleVO userInfo    = commonUtil.userInfoSimple(loginCookie);
+		String useBottomFrameOnly = ezCommonService.getTenantConfig("useBottomFrameOnly", userInfo.getTenantId());
+		
+		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String url         = gwServerUrl + "/rest/ezwebfolder/check-wfadmin/" + userInfo.getId();
+		
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			String checkResult = (String) resultBody.get("data");
+			model.addAttribute("isWfAdmin", checkResult);
+		}
+		
 		
 		model.addAttribute("useBottomFrameOnly", useBottomFrameOnly);
 		return "ezWebFolder/webfolderLeft";
