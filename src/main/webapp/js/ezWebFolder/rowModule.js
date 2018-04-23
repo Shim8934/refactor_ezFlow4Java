@@ -87,6 +87,23 @@ var rowModule = (function() {
 	function getUnselectedRows() {
 		return rowWrapElement.querySelectorAll("tr." + className.unselected);
 	}
+	
+	function getRowInfo(rowElement) {
+    	var targetId = rowElement.getAttribute("targetId");
+    	var targetType = rowElement.getAttribute("targetType");
+    	var isFavorite = rowElement.hasAttribute("favorite");
+    	
+    	// favorite type mapping
+    	if (targetType.length > 1) {
+        	targetType = targetType === "folder" ? targetType = "D" : targetType = "F";
+    	}
+    	
+    	return {
+        	id: targetId,
+        	type: targetType,
+        	isFavorite: isFavorite
+    	}
+	}
 
 	function isSelected(rowElement) {
 		return rowElement.className.search(selectedClassNameRegExp) >= 0;
@@ -122,6 +139,7 @@ var rowModule = (function() {
 		onCheckboxChange : onCheckboxChange,
 		getSelectedRows : getSelectedRows,
 		getUnselectedRows : getSelectedRows,
+		getRowInfo : getRowInfo,
 		clearFocus : clearFocus,
 		selectAll : selectAll
 	};

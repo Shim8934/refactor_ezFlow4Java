@@ -3,10 +3,10 @@
 
 <sqlMap namespace="ezWebFolder_m">
 	<!-- FolderFile typeAlias  -->
-	<typeAlias alias="TrashCanVO"             type="egovframework.ezEKP.ezWebFolder.vo.TrashCanVO"/>
-	<typeAlias alias="ShareVO"                type="egovframework.ezEKP.ezWebFolder.vo.ShareVO"/>
-	<typeAlias alias="FolderFileVO"           type="egovframework.ezEKP.ezWebFolder.vo.FolderFileVO"/>
-	<typeAlias alias="FavoriteFileVO"         type="egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO"/>
+	<typeAlias alias="TrashCanVO"		type="egovframework.ezEKP.ezWebFolder.vo.TrashCanVO"/>
+	<typeAlias alias="ShareVO"			type="egovframework.ezEKP.ezWebFolder.vo.ShareVO"/>
+	<typeAlias alias="FolderFileVO"		type="egovframework.ezEKP.ezWebFolder.vo.FolderFileVO"/>
+	<typeAlias alias="FavoriteVO"		type="egovframework.ezEKP.ezWebFolder.vo.FavoriteVO"/>
 	
 	<!-- TrashFile resultMap -->
 	<resultMap id="trashCanVO" class="TrashCanVO">
@@ -26,19 +26,18 @@
 	</resultMap>
 	
 	<!-- FavoriteFile resultMap -->
-	<resultMap id="favoriteFileVO" class="FavoriteFileVO">
-		<result property="targetId"        column="TARGET_ID"        columnIndex="1"/>
-		<result property="targetName"      column="TARGET_NAME"      columnIndex="2"/>
-		<result property="targetType"      column="TARGET_TYPE"      columnIndex="3"/>
-		<result property="targetIconUrl"   column="TARGET_ICON_URL"  columnIndex="4"/>
-		<result property="targetPath"      column="TARGET_PATH"      columnIndex="5"/>
-		<result property="targetExt"       column="TARGET_EXT"       columnIndex="6"/>
-		<result property="targetSize"      column="TARGET_SIZE"      columnIndex="7"/>
-		<result property="createId"        column="CREATE_ID"        columnIndex="8"/>
-		<result property="createName1"     column="CREATE_NAME1"     columnIndex="9"/>
-		<result property="createName2"     column="CREATE_NAME2"     columnIndex="10"/>
-		<result property="createDate"      column="CREATE_DATE"      columnIndex="11"/>
-		<result property="tenantId"        column="TENANT_ID"        columnIndex="12"/>
+	<resultMap id="favoriteVO" class="FavoriteVO">
+		<result property="targetId"        column="TARGET_ID"/>
+		<result property="targetName"      column="TARGET_NAME"/>
+		<result property="targetType"      column="TARGET_TYPE"/>
+		<result property="targetIconUrl"   column="TARGET_ICON_URL"/>
+		<result property="targetPath"      column="TARGET_PATH"/>
+		<result property="targetExt"       column="TARGET_EXT"/>
+		<result property="targetSize"      column="TARGET_SIZE"/>
+		<result property="creatorId"       column="CREATE_ID"/>
+		<result property="creatorName"     column="CREATOR_NAME"/>
+		<result property="createDate"      column="CREATE_DATE"/>
+		<result property="tenantId"        column="TENANT_ID"/>
 	</resultMap>
 
 	<!-- ShareFile resultMap -->
@@ -71,7 +70,7 @@
         <result property="tenantId"               column="tenant_id"              columnIndex="27" />
     </resultMap>
 	
-<sql id="searchTerm">
+	<sql id="searchTerm">
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 				<![CDATA[
 					FT2.TYPE_NAME = #searchFileType#
@@ -136,44 +135,74 @@
 				]]>
 			</isNotEqual>
 		</isNotEqual>
-</sql>	
+	</sql>
 
-<sql id ="searchTrashCanFolder">
-	<isNotEqual property="searchExt" compareValue="" prepend="AND">
-				<![CDATA[
-					'folder' LIKE '%' || #searchExt# || '%'
-				]]>
+	<sql id ="searchTrashCanFolder">
+		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+			<![CDATA[
+				'folder' LIKE '%' || #searchExt# || '%'
+			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
-				<![CDATA[
-					FOLDER.FOLDER_NAME1 LIKE '%' || #searchFileName# || '%'
-				]]>
+			<![CDATA[
+				FOLDER.FOLDER_NAME1 LIKE '%' || #searchFileName# || '%'
+			]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
-				<![CDATA[
-					FOLDER.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
-				]]>
+			<![CDATA[
+				FOLDER.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
+			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
-				<![CDATA[
-					FILE_TYPE.TYPE_NAME LIKE '%' || #searchFileType# || '%'
-				]]>
+			<![CDATA[
+				FILE_TYPE.TYPE_NAME LIKE '%' || #searchFileType# || '%'
+			]]>
 		</isNotEqual>
 		<isNotEqual property="endrollStartDate" compareValue="">
 			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					TO_CHAR(FOLDER.CREATE_DATE, 'YYYY-MM-DD') >= TO_CHAR(#endrollStartDate#, 'YYYY-MM-DD') AND TO_CHAR(FOLDER.CREATE_DATE, 'YYYY-MM-DD')<= TO_CHAR(#endrollStartDate#, 'YYYY-MM-DD')
+					TO_CHAR(FOLDER.CREATE_DATE, 'YYYY-MM-DD') >= TO_CHAR(#endrollStartDate#, 'YYYY-MM-DD') AND TO_CHAR(FOLDER.CREATE_DATE, 'YYYY-MM-DD') <= TO_CHAR(#endrollStartDate#, 'YYYY-MM-DD')
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 		<isNotEqual property="delStartDate" compareValue="">
 			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					TO_CHAR(FOLDER.UPDATE_DATE, 'YYYY-MM-DD') >= # TO_CHAR(delStartDate#, 'YYYY-MM-DD') AND TO_CHAR(FOLDER.UPDATE_DATE, 'YYYY-MM-DD')<= TO_CHAR(#delEndDate#, 'YYYY-MM-DD')
+					TO_CHAR(FOLDER.UPDATE_DATE, 'YYYY-MM-DD') >= TO_CHAR(#delStartDate#, 'YYYY-MM-DD') AND TO_CHAR(FOLDER.UPDATE_DATE, 'YYYY-MM-DD') <= TO_CHAR(#delEndDate#, 'YYYY-MM-DD')
 				]]>
 			</isNotEqual>
 		</isNotEqual>
-</sql>	
+	</sql>
+	
+	<sql id="searchFavorite">
+		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+			<![CDATA[
+				RESULT.TYPE_NAME = #searchFileType#
+			]]>
+		</isNotEqual>
+		<isNotEqual property="searchExt" compareValue="" prepend="AND">
+			<![CDATA[
+				RESULT.TARGET_EXT LIKE '%' || #searchExt# || '%'
+			]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+			<![CDATA[
+				RESULT.TARGET_NAME LIKE '%' || #searchFileName# || '%'
+			]]>
+		</isNotEqual>
+		<isNotEqual property="searchCreatorName" compareValue="" prepend="AND">
+			<![CDATA[
+				RESULT.CREATE_NAME1 LIKE '%' || #searchCreatorName# || '%' OR RESULT.CREATE_NAME2 LIKE '%' || #searchCreatorName# || '%'
+			]]>
+		</isNotEqual>
+		<isNotEqual property="searchStartDate" compareValue="">
+			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
+				<![CDATA[
+					TO_CHAR(RESULT.CREATE_DATE, 'YYYY-MM-DD') >= #searchStartDate# AND TO_CHAR(RESULT.CREATE_DATE, 'YYYY-MM-DD') <= #searchEndDate#
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</sql>
 	
 	<select id="EzWebFolderDAO_m.getSharingList" parameterClass="Map" resultMap="shareVO">
 		<![CDATA[
@@ -1001,13 +1030,13 @@
 		]]>
 	</update>
 	
-	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteFileVO">
+	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteVO">
 		<![CDATA[
 			SELECT
 			    * 
 			FROM (
 			    SELECT 
-			        ROWNUM NUM, RESULT.*
+			        ROWNUM NUM, ORDER_RESULT.*
 			    FROM (
 			        SELECT
 			            *
@@ -1022,10 +1051,16 @@
 			                FILES.FILE_EXT		AS TARGET_EXT,
 			                FILES.FILE_SIZE 	AS TARGET_SIZE,
 			                FILES.CREATE_ID,
+			                CASE #primary#
+								WHEN '1'
+								THEN FILES.CREATE_NAME1
+								ELSE FILES.CREATE_NAME2
+							END CREATOR_NAME,
 			                FILES.CREATE_NAME1,
 			                FILES.CREATE_NAME2,
-			                FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE')  AS CREATE_DATE,
-			                FAVOR.TENANT_ID
+			                FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+			                FAVOR.TENANT_ID,
+			                FILES.USE_STATUS
 			            FROM
 			                TBL_WEBFOLDER_FAVOR FAVOR
 			                INNER JOIN TBL_WEBFOLDER_FILE FILES
@@ -1037,14 +1072,17 @@
 			            WHERE
 			                FAVOR.TARGET_TYPE = 'F' AND
 			                FAVOR.USER_ID = #userId# AND
-			                FAVOR.TENANT_ID = #tenantId# AND
-			                FILES.USE_STATUS = 'Y'
+			                FAVOR.TENANT_ID = #tenantId#
 			                
 			            UNION
 			                
 			            SELECT
 			                FAVOR.TARGET_ID,
-			                FOLDER.FOLDER_NAME1 AS TARGET_NAME,
+			                CASE #primary#
+								WHEN '1'
+								THEN FOLDER.FOLDER_NAME1
+								ELSE FOLDER.FOLDER_NAME2
+							END TARGET_NAME,
 			                CONCAT('D_', FOLDER.FOLDER_TYPE) AS TARGET_TYPE,
 			                FILE_TYPE.TYPE_ICON AS TARGET_ICON_URL,
 			                FILE_TYPE.TYPE_NAME,
@@ -1052,10 +1090,16 @@
 			                'folder' 		AS TARGET_EXT,
 			                TO_CHAR(0)		AS TARGET_SIZE,
 			                FOLDER.CREATE_ID,
+     			            CASE #primary#
+								WHEN '1'
+								THEN FOLDER.CREATE_NAME1
+								ELSE FOLDER.CREATE_NAME2
+							END CREATOR_NAME,
 			                FOLDER.CREATE_NAME1,
 			                FOLDER.CREATE_NAME2,
-			                FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE')  AS CREATE_DATE,
-			                FAVOR.TENANT_ID
+			                FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+			                FAVOR.TENANT_ID,
+			                FOLDER.USE_STATUS
 			            FROM
 			                TBL_WEBFOLDER_FAVOR FAVOR
 			                INNER JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
@@ -1065,17 +1109,16 @@
 			            WHERE
 			                FAVOR.TARGET_TYPE = 'D' AND
 			                FAVOR.USER_ID = #userId# AND
-			                FAVOR.TENANT_ID = #tenantId# AND
-			                FOLDER.USE_STATUS = 'Y'
-			        )
+			                FAVOR.TENANT_ID = #tenantId#
+			        ) RESULT
 				    WHERE
-						TARGET_EXT LIKE '%' || #searchExt# || '%' AND
-						TARGET_NAME LIKE '%' || #searchFileName# || '%' AND
-						CREATE_NAME1 LIKE '%' || #searchCreatorName# || '%' AND
-						TYPE_NAME LIKE '%' || #searchFileType# || '%'
+						RESULT.USE_STATUS = 'Y'
+		]]>
+			<include refid="searchFavorite"/>
+		<![CDATA[
 				    ORDER BY
 				        TARGET_TYPE ASC, CREATE_DATE DESC
-			    ) RESULT
+			    ) ORDER_RESULT
 			)
 			WHERE
 			    NUM >= #startIndex# + 1 AND NUM < (#startIndex# + #listCount# + 1)
@@ -1083,63 +1126,63 @@
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getFavoriteFolderCount" parameterClass="Map" resultClass="Integer">
-		SELECT
-			COUNT(RESULT.TARGET_NAME) COUNT
-		FROM (
+		<![CDATA[
 			SELECT
-				FOLDER.FOLDER_NAME1 AS TARGET_NAME,
-				'folder' 		AS TARGET_EXT,
-				FILE_TYPE.TYPE_NAME,
-				FOLDER.CREATE_NAME1,
-				FOLDER.CREATE_NAME2,
-				FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE')  AS CREATE_DATE
-			FROM
-				TBL_WEBFOLDER_FAVOR FAVOR
-				INNER JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
-				ON FILE_TYPE.TYPE_NAME = 'folder' AND FILE_TYPE.TENANT_ID = FAVOR.TENANT_ID
-					INNER JOIN TBL_WEBFOLDER_FOLDER FOLDER
-					ON FOLDER.FOLDER_ID = FAVOR.TARGET_ID AND FOLDER.TENANT_ID = FAVOR.TENANT_ID
+				COUNT(RESULT.TARGET_NAME) COUNT
+			FROM (
+				SELECT
+					FOLDER.FOLDER_NAME1 AS TARGET_NAME,
+					'folder' 		AS TARGET_EXT,
+					FILE_TYPE.TYPE_NAME,
+					FOLDER.CREATE_NAME1,
+					FOLDER.CREATE_NAME2,
+					FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+					FOLDER.USE_STATUS
+				FROM
+					TBL_WEBFOLDER_FAVOR FAVOR
+					INNER JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
+					ON FILE_TYPE.TYPE_NAME = 'folder' AND FILE_TYPE.TENANT_ID = FAVOR.TENANT_ID
+						INNER JOIN TBL_WEBFOLDER_FOLDER FOLDER
+						ON FOLDER.FOLDER_ID = FAVOR.TARGET_ID AND FOLDER.TENANT_ID = FAVOR.TENANT_ID
+				WHERE
+					FAVOR.TARGET_TYPE = 'D' AND
+					FAVOR.USER_ID = #userId# AND
+					FAVOR.TENANT_ID = #tenantId#
+			) RESULT
 			WHERE
-				FAVOR.TARGET_TYPE = 'D' AND
-				FAVOR.USER_ID = #userId# AND
-				FAVOR.TENANT_ID = #tenantId# AND
-				FOLDER.USE_STATUS = 'Y'
-		) RESULT
-		WHERE
-			RESULT.TARGET_EXT LIKE '%' || #searchExt# || '%' AND
-			RESULT.TARGET_NAME LIKE '%' || #searchFileName# || '%' AND
-			RESULT.CREATE_NAME1 LIKE '%' || #searchCreatorName# || '%' AND
-			RESULT.TYPE_NAME LIKE '%' || #searchFileType# || '%'
+				RESULT.USE_STATUS = 'Y'
+		]]>
+		<include refid="searchFavorite"/>
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getFavoriteFileCount" parameterClass="Map" resultClass="Integer">
-		SELECT
-			COUNT(RESULT.TARGET_NAME) COUNT
-		FROM (
+		<![CDATA[
 			SELECT
-				FILES.FILE_NAME 	AS TARGET_NAME,
-				FILES.FILE_EXT		AS TARGET_EXT,
-				FILE_TYPE.TYPE_NAME,
-				FILES.CREATE_NAME1,
-				FILES.CREATE_NAME2,
-				FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE')  AS CREATE_DATE
-			FROM
-				TBL_WEBFOLDER_FAVOR FAVOR
-				INNER JOIN TBL_WEBFOLDER_FILE FILES
-				ON FILES.FILE_ID = FAVOR.TARGET_ID AND FILES.TENANT_ID = FAVOR.TENANT_ID
-					INNER JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
-					ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID AND FILE_TYPE.TENANT_ID = FAVOR.TENANT_ID
+				COUNT(RESULT.TARGET_NAME) COUNT
+			FROM (
+				SELECT
+					FILES.FILE_NAME 	AS TARGET_NAME,
+					FILES.FILE_EXT		AS TARGET_EXT,
+					FILE_TYPE.TYPE_NAME,
+					FILES.CREATE_NAME1,
+					FILES.CREATE_NAME2,
+					FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+					FILES.USE_STATUS
+				FROM
+					TBL_WEBFOLDER_FAVOR FAVOR
+					INNER JOIN TBL_WEBFOLDER_FILE FILES
+					ON FILES.FILE_ID = FAVOR.TARGET_ID AND FILES.TENANT_ID = FAVOR.TENANT_ID
+						INNER JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
+						ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID AND FILE_TYPE.TENANT_ID = FAVOR.TENANT_ID
+				WHERE
+					FAVOR.TARGET_TYPE = 'F' AND
+					FAVOR.USER_ID = #userId# AND
+					FAVOR.TENANT_ID = #tenantId#
+			) RESULT
 			WHERE
-				FAVOR.TARGET_TYPE = 'F' AND
-				FAVOR.USER_ID = #userId# AND
-				FAVOR.TENANT_ID = #tenantId# AND
-				FILES.USE_STATUS = 'Y'
-		) RESULT
-		WHERE
-			RESULT.TARGET_EXT LIKE '%' || #searchExt# || '%' AND
-			RESULT.TARGET_NAME LIKE '%' || #searchFileName# || '%' AND
-			RESULT.CREATE_NAME1 LIKE '%' || #searchCreatorName# || '%' AND
-			RESULT.TYPE_NAME LIKE '%' || #searchFileType# || '%'
+				RESULT.USE_STATUS = 'Y'
+		]]>
+		<include refid="searchFavorite"/>
 	</select>
 	
 	<select id="EzWebFolderDAO_m.isExistsFavorite" parameterClass="Map" resultClass="Integer">
@@ -1156,9 +1199,9 @@
 	
 	<insert id="EzWebFolderDAO_m.addFavorite">
 		INSERT INTO
-			TBL_WEBFOLDER_FAVOR
+			TBL_WEBFOLDER_FAVOR (TARGET_ID, USER_ID, TARGET_TYPE, CREATE_DATE, TENANT_ID)
 		VALUES
-			(#targetId#, #userId#, #targetType#, #createDate#, #tenantId#)
+			(#targetId#, #userId#, #targetType#, TO_DATE(#createDate#, 'YYYY-MM-DD HH24:MI:SS'), #tenantId#)
 	</insert>
 	
 	<delete id="EzWebFolderDAO_m.deleteFavorite">

@@ -199,7 +199,7 @@
 		<isNotEqual property="searchStartDate" compareValue="">
 			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(RESULT.CREATE_DATE >= DATE_FORMAT(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND RESULT.CREATE_DATE <= DATE_FORMAT(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
+					(RESULT.CREATE_DATE >= DATE_FORMAT(#searchStartDate#, '%Y-%m-%d') AND RESULT.CREATE_DATE <= DATE_FORMAT(#searchEndDate#, '%Y-%m-%d'))
 				]]>
 			</isNotEqual>
 		</isNotEqual>
