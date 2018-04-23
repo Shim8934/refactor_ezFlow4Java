@@ -675,8 +675,9 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String isuse = request.getParameter("isuse");
 			String isAdmin = request.getParameter("isAdmin");
+			String statistics = request.getParameter("statistics");
 			
-			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, info.getTenantId());
+			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
 			
 			//imgPath 셋팅
 			for (AttitudeTypeVO typeInfo : attitudeTypeList) {
@@ -822,10 +823,10 @@ public class EzAttitudeGWController {
 			}
 
 			//formList 구하기
-			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
+//			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
 			
 			data.put("typeInfo", typeInfo);
-			data.put("formList", formList);
+//			data.put("formList", formList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -964,35 +965,24 @@ public class EzAttitudeGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			String companyId = request.getParameter("companyId");
 			String userId = request.getParameter("userId");
-			String userIdList = request.getParameter("userIdList");
-			String offsetMin = request.getParameter("offsetMin");
+			String selectUserId = request.getParameter("selectUserId");
 
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 
-			List<AttitudeUserConfigVO> voList = ezAttitudeService.getAttitudeUserConfigInfo(info.getTenantId(), companyId, userIdList, offsetMin);
-
-			if (voList.size() == 0) {
-				voList = new ArrayList<AttitudeUserConfigVO>();
-				AttitudeUserConfigVO vo = new AttitudeUserConfigVO();
-
-				info = mOptionService.commonInfoWeb(serverName, userIdList);
-				vo.setUserId(userIdList);
-				vo.setUserName(info.getUserName());
-				vo.setUserName2(info.getUserName2());
-				voList.add(vo);
-			}
+			AttitudeUserConfigVO vo = ezAttitudeService.getAttitudeUserConfigInfo(selectUserId, commonUtil.getMinuteUTC(info.getOffSet()), info.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", voList);
+			result.put("data", vo);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
+		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/users-attitude-confs] ended.");
+		
 		return result;
 	}
 	
@@ -1612,6 +1602,7 @@ public class EzAttitudeGWController {
 			String orderOption = request.getParameter("orderOption");
 			String offsetMin = request.getParameter("offsetMin");
 			String isAdmin = request.getParameter("isAdmin");
+			String statistics = request.getParameter("statistics");
 			String isuse = "1";
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
@@ -1622,7 +1613,7 @@ public class EzAttitudeGWController {
 			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID);
 			
 			//구분 리스트
-			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, tenantID);
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
@@ -1800,4 +1791,40 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth] ended.");
 		return result;
 	}
+	
+	/**
+	 * G/W 통계 [GET] 개인 근태 유형별 통계 -----임시
+	 */
+//	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+//	public JSONObject getAttitudeUserCount(@PathVariable String userId, @PathVariable String attitudetypeId, HttpServletRequest request) {
+//		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] started.");
+//		
+//		JSONObject result = new JSONObject();
+//		try{
+//			String serverName = request.getHeader("x-user-host");
+//			String offset = request.getParameter("offset");
+//			String startDate = request.getParameter("startDate");
+//			String endDate = request.getParameter("endDate");
+//			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+//			
+//			String startDate = startDate + " 00:00:00";
+//			String endDate = endDate + " 23:59:59";
+//			
+//			List<AttitudeStatisVO> resultList;
+//			
+//			
+//			resultList = ezAttitudeService.getAttitudeUserStatistics(userId, offset, startDate, endDate, info.getTenantId());
+//			
+//			
+//			result.put("status", "ok");
+//			result.put("code", 0);
+//			result.put("data", resultList);
+//		} catch (Exception e) {
+//			result.put("status", "error");
+//			result.put("code", 1);
+//			result.put("data", "");
+//		}
+//		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] ended.");
+//		return result;
+//	}
 }

@@ -23,6 +23,7 @@
     <script type="text/javascript">
     var Tab1_flag = true;
     var xmlHttp = createXMLHttpRequest();
+//     var adminCompany = "${adminCompany}";
 	
 	document.onselectstart = function () {
     if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -32,13 +33,15 @@
 	};
 	
     window.onload = function () {
-        if (CrossYN())
+        if (CrossYN()) {
             document.getElementById("topmenu").style.cssFloat = "";
-        else
+        } else {
             document.getElementById("topmenu").style.whiteSpace = "nowrap";
-
+        }
+		
+		//년도 설정(조회기간)
         makeoptionyear();
-
+        
         var xmlpara = createXmlDom();
         var xmlTree = createXmlDom();
         var xmlHTTP = createXMLHttpRequest();
@@ -62,6 +65,7 @@
         treeView.DataBind("TreeView");
     }
 
+    //조직도 회사,부서 클릭
     function TreeViewNodeClick() {
         var nodeIdx = 1;
         var treeView = new TreeView();
@@ -69,8 +73,13 @@
         var selnode = treeView.GetSelectNode();
         DeptID = selnode.GetNodeData("CN");
         displayUserList(DeptID);
+        //만약 회사 클릭시
+        if (selnode.GetNodeData("SETNODEICONBYNAME") != "") {
+        	company_typeList(DeptID);
+        }
     }
 
+    //하위부서?
     function RequestData(pNodeID, pTreeID) {
         var TreeIdx = pNodeID;
         var treeNode = new TreeNode();
@@ -79,6 +88,7 @@
         GetDeptSubTreeInfo(deptID, TreeIdx);
     }
 
+    //하위부서 정보
     function GetDeptSubTreeInfo(deptID, TreeIdx) {
         var xmlHTTP = createXMLHttpRequest();
         var xmlRtn = createXmlDom();
@@ -109,8 +119,8 @@
         treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
     }
 
+    //부서클릭시 사원리스트 뿌리기
     function displayUserList(DeptID) {
-    	
     	$.ajax({
         	type : "POST",
         	dataType : "text",
@@ -139,7 +149,8 @@
                 }
                 var pUserList = new ListView();
                 pUserList.SetID("lvUserList");
-                pUserList.SetRowOnClick("getmailstatistics");
+                //사원리스트 클릭 이벤트 주기
+                pUserList.SetRowOnClick("getAttitudeStatistics");//////////////////////////////////////////////////////////////////////
                 pUserList.SetSelectFlag(false);
                 pUserList.SetHeightFree(true);
                 pUserList.DataSource(headerData);
@@ -151,7 +162,31 @@
         });
 
     }
-
+    
+    //회사 클릭시마다 근태유형 selectbox 변경
+    function company_typeList(companyId) {
+    	$.ajax({
+        	type : "POST",
+        	dataType : "json",
+        	url : "/ezStatistics/attitudeTypeList.do",
+        	async : false,
+        	data : {companyId : companyId},
+        	success : function(result){
+        		var html = "";
+        		if (result.length != null && result.length != 0) {
+	                for (var i = 0; i < result.length; i++) {
+		        		html += "<option value='" + result[i].typeId + "'>" + result[i].typeName + "</option>";
+	                }
+        		}
+        		$("#attitudeType").html(html);
+        	},
+        	error : function(error){
+//         		OpenAlertUI(linealt2 + error)
+        	}
+        });
+    }
+    
+    //조회기간 년도 (현재년도에서 -5년까지)
     var isfirst = true;
     var tempyear;
     function makeoptionyear() {
@@ -191,77 +226,46 @@
         }
     }
 
-    function Tab1_NewTabIni(pTabNodeID) {
-        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
-            if (document.getElementById(pTabNodeID).childNodes[i].nodeName == "P") {
-                if (document.getElementById(pTabNodeID).childNodes[i].childNodes[0].nodeName == "SPAN") {
-                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseover = function () { Tab1_MouserOver(this); };;
-                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseout = function () { Tab1_MouserOut(this); };;
-                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onclick = function () { Tab1_MouseClick(this); };;
-
-                    if (Tab1_flag) {
-                        document.getElementById(pTabNodeID).childNodes[i].childNodes[0].className = "tabon";
-                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes[i].childNodes[0].id;
-                        Tab1_flag = false;
-                    }
-
-                }
-            }
-        }
+    //사원선택시
+    function getAttitudeStatistics() {
+    	var selectUserId = pUserList.GetSelectedRows()[0].getAttribute("DATA2");
+    	$.ajax({
+        	type : "POST",
+        	dataType : "json",
+        	url : "/ezStatistics/getAttitudeUser.do",
+        	async : false,
+        	data : {userId : selectUserId, typeId : $("#attitudeType").val(), year : $("#selyear").val() },
+        	success : function(result){
+        		
+        	},
+        	error : function(error){
+        		
+        	}
+        });
     }
+//     var seluserid;
+//     function getmailstatistics() {
+//         xmlHttp = createXMLHttpRequest();
+//         var xmlDoc = createXmlDom();
 
-    function Tab1_MouserOver(obj) {
-        obj.className = "tabover";
-    }
-    function Tab1_MouserOut(obj) {
-        if (Tab1_SelectID != obj.id)
-            obj.className = "";
-    }
-    function Tab1_MouseClick(obj) {
-        obj.className = "tabon";
-        if (obj.id != Tab1_SelectID) {
-            if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
-                document.getElementById(Tab1_SelectID).className = "";
+//         var pUserList = new ListView();
+//         pUserList.LoadFromID("lvUserList");
 
-            obj.className = "tabon";
-            Tab1_SelectID = obj.id;
-            ChangeTab(obj);
-        }
-    }
+//         if (pUserList.GetSelectedRows()[0] != undefined)
+//             seluserid = pUserList.GetSelectedRows()[0].getAttribute("DATA2");
 
-    var tabledata = new Array("<spring:message code='ezStatistics.t38' />", "<spring:message code='ezStatistics.t40' />", "RECEIVEINCNT", "SENDINCNT");
-    function ChangeTab(obj) {
-        var pSelectTab = obj.getAttribute("divname");
-        tabledata = new Array();
-        switch (pSelectTab) {
-            case "passTab": tabledata.push("<spring:message code='ezStatistics.t38' />", "<spring:message code='ezStatistics.t40' />", "RECEIVEINCNT", "SENDINCNT"); getmailstatistics(); break;
-            case "bujaeTab": tabledata.push("<spring:message code='ezStatistics.t39' />", "<spring:message code='ezStatistics.t41' />", "RECEIVEOUTCNT", "SENDOUTCNT"); getmailstatistics(); break;
-            case "bujaeGTab": tabledata.push("<spring:message code='ezStatistics.t42' />", "<spring:message code='ezStatistics.t44' />", "RECEIVEINSIZE", "SENDINSIZE"); getmailstatistics(); break;
-            case "noticeTab": tabledata.push("<spring:message code='ezStatistics.t43' />", "<spring:message code='ezStatistics.t45' />", "RECEIVEOUTSIZE", "SENDOUTSIZE"); getmailstatistics(); break;
-        }
-    }
+//         var objRoot, objNode
+//         objNode = createNodeInsert(xmlDoc, objNode, "PARAM");
+//         createNodeAndInsertText(xmlDoc, objNode, "USERID", seluserid);
+//         createNodeAndInsertText(xmlDoc, objNode, "SDATE", document.getElementById("selyear").value);
+//         createNodeAndInsertText(xmlDoc, objNode, "EDATE", document.getElementById("selyear").value);
+//         xmlHttp.open("POST", "/ezStatistics/getMailUser.do", true);
+//         xmlHttp.onreadystatechange = event_getmailstatistics;
+//         xmlHttp.send(xmlDoc);
+//     }
 
-    var seluserid;
-    function getmailstatistics() {
-        xmlHttp = createXMLHttpRequest();
-        var xmlDoc = createXmlDom();
-
-        var pUserList = new ListView();
-        pUserList.LoadFromID("lvUserList");
-
-        if (pUserList.GetSelectedRows()[0] != undefined)
-            seluserid = pUserList.GetSelectedRows()[0].getAttribute("DATA2");
-
-        var objRoot, objNode
-        objNode = createNodeInsert(xmlDoc, objNode, "PARAM");
-        createNodeAndInsertText(xmlDoc, objNode, "USERID", seluserid);
-        createNodeAndInsertText(xmlDoc, objNode, "SDATE", document.getElementById("selyear").value);
-        createNodeAndInsertText(xmlDoc, objNode, "EDATE", document.getElementById("selyear").value);
-        xmlHttp.open("POST", "/ezStatistics/getMailUser.do", true);
-        xmlHttp.onreadystatechange = event_getmailstatistics;
-        xmlHttp.send(xmlDoc);
-    }
-
+	//사원선택시와 관련 이벤트 함수
+	/*
     var data = new Array();
     var data2 = new Array();
     function event_getmailstatistics() {
@@ -488,7 +492,9 @@
             drawingchart();
         }
     }
+    */
 
+    //차트그리기
     function drawingchart(type) {
         if (data[0] == undefined) {
             return;
@@ -510,16 +516,7 @@
         });
     }
 
-    function getmailsize(size) {
-        if (parseInt(size) / 1024 / 1024 / 1024 > 1)
-            return (parseInt(size) / 1024 / 1024 / 1024).toFixed(1) + "GB";
-        else if (parseInt(size) / 1024 / 1024 > 1)
-            return (parseInt(size) / 1024 / 1024).toFixed(1) + "MB";
-        else if (parseInt(size) / 1024 > 1)
-            return (parseInt(size) / 1024).toFixed(1) + "KB";
-        else
-            return (parseInt(size)).toFixed(1) + "B";
-    }
+    //엑셀내려받기 버튼 클릭시
     function btnexportexcel_onclick() {
         document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
         
@@ -530,9 +527,9 @@
         
         document.getElementById("formAgent").target = "saveExcel";
         document.getElementById("formAgent").submit();
-
     }
 
+    //검색
     function search_press(e) {
         if (window.event) {
             if (window.event.keyCode == 13) {
@@ -545,6 +542,7 @@
         }
     }
 
+    //검색
     function search() {
         if (document.getElementById("searchopt").value == "1")
             searchuser();
@@ -552,6 +550,7 @@
             searchdept();
     }
 
+    //부서로 검색
     var searchdept_cross_dialogArguments = new Array();
     function searchdept() {
         if (keyword.value.trim() == "") {
@@ -622,17 +621,17 @@
             }
         }
     }
-    
-    function SelelctDept_complite(deptid){
-   	 if (deptid != "") {
-            bSearch = true;
-            g_xmlHTTP = createXMLHttpRequest();
-            var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-            g_xmlHTTP.send(strQuery);
-        }
-   }
+    //?
+//     function SelelctDept_complite(deptid){
+//    		if (deptid != "") {
+//             bSearch = true;
+//             g_xmlHTTP = createXMLHttpRequest();
+//             var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+//             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+//             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+//             g_xmlHTTP.send(strQuery);
+//         }
+//    }
     
     function event_getDeptFullTree() {
         if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
@@ -657,14 +656,14 @@
                 treeView.SetNodeClick("TreeViewNodeClick");
                 treeView.DataSource(g_xmlHTTP.responseXML);
                 treeView.DataBind("TreeView");
-            }
-            else {
+            } else {
                 alert(g_xmlHTTP.statusText)
                 g_xmlHTTP = null;
             }
         }
     }
 
+    //사원으로 검색시
     function searchuser() {
         if (keyword.value == "") {
             alert("<spring:message code='ezStatistics.t1010' />");
@@ -714,47 +713,46 @@
         		alert(error);
         	}
         });
-        
     }
-    function event_displayUserList2() {
-        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-            if (g_xmlHTTP.statusText == "OK") {
-                if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0)
-                    alert("<spring:message code='ezStatistics.t1016' />");
-                else {
-                    var retXml = createXmlDom();
+//     function event_displayUserList2() {
+//         if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
+//             if (g_xmlHTTP.statusText == "OK") {
+//                 if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0)
+//                     alert("<spring:message code='ezStatistics.t1016' />");
+//                 else {
+//                     var retXml = createXmlDom();
 
-                    if (document.getElementById("UserList").innerHTML != "")
-                        document.getElementById("UserList").innerHTML = "";
+//                     if (document.getElementById("UserList").innerHTML != "")
+//                         document.getElementById("UserList").innerHTML = "";
 
-                    var headerData = createXmlDom();
-                    headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
-                    if (g_xmlHTTP.responseText != "") {
-                        if (CrossYN()) {
-                            var xmlRtn = g_xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-                            var Node = headerData.importNode(xmlRtn, true);
-                            headerData.documentElement.appendChild(Node);
-                        }
-                        else {
-                            var xmlRtn = g_xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-                            headerData.documentElement.appendChild(xmlRtn);
-                        }
-                    }
-                    var pUserList = new ListView();
-                    pUserList.SetID("lvUserList");
-                    pUserList.SetRowOnClick("getmailstatistics");
-                    pUserList.SetSelectFlag(false);
-                    pUserList.SetHeightFree(true);
-                    pUserList.DataSource(headerData);
-                    pUserList.DataBind("UserList");
-                }
-            }
-            else
-                alert(g_xmlHTTP.statusText)
+//                     var headerData = createXmlDom();
+//                     headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+//                     if (g_xmlHTTP.responseText != "") {
+//                         if (CrossYN()) {
+//                             var xmlRtn = g_xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
+//                             var Node = headerData.importNode(xmlRtn, true);
+//                             headerData.documentElement.appendChild(Node);
+//                         }
+//                         else {
+//                             var xmlRtn = g_xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
+//                             headerData.documentElement.appendChild(xmlRtn);
+//                         }
+//                     }
+//                     var pUserList = new ListView();
+//                     pUserList.SetID("lvUserList");
+//                     pUserList.SetRowOnClick("getmailstatistics");
+//                     pUserList.SetSelectFlag(false);
+//                     pUserList.SetHeightFree(true);
+//                     pUserList.DataSource(headerData);
+//                     pUserList.DataBind("UserList");
+//                 }
+//             }
+//             else
+//                 alert(g_xmlHTTP.statusText)
 
-            g_xmlHTTP = null;
-        }
-    }
+//             g_xmlHTTP = null;
+//         }
+//     }
 
     </script>
 </head>
@@ -779,13 +777,13 @@
         <tr>
             <td style="width: 99%">
                 <span id="topmenu" style="width: 500px">
-                 	회사선택 : 
-				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
-					<c:forEach var = "companyItem" items="${companyList }">
-						<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
-					</c:forEach>
-	      		</select>
-                 &nbsp;&nbsp;
+<!--                  	회사선택 :  -->
+<!-- 				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;"> -->
+<%-- 					<c:forEach var = "companyItem" items="${companyList }"> --%>
+<%-- 						<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option> --%>
+<%-- 					</c:forEach> --%>
+<!-- 	      		</select> -->
+<!--                  &nbsp;&nbsp; -->
                 <spring:message code='ezStatistics.t1002' /> : 
                 <select id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
                     <spring:message code='ezStatistics.t55' />
@@ -798,9 +796,11 @@
                     <a class="imgbtn" style="vertical-align: middle"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
                     &nbsp;&nbsp;
                     	근태유형 : 
-                    <select>
-                    	<option>구분1</option>
-                    </select>
+	                <select name="attitudeType" id="attitudeType" style="margin-top:4px; padding-right:40px;">
+<%-- 						<c:forEach var = "typeItem" items="${typeList }"> --%>
+<%-- 							<option value="<c:out value = '${typeItem.typeId }' />"><c:out value = '${typeItem.typeName }'/></option> --%>
+<%-- 						</c:forEach> --%>
+		      		</select>
                 </span>
             </td>
             <td>
@@ -864,6 +864,5 @@
 </body>
 <script type="text/javascript">
     selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-    Tab1_NewTabIni("tab1");
 </script>
 </html>

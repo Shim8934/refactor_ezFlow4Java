@@ -206,7 +206,7 @@
 	    	}
 	    	
 	    	//검색 > 구분selectBox
-	    	function getAttitudeTypeList(typeList, typeId) {
+	    	/* function getAttitudeTypeList(typeList, typeId) {
 	    		var html = "<option value=''>전체</option>";
 	    		
 	    		for (var i = 0; i < typeList.length; i ++) {
@@ -218,7 +218,7 @@
 	    		if (typeId != "") {
 	    			$('#searchAttitudeType').val(typeId);
 	    		}
-	    	}
+	    	} */
 	    	
 	    	function getUserConfList_after(result){
 	    		var resultHtml = "";

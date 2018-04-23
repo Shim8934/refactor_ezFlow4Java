@@ -21,7 +21,6 @@
 		
 		<script type="text/javascript">
 			var formHtml = '${formInfo.formHtml}';
-			var attitudeInfo = ${attitudeInfo};
 			var typeId = "<c:out value='${attitudeInfo.typeId}'/>";
 			var typeName = "<c:out value='${attitudeInfo.typeName}'/>";
 			var writerName = "<c:out value='${attitudeInfo.writerName}'/>";

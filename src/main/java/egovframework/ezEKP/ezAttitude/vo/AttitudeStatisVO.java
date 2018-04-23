@@ -3,7 +3,9 @@ package egovframework.ezEKP.ezAttitude.vo;
 public class AttitudeStatisVO {
 	private String typeId;
 	private String typeName;
-	private String sumDate;
+	private String count;
+	private String statMonth;
+	
 	public String getTypeId() {
 		return typeId;
 	}
@@ -16,11 +18,17 @@ public class AttitudeStatisVO {
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
 	}
-	public String getSumDate() {
-		return sumDate;
+	public String getCount() {
+		return count;
 	}
-	public void setSumDate(String sumDate) {
-		this.sumDate = sumDate;
+	public void setCount(String count) {
+		this.count = count;
+	}
+	public String getStatMonth() {
+		return statMonth;
+	}
+	public void setStatMonth(String statMonth) {
+		this.statMonth = statMonth;
 	}
 	
 }
