@@ -430,10 +430,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		headManager = ezPMSDAO.getHeadManagerInfo(param);
 		return headManager;
 	}
+	
 	@Override
 	public List<ProjectMemberVO> getProjectMember(int projectId, int roleId,
 			String lang) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void addProjectMember(ProjectInfoVO newProject, String parameter) {
+		// TODO Auto-generated method stub
+		
 	}
 }
