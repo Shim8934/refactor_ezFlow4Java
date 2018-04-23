@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+g<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>  
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -652,7 +652,7 @@
 		</c:if>
 		<c:if test="${boardInfo.buttonHidden == 'N'}">
 			<script type="text/javascript">
-			    parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t00010'/>" + " " + "${boardName}" + "<span id='mailBoxInfo'></span>";
+			    parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" + "<span id='mailBoxInfo'></span>";
 			</script>
 			<br />
 			<div id="mainmenu">
@@ -675,7 +675,7 @@
 		</c:if>	
 		<c:if test="${boardInfo.buttonHidden != N}">
 		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t00010'/>" + " " + "${boardName}" + "<span id='mailBoxInfo'></span>";
+		        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" + "<span id='mailBoxInfo'></span>";
 		    </script>
 		</c:if>
 		    <div id="layer_Viewpopup" style="width: 150px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
