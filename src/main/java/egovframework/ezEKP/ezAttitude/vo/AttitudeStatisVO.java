@@ -4,6 +4,8 @@ public class AttitudeStatisVO {
 	private String typeId;
 	private String typeName;
 	private String sumDate;
+	private String statMonth;
+	
 	public String getTypeId() {
 		return typeId;
 	}
@@ -21,6 +23,12 @@ public class AttitudeStatisVO {
 	}
 	public void setSumDate(String sumDate) {
 		this.sumDate = sumDate;
+	}
+	public String getStatMonth() {
+		return statMonth;
+	}
+	public void setStatMonth(String statMonth) {
+		this.statMonth = statMonth;
 	}
 	
 }

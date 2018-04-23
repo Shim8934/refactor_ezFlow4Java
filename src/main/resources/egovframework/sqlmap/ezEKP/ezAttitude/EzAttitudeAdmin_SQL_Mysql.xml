@@ -800,4 +800,42 @@
 			VALUES (#selectUserId#, #tenantId#, #companyId#, #deptId#)
 		]]>
 	</insert>
+	
+	<select id="getAttitudeUserStatistics" parameterClass="Map" resultMap="">
+		<![CDATA[
+			SELECT SUM(to_days(
+								IF(
+									date_add(END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
+			                        #endDate#, 
+			                        date_add(IFNULL(END_DATE, START_DATE), INTERVAL +#offsetMin# minute)
+								   )
+							   ) 
+					   -
+					   to_days(
+								IF(
+									date_add(START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
+			                        #startDate#, 
+			                        date_add(START_DATE, INTERVAL +#offsetMin# minute)
+								   )
+							   )
+						) + COUNT(TYPE_ID) AS SUM_DATE,
+			       TYPE_ID
+			FROM   
+				jmocha.tbl_attitude
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				TYPE_ID = #typeId#
+			AND    
+				(
+					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
+					or
+					(END_DATE >= #startDate# and END_DATE < #endDate#) 
+					or
+					(START_DATE < #startDate# and END_DATE >= #endDate#)
+				)
+			GROUP BY
+				TYPE_ID
+		]]>
+	</select>
 </sqlMap>

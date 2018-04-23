@@ -1802,4 +1802,40 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth] ended.");
 		return result;
 	}
+	
+	/**
+	 * G/W 통계 [GET] 개인 근태 유형별 통계 -----임시
+	 */
+//	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+//	public JSONObject getAttitudeUserCount(@PathVariable String userId, @PathVariable String attitudetypeId, HttpServletRequest request) {
+//		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] started.");
+//		
+//		JSONObject result = new JSONObject();
+//		try{
+//			String serverName = request.getHeader("x-user-host");
+//			String offset = request.getParameter("offset");
+//			String startDate = request.getParameter("startDate");
+//			String endDate = request.getParameter("endDate");
+//			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+//			
+//			String startDate = startDate + " 00:00:00";
+//			String endDate = endDate + " 23:59:59";
+//			
+//			List<AttitudeStatisVO> resultList;
+//			
+//			
+//			resultList = ezAttitudeService.getAttitudeUserStatistics(userId, offset, startDate, endDate, info.getTenantId());
+//			
+//			
+//			result.put("status", "ok");
+//			result.put("code", 0);
+//			result.put("data", resultList);
+//		} catch (Exception e) {
+//			result.put("status", "error");
+//			result.put("code", 1);
+//			result.put("data", "");
+//		}
+//		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] ended.");
+//		return result;
+//	}
 }
