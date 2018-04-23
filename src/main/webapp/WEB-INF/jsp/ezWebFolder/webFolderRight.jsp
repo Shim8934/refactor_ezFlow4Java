@@ -175,16 +175,8 @@
 		// fileList 화면 
 		window.onload = function () {
 			$('#upload').css('display','none');
-			$('#idSelect').ddslick({
-				onSelected: function(selectedElmt){
-					//callback function: do something with selectedData;
-					document.getElementById("idSelect").value = selectedElmt.selectedData["value"];
-					changeValue(document.getElementById("idSelect").value);
-				}
-			});
-			
 			pEnd= pStart + blockSize;
-// 			getFileList(folderId);
+			getFileList(folderId);
 			var divList          = document.getElementById("dragDropArea");
 			var reheight         = document.documentElement.clientHeight - 220;
 			divList.style.height = reheight + "px";
@@ -255,8 +247,9 @@
 					
 					makePageSelPage();
 					namePath(folderPath,originalPath);
-					document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " <spring:message code='ezWebFolder.t277'/>" + "<span style='color:#017BEC;'>" 
-						+ fileCnt +"</span>"+", " +strLang41 + " <spring:message code='ezWebFolder.t276'/> " + "<span style='color:#017BEC;'>" + fldCnt +" </span>" + strLang42 + "]";
+					document.getElementById("mailBoxInfo").innerHTML = " - ["+ " <spring:message code='ezWebFolder.t276'/> " + "<span style='color:#017BEC;'>" + fldCnt +" </span>"
+					 + strLang42+" / "+"<spring:message code='ezWebFolder.t277'/> " + " <span style='color:#017BEC;'> " 
+						+ fileCnt +" </span>"  + strLang42 + " ]";
 					$("#listcount").val(blockSize).prop("selected", true);
 				},
 				error : function(error) {
@@ -286,11 +279,11 @@
 				};
 
 				detailName.textContent = path[i] ;
-				detailName.setAttribute("style", "font-size:22px; ");
+				detailName.setAttribute("style", "font-size:18px; ");
 				nameTag.appendChild(detailName);
 				if(path.length ==3) {
 					detailName = document.createElement("span");
-					detailName.textContent =  "   * 해당 폴더는 하위폴더의 모든 파일을 보여줍니다.";
+					detailName.textContent =  " <spring:message code='ezWebFolder.t291' /> "; // 모든파일
 					detailName.setAttribute("style", "font-size:12px; ");
 					nameTag.appendChild(detailName);
 				}
@@ -351,7 +344,6 @@
 					var tdElmt7 = document.createElement("td");	
 					var tdElmt8 = document.createElement("td");	
 					var tdElmt9 = document.createElement("td");
-// 					var tdElmt10 = document.createElement("td");
 					var tdElmt10 = document.createElement("td");
 					
 					trElmt.setAttribute("class", "bnkWebFolder");
@@ -387,8 +379,13 @@
 					tdElmt3.appendChild(fileIconElmt);
 					
 					tdElmt4.textContent = result[i]["fileName"];
-					tdElmt5.textContent = getFileSize(result[i]["fileSize"]);
-					
+					tdElmt5.setAttribute("text-align", "center");
+					if(result[i]["typeId"] == "folder") {
+						tdElmt5.textContent = ' - ';
+					}else {
+						tdElmt5.textContent = getFileSize(result[i]["fileSize"]);
+					}
+					tdElmt5.style.textAlign = "center";
 // 					if (primary == "1") {
 						tdElmt6.textContent = result[i]["createName1"];
 // 					}
@@ -563,6 +560,17 @@
 	        document.getElementById("searchFileName").value = "";
 	        document.getElementById("searchCreateName").value = "";
 	    
+	        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"left\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+        	
+        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+        	
+        	$("#srarchpopup").css("left", popupX);
+        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+        	
+        	$("#srarchpopup").modal();
+        	
+        	
 	        if (obj.getAttribute("mode") == "off") {
 	            document.getElementById("layer_popup").style.left = "10px";
 // 	            if (pAdminType == "y")
@@ -575,10 +583,11 @@
 	        else {
 	        	searchOptionHidden();
 	        }
+	        
+	        
 	    }
 	    function searchOptionHidden() {
-	        document.getElementById("layer_popup").style.display = "none";
-	        document.getElementById("SearchOption").setAttribute("mode", "off");
+	    	$.modal.close();
 	    }
    	   
    	   
@@ -631,10 +640,13 @@
 			AttachDownFrame.location.href = downloadUrl;
 			
        }
-       
-       function fileUpload() {
+       function endUpdate() {
+    	   
+       }
+       function fileUpload2() {
     	   document.getElementById("file").click();
-    	   refreshView();
+//     	   refreshView();
+//     	   endUpdate();
        }
        
        function refreshView() {
@@ -884,7 +896,7 @@
 	<div id="mainmenu2">
 		<ul>
 			<li id=""><a onClick="fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-			<li id="upload"><a onClick="fileUpload()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+			<li id="upload"><a onClick="fileUpload2()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
 			<li id=""><a onClick="fileDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
 			<li id=""><a onClick="fileRename()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 			<li id=""><a onClick="fileMove()"     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
@@ -897,8 +909,8 @@
 <!-- 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li> -->
 			<li id=""><a onClick="refreshView()"style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 			<li id="right" style="float:right;"><span><spring:message code='ezWebFolder.t215'/></span><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
-			<li id="right" style="float:right;">
-				<select class="select" id="idSelect" onchange="idChange(this.value);" style="width:100px; display:none;">
+			<li id="right" style="float:left;">
+				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="width:100px; ">
 					<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
 					<option value="document" data-imagesrc="/images/webfolder/msWord.png"       ><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
 					<option value="music" data-imagesrc="/images/webfolder/mp3.png"      ><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
@@ -959,7 +971,7 @@
 				<th width="40px" ><spring:message code='ezWebFolder.t216'/></th><!-- 즐겨찾기 -->
 				<th width="40px" ><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 				<th width="240px"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
-				<th width="60px" ><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
+				<th width="60px" style="text-align : center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
 				<th width="80px"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
 				<th width="80px" ><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
 				<th width="80px" ><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
@@ -976,53 +988,48 @@
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
         <iframe src="" style="border:none;" id="iFrameLayer"></iframe>
     </div>
-    
     <span id="mailBoxInfo"></span>
-    <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
-          <div class="popupwrap1">
-            <div class="popupwrap2">
-		        <table class="content">  
-			        <tr>
-			           <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
-			           <td>
-			               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-<!-- 			               <img class="ui-datepicker-trigger" src="/images/ImgIcon/calendar-month.gif" alt title> -->
-			                ~
-			               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-<!-- 			               <img class="ui-datepicker-trigger" src="/images/ImgIcon/calendar-month.gif" alt title>  -->
-			           </td>
-			       </tr>
-			       
-			        <tr>
-			            <th style="text-align:center"><spring:message code='ezWebFolder.t152' /></th><!-- 확장자 -->
-			            <td><input type="text" id="searchExt" style="width:98%" value="" name="searchExt"></td>
-			        </tr>
-			        <tr>
-			            <th style="text-align:center"><spring:message code='ezWebFolder.t153' /></th><!-- 파일명 -->
-			            <td><input type="text" id="searchFileName" style="width:98%" value="" name="searchFileName"></td>
-			        </tr>  
-			         <tr>
-			            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 작성자 -->
-			            <td><input type="text" id="searchCreateName" style="width:98%" value="" name="searchCreateName"></td>
-			        </tr>    
-			       
-		   		 </table>
-			    <br />
-			    <table style="width:100%">
-			        <tr>
-			            <td style="text-align:center;">
-			                <a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezWebFolder.t279' /></span></a><!-- 날짜초기화 -->
-			                <a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezWebFolder.t123' /></span></a><!-- 검색 -->
-			                <a class="imgbtn"><span onClick="searchOptionHidden()"><spring:message code='ezWebFolder.t112' /></span></a><!-- 취소 -->
-			            </td>
-			        </tr>
-			    </table>
-	           </div>
-	         </div>
-	        
-	        <div class="shadow">
-	        </div>
+	<div id="srarchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
+		<div class="popupwrap4">
+			<table class="content" style="margin-top:10px;">  
+				<tr>
+					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAddress.t312' /></th>
+				</tr>
+				<tr>
+		           <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
+		           <td>
+		               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+		                ~
+		               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+		           </td>
+				</tr>
+		       
+		        <tr>
+		            <th style="text-align:center"><spring:message code='ezWebFolder.t152' /></th><!-- 확장자 -->
+		            <td><input type="text" id="searchExt" style="width:98%" value="" name="searchExt"></td>
+		        </tr>
+		        <tr>
+		            <th style="text-align:center"><spring:message code='ezWebFolder.t153' /></th><!-- 파일명 -->
+		            <td><input type="text" id="searchFileName" style="width:98%" value="" name="searchFileName"></td>
+		        </tr>  
+		         <tr>
+		            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 작성자 -->
+		            <td><input type="text" id="searchCreateName" style="width:98%" value="" name="searchCreateName"></td>
+		        </tr>    
+			</table>
+			<br/>
+			<table style="width:100%">
+				<tr>
+					<td style="text-align:center;">
+						<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142' /></span></a>
+						<a class="imgbtn"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+					</td>
+				</tr>
+			</table>
 		</div>
+	</div>	
+		
+		
 	<div id="tblPageRayer"></div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -1032,7 +1039,9 @@
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-	<script type="text/javascript" src="/js/ezWebFolder/bnk.js"                         ></script>
+	<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+<!-- 	<script type="text/javascript" src="/js/ezWebFolder/bnk.js"                         ></script> -->
 	
 	
 </body>

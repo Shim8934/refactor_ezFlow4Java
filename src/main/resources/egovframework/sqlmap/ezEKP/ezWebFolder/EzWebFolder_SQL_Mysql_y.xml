@@ -644,7 +644,7 @@
 				
 				and user.tenant_id = #tenantId#
 				
-			)as t on folder.FOLDER_PATH like concat('%',t.folder_path,'%') 
+			)as auth on folder.FOLDER_PATH like concat('%',auth.folder_path,'%') 
 	        
 			inner join tbl_webfolder_file file on folder.FOLDER_ID = file.folder_id
 			inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID and type.tenant_id = #tenantId# 
@@ -653,7 +653,7 @@
 			where 
 			file.tenant_id = #tenantId#
 			and file.use_status ='Y'
-			and t.tenant_id = #tenantId#
+			and auth.tenant_id = #tenantId#
 
 			]]>	
    		</isEqual>
