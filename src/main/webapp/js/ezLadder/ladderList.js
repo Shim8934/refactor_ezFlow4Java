@@ -232,12 +232,9 @@ function view() {
 		sort ='date';
 		sortFlag = 'desc';
 	}
-	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=";
-	if(searchInput.indexOf('%') >= 0 || searchInput.indexOf('&') >= 0 || searchInput.indexOf('#') >= 0 || searchInput.indexOf('*') >= 0) {
-		szUrl = szUrl + escape(searchInput) + "&sort=" + sort + "&sortFlag=" + sortFlag;
-	} else {
-		szUrl = szUrl + searchInput + "&sort=" + sort + "&sortFlag=" + sortFlag;
-	}
+	searchInput = encodeURIComponent(searchInput).replace(/%20/g,'+');
+	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=" + searchInput + "&sort=" + sort + "&sortFlag=" + sortFlag;
+
 	document.location.href = szUrl;
 }
 
