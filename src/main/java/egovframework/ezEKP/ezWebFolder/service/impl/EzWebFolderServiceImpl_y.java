@@ -190,7 +190,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			String companyId, String searchExt, String searchFileName,
 			String searchStartDate, String searchEndDate,
 			String searchCreateName, String searchFileType,
-			String searchPageCount, int pStart , int pEnd , String offset , String primary) {
+			String searchPageCount, int pStart , int pEnd , String offset , String primary)  throws Exception {
 		
 		String parentId = "";
 		LOGGER.debug("getFileToTalCount start ");
@@ -225,7 +225,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		if (searchExt != "" || searchStartDate != "" || searchEndDate != "" || searchCreateName != "" || searchFileName!="") {
 			flag = "1";
 		}
-		try {
+//		try {
 			map.put("flag", flag);
 			if (flag.equals("1")) {
 				LOGGER.debug("searchFileToTalCount start ");
@@ -248,14 +248,14 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount(map);
 			LOGGER.debug("getFldTotalCount end ");
 			
-		} catch (Exception e) {
+//		} catch (Exception e) {
 			if (fileTotalCnt < 0) {
 				fileTotalCnt = 0;
 			}
 			if (fldTotalCnt < 0) {
 				fldTotalCnt = 0;
 			}
-		}
+//		}
 		
 		Map<String, Integer> cnt = new HashMap<String, Integer>();
 		int totalCount = 0;
@@ -321,7 +321,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 
 	@Override					
 	public String insertFolder(int tenantId, String comId, String deptId, String userId,String folderType, String newFolderName1,
-			String newFolderName2, FolderVO uppFolder , String timeUTC) {
+			String newFolderName2, FolderVO uppFolder , String timeUTC)  {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		LoginVO loginvo =  getUserInfo(tenantId,comId,userId);
