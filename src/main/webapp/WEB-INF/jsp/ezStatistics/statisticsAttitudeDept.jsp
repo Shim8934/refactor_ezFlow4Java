@@ -598,10 +598,7 @@
                 <select id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
                     <spring:message code='ezStatistics.t55' />
 		            &nbsp;&nbsp;
-					<select id="searchopt">
-		            	<option value="1"><spring:message code='ezStatistics.t1017' /></option>
-		            	<option value="2"><spring:message code='ezStatistics.t113' /></option>
-					</select>
+					부서검색 :
                     <input id="keyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
                     <a class="imgbtn" style="vertical-align: middle"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
                     &nbsp;&nbsp;

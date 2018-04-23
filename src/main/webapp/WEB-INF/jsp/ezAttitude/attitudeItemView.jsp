@@ -21,7 +21,6 @@
 		
 		<script type="text/javascript">
 			var formHtml = '${formInfo.formHtml}';
-			var attitudeInfo = ${attitudeInfo};
 			var typeId = "<c:out value='${attitudeInfo.typeId}'/>";
 			var typeName = "<c:out value='${attitudeInfo.typeName}'/>";
 			var writerName = "<c:out value='${attitudeInfo.writerName}'/>";
@@ -97,7 +96,7 @@
 			function modifyAttitude() {
 				var openWin = null;
 				if (CrossYN()) {
-                    openWin = window.open("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(650, 580));
+                    openWin = window.open("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(810, 790));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {

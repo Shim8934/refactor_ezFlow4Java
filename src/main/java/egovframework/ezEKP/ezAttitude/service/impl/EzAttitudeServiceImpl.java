@@ -1095,4 +1095,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return ezAttitudeDAO.getAttitudeAuthDeptList(map);
 	}
+
+	@Override
+	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId,
+			String offset, String startDate, String endDate, int tenantId)
+			throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+
+		map.put("userId", userId);
+		map.put("offsetMin", offsetMin);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("tenantId", tenantId);
+		
+		return ezAttitudeDAO.getAttitudeUserStatistics(map);
+	}
 }
