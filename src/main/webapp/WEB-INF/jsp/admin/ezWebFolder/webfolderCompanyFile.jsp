@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"            type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"                ></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"                          ></script>
+		<script type="text/javascript" src="/js/ezWebFolder/popup.js"                       ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"                             ></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"      ></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
@@ -74,7 +74,20 @@
 			}
 			
 			function openSearchPanel() {
-				$("#searchPanel").toggle("1000");
+				var searchPanel = document.getElementById("searchPanel");
+				if (searchPanel.style.display == "none") {
+					window.parent.frames["left"].document.body.style.overflow = "hidden";
+					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+					document.getElementById("mailPanel").style.display = "";
+					searchPanel.style.right   = getPosition(516, 217) + "px";
+					searchPanel.style.display = "";
+				}
+				else {
+					window.parent.frames["left"].document.body.style.overflow = "auto";
+					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
+					document.getElementById("mailPanel").style.display = "none";
+					searchPanel.style.display = "none";
+				}
 				
 				$("#Sdatepicker").datepicker('setDate', "");
 				$("#Edatepicker").datepicker('setDate', "");
@@ -292,6 +305,8 @@
 					filesList.push(fileFolderId);
 				}
 				
+				window.parent.frames["left"].document.body.style.overflow = "hidden";
+				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
 				DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
 			}
 			
@@ -309,6 +324,8 @@
 				}
 				
 				var fileId = listOfChecked[0].getAttribute("_fileId");
+				window.parent.frames["left"].document.body.style.overflow = "hidden";
+				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
 				DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 			}
 			
@@ -327,6 +344,8 @@
 					filesList.push(fileFolderId);
 				}
 				
+				window.parent.frames["left"].document.body.style.overflow = "hidden";
+				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
 				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString() + "&mode=admin");
 			}
 			
@@ -426,7 +445,7 @@
 			selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
 		</script>
 		
-		<div id="searchPanel" style="position: fixed; top: 132px; left: 200px; height: auto; width: 514px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
+		<div id="searchPanel" style="z-index: 2000; position: absolute; height: auto; width: 514px; border: 1px solid #666666; background-color: #f2f2f2; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
 			<div style="margin: 10px;">
 				<table class="content" style="border-collapse: collapse; width: 100%;">
 					<tr>

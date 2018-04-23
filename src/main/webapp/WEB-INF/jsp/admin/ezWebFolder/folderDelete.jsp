@@ -15,7 +15,7 @@
 		var folderId = "<c:out value="${folderId}"/>";
 		
 		function wClose() {
-			parent.DivPopUpHidden();
+			parent.closeAllPopup();
 			window.close();
 		}
 		
@@ -56,9 +56,9 @@
 	
 	<div style="margin: 10px;"><spring:message code='ezWebFolder.t222'/></div>
 	
-	<div style="margin-top: 15px;"><hr size="0" style="color:#fff; background-color:#fff; margin: 0px 10px; border-top: 1px solid #304D7F;"></div>
+	<div style="margin-top: 10px;"><hr size="0" style="color:#fff; background-color:#fff; margin: 0px 10px; border-top: 1px solid #304D7F;"></div>
 	
-	<div style="margin: 6px 0px 6px 140px; position:fixed; bottom: 0px;">
+	<div style="margin: 10px 0px; position:fixed; bottom: 0px; text-align: center; width: 100%;">
 		<a id="btnSave"  class="webfolderBttn" onClick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
 		<a id="btnCancel"class="webfolderBttn" onClick="wClose();"  ><span><spring:message code='ezWebFolder.t112'/></span></a>
 	</div>

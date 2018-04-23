@@ -202,7 +202,7 @@ public class EzWebFolderGWController {
 	}
 
 	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/{newvalue}/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject putChangePersonalStorage(@PathVariable(value="newvalue") String newValue, @RequestParam("userList") List<String> userList, HttpServletRequest request) {
+	public JSONObject putChangePersonalStorage(@PathVariable(value="newvalue") String newValue, @RequestParam("userList") List<String> userList, Locale locale, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		JSONObject result = new JSONObject();
@@ -210,13 +210,19 @@ public class EzWebFolderGWController {
 		if (serverName.equals("") || companyId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
 		try {
-			int tenantId = loginService.getTenantId(serverName);
+			int tenantId                      = loginService.getTenantId(serverName);
+			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, tenantId);
+			
+			if (Integer.parseInt(newValue) < Integer.parseInt(webfolderConfig.getUploadLimit())) {
+				result.put("status", "error");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t26", locale));
+				return result;
+			}
 			
 			ezWebFolderAdminService.updateNewAmount(userList, newValue, companyId, tenantId);
 			
@@ -227,8 +233,7 @@ public class EzWebFolderGWController {
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
@@ -2203,6 +2208,45 @@ public class EzWebFolderGWController {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezwebfolder/check-wfadmin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject checkWfAdmin(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || userId: " + userId);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, "", "");
+			boolean check = checkWfAdmin(userInfo);
+			
+			if (check == true) {
+				result.put("data", "1");
+			}
+			else {
+				result.put("data", "0");
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
 		}
 		
 		return result;

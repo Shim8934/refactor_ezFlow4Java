@@ -16,7 +16,7 @@
 		var fileList = "<c:out value="${fileList}"/>";
 		
 		function wClose() {
-			parent.DivPopUpHidden();
+			parent.closeAllPopup();
 			window.close();
 		}
 		
