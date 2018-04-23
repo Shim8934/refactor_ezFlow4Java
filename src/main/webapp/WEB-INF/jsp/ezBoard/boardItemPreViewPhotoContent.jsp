@@ -312,8 +312,14 @@
 	
 	        function ImageMain(imagefilename) {
 	            imageonmouse(imagefilename.id);
-	
-	            var mainfilename = imagefilename.src.split("s_")[0] + imagefilename.src.split("s_")[1];
+	            
+				// 기존 게시물 사진추가 시 경로 구분
+           		if(imagefilename.src.split("s_")[1] == undefined) {
+	            	var mainfilename = imagefilename.src;
+	            } else {
+	            	var mainfilename = imagefilename.src.split("s_")[0] + imagefilename.src.split("s_")[1];
+	            }
+	            
 	            viewimage = imagefilename.id;
 	
 	            document.getElementById("mainimages").style.display = "none";
@@ -371,9 +377,7 @@
 	                }
 	            }
 	            viewimage = pageimage;
-	            imageonmouse(pageimage);
-	
-	            var mainfilename = document.getElementById(pageimage).src.split("s_")[0] + document.getElementById(pageimage).src.split("s_")[1];
+	            imageonmouse(pageimage);   
 	            ImageMain(document.getElementById(pageimage));
 	        }
 	        function showHideLayers() {

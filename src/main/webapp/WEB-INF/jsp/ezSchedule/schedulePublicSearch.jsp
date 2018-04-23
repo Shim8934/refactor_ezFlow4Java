@@ -290,7 +290,7 @@
 	            	</td>
 		    	</tr>
 		    	</c:forEach>		    	
-		    	<c:if test="${fn:length(scheduleList) == 0 && idList != null}">
+		    	<c:if test="${fn:length(scheduleList) == 0}">
 		    	<tr> 
 		        	<td colspan="9" style="text-align:center"><spring:message code='ezSchedule.t297'/></td> 
 		      	</tr>
