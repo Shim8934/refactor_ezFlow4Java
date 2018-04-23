@@ -44,15 +44,14 @@
 	    	var searchTitle = ""; // 검색조건 (직위)
 	    	var searchAttitudeType = ""; // 검색조건(구분)
 	    	//검색조건 (근무시간) Hr,Min 묶음으로
-	    	var searchStartDate = "";
-	    	var searchEndDate = "";
+	    	var searchStartDate = "${searchStartDate}";
+	    	var searchEndDate = "${searchEndDate}";
 	    	var pageNum = 1; // 페이지 ==> 초기값 설정
 	    	var totalCount = "" // 게시물 총 갯수
 	    	var totalPage = ""; // 게시판의 총 페이지갯수
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var adminCompany = "${adminCompany}";
-	    	var today = "${today}";
 	    	
 	    	$(function(){
 	    		//회사리스트
@@ -68,9 +67,8 @@
 		            company_change();
 		        }
 	    		
-	    		//검색시 날짜 오늘날짜로 기본값 적용
-	    		$("#Sdatepicker").val(today);
-	    		$("#Edatepicker").val(today);
+	    		$("#Sdatepicker").val("${searchStartDate}");
+	    		$("#Edatepicker").val("${searchEndDate}");
 	    		
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '#attiBoardList th', function(){
@@ -186,9 +184,9 @@
 	   					userName : searchUserName,
 	   					deptName : searchDeptName,
 	   					title : searchTitle,
-	   					searchStartDate : searchStartDate,
-	   					searchEndDate : searchEndDate,
-	   					searchAttitudeType : searchAttitudeType,
+	   					startDate : searchStartDate,
+	   					endDate : searchEndDate,
+	   					attitudeType : searchAttitudeType,
 	   					pageNum : pageNum,
 	   					listSize : listSize,
 	   					orderCell : orderCell,
@@ -209,7 +207,7 @@
 	    	
 	    	//검색 > 구분selectBox
 	    	function getAttitudeTypeList(typeList, typeId) {
-	    		var html = "<option value='total'>전체</option>";
+	    		var html = "<option value=''>전체</option>";
 	    		
 	    		for (var i = 0; i < typeList.length; i ++) {
 	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
@@ -234,14 +232,17 @@
 	    			   			+ "<td>" + result[i].deptName + "</td>"
 	    						+ "<td>" + result[i].typeName + "</td>";
 	    						
-	    			if ( result[i].endDate == null || result[i].endDate == "") {
+	    			if (result[i].endDate == null || result[i].endDate == "") {
 	    				resultHtml += "<td>" + result[i].startDate + "</td>";
 	    			} else {
 	    				resultHtml += "<td>" + result[i].startDate + " ~ " + result[i].endDate + "</td>";
 	    			}
 	    			
-	    			resultHtml += "<td>" + result[i].startTime + "</td>"
-    			   				+ "<td>" + result[i].endTime + "</td>" + "</tr>";
+	    			if (result[i].endTime == null || result[i].endTime == "") {
+	    				resultHtml += "<td>" + result[i].startTime + "</td></tr>";
+	    			} else {
+	    				resultHtml += "<td>" + result[i].startTime + " ~ " + result[i].endTime + "</td></tr>";
+	    			}
 	    		}
 	    		
 	    		if (resultHtml == "") {
@@ -378,7 +379,7 @@
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/admin/ezAttitude/excelFileExport.do?companyId="+sCompanyId+"&typeId="+sTypeId+"&userIdList="+sUserIdList+"&startDate="+startDate+"&endDate="+endDate;
+		    	exportExcelframe.location.href="/admin/ezAttitude/excelFileExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&attitudeType=" + searchAttitudeType + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
 		    	exportExcelframe.target="_blank";
 			}
 	    </script>
@@ -406,7 +407,7 @@
 					<td style="width: 3%;">이름</td>
 					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;"></td>
 					<td style="width: 3%">구분</td>
-					<td style="width: 20%;"><select name="attitudeType" id="attitudeType" style="margin-top:4px; padding-right:40px;"></select></td>
+					<td style="width: 20%;"><select name="searchAttitudeType" id="searchAttitudeType" style="margin-top:4px; padding-right:40px;"></select></td>
 				</tr>
 				<tr>
 					<td style="width: 3%;">직위</td>
@@ -421,11 +422,11 @@
 					<td style=" width:*;" colspan=2>
 						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchUserConfList('refresh');">새로고침</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="exportExcel();">엑셀저장</span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		
 		
 	  	<!-- <div id="mainmenu">
 	  		<ul class="on">
@@ -489,8 +490,7 @@
 					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
 					<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime">시작시간</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="endtime">종료시간</th>
+					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_time">시간</th>
 				</tr>
 			</thead>
 			<tbody>

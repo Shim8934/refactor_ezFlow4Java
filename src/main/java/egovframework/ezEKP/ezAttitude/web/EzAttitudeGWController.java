@@ -323,6 +323,9 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			 
 			LOGGER.debug("companyId : " + companyId);
 			LOGGER.debug("tenantId : " + tenantId);
 			LOGGER.debug("userId : " + userId);
@@ -330,9 +333,6 @@ public class EzAttitudeGWController {
 			LOGGER.debug("content : " + content);
 			LOGGER.debug("changeDate : " + changeDate);
 			LOGGER.debug("attitudeId : " + attitudeId);
-			
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			ezAttitudeService.attSaveAppModify(attitudeId, companyId, tenantId, userId, info.getUserName(), 
 					info.getUserName2(), info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), 
@@ -892,9 +892,6 @@ public class EzAttitudeGWController {
 			data.put("list", list);
 			//로그인한 관리자의 회사
 			data.put("adminCompany", info.getCompanyId());
-			//오늘날짜
-			String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
-			data.put("today", commonUtil.getDateStringInUTC(today, info.getOffSet(), false));
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1616,17 +1613,6 @@ public class EzAttitudeGWController {
 			String offsetMin = request.getParameter("offsetMin");
 			String isAdmin = request.getParameter("isAdmin");
 			String isuse = "1";
-			
-			/*String pageNum = request.getParameter("pageNum");
-			String listSize = request.getParameter("listSize");
-			String typeId = request.getParameter("typeId");
-			String userIdList = request.getParameter("userIdList");
-			String orderCell = request.getParameter("orderCell");
-			String orderOption = request.getParameter("orderOption");
-			String startDate = request.getParameter("startDate");
-			String endDate = request.getParameter("endDate");
-			String offsetMin = request.getParameter("offsetMin");
-			String isAdmin = request.getParameter("isAdmin");*/
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantID = info.getTenantId();

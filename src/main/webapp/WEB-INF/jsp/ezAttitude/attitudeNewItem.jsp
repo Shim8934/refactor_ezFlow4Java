@@ -27,6 +27,7 @@
 		
 		<script type="text/javascript">
 			var writerName = "${userInfo.displayName}";
+			var userOffset = "${userOffset}";
 			var companyId = "${companyId}";
 			var date = "${date}";
 			var mode = "${mode}";
@@ -37,6 +38,8 @@
 			var content = '${attitudeInfo.content}';
 			var attitudeId = "<c:out value='${attitudeInfo.attitudeId}'/>";
 			var dateType = "<c:out value='${attitudeInfo.dateType}'/>";
+			var holidayFlag = false;
+			var closedDay = "";
 			
 			window.onload = function () {
 				if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -250,7 +253,41 @@
 		        });
 			}
 			
-			// 근태종류 선택 시 이벤트
+			function checkHoliday(obj) {
+				var now = new Date();
+				var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (parseInt(userOffset.split(':')[0]) * 3600000) + (parseInt(userOffset.split(':')[1]) * 60000);
+				now.setTime(tz);
+				$.ajax({
+					type:"POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getHolidayList.do",
+					data : {},
+					success : function(result) {
+						for (var i = 0; i < result.holidayList.length; i++) {
+							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+																  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+																		  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+																		  result.holidayList[i].isRest == 1 ? true : false));
+							}
+						}
+						
+						var todayLunar = lunarCalc(now.getFullYear(), now.getMonth() + 1, now.getDate(), 1);
+						var todayMemorialDayList = memorialDayCheck(now, todayLunar);
+						var todayYearMemorialDayList = yearmemorialDayCheck(now, todayLunar);
+						
+						closedDay = result.attitudeConfigVO.closedDay.split(",");
+						if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0 || closedDay[now.getDay()] == "1") {
+							holidayFlag = true;
+						}
+					}
+				});
+			}
 			
 		</script>
 	</head>
@@ -277,7 +314,7 @@
 	                        <table id="attiwriteForm" class="content">
 								<tr id="selectTR">
 									<th>구분</th>
-									<td colspan="2">
+									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
 												<c:if test="${item.parentId ne 'A05' && item.typeId ne 'A01' && item.typeId ne 'A02' && item.typeId ne 'A03'}">
@@ -308,63 +345,9 @@
 		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 250 + "PX";
 		    </script>
 	    </form>
-<!-- 		<form method="post"> -->
-<!-- 			<div id="main_body"> -->
-<!-- 				<div id="menu"> -->
-<!-- 					<ul> -->
-<!-- 						<li><span onClick="dateTypeCheck()">저장후닫기</span></li> -->
-<!-- 					</ul> -->
-<!-- 				</div> -->
-<!-- 				<div id="close"> -->
-<!-- 					<ul> -->
-<!-- 						<li><span onClick="window.close()">닫기</span></li> -->
-<!-- 					</ul> -->
-<!-- 				</div> -->
-<!-- 				<table id="attiwriteForm" class="content"> -->
-<!-- 					<tbody> -->
-<!-- 						<tr>  -->
-<!-- 			    			<th>구분</th>  -->
-<!-- 			    			<td> -->
-<!-- 								<select id="selectAtti" style="width:80px;" onchange="form_change(this)"> -->
-<%-- 									<c:forEach var="item" items="${attitudeTypeList }"> --%>
-<%-- 										<c:if test="${item.parentId ne 'A05' && item.typeId ne 'A01' && item.typeId ne 'A02' && item.typeId ne 'A03'}"> --%>
-<%-- 											<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option> --%>
-<%-- 										</c:if> --%>
-<%-- 									</c:forEach> --%>
-<!-- 								</select> -->
-<!-- 								<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)"> -->
-<%-- 									<c:forEach var="item" items="${attitudeTypeList }"> --%>
-<%-- 										<c:if test="${item.parentId eq 'A05'}"> --%>
-<%-- 											<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option> --%>
-<%-- 										</c:if> --%>
-<%-- 									</c:forEach> --%>
-<!-- 								</select> -->
-<!-- 							</td>  -->
-<!-- 			  			</tr> -->
-<!-- 			  			<tr> -->
-<!-- 							<td style="vertical-align:top;height:100%;" id="EdtorSize" colspan="2"> -->
-<!-- 				            	<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe> -->
-<!-- 				            </td> -->
-<!-- 						</tr> -->
-<!-- 		  			</tbody> -->
-<!-- 				</table> -->
-<!-- 			</div> -->
-<!-- 		</form> -->
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
 	    </div>
-<!-- 		<table class="content" style="width:100%; margin-top: 10px;"> -->
-<!-- 			<tr> -->
-<!-- 				<td style="vertical-align:top;height:100%;" id="EdtorSize"> -->
-<!-- 	            	<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe> -->
-<!-- 	            </td> -->
-<!-- 			</tr> -->
-<!-- 		  	<tr> -->
-<!--   				<td style="height: 300px; margin:0px; padding:0px;"> -->
-<!--   					<textarea name="content" class="textarea" style="width:100%; height:300px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea> -->
-<!--   				</td>   -->
-<!--   			</tr> -->
-<!-- 		</table> -->
 	</body>
 </html>

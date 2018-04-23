@@ -21,6 +21,8 @@
 		<!-- data picker-->		
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<!-- time picker-->		
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<style>
 			#attiStatis table td {
 				color : #777;
@@ -54,6 +56,9 @@
 			var companyHoliday = "";        // 회사 휴무일
 			var closedDateAttitude = true;  // 휴일근태등록 유무
 			var attitudeModAppl = true;     // 근태수정신청 유무
+			var modAttitudeId = "";         // 수정신청 근태ID
+			var modChangeDate = "";         // 수정신청 변경일자
+			var modContent = "";            // 수정신청 내용
 			
 			$(function(){
 				//개인근태현황에서만 근태 등록 가능
@@ -75,23 +80,23 @@
 				
 				//근태수정신청 팝업창
 				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02]', function(){
-				//근태수정신청은 개인근태현황에서만 가능
-				var modappl = $(this).attr('modappl');
-				var attitudeid = $(this).attr('attitudeid');
-				if (deptFlag != "true") {
-					if (modappl == 0) {
-						attitudeModItem(this);	
+					//근태수정신청은 개인근태현황에서만 가능
+					var modappl = $(this).attr('modappl');
+					var attitudeid = $(this).attr('attitudeid');
+					if (deptFlag != "true") {
+						if (modappl == 0) {
+							attitudeModItem(this);	
+						} else {
+							mod_detail(attitudeid);
+						}
+						
 					} else {
-						mod_detail(attitudeid);
+						if (modappl == 0) {
+							console.log(this);
+						} else {
+							mod_detail(attitudeid);
+						}
 					}
-					
-				} else {
-					if (modappl == 0) {
-						console.log(this);
-					} else {
-						mod_detail(attitudeid);
-					}
-				}
 				})
 			})
 			
@@ -117,26 +122,26 @@
 			var monthStr = monthMsg.split(";");		    
 			var dayMsg = "일;월;화;수;목;금;토";
 			var dayStr = dayMsg.split(";");
-			    
+			
 			$(function () {
-			    $.datepicker.regional["ko"] = {
-			    	closeText: "닫기",
-			        prevText: "이전달",
-			        nextText: "다음달",
-				currentText: "오늘",
-			        monthNames: monthStr,
-			        monthNamesShort: monthStr,
-			        dayNames: dayStr,
-			        dayNamesShort: dayStr,
-			        dayNamesMin: dayStr,
-			        weekHeader: 'Wk',
-			        dateFormat: 'yy-mm-dd',
-			        firstDay: 0,
-			        isRTL: false,
-			        duration: 200,
-			        showAnim: 'show',
-			        showMonthAfterYear: true
-			    };
+				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+		            monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
 			    $.datepicker.setDefaults($.datepicker.regional["ko"]);
 			    
 			    $("#Sdatepicker").datepicker('disable');
@@ -437,7 +442,7 @@
 			}
 			
 			//수정신청 레이어 팝업띄우깅
-			function showDialog() {
+			function showDialog(obj) {
 				if (attitudeModAppl) {
 					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
 		        	
@@ -450,6 +455,22 @@
 						  clickClose: false,
 						  showClose: false
 					});
+					
+					$("#originInCom").text($(obj).parents("td").attr("day") + $(obj).text().split(" :")[1]);
+					
+					var uploadSDate = $(obj).parents("td").attr("day") + " 00:00:00";
+					var sYear = uploadSDate.substring(0, 4);
+					var sMonth = uploadSDate.substring(5, 7);
+					var sDay = uploadSDate.substring(8, 10);
+					var sHour = uploadSDate.substring(11, 13);
+					var sMin = uploadSDate.substring(14, 16);
+					
+			        var SDate = new Date();
+			        SDate.setFullYear(sYear, sMonth-1, sDay);
+			        SDate.setHours(sHour, sMin, 0, 0);
+			        
+			        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+			        $("#Sdatepicker").datepicker('setDate', SDate);
 				} else {
 					 alert("수정신청이 불가능합니다.");
 				}
@@ -471,6 +492,23 @@
 	
 			}
         	
+			function attiModAppl() {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/a.do",
+					data : {
+						attitudeId : modAttitudeId,
+						changeDate : modChangeDate,
+						content : modContent
+					},
+					success : function() {
+						alert("근태 수정이 신청되었습니다.");
+					}
+				});
+			}
+			
 			function searchByTypeId(t) {
 				var typeName = t.parentElement.getElementsByTagName("th").item(0).innerText;
 				var pDate = $("#calTitle").text().trim()
@@ -678,6 +716,36 @@
 		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
+<<<<<<< HEAD
+			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
+			    	<tr>
+						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태수정신청</th>
+					</tr>
+					<tr>
+			  			<th style="width:90px;height:30px">구분
+						<td>지각</td>
+					</tr>
+					<tr>
+			  			<th style="width:90px;height:30px">출근시각</th>
+						<td id="originInCom"></td>
+					</tr>
+					<tr>
+			  			<th style="width:90px;height:30px">변경시각</th>
+						<td id="transInCom">
+							<span id="periodblock">
+								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+								<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> :<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<th style="width:90px;height:30px">승인상태</th>
+						<td id="apprStatus">상태(진행, 반려)</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="margin:0px; padding:0px;"><textarea class="textarea" style="width:100%; height:120px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea></td>
+					</tr>
+=======
 			    <table class="popuplist" id="addpopup_list" style="display:block; width:500px; margin:10px 0px 0px 1px;">
 				    <thead>
 				    	<tr>
@@ -695,12 +763,13 @@
 				    		<th style="height:30px">일시</th>
 						</tr>
 				    </tbody>
+>>>>>>> 1085f7d4be69737d00e35b93d0ae9cc715486074
 				</table>
 				<!-- /내용 -->
 				<br />
 				<div style="text-align:center;">
-					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
-					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
+					<a class="imgbtn"><span onclick="attiModAppl()" >신청</span></a>
+					<a class="imgbtn" rel="modal:close"><span>취소</span></a>
 			    </div>
 			</div>
 			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>

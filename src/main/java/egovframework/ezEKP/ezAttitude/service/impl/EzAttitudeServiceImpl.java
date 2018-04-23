@@ -261,7 +261,27 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String writerDeptName2, String changeDate, String changeTime,
 			String content, String companyId, int tenantId) throws Exception {
 		// TODO Auto-generated method stub
+		LOGGER.debug("insertAttitudeApplication started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+		
+		LOGGER.debug("insertAttitudeApplication ended");
 	}
 
 	@Override
@@ -888,7 +908,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
 		int limit = 0;
 		
-		if (pageNum != null && pageNum != "") {
+		if (pageNum != null && !pageNum.equals("")) {
 			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
 		}
 		
@@ -906,15 +926,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			cal.setTime(startDate);
 			cal.add(Calendar.DAY_OF_MONTH, -7);
 			
-			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false);
-			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, false);
+			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
 		} else {
 			if (searchStartDate.equals("")) {
-				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, false);
+				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
 			}
 			
 			if (searchEndDate.equals("")) {
-				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, false);
+				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 			}
 		}
 		
@@ -931,7 +951,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		map.put("limit", limit);
+		map.put("limit", limit != 0 ? limit : null);
 
 		List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeList2(map);
 
@@ -959,15 +979,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			cal.setTime(startDate);
 			cal.add(Calendar.DAY_OF_MONTH, -7);
 			
-			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false);
-			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, false);
+			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
 		} else {
 			if (searchStartDate.equals("")) {
-				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, false);
+				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
 			}
 			
 			if (searchEndDate.equals("")) {
-				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, false);
+				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 			}
 		}
 		
