@@ -305,7 +305,8 @@
 	        function GoTop() {
 	            message.AGoTop.click();
 	        }
-		        
+	
+	        
 	        function GoDown() {
 	            message.AGoDown.click();
 	        }
@@ -314,37 +315,39 @@
 	            imageonmouse(imagefilename.id);
 	
 	            var mainfilename = imagefilename.src.split("s_")[0] + imagefilename.src.split("s_")[1];
+	
 	            viewimage = imagefilename.id;
 	
-	            document.getElementById("mainimages").style.display = "none";
 	            document.getElementById("mainimages").src = mainfilename;
 	            document.getElementById("mainimages").name = imagefilename.name;
 	            document.getElementById("MainContent").innerHTML = imagefilename.title;
 	
 	            imageloding();
+	            
 	        }
 	
 	        function imageloding() {
-	            var newimage = new Image();
-	            newimage.src = document.getElementById("mainimages").src;
-	           
-	            newimage.onload = function() {
-		            var we = newimage.width;
-		            var he = newimage.height;
-	 
-		            if (we > 400) {
-		                document.getElementById("mainimages").width = 400;
-		            } else {
-		                document.getElementById("mainimages").width = we;
-		            }
-		            if (he > 300) {
-		                document.getElementById("mainimages").height = 280;
-		            } else {
-		                document.getElementById("mainimages").height = he;
-		            }
-		            
-		            document.getElementById("mainimages").style.display = "";
-		        }
+	            var loading = 1000;
+	
+	            var newiamge = new Image();
+	            newiamge.src = document.getElementById("mainimages").src;
+	            var we = newiamge.width;
+	            var he = newiamge.height;
+	
+	            if (we == 0 && he == 0) {
+	                var endloading = loading + loading;
+	                setTimeout("imageloding()", endloading);
+	            }
+	            
+	            if (we > 400)
+	                document.getElementById("mainimages").width = 400;
+	            else
+	                document.getElementById("mainimages").width = we;
+	
+	            if (he > 300)
+	                document.getElementById("mainimages").height = 280;
+	            else
+	                document.getElementById("mainimages").height = he;
 	        }
 	
 	        function Pagenationimage(page) {
@@ -353,8 +356,12 @@
 	            for (var i = 0; i < ImageCount; i++) {
 	                if (viewimage == "image" + i) {
 	                    if (page == "prevPage") {
-	                        if (i == 0) {                  
-	                            btn_SmallIamge("Prev");	                            
+	                        if (i == 0) {
+	                            
+	                            btn_SmallIamge("Prev");
+	                            
+	                            
+	
 	                            return;
 	                        }
 	
@@ -380,15 +387,14 @@
 	            showDiv.style.display = "block";
 	        }
 	
-	        function bt(id, after) {
-	        	document.getElementById(id).src = after;
-	        }
+	        function bt(id, after) { document.getElementById(id).src = after; }
 	
 	
 	        function page_reload() {
 	            window.location.reload();
 	        }
-		
+	
+	
 	        function btn_SmallIamge(Page) {
 	            xmlhttp = createXMLHttpRequest();
 	
@@ -410,7 +416,8 @@
 	                if (imagetotalcount <= endpage) {
 	                    imagepage = 0;
 	                    NewPage = 1;
-	               	                    
+	                    
+	                    
 	                }
 	                else {
 	                    imagepage = 0;
@@ -426,7 +433,8 @@
 	                        pPage = Number(imagetotalcount / 10) + 1;
 	                    }
 	                    imagepage = imagetotalcount % 10 - 1;
-	                         
+	                    
+	                    
 	                }
 	                NewPage = parseInt(pPage) - 1;
 	            }
