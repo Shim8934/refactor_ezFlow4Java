@@ -20,9 +20,6 @@
 	            //수정모드일 때
 	            if(typeId != "") {
 	            	saveMode = "modify";
-	            	
-	            	//파일경로
-// 	            	var imgFilePath = "${typeInfo.imgPath}";
 	            } else {
 	    			typeId = "<c:out value = '${typeId}' />";
 	            }
@@ -108,16 +105,7 @@
 		</script>
 	</head>
 	<body class="popup">
-	    <div id="menu">
-	        <ul>
-	            <li><span onclick="OK_Click()"><spring:message code='ezAttitude.t16' /></span></li>
-	        </ul>
-	    </div>
-	    <div id="close">
-	        <ul>
-	            <li><span onclick="close_Click()">닫기</span></li>
-	        </ul>
-	    </div>
+		<h1>유형 추가/수정</h1>
 		<table class="content"> 
   			<tr> 
     			<th><spring:message code='ezAttitude.t40' /></th> 
@@ -156,7 +144,11 @@
   					</table>
   				</td>
   			</tr>
-		</table> 
+		</table>
+		<div class="btnposition">
+	        <a class="imgbtn"><span onclick="OK_Click();" >저장</span></a>
+	        <a class="imgbtn"><span onclick="close_Click();">취소</span></a>      
+	    </div>
 		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezAttitude/iconUpload.do" target="ifrm" style="width: 1px; height: 1px;display:none">
         	<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="false" />

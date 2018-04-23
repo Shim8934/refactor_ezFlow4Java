@@ -106,7 +106,7 @@
 	            if (CrossYN()) {
 	            	saveType_dialogArguments[0] = $("#ListCompany").val();
 // 	            	saveType_dialogArguments[1] = save_type_Complete;
-                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=540px, height=155px', GetOpenWindowfeature(800, 520));
+                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=540px, height=200px', GetOpenWindowfeature(800, 520));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
@@ -123,7 +123,7 @@
 	        	saveType_dialogArguments[0] = $("#ListCompany").val();
 //             	saveType_dialogArguments[1] = save_type_Complete;
             	var typeId = obj.id;
-	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + typeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=540px, height=155px', GetOpenWindowfeature(800, 520));
+	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + typeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=540px, height=200px', GetOpenWindowfeature(800, 520));
 	        	
 	        	try { OpenWin.focus(); } catch (e) { }
 	        }
