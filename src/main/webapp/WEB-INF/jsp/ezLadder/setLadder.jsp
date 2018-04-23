@@ -794,7 +794,7 @@
 								<div id="ladderPreList" style="top: 7px; right: 11px;"><img  title="<spring:message code='ezLadder.t079'/>" src="/images/ezLadder/icon_preLadder.png"/></div>
 							</div>
 							<div id="ladderSecret" style="position: absolute; right: 0;">
-								<img src="/images/ezLadder/icon_public.png" title="<spring:message code='ezLadder.t007'/>" class="default icon" _flag="0"/>
+								<img src="/images/ezLadder/icon_public.png" title="<spring:message code='ezLadder.t0070'/>" class="default icon" _flag="0"/>
 								<img src="/images/ezLadder/icon_private.png" title="<spring:message code='ezLadder.t076'/>" class="select icon" _flag="1"/>
 							</div>
 							<input name="secretFlag" style="display: none;" />

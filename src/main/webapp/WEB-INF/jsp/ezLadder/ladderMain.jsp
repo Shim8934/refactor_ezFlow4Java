@@ -137,7 +137,7 @@
 					<th onClick="listSort(2)" width="140px"><spring:message code="ezLadder.t004"/> <span id="sort_2" ></span></th>
 					<th onClick="listSort(3)" width="140px"><spring:message code="ezLadder.t005"/> <span id="sort_3" ></span></th> 
 					<th onClick="listSort(4)" width="80px"><spring:message code="ezLadder.t006"/> <span id="sort_4" ></span></th> 
-					<th onClick="listSort(5)" width="80px"><spring:message code="ezLadder.t007"/> <span id="sort_5" ></span></th>
+					<th onClick="listSort(5)" width="80px"><spring:message code="ezLadder.t0070"/> <span id="sort_5" ></span></th>
 					<th onClick="listSort(6)" width="80px"><spring:message code="ezLadder.t008"/> <span id="sort_6" ></span></th>
 			    </tr>
 				 <c:forEach items="${list }" var="vo">
@@ -159,7 +159,7 @@
 						
 						<c:choose>
 							<c:when test="${vo.secretFlag eq 0 }">
-								<td><img class="effect" title="<spring:message code='ezLadder.t007'/>" src ='/images/ezLadder/icon_public.png' /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t0070'/>" src ='/images/ezLadder/icon_public.png' /></td>
 							</c:when>
 							<c:otherwise>
 								<td><img class="effect" title="<spring:message code='ezLadder.t076'/>" src ='/images/ezLadder/icon_private.png' /></td>
