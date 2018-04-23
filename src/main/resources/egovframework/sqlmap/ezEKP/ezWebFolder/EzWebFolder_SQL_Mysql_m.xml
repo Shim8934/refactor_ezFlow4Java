@@ -704,15 +704,25 @@
 	</insert>
 	
 	<insert id="EzWebFolderDAO_m.insertShareSub" parameterClass="Map">
+		<selectKey keyProperty="id" resultClass="Integer">
+			SELECT 
+				CASE WHEN MAX(SEQ_ID) IS NULL
+					THEN 1
+					ELSE MAX(SEQ_ID) + 1
+				END AS ID
+			FROM TBL_WEBFOLDER_SHARE_SUB
+			WHERE TENANT_ID = #tenantId#
+		</selectKey>
+		
 		INSERT INTO TBL_WEBFOLDER_SHARE_SUB (
-			SHARE_ID,              USER_ID,               USER_NAME1,
-			USER_NAME2,            USER_TYPE,             SUB_STATUS,
-			TENANT_ID
+			SEQ_ID,                SHARE_ID,              USER_ID,
+			USER_NAME1,            USER_NAME2,            USER_TYPE,
+			SUB_STATUS,            TENANT_ID
 		)
 		SELECT
-			#shareId#,             #userId#,              DISPLAYNAME,
-			DISPLAYNAME2,          #userType#,            #subStatus#,
-			#tenantId#
+			#id#,                  #shareId#,             #userId#,
+			DISPLAYNAME,           DISPLAYNAME2,          #userType#,
+			#subStatus#,           #tenantId#
 		<isEqual property="userType" compareValue="U">
 			FROM TBL_USERMASTER
 		</isEqual>
@@ -983,13 +993,25 @@
 	</select>
 	
 	<insert id="EzWebFolderDAO_m.hideShare" parameterClass="Map">
+		<selectKey keyProperty="id" resultClass="Integer">
+			SELECT 
+				CASE WHEN MAX(SEQ_ID) IS NULL
+					THEN 1
+					ELSE MAX(SEQ_ID) + 1
+				END AS ID
+			FROM TBL_WEBFOLDER_SHARE_HIDE
+			WHERE TENANT_ID = #tenantId#
+		</selectKey>
+	
 		INSERT INTO TBL_WEBFOLDER_SHARE_HIDE (
-			SHARE_ID,              USER_ID,               USER_NAME1,
-			USER_NAME2,            HIDE_DATE,             TENANT_ID
+			SEQ_ID,                SHARE_ID,              USER_ID,
+			USER_NAME1,            USER_NAME2,            HIDE_DATE,
+			TENANT_ID
 		)
 		SELECT
-			#shareId#,             #userId#,              DISPLAYNAME,
-			DISPLAYNAME2,          #hideDate#,            #tenantId#
+			#id#,                  #shareId#,             #userId#,
+			DISPLAYNAME,           DISPLAYNAME2,          #hideDate#,
+			#tenantId#
 		FROM TBL_USERMASTER
 		WHERE CN = #userId#
 		AND TENANT_ID  = #tenantId#
