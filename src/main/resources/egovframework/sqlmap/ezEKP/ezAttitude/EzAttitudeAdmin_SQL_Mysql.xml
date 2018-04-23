@@ -438,33 +438,60 @@
 	</insert>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigInfo" parameterClass="Map" resultMap="attitudeUserConfigInfo">
-		<![CDATA[
+		<!-- <![CDATA[
 			SELECT
-				A.USER_ID,
-				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_STARTTIME), INTERVAL #offsetMin# minute), 12, 5) as WORK_STARTTIME,
-				SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')),' ' ,A.WORK_ENDTIME), INTERVAL #offsetMin# minute), 12, 5) as WORK_ENDTIME,
-				B.DISPLAYNAME
+				A.user_id,
+				SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', A.work_starttime), INTERVAL #offsetMin# minute), 12, 5) as work_starttime,
+				SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', A.work_endtime), INTERVAL #offsetMin# minute), 12, 5) as work_endtime,
+				B.displayname
 			FROM
 				TBL_ATTITUDE_USER_CONF A
 			INNER JOIN 
 				TBL_USERMASTER B 
 			ON 
-				A.USER_ID = B.CN
+				A.user_id = B.cn
 			AND
-				A.TENANT_ID = B.TENANT_ID
+				A.tenant_id = B.tenant_id
 			WHERE 
-				A.COMPANY_ID = #companyId#
+				A.tenant_id = #tenantId#
 			AND 
-				A.TENANT_ID = #tenantId#
+				A.company_id = #companyId#
+			AND
+				A.user_Id = #selectUserId#
+		]]> -->
+		
+		<![CDATA[
+			SELECT
+				TBL_USERMASTER.cn AS user_id,
+				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) as work_starttime,
+				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) as work_endtime,
+				TBL_USERMASTER.title,
+				TBL_USERMASTER.displayname,
+				TBL_USERMASTER.description,
+				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime, '0', '1') AS compareTime
+			FROM
+				TBL_USERMASTER
+			LEFT JOIN
+				TBL_ATTITUDE_USER_CONF
+			ON 
+				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_USER_CONF.tenant_id
+			AND
+				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_USER_CONF.company_id
+			AND
+				TBL_USERMASTER.cn = TBL_ATTITUDE_USER_CONF.user_id
+			LEFT JOIN
+				TBL_ATTITUDE_CONF
+			ON
+				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_CONF.tenant_id
+			AND
+				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_CONF.company_id
+			WHERE
+				TBL_USERMASTER.tenant_id = #tenantId#
+			AND
+				TBL_USERMASTER.cn = #selectUserId#
 		]]>
-		<isNotEmpty prepend="AND" property="userId">
-			<iterate prepend="A.USER_ID IN" property="userId" open="(" close=")" conjunction=",">
-			<![CDATA[
-				 #userId[]#
-			]]>
-			</iterate>				
-		</isNotEmpty>
 	</select>
+	
 	<!-- 없앨까 생각중인 쿼리.... -->
 	<select id="ezAttitudeAdminDAO.getDeptUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
 		<![CDATA[

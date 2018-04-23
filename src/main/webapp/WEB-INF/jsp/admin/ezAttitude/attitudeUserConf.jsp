@@ -91,12 +91,9 @@
 		    			getUserConfList();
 	    			}
 	    		});
-	    	})
+	    	});
 	    	
 	    	function company_change(){
-	    		if($("#HeaderAllCheckBox").is(":checked") == true) {
-	    			$("#HeaderAllCheckBox").prop("checked", false);
-	    		}
 	    		
 	    		pCompanyId = $("select[name=ListCompany]").val();
 	    		
@@ -138,7 +135,8 @@
 	    		$("#attiBoardList tbody").html("");
 	    		
 	    		result.forEach(function(vo, index) {
-	    			resultHtml += "<tr userid='" + vo.userId + "'><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>"
+	    			resultHtml += "<tr userid='" + vo.userId + "'>";
+// 	    			resultHtml += "<tr userid='" + vo.userId + "'><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>"
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
@@ -219,42 +217,16 @@
 	    		}
 	    	} */
 	    	
-	    	//이거 수정해서 edit 레이어로 쓰자
-	    	function userConfSave(userid) {
-	    		var url = "";
-	    		
-	    		if(userid == null) {
-		    		selectedCheck();
-	    		}
-	    		
-	    		if(selecUserList == "" || selecUserList == null) {
-	    			url = "/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val();
-	    		} else {
-	    			url = "/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val() + "&userList=" + selecUserList;
-	    		}
+	    	function editUserConf(selectUserId) {
+    			var url = "/admin/ezAttitude/editAttitudeUserConf.do?selectUserId=" + selectUserId;
 	    		
 	    		if (CrossYN()) {
-	    			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
-	    			OpenWin = GetOpenWindow(url, "", "1140", "630");
+	    			OpenWin = GetOpenWindow(url, "", "340", "180");
 	    			
 	    			try { OpenWin.focus();} catch (e) { }
 	    		} else {
-	    			showModalDialog("/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
+	    			showModalDialog(url, null, "dialogWidth:340px; dialogHeight:180px; status:no; help:no; scroll:no; edge:sunken");
 	    		}
-	    	}
-	    	
-	    	//리스트에 체크박스 selected 체크
-	    	function selectedCheck(){
-	    		selecUserList = "";
-	    		var trIdx = $('#attiBoardList').find('tr').length;
-	    		
-	   			for (var i = 1; i < trIdx; i++) {
-	   				if ($('#attiBoardList tr').eq(i).find("input[type='checkbox']").is(":checked")) {
-	   					selecUserList += $('#attiBoardList tr').eq(i).attr('userid') + ",";
-	   				}
-	   			}
-	   			//마지막 ',' 지우기
-	   			selecUserList = selecUserList.slice(0, -1);
 	    	}
 	    	
 	    	//삭제버튼
@@ -285,8 +257,7 @@
 	    	} */
 	    	
 	    	function userDbClick() {
-	    		selecUserID = $(this).attr('userid');
-	    		userConfSave(selecUserID);
+	    		editUserConf($(this).attr('userid'));
 	    	}
 	    </script>
 	</head>
@@ -376,7 +347,7 @@
 		<table id="attiBoardList" class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
-					<th style="width:10%;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
+<!-- 					<th style="width:10%;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th> -->
 					<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
 					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
 					<th style="width:25%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
