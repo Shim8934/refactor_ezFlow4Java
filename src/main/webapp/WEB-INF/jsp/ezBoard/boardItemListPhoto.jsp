@@ -154,12 +154,12 @@
 		    	});
 		    	
 		    	//즐겨찾기 게시판의 포토게시판 스크립트 오류 수정
-		    	if (typeof((($($(window.parent.frames['left']))).context) == "undefined") && (($($(window.parent.frames['left']))).length) == 0) {
+		    	if (window.parent.frames['left'] == undefined) {
 		    		$(parent.parent.frames['left']).mouseup(function (e) {
 			    		MailOptionHiddenOutside(e);
 			    	});
 		    	} else {
-			    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
+			    	$(window.parent.frames['left'].document).mouseup(function (e) {
 				    	MailOptionHiddenOutside(e);
 			    	});
 		    	}
@@ -1146,7 +1146,9 @@
     <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 
     <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
-        <div style="width:100%;" id="divList">
+
+        <div style="width:100%; " id="divList">
+
             <div id="lvBoardList"></div>
         </div>
         <div id='runtime' style="color:#666;padding-top:5px"></div>

@@ -487,23 +487,19 @@
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
 		            {
 		                TYPE += "TITLE;";
-		                DATA += "<TITLE>" + MakeXMLString(document.getElementById("txtTitle").value.replace("'", "''")) + "</TITLE>";
+		                DATA += "<TITLE>" + document.getElementById("txtTitle").value + "</TITLE>";
 		            }
-		            
-		        	if (document.getElementById("txtContent").value != "") {		// DocContent
-           			    TYPE += "CONTENT;";
-          		        DATA += "<CONTENT>" + MakeXMLString(document.getElementById("txtContent").value.replace("'", "''")) + "</CONTENT>";
 		
 		            if (document.getElementById("txtWriterName").value != "")		// DrafterName
 		            {
 		                TYPE += "WRITERNAME;";
-		                DATA += "<WRITERNAME>" + MakeXMLString(document.getElementById("txtWriterName").value.replace("'", "''")) + "</WRITERNAME>";
+		                DATA += "<WRITERNAME>" + document.getElementById("txtWriterName").value + "</WRITERNAME>";
 		            }
 		
 		            if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
 		            {
 		                TYPE += "ABSTRACT;";
-		                DATA += "<ABSTRACT>" + MakeXMLString(document.getElementById("txtAbstract").value.replace("'", "''")) + "</ABSTRACT>";
+		                DATA += "<ABSTRACT>" + document.getElementById("txtAbstract").value + "</ABSTRACT>";
 		            }
 		
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
@@ -518,8 +514,7 @@
 		                DATA += "<ENDDATE>" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</ENDDATE>";
 		            }
 		        }
-		       		SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
-		    	}
+		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
 		    function btn_PostDate_Clear() {
 		        $("#Sdatepicker").datepicker('setDate', "");
@@ -1031,7 +1026,6 @@
 		        btn_PostDate_Clear();
 		        document.getElementById("chkSearchSub").checked = false;
 		        document.getElementById("txtTitle").value = "";
-		        document.getElementById("txtContent").value = "";
 		        document.getElementById("txtWriterName").value = "";
 		        document.getElementById("txtAbstract").value = "";
 		    
@@ -1054,7 +1048,7 @@
 		    }
 		    function search(type) {
 		        if (type == "basic") {
-		            if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("txtContent").value == ""
+		            if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
 		            		&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 		                alert("<spring:message code='ezBoard.t192' />");
 		                return;
@@ -1274,7 +1268,7 @@
 		    <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 		
 		    <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
-		        <div style="width:100%; overflow:AUTO;" id="divList">
+		        <div style="width:100%;" id="divList">
 		            <div id="lvBoardList"></div>
 		        </div>
 		        <div id='runtime' style="color:#666;padding-top:5px"></div>
@@ -1353,10 +1347,6 @@
 		            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
 		            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
 		        </tr>  
-		        <tr>
-		            <th style="text-align:center"><spring:message code='ezBoard.garm01' /></th>
-		            <td><input type="text" id="txtContent" style="width:98%" value=""></td>
-		        </tr> 
 		         <tr>
 		            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
 		            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>

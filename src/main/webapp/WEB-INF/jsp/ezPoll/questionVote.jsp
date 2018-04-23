@@ -2647,14 +2647,15 @@
 				}).on("click", "#imgPopup", function(e){
 					var popupOption = "resizable=yes, scrollbars=yes, location=no, status=no";
 					var title = e.target.getAttribute("_filename");
-					var imgPopupWindow = window.open(title, title, popupOption);
+					var imgPopupWindow = window.open("", title, popupOption);
 					imgPopupWindow.document.write(
 							"<table style='width:100%; height:100%;'>"
 						   		+"<td style='vertical-align:middle;'>"
 						   			+"<img src='" + e.target.src + "' title='" + title + "' style='display:block; margin:auto;'/>"
 						   		+"</td>"
 				   		  +"</table>"
-					);
+					);					
+					imgPopupWindow.document.title = title;
 					imgPopupWindow.document.close();
 				});
 		    }
