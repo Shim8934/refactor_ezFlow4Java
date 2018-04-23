@@ -331,6 +331,7 @@ public class EzWebFolderGWController {
 		String fileExt    = request.getParameter("fileExt")     != null ? request.getParameter("fileExt")                       : "";
 		String fileName   = request.getParameter("fileName")    != null ? request.getParameter("fileName")                      : "";
 		String userName   = request.getParameter("userName")    != null ? request.getParameter("userName")                      : "";
+		String fileType   = request.getParameter("fileType")    != null ? request.getParameter("fileType")                      : "";
 		String searchChk  = "1";
 		int currPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) :  1;
 		int totalRows     = 0;
@@ -338,11 +339,11 @@ public class EzWebFolderGWController {
 		int pageSize      = 10;
 		int startPoint    = (currPage - 1) * pageSize;
 		
-		logger.debug("StartDate: " + startDate + " || EndDate: " + endDate + " || FileExt: " + fileExt + " || FileName: " + fileName + " || Username: " + userName);
+		logger.debug("StartDate: " + startDate + " || EndDate: " + endDate + " || FileExt: " + fileExt + " || FileName: " + fileName + " || File Type: " + fileType + " || Username: " + userName);
 		
 		JSONObject result = new JSONObject();
 		
-		if (serverName.equals("") || offset.equals("") || offset.equals("") || primary.equals("") || companyId.equals("")) {
+		if (serverName.equals("") || offset.equals("") || offset.equals("") || primary.equals("") || companyId.equals("") || fileType.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -379,8 +380,8 @@ public class EzWebFolderGWController {
 			
 			logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
 			
-			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, startPoint, pageSize, primary, offset, tenantId);
-			totalRows                    = ezWebFolderAdminService.getTotalFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, startPoint, pageSize, primary, tenantId);
+			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
+			totalRows                    = ezWebFolderAdminService.getTotalFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, tenantId);
 			totalPages                   = (totalRows + pageSize - 1)/pageSize;
 			
 			result.put("data", listFileLogs);
@@ -1829,7 +1830,7 @@ public class EzWebFolderGWController {
 		String[] fileArr  = fileList.split(",");
 		JSONObject result = new JSONObject();
 		
-		if (offset.equals("") || serverName.equals("") || mode.equals("") || type.equals("") || companyId.equals("") || fileArr.length == 0 || primary.equals("")) {
+		if (offset.equals("") || serverName.equals("") || mode.equals("") || type.equals("") || fileArr.length == 0 || primary.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
@@ -1843,6 +1844,7 @@ public class EzWebFolderGWController {
 			int tenantId         = userInfo.getTenantId();
 			List<String> fileIds = Arrays.asList(fileArr);
 			List<String> folders = ezWebFolderService.getFolderListFromFileId(fileIds, tenantId);
+			companyId            = companyId.equals("") ? userInfo.getCompanyID() : companyId;
 			
 			switch (type) {
 				case "comp":

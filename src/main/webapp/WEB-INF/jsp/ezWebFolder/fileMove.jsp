@@ -31,13 +31,13 @@
 			selectedLevel  = null;
 			currentFolders = [];
 			var type       = document.querySelector('input[name=treeType]:checked').value;
-			
+			var compVal    = document.getElementById("companyList") ? document.getElementById("companyList").value : "";
 			$.ajax({
 				type: "POST",
 				url: "/ezWebFolder/getFileFolderTree.do",
 				data: {
 					"fileList"  : fileList,
-					"companyId" : document.getElementById("companyList").value,
+					"companyId" : compVal,
 					"type"      : type,
 					"mode"      : mode
 				},

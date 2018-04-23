@@ -51,7 +51,9 @@
 				if (searchPanel.style.display == "none") {
 					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
 					document.getElementById("mailPanel").style.display = "";
-					searchPanel.style.right   = getPosition(516, 217) + "px";
+					var position              = getPosition(502, 128);
+					searchPanel.style.top     = position[0] + "px";
+					searchPanel.style.right   = position[1] + "px";
 					searchPanel.style.display = "";
 				}
 				else {
@@ -417,13 +419,24 @@
 			}
 			
 			function getPosition(popUpW, popUpH) {
-				var returnValue = null;
-				var width       = window.parent.document.documentElement.clientWidth;
+				var returnValue = new Array();
+				var heigth      = window.parent.document.documentElement.clientHeight;
+				if (heigth == 0) {heigth = window.parent.document.body.clientHeight;}
 				
+				var width = window.parent.document.documentElement.clientWidth;
 				if (width == 0) {width = window.parent.document.body.clientWidth;}
 				
 				var pleftpos = parseInt(width) - popUpW;
-				returnValue  = pleftpos / 2;
+				heigth       = parseInt(heigth) - popUpH;
+				
+				if (heigth < (popUpH + 50)) {
+					returnValue[0] = (heigth / 2);
+				}
+				else {
+					returnValue[0] = (heigth / 2) - 50;
+				}
+				
+				returnValue[1] = pleftpos / 2;
 				return returnValue;
 			}
 			
@@ -447,14 +460,14 @@
 			<div style="position: relative;">
 				<a id="btnSearch" class="webfolderBttn2" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123'/></span></a>
 				<a id="btnRefresh" class="webfolderBttn2" onClick="change();"><span><spring:message code='ezWebFolder.t139'/></span></a>
-				<div id="searchPanel" style="z-index: 2000; position: absolute; height: auto; width: 500px; border: 1px solid #666666; background-color: #f2f2f2; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
+				<div id="searchPanel" style="z-index: 2000; position: fixed; height: auto; width: 500px; border: 1px solid #666666; background-color: #f2f2f2; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
 					<div style="margin: 10px;">
 						<table style="border-collapse: collapse; width: 100%;">
 							<tr>
 								<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t23'/></th>
 							</tr>
 							<tr>
-								<th style="width: 100px; min-width: 100px;"><spring:message code='ezWebFolder.t141'/></th>
+								<th style="width: 100px; min-width: 100px; height: 30px;"><spring:message code='ezWebFolder.t141'/></th>
 								<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 358px; width: 358px;">
 									<select id="searchOption" style="margin-left: 10px;">
 										<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
@@ -473,6 +486,7 @@
 							</tr>
 						</table>
 					</div>
+					<span class="wfCloseBttn" onclick="openSearchPanel();"></span>
 				</div>
 			</div>
 			<div style="position: absolute; top: 0px; right: 2px; height: 27px;">
