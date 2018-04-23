@@ -95,7 +95,7 @@
 		<isNotEqual property="searchStartDate" compareValue="">
 			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DF.CREATE_DATE >= DATE_FORMAT(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND DF.CREATE_DATE <= DATE_FORMAT(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
+					(DF.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND DF.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
 				]]>
 			</isNotEqual>
 		</isNotEqual>
