@@ -188,6 +188,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		insert("ezAttitudeAdminDAO.addUsersModifyAttHistory", map);
 	}
 	
+	public void addUsersModifyAttHistoryFirst(Map<String, Object> map) throws Exception {
+		insert("ezAttitudeAdminDAO.addUsersModifyAttHistoryFirst", map);
+	}
+	
 	public void deleteAttitude(Map<String, Object> map) throws Exception {
 		delete("ezAttitude.deleteAttitude", map);
 	}

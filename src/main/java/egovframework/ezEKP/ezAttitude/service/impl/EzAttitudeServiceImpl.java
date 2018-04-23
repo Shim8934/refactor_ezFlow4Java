@@ -877,6 +877,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("modappl", "1");
 		
 		ezAttitudeDAO.attSaveAppModify(map);
+		ezAttitudeDAO.addUsersModifyAttHistoryFirst(map);
 		ezAttitudeDAO.attAppUpdate(map);
 	}
 
@@ -1005,6 +1006,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		//승인, 반려 기록
 		ezAttitudeDAO.changeUsersModifyAtt(map);
 		
+		//사용자의 기존 지각 상태의 근태 수정
 		ezAttitudeDAO.changeUsersAtt(map);
 		
 		//수정이 완료 되면 히스토리 기록
