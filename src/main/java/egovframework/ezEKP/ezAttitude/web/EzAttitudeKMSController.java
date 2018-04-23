@@ -975,6 +975,7 @@ public class EzAttitudeKMSController {
 		
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
+			LOGGER.debug("!@##$!@#%$$#%!%" + data.toJSONString());
 			model.addAttribute("data", data);
 		}
 		
@@ -982,6 +983,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("userTimeSet", offset);
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("adminFlag", adminFlag);
+		model.addAttribute("userId", userInfo.getId());
 		
 		LOGGER.debug("attModAppDetail ended");
 		
@@ -1037,6 +1039,11 @@ public class EzAttitudeKMSController {
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
 			model.addAttribute("data", data);
+		}
+		
+		//글쓴이와 사용자의 아이디가 다르면 수정창에 접근 불가.
+		if (userInfo.getId().equals(data.get("writerId"))) {
+			return "cmm/error/accessDenied";
 		}
 		
 		model.addAttribute("userLang", userInfo.getLang());
