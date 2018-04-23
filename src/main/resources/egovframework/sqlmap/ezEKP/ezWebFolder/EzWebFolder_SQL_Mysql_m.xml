@@ -686,7 +686,7 @@
 					ELSE MAX(SHARE_ID) + 1
 				END AS ID
 			FROM TBL_WEBFOLDER_SHARE
-			WHERE TENANT_ID = #tenantId#;
+			WHERE TENANT_ID = #tenantId#
 		</selectKey>
 		
 		INSERT INTO TBL_WEBFOLDER_SHARE (
