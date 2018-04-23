@@ -122,9 +122,9 @@
 					f.USE_STATUS     		AS USE_STATUS   ,
 					f.CREATE_ID	    		AS CREATE_ID    ,
 					decode ( #primary# , '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
-					DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+					f.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 					f.UPDATE_ID	  ,
-					DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,       	 
+					f.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,    	 
 					f.TENANT_ID    ,
 					(select 
                         distinct decode(
@@ -137,7 +137,7 @@
                                                 and fav.target_type = 'F')),'a',1,2)as t
                         from dual)as FAVORITE_STATUS,
 					decode (#primary#,'1','1','0')as FILESHARE_STATUS ,
-					decode (file.FILE_EXT , 'folder',0,1) as FOLDER_SORT,
+					decode (f.FILE_EXT , 'folder',0,1) as FOLDER_SORT,
 					type.TYPE_NAME 	AS filetype_name    		
 		]]>	
     </sql>
@@ -159,9 +159,9 @@
 				folder.USE_STATUS   AS USE_STATUS   ,     
 				folder.CREATE_ID	AS CREATE_ID    ,     
 				decode ( #primary# = '1' , folder.CREATE_NAME1, folder.CREATE_NAME2) as CREATE_NAME1,
-				DATE_ADD(folder.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				folder.UPDATE_ID	AS UPDATE_ID    , 
-				DATE_ADD(folder.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				folder.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+				folder.UPDATE_ID	  ,
+				folder.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,  	
 				folder.TENANT_ID	as TENANT_ID    ,
 				(select 
                         distinct decode(
@@ -718,7 +718,7 @@
 			<![CDATA[
 	           	SELECT count(folder.folder_id)
 	            from 
-		            tbl_webfolder_filetype AS type inner JOIN  tbl_webfolder_folder as folder ON type.TYPE_NAME = 'folder'
+		            tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder'
 	            where 
 						folder.tenant_id = #tenantId#	 
 					and folder.FOLDER_TYPE = #folderType#
@@ -728,7 +728,7 @@
 			]]>
 			<isEqual property = "flag" compareValue="1" prepend="AND">
 				<![CDATA[
-					folder.folder_path like concat('%',#folderPath#, '%')
+					folder.folder_path like ('%'||#folderPath#||'%')
 				]]>
 			</isEqual>
 			<isEqual property= "flag" compareValue="0" prepend="AND">
@@ -765,7 +765,7 @@
 					f.FOLDER_ID	  ,
 					f.USE_STATUS   ,
 					decode ( #primary# , '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
-					DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+					f.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE
 					f.TENANT_ID    ,
 					type.TYPE_NAME 	AS filetype_name    	   		
 			]]>	
@@ -808,7 +808,7 @@
 					f.FOLDER_ID	  			AS FOLDER_ID,
 					f.USE_STATUS   			AS USE_STATUS,
 					decode ( #primary# , '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
-					DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+					f.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE
 					f.TENANT_ID    ,
 					type.TYPE_NAME 	AS filetype_name    	   		
 			]]>	
@@ -1078,14 +1078,11 @@
 	</select>
 	<insert id="EzWebFolderDAO_y.insertFolder" parameterClass="Map" >
 		<selectKey keyProperty="id" resultClass="String">
-			<![CDATA[
-				SELECT TO_CHAR(NVL(MAX(to_number(FOLDER_ID)), 0) + 1)
-				FROM TBL_WEBFOLDER_FOLDER 
-				WHERE TENANT_ID = #tenantId# 
-			]]>
+			SELECT TO_CHAR(NVL(MAX(to_number(FOLDER_ID)), 0) + 1)
+			FROM TBL_WEBFOLDER_FOLDER 
+			WHERE TENANT_ID = #tenantId# 
 
 		</selectKey>
-		<![CDATA[
 		    INSERT INTO TBL_WEBFOLDER_FOLDER(
 		    	FOLDER_ID,
 		    	FOLDER_NAME1,
@@ -1126,7 +1123,6 @@
 		    	#comId#,
 		    	#tenantId#
 		    	)
- 		]]> 
     
 	</insert>
 	<select id="EzWebFolderDAO_y.getFolderStep" parameterClass="Map" resultClass ="Integer">
