@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,7 +46,7 @@ public class EzWebFolderController_m {
 		
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
-		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/sharing-list";
+		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/sharing";
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -75,7 +76,7 @@ public class EzWebFolderController_m {
 		
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
-		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/shared-list";
+		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/shared";
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -96,6 +97,28 @@ public class EzWebFolderController_m {
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
 		logger.debug("getSharedList ended.");
+		return result.getBody();
+	}
+	
+	@RequestMapping(value="/ezWebFolder/addShare.do")
+	public @ResponseBody String addShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, @RequestBody String requestBody) throws Exception {
+		logger.debug("addShare started.");
+		
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
+		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/sharing";
+		
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(requestBody, headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
+		
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		logger.debug("addShare ended.");
 		return result.getBody();
 	}
 	

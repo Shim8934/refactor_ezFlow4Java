@@ -5,14 +5,14 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="/css/organ_tree.css"                     type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"          type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezWebFolder/popup.js"       ></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"             ></script>
 		<script type="text/javascript" >
-		var primary               = "<c:out value='${primary}'/>";
+			var primary           = "<c:out value='${primary}'/>";
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
 			var primary           = "<c:out value='${primary}'/>";
@@ -46,7 +46,6 @@
 			}
 			
 			function renderData(result) {
-				//var bttnAdd = document.getElementById("addFoldersBttn");
 				var divTree = document.getElementById("folderTree");
 				
 				while (divTree.hasChildNodes()) {
@@ -424,6 +423,7 @@
 					}
 				}
 				
+				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
 				DivPopUpShow(450, 480, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder);
 			}
 			
@@ -443,7 +443,8 @@
 					}
 				}
 				
-				DivPopUpShow(450, 140, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder);
+				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+				DivPopUpShow(450, 130, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder);
 			}
 			
 			function updateTarget(value) {
@@ -491,18 +492,22 @@
 					}
 				});
 			}
+			
+			function closeAllPopup() {
+				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
+				DivPopUpHidden();
+			}
 		</script>
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code='ezWebFolder.t126' /></h1>
 		<div id="companySelect" style="margin: 10px 0px;">
-			<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b>회사 선택: </b></span>
-			<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
+			<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b>회사 선택: </b></span>
+			<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="change();">
 				<c:forEach var="item" items="${list}">
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 				</c:forEach>
 			</select>
-			<a class="webfolderBttn3" id="addFoldersBttn" style=""><span onclick="addAllFolders();"><spring:message code='ezWebFolder.t228'/></span></a>
 		</div>
 		
 		<div style="height: 450px; width: 100%;">

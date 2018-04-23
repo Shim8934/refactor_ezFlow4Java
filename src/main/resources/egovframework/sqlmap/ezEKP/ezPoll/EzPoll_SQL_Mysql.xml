@@ -32,6 +32,7 @@
         <result property="isSorting"          	column="is_sorting"                columnIndex="18" />
         <result property="isSelOnlyOnce"        column="is_selonlyonce"            columnIndex="19" />
         <result property="sendPostNotice"   	column="sendpostnotice"		   	   columnIndex="20" />
+        <result property="openToAll" 			column="openToAll"		  	 	   columnIndex="21" />
         
     </resultMap>    
     
@@ -111,13 +112,13 @@
 	                ID,        			TENANT_ID,         CONTENT,        		MULTI_SELECT,       CREATE_DATE,
 	                START_DATE,         END_DATE,          TARGET,              TITLE,          	SECRET_VOTE,        
 	                CREATOR,			CREATOR_NAME1,	   CREATOR_NAME2,	    FILE_PATH,		    RESULT_FIRST,		
-	                SET_DATE,			IS_SORTING,		   IS_SELONLYONCE,		SENDPOSTNOTICE
+	                SET_DATE,			IS_SORTING,		   IS_SELONLYONCE,		SENDPOSTNOTICE,		OPENTOALL
 	            )
 	            VALUES(
 	                #id#,          	 	#tenant_id#,        #content#,          #multi_select#,     #create_date#,
 	                #start_date#,       #end_date#,         #target#,           #title#,     		#secret_vote#,
 	                #creator#,		    #creator_name1#,	#creator_name2#,	#file_path#,		#result_first#,		
-	                #set_date#,			#is_sorting#,		#is_selonlyonce#,	#sendpostnotice#
+	                #set_date#,			#is_sorting#,		#is_selonlyonce#,	#sendpostnotice#,	#opentoall#
             )  
         	]]>
         </isEqual>
@@ -142,7 +143,8 @@
 	            	 SET_DATE			= #set_date#,
 	            	 IS_SORTING			= #is_sorting#,
             	 	 IS_SELONLYONCE		= #is_selonlyonce#,
-            	 	 SENDPOSTNOTICE		= #sendpostnotice#
+            	 	 SENDPOSTNOTICE		= #sendpostnotice#,
+            	 	 OPENTOALL			= #opentoall#
 	            WHERE
 	            		ID				= #id#
 	            	AND
@@ -1084,5 +1086,33 @@
 			AND
 				QST_ID    = #qst_id#
 		]]>			
+    </select>
+    
+    <update id="EzPollDAO.updateQuestionEndDate" parameterClass="Map">
+   		<![CDATA[
+	            UPDATE 
+	            	TBL_VOTE_QUESTION
+	            SET 
+	            	 END_DATE = #end_date#
+	            WHERE
+        			 QST_ID = #qst_id#
+                AND
+                  	 USER_ID = #user_id#
+                AND
+                  	 TENANT_ID = #tenant_id#
+		]]>
+    </update>   
+    
+    <select id="EzPollDAO.getOpenToAllQuestion" resultMap="pollQuestion">   
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_VOTE_QUESTION
+			WHERE  
+				TENANT_ID = #tenant_id#
+			AND
+				OPENTOALL = 1
+		]]>				
     </select>
 </sqlMap>

@@ -5,21 +5,16 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezOrgan.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<link rel="stylesheet" href="/css/organ_tree.css"                       type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>"   type="text/css">
+		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"            type="text/css">
+		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css"           type="text/css">
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"                ></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"                             ></script>
+		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"           ></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"        ></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"      ></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" >
 			var blockSize    = 10;
@@ -75,7 +70,18 @@
 			}
 			
 			function openSearchPanel() {
-				$("#searchPanel").toggle("1000");
+				var searchPanel = document.getElementById("searchPanel");
+				if (searchPanel.style.display == "none") {
+					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+					document.getElementById("mailPanel").style.display = "";
+					searchPanel.style.right   = getPosition(516, 217) + "px";
+					searchPanel.style.display = "";
+				}
+				else {
+					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
+					document.getElementById("mailPanel").style.display = "none";
+					searchPanel.style.display = "none";
+				}
 				
 				$("#Sdatepicker").datepicker('setDate', "");
 				$("#Edatepicker").datepicker('setDate', "");
@@ -149,7 +155,7 @@
 						tdElmt2.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
 						tdElmt2.textContent = result[i]["fileName"];
 						
-						tdElmt3.textContent = result[i]["fileSize"];
+						tdElmt3.textContent = getFileSize(result[i]["fileSize"]);
 						
 						tdElmt4.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
 						
@@ -235,6 +241,17 @@
 				search_Set("1");
 			}
 			
+			function getPosition(popUpW, popUpH) {
+				var returnValue = null;
+				var width       = window.parent.document.documentElement.clientWidth;
+				
+				if (width == 0) {width = window.parent.document.body.clientWidth;}
+				
+				var pleftpos = parseInt(width) - popUpW;
+				returnValue  = pleftpos / 2;
+				return returnValue;
+			}
+			
 		</script>
 	</head>
 	<body class="mainbody">
@@ -243,8 +260,8 @@
 			<span id="mailBoxInfo"></span>
 		</h1>
 		<div id="companySelect" style="margin: 10px 0px;">
-			<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
-			<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
+			<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
+			<select id="companyList" style="font-size: 12px; height: 20px; display: inline-block;" onchange="change();">
 				<c:forEach var="item" items="${list}">
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 				</c:forEach>
@@ -254,11 +271,13 @@
 		<div style="height: 27px; margin-bottom: 10px;">
 			<div style="position: relative;">
 				<a id="btnSearch" class="webfolderBttn2" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123'/></span></a>
-				<img src="/images/i_bar.gif" style="margin-left: 2px;"/>
 				<a id="btnRefresh" class="webfolderBttn2" onClick="change();"><span><spring:message code='ezWebFolder.t139'/></span></a>
-				<div id="searchPanel" style="position: absolute; top: 37px; left: 0px; height: 180px; width: 514px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
+				<div id="searchPanel" style="z-index: 2000; position: absolute; height: auto; width: 514px; border: 1px solid #666666; background-color: #f2f2f2; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
 					<div style="margin: 10px;">
 						<table class="content" style="border-collapse: collapse; width: 100%;">
+							<tr>
+								<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t24'/></th>
+							</tr>
 							<tr>
 								<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t151'/></th>
 								<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
@@ -286,7 +305,7 @@
 								</td>
 							</tr>
 						</table>
-						<div style="margin: 12px 50px 12px 180px;">
+						<div style="margin: 12px 0px; text-align: center;">
 							<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
 							<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
 						</div>
@@ -299,16 +318,18 @@
 				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileHistory">
 				<tr>
 					<th width="40px"  ><spring:message code='ezWebFolder.t155'/></th>
-					<th width="160px" ><spring:message code='ezWebFolder.t156'/></th>
-					<th width="40px"  ><spring:message code='ezWebFolder.t157'/></th>
-					<th width="160px" ><spring:message code='ezWebFolder.t154'/></th>
+					<th width="220px" ><spring:message code='ezWebFolder.t156'/></th>
+					<th width="60px"  ><spring:message code='ezWebFolder.t157'/></th>
+					<th width="80px" ><spring:message code='ezWebFolder.t154'/></th>
 					<th width="60px"  ><spring:message code='ezWebFolder.t158'/></th>
-					<th width="140px" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
+					<th width="120px" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
 				</tr>
 			</table>
 		</div>
 		
 		<div id="tblPageRayer"></div>
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	</body>
 </html>

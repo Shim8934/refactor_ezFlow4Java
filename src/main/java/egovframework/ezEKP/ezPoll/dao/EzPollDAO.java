@@ -220,4 +220,9 @@ public class EzPollDAO extends EgovAbstractDAO {
 	public List<PollUserVO> getListOfUserIdForQstByQstId(Map<String, Object> map) {		
 		return (List<PollUserVO>) list("EzPollDAO.getListOfUserIdForQstByQstId", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PollQuestionVO> getOpenToAllQuestion(Map<String, Object> map) {		
+		return (List<PollQuestionVO>) list("EzPollDAO.getOpenToAllQuestion", map);
+	}
 }

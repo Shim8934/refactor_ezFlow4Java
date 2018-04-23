@@ -188,7 +188,7 @@
 					inputElmt.setAttribute("type", "checkbox");
 					inputElmt.setAttribute("value", resultElement["trashCanId"]);
 					inputElmt.setAttribute("class", "checkBnk");			
-					inputElmt.addEventListener("change", function(e) {getChecked(e);});
+					inputElmt.onclick = function(e) {getChecked(e);};
 					
 					tdCheckbox.appendChild(inputElmt);
 					
@@ -427,7 +427,7 @@
 			var folderList = [];
 			
 			for (var i = 0; i < listOfChecked.length; i++) {
-				var fileFolderId = listOfChecked[i].getAttribute("_fileId");
+				var fileFolderId = listOfChecked[i].getAttribute("targetid");
 				
 				if (listOfChecked[i].getAttribute("ext") == 'folder') {
 					folderList.push(fileFolderId);
@@ -502,11 +502,11 @@
 					"folderList" :  folderList.toString()
 				},
 				success : function (data) {
-					alert('복원을 완료 하였습니다.');
+					alert("<spring:message code = 'ezWebFolder.t289'/>");
 					refreshView();
 				},
 				error : function(error) {
-					alert("복원을 실패하였습니다. 선택한 파일 및 폴더의 상위 폴더가 존재하지 않습니다.");
+					alert("<spring:message code = 'ezWebFolder.t290'/>");
 				}
 			})
        }
@@ -541,14 +541,14 @@
     </script>
 </head>
 <body class="mainbody">
-    <h1>휴지통   <span id="mailBoxInfo"></span></h1>
+    <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span></h1>
 	<div id="mainmenu2">
 		<ul>
-			<li id=""><a onClick="restoreTrashCan()" style="margin-top: 3px;"><span>복원</span></a></li>
-			<li id=""><a onClick="moveTraschCan()" style="margin-top: 3px;"><span>이동</span></a></li>
-			<li id=""><a onClick="filePermanentDelete()"   style="margin-top: 3px;"><span>영구삭제</span></a></li>
-			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span>검색</span></a></li>
-			<li id="right" style="float:right;">보기설정&nbsp;<img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
+			<li id=""><a onClick="restoreTrashCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t287'/></span></a></li>
+			<li id=""><a onClick="moveTraschCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t282'/></span></a></li>
+			<li id=""><a onClick="filePermanentDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t19'/></span></a></li>
+			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
+			<li id="right" style="float:right;"><spring:message code='ezWebFolder.t215'/><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
 			<li id="right" style="float:right;">
 				<select class="select" id="idSelect" onchange="idChange(this.value);" style="width:100px; display:none;">
 					<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
@@ -571,7 +571,6 @@
     <div id="progress-wrp" style="display: none;">
     	<div class="progress-bar"></div ><div class="status">0%</div>
     </div>
-    <!-- 파일 리스트 10~ 50 선택 -->
     <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
         <div class="popupwrap1">	
             <div class="popupwrap2">
@@ -612,7 +611,7 @@
 				<th width="160px"><spring:message code='ezWebFolder.t156'/></th>
 				<th width="60px" ><spring:message code='ezWebFolder.t157'/></th>
 				<th width="120px"><spring:message code='ezWebFolder.t189'/></th>
-				<th width="80px" >삭제일</th>
+				<th width="80px" ><spring:message code='ezWebFolder.t288'/></th>
 				<th width="80px" ><spring:message code='ezWebFolder.t190'/></th>
 				<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
 			</tr>
@@ -640,7 +639,7 @@
 			           </td>
 			       </tr>
 			        <tr>
-			           <th style="text-align:center">삭제일</th>
+			           <th style="text-align:center"><spring:message code='ezWebFolder.t288'/></th>
 			           <td>
 			               <input type="text" class="Sdatepicker" id="delStartDate" style="width:80px;text-align:center" readonly="readonly">
 			                ~
@@ -649,15 +648,15 @@
 			       </tr>
 			       
 			        <tr>
-			            <th style="text-align:center">확장자</th>
+			            <th style="text-align:center"><spring:message code='ezWebFolder.t152'/></th>
 			            <td><input type="text" id="searchExt" style="width:100%" value=""></td>
 			        </tr>
 			        <tr>
-			            <th style="text-align:center">파일명</th>
+			            <th style="text-align:center"><spring:message code='ezWebFolder.t153'/></th>
 			            <td><input type="text" id="searchFileName" style="width:100%" value=""></td>
 			        </tr>  
 			         <tr>
-			            <th style="text-align:center">작성자</th>
+			            <th style="text-align:center"><spring:message code='ezWebFolder.t154'/></th>
 			            <td><input type="text" id="searchCreateName" style="width:100%" value=""></td>
 			        </tr>    
 			       
@@ -666,9 +665,9 @@
 			    <table style="width:100%">
 			        <tr>
 			            <td style="text-align:center;">
-			                <a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a><!-- 날짜초기화 -->
-			                <a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a><!-- 검색 -->
-			                <a class="imgbtn"><span onClick="searchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a><!-- 취소 -->
+			                <a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
+			                <a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
+			                <a class="imgbtn"><span onClick="searchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a>
 			            </td>
 			        </tr>
 			    </table>

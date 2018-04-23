@@ -37,5 +37,4 @@ public class WebfolderEnvVO {
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
 	}
-	
 }

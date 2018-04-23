@@ -47,15 +47,7 @@
 			<tr>
 				<th width="70"><spring:message code = 'ezCommunity.t518' /></th>
 				<td>${memberInfo.userName}</td>
-			</tr>
-			<tr>
-				<th><spring:message code = 'ezCommunity.t519' /></th>
-				<td>
-					<c:if test="${clubUser.c_birth != '0' }">
-						${memberInfo.birthDay}
-					</c:if>
-				</td>
-			</tr>
+			</tr>	
 			<tr style="display:none">
 				<th><spring:message code = 'ezCommunity.t520' /></th>
 				<td>
@@ -107,10 +99,6 @@
 						${memberInfo.handPhone }
 					</c:if>
 				</td>
-			</tr>
-			<tr>
-				<th><spring:message code = 'ezCommunity.t527' /></th>
-				<td>${clubUser.c_intro }</td>
 			</tr>
 		</table>
 		<br/>

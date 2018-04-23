@@ -46,5 +46,4 @@ public class SimpleUserVO {
 	public void setPosition(String position) {
 		this.position = position;
 	}
-	
 }

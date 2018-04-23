@@ -26,10 +26,10 @@
 			};	
 			
 			function view_CommunityInfo(pcode) {
-				var pheight = window.screen.availHeight;
+ 				var pheight = window.screen.availHeight;
 				var pwidth = window.screen.availWidth;
-				var pTop = (pheight - 760) / 2;
-				var pLeft = (pwidth - 765) / 2;
+				var pTop = (pheight - 430) / 2;
+				var pLeft = (pwidth - 500) / 2; 
 				window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
 			}
 			

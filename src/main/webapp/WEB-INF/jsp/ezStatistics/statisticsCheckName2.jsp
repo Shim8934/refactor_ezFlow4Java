@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title><spring:message code='ezStatistics.t1013'/></title>
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -13,7 +14,15 @@
 		<script language="javascript" type="text/javascript">
 		    var UserAgentState = navigator.userAgent.toLowerCase();
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
+		    var ReturnFunction;
+		    var RgParams;
+		    
 		    window.onload = function () {
+		    	 try {
+		    		RgParams = opener.searchdept_cross_dialogArguments[0];
+			       	ReturnFunction = opener.searchdept_cross_dialogArguments[1];			       	
+			    } catch (e) { }
+			        
 		        var listview = new ListView();
 		        listview.SetID("ListView1");
 		        listview.SetSelectFlag(false);
@@ -21,15 +30,27 @@
 		        listview.SetRowOnDblClick("change_onClick");
 		        listview.DataSource(listviewheader);
 		        listview.DataBind("ListViewItem");
-		        listview.DataSource(dialogArguments["addrBook"]);
+		        
+		        if (CrossYN()) {
+		        	listview.DataSource(RgParams["addrBook"]);
+		        } else { 
+		        	listview.DataSource(dialogArguments["addrBook"]);
+		        }
 		        listview.RowDataBind();
 		    }
+		    
+		    window.onunload = function () {
+		        if (ReturnFunction != null)
+		            ReturnFunction(deptid);
+		    }
+		    
+		    var deptid = "";
 		    function change_onClick() {
 		        var listview = new ListView();
 		        listview.LoadFromID("ListView1");
-		        var count1;
+		 //       var count1;
 		        var selecteditemcount = listview.GetSelectedRows().length;
-		        var selrow;
+		  //      var selrow;
 		        if (selecteditemcount == 0) {
 		            alert("<spring:message code='ezOrgan.t106' />");
 		            return;
@@ -38,18 +59,28 @@
 		            alert("<spring:message code='ezOrgan.t107' />");
 		            return;
 		        }
-		        if (browserIE)
+		        if (browserIE) {
 		            dialogArguments["deptid"] = dialogArguments["addrBook"].getElementsByTagName("ROW")[listview.GetSelectedIndexes()].getElementsByTagName("DATA2")[0].text;
-		        else
-		            dialogArguments["deptid"] = dialogArguments["addrBook"].getElementsByTagName("ROW")[listview.GetSelectedIndexes()].getElementsByTagName("DATA2")[0].textContent;
+		        } else {
+		        	deptid = RgParams["addrBook"].getElementsByTagName("ROW")[listview.GetSelectedIndexes()].getElementsByTagName("DATA2")[0].textContent;
+		        }
 		        window.close();
 		    }
+		    
 		    function delete_onClick() {
-		        dialogArguments["recipientTDData"] = "delete";
+		   		if (CrossYN()) {
+		   			RgParams["recipientTDData"] = "delete";
+		   		} else {
+		        	dialogArguments["recipientTDData"] = "delete";
+		    	 }
 		        window.close();
 		    }
 		    function cancel_onClick() {
-		        dialogArguments["recipientTDData"] = "dontprocess";
+		    	if (CrossYN()) {
+		   			RgParams["recipientTDData"] = "dontprocess";
+		   		} else {
+		        	dialogArguments["recipientTDData"] = "dontprocess";
+		   		}
 		        window.close();
 		    }
 		</script>
@@ -84,7 +115,7 @@
 		</script>
 		<h2><spring:message code='ezStatistics.t11' /></h2>
 		<div class="listview">
-		  <div id="ListViewItem" style="Width:587px; Height:195px; border:0px;overflow:auto" ></div>
+		  <div id="ListViewItem" style="width:100%; min-width:587px; Height:210px; border:0px;overflow:auto" ></div>
 		</div>
 		<div class="btnposition">
 		    <a class="imgbtn" onClick="change_onClick()"><span>확인</span></a>

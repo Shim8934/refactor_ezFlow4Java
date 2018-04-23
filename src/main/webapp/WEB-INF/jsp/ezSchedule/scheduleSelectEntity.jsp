@@ -1154,8 +1154,8 @@
 	                            </div>
 	                            <table style="margin-top: 3px;">
 	                                <tr>
-	                                    <td class="box" style="border-right:0px">
-	                                        <div style="width: 220px; height: 500px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+	                                    <td class="box" style="border-right:0px; padding-bottom:0px;">
+	                                        <div style="width: 220px; height: 504px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 	                                    </td>
 	                                    <td></td>
 	                                    <td class="listview" style="width: 426px" id="orglistView">
@@ -1202,7 +1202,7 @@
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezSchedule.t163' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 477px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 515px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>

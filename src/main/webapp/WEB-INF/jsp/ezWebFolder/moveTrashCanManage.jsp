@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>이동</title>
+    <title><spring:message code="ezWebFolder.t282"/></title>
 <!--     <meta name="CODE_LANGUAGE" content="C#"> -->
     <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -106,7 +106,7 @@
         var moveCopyFolderDlg_cross_dialogArguments = [];
         function move_onclick() {
         	
-        	if (!confirm('파일 및 폴더를 이동하시겠습니까?')) {
+        	if (!confirm("<spring:message code='ezWebFolder.t283'/>")) {
         		return;
         	}
         	
@@ -131,10 +131,10 @@
             		"folderId" : folderId
             	},
             	succss : function (data) {
-            		aler("이동을 완료하였습니다.");
+            		aler("<spring:message code='ezWebFolder.t284'/>");
             	},
             	error : function(error) {
-            		alert("이동을 실패하였습니다.")
+            		alert("<spring:message code='ezWebFolder.t285'/>");
             	}
             })
             
@@ -161,7 +161,7 @@
 </head>
 
 <body scroll="no" class="popup">
-	<h1>파일 / 폴더 이동</h1>
+	<h1><span>"<spring:message code='ezWebFolder.t286'/>"</span></h1>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<div style="position: absolute; top: 0px; right: 0px;">
 			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('C');"> <span><spring:message code='ezWebFolder.t233'/></span>

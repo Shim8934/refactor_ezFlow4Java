@@ -141,11 +141,11 @@
 
                             var _img = document.createElement("img");
                             _img.style.width = "33px";
-                            _img.style.height = "33px";
-                            if (copLogo.indexOf("default_logo_type") > -1)
+                            _img.style.height = "23.57px";
+                            if (copLogo.indexOf("default_logo_") > -1)
                                 _img.setAttribute("src", "/images/ezCommunity/logo/" + copLogo);
                             else
-                                _img.setAttribute("src", "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + encodeURIComponent(copLogo));
+                                _img.setAttribute("src", "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + encodeURIComponent(copLogo));
 
                             _span.appendChild(_img);
                             _li.innerHTML = _span.outerHTML + copName;

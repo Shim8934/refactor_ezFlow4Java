@@ -223,7 +223,7 @@
 		}
 		
 		function wClose() {
-			parent.DivPopUpHidden();
+			parent.closeAllPopup();
 			window.close();
 		}
 		
@@ -323,11 +323,13 @@
 		</ul>
 	</div>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
-		<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="getData();">
-				<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-		</select>
+		<c:if test="${mode != 'normal'}">
+			<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="getData();">
+					<c:forEach var="item" items="${list}">
+						<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+					</c:forEach>
+			</select>
+		</c:if>
 		<div style="position: absolute; top: 0px; right: 0px;">
 			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="getData();"> <span><spring:message code="ezWebFolder.t233"/></span>
 			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="getData();"> <span><spring:message code="ezWebFolder.t234"/></span>
@@ -338,7 +340,7 @@
 	</div>
 	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto;" id="folderTree"></div>
 	
-	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
+	<div style="margin: 8px 0px; position:fixed; bottom: 0px; text-align: center; width: 100%;">
 		<a id="btnSave"   class="webfolderBttn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
 		<a id="btnCancel" class="webfolderBttn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
 	</div>

@@ -16,8 +16,8 @@
 #progress-wrp .progress-bar {height: 20px; border-radius: 3px; background-color: #66b3ff; width: 0; box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11); }
 #progress-wrp .status {top:3px; left:50%; position:absolute; display:inline-block; color: #000000; }
 
-.webfolderBttn {white-space:nowrap; display:inline-block; cursor: pointer; height:25px; min-width: 60px; vertical-align:top; padding: 0px 5px;}
-.webfolderBttn span {display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:25px; min-width: 40px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:25px; text-align: center;}
+.webfolderBttn {white-space:nowrap; display:inline-block; cursor: pointer; height:25px; min-width: 60px; vertical-align:top; padding: 0px;}
+.webfolderBttn span {display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:24px; min-width: 40px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:25px; text-align: center;}
 .webfolderBttn span:hover {color: #FFF; background: #004896; border: 1px solid #004896;}
 
 .webfolderBttn2{cursor: pointer; line-height: 27px;}

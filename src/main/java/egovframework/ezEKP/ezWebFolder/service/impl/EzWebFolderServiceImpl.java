@@ -446,16 +446,16 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("companyId",  companyId);
 		map.put("tenantId",   tenantId);
 		
-		List<FolderSimpleVO> listFolders = ezWebFolderDAO.getAllSimpleDeptFolder(map);
-		List<OrganDeptVO> listDepts      = getAllDepartments(companyId, userInfo.getPrimary(), tenantId);
+		List<FolderSimpleVO> listFolders      = ezWebFolderDAO.getAllSimpleDeptFolder(map);
+		List<OrganDeptVO> listDepts           = getAllDepartments(companyId, userInfo.getPrimary(), tenantId);
+		Set<String> deptIds                   = listFolders.stream().map(FolderSimpleVO::getOwnerId).collect(Collectors.toSet());
+		List<OrganDeptVO> listNotPresentDepts = listDepts.stream().filter(e -> !deptIds.contains(e.getCn())).collect(Collectors.toList());
 		
-		if (listFolders.size() < listDepts.size()) {
-			Set<String> deptIds                   = listFolders.stream().map(FolderSimpleVO::getOwnerId).collect(Collectors.toSet());
-			List<OrganDeptVO> listNotPresentDepts = listDepts.stream().filter(e -> !deptIds.contains(e.getCn())).collect(Collectors.toList());
-			String userId                         = userInfo.getId();
-			SimpleDateFormat formatter            = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date date                             = new Date();
-			String timeUTC                        = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		if (listNotPresentDepts.size() > 0) {
+			String userId              = userInfo.getId();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date                  = new Date();
+			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
 			
 			for (OrganDeptVO dept : listNotPresentDepts) {
 				FolderVO folder = new FolderVO();
@@ -995,7 +995,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		
 		List<String> folderNames = ezWebFolderDAO.getFolderNameList(map);
 		result                   = String.join("/", folderNames);
-		result                   = "/" + result + "/";
+		result                   = result + "/";
 		
 		return result;
 	}

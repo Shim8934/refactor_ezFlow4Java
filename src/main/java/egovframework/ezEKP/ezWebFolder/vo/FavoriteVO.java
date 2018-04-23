@@ -12,7 +12,6 @@ public class FavoriteVO {
 	private String creatorId;
 	private String creatorName;
 	private String createDate;
-	
 	private int tenantId;
 
 	public String getTargetId() {

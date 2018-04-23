@@ -66,5 +66,4 @@ public class FolderSimpleVO {
 	public void setOwnerId(String ownerId) {
 		this.ownerId = ownerId;
 	}
-
 }
