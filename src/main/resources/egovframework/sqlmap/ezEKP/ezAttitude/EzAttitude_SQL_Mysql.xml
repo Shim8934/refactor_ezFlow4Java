@@ -574,8 +574,20 @@
 		      #ids[]# 
 		</iterate>
 	</delete>
-
 	
+	<insert id="ezAttitudeAdminDAO.delUsersModifyAttHistoryFirst" parameterClass="Map">
+		DELETE FROM 
+			tbl_attitude_modappl_history
+		WHERE
+			TENANT_ID = #tenantId#
+        AND
+        	COMPANY_ID = #companyId#
+        AND
+			ATTITUDE_ID = #attitudeId#
+		AND
+			MOD_CNT = 0
+	</insert>
+
 	<update id="ezAttitudeDAO.attAppUpdate" parameterClass="Map">
 		<![CDATA[
 			UPDATE
