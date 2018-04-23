@@ -228,12 +228,13 @@
 
     //사원선택시
     function getAttitudeStatistics() {
+    	var selectUserId = pUserList.GetSelectedRows()[0].getAttribute("DATA2");
     	$.ajax({
         	type : "POST",
         	dataType : "json",
         	url : "/ezStatistics/getAttitudeUser.do",
         	async : false,
-        	data : {userId : userId, typeId : typeId, year : year },
+        	data : {userId : selectUserId, typeId : $("#attitudeType").val(), year : $("#selyear").val() },
         	success : function(result){
         		
         	},

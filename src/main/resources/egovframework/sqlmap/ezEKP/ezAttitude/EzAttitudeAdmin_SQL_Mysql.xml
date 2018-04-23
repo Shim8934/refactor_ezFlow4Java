@@ -12,6 +12,7 @@
 	<typeAlias alias="AttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
 	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>
 	<typeAlias alias="AttitudeAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO"/>
+	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
 	
 	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
 		<result property="companyId"				column="COMPANY_ID"				columnIndex="1"/>
@@ -77,6 +78,11 @@
 		<result property="deptName" column="dept_name" />
 		<result property="deptId" column="dept_id" />
 		<result property="mine" column="mine" />
+	</resultMap>
+	
+	<resultMap class="AttitudeStatisVO" id="userStatistics">
+		<result property="count" column="COUNT" />
+		<result property="typeId" column="TYPE_ID" />
 	</resultMap>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
@@ -790,7 +796,7 @@
 		]]>
 	</insert>
 	
-	<select id="getAttitudeUserStatistics" parameterClass="Map" resultMap="">
+	<select id="getAttitudeUserStatistics" parameterClass="Map" resultMap="userStatistics">
 		<![CDATA[
 			SELECT SUM(to_days(
 								IF(
@@ -807,7 +813,7 @@
 			                        date_add(START_DATE, INTERVAL +#offsetMin# minute)
 								   )
 							   )
-						) + COUNT(TYPE_ID) AS SUM_DATE,
+						) + COUNT(TYPE_ID) AS COUNT,
 			       TYPE_ID
 			FROM   
 				jmocha.tbl_attitude
