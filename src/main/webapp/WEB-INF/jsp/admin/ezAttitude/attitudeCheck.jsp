@@ -232,14 +232,17 @@
 	    			   			+ "<td>" + result[i].deptName + "</td>"
 	    						+ "<td>" + result[i].typeName + "</td>";
 	    						
-	    			if ( result[i].endDate == null || result[i].endDate == "") {
+	    			if (result[i].endDate == null || result[i].endDate == "") {
 	    				resultHtml += "<td>" + result[i].startDate + "</td>";
 	    			} else {
 	    				resultHtml += "<td>" + result[i].startDate + " ~ " + result[i].endDate + "</td>";
 	    			}
 	    			
-	    			resultHtml += "<td>" + result[i].startTime + "</td>"
-    			   				+ "<td>" + result[i].endTime + "</td>" + "</tr>";
+	    			if (result[i].endTime == null || result[i].endTime == "") {
+	    				resultHtml += "<td>" + result[i].startTime + "</td></tr>";
+	    			} else {
+	    				resultHtml += "<td>" + result[i].startTime + " ~ " + result[i].endTime + "</td></tr>";
+	    			}
 	    		}
 	    		
 	    		if (resultHtml == "") {
@@ -487,8 +490,7 @@
 					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
 					<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_time">시작시간</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="end_time">종료시간</th>
+					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_time">시간</th>
 				</tr>
 			</thead>
 			<tbody>

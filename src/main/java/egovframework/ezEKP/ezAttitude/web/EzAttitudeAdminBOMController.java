@@ -1543,10 +1543,8 @@ public class EzAttitudeAdminBOMController {
 		row.getCell(3).setCellStyle(headerStyle);
 		row.createCell(4).setCellValue("날짜");
 		row.getCell(4).setCellStyle(headerStyle);
-		row.createCell(5).setCellValue("시작시간");
+		row.createCell(5).setCellValue("시간");
 		row.getCell(5).setCellStyle(headerStyle);
-		row.createCell(6).setCellValue("종료시간");
-		row.getCell(6).setCellStyle(headerStyle);
 		
 		//body
 		for (int i = 0 ; i < attitudeList.size(); i++) { 
@@ -1554,31 +1552,38 @@ public class EzAttitudeAdminBOMController {
 			row = sheet.createRow(i + 1);
 
 			row.createCell(0).setCellValue(vo.getUserName());
-			row.getCell(0).setCellStyle(bodyStyle);
+			
 			row.createCell(1).setCellValue(vo.getUserTitle());
-			row.getCell(1).setCellStyle(bodyStyle);
 			row.createCell(2).setCellValue(vo.getDeptName());
-			row.getCell(2).setCellStyle(bodyStyle);
 			row.createCell(3).setCellValue(vo.getTypeName());
-			row.getCell(3).setCellStyle(bodyStyle);
+			
 			if (vo.getEndDate() != null && !vo.getEndDate().equals("")) {
 				row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
 			} else {
 				row.createCell(4).setCellValue(vo.getStartDate());
 			}
-			row.getCell(4).setCellStyle(bodyStyle);
-			row.createCell(5).setCellValue(vo.getStartTime());
-			row.getCell(5).setCellStyle(bodyStyle);
+			
 			if (vo.getEndTime() != null && !vo.getEndTime().equals("")) {
-				row.createCell(6).setCellValue(vo.getEndTime());
+				row.createCell(5).setCellValue(vo.getStartTime() + " ~ " + vo.getEndTime());
 			} else {
-				row.createCell(6).setCellValue("");
+				row.createCell(5).setCellValue(vo.getStartTime());
 			}
-			row.getCell(6).setCellStyle(bodyStyle);
+			
+			row.getCell(0).setCellStyle(bodyStyle);
+			row.getCell(1).setCellStyle(bodyStyle);
+			row.getCell(2).setCellStyle(bodyStyle);
+			row.getCell(3).setCellStyle(bodyStyle);
+			row.getCell(4).setCellStyle(bodyStyle);
+			row.getCell(5).setCellStyle(bodyStyle);
 		}
 		
-		//날짜(4번컬럼)는 길면 짤리므로 자동으로 너비조정을 해준다
+		//width 조정
+		sheet.autoSizeColumn(0);
+		sheet.autoSizeColumn(1);
+		sheet.autoSizeColumn(2);
+		sheet.autoSizeColumn(3);
 		sheet.autoSizeColumn(4);
+		sheet.autoSizeColumn(5);
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
