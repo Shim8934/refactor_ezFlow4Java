@@ -95,7 +95,7 @@
 		<isNotEqual property="searchStartDate" compareValue="">
 			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DF.CREATE_DATE >= DATE_FORMAT(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND DF.CREATE_DATE <= DATE_FORMAT(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
+					(DF.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND DF.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -199,7 +199,7 @@
 		<isNotEqual property="searchStartDate" compareValue="">
 			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(RESULT.CREATE_DATE >= DATE_FORMAT(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND RESULT.CREATE_DATE <= DATE_FORMAT(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
+					(RESULT.CREATE_DATE >= DATE_FORMAT(#searchStartDate#, '%Y-%m-%d') AND RESULT.CREATE_DATE <= DATE_FORMAT(#searchEndDate#, '%Y-%m-%d'))
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -283,7 +283,7 @@
 			AND DF.FOLDERFILE_TYPE = FV.TARGET_TYPE
 			AND DF.TENANT_ID = FV.TENANT_ID
 			AND FV.USER_ID = #userId#
-			JOIN TBL_WEBFOLDER_SHARE2 AS S
+			JOIN TBL_WEBFOLDER_SHARE AS S
 			ON S.FOLDERFILE_ID = DF.FILE_ID
 		    AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
 		    AND SHARER_ID = #userId#
@@ -342,7 +342,7 @@
 				DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
 				SS.SUB_STATUS,
 				S.TENANT_ID
-			FROM TBL_WEBFOLDER_SHARE2 AS S
+			FROM TBL_WEBFOLDER_SHARE AS S
 			JOIN TBL_WEBFOLDER_SHARE_SUB AS SS
 			ON S.SHARE_ID = SS.SHARE_ID
 			AND SS.USER_ID IN
@@ -486,7 +486,7 @@
 				AND DF.FOLDERFILE_TYPE = FV.TARGET_TYPE
 				AND DF.TENANT_ID = FV.TENANT_ID
 				AND FV.USER_ID = #userId#
-				JOIN TBL_WEBFOLDER_SHARE2 AS S
+				JOIN TBL_WEBFOLDER_SHARE AS S
 				ON S.FOLDERFILE_ID = DF.FILE_ID
 			    AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
 			    AND SHARER_ID = #userId#
@@ -548,7 +548,7 @@
 					DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
 					SS.SUB_STATUS,
 					S.TENANT_ID
-				FROM TBL_WEBFOLDER_SHARE2 AS S
+				FROM TBL_WEBFOLDER_SHARE AS S
 				JOIN TBL_WEBFOLDER_SHARE_SUB AS SS
 				ON S.SHARE_ID = SS.SHARE_ID
 				AND SS.USER_ID IN
@@ -685,17 +685,17 @@
 					THEN 1
 					ELSE MAX(SHARE_ID) + 1
 				END AS ID
-			FROM TBL_WEBFOLDER_SHARE2
-			WHERE TENANT_ID = #tenantId#;
+			FROM TBL_WEBFOLDER_SHARE
+			WHERE TENANT_ID = #tenantId#
 		</selectKey>
 		
-		INSERT INTO TBL_WEBFOLDER_SHARE2 (
+		INSERT INTO TBL_WEBFOLDER_SHARE (
 			SHARE_ID,              SHARER_ID,             SHARER_NAME1,
 			SHARER_NAME2,          FOLDERFILE_ID,         FOLDERFILE_TYPE,
 			USER_NAME_LIST,        SHARE_DATE,            TENANT_ID
 		)
 		SELECT
-			#id#,                  #sharerId#,              DISPLAYNAME,
+			#id#,                  #sharerId#,            DISPLAYNAME,
 			DISPLAYNAME2,          #folderFileId#,        #folderFileType#,
 			#userNameList#,        #shareDate#,           #tenantId#
 		FROM TBL_USERMASTER
@@ -704,15 +704,25 @@
 	</insert>
 	
 	<insert id="EzWebFolderDAO_m.insertShareSub" parameterClass="Map">
+		<selectKey keyProperty="id" resultClass="Integer">
+			SELECT 
+				CASE WHEN MAX(SEQ_ID) IS NULL
+					THEN 1
+					ELSE MAX(SEQ_ID) + 1
+				END AS ID
+			FROM TBL_WEBFOLDER_SHARE_SUB
+			WHERE TENANT_ID = #tenantId#
+		</selectKey>
+		
 		INSERT INTO TBL_WEBFOLDER_SHARE_SUB (
-			SHARE_ID,              USER_ID,               USER_NAME1,
-			USER_NAME2,            USER_TYPE,             SUB_STATUS,
-			TENANT_ID
+			SEQ_ID,                SHARE_ID,              USER_ID,
+			USER_NAME1,            USER_NAME2,            USER_TYPE,
+			SUB_STATUS,            TENANT_ID
 		)
 		SELECT
-			#shareId#,             #userId#,              DISPLAYNAME,
-			DISPLAYNAME2,          #userType#,            #subStatus#,
-			#tenantId#
+			#id#,                  #shareId#,             #userId#,
+			DISPLAYNAME,           DISPLAYNAME2,          #userType#,
+			#subStatus#,           #tenantId#
 		<isEqual property="userType" compareValue="U">
 			FROM TBL_USERMASTER
 		</isEqual>
@@ -725,7 +735,7 @@
 	
 	<select id="EzWebFolderDAO_m.getShareId" parameterClass="Map" resultClass="Integer">
 		SELECT SHARE_ID
-		FROM TBL_WEBFOLDER_SHARE2
+		FROM TBL_WEBFOLDER_SHARE
 		WHERE SHARER_ID     = #sharerId#
 		AND FOLDERFILE_ID   = #folderFileId#
 		AND FOLDERFILE_TYPE = #folderFileType#
@@ -740,7 +750,7 @@
 	
 	<update id="EzWebFolderDAO_m.updateShareUserNameList" parameterClass="Map">
 		UPDATE
-			TBL_WEBFOLDER_SHARE2
+			TBL_WEBFOLDER_SHARE
 		SET
 			USER_NAME_LIST = (
 				SELECT CONCAT(group_concat(DISPLAYNAME), '|', group_concat(DISPLAYNAME2))
@@ -770,7 +780,7 @@
 	</update>
 	
 	<delete id="EzWebFolderDAO_m.deleteShare">
-		DELETE FROM TBL_WEBFOLDER_SHARE2
+		DELETE FROM TBL_WEBFOLDER_SHARE
 		WHERE SHARE_ID = #shareId#
 		AND TENANT_ID  = #tenantId#
 	</delete>
@@ -819,7 +829,7 @@
 				DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
 				SS.SUB_STATUS,
 				S.TENANT_ID
-			FROM TBL_WEBFOLDER_SHARE2 AS S
+			FROM TBL_WEBFOLDER_SHARE AS S
 			JOIN TBL_WEBFOLDER_SHARE_SUB AS SS
 			ON S.SHARE_ID = SS.SHARE_ID
 			AND SS.USER_ID IN
@@ -925,7 +935,7 @@
 					DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
 					SS.SUB_STATUS,
 					S.TENANT_ID
-				FROM TBL_WEBFOLDER_SHARE2 AS S
+				FROM TBL_WEBFOLDER_SHARE AS S
 				JOIN TBL_WEBFOLDER_SHARE_SUB AS SS
 				ON S.SHARE_ID = SS.SHARE_ID
 				AND SS.USER_ID IN
@@ -983,13 +993,25 @@
 	</select>
 	
 	<insert id="EzWebFolderDAO_m.hideShare" parameterClass="Map">
+		<selectKey keyProperty="id" resultClass="Integer">
+			SELECT 
+				CASE WHEN MAX(SEQ_ID) IS NULL
+					THEN 1
+					ELSE MAX(SEQ_ID) + 1
+				END AS ID
+			FROM TBL_WEBFOLDER_SHARE_HIDE
+			WHERE TENANT_ID = #tenantId#
+		</selectKey>
+	
 		INSERT INTO TBL_WEBFOLDER_SHARE_HIDE (
-			SHARE_ID,              USER_ID,               USER_NAME1,
-			USER_NAME2,            HIDE_DATE,             TENANT_ID
+			SEQ_ID,                SHARE_ID,              USER_ID,
+			USER_NAME1,            USER_NAME2,            HIDE_DATE,
+			TENANT_ID
 		)
 		SELECT
-			#shareId#,             #userId#,              DISPLAYNAME,
-			DISPLAYNAME2,          #hideDate#,            #tenantId#
+			#id#,                  #shareId#,             #userId#,
+			DISPLAYNAME,           DISPLAYNAME2,          #hideDate#,
+			#tenantId#
 		FROM TBL_USERMASTER
 		WHERE CN = #userId#
 		AND TENANT_ID  = #tenantId#
@@ -1001,56 +1023,6 @@
 		AND USER_ID    = #userId#
 		AND TENANT_ID  = #tenantId#
 	</delete>
-	
-	<select id="EzWebFolderDAO_m.userDeptList" parameterClass="Map" resultClass="String">
-			SELECT
-			TU.DEPARTMENT 
-			FROM
-			TBL_USERMASTER TU 
-			WHERE 1=1
-			AND TU.CN = #userId#
-			AND TU.TENANT_ID = #tenantId#
-		<isNotEmpty property="notInDept">
-			AND TU.DEPARTMENT NOT IN ($notInDept$)	
-		</isNotEmpty>	
-
-			UNION
-			
-			SELECT
-			TA.DEPTID
-			FROM
-			TBL_ADDJOBMASTER TA
-			WHERE 1=1
-			AND TA.CN = #userId#
-			AND TA.TENANT_ID = #tenantId#
-		<isNotEmpty property="notInDept">
-			AND TA.CN NOT IN ($notInDept$)	
-		</isNotEmpty>
-	</select>
-	
-	<select id="EzWebFolderDAO_m.chiefDeptPath" parameterClass="Map" resultClass="String">
-			SELECT
-			TD.DEPT_CD_PATH
-			FROM
-			TBL_DEPTMASTER TD
-			WHERE
-				TD.EXTENSIONATTRIBUTE9 = #userId#
-			AND 
-				TD.TENANT_ID = #tenantId#
-	</select>
-	
-	<select id="EzWebFolderDAO_m.chiefDeptList" parameterClass="Map" resultClass="String">
-			SELECT
-			TD.CN
-			FROM
-			TBL_DEPTMASTER TD
-			WHERE 1=1
-			AND TD.DEPT_CD_PATH LIKE CONCAT(#deptCdPath#,'%')
-			AND TD.TENANT_ID = #tenantId#
-		<isNotEmpty property="notInDept">
-			AND TD.CN NOT IN ($notInDept$)	
-		</isNotEmpty>
-	</select>
 	
 	<select id="EzWebFolderDAO_m.getTrashCanList" parameterClass="Map" resultMap="trashCanVO">
 		<![CDATA[

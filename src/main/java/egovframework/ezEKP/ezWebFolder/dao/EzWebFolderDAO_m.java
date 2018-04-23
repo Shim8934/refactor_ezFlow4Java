@@ -83,18 +83,6 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		delete("EzWebFolderDAO_m.showShare", map);
 	}
 	
-	public List<String> userDeptList(Map<String, Object> map) {
-		return (List<String>) list("EzWebFolderDAO_m.userDeptList", map);
-	}
-
-	public List<String> chiefDeptPath(Map<String, Object> map) {
-		return (List<String>) list("EzWebFolderDAO_m.chiefDeptPath", map);
-	}
-
-	public List<String> chiefDeptList(Map<String, Object> map) {
-		return (List<String>) list("EzWebFolderDAO_m.chiefDeptList", map);
-	}
-
 	public List<FavoriteVO> getFavorites(Map<String, Object> map) {
 		return (List<FavoriteVO>) list("EzWebFolderDAO_m.getFavorites", map);
 	}

@@ -25,7 +25,7 @@ var favoriteModule = (function() {
 			rowElement = selectedRows[i];
 			imageElement = rowElement.querySelector("img:first-child");
 			successHandle = function() { toggleImage(rowElement, imageElement); };
-			rowInfo = getRowInfo(selectedRows[i]);
+			rowInfo = rowModule.getRowInfo(selectedRows[i]);
 			
 			requestAjax(rowInfo.id, rowInfo.type, false, successHandle);
 		}
@@ -40,23 +40,6 @@ var favoriteModule = (function() {
     	toggleFavorite(rowElement, true, successHandle, successHandle);
     }
     
-	function getRowInfo(rowElement) {
-    	var targetId = rowElement.getAttribute("targetId");
-    	var targetType = rowElement.getAttribute("targetType");
-    	var isFavorite = rowElement.hasAttribute("favorite");
-    	
-    	// favorite type mapping
-    	if (targetType.length > 1) {
-        	targetType = targetType === "folder" ? targetType = "D" : targetType = "F";
-    	}
-    	
-    	return {
-        	id: targetId,
-        	type: targetType,
-        	isFavorite: isFavorite
-    	}
-	}
-	
 	function toggleImage(rowElement, imageElement) {
 		if (rowElement.hasAttribute("favorite")) {
 			imageElement.src = "/images/ImgIcon/view-flag.gif";
@@ -71,7 +54,7 @@ var favoriteModule = (function() {
 	// 또한 attribute 이름을 통일시켜야함. targetId, targetPath, targetType, favorite 으로 통일 예정
 	// 통일 시 변수로 따로 저장해도 괜찮을듯 
     function toggleFavorite(rowElement, isAsync, addHandler, deleteHandler) {
-    	var rowInfo = getRowInfo(rowElement);
+    	var rowInfo = rowModule.getRowInfo(rowElement);
 
 		if (rowInfo.isFavorite) {
 			deleteFavorite(rowInfo.id, rowInfo.type, isAsync, deleteHandler);
@@ -114,7 +97,6 @@ var favoriteModule = (function() {
     return {
 		onCheckAllClick : onCheckAllClick,
 		onImageClick : onImageClick,
-		getRowInfo : getRowInfo,
 		toggleFavorite : toggleFavorite,
 		addFavorite : addFavorite,
 		deleteFavorite : deleteFavorite
