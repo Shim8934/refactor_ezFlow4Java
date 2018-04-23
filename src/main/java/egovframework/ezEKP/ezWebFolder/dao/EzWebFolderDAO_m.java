@@ -86,6 +86,14 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		delete("EzWebFolderDAO_m.deleteShare", map);
 	}
 	
+	public List<ShareVO> getHiddenSharedList(Map<String, Object> map) {
+		return (List<ShareVO>)list("EzWebFolderDAO_m.getHiddenSharedList", map);
+	}
+
+	public List<Map<String, Object>> getHiddenSharedCount(Map<String, Object> map) {
+		return (List<Map<String, Object>>)list("EzWebFolderDAO_m.getHiddenSharedCount", map);
+	}
+	
 	public void hideShare(Map<String, Object> map) {
 		insert("EzWebFolderDAO_m.hideShare", map);
 	}

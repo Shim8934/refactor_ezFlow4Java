@@ -3186,7 +3186,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		String cnACL = result;
 		String totalAdmin = "0";
 		String companyAdmin = "0";
-		String webfolderAdmin = "0";
 		
 		if (cnACL != null && !cnACL.equals("")) {
 			if (cnACL.indexOf("c=1") > -1) {
@@ -3195,11 +3194,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			if (cnACL.indexOf("k=1") > -1) {
 				companyAdmin = "1";
 			}
-			//baonk added
-			if (cnACL.indexOf("wf=1") > -1) {
-				webfolderAdmin = "1";
-			}
-			//end
 		}
 		
 		String aclResult = "";
@@ -3210,14 +3204,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			if (companyAdmin.equals("1")) {
 				aclResult = "2";
 			} else {
-				//baonk added
-				if (webfolderAdmin.equals("1")) {
-					aclResult = "4";
-				}
-				else {
-					aclResult = "3";
-				}
-				//end
+				aclResult = "3";
 			}
 		}
 

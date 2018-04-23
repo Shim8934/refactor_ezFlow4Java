@@ -5,21 +5,16 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezOrgan.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<link rel="stylesheet" href="/css/organ_tree.css"                       type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>"   type="text/css">
+		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"            type="text/css">
+		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css"           type="text/css">
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"                ></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"                             ></script>
+		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"           ></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"        ></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"      ></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" >
 			var blockSize    = 10;
@@ -75,7 +70,18 @@
 			}
 			
 			function openSearchPanel() {
-				$("#searchPanel").toggle("1000");
+				var searchPanel = document.getElementById("searchPanel");
+				if (searchPanel.style.display == "none") {
+					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+					document.getElementById("mailPanel").style.display = "";
+					searchPanel.style.right   = getPosition(516, 217) + "px";
+					searchPanel.style.display = "";
+				}
+				else {
+					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
+					document.getElementById("mailPanel").style.display = "none";
+					searchPanel.style.display = "none";
+				}
 				
 				$("#Sdatepicker").datepicker('setDate', "");
 				$("#Edatepicker").datepicker('setDate', "");
@@ -235,6 +241,17 @@
 				search_Set("1");
 			}
 			
+			function getPosition(popUpW, popUpH) {
+				var returnValue = null;
+				var width       = window.parent.document.documentElement.clientWidth;
+				
+				if (width == 0) {width = window.parent.document.body.clientWidth;}
+				
+				var pleftpos = parseInt(width) - popUpW;
+				returnValue  = pleftpos / 2;
+				return returnValue;
+			}
+			
 		</script>
 	</head>
 	<body class="mainbody">
@@ -255,7 +272,7 @@
 			<div style="position: relative;">
 				<a id="btnSearch" class="webfolderBttn2" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123'/></span></a>
 				<a id="btnRefresh" class="webfolderBttn2" onClick="change();"><span><spring:message code='ezWebFolder.t139'/></span></a>
-				<div id="searchPanel" style="position: absolute; top: 37px; left: 0px; height: auto; width: 514px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
+				<div id="searchPanel" style="z-index: 2000; position: absolute; height: auto; width: 514px; border: 1px solid #666666; background-color: #f2f2f2; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
 					<div style="margin: 10px;">
 						<table class="content" style="border-collapse: collapse; width: 100%;">
 							<tr>
@@ -311,6 +328,8 @@
 		</div>
 		
 		<div id="tblPageRayer"></div>
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	</body>
 </html>

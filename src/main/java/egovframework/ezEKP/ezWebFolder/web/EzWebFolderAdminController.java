@@ -403,7 +403,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/updateCapacities.do", method = RequestMethod.POST)
-	public void updateCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "userListParam") List<String> userList, HttpServletResponse response) throws Exception {
+	public String updateCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "userListParam") List<String> userList,  Model model, HttpServletResponse response) throws Exception {
 		String newStorageValue = request.getParameter("newStorage");
 		String companyId       = request.getParameter("companyId");
 		
@@ -425,7 +425,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		String status                 = resultBody.get("status").toString();
 		
-		logger.debug("Status: " + status);
+		if (!status.equals("ok")) {
+			String reason = resultBody.get("reason").toString();
+			model.addAttribute("reason", reason);
+		}
+		
+		return "json";
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/restoreCapacities.do", method = RequestMethod.POST)
