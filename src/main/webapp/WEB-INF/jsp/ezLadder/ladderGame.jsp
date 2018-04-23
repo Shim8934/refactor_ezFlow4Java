@@ -44,6 +44,11 @@
 		        stompClient.disconnect();
 		    }
 		});
+		
+		window.onload = function() {
+			var firstScrollTop = $("#attendantList").offset().top - 5;
+			$("html, body").animate({"scrollTop": firstScrollTop}, 400);
+		}
 	
 		
 		function ladder_window_resize() {
@@ -62,7 +67,7 @@
 				$("#blackBox").css("width", (win_width + 50) + "px");
 			}
 			
-			$("#startButton").css("left", $(".setTable").width()/2 - 250).css("top", $(".setTable").height()/2 - 75);
+			$("#startButton").css("left", $(".setTable").width()/2 - 250).css("top", $(".setTable").height()/2);
 		}
 		
 		function initValues() {
@@ -383,8 +388,8 @@
 					
 					$("#lineDiv").html(
 							"<span></span>" +
-							"<canvas id='ladderCanvasLine' width='0' height='800'></canvas>" +
-							"<canvas id='ladderCanvas' width='0' height='800'></canvas>"
+							"<canvas id='ladderCanvasLine' width='0' height='675'></canvas>" +
+							"<canvas id='ladderCanvas' width='0' height='675'></canvas>"
 						);
 					$(".directionBtn").html(
 							'<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code="ezLadder.t106" /></div></button>' +
@@ -392,7 +397,7 @@
 					);
 					var html = '';
 					_ladderLine.forEach(function(line, index) {
-						html += '<li><div id="drag' + index + '" style="padding-top:  20px; cursor: pointer;">';
+						html += '<li><div id="drag' + index + '" style="cursor: pointer;">';
 						if(!line.pic) {
 							html += '<span class="userPicWraper_d"><img src="/images/ezLadder/icon_defaultAttendant.png" width="60px" height="60px" style="display: block;" /></span>';
 						} else {
@@ -721,11 +726,11 @@
 						</div>
 							<div class="directionBtn"></div>
 							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px;">
-								<div style="height: 140px;">
+								<div style="height: 100px; margin-bottom: 20px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
 											<li _attendantIndex="${status.index}">
-												<div class="ladderDrag" id="drag${status.index}" style="padding-top:  20px; cursor: pointer; left: 0px; border-radius: 5px;">
+												<div class="ladderDrag" id="drag${status.index}" style="cursor: pointer; left: 0px; border-radius: 5px;">
 													<c:choose>
 														<c:when test="${empty line.pic}">
 															<span class="userPicWraper_d">
@@ -744,13 +749,13 @@
 										</c:forEach>
 									</ul>
 								</div>
-								<div id="lineDiv" style="position: relative; height: 800px; z-index: 1;">
-									<div id="blackBox" style="height: 800px;background: darkgray;position: absolute;left: -50px;right: 0;">
+								<div id="lineDiv" style="position: relative; height: 675px; z-index: 1;">
+									<div id="blackBox" style="height: 675px;background: darkgray;position: absolute;left: -50px;right: 0;">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>
-									<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
-									<canvas id='ladderCanvas' width='0' height='800'></canvas>
+									<canvas id='ladderCanvasLine' width='0' height='675'></canvas>
+									<canvas id='ladderCanvas' width='0' height='675'></canvas>
 								</div>
 								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
@@ -770,11 +775,11 @@
 								<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code='ezLadder.t107' /></div></button>
 							</div>
 							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px;">
-								<div style="height: 140px;">
+								<div style="height: 100px; margin-bottom: 20px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
 											<li>
-												<div id="drag${status.index}" style="padding-top:  20px; cursor: pointer;">
+												<div id="drag${status.index}" style="cursor: pointer;">
 														<c:choose>
 															<c:when test="${empty line.pic}">
 																<span class="userPicWraper_d">
@@ -795,8 +800,8 @@
 								</div>
 								<div id="lineDiv" style="position: relative; z-index: 1;">
 									<span></span>
-									<canvas id='ladderCanvasLine' width='0' height='800'></canvas>
-									<canvas id='ladderCanvas' width='0' height='800'></canvas>
+									<canvas id='ladderCanvasLine' width='0' height='675'></canvas>
+									<canvas id='ladderCanvas' width='0' height='675'></canvas>
 								</div>
 								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
