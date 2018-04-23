@@ -305,49 +305,52 @@
 	        function GoTop() {
 	            message.AGoTop.click();
 	        }
-	
-	        
+		        
 	        function GoDown() {
 	            message.AGoDown.click();
 	        }
 	
 	        function ImageMain(imagefilename) {
 	            imageonmouse(imagefilename.id);
-	
-	            var mainfilename = imagefilename.src.split("s_")[0] + imagefilename.src.split("s_")[1];
-	
+	            
+				// 기존 게시물 사진추가 시 경로 구분
+           		if(imagefilename.src.split("s_")[1] == undefined) {
+	            	var mainfilename = imagefilename.src;
+	            } else {
+	            	var mainfilename = imagefilename.src.split("s_")[0] + imagefilename.src.split("s_")[1];
+	            }
+	            
 	            viewimage = imagefilename.id;
 	
+	            document.getElementById("mainimages").style.display = "none";
 	            document.getElementById("mainimages").src = mainfilename;
 	            document.getElementById("mainimages").name = imagefilename.name;
 	            document.getElementById("MainContent").innerHTML = imagefilename.title;
 	
 	            imageloding();
-	            
 	        }
 	
 	        function imageloding() {
-	            var loading = 1000;
-	
-	            var newiamge = new Image();
-	            newiamge.src = document.getElementById("mainimages").src;
-	            var we = newiamge.width;
-	            var he = newiamge.height;
-	
-	            if (we == 0 && he == 0) {
-	                var endloading = loading + loading;
-	                setTimeout("imageloding()", endloading);
-	            }
-	            
-	            if (we > 400)
-	                document.getElementById("mainimages").width = 400;
-	            else
-	                document.getElementById("mainimages").width = we;
-	
-	            if (he > 300)
-	                document.getElementById("mainimages").height = 280;
-	            else
-	                document.getElementById("mainimages").height = he;
+	            var newimage = new Image();
+	            newimage.src = document.getElementById("mainimages").src;
+	           
+	            newimage.onload = function() {
+		            var we = newimage.width;
+		            var he = newimage.height;
+	 
+		            if (we > 400) {
+		                document.getElementById("mainimages").width = 400;
+		            } else {
+		                document.getElementById("mainimages").width = we;
+		            }
+		            if (he > 300) {
+		                document.getElementById("mainimages").height = 280;
+		            } else {
+		                document.getElementById("mainimages").height = he;
+		            }
+		            
+		            document.getElementById("mainimages").style.display = "";
+		        }
 	        }
 	
 	        function Pagenationimage(page) {
@@ -356,12 +359,8 @@
 	            for (var i = 0; i < ImageCount; i++) {
 	                if (viewimage == "image" + i) {
 	                    if (page == "prevPage") {
-	                        if (i == 0) {
-	                            
-	                            btn_SmallIamge("Prev");
-	                            
-	                            
-	
+	                        if (i == 0) {                  
+	                            btn_SmallIamge("Prev");	                            
 	                            return;
 	                        }
 	
@@ -378,23 +377,22 @@
 	                }
 	            }
 	            viewimage = pageimage;
-	            imageonmouse(pageimage);
-	
-	            var mainfilename = document.getElementById(pageimage).src.split("s_")[0] + document.getElementById(pageimage).src.split("s_")[1];
+	            imageonmouse(pageimage);   
 	            ImageMain(document.getElementById(pageimage));
 	        }
 	        function showHideLayers() {
 	            showDiv.style.display = "block";
 	        }
 	
-	        function bt(id, after) { document.getElementById(id).src = after; }
+	        function bt(id, after) {
+	        	document.getElementById(id).src = after;
+	        }
 	
 	
 	        function page_reload() {
 	            window.location.reload();
 	        }
-	
-	
+		
 	        function btn_SmallIamge(Page) {
 	            xmlhttp = createXMLHttpRequest();
 	
@@ -416,8 +414,7 @@
 	                if (imagetotalcount <= endpage) {
 	                    imagepage = 0;
 	                    NewPage = 1;
-	                    
-	                    
+	               	                    
 	                }
 	                else {
 	                    imagepage = 0;
@@ -433,8 +430,7 @@
 	                        pPage = Number(imagetotalcount / 10) + 1;
 	                    }
 	                    imagepage = imagetotalcount % 10 - 1;
-	                    
-	                    
+	                         
 	                }
 	                NewPage = parseInt(pPage) - 1;
 	            }
