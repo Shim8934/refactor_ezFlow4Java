@@ -43,8 +43,6 @@ function DivPopUpPosition(popUpW, popUpH) {
 	var width = window.parent.document.documentElement.clientWidth;
 	if (width == 0) {width = window.parent.document.body.clientWidth;}
 	
-	var left     = 0;
-	var top      = 0;
 	var pleftpos = parseInt(width) - popUpW;
 	heigth       = parseInt(heigth) - popUpH;
 	
@@ -56,17 +54,6 @@ function DivPopUpPosition(popUpW, popUpH) {
 	}
 	
 	returnValue[1] = pleftpos / 2;
-	return returnValue;
-}
-
-function getPosition(popUpW, popUpH) {
-	var returnValue = null;
-	var width       = window.parent.document.documentElement.clientWidth;
-	
-	if (width == 0) {width = window.parent.document.body.clientWidth;}
-	
-	var pleftpos = parseInt(width) - popUpW;
-	returnValue  = pleftpos / 2;
 	return returnValue;
 }
 

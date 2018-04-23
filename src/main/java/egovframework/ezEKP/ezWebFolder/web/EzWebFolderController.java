@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezWebFolder.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
 import org.slf4j.Logger;
@@ -88,7 +89,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			String checkResult = (String) resultBody.get("data");
 			model.addAttribute("isWfAdmin", checkResult);
 		}
-		
 		
 		model.addAttribute("useBottomFrameOnly", useBottomFrameOnly);
 		return "ezWebFolder/webfolderLeft";

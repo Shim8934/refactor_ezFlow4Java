@@ -112,7 +112,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	@Override
-	public List<FileLogVO> getListFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
+	public List<FileLogVO> getListFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyId",  companyId);
 		map.put("searchChk",  searchChk);
@@ -120,6 +120,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("endDate",    endDate);
 		map.put("fileExt",    fileExt);
 		map.put("fileName",   fileName);
+		map.put("fileType",   fileType);
 		map.put("userName",   userName);
 		map.put("startPoint", startPoint);
 		map.put("pageSize",   pageSize);
@@ -130,7 +131,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	@Override
-	public int getTotalFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, int startPoint, int endPoint, String primary, int tenantId) throws Exception {
+	public int getTotalFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyId",  companyId);
 		map.put("searchChk",  searchChk);
@@ -139,8 +140,6 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("fileExt",    fileExt);
 		map.put("fileName",   fileName);
 		map.put("userName",   userName);
-		map.put("startPoint", startPoint);
-		map.put("endPoint",   endPoint);
 		map.put("primary",    primary);
 		map.put("tenantId",   tenantId);
 		return ezWebFolderAdminDAO.getTotalFileLogs(map);

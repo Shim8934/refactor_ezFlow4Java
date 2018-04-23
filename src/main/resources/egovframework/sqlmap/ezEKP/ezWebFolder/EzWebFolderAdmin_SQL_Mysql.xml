@@ -60,39 +60,64 @@
 	
 	<sql id="fileHistoryCondition">
 		WHERE
-				COMPANY_ID = #companyId#
+				l.COMPANY_ID = #companyId#
 			AND
-				TENANT_ID  = #tenantId#
+				l.TENANT_ID  = #tenantId#
+		<isEqual property="fileType" compareValue="2" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'document'
+			]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="3" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'music'
+			]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="4" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'video'
+			]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="5" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'image'
+			]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="6" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'zip'
+			]]>
+		</isEqual>
 		
 		<isEqual property="searchChk" compareValue="1">
 			<isNotEqual property="fileExt" compareValue="" prepend="AND">
 				<![CDATA[
-					FILE_EXT LIKE CONCAT(CONCAT('%', #fileExt#), '%')
+					l.FILE_EXT LIKE CONCAT(CONCAT('%', #fileExt#), '%')
 				]]>
 			</isNotEqual>
 			
 			<isNotEqual property="fileName" compareValue="" prepend="AND">
 				<![CDATA[
-					FILE_NAME LIKE CONCAT(CONCAT('%', #fileName#), '%')
+					l.FILE_NAME LIKE CONCAT(CONCAT('%', #fileName#), '%')
 				]]>
 			</isNotEqual>
 			
 			<isNotEqual property="userName" compareValue="" prepend="AND">
 				<isEqual property="primary" compareValue="1">
 					<![CDATA[
-						CREATE_NAME1 LIKE CONCAT(CONCAT('%', #userName#), '%')
+						l.CREATE_NAME1 LIKE CONCAT(CONCAT('%', #userName#), '%')
 					]]>
 				</isEqual>
 				<isEqual property="primary" compareValue="2">
 					<![CDATA[
-						CREATE_NAME2 LIKE CONCAT(CONCAT('%', #userName#), '%')
+						l.CREATE_NAME2 LIKE CONCAT(CONCAT('%', #userName#), '%')
 					]]>
 				</isEqual>
 			</isNotEqual>
 			
 			<isNotEqual property="startDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(CREATE_DATE >= #startDate# AND CREATE_DATE <= #endDate#)
+					(l.CREATE_DATE >= #startDate# AND l.CREATE_DATE <= #endDate#)
 				]]>
 			</isNotEqual>
 		</isEqual>
@@ -332,26 +357,26 @@
 	<select id="EzWebFolderAdminDAO.getListFileLogs" resultMap="fileLogVO">
 		<![CDATA[
 			SELECT
-				LOG_ID                                          AS LOG_ID,
-				FILE_TYPE                                       AS FILE_TYPE,
-				FILE_NAME                                       AS FILE_NAME,
-				FILE_SIZE                                       AS FILE_SIZE,
-				FILE_EXT                                        AS FILE_EXT,
-				LOG_TYPE                                        AS LOG_TYPE,
-				CREATE_ID                                       AS CREATE_ID,
-				CREATE_NAME1                                    AS CREATE_NAME1,
-				CREATE_NAME2                                    AS CREATE_NAME2,
-				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				COMPANY_ID                                      AS COMPANY_ID,
-				TENANT_ID                                       AS TENANT_ID
+				l.LOG_ID                                          AS LOG_ID,
+				l.FILE_TYPE                                       AS FILE_TYPE,
+				l.FILE_NAME                                       AS FILE_NAME,
+				l.FILE_SIZE                                       AS FILE_SIZE,
+				l.FILE_EXT                                        AS FILE_EXT,
+				l.LOG_TYPE                                        AS LOG_TYPE,
+				l.CREATE_ID                                       AS CREATE_ID,
+				l.CREATE_NAME1                                    AS CREATE_NAME1,
+				l.CREATE_NAME2                                    AS CREATE_NAME2,
+				DATE_ADD(l.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				l.COMPANY_ID                                      AS COMPANY_ID,
+				l.TENANT_ID                                       AS TENANT_ID
 			FROM
-				TBL_WEBFOLDER_LOG
+				TBL_WEBFOLDER_LOG l LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON l.FILE_EXT = t.FILE_EXT AND l.TENANT_ID = t.TENANT_ID
 		]]>
 		<include refid="fileHistoryCondition"/>
 		<![CDATA[
 			ORDER BY
-				CREATE_DATE DESC,
-				CAST(LOG_ID AS INT) DESC
+				l.CREATE_DATE DESC,
+				CAST(l.LOG_ID AS INT) DESC
 			LIMIT
 				#startPoint#, #pageSize#
 		]]>
@@ -359,7 +384,7 @@
 	
 	<select id="EzWebFolderAdminDAO.getTotalFileLogs" resultClass="Integer">
 		<![CDATA[
-			SELECT COUNT(*) FROM TBL_WEBFOLDER_LOG
+			SELECT COUNT(*) FROM TBL_WEBFOLDER_LOG l LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON l.FILE_EXT = t.FILE_EXT AND l.TENANT_ID = t.TENANT_ID
 		]]>
 		<include refid="fileHistoryCondition"/>
 	</select>
