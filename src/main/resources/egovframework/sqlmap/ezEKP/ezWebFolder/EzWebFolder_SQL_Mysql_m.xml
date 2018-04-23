@@ -650,7 +650,7 @@
 			AND FU.TENANT_ID = F.TENANT_ID
 			WHERE FU.USER_ID = #userId#
 			AND USER_TYPE = 'chief'
-			AND FU.TENANT_ID = #tenantId#;
+			AND FU.TENANT_ID = #tenantId#
 		]]>
 	</select>
 	
