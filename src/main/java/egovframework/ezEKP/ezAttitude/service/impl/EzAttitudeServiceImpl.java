@@ -261,7 +261,27 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String writerDeptName2, String changeDate, String changeTime,
 			String content, String companyId, int tenantId) throws Exception {
 		// TODO Auto-generated method stub
+		LOGGER.debug("insertAttitudeApplication started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+//		map.put("", );
+		
+		LOGGER.debug("insertAttitudeApplication ended");
 	}
 
 	@Override

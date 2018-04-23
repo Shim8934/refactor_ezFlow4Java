@@ -323,6 +323,9 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			 
 			LOGGER.debug("companyId : " + companyId);
 			LOGGER.debug("tenantId : " + tenantId);
 			LOGGER.debug("userId : " + userId);
@@ -330,9 +333,6 @@ public class EzAttitudeGWController {
 			LOGGER.debug("content : " + content);
 			LOGGER.debug("changeDate : " + changeDate);
 			LOGGER.debug("attitudeId : " + attitudeId);
-			
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			ezAttitudeService.attSaveAppModify(attitudeId, companyId, tenantId, userId, info.getUserName(), info.getUserName2(), 
 					info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), info.getDeptName2(), changeDate, "0", content, offset);
