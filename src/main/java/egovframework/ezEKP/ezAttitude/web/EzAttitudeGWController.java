@@ -890,9 +890,6 @@ public class EzAttitudeGWController {
 			data.put("list", list);
 			//로그인한 관리자의 회사
 			data.put("adminCompany", info.getCompanyId());
-			//오늘날짜
-			String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
-			data.put("today", commonUtil.getDateStringInUTC(today, info.getOffSet(), false));
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

@@ -44,15 +44,14 @@
 	    	var searchTitle = ""; // 검색조건 (직위)
 	    	var searchAttitudeType = ""; // 검색조건(구분)
 	    	//검색조건 (근무시간) Hr,Min 묶음으로
-	    	var searchStartDate = "";
-	    	var searchEndDate = "";
+	    	var searchStartDate = "${searchStartDate}";
+	    	var searchEndDate = "${searchEndDate}";
 	    	var pageNum = 1; // 페이지 ==> 초기값 설정
 	    	var totalCount = "" // 게시물 총 갯수
 	    	var totalPage = ""; // 게시판의 총 페이지갯수
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var adminCompany = "${adminCompany}";
-	    	var today = "${today}";
 	    	
 	    	$(function(){
 	    		//회사리스트
@@ -68,9 +67,8 @@
 		            company_change();
 		        }
 	    		
-	    		//검색시 날짜 오늘날짜로 기본값 적용
-	    		$("#Sdatepicker").val(today);
-	    		$("#Edatepicker").val(today);
+	    		$("#Sdatepicker").val("${searchStartDate}");
+	    		$("#Edatepicker").val("${searchEndDate}");
 	    		
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '#attiBoardList th', function(){
@@ -489,8 +487,8 @@
 					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
 					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
 					<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime">시작시간</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="endtime">종료시간</th>
+					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_time">시작시간</th>
+					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="end_time">종료시간</th>
 				</tr>
 			</thead>
 			<tbody>

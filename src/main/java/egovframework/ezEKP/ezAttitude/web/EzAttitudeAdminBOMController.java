@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezAttitude.web;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -42,6 +43,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
@@ -1219,10 +1222,29 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
+		String adminCompany = "";
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
+		
+		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		
+		String searchStartDate = localDate + " 00:00:00";
+		String searchEndDate = localDate + " 23:59:59";
+		
+		Date startDate = sdf.parse(searchStartDate);
+		
+		cal = Calendar.getInstance();
+		cal.setTime(startDate);
+		cal.add(Calendar.DAY_OF_MONTH, -7);
+		
+		searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
+		
 		//회사리스트
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies";
@@ -1248,18 +1270,16 @@ public class EzAttitudeAdminBOMController {
 		
 		JSONArray list = new JSONArray();
 		JSONObject data = new JSONObject();
-		String adminCompany = "";
-		String today = "";
 		
 		if (status.equals("ok")) {
 			data = (JSONObject) resultBody.get("data");
 			list = (JSONArray) data.get("list");
 			adminCompany = (String) data.get("adminCompany");
-			today = (String) data.get("today");
 			
 			model.addAttribute("list", list);
 			model.addAttribute("adminCompany", adminCompany);
-			model.addAttribute("today", today);
+			model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
+			model.addAttribute("searchEndDate", searchEndDate.substring(0, 10));
 		}
 		
 		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf ended");
