@@ -905,15 +905,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			cal.setTime(startDate);
 			cal.add(Calendar.DAY_OF_MONTH, -7);
 			
-			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false);
-			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, false);
+			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
 		} else {
 			if (searchStartDate.equals("")) {
-				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, false);
+				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
 			}
 			
 			if (searchEndDate.equals("")) {
-				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, false);
+				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 			}
 		}
 		
@@ -958,15 +958,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			cal.setTime(startDate);
 			cal.add(Calendar.DAY_OF_MONTH, -7);
 			
-			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, false);
-			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, false);
+			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
 		} else {
 			if (searchStartDate.equals("")) {
-				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, false);
+				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
 			}
 			
 			if (searchEndDate.equals("")) {
-				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, false);
+				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 			}
 		}
 		

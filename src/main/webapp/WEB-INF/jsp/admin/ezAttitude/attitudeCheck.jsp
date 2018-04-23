@@ -186,9 +186,9 @@
 	   					userName : searchUserName,
 	   					deptName : searchDeptName,
 	   					title : searchTitle,
-	   					searchStartDate : searchStartDate,
-	   					searchEndDate : searchEndDate,
-	   					searchAttitudeType : searchAttitudeType,
+	   					startDate : searchStartDate,
+	   					endDate : searchEndDate,
+	   					attitudeType : searchAttitudeType,
 	   					pageNum : pageNum,
 	   					listSize : listSize,
 	   					orderCell : orderCell,
@@ -209,7 +209,7 @@
 	    	
 	    	//검색 > 구분selectBox
 	    	function getAttitudeTypeList(typeList, typeId) {
-	    		var html = "<option value='total'>전체</option>";
+	    		var html = "<option value=''>전체</option>";
 	    		
 	    		for (var i = 0; i < typeList.length; i ++) {
 	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
@@ -406,7 +406,7 @@
 					<td style="width: 3%;">이름</td>
 					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;"></td>
 					<td style="width: 3%">구분</td>
-					<td style="width: 20%;"><select name="attitudeType" id="attitudeType" style="margin-top:4px; padding-right:40px;"></select></td>
+					<td style="width: 20%;"><select name="searchAttitudeType" id="searchAttitudeType" style="margin-top:4px; padding-right:40px;"></select></td>
 				</tr>
 				<tr>
 					<td style="width: 3%;">직위</td>
