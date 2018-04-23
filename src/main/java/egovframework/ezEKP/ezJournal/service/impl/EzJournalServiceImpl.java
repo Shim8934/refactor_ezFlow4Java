@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -39,7 +38,6 @@ import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-
 
 @Service("ezJournalService")
 public class EzJournalServiceImpl implements EzJournalService {
@@ -816,10 +814,11 @@ public class EzJournalServiceImpl implements EzJournalService {
 		String journalIdS = "";
 		
 		for (int i = 0; i < journalIdList.size(); i++) {
-			if(i==0){
+			
+			if (i == 0){
 				journalIdS = journalIdList.get(i);
 			} else {
-				journalIdS += ","+journalIdList.get(i);
+				journalIdS += "," + journalIdList.get(i);
 			}
 		}
 		param.put("journalIdS", journalIdS);
@@ -831,10 +830,11 @@ public class EzJournalServiceImpl implements EzJournalService {
 			String thisContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").html();
 			String nextContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("nextJournal").html();
 			
-			formThisHtml.append("<p> - " + journal.getJournalTitle().trim() + " - </p>");
+			// #146bb8
+			formThisHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");
 			formThisHtml.append(thisContent.trim() + "<p></p><p></p>");
 			
-			formNextHtml.append("<p> - " + journal.getJournalTitle().trim() + " - </p>");   
+			formNextHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");   
 			formNextHtml.append(nextContent.trim() + "<p></p><p></p>");
 		}
 		
