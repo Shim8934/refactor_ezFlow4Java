@@ -521,7 +521,7 @@ public class EzLadderGWController {
 		int totalLadder = 0;
 		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
 		int listNumPerPage = 20;
-		System.out.println("listNumPerPage ==========================" + listNumPerPage);
+		
 		try {
 			List<LadderVO> list;
 			ezLadderService.changePreLadderList(ladOrderVO);

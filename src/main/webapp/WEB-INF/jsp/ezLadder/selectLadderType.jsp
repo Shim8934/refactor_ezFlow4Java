@@ -41,7 +41,7 @@
 	<body class="mainbody">
 		<h1><spring:message code="ezLadder.t018" /></h1>
 		<div class="gameType_wrap">
-		    <h2><spring:message code='ezLadder.t100' /></h2>
+		    <h2><spring:message code='ezLadder.t104' /></h2>
 		    <ul>
 		    	<li class="gameType0" onClick='selectLadType(0)'>
 		        	<dl>

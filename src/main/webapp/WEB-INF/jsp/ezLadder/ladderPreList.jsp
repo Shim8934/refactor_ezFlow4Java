@@ -20,7 +20,7 @@
 			var pageChange = 1;
 			var totalPage = ${totalPage};
 			var totalLadder = ${totalLadder};
-			var blockSize = 10;
+			var blockSize = 5;
 			var mode = "";
 			var modeCheck = "${mode}";
 			var searchSelect = "${searchSelect}";
@@ -104,9 +104,20 @@
 					},
 					success: function(result) {
 						var lines = "";
-				
+						var searchLadderType;
+						switch (ladder["type"]) {
+						case 0: searchLadderType = strLang19;
+								break;
+						case 1: searchLadderType = strLang20;
+								break;
+	 					case 2: searchLadderType = strLang21;
+								break;
+						case 3: searchLadderType = strLang22;
+								break;
+						}  
+						
 						$.each(result.list, function(index, value) {
-							lines += '<li name="preladder_' + index + '" id="' + value.ladderId + '" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0' + value.type + '.png"></span><span class="txt">' + value.title + '</span></li>';
+							lines += '<li name="preladder_' + index + '" id="' + value.ladderId + '" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0' + value.type + '.png" title="' + searchLadderType + '"></span><span class="txt">' + value.title + '</span></li>';
 						});
 						$("#columnsbnk").html(lines);
 						drag(); 
@@ -188,7 +199,19 @@
 				totalLadder = ladderList["totalLadder"];
 
 				ladderList["list"].forEach(function(ladder, index) {
-					html += '<li name="preladder_' + index + '" id="' + ladder["ladderId"] + '" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0' + ladder["type"] + '.png"></span><span class="txt">' + ladder["title"] + '</span></li>';
+					var searchLadderType;
+					switch (ladder["type"]) {
+					case 0: searchLadderType = strLang19;
+							break;
+					case 1: searchLadderType = strLang20;
+							break;
+ 					case 2: searchLadderType = strLang21;
+							break;
+					case 3: searchLadderType = strLang22;
+							break;
+					} 
+					
+					html += '<li name="preladder_' + index + '" id="' + ladder["ladderId"] + '" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0' + ladder["type"] + '.png" title="' + searchLadderType + '" ></span><span class="txt">' + ladder["title"] + '</span></li>';
 				});
 				
 				$("#columnsbnk").html(html);
@@ -284,7 +307,7 @@
 							</div>
 							<ul id="columnsbnk" class="game_list content">
 								<c:forEach items="${list}" var="prelist" varStatus="status">
-									<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png"></span><span class="txt">${prelist.title}</span></li>
+									<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png" title="<spring:message code='ezLadder.t10${prelist.type+1}'/>"></span><span class="txt">${prelist.title}</span></li>
 								</c:forEach>
 							</ul>
 							<div id="tblPageRayer" style="margin-top: 10px;"></div>
