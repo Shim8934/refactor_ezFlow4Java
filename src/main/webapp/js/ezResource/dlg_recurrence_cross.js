@@ -184,7 +184,7 @@ function SetMonthly( xmlMonthly )
 
 function SetYearly( xmlYearlly )
 {
-	document.getElementById("mpYealy").checked = true;
+	document.getElementById("mpYearly").checked = true;
 	showMainPattern(3);
 	if(getNodeText(SelectNodes(xmlYearlly,"recurrence/selType")[0])  == 0)
 	{
