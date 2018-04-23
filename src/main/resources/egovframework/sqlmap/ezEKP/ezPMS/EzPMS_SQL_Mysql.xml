@@ -369,18 +369,47 @@
 			]]>
 	</select>
 	
-	<select id="EzPMSDAO.getProjectMember" parameterClass="Map" resultMap="projectMemberVO">
+	<select id="EzPMSDAO.getProjectMember" parameterClass="Map" resultMap="projectMemberVO" remapResults="true">
 			<![CDATA[
 				SELECT
-					CONCAT('t',TASK_ID) AS id,
-					GROUP_ID AS parent,
-					TASK_NAME AS text,
-					SORT_ORDER AS sort
-				FROM TBL_PMS_TASK
+					USER_ID AS USER_ID,
+					USER_NAME$lang$ AS USER_NAME,
+					USER_DEPTNAME$lang$ AS USER_DEPTNAME
+				FROM TBL_PMS_MEMBER
 				WHERE
 					PROJECT_ID = #project_Id#
-						AND
-					DEL_STATUS = 0
+				AND
+					USER_ID_TYPE = 'user'
+				AND
+					MEMBER_ROLE_ID IN (#member_Role_Id#)
+				AND
+					TENANT_ID = #tenant_Id#
+				UNION
+				SELECT 
+					CN AS USER_ID,
+					DISPLAYNAME$lang$ AS USER_NAME,
+					DESCRIPTION$lang$ AS USER_DEPTNAME
+				FROM TBL_USERMASTER D JOIN
+				(SELECT
+					DISTINCT B.CN AS DEPARTMENT
+				FROM
+					TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
+				ON
+					B.DEPT_CD_PATH LIKE CONCAT('%',A.USER_ID,'%')
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.PROJECT_ID = #project_Id#
+				AND
+					A.USER_ID_TYPE = 'dept'
+				AND
+					A.MEMBER_ROLE_ID IN (#member_Role_Id#)
+				AND
+					A.TENANT_ID = 1) C
+				ON
+					D.DEPARTMENT = C.DEPARTMENT
+				WHERE
+					D.TENANT_ID = #tenant_Id#
 			]]>
 	</select>
 	

@@ -143,16 +143,21 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectMemberVO> getProjectMember(int projectId, int roleId, String lang) {
-		LOGGER.debug("getProjectMember started");
+	public List<ProjectMemberVO> getProjectMemberList(int projectId, int roleId, String lang, int tenantId) {
+		LOGGER.debug("getProjectMemberList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("projectId", projectId);
-		param.put("roleId", roleId);
+		if (roleId == 4) {
+			param.put("roleId", "1,2");			
+		} else {
+			param.put("roleId", roleId);
+		}
 		param.put("lang", lang);
-		List<ProjectMemberVO> list = ezPMSDAO.getProjectMember(param);
+		param.put("tenantId", tenantId);
+		List<ProjectMemberVO> list = ezPMSDAO.getProjectMemberList(param);
 		
-		LOGGER.debug("getProjectMember ended");
+		LOGGER.debug("getProjectMemberList ended");
 		return list;
 	}
 
@@ -425,10 +430,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		headManager = ezPMSDAO.getHeadManagerInfo(param);
 		return headManager;
 	}
-
 	@Override
-	public void addProjectMember(ProjectInfoVO newProject, String parameter) {
-		
-		
+	public List<ProjectMemberVO> getProjectMember(int projectId, int roleId,
+			String lang) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
