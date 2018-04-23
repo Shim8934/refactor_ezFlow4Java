@@ -73,24 +73,40 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("createDate", newProject.getCreateDate());
 		map.put("creatorName", newProject.getCreatorName());
 		map.put("creatorName2", newProject.getCreatorName2());
+		map.put("creatorDeptName", newProject.getCreatorDeptname());
+		map.put("creatorDeptName2", newProject.getCreatorDeptname2());
 		map.put("creatorId", newProject.getCreatorId());
-		map.put("status", "W");
+		map.put("progress", 0);
 		
 		try {
+			//날짜 차이 계산
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getCreateDate());
 			
 			int workingDays = getWorkinDays(startDate, endDate);
 			
+			int createAndEndDateComp = createDate.compareTo(endDate);
+			
+			if(createAndEndDateComp > 0) {
+				map.put("status", "L");
+			} else {
+				map.put("status", "W");
+			}
+						
 			map.put("workingDay", workingDays);
 			map.put("restDueday", workingDays);
 			
-		} catch (ParseException e) {
-			System.out.println(e.getMessage());
+			//프로젝트 총괄담당자 정보 불러오기
+			ProjectMemberVO headManagerInfo = getHeadManagerInfo(newProject.getHeadManagerId(), Integer.parseInt(tenantId));
+			map.put("headManagerDeptName", headManagerInfo.getUserDeptname());
+			map.put("headManagerDeptName2", headManagerInfo.getUserDeptname2());
+			map.put("headManagerName", headManagerInfo.getUserName());
+			map.put("headManagerName2", headManagerInfo.getUserName2());
+			
+		} catch (Exception e) {
+			LOGGER.debug("Error : " + e.getMessage());
 		}
-		
-		
 		
 		ezPMSDAO.addNewProject(map);
 		LOGGER.debug("Service addNewProject ended.");
@@ -396,5 +412,23 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	    
 	    int workingDays = (int) (daysWithoutSunday-w1+w2);
 	    return workingDays;
+	}
+	
+	//프로젝트 총괄 담당자의 유저 정보 불러오기
+	public ProjectMemberVO getHeadManagerInfo(String userId, int tenantId) throws Exception {
+		ProjectMemberVO headManager = new ProjectMemberVO();
+		
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("tenantId", tenantId);
+		
+		headManager = ezPMSDAO.getHeadManagerInfo(param);
+		return headManager;
+	}
+
+	@Override
+	public void addProjectMember(ProjectInfoVO newProject, String parameter) {
+		
+		
 	}
 }

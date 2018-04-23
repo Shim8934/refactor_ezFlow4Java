@@ -37,3 +37,28 @@ function getProjectTaskTree(containerId, projectId) {
 		}
 	});
 }
+
+
+function convertString(str) {
+	str = ReplaceText(str, "&", "&amp;");
+	str = ReplaceText(str, "<", "&lt;");
+	str = ReplaceText(str, ">", "&gt;");
+	str = str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+	return str;
+}
+ 
+function ReplaceText(orgStr, findStr, replaceStr) {
+     var re = new RegExp(findStr, "gi");
+     return (orgStr.replace(re, replaceStr));
+}
+ 
+function replaceString(p_str) {
+     p_str = ReplaceText(p_str, "&amp;", "&");
+     p_str = ReplaceText(p_str, "&lt;", "<");
+     p_str = ReplaceText(p_str, "&gt;", ">");
+     return p_str;
+}
+
+function popupClose() {
+	parent.DivPopUpHidden();
+}

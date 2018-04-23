@@ -65,7 +65,7 @@ public class EzPMSGWController {
 //			Map<String, Object> search = new HashMap<>();
 			String projectName = request.getParameter("projectName");
 			String planStartDate = request.getParameter("planStartDate");
-			String overview = request.getParameter("overview");			
+			String overview = request.getParameter("overview");	
 			
 			//프로젝트 리스트 가져오기
 			//List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), info, status, search, info.getOffSet(), lang);

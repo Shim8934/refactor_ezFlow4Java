@@ -16,6 +16,7 @@
 	<typeAlias 	alias="deptViewVO" 									type="egovframework.ezEKP.ezPMS.vo.DeptViewVO" />
 	<typeAlias 	alias="deptInfoVO" 									type="egovframework.ezEKP.ezPMS.vo.DeptInfoVO" />
 	<typeAlias 	alias="companyVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO" />
+	<typeAlias 	alias="HeadManagerVO" 								type="egovframework.ezEKP.ezPMS.vo.ProjectMemberVO"/>
 	
     <resultMap id="projectInfoVO" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
@@ -207,6 +208,14 @@
 		<result property="deptName" 		column="dept_name" />
 	</resultMap>
 	
+	<resultMap id="headManagerVO" class="HeadManagerVO">
+		<result property="userId" 					column="userId"/>
+		<result property="userName" 				column="userName"/>
+		<result property="userName2" 				column="userName2"/>
+		<result property="userDeptname" 			column="userDeptname"/>
+		<result property="userDeptname2" 			column="userDeptname2"/>
+	</resultMap> 
+	
     <!-- 조직도 만들기 위한 쿼리 -->
 	<select id="selectDeptList" parameterClass="map" resultMap="deptViewMap">
 		select 
@@ -311,7 +320,7 @@
 			lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME$lang$
 	</select>
 	
-    <insert id="EzPMSDAO.addNewProject" parameterClass="Map">
+    <insert id="addNewProject" parameterClass="Map">
     	<![CDATA[
     		INSERT INTO tbl_pms_project(
     			tenant_id, 				project_name, 			plan_start_date, 			plan_end_date, 			real_start_date, 
@@ -323,7 +332,7 @@
     		VALUES ( 
     			#tenantId#,				#projectName#,			#planStartDate#,			#planEndDate#,			#realStartDate#, 
     			#headManagerId#,		#headManagerName#,		#headManagerName2#,			#headManagerDeptName#,	#headManagerDeptName2#,	
-    			#status#,				0,						#overview#,					#weightInput#,			#creatorId#, 
+    			#status#,				#progress#,				#overview#,					#weightInput#,			#creatorId#, 
     			#creatorName#,			#creatorName2#,			#creatorDeptName#,			#creatorDeptName2#,		#workingDay#,
     			#restDueday#,			#alamMailStatus#,       #createDate#
     		)
@@ -375,5 +384,27 @@
 			]]>
 	</select>
 	
+	<select id="getHeadManagerInfo" parameterClass="Map" resultMap="headManagerVO">
+		<![CDATA[
+			SELECT 
+				A.CN AS userId, 
+				A.DISPLAYNAME AS userName, 
+				A.DISPLAYNAME2 AS userName2, 
+				B.DISPLAYNAME AS userDeptname, 
+				B.DISPLAYNAME2 AS userDeptname2 
+			FROM 
+				jmocha_user_master A 
+			LEFT JOIN 
+				jmocha_dept_master B 
+			ON 
+				A.tenant_id = B.tenant_id 
+			AND 
+				A.department = B.CN
+			WHERE 
+				A.tenant_id = #tenantId# 
+			AND 
+				A.CN = #userId#
+		]]>
+	</select>
 	
 </sqlMap>

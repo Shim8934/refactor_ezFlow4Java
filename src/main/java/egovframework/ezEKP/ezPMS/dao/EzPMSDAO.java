@@ -79,7 +79,12 @@ public class EzPMSDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public void addNewProject(Map<String, Object> map) {
-		insert("EzPMSDAO.addNewProject", map);
+		insert("addNewProject", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ProjectMemberVO getHeadManagerInfo(HashMap<String, Object> map) {
+		return (ProjectMemberVO) select("getHeadManagerInfo", map);
 	}
 	
 }

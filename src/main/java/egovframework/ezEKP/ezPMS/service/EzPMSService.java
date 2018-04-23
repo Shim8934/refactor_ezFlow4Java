@@ -97,4 +97,6 @@ public interface EzPMSService {
 
 	List<DeptViewVO> getDeptViewList(String userId, String companyId, int tenantId, String lang) throws Exception;
 
+	public void addProjectMember(ProjectInfoVO newProject, String parameter);
+
 }

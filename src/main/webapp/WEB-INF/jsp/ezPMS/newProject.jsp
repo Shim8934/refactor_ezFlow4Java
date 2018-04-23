@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
@@ -12,6 +11,7 @@
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/dist/jstree.js"></script>
+
 <!-- date picker -->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
@@ -19,6 +19,7 @@
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+<script type="text/javascript" src="/js/ezPMS/common.js"></script>
 
 <style type="text/css">
 .textInput {
@@ -38,79 +39,9 @@ var overview = null;
 var endAlamStatus = null;
 var headManagerId = null;
 
- $(function() {
-	 $("#Sdatepicker").datepicker({
-			changeMonth: true,
-			changeYear: true,
-			autoSize: true,
-			showOn: "both",
-			buttonImage: "/images/ImgIcon/calendar-month.gif",
-			buttonImageOnly: true,
-			beforeShow: function (input) {
-				var i_offset = $(input).offset();
-				setTimeout(function () {
-					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
-				})
-			}
-		});
-
-		$("#Edatepicker").datepicker({
-			changeMonth: true,
-			changeYear: true,
-			autoSize: true,
-			showOn: "both",
-			buttonImage: "/images/ImgIcon/calendar-month.gif",
-			buttonImageOnly: true,
-			beforeShow: function (input) {
-				var i_offset = $(input).offset();
-				setTimeout(function () {
-					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
-  			})
-			}
-		});
-		
-		var SDate = new Date(planStartDate);
-		var EDate = new Date(planEndDate);
-
-		$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		$("#Sdatepicker").datepicker('setDate', SDate);
-		
-		$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		$("#Edatepicker").datepicker('setDate', EDate);
-		
-		$.datepicker.regional["<spring:message code='main.t0619' />"] = {
-				closeText: "<spring:message code='main.t3' />",
-				prevText: "<spring:message code='main.t0604' />",
-				nextText: "<spring:message code='main.t0605' />",
-				currentText: "<spring:message code='main.t0606' />",
-				monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-				             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-				             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-				             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-				monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-				                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-				                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-				                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-				dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
-				           "<spring:message code='main.t0627' />"],
-				dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-				                "<spring:message code='main.t0627' />"],
-				dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-				              "<spring:message code='main.t0627' />"],
-				weekHeader: "Wk",
-				dateFormat: "yy-mm-dd",
-				firstDay: 0,
-				isRTL: false,
-				duration: 200,
-				showAnim: "show",
-				showMonthAfterYear: true
-		  };
-		  
-		  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
- 
+ $(function() {	
+	getDatePicker();
+	 
 	$("#daysBeforeAlam").change(function() {
 		var state = $("#daysBeforeAlam option:selected").val();
 		if(state == "write") {
@@ -119,6 +50,80 @@ var headManagerId = null;
 		}
 	});
  });
+
+ function getDatePicker() {
+ 	$("#Sdatepicker").datepicker({
+ 		changeMonth: true,
+ 		changeYear: true,
+ 		autoSize: true,
+ 		showOn: "both",
+ 		buttonImage: "/images/ImgIcon/calendar-month.gif",
+ 		buttonImageOnly: true,
+ 		beforeShow: function (input) {
+ 			var i_offset = $(input).offset();
+ 			setTimeout(function () {
+ 				//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+ 			})
+ 		}
+ 	});
+
+ 	$("#Edatepicker").datepicker({
+ 		changeMonth: true,
+ 		changeYear: true,
+ 		autoSize: true,
+ 		showOn: "both",
+ 		buttonImage: "/images/ImgIcon/calendar-month.gif",
+ 		buttonImageOnly: true,
+ 		beforeShow: function (input) {
+ 			var i_offset = $(input).offset();
+ 			setTimeout(function () {
+ 				//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+ 			})
+ 		}
+ 	});
+ 	
+ 	var SDate = new Date(planStartDate);
+ 	var EDate = new Date(planEndDate);
+
+ 	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+ 	$("#Sdatepicker").datepicker('setDate', SDate);
+ 	
+ 	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+ 	$("#Edatepicker").datepicker('setDate', EDate);
+ 	
+ 	$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+ 			closeText: "<spring:message code='main.t3' />",
+ 			prevText: "<spring:message code='main.t0604' />",
+ 			nextText: "<spring:message code='main.t0605' />",
+ 			currentText: "<spring:message code='main.t0606' />",
+ 			monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+ 			             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+ 			             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+ 			             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+ 			monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+ 			                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+ 			                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+ 			                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+ 			dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+ 			           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+ 			           "<spring:message code='main.t0627' />"],
+ 			dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+ 			                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+ 			                "<spring:message code='main.t0627' />"],
+ 			dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+ 			              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+ 			              "<spring:message code='main.t0627' />"],
+ 			weekHeader: "Wk",
+ 			dateFormat: "yy-mm-dd",
+ 			firstDay: 0,
+ 			isRTL: false,
+ 			duration: 200,
+ 			showAnim: "show",
+ 			showMonthAfterYear: true
+ 	  };
+ 	  
+ 	  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+ }
  
  function openOrganTree(type) {
 	 var url = "/ezPMS/pmsSelectAuth.do?type=" + type.id;
@@ -127,17 +132,32 @@ var headManagerId = null;
  }
  
  function addNewProject() {
-	 projectName = $("#projectName").val();
+	 projectName = $("#projectName").val().trim();
 	 var calcType = $(":input:radio[name=weightInput]:checked").val();
 	 planStartDate = $("#Sdatepicker").val();
 	 planEndDate = $("#Edatepicker").val();
-	 overview = $("#overview").val();
+	 overview = convertString($("#overview").val().trim());
+	 
+	 //프로젝트 이름 길이 제한
+	 if (projectName.length == 0) {
+		 alert("프로젝트명을 입력해주세요.");
+		 return;
+	 } else if (projectName.length > 100) {
+		 alert("프로젝트의 이름이 100자를 초과할 수 없습니다.");
+		 return;
+	 }
 	 
 	 if ($("#endAlam").prop("checked") == false) {
 		 endAlamStatus = -1;
 	 } else {
 		 if ($("#daysBeforeAlam option:selected").text() == "직접입력") {
 			 endAlamStatus = $("#write").val();
+			 
+			 if (endAlamStatus.match(/[^0-9]/g).length > 0) {
+				 alert("문자는 입력할 수 없습니다.");
+				 return;
+			 }
+			 
 		 } else {
 			 endAlamStatus = $("#daysBeforeAlam option:selected").text(); 
 		 }
@@ -147,6 +167,31 @@ var headManagerId = null;
 		 weightInput = 0;
 	 } else {
 		 weightInput = 1;
+	 }
+	 
+	 //날짜 제한
+	 var startDateArr = planStartDate.split('-');
+	 var endDateArr = planEndDate.split('-');
+	 
+	 var startDateComp = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
+	 var endDateComp = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+	 
+	 var today = new Date();
+	 var todayComp = new Date(today.getFullYear(), today.getMonth()-1, today.getDay());
+	 
+	//1. 시작일 > 종료일은 불가능
+	 if (startDateComp.getTime() > endDateComp.getTime()) {
+		  alert("시작날짜가 종료날짜보다 늦을 수 없습니다.");
+		  return;
+	  }
+	  
+	//2. 종료일 < 현재일일 떄, 지연프로젝트로 넘어갈 것이라는 confirm창 띄우기
+	 if (endDateComp.getTime() < todayComp.getTime()) {
+		 var confCheck = confirm("종료일이 현재일보다 빠르기 때문에 지연프로젝트로 넘어갑니다. 계속하시겠습니까?");
+		 
+		 if (confCheck != true) {
+			 return;
+		 }
 	 }
 	
 	data = {
@@ -161,6 +206,7 @@ var headManagerId = null;
 			participantList : participantList,
 			viewerList : viewerList
 	}
+	
 	$.ajax({
 		type : "POST",
 		url : "/ezPMS/addNewProject.do",
@@ -177,10 +223,6 @@ var headManagerId = null;
 			alert("error2");
 		}
 	});
- }
-
- function popupClose() {
-	parent.DivPopUpHidden();
  }
  
  function applyList() {
@@ -217,12 +259,12 @@ var headManagerId = null;
 	 $("#managers").html(managerNameList);
 	 $("#participants").html(participantNameList);
 	 $("#viewers").html(viewerNameList);
-	 
  }
+ 
 </script>
 </head>
 <body class="popup">
-	<h1>New Project</h1>
+	<h1>새 프로젝트 추가</h1>
 	<div id="main_body">
 		<table class="content" style="width:100%;">
 			<tr>
@@ -245,13 +287,13 @@ var headManagerId = null;
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree(managers)"><span>담당자</span></a></th>
-				<td colspan="3" style="height:70px" id="managers"><button onclick="test()">test</button></td>
+				<td colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="managers"></div></td>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree(participants)"><span>참여자</span></a></th>
-				<td colspan="3" style="height:70px" id="participants">은정</td>
+				<td colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="participants"></div></td>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree(viewers)"><span>조회자</span></a></th>
-				<td colspan="3" style="height:70px" id="viewers">은정</td>
+				<td colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="viewers"></div></td>
 			<tr>
 				<th>개요</th>
 				<td colspan="3"><textarea id="overview" style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
@@ -266,7 +308,7 @@ var headManagerId = null;
 						<option value="5">5</option>
 						<option value="10">10</option>
 						<option value="write">직접입력</option>
-					</select><input type="text" id="write" style="display:none;"> 일 전
+					</select><input type="text" id="write" style="display:none; width:80px;"> 일 전
 				</td>
 			</tr>
 		</table>
