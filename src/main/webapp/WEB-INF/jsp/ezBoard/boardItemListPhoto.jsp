@@ -154,12 +154,12 @@
 		    	});
 		    	
 		    	//즐겨찾기 게시판의 포토게시판 스크립트 오류 수정
-		    	if (typeof((($($(window.parent.frames['left']))).context) == "undefined") && (($($(window.parent.frames['left']))).length) == 0) {
+		    	if (window.parent.frames['left'] == undefined) {
 		    		$(parent.parent.frames['left']).mouseup(function (e) {
 			    		MailOptionHiddenOutside(e);
 			    	});
 		    	} else {
-			    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
+			    	$(window.parent.frames['left'].document).mouseup(function (e) {
 				    	MailOptionHiddenOutside(e);
 			    	});
 		    	}
@@ -507,7 +507,7 @@
 		
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - 720) / 2;
+		        var pTop = (pheight - 800) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 		
 		        for (var i = 0; i < obj.childNodes.length; i++) {
@@ -516,7 +516,7 @@
 		        }	
 		        // if (tr != null && oArrRows.length > 0) {
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        //}       
 		    }
 		
