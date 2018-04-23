@@ -198,7 +198,8 @@
 					(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
 				)
 			ORDER BY
-				A.TYPE_ID
+				A.TYPE_ID,
+				A.START_DATE
 		]]>
 	</select>
 

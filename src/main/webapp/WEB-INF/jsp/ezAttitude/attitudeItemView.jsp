@@ -97,7 +97,7 @@
 			function modifyAttitude() {
 				var openWin = null;
 				if (CrossYN()) {
-                    openWin = window.open("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(650, 580));
+                    openWin = window.open("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(810, 790));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
