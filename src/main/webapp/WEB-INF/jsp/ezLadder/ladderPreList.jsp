@@ -152,22 +152,6 @@
 						showLadderPreview();
 					});
 				
-				/** sort list */
-				/*$("#columnsbnk").sortable({
-					activate: function(event, ui) {
-						console.log(ui.helper[0]);
-						var thisId = "#" + ui.helper[0].id; 
-						$(thisId).css("border", "1px solid #ddd");
-					}, 
-					stop: function(event, ui) {
-						console.log("sto");
-						var thisId = "#" + ui.item[0].id; 
-						$(thisId).css("border", "");
-					}
-				});
-				$("#columnsbnk").disableSelection();
-				*/
-				/** 이전 리스트 순서 바꾸기 */
 				$("#btn_SaveAprLineTempletName").on("click", function() {
 					loadPreLadderSetting();
 				});
@@ -198,9 +182,10 @@
 			}
 			
 			function loadPreLadderSetting() {
-				retladinfo = getPreLadder(ladderID);
+				/* retladinfo = getPreLadder(ladderID); */
 				if(!!retFunc) {
-					retFunc(retladinfo["lad"], retladinfo["ladline"]);
+					/* retFunc(retladinfo["lad"], retladinfo["ladline"]); */
+					retFunc(ladderID);
 				}
 				
 				window.close();
@@ -284,7 +269,7 @@
 							</div>
 							<ul id="columnsbnk" class="game_list content">
 								<c:forEach items="${list}" var="prelist" varStatus="status">
-									<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png"></span><span class="txt">${prelist.title}</span></li>
+									<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png"></span><span class="txt"><c:out value="${prelist.title}" /></span></li>
 								</c:forEach>
 							</ul>
 							<div id="tblPageRayer" style="margin-top: 10px;"></div>

@@ -123,7 +123,7 @@ public class LadderLineVO {
 		return pic;
 	}
 	public void setPic(String pic) {
-		this.pic = pic;
+		this.pic = pic == null ? "" : pic;
 	}
 	
 	/** 배열 */

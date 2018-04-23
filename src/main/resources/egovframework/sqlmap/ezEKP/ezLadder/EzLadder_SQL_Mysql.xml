@@ -1058,7 +1058,7 @@
 	<!-- boh -->
 	<select id="EzLadderDAO.selectSearchUser" parameterClass="map" resultClass="LadderLineVO">
 		SELECT 
-			CN AS USERID, DISPLAYNAME$lang$ AS USERNAME, DISPLAYNAME$lang$ AS USERNAME2, DESCRIPTION$lang$ AS DEPTNAME, EXTENSIONATTRIBUTE2 AS PIC
+			CN AS USERID, DISPLAYNAME AS USERNAME, DISPLAYNAME2 AS USERNAME2, DESCRIPTION$lang$ AS DEPTNAME, EXTENSIONATTRIBUTE2 AS PIC, TENANT_ID
 		FROM 
 			TBL_USERMASTER
 		WHERE 
@@ -1196,18 +1196,6 @@
 			(#tenant_id#, #ladderId#, #comment#, #userId#, #userName#, #userName2#, #writeDate#)
 	</insert>
 	
-	<!-- 밑에 잘 실행되면 삭제하기... -->
-	<!-- <select id="EzLadderDAO.selectRecentCommentId" parameterClass="LadderCommentVO" resultClass="Integer">
-		SELECT 
-			MAX(ID)
-		FROM 
-			TBL_LADDER_COMMENT
-		WHERE 
-			TENANT_ID = #tenant_id#
-		AND 
-			USERID = #userId#
-	</select> -->
-	
 	<select id="EzLadderDAO.selectLadderComment" parameterClass="LadderCommentVO" resultClass="LadderCommentVO">
 		SELECT 
 			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE, TENANT_ID
@@ -1258,16 +1246,6 @@
 	</delete>
 	
 	<select id="EzLadderDAO.selectLadderBMGroupList" parameterClass="LadderBmVO" resultClass="LadderBmVO">
-		<!-- SELECT 
-			LADDERBMID, BMNAME, USERID, REGDATE
-		FROM 
-			TBL_LADDER_BM
-		WHERE 
-			TENANT_ID = #tenant_id#
-		AND 
-			USERID = #userId#
-		ORDER BY 
-			LADDERBMID -->
 		SELECT 
 			B.LADDERBMID, B.BMNAME, B.USERID, B.REGDATE, U.USERNAME, U.USERNAME2, COUNT(U.USERNAME)-1 COUNT
 		FROM 
@@ -1287,18 +1265,8 @@
 	</select>
 	
 	<select id="EzLadderDAO.selectLadderBMUserList" parameterClass="LadderBmUserVO" resultClass="LadderBmUserVO">
-		<!-- SELECT 
-			ID, LADDERBMID, USERID, USERNAME, USERNAME2
-		FROM 
-			TBL_LADDER_BMUSER
-		WHERE 
-			TENANT_ID = #tenant_id#
-		AND 
-			LADDERBMID = #ladderBmId#
-		ORDER BY 
-			ID -->
 		SELECT 
-			B.ID, B.LADDERBMID, B.USERID, B.USERNAME, B.USERNAME2, U.COMPANY, U.DESCRIPTION, U.MAIL
+			B.ID, B.LADDERBMID, B.USERID, B.USERNAME, B.USERNAME2, U.COMPANY, U.DESCRIPTION, U.MAIL, EXTENSIONATTRIBUTE2 AS PIC
 		FROM 
 			TBL_LADDER_BMUSER B
 		LEFT JOIN 

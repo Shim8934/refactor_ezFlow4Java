@@ -236,6 +236,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 					resultUser.add(noUser);
 				} else {
 					for(LadderLineVO line : user) {
+						if(primaryLang.equals("2")) {
+							String tempUserName = line.getUserName();
+							line.setUserName(line.getUserName2());
+							line.setUserName2(tempUserName);
+						}
 						resultUser.add(line);
 					}
 				}
@@ -485,7 +490,6 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("tenantId", ladVO.getTenant_id());
 		map.put("lang", lang);
 		List<LadderLineVO> list = ezLadderDAO.ladderGameParticipant(map);
-		logger.debug("getLadderLineParticipant ended.");
 		
 		if(lang.equals("2")) {
 			for(LadderLineVO userVO : list) {
@@ -493,6 +497,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 				userVO.setResultUserName(userVO.getResultUserName2());
 			}
 		}
+		
+		logger.debug("getLadderLineParticipant ended.");
 		return list;
 	}
 

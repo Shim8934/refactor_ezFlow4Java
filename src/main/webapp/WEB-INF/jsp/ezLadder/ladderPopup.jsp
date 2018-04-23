@@ -19,51 +19,57 @@
 		<script type="text/javascript">
 			var retVal;
 			var retFunc;
-			var retVal2;
 			var poptype = "${popupType}";
 			
+			// event
+			function mouseHover(obj, event) {
+				if(event.type == "mouseenter") {
+					obj.classList.add("spanMouseActiveHover");
+				} else {
+					obj.classList.remove("spanMouseActiveHover");
+				}
+			}
+			function userClick(obj, event) {
+				if(obj.classList.contains("spanMouseActiveClick")) {
+					obj.classList.remove("spanMouseActiveClick");
+				} else {
+					obj.classList.add("spanMouseActiveClick");
+				}
+			}
+			// event end
+			
+			$(window).load(function() {
+				if(poptype == "overlapOnlyName") {
+					var $userInfo = $("#userInfo");
+					var html = "";
+					var retValLen = retVal["userId"].length;
+					
+					for(var i = 0; i < retValLen; i++) {
+						html += "<span _userId='" + retVal["userId"][i] + "' onmouseenter='mouseHover(this, event);' onmouseleave='mouseHover(this, event);' onclick='userClick(this, event);'>" + retVal["userName"][i] + " | " + retVal["deptName"][i] + " | " + retVal["userId"][i] + "</span>";
+					}
+					$userInfo.html(html);
+				}
+			});
 			$(function() {
 				try {
 					retVal = parent.retAttendantPopInfo[0];
 					retFunc = parent.retAttendantPopInfo[1];
-					retVal2 = parent.retAttendantPopInfo[2];
 				} catch(e) {
-					try {
-						retVal = opener.retAttendantPopInfo[0]
-						retFunc = opener.retAttendantPopInfo[1];
-						retVal2 = opener.retAttendantPopInfo[2];
-					} catch(e) {
-						retVal2 = "";
-					}
-					console.log(retVal2);
+					retVal = opener.retAttendantPopInfo[0]
+					retFunc = opener.retAttendantPopInfo[1];
 				} 
-				
-				/* if(poptype === "overlap") {
-					console.log(retVal);
-					var html = "";
-					retVal.forEach(function(uservo, index) {
-						if(index === 0) {
-							html = "<p>" + uservo["name1"];
-						} else {
-							html += ", " + uservo["name1"];
-						}
-					});
-					$("#usernames").html(html + "</p>");
-				} */ // 중복유저 알려주는거??
-				
 				$("#btn_addRealUser").on("click", function() {
-					if(typeof retFunc === "function") {
-						/* retFunc(retVal, "real-xml"); */
+					addAttendant($(this).attr("_flag"));
+					/* if(typeof retFunc === "function") {
 						retFunc(retVal, "real");
-					}
+					} */
 				});
 				$("#btn_addAnonyUser").on("click", function() {
-					if(typeof retFunc === "function") {
-						/* retFunc(retVal, "anony-xml"); */
+					addAttendant($(this).attr("_flag"));
+					/* if(typeof retFunc === "function") {
 						retFunc(retVal, "anony");
-					}
+					} */
 				});
-				
 				$("#btn_SaveAprLineTempletName").on("click", function() {
 					var bmName = $("#TxtAprLineTempletName").val();
 					if(bmName == "") {
@@ -78,8 +84,41 @@
 					parent.DivPopUpHidden();
 				});
 			});
+			
+			function addAttendant(flag) {
+				if(typeof retFunc == "function") {
+					if(poptype == "overlapOnlyName") {
+						var $active = $(".spanMouseActiveClick");
+						
+						$active.each(function(i, obj) {
+							var removeIdx = retVal["userId"].indexOf(obj.getAttribute("_userId"));
+							
+							retVal["userId"].splice(removeIdx, 1);
+							retVal["userName"].splice(removeIdx, 1);
+							retVal["deptName"].splice(removeIdx, 1);
+						});
+					}
+					
+					retFunc(retVal, flag);
+				}
+			}
 		</script>
-		
+		<style type="text/css">
+			#userInfo {
+				padding: 0, 10px;
+			}
+			#userInfo span {
+				display: block;
+				height: 20px;
+				cursor: pointer;
+			}
+			.spanMouseActiveClick {
+				background-color: #e5efff;
+			}
+			.spanMouseActiveHover {
+				background-color: #DDD;
+			}
+		</style>
 	</head>
 	<body class="popup">
 			<c:choose>
@@ -106,6 +145,11 @@
 					<span>▒ <spring:message code="ezLadder.t064" /></span>
 					<!-- <span id="usernames"></span> -->
 				</c:when>
+				<c:when test="${popupType == 'overlapOnlyName'}">
+					<h1 id="h1Title" style="margin-bottom: 30px;">이름 중복 검색</h1>
+					<span>▒ 이름이 여러명 검색되었습니다. 추가할 유저를 선택하세요.</span>
+					<p id="userInfo"></p>
+				</c:when>
 				<c:when test="${popupType == 'cmtdelete'}">
 					<h1 id="h1Title" style="margin-bottom: 30px;"><spring:message code="ezLadder.t053" /></h1>
 					<span>▒ <spring:message code="ezLadder.t051" /></span>
@@ -115,8 +159,12 @@
 		<div class="btnposition btnpositionNew">
 			<c:choose>
 				<c:when test="${popupType == 'overlap'}">
-					<input type="submit" value="<spring:message code="ezLadder.t068" />" id="btn_addRealUser">
-					<input type="submit" value="<spring:message code="ezLadder.t069" />" id="btn_addAnonyUser">
+					<input type="submit" value="<spring:message code="ezLadder.t068" />" id="btn_addRealUser" _flag="real">
+					<input type="submit" value="<spring:message code="ezLadder.t069" />" id="btn_addAnonyUser" _flag="anony">
+					<input type="submit" value="<spring:message code="ezLadder.t109" />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
+				</c:when>
+				<c:when test="${popupType == 'overlapOnlyName'}">
+					<input type="submit" value="참여자 추가" id="btn_addRealUser" _flag="real">
 					<input type="submit" value="<spring:message code="ezLadder.t109" />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
 				</c:when>
 				<c:otherwise>
