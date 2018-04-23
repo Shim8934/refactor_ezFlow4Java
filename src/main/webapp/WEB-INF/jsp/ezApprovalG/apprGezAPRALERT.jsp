@@ -25,24 +25,27 @@
 		    function btn_OpinionOK_onclick() {
 		        if (ReturnFunction != null) {
 		            ReturnFunction();
+		            
+		            if (winFlag) {
+		            	window.close();
+		            }
+	            } else {
+		        	window.returnValue = true;
 		            window.close();
-		        }
-		        else
-	        	   if( document.getElementById("pMessageContent").innerHTML == "<spring:message code='ezApprovalG.t146'/>")
-	            	{
-			            window.returnValue = true;
-	            	}
-		            window.close();
+	            }
 		    }
 		    var ReturnFunction;
+		    var winFlag;
 		    window.onload = function () {
 		        try {
 		            RetValue = parent.ezapralert_cross_dialogArguments[0];
 		            ReturnFunction = parent.ezapralert_cross_dialogArguments[1];
+		            winFlag = parent.ezapralert_cross_dialogArguments[2];
 		        } catch (e) {
 		            try {
 		                RetValue = opener.ezapralert_cross_dialogArguments[0];
 		                ReturnFunction = opener.ezapralert_cross_dialogArguments[1];
+			            winFlag = opener.ezapralert_cross_dialogArguments[2];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }

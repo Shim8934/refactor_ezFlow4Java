@@ -1552,8 +1552,9 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
 				var pInformationContent = "" + strLang296 + "<br>" + strLang297 + "";
 				var ans = OpenInformationUI(pInformationContent, AprLineAddUser_Complete);
 				
-				if(!CrossYN() && ans)
+				if(ans) {
 					AprLineAddUser_Complete(true);
+				}
 			}
 			else {
 				AprLineAddUser_Complete(true);

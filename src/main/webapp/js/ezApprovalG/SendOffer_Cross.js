@@ -10,7 +10,7 @@ function SendOffer(pUserID)
 		var DocList = new ListView();
         DocList.LoadFromID("DocList");   
         var tr = DocList.GetSelectedRows();
-	
+        ext = tr[0].getAttribute("DATA2").substring(tr[0].getAttribute("DATA2").lastIndexOf(".")+1);
 		if (tr.length <= 0)
 		{
 			var pAlertContent = strLang195;
@@ -287,7 +287,10 @@ function SendOfferCheck(pDocID, pUserID)
 		else if (rtnVal == "NORECEIPT")
 		{
 			var pInformationContent = " " + strLang201 + "<br> " + strLang202;
-			OpenInformationUI(pInformationContent, SendOfferCheck_OpenUI);
+			var ret = OpenInformationUI(pInformationContent, SendOfferCheck_OpenUI);
+			if (ret && ext == 'hwp') {
+			    SendOfferCheck_OpenUI(ret);
+			}
 			return "NORECEIPT";
 		}
 		else if (rtnVal == "NODEPT")
@@ -455,16 +458,18 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
+    var RtnVal = "";
     if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined) {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+            ezapropinion_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
         else {
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+            ezapropinion_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
@@ -472,7 +477,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
-        var RtnVal = window.showModalDialog(url, parameter, feature);
+        RtnVal = window.showModalDialog(url, parameter, feature);
     }
     return RtnVal;
 }

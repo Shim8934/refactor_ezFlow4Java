@@ -2,15 +2,24 @@
 //문서 번호 작성 함수 ex) A부서-11111
 function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
     try {
-        var fields = message.GetFieldsList();
+    	var fields;
         var name, docnumber;
         var rtnval;
 
         name = pPrefix + "docnumber";
-        var field = message.GetListItem(fields, name);
-        if (!field) return true;
+        
+        if (isHWP == "Y") {
+            if (!HwpCtrl.CheckFieldExist(name))
+                return true;
 
-        fractionsymbol = field.textContent;
+            fractionsymbol = HwpCtrl.GetFieldText(name);
+        } else {
+        	fields = message.GetFieldsList();
+        	var field = message.GetListItem(fields, name);
+        	if (!field) return true;
+        	
+        	fractionsymbol = field.textContent;
+        }
 
     	var result = "";
     	
@@ -59,46 +68,74 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
         		}
         		return true;
         	} else {
-        		field.textContent = fractionsymbol + SN;
-        		
-        		var tempNumString = SN;
-        		var i = 0;
-        		var templen = tempNumString.length;
-        		for (i = 0; i < 6 - templen; i++)
-        			tempNumString = "0" + tempNumString;
-        		DocNumCode = pDeptID + tempNumString;
-        		
-        		message.DocumentBodySetAttribute("regnumbercode", tempNumString);
-        		message.DocumentBodySetAttribute("deptid", pDeptID);
-        		
-        		var field = message.GetListItem(fields, "enforcedate");
-        		if (field) {
-        			if (trim(field.textContent) == "") {
-        				field.textContent = getGyulJeDate();
+        		if (isHWP == "Y") {
+                    HwpCtrl.SetFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + SN);
+                    var tempNumString = SN;
+                    var i = 0;
+                    var templen = tempNumString.length;
+                    for (i = 0; i < 6 - templen; i++)
+                        tempNumString = "0" + tempNumString;
+                    DocNumCode = pDeptID + tempNumString;
+
+                    if (HwpCtrl.CheckFieldExist("enforcedate"))
+                        if (trim(HwpCtrl.GetFieldText("enforcedate")) == "")
+                            HwpCtrl.SetFieldText("enforcedate", getGyulJeDate());
+
+                    return true;
+        		} else {
+        			field.textContent = fractionsymbol + SN;
+        			
+        			var tempNumString = SN;
+        			var i = 0;
+        			var templen = tempNumString.length;
+        			for (i = 0; i < 6 - templen; i++)
+        				tempNumString = "0" + tempNumString;
+        			DocNumCode = pDeptID + tempNumString;
+        			
+        			message.DocumentBodySetAttribute("regnumbercode", tempNumString);
+        			message.DocumentBodySetAttribute("deptid", pDeptID);
+        			
+        			var field = message.GetListItem(fields, "enforcedate");
+        			if (field) {
+        				if (trim(field.textContent) == "") {
+        					field.textContent = getGyulJeDate();
+        				}
         			}
+        			return true;
         		}
-        		return true;
         	}
         }
     } catch (e) {
         if (SN != "") {
-            field.textContent = fractionsymbol + SN;
-            rollbackDocNumber(pDeptID, pPrefix, pDocID);
-            return false;
+        	if (isHWP == "Y") {
+        		HwpCtrl.SetFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + SN);
+        	} else {
+        		field.textContent = fractionsymbol + SN;
+        	}
+        	
+        	rollbackDocNumber(pDeptID, pPrefix, pDocID);
+        	return false;
         }
     }
 }
 function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     try {
-        var fields = message.GetFieldsList();
         var name, docnumber;
         var rtnval;
         name = pPrefix + "docnumber";
+        
+        if (isHWP == "Y") {
+            if (!HwpCtrl.CheckFieldExist(name))
+                return true;
 
-        var field = message.GetListItem(fields, name);
-        if (!field) return true;
-
-        docnumber = field.textContent;
+            docnumber = HwpCtrl.GetFieldText(name);
+        } else {
+        	var fields = message.GetFieldsList();
+        	var field = message.GetListItem(fields, name);
+        	if (!field) return true;
+        	
+        	docnumber = field.textContent;
+        }
         docnumber = docnumber.replace(fractionsymbol, "");
 
     	var result = "";
@@ -120,7 +157,12 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     	
         var dataNodes = GetChildNodes(loadXMLString(result));
         rtnval = getNodeText(dataNodes[0]);
-        field.textContent = fractionsymbol;
+        
+        if (isHWP == "Y") {
+        	HwpCtrl.SetFieldText(name, fractionsymbol);
+        } else {
+        	field.textContent = fractionsymbol;
+        }
 
         if (rtnval == "FALSE") {
             DocNumCode = "";
@@ -129,6 +171,10 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
             DocNumCode = "";
         }
     } catch (e) {
-        field.textContent = fractionsymbol;
+    	if (isHWP == "Y") {
+    		HwpCtrl.SetFieldText(name, fractionsymbol);
+    	} else {
+    		field.textContent = fractionsymbol;
+    	}
     }
 }

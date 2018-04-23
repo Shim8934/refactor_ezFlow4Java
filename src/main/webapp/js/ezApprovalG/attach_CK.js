@@ -111,11 +111,16 @@ function SaveAttachListInfo(Attachxml) {
     
     if (xmlhttp.responseText == "TRUE") {
     	if (CrossYN()) {
-            CheckHistory(1);
-            parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
-            parent.DivPopUpHidden();
-        }
-        else {
+    		if (isIE() && window.dialogArguments) {
+    			CheckHistory(1);
+    			window.returnValue = Attachxml;
+    			window.close();
+    		} else {
+    			CheckHistory(1);
+    			parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
+    			parent.DivPopUpHidden();
+    		}
+        } else {
             CheckHistory(1);
             window.returnValue = Attachxml;
             window.close();
@@ -465,7 +470,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN()) {
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;

@@ -55,6 +55,8 @@
     var pDeptName		= arr_userinfo[5];
     var pDocID =""; 
     var pDocSN = "0";
+    var ext = "mht";
+    
     window.onload = function () {
         if (window.dialogArguments != null) {
             var objWinDlgArgs = window.dialogArguments;
@@ -365,7 +367,8 @@
             var para = new Array();
             para[0] = g_SepAttachLVXml;
             para[1] = g_CabID;
-
+			para[3] = ext;
+			
             var url = "/ezApprovalG/insSepAttach.do";
 
             inssepattach_cross_dialogArguments[0] = para;

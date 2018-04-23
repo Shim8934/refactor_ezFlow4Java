@@ -490,11 +490,11 @@
 	                <input class = 'approvalG' type="text" id="tbManage" name="tbManage" style="Width: 100%" readonly>
 	                <c:choose>
 	                	<c:when test="approvalS">
-			                <select id="selDept" name="selDept" size="2" style="border: #ddd 1px solid; height: 400px; width: 100%; z-index: 100">
+			                <select id="selDept" name="selDept" size="2" style="background:none; border: #ddd 1px solid; height: 400px; width: 100%; z-index: 100">
 			                </select>
 	                	</c:when>
 	                	<c:otherwise>
-			                <select id="selDept" name="selDept" size="2" style="border: #ddd 1px solid; height: 388px; width: 100%; z-index: 100">
+			                <select id="selDept" name="selDept" size="2" style="background:none; border: #ddd 1px solid; height: 388px; width: 100%; z-index: 100">
 			                </select>
 	                	</c:otherwise>
 	                </c:choose>

@@ -154,6 +154,8 @@
 			var agreeResultType = "${agreeResultType}";
 			var curDocNum = "";
 			var isEditorComplete = false;
+			var isHWP = "";
+			var ext = "mht";
 			
 		    window.onload = function ()
 		    {
@@ -793,12 +795,6 @@
 	                        sendAlertMail("APR", 1, "DRAFT");
 		                }
 		                UpdateLineHistory();
-		                if (LastSignSN == 1) {
-		                    SendAckForExch("approval", "END");
-		                }
-		                else {
-		                    SendAckForExch("submit", "ING");
-		                }
 		
 		                pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
 		                OpenAlertUI(pAlertContent, Complete_Deaft2);
@@ -1174,7 +1170,8 @@
 		        var para = new Array();
 		        para[0] = g_SepAttachLVXml;
 		        para[1] = cabinetID;
-		
+				para[3] = ext;
+				
 		        var url = "/ezApprovalG/insSepAttach.do";
 		        inssepattach_cross_dialogArguments[0] = para;
 		        inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
@@ -1303,7 +1300,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		
-		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun ;
+		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "mht";
 		        if (ListType == "21") {
 		            OpenUrl += "&docSN=" + DocSN;
 				}

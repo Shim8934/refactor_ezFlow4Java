@@ -30,6 +30,8 @@
 		    var UserLang = "${userInfo.lang}";
 		    var RetValue;
 		    var ReturnFunction;
+		    var ext = "";
+		    
 		    window.onload = function () {
 		        try {
 		            RetValue = parent.inssepattach_cross_dialogArguments[0];
@@ -46,6 +48,7 @@
 		            document.getElementById("listviewdiv").style.height = "500px";
 		            document.getElementById("lvList").style.height = "500px";
 		        }
+  	 			ext = RetValue[3];
 		        g_SepAttchLVXml = RetValue[0];
 		        g_CabinetID = RetValue[1];
 		        if (RetValue[2])
@@ -135,7 +138,7 @@
 		
 		        var url = "/ezApprovalG/regSepAttach.do";
 		
-		        if (CrossYN()) {
+		        if (CrossYN() && ext != "hwp") {
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		            
@@ -304,7 +307,7 @@
 		
 		            var url = "/ezApprovalG/regSepAttach.do";
 		
-		            if (CrossYN()) {
+		            if (CrossYN() && ext != "hwp") {
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		
@@ -347,20 +350,20 @@
 		            var para = new Array();
 		            para[0] = g_TaskCode;
 		            para[1] = GetAttribute(selnode[0], "DATA1");
+		            para[2] = RetValue[3];
 
 		            var url = "/ezApprovalG/selectCabinetInTask.do";
-		            var feature = "dialogWidth:480px;dialogHeight:430px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
+		            var feature = "dialogWidth:700px;dialogHeight:430px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
         			feature = feature + GetShowModalPosition(480, 430);
-		            if (CrossYN()) {
+		            if (CrossYN() && RetValue[3] == 'mht') {
 		            	selectcabinetintask_cross_dialogArguments[0] = para;
 		            	selectcabinetintask_cross_dialogArguments[1] = btnSelectCabinet_onclick_Complete;
 
 		                 DivPopUpShow(475, 375, url);
-		            }
-		            else {
+		            } else {
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);
-		
+
 		            if (rtn[0] == "TRUE") {
 		                var CabXml = createXmlDom();
 		                CabXml = loadXMLString(rtn[1]);
@@ -407,7 +410,6 @@
 		    }
 		    function GetListXml() {
 		        var InfoXml = loadXMLString(GetLVHearderXml());
-		
 		        var Rows = InfoXml.childNodes[0].childNodes[1];
 		
 		        var pLvList = new ListView();
@@ -417,7 +419,7 @@
 		
 		        var selRow, Row, Cell, Value, Data, node, i;
 		        for (i = 0; i < totalRows.length; i++) {
-		            selRow = totalRows[i];
+		            selRow = totalRows[i];        
 		            Row = createNodeAndAppandNode(InfoXml, Rows, Row, "ROW");
 		            Cell = createNodeAndAppandNode(InfoXml, Row, Cell, "CELL");
 		            node = createNodeAndAppandNodeText(InfoXml, Cell, node, "VALUE", selRow.cells[0].innerHTML);
@@ -462,13 +464,12 @@
 		
 		        var totalRows = pLvList.GetDataRows();
 		        var pAttachCurSel = pLvList.GetSelectedRows();
-			    if (pAttachCurSel.length > 0)
-			    	{
-		        var i;
-		        for (i = 0; i < totalRows.length; i++) {
-		            totalRows[i].cells[0].innerHTML = i + 1;
-		        }
-			    	} 
+			    if (pAttachCurSel.length > 0) {
+			        var i;
+			        for (i = 0; i < totalRows.length; i++) {
+			            totalRows[i].cells[0].innerHTML = i + 1;
+			        }
+			    } 
 		    }
 		    
 		    function btnOK_onclick() {
@@ -482,11 +483,12 @@
 		        }
 		        rtnVal[0] = "TRUE";
 		        rtnVal[1] = GetListXml();
-		
+
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
 		        }
 		        else {
+		        	window.returnValue = rtnVal;
 		            window.close();
 		        }
 		    }
@@ -496,12 +498,12 @@
 		        }
 		        else {
 		            rtnVal[0] = "FALSE";
+		            window.returnValue = rtnVal;
 		            window.close();
 		        }
 		    }
 		    window.onbeforeunload = function () {
-		        if (!CrossYN())
-		            window.returnValue = rtnVal;
+	            window.returnValue = rtnVal;
 		    }
 		</script>
 		<style>
@@ -510,14 +512,14 @@
 	</head>
 	<body class="popup">
 		<div id="menu">
-		        <ul id="trModify" style="display:none">
-		          <li id="btnAddList"><span onClick="return btnAddList_onclick()"><spring:message code='ezApprovalG.t268'/></span></li>
-		          <li id="btnModList" ><span onClick="return btnModList_onclick()"><spring:message code='ezApprovalG.t1033'/></span></li>
-				  <li id="btnDelList"><span onClick="return btnDelList_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
-		        </ul>
-				<ul id="trChangeCabinet" style="display:none">
-		          <li id="btnSelectCabinet"><span onClick="return btnSelectCabinet_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
-		        </ul>
+	        <ul id="trModify" style="display:none">
+	          <li id="btnAddList"><span onClick="return btnAddList_onclick()"><spring:message code='ezApprovalG.t268'/></span></li>
+	          <li id="btnModList" ><span onClick="return btnModList_onclick()"><spring:message code='ezApprovalG.t1033'/></span></li>
+			  <li id="btnDelList"><span onClick="return btnDelList_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
+	        </ul>
+			<ul id="trChangeCabinet" style="display:none">
+	          <li id="btnSelectCabinet"><span onClick="return btnSelectCabinet_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
+	        </ul>
 		</div>
 		
 		<h2><spring:message code='ezApprovalG.t1034'/></h2>
@@ -526,8 +528,8 @@
 		</div>
 		
 		<div class="btnposition btnpositionNew" >
-		<a class="imgbtn"><span onclick = "return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
-		<a class="imgbtn"><span onclick = "return btnClose_onclick()"> <spring:message code='ezApprovalG.t119'/></span></a>
+			<a class="imgbtn"><span onclick = "return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
+			<a class="imgbtn"><span onclick = "return btnClose_onclick()"> <spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

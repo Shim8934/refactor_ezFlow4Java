@@ -61,6 +61,7 @@ var strLang107 = "Classified"
 // DraftUI\draft.js
 var strLang124 = "Approval status "
 var strLang125 = "Status"
+var strLang126 = "Public"
 var strLang128 = "기"
 var strLang131 = "Error occurred."
 var strLang132 = "Please select the document again!"
@@ -507,6 +508,7 @@ var strLang713 = "Can not find the documentary information."
 var strLang714 = "Additional information initialization"
 var strLang715 = "Classification information initialization"
 var strLang716 = "Failed loading documentary classification information!"
+var strLang717 = "The opinion about contents of body is follow.]\15"
 // ezDocInfo\setL
 // ezStatistics\_vti_cnf\ezStatistics.js
 // ezStatistics\ezStatistics.js
@@ -1006,3 +1008,5 @@ var strLangSpjj32 =	"후결 승인시에 에러가 발생하였습니다."
 	
 var strLangSpjj33 = "결재 문서 바로가기";
 var strLangSpjj34 = "님이 기안한 결재 문서가 도착했습니다. <br> 결재를 하시려면 아래 링크를 클릭하세요.";
+
+var strLang129 = "수신자"

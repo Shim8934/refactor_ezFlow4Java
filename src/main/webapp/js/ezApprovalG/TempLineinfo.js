@@ -215,12 +215,10 @@ function btn_DelAprLineTemplet_onclick()
 	var p_SelAprLineTempletSN;
 	var pInformationContent = linealt7;
 	var Ans = OpenInformationUI(pInformationContent, btn_DelAprLineTemplet_onclick_Complete);
-	if (!CrossYN()) {
 	    if (Ans) {
 	        p_SelAprLineTempletSN = ListViewLen[0].getAttribute("DATA1");
 	        DelAprLineTempletList(p_SelAprLineTempletSN);
 	    }
-	}
 }
 
 function btn_DelAprLineTemplet_onclick_Complete(Ans) {

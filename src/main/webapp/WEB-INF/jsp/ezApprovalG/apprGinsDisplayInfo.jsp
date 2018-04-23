@@ -77,8 +77,12 @@
 		            rtnVal[0] = "TRUE";
 		            rtnVal[1] = GetDisplayEndDate();
 		            rtnVal[2] = txtDisplayReason.value;
-		            ReturnFunction(rtnVal);
-		            window.close();
+		            
+		            if (ReturnFunction != null) {
+			            ReturnFunction(rtnVal);
+			        } else {
+			            window.close();
+			        }
 		        }
 		    }
 		    function IsGreaterThanCurYear(pYear)
@@ -94,10 +98,9 @@
 		        rtnVal[0] = "FALSE";
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
+		        } else {
 		            window.close();
 		        }
-		        else
-		            window.close();
 		    }
 		    window.onunload = function()
 		    {

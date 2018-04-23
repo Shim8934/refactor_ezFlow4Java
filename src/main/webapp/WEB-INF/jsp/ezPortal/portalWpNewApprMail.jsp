@@ -352,21 +352,36 @@
 		        pArgument[5] = "";
 		        pArgument[6] = "OPINION_SHOW";
 		        pArgument[7] = "2";
-	
+		        
 		        var openLocation;
-		                
-	            if (CrossYN()) {
-	                openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	            } else {
-	            	openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	            }
-	            
-	            openLocation = openLocation + escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
-	            openLocation = openLocation + "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
-	            openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
-	            openLocation = openLocation + "&listType=" + escape(pArgument[7]);
-	
-		        openwindow(openLocation, "", 880, 570);
+		        
+                if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "doc") {
+                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezViewApr_Word_Cross.aspx?DocID=" + escape(pArgument[0]) + "&DocHref=" + escape(pArgument[1]);
+                    openLocation += "&OpinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
+                    openLocation += "&isOpinion=" + escape(pArgument[6]);
+                    openLocation += "&ListType=" + escape(pArgument[7]);
+                }
+                else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+                	if (isIE()) {
+	                    openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
+	                    openLocation += "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&listSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
+	                    openLocation += "&isOpinion=" + escape(pArgument[6]);
+	                    openLocation += "&listType=" + escape(pArgument[7]);
+                	} else {
+                		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+                        alert(pAlertContent);
+                        
+                        return;
+                	}
+                } else {
+                	openLocation = "/ezApprovalG/aprDocView.do?docID=";
+                	openLocation += escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
+    	            openLocation += "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
+    	            openLocation += "&isOpinion=" + escape(pArgument[6]);
+    	            openLocation += "&listType=" + escape(pArgument[7]);
+                }
+
+                openwindow(openLocation, "", 880, 570);
 		    }
 	
 		    function openApprDraftUI(pDraftFlag, pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
@@ -449,16 +464,18 @@
 	                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
 	                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
 	            } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?DocID=" + escape(pArgument[0]);
-	                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
-	                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
+	            	if (isIE()) {
+		                openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
+		                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
+		                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0" + "&docState=" + escape(pDocState);
+	            	} else {
+	            		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                    alert(pAlertContent);
+	                    
+	                    return;
+	            	}
 	            } else {                
-	                if (CrossYN()) {
-	                    openLocation = "/ezApprovalG/approvui.do?docID=";
-	                } else {
-	                	openLocation = "/ezApprovalG/approvui.do?docID=";
-	                }
-
+                    openLocation = "/ezApprovalG/approvui.do?docID=";
 	                openLocation = openLocation + escape(pArgument[0]);
 	                openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]);
 	                openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0" + "&docState=" + escape(pDocState);

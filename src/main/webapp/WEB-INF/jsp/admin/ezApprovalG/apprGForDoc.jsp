@@ -465,7 +465,14 @@
 			        var openLocation = "";
 			        
 			        if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") { //한글기안
-			            openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP.aspx";
+			        	if (isIE()) {
+				            openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+		                } else {
+		                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+		                	alert(pAlertContent);
+		                    
+		                    return;
+		                }
 			        } else {
 		                openLocation = "/ezApprovalG/contDocView.do";
 			        }

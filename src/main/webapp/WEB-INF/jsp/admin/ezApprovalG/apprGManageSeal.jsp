@@ -46,7 +46,6 @@
 		    function OpenAlertUI(pAlertContent) {
 		        if (CrossYN()) {
 		            ezapralert_cross_dialogArguments[0] = pAlertContent;
-		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
 		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 		            try { ezAPRALERT_Cross.focus(); } catch (e) { }
 		        } else {
@@ -329,7 +328,7 @@
 		</div>
 	
 		<div class="listview"  style="width:790px" >
-			<DIV id=lvtForm class="text" style="border:0; HEIGHT:300px; WIDTH:790px"></DIV>
+			<DIV id=lvtForm class="text" style="OVERFLOW-Y:auto; overflow-x:auto; border:0; HEIGHT:300px; WIDTH:790px"></DIV>
 		</div>
 	
 		<script type="text/javascript">

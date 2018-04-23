@@ -44,18 +44,20 @@
 					if (rtnVal != "FALSE") {
 				        if (ReturnFunction != null) {
 				            ReturnFunction(rtnVal);
-				            window.close();
-				        }
-				        else {
+				            
+				            if (winFlag) {
+				            	window.close();
+				            }
+				        } else {
 				            window.returnValue = rtnVal;
 				            window.close();
 				        }
 					} else {
-							flag = true;
-				            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
-				            alert(pAlertContent); // 추가
-				            //OpenAlertUI(pAlertContent);
-				            return;
+						flag = true;
+			            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
+			            alert(pAlertContent); // 추가
+			            //OpenAlertUI(pAlertContent);
+			            return;
 					}
 			    }
 		    }
@@ -64,7 +66,6 @@
 		    function OpenAlertUI(pAlertContent) {
 		        if (CrossYN()) {
 		            ezapralert_cross_dialogArguments[0] = pAlertContent;
-		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
 		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 		            try { ezAPRALERT_Cross.focus(); } catch (e) {
 		            }
@@ -81,8 +82,11 @@
 		    
 		    function btn_OpinionCANCEL_onclick() {
 		        if (ReturnFunction != null) {
-		            window.close();
-		            ReturnFunction("cancel");            
+		            ReturnFunction("cancel");
+		            
+		            if (winFlag) {
+		            	window.close();
+		            }
 		        }
 		        else {
 		            window.returnValue = "cancel";
@@ -91,6 +95,7 @@
 		    }
 		    var RetValue;
 		    var ReturnFunction;
+		    var winFlag;
 		    window.onload = function () {
 		    	document.getElementById('inpPassword').focus();
 		    	
@@ -103,10 +108,12 @@
 		        try {
 		            RetValue = parent.ezchkpasswd_cross_dialogArguments[0];
 		            ReturnFunction = parent.ezchkpasswd_cross_dialogArguments[1];
+		            winFlag = parent.ezchkpasswd_cross_dialogArguments[2];
 		        } catch (e) {
 		            try {
 		                RetValue = opener.ezchkpasswd_cross_dialogArguments[0];
 		                ReturnFunction = opener.ezchkpasswd_cross_dialogArguments[1];
+		                winFlag = opener.ezchkpasswd_cross_dialogArguments[2];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }

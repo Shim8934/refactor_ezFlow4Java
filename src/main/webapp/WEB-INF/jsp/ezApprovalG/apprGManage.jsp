@@ -97,7 +97,8 @@
 		    var SubQuery = "${SubQuery}";
 		    var condition = new Array();
 		    var nowDate = "${nowDateUTC}";
-		    
+		    var ext;
+		   
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -243,13 +244,13 @@
 		                onSelect_Year(data.item.value);
 		            }
 		        });
-		
+		        
 		        $("#number")
 		          .selectmenu()
 		          .selectmenu("menuWidget")
 		            .addClass("overflow");
 		    });
-		    
+		  
 		    function window_onload() {
 		        CurrentHeight = document.documentElement.clientHeight;
 		        CurrenWidth = document.documentElement.clientWidth;
@@ -334,6 +335,7 @@
 		        SelList.LoadFromID("DocList");
 		        var oArrRows = SelList.GetSelectedRows();
 		        var tr = oArrRows[0];
+		        ext =  tr.getAttribute("DATA3").substr(tr.getAttribute("DATA3").length - 3, tr.getAttribute("DATA3").length).toLowerCase();
 		        if (tr.length != 0) {
 		            if (pListTypeValue != "5") {
 		                if (pDocInfoValue == "1")
@@ -346,7 +348,7 @@
 		                if (tr) {
 		                    pDocID = tr.getAttribute("DATA1");
 		                    pURL = tr.getAttribute("DATA2");
-		
+							
 		                    switch (pDocInfoValue) {
 		                        case "4":
 		                            getDataInfo("3");
@@ -393,8 +395,7 @@
 		                    openApprovUI();
 		                else
 		                    btnRedraft_onclick();
-		            }
-		            else if (pListTypeValue == "4") {
+		            } else if (pListTypeValue == "4") {
 		                if (pSusinManagerFlag == "admin" || pCurSelRow.getAttribute("DATA8") == pUserID) {
 		                    var pDraftFlag;
 		                    var tmpDocState = pCurSelRow.getAttribute("DATA9");
@@ -408,31 +409,35 @@
 		                    else {
 		                        OpenReceiveDraftUI(pCurSelRow, pDraftFlag);
 		                    }
-		                }
-		                else {
+		                } else {
 		                    openViewDocInfo();
 		                }
-		            }
-		            else if (pListTypeValue == "21") //한양대 임시저장
-		            {
+		            } else if (pListTypeValue == "21") { //한양대 임시저장 
 		                pDocID = pCurSelRow.getAttribute("DATA1");
 // 		                var newDocID = MakeTmp2Ing(pDocID);
 		                pURL = pCurSelRow.getAttribute("DATA3");
 		                btnRedraft_onclick();
-		            }
-		            else if (pListTypeValue != "5") {
+		            } else if (pListTypeValue != "5") {
 		                openViewDocInfo();
-		            }
-		            else {
+		            } else {
 		                var para = new Array();
 		                para[0] = pDocID;
 		                para[1] = pURL;
-		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp")
-		                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
-		                else {
+		                
+		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		                	if (isIE()) {
+			                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+		                	} else {
+		                		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+			                    alert(pAlertContent);
+			                    
+			                    return;
+		                	}
+		                } else {
 	                        openLocation = "/ezApprovalG/contDocView.do";
 		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
 		                }
+		                
 		                openwindow(openLocation, "", 880, 570);
 		            }
 		        }
@@ -563,9 +568,15 @@
 		            para[1] = pURL;
 		            var openLocation;
 		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
-		            }
-		            else {
+		            	if (isIE()) {
+			            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+		                } else {
+		                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+		                	alert(pAlertContent);
+		                    
+		                    return;
+		                }
+		            } else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
 		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
@@ -609,8 +620,7 @@
 		
 		            if (Html1 == "hwp") {
 		                if (FunctionType == "000")                   //한글양식 미결 문서
-		                    //openServerDraftUI_HWP("REDRAFT", pCurSelRow);
-		                    alert(strLang1103);
+		                    openServerDraftUI("REDRAFT", pCurSelRow);
 		                else
 		                    openDraftUI("REDRAFT", pCurSelRow);
 		            }
@@ -663,6 +673,7 @@
 		    }
 		    function btnReceipt_onclick() {
 		        var DocList = new ListView();
+		        var ua = navigator.userAgent;
 		        DocList.LoadFromID("DocList");
 		        var oArrRows = DocList.GetSelectedRows();
 		        
@@ -677,7 +688,7 @@
 		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
 		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
 		                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		                    if (CrossYN()) {
+		                    if (CrossYN() && !(/netscape/i.test(navigator.appName) && /trident/i.test(navigator.userAgent) || /msie/i.test(navigator.userAgent))) {
 		                        alert(strLang1103);
 		                        return;
 		                    } else {
@@ -767,10 +778,13 @@
 		            if (pListTypeValue == "3") {
 		                var pMsg = "<spring:message code='ezApprovalG.t67'/>";
 		                var Ans = OpenInformationUI(pMsg, btncallback_onclick_Complete, "open");
-		            }
-		            else {
+		            } else {
 		                var pMsg = "<spring:message code='ezApprovalG.t68'/>";
 		                var Ans = OpenInformationUI(pMsg, btncallback_onclick_Complete, "open");
+		            }
+		            
+		            if (Ans) {
+		            	btncallback_onclick_Complete(true);
 		            }
 		        }
 		    }
@@ -1074,49 +1088,50 @@
 		        var pHref = tr.getAttribute("DATA3");
 		        var openLocation;
 		        if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-		            if (CrossYN()) {
+		            if (/msie/i.test(navigator.userAgent)) {
 		                alert(strLang1103);
 		                return;
+		            } else {
+		                openLocation = "/ezApprovalG/ezSimsaG_HWP.do";
 		            }
-		            else {
-		                openLocation = "ezViewHWP/ezSimsaG_HWP.aspx";
-		            }
-		        }
-		        else {
+		        } else {
 	                openLocation = "/ezApprovalG/ezSimsaG.do";
 		        }
 		        openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pHref) + "&orgDocID=" + encodeURI(pOrgDocID);
 		        var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
 		        window.open(openLocation, "enforce", param);
 		    }
+		    
 		    window.onbeforeunload = function () {
 		        try {
 		            hideProgress();
 		        } catch (e) { }
 		    };
+		    
 		    function goToPage(page) {
 		        if (page == "front") {
-		            if (parseInt(pageNum) - 1 < 1)
+		            if (parseInt(pageNum) - 1 < 1) {
 		                return;
+		            }
 		            pageNum = pageNum - 1;
 		            openergetDocInfo();
-		        }
-		        else if (page == "next") {
+		        } else if (page == "next") {
 		            if (parseInt(pageNum) + 1 > parseInt(totalPages))
 		                return;
 		            pageNum = pageNum + 1;
 		            openergetDocInfo();
-		        }
-		        else if (page == "page") {
+		        } else if (page == "page") {
 		            if (event.keyCode == 13) {
 		                var goPage = document.all.txt_PageInputNum.value;
-		                if (parseInt(goPage) != goPage || parseInt(goPage) == "" || parseInt(goPage) < 1 || parseInt(goPage) > parseInt(totalPages))
+		                if (parseInt(goPage) != goPage || parseInt(goPage) == "" || parseInt(goPage) < 1 || parseInt(goPage) > parseInt(totalPages)) {
 		                    return;
+		                }
 		                pageNum = parseInt(goPage);
 		                openergetDocInfo();
 		            }
 		        }
 		    }
+		    
 		    function btnAddCabinet_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -1269,7 +1284,7 @@
 		        var top = 0;
 		        left = (parseInt(width) - parseInt(wWeigth)) / 2;
 		        top = (parseInt(heigth) - parseInt(wHeigth)) / 2;
-		        window.open("secondApprovalInfo.do", '', "status=0,menubar=0,scrollbars=0,resizable=1,height=220,width=468,top=" + top + ",left =" + left);
+		        window.open("secondApprovalInfo.do", '', "status=0,menubar=0,scrollbars=1,resizable=1,height=220,width=468,top=" + top + ",left =" + left);
 		    }
 		    function TextReplace(pStr, pStr1, pStr2) {
 		        TextReplace = pStr.replace(pStr1, pStr2);
@@ -1681,7 +1696,11 @@
 		    }
 		    
 		    function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
-		    	return condStr.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+		    	return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+		    }
+		    
+		    function initselyear() {
+		        $('#sel_year').selectmenu('close');
 		    }
 		    
 		</script>
@@ -1736,7 +1755,7 @@
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li>
 		        <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-		        <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
+		        <select id="sel_year" name="sel_year" style="width:75px;" onmouseover="onSelect_Year(this);">    
 		            <option value="ALL">ALL</option>
 		        </select>  
 			</ul>

@@ -1882,7 +1882,7 @@ function openFormUI() {
         getformcont_cross_dialogArguments[0] = parameter;
         getformcont_cross_dialogArguments[1] = openFormUI_Complete;
 
-        DivPopUpShow(713, 570, "/ezApprovalG/getFormCont.do");
+        DivPopUpShow(713, 570, "/ezApprovalG/getFormCont.do?fileType=mht");
     } catch (e) {
         alert("openFormUI()" + e.description);
     }
@@ -2372,7 +2372,9 @@ function openOpinionUI(pOpinionFlag) {
         parameter[1] = pOpinionFlag;
         parameter[2] = KuyjeType;
         parameter[3] = pDraftFlag;
-
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = "mht";
+        
         apropinion_cross_dialogArguments[0] = parameter;
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
@@ -2438,7 +2440,7 @@ function openFileAttachUI() {
         aprattach_cross_dialogArguments[0] = "";
         aprattach_cross_dialogArguments[1] = "";
 
-        DivPopUpShow(540, 390, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag);
+        DivPopUpShow(540, 390, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag + "&ext=" + ext);
     } catch (e) {
         alert("openFileAttachUI()" + e.description);
     }
@@ -2951,14 +2953,19 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN()) {
-        ezapralert_cross_dialogArguments[0] = parameter;
-        if (CompleteFunction != undefined)
-            ezapralert_cross_dialogArguments[1] = CompleteFunction;
-        else
-            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-        DivPopUpShow(330, 205, url);
-    }
-    else {
+    	if (isIE() && !document.getElementById("iFrameLayer")) {
+    		var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+    		feature = feature + GetShowModalPosition(330, 205);
+			var rtn = window.showModalDialog(url, parameter, feature);
+    	} else {
+    		ezapralert_cross_dialogArguments[0] = parameter;
+    		if (CompleteFunction != undefined)
+    			ezapralert_cross_dialogArguments[1] = CompleteFunction;
+    		else
+    			ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+    		DivPopUpShow(330, 205, url);
+    	}
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
         if (url != "")
@@ -2968,7 +2975,6 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
         	Complete_Deaft2();
         }
     }
-
 }
 
 function OpenAlertUI_Complete() {
@@ -2980,16 +2986,15 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-
-    if (CrossYN()) {
+ 
+    if (CrossYN() && ext != 'hwp') {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
         else
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
         DivPopUpShow(330, 205, url);
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
 
@@ -3033,8 +3038,6 @@ function getDocInfo() {
         if (SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "Y" || SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "O")
             pHasOpinionYN = "Y";
        
-        var fields = message.GetFieldsList();
-        var field;
         if (isUsed == "reuse") {
         	if (reuseTitleYN == "YES") {
         		doctitle = SelectSingleNodeValueNew(result, "DATA/DOCTITLE");
@@ -3058,8 +3061,7 @@ function getDocInfo() {
         tempSecurityDate = SelectSingleNodeValueNew(result, "DATA/SECURITYAPPROVAL");
     }
 }
-function changeEditMode() {
-}
+
 function HabyuiResultOpinion() {
     try {
         var parameter = new Array();
@@ -3069,7 +3071,9 @@ function HabyuiResultOpinion() {
         parameter[1] = "N";
         parameter[2] = KuyjeType;
         parameter[3] = pOrgDocID;
-
+        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+        parameter[99] = "mht";
+        
         var url = "/ezApprovalG/aprOpinion.do";
         var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no";
         feature = feature + GetShowModalPosition(530, 520);
@@ -3485,36 +3489,40 @@ function SaveOrgFile() {
     return result;
 }
 function SignCheck() {
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getSignInfo.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+	
     var SignXML = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-
-
-    xmlhttp.open("Post", "../ezAPRSIGN/aspx/getSignInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    if (getXmlString(xmlhttp.responseXML) == "")
+    if (result == "" || result == null) {
         return;
+    }
 
     var NodeList;
-    if (SelectNodes(xmlhttp.responseXML, "SIGNINFOS/SIGNINFO")) {
-        NodeList = SelectNodes(xmlhttp.responseXML, "SIGNINFOS/SIGNINFO");
-        if (NodeList.length <= 0)
-            return;
+    NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
+    
+    if (NodeList.length <= 0) {
+        return;
     }
-    SignXML = xmlhttp.responseXML;
+    
+    SignXML = result;
 
     var rtnVal = putSignXML(SignXML);
+    
     if (rtnVal) {
         SaveFile();
-
-        var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("Post", "../ezAPRSIGN/aspx/delSignInfo.aspx", false);
-        xmlhttp.send(SignXML);
     }
 }
 function putSignXML(SignXML) {
@@ -3621,16 +3629,25 @@ function getSignDate() {
 
     return result;
 }
+
 function getHistory() {
-    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
+    var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + ext;
     centerOpenWindow(URL, 740, 450);
 }
+
 function centerOpenWindow(wfileLocation, wWeight, wHeight) {
     try {
         if (CrossYN()) {
-            DivPopUpShow(wWeight, wHeight, wfileLocation);
-        }
-        else {
+        	if (isIE() && !document.getElementById("iFrameLayer")) {
+        		var heigth = window.screen.availHeight;
+        		var width = window.screen.availWidth;
+        		var left = (width - wWeight) / 2;
+        		var top = (heigth - wHeight) / 2;
+        		window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+        	} else {
+        		DivPopUpShow(wWeight, wHeight, wfileLocation);
+        	}
+        } else {
             var heigth = window.screen.availHeight;
             var width = window.screen.availWidth;
             var left = (width - wWeight) / 2;

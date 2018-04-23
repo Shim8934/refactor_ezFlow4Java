@@ -13,10 +13,10 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/aprCabinetAttach_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/getContainerInfo_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
+	    <script type="text/javascript" src="/js/ezApprovalG/aprCabinetAttach_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/ezCabinet_Cross.js"></script>
 	    <script id="clientEventHandlersJS" type="text/javascript">

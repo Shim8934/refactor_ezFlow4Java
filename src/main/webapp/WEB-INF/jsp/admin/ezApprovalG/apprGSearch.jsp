@@ -300,7 +300,6 @@
 		    function OpenAlertUI(pAlertContent) {
 		        if (CrossYN()) {
 		            ezapralert_cross_dialogArguments[0] = pAlertContent;
-		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
 		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 		            try { ezAPRALERT_Cross.focus(); } catch (e) {
 		            }

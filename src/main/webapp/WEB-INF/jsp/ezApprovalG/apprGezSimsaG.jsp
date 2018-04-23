@@ -83,6 +83,8 @@
 		    var flag = false;
 		    var pUse_Editor = "${useEditor}";
 		    var PrtBodyContent;
+		    var ext = "mht";
+		    
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
 		    }
@@ -269,7 +271,7 @@
 		        }
 		    }
 		    function btnSetReceivLine_onclick() {
-		        DivPopUpShow(540, 240, "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID);
+		        DivPopUpShow(540, 240, "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID + "&ext=" + ext);
 		    }
 		    function btnOpinion_onclick() {
 		        var parameter = new Array();
@@ -451,7 +453,9 @@
 		        parameter[1] = ret;
 		        parameter[2] = "002";
 		        parameter[3] = pOrgDocID;
-		
+		        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+		        parameter[99] = "mht";
+		        
 		        apropinion_cross_dialogArguments[0] = parameter;
 		        apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 		

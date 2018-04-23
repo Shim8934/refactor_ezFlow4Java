@@ -149,6 +149,8 @@
 			var agreeReturnType = "${agreeReturnType}";
 			var curDocNum = "";
 			var draftDeptID = "${draftDeptID}";
+			var isHWP = "";
+			var ext = "mht";
 			
 			var docState = "${docState}";
 		    window.onload = function () {
@@ -263,8 +265,8 @@
 		            }
 		        }
 		    }
-		    function openOtherApprovUI()
-		    {
+		    
+		    function openOtherApprovUI() {
 		        var pArgument = new Array();
 		        pArgument[0] = NextDocID;
 		        pArgument[1] = NextDocUserID;
@@ -272,20 +274,15 @@
 		        pArgument[4] = NextDocUserName2;
 		        pArgument[3] = NextDocDeptID;
 		        var formURL = NextDocHref;
-		        if (NextDocExtended.toLowerCase() == "doc")
-		        {
+		        if (NextDocExtended.toLowerCase() == "doc") {
 		            var openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID="+escape(pArgument[0]);
 		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        }
-		        else if (NextDocExtended.toLowerCase() == "hwp")
-		        {
-		            var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?DocID="+escape(pArgument[0]);
-		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
-		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        }
-		        else
-		        {
+		        } else if (NextDocExtended.toLowerCase() == "hwp") {
+		            var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
+		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
+		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
+		        } else {
 		            var openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_CK.aspx?DocID="+escape(pArgument[0]);
 		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
 		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
@@ -300,6 +297,7 @@
 		            btnClose_onclick();
 		        }
 		    }
+		    
 		    function DocumentComplete()
 		    {
 		        if (flag == false) 
@@ -876,8 +874,7 @@
 		        }
 		        check_openSingUI();
 		    }
-		    function btnReject_onclick()
-		    {
+		    function btnReject_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t36'/>";
 		        OpenInformationUI(pInformationContent, btnReject_onclick_Complete);
 		    }
@@ -951,8 +948,7 @@
 		            OpenAlertUI(pAlertContent);
 		        }
 		    }
-		    function btnStay_onclick() 
-		    {
+		    function btnStay_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t39'/>";
 		       OpenInformationUI(pInformationContent, btnStay_onclick_Complete);
 		    }
@@ -1229,7 +1225,8 @@
 		        var para = new Array();
 		        para[0] = g_SepAttachLVXml;
 		        para[1] = cabinetID;
-		
+		        para[3] = ext;
+		        
 		        inssepattach_cross_dialogArguments[0] = para;
 		        inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
 		
@@ -1323,14 +1320,13 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun , "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "mht", "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
 		            try {
-		                var savexmlhttp = createXMLHttpRequest();
 		                //결재선 저장
 		                if (approvalFlag == "S") {
 			                if (pGubun != "14" && pGubun != "10") {
@@ -1354,8 +1350,6 @@
 			                        SaveFile();
 			                        getCurApproverAprLine("${isUsed}");
 			                    }
-			                    savexmlhttp = null;
-			                    savexmlhttp = createXMLHttpRequest();
 			                }
 		                } else {
 			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
@@ -1379,8 +1373,6 @@
 			                        SaveFile();
 			                        getCurApproverAprLine("${isUsed}");
 			                    }
-			                    savexmlhttp = null;
-			                    savexmlhttp = createXMLHttpRequest();
 			                }
 		                }
 		
@@ -1464,7 +1456,6 @@
 		
 		                SummaryFlag = true;
 		
-		                savexmlhttp = null;
 		            }
 		            catch (e) {
 		                alert("<spring:message code='ezApprovalG.pjj02'/>");

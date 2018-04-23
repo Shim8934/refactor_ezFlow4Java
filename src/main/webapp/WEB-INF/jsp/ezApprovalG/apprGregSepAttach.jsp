@@ -44,6 +44,7 @@
 		                RetValue = window.dialogArguments;
 		            }
 		        }
+
 		        if (RetValue != null) {
 		            g_InitFlag = RetValue[0];
 		            g_RecordID = RetValue[1];
@@ -137,8 +138,8 @@
 		    }
 		    function selRegisterType_onchange() {
 		        var Val = selRegisterType.value;
+		        
 		        if (Val == 5 || Val == 6) {
-		            window.dialogHeight = "596px";
 		            if (CrossYN())
 		                window.resizeTo(705, 690);
 		
@@ -156,7 +157,6 @@
 		            ChkAVTypeCode();
 		        }
 		        else {
-		            window.dialogHeight = "420px";
 		            if (CrossYN())
 		                window.resizeTo(705, 550);
 		
@@ -300,7 +300,7 @@
 		                return "";
 		            }
 		        }
-		
+
 		        if (g_InitFlag == "0") {
 		            if (RegSeparateAttach()) {
 		                rtnVal[0] = "TRUE";
@@ -320,7 +320,6 @@
 		            rtnVal[1] = GetSepAttInfoXml();
 		            if (ReturnFunction != null) {
 		                ReturnFunction(rtnVal);
-		                window.close();
 		            }
 		            else {
 		                window.returnValue = rtnVal;
@@ -482,7 +481,6 @@
 		    }
 		    function btnClose_onclick() {
 		        rtnVal[0] = "FALSE";
-		
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
 		            window.close();

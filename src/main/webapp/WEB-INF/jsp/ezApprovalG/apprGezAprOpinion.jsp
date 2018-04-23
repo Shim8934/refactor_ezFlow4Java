@@ -12,14 +12,17 @@
 		<script type="text/javascript">
 			var RetValue;
 		    var ReturnFunction;
+		    var winFlag;
 		    window.onload = function () {
 		        try {
 		            RetValue = parent.ezapropinion_cross_dialogArguments[0];
 		            ReturnFunction = parent.ezapropinion_cross_dialogArguments[1];
+		            winFlag = parent.ezapropinion_cross_dialogArguments[2];
 		        } catch (e) {
 		            try {
 		                RetValue = opener.ezapropinion_cross_dialogArguments[0];
 		                ReturnFunction = opener.ezapropinion_cross_dialogArguments[1];
+			            winFlag = opener.ezapropinion_cross_dialogArguments[2];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }
@@ -51,9 +54,11 @@
 		    function btn_OpinionOK_onclick() {
 		        if (ReturnFunction != null) {
 		            ReturnFunction(true);
-		            window.close();
-		        }
-		        else {
+		            
+		            if (winFlag) {
+			            window.close();
+		            }
+		        } else {
 		            window.returnValue = true;
 		            window.close();
 		        }
@@ -61,9 +66,11 @@
 		    function btn_OpinionCANCEL_onclick() {
 		        if (ReturnFunction != null) {
 		            ReturnFunction(false);
-		            window.close();
-		        }
-		        else {
+		            
+		            if (winFlag) {
+			            window.close();
+		            }
+		        } else {
 		            window.returnValue = false;
 		            window.close();
 		        }
