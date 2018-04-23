@@ -21,6 +21,8 @@
 		<!-- data picker-->		
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<!-- time picker-->		
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<style>
 			#attiStatis table td {
 				color : #777;
@@ -54,6 +56,9 @@
 			var companyHoliday = "";        // 회사 휴무일
 			var closedDateAttitude = true;  // 휴일근태등록 유무
 			var attitudeModAppl = true;     // 근태수정신청 유무
+			var modAttitudeId = "";         // 수정신청 근태ID
+			var modChangeDate = "";         // 수정신청 변경일자
+			var modContent = "";            // 수정신청 내용
 			
 			$(function(){
 				//개인근태현황에서만 근태 등록 가능
@@ -62,8 +67,11 @@
 						pMode = "new";
 						attitudeNewItem(this);
 					})	
-				} else {
-					//부서내 모든 사원의 근태 현황 조회 팝업 
+				} else { // 부서근태현황에서는 당일의 근태를 조회.
+					$(document).on('dblclick', '.td_day td', function(){
+						pMode = "new";
+						searchByDay(this);
+					})
 				}
 				
 				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function(){
@@ -72,10 +80,23 @@
 				
 				//근태수정신청 팝업창
 				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02]', function(){
-				//근태수정신청은 개인근태현황에서만 가능
-				if (deptFlag != "true") {
-					attitudeModItem(this);
-				}
+					//근태수정신청은 개인근태현황에서만 가능
+					var modappl = $(this).attr('modappl');
+					var attitudeid = $(this).attr('attitudeid');
+					if (deptFlag != "true") {
+						if (modappl == 0) {
+							attitudeModItem(this);	
+						} else {
+							mod_detail(attitudeid);
+						}
+						
+					} else {
+						if (modappl == 0) {
+							console.log(this);
+						} else {
+							mod_detail(attitudeid);
+						}
+					}
 				})
 			})
 			
@@ -101,26 +122,26 @@
 			var monthStr = monthMsg.split(";");		    
 			var dayMsg = "일;월;화;수;목;금;토";
 			var dayStr = dayMsg.split(";");
-			    
+			
 			$(function () {
-			    $.datepicker.regional["ko"] = {
-			    	closeText: "닫기",
-			        prevText: "이전달",
-			        nextText: "다음달",
-				currentText: "오늘",
-			        monthNames: monthStr,
-			        monthNamesShort: monthStr,
-			        dayNames: dayStr,
-			        dayNamesShort: dayStr,
-			        dayNamesMin: dayStr,
-			        weekHeader: 'Wk',
-			        dateFormat: 'yy-mm-dd',
-			        firstDay: 0,
-			        isRTL: false,
-			        duration: 200,
-			        showAnim: 'show',
-			        showMonthAfterYear: true
-			    };
+				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+		            monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
 			    $.datepicker.setDefaults($.datepicker.regional["ko"]);
 			    
 			    $("#Sdatepicker").datepicker('disable');
@@ -329,6 +350,7 @@
 							}	
 						}
 					}
+					$("td[typeid=A02][modappl=0]").css('cursor','context-menu');
 				}
 			}
 			
@@ -356,7 +378,7 @@
 			
 			
 			/**
-			* 근태작성
+			* 
 			*/
 			function attitudeNewItem(obj) {
 				var date = $(obj).attr("dispdate");
@@ -379,19 +401,23 @@
 			* 근태수정신청
 			*/
 			function attitudeModItem(obj) {
+				var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 760) / 2;
+		        var pLeft = (pwidth - 790) / 2;
+				var feature = GetOpenPosition(790, 760);
+				
 				var attitudeId = $(obj).attr("attitudeId"); 
 				var pTypeId = $(obj).attr("typeId");
 				
-				console.log("attitudeId : " + attitudeId);
-				console.log("pTypeId : " + pTypeId);
-				
 				if (CrossYN()) {
-                    var OpenWin = window.open("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "attitudeNewItem", GetOpenWindowfeature(650, 580));
+                    var OpenWin = window.open("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "attitudeNewItem",
+                    		"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
                 	rtnValue = window.showModalDialog("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "",
-                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+                			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
@@ -413,7 +439,7 @@
 			}
 			
 			//수정신청 레이어 팝업띄우깅
-			function showDialog() {
+			function showDialog(obj) {
 				if (attitudeModAppl) {
 					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
 		        	
@@ -426,6 +452,22 @@
 						  clickClose: false,
 						  showClose: false
 					});
+					
+					$("#originInCom").text($(obj).parents("td").attr("day") + $(obj).text().split(" :")[1]);
+					
+					var uploadSDate = $(obj).parents("td").attr("day") + " 00:00:00";
+					var sYear = uploadSDate.substring(0, 4);
+					var sMonth = uploadSDate.substring(5, 7);
+					var sDay = uploadSDate.substring(8, 10);
+					var sHour = uploadSDate.substring(11, 13);
+					var sMin = uploadSDate.substring(14, 16);
+					
+			        var SDate = new Date();
+			        SDate.setFullYear(sYear, sMonth-1, sDay);
+			        SDate.setHours(sHour, sMin, 0, 0);
+			        
+			        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+			        $("#Sdatepicker").datepicker('setDate', SDate);
 				} else {
 					 alert("수정신청이 불가능합니다.");
 				}
@@ -447,12 +489,31 @@
 	
 			}
         	
+			function attiModAppl() {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/a.do",
+					data : {
+						attitudeId : modAttitudeId,
+						changeDate : modChangeDate,
+						content : modContent
+					},
+					success : function() {
+						alert("근태 수정이 신청되었습니다.");
+					}
+				});
+			}
+			
 			function searchByTypeId(t) {
-				
+				var typeName = t.parentElement.getElementsByTagName("th").item(0).innerText;
 				var pDate = $("#calTitle").text().trim()
 				var startDate = pDate + "-01 00:00:00";
 				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate() + " 23:59:59";
 
+				document.getElementById("popup_title").innerText = "근태내역확인 [" + typeName + "]";
+				
 				$.ajax({
 					type : "POST",
 					dataType : "json",
@@ -464,14 +525,154 @@
 						deptFlag : deptFlag,
 						typeId : t.getAttribute("id")
 					},
-					success : function(result) {
-						console.log(result)
-// 						$("span[name=span_list] table tbody").remove();
-// 						getAttitudeMainList_after(result);
-// 						getAttiStatisList();
-					}
-				})
+					success : function(json) {
+						
+				    	$('#addpopup_list tbody').children('tr').not(":first").remove();
+				    	
+				    	if (json.length == 0) {
+				    		var uvobjTr = $("<tr></tr>").append($("<td style='width:5%; display:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:20%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:70%; height:0px; display:;'></td>"));
+				    		$("#addpopup_list tbody").append(uvobjTr);
+				    		
+				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px;'></td>").text("내역이 없습니다."));
+				    		$("#addpopup_list tbody").append(objTr);
+				    	}
+				    	
+				    	for(var i = 0; i < json.length; i++) {
+				    		if (json[i].apprStatus == 1) {
+				    			json[i].apprStatus = "승인";
+				    		} else {
+				    			json[i].apprStatus = "반려";
+				    		}
+
+				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i+1)));
+				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
+				    		if (json[i].writerDeptName.length > 6) {
+				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
+				    		} else {
+				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
+				    		}
+				    		if (json[i].endDate == null) {
+				    			objTr.append($("<td style='width:70%'></td>").text("\u00a0" + json[i].startDate));
+				    		} else {
+					    		objTr.append($("<td style='width:70%'></td>").text("\u00a0" + json[i].startDate+ "\u00a0~\u00a0" + json[i].endDate));				    			
+				    		}
+
+				    		$("#addpopup_list tbody").append(objTr);
+				    	}
+				    },
+				    complete : function() {
+				    	try {
+				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);	
+				    	} catch(e) {
+				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);
+				    	}
+			        	
+			        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			        	
+			        	$("#popup").css("left", popupX);
+			        	
+						$("#popup").modal({
+							  escapeClose: false,
+							  clickClose: false,
+							  showClose: false
+						});
+				    }
+			    });
 			}
+			
+			function searchByDay(t) {
+				var date = $(t).attr('dispdate')
+				var startDate = date + " 00:00:00";
+				var endDate = date + " 23:59:59";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getAttitudeList.do",
+					data : {
+						startDate : startDate,
+						endDate : endDate,
+						deptFlag : deptFlag,
+					},
+					success : function(json) {
+						console.log(json);
+				    	$('#addpopupDay_list tbody').children('tr').not(":first").remove();
+				    	
+				    	if (json.length == 0) {
+				    		var uvobjTr = $("<tr></tr>").append($("<td style='width:5%; display:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:20%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:60%; height:0px; display:;'></td>"));
+				    		$("#addpopupDay_list tbody").append(uvobjTr);
+				    		
+				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px;'></td>").text("내역이 없습니다."));
+				    		$("#addpopupDay_list tbody").append(objTr);
+				    	}
+				    	
+				    	for(var i = 0; i < json.length; i++) {
+				    		if (json[i].apprStatus == 1) {
+				    			json[i].apprStatus = "승인";
+				    		} else {
+				    			json[i].apprStatus = "반려";
+				    		}
+
+				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i+1)));
+				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].typeName));
+				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
+				    		if (json[i].writerDeptName.length > 6) {
+				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
+				    		} else {
+				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
+				    		}
+				    		if (json[i].endDate == null) {
+				    			objTr.append($("<td style='width:60%'></td>").text("\u00a0" + json[i].startDate));
+				    		} else {
+					    		objTr.append($("<td style='width:60%'></td>").text("\u00a0" + json[i].startDate+ "\u00a0~\u00a0" + json[i].endDate));				    			
+				    		}
+
+				    		$("#addpopupDay_list tbody").append(objTr);
+				    	}
+				    },
+				    complete : function() {
+				    	try {
+				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);	
+				    	} catch(e) {
+				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);
+				    	}
+			        	
+			        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			        	
+			        	$("#popupDay").css("left", popupX);
+			        	
+						$("#popupDay").modal({
+							  escapeClose: false,
+							  clickClose: false,
+							  showClose: false
+						});
+				    }
+			    });
+			}
+			
+			function mod_detail(modAttId) {
+		    	var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 760) / 2;
+		        var pLeft = (pwidth - 790) / 2;
+				var feature = GetOpenPosition(790, 760);
+				
+				if (adminFlag == "true") {
+					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId +"&adminFlag=" + adminFlag, "",
+				 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				} else {
+					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId, "",
+				 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
+				}
+		    }
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">
@@ -508,10 +709,11 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		<!-- 근태수정신청 팝업창 -->
-		<div id="popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+		<!-- 근태유영별 팝업창 -->
+		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
+<<<<<<< HEAD
 			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
 			    	<tr>
 						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태수정신청</th>
@@ -522,28 +724,76 @@
 					</tr>
 					<tr>
 			  			<th style="width:90px;height:30px">출근시각</th>
-						<td>오늘날짜 (공백) 출근시각</td>
+						<td id="originInCom"></td>
 					</tr>
 					<tr>
 			  			<th style="width:90px;height:30px">변경시각</th>
-						<td>
-							<span id="periodblock" datetype="3">
+						<td id="transInCom">
+							<span id="periodblock">
 								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-								<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+								<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> :<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 							</span>
 						</td>
 					</tr>
 					<tr>
 						<th style="width:90px;height:30px">승인상태</th>
-						<td>상태(진행, 반려)</td>
+						<td id="apprStatus">상태(진행, 반려)</td>
 					</tr>
 					<tr>
-<!-- 						<td colspan="2"><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%; height:90px; box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td> -->
 						<td colspan="2" style="margin:0px; padding:0px;"><textarea class="textarea" style="width:100%; height:120px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea></td>
-<!-- 						<td style="vertical-align:top;height:100%;" id="EdtorSize" colspan="2"> -->
-<!-- 		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe> -->
-<!-- 	                    </td> -->
 					</tr>
+=======
+			    <table class="popuplist" id="addpopup_list" style="display:block; width:500px; margin:10px 0px 0px 1px;">
+				    <thead>
+				    	<tr>
+						<th class="layerHeader" colspan="4" style="width:500px;">
+							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
+							<span id="popup_title">&nbsp;근태내역확인</span>
+						</th>
+						</tr>
+				    </thead>
+				    <tbody style="max-height:500px; width:500px; display:block; overflow-y:auto;">
+				    	<tr>
+				    		<th style="height:30px">No.</th>
+				    		<th style="height:30px">사원명</th>
+				    		<th style="height:30px">부서명</th>
+				    		<th style="height:30px">일시</th>
+						</tr>
+				    </tbody>
+>>>>>>> 1085f7d4be69737d00e35b93d0ae9cc715486074
+				</table>
+				<!-- /내용 -->
+				<br />
+				<div style="text-align:center;">
+					<a class="imgbtn"><span onclick="attiModAppl()" >신청</span></a>
+					<a class="imgbtn" rel="modal:close"><span>취소</span></a>
+			    </div>
+			</div>
+			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
+		</div>
+		
+		<!-- 근태날짜별 팝업창 -->
+		<div id="popupDay" class="popupwrap4" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+			<div class="popupwrap5">
+				<!-- 내용 -->
+			    <table class="popuplist" id="addpopupDay_list" style="display:block; width:560px; margin:10px 0px 0px 1px;">
+				    <thead>
+				    	<tr>
+						<th class="layerHeader" colspan="5" style="width:560px;">
+							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
+							<span id="popupDay_title">&nbsp;근태내역확인</span>
+						</th>
+						</tr>
+				    </thead>
+				    <tbody style="max-height:500px; width:560px; display:block; overflow-y:auto;">
+				    	<tr>
+				    		<th style="height:30px">No.</th>
+				    		<th style="height:30px">근태유형</th>
+				    		<th style="height:30px">사원명</th>
+				    		<th style="height:30px">부서명</th>
+				    		<th style="height:30px">일시</th>
+						</tr>
+				    </tbody>
 				</table>
 				<!-- /내용 -->
 				<br />

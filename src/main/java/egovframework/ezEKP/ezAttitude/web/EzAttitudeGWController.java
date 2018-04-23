@@ -323,6 +323,9 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		
 		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			 
 			LOGGER.debug("companyId : " + companyId);
 			LOGGER.debug("tenantId : " + tenantId);
 			LOGGER.debug("userId : " + userId);
@@ -331,11 +334,10 @@ public class EzAttitudeGWController {
 			LOGGER.debug("changeDate : " + changeDate);
 			LOGGER.debug("attitudeId : " + attitudeId);
 			
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			ezAttitudeService.attSaveAppModify(attitudeId, companyId, tenantId, userId, info.getUserName(), 
+					info.getUserName2(), info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), 
+					info.getDeptName2(), changeDate, "0", content, offset);
 			
-			ezAttitudeService.attSaveAppModify(attitudeId, companyId, tenantId, userId, info.getUserName(), info.getUserName2(), 
-					info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), info.getDeptName2(), changeDate, "0", content, offset);
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");
@@ -891,9 +893,6 @@ public class EzAttitudeGWController {
 			data.put("list", list);
 			//로그인한 관리자의 회사
 			data.put("adminCompany", info.getCompanyId());
-			//오늘날짜
-			String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
-			data.put("today", commonUtil.getDateStringInUTC(today, info.getOffSet(), false));
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1156,6 +1155,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1455,6 +1455,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1615,34 +1616,21 @@ public class EzAttitudeGWController {
 			String statistics = request.getParameter("statistics");
 			String isuse = "1";
 			
-			/*String pageNum = request.getParameter("pageNum");
-			String listSize = request.getParameter("listSize");
-			String typeId = request.getParameter("typeId");
-			String userIdList = request.getParameter("userIdList");
-			String orderCell = request.getParameter("orderCell");
-			String orderOption = request.getParameter("orderOption");
-			String startDate = request.getParameter("startDate");
-			String endDate = request.getParameter("endDate");
-			String offsetMin = request.getParameter("offsetMin");
-			String isAdmin = request.getParameter("isAdmin");*/
-			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();
 			
-			//모든근태조회
-			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, info.getTenantId());
-			
-			//리스트 총 갯수
-			String totalCount = ezAttitudeService.getAttitudeCount2(info.getTenantId(), companyId, searchAttitudeType, searchUserName, searchStartDate, searchEndDate, offset);
+			String totalCount = ezAttitudeService.getAttitudeCount2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantID);
+			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID);
 			
 			//구분 리스트
 			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
 			
 			JSONObject data = new JSONObject();
-//			data.put("list", list);
-//			data.put("totalCount", totalCount);
-//			data.put("typeList", typeList);
-//			data.put("typeId", typeId);
+			data.put("list", list);
+			data.put("totalCount", totalCount);
+			data.put("typeList", typeList);
+			data.put("typeId", searchAttitudeType);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

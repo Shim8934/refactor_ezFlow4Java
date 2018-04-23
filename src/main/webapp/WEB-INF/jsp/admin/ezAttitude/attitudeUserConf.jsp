@@ -30,9 +30,7 @@
 				border-right: 1px solid #e8e8e8;
 				background-color: #fcfcfc;
 			}
-			#searchTable td {
-				padding: 8px 5px;
-			}
+			#searchTable td {padding: 8px 5px;}
 	    </style>
 	    
 	    <script type="text/javascript">
@@ -165,6 +163,14 @@
 	    			searchEndTime = $("#searchEndTime").val();
 	    			searchCompareValue = $("[type='radio']:checked").val();
 	    		} else {
+	    			//새로고침
+	    			$("#searchUserName").val("");
+	    			$("#searchDeptName").val("");
+	    			$("#searchTitle").val("");
+	    			$("#searchStartTime").val("");
+	    			$("#searchEndTime").val("");
+	    			$("[type='radio']:checked").val("");
+	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";
 	    			searchTitle = "";
@@ -351,10 +357,10 @@
 				<tr>
 					<td style="width: 5%;">직위</td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50"></td>
-					<td style="width: 5.5%;">수정된거?</td>
+					<td style="width: 5.5%;">회사규율이랑비교</td>
 					<td style="width: 11%;">
 						<span style="width: 90%;">
-							<input type="radio" name="searchCompareValue" id="searchCompareValueAll" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;모두
+							<input type="radio" name="searchCompareValue" id="searchCompareValueAll" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/>&nbsp;모두
 							<input type="radio" name="searchCompareValue" id="searchCompareValue0" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;같은
 							<input type="radio" name="searchCompareValue" id="searchCompareValue1" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;다른
 						</span>

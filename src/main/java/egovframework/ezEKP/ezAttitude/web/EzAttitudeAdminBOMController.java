@@ -1,16 +1,13 @@
 package egovframework.ezEKP.ezAttitude.web;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -23,11 +20,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,24 +34,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
-import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1230,10 +1222,29 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
+		String adminCompany = "";
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
+		
+		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		
+		String searchStartDate = localDate + " 00:00:00";
+		String searchEndDate = localDate + " 23:59:59";
+		
+		Date startDate = sdf.parse(searchStartDate);
+		
+		cal = Calendar.getInstance();
+		cal.setTime(startDate);
+		cal.add(Calendar.DAY_OF_MONTH, -7);
+		
+		searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
+		
 		//회사리스트
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies";
@@ -1259,18 +1270,16 @@ public class EzAttitudeAdminBOMController {
 		
 		JSONArray list = new JSONArray();
 		JSONObject data = new JSONObject();
-		String adminCompany = "";
-		String today = "";
 		
 		if (status.equals("ok")) {
 			data = (JSONObject) resultBody.get("data");
 			list = (JSONArray) data.get("list");
 			adminCompany = (String) data.get("adminCompany");
-			today = (String) data.get("today");
 			
 			model.addAttribute("list", list);
 			model.addAttribute("adminCompany", adminCompany);
-			model.addAttribute("today", today);
+			model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
+			model.addAttribute("searchEndDate", searchEndDate.substring(0, 10));
 		}
 		
 		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf ended");
@@ -1432,22 +1441,25 @@ public class EzAttitudeAdminBOMController {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie); 
 		
 		String companyId = request.getParameter("companyId");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
+		String searchStartDate = request.getParameter("startDate");
+		String searchEndDate = request.getParameter("endDate");
+		String searchAttitudeType = request.getParameter("attitudeType");
 		String pageNum = request.getParameter("pageNum");
 		String listSize = request.getParameter("listSize");
-		String typeId = request.getParameter("typeId");
-		String userIdList = request.getParameter("userIdList");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
-		String startDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
 		String userId = userInfo.getId();
-		String offset = userInfo.getOffset();
-		String offsetMin = commonUtil.getMinuteUTC(offset);
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		LOGGER.debug(companyId);
+		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
+				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
+				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; // 부서근태조회는 따로 빼두는것이 좋지 않을까
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1456,15 +1468,17 @@ public class EzAttitudeAdminBOMController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchTitle", searchTitle)
+				.queryParam("searchStartDate", searchStartDate)
+				.queryParam("searchEndDate", searchEndDate)
+				.queryParam("searchAttitudeType", searchAttitudeType)
 				.queryParam("userId", userId)
 				.queryParam("pageNum", pageNum)
 				.queryParam("listSize", listSize)
-				.queryParam("typeId", typeId)
-				.queryParam("userIdList", userIdList)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
-				.queryParam("startDate", startDate)
-				.queryParam("endDate", endDate)
 				.queryParam("offsetMin", offsetMin);
 		
 		RestTemplate rest = new RestTemplate();
@@ -1510,7 +1524,6 @@ public class EzAttitudeAdminBOMController {
 		headerStyle.setFont(font);
 		
 		Row row;
-		Cell cell;
 		      
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
@@ -1530,10 +1543,8 @@ public class EzAttitudeAdminBOMController {
 		row.getCell(3).setCellStyle(headerStyle);
 		row.createCell(4).setCellValue("날짜");
 		row.getCell(4).setCellStyle(headerStyle);
-		row.createCell(5).setCellValue("시작시간");
+		row.createCell(5).setCellValue("시간");
 		row.getCell(5).setCellStyle(headerStyle);
-		row.createCell(6).setCellValue("종료시간");
-		row.getCell(6).setCellStyle(headerStyle);
 		
 		//body
 		for (int i = 0 ; i < attitudeList.size(); i++) { 
@@ -1541,31 +1552,38 @@ public class EzAttitudeAdminBOMController {
 			row = sheet.createRow(i + 1);
 
 			row.createCell(0).setCellValue(vo.getUserName());
-			row.getCell(0).setCellStyle(bodyStyle);
+			
 			row.createCell(1).setCellValue(vo.getUserTitle());
-			row.getCell(1).setCellStyle(bodyStyle);
 			row.createCell(2).setCellValue(vo.getDeptName());
-			row.getCell(2).setCellStyle(bodyStyle);
 			row.createCell(3).setCellValue(vo.getTypeName());
-			row.getCell(3).setCellStyle(bodyStyle);
-			if (vo.getEndDate() != null && vo.getEndDate() != "") {
+			
+			if (vo.getEndDate() != null && !vo.getEndDate().equals("")) {
 				row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
 			} else {
 				row.createCell(4).setCellValue(vo.getStartDate());
 			}
-			row.getCell(4).setCellStyle(bodyStyle);
-			row.createCell(5).setCellValue(vo.getStartTime());
-			row.getCell(5).setCellStyle(bodyStyle);
-			if (vo.getEndTime() != null && vo.getEndTime() != "") {
-				row.createCell(6).setCellValue(vo.getEndTime());
+			
+			if (vo.getEndTime() != null && !vo.getEndTime().equals("")) {
+				row.createCell(5).setCellValue(vo.getStartTime() + " ~ " + vo.getEndTime());
 			} else {
-				row.createCell(6).setCellValue("");
+				row.createCell(5).setCellValue(vo.getStartTime());
 			}
-			row.getCell(6).setCellStyle(bodyStyle);
+			
+			row.getCell(0).setCellStyle(bodyStyle);
+			row.getCell(1).setCellStyle(bodyStyle);
+			row.getCell(2).setCellStyle(bodyStyle);
+			row.getCell(3).setCellStyle(bodyStyle);
+			row.getCell(4).setCellStyle(bodyStyle);
+			row.getCell(5).setCellStyle(bodyStyle);
 		}
 		
-		//날짜(4번컬럼)는 길면 짤리므로 자동으로 너비조정을 해준다
+		//width 조정
+		sheet.autoSizeColumn(0);
+		sheet.autoSizeColumn(1);
+		sheet.autoSizeColumn(2);
+		sheet.autoSizeColumn(3);
 		sheet.autoSizeColumn(4);
+		sheet.autoSizeColumn(5);
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());

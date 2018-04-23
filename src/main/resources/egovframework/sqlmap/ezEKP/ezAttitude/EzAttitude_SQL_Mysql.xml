@@ -50,6 +50,7 @@
 		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
 		<result  property="writerName"			column="WRITER_NAME"			columnIndex="18"/>
+		<result  property="writerDeptName"			column="WRITER_DEPT_NAME"			columnIndex="19"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -84,6 +85,7 @@
 		<result property="typeName"			column="TYPE_NAME" 		columnIndex="7"/> 		
 		<result property="typeName2"		column="TYPE_NAME2" 	columnIndex="8"/>
 		<result property="content"			column="CONTENT" 		columnIndex="9"/>
+		<result property="writerId"			column="WRITER_ID" 		columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap id="attitudeApplicationHistoryVO" class="AttitudeApplicationVO">
@@ -148,7 +150,8 @@
 				A.TYPE_ID,
 				B.TYPE_NAME,
 				B.IMG_PATH,
-				C.DISPLAYNAME AS WRITER_NAME
+				C.DISPLAYNAME AS WRITER_NAME,
+				C.DESCRIPTION AS WRITER_DEPT_NAME
 			FROM   
 				tbl_attitude A 
 			INNER JOIN 
@@ -291,48 +294,48 @@
 				a.WRITER_ID = #userId#
 		</isNotEmpty>
 		<isNotEmpty property="deptIdList" prepend="and">
-			<iterate prepend="WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+			<iterate prepend="A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
 	      		#deptIdList[]#
 			</iterate>
 		</isNotEmpty>
 		<isNotEmpty property="apprUserName" prepend="and">
 			<isNotEmpty property="apprUserName" >
 				<isEqual property="sysLang" compareValue="primary" >
-						APPR_USER_NAME LIKE CONCAT('%', #apprUserName#,'%')
+						A.APPR_USER_NAME LIKE CONCAT('%', #apprUserName#,'%')
 				</isEqual>
 				<isNotEqual property="sysLang" compareValue="primary">
-						APPR_USER_NAME2 LIKE CONCAT('%', #apprUserName#,'%')
+						A.APPR_USER_NAME2 LIKE CONCAT('%', #apprUserName#,'%')
 				</isNotEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="writerName" prepend="and">
 			<isNotEmpty property="writerName" >
 				<isEqual property="sysLang" compareValue="primary" >
-						a.WRITER_NAME LIKE CONCAT('%', #writerName#,'%')
+						A.WRITER_NAME LIKE CONCAT('%', #writerName#,'%')
 				</isEqual>
 				<isNotEqual property="sysLang" compareValue="primary">
-						a.WRITER_NAME2 LIKE CONCAT('%', #writerName#,'%')
+						A.WRITER_NAME2 LIKE CONCAT('%', #writerName#,'%')
 				</isNotEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="writerDeptName" prepend="and">
 			<isNotEmpty property="writerDeptName" >
 				<isEqual property="sysLang" compareValue="primary" >
-						a.WRITER_DEPT_NAME LIKE CONCAT('%', #writerDeptName#,'%')
+						A.WRITER_DEPT_NAME LIKE CONCAT('%', #writerDeptName#,'%')
 				</isEqual>
 				<isNotEqual property="sysLang" compareValue="primary">
-						a.WRITER_DEPT_NAME2 LIKE CONCAT('%', #writerDeptName#,'%')
+						A.WRITER_DEPT_NAME2 LIKE CONCAT('%', #writerDeptName#,'%')
 				</isNotEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
-			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="endDate" prepend="and">
 			<![CDATA[
-			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="type" prepend="and">
@@ -342,13 +345,13 @@
 		</isNotEmpty>
 		<![CDATA[
 			AND
-				DELFLAG = 0
+				A.DELFLAG = 0
 		]]>
 		<isNotEmpty prepend="" property="order">
 				ORDER BY $order$
 		</isNotEmpty>
 		<isEmpty prepend="" property="order">
-				ORDER BY START_DATE DESC
+				ORDER BY B.START_DATE DESC
 		</isEmpty>
 		<isNotEmpty property="startPoint" prepend="limit">
 			<isNotEmpty property="endPoint">
@@ -365,7 +368,7 @@
 					a.attitude_id as ATTITUDE_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
 					a.appr_user_name as APPR_USER_NAME,
-					DATE_FORMAT(DATE_ADD(DATE_FORMAT(b.start_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
+					DATE_FORMAT(DATE_ADD(DATE_FORMAT(c.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
 					a.appr_status as APPR_STATUS,
 					a.writer_name as WRITER_NAME,
 					a.writer_dept_name as WRITER_DEPT_NAME
@@ -375,10 +378,24 @@
 				join tbl_attitude b 
 			on 
 				a.ATTITUDE_ID = b.ATTITUDE_ID
+			and
+				a.COMPANY_ID = b.COMPANY_ID
+			and 
+				a.TENANT_ID = b.TENANT_ID
+			inner join
+				tbl_attitude_modappl_history c
+			on
+				a.ATTITUDE_ID = c.ATTITUDE_ID						
+			and
+				a.COMPANY_ID = c.COMPANY_ID
+			and 
+				a.TENANT_ID = c.TENANT_ID				
 			where 
 				a.COMPANY_ID = #companyId#
 			and 
 				a.TENANT_ID = #tenantId#
+			and 
+				c.mod_cnt = 0
 		]]>
 		<include refid="ezAttitudeDAO.searchQuery"/>
 	</select>
@@ -419,7 +436,8 @@
 					c.type_id as TYPE_ID,
 					c.type_name as TYPE_NAME,
 					c.type_name2 as TYPE_NAME2,
-					a.content as CONTENT
+					a.content as CONTENT,
+					a.writer_id as WRITER_ID
 			FROM 
 				jmocha.tbl_attitude_modappl a
 			inner 
@@ -542,12 +560,10 @@
 		]]>
 	</select>
 	
-	<update id="ezAttitudeDAO.delUsersModifyAtt" parameterClass="Map">
+	<delete id="ezAttitudeDAO.delUsersModifyAtt" parameterClass="Map">
 		<![CDATA[
-			UPDATE
+			DELETE FROM 
 				TBL_ATTITUDE_MODAPPL
-			SET
-				DELFLAG = #delFlag#
           	WHERE
           		TENANT_ID = #tenantId#
           	AND
@@ -557,24 +573,53 @@
 		<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
 		      #ids[]# 
 		</iterate>
-	</update>
+	</delete>
 	
+	<insert id="ezAttitudeAdminDAO.delUsersModifyAttHistoryFirst" parameterClass="Map">
+		DELETE FROM 
+			tbl_attitude_modappl_history
+		WHERE
+			TENANT_ID = #tenantId#
+        AND
+        	COMPANY_ID = #companyId#
+        AND
+			ATTITUDE_ID = #attitudeId#
+		AND
+			MOD_CNT = 0
+	</insert>
+
 	<update id="ezAttitudeDAO.attAppUpdate" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				TBL_ATTITUDE
+				TBL_ATTITUDE A
+			INNER JOIN
+				TBL_ATTITUDE_MODAPPL_HISTORY B
+			ON
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.COMPANY_ID = B.COMPANY_ID
+			AND
+				A.ATTITUDE_ID = B.ATTITUDE_ID
 			SET
-				modappl = #modappl#
-          	WHERE
-          		TENANT_ID = #tenantId#
-          	AND
-        		COMPANY_ID = #companyId#
+				A.MODAPPL = #modappl#
 		]]>
+		<isEqual property="modappl" compareValue="0">
+				,A.START_DATE = B.CHANGE_DATE
+				,A.TYPE_ID = "A02"
+		</isEqual>
+		<![CDATA[				 
+          	WHERE
+          		A.TENANT_ID = #tenantId#
+          	AND
+        		A.COMPANY_ID = #companyId#
+        	AND
+        		B.MOD_CNT = 0
+        ]]>
 		<isNotEmpty property="attitudeId" prepend="and">
-				ATTITUDE_ID = #attitudeId#  
+				A.ATTITUDE_ID = #attitudeId#  
 		</isNotEmpty>
 		<isNotEmpty property="ids" prepend="and">
-			<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
+			<iterate prepend="A.ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
 			      #ids[]#
 			</iterate>
 		</isNotEmpty>
@@ -730,6 +775,57 @@
 		]]>
 	</update>
 	
+	<update id="ezAttitudeDAO.changeUsersAtt" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_ATTITUDE A 
+			INNER JOIN 
+				TBL_ATTITUDE_MODAPPL B 
+			ON 
+				A.ATTITUDE_ID = B.ATTITUDE_ID
+			AND 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.COMPANY_ID = B.COMPANY_ID
+			INNER JOIN 
+				TBL_ATTITUDE_MODAPPL_HISTORY C 
+			ON 
+				A.ATTITUDE_ID = C.ATTITUDE_ID
+			AND 
+				A.TENANT_ID = C.TENANT_ID
+			AND
+				A.COMPANY_ID = C.COMPANY_ID				
+			SET 
+				A.TYPE_ID =
+		]]> 
+			<isEqual property="changeStatus" compareValue="appr">
+				<![CDATA[
+					"A01"
+					, A.START_DATE = B.CHANGE_DATE
+				]]>
+			</isEqual>
+			<isEqual property="changeStatus" compareValue="ret">
+				<![CDATA[
+					"A02"
+					, A.START_DATE = C.CHANGE_DATE
+				]]>
+			</isEqual>
+		<![CDATA[
+	        WHERE
+	        	A.TENANT_ID = #tenantId#
+	        AND
+	        	C.MOD_CNT = 0
+		]]>	        	
+	        AND
+	        <iterate prepend="A.ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
+				#ids[]# 
+			</iterate>
+		<![CDATA[			
+	        AND
+	        	A.COMPANY_ID = #companyId#
+		]]>
+	</update>
+	
 	<insert id="ezAttitudeAdminDAO.addUsersModifyAttHistory" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
 			ATTITUDE_ID,
@@ -802,6 +898,68 @@
 		</iterate>
 	</insert>
 	
+	<insert id="ezAttitudeAdminDAO.addUsersModifyAttHistoryFirst" parameterClass="Map">
+		INSERT INTO tbl_attitude_modappl_history(
+			ATTITUDE_ID,
+			MOD_CNT,
+			COMPANY_ID,
+			TENANT_ID,
+			WRITER_ID,
+			WRITER_NAME,
+			WRITER_NAME2,
+			WRITER_TITLE,
+			WRITER_TITLE2,
+			WRITER_DEPT_ID,
+			WRITER_DEPT_NAME,
+			WRITER_DEPT_NAME2,
+			CHANGE_DATE,
+			DELFLAG,
+			APPR_USER_ID,
+			APPR_USER_NAME,
+			APPR_USER_NAME2,
+			APPR_DATE,
+			APPR_STATUS,
+			CONTENT
+			)
+		SELECT
+			A.ATTITUDE_ID,
+			0,
+			A.COMPANY_ID,
+			A.TENANT_ID,
+			A.WRITER_ID,
+			A.WRITER_NAME,
+			A.WRITER_NAME2,
+			A.WRITER_TITLE,
+			A.WRITER_TITLE2,
+			A.WRITER_DEPT_ID,
+			A.WRITER_DEPT_NAME,
+			A.WRITER_DEPT_NAME2,
+			B.START_DATE,
+			A.DELFLAG,
+			A.APPR_USER_ID,
+			A.APPR_USER_NAME,
+			A.APPR_USER_NAME2,
+			A.APPR_DATE,
+			0,
+			A.CONTENT
+		FROM 
+			tbl_attitude_modappl A 
+		INNER JOIN
+			tbl_attitude B
+		ON 
+			A.ATTITUDE_ID = B.ATTITUDE_ID
+		AND 
+			A.TENANT_ID = B.TENANT_ID
+		AND
+			A.COMPANY_ID = B.COMPANY_ID
+		WHERE
+			A.TENANT_ID = #tenantId#
+        AND
+        	A.COMPANY_ID = #companyId#
+        AND
+			A.ATTITUDE_ID = #attitudeId#
+	</insert>
+	
 	<delete id="ezAttitude.deleteAttitude" parameterClass="Map">
 		DELETE FROM
 			tbl_attitude
@@ -838,12 +996,14 @@
 					CONTENT
 			FROM 
 				jmocha.tbl_attitude_modappl_history 
-			where 
+			WHERE 
 				COMPANY_ID = #companyId#
-			and 
+			AND 
 				TENANT_ID = #tenantId#
-			and
+			AND
 				ATTITUDE_ID = #attModId#
+			AND 
+				MOD_CNT > 0
 		]]>
 	</select>
 </sqlMap>
