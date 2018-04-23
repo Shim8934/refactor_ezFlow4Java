@@ -38,7 +38,11 @@
 			}
 			.viewtxt > span > span {
 				font-size: 14px;
-			}			
+			}	
+			
+			#menu > ul:nth-child(2) > li {
+				margin: 0 2px !important;
+			}		
 		</style>
 		
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
@@ -1409,7 +1413,7 @@
 	                                <option value="2"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t362' /></option>
 	                            </select>
 	                        </li>
-	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
+	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;  display:none;">
 	                            <img src="/images/pbar.gif"></li> 
 	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
 	                            <select id="SelMailSign" onchange="MailSignSel()" style="vertical-align:top;">
@@ -1423,7 +1427,7 @@
 	                                    <spring:message code='ezEmail.t828' /></option>
 	                            </select>
 	                        </li>
-	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
+	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;  display:none;">
 	                            <img src="/images/pbar.gif"></li> 
 	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
 	                            <select id="bodyType" style="vertical-align:top;width:90px;" onchange="changeTextOption(this.value);">
@@ -1432,7 +1436,7 @@
 	                            </select>
 	                        </li>
 	                        <c:if test="${useOnlyInnerMail != 'YES'}">
-	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;"><img src="/images/pbar.gif"></li>
+	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;"><img src="/images/pbar.gif"></li>
 	                        	<li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
 		                            <select style="vertical-align:top;width:120px;" onchange="ChangeSenderName(this);">
 		                            ${mailSendObject}
@@ -1453,7 +1457,7 @@
 		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		      			
 		      			if (useSecureMail == "YES") {
-		    	        	$('.securemail').css('display', '');
+		    	        	$('.securemail').not('.bar').css('display', '');
 		    	        	
 		    	        	if (isSecureMail == "true") {
 		    	        		document.getElementById("chkSecureMail").checked = true;

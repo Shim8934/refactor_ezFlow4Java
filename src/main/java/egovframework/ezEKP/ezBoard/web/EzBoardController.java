@@ -995,7 +995,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	logger.debug("getBoardList started");
     	logger.debug("boardID : " + boardVO.getBoardId());
     	logger.debug("boardType : " + boardVO.getBoardType());
-
+    	
     	userInfo = commonUtil.userInfo(loginCookie);
     	
     	String boardID = boardVO.getBoardId();
@@ -1026,7 +1026,6 @@ public class EzBoardController extends EgovFileMngUtil{
     		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
     			boardVO.setBoardType("N");
     			resultXML = getNewItemList(boardVO, userInfo);
-    			System.out.println(resultXML);
     		} else {
     			resultXML = getBoardListItem(boardVO, userInfo, type);
     		}
@@ -2022,7 +2021,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardInfo = getBoardInfo(boardVO.getBoardId(), userInfo);
 		
 		boardVO.setSubFlag("N");
-		boardVO.setSearchQuery(boardVO.getSearchQuery().replace("&lt;", "<").replace("&gt;", ">"));
+		//boardVO.setSearchQuery(boardVO.getSearchQuery().replace("&lt;", "<").replace("&gt;", ">"));
 		
 		Document searchQueryDoc = commonUtil.convertStringToDocument(boardVO.getSearchQuery());
 		
@@ -2033,6 +2032,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getSearchQuery().indexOf("TITLE;") != -1) {
 			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent());
 			returnQuery += " AND TITLE like '%" + boardVO.getTitle() + "%' ";
+		}
+		
+		if (boardVO.getSearchQuery().indexOf("CONTENT;") != -1) {
+				boardVO.setContent(searchQueryDoc.getElementsByTagName("CONTENT").item(0).getTextContent());
+				returnQuery += " AND CONTENT like '%" + boardVO.getContent() + "%' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("WRITERNAME;") != -1) {
@@ -2734,13 +2738,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardMyFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
 		
 		int boardCount = ezBoardService.getBrdTotalItemCount(boardMyFavoriteVO);
-		
 		int startRow = 1;
 		int endRow = 0;
 		
 		BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
 		
 		int personalCount = boardConfigVO.getListCount();
+
 		String previewtype = boardConfigVO.getPreview();
 		String fieldName = "";
 		String fieldValue = "";
@@ -5431,7 +5435,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		doc.getElementsByTagName("ENDDATE").item(0).setTextContent(doc.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 10) + " 23:59:59");
-		doc.getElementsByTagName("CONTENT").item(0).setTextContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace(System.lineSeparator(), "<br>"));
+		doc.getElementsByTagName("CONTENT").item(0).setTextContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
 		
 		if (!mode.equals("temp")) {
 			mode = "New";
@@ -5735,7 +5739,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			String itemID = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
 			String title = doc.getElementsByTagName("TITLE").item(0).getTextContent();
 			boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
-			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace(System.lineSeparator(), "<br>");;
+			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent();
 			
 			ezBoardService.photoListAlbumEdit(boardID, itemID, title, content, userInfo.getTenantId());
 			
@@ -5744,7 +5748,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			String itemID = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
 			String title = doc.getElementsByTagName("TITLE").item(0).getTextContent();
 			boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
-			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace(System.lineSeparator(), "<br>");;
+			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent();
 			
 			ezBoardService.photoListAlbumEditTemp(boardID, itemID, title, content, userInfo.getTenantId());
 			
@@ -6126,7 +6130,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@ResponseBody
 	public String setBoardConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("setBoardConfig started");
-
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userID = request.getParameter("pUserID");

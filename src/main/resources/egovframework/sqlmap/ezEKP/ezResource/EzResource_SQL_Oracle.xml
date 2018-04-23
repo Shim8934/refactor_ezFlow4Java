@@ -1151,42 +1151,52 @@
 	<select id="EzResourceDAO.getSchedule" parameterClass="Map" resultMap="resGetScheduleVO">
 		<![CDATA[
 			SELECT 
-				OWNERID, 
-				NUM, 
-				PNUM, 
-				COMPANYID, 
-				WRITERID, 
-				DEPTNM, 
-				OWNERNM, 
-				TITLE, 
-				LOCATION, 
-				TIMEDISPLAY, 
-				TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE, 
-				TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE, 
-				ALLDAY, 
-				ALERTTIME, 
-				CONTENT, 
-				IMPORTANCE, 
-				REFLAG, 
-				GRESFLAG, 
-				TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY, 
-				ENTRYLIST, 
-				CHARACTERID, 
-				ATTACHFLAG, 
-				PUBLICFLAG, 
-				APPROVEFLAG, 
-				SCHEDULEID, 
-				TENANT_ID
+				A.OWNERID, 
+				A.NUM, 
+				A.PNUM, 
+				A.COMPANYID, 
+				A.WRITERID, 
+				A.DEPTNM, 
+				A.OWNERNM, 
+				A.TITLE, 
+				A.LOCATION, 
+				A.TIMEDISPLAY, 
+				TO_CHAR(B.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE, 
+				TO_CHAR(B.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE, 
+				A.ALLDAY, 
+				A.ALERTTIME, 
+				A.CONTENT, 
+				A.IMPORTANCE, 
+				A.REFLAG, 
+				A.GRESFLAG, 
+				TO_CHAR(A.WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY, 
+				A.ENTRYLIST, 
+				A.CHARACTERID, 
+				A.ATTACHFLAG, 
+				A.PUBLICFLAG, 
+				A.APPROVEFLAG, 
+				A.SCHEDULEID, 
+				A.TENANT_ID
       		FROM
-      			TBL_RS_SCHEDULE 
+      			TBL_RS_SCHEDULE A 
+      		JOIN
+      			TBL_RS_SCHEDULEREPETITION B
+      			ON
+      				A.COMPANYID = B.COMPANYID
+      			AND 
+	      			A.OWNERID = B.OWNERID
+	      		AND
+	      			A.NUM = B.NUM
+	      		AND
+	      			A.TENANT_ID = B.TENANT_ID
       		WHERE  
-      			COMPANYID = #v_pCompanyID#
+      			A.COMPANYID = #v_pCompanyID#
       		AND 
-      			OWNERID = #v_pOwnerID#
+      			A.OWNERID = #v_pOwnerID#
       		AND 
-      			NUM = #v_pNum#
+      			A.NUM = #v_pNum#
       		AND
-      			TENANT_ID = #tenantID#	
+      			A.TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
