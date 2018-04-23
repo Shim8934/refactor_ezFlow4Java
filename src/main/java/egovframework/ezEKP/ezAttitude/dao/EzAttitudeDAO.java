@@ -180,6 +180,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		update("ezAttitudeDAO.changeUsersModifyAtt", map);
 	}
 	
+	public void changeUsersAtt(Map<String, Object> map) {		
+		update("ezAttitudeDAO.changeUsersAtt", map);
+	}
+	
 	public void addUsersModifyAttHistory(Map<String, Object> map) throws Exception {
 		insert("ezAttitudeAdminDAO.addUsersModifyAttHistory", map);
 	}

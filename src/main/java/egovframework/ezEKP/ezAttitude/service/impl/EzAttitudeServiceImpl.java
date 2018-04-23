@@ -1005,6 +1005,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		//승인, 반려 기록
 		ezAttitudeDAO.changeUsersModifyAtt(map);
 		
+		ezAttitudeDAO.changeUsersAtt(map);
+		
 		//수정이 완료 되면 히스토리 기록
 		ezAttitudeDAO.addUsersModifyAttHistory(map);
 	}

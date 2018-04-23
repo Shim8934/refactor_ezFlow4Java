@@ -733,6 +733,37 @@
 		]]>
 	</update>
 	
+	<update id="ezAttitudeDAO.changeUsersAtt" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_ATTITUDE_MODAPPL
+			SET 
+				APPR_STATUS =
+		]]> 
+			<isEqual property="changeStatus" compareValue="appr">
+				1
+			</isEqual>
+			<isEqual property="changeStatus" compareValue="ret">
+				2
+			</isEqual>
+		<![CDATA[
+			,APPR_DATE = DATE_FORMAT(#apprDate#, '%Y-%m-%d %H:%i:%S')
+			,APPR_USER_ID = #userId#
+			,APPR_USER_NAME = #displayName#
+			,APPR_USER_NAME2 = #displayName2#
+	        WHERE
+	        	TENANT_ID = #tenantId#
+		]]>	        	
+	        AND
+	        <iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
+				#ids[]# 
+			</iterate>
+		<![CDATA[			
+	        AND
+	        	COMPANY_ID = #companyId#
+		]]>
+	</update>
+	
 	<insert id="ezAttitudeAdminDAO.addUsersModifyAttHistory" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
 			ATTITUDE_ID,

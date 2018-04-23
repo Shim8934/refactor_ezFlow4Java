@@ -93,7 +93,13 @@
 			    });
 		    }
 		    
-		    function modApprove() { 
+		    function modApprove() {
+		    	
+		    	if ("${data.apprStatus}" == 1) {
+		    		alert("이미 승인된 항목 입니다.");
+		    		return;
+		    	}
+		    	
 		    	var obj = new Object();
 		    	
 			    obj.idList = attid;
@@ -120,7 +126,12 @@
 		    
 		  	//반려
 		    function modReturn() {
-				var obj = new Object();
+		    	if ("${data.apprStatus}" == 2) {
+		    		alert("이미 반려된 항목 입니다.");
+		    		return;
+		    	}
+		  		
+		  		var obj = new Object();
 		    	
 			    obj.idList = attid;
 			    obj.changeStatus = "ret";
