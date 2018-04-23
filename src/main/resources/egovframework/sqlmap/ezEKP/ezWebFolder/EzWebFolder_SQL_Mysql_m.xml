@@ -614,15 +614,14 @@
 	
 	<select id="EzWebFolderDAO_m.getFolderUserIdList_D" resultClass="String">
 		<![CDATA[
-			SELECT DISTINCT
-				USER_ID
+			SELECT F.OWNER_ID
 			FROM TBL_WEBFOLDER_FOLDERUSER FU
 			JOIN TBL_WEBFOLDER_FOLDER F
 			ON FU.FOLDER_ID = F.FOLDER_ID
 			AND FU.TENANT_ID = F.TENANT_ID
-			WHERE F.FOLDER_TYPE = 'D'
-			AND FU.CREATE_ID = #userId#
-			AND FU.TENANT_ID = #tenantId#
+			WHERE FU.USER_ID = #userId#
+			AND USER_TYPE = 'chief'
+			AND FU.TENANT_ID = #tenantId#;
 		]]>
 	</select>
 	
