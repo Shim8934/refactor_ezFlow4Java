@@ -22,7 +22,7 @@
 	            	saveMode = "modify";
 	            	
 	            	//파일경로
-	            	var imgFilePath = "${typeInfo.imgPath}";
+// 	            	var imgFilePath = "${typeInfo.imgPath}";
 	            } else {
 	    			typeId = "<c:out value = '${typeId}' />";
 	            }
@@ -91,12 +91,12 @@
 		        		imgPath : imgPath
 		        	},
 		        	success : function(result) {
-		        			alert('추가하였습니다.');
+		        			alert('저장되었습니다.');
 		        			window.opener.company_change();
 							window.close();
 		        	},
 		        	error : function() {
-		        		alert('추가하는 도중 에러 발생');
+		        		alert('저장하는 도중 에러 발생');
 		        	}
 		        });
 			}
@@ -147,7 +147,7 @@
 	  							</a>
 	  						</td>
 	  						<td style="width:40%">
-	  							<img id="preview" name="preview" src="${typeinfo.imgpath}" width="16px;" height="16px;" alt="" border="0" style="display: block;">
+	  							<img id="preview" name="preview" src="${typeInfo.imgPath}" width="16px;" height="16px;" alt="" border="0" style="display: block;">
 	  						</td>
 	  						<td>
 	  							★ 아이콘 크기 : 16px * 16px

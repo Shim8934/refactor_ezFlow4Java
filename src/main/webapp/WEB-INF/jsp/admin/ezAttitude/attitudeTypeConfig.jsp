@@ -67,6 +67,7 @@
  	        	}
 	        }
 	        
+	        //유형 사용여부 일괄저장
 	        function save_config() {
 	        	var length = $('table.mainlist input[name^=useRadio]').length / 2;
 	        	var list = [];
@@ -105,12 +106,12 @@
 	            if (CrossYN()) {
 	            	saveType_dialogArguments[0] = $("#ListCompany").val();
 // 	            	saveType_dialogArguments[1] = save_type_Complete;
-                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=540px, height=185px', GetOpenWindowfeature(800, 520));
+                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=540px, height=155px', GetOpenWindowfeature(800, 520));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
                 	rtnValue = window.showModalDialog("/admin/ezAttitude/addAttitudeType.do", $("#ListCompany").val(),
-                        "dialogHeight:185px;dialogwidth:540px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+                        "dialogHeight:155px;dialogwidth:540px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
@@ -122,7 +123,7 @@
 	        	saveType_dialogArguments[0] = $("#ListCompany").val();
 //             	saveType_dialogArguments[1] = save_type_Complete;
             	var typeId = obj.id;
-	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + typeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", GetOpenWindowfeature(800, 520));
+	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + typeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=540px, height=155px', GetOpenWindowfeature(800, 520));
 	        	
 	        	try { OpenWin.focus(); } catch (e) { }
 	        }

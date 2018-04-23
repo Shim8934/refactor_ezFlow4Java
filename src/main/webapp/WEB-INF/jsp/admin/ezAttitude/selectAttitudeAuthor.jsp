@@ -10,7 +10,6 @@
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
 		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
@@ -46,24 +45,37 @@
 	   		function setDeptList(){
 				$('#treeview').on('changed.jstree', function (e, data) {
 			     	var id = data.instance.get_node(data.selected).id;
-					setUserList("DEPARTMENT",id);
-				  })
-				.jstree({ 
-					'core' : {'data' : treeContent},
+			     	var deptName = $("#"+id+" a:first").text();
+					setUserList("DEPARTMENT", id,deptName);
+				}).jstree({ 
+					'core'   : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
-					 'themes' : {'responsive' : true}
-				});
+					'themes' : {'responsive' : true}
+				}).on('ready.jstree', function(e, data) {
+					var offset = $(".jstree-clicked").offset();
+		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+			    });
+	   		}
+	   		
+	   		function goScroll(){
+				var offset = $("#opensol").offset();
+	   	        $('html, body').animate({scrollTop : offset.top}, 400);
 	   		}
 	   		
 	   		//사원 리스트 뿌리기
-	   		function setUserList(key,value){
+	   		function setUserList(key,value,deptName){
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key":key, "value":value},
+	   				data:{"key":key, "value":value,"deptName":deptName},
 	   				success: function(result){
-	   					$("#orglistView").html(result);
+	   					var picList = $(result).find(".organwrap");
+	   					if (picList.length==0 && key!="DEPARTMENT") {
+	   						alert("<spring:message code='ezCommunity.t1379'/>");
+	   					} else {
+		   					$("#orglistView").html(result);
+	   					}
 	   				}
 	   			});
 	   		}
@@ -109,8 +121,12 @@
 	   		//검색
 	   		function search_click(){
 	   			var key = $("#search_type").val();
-	   			var value = $("#keyword").val();
-	   			setUserList(key,value);
+	   			var value = $("#keyword").val().trim();
+	   			if(value){
+		   			setUserList(key, value);
+	   			} else {
+	   				alert("검색어를 입력해주세요")
+	   			}
 	   		}
 	   		
 	   		//사원선택

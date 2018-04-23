@@ -186,7 +186,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, int tenantId) throws Exception {
+	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, String statistics, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeTypeList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -194,6 +194,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("isuse", isuse);
 		map.put("isAdmin", isAdmin);
+		map.put("statistics", statistics);
 		
 		LOGGER.debug("getAttitudeTypeList ended");
 		

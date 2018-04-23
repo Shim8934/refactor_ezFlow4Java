@@ -336,6 +336,11 @@
 				PARENT_ID = 'A05'
 			]]>
 			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="statistics">
+			<![CDATA[
+				TYPE_ID NOT IN ('A01', 'A03')
+			]]>
+			</isNotEmpty>
 	</select>
 	
 	<update id="ezAttitudeAdminDAO.updateAttitudeTypeConfig" parameterClass="Map">
@@ -465,7 +470,7 @@
 			</iterate>				
 		</isNotEmpty>
 	</select>
-	<!-- 없앨까 생각중인 쿼리.... -->
+	<!-- 조직도 부서별 사원 리스트 -->
 	<select id="ezAttitudeAdminDAO.getDeptUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
 		<![CDATA[
 			SELECT
@@ -479,8 +484,16 @@
 				TBL_USERMASTER 
 			WHERE
 				TENANT_ID=#tenantId#
-			AND 
-				$key$ like concat('%',#value#,'%')
+		]]>
+		<isNotEqual property="key" compareValue="DEPARTMENT">
+			AND
+				$key$ LIKE concat('%',#value#,'%')
+		</isNotEqual>
+		<isEqual property="key" compareValue="DEPARTMENT">
+			AND
+				$key$ = #value#
+		</isEqual>
+		<![CDATA[
 			ORDER BY
 				lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME
 		]]>
@@ -516,23 +529,23 @@
 		    	D.CN AS ID,
 		        IF(D.EXTENSIONATTRIBUTE1=NULL
 		 ]]>
-		        <isNotEmpty property="companyId">
-		        <![CDATA[
-		        	OR D.CN=#companyId#
-		        ]]>
-		        </isNotEmpty>
+		 <isNotEmpty property="companyId">
 		 <![CDATA[
-		        ,'##',D.EXTENSIONATTRIBUTE1) AS PARENT,
-		        D.EXTENSIONATTRIBUTE2 AS COMPANYID,
-		        D.DISPLAYNAME AS TEXT,
-		        CASE D.CN
-		           WHEN D.EXTENSIONATTRIBUTE2 THEN 'COMP'
-		           ELSE 'DEPT'
-		        END AS ISCOMP,
-		        CASE D.CN
-		           WHEN U.DEPARTMENT THEN 'YES'
-		           ELSE 'NO'
-		        END AS MYDEPT
+		 	OR D.CN=#companyId#
+		 ]]>
+		 </isNotEmpty>
+		 <![CDATA[
+		 	,'##',D.EXTENSIONATTRIBUTE1) AS PARENT,
+		 	D.EXTENSIONATTRIBUTE2 AS COMPANYID,
+		    D.DISPLAYNAME AS TEXT,
+		    CASE D.CN
+		    	WHEN D.EXTENSIONATTRIBUTE2 THEN 'COMP'
+		        ELSE 'DEPT'
+		    END AS ISCOMP,
+		    CASE D.CN
+		    	WHEN U.DEPARTMENT THEN 'YES'
+		        ELSE 'NO'
+		    END AS MYDEPT
 		    FROM
 		        TBL_DEPTMASTER D 
 		    LEFT JOIN 
@@ -553,13 +566,13 @@
 				OR
 					(substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 1)
 		       )
-		     ]]>
-			<isNotEmpty property="companyId">
-			<![CDATA[
-				AND 
-					D.EXTENSIONATTRIBUTE2 = #companyId#
-			]]>
-			</isNotEmpty>
+		]]>
+		<isNotEmpty property="companyId">
+		<![CDATA[
+			AND 
+				D.EXTENSIONATTRIBUTE2 = #companyId#
+		]]>
+		</isNotEmpty>
 		<![CDATA[
 		    ORDER BY lpad(ifnull(D.EXTENSIONATTRIBUTE15, 0), 6, 0), D.DISPLAYNAME			
 		]]>

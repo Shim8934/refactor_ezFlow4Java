@@ -58,6 +58,10 @@
 	    	
 	    	//부서선택
 	    	function selectDept(){
+	    		if (selectedUser == "" || selectedUser == null) {
+	    			alert("권한자를 선택해주세요");
+	    			return;
+	    		}
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthorDept.do";
 				url+="?companyId="+companyId+"&userId="+selectedUser;
 				window.open(url, "authorDept", GetOpenWindowfeature(500, 540));
@@ -84,33 +88,36 @@
 	    	}	  
 	    	
 	    	//권한 저장
-	    	function insertAuthDept(){
-	    		if (selectedUser == "" || selectedUser == null) {
-	    			alert("권한자를 선택해주세요");
-	    			return;
+	    	function saveAuthDept(){
+// 	    		if (selectedUser == "" || selectedUser == null) {
+// 	    			alert("권한자를 선택해주세요");
+// 	    			return;
+// 	    		}
+// 	    		if (deptIdStr == "" || deptIdStr == null) {
+// 	    			alert("권한 부서를 선택해주세요");
+// 	    			return;
+// 	    		}
+	    		if (deptIds.length!=0) {
+					$.ajax({
+		   				type:"post",
+		   				url:"/admin/ezAttitude/saveAttitudeAuthor.do",
+		   				data:{
+		   					selectedUser : selectedUser,
+		   					companyId : companyId,
+		   					deptIds : deptIdStr
+		   				},
+		   				success: function(){
+		   					alert("권한이 등록되었습니다.");
+	   						opener.company_change();
+	   						window.close();
+		   				},
+		   				error : function() {
+		   					alert("권한을 추가하는 도중 에러 발생");
+		   				}
+		   			});
+	    		} else {
+	    			alert("권한 부서를 선택해 주세요.");
 	    		}
-	    		if (deptIdStr == "" || deptIdStr == null) {
-	    			alert("권한 부서를 선택해주세요");
-	    			return;
-	    		}
-// 	   			var jsonString = JSON.stringify({"userId":selectedUser,"depts":deptIds});
-				$.ajax({
-	   				type:"post",
-	   				url:"/admin/ezAttitude/saveAttitudeAuthor.do",
-	   				data:{
-	   					selectedUser : selectedUser,
-	   					companyId : companyId,
-	   					deptIds : deptIdStr
-	   				},
-	   				success: function(){
-	   					alert("권한이 등록되었습니다.");
-   						opener.company_change();
-   						window.close();
-	   				},
-	   				error : function() {
-	   					alert("권한을 추가하는 도중 에러 발생");
-	   				}
-	   			});
 	   		}
 	    	
 		</script>
@@ -135,7 +142,7 @@
 	        </tr>
 	    </table>
 	    <div class="btnposition">
-	        <a class="imgbtn"><span onclick="insertAuthDept();" >저장</span></a>
+	        <a class="imgbtn"><span onclick="saveAuthDept();" >저장</span></a>
 	        <a class="imgbtn"><span onclick="window.close();">취소</span></a>      
 	    </div>
 	</body>

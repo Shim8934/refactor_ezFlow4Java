@@ -673,8 +673,9 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String isuse = request.getParameter("isuse");
 			String isAdmin = request.getParameter("isAdmin");
+			String statistics = request.getParameter("statistics");
 			
-			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, info.getTenantId());
+			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
 			
 			//imgPath 셋팅
 			for (AttitudeTypeVO typeInfo : attitudeTypeList) {
@@ -820,10 +821,10 @@ public class EzAttitudeGWController {
 			}
 
 			//formList 구하기
-			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
+//			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
 			
 			data.put("typeInfo", typeInfo);
-			data.put("formList", formList);
+//			data.put("formList", formList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1611,6 +1612,7 @@ public class EzAttitudeGWController {
 			String orderOption = request.getParameter("orderOption");
 			String offsetMin = request.getParameter("offsetMin");
 			String isAdmin = request.getParameter("isAdmin");
+			String statistics = request.getParameter("statistics");
 			String isuse = "1";
 			
 			/*String pageNum = request.getParameter("pageNum");
@@ -1634,7 +1636,7 @@ public class EzAttitudeGWController {
 			String totalCount = ezAttitudeService.getAttitudeCount2(info.getTenantId(), companyId, searchAttitudeType, searchUserName, searchStartDate, searchEndDate, offset);
 			
 			//구분 리스트
-			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, info.getTenantId());
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
 			
 			JSONObject data = new JSONObject();
 //			data.put("list", list);
