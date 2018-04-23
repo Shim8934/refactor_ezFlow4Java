@@ -223,7 +223,7 @@
 					success : function(result) {
 						$("#attiStatis td").text("0일");
 						for (var i = 0; i < result.length; i++) {
-							$("#" + result[i].typeId).text(result[i].sumDate + "일");
+							$("#" + result[i].typeId).text(result[i].count + "일");
 						}
 					}
 				})

@@ -965,35 +965,24 @@ public class EzAttitudeGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			String companyId = request.getParameter("companyId");
 			String userId = request.getParameter("userId");
-			String userIdList = request.getParameter("userIdList");
-			String offsetMin = request.getParameter("offsetMin");
+			String selectUserId = request.getParameter("selectUserId");
 
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 
-			List<AttitudeUserConfigVO> voList = ezAttitudeService.getAttitudeUserConfigInfo(info.getTenantId(), companyId, userIdList, offsetMin);
-
-			if (voList.size() == 0) {
-				voList = new ArrayList<AttitudeUserConfigVO>();
-				AttitudeUserConfigVO vo = new AttitudeUserConfigVO();
-
-				info = mOptionService.commonInfoWeb(serverName, userIdList);
-				vo.setUserId(userIdList);
-				vo.setUserName(info.getUserName());
-				vo.setUserName2(info.getUserName2());
-				voList.add(vo);
-			}
+			AttitudeUserConfigVO vo = ezAttitudeService.getAttitudeUserConfigInfo(selectUserId, commonUtil.getMinuteUTC(info.getOffSet()), info.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", voList);
+			result.put("data", vo);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
+		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/users-attitude-confs] ended.");
+		
 		return result;
 	}
 	

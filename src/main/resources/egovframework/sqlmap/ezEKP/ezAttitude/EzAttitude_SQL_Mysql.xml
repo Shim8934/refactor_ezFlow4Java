@@ -50,7 +50,7 @@
 		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
 		<result  property="writerName"			column="WRITER_NAME"			columnIndex="18"/>
-		<result  property="writerDeptName"			column="WRITER_DEPT_NAME"			columnIndex="19"/>
+		<result  property="writerDeptName"		column="WRITER_DEPT_NAME"		columnIndex="19"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -59,7 +59,7 @@
 	</resultMap>
 	
 	<resultMap id="attitudeStatis" class="AttitudeStatisVO">
-		<result property="sumDate"			column="SUM_DATE"			columnIndex="1"/>
+		<result property="count"			column="count"			columnIndex="1"/>
 		<result property="typeId"			column="TYPE_ID"			columnIndex="2"/>
 	</resultMap>
 	
@@ -478,7 +478,7 @@
 			                        date_add(START_DATE, INTERVAL +#offsetMin# minute)
 								   )
 							   )
-						) + COUNT(TYPE_ID) AS SUM_DATE,
+						) + COUNT(TYPE_ID) AS count,
 			       TYPE_ID
 			FROM   
 				jmocha.tbl_attitude
