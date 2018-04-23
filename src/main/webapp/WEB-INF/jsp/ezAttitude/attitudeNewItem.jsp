@@ -31,11 +31,13 @@
 			var companyId = "${companyId}";
 			var date = "${date}";
 			var mode = "${mode}";
+			var pStartDate = "<c:out value='${attitudeInfo.startDate}'/>";
+			var pEndDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var typeId = "<c:out value='${attitudeInfo.typeId}'/>";
 			var region = "<c:out value='${attitudeInfo.region}'/>";
 			var mobile = "<c:out value='${attitudeInfo.mobile}'/>";
 			var bizSub = "<c:out value='${attitudeInfo.bizSub}'/>";
-			var content = '${attitudeInfo.content}';
+ 			var content = '${attitudeInfo.content}';
 			var attitudeId = "<c:out value='${attitudeInfo.attitudeId}'/>";
 			var dateType = "<c:out value='${attitudeInfo.dateType}'/>";
 			var holidayFlag = false;
@@ -79,14 +81,22 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
-				var uploadSDate = date + " 00:00:00";
+		        
+		        var uploadSDate = "";
+		        var uploadEDate = "";
+		        if (mode == "mod") {
+					uploadSDate = pStartDate;
+					uploadEDate = pEndDate;
+		        } else {
+					uploadSDate = date + " 00:00:00";
+					uploadEDate = date + " 23:59:59";
+		        }
 				var sYear = uploadSDate.substring(0, 4);
 				var sMonth = uploadSDate.substring(5, 7);
 				var sDay = uploadSDate.substring(8, 10);
 				var sHour = uploadSDate.substring(11, 13);
 				var sMin = uploadSDate.substring(14, 16);
 							
-				var uploadEDate = date + " 23:59:59";
 				var eYear = uploadEDate.substring(0, 4);
 				var eMonth = uploadEDate.substring(5, 7);
 				var eDay = uploadEDate.substring(8, 10);
