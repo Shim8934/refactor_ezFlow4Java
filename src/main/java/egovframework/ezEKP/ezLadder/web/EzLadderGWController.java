@@ -172,6 +172,22 @@ public class EzLadderGWController {
 			
 			List<LadderLineVO> resultUser = ezLadderService.selectSearchUser(searchUserName, tenant_id, lang);
 			
+			for(LadderLineVO line : resultUser) {
+				String imagePath = line.getPic();
+				if (imagePath != null && !imagePath.equals("")) {
+					String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", line.getTenant_id())+ commonUtil.separator + imagePath;
+					String fullPath = request.getServletContext().getRealPath(realPath);
+					
+					if (checkExist(fullPath)) {
+						line.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
+					} else {
+						line.setPic("");
+					}
+				} else {
+					line.setPic("");
+				}
+			}
+			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", resultUser);
@@ -583,8 +599,12 @@ public class EzLadderGWController {
 				
 				if (checkExist(fullPath)) {
 					vo.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
+				} else {
+					vo.setPic("");
 				}
-			} 
+			} else {
+				vo.setPic("");
+			}
 			for(LadderLineVO lineVO : list) {
 				imagePath = ezOrganService.getPropertyValue(lineVO.getUserId(), "extensionAttribute2", lineVO.getTenant_id());
 				
@@ -594,8 +614,12 @@ public class EzLadderGWController {
 					
 					if (checkExist(fullPath)) {
 						lineVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
+					} else {
+						lineVO.setPic("");
 					}
-				} 
+				} else {
+					lineVO.setPic("");
+				}
 			}
 			for (LadderCommentVO commentVO : cmtlist) {
 				imagePath = ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id());
@@ -606,8 +630,12 @@ public class EzLadderGWController {
 					
 					if (checkExist(fullPath)) {
 						commentVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
+					} else {
+						commentVO.setPic("");
 					}
-				} 
+				} else {
+					commentVO.setPic("");
+				}
 			}
 			
 			result.put("status", "ok");
@@ -621,7 +649,7 @@ public class EzLadderGWController {
 			result.put("code", "1");
 		}
 		
-		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId + "users/" + userId + "] ended.");
+		logger.debug("web G/W LADDER [Get /ladder/ladders/" + ladderId + "/users/" + userId + "] ended.");
 		
 		return result;
 	}

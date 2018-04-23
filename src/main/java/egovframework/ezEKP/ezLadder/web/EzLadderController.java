@@ -216,10 +216,9 @@ public class EzLadderController {
 	}
 	
 	/**
-	 * 사다리 게이머 추가
+	 * 사다리 게이머 바로 추가
 	 * @throws ParseException 
 	 * */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezLadder/setLadderAttendant.do")
 	public String setLadderAttendant(@CookieValue("loginCookie") String loginCookie, String [] searchUserName, HttpServletRequest request, Model model) throws ParseException {
 		logger.debug("setLadderAttendant started.");
@@ -248,7 +247,6 @@ public class EzLadderController {
 		JSONArray resultSearchName = (JSONArray) jsonResult.get("data");
 	
 		if (status.equals("ok")) {
-			logger.debug("### 오케이");
 			model.addAttribute(resultSearchName);
 		} else {
 			return "error";
@@ -321,7 +319,6 @@ public class EzLadderController {
 		logger.debug("getLadderBM.do started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
 		String url = "";
@@ -617,15 +614,13 @@ public class EzLadderController {
 	 */
 	@RequestMapping(value = "/ezLadder/getLadderGame.do", method = RequestMethod.GET)
 	public String getLadderGame(@CookieValue("loginCookie") String loginCookie, String ladderId, String searchSelect, String searchInput, String mode, String currPage, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
-		
-		logger.debug("ezLadder/getLadderGame.do started.");
+		logger.debug("getLadderGame started.");
 		logger.debug("ladderId : " + ladderId);
 		logger.debug("searchSelect : " + searchSelect);
 		logger.debug("searchInput " + searchInput);
 		logger.debug("mode : " + mode);
 		logger.debug("currPage : " + currPage);
 		
-//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
@@ -669,7 +664,7 @@ public class EzLadderController {
 			return "error";
 		}
 		
-		logger.debug("ezLadder/getLadderGame.do ended.");
+		logger.debug("getLadderGame ended.");
 		
 		if(mode.equals("pre") || mode.equals("json")) {
 			return "json";

@@ -150,7 +150,7 @@
 	            var totalLen = totalRows.length;
 	
 	            var stridlength = 0;
-	            var attendants = RetValue["attendants"];
+	            var attendants = RetValue;
 	            /* if (attendants != undefined && attendants != null && attendants["id"] != undefined && attendants["id"] != "") */
 	            if(!!attendants && !! attendants["id"]) {
 	                stridlength = attendants["id"].length;
@@ -370,15 +370,25 @@
 							page : CurPage ,
 							type : "user"
 						} ,
-	  				success : function(xml) {
-			                event_displayUserList(loadXMLString(xml));
+						success : function(xml) {
+							event_displayUserList(loadXMLString(xml));
 			                
-			                //2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
-			               	if (strSearch != "") {
-				            	document.getElementById('keyword').value = strSearch;
+							//2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
+							if (strSearch != "") {
+								document.getElementById('keyword').value = strSearch;
 								search_click("search"); 
 								strSearch = "";
-			              	}
+							}
+							
+							/** boh add : 부서 클릭하면 부서 전체 list 추가하기*/
+							listContentArry = new Array();
+							
+							var tempListContent = $("#txtlist_table tr[id^='MailUserlist_']");
+							var tempListLen = tempListContent.length;
+							for(var i = 0; i < tempListLen; i++) {
+								listContentArry[i] = tempListContent[i].getAttribute("id");
+							}
+							/** boh end */
 						},
 						error : function(jqXHR, textStatus, errorThrown) {
 							alert(error);
@@ -585,79 +595,109 @@
 	            var overlapAttendantXML = [];
 	            var AttendantXML = [];
 	            
-	            var alluser = [];
-				var overlapuser = [];
+	            var alluser = {"userId": [], "userName": [], "userName2": [], "pic": [], "temporder": [], "userdata": []};
+				var overlapuser = {"userId": [], "userName": [], "userName2": [], "pic": [], "temporder": [], "userdata": []};
+            	var trData;
 	            
 	            if (_RowObjectID != null) { 
 	            	if (_RowObjectName.trim() == "deptList") {
 		            	// 즐겨찾기에서 그룹으로 추가
 		            	for (var i = 0; i < $("#List_TBODY2 tr").length; i++) {
-							strId = $("#List_TBODY2 tr").eq(i).find("#data7").text();
-		                    strName = $("#List_TBODY2 tr").eq(i).find("#data5").text();
-	
-		                    strDeptNM = $("#List_TBODY2 tr").eq(i).find("#data3").text();
-		                    strEmail = $("#List_TBODY2 tr").eq(i).find("#data6").text();
-		                    strName2 = $("#List_TBODY2 tr").eq(i).find("#data8").text();
-		                    strDeptNM2 = "";
-		                    jickwe = "";
-		                    phone = "";
-		
-		                    /* var getlistview = new ListView();
-		                    getlistview.LoadFromID(pListView); */
+		            		trData = $("#List_TBODY2 tr").eq(i);
+		            		
+							strId = trData.find("#data7").text();
+		                    strName = trData.find("#data5").text();
+		                    strName2 = trData.find("#data8").text();
+		                    pic = trData.find("#data9").text();
+		                    
 		                    var IsInsert = CheckMailReceiver(strId, "3");
 		
 		                    if(strId.substring(0, 14) === "anonyAttendant" || !IsInsert){
-		                    	alluser[i] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real" };
+		                    	alluser["userId"][i] = strId;
+		                    	alluser["userName"][i] = strName;
+		                    	alluser["userName2"][i] = strName2;
+		                    	alluser["pic"][i] = pic;
+		                    	alluser["temporder"][i] = i;
+		                    	if(strId.substring(0, 14) === "anonyAttendant") {
+		                    		alluser["userdata"][i] = "anony";
+		                    	} else {
+		                    		alluser["userdata"][i] = "real";
+		                    	}
 		                    } else {
-		                    	overlapuser[i] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }; 
+		                    	overlapuser["userId"][i] = strId;
+		                    	overlapuser["userName"][i] = strName;
+		                    	overlapuser["userName2"][i] = strName2;
+		                    	overlapuser["pic"][i] = pic;
+		                    	overlapuser["temporder"][i] = i;
+		                    	overlapuser["userdata"][i] = "";
 		                    }
 		                }
 	            	} else {
 	            		// 즐겨찾기에서 유저로 추가
-	            		strId = $("[name='" + _RowObjectName + "'").find("#data7").text();
-	                    strName = $("[name='" + _RowObjectName + "'").find("#data5").text();
+	            		trData = $("[name='" + _RowObjectName + "'");
+	            		
+	            		strId = trData.find("#data7").text();
+	                    strName = trData.find("#data5").text();
+	                    strName2 = trData.find("#data8").text();
+	                    pic = trData.find("#data9").text();
 	
-	                    strDeptNM = $("[name='" + _RowObjectName + "'").find("#data3").text();
-	                    strEmail = $("[name='" + _RowObjectName + "'").find("#data6").text();
-	                    strName2 = $("[name='" + _RowObjectName + "'").find("#data8").text();
-	                    strDeptNM2 = "";
-	                    jickwe = "";
-	                    phone = "";
-	
-	                    /* var getlistview = new ListView();
-	                    getlistview.LoadFromID(pListView);  */
 	                    var IsInsert = CheckMailReceiver(strId, "3");
 	                    
 	                    if(strId.substring(0, 14) === "anonyAttendant" || !IsInsert){
-	                    	alluser[0] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone }, "datatype": "real" };
+	                    	alluser["userId"][0] = strId;
+	                    	alluser["userName"][0] = strName;
+	                    	alluser["userName2"][0] = strName2;
+	                    	alluser["pic"][0] = pic;
+	                    	alluser["temporder"][0] = i;
+	                    	if(strId.substring(0, 14) === "anonyAttendant") {
+	                    		alluser["userdata"][0] = "anony";
+	                    	} else {
+	                    		alluser["userdata"][0] = "real";
+	                    	}
 	                    } else {
-	                    	overlapuser[0] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone };
+	                    	overlapuser["userId"][0] = strId;
+	                    	overlapuser["userName"][0] = strName;
+	                    	overlapuser["userName2"][0] = strName2;
+	                    	overlapuser["pic"][0] = pic;
+	                    	overlapuser["temporder"][0] = i;
+	                    	overlapuser["userdata"][0] = "";
 	                    }
 	            	}
 	            } else {
 	            	// 조직도에서 바로 추가
 		            if (listContentArry != "") {
 		                for (var i = 0; i < listContentArry.length; i++) {
-		                	strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-		                    strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
-		                    strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
-		                    strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-		                    strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
-		                    strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
-		                    jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
-		                    phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
-		                    pic = document.getElementById(listContentArry[i]).getAttribute("_data9");
+		                	trData = document.getElementById(listContentArry[i]);
+		                	
+		                	strId = trData.getAttribute("_data2");
+		                    strName = trData.getAttribute("_data4");
+		                    strName2 = trData.getAttribute("_data11");
+		                    pic = trData.getAttribute("_data9");
+		                    
 		
 		                    var IsInsert = CheckMailReceiver(strId, "3"); 
 		                    
 							if(!IsInsert){
-								alluser[i] = { "data": { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone, "pic": pic}, "datatype": "real" };
+								alluser["userId"][i] = strId;
+		                    	alluser["userName"][i] = strName;
+		                    	alluser["userName2"][i] = strName2;
+		                    	alluser["pic"][i] = pic;
+		                    	alluser["temporder"][i] = i;
+		                    	if(strId.substring(0, 14) === "anonyAttendant") {
+		                    		alluser["userdata"][i] = "anony";
+		                    	} else {
+		                    		alluser["userdata"][i] = "real";
+		                    	}
 		                    } else {
-		                    	overlapuser[i] = { "id": strId, "name1": strName, "name2": strName2, "deptname1": strDeptNM, "deptname2": strDeptNM2, "jickwe": jickwe, "phone": phone, "pic": pic };
+		                    	overlapuser["userId"][i] = strId;
+		                    	overlapuser["userName"][i] = strName;
+		                    	overlapuser["userName2"][i] = strName2;
+		                    	overlapuser["pic"][i] = pic;
+		                    	overlapuser["temporder"][i] = i;
+		                    	overlapuser["userdata"][i] = "";
 		                    }
 		                }
 		            } else {
-		            	console.log('4444444444444444');
 		                if (p_ListOrderObject == "") {
 		                    alert("<spring:message code='ezLadder.t031' />");
 		                    return;
@@ -666,68 +706,39 @@
 		                if (p_ListOrderObject != "") {
 		                    strId = p_ListOrderObject.getAttribute("_data2");
 		                    strName = p_ListOrderObject.getAttribute("_data4");
-		                    strDeptNM = p_ListOrderObject.getAttribute("_data5");
-		                    strEmail = p_ListOrderObject.getAttribute("_data3");
 		                    strName2 = p_ListOrderObject.getAttribute("_data11");
-		                    strDeptNM2 = p_ListOrderObject.getAttribute("_data13");
-		                    jickwe = p_ListOrderObject.getAttribute("_data14");
-		                    phone = p_ListOrderObject.getAttribute("_data8");
+		                    pic = p_ListOrderObject.getAttribute("_data9");
 		
 		                    var listid = "MsgToList";
 		                
 		                    var getlistview = new ListView();
 		                    getlistview.LoadFromID(listid);
 		                    var bFlag = getlistview.ExistRow("DATA2", strEmail);
-		
-		                    if (bFlag) {
-		                        pAddFlag = true;
+		                    
+		                    if(!bFlag){
+								alluser["userId"][0] = strId;
+		                    	alluser["userName"][0] = strName;
+		                    	alluser["userName2"][0] = strName2;
+		                    	alluser["temporder"][0] = i;
+		                    	alluser["pic"][0] = pic;
+		                    	if(strId.substring(0, 14) === "anonyAttendant") {
+		                    		alluser["userdata"][0] = "anony";
+		                    	} else {
+		                    		alluser["userdata"][0] = "real";
+		                    	}
 		                    } else {
-		                        pparsingXML2 = "";
-		                        pparsingXML = "";
-		                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-		                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-		                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
-		                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-		                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
-		                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
-		                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
-		                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
-		                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-		                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
-		                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-		                        Resultxml = loadXMLString(pparsingXML2);
-		
-		                        var listview = new ListView();
-		                        listview.LoadFromID(listid);
-		
-		                        var MaxID = 0;
-		                        var InitTr = listview.GetDataRows();
-		                        var MaxCntNum = 0;
-		                        for (var j = 0  ; j < InitTr.length  ; j++) {
-		                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-		                            if (MaxID < curnum) {
-		                                MaxID = curnum;
-		                                MaxCntNum = j;
-		                            }
-		                        }
-		
-		                        var objTr = listview.AddRow(InitTr.length);
-		                        if (MaxCntNum != 0)
-		                            MaxCntNum = MaxCntNum + 1;
-		                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-		                        listview.AddDataRow(objTr, Resultxml);
-		
-		                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-		                        for (var y = 0; y < _tdlength; y++) {
-		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-		                        }
+		                    	overlapuser["userId"][0] = strId;
+		                    	overlapuser["userName"][0] = strName;
+		                    	overlapuser["userName2"][0] = strName2;
+		                    	overlapuser["pic"][0] = pic;
+		                    	overlapuser["temporder"][0] = i;
+		                    	overlapuser["userdata"][0] = "";
 		                    }
 		                }
 		            }
 	            }
 	            
-	            if(!!overlapuser.length) {
+	            if(!!overlapuser["userId"].length) {
 	            	retAttendantPopInfo[0] = true;
 					retAttendantPopInfo[1] = bindAllUser;
 					
@@ -736,13 +747,19 @@
 					bindAllUser(false);
 				}
 	            
-		        /* _RowObjectID = null; */
-                
                 function bindAllUser(value, type) {
 					if(value) {
-						overlapuser.forEach(function(user, index) {
-							alluser[index] = { "data": user, "datatype": type };
-						});
+						var overlapLen = overlapuser["userId"].length;
+						for(var i = 0; i < overlapLen; i++) {
+							if(!!overlapuser["userId"][i]) {
+								alluser["userId"][i] = overlapuser["userId"][i];
+								alluser["userName"][i] = overlapuser["userName"][i];
+								alluser["userName2"][i] = overlapuser["userName2"][i];
+								alluser["temporder"][i] = i;
+								alluser["pic"][i] = overlapuser["pic"][i];
+								alluser["userdata"][i] = type;
+							}
+						}
 					}
 					parsingXMLUserList(alluser);
 				}
@@ -753,18 +770,13 @@
 				
 				var listid = "MsgToList"; // 추가된 유저목록 테이블 아이디
 				var i = 0;
-				var len = userlist.length;
+				var len = userlist["userId"].length;
 				var pparsingXML = "";
 				var totallen = 0;
 				         
 				var strId = "";
 				var strName = "";
-				var strDeptNM = "";
-				var strEmail = "";
 				var strName2 = "";
-				var strDeptNM2 = "";
-				var jickwe = "";
-				var phone = "";
 				var strpic = "";
 				
 				var listview = new ListView();
@@ -778,32 +790,21 @@
 				} */
 				
 				for(; i < len; i++) {
-					var user = userlist[i]["data"];
-					
-					strName = user["name1"];
-					strName2 = user["name2"];
-					strEmail = user["name1"];
-					if(userlist[i]["datatype"] === "anony") {
-						strId = "anonyAttendant";
+					if(userlist["userdata"][i] === "anony") {
+						strId = "anonyAttendant_" + (totalRow + i);
+						strpic = "";
 					} else {
-						strId = user["id"];
-						strDeptNM = user["deptname1"];
-						strDeptNM2 = user["deptname2"];
-						jickwe = user["jickwe"];
-						phone = user["phone"]; 
+						strId = userlist["userId"][i];
+						strpic = userlist["pic"][i];
 					}
-					strpic = user["pic"];
+					strName = userlist["userName"][i];
+					strName2 = userlist["userName2"][i];
 					
 					pparsingXML = "<LISTVIEWDATA2><ROWS>";
 					pparsingXML += "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 					pparsingXML += "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 					pparsingXML += "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-					pparsingXML += "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
-					pparsingXML += "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
-					pparsingXML += "<DATA6><![CDATA[" + strName + "]]></DATA6>";
-					pparsingXML += "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
-					pparsingXML += "<DATA8>" + phone + "</DATA8>";
-					pparsingXML += "<DATA9>" + strpic + "</DATA9>";
+					pparsingXML += "<DATA4>" + strpic + "</DATA4>";
 					pparsingXML += "<VALUE>"  + strName + "</VALUE></CELL></ROW>";
 					pparsingXML += "</ROWS></LISTVIEWDATA2>";
 				
@@ -836,7 +837,7 @@
 					}
 				}
 				var listid ="MsgToList";
-				/* _RowObjectID = null; */
+				_RowObjectID = null;
 			}	
 	    
 		    function CheckMailReceiver(selRow, option) {
@@ -1213,7 +1214,7 @@
 		    function setBmGroup(type, ladderBmId) {
 		    	save_userlist();
 		    	
-		    	if(type !== "delete" && !rtn.length){
+		    	if(type !== "delete" && !rtn["userId"].length){
 		    		alert("<spring:message code='ezLadder.t058' />");
 		    		return;
 		    	}
@@ -1231,16 +1232,9 @@
 		    	var ladderbmid = retAttendantPopInfo[2];
 		    	
 				if(type !== "delete") {
-			    	var bmuserid = [];
-			    	var bmusername = [];
-			    	var bmusername2 = [];
-			    	
-			    	var rtnlen = rtn.length;
-			    	for(var i = 0; i < rtnlen; i++) {
-			    		bmuserid[i] = rtn[i]["id"];
-			    		bmusername[i] = rtn[i]["name"];
-			    		bmusername2[i] = rtn[i]["name2"];
-			    	}
+			    	var bmuserid = rtn["userId"];
+			    	var bmusername = rtn["userName"];
+			    	var bmusername2 = rtn["userName2"];
 				}
 		    	
 		    	$.ajax({
@@ -1307,6 +1301,7 @@
 				    			html += "<td id='data6' style='width:41%'>" + user.mail + "</td>";
 				    			html += "<td id='data7' style='display:none'>" + user.userId + "</td>";
 				    			html += "<td id='data8' style='display:none'>" + user.userName2 + "</td>";
+				    			html += "<td id='data9' style='display:none'>" + user.pic + "</td>";
 				    			html += "</tr>";
 	   						});
 	   						
@@ -1317,8 +1312,10 @@
 		    }
 		    
 		    /** msgtolist 의 유저 rtn에 추가 */
-		    var rtn = [];
+		    var rtn = {};
 		    function save_userlist() {
+		    	rtn = {"userId": [], "userName": [], "userName2": [], "pic": []}
+		    	
 		    	var listid = "MsgToList"; 
 		    	var selList = new ListView();
 		        selList.LoadFromID(listid);
@@ -1327,21 +1324,18 @@
 		        var totalLen = totalRows.length;
 		        
 		        for(var i = 0; i < totalLen; i++) {
-		        	if(GetAttribute(totalRows[i], "DATA1").substring(0, 14) === "anonyAttendant") {
-		        		var anonyName = $("#MsgToList tr:eq(" + (i + 1) + ") input").val();
-		        		rtn[i] = { "data": { "userName": anonyName, "userName2": anonyName }, "datatype": "anony" };
-		        		/* rtn["id"][i] = "anonyAttendant_" + i;
-		        		rtn["name"][i] = anonyName;
-		        		rtn["name2"][i] = anonyName;
-		        		rtn["pic"][i] = ""; */
-		        		/* rtn[i] = { "id": "anonyAttendant_" + i, "name": $("#MsgToList tr:eq(" + (i + 1) + ") input").val(), "name2": $("#MsgToList tr:eq(" + (i + 1) + ") input").val(), "pic": "" }; */
+		        	if(GetAttribute(totalRows[i], "DATA1").substring(0, 14) == "anonyAttendant") {
+		        		rtn["userName"][i] = $(totalRows[i]).find("input").val();
+		        		rtn["userName2"][i] = $(totalRows[i]).find("input").val();
 		        	} else {
-		        		rtn[i] = { "data": { "userId": GetAttribute(totalRows[i], "DATA1"),"userName": GetAttribute(totalRows[i], "DATA2"), "userName2": GetAttribute(totalRows[i], "DATA3"), "pic": GetAttribute(totalRows[i], "DATA9") }, "datatype": "real" };
-		        		/* rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
-		        		rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
-		        		rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3");
-		        		rtn["pic"][i] = GetAttribute(totalRows[i], "DATA9"); */
-		        		/* rtn[i] = { "id": GetAttribute(totalRows[i], "DATA1"), "name": GetAttribute(totalRows[i], "DATA2"), "name2": GetAttribute(totalRows[i], "DATA3"), "pic": GetAttribute(totalRows[i], "DATA9") }; */
+			        	rtn["userName"][i] = GetAttribute(totalRows[i], "DATA2");
+			        	rtn["userName2"][i] = GetAttribute(totalRows[i], "DATA3");
+		        	}
+		        	rtn["userId"][i] = GetAttribute(totalRows[i], "DATA1");
+		        	if(!!GetAttribute(totalRows[i], "DATA4")) {
+			        	rtn["pic"][i] = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + GetAttribute(totalRows[i], "DATA4");
+		        	} else {
+		        		rtn["pic"][i] = "";
 		        	}
 		        }
 		    }
@@ -1353,7 +1347,6 @@
 		            window.returnValue = rtn;
 		        }
 		        
-		        // return function -> manage_attendant_Complete (setLadder.jsp)
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rtn);
 		        } else {
@@ -1574,6 +1567,9 @@
 		                    document.getElementById("circularDept_content").style.display = "";
 		                    $("#circularDept").scrollTop(0);
 		                    $("#List_TBODY2").html("");
+		                    $("[id^='MailUserlist'] td").css("background", "#FFF")
+		                    listContentArry = new Array();
+		                    p_ListOrderObject = "";
 		                }
 		                break;
 		    	}
