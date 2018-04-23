@@ -142,7 +142,7 @@
 			    </tr>
 				 <c:forEach items="${list }" var="vo">
 					<tr class="black" style="height=30px;" onClick="getLadderGame(${vo.ladderId})">
-						<td><img class="effect" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" src ='/images/ezLadder/icon_game0${vo.type}.png' /></td>			
+						<td><img class="effect" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" src ='/images/ezLadder/icon_game_thirty0${vo.type}.png' /></td>			
 						
 						<td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><c:out value ="${vo.title }" /></td>
 						<td>${vo.writerName }</td>
@@ -150,10 +150,10 @@
 						
 						<c:choose>
 							<c:when test="${vo.status eq 0 }">
-								<td><img class="effect" title="<spring:message code='ezLadder.t074'/>" src ='/images/ezLadder/icon_wait.png' /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t074'/>" src ='/images/ezLadder/icon_wait_thirty.png' /></td>
 							</c:when>
 							<c:otherwise>
-								<td><img class="effect" title="<spring:message code='ezLadder.t075'/>" src ='/images/ezLadder/icon_complete.png' /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t075'/>" src ='/images/ezLadder/icon_complete_thirty.png' /></td>
 							</c:otherwise>
 						</c:choose>
 						
@@ -168,10 +168,10 @@
 						
 						<c:choose>
 							<c:when test="${id eq vo.writerId}">
-								<td><img class="effect" title="<spring:message code='ezLadder.t077'/>" src ='/images/ezLadder/icon_posDelete.png' onclick="deleteLadder(${vo.ladderId}, event);" /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t077'/>" src ='/images/ezLadder/icon_posDelete_thirty.png' onclick="deleteLadder(${vo.ladderId}, event);" /></td>
 							</c:when>
 							<c:otherwise>
-								<td><img class="effect" title="<spring:message code='ezLadder.t078'/>" src ='/images/ezLadder/icon_imposDelete.png' /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t078'/>" src ='/images/ezLadder/icon_imposDelete_thirty.png' /></td>
 							</c:otherwise>
 						</c:choose>
 					</tr>
