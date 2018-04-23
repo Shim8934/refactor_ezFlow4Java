@@ -83,8 +83,13 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public ProjectMemberVO getHeadManagerInfo(HashMap<String, Object> map) {
-		return (ProjectMemberVO) select("getHeadManagerInfo", map);
+	public ProjectMemberVO getUserInfo(HashMap<String, Object> map) {
+		return (ProjectMemberVO) select("getUserInfo", map);
+	}
+
+	public void addProjectMember(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		insert("addProjectMember", map);
 	}
 	
 }

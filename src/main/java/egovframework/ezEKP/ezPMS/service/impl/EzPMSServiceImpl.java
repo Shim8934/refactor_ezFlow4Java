@@ -73,8 +73,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("createDate", newProject.getCreateDate());
 		map.put("creatorName", newProject.getCreatorName());
 		map.put("creatorName2", newProject.getCreatorName2());
-		map.put("creatorDeptName", newProject.getCreatorDeptname());
-		map.put("creatorDeptName2", newProject.getCreatorDeptname2());
+		map.put("creatorDeptname", newProject.getCreatorDeptname());
+		map.put("creatorDeptname2", newProject.getCreatorDeptname2());
 		map.put("creatorId", newProject.getCreatorId());
 		map.put("progress", 0);
 		
@@ -98,9 +98,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map.put("restDueday", workingDays);
 			
 			//프로젝트 총괄담당자 정보 불러오기
-			ProjectMemberVO headManagerInfo = getHeadManagerInfo(newProject.getHeadManagerId(), Integer.parseInt(tenantId));
-			map.put("headManagerDeptName", headManagerInfo.getUserDeptname());
-			map.put("headManagerDeptName2", headManagerInfo.getUserDeptname2());
+			ProjectMemberVO headManagerInfo = getUserInfo(newProject.getHeadManagerId(), Integer.parseInt(tenantId));
+			map.put("headManagerDeptname", headManagerInfo.getUserDeptname());
+			map.put("headManagerDeptname2", headManagerInfo.getUserDeptname2());
 			map.put("headManagerName", headManagerInfo.getUserName());
 			map.put("headManagerName2", headManagerInfo.getUserName2());
 			
@@ -420,14 +420,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	//프로젝트 총괄 담당자의 유저 정보 불러오기
-	public ProjectMemberVO getHeadManagerInfo(String userId, int tenantId) throws Exception {
+	@Override
+	public ProjectMemberVO getUserInfo(String userId, int tenantId) throws Exception {
 		ProjectMemberVO headManager = new ProjectMemberVO();
 		
 		HashMap<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
 		
-		headManager = ezPMSDAO.getHeadManagerInfo(param);
+		headManager = ezPMSDAO.getUserInfo(param);
 		return headManager;
 	}
 	
@@ -439,8 +440,30 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void addProjectMember(ProjectInfoVO newProject, String parameter) {
-		// TODO Auto-generated method stub
+	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId) {		
+		LOGGER.debug("Service ezPMS addProjectMember Started");
+		HashMap<String, Object> map = new HashMap<>();
 		
+		try {
+			map.put("userId", projectMemberList.getUserId());
+			map.put("userName", projectMemberList.getUserName());
+			map.put("userName2", projectMemberList.getUserName2());
+			map.put("userDeptname", projectMemberList.getUserDeptname());
+			map.put("userDeptname2", projectMemberList.getUserDeptname2());
+			map.put("userPosition", projectMemberList.getUserPosition());
+			map.put("userPosition2", projectMemberList.getUserPosition2());
+			map.put("memberRoleId", projectMemberList.getMemberRoleId());
+			map.put("userIdType", "user");
+			map.put("projectId", projectMemberList.getProjectId());
+			map.put("tenantId", tenantId);
+			
+			ezPMSDAO.addProjectMember(map);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LOGGER.debug("ERROR : " + e.getMessage());
+		}
+		
+		LOGGER.debug("Service ezPMS addProjectMember Ended");
 	}
 }

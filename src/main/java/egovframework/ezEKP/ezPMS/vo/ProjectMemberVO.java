@@ -3,13 +3,13 @@ package egovframework.ezEKP.ezPMS.vo;
 //프로젝트 참여자 관련 정보
 public class ProjectMemberVO {
 	// 멤버 아이디 
-    private Long memberId;
+    private int memberId;
 
     // 테넌트 아이디 
     private int tenantId;
 
     // 프로젝트 아이디 
-    private Long projectId;
+    private int projectId;
 
     // 멤버 역할 아이디 
     private int memberRoleId;
@@ -38,11 +38,11 @@ public class ProjectMemberVO {
     // 사용자 아이디 종류 
     private String userIdType;
 
-    public Long getMemberId() {
+    public int getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(Long memberId) {
+    public void setMemberId(int memberId) {
         this.memberId = memberId;
     }
 
@@ -54,11 +54,11 @@ public class ProjectMemberVO {
         this.tenantId = tenantId;
     }
 
-    public Long getProjectId() {
+    public int getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
 
