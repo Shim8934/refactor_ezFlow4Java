@@ -102,10 +102,19 @@
 				
 				$(".ladderType")
 					.on("click", function() {
-						$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
+						var imgs = $(".ladderType[_num='" + ladderType + "']").find("img");
+						
+						imgs.removeClass("active");
+						imgs.eq(0).addClass("active");
 						
 						ladderType = $(this).attr("_num");
-						$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
+						imgs = $(this).find("img");
+						
+						imgs.removeClass("active");
+						imgs.eq(2).addClass("active").css("border", "2px solid #0470e4");
+						/* $(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
+						
+						$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active"); */
 						
 						setInputValue(false);
 						setLadderTypeDiv();
