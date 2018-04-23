@@ -1,4 +1,4 @@
-﻿var ListTypeFlag;
+﻿﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -150,10 +150,11 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (typeof (tdRegSepAtt) != "undefined" && typeof (tdRegSepAtt) != "unknown") {
                 if (selRow.getAttribute("DATA8") == "00") {
-                    if (GetCabChargerRight() == "true")
+                	if (GetCabChargerRight() == "true" || g_bDeptCharger) {
                         document.getElementById("tdRegSepAtt").style.display = "";
-                    else
+                    } else {
                         document.getElementById("tdRegSepAtt").style.display = "none";
+                    }
                 }
                 else {
                     document.getElementById("tdRegSepAtt").style.display = "none";
