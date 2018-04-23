@@ -15,6 +15,9 @@ var checkUserPath = []; // 유저별 사다리 이동 방향 정보
 var userStatus = []; // 유저의 사다리 실행 상태 (처음 실행 : 0, 다시 실행 : 1)
 var drawStatus = false; // true:애니메이션 진행 false:애니메이션 정지
 var beforeStatus = 0; // 0: 직전에 애니메이션 진행 1: 직전에 팝 진행
+var colors 					= ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",		
+								"#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",     
+          						"#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"];
 
 function changeUser(len) {
 	wInfo = len;
@@ -71,22 +74,23 @@ function setUserPath() { // 각 유저의 이동경로 저장
 	var locX;
 	var locY;
 	var userPathInfo;
-	var colorArray = colors();
-	var colorCnt = 60;
+	/*var colorArray = colors();
+	var colorCnt = 60;*/
 	
 	for(var i = 0; i < wInfo; i++) {
 		locX = i;
 		locY = 0;
 		userPathInfo = {};
-		temp = Math.floor(Math.random()*colorCnt);
-		userPathInfo['color'] = colorArray[temp];
-		colorArray.splice(temp, 1);
+		/*temp = Math.floor(Math.random()*colorCnt);
+		userPathInfo['color'] = colorArray[temp];*/
+		userPathInfo['color'] = colors[i % 30];
+		/*colorArray.splice(temp, 1);
 		colorCnt--;
 		
 		if(colorCnt == 0) {
 			colorArray = colors();
 			colorCnt =60;
-		}
+		}*/
 		/*userPathInfo['color'] = '#' + Math.round(Math.random() * 0xffffff).toString(16);*/
 		
 		while(locY < hInfo) {
@@ -106,14 +110,14 @@ function setUserPath() { // 각 유저의 이동경로 저장
 		checkUserPath[i] = userPathInfo;
 	}
 }
-
+/*
 function colors() {
 	var color = [ '#FF7100','#FF4B14','#FF1B1B','#FF144B','#FF0071','#FFB420','#FF9440','#FF6D52','#FF526D','#FF4094','#FF20B4','#FFF231','#FFD75E','#FFDBBF','#FF8D8D',
 	              '#FF80B8','#FF5ED7','#FF31F2','#CEFF2F','#EAFF65','#FFF998','#FFDBBF','#FFBFDB','#FF98F9','#EA65FF','#CE2FFF','#8DFF1B','#A9FF54','#C6FF8D','#BFFFE3',
 	              '#E2C6FF','#C68DFF','#C68DFF','#8D1BFF','#60FF2F','#7AFF65','#98FF9F','#BFFFE3','#BFE3FF','#989FFF','#7A65FF','#602FFF','#31FF3E','#5EFF86','#80FFC7',
 	              '#8DFFFF','#80C7FF','#5E86FF','#313EFF','#20FF6B','#40FFAA','#52FFE4','#52E4FF','#40AAFF','#206BFF','#00FF8E','#14FFC8','#1BFFFF','#14C8FF','#008EFF'];
 	return (color);
-}
+}*/
 
 var moveImgHalfHeight;
 var canvasTop;
