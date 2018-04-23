@@ -85,7 +85,7 @@ public interface EzAttitudeService {
 	
 //	public void insertAttitudeUserConfig(int tenantId, String companyId, String userId, String workStartTime, String workEndTime) throws Exception;
 	
-	public void saveAttitudeUserConfig(int tenantId, String userConfInfoList, String offSet) throws Exception;
+	public void saveAttitudeUserConfig(String selectUserId, String workStartTime, String workEndTime, String offSet, int tenantId) throws Exception;
 	
 	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId) throws Exception;
 	

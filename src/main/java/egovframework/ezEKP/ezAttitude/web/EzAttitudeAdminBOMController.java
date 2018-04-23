@@ -1187,13 +1187,15 @@ public class EzAttitudeAdminBOMController {
 	/**
 	 * 사용자별 근무시간 수정
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeUserConf.do")
+	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeUserConfig.do")
 	@ResponseBody
-	public JSONObject saveAttitudeUserConf(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("saveAttitudeUserConf started");
+	public String saveAttitudeUserConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LOGGER.debug("saveAttitudeUserConfig started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String selectUserId = request.getParameter("selectUserId");
+		String workStartTime = request.getParameter("workStartTime");
+		String workEndTime = request.getParameter("workEndTime");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/users/ezattitude/user-attitude-confs";
@@ -1205,7 +1207,9 @@ public class EzAttitudeAdminBOMController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("selectUserId", selectUserId);
+				.queryParam("selectUserId", selectUserId)
+				.queryParam("workStartTime", workStartTime)
+				.queryParam("workEndTime", workEndTime);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -1216,16 +1220,9 @@ public class EzAttitudeAdminBOMController {
 		
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
+		LOGGER.debug("saveAttitudeUserConfig ended");
 		
-		JSONObject jObject = new JSONObject();
-		
-		if(status.equals("ok")){
-			jObject = (JSONObject) resultBody.get("data");
-		}
-		
-		LOGGER.debug("saveAttitudeUserConf ended");
-		
-		return jObject;
+		return status;
 	}
 	
 	/**

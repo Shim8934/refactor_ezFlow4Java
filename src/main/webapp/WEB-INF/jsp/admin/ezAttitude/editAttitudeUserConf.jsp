@@ -40,19 +40,22 @@
 		function btnOk_onclick() {
 			$.ajax({
    				type:"post",
-   				dataType:"json",
-   				url:"/admin/ezAttitude/saveAttitudeUserConf.do",
+   				dataType:"text",
+   				async : false,
+   				url:"/admin/ezAttitude/saveAttitudeUserConfig.do",
    				data:{
-   					selectUserId : selectUserId,
-   					workStartTime : workStartTime.val(),
-   					workEndTime : workEndTime.val()
+   					selectUserId : "${vo.userId}",
+   					workStartTime : $("#workStartTime").val(),
+   					workEndTime : $("#workEndTime").val()
    				},
    				success: function(result){
-   					opener.getUserConfList();
-   					window.close();
-   				}, error: function() {
-   					alert("실패햇다");
-   					window.close();
+					if (result == "ok") {
+						opener.getUserConfList();
+	   					window.close();
+					} else {
+						alert("실패햇다");
+	   					window.close();
+					}
    				}
    			});
 			

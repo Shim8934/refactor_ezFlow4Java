@@ -996,15 +996,17 @@ public class EzAttitudeGWController {
 		
 		JSONObject result = new JSONObject();
 		
-		try{
+		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			String userConfInfoList = request.getParameter("userConfInfoList");
+			String selectUserId = request.getParameter("selectUserId");
+			String workStartTime = request.getParameter("workStartTime");
+			String workEndTime = request.getParameter("workEndTime");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			// insert on duplicate
-			ezAttitudeService.saveAttitudeUserConfig(info.getTenantId(), userConfInfoList, info.getOffSet());
+			ezAttitudeService.saveAttitudeUserConfig(selectUserId, workStartTime, workEndTime, info.getOffSet(), info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
