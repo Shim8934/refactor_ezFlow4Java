@@ -149,7 +149,7 @@
 						tdElmt2.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
 						tdElmt2.textContent = result[i]["fileName"];
 						
-						tdElmt3.textContent = result[i]["fileSize"];
+						tdElmt3.textContent = getFileSize(result[i]["fileSize"]);
 						
 						tdElmt4.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
 						
@@ -254,11 +254,13 @@
 		<div style="height: 27px; margin-bottom: 10px;">
 			<div style="position: relative;">
 				<a id="btnSearch" class="webfolderBttn2" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123'/></span></a>
-				<img src="/images/i_bar.gif" style="margin-left: 2px;"/>
 				<a id="btnRefresh" class="webfolderBttn2" onClick="change();"><span><spring:message code='ezWebFolder.t139'/></span></a>
-				<div id="searchPanel" style="position: absolute; top: 37px; left: 0px; height: 180px; width: 514px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
+				<div id="searchPanel" style="position: absolute; top: 37px; left: 0px; height: auto; width: 514px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
 					<div style="margin: 10px;">
 						<table class="content" style="border-collapse: collapse; width: 100%;">
+							<tr>
+								<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t24'/></th>
+							</tr>
 							<tr>
 								<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t151'/></th>
 								<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
@@ -286,7 +288,7 @@
 								</td>
 							</tr>
 						</table>
-						<div style="margin: 12px 50px 12px 180px;">
+						<div style="margin: 12px 0px; text-align: center;">
 							<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
 							<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
 						</div>
@@ -299,11 +301,11 @@
 				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileHistory">
 				<tr>
 					<th width="40px"  ><spring:message code='ezWebFolder.t155'/></th>
-					<th width="160px" ><spring:message code='ezWebFolder.t156'/></th>
-					<th width="40px"  ><spring:message code='ezWebFolder.t157'/></th>
-					<th width="160px" ><spring:message code='ezWebFolder.t154'/></th>
+					<th width="220px" ><spring:message code='ezWebFolder.t156'/></th>
+					<th width="60px"  ><spring:message code='ezWebFolder.t157'/></th>
+					<th width="80px" ><spring:message code='ezWebFolder.t154'/></th>
 					<th width="60px"  ><spring:message code='ezWebFolder.t158'/></th>
-					<th width="140px" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
+					<th width="120px" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
 				</tr>
 			</table>
 		</div>

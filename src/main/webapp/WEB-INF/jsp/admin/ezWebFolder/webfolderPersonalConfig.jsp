@@ -415,11 +415,13 @@
 		<div style="position: relative; height: 27px; margin-bottom: 10px;">
 			<div style="position: relative;">
 				<a id="btnSearch" class="webfolderBttn2" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123'/></span></a>
-				<img src="/images/i_bar.gif" style="margin-left: 2px;"/>
 				<a id="btnRefresh" class="webfolderBttn2" onClick="change();"><span><spring:message code='ezWebFolder.t139'/></span></a>
-				<div id="searchPanel" style="position: absolute; top: 37px; left: 0px; height: 80px; width: 500px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
+				<div id="searchPanel" style="position: absolute; top: 37px; left: 0px; height: auto; width: 500px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
 					<div style="margin: 10px;">
 						<table style="border-collapse: collapse; width: 100%;">
+							<tr>
+								<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t23'/></th>
+							</tr>
 							<tr>
 								<th style="width: 100px; min-width: 100px;"><spring:message code='ezWebFolder.t141'/></th>
 								<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 358px; width: 358px;">
@@ -432,7 +434,7 @@
 							</tr>
 							<tr>
 								<td colspan="2">
-									<div style="margin: 9px 50px 9px 160px;">
+									<div style="margin-top: 10px; text-align: center;">
 										<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
 										<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
 									</div>
@@ -444,7 +446,7 @@
 			</div>
 			<div style="position: absolute; top: 0px; right: 2px; height: 27px;">
 				<span style="height: 20px; line-height: 20px; display: inline; font-size: 14px;"><spring:message code='ezWebFolder.t145'/></span>
-				<input id="storageVal" type="text" style="width: 100px; height: 27px; border-radius: 5px; border: 1px solid #b3b3b3; margin-right: 3px; padding-left: 5px;" placeholder="<spring:message code='ezWebFolder.t132' />"/>
+				<input id="storageVal" type="text" style="width: 100px; height: 27px; border-radius: 5px; border: 1px solid #b3b3b3; padding-left: 5px;" placeholder="<spring:message code='ezWebFolder.t132' />"/>
 				<a id="btnChange" class="webfolderBttn2" onClick="changeStorageVal();"><span><spring:message code='ezWebFolder.t124'/></span></a>
 				<a id="btnBack" class="webfolderBttn2" onClick="changeToDefault();"   ><span><spring:message code='ezWebFolder.t125'/></span></a>
 			</div>
@@ -454,9 +456,9 @@
 			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileStorage">
 				<tr>
 					<th width="10px"><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
-					<th width="80px"  style=""><spring:message code='ezWebFolder.t146'/></th>
-					<th width="80px"  style=""><spring:message code='ezWebFolder.t142'/></th>
-					<th width="200px" style=""><spring:message code='ezWebFolder.t143'/></th>
+					<th width="120px"  style=""><spring:message code='ezWebFolder.t146'/></th>
+					<th width="120px"  style=""><spring:message code='ezWebFolder.t142'/></th>
+					<th width="120px" style=""><spring:message code='ezWebFolder.t143'/></th>
 					<th width="40px"  style=""><spring:message code='ezWebFolder.t147'/></th>
 					<th width="80px"  style="text-align: center;"><spring:message code='ezWebFolder.t148'/></th>
 					<th width="80px"  style="text-align: center;"><spring:message code='ezWebFolder.t149'/></th>
