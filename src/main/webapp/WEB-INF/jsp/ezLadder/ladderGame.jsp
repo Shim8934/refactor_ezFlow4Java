@@ -643,9 +643,9 @@
 								<p class="ladderGame_title">${vo.title}</p>
 								<div class="ladderGame_info">
 									<ul class="attribute">
-										<li><img src="/images/ezLadder/icon_game0${vo.type}.png" width="45px;" height="45px;"></li>
-										<li><img src="/images/ezLadder/icon_status0${vo.status}.png" width="45px;" height="45px;"></li>
-										<li><img src="/images/ezLadder/icon_secretflag0${vo.secretFlag}.png" width="45px;" height="45px;"></li>
+										<li><img src="/images/ezLadder/icon_game0${vo.type}.png" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" width="45px;" height="45px;"></li>
+										<li><img src="/images/ezLadder/icon_status0${vo.status}.png" title="<spring:message code='ezLadder.t07${vo.status+4}'/>" width="45px;" height="45px;"></li>
+										<li><img src="/images/ezLadder/icon_secretflag0${vo.secretFlag}.png" title="<spring:message code='ezLadder.t007${vo.secretFlag}'/>" width="45px;" height="45px;"></li>
 									</ul>
 									<p class="pic"><img src="${empty vo.pic ? '/images/ezLadder/icon_defaultAttendant.png' : vo.pic}" width="60px;" height="60px;" style="position: relative;top: -2px;left: -2px;"></p>
 									<div class="txt">
@@ -654,10 +654,10 @@
 										<span class="date">${vo.writeDate}</span>
 									</div>
 									<ul class="edit">
-										<li style="cursor: pointer;"><img src="/images/ezLadder/icon_reuse.png" width="45px;" height="45px;" id="usePreladder"></li>
+										<li style="cursor: pointer;"><img src="/images/ezLadder/icon_reuse.png" width="45px;" height="45px;" id="usePreladder" title="<spring:message code='ezLadder.t082'/>"></li>
 										<c:choose>
-											<c:when test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:when>
-											<c:when test="${vo.writerId != id}"><li><img src="/images/ezLadder/icon_imposDelete.png" width="45px;" height="45px;"></li></c:when>
+											<c:when test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" title="<spring:message code='ezLadder.t077'/>" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:when>
+											<c:when test="${vo.writerId != id}"><li><img src="/images/ezLadder/icon_imposDelete.png" title="<spring:message code='ezLadder.t077'/>" width="45px;" height="45px;"></li></c:when>
 										</c:choose>
 									</ul>
 								</div>

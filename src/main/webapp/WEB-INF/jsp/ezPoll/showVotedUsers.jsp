@@ -53,7 +53,7 @@
 		</script>
 	</head>
 	
-	<body class = "popup" id = "mainbody" style="overflow: hidden;">
+	<body class = "popup" id = "mainbody" style="overflow: hidden; min-width: 370px">
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: inline-block; padding-left: 5px; text-align:left; width: 100%;">

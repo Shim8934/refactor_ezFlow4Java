@@ -801,11 +801,11 @@
 						<div style="height: 50px; line-height: 50px; margin-bottom: 10px; position: relative;">
 							<div style="height: 40px; position: absolute; left: 0; right: 65px;">
 								<input type="text" class="input" name="title" id="title" style="height: 100%; width: 100%;" placeholder="<spring:message code="ezLadder.t019"/>" maxlength="166"/>
-								<div id="ladderPreList" style="top: 7px; right: 11px;"><img src="/images/ezLadder/icon_preLadder.png"/></div>
+								<div id="ladderPreList" style="top: 7px; right: 11px;"><img  title="<spring:message code='ezLadder.t079'/>" src="/images/ezLadder/icon_preLadder.png"/></div>
 							</div>
 							<div id="ladderSecret" style="position: absolute; right: 0;">
-								<img src="/images/ezLadder/icon_public.png" class="default icon" _flag="0"/>
-								<img src="/images/ezLadder/icon_private.png" class="select icon" _flag="1"/>
+								<img src="/images/ezLadder/icon_public.png" title="<spring:message code='ezLadder.t0070'/>" class="default icon" _flag="0"/>
+								<img src="/images/ezLadder/icon_private.png" title="<spring:message code='ezLadder.t076'/>" class="select icon" _flag="1"/>
 							</div>
 							<input name="secretFlag" style="display: none;" />
 						</div>
@@ -820,20 +820,20 @@
 							<div style="float: right;">
 									<div id="ladderTypeOption" style='display: inline-block; margin-right: 30px; height: 50px;'></div>
 									<div class="ladderType" _num="0">
-										<img src="/images/ezLadder/icon_game00_no.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_game00.png" class="select icon"/>
+										<img title="<spring:message code='ezLadder.t101'/>" src="/images/ezLadder/icon_game00_no.png" class="default icon"/>
+										<img title="<spring:message code='ezLadder.t101'/>" src="/images/ezLadder/icon_game00.png" class="select icon"/>
 									</div>
 									<div class="ladderType" _num="1">
-										<img src="/images/ezLadder/icon_game01_no.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_game01.png" class="select icon"/>
+										<img title="<spring:message code='ezLadder.t102'/>" src="/images/ezLadder/icon_game01_no.png" class="default icon"/>
+										<img title="<spring:message code='ezLadder.t102'/>" src="/images/ezLadder/icon_game01.png" class="select icon"/>
 									</div>
 									<div class="ladderType" _num="2">
-										<img src="/images/ezLadder/icon_game02_no.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_game02.png" class="select icon"/>
+										<img title="<spring:message code='ezLadder.t103'/>" src="/images/ezLadder/icon_game02_no.png" class="default icon"/>
+										<img title="<spring:message code='ezLadder.t103'/>" src="/images/ezLadder/icon_game02.png" class="select icon"/>
 									</div>
 									<div class="ladderType" _num="3">
-										<img src="/images/ezLadder/icon_game03_no.png" class="default icon"/>
-										<img src="/images/ezLadder/icon_game03.png" class="select icon"/>
+										<img title="<spring:message code='ezLadder.t104'/>" src="/images/ezLadder/icon_game03_no.png" class="default icon"/>
+										<img title="<spring:message code='ezLadder.t104'/>" src="/images/ezLadder/icon_game03.png" class="select icon"/>
 									</div>
 								<input name="type" style="display: none;" />
 							</div>
@@ -843,7 +843,7 @@
 				<tr>
 					<td>
 						<div style="height:50px; margin-bottom: 25px; line-height: 50px;">
-							<div style="height: 50px; width: 50px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 5px;">
+							<div style="height: 50px; width: 50px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 5px;" title="<spring:message code='ezLadder.t081'/>">
 								<span id="amount">0</span>
 							</div>
 							<div id="slider-range-min" style="width: 300px; top: 19px; left: 70px; margin: 0;"></div>
@@ -854,8 +854,8 @@
 				<tr>
 					<td style="position: relative; margin-top: 20px;">
 						<div id="addAttendant" class="icondiv" style="width: 50px; height: 50px; overflow: hidden; border: 2px solid #0470e4; border-radius: 15px; cursor: pointer;">
-							<img src="/images/ezLadder/icon_addAttendant.png" style="padding-left: 2px; padding-top: 2px; display: block"/>
-							<img src="/images/ezLadder/icon_addAttendant_hover.png" style="padding-left: 2px; padding-top: 2px; display: none"/>
+							<img src="/images/ezLadder/icon_addAttendant.png" style="padding-left: 2px; padding-top: 2px; display: block" title="<spring:message code='ezLadder.t080'/>"/>
+							<img src="/images/ezLadder/icon_addAttendant_hover.png" style="padding-left: 2px; padding-top: 2px; display: none" title="<spring:message code='ezLadder.t080'/>"/>
 						</div>
 						<div id="ladderLineBox" style="border: 1px solid #ddd; height: 450px; overflow-y: hidden; overflow-x: auto; min-width: 750px;">
 							<div style="height: 140px;">
