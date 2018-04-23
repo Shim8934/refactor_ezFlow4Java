@@ -1610,17 +1610,6 @@ public class EzAttitudeGWController {
 			String isAdmin = request.getParameter("isAdmin");
 			String isuse = "1";
 			
-			/*String pageNum = request.getParameter("pageNum");
-			String listSize = request.getParameter("listSize");
-			String typeId = request.getParameter("typeId");
-			String userIdList = request.getParameter("userIdList");
-			String orderCell = request.getParameter("orderCell");
-			String orderOption = request.getParameter("orderOption");
-			String startDate = request.getParameter("startDate");
-			String endDate = request.getParameter("endDate");
-			String offsetMin = request.getParameter("offsetMin");
-			String isAdmin = request.getParameter("isAdmin");*/
-			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();

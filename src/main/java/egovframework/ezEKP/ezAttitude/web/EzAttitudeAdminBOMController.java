@@ -1441,22 +1441,25 @@ public class EzAttitudeAdminBOMController {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie); 
 		
 		String companyId = request.getParameter("companyId");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
+		String searchStartDate = request.getParameter("startDate");
+		String searchEndDate = request.getParameter("endDate");
+		String searchAttitudeType = request.getParameter("attitudeType");
 		String pageNum = request.getParameter("pageNum");
 		String listSize = request.getParameter("listSize");
-		String typeId = request.getParameter("typeId");
-		String userIdList = request.getParameter("userIdList");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
-		String startDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
 		String userId = userInfo.getId();
-		String offset = userInfo.getOffset();
-		String offsetMin = commonUtil.getMinuteUTC(offset);
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		LOGGER.debug(companyId);
+		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
+				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
+				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom"; // 부서근태조회는 따로 빼두는것이 좋지 않을까
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1465,15 +1468,17 @@ public class EzAttitudeAdminBOMController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchTitle", searchTitle)
+				.queryParam("searchStartDate", searchStartDate)
+				.queryParam("searchEndDate", searchEndDate)
+				.queryParam("searchAttitudeType", searchAttitudeType)
 				.queryParam("userId", userId)
 				.queryParam("pageNum", pageNum)
 				.queryParam("listSize", listSize)
-				.queryParam("typeId", typeId)
-				.queryParam("userIdList", userIdList)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
-				.queryParam("startDate", startDate)
-				.queryParam("endDate", endDate)
 				.queryParam("offsetMin", offsetMin);
 		
 		RestTemplate rest = new RestTemplate();
@@ -1519,7 +1524,6 @@ public class EzAttitudeAdminBOMController {
 		headerStyle.setFont(font);
 		
 		Row row;
-		Cell cell;
 		      
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
@@ -1557,7 +1561,7 @@ public class EzAttitudeAdminBOMController {
 			row.getCell(2).setCellStyle(bodyStyle);
 			row.createCell(3).setCellValue(vo.getTypeName());
 			row.getCell(3).setCellStyle(bodyStyle);
-			if (vo.getEndDate() != null && vo.getEndDate() != "") {
+			if (vo.getEndDate() != null && !vo.getEndDate().equals("")) {
 				row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
 			} else {
 				row.createCell(4).setCellValue(vo.getStartDate());
@@ -1565,7 +1569,7 @@ public class EzAttitudeAdminBOMController {
 			row.getCell(4).setCellStyle(bodyStyle);
 			row.createCell(5).setCellValue(vo.getStartTime());
 			row.getCell(5).setCellStyle(bodyStyle);
-			if (vo.getEndTime() != null && vo.getEndTime() != "") {
+			if (vo.getEndTime() != null && !vo.getEndTime().equals("")) {
 				row.createCell(6).setCellValue(vo.getEndTime());
 			} else {
 				row.createCell(6).setCellValue("");

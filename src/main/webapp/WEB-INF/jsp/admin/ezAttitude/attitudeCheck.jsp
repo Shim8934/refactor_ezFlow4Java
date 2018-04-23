@@ -376,7 +376,7 @@
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/admin/ezAttitude/excelFileExport.do?companyId="+sCompanyId+"&typeId="+sTypeId+"&userIdList="+sUserIdList+"&startDate="+startDate+"&endDate="+endDate;
+		    	exportExcelframe.location.href="/admin/ezAttitude/excelFileExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&attitudeType=" + searchAttitudeType + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
 		    	exportExcelframe.target="_blank";
 			}
 	    </script>
@@ -419,11 +419,11 @@
 					<td style=" width:*;" colspan=2>
 						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchUserConfList('refresh');">새로고침</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="exportExcel();">엑셀저장</span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		
 		
 	  	<!-- <div id="mainmenu">
 	  		<ul class="on">

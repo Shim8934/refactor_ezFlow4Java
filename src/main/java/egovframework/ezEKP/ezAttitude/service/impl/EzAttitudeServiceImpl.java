@@ -887,7 +887,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
 		int limit = 0;
 		
-		if (pageNum != null && pageNum != "") {
+		if (pageNum != null && !pageNum.equals("")) {
 			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
 		}
 		
@@ -930,7 +930,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		map.put("limit", limit);
+		map.put("limit", limit != 0 ? limit : null);
 
 		List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeList2(map);
 
