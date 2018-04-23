@@ -70,7 +70,7 @@
 				} else { // 부서근태현황에서는 당일의 근태를 조회.
 					$(document).on('dblclick', '.td_day td', function(){
 						pMode = "new";
-						alert("부서 -> 근태 조회 구현 해야 함");
+						searchByDay(this);
 					})
 				}
 				
@@ -586,6 +586,81 @@
 			    });
 			}
 			
+			function searchByDay(t) {
+				var date = $(t).attr('dispdate')
+				var startDate = date + " 00:00:00";
+				var endDate = date + " 23:59:59";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getAttitudeList.do",
+					data : {
+						startDate : startDate,
+						endDate : endDate,
+						deptFlag : deptFlag,
+					},
+					success : function(json) {
+						console.log(json);
+				    	$('#addpopupDay_list tbody').children('tr').not(":first").remove();
+				    	
+				    	if (json.length == 0) {
+				    		var uvobjTr = $("<tr></tr>").append($("<td style='width:5%; display:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:20%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:60%; height:0px; display:;'></td>"));
+				    		$("#addpopupDay_list tbody").append(uvobjTr);
+				    		
+				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px;'></td>").text("내역이 없습니다."));
+				    		$("#addpopupDay_list tbody").append(objTr);
+				    	}
+				    	
+				    	for(var i = 0; i < json.length; i++) {
+				    		if (json[i].apprStatus == 1) {
+				    			json[i].apprStatus = "승인";
+				    		} else {
+				    			json[i].apprStatus = "반려";
+				    		}
+
+				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i+1)));
+				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].typeName));
+				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
+				    		if (json[i].writerDeptName.length > 6) {
+				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
+				    		} else {
+				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
+				    		}
+				    		if (json[i].endDate == null) {
+				    			objTr.append($("<td style='width:60%'></td>").text("\u00a0" + json[i].startDate));
+				    		} else {
+					    		objTr.append($("<td style='width:60%'></td>").text("\u00a0" + json[i].startDate+ "\u00a0~\u00a0" + json[i].endDate));				    			
+				    		}
+
+				    		$("#addpopupDay_list tbody").append(objTr);
+				    	}
+				    },
+				    complete : function() {
+				    	try {
+				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);	
+				    	} catch(e) {
+				    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);
+				    	}
+			        	
+			        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			        	
+			        	$("#popupDay").css("left", popupX);
+			        	
+						$("#popupDay").modal({
+							  escapeClose: false,
+							  clickClose: false,
+							  showClose: false
+						});
+				    }
+			    });
+			}
+			
 			function mod_detail(modAttId) {
 		    	var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
@@ -637,7 +712,7 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		<!-- 근태수정신청 팝업창 -->
+		<!-- 근태유영별 팝업창 -->
 		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
@@ -695,6 +770,39 @@
 				<div style="text-align:center;">
 					<a class="imgbtn"><span onclick="attiModAppl()" >신청</span></a>
 					<a class="imgbtn" rel="modal:close"><span>취소</span></a>
+			    </div>
+			</div>
+			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
+		</div>
+		
+		<!-- 근태날짜별 팝업창 -->
+		<div id="popupDay" class="popupwrap4" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+			<div class="popupwrap5">
+				<!-- 내용 -->
+			    <table class="popuplist" id="addpopupDay_list" style="display:block; width:560px; margin:10px 0px 0px 1px;">
+				    <thead>
+				    	<tr>
+						<th class="layerHeader" colspan="5" style="width:560px;">
+							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
+							<span id="popupDay_title">&nbsp;근태내역확인</span>
+						</th>
+						</tr>
+				    </thead>
+				    <tbody style="max-height:500px; width:560px; display:block; overflow-y:auto;">
+				    	<tr>
+				    		<th style="height:30px">No.</th>
+				    		<th style="height:30px">근태유형</th>
+				    		<th style="height:30px">사원명</th>
+				    		<th style="height:30px">부서명</th>
+				    		<th style="height:30px">일시</th>
+						</tr>
+				    </tbody>
+				</table>
+				<!-- /내용 -->
+				<br />
+				<div style="text-align:center;">
+					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
+					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
 			    </div>
 			</div>
 			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>

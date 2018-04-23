@@ -30,9 +30,7 @@
 				border-right: 1px solid #e8e8e8;
 				background-color: #fcfcfc;
 			}
-			#searchTable td {
-				padding: 8px 5px;
-			}
+			#searchTable td {padding: 8px 5px;}
 	    </style>
 	    
 	    <script type="text/javascript">
@@ -165,6 +163,14 @@
 	    			searchEndTime = $("#searchEndTime").val();
 	    			searchCompareValue = $("[type='radio']:checked").val();
 	    		} else {
+	    			//새로고침
+	    			$("#searchUserName").val("");
+	    			$("#searchDeptName").val("");
+	    			$("#searchTitle").val("");
+	    			$("#searchStartTime").val("");
+	    			$("#searchEndTime").val("");
+	    			$("[type='radio']:checked").val("");
+	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";
 	    			searchTitle = "";
