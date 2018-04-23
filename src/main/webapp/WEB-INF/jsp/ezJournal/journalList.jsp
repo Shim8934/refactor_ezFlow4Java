@@ -17,24 +17,24 @@
 			width="100%" border="0" class="mainlist" style="min-width: 569px;">
 		<thead id="BoardList_THEAD">
 			<tr id="BoardList_TH">
-				<th id="BoardList_TH_0" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px;" class="h4_center" bgcolor="#CCCCCC">
+				<th id="BoardList_TH_0" style="text-align: left; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;" class="h4_center" bgcolor="#CCCCCC">
 					<input type="checkbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 				</th>
 				<c:if test="${listType eq 'recv' }">
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="padding-left: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:25px; text-align: left;" class="h5_center">
+					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:25px; text-align: left;" class="h5_center">
 						<img style="cursor:pointer; vertical-align: middle;" src="/images/ImgIcon/view-document.gif ">
 					</th>
 				</c:if>
 				<c:if test="${listType eq 'mine' }">
-					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: left; width:25px;" class="h5_center">
+					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: left; width:25px;" class="h5_center">
 						<img src="/images/lock_icon.png" style="vertical-align: middle;">
 					</th>
 				</c:if>
 				<!-- 취합여부아이콘 -->
-					<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:35px; text-align: left; padding: 0px 3px;" class="h5_center">
+					<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; cursor: pointer; width:35px; text-align: left; padding: 0px 3px;" class="h5_center">
 						<img src="/images/ImgIcon/addon.png" style="vertical-align: middle;">
 					</th>
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="padding-left: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20px; text-align: left;" class="h5_center">
+					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px; text-align: left;" class="h5_center">
 						<img src="/images/newAttach.gif" style="vertical-align: middle;">
 					</th>
 				<c:if test="${listType eq 'recv' or listType eq 'temp' }">
@@ -69,7 +69,7 @@
 					</th>
 				</c:if>
 				<c:if test="${listType eq 'department' or listType eq 'mine' }">
-					<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center; width:35px;" class="h5_center">
+					<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: center; width:35px;" class="h5_center">
 						<spring:message code='ezJournal.t65'/>
 					</th>
 				</c:if>
