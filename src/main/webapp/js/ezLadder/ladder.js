@@ -3,9 +3,9 @@ var clickUserOrder = -1;
 var resultOrder = -1;
 var startXPoint = userDiv/2; // 시작 위치 왼쪽부터 떨어진 거리
 var startYPoint = 1; // 시작 위치 위부터 떨어진 거리
-var hInfo = 39 + 1; // 높이 수
+var hInfo = 39 + 6; // 높이 수
 var wInfo = 0; // 멤버 수
-var hSize = 20; // 세로 간격
+var hSize = 15; // 세로 간격
 var wSize = 150; // 가로 간격
 var moveSpeed = 6/*hSize / 10*/; // 애니메이션 속도
 var lad = ""; // 사다리 정보
@@ -310,7 +310,6 @@ function printUserPath(locX, locY, moveX, moveY, type) { // 유저 경로 그리
 }
 
 function drawLadLine(flag, startX, startY) {
-	console.log("draw ladder line");
 	var canvas = document.getElementById('ladderCanvas');
 	
 	if(canvas.getContext) {
@@ -335,7 +334,6 @@ function drawLadLine(flag, startX, startY) {
 }
 
 function drawPathLine(user, moveX, moveY, type) {
-	console.log("draw path line");
 	var canvas = document.getElementById('ladderCanvasLine');
 	
 	if(canvas.getContext) {

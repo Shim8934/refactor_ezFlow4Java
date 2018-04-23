@@ -99,15 +99,38 @@
 						checkAttendant(inputNames);
 					}
 				});
-				$(".ladderType").on("click", function() {
-					$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
-					
-					ladderType = $(this).attr("_num");
-					$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
-					
-					setInputValue(false);
-					setLadderTypeDiv();
-				});
+				
+				$(".ladderType")
+					.on("click", function() {
+						$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
+						
+						ladderType = $(this).attr("_num");
+						$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
+						
+						setInputValue(false);
+						setLadderTypeDiv();
+					})
+					.on("mouseenter", function() {
+						var imgs = $(this).find("img");
+						
+						imgs.removeClass("active");
+						imgs.eq(2).addClass("active");
+						if($(this).attr("_num") != ladderType) {
+							imgs.eq(2).css("border", "2px solid #dddddd");
+						} else {
+							imgs.eq(2).css("border", "2px solid #0470e4");
+						}
+					})
+					.on("mouseleave", function() {
+						var imgs = $(this).find("img");
+						
+						imgs.removeClass("active");
+						if($(this).attr("_num") != ladderType) {
+							imgs.eq(0).addClass("active");
+						} else {
+							imgs.eq(1).addClass("active");
+						}
+					});
 				$("#ladderSecret").on("click", function() {
 					$("#ladderSecret img").toggleClass("active");
 				});
@@ -218,9 +241,11 @@
 				$("#ladderSecret img").removeClass("active");
 				$("#ladderSecret [_flag='" + secretFlag + "']").addClass("active");
 				
+				var imgs = $(".ladderType[_num='" + ladderType + "'] img");
 				$(".ladderType .select").removeClass("active");
 				$(".ladderType .default").addClass("active");
-				$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
+				imgs.eq(0).removeClass("active");
+				imgs.eq(1).addClass("active");
 				setLadderTypeDiv();
 			}
 			
@@ -776,6 +801,9 @@
 			.default {
 				border: 2px solid #dddddd; 
 			}
+			.typehover {
+				background: #ddeeff;
+			}
 			.select {
 				border: 2px solid #0470e4; 
 			}
@@ -819,7 +847,14 @@
 							</div>
 							<div style="float: right;">
 									<div id="ladderTypeOption" style='display: inline-block; margin-right: 30px; height: 50px;'></div>
-									<div class="ladderType" _num="0">
+									<c:forEach begin="0" end="3" var="typenum">
+										<div class="ladderType" _num="${typenum}">
+											<img title="<spring:message code='ezLadder.t10${typenum + 1}'/>" src="/images/ezLadder/icon_game0${typenum}_no.png" class="default icon"/>
+											<img title="<spring:message code='ezLadder.t10${typenum + 1}'/>" src="/images/ezLadder/icon_game0${typenum}.png" class="select icon"/>
+											<img title="<spring:message code='ezLadder.t10${typenum + 1}'/>" src="/images/ezLadder/icon_game0${typenum}_hover.png" class="typehover icon"/>
+										</div>
+									</c:forEach>
+									<%-- <div class="ladderType" _num="0">
 										<img title="<spring:message code='ezLadder.t101'/>" src="/images/ezLadder/icon_game00_no.png" class="default icon"/>
 										<img title="<spring:message code='ezLadder.t101'/>" src="/images/ezLadder/icon_game00.png" class="select icon"/>
 									</div>
@@ -834,7 +869,7 @@
 									<div class="ladderType" _num="3">
 										<img title="<spring:message code='ezLadder.t104'/>" src="/images/ezLadder/icon_game03_no.png" class="default icon"/>
 										<img title="<spring:message code='ezLadder.t104'/>" src="/images/ezLadder/icon_game03.png" class="select icon"/>
-									</div>
+									</div> --%>
 								<input name="type" style="display: none;" />
 							</div>
 						</div>
