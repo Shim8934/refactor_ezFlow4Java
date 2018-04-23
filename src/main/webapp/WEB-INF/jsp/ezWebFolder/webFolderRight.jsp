@@ -197,6 +197,7 @@
 			}
 			
 		}
+		
 		function nameFileList(param) {
 			searchFileType = "";  
 			searchExt ="";        
@@ -319,8 +320,8 @@
 					trElmt.appendChild(tdElmt8);
 					trElmt.appendChild(tdElmt9);
 					trElmt.appendChild(tdElmt10);
-					tableList.appendChild(trElmt);
 					
+					tableList.appendChild(trElmt);
 				}
 			} 
 		}
@@ -328,7 +329,6 @@
 		function dbClickFunction(obj) {
 			var folderId2 = obj.getAttribute("targetId");
 			getFileList(folderId2);
-			
 		}
 		
 	   	$(function () {
@@ -355,13 +355,13 @@
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker('setDate', "");
 	     });
+	   	
 	   	// 날짜 초기화 버튼
 	   	function btn_PostDate_Clear() {
 	        $("#Sdatepicker").datepicker('setDate', "");
 	        $("#Edatepicker").datepicker('setDate', "");
 	
 	    }
-
 	    
 	    function goToPageByNum(Value){
 	    	currentPage = Value;
@@ -478,35 +478,19 @@
 	 	function optionHidden() {
 	 	    document.getElementById("layer_Viewpopup").style.display = "none";
 	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
+	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 	 	}
 	 	
        function fileDownload() {
-    		var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
-    	   
-    		if (listOfChecked.length <= 0) {
-    			alert("<spring:message code = 'ezWebFolder.t108'/>");
-    			return;
-    		}
+			var selected = getSelectedFoldersAndFiles();
+			
+			if (selected === undefined) {
+				return;
+			}
     		
-    		var filesList  = [];
-    		var folderList = [];
-    		
-    		for (var i = 0; i < listOfChecked.length; i++) {
-    			var fileFolderId = listOfChecked[i].getAttribute("targetId");
-    			
-    			if (listOfChecked[i].getAttribute("targetType") == 'folder') {
-    				folderList.push(fileFolderId);
-    			}
-    			else {
-    				filesList.push(fileFolderId);
-    			}
-    		}
-    		
-    		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString() +"&folderList=" + folderList.toString();
+    		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + selected.files.toString() + "&folderList=" + selected.folders.toString();
 			
 			AttachDownFrame.location.href = downloadUrl;
-			
        }
        
        function fileUpload() {
@@ -519,27 +503,13 @@
        }
        
        function fileDelete() {
-			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+			var selected = getSelectedFoldersAndFiles();
 			
-			if (listOfChecked.length <= 0) {
-				alert("<spring:message code = 'ezWebFolder.t108'/>");
+			if (selected === undefined) {
 				return;
 			}
 			
-			var filesList  = [];
-			var folderList = [];
-			
-			for (var i = 0; i < listOfChecked.length; i++) {
-				var fileFolderId = listOfChecked[i].getAttribute("targetId");
-				
-				if (listOfChecked[i].getAttribute("targetType") == 'folder') {
-					folderList.push(fileFolderId);
-				} else {
-					filesList.push(fileFolderId);
-				}
-			}
-			
-			if (folderList.length > 0) {
+			if (selected.folders.length > 0) {
 				alert("<spring:message code = 'ezWebFolder.t20'/>");
 				return;
 			}
@@ -548,7 +518,7 @@
 				type: "POST",
 				url: "/ezWebFolder/checkPermission.do",
 				data: {
-					"fileList" : filesList.toString()
+					"fileList" : selected.files.toString()
 				},
 				dataType: "JSON",
 				async: true,
@@ -558,8 +528,9 @@
 					if (result != "ok") {
 						alert("<spring:message code='ezWebFolder.t243'/>");
 					} else {
-						DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
+						DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
 					}
+					
 					refreshView();
 				},
 				error : function(error) {
@@ -569,37 +540,23 @@
 		}
 		
 		function fileRename() {
-			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+			var selected = getSelectedFoldersAndFiles();
 			
-			if (listOfChecked.length <= 0) {
-				alert("<spring:message code = 'ezWebFolder.t108'/>");
+			if (selected === undefined) {
 				return;
 			}
 			
-			var filesList  = [];
-			var folderList = [];
-			
-			for (var i = 0; i < listOfChecked.length; i++) {
-				var fileFolderId = listOfChecked[i].getAttribute("targetId");
-				
-				if (listOfChecked[i].getAttribute("targetType") == 'folder') {
-					folderList.push(fileFolderId);
-				} else {
-					filesList.push(fileFolderId);
-				}
-			}
-			
-			if (folderList.length > 0) {
+			if (selected.folders.length > 0) {
 				alert("<spring:message code = 'ezWebFolder.t20'/>");
 				return;
 			}
 			
-			if (filesList.length > 1) {
+			if (selected.files.length > 1) {
 				alert("<spring:message code = 'ezWebFolder.t115'/>");
 				return;
 			}
 			
-			var fileId = filesList[0];
+			var fileId = selected.files[0];
 			
 			$.ajax({
 				type: "POST",
@@ -625,32 +582,47 @@
 		}
 		
 		function fileMove() {
-			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+			var selected = getSelectedFoldersAndFiles();
 			
-			if (listOfChecked.length <= 0) {
-				alert("<spring:message code = 'ezWebFolder.t108'/>");
+			if (selected === undefined) {
 				return;
 			}
 			
-			var filesList  = [];
-			var folderList = [];
-			
-			for (var i = 0; i < listOfChecked.length; i++) {
-				var fileFolderId = listOfChecked[i].getAttribute("targetId");
-				
-				if (listOfChecked[i].getAttribute("targetType") == 'folder') {
-					folderList.push(fileFolderId);
-				} else {
-					filesList.push(fileFolderId);
-				}
-			}
-			
-			if (folderList.length > 0) {
+			if (selected.folders.length > 0) {
 				alert("<spring:message code = 'ezWebFolder.t20'/>");
 				return;
 			}
 			
-			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString());
+			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString());
+		}
+		
+		function getSelectedFoldersAndFiles() {
+			var selectedRows = rowModule.getSelectedRows();
+			var selectedLength = selectedRows.length;
+			
+			if (selectedLength <= 0) {
+				alert("<spring:message code = 'ezWebFolder.t108'/>");
+				return undefined;
+			}
+			
+			var files  = [];
+			var folders = [];
+			var rowInfo;
+			
+			for (var i = 0; i < selectedLength; i++) {
+				rowInfo = rowModule.getRowInfo(selectedRows[i]);
+				
+				if (rowInfo.type === 'D') {
+					folders.push(rowInfo.id);
+				} else {
+					files.push(rowInfo.id);
+				}
+			}
+			
+			return {
+				folders : folders,
+				files : files
+			}
 		}
 		
        function changeCount(value) {
