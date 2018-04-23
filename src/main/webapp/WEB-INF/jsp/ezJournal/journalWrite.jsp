@@ -235,6 +235,10 @@
                 } else {
                     self.resizeTo(785, 830);
                 }
+	    		
+	    		if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
+		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 310 + "PX";
+		    	}
 				
 	    		selTypeId = $("#optType").find("option:selected").val();
 	    		

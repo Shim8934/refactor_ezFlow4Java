@@ -1678,7 +1678,6 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezJournal/journalDetailContent.do")
 	public String getJournalContent(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getJournalContent started");
@@ -1689,7 +1688,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		String journalId = request.getParameter("journalId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId, param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId, param, request, "get", null);
 		
 		String status = resultBody.get("status").toString();
 		
