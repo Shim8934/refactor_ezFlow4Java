@@ -89,7 +89,8 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (selRow.getAttribute("DATA6") == "0") {
                 if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-					if (GetCabChargerRight() == "true") {                    	
+                	console.log(g_bDeptCharger)
+					if (GetCabChargerRight() == "true" || g_bDeptCharger) {                    	
                         document.getElementById("tdbtnEndProduce").style.display = "";
                         //SwapImage(btnEndProduce, "");
                     }
