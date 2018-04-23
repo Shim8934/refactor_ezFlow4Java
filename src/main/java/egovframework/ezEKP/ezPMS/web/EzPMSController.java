@@ -75,15 +75,9 @@ public class EzPMSController {
 		String url = "/rest/ezPMS/projects/userId/"+userInfo.getId();
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("status", "P");
-		param.put("projectName", "hello world");
-		param.put("manager", "eunjeong");
-		param.put("planStartDate", "2018-04-17");
-		param.put("planEndDate", "2018-04-18");
-		param.put("overview", "hello");
-		param.put("viewType", "memo");
-		param.put("listNum", 10);
-		param.put("sortType", "endDate");
+		
+		
+		
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		
@@ -163,13 +157,8 @@ public class EzPMSController {
 	
 	/**
 	 * 새로운 프로젝트 추가
-	 * @param loginCookie
-	 * @param request
-	 * @param resp
-	 * @param model
-	 * @return
-	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/addNewProject.do")
 	public String addNewProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param,HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS addNewProject started");
@@ -185,9 +174,15 @@ public class EzPMSController {
 		param.put("createDate", today);
 		param.put("creatorName", userInfo.getDisplayName1());
 		param.put("creatorName2", userInfo.getDisplayName2());
+		param.put("creatorDeptname", userInfo.getDeptName1());
+		param.put("creatorDeptname2", userInfo.getDeptName2());
 		
-		System.out.println(userInfo.getTenantId());
-		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", null);
+		JSONObject jsonList = new JSONObject();
+		jsonList.put("managerList", param.get("managerList"));
+		jsonList.put("participantList", param.get("participantList"));
+		jsonList.put("viewerList", param.get("viewerList"));
+
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
 		
 //		JSONArray list = new JSONArray();
 		System.out.println(result);

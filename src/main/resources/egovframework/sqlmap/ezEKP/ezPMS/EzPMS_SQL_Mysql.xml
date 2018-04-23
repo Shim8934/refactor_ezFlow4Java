@@ -16,6 +16,7 @@
 	<typeAlias 	alias="deptViewVO" 									type="egovframework.ezEKP.ezPMS.vo.DeptViewVO" />
 	<typeAlias 	alias="deptInfoVO" 									type="egovframework.ezEKP.ezPMS.vo.DeptInfoVO" />
 	<typeAlias 	alias="companyVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO" />
+	<typeAlias 	alias="UserInfoVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectMemberVO"/>
 	
     <resultMap id="projectInfoVO" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
@@ -198,6 +199,16 @@
 		<result property="deptName" 		column="dept_name" />
 	</resultMap>
 	
+	<resultMap id="userInfoVO" class="UserInfoVO">
+		<result property="userId" 					column="userId"/>
+		<result property="userName" 				column="userName"/>
+		<result property="userName2" 				column="userName2"/>
+		<result property="userPosition"				column="userPosition"/>
+		<result property="userPosition2"			column="userPosition2"/>
+		<result property="userDeptname" 			column="userDeptname"/>
+		<result property="userDeptname2" 			column="userDeptname2"/>
+	</resultMap> 
+	
     <!-- 조직도 만들기 위한 쿼리 -->
 	<select id="selectDeptList" parameterClass="map" resultMap="deptViewMap">
 		select 
@@ -302,7 +313,7 @@
 			lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME$lang$
 	</select>
 	
-    <insert id="EzPMSDAO.addNewProject" parameterClass="Map">
+    <insert id="addNewProject" parameterClass="Map">
     	<![CDATA[
     		INSERT INTO tbl_pms_project(
     			tenant_id, 				project_name, 			plan_start_date, 			plan_end_date, 			real_start_date, 
@@ -313,9 +324,9 @@
     		) 
     		VALUES ( 
     			#tenantId#,				#projectName#,			#planStartDate#,			#planEndDate#,			#realStartDate#, 
-    			#headManagerId#,		#headManagerName#,		#headManagerName2#,			#headManagerDeptName#,	#headManagerDeptName2#,	
-    			#status#,				0,						#overview#,					#weightInput#,			#creatorId#, 
-    			#creatorName#,			#creatorName2#,			#creatorDeptName#,			#creatorDeptName2#,		#workingDay#,
+    			#headManagerId#,		#headManagerName#,		#headManagerName2#,			#headManagerDeptname#,	#headManagerDeptname2#,	
+    			#status#,				#progress#,				#overview#,					#weightInput#,			#creatorId#, 
+    			#creatorName#,			#creatorName2#,			#creatorDeptname#,			#creatorDeptname2#,		#workingDay#,
     			#restDueday#,			#alamMailStatus#,       #createDate#
     		)
     	]]>
@@ -403,5 +414,46 @@
 			D.TENANT_ID = #tenant_Id#
 	</select>
 	
+	<select id="getUserInfo" parameterClass="Map" resultMap="userInfoVO">
+		<![CDATA[
+			SELECT 
+				A.CN AS userId, 
+				A.DISPLAYNAME AS userName, 
+				A.DISPLAYNAME2 AS userName2,
+				A.TITLE AS userPosition,
+				A.TITLE2 AS userPosition2, 
+				B.DISPLAYNAME AS userDeptname, 
+				B.DISPLAYNAME2 AS userDeptname2 
+			FROM 
+				jmocha_user_master A 
+			LEFT JOIN 
+				jmocha_dept_master B 
+			ON 
+				A.tenant_id = B.tenant_id 
+			AND 
+				A.department = B.CN
+			WHERE 
+				A.tenant_id = #tenantId# 
+			AND 
+				A.CN = #userId#
+		]]>
+	</select>
+	
+	<insert id="addProjectMember" parameterClass="Map">
+		<selectKey resultClass="Integer" keyProperty="projectId">
+			<![CDATA[
+				SELECT MAX(project_id) FROM tbl_pms_project
+			]]>
+		</selectKey>
+		<![CDATA[
+			INSERT INTO tbl_pms_member (
+				tenant_id,			project_id,			member_role_id,		user_id,		user_name,
+				user_name2,			user_deptname,		user_deptname2,		user_position,	user_position2, user_id_type
+			) VALUES (
+				#tenantId#,			#projectId#,		#memberRoleId#,		#userId#,		#userName#,
+				#userName2#,		#userDeptname#,		#userDeptname2#,	#userPosition#,	#userPosition2#,	#userIdType#
+			)
+		]]>
+	</insert>
 	
 </sqlMap>

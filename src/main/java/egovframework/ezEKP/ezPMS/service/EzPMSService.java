@@ -99,4 +99,8 @@ public interface EzPMSService {
 	
 	public List<ProjectMemberVO> getProjectMemberList(int projectId, int roleId, String lang, int tenantId);
 
+	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId);
+
+	ProjectMemberVO getUserInfo(String userId, int tenantId) throws Exception;
+
 }

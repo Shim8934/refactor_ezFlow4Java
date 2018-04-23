@@ -177,13 +177,14 @@
 		   			if (chkFlag) {
 		   				if (authName == "manager") {
 		   					managerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept});
+		   					authList.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept});
 		   				} else if (authName == "participant") {
 		   					participantArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 2, "userDept" : userDept});
+		   					authList.push({"userName" : userName, "userId" : receiverId, "roleId" : 2, "userDept" : userDept});
 		   				} else {
 		   					viewerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 3, "userDept" : userDept});
+		   					authList.push({"userName" : userName, "userId" : receiverId, "roleId" : 3, "userDept" : userDept});
 		   				}
-		   				
-		   				authList.push({"userName" : userName, "userId" : receiverId});
 		   			} else {
 		   				alert("이미 추가된 사용자 입니다.");
 		   			}
@@ -191,7 +192,7 @@
 		   			drawReceiverList(authName);
 		   			selMainListUserId = "";
 	   			} else {
-	   				alert("수신자를 선택해 주십시오.");
+	   				alert("사용자를 선택해 주십시오.");
 	   			}
 	   		}
 	   		
@@ -285,13 +286,38 @@
 	   		}
 	   		
 	   		$(document).ready(function() {
+	   			
+	   			function ReplaceText(orgStr, findStr, replaceStr) {
+			        var re = new RegExp(findStr, "gi");
+			        return (orgStr.replace(re, replaceStr));
+			    }
+			    function replaceString(p_str) {
+			        p_str = ReplaceText(p_str, "&amp;", "&");
+			        p_str = ReplaceText(p_str, "&lt;", "<");
+			        p_str = ReplaceText(p_str, "&gt;", ">");
+			        return p_str;
+			    }
+			    
 	   			treeContent = ${deptList};
 	   			$("#1tab1").click();
 	            ChangeTab(document.getElementById("1tab1"));
 		   		setDeptList();
-	   			if ($(opener.selReceiver).length > 0) {
-	   				receiverList = opener.selReceiver;
-	   				drawReceiverList();
+	   			if ($(opener.managerList).length > 0 || $(opener.participantList).length > 0 ||  $(opener.viewerList).length > 0) {
+		   			managerArray = opener.managerList;
+		   			participantArray = opener.participantList;
+		   			viewerArray = opener.viewerList;
+		   			
+		   			authList = authList.concat(managerArray);
+		   			authList = authList.concat(participantArray);
+		   			authList = authList.concat(viewerArray);
+		   			
+	   				drawReceiverList("manager");
+	   				drawReceiverList("participant");
+	   				drawReceiverList("viewer");
+	   			} else {
+		   			authList.push({"userName" : userName, "userId" : userId, "roleId" : 1, "userDept" : replaceString(userDept)});
+		   			managerArray.push({"userName" : userName, "userId" : userId, "roleId" : 1, "userDept" : replaceString(userDept)});
+		   			drawReceiverList("manager");
 	   			}
 		   		
 	   			$(function () {
@@ -310,21 +336,6 @@
 		   			} else {
 		   				SelectReceiverWindow(viewer, viewerList);
 		   			}
-		   			
-		   			function ReplaceText(orgStr, findStr, replaceStr) {
-				        var re = new RegExp(findStr, "gi");
-				        return (orgStr.replace(re, replaceStr));
-				    }
-				    function replaceString(p_str) {
-				        p_str = ReplaceText(p_str, "&amp;", "&");
-				        p_str = ReplaceText(p_str, "&lt;", "<");
-				        p_str = ReplaceText(p_str, "&gt;", ">");
-				        return p_str;
-				    }
-		   			
-		   			authList.push({"userName" : userName, "userId" : userId});
-		   			managerArray.push({"userName" : userName, "userId" : userId, "roleId" : 1, "userDept" : replaceString(userDept)});
-		   			drawReceiverList("manager");
 	   			});
    			});
 	   		

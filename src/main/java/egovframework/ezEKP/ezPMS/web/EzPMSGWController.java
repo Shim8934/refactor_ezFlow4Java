@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,7 +66,7 @@ public class EzPMSGWController {
 //			Map<String, Object> search = new HashMap<>();
 			String projectName = request.getParameter("projectName");
 			String planStartDate = request.getParameter("planStartDate");
-			String overview = request.getParameter("overview");			
+			String overview = request.getParameter("overview");	
 			
 			//프로젝트 리스트 가져오기
 			//List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), info, status, search, info.getOffSet(), lang);
@@ -92,11 +93,11 @@ public class EzPMSGWController {
 	//새프로젝트 추가
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects", method = RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject addNewProject(HttpServletRequest request) throws Exception {
+	public JSONObject addNewProject(@RequestBody JSONObject json, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects] started.");
 		
 		JSONObject result = new JSONObject();
-		
+		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
@@ -113,11 +114,28 @@ public class EzPMSGWController {
 			newProject.setCreateDate(request.getParameter("createDate"));
 			newProject.setCreatorName(request.getParameter("creatorName"));
 			newProject.setCreatorName2(request.getParameter("creatorName2"));
+			newProject.setCreatorDeptname(request.getParameter("creatorDeptname"));
+			newProject.setCreatorDeptname2(request.getParameter("creatorDeptname2"));
 			
 			ezPMSService.addNewProject(newProject, request.getParameter("tenantId"));
 			
+			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json.get("managerList");
+			projectMemberList.addAll((List<Map<String, Object>>) json.get("participantList"));
+			projectMemberList.addAll((List<Map<String, Object>>) json.get("viewerList"));
+			
+			for (int i = 0; i < projectMemberList.size(); i++) {
+				ProjectMemberVO member = ezPMSService.getUserInfo((String)projectMemberList.get(i).get("userId"), Integer.parseInt(request.getParameter("tenantId")));
+				member.setMemberRoleId((int)projectMemberList.get(i).get("roleId"));
+				ezPMSService.addProjectMember(member, Integer.parseInt(request.getParameter("tenantId")));
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
 		
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects] ended.");
 		return result;
