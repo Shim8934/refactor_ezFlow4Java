@@ -8,6 +8,10 @@ import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzWebFolderService_y {
+	public void insertIfNotExistRootForder(String userId, String userName1, String userName2, String compId, List<Map<String, String>> permissionIdList, String offset, int tenantId) throws Exception;
+	
+	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId) throws Exception;
+	
 	// 파일 list
 	List<FileVO> getFileList(String folderId,String folderType,String userId,String deptId,int tenantId, String companyId, String searchExt,
 			String searchFileName, String searchStartDate, String searchEndDate,String searchCreateName,
