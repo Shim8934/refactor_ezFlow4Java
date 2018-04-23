@@ -120,12 +120,12 @@ public class EzAttitudeGWController {
 			}
 	         
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", resultList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] ended.");
@@ -160,7 +160,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/attitudes] ended.");
 		return result;
@@ -178,11 +178,11 @@ public class EzAttitudeGWController {
 		try{
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/" + attitudetypeId + "/attitudes] ended.");
@@ -207,11 +207,11 @@ public class EzAttitudeGWController {
 			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getTenantId());
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", attitudeVO);
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
@@ -244,11 +244,11 @@ public class EzAttitudeGWController {
 			ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, info.getTenantId());
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
@@ -273,11 +273,11 @@ public class EzAttitudeGWController {
 			ezAttitudeService.deleteAttitude(attitudeId, info.getTenantId());
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
@@ -296,11 +296,11 @@ public class EzAttitudeGWController {
 		try{
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modify-applications] ended.");
@@ -339,12 +339,12 @@ public class EzAttitudeGWController {
 					info.getDeptName2(), changeDate, "0", content, offset);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] ended.");
@@ -363,11 +363,11 @@ public class EzAttitudeGWController {
 		try{
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/modify-applications/" + modapplId + "] ended.");
@@ -386,11 +386,11 @@ public class EzAttitudeGWController {
 		try{
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modify-applications/" + modapplId + "] ended.");
@@ -409,11 +409,11 @@ public class EzAttitudeGWController {
 		try{
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/modify-applications] ended.");
@@ -432,11 +432,11 @@ public class EzAttitudeGWController {
 		try{
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/modify-applications] ended.");
@@ -537,11 +537,11 @@ public class EzAttitudeGWController {
 			}
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", resultList);
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-count] ended.");
@@ -560,11 +560,11 @@ public class EzAttitudeGWController {
 		try{
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /ezattitude/depts/" + deptId + "/attitude-count] ended.");
@@ -649,11 +649,11 @@ public class EzAttitudeGWController {
 			ezAttitudeService.updateAttitudeConfig(jsonParam);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		
@@ -690,11 +690,11 @@ public class EzAttitudeGWController {
 			}
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", attitudeTypeList);
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
@@ -717,11 +717,11 @@ public class EzAttitudeGWController {
 			ezAttitudeService.updateAttitudeTypeConfig(request.getParameter("typeConfigList"), companyId, info.getTenantId());
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
@@ -756,11 +756,11 @@ public class EzAttitudeGWController {
 //			data.put("formList", formList);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/{companyId}/attitudetypes/info] ended.");
@@ -788,11 +788,11 @@ public class EzAttitudeGWController {
 			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, imgPath, info.getTenantId(), companyId);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
@@ -830,11 +830,11 @@ public class EzAttitudeGWController {
 //			data.put("formList", formList);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId + "] ended.");
@@ -863,11 +863,11 @@ public class EzAttitudeGWController {
 			ezAttitudeService.updateAttitudeType(typeId, typeName, typeName2, imgPath, info.getTenantId(), companyId);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes/" + attitudetypeId+ "] ended.");
@@ -896,11 +896,11 @@ public class EzAttitudeGWController {
 			data.put("adminCompany", info.getCompanyId());
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies] ended.");
@@ -1007,11 +1007,11 @@ public class EzAttitudeGWController {
 			ezAttitudeService.saveAttitudeUserConfig(info.getTenantId(), userConfInfoList, info.getOffSet());
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users-attitude-confs] ended.");
@@ -1037,11 +1037,11 @@ public class EzAttitudeGWController {
 			ezAttitudeService.deleteAttitudeUserConfig(info.getTenantId(), selecUserList);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users-attitude-confs] ended.");
@@ -1060,11 +1060,11 @@ public class EzAttitudeGWController {
 		try{
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users" + userId + "/add-authority] ended.");
@@ -1083,11 +1083,11 @@ public class EzAttitudeGWController {
 		try{
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/exceldown] ended.");
@@ -1142,12 +1142,12 @@ public class EzAttitudeGWController {
 			data.put("list", attList);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
@@ -1187,12 +1187,12 @@ public class EzAttitudeGWController {
 			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, adminFlag, checkAdmin);
 
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", attListCount+"");
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] ended.");
@@ -1312,11 +1312,11 @@ public class EzAttitudeGWController {
 			data.put("filePath2", filePath2);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetype/" + typeId + "/iconupload] ended.");
@@ -1442,12 +1442,12 @@ public class EzAttitudeGWController {
 			ezAttitudeService.delUsersModifyAtt(companyId, tenantId, ids);
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
@@ -1482,12 +1482,12 @@ public class EzAttitudeGWController {
 			ezAttitudeService.changeUsersModifyAtt(companyId, tenantId, ids, changeStatus, userId, info.getUserName(), info.getUserName2());
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "fail");
 		}
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
@@ -1514,11 +1514,11 @@ public class EzAttitudeGWController {
 			
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", formVO);
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/{attitudetypeId}/forms/form] ended.");

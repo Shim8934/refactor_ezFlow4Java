@@ -1189,7 +1189,7 @@ public class EzAttitudeAdminBOMController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeUserConf.do")
 	@ResponseBody
-	public void saveAttitudeUserConf(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public JSONObject saveAttitudeUserConf(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LOGGER.debug("saveAttitudeUserConf started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -1211,7 +1211,21 @@ public class EzAttitudeAdminBOMController {
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject jObject = new JSONObject();
+		
+		if(status.equals("ok")){
+			jObject = (JSONObject) resultBody.get("data");
+		}
+		
 		LOGGER.debug("saveAttitudeUserConf ended");
+		
+		return jObject;
 	}
 	
 	/**
