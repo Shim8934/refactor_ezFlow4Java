@@ -790,7 +790,7 @@
 		]]>
 	</insert>
 	
-	<select id="getAttitudeUserStatistics" parameterClass="Map" resultMap="">
+	<select id="ezAttitudeAdminDAO.getAttitudeUserStatistics" parameterClass="Map" resultMap="Map">
 		<![CDATA[
 			SELECT SUM(to_days(
 								IF(
