@@ -173,14 +173,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		List<ShareVO> list = ezWebFolderDAO_m.getSharingList(map);
 		
 		for (ShareVO vo : list) {
-			// set userList
-			String userList = vo.getUserList();
-			
-			if (userList != null && !userList.isEmpty()) {
-				String[] userArr = userList.split(",");
-				vo.setUserList(getUserNameList(userArr, primary, tenantId));
-			}
-			
 			// set folderPath
 			vo.setFolderPath(ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId));
 		}
@@ -218,14 +210,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		List<ShareVO> list = ezWebFolderDAO_m.getSharedList(map);
 		
 		for (ShareVO vo : list) {
-			// set userList
-			String userList = vo.getUserList();
-			
-			if (userList != null && !userList.isEmpty()) {
-				String[] userArr = userList.split(",");
-				vo.setUserList(getUserNameList(userArr, primary, tenantId));
-			}
-			
 			// set folderPath
 			vo.setFolderPath(ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId));
 		}
@@ -480,6 +464,69 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("tenantId", tenantId);
 		
 		ezWebFolderDAO_m.deleteShare(map);
+	}
+	
+	@Override
+	public List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception {
+		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId",	         userId);
+		map.put("primary",	         primary);
+		map.put("offset",	         commonUtil.getMinuteUTC(offset));
+		map.put("startPoint",        startPoint);
+		map.put("pageSize",	         pageSize);
+		map.put("idList",	         idList);
+		map.put("tenantId",	         tenantId);
+		
+		List<ShareVO> list = ezWebFolderDAO_m.getHiddenSharedList(map);
+		
+		for (ShareVO vo : list) {
+			// set folderPath
+			vo.setFolderPath(ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId));
+		}
+		
+		return list;
+	}
+
+	@Override
+	public Map<String, Integer> getHiddenSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception {
+		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId",	userId);
+		map.put("primary",	primary);
+		map.put("offset",	commonUtil.getMinuteUTC(offset));
+		map.put("idList",	idList);
+		map.put("tenantId",	tenantId);
+		
+		List<Map<String, Object>> list = ezWebFolderDAO_m.getHiddenSharedCount(map);
+		
+		int fileCount	 = 0;
+		int folderCount	 = 0;
+		int totalCount	 = 0;
+		int totalPage	 = 0;
+		
+		for (Map<String, Object> info : list) {
+			String folderFileType = (String)info.get("FOLDERFILE_TYPE");
+			if (folderFileType.equals("D")) {
+				folderCount = (int)(long)info.get("COUNT");
+			} else if (folderFileType.equals("F")) {
+				fileCount = (int)(long)info.get("COUNT");
+			}
+		}
+		
+		totalCount	= fileCount + folderCount;
+		totalPage	= (totalCount + pageSize - 1) / pageSize;
+		
+		Map<String, Integer> countInfo = new HashMap<String, Integer>();
+		countInfo.put("fileCount", fileCount);
+		countInfo.put("folderCount", folderCount);
+		countInfo.put("totalCount", totalCount);
+		countInfo.put("totalPage", totalPage);
+		
+		LOGGER.debug("countInfo: " + countInfo);
+		return countInfo;
 	}
 	
 	@Override
@@ -1146,4 +1193,5 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		ezWebFolderDAO.moveFile(map);
 	}
+	
 }

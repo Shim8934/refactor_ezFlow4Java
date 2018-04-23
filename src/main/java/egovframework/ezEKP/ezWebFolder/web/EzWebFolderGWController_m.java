@@ -123,7 +123,7 @@ public class EzWebFolderGWController_m {
 			e.printStackTrace();
 			
 			result.put("status", "error");
-			result.put("code", 1);
+			result.put("code", 2);
 		}
 		
 		logger.debug("getSharingList ended.");
@@ -196,7 +196,7 @@ public class EzWebFolderGWController_m {
 			e.printStackTrace();
 			
 			result.put("status", "error");
-			result.put("code", 1);
+			result.put("code", 2);
 		}
 		
 		logger.debug("getSharedList ended.");
@@ -244,7 +244,7 @@ public class EzWebFolderGWController_m {
 			e.printStackTrace();
 			
 			result.put("status", "error");
-			result.put("code", 1);
+			result.put("code", 2);
 		}
 		
 		logger.debug("addShare ended.");
@@ -289,7 +289,7 @@ public class EzWebFolderGWController_m {
 			e.printStackTrace();
 			
 			result.put("status", "error");
-			result.put("code", 1);
+			result.put("code", 2);
 		}
 		
 		logger.debug("updateShare ended.");
@@ -332,7 +332,7 @@ public class EzWebFolderGWController_m {
 			e.printStackTrace();
 			
 			result.put("status", "error");
-			result.put("code", 1);
+			result.put("code", 2);
 		}
 		
 		logger.debug("deleteShare ended.");
@@ -347,7 +347,9 @@ public class EzWebFolderGWController_m {
 		logger.debug("getHiddenSharedList started.");
 		
 		String serverName = orElse(request.getHeader("host-name"), "");
-		logger.debug("userId: " + userId + " || serverName: " + serverName);
+		String pageNum 		= orElse(request.getHeader("pageNum"), "1");
+		String pageSize 	= orElse(request.getHeader("pageSize"), "0");
+		logger.debug("serverName: " + serverName + " || userId: " + userId + " || pageNum: " + pageNum + " || pageSize: " + pageSize);
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -362,38 +364,38 @@ public class EzWebFolderGWController_m {
 		}
 		
 		try {
-//			// TODO: commonInfoWeb 안타도록 수정
-//			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
-//			int tenantId  = common.getTenantId();
-//			String offset = common.getOffSet();
-//			String lang   = common.getLang();
-//			
-//			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
-//			
-//			int pageSizeInt  = Integer.parseInt(pageSize);
-//			int pageNumInt   = Integer.parseInt(pageNum);
-//			
-//			if (pageSizeInt == 0) {
-//				pageSizeInt = ezWebFolderService_y.getUsrListCount(tenantId, userId);
-//			}
-//			
-//			int startPoint = (pageNumInt - 1) * pageSizeInt;
-//			
-//			List<ShareVO> list = ezWebFolderService_m.getSharingList(userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-//			Map<String, Integer> countInfo = ezWebFolderService_m.getSharingCount(userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
-//			
-//			data.put("list", list);
-//			data.putAll(countInfo);
-//			
-//			result.put("status", "ok");
-//			result.put("code", 0);
-//			result.put("data", data);s
+			// TODO: commonInfoWeb 안타도록 수정
+			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId  = common.getTenantId();
+			String offset = common.getOffSet();
+			String lang   = common.getLang();
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			
+			int pageSizeInt  = Integer.parseInt(pageSize);
+			int pageNumInt   = Integer.parseInt(pageNum);
+			
+			if (pageSizeInt == 0) {
+				pageSizeInt = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+			}
+			
+			int startPoint = (pageNumInt - 1) * pageSizeInt;
+			
+			List<ShareVO> list = ezWebFolderService_m.getHiddenSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, tenantId);
+			Map<String, Integer> countInfo = ezWebFolderService_m.getHiddenSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, tenantId);
+			
+			data.put("list", list);
+			data.putAll(countInfo);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
 			
 			result.put("status", "error");
-			result.put("code", 1);
+			result.put("code", 2);
 		}
 		
 		logger.debug("getHiddenSharedList ended.");
@@ -436,7 +438,7 @@ public class EzWebFolderGWController_m {
 			e.printStackTrace();
 			
 			result.put("status", "error");
-			result.put("code", 1);
+			result.put("code", 2);
 		}
 		
 		logger.debug("hideShare ended.");
@@ -479,7 +481,7 @@ public class EzWebFolderGWController_m {
 			e.printStackTrace();
 			
 			result.put("status", "error");
-			result.put("code", 1);
+			result.put("code", 2);
 		}
 		
 		logger.debug("showShare ended.");

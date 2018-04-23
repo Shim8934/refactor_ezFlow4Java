@@ -476,7 +476,6 @@
 			FROM TBL_WEBFOLDER_SHARE2 AS S
 			JOIN TBL_WEBFOLDER_SHARE_SUB AS SS
 			ON S.SHARE_ID = SS.SHARE_ID
-			AND SS.USER_ID = #userId#
 			AND SS.USER_ID IN
 		]]>
 			<iterate property="idList" open="(" close=")" conjunction=",">
@@ -683,7 +682,6 @@
 				FROM TBL_WEBFOLDER_SHARE2 AS S
 				JOIN TBL_WEBFOLDER_SHARE_SUB AS SS
 				ON S.SHARE_ID = SS.SHARE_ID
-				AND SS.USER_ID = #userId#
 				AND SS.USER_ID IN
 		]]>
 				<iterate property="idList" open="(" close=")" conjunction=",">
@@ -908,6 +906,213 @@
 		WHERE SHARE_ID = #shareId#
 		AND TENANT_ID  = #tenantId#
 	</delete>
+	
+	<select id="EzWebFolderDAO_m.getHiddenSharedList" parameterClass="Map" resultMap="shareVO">
+		<![CDATA[
+			SELECT
+				DF.FILE_ID,
+				CASE WHEN #primary# = '1'
+					THEN DF.FILE_NAME1
+					ELSE DF.FILE_NAME2
+				END FILE_NAME,
+				DF.FOLDERFILE_TYPE,
+				DF.FOLDER_TYPE,
+				DF.FILE_PATH,
+				DF.FILE_SIZE,
+				DF.FILE_EXT,
+				DF.FOLDER_PATH,
+				DF.OWNER_ID,
+				DF.USE_STATUS,
+				DF.CREATE_ID,
+				CASE WHEN #primary# = '1'
+					THEN DF.CREATE_NAME1
+					ELSE DF.CREATE_NAME2
+				END CREATE_NAME,
+				DATE_FORMAT(DATE_ADD(DF.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+				DF.UPDATE_ID,
+				DATE_FORMAT(DATE_ADD(DF.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
+				DF.TYPE_ID,
+				FT2.TYPE_NAME,
+				FT2.TYPE_ICON,
+				CASE WHEN FV.USER_ID IS NULL
+					THEN '0'
+					ELSE '1'
+				END FAVORITE_STATUS,
+				S.SHARE_ID,
+				S.SHARER_ID,
+		        CASE WHEN #primary# = '1'
+					THEN S.SHARER_NAME1
+					ELSE S.SHARER_NAME2
+				END SHARER_NAME,
+				CASE WHEN #primary# = '1'
+					THEN SUBSTRING(S.USER_NAME_LIST, 1, INSTR(S.USER_NAME_LIST, '|') - 1)
+					ELSE SUBSTRING(S.USER_NAME_LIST, INSTR(S.USER_NAME_LIST, '|') + 1)
+				END USER_LIST,
+				DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
+				SS.SUB_STATUS,
+				S.TENANT_ID
+			FROM TBL_WEBFOLDER_SHARE2 AS S
+			JOIN TBL_WEBFOLDER_SHARE_SUB AS SS
+			ON S.SHARE_ID = SS.SHARE_ID
+			AND SS.USER_ID IN
+		]]>
+			<iterate property="idList" open="(" close=")" conjunction=",">
+				#idList[].id#
+			</iterate>
+		<![CDATA[
+			AND S.TENANT_ID = SS.TENANT_ID
+			JOIN TBL_WEBFOLDER_SHARE_HIDE AS SH
+			ON S.SHARE_ID = SH.SHARE_ID
+			AND S.TENANT_ID = SH.TENANT_ID
+			AND SH.USER_ID = #userId#
+			JOIN (
+				SELECT
+					D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
+					'D' AS FOLDERFILE_TYPE,     D.FOLDER_TYPE,                   '' AS FILE_PATH,
+					'' AS FILE_SIZE,            FT.FILE_EXT,                     D.FOLDER_PATH,
+					D.OWNER_ID,                 D.USE_STATUS,                    D.CREATE_ID,
+					D.CREATE_NAME1,             D.CREATE_NAME2,                  D.CREATE_DATE,
+					D.UPDATE_ID,                D.UPDATE_DATE,                   FT.TYPE_ID,
+					D.TENANT_ID
+				FROM TBL_WEBFOLDER_FOLDER AS D
+				JOIN TBL_WEBFOLDER_FILETYPE AS FT
+				ON FT.FILE_EXT = 'folder'
+				AND D.TENANT_ID = FT.TENANT_ID
+				UNION
+				SELECT
+					F.FILE_ID AS FILE_ID,       F.FILE_NAME AS FILE_NAME1,       F.FILE_NAME AS FILE_NAME2,
+					'F' AS FOLDERFILE_TYPE,     D2.FOLDER_TYPE,                  F.FILE_PATH,
+					F.FILE_SIZE,                F.FILE_EXT,                      D2.FOLDER_PATH,
+					D2.OWNER_ID,                F.USE_STATUS,                    F.CREATE_ID,
+					F.CREATE_NAME1,             F.CREATE_NAME2,                  F.CREATE_DATE,
+					F.UPDATE_ID,                F.UPDATE_DATE,                   F.TYPE_ID,
+					F.TENANT_ID
+				FROM TBL_WEBFOLDER_FILE AS F
+				JOIN TBL_WEBFOLDER_FOLDER AS D2
+				ON F.FOLDER_ID = D2.FOLDER_ID
+				AND F.TENANT_ID = D2.TENANT_ID ) AS DF
+			ON S.FOLDERFILE_ID = DF.FILE_ID
+			AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
+			AND S.TENANT_ID = DF.TENANT_ID
+			JOIN TBL_WEBFOLDER_FILETYPE FT2
+			ON DF.TYPE_ID = FT2.TYPE_ID
+			AND DF.TENANT_ID = FT2.TENANT_ID
+			LEFT JOIN TBL_WEBFOLDER_FAVOR AS FV
+			ON DF.FILE_ID = FV.TARGET_ID
+			AND DF.FOLDERFILE_TYPE = FV.TARGET_TYPE
+			AND DF.TENANT_ID = FV.TENANT_ID
+			AND FV.USER_ID = #userId#
+			WHERE DF.USE_STATUS = 'Y'
+			AND S.TENANT_ID = #tenantId#
+			ORDER BY SHARE_DATE DESC
+			LIMIT #startPoint#, #pageSize#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getHiddenSharedCount" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+				UU.FOLDERFILE_TYPE,
+				COUNT(UU.FOLDERFILE_TYPE) AS COUNT
+			FROM (
+				SELECT
+					DF.FILE_ID,
+					CASE WHEN #primary# = '1'
+						THEN DF.FILE_NAME1
+						ELSE DF.FILE_NAME2
+					END FILE_NAME,
+					DF.FOLDERFILE_TYPE,
+					DF.FOLDER_TYPE,
+					DF.FILE_PATH,
+					DF.FILE_SIZE,
+					DF.FILE_EXT,
+					DF.FOLDER_PATH,
+					DF.OWNER_ID,
+					DF.USE_STATUS,
+					DF.CREATE_ID,
+					CASE WHEN #primary# = '1'
+						THEN DF.CREATE_NAME1
+						ELSE DF.CREATE_NAME2
+					END CREATE_NAME,
+					DATE_FORMAT(DATE_ADD(DF.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+					DF.UPDATE_ID,
+					DATE_FORMAT(DATE_ADD(DF.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
+					DF.TYPE_ID,
+					FT2.TYPE_NAME,
+					FT2.TYPE_ICON,
+					CASE WHEN FV.USER_ID IS NULL
+						THEN '0'
+						ELSE '1'
+					END FAVORITE_STATUS,
+					S.SHARE_ID,
+					S.SHARER_ID,
+			        CASE WHEN #primary# = '1'
+						THEN S.SHARER_NAME1
+						ELSE S.SHARER_NAME2
+					END SHARER_NAME,
+					CASE WHEN #primary# = '1'
+						THEN SUBSTRING(S.USER_NAME_LIST, 1, INSTR(S.USER_NAME_LIST, '|') - 1)
+						ELSE SUBSTRING(S.USER_NAME_LIST, INSTR(S.USER_NAME_LIST, '|') + 1)
+					END USER_LIST,
+					DATE_FORMAT(DATE_ADD(S.SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
+					SS.SUB_STATUS,
+					S.TENANT_ID
+				FROM TBL_WEBFOLDER_SHARE2 AS S
+				JOIN TBL_WEBFOLDER_SHARE_SUB AS SS
+				ON S.SHARE_ID = SS.SHARE_ID
+				AND SS.USER_ID IN
+		]]>
+				<iterate property="idList" open="(" close=")" conjunction=",">
+					#idList[].id#
+				</iterate>
+		<![CDATA[
+				AND S.TENANT_ID = SS.TENANT_ID
+				JOIN TBL_WEBFOLDER_SHARE_HIDE AS SH
+				ON S.SHARE_ID = SH.SHARE_ID
+				AND S.TENANT_ID = SH.TENANT_ID
+				AND SH.USER_ID = #userId#
+				JOIN (
+					SELECT
+						D.FOLDER_ID AS FILE_ID,     D.FOLDER_NAME1 AS FILE_NAME1,    D.FOLDER_NAME2 AS FILE_NAME2,
+						'D' AS FOLDERFILE_TYPE,     D.FOLDER_TYPE,                   '' AS FILE_PATH,
+						'' AS FILE_SIZE,            FT.FILE_EXT,                     D.FOLDER_PATH,
+						D.OWNER_ID,                 D.USE_STATUS,                    D.CREATE_ID,
+						D.CREATE_NAME1,             D.CREATE_NAME2,                  D.CREATE_DATE,
+						D.UPDATE_ID,                D.UPDATE_DATE,                   FT.TYPE_ID,
+						D.TENANT_ID
+					FROM TBL_WEBFOLDER_FOLDER AS D
+					JOIN TBL_WEBFOLDER_FILETYPE AS FT
+					ON FT.FILE_EXT = 'folder'
+					AND D.TENANT_ID = FT.TENANT_ID
+					UNION
+					SELECT
+						F.FILE_ID AS FILE_ID,       F.FILE_NAME AS FILE_NAME1,       F.FILE_NAME AS FILE_NAME2,
+						'F' AS FOLDERFILE_TYPE,     D2.FOLDER_TYPE,                  F.FILE_PATH,
+						F.FILE_SIZE,                F.FILE_EXT,                      D2.FOLDER_PATH,
+						D2.OWNER_ID,                F.USE_STATUS,                    F.CREATE_ID,
+						F.CREATE_NAME1,             F.CREATE_NAME2,                  F.CREATE_DATE,
+						F.UPDATE_ID,                F.UPDATE_DATE,                   F.TYPE_ID,
+						F.TENANT_ID
+					FROM TBL_WEBFOLDER_FILE AS F
+					JOIN TBL_WEBFOLDER_FOLDER AS D2
+					ON F.FOLDER_ID = D2.FOLDER_ID
+					AND F.TENANT_ID = D2.TENANT_ID ) AS DF
+				ON S.FOLDERFILE_ID = DF.FILE_ID
+				AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
+				AND S.TENANT_ID = DF.TENANT_ID
+				JOIN TBL_WEBFOLDER_FILETYPE FT2
+				ON DF.TYPE_ID = FT2.TYPE_ID
+				AND DF.TENANT_ID = FT2.TENANT_ID
+				LEFT JOIN TBL_WEBFOLDER_FAVOR AS FV
+				ON DF.FILE_ID = FV.TARGET_ID
+				AND DF.FOLDERFILE_TYPE = FV.TARGET_TYPE
+				AND DF.TENANT_ID = FV.TENANT_ID
+				AND FV.USER_ID = #userId#
+				WHERE DF.USE_STATUS = 'Y'
+				AND S.TENANT_ID = #tenantId# ) AS UU
+			GROUP BY UU.FOLDERFILE_TYPE
+		]]>
+	</select>
 	
 	<insert id="EzWebFolderDAO_m.hideShare" parameterClass="Map">
 		INSERT INTO TBL_WEBFOLDER_SHARE_HIDE (
