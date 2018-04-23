@@ -14,7 +14,7 @@
 	    <script type="text/javascript">	
 	    	var selectedUser;
 	    	var selectedUserName;
-	    	var companyId = "<c:out value="${companyId}" />";
+	    	var companyId = "<c:out value='${companyId}'/>";
 	    	var deptIds = [];
 	    	var deptNames = [];
 	    	var userDeptId;
@@ -41,7 +41,7 @@
 	    		}else{
 		    		var url = "/admin/ezJournal/selectAuthorDept.do";
 					url+="?companyId="+companyId+"&userId="+selectedUser;
-					window.open(url, "authorDept", GetOpenWindowfeature(500, 560));
+					window.open(url, "authorDept", GetOpenWindowfeature(500, 570));
 	    		}
 	    	}
 	    	 
@@ -121,7 +121,7 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t142' /></th>
 	            <td>
-	                <textarea rows="3" id="txtdept" style="margin-top:4px; width:77%; resize: none;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	                <textarea rows="3" id="txtdept" style="margin-top:2px; margin-bottom:2px; width:77%; resize: none;" onfocus="this.blur();" readonly="readonly" ></textarea>
 	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:15px;"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
