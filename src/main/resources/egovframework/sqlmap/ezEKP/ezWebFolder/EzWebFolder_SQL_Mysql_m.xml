@@ -695,7 +695,7 @@
 			USER_NAME_LIST,        SHARE_DATE,            TENANT_ID
 		)
 		SELECT
-			#id#,                  #sharerId#,              DISPLAYNAME,
+			#id#,                  #sharerId#,            DISPLAYNAME,
 			DISPLAYNAME2,          #folderFileId#,        #folderFileType#,
 			#userNameList#,        #shareDate#,           #tenantId#
 		FROM TBL_USERMASTER
