@@ -885,10 +885,10 @@
 			
 			if (adminFlag == "true") {
 				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId +"&adminFlag=" + adminFlag, "",
-			 			"height = 830px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			} else {
 				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId, "",
-			 			"height = 830px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
+			 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 			}
 	    }
 	    

@@ -410,17 +410,14 @@
 				var attitudeId = $(obj).attr("attitudeId"); 
 				var pTypeId = $(obj).attr("typeId");
 				
-				console.log("attitudeId : " + attitudeId);
-				console.log("pTypeId : " + pTypeId);
-				
 				if (CrossYN()) {
                     var OpenWin = window.open("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "attitudeNewItem",
-                    		"height = 730px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                    		"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
                 	rtnValue = window.showModalDialog("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "",
-                			"height = 730px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
@@ -670,10 +667,10 @@
 				
 				if (adminFlag == "true") {
 					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId +"&adminFlag=" + adminFlag, "",
-				 			"height = 730px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 				} else {
 					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId, "",
-				 			"height = 730px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
+				 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 				}
 		    }
 		</script>

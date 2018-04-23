@@ -107,8 +107,34 @@ public class EzStatisticsAttitudeController {
 			model.addAttribute("adminCompany", adminCompany);
 		}
 		
+		//근태유형(구분) 리스트
+		gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		url = gwServerUrl + "/rest/ezattitude/companies/" + adminCompany + "/attitudetypes";//TODO
+		
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		entity = new HttpEntity<>(headers);
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+				
+		status = resultBody.get("status").toString();
+		
+		JSONArray typeList = new JSONArray();
+		if (status.equals("ok")) {		
+			typeList = (JSONArray) resultBody.get("data");
+			
+			model.addAttribute("typeList", typeList);
+		}
+		
 		return "ezStatistics/statisticsAttitudeUser";
 	}
+	
 	/**
 	 * 부서별 근태 통계 리스트
 	 */
@@ -229,5 +255,46 @@ public class EzStatisticsAttitudeController {
 			}
 		}
 		return deptList;
+	}
+	
+	/**
+	 * 조직도 회사변경시마다 근태유형 변경.
+	 */
+	@RequestMapping(value = "/ezStatistics/attitudeTypeList.do")
+	@ResponseBody
+	public JSONArray getAttitudeTypeList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("statistics", "statistics");
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray typeList = new JSONArray();
+		if (status.equals("ok")) {		
+			typeList = (JSONArray) resultBody.get("data");
+		}
+		
+		return typeList;
 	}
 }

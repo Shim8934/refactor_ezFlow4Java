@@ -1042,7 +1042,7 @@ public class EzAttitudeKMSController {
 		}
 		
 		//글쓴이와 사용자의 아이디가 다르면 수정창에 접근 불가.
-		if (userInfo.getId().equals(data.get("writerId"))) {
+		if (!userInfo.getId().equals(data.get("writerId"))) {
 			return "cmm/error/accessDenied";
 		}
 		

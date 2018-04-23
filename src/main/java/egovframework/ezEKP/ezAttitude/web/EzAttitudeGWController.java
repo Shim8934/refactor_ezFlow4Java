@@ -334,8 +334,10 @@ public class EzAttitudeGWController {
 			LOGGER.debug("changeDate : " + changeDate);
 			LOGGER.debug("attitudeId : " + attitudeId);
 			
-			ezAttitudeService.attSaveAppModify(attitudeId, companyId, tenantId, userId, info.getUserName(), info.getUserName2(), 
-					info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), info.getDeptName2(), changeDate, "0", content, offset);
+			ezAttitudeService.attSaveAppModify(attitudeId, companyId, tenantId, userId, info.getUserName(), 
+					info.getUserName2(), info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), 
+					info.getDeptName2(), changeDate, "0", content, offset);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");
@@ -673,8 +675,9 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String isuse = request.getParameter("isuse");
 			String isAdmin = request.getParameter("isAdmin");
+			String statistics = request.getParameter("statistics");
 			
-			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, info.getTenantId());
+			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
 			
 			//imgPath 셋팅
 			for (AttitudeTypeVO typeInfo : attitudeTypeList) {
@@ -820,10 +823,10 @@ public class EzAttitudeGWController {
 			}
 
 			//formList 구하기
-			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
+//			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
 			
 			data.put("typeInfo", typeInfo);
-			data.put("formList", formList);
+//			data.put("formList", formList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1141,6 +1144,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1440,6 +1444,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1597,6 +1602,7 @@ public class EzAttitudeGWController {
 			String orderOption = request.getParameter("orderOption");
 			String offsetMin = request.getParameter("offsetMin");
 			String isAdmin = request.getParameter("isAdmin");
+			String statistics = request.getParameter("statistics");
 			String isuse = "1";
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
@@ -1607,7 +1613,7 @@ public class EzAttitudeGWController {
 			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID);
 			
 			//구분 리스트
-			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, tenantID);
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);

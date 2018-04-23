@@ -53,37 +53,76 @@
 	   		}
 	   		
 	   		//부서 리스트 오른쪽에 이동
+// 	   		function addDeptInLP(){
+// 		   		var flag = true;
+// 		   		for (var i = 0; i < lpDepts.length ; i++) {
+// 					if(lpDepts[i] == lpDeptId){
+// 			   			alert("선택된 항목입니다.");
+// 						flag=false;
+// 					}
+// 				}
+// 		   		if(flag){
+// 			   		if (lpDeptId != opener.userDeptId) {
+// 				   		$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
+// 				   		lpDepts.push(lpDeptId);
+// 				   		lpDeptNames.push(lpDeptName);
+// 					} else {
+// 			   			alert("자신의 부서는 추가 할 수 없습니다.");
+// 					}
+// 		   		}
+// 	   		}
 	   		function addDeptInLP(){
-		   		var flag = true;
-		   		for (var i = 0; i < lpDepts.length ; i++) {
-					if(lpDepts[i] == lpDeptId){
-			   			alert("선택된 항목입니다.");
-						flag=false;
+	   			if($("#withChild").is(":checked")){
+	   				$('#treeview').jstree('open_all');
+	   				$("#"+lpDeptId).find("a").each(function(){
+	   					var childrenId = $(this).parent("li").attr("id");
+	   					var childrenName = $(this).text();
+			   			var flag = true;
+			   			for (var i = 0; i < lpDepts.length ; i++) {
+							if(lpDepts[i] == childrenId){
+								flag=false;
+							}
+						}
+			   			if(flag){
+				   			if (childrenId!=opener.userDeptId) {
+					   			$("#lplistView .mainlist_free").append("<tr targetId="+childrenId+" targetName="+childrenName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+childrenName+"</td></tr>");
+					   			lpDepts.push(childrenId);
+					   			lpDeptNames.push(childrenName);
+							} 
+			   			}
+	   				});
+	   			} else {
+		   			var flag = true;
+		   			for (var i = 0; i < lpDepts.length ; i++) {
+						if(lpDepts[i] == lpDeptId){
+			   				alert("선택된 항목입니다.");
+							flag=false;
+						}
 					}
-				}
-		   		if(flag){
-			   		if (lpDeptId != opener.userDeptId) {
-				   		$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
-				   		lpDepts.push(lpDeptId);
-				   		lpDeptNames.push(lpDeptName);
-					} else {
-			   			alert("자신의 부서는 추가 할 수 없습니다.");
-					}
-		   		}
+		   			if(flag){
+			   			if (lpDeptId!=opener.userDeptId) {
+				   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
+				   			lpDepts.push(lpDeptId);
+				   			lpDeptNames.push(lpDeptName);
+						} else {
+			   				alert("자신의 부서는 추가 할 수 없습니다.");
+						}
+		   			}
+	   			}
 	   		}
 	   		
 	   		//사원 리스트 뿌리기
-	   		function setUserList(key,value){
-	   			$.ajax({
-	   				type:"post",
-	   				dataType:"html",
-	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key":key, "value":value},
-	   				success: function(result){
-	   					$("#orglistView").html(result);
-	   				}
-	   			});
-	   		}
+// 	   		function setUserList(key,value){
+// 	   			$.ajax({
+// 	   				type:"post",
+// 	   				dataType:"html",
+// 	   				url:"/admin/ezJournal/userList.do",
+// 	   				data:{"key":key, "value":value},
+// 	   				success: function(result){
+// 	   					$("#orglistView").html(result);
+// 	   				}
+// 	   			});
+// 	   		}
 	   		
 	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
 	   		function delTargetDept(elem){
@@ -151,14 +190,14 @@
        	<table>
             <tr>
                 <td class="box" style="width: 250px; height: 465px;">
-                    <div style="width: 100%; height: 100%; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+                    <div style="width: 250px; height: 100%; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
                 </td>
                 <td style="width: 30px; text-align: center;" rowspan="2">                            
                       <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
                       <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept(targetDept)">
                  		</td>
-                <td class="listview" style="width: 250px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
-                	<div style="width: 100%; height: 100%; overflow: auto;">
+                <td class="listview" style="width: 200px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
+                	<div style="width: 200px%; height: 100%; overflow: auto;">
 	                	<table class="mainlist_free">
 						</table>
 					</div>
