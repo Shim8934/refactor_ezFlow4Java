@@ -17,6 +17,7 @@
 	<!-- module -->
 	<script type="text/javascript" src="/js/ezWebFolder/rowModule.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/favoriteModule.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
     <script type="text/javascript">
     	var file 		 = new Array();
 		var primary      = "<c:out value='${primary}'/>";
@@ -405,7 +406,7 @@
 	        searchOptionHidden();
 // 	        MakeSubCondition();
 	        getFileList(folderId);
-	   }
+		}
 	    
 		function getChecked(event) {
 			event.stopPropagation();
@@ -490,7 +491,7 @@
 	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 	 	}
 	 	
-       function fileDownload() {
+		function fileDownload() {
 			var selected = getSelectedFoldersAndFiles();
 			
 			if (selected === undefined) {
@@ -500,19 +501,19 @@
     		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + selected.files.toString() + "&folderList=" + selected.folders.toString();
 			
 			AttachDownFrame.location.href = downloadUrl;
-       }
-       function endUpdate() {
-    	   
-       }
-       function fileUpload2() {
-    	   document.getElementById("file").click();
+		}
+		function endUpdate() {
+
+		}
+		function fileUpload2() {
+			document.getElementById("file").click();
 //     	   refreshView();
 //     	   endUpdate();
-       }
+		}
        
-       function refreshView() {
-    	   getFileList(folderId);
-       }
+		function refreshView() {
+			getFileList(folderId);
+		}
        
        function fileDelete() {
 			var selected = getSelectedFoldersAndFiles();
@@ -637,22 +638,44 @@
 			}
 		}
 		
-       function changeCount(value) {
-    	   blockSize = value;
-    	   currentPage = 1;
-    	   pStart = 0;
-    	   refreshView();
-       }
+		function changeCount(value) {
+			blockSize = value;
+			currentPage = 1;
+			pStart = 0;
+			refreshView();
+		}
        
-       function changeValue(value) {
-    	   searchFileType = value;
-    	   if( value == "all" ) {
-    		   searchFileType = ""
-    	   };
-    	   currentPage = 1;
-    	   refreshView();
-       }
+		function changeValue(value) {
+			searchFileType = value;
+			
+			if ( value == "all" ) {
+				searchFileType = "";
+			}
+			
+			currentPage = 1;
+			refreshView();
+		}
        
+		var addShareDialogArguments = new Array();
+		function addShare() {
+			var selectedRows = rowModule.getSelectedRows();
+			var selectedLength = selectedRows.length;
+			
+			if (selectedLength == 0) {
+				alert("파일 또는 폴더를 선택하세요.");
+				return;
+			}
+			
+			if (selectedLength > 2) {
+				alert("하나만 선택하세요.");
+				return;
+			}
+			
+			addShareDialogArguments[0] = rowModule.getRowInfo(selectedRows[0]);
+			addShareDialogArguments[1] = refreshView;
+            var OpenWin = window.open("/ezWebFolder/addShareView.do", "addShareView", GetOpenWindowfeature(610, 685));
+            try { OpenWin.focus(); } catch (e) { }
+		}
     </script>
 </head>
 <body class="mainbody">
@@ -670,6 +693,7 @@
 			<li id=""><a onClick="fileDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
 			<li id=""><a onClick="fileRename()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 			<li id=""><a onClick="fileMove()"     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
+			<li id=""><a onClick="addShare()"     style="margin-top: 3px;"><span>공유추가</span></a></li>
 			<li id=""><img src="/images/i_bar.gif"></li>
 			<li id=""><a onClick="favoriteModule.onCheckAllClick()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t281'/></span></a></li>
 <%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>

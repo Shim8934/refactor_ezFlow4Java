@@ -4,7 +4,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>공유 추가/수정</title>
+		<c:if test="${type eq 'NEW'}"><title>공유 추가</title></c:if>
+		<c:if test="${type ne 'NEW'}"><title>공유 수정</title></c:if>
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
@@ -15,9 +16,9 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js" ></script>
 		<script type="text/javascript" src="/js/ezWebFolder/organJson.js"    ></script>
 		<script type="text/javascript">
-			var pCompanyID        = "<c:out value='${pCompanyID}'/>";
-			var primary           = "<c:out value='${primary}'/>";
-			var arrSubFolder      = [];
+			var pCompanyID        = "<c:out value='${userInfo.companyID}'/>";
+			var primary           = "<c:out value='${userInfo.primary}'/>";
+			var fileInfo         = null;
 			var selectedDept      = "";
 			var selectedUser      = "";
 			var strErrMsg         = "<spring:message code='ezWebFolder.t134'/>";
@@ -28,7 +29,67 @@
 			var strSearchNotFound = "<spring:message code='ezWebFolder.t172'/>";
 			
 			window.onload = function () {
+				fileInfo = window.opener.addShareDialogArguments[0];
 				preProcess();
+			}
+			
+			function addShare() {
+				var deptList = document.getElementById("DListView");
+				var userList = document.getElementById("MListView");
+				var shareSub = document.getElementById("shareSub");
+				
+				if (deptList.rows.length + userList.rows.length <= 2) {
+					alert(strDataNotFound);
+					return;
+				}
+				
+				var requestArray = [];
+				
+				if (deptList.rows.length > 1) {
+					for (var i = 1; i < deptList.rows.length; i++) {
+						var obj = {
+							"id" : deptList.rows[i].getAttribute("nodeId"),
+							"type" : "D",
+							"subStatus" : deptList.rows[i].getAttribute("shareSub")
+						};
+						
+						requestArray.push(obj);
+					}
+				}
+				
+				if (userList.rows.length > 1) {
+					for (var i = 1; i < userList.rows.length; i++) {
+						var obj = {
+							"id" : userList.rows[i].getAttribute("nodeId"),
+							"type" : "U",
+							"subStatus" : userList.rows[i].getAttribute("shareSub")
+						};
+						
+						requestArray.push(obj);
+					}
+				}
+				
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/addShare.do",
+					data: JSON.stringify({
+						"folderFileId" : fileInfo.id,
+						"folderFileType" : fileInfo.type,
+						"userList" : requestArray
+					}),
+					dataType: "json",
+					async: false,
+					success : function(data) {
+						if (data.status == "ok") {
+							alert(strAlertMsg);
+						} else {
+							alert(strErrMsg + data.code);
+						}
+					},
+					error : function(error) {
+						alert(strErrMsg + error);
+					}
+				});
 			}
 			
 		</script>
@@ -37,7 +98,8 @@
 		</style>
 	</head>
 	<body class="popup">
-		<h1>공유 추가/수정</h1>
+		<c:if test="${type eq 'NEW'}"><h1>공유 추가</h1></c:if>
+		<c:if test="${type ne 'NEW'}"><h1>공유 수정</h1></c:if>
 		<table> 
 			<tr> 
 				<td width="195" valign="top">
@@ -104,7 +166,7 @@
 				<td></td>
 				<td>
 					<div class="btnposition" style="margin-top:0px;padding-top:0px">
-						<a class="imgbtn btnSave"   name="Submit"  onClick="set_range();"     ><span><spring:message code='ezWebFolder.t116' /></span></a>
+						<a class="imgbtn btnSave"   name="Submit"  onClick="addShare();"     ><span><spring:message code='ezWebFolder.t116' /></span></a>
 						<a class="imgbtn btnCancel" name="Submit2" onClick="close_onclick();" ><span><spring:message code='ezWebFolder.t112' /></span></a>
 					</div>
 				</td>
