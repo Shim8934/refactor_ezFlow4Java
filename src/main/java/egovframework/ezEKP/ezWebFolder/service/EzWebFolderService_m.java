@@ -6,6 +6,7 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
@@ -46,15 +47,13 @@ public interface EzWebFolderService_m {
 
 	public void permanetDeleteSelectedFiles(String[] fileIDList,String[] folderIDList ,LoginVO userInfo, String realPath) throws Exception;
 
-	public void realFileDelete(String fileName, String realPath, LoginVO userInfo) throws Exception;
+	public int realFileDelete(FileVO fileVO, String realPath, LoginVO userInfo, String userName1, String userName2) throws Exception;
 	
-	public void realFileDeleteInFolder(String folderPath, String comPanyId ,String realPath, LoginVO userInfo, String offset, int tenantId) throws Exception;
+	public int deleteFile(String fileId, int tenantId) throws Exception;
 
-	public void deleteFile(String fileId, int tenantId) throws Exception;
+	public int deleteFolder(FolderVO folderVO) throws Exception;
 
-	public void deleteFolder(FolderVO folderVO) throws Exception;
-
-	public void deleteAllFilesInFolder(FolderVO folderVO) throws Exception;
+	public void deleteAllFilesInFolder(FolderVO folderVO, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId, String userId, String userName1, String userName2) throws Exception;
 
 	public List<TrashCanVO> getFileByFolderId(String folderId, int tenantId, String userId) throws Exception;
 
@@ -72,7 +71,7 @@ public interface EzWebFolderService_m {
 	
 	public void restoreFile (String fileId, int tenantId, String userId, String timeUTC) throws Exception;
 
-	public void restoreFolder (String folderPath, int tenantId, String userId, String companyId, String timeUTC) throws Exception;
+	public int restoreFolder (String folderPath, int tenantId, String userId, String companyId, String timeUTC) throws Exception;
 	
 	public void restoreTrashCan (String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC) throws Exception;
 	
@@ -83,4 +82,6 @@ public interface EzWebFolderService_m {
 	void moveFolder(FolderVO folderVO, FolderVO destFoldeVO, String userId, String offset, int tenantId, String timeUTC) throws Exception;
 
 	void movSubFolders(String userId, String folderType, String oldPath, String newPath, String timeUTC, String ownerId, int levelDistance, int tenantId) throws Exception;
+
+	void moveFile(String fileId, String folderId, int tenantId, String timeUTC) throws Exception;
 }
