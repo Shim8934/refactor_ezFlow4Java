@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -98,7 +99,7 @@
                       <td width="20" height="22" align="center"></td>
                       <td>
                         <c:if test="${item.ISNEW == 'YES'}"><img src='/images/ezTalkGate/new_s.gif' style="width:27px;height:17px;vertical-align:bottom;"></c:if>
-                        <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:190px;display:inline-block;vertical-align:bottom;"><font color="#000000"><c:out value='${item.TITLE}' /></font></div> &nbsp;
+                        <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:190px;display:inline-block;vertical-align:bottom;"><font color="#000000">[${fn:substring(item.WRITEDATE, 5, 7)}/${fn:substring(item.WRITEDATE, 8, 10)}] <c:out value='${item.TITLE}' /></font></div> &nbsp;
                       </td>
                     </tr>
                     <tr>
