@@ -90,6 +90,11 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		// TODO Auto-generated method stub
 		insert("addProjectMember", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getRemainingWeight(String projectId) {
+		return (Map<String, Object>) select("getRemainingWeight", projectId);
+	}
 	
 	/**
 	 * 프로젝트관리 메인 환경설정 리스트 가져오기 (+메일)

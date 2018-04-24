@@ -483,8 +483,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public String getRemainingWeight(String projectId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, Object> getRemainingWeight(String projectId) {
+		return ezPMSDAO.getRemainingWeight(projectId);
 	}
 }

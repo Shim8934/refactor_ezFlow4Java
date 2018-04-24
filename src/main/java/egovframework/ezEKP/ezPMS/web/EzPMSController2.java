@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPMS.web;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -165,8 +167,11 @@ public class EzPMSController2 {
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
-			JSONArray data = (JSONArray) resultBody.get("data");
-			model.addAttribute("data", data);
+			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("remainingWeight", data.get("remainingWeight"));
+			model.addAttribute("projectStartDate", data.get("projectStartDate"));
+			model.addAttribute("projectEndDate", data.get("projectEndDate"));
+			model.addAttribute("weightInput", data.get("weightInput"));
 		}
 		
 		model.addAttribute("projectId", projectId);
@@ -184,31 +189,33 @@ public class EzPMSController2 {
 	 * 프로젝트관리 업무 등록 함수
 	 * @param request
 	 * @param model
-	 * @param vo
 	 * @param loginCookie
 	 * @return
+	 * @throws Exception 
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezPMS/addTask.do")
-	public String addTask(HttpServletRequest request, Model model, ProjectTaskVO vo,@CookieValue("loginCookie") String loginCookie) {
+	public String addTask(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		
 		LOGGER.debug("ezPMS addTask started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
-		String projectId = request.getParameter("projectId");
+		String projectId = (String) param.get("projectId");
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", userInfo.getTenantId());
+		param.put("writerId", userInfo.getId());
+		param.put("writeDate", today);
+		param.put("writerName", userInfo.getDisplayName1());
+		param.put("writerName2", userInfo.getDisplayName2());
+		param.put("writerDeptname", userInfo.getDeptName1());
+		param.put("writerDeptname2", userInfo.getDeptName2());
 		
-		Gson gson = new Gson();
-		JSONParser jp = new JSONParser();
-		JSONObject jsonParam = null;
-		try {
-			jsonParam = (JSONObject) jp.parse(gson.toJson(vo));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		JSONObject jsonList = new JSONObject();
+		jsonList.put("managerList", param.get("managerList"));
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + projectId + "/users/" + userInfo.getId(), param, request, "post", jsonParam);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + projectId + "/users/" + userInfo.getId(), param, request, "post", jsonList);
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
