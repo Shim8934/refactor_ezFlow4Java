@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezWebFolder.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
 import org.slf4j.Logger;
@@ -69,7 +68,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO userInfo    = commonUtil.userInfoSimple(loginCookie);
 		String useBottomFrameOnly = ezCommonService.getTenantConfig("useBottomFrameOnly", userInfo.getTenantId());
 		
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/check-wfadmin/" + userInfo.getId();
 		
 		HttpHeaders headers  = new HttpHeaders();
@@ -118,7 +117,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/webfolderConfig.do")
 	public String boardConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/dept-chief/" + user.getId();
 		
 		HttpHeaders headers  = new HttpHeaders();
@@ -152,7 +151,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("webfolderGeneral started");
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/env/list-count";
 		
 		HttpHeaders headers  = new HttpHeaders();
@@ -185,7 +184,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
 		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
 		String folderId                = request.getParameter("folderId");
-		String gwServerUrl             = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl             = config.getProperty("config.webFolderGwServerURL");
 		String url                     = gwServerUrl + "/rest/ezwebfolder/filemanage/file-upload";
 		
 		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
@@ -256,7 +255,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String listFileId   = request.getParameter("fileList");
 		String listFolderId = request.getParameter("folderList");
-		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/filemanage/file-download";
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
@@ -316,7 +315,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String listFileId   = request.getParameter("fileList");
-		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/file-delete";
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
@@ -372,7 +371,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String fileId       = request.getParameter("fileId");
 		String newName      = request.getParameter("newName");
-		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/file-rename/fileid/" + fileId;
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -411,7 +410,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			return "cmm/error/egovError";
 		}
 		
-		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-list/" + user.getId();
 		
 		HttpHeaders headers  = new HttpHeaders();
@@ -455,7 +454,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String mode         = request.getParameter("mode");
 		String privileges   = request.getParameter("privileges");
 		
-		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/filemove/modes/" + mode;
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -496,7 +495,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String companyId   = request.getParameter("companyId");
 		String folderId    = request.getParameter("folderId");
 		String type        = request.getParameter("type");
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/foldersTree";
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -545,7 +544,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String companyId   = request.getParameter("companyId");
 		String deptId      = request.getParameter("deptId") != null ? request.getParameter("deptId") : "";
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/depart-tree";
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -583,7 +582,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String deptId      = request.getParameter("deptId");
 		String level       = request.getParameter("level");
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/sub-tree/" + deptId;
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -615,7 +614,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("select share users is running!");
 		
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-id/" + user.getId();
 		
 		HttpHeaders headers  = new HttpHeaders();
@@ -647,7 +646,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	public String getDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String deptId      = request.getParameter("deptId");
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/dept-member/" + deptId;
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -681,7 +680,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String companyId   = request.getParameter("companyId");
 		String type        = request.getParameter("type");
 		
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/foldersTree/file";
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -731,7 +730,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String listCount   = request.getParameter("listCount");
 		
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/env/" + listCount + "/update";
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -762,7 +761,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/getDeptTreeForChief.do", method = RequestMethod.POST)
 	public String getDepartTreeForChief(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/depart-tree/chief/" + user.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -795,7 +794,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/getSelectedDeptForChief.do", method = RequestMethod.POST)
 	public String getSelectedDepartsForChief(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/selected-dept/chief/" + user.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -824,7 +823,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/saveSelectedDeptsForChief.do", method = RequestMethod.POST)
 	public String updateEnvDeptList(@CookieValue("loginCookie") String loginCookie, @RequestParam("deptList") List<String> deptsList, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/env/dept-list";
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -860,7 +859,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String fileId      = request.getParameter("fileId");
 		String fileList    = request.getParameter("fileList");
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/permission-check/" + user.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -891,7 +890,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/getUserCapicity.do", method = RequestMethod.POST)
 	public String getUserCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/capacity/" + user.getId();
 		
 		HttpHeaders headers = new HttpHeaders();

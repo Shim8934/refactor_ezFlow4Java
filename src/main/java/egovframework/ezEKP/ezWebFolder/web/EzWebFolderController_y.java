@@ -65,7 +65,7 @@ public class EzWebFolderController_y {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderType = request.getParameter("folderType") != null ? request.getParameter("folderType") : "";
 		String folderId = request.getParameter("folderId") != null ? request.getParameter("folderId") : "";
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/users/" +userInfo.getId() + "/folder-tree";
 
 		RestTemplate rest = new RestTemplate();
@@ -153,7 +153,7 @@ public class EzWebFolderController_y {
 		
 		// 여기에 userId,  companyId, tenantId 가지고 가기 
 		
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/folders/" + folderId + "/file-list";
 		
 		RestTemplate rest = new RestTemplate();
@@ -271,7 +271,7 @@ public class EzWebFolderController_y {
 		}
 		
 		String serverName = request.getServerName();
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/folders";
 		
 		RestTemplate rest = new RestTemplate();
@@ -335,7 +335,7 @@ public class EzWebFolderController_y {
 		}
 		
 		String serverName = request.getServerName();
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/folders/"+folderId;
 		
 		RestTemplate rest = new RestTemplate();
@@ -384,7 +384,7 @@ public class EzWebFolderController_y {
 		}
 		
 		String serverName = request.getServerName();
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/folders2/"+folderId;
 		
 		RestTemplate rest = new RestTemplate();
@@ -443,7 +443,7 @@ public class EzWebFolderController_y {
 			folderId = request.getParameter("folderId");
 		}
 		String serverName  = request.getServerName();
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String mode        = request.getParameter("mode");
 		String url  = "";
 		if (mode.equals("folder-copy")) {
