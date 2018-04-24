@@ -799,13 +799,23 @@
     			var optionId = "#option" + i;
     			var pLastChild = $(optionId).parent()[0].lastChild;
     			var pLastChildNodeName = pLastChild.nodeName.toLowerCase();
+    			var optVal = $(optionId).val().replace(/ /g,'');
     			
-    			if ($(optionId).val().replace(/ /g,'') != "") {    				
+    			if (optVal != "") {    				
     				count ++;
     			}
-    			else if (pLastChildNodeName === "img" && pLastChild.hasAttribute("_fileinfo")) {
-    				count ++;
-    				$(optionId).val(pLastChild.getAttribute("_fileinfo"));
+    			else if (pLastChildNodeName === "img" && pLastChild.hasAttribute("_fileinfo") && optVal == "") {
+    				var targetOpt = document.getElementById("option" + i);
+    				targetOpt.focus();
+    				targetOpt.value = "<spring:message code='ezPoll.t152'/>";
+    				targetOpt.style.backgroundColor = "#dcdcdc";
+    				setTimeout(
+   						function(){
+   							targetOpt.style.backgroundColor = "";
+   							targetOpt.value = "";
+  						}
+ 					, 800);
+    				return -i;
     			}
     			else {
     				$(optionId).val("");
@@ -841,11 +851,16 @@
 	            
 	        }
 	       /*  && mode != "modify" */
-	        if (checkOption() <= 0) {	        	
+	        var chkFlags = checkOption();
+	        if (chkFlags == 0) {	        	
 	        	alert('<spring:message code="ezPoll.t148"/>');
 	        	document.getElementById("option1").focus();
 	        	return false;
-	        }	   
+	        }
+	        else if(chkFlags < 0){
+	        	alert('<spring:message code="ezPoll.t152"/>');
+	        	return false;
+	        }
 	        
 	        L_StartDate = L_StartDate.substring(0, 10);
 	        L_EndDate 	= L_EndDate.substring(0, 10);

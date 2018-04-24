@@ -71,6 +71,11 @@
 		    var letterStr26 = "<spring:message code='ezEmail.letter26'/>";
 		    var letterStr27 = "<spring:message code='ezEmail.letter27'/>";
 		    var letterStr28 = "<spring:message code='ezEmail.letter28'/>";
+			var specialMsg = "<spring:message code='ezEmail.kyj17'/>"; // 해당 특수문자는 입력할 수 없습니다.
+			var specialMsg2 = "<spring:message code='ezEmail.letter9'/>"; //
+			var lengthMsg = "<spring:message code='ezEmail.letter14'/>"; // 자 이하로 입력 가능합니다.
+			var contentMsg = "<spring:message code='ezEmail.letter11'/>"; // 이름을 입력해주세요.
+			var letterBoxNameMsg = "<spring:message code='ezEmail.letter31'/>"; // 이름은
 		    
 		    window.onload = window_onload;
 		    

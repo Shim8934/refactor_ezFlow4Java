@@ -70,7 +70,7 @@
 		        	var nameList = userName.split(", ");
 		        	var nameList2 = userName2.split(", ");
 
-		        	// 수정이나 임시저장일경우 작성자는 회람자로 무조건 추가되기때문에 -1
+		        	// 수정이나 임시저장일경우 작성자는 회람자로 무조건 추가되기때문에 -1처리함
 		        	if (mode != "write") {
 		        		listSize = listSize - 1;
 		        	}
