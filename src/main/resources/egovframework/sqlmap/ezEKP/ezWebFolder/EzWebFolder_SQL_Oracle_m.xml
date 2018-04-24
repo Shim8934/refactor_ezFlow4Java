@@ -65,7 +65,7 @@
         <result property="shareId"                column="share_id"  		      columnIndex="21" />
         <result property="sharerId"               column="sharer_id"  		      columnIndex="22" />
         <result property="sharerName"             column="sharer_name"		      columnIndex="23" />
-        <result property="userList"               column="user_list"			  columnIndex="24" />
+        <result property="userList"               column="user_list"			  columnIndex="24"         nullValue="" />
         <result property="shareDate"              column="share_date"             columnIndex="25" />
         <result property="subStatus"              column="sub_status"             columnIndex="26" />
         <result property="tenantId"               column="tenant_id"              columnIndex="27" />
