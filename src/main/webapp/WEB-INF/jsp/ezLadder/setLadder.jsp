@@ -141,6 +141,11 @@
 				$("#ladderSecret").on("click", function() {
 					$("#ladderSecret img").toggleClass("active");
 				});
+				// 목록으로 버튼
+				$("#returnList").on("click", function() {
+					
+					window.location.href= '/ezLadder/ladderMain.do';
+				});
 				
 				var timer;
 				var scrollCnt = 0;
@@ -920,7 +925,9 @@
 					</td>
 				</tr>
 			</table>
+			
 			<div class="wrap" style="min-width: 800px;">
+				<button type="button" id="returnList" style="float: left;"><spring:message code="ezLadder.t083"/></button>
 				<input type="button" class="ladderBtn" id="makeLad" disabled="disabled" value="<spring:message code="ezLadder.t018"/>">
 			</div>
 		</form>

@@ -125,7 +125,7 @@
 	padding: 0px 20px;	
 }
 
-.ladderBtn {
+.ladderBtn, #returnList {
 	float: right;
 	cursor: pointer;
 	background: #dddddd;
