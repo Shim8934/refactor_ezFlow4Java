@@ -93,6 +93,11 @@
 	   					var deptList = $("#authorDeptList tr");
 	   					if(deptList.length==1){
 	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezApprovalG.t431"/></td></tr>');
+		   					$("#authorDeptList tr").each(function(){
+		   						if($(this).attr("mine")=='Y'){
+		   							userDeptId=$(this).attr("targetId");
+		   						} 
+		   					})
 	   					} else {
 		   					$("#authorDeptList tr").each(function(){
 		   						if($(this).attr("mine")!='Y'){
