@@ -162,8 +162,9 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("searchFileType", searchFileType);
 		map.put("pStart", pStart);
 		map.put("pEnd", pEnd);
-		map.put("offset", offset);
 		map.put("primary", primary);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
 		List<FileVO> filevo  = new ArrayList<FileVO>();
 		if (searchExt != "" || searchStartDate != "" || searchEndDate != "" || searchCreateName != "" || searchFileName!="" ) {
 			flag = "1";
@@ -218,7 +219,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("searchPageCount", searchPageCount);
 		map.put("pStart", pStart);
 		map.put("pEnd", pEnd);
-		map.put("offset", offset);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		LOGGER.debug("offset  :  " + commonUtil.getMinuteUTC(offset));
 		int fileTotalCnt = 0;
 		int fldTotalCnt = 0;
 		List<FileVO> filevo  = new ArrayList<FileVO>();

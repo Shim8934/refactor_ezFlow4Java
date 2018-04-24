@@ -434,7 +434,8 @@ public class EzWebFolderGWController_y {
 			String offset = common.getOffSet();
 			String primary = common.getPrimary();
 			String comId = common.getCompanyId();
-			
+			LOGGER.debug("offset : " + offset);
+			LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
 			// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
 			int usrListCnt = service.getUsrListCount(tenantId, userId);
 			LOGGER.debug(" usrListCnt : " + usrListCnt + "tenantId : " +tenantId + "userId : " + userId);
