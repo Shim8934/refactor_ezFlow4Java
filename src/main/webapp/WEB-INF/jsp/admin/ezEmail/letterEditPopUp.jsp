@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Insert title here</title>
+		<title></title>
 	    <link rel="stylesheet" href="/css/ezEmail/style.css" />		
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
@@ -60,10 +60,12 @@
 			window.onload = function() {
 				console.log(popUpType);
 				if (popUpType == "modify") {
+					document.title = "<spring:message code='ezEmail.letter12'/>";
 					$(".leTitle").text("<spring:message code='ezEmail.letter12'/>");
 					
 					modifyLoad(popLetterNo);
 				} else {
+					document.title = "<spring:message code='ezEmail.letter3'/>";
 					$(".leTitle").text("<spring:message code='ezEmail.letter3'/>");
 				}
 				
