@@ -42,38 +42,38 @@
 
 	<!-- ShareFile resultMap -->
     <resultMap id="shareVO" class="ShareVO">
-        <result property="fileId"                 column="file_id"                columnIndex="1"  />
-        <result property="fileName"               column="file_name"              columnIndex="2"  />
-        <result property="folderFileType"         column="folderfile_type"        columnIndex="3"  />
-        <result property="folderType"             column="folder_type"            columnIndex="4"  />
-        <result property="filePosition"           column="file_path"              columnIndex="5"  />
-        <result property="fileSize"               column="file_size"              columnIndex="6"  />
-        <result property="fileExt"                column="file_ext"               columnIndex="7"  />
-        <result property="folderPath"             column="folder_path"            columnIndex="8"  />
-        <result property="ownerId"                column="owner_id"               columnIndex="9"  />
-        <result property="useStatus"              column="use_status"             columnIndex="10" />
-        <result property="createId"               column="create_id"              columnIndex="11" />
-        <result property="createName"             column="create_name"            columnIndex="12" />
-        <result property="createDate"             column="create_date"            columnIndex="13" />
-        <result property="updateId"               column="update_id"          	  columnIndex="14" />
-        <result property="updateDate"             column="update_date"            columnIndex="15" />
-        <result property="typeId"                 column="type_id"                columnIndex="16" />
-        <result property="typeName"               column="type_name"              columnIndex="17" />        
-        <result property="fileIconUrl"            column="type_icon"              columnIndex="18" />
-<!--    <result property="shareStatus"            column="share_status"        	  columnIndex="19" /> -->
-        <result property="favouriteStatus"        column="favorite_status"        columnIndex="20" />
-        <result property="shareId"                column="share_id"  		      columnIndex="21" />
-        <result property="sharerId"               column="sharer_id"  		      columnIndex="22" />
-        <result property="sharerName"             column="sharer_name"		      columnIndex="23" />
-        <result property="userList"               column="user_list"			  columnIndex="24"         nullValue="" />
-        <result property="shareDate"              column="share_date"             columnIndex="25" />
-        <result property="subStatus"              column="sub_status"             columnIndex="26" />
-        <result property="tenantId"               column="tenant_id"              columnIndex="27" />
+        <result property="fileId"                 column="FILE_ID"                columnIndex="1"  />
+        <result property="fileName"               column="FILE_NAME"              columnIndex="2"  />
+        <result property="folderFileType"         column="FOLDERFILE_TYPE"        columnIndex="3"  />
+        <result property="folderType"             column="FOLDER_TYPE"            columnIndex="4"  />
+        <result property="filePosition"           column="FILE_PATH"              columnIndex="5"  />
+        <result property="fileSize"               column="FILE_SIZE"              columnIndex="6"  />
+        <result property="fileExt"                column="FILE_EXT"               columnIndex="7"  />
+        <result property="folderPath"             column="FOLDER_PATH"            columnIndex="8"  />
+        <result property="ownerId"                column="OWNER_ID"               columnIndex="9"  />
+        <result property="useStatus"              column="USE_STATUS"             columnIndex="10" />
+        <result property="createId"               column="CREATE_ID"              columnIndex="11" />
+        <result property="createName"             column="CREATE_NAME"            columnIndex="12" />
+        <result property="createDate"             column="CREATE_DATE"            columnIndex="13" />
+        <result property="updateId"               column="UPDATE_ID"          	  columnIndex="14" />
+        <result property="updateDate"             column="UPDATE_DATE"            columnIndex="15" />
+        <result property="typeId"                 column="TYPE_ID"                columnIndex="16" />
+        <result property="typeName"               column="TYPE_NAME"              columnIndex="17" />        
+        <result property="fileIconUrl"            column="TYPE_ICON"              columnIndex="18" />
+<!--    <result property="shareStatus"            column="SHARE_STATUS"        	  columnIndex="19" /> -->
+        <result property="favouriteStatus"        column="FAVORITE_STATUS"        columnIndex="20" />
+        <result property="shareId"                column="SHARE_ID"  		      columnIndex="21" />
+        <result property="sharerId"               column="SHARER_ID"  		      columnIndex="22" />
+        <result property="sharerName"             column="SHARER_NAME"		      columnIndex="23" />
+        <result property="userList"               column="USER_LIST"			  columnIndex="24"         nullValue="" />
+        <result property="shareDate"              column="SHARE_DATE"             columnIndex="25" />
+        <result property="subStatus"              column="SUB_STATUS"             columnIndex="26" />
+        <result property="tenantId"               column="TENANT_ID"              columnIndex="27" />
     </resultMap>
 	
 	<resultMap id="countMap" class="HashMap">
-		<result property="folderfile_type"        column="folderfile_type"        columnIndex="1"  />
-        <result property="count"               	  column="count"                  columnIndex="2"           javaType="Long" />
+		<result property="folderfile_type"        column="FOLDERFILE_TYPE"        columnIndex="1"  />
+        <result property="count"               	  column="COUNT"                  columnIndex="2"           javaType="Long" />
 	</resultMap>
 	
 	<sql id="searchTerm">
