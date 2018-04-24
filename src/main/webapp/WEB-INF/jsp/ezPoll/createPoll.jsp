@@ -170,6 +170,10 @@
 				var _seeResultFirst = "<c:out value='${question.resultFirst}'/>";
 				if (_seeResultFirst == 0) {
 					$('#seeResultFirst ').attr('checked', false);
+				}else if(_seeResultFirst === "2"){
+					$('#seeResultFirst ').attr('checked', false);
+					$("#seeResultCreatorDiv").css("display", "inline-block");
+					$("#seeResultCreator").attr("checked", true);
 				}
 				
 				//Allow secret vote
@@ -795,13 +799,23 @@
     			var optionId = "#option" + i;
     			var pLastChild = $(optionId).parent()[0].lastChild;
     			var pLastChildNodeName = pLastChild.nodeName.toLowerCase();
+    			var optVal = $(optionId).val().replace(/ /g,'');
     			
-    			if ($(optionId).val().replace(/ /g,'') != "") {    				
+    			if (optVal != "") {    				
     				count ++;
     			}
-    			else if (pLastChildNodeName === "img" && pLastChild.hasAttribute("_fileinfo")) {
-    				count ++;
-    				$(optionId).val(pLastChild.getAttribute("_fileinfo"));
+    			else if (pLastChildNodeName === "img" && pLastChild.hasAttribute("_fileinfo") && optVal == "") {
+    				var targetOpt = document.getElementById("option" + i);
+    				targetOpt.focus();
+    				targetOpt.value = "<spring:message code='ezPoll.t152'/>";
+    				targetOpt.style.backgroundColor = "#dcdcdc";
+    				setTimeout(
+   						function(){
+   							targetOpt.style.backgroundColor = "";
+   							targetOpt.value = "";
+  						}
+ 					, 800);
+    				return -i;
     			}
     			else {
     				$(optionId).val("");
@@ -837,11 +851,16 @@
 	            
 	        }
 	       /*  && mode != "modify" */
-	        if (checkOption() <= 0) {	        	
+	        var chkFlags = checkOption();
+	        if (chkFlags == 0) {	        	
 	        	alert('<spring:message code="ezPoll.t148"/>');
 	        	document.getElementById("option1").focus();
 	        	return false;
-	        }	   
+	        }
+	        else if(chkFlags < 0){
+	        	alert('<spring:message code="ezPoll.t152"/>');
+	        	return false;
+	        }
 	        
 	        L_StartDate = L_StartDate.substring(0, 10);
 	        L_EndDate 	= L_EndDate.substring(0, 10);
@@ -1104,8 +1123,8 @@
 			}
 	  	}
 	  	
-	  	function seeResultOptAdd(){
-	  		if($("#seeResultCreatorDiv").css("display") == "none"){
+	  	function seeResultOptAdd(chkBox){
+	  		if(chkBox.checked !== true){
 		  		$("#seeResultCreatorDiv").css("display", "inline-block");	  			
 	  		}
 	  		else{
@@ -1210,7 +1229,7 @@
 					</div>
 
 					<div class="qstSetting">
-						<input id="seeResultFirst" type="checkbox" onchange="seeResultOptAdd()" checked> 
+						<input id="seeResultFirst" type="checkbox" onchange="seeResultOptAdd(this)" checked> 
 						<span><spring:message code="ezPoll.t157"/></span>
 						<div id="seeResultCreatorDiv" style="display:none;">
 							<input id="seeResultCreator" type="checkbox">

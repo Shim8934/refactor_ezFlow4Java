@@ -3096,7 +3096,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("USERID").item(k).getTextContent()) + "</DATA1>");
 			resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA2>");
 			resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("APRLINESN").item(k).getTextContent()) + "</DATA3>");
-			resultXML.append("<DATA4>" + getCode2Name("A04", docXML.getElementsByTagName("APRSTATE").item(k).getTextContent(), companyID, lang, tenantID) + "</DATA4>");
+			
+			if (approvalFlag.equals("G")) {
+				resultXML.append("<DATA4>" + getCode2Name("A04", docXML.getElementsByTagName("APRSTATE").item(k).getTextContent(), companyID, lang, tenantID) + "</DATA4>");
+			} else {
+				resultXML.append("<DATA4>" + getCode2Name("SA04", docXML.getElementsByTagName("APRSTATE").item(k).getTextContent(), companyID, lang, tenantID) + "</DATA4>");
+			}
 			
 			resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA5>");
 			resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("APRMEMBERISDEPTYN").item(k).getTextContent()) + "</DATA6>");
@@ -3385,7 +3390,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					map.put("v_AprType", getName2Code("SA03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
 				}
 				
-				map.put("v_AprState", getName2Code("A04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
+				if (approvalFlag.equals("G")) {
+					map.put("v_AprState", getName2Code("A04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
+				} else {
+					map.put("v_AprState", getName2Code("SA04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
+				}
 				map.put("v_AprMemberID", rowNode.item(i).getChildNodes().item(9).getTextContent().trim());
 				map.put("v_AprMemberIsDeptYN", rowNode.item(i).getChildNodes().item(10).getTextContent().trim());
 				map.put("v_AprMemberName", rowNode.item(i).getChildNodes().item(18).getTextContent().trim());
@@ -17189,8 +17198,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (!apprFromYEAR.equals("") && apprFromYEAR != null) {
-			tmpEndDate1 = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprFromYEAR, apprFromMONTH, apprFromDAY, true), offset, false).trim();
-			tmpEndDate2 = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprToYEAR, apprToMONTH, apprToDAY, false), offset, false).trim();
+			tmpEndDate1 = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprFromYEAR, apprFromMONTH, apprFromDAY, true), offset, true).trim();
+			tmpEndDate2 = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprToYEAR, apprToMONTH, apprToDAY, false), offset, true).trim();
 		}
 		
 		if (!myApprFromYEAR.equals("") && myApprFromYEAR != null) {
@@ -17348,7 +17357,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String draftDeptName, String formID, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
 			String docState, int querySize, int querySize2, int querySize3, String orderOption1, String orderOption2, String alFlag, String langType, String approvUser, String companyID, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
 		logger.debug("getSearchDocList started");
-
+		
+		System.out.println("시간 : " + tmpEndDate1);
+		System.out.println("시간 : " + tmpEndDate2);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_CONTID", containerID);
@@ -17370,10 +17382,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTER", drafter.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
 		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
 		map.put("v_FORMID", formID.trim());
-		map.put("v_ENDDATE1", tmpStartDate1);
-		map.put("v_ENDDATE2", tmpStartDate2);
-		map.put("v_STARTDATE1", tmpEndDate1);
-		map.put("v_STARTDATE2", tmpEndDate2);
+		map.put("v_ENDDATE1", tmpEndDate1);
+		map.put("v_ENDDATE2", tmpEndDate2);
+		map.put("v_STARTDATE1", tmpStartDate1);
+		map.put("v_STARTDATE2", tmpStartDate2);
 		map.put("v_PROCESSDATE1", tmpProcessDate1);
 		map.put("iv_APRFLAG", aprFlag);
 		map.put("alFlag", alFlag);
@@ -18140,6 +18152,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getListField started");
 
 		String rtnVal = "";
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		
 		switch (fieldName) {
 		case "DOCTYPE" : 
@@ -18153,7 +18166,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			break;
 			
 		case "APRTYPE" :
-			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 			
 			if (approvalFlag.equals("G")) {
 				rtnVal = getCode2Name("A03", fieldValue, companyID, userLang, tenantID);
@@ -18164,12 +18176,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			break;
 			
 		case "APRSTATE" :
-			rtnVal = getCode2Name("A04", fieldValue, companyID, userLang, tenantID);
+			if (approvalFlag.equals("G")) {
+				rtnVal = getCode2Name("A04", fieldValue, companyID, userLang, tenantID);
+			} else {
+				rtnVal = getCode2Name("SA04", fieldValue, companyID, userLang, tenantID);
+			}
 			
 			break;
 			
 		case "FUNCTIONTYPE" :
-			rtnVal = getCode2Name("A04", fieldValue, companyID, userLang, tenantID);
+			if (approvalFlag.equals("G")) {
+				rtnVal = getCode2Name("A04", fieldValue, companyID, userLang, tenantID);
+			} else {
+				rtnVal = getCode2Name("SA04", fieldValue, companyID, userLang, tenantID);
+			}
 			
 			break;
 			
