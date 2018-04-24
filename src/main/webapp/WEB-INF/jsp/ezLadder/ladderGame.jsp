@@ -745,12 +745,12 @@
 						<div id="startButton" style="position: absolute; z-index: 100; top: 0; left: 0;">
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
-										<div style="width: 500px; height: 150px;text-align: center;">
+										<div style="width: 500px; height: 150px; text-align: center;">
 											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top: 25px;"/></a>
 										</div>
 									</c:when>
 									<c:otherwise>
-										<div style="width: 500px; height: 150px; background: white; text-align: center;">
+										<div style="width: 500px; height: 150px; background: white; border: 1px solid #ddd; text-align: center;">
 											<span style="font-size: large; color: maroon; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
 											<span style="display: inline-block;"><spring:message code="ezLadder.t049" /></span>
 										</div>
@@ -783,14 +783,14 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 400px;background: #000000;opacity: 0.2;position: absolute;left: -50px;right: 0;">
+									<div id="blackBox" style="height: 400px;background: #f8f8f8;position: absolute;left: -50px;right: 0;">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>
 									<canvas id='ladderCanvasLine' width='0' height='400'></canvas>
 									<canvas id='ladderCanvas' width='0' height='400'></canvas>
 								</div>
-								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
+								<ul id="itemList" style="margin-top: 16px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
 										<li>
 											<div title="${line.item}" class="resultItem" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
@@ -836,7 +836,7 @@
 									<canvas id='ladderCanvasLine' width='0' height='675'></canvas>
 									<canvas id='ladderCanvas' width='0' height='675'></canvas>
 								</div>
-								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
+								<ul id="itemList" style="margin-top: 14px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
 										<li>
 											<div title="${line.item}" class="resultItem" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
