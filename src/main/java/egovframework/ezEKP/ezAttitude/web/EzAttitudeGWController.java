@@ -1649,6 +1649,8 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
 			String searchUserName = request.getParameter("searchUserName");
+			String searchDeptName = request.getParameter("searchDeptName");
+			String searchTitle = request.getParameter("searchTitle");
 			String searchStartDate = request.getParameter("searchStartDate");
 			String searchEndDate = request.getParameter("searchEndDate");
 			String pageNum = request.getParameter("pageNum");
@@ -1661,8 +1663,8 @@ public class EzAttitudeGWController {
 			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();
 			
-			String totalCount = ezAttitudeService.getAttitudeAbsentCount(searchUserName, searchStartDate, searchEndDate, offset, companyId, tenantID);
-			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID);
+			String totalCount = ezAttitudeService.getAttitudeAbsentCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, offset, companyId, tenantID);
+			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID);
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
