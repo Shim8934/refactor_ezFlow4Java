@@ -161,7 +161,7 @@
 </head>
 
 <body scroll="no" class="popup">
-	<h1><span>"<spring:message code='ezWebFolder.t286'/>"</span></h1>
+	<h1><span><spring:message code='ezWebFolder.t286'/></span></h1>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<div style="position: absolute; top: 0px; right: 0px;">
 			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('C');"> <span><spring:message code='ezWebFolder.t233'/></span>
