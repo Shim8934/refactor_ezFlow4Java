@@ -157,11 +157,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		long totalPage	 = 0;
 		
 		for (Map<String, Object> info : list) {
-			String folderFileType = (String)info.get("FOLDERFILE_TYPE");
+			String folderFileType = (String)info.get("folderfile_type");
 			if (folderFileType.equals("D")) {
-				folderCount = (Long) info.get("COUNT");
+				folderCount = (Long) info.get("count");
 			} else if (folderFileType.equals("F")) {
-				fileCount = (Long) info.get("COUNT");
+				fileCount = (Long) info.get("count");
 			}
 		}
 		
@@ -211,11 +211,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		long totalPage	 = 0;
 		
 		for (Map<String, Object> info : list) {
-			String folderFileType = (String)info.get("FOLDERFILE_TYPE");
+			String folderFileType = (String)info.get("folderfile_type");
 			if (folderFileType.equals("D")) {
-				folderCount = Integer.valueOf((String) info.get("COUNT"));
+				folderCount = (Long) info.get("count");
 			} else if (folderFileType.equals("F")) {
-				fileCount = Integer.valueOf((String) info.get("COUNT"));
+				fileCount = (Long) info.get("count");
 			}
 		}
 		
@@ -418,11 +418,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		long totalPage	 = 0;
 		
 		for (Map<String, Object> info : list) {
-			String folderFileType = (String)info.get("FOLDERFILE_TYPE");
+			String folderFileType = (String)info.get("folderfile_type");
 			if (folderFileType.equals("D")) {
-				folderCount = Integer.valueOf((String) info.get("COUNT"));
+				folderCount = (Long) info.get("count");
 			} else if (folderFileType.equals("F")) {
-				fileCount = Integer.valueOf((String) info.get("COUNT"));
+				fileCount = (Long) info.get("count");
 			}
 		}
 		

@@ -71,6 +71,11 @@
         <result property="tenantId"               column="tenant_id"              columnIndex="27" />
     </resultMap>
 	
+	<resultMap id="countMap" class="HashMap">
+		<result property="folderfile_type"        column="folderfile_type"        columnIndex="1"  />
+        <result property="count"               	  column="count"                  columnIndex="2"           javaType="Long" />
+	</resultMap>
+	
 	<sql id="searchTerm">
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 				<![CDATA[
@@ -420,7 +425,7 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.getSharingCount" parameterClass="Map" resultClass="HashMap">
+	<select id="EzWebFolderDAO_m.getSharingCount" parameterClass="Map" resultMap="countMap">
 		<![CDATA[
 			SELECT
 				UU.FOLDERFILE_TYPE,
@@ -516,7 +521,7 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.getSharedCount" parameterClass="Map" resultClass="HashMap">
+	<select id="EzWebFolderDAO_m.getSharedCount" parameterClass="Map" resultMap="countMap">
 		<![CDATA[
 			SELECT
 				UU.FOLDERFILE_TYPE,
@@ -903,7 +908,7 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.getHiddenSharedCount" parameterClass="Map" resultClass="HashMap">
+	<select id="EzWebFolderDAO_m.getHiddenSharedCount" parameterClass="Map" resultMap="countMap">
 		<![CDATA[
 			SELECT
 				UU.FOLDERFILE_TYPE,
