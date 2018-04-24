@@ -355,6 +355,7 @@ function MakeAddressList() {
             /*SubPTag.appendChild(pContentSub);*/
 
             var ULTag = document.createElement("ul");
+            ULTag.style.marginTop = "12px";
 
             var UITag1 = document.createElement("li");
             UITag1.className = "name";            
