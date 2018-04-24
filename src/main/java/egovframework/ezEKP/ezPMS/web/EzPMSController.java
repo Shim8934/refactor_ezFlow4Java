@@ -1,10 +1,14 @@
 package egovframework.ezEKP.ezPMS.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -44,6 +49,9 @@ public class EzPMSController {
 
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name = "EzEmailService")
+	private EzEmailService ezEmailService;
 	
 	/**
 	 * 프로젝트 관리 메인화면 호출함수
@@ -160,7 +168,8 @@ public class EzPMSController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/addNewProject.do")
-	public String addNewProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param,HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	@ResponseBody
+	public String addNewProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS addNewProject started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -184,11 +193,12 @@ public class EzPMSController {
 
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
 		
-//		JSONArray list = new JSONArray();
-		System.out.println(result);
+		Map<String, Object> data = (Map<String, Object>) result.get("data");
+		String projectId = String.valueOf(data.get("projectId"));
 		
+		LOGGER.debug("projectId : " + projectId);
 		LOGGER.debug("ezPMS addNewProject ended");
-		return "json";
+		return projectId;
 	}
 	
 	/**
@@ -544,5 +554,81 @@ public class EzPMSController {
 	@RequestMapping(value="/ezPMS/selectHeadManager.do")
 	public String selectHeadManager() {
 		return "ezPMS/selectHeadManager";
+	}
+	
+	// 알림메일 발송
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/sendNotiMail.do")
+	public void sendNotiMail(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("sendNotiMail Started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String projectName = (String) param.get("projectName");
+		int projectId = (int) param.get("projectId");
+		List<Map<String, Object>> managerList = (List<Map<String, Object>>) param.get("managerList");
+		List<Map<String, Object>> participantList = (List<Map<String, Object>>) param.get("participantList");
+		List<Map<String, Object>> viewerList = (List<Map<String, Object>>) param.get("viewerList");
+		
+		param.put("tenantId", userInfo.getTenantId());
+		
+		try{
+			getToArrMailList(managerList, param, request, projectName, projectId, "관리자", loginCookie);
+			getToArrMailList(participantList, param, request, projectName, projectId, "참여자", loginCookie);
+			getToArrMailList(viewerList, param, request, projectName, projectId, "조회자", loginCookie);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LOGGER.debug("ERROR : " + e.getMessage());
+		}
+	}
+	
+	public InternetAddress[] getToArrMailList (List<Map<String, Object>> nameList, Map<String, Object> param, HttpServletRequest request, String projectName, int projectId, String authName, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("getToArrMailList started");
+		
+		ArrayList<InternetAddress> toArrList = new ArrayList<InternetAddress>();
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		try {
+			for (int i = 0; i < nameList.size(); i++) {
+				String userId = (String)nameList.get(i).get("userId");
+				
+				JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/users/"+userId+"/setting", param, request, "get", null);
+				String status = resultBody.get("status").toString();
+				
+				if(status.equals("ok")) {
+					JSONObject manager = (JSONObject) resultBody.get("data");
+					InternetAddress toManager = new InternetAddress();
+					toManager.setAddress((String) manager.get("userMail"));
+					toManager.setPersonal((String)manager.get("userName"));
+					LOGGER.debug("userMail : " + (String)manager.get("userMail") + ", userName : " + (String)manager.get("userName"));
+					toArrList.add(toManager);
+				}
+			}
+			
+			InternetAddress[] toArr = new InternetAddress[toArrList.size()];
+			
+			for (int i = 0; i < toArrList.size(); i++) {
+				toArr[i] = toArrList.get(i);
+			}
+			
+			for (int i = 0; i < toArr.length; i++) {
+				String subject = "[" + projectName + "] 프로젝트 " + authName + "로 지정되었습니다."; 
+				
+				String content = "<p>" + "[" + projectName + "] 프로젝트 " + authName + "로 지정되었습니다." + "</p>";
+				content += "<p></p>";
+				content += "<a href='#' target='' onclick='getProjectInfo(" + projectId + ");'>[" + projectName + "] 프로젝트로 이동</a>";
+				
+				InternetAddress from;
+				from = new InternetAddress(userInfo.getEmail());
+				from.setPersonal(userInfo.getDisplayName());
+				
+				ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, content, false);
+			}
+			
+			LOGGER.debug("getToArrMailList ended");
+			return toArr;
+		} catch (Exception e) {
+			LOGGER.debug("ERROR : " + e.getMessage());
+			return null;
+		}
 	}
 }

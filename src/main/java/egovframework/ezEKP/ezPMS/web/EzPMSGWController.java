@@ -117,7 +117,7 @@ public class EzPMSGWController {
 			newProject.setCreatorDeptname(request.getParameter("creatorDeptname"));
 			newProject.setCreatorDeptname2(request.getParameter("creatorDeptname2"));
 			
-			ezPMSService.addNewProject(newProject, request.getParameter("tenantId"));
+			int projectId = ezPMSService.addNewProject(newProject, request.getParameter("tenantId"));
 			
 			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json.get("managerList");
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("participantList"));
@@ -126,11 +126,16 @@ public class EzPMSGWController {
 			for (int i = 0; i < projectMemberList.size(); i++) {
 				ProjectMemberVO member = ezPMSService.getUserInfo((String)projectMemberList.get(i).get("userId"), Integer.parseInt(request.getParameter("tenantId")));
 				member.setMemberRoleId((int)projectMemberList.get(i).get("roleId"));
+				member.setProjectId(projectId);
 				ezPMSService.addProjectMember(member, Integer.parseInt(request.getParameter("tenantId")));
 			}
 			
+			JSONObject data = new JSONObject();
+			data.put("projectId", projectId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -166,6 +171,33 @@ public class EzPMSGWController {
 		
 		
 		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects" + projectId + "] ended.");
+		return result;
+	}
+	
+	//프로젝트관리 메인 화면 설정 정보 호출
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/users/{userId}/setting", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getMainSetting(@PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/setting] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			ProjectMainSettingVO projectSetting = ezPMSService.getProjectMainSetting(userId, Integer.parseInt(request.getParameter("tenantId")));
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", projectSetting);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/setting] ended.");
 		return result;
 	}
 	

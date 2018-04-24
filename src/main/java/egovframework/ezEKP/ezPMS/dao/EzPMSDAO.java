@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -77,12 +78,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (List<ProjectMemberVO>) list("EzPMSDAO.getProjectMember", map);
 	}
 
-	@SuppressWarnings("unchecked")
-	public void addNewProject(Map<String, Object> map) {
-		insert("addNewProject", map);
+	public int addNewProject(Map<String, Object> map) {
+		return (int) insert("addNewProject", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public ProjectMemberVO getUserInfo(HashMap<String, Object> map) {
 		return (ProjectMemberVO) select("getUserInfo", map);
 	}
@@ -97,4 +96,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (Map<String, Object>) select("getRemainingWeight", projectId);
 	}
 	
+	/**
+	 * 프로젝트관리 메인 환경설정 리스트 가져오기 (+메일)
+	 */
+	public ProjectMainSettingVO getProjectMainSetting(Map<String, Object> map) {
+		return (ProjectMainSettingVO) select("projectMainSetting", map);
+	}
 }

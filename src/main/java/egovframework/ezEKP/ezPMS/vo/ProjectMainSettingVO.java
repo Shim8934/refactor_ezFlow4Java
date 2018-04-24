@@ -3,7 +3,7 @@ package egovframework.ezEKP.ezPMS.vo;
 //프로젝트관리 메인 화면 환경설정
 public class ProjectMainSettingVO {
 	// 환경설정 아이디 
-    private Long settingId;
+    private String settingId;
 
     // 테넌트 아이디 
     private int tenantId;
@@ -12,7 +12,7 @@ public class ProjectMainSettingVO {
     private String userId;
 
     // 화면 종류 
-    private int viewType;
+    private String viewType;
 
     // 진행률 색상 
     private String progressColor;
@@ -27,16 +27,49 @@ public class ProjectMainSettingVO {
     private String holdColor;
 
     // 프로젝트 정렬 
-    private int projectSort;
+    private String projectSort;
 
     // 리스트 개수 
-    private int listNumber;
+    private String listNumber;
+    
+    // 사용자 메일
+    private String userMail;
+    
+    // 이름
+    private String userName;
+    
+    // 이름 다국어
+    private String userName2;
+    
+    public String getUserMail() {
+		return userMail;
+	}
 
-    public Long getSettingId() {
+	public void setUserMail(String userMail) {
+		this.userMail = userMail;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserName2() {
+		return userName2;
+	}
+
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
+	}
+
+	public String getSettingId() {
         return settingId;
     }
 
-    public void setSettingId(Long settingId) {
+    public void setSettingId(String settingId) {
         this.settingId = settingId;
     }
 
@@ -56,11 +89,11 @@ public class ProjectMainSettingVO {
         this.userId = userId;
     }
 
-    public int getViewType() {
+    public String getViewType() {
         return viewType;
     }
 
-    public void setViewType(int viewType) {
+    public void setViewType(String viewType) {
         this.viewType = viewType;
     }
 
@@ -96,19 +129,19 @@ public class ProjectMainSettingVO {
         this.holdColor = holdColor;
     }
 
-    public int getProjectSort() {
+    public String getProjectSort() {
         return projectSort;
     }
 
-    public void setProjectSort(int projectSort) {
+    public void setProjectSort(String projectSort) {
         this.projectSort = projectSort;
     }
 
-    public int getListNumber() {
+    public String getListNumber() {
         return listNumber;
     }
 
-    public void setListNumber(int listNumber) {
+    public void setListNumber(String listNumber) {
         this.listNumber = listNumber;
     }
 }

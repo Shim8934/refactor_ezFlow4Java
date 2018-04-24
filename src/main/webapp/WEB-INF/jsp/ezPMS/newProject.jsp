@@ -214,10 +214,15 @@ var headManagerId = null;
 		contentType: "application/json; charset=UTF-8",
 		data :JSON.stringify(data),
 		success : function(result) {
-			alert("<spring:message code='ezTask.t150' />");
+			alert(result);
 			
-			try { parent.setProjectList(); } catch (e) { alert("error1")}
+			sendNotiMail(result, projectName);
+			alert("새프로젝트가 추가되었습니다.");
+			
+			try { parent.setProjectList(); } catch (e) {}
 			popupClose();
+			
+			
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert("error2");
@@ -261,6 +266,27 @@ var headManagerId = null;
 	 $("#viewers").html(viewerNameList);
  }
  
+ function sendNotiMail(projectId, projectName) {
+	 var data = {
+			 projectName : projectName,
+			 managerList : managerList,
+			 participantList : participantList,
+			 viewerList : viewerList,
+			 projectId : projectId
+		 }
+	 
+	 $.ajax({
+		 type : "post",
+		 ansync : false,
+		 dataType : "json",
+		 contentType: "application/json; charset=UTF-8",
+		 data : JSON.stringify(data),
+		 url : "/ezPMS/sendNotiMail.do",
+		 success : function() {
+			 
+		 }
+	 });
+ }
 </script>
 </head>
 <body class="popup">
