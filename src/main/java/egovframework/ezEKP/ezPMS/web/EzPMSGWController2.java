@@ -388,7 +388,7 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			List<ProjectTaskTreeVO> list = ezPMSService.getProjectTaskTree(Integer.parseInt(projectId));
+			List<ProjectTaskTreeVO> list = ezPMSService.getProjectTaskTree(Integer.parseInt(projectId), request.getParameter("onlyGroup"));
 			
 			LOGGER.debug(list.get(0).getText());
 			
@@ -424,12 +424,6 @@ public class EzPMSGWController2 {
 			
 			List<ProjectMemberVO> memberList = ezPMSService.getProjectMemberList(projectId, roleId, lang, tenantId);
 			
-			for(ProjectMemberVO vo : memberList) {
-				System.out.println(vo.getUserId());
-				System.out.println(vo.getUserName());
-				System.out.println(vo.getUserDeptname());
-			}
-			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", memberList);
@@ -442,6 +436,36 @@ public class EzPMSGWController2 {
 		
 		
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "] ended.");
+		return result;
+	}
+	
+	
+	/**
+	 * 프로젝트관리 잔여 가중치 조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/weight/{projectId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getRemainingWeight(@PathVariable String projectId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/weight/" + projectId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			
+			String remainingWeight = ezPMSService.getRemainingWeight(projectId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", remainingWeight);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");		
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/weight/" + projectId + "] ended.");
 		return result;
 	}
 		

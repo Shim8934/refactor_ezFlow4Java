@@ -62,8 +62,11 @@ public class EzPMSController2 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String projectId = request.getParameter("projectId");
+		String onlyGroup = request.getParameter("onlyGroup");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("onlyGroup", onlyGroup);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -155,6 +158,16 @@ public class EzPMSController2 {
 		String writerDeptName = userInfo.getDeptName();
 		
 		String projectId = request.getParameter("projectId");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/weight/" + projectId, param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray data = (JSONArray) resultBody.get("data");
+			model.addAttribute("data", data);
+		}
 		
 		model.addAttribute("projectId", projectId);
 		model.addAttribute("writerId", writerId);
@@ -298,6 +311,29 @@ public class EzPMSController2 {
 		LOGGER.debug("ezPMS goProjectMemberList ended");
 		
 		return "/ezPMS/pmsSetTaskMember";
+	}
+	
+	/**
+	 * 프로젝트관리 멤버리스트 페이지 호출함수
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/goGroupTree.do")
+	public String goGroupTree(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS goGroupTree started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String projectId = request.getParameter("projectId");
+		
+		model.addAttribute("projectId", projectId);
+		
+		LOGGER.debug("ezPMS goGroupTree ended");
+		
+		return "/ezPMS/groupTree";
 	}
 	
 }

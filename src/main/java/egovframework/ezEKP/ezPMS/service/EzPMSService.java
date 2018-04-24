@@ -89,7 +89,7 @@ public interface EzPMSService {
 	
 	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId);
 	
-	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId);
+	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId, String onlyGroup);
 
 	List<ProjectUserVO> getDeptUserList(int tenantId, String key, String value, String lang) throws Exception;
 
@@ -102,5 +102,7 @@ public interface EzPMSService {
 	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId);
 
 	ProjectMemberVO getUserInfo(String userId, int tenantId) throws Exception;
+	
+	public String getRemainingWeight(String projectId);
 
 }

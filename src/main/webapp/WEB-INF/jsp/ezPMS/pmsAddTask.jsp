@@ -35,10 +35,10 @@ var weightInput = null;
 var planStartDate = "${planStartDate}";
 var planEndDate = "${planEndDate}";
 var managerList = null;
-var viewerList = [];
 var overview = null;
-var endAlamStatus = null;
 var headManagerId = null;
+var groupId = "";
+var groupName = "";
 
  $(function() {
 	 $("#Sdatepicker").datepicker({
@@ -122,11 +122,18 @@ var headManagerId = null;
 	});
  });
  
- function openMemberList() {
+function openMemberList() {
 		 var win;
 		 var feature = GetOpenPosition(760, 700);
 		 DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.8, "/ezPMS/goProjectMemberList.do?projectId=" + projectId, "",
 				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+}
+
+function openGroupTree() {
+		var win;
+	 	var feature = GetOpenPosition(760, 700);
+	 	DivPopUpShow($('body').prop('scrollWidth') * 0.4, $('body').prop('scrollHeight') * 0.7, "/ezPMS/goGroupTree.do?projectId=" + projectId, "",
+			 	"height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
  
  function addTask() {
@@ -163,6 +170,10 @@ var headManagerId = null;
 	 
 	 $("#managers").html(managerNameList);
  }
+ 
+function setUpperGroup() {
+	$("#upperGroup").html(groupName);
+}
 
 </script>
 </head>
@@ -191,7 +202,7 @@ var headManagerId = null;
 				<td colspan="3" style="height:70px" id="managers">은정</td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openOrganTree()"><span>상위그룹</span></a></th>
+				<th><a class="imgbtn" onclick="openGroupTree()"><span>상위그룹</span></a></th>
 				<td colspan="3" style="height:70px;" id="upperGroup"></td>
 			</tr>
 			<tr>
