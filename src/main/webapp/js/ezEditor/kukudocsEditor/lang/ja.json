@@ -704,8 +704,10 @@
     "copyKeydownMessage": "Ctrl + C（Mac:CMD + C）ショートカットを使用してください。",
     "pasteKeydownMessage": "Ctrl + V（Mac:CMD + V）キーボードショートカットを使用してください。",
     "cutKeydownMessage": "Ctrl + X（Mac:CMD + X）ショートカットを使用してください。",
-    "notFoundTextErrorMessage": "文字列が見つかりません。"
+    "notFoundTextErrorMessage": "文字列が見つかりません。",
+    "errorParsingError" : "変換中にエラーが発生しました。"
   },
+  "processingMessage" : "変換中 ...",
   "paragraphInsert": "段落挿入",
   "licenseErrorMsg": "ライセンス期間が終了しました。\nライセンス管理者に連絡して期間を延長してください。"
 }
