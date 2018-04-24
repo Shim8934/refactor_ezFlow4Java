@@ -613,14 +613,22 @@ public class EzLadderController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezLadder/getLadderGame.do", method = RequestMethod.GET)
-	public String getLadderGame(@CookieValue("loginCookie") String loginCookie, String ladderId, String searchSelect, String searchInput, String mode, String currPage, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String getLadderGame(@CookieValue("loginCookie") String loginCookie, String ladderId, String searchSelect, String searchInput, String mode, String currPage, String sort, String sortFlag, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getLadderGame started.");
 		logger.debug("ladderId : " + ladderId);
 		logger.debug("searchSelect : " + searchSelect);
-		logger.debug("searchInput " + searchInput);
+		logger.debug("searchInput : " + searchInput);
 		logger.debug("mode : " + mode);
 		logger.debug("currPage : " + currPage);
+		logger.debug("sort : " + sort);
+		logger.debug("sortFlag : " + sortFlag);
 		
+		mode = mode != null ? mode : "all";
+		currPage = currPage != null ? currPage : "1";
+		searchSelect = searchSelect != null ? searchSelect : "";
+		searchInput = searchInput != null ? searchInput : "";
+		sort = sort != null ? sort : "basic";
+		sortFlag = sortFlag != null ? sortFlag : "desc";
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
@@ -656,6 +664,8 @@ public class EzLadderController {
 			model.addAttribute("searchInput", searchInput );
 			model.addAttribute("mode", mode );
 			model.addAttribute("currPage", currPage);
+			model.addAttribute("sort", sort);
+			model.addAttribute("sortFlag", sortFlag);
 			
 			model.addAttribute("vo", vo); // ladder
 			model.addAttribute("list", list);// ladder line list

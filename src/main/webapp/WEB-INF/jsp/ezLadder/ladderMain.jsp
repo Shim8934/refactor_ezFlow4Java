@@ -159,10 +159,10 @@
 						
 						<c:choose>
 							<c:when test="${vo.secretFlag eq 0 }">
-								<td><img class="effect" title="<spring:message code='ezLadder.t0070'/>" src ='/images/ezLadder/icon_public.png' /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t0070'/>" src ='/images/ezLadder/icon_public_thirty.png' /></td>
 							</c:when>
 							<c:otherwise>
-								<td><img class="effect" title="<spring:message code='ezLadder.t076'/>" src ='/images/ezLadder/icon_private.png' /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t076'/>" src ='/images/ezLadder/icon_private_thirty.png' /></td>
 							</c:otherwise>
 						</c:choose>
 						
