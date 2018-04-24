@@ -80,7 +80,7 @@ public class EzAttitudeGWController {
 	private MOptionService mOptionService;
 	
 	/**
-	 * G/W 근태관리 [GET] 개인, 부서, 부서+개인 근태현황조회
+	 * G/W 근태관리 [GET] 개인, 부서, 부서+개인 근태조회
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject attitudeMainList(HttpServletRequest request) {
@@ -167,7 +167,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 유형별 근태현황 조회
+	 * G/W 근태관리 [GET] 유형별 근태 조회
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}/attitudes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeListType(@PathVariable String attitudetypeId, HttpServletRequest request) {
@@ -1582,7 +1582,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 근태현황조회 --임시
+	 * G/W 근태관리 [GET] 근태조회 --임시
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/bombom", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject attitudeMainList2(HttpServletRequest request) {
@@ -1633,6 +1633,52 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/bombom] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 근태조회 미입력자 목록
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/absent", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	 public JSONObject attitudeAbsentList(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/absent] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String companyId = request.getParameter("companyId");
+			String searchUserName = request.getParameter("searchUserName");
+			String searchStartDate = request.getParameter("searchStartDate");
+			String searchEndDate = request.getParameter("searchEndDate");
+			String pageNum = request.getParameter("pageNum");
+			String listSize = request.getParameter("listSize");
+			String orderCell = request.getParameter("orderCell");
+			String orderOption = request.getParameter("orderOption");
+			String offsetMin = request.getParameter("offsetMin");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantID = info.getTenantId();
+			String offset = info.getOffSet();
+			
+			String totalCount = ezAttitudeService.getAttitudeAbsentCount(searchUserName, searchStartDate, searchEndDate, offset, companyId, tenantID);
+			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID);
+			
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("totalCount", totalCount);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/absent] ended.");
+		
 		return result;
 	}
 	

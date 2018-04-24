@@ -1299,7 +1299,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 관리자 근태조회 리스트 출력
+	 * 관리자 근태조회 리스트 조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeCheckList.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
@@ -1370,15 +1370,91 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
+	 * 근태조회 미입력자목록 팝업화면 호출
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/popupAbsentedList.do")
+	public String popupAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("popupAbsentedList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String searchUserName = request.getParameter("searchUserName");
+		String searchStartDate = request.getParameter("startDate");
+		String searchEndDate = request.getParameter("endDate");
+		
+		model.addAttribute("searchStartDate", searchStartDate);
+		model.addAttribute("searchEndDate", searchEndDate);
+		
+		LOGGER.debug("popupAbsentedList ended.");
+		
+		return "/admin/ezAttitude/popupAbsentedList";
+	}
+	
+	/**
+	 * 근태조회 미입력자목록 조회
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/absentedList.do")
+	@ResponseBody
+	public JSONObject absentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("absentedList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		String companyId = request.getParameter("companyId");
+		String searchUserName = request.getParameter("searchUserName");
+		String searchStartDate = request.getParameter("searchStartDate");
+		String searchEndDate = request.getParameter("searchEndDate");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/absent";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchStartDate", searchStartDate)
+				.queryParam("searchEndDate", searchEndDate)
+				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption)
+				.queryParam("offsetMin", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject jObject = new JSONObject();
+		if(status.equals("ok")){
+			jObject = (JSONObject) resultBody.get("data");
+		}
+		
+		LOGGER.debug("absentedList ended.");
+		return jObject;
+	}
+	
+	/**
 	 * 근태조회 엑셀 출력
-	 * @param loginCookie
-	 * @param response
-	 * @param request
-	 * @param locale
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/excelFileExport.do")
-	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request, Locale locale) throws Exception{
+	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
 		LOGGER.debug("excelFileExport started."); 
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie); 

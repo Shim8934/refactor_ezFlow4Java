@@ -119,6 +119,10 @@ public interface EzAttitudeService {
 
 	public String getAttitudeCount2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String offset, String companyId, int tenantId) throws Exception;
 	
+	public String getAttitudeAbsentCount(String searchUserName, String searchStartDate, String searchEndDate, String offset, String companyId, int tenantID) throws Exception;
+	
+	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantID) throws Exception;
+	
 	public void attSaveAppModify(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
 			String writerDeptId, String writerDeptName, String writerDeptName2 ,String changeDate, String delFlag, String content,String offset) throws Exception;
 	
