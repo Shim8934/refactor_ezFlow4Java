@@ -128,7 +128,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public Map<String, Integer> getSharingCount(String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+	public Map<String, Long> getSharingCount(String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
 		
@@ -151,24 +151,24 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		List<Map<String, Object>> list = ezWebFolderDAO_m.getSharingCount(map);
 		
-		int fileCount	 = 0;
-		int folderCount	 = 0;
-		int totalCount	 = 0;
-		int totalPage	 = 0;
+		long fileCount	 = 0;
+		long folderCount	 = 0;
+		long totalCount	 = 0;
+		long totalPage	 = 0;
 		
 		for (Map<String, Object> info : list) {
 			String folderFileType = (String)info.get("FOLDERFILE_TYPE");
 			if (folderFileType.equals("D")) {
-				folderCount = (int)(long)info.get("COUNT");
+				folderCount = (Long) info.get("COUNT");
 			} else if (folderFileType.equals("F")) {
-				fileCount = (int)(long)info.get("COUNT");
+				fileCount = (Long) info.get("COUNT");
 			}
 		}
 		
 		totalCount	= fileCount + folderCount;
 		totalPage	= (totalCount + pageSize - 1) / pageSize;
 		
-		Map<String, Integer> countInfo = new HashMap<String, Integer>();
+		Map<String, Long> countInfo = new HashMap<String, Long>();
 		countInfo.put("fileCount", fileCount);
 		countInfo.put("folderCount", folderCount);
 		countInfo.put("totalCount", totalCount);
@@ -179,7 +179,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public Map<String, Integer> getSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+	public Map<String, Long> getSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
 		
@@ -205,24 +205,24 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		List<Map<String, Object>> list = ezWebFolderDAO_m.getSharedCount(map);
 		
-		int fileCount	 = 0;
-		int folderCount	 = 0;
-		int totalCount	 = 0;
-		int totalPage	 = 0;
+		long fileCount	 = 0;
+		long folderCount = 0;
+		long totalCount	 = 0;
+		long totalPage	 = 0;
 		
 		for (Map<String, Object> info : list) {
 			String folderFileType = (String)info.get("FOLDERFILE_TYPE");
 			if (folderFileType.equals("D")) {
-				folderCount = (int)(long)info.get("COUNT");
+				folderCount = Integer.valueOf((String) info.get("COUNT"));
 			} else if (folderFileType.equals("F")) {
-				fileCount = (int)(long)info.get("COUNT");
+				fileCount = Integer.valueOf((String) info.get("COUNT"));
 			}
 		}
 		
 		totalCount	= fileCount + folderCount;
 		totalPage	= (totalCount + pageSize - 1) / pageSize;
 		
-		Map<String, Integer> countInfo = new HashMap<String, Integer>();
+		Map<String, Long> countInfo = new HashMap<String, Long>();
 		countInfo.put("fileCount", fileCount);
 		countInfo.put("folderCount", folderCount);
 		countInfo.put("totalCount", totalCount);
@@ -400,7 +400,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 
 	@Override
-	public Map<String, Integer> getHiddenSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception {
+	public Map<String, Long> getHiddenSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception {
 		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -412,24 +412,24 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		List<Map<String, Object>> list = ezWebFolderDAO_m.getHiddenSharedCount(map);
 		
-		int fileCount	 = 0;
-		int folderCount	 = 0;
-		int totalCount	 = 0;
-		int totalPage	 = 0;
+		long fileCount	 = 0;
+		long folderCount = 0;
+		long totalCount	 = 0;
+		long totalPage	 = 0;
 		
 		for (Map<String, Object> info : list) {
 			String folderFileType = (String)info.get("FOLDERFILE_TYPE");
 			if (folderFileType.equals("D")) {
-				folderCount = (int)(long)info.get("COUNT");
+				folderCount = Integer.valueOf((String) info.get("COUNT"));
 			} else if (folderFileType.equals("F")) {
-				fileCount = (int)(long)info.get("COUNT");
+				fileCount = Integer.valueOf((String) info.get("COUNT"));
 			}
 		}
 		
 		totalCount	= fileCount + folderCount;
 		totalPage	= (totalCount + pageSize - 1) / pageSize;
 		
-		Map<String, Integer> countInfo = new HashMap<String, Integer>();
+		Map<String, Long> countInfo = new HashMap<String, Long>();
 		countInfo.put("fileCount", fileCount);
 		countInfo.put("folderCount", folderCount);
 		countInfo.put("totalCount", totalCount);
