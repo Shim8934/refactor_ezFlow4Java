@@ -69,6 +69,7 @@
 		    var responseResult;
 		    var selectNode;
 		    var noResult = false;
+		    var moveChk = false;
 			var searchTxt = ""; // 검색어
 			var searchMsg = "<spring:message code='ezOrgan.t56'/>"; // 검색어를 입력해주세요.
 			var specialMsg = "<spring:message code='ezEmail.kyj17'/>"; // 해당 특수문자는 입력할 수 없습니다.
@@ -88,6 +89,12 @@
 			// 위, 아래 버튼 클릭 시 실행
 			// type: prev(위), next(아래)
 			function orderSelect(type) {
+				
+				if (searchMode == true) {
+					alert("<spring:message code='ezEmail.letter33'/>");
+					return;
+				}
+				
 				var select= $('body').find('.lmLetterSelect');
 				
 				if (select.length === 0) {
@@ -100,11 +107,24 @@
 				} else {
 					select.next().after(select);
 				}
+				moveChk = true;
 			}
 			
 			// 순서 저장 버튼 눌렀을때
 			function orderChange() {
+				
+				if (searchMode == true) {
+					alert("<spring:message code='ezEmail.letter33'/>");
+					return;
+				}
+				
 				var liArr = $('div.lmLetter').find('li');
+				
+				if ($(liArr).attr("class") == 'lmNoData' || moveChk == false) {
+					alert("<spring:message code='ezEmail.letter34'/>");
+					return;
+				}
+					
 				
 				for (var i = 0; i < liArr.length; i++) {
 					var letterNo = $(liArr[i]).attr("data-letterno");
@@ -115,7 +135,6 @@
 						dataType:"text",
 						error:function(data) {
 							alert("error");
-							//console.log(data);
 							return;
 						}
 					});
@@ -123,6 +142,8 @@
 				
 				alert("<spring:message code='ezEmail.letter6'/>");
 				getLetterList(selectNode.node.id);
+				
+				moveChk = false;
 			}
 			
 			// 편지지 이동
@@ -166,6 +187,12 @@
 				 var letterNo = "";
 				 
 				 if (type === "add") {
+					 
+					 if (searchMode == true) {
+						 alert("<spring:message code='ezEmail.letter33'/>");
+						 return;
+					 }
+					 
 					 popUpType = "add";
 					 letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo");
 					 letterNo = -1;

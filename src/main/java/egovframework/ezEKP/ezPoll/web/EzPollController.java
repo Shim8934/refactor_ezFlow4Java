@@ -324,14 +324,23 @@ public class EzPollController extends EgovFileMngUtil {
 		String qstId = "";
 		String pollType = (request.getParameter("pollType") != null) ? request.getParameter("pollType") : "2";
 		boolean creatorResultFlag = request.getParameter("resultFirst") != null && request.getParameter("status") != null;
+		String gotoList = (request.getParameter("gotoList") != null ? request.getParameter("gotoList") : "0");
+		String params = (request.getParameter("params") != null ? request.getParameter("params") : "");
 		
 		if (request.getParameter("qstId") != null) {			
 			qstId = request.getParameter("qstId");
 		}
 		
-		if (!qstId.equals("")) {			
+		if (!qstId.equals("") && gotoList == null) {			
 			redirectAttributes.addAttribute("qstId", qstId);
 			return "redirect:/ezPoll/pollVote.do";
+		}
+		
+		//목록버튼 눌렀을 때 해당 페이지로 이동시켜주기 위함.
+		if(gotoList.equals("1") && !params.equals("")){
+			String[] paramsArr = params.split(",");
+			currPage = Integer.parseInt(paramsArr[0]);
+			pollType = paramsArr[4];
 		}
 		
 		String mode = (request.getParameter("mode") != null) ? request.getParameter("mode") : "";
@@ -458,7 +467,7 @@ public class EzPollController extends EgovFileMngUtil {
 					}
 				}
 			}
-			//대기 상황일 경우도 필터하도록 처리 pollType => 1:전체, 2:진행, 3완료, 4:대기
+			//대기 상황일 경우도 필터하도록 처리 pollType => 0,1:전체, 2:진행, 3완료, 4:대기
 			else if(pollType.equals("4")) {
 				while (iterator.hasNext()){
 					PollQuestionVO question = iterator.next();
@@ -523,6 +532,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("adminPrivilege", adminPrivilege);
 		model.addAttribute("primary", loginVO.getPrimary());
 		model.addAttribute("pollType", pollType);
+		model.addAttribute("gotoList", gotoList);
 		
 		
 		logger.debug("get question finishes!");
@@ -1791,7 +1801,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String strXML = "";
 		int checkUsingFile = 0;
 		
-		if (req.getParameter("optImgPrevArr") != null) {
+		if (req.getParameter("optImgPrevArr") != null && !req.getParameter("optImgPrevArr").equals("")) {
 			optImgPrevArrStr = req.getParameter("optImgPrevArr");
 			optImgPrevArr = optImgPrevArrStr.split(",");
 		}		

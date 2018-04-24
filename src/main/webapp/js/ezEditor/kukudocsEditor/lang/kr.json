@@ -704,8 +704,10 @@
     "copyKeydownMessage": "Ctrl + C (Mac : CMD + C) 단축키를 사용하여 주시기 바랍니다.",
     "pasteKeydownMessage": "Ctrl + V (Mac : CMD + V) 단축키를 사용하여 주시기 바랍니다.",
     "cutKeydownMessage": "Ctrl + X (Mac : CMD + X) 단축키를 사용하여 주시기 바랍니다.",
-    "notFoundTestErrorMessage": "문자열을 찾을 수 없습니다."
+    "notFoundTestErrorMessage": "문자열을 찾을 수 없습니다.",
+    "errorParsingError" : "변환도중 에러가 발생되었습니다."
   },
+  "processingMessage" : "변환 중 ...",
   "paragraphInsert": "문단 추가",
   "licenseErrorMsg": "라이선스 기간이 만료되었습니다. \n기간을 연장하려면 라이선스 관리자에게 문의하세요."
 }

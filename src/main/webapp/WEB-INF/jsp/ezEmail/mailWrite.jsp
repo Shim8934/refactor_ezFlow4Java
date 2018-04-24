@@ -777,22 +777,27 @@
 	        }
 	        AttachFileInfo(strXML);
 	    }
-	
+		
 	    function FileUpdateAfter(strXML) {
-	        tempXML = strXML;
+	        
+	    	tempXML = strXML;
 	        pAttachXml = loadXMLString(strXML);
+	        
 	        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
 	        var xmlDoc = createXmlDom();
 	        var objNode;
 	        var objRow;
 	        var objRows;
 	        var objRowRow;
+	        
 	        objNode = createNodeInsert(xmlDoc, objNode, "DATA");
 	        createNodeAndInsertText(xmlDoc, objNode, "CMD", "ADD");
 	        createNodeAndInsertText(xmlDoc, objNode, "URL", g_url);
 	        objRow = createNodeAndAppandNode(xmlDoc, objNode, objRow, "FILELIST");
+	        
 	        for (var i = 0; i < nodes.length; i++) {
-	            if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
+	            
+	        	if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
 	                objRows = createNodeAndAppandNode(xmlDoc, objRow, objRows, "FILE");
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "NAME", getNodeText(GetChildNodes(nodes[i])[2]));
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "PATH", getNodeText(GetChildNodes(nodes[i])[4]));
@@ -845,10 +850,10 @@
 		            
 		            returnvalue(strXML);
 	        	}
-	        }
-	        else {
+	        } else {
 	            alert(xmlhttp.status + " : " + strLang241);
 	        }
+	        
 	        return xmlReturnValue;
 	    }
 	
