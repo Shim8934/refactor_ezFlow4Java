@@ -38,6 +38,8 @@
 		var stompClient = null;
 		var servername = null;
 		var deleteFlag = "${vo.deleteFlag}";
+		var sort = "${sort}";
+		var sortFlag = "${sortFlag}";
 		
 		$(window).unload(function() {
 			if (stompClient !== null) {
@@ -170,6 +172,11 @@
 						$(this).find("img").attr("src", "/images/ezLadder/icon_defaultAttendant.png");
 					}
 				})
+				$("#backToList").on("click", function() {
+					window.location.href = '/ezLadder/ladderMain.do?&mode=' + mode + '&currPage=' + currPage + '&searchSelect=' 
+							+ searchSelect + '&searchInput=' + searchInput + '&sort=' + sort + '&sortFlag=' + sortFlag;
+				});
+				
 			$("#usePreladder").on("click", function() {
 				window.location.href = "/ezLadder/setLadder.do?ladderId=" + ${vo.ladderId};
 			});
@@ -843,6 +850,7 @@
 			
 			
 		</div>
+		<!-- 아직 아이콘 만드는 중 <button type="button" id="backToList">목록으로 ㅎㅎ</button> -->
 		<c:if test="${mode != 'preview' }">
 			<div id="commentArea" style="border:1px solid #DDD; margin:15px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
 				<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none;">

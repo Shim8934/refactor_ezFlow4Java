@@ -39,7 +39,7 @@ function getLadderGame(ladderId) {
 		return allData;
 	}
 	window.location.href = '/ezLadder/getLadderGame.do?ladderId=' + ladderId + '&searchSelect=' + searchSelect +
-	'&searchInput=' + searchInput + '&mode=' + mode + '&currPage=' + currPage;
+	'&searchInput=' + searchInput + '&mode=' + mode + '&currPage=' + currPage + '&sort=' + sort + '&sortFlag=' + sortFlag;
 }
 
 // 참여자 버튼

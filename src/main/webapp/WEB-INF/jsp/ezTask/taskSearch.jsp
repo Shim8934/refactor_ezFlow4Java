@@ -590,7 +590,7 @@
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 			</tr>
-			<tr id="tr_ing" style="text-align:center">
+			<tr id="tr_ing" style="text-align:center; display: none;">
 				<td colspan="11" style="height:25px;background-color:white;text-align:center"><spring:message code='ezTask.t192' /></td>
 			</tr>
 		</table>

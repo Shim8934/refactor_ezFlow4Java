@@ -969,8 +969,8 @@
 	      			<label for="mpWeekly" accesskey="W"><spring:message code='ezSchedule.t73' /><u>W</u>)</label>
 	      			<input id="mpMonthly" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(2);' />
 	      			<label for="mpMonthly" accesskey="M"><spring:message code='ezSchedule.t74' /><u>M</u>)</label>
-	      			<input id="mpYealy" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(3);' />
-	      			<label for="mpYealy" accesskey="Y"><spring:message code='ezSchedule.t75' /><u>Y</u>)</label>
+	      			<input id="mpYearly" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(3);' />
+	      			<label for="mpYearly" accesskey="Y"><spring:message code='ezSchedule.t75' /><u>Y</u>)</label>
 	    		</td>
 	  		</tr>
 	  		<tr id='divRecurPatterns' style="display:none">

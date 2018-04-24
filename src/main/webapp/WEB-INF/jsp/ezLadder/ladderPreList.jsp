@@ -104,20 +104,20 @@
 					},
 					success: function(result) {
 						var lines = "";
-						var searchLadderType;
-						switch (ladder["type"]) {
-						case 0: searchLadderType = strLang19;
-								break;
-						case 1: searchLadderType = strLang20;
-								break;
-	 					case 2: searchLadderType = strLang21;
-								break;
-						case 3: searchLadderType = strLang22;
-								break;
-						}  
-						
 						$.each(result.list, function(index, value) {
-							lines += '<li name="preladder_' + index + '" id="' + value.ladderId + '" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0' + value.type + '.png" title="' + searchLadderType + '"></span><span class="txt">' + value.title + '</span></li>';
+							var preType; 
+							switch(value.type) {
+								case 0: preType = strLang19;
+									break;
+								case 1: preType = strLang20;
+									break;
+								case 2: preType = strLang21;
+									break;
+								case 3: preType = strLang22;
+									break;
+							}
+							
+							lines += '<li name="preladder_' + index + '" id="' + value.ladderId + '" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0' + value.type + '.png" title="' + preType +'"></span><span class="txt">' + value.title + '</span></li>';
 						});
 						$("#columnsbnk").html(lines);
 						drag(); 
@@ -163,6 +163,7 @@
 						showLadderPreview();
 					});
 				
+				/** 이전 리스트 순서 바꾸기 */
 				$("#btn_SaveAprLineTempletName").on("click", function() {
 					loadPreLadderSetting();
 				});
@@ -266,9 +267,6 @@
 					if (e.which == 13)
 						searchLadder();
 				}
-				/* if(event.keyCode == "13") {
-					searchLadder();
-				} */
 			}
 			
 			function keyword_Clear() {
@@ -290,7 +288,7 @@
 							</div>
 							<ul id="columnsbnk" class="game_list content">
 								<c:forEach items="${list}" var="prelist" varStatus="status">
-									<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png" title="<spring:message code='ezLadder.t10${prelist.type+1}'/>"></span><span class="txt"><c:out value="${prelist.title}" /></span></li>
+									<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png" title="<spring:message code='ezLadder.t10${prelist.type+1}'/>"></span><span class="txt">${prelist.title}</span></li>
 								</c:forEach>
 							</ul>
 							<div id="tblPageRayer" style="margin-top: 10px;"></div>
