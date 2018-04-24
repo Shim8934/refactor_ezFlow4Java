@@ -708,7 +708,7 @@
 		SELECT
 			#id#,                  #sharerId#,            DISPLAYNAME,
 			DISPLAYNAME2,          #folderFileId#,        #folderFileType#,
-			#userNameList#,        #shareDate#,           #tenantId#
+			#userNameList#,        TO_DATE(#shareDate#, 'YYYY-MM-DD HH24:MI:SS'),           #tenantId#
 		FROM TBL_USERMASTER
 		WHERE CN = #sharerId#
 		AND TENANT_ID = #tenantId#
@@ -764,7 +764,7 @@
 			TBL_WEBFOLDER_SHARE
 		SET
 			USER_NAME_LIST = (
-				SELECT (LISTAGG(TO_CHAR(DISPLAYNAME), ',') within group (ORDER BY DISPLAYNAME) || '|' || LISTAGG(TO_CHAR(DISPLAYNAME2), ',') within group (ORDER BY DISPLAYNAME2))
+				SELECT (LISTAGG(TO_CHAR(DISPLAYNAME), ',') WITHIN GROUP (ORDER BY DISPLAYNAME) || '|' || LISTAGG(TO_CHAR(DISPLAYNAME2), ',') WITHIN GROUP (ORDER BY DISPLAYNAME2))
 				FROM (
 					SELECT DISPLAYNAME, DISPLAYNAME2
 					FROM TBL_USERMASTER
@@ -781,9 +781,9 @@
 						#idList[].id#
 					</iterate>
 					AND TENANT_ID = #tenantId#
-				) AS UD
+				) UD
 			),
-			SHARE_DATE = #shareDate#
+			SHARE_DATE = TO_DATE(#shareDate#, 'YYYY-MM-DD HH24:MI:SS')
 		WHERE
 			SHARE_ID = #shareId#
 		AND
@@ -1026,7 +1026,7 @@
 		)
 		SELECT
 			#id#,                  #shareId#,             #userId#,
-			DISPLAYNAME,           DISPLAYNAME2,          #hideDate#,
+			DISPLAYNAME,           DISPLAYNAME2,          TO_DATE(#hideDate#, 'YYYY-MM-DD HH24:MI:SS'),
 			#tenantId#
 		FROM TBL_USERMASTER
 		WHERE CN = #userId#
