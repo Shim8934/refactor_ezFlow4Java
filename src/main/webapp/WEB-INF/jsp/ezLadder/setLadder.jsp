@@ -102,10 +102,17 @@
 				
 				$(".ladderType")
 					.on("click", function() {
-						$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
+						console.log("타입 클릭....");
+						var imgs = $(".ladderType[_num='" + ladderType + "']").find("img");
+						
+						imgs.removeClass("active");
+						imgs.eq(0).addClass("active");
 						
 						ladderType = $(this).attr("_num");
-						$(".ladderType[_num='" + ladderType + "'] img").toggleClass("active");
+						imgs = $(this).find("img");
+						
+						imgs.removeClass("active");
+						imgs.eq(2).addClass("active").css("border", "2px solid #0470e4");
 						
 						setInputValue(false);
 						setLadderTypeDiv();
@@ -277,16 +284,16 @@
 				
 				ladderSetInitView();
 				
-				var userdata = {"userId": [], "userName": [], "userName2": [], "pic": [], "item": []};
+				/* var userdata = {"userId": [], "userName": [], "userName2": [], "pic": [], "item": []};
 				lineInfo.forEach(function(line, index) {
 					userdata["userId"][index] = line.userId;
 					userdata["userName"][index] = line.userName;
 					userdata["userName2"][index] = line.userName2;
 					userdata["pic"][index] = line.pic;
 					userdata["item"][index] = line.item;
-				});
+				}); */
 				
-				setAllUser_(userdata, "preladder");
+				setAllUser_(lineInfo, "preladder");
 				
 				$("#makeLad").removeAttr("disabled").css({"background": "#0470e4", "cursor": "pointer"});
 			}
@@ -298,7 +305,7 @@
 				var i = 0;
 				
 				if(attendants !== null) {
-					userlen = attendants["id"].length;
+					userlen = attendants["name"].length;
 				}
 				
 				for(; i < userlen; i++) {
@@ -327,11 +334,12 @@
 				ladder_select_attendant_dialogArguments[0] = attendants;
 				ladder_select_attendant_dialogArguments[1] = manage_attendant_complete;
 
-			    GetOpenWindow("/ezLadder/setLadderAttendantPopUp.do", "ladder_select_attendant", 970, 680);
+				GetOpenWindow("/ezLadder/setLadderAttendantPopUp.do", "ladder_select_attendant", 970, 680);
 			}
 			
 			function manage_attendant_complete(rtn) {
 				setAllUser_(rtn);
+				console.log(rtn);
 			}
 
 			/** 참여자 변경될때 슬라이더 바 조절 */
@@ -413,7 +421,6 @@
 						});
 						
 						var searchUserLen = searchUser["userId"].length;
-						searchOLNameSet = new Set();
 						var serchNameOverlapUser = {"userId": [], "userName": [], "deptName": []};
 						var alluserCnt = 0;
 						var overlapuserCnt = 0;
@@ -432,7 +439,13 @@
 								
 								if(chkOL0) {
 									// 이름 검색이 중복 (팝업확인)
-									searchOLNameSet.add(searchUser["userId"][i]);
+									if(serchNameOverlapUser["userId"].indexOf(searchUser["userId"][i]) == -1) {
+										var idx = serchNameOverlapUser["userId"].length;
+										serchNameOverlapUser["userId"][idx] = searchUser["userId"][i];
+										serchNameOverlapUser["userName"][idx] = searchUser["userName"][i];
+										serchNameOverlapUser["deptName"][idx] = searchUser["deptName"][i];
+									}
+									/* searchOLNameSet.add(searchUser["userId"][i]); */
 								}
 								if(chkOL1 == -1 && chkOL2 == -1) {
 									// 참여자 노중복
@@ -466,26 +479,14 @@
 							}
 						}
 						
-						var setLen = searchOLNameSet.size;
-						if(setLen > 0) {
-							var pMgH = 16;
-							var spanH = 20;
-							var popH = 185 + pMgH * 2 + spanH * searchOLNameSet.size;
-							var allSetId = searchOLNameSet.values();
+						var onlyNameOLLen = serchNameOverlapUser["userId"].length;
+						if(onlyNameOLLen > 0) {
 							var idIndex;
-							
-							for(var i = 0; i < setLen; i++) {
-								idIndex = searchUser["userId"].indexOf(allSetId.next().value);
-								
-								serchNameOverlapUser["userId"][i] = searchUser["userId"][idIndex];
-								serchNameOverlapUser["userName"][i] = searchUser["userName"][idIndex];
-								serchNameOverlapUser["deptName"][i] = searchUser["deptName"][idIndex];
-							}
 							
 							retAttendantPopInfo[0] = serchNameOverlapUser;
 							retAttendantPopInfo[1] = firstPopupComp;
 							
-							DivPopUpShow(360, popH, "/ezLadder/ladderPopup.do?popupType=overlapOnlyName");
+							DivPopUpShow(360, 258, "/ezLadder/ladderPopup.do?popupType=overlapOnlyName");
 						} else {
 							showSecondOverlapPopup();
 						}
@@ -604,20 +605,33 @@
 				DivPopUpHidden();
 				
 				attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
-				if(items == null) {
+				
+				if(addtype == "preladder") {
 					items = [];
-				} else if(addtype == "preladder") {
-					items = userdata["item"];
+					userdata.forEach(function(line, idx) {
+						attendants["id"][idx] = line["userId"];
+						attendants["name"][idx] = line["userName"];
+						attendants["name2"][idx] = line["userName2"];
+						attendants["pic"][idx] = line["pic"];
+						attendants["order"][idx] = idx;
+						items[idx] = line["item"];
+					});
+				} else {
+					var order = 0;
+					var userdataLen = userdata["userId"].length;
+					
+					if(items == null) {
+						items = [];
+					}
+					
+					for(; order < userdataLen; order++) {
+						attendants["id"][order] = userdata["userId"][order];
+						attendants["name"][order] = userdata["userName"][order];
+						attendants["name2"][order] = userdata["userName2"][order];
+						attendants["pic"][order] = userdata["pic"][order];
+						attendants["order"][order] = order; 
+					}
 				}
-				
-				var order = 0;
-				
-				attendants["id"] = userdata["userId"].slice(0);
-				attendants["name"] = userdata["userName"].slice(0);
-				attendants["name2"] = userdata["userName2"].slice(0);
-				attendants["pic"] = userdata["pic"].slice(0);
-				attendants["order"] = order++; 
-				
 				/* 사람 수 제한시 */
 				/* if(attendantlen + userdata.length > maxAttendant) {
 					alert(maxAttendant + "<spring:message code='ezLadder.t048' />");
@@ -689,6 +703,7 @@
 				}
 				
 				$("#ladderLineBox").scrollLeft(len * 150);
+				console.log(attendants.id);
 			}
 			
 			/** 유저 정보 xml로 가져오기 */

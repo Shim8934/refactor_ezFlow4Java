@@ -49,7 +49,7 @@
 		
 		window.onload = function() {
 			var firstScrollTop = $("#attendantList").offset().top - 5;
-			$("html, body").animate({"scrollTop": firstScrollTop}, 400);
+			$("html, body").animate({"scrollTop": firstScrollTop}, 300);
 		}
 	
 		
@@ -330,18 +330,28 @@
 		}
 		function ladderAnimationComplete(type) {
 			var $moveImgUser;
+			var $resultLi = $("#itemList li:eq(" + resultOrder + ")");
+			var $resultDiv = $("#itemList li:eq(" + resultOrder + ")").find("div");
 			
-			if($("#itemList li:eq(" + resultOrder + ") div").length == 1) {
-				var html = "<div title='" + _ladderLine[clickUserOrder].userName + "' style='line-height: 30px; height: 30px; background: #ddd; margin-top: 10px; border-radius: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + _ladderLine[clickUserOrder].userName + "</div>";
-				$("#itemList li:eq(" + resultOrder + ")").append(html);
+			$(".resultItem").css({"outline": "1px solid #dddddd", "background": "#ffffff"});
+			$(".resultUser").css({"background": "#dddddd", "color": "#000000"});
+
+			$resultDiv.eq(0).css({"outline": "1px solid #0470e4", "background": "#ddeeff"});
+			if($resultDiv.length == 1) {
+				var html = "<div title='" + _ladderLine[clickUserOrder].userName + "' class='resultUser' style='line-height: 30px; height: 30px; background: #0470e4; color: #ffffff; margin-top: 10px; border-radius: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + _ladderLine[clickUserOrder].userName + "</div>";
+				$resultLi.append(html);
 				$moveImgUser = $("#moveImgUser" + clickUserOrder);
 			} else {
+				$resultDiv.eq(1).css({"background": "#0470e4", "color": "#ffffff"});
 				$moveImgUser = $("#copyUser");
 			}
 			
 			if(type.substring(0, 3) == "ani" || type.substring(3, 6) == "one") {
 				var scrollval = (resultOrder * 150 - $("#ladderLineBox").width()/2) + 75;
 				$("#ladderLineBox").animate({"scrollLeft": scrollval}, 400);
+			} else {
+				$(".resultItem").css({"outline": "1px solid #dddddd", "background": "#ffffff"});
+				$(".resultUser").css({"background": "#dddddd", "color": "#000000"});
 			}
 			
 			if($moveImgUser.attr("_result") == "0") {
@@ -554,7 +564,7 @@
 				document.getElementById("sendBttn").disabled = true;
 			}
 			else {
-				document.getElementById("sendBttn").style.backgroundColor = "#004896";
+				document.getElementById("sendBttn").style.backgroundColor = "#0470e4";
 				document.getElementById("sendBttn").disabled = false;
 			}
 		}
@@ -767,7 +777,7 @@
 								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
 										<li>
-											<div title="${line.item}" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
+											<div title="${line.item}" class="resultItem" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
 												<span style="white-space: nowrap;">${line.item}</span>
 											</div>
 										</li>
@@ -813,7 +823,7 @@
 								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
 										<li>
-											<div title="${line.item}" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
+											<div title="${line.item}" class="resultItem" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
 												<span style="white-space: nowrap;">${line.item}</span>
 											</div>
 										</li>

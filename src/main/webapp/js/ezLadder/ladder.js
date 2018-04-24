@@ -137,6 +137,14 @@ function ladderDrawInitSettingVar() {
 }
 
 function moveUserPicImg(type) {
+	if(!!$(".goLadder").length && clickUserOrder != $(".goLadder").parent().attr("id").slice(4)) {
+		$("[id^='drag']").find("div").removeClass("goLadder").css({"outline": "1px solid #dddddd", "background": "#ffffff"})
+	}
+	
+	if(type != "popall") {
+		$("#drag" + clickUserOrder).find("div").addClass("goLadder").css({"outline": "1px solid #0470e4", "background": "#ddeeff"});
+	}
+	
 	pathUser = checkUserPath[clickUserOrder];
 	var userImgHtml;
 	if($("#drag" + clickUserOrder + " span").hasClass("userPicWraper_d")) {
@@ -201,11 +209,11 @@ function aniOneUser() {
 	moveUserPicImg("anione");
 }
 
-function aniAllUser() {
+function aniAllUser(tempOrder) {
 	drawStatus = !drawStatus;
 	beforeStatus = 0;
 	
-	moveUserPicImg("aniall" + clickUserOrder);
+	moveUserPicImg("aniall" + tempOrder);
 }
 
 function popOneUser() {
@@ -257,10 +265,7 @@ function printUserPath(locX, locY, moveX, moveY, type) { // 유저 경로 그리
 		drawPathLine(clickUserOrder, moveX, moveY, typeStr2);
 		
 		$moveImg.css({"top": moveTop, "left": moveLeft});
-		/*if($moveImg.offset().top >= $(window).height()) {
-			$(window).scrollTop($moveImg.offset().top);
-		}
-		*/
+		
 		if(locY >= hInfo) { 
 			drawStatus = false;
 			resultOrder = locX;
