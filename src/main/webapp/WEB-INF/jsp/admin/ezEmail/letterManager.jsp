@@ -88,6 +88,12 @@
 			// 위, 아래 버튼 클릭 시 실행
 			// type: prev(위), next(아래)
 			function orderSelect(type) {
+				
+				if (searchMode == true) {
+					alert("<spring:message code='ezEmail.letter31'/>");
+					return;
+				}
+				
 				var select= $('body').find('.lmLetterSelect');
 				
 				if (select.length === 0) {
@@ -104,6 +110,11 @@
 			
 			// 순서 저장 버튼 눌렀을때
 			function orderChange() {
+				
+				if (searchMode == true) {
+					alert("<spring:message code='ezEmail.letter31'/>");
+					return;
+				}
 				var liArr = $('div.lmLetter').find('li');
 				
 				for (var i = 0; i < liArr.length; i++) {
@@ -166,6 +177,12 @@
 				 var letterNo = "";
 				 
 				 if (type === "add") {
+					 
+					 if (searchMode == true) {
+						 alert("<spring:message code='ezEmail.letter31'/>");
+						 return;
+					 }
+					 
 					 popUpType = "add";
 					 letterBoxNo = $(btn).parents(".boxNo").attr("data-boxNo");
 					 letterNo = -1;

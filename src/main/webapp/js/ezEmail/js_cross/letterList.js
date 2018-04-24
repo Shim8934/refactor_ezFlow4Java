@@ -5,7 +5,7 @@ function letterSearch() {
 	var search = $("#lmSearchInput").val();
 	
 	// 편지지(사용자) 중에서 검색 모드일때만
-	if (pageType == 'letter_user') {
+	if (pageType == 'letter_user' || pageType == 'letter') {
 		searchMode = true;
 	}
 	
@@ -45,7 +45,7 @@ function disableChk() {
 	var search = $("#lmSearchInput").val();
 	
 	if(search.trim() !== "") {
-		$(".searchDis").attr("disabled",true);
+		//$(".searchDis").attr("disabled",true);
 	}
 }
 
@@ -206,7 +206,6 @@ function addLetterList(jsonArr) {
 	} 
 	
 	letterListCss(pageType, searchMode);
-	searchMode = false;
 }
 
 //편지지 검색 시 엔터 사용
