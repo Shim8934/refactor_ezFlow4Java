@@ -694,7 +694,13 @@
 		        	strBody = message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
 		        }
 		        
+		        // 게시물 내용을 db에 넣기 위한 변수 2018-04-06 강민수92
+		        var strContent = strBody;		        
+		        
 				strBody = strBody.replace(/&quot;/gi, "\'");
+				
+				//html 태그를 제거
+				strContent = strContent.replace(/(<([^>]+)>)/gi, "");
 				
       			if (strBody.indexOf("url(\'/") > -1) {
       				strBody = strBody.replace("url(\'/", "url(\'");
@@ -711,6 +717,8 @@
 		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
 		            }
 		        }
+		        
+				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCCONTENT", strContent);
 
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody.replace(/\r\n/g, "@r!n@"));
 
