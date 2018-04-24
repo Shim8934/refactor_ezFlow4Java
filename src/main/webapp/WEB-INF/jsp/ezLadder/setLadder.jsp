@@ -757,12 +757,13 @@
 					alert("<spring:message code='ezLadder.t020'/>");
 					return;
 				}
-				$("[name='userNames']").each(function(){
-					if(this.value == "") {
+				var userNamesLen = $("[name='userNames']").length;
+				for(var i = 0; i < userNamesLen; i++) {
+					if($("#userNames" + i).val() == "") {
 						alert("<spring:message code='ezLadder.t055'/>");
 						return;
 					}
-				});
+				}
 				
 				$("#makeLad").attr("disabled", "disabled");
 				

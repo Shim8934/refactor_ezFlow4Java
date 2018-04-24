@@ -417,7 +417,9 @@
 					_ladderLine = ladderInfo["list"];
 					status = _ladder.status;
 					
-					$("#lineDiv").html(
+					$("#lineDiv")
+						.css("height" , "675px")
+						.html(
 							"<span></span>" +
 							"<canvas id='ladderCanvasLine' width='0' height='675'></canvas>" +
 							"<canvas id='ladderCanvas' width='0' height='675'></canvas>"
@@ -680,7 +682,7 @@
 					<td>
 						<div class="ladderPreList_right" style="width: 100%; min-width: 800px; border: 0; height: auto;">
 							<h2 style="border: 1px solid #DDD;">
-								<p class="ladderGame_title">${vo.title}</p>
+								<p class="ladderGame_title"><c:out value="${vo.title}" /></p>
 								<div class="ladderGame_info">
 									<ul class="attribute">
 										<li><img src="/images/ezLadder/icon_game0${vo.type}.png" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" width="45px;" height="45px;"></li>

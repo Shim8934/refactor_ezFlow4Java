@@ -104,6 +104,7 @@
 					},
 					success: function(result) {
 						var lines = "";
+						$("#columnsbnk").html("");
 						$.each(result.list, function(index, value) {
 							var preType; 
 							switch(value.type) {
@@ -117,9 +118,10 @@
 									break;
 							}
 							
-							lines += '<li name="preladder_' + index + '" id="' + value.ladderId + '" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0' + value.type + '.png" title="' + preType +'"></span><span class="txt">' + value.title + '</span></li>';
+							lines = '<li name="preladder_' + index + '" id="' + value.ladderId + '" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0' + value.type + '.png" title="' + preType +'"></span><span class="txt"></span></li>';
+							$("#columnsbnk").append(lines);
+							$("#" + value.ladderId).find(".txt").text(value.title);
 						});
-						$("#columnsbnk").html(lines);
 						drag(); 
 	
 					}
@@ -182,7 +184,8 @@
 				currPage = ladderList["currPage"];
 				totalPage = ladderList["totalPage"];
 				totalLadder = ladderList["totalLadder"];
-
+				
+				$("#columnsbnk").html("");
 				ladderList["list"].forEach(function(ladder, index) {
 					var searchLadderType;
 					switch (ladder["type"]) {
@@ -196,10 +199,11 @@
 							break;
 					} 
 					
-					html += '<li name="preladder_' + index + '" id="' + ladder["ladderId"] + '" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0' + ladder["type"] + '.png" title="' + searchLadderType + '" ></span><span class="txt">' + ladder["title"] + '</span></li>';
+					html = '<li name="preladder_' + index + '" id="' + ladder["ladderId"] + '" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0' + ladder["type"] + '.png" title="' + searchLadderType + '" ></span><span class="txt"></span></li>';
+					$("#columnsbnk").append(html);
+					$("#" + ladder["ladderId"]).find(".txt").text(ladder["title"]);
 				});
 				
-				$("#columnsbnk").html(html);
 				drag();
 				makePageSelPage();
 				
@@ -282,13 +286,13 @@
 					<div class="ladderPreList_contents">
 						<div class="ladderPreList_left">
 							<div class="search_title">
-								<input type="text" id="searchInput" class="input_text" placeholder="검색 단어 입력" onfocus="this.className='input_text focus';" onkeyup="Key_event(event);" onmousedown="keyword_Clear();" />
+								<input type="text" id="searchInput" class="input_text" onfocus="this.className='input_text focus';" onkeyup="Key_event(event);" onmousedown="keyword_Clear();" />
 								<input id="searchOption" value="title" style="display: none;">
 								<input type="image" src="/images/ezLadder/search_btn.gif" alt="" class="search_btn" onclick="searchLadder();" />
 							</div>
 							<ul id="columnsbnk" class="game_list content">
 								<c:forEach items="${list}" var="prelist" varStatus="status">
-									<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png" title="<spring:message code='ezLadder.t10${prelist.type+1}'/>"></span><span class="txt">${prelist.title}</span></li>
+									<li name="preladder_${status.index}" id="${prelist.ladderId}" class="myBorder"><span class="icon"><img src="/images/ezLadder/icon_game0${prelist.type}.png" title="<spring:message code='ezLadder.t10${prelist.type+1}'/>"></span><span class="txt"><c:out value="${prelist.title}" /></span></li>
 								</c:forEach>
 							</ul>
 							<div id="tblPageRayer" style="margin-top: 10px;"></div>
