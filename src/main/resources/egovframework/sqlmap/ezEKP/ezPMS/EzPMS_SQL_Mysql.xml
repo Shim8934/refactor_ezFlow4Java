@@ -330,6 +330,10 @@
     			#restDueday#,			#alamMailStatus#,       #createDate#
     		)
     	]]>
+    	<selectKey keyProperty="id" resultClass="Integer">
+    		SELECT
+    			last_insert_id()
+    	</selectKey>
     </insert>
     
     <select id="EzPMSDAO.getProjectGroupTree" parameterClass="Map" resultMap="projectTaskTreeVO">
@@ -440,11 +444,6 @@
 	</select>
 	
 	<insert id="addProjectMember" parameterClass="Map">
-		<selectKey resultClass="Integer" keyProperty="projectId">
-			<![CDATA[
-				SELECT MAX(project_id) FROM tbl_pms_project
-			]]>
-		</selectKey>
 		<![CDATA[
 			INSERT INTO tbl_pms_member (
 				tenant_id,			project_id,			member_role_id,		user_id,		user_name,

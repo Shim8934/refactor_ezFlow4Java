@@ -214,9 +214,13 @@ var headManagerId = null;
 		contentType: "application/json; charset=UTF-8",
 		data :JSON.stringify(data),
 		success : function(result) {
-			alert("<spring:message code='ezTask.t150' />");
+			alert("새프로젝트가 추가되었습니다.");
 			
-			try { parent.setProjectList(); } catch (e) { alert("error1")}
+			var memberList = managerList;
+			
+			sendNotiMail(result, projectname);
+			
+			try { parent.setProjectList(); } catch (e) {}
 			popupClose();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
@@ -261,6 +265,11 @@ var headManagerId = null;
 	 $("#viewers").html(viewerNameList);
  }
  
+ function sendNotiMail(projectId) {
+	 $.ajax({
+		 
+	 });
+ }
 </script>
 </head>
 <body class="popup">

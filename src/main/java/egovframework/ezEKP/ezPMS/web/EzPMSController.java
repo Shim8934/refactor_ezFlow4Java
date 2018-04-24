@@ -184,11 +184,11 @@ public class EzPMSController {
 
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
 		
-//		JSONArray list = new JSONArray();
-		System.out.println(result);
+		Map<String, Object> data = (Map<String, Object>) result.get("data");
+		String projectId = (String) data.get("projectId");
 		
 		LOGGER.debug("ezPMS addNewProject ended");
-		return "json";
+		return projectId;
 	}
 	
 	/**
@@ -544,5 +544,10 @@ public class EzPMSController {
 	@RequestMapping(value="/ezPMS/selectHeadManager.do")
 	public String selectHeadManager() {
 		return "ezPMS/selectHeadManager";
+	}
+	
+	@RequestMapping(value="/ezPMS/sendNotiMail.do")
+	public void sendNotiMail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		
 	}
 }

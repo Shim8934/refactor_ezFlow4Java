@@ -117,7 +117,7 @@ public class EzPMSGWController {
 			newProject.setCreatorDeptname(request.getParameter("creatorDeptname"));
 			newProject.setCreatorDeptname2(request.getParameter("creatorDeptname2"));
 			
-			ezPMSService.addNewProject(newProject, request.getParameter("tenantId"));
+			int projectId = ezPMSService.addNewProject(newProject, request.getParameter("tenantId"));
 			
 			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json.get("managerList");
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("participantList"));
@@ -126,11 +126,16 @@ public class EzPMSGWController {
 			for (int i = 0; i < projectMemberList.size(); i++) {
 				ProjectMemberVO member = ezPMSService.getUserInfo((String)projectMemberList.get(i).get("userId"), Integer.parseInt(request.getParameter("tenantId")));
 				member.setMemberRoleId((int)projectMemberList.get(i).get("roleId"));
+				member.setProjectId(projectId);
 				ezPMSService.addProjectMember(member, Integer.parseInt(request.getParameter("tenantId")));
 			}
 			
+			JSONObject data = new JSONObject();
+			data.put("projectId", projectId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			

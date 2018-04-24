@@ -78,8 +78,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void addNewProject(Map<String, Object> map) {
-		insert("addNewProject", map);
+	public int addNewProject(Map<String, Object> map) {
+		return (int) insert("addNewProject", map);
 	}
 	
 	@SuppressWarnings("unchecked")

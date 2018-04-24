@@ -56,7 +56,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void addNewProject(ProjectInfoVO newProject, String tenantId) {
+	public int addNewProject(ProjectInfoVO newProject, String tenantId) {
 		LOGGER.debug("Service addNewProject started.");
 		
 		System.out.println(newProject.getProjectName());
@@ -108,8 +108,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			LOGGER.debug("Error : " + e.getMessage());
 		}
 		
-		ezPMSDAO.addNewProject(map);
+		int projectId = ezPMSDAO.addNewProject(map);
 		LOGGER.debug("Service addNewProject ended.");
+		return projectId;
 	}
 
 	@Override
