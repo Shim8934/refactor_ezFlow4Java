@@ -811,6 +811,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 	@Override
 	public List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception {
+		setSearchDateOffset(searchInfo, offset);
 
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
@@ -834,6 +835,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Override
 	public Map<String, Integer> getFavoriteCount(String userId, String offset, int tenantId, SearchVO searchInfo) throws Exception {
+		setSearchDateOffset(searchInfo, offset);
 
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
@@ -846,33 +848,32 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("searchFileType", searchInfo.getSearchFileType());
 		parameterMap.put("searchStartDate", searchInfo.getSearchStartDate());
 		parameterMap.put("searchEndDate", searchInfo.getSearchEndDate());
-		
+
 		Integer folderCount = ezWebFolderDAO.getFavoriteFolderCount(parameterMap);
 		Integer fileCount = ezWebFolderDAO.getFavoriteFileCount(parameterMap);
-		
+
 		Map<String, Integer> result = new HashMap<String, Integer>();
 		result.put("totalCount", folderCount + fileCount);
 		result.put("folderCount", folderCount);
 		result.put("fileCount", fileCount);
-		
+
 		return result;
 	}
 	
 	@Override
 	public boolean isExistsFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception {
-		
+
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
 		parameterMap.put("targetId", targetId);
 		parameterMap.put("targetType", targetType);
 		parameterMap.put("tenantId", tenantId);
-		
-		LOGGER.debug("insi1: "+parameterMap.toString());
 
 		Integer count = ezWebFolderDAO.isExistsFavorite(parameterMap);
-		
-		LOGGER.debug("insi: "+(count == 1));
-		
+
+		LOGGER.debug("is exists: " + (count == 1));
+		LOGGER.debug("exists data: " + parameterMap.toString());
+
 		return count == 1;
 	}
 	
@@ -990,4 +991,15 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		ezWebFolderDAO.moveFile(map);
 	}
 	
+	private void setSearchDateOffset(SearchVO searchInfo, String offset) {
+		String startDate = searchInfo.getSearchStartDate();
+		String endDate = searchInfo.getSearchEndDate();
+		
+		if (startDate.isEmpty() || endDate.isEmpty()) {
+			return;
+		}
+		
+		searchInfo.setSearchStartDate(commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true));
+		searchInfo.setSearchEndDate(commonUtil.getDateStringInUTC(endDate + " 23:59:59", offset, true));
+	}
 }

@@ -199,7 +199,7 @@
 		<isNotEqual property="searchStartDate" compareValue="">
 			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					TO_CHAR(RESULT.CREATE_DATE, 'YYYY-MM-DD') >= #searchStartDate# AND TO_CHAR(RESULT.CREATE_DATE, 'YYYY-MM-DD') <= #searchEndDate#
+					RESULT.CREATE_DATE >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND RESULT.CREATE_DATE <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS')
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -1315,7 +1315,7 @@
 							END CREATOR_NAME,
 			                FILES.CREATE_NAME1,
 			                FILES.CREATE_NAME2,
-			                FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+			                FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 			                FAVOR.TENANT_ID,
 			                FILES.USE_STATUS
 			            FROM
@@ -1354,7 +1354,7 @@
 							END CREATOR_NAME,
 			                FOLDER.CREATE_NAME1,
 			                FOLDER.CREATE_NAME2,
-			                FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+			                FOLDER.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 			                FAVOR.TENANT_ID,
 			                FOLDER.USE_STATUS
 			            FROM
@@ -1393,7 +1393,7 @@
 					FILE_TYPE.TYPE_NAME,
 					FOLDER.CREATE_NAME1,
 					FOLDER.CREATE_NAME2,
-					FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+					FOLDER.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 					FOLDER.USE_STATUS
 				FROM
 					TBL_WEBFOLDER_FAVOR FAVOR
@@ -1423,7 +1423,7 @@
 					FILE_TYPE.TYPE_NAME,
 					FILES.CREATE_NAME1,
 					FILES.CREATE_NAME2,
-					FAVOR.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+					FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 					FILES.USE_STATUS
 				FROM
 					TBL_WEBFOLDER_FAVOR FAVOR
