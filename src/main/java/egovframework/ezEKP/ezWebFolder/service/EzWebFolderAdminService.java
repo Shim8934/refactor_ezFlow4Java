@@ -12,13 +12,13 @@ public interface EzWebFolderAdminService {
 	WebfolderConfigVO getWebfolderConfig(String companyId, int tenantId) throws Exception;
 	List<UserCapacityVO> getListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception;
 	void updateNewAmount(List<String> userList, String newStorageValue, String companyId, int tenantId) throws Exception;
-	List<FileLogVO> getListFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, int startPoint, int endPoint, String primary, String offset, int tenantId) throws Exception;
+	List<FileLogVO> getListFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int endPoint, String primary, String offset, int tenantId) throws Exception;
 	void insertFileLog(FileLogVO fileLog) throws Exception;
 	void insertFolder(FolderVO folder) throws Exception;
 	void insertFolder2(FolderVO folder) throws Exception;
 	void insertFolderUser(String seq, String userId, String userType, String folderId, String createId, String createDate, String companyId, int tenantId) throws Exception;
 	void deleteFolderUsers(String folderId, int tenantId) throws Exception;
-	int getTotalFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, int startPoint, int endPoint, String primary, int tenantId) throws Exception;
+	int getTotalFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, int tenantId) throws Exception;
 	int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception;
 	void deleteFolderUsersOfChief(String userId, int tenantId) throws Exception;
 	void addCompanyFolder(String pFolderId, String folderUsers, String folderName, String folderName2, LoginVO userInfo) throws Exception;

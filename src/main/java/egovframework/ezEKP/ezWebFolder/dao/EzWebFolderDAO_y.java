@@ -13,6 +13,26 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @SuppressWarnings("unchecked")
 @Repository("EzWebFolderDAO_y")
 public class EzWebFolderDAO_y extends EgovAbstractDAO {
+	public int checkRootFolder(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.checkRootFolder", map);
+	}
+	
+	public String insertRootFolder(Map<String, Object> map) {
+		return (String) insert("EzWebFolderDAO_y.insertRootFolder", map);
+	}
+	
+	public List<Map<String, Object>> getUserFolderTree(Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getUserFolderTree",map);
+	}
+	
+	public List<Map<String, Object>> getDeptFolderTree(Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getDeptFolderTree",map);
+	}
+	
+	public List<Map<String, Object>> getCompFolderTree(Map<String, Object> map) {
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_y.getCompFolderTree",map);
+	}
+	
 	// fileList 가져오는 메소드
 	public List<FileVO> getFileList(Map<String, Object> map) {
 		return  (List<FileVO>) list("EzWebFolderDAO_y.getFileList",map);

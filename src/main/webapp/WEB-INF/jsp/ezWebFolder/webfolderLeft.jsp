@@ -27,6 +27,10 @@
 		    var firFolderId = "";
 		    var flag = "";
 		    
+			document.onselectstart = function() {
+				return false;
+			}
+		    
 		    $(function() { 
 				folderList('C');
 		    	folderType = 'C';
@@ -213,6 +217,10 @@
 			function setRightFrame(url) {
 				window.parent.frames["right"].location.href = url;
 			}
+			
+			function wfAdministrator() {
+				window.open("/admin/ezWebFolder/webFolderConfig.do", "", GetOpenWindowfeature(1380, 800));
+			}
 		</script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%" onload="drawVolume();">
@@ -224,14 +232,18 @@
   				<span style="display:inline-block;width:100%;" onclick="folderList('C');"><spring:message code='ezWebFolder.t233' /></span>
   			</h2>  
     		<ul class ="tree">
-    			<div id ="tree" style="width:210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
+    			<li style="padding: 0px; display: unset;">
+	    			<div id="tree" style="width:210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
+    			</li>
 <!-- 	  			<li id ="company"></li> -->
 		    </ul>  	
 		    <h2>
   				<span style="display:inline-block; width:100%;" onclick="folderList('D');"><spring:message code='ezWebFolder.t234' /></span>
   			</h2>  
     		<ul class ="tree">
-    			<div id ="treeDept" style="width: 210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
+    			<li style="padding: 0px; display: unset;">
+    				<div id ="treeDept" style="width: 210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
+    			</li>
 <!-- 	  			<li id ="dept"></li> -->
 		    </ul>  
 		    	
@@ -239,7 +251,9 @@
   				<span style="display:inline-block;width:100%;" onclick="folderList('U');"><spring:message code='ezWebFolder.t235' /></span>
   			</h2>  
     		<ul class ="tree">
-    			<div id ="treePer" style="width: 210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
+	    		<li style="padding: 0px; display: unset;">
+	    			<div id ="treePer" style="width: 210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
+	    		</li>
 <!-- 	  			<li id="person"></li> -->
 		    </ul>  
 		    
@@ -267,6 +281,12 @@
 			<h3>
 				<span onclick="wfConfig();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t236" /></span><!-- 환경설정 -->
 			</h3>
+			<c:if test="${isWfAdmin == '1'}">
+				<h3>
+					<span onclick="wfAdministrator();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t25" /></span><!-- 웹폴더 관리자 -->
+				</h3>
+			</c:if>
+
 			<div id='myProgress' style='margin-left:20px;'>
 				<div id='myBar'></div>
 			</div>

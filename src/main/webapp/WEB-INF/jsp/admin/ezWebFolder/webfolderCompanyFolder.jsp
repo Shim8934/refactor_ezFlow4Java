@@ -5,12 +5,12 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="/css/organ_tree.css"                     type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"          type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezWebFolder/popup.js"       ></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"             ></script>
 		<script type="text/javascript" >
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
@@ -444,6 +444,7 @@
 					return;
 				}
 				
+				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
 				DivPopUpShow(450, 480, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder);
 			}
 			
@@ -458,7 +459,8 @@
 					return;
 				}
 				
-				DivPopUpShow(450, 140, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder);
+				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+				DivPopUpShow(450, 130, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder);
 			}
 			
 			function change() {
@@ -493,6 +495,11 @@
 						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
+			}
+			
+			function closeAllPopup() {
+				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
+				DivPopUpHidden();
 			}
 		</script>
 	</head>

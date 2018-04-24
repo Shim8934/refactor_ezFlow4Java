@@ -47,7 +47,21 @@
 			}
 			
 			function openSearchPanel() {
-				$("#searchPanel").toggle("1000");
+				var searchPanel = document.getElementById("searchPanel");
+				if (searchPanel.style.display == "none") {
+					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+					document.getElementById("mailPanel").style.display = "";
+					var position              = getPosition(502, 128);
+					searchPanel.style.top     = position[0] + "px";
+					searchPanel.style.right   = position[1] + "px";
+					searchPanel.style.display = "";
+				}
+				else {
+					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
+					document.getElementById("mailPanel").style.display = "none";
+					searchPanel.style.display = "none";
+				}
+				
 				document.getElementById("inputSearch").value                = "";
 				document.getElementById("searchOption").options[0].selected = 'selected';
 			}
@@ -341,13 +355,21 @@
 						"companyId"     : document.getElementById("companyList").value,
 						"newStorage"    : newValue
 					},
-					dataType: "text",
+					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						alert("<spring:message code='ezWebFolder.t252'/>");
-						document.getElementById("storageVal").value = "";
-						search_Set(currentPage);
-						checkedArr = [];
+						var reason = data.reason;
+						
+						if (reason) {
+							alert(reason);
+							return;
+						}
+						else {
+							alert("<spring:message code='ezWebFolder.t252'/>");
+							document.getElementById("storageVal").value = "";
+							search_Set(currentPage);
+							checkedArr = [];
+						}
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -396,6 +418,28 @@
 				}
 			}
 			
+			function getPosition(popUpW, popUpH) {
+				var returnValue = new Array();
+				var heigth      = window.parent.document.documentElement.clientHeight;
+				if (heigth == 0) {heigth = window.parent.document.body.clientHeight;}
+				
+				var width = window.parent.document.documentElement.clientWidth;
+				if (width == 0) {width = window.parent.document.body.clientWidth;}
+				
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				
+				if (heigth < (popUpH + 50)) {
+					returnValue[0] = (heigth / 2);
+				}
+				else {
+					returnValue[0] = (heigth / 2) - 50;
+				}
+				
+				returnValue[1] = pleftpos / 2;
+				return returnValue;
+			}
+			
 		</script>
 	</head>
 	<body class="mainbody">
@@ -415,13 +459,15 @@
 		<div style="position: relative; height: 27px; margin-bottom: 10px;">
 			<div style="position: relative;">
 				<a id="btnSearch" class="webfolderBttn2" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123'/></span></a>
-				<img src="/images/i_bar.gif" style="margin-left: 2px;"/>
 				<a id="btnRefresh" class="webfolderBttn2" onClick="change();"><span><spring:message code='ezWebFolder.t139'/></span></a>
-				<div id="searchPanel" style="position: absolute; top: 37px; left: 0px; height: 80px; width: 500px; border: 1px solid #666666; z-index: 10; background-color: #f2f2f2; display: none;">
+				<div id="searchPanel" style="z-index: 2000; position: fixed; height: auto; width: 500px; border: 1px solid #666666; background-color: #f2f2f2; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
 					<div style="margin: 10px;">
 						<table style="border-collapse: collapse; width: 100%;">
 							<tr>
-								<th style="width: 100px; min-width: 100px;"><spring:message code='ezWebFolder.t141'/></th>
+								<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t23'/></th>
+							</tr>
+							<tr>
+								<th style="width: 100px; min-width: 100px; height: 30px;"><spring:message code='ezWebFolder.t141'/></th>
 								<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 358px; width: 358px;">
 									<select id="searchOption" style="margin-left: 10px;">
 										<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
@@ -432,7 +478,7 @@
 							</tr>
 							<tr>
 								<td colspan="2">
-									<div style="margin: 9px 50px 9px 160px;">
+									<div style="margin-top: 10px; text-align: center;">
 										<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
 										<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
 									</div>
@@ -440,11 +486,12 @@
 							</tr>
 						</table>
 					</div>
+					<span class="wfCloseBttn" onclick="openSearchPanel();"></span>
 				</div>
 			</div>
 			<div style="position: absolute; top: 0px; right: 2px; height: 27px;">
 				<span style="height: 20px; line-height: 20px; display: inline; font-size: 14px;"><spring:message code='ezWebFolder.t145'/></span>
-				<input id="storageVal" type="text" style="width: 100px; height: 27px; border-radius: 5px; border: 1px solid #b3b3b3; margin-right: 3px; padding-left: 5px;" placeholder="<spring:message code='ezWebFolder.t132' />"/>
+				<input id="storageVal" type="text" style="width: 100px; height: 27px; border-radius: 5px; border: 1px solid #b3b3b3; padding-left: 5px;" placeholder="<spring:message code='ezWebFolder.t132' />"/>
 				<a id="btnChange" class="webfolderBttn2" onClick="changeStorageVal();"><span><spring:message code='ezWebFolder.t124'/></span></a>
 				<a id="btnBack" class="webfolderBttn2" onClick="changeToDefault();"   ><span><spring:message code='ezWebFolder.t125'/></span></a>
 			</div>
@@ -454,9 +501,9 @@
 			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileStorage">
 				<tr>
 					<th width="10px"><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
-					<th width="80px"  style=""><spring:message code='ezWebFolder.t146'/></th>
-					<th width="80px"  style=""><spring:message code='ezWebFolder.t142'/></th>
-					<th width="200px" style=""><spring:message code='ezWebFolder.t143'/></th>
+					<th width="120px"  style=""><spring:message code='ezWebFolder.t146'/></th>
+					<th width="120px"  style=""><spring:message code='ezWebFolder.t142'/></th>
+					<th width="120px" style=""><spring:message code='ezWebFolder.t143'/></th>
 					<th width="40px"  style=""><spring:message code='ezWebFolder.t147'/></th>
 					<th width="80px"  style="text-align: center;"><spring:message code='ezWebFolder.t148'/></th>
 					<th width="80px"  style="text-align: center;"><spring:message code='ezWebFolder.t149'/></th>
@@ -466,6 +513,7 @@
 		</div>
 		
 		<div id="tblPageRayer"></div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	</body>
 </html>

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
-import egovframework.ezEKP.ezWebFolder.vo.FavoriteFileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
@@ -22,13 +22,23 @@ public interface EzWebFolderService_m {
 	
 	public Map<String, Integer> getSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
 	
+	public List<Map<String, String>> getPermissionIdList(String userId, String deptId, String compId, int tenantId) throws Exception;
+	
 	public boolean isShared(String folderFileId, String folderFileType, String folderPath, int tenantId) throws Exception;
 	
-	int getShareSeq(int tenantId) throws Exception;
+	public void insertShare(String sharerId, String folderFileId, String folderFileType, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
 	
-	void insertShare(int seqId, String companyId, String userId, String userType, String folderFileId, String folderFileType, String createId, int tenantId) throws Exception;
+	public void updateShare(String shareId, String sharerId, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
 	
-	void delShare(String companyId, String folderFileId, String folderFileType, String createId, int tenantId) throws Exception;
+	public void deleteShare(String shareId, String sharerId, String offset, int tenantId) throws Exception;
+	
+	public List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception;
+
+	public Map<String, Integer> getHiddenSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception;
+	
+	public void hideShare(String shareId, String userId, String offset, int tenantId) throws Exception;
+
+	public void showShare(String shareId, String userId, String offset, int tenantId) throws Exception;
 	
 	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int pStart, int pEnd, String searchExt, String searchFileName, String searchFileType, String searchCreateName, String endrollStartDate, String endrollEndDate, String delStartDate, String delEndDate) throws Exception;
 
@@ -50,7 +60,7 @@ public interface EzWebFolderService_m {
 
 	public List<TrashCanVO> getFolderByFolderPath(String folderPath, int tenantId, String companyId) throws Exception;
 	
-	List<FavoriteFileVO> getFavorites(String userId, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception;
+	List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception;
 	
 	Map<String, Integer> getFavoriteCount(String userId, String offset, int tenantId, SearchVO searchInfo) throws Exception;
 	

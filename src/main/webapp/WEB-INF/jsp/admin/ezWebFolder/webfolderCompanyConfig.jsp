@@ -136,7 +136,7 @@
 				</tr>
 			</table>
 		</div>
-		<div style="margin: 10px 70px;">
+		<div style="margin: 10px 90px;">
 			<a class="webfolderBttn"><span onclick="save();"  ><spring:message code='ezWebFolder.t133'/></span></a>
 			<a class="webfolderBttn"><span onclick="cancel();"><spring:message code='ezWebFolder.t112'/></span></a>
 		</div>

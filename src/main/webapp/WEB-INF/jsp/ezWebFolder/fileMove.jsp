@@ -31,13 +31,13 @@
 			selectedLevel  = null;
 			currentFolders = [];
 			var type       = document.querySelector('input[name=treeType]:checked').value;
-			
+			var compVal    = document.getElementById("companyList") ? document.getElementById("companyList").value : "";
 			$.ajax({
 				type: "POST",
 				url: "/ezWebFolder/getFileFolderTree.do",
 				data: {
 					"fileList"  : fileList,
-					"companyId" : document.getElementById("companyList").value,
+					"companyId" : compVal,
 					"type"      : type,
 					"mode"      : mode
 				},
@@ -223,7 +223,7 @@
 		}
 		
 		function wClose() {
-			parent.DivPopUpHidden();
+			parent.closeAllPopup();
 			window.close();
 		}
 		
@@ -340,7 +340,7 @@
 	</div>
 	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto;" id="folderTree"></div>
 	
-	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
+	<div style="margin: 8px 0px; position:fixed; bottom: 0px; text-align: center; width: 100%;">
 		<a id="btnSave"   class="webfolderBttn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
 		<a id="btnCancel" class="webfolderBttn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
 	</div>

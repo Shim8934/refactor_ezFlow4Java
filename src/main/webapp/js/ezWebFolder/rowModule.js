@@ -1,0 +1,146 @@
+var rowModule = (function() {
+	var className = {
+		selected : "bnkWebFolder2",
+		unselected : "bnkWebFolder"
+	};
+
+	var selectedClassNameRegExp = new RegExp("\\b" + className.selected + "\\b");
+
+	var ctrlKey = false;
+	var shiftKey = false;
+
+	var rowWrapElement;
+	var firstSelected;
+
+	window.addEventListener("load", function() {
+		var keyEvent = function(event) {
+			shiftKey = event.shiftKey;
+			ctrlKey = event.ctrlKey;
+		}
+		
+		document.addEventListener("keydown", keyEvent);
+		document.addEventListener("keyup", keyEvent);
+		
+		rowWrapElement = document.getElementById("tblFileList");
+	});
+
+	function onRowClick(rowElement) {
+		if (isFirstSelected()) {
+			firstSelected = rowElement;
+			setSelectState(rowElement, true);
+
+			return;
+		}
+
+		if (shiftKey) {
+			var rows = Array.prototype.slice.call(rowWrapElement.children);
+			var startIndex = rows.indexOf(firstSelected);
+			var endIndex = rows.indexOf(rowElement);
+			var temp;
+
+			if (startIndex > endIndex) {
+				temp = startIndex;
+				startIndex = endIndex;
+				endIndex = temp;
+			}
+
+			clearFocus();
+
+			for (var i = startIndex; i <= endIndex; i++) {
+				setSelectState(rows[i], true);
+			}
+
+			return;
+		}
+		
+		var selectedLength = getSelectedRows().length;
+		var isDuplicateFocus = (selectedLength === 1 && firstSelected === rowElement);
+
+		if (ctrlKey || isDuplicateFocus) {
+			setSelectState(rowElement, !isSelected(rowElement));
+		} else {
+			clearFocus();
+			setSelectState(rowElement, true);
+
+			firstSelected = rowElement;
+		}
+	}
+	
+	function onCheckboxChange(element) {
+		var rowElement = element.parentElement.parentElement;
+
+		if (isFirstSelected()) {
+			firstSelected = rowElement;
+		}
+		
+		setSelectState(rowElement, element.checked);
+	}
+	
+	function isFirstSelected() {
+		return (firstSelected === undefined || getSelectedRows().length === 0);
+	}
+
+	function getSelectedRows() {
+		return rowWrapElement.querySelectorAll("tr." + className.selected);
+	}
+
+	function getUnselectedRows() {
+		return rowWrapElement.querySelectorAll("tr." + className.unselected);
+	}
+	
+	function getRowInfo(rowElement) {
+    	var targetId = rowElement.getAttribute("targetId");
+    	var targetType = rowElement.getAttribute("targetType");
+    	var isFavorite = rowElement.hasAttribute("favorite");
+    	
+    	// favorite type mapping
+    	if (targetType.length > 1) {
+        	targetType = targetType === "folder" ? targetType = "D" : targetType = "F";
+    	}
+    	
+    	return {
+        	id: targetId,
+        	type: targetType,
+        	isFavorite: isFavorite
+    	}
+	}
+
+	function isSelected(rowElement) {
+		return rowElement.className.search(selectedClassNameRegExp) >= 0;
+	}
+
+	function clearFocus() {
+		var selectedRows = getSelectedRows();
+		var length = selectedRows.length;
+
+		for (var i = 0; i < length; i++) {
+			setSelectState(selectedRows[i], false);
+		}
+	}
+
+	function setSelectState(rowElement, isSelect) {
+		var checkboxElement = rowElement.firstChild.firstChild;
+
+		checkboxElement.checked = isSelect;
+		rowElement.setAttribute("class", isSelect ? className.selected : className.unselected);
+	}
+
+	function selectAll(isEnable) {
+		var targetRows = isEnable ? getUnselectedRows() : getSelectedRows();
+		var length = targetRows.length;
+
+		for (var i = 0; i < length; i++) {
+			setSelectState(targetRows[i], isEnable);
+		}
+	}
+
+	return {
+		onRowClick : onRowClick,
+		onCheckboxChange : onCheckboxChange,
+		getSelectedRows : getSelectedRows,
+		getUnselectedRows : getSelectedRows,
+		getRowInfo : getRowInfo,
+		clearFocus : clearFocus,
+		selectAll : selectAll
+	};
+}());

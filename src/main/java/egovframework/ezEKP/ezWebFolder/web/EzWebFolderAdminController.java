@@ -403,7 +403,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/updateCapacities.do", method = RequestMethod.POST)
-	public void updateCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "userListParam") List<String> userList, HttpServletResponse response) throws Exception {
+	public String updateCapacities(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam(value = "userListParam") List<String> userList,  Model model, HttpServletResponse response) throws Exception {
 		String newStorageValue = request.getParameter("newStorage");
 		String companyId       = request.getParameter("companyId");
 		
@@ -425,7 +425,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		String status                 = resultBody.get("status").toString();
 		
-		logger.debug("Status: " + status);
+		if (!status.equals("ok")) {
+			String reason = resultBody.get("reason").toString();
+			model.addAttribute("reason", reason);
+		}
+		
+		return "json";
 	}
 
 	@RequestMapping(value="/admin/ezWebFolder/restoreCapacities.do", method = RequestMethod.POST)
@@ -464,6 +469,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String fileExt       = request.getParameter("fileExt")   != null ? request.getParameter("fileExt")   : "";
 		String fileName      = request.getParameter("fileName")  != null ? request.getParameter("fileName")  : "";
 		String userName      = request.getParameter("userName")  != null ? request.getParameter("userName")  : "";
+		String fileType      = request.getParameter("fileType")  != null ? request.getParameter("fileType")  : "";;
 		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/filehistorylist";
 		
@@ -479,6 +485,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("startDate", startDate)
 										.queryParam("fileExt", fileExt)
 										.queryParam("fileName", fileName)
+										.queryParam("fileType", fileType)
 										.queryParam("userName", userName)
 										.queryParam("currentPage", currPage)
 										.queryParam("endDate", endDate);
@@ -1125,5 +1132,4 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		return "json";
 	}
-	
 }
