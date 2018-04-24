@@ -563,6 +563,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		String browser = ClientUtil.getClientInfo(req, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
+		//HWP사용유무
+		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
+		
+		if (useHWP.equals("")) {
+			useHWP = "NO";
+		}
+		
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("pageID", pageID);
 		model.addAttribute("parentPageID", parentPageID);
@@ -580,6 +587,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("skinExist", skinExist);
 		model.addAttribute("script1", script1);
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
+		model.addAttribute("useHWP", useHWP);
 		
 		logger.debug("topMenu ended");
 		return "/ezPortal/portalTopMenu";
