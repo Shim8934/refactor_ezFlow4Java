@@ -203,7 +203,6 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getAttitudeAuthList", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void deleteAttitudeAuth(Map<String, Object> map) {
 		delete("ezAttitudeAdminDAO.deleteAttitudeAuth", map);
 	}
@@ -218,14 +217,12 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 			Map<String, Object> map) {
 		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getAttitudeAuthDeptList", map);
 	}
-	@SuppressWarnings("unchecked")
 	public void insertAttitudeAuth(Map<String, Object> map) {
 		insert("ezAttitudeAdminDAO.insertAttitudeAuth", map);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<AttitudeStatisVO> getAttitudeUserStatistics(
+	public AttitudeStatisVO getAttitudeUserStatistics(
 			Map<String, Object> map) {
-		return (List<AttitudeStatisVO>) list("ezAttitudeAdminDAO.getAttitudeUserStatistics", map);
+		return (AttitudeStatisVO) select("ezAttitudeAdminDAO.getAttitudeUserStatistics", map);
 	}
 }

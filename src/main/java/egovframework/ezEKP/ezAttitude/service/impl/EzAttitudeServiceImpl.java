@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1098,18 +1099,42 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId,
-			String offset, String startDate, String endDate, int tenantId)
+			String offset, String year, String typeId, int tenantId)
 			throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-
+		
+		String startTime = "-01 00:00:00";
+		
 		map.put("userId", userId);
 		map.put("offsetMin", offsetMin);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
+		map.put("year", year);
+		map.put("startTime", startTime);
+		map.put("typeId", typeId);
 		map.put("tenantId", tenantId);
 		
-		return ezAttitudeDAO.getAttitudeUserStatistics(map);
+		List<AttitudeStatisVO> list = new ArrayList<AttitudeStatisVO>();
+		for (int months = 1; months < 13; months++) {
+			Calendar cal = Calendar.getInstance();
+			cal.set(Integer.valueOf(year), months - 1, 1);
+			
+			String endTime = "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
+			map.put("endTime", endTime);
+			map.put("months", months);
+			
+			AttitudeStatisVO vo = ezAttitudeDAO.getAttitudeUserStatistics(map);
+			if (vo != null) {
+				list.add(vo);
+			} else {
+				AttitudeStatisVO vo2 = new AttitudeStatisVO();
+				vo2.setCount("0");
+				vo2.setTypeId(typeId);
+				vo2.setStatMonth(String.valueOf(months));
+				list.add(vo2);
+			}
+		}
+		
+		return list;
 	}
 }
