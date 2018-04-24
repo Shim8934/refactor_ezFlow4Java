@@ -159,7 +159,7 @@
 			$('#originalPath').empty();
 			var nameTag = document.createElement("span");
 			orginalPathElmt.appendChild(nameTag);
-			for ( var i = 1; i< path.length - 1; i++) {
+			for ( var i = 0; i< path.length - 1; i++) {
 				var detailName = [];
 				detailName = document.createElement("span");
 				
@@ -172,14 +172,14 @@
 				detailName.textContent = path[i] ;
 				detailName.setAttribute("style", "font-size:18px; ");
 				nameTag.appendChild(detailName);
-				if(path.length ==3) {
+				if(path.length ==2) {
 					detailName = document.createElement("span");
 					detailName.textContent =  " <spring:message code='ezWebFolder.t291' /> "; // 모든파일
 					detailName.setAttribute("style", "font-size:12px; ");
 					nameTag.appendChild(detailName);
 				}
 				var imgElmt = document.createElement("img");
-				imgElmt.setAttribute("style", "height: 18px; width: 18px; display: inline-block;");
+				imgElmt.setAttribute("style", "height: 14px; width: 14px; display: inline-block; margin : 0px 6px;");
 				imgElmt.src = "/images/webfolder/arrow.png";
 				
 				

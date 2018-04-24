@@ -568,48 +568,53 @@
 	
 	<select id="EzWebFolderDAO_y.searchFileList" resultMap="fileVO" parameterClass="Map">   
 		<![CDATA[
-		SELECT DISTINCT
-				t.*	 
-		from 
-			(
-		]]>
-		<include refid="fileListSelect"/>
-			<![CDATA[
-				from tbl_webfolder_file f inner join (
-					select *
-					from tbl_webfolder_folder  
-					where folder_path like (#folderPath#||'%') and tenant_id = #tenantId# and folder_type = #folderType# ) 
-						folder on folder.folder_id  = f.folder_id
-				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
-				where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
-				
-			]]>
-			<include refid="fldSelect"/>
-			<![CDATA[
-				    from tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder' and folder.tenant_id = #tenantId#
-				    where 
-							folder.tenant_id = #tenantId# 
-						and
-							type.tenant_id = #tenantId#
-						and 
-							folder.FOLDER_TYPE = #folderType#
-		                and 
-		                	folder.USE_STATUS = 'Y'
-		                and 
-		                	folder.company_id = #comId#		
-		            
-				      
-			]]>
-			<![CDATA[
-				) t 
-				
-				where folder_path like (#folderPath#||'%') 
-			]]>
+	  		select * from ( 
+	  			select tear.*, ROWNUM rownums 
+	        	from (
+					SELECT DISTINCT
+							t.*	 
+					from 
+						(
+					]]>
+					<include refid="fileListSelect"/>
+						<![CDATA[
+							from tbl_webfolder_file f inner join (
+								select *
+								from tbl_webfolder_folder  
+								where folder_path like (#folderPath#||'%') and tenant_id = #tenantId# and folder_type = #folderType# ) 
+									folder on folder.folder_id  = f.folder_id
+							inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
+							where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
+							
+						]]>
+						<include refid="fldSelect"/>
+						<![CDATA[
+						    from tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder' and folder.tenant_id = #tenantId#
+						    where 
+									folder.tenant_id = #tenantId# 
+								and
+									type.tenant_id = #tenantId#
+								and 
+									folder.FOLDER_TYPE = #folderType#
+				                and 
+				                	folder.USE_STATUS = 'Y'
+				                and 
+				                	folder.company_id = #comId#		
+						]]>
+					<![CDATA[
+						) t 
+						
+						where folder_path like (#folderPath#||'%') 
+					]]>
 		<include refid="searchAll"/>
 		<![CDATA[
 			
-			ORDER BY FOLDER_SORT,CREATE_DATE desc 
-			LIMIT #pStart#, #pEnd#
+				ORDER BY FOLDER_SORT
+                ) tear 
+				where ROWNUM <= #pEnd# + #pStart#
+	              
+	            )
+	        where rownums >= #pStart#
 		]]>	
 	</select>
 	<select id="EzWebFolderDAO_y.searchFileListR" resultMap="fileVO" parameterClass="Map">
@@ -694,7 +699,36 @@
 				]]>
 			</isEqual>
 	         
-			<include refid="searchAll"/>
+			<isNotEqual property="searchExt" compareValue="" prepend="AND">
+			<![CDATA[
+				type.FILE_EXT LIKE '%'|| #searchExt# || '%'
+       		]]> 
+			</isNotEqual>		
+			<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+				<![CDATA[
+					folder.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
+					or
+					folder.CREATE_NAME2 LIKE '%' || #searchCreateName# || '%'
+	       		]]> 
+			</isNotEqual>		
+			<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+				<![CDATA[
+					type.TYPE_NAME LIKE '%'|| #searchFileType# ||'%'
+	       		]]> 
+			</isNotEqual>		
+			<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+				<![CDATA[
+						folder.folder_name1 LIKE '%' || #searchFileName# || '%'
+					or
+						folder.folder_name2 LIKE '%' || #searchFileName# || '%'
+	       		]]> 
+			</isNotEqual>
+			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
+				<![CDATA[
+					(TO_DATE(t.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') >= #searchStartDate# 
+					AND TO_CHAR(t.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') <= #searchEndDate#)
+				]]>
+			</isNotEqual>
 		</isNotEqual>
 		
 		<isEqual property="parentId" compareValue="root" >
@@ -803,7 +837,7 @@
 					]]>
 				</isNotEqual>
 			<![CDATA[
-				) teat
+				) t
 				where 1=1
 			]]>	
 

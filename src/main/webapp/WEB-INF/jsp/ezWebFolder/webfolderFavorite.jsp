@@ -148,7 +148,7 @@
 				setOnListTypeChangeEventListener: setOnListTypeChangeEventListener
 			};
     	}());
-
+   		
    		// TODO: 리펙토링
     	var resultColumn = {
     		favorite : {
@@ -301,7 +301,7 @@
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			})
-		};
+		}
 		
 		function loadList(folderId, folderType) {
 	    	if(folderId === undefined || folderId == "") {
