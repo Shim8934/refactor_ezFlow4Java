@@ -1167,10 +1167,10 @@
 		]]>
 	</delete>
 	
-	<delete id="EzWebFolderDAO_m.deleteAllFilesInFolder" parameterClass="Map">
-		<![CDATA[
-			DELETE
-			FROM
+	<select id="EzWebFolderDAO_m.selectAllFilesInFolder" parameterMap="Map" resultClass="String">
+		SELECT
+				f.FILE_ID
+    	 FROM
 				TBL_WEBFOLDER_FILE f JOIN
 					(
 					SELECT
@@ -1187,9 +1187,8 @@
 			WHERE
 				f.TENANT_ID = #tenantId#
 			AND
-				f.USE_STATUS = 'T'
-		]]>
-	</delete>
+				f.USE_STATUS = 'T';
+	</select>
 	
 	<select id="EzWebFolderDAO_m.getFolderByFolderPath"  parameterClass="Map" resultMap="trashCanVO">
 		<![CDATA[

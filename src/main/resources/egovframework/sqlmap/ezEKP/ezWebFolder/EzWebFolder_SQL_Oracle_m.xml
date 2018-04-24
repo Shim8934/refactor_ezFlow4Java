@@ -1064,8 +1064,8 @@
 					FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
 		            'folder'	AS TRASHCAN_EXT,
 					'0' 	AS TRASHCAN_SIZE,
-					FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
-					FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
+					TO_CHAR(FOLDER.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE,
+					TO_CHAR(FOLDER.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE,
 					FOLDER.CREATE_NAME1 AS CREATE_NAME1,
 		            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
 		            '' AS FILE_FOLDER_ID,
@@ -1093,8 +1093,8 @@
 				END  AS TRASHCAN_ICON_URL,
 				FILES.FILE_EXT		AS TRASHCAN_EXT,
 				FILES.FILE_SIZE 	AS TRASHCAN_SIZE,
-				FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
-				FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
+				TO_CHAR(FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE,
+				TO_CHAR(FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE,
 	            FILES.CREATE_NAME1 AS CREATE_NAME1,
 	            FILES.CREATE_NAME1 AS CREATE_NAME2,
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
@@ -1111,14 +1111,14 @@
 		<include refid="searchTrashCanFile"/>
 	 	<![CDATA[
 				) A
-			ORDER BY A.TRASHCAN_EXT,A.UPDATE_DATE DESC
-			WHERE rownum <= #pStart# + #pEnd# ) B
-		WHERE B.rnum >= #pStart# + 1
+			WHERE rownum <= #pStart# + #pEnd# 
+			ORDER BY A.TRASHCAN_EXT DESC,A.UPDATE_DATE DESC ) B
+		WHERE B.rnum >= (#pStart# + 1)
 		]]> 
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getFileListByFolderId" parameterClass="Map" resultMap="trashCanVO">
-		<![CDATA[
+<![CDATA[
 			SELECT
 				distinct
 				FILES.FILE_id       AS TRASHCAN_ID,
@@ -1127,15 +1127,15 @@
 				FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
 				FILES.FILE_EXT		AS TRASHCAN_EXT,
 				FILES.FILE_SIZE 	AS TRASHCAN_SIZE,
-				FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
-				FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
+				TO_CHAR(FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE,
+				TO_CHAR(FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE,
 	            FILES.CREATE_NAME1 AS CREATE_NAME1,
 	            FILES.CREATE_NAME1 AS CREATE_NAME2,
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
 	            '' as FOLDER_UPPER
 			FROM
-				tbl_webfolder_file AS FILES
-				INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+				tbl_webfolder_file  FILES
+				INNER JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
 				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
 			WHERE
 				FILES.USE_STATUS = 'T' AND
@@ -1143,20 +1143,20 @@
 				FILES.TENANT_ID = #tenantId# AND
 				FILES.FOLDER_ID = #folderId#
 		]]>
-	</select>
+</select>
 	
 	<select id="EzWebFolderDAO_m.getFolderPath" parameterClass="Map" resultClass="String">
-		<![CDATA[
+<![CDATA[
 		
 		    SELECT
 				FOLDER.FOLDER_PATH
 			FROM 
-				TBL_WEBFOLDER_FOLDER AS FOLDER
+				TBL_WEBFOLDER_FOLDER FOLDER
 			where
 				FOLDER.FOLDER_ID = #folderId# AND 
 				FOLDER.TENANT_ID = #tenantId#
 		]]>
-	</select>
+</select>
 	
 	<delete id="EzWebFolderDAO_m.deleteFile" parameterClass="Map">
 		<![CDATA[
@@ -1167,8 +1167,6 @@
 				FILE_ID    = #fileId#
 			AND
 				TENANT_ID  = #tenantId#
-			AND
-				COMPANY_ID = #companyId#	
 			AND 
 				USE_STATUS = 'T'
 		]]>
@@ -1215,7 +1213,7 @@
 	</delete>
 	
 	<select id="EzWebFolderDAO_m.getFolderByFolderPath"  parameterClass="Map" resultMap="trashCanVO">
-		<![CDATA[
+<![CDATA[
 			SELECT
 				 distinct
 				FOLDER.FOLDER_ID    AS TRASHCAN_ID,     
@@ -1224,15 +1222,15 @@
 				FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
 	            'folder'	AS TRASHCAN_EXT,
 				0 	AS TRASHCAN_SIZE,
-				DATE_ADD(FOLDER.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				DATE_ADD(FOLDER.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				TO_CHAR(FOLDER.CREATE_DATE + INTERVAL #offset# MINUTE, 'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE,
+				TO_CHAR(FOLDER.UPDATE_DATE + INTERVAL #offset# MINUTE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE,
 				FOLDER.CREATE_NAME1 AS CREATE_NAME1,
 	            FOLDER.CREATE_NAME1 AS CREATE_NAME2,
 	            "" AS FILE_FOLDER_ID,
 	            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
 			FROM
-				TBL_WEBFOLDER_FOLDER AS FOLDER
-				LEFT JOIN TBL_WEBFOLDER_FILETYPE AS FILE_TYPE
+				TBL_WEBFOLDER_FOLDER FOLDER
+				LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
 				ON FILE_TYPE.TYPE_NAME = 'folder'
 			WHERE
 				FOLDER_PATH LIKE #folderPath# || '%'
@@ -1240,8 +1238,8 @@
 				TENANT_ID = #tenantId#
 			AND
 				COMPANY_ID = #companyId#
-			]]>	
-	</select>
+			]]>
+</select>
 	
 	<update id="EzWebFolderDAO_m.restoreFile" parameterClass="Map">
 		UPDATE
@@ -1488,7 +1486,7 @@
 		SELECT
 			count(FILES.FILE_id )
 		FROM
-			tbl_webfolder_file AS FILES
+			tbl_webfolder_file FILES
 		WHERE
 			FILES.USE_STATUS = 'T' AND
 			FILES.DELETER_ID = #userId# AND
@@ -1500,7 +1498,7 @@
 		SELECT
 			count(FOLDER.FOLDER_id)    
 		FROM
-			tbl_webfolder_folder AS FOLDER
+			tbl_webfolder_folder  FOLDER
 		WHERE
 			FOLDER.USE_STATUS = 'T' AND
 			FOLDER.DELETER_ID = #userId# AND

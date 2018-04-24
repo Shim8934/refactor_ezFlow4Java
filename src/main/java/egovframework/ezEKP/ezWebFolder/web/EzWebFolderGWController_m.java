@@ -833,6 +833,7 @@ public class EzWebFolderGWController_m {
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
+		int retoreSize = fileIDList.length + folderIDList.length;
 		JSONObject result = new JSONObject();
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -847,17 +848,19 @@ public class EzWebFolderGWController_m {
 			return result;
 		}
 		
-		try {
-			
-			ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId, userId, offset, companyId, timeUTC);
-			
-			result.put("status", "ok");
-			result.put("code", "0");
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t314", locale));
-			result.put("status", "error");
-			result.put("code", "1");
+		for (int i = 0 ; i< retoreSize ; i++) {
+			try {
+				
+				ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId, userId, offset, companyId, timeUTC);
+				
+				result.put("status", "ok");
+				result.put("code", "0");
+			} catch (Exception e) {
+				e.printStackTrace();
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t314", locale));
+				result.put("status", "error");
+				result.put("code", "1");
+			}
 		}
 		
 		logger.debug("restoreTrashCan ended");

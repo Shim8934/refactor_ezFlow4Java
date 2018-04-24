@@ -231,11 +231,6 @@ public class EzWebFolderController_m {
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
 		
-		if (fileList.equals("")) {
-			logger.debug("Delete File Confirm illegal arguments!");
-			return "cmm/error/egovError";
-		}
-		
 		model.addAttribute("fileList", fileList);
 		model.addAttribute("folderList", folderList);
 		

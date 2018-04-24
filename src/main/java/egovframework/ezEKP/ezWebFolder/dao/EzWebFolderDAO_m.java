@@ -107,8 +107,8 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return delete("EzWebFolderDAO_m.deleteFolder", map);
 	}
 	
-	public int deleteAllFilesInFolder (Map<String, Object> map) {
-		return delete("EzWebFolderDAO_m.deleteAllFilesInFolder", map);
+	public List <String> selectAllFilesInFolder (Map<String, Object> map) {
+		return (List<String>) list("EzWebFolderDAO_m.selectAllFilesInFolder", map);
 	}
 	
 	public int restoreFile (Map<String, Object> map){
