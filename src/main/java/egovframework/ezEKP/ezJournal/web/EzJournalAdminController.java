@@ -627,6 +627,7 @@ public class EzJournalAdminController {
 		param.put("key",key );
 		param.put("value", request.getParameter("value"));
 		param.put("userId", userInfo.getId());
+		param.put("companyId", request.getParameter("companyId"));
 		logger.debug(request.getParameter("key"));
 		logger.debug(request.getParameter("value"));
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users", param, request,"get",null);

@@ -259,13 +259,14 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 	
 	@Override
-	public List<JournalAuthorVO> getDeptUserList(int tenantId, String key ,String value, String lang) throws Exception{
+	public List<JournalAuthorVO> getDeptUserList(int tenantId, String key ,String value, String companyId, String lang) throws Exception{
 		logger.debug("getDeptUserList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("key", key);
 		param.put("value", value);
+		param.put("companyId", companyId);
 		param.put("lang", lang);
 		List<JournalAuthorVO> userList = ezJournalDAO.getDeptUserList(param);
 		

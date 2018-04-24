@@ -31,6 +31,8 @@
 	   		var updateUserId;
 	   		//선택된 유저으,ㅣ부서
 	   		var userDeptId;
+	   		//회사 아이디
+	   		var companyId;
 	   	
 	   		function close_Click(){
 	   			window.close();
@@ -62,7 +64,7 @@
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key":key, "value":value,"deptName":deptName},
+	   				data:{"key":key, "value":value, "deptName":deptName, "companyId":companyId},
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
 	   					if(picList.length==0 && key!="DEPARTMENT"){
@@ -132,6 +134,7 @@
 	   		}
 	   		
 	   		$(document).ready(function(){
+	   			companyId = opener.companyId;
 	   			treeContent = ${deptList};
 		   		setDeptList();
    			});

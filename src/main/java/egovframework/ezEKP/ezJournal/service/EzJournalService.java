@@ -121,7 +121,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalAuthorVO> getDeptUserList (int tenantId, String key, String value,String lang) throws Exception;
+	public List<JournalAuthorVO> getDeptUserList (int tenantId, String key, String value,String companyId, String lang) throws Exception;
 
 	/**
 	 * 양식 상세정보

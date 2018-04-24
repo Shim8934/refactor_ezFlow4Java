@@ -529,6 +529,8 @@
 			tbl_usermaster
 		where
 			TENANT_ID = #tenantId#
+		and
+			PHYSICALDELIVERYOFFICENAME = #companyId#
 		<isNotEqual property="key" compareValue="DEPARTMENT">
 			and 
 				$key$ like concat('%',#value#,'%')
