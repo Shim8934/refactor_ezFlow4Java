@@ -211,7 +211,7 @@
 			    }
 		        
 		        if (MaxNum == 0) {
-		        	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+		        	PagingHTML += "<span class='on'>" + 1 + "</span>";
 		        }
 		        
 			    if (totalPage > BlockSize) {

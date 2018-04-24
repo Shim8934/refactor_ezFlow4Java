@@ -1801,7 +1801,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String strXML = "";
 		int checkUsingFile = 0;
 		
-		if (req.getParameter("optImgPrevArr") != null) {
+		if (req.getParameter("optImgPrevArr") != null && !req.getParameter("optImgPrevArr").equals("")) {
 			optImgPrevArrStr = req.getParameter("optImgPrevArr");
 			optImgPrevArr = optImgPrevArrStr.split(",");
 		}		

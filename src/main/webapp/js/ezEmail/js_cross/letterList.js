@@ -5,7 +5,7 @@ function letterSearch() {
 	var search = $("#lmSearchInput").val();
 	
 	// 편지지(사용자) 중에서 검색 모드일때만
-	if (pageType == 'letter_user') {
+	if (pageType == 'letter_user' || pageType == 'letter') {
 		searchMode = true;
 	}
 	
@@ -45,12 +45,12 @@ function disableChk() {
 	var search = $("#lmSearchInput").val();
 	
 	if(search.trim() !== "") {
-		$(".searchDis").attr("disabled",true);
+		//$(".searchDis").attr("disabled",true);
 	}
 }
 
-// 예외처리                  (문자, 특수문자 허용여부, 길이)
-function strChk(str, speChar, strLen) {
+// 예외처리                  (문자, 특수문자 허용여부, 길이, 대상 메시지)
+function strChk(str, speChar, strLen, kindMsg) {
 	// 공백, 특수문자, 길이
 	var strTrim = str.trim();
 	var msg = "";
@@ -61,13 +61,13 @@ function strChk(str, speChar, strLen) {
 			var speCha = /[`~!<>@#$%^&*|\\\"\';:\/?]/gi;
 			
 			if (speCha.test(strTrim)) {
-				msg = specialMsg;
+				msg = specialMsg + "\n" + specialMsg2;
 			}	
 		}
 		
 		if (strLen !== undefined) {
-			if (strTrim.length > strLen) {
-				msg = strLen + lengthMsg;
+			if (strTrim.length >= strLen) {
+				msg = kindMsg + strLen.toString() + lengthMsg;
 			} 
 		}
 	}else {
@@ -206,7 +206,6 @@ function addLetterList(jsonArr) {
 	} 
 	
 	letterListCss(pageType, searchMode);
-	searchMode = false;
 }
 
 //편지지 검색 시 엔터 사용

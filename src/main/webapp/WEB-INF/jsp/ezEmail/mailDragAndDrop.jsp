@@ -334,48 +334,31 @@
 		
 		    function FileUpdataAfterComplete() {
 		        var filelist = SelectNodes(AttatchReturnValue, "DATA/ROW");
-		        
 		        for (var i = 0; i < filelist.length; i++) {
 		            var FilePath = SelectSingleNodeValue(filelist[i], "FILEPATH");
 		            var FileURL = SelectSingleNodeValue(filelist[i], "URL");
 		            var FileBIG = SelectSingleNodeValue(filelist[i], "BIG");
 		            var FileITEMID = SelectSingleNodeValue(filelist[i], "ITEMID");
-		            
 		            SetAttachItemLink(FilePath, FileURL, FileBIG, FileITEMID);
 		        }
-		        
 		        AttatchReturnValue = null;
 		    }
-		    
-		    function SetAttachItemLink(filepath, url, big, itemid) {
+		    function SetAttachItemLink(filepath, url,big,itemid) {
 		        var TRRows = document.getElementById("lstAttachLink").getElementsByTagName("TR");
-		        
 		        for (var i = 0; i < TRRows.length; i++) {
-		            
-		        	if (GetAttribute(TRRows.item(i), "value") != null && GetAttribute(TRRows.item(i), "value") != "") {
-		               
-		        		if (GetAttribute(TRRows.item(i), "value") == filepath) {
-		                	var index = parseInt(TRRows.item(i).getAttribute("_fileindex"));
-		                	var pUrl = url;
-		                	
-		                	if (big == "N") {
-		                		pUrl = url + "&index=0";
-		                	}
-		                	
-		                    TRRows.item(i).childNodes.item(1).setAttribute("_href", pUrl);
+		            if (GetAttribute(TRRows.item(i), "value") != null && GetAttribute(TRRows.item(i), "value") != "") {
+		                if (GetAttribute(TRRows.item(i), "value") == filepath) {
+		                    TRRows.item(i).childNodes.item(1).setAttribute("_href", url);
 		                    TRRows.item(i).setAttribute("_big", big);
 		                    TRRows.item(i).setAttribute("_itemid", itemid);
-		                    TRRows.item(i).childNodes.item(1).setAttribute("style", "cursor:pointer");
-		                    TRRows.item(i).childNodes.item(1).onclick = function () { FileDownload(this); };
+		                    TRRows.item(i).childNodes.item(1).ondblclick = function () { FileDownload(this); };
 		                }
 		            }
 		        }
 		    }
-		    
 		    function FileDownload(obj) {
 		    	window.parent.DownloadAttach(GetAttribute(obj, "_href"));
 		    }
-		    
 		    function uploadFailed(evt) {
 		        isfileup = false;
 		        alert(strLangKMS06);
