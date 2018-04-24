@@ -119,7 +119,7 @@
 							renderData(data.list);
 							checkedArr = [];
 							
-							document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " <spring:message code='ezWebFolder.t276'/>" + " <span style='color:#017BEC;'>" 
+							document.getElementById("mailBoxInfo").innerHTML = " - [<spring:message code='ezWebFolder.t276'/> <span style='color:#017BEC;'>" 
 								+ folderRows + "</span> " + strLang42 + " / " + "<spring:message code='ezWebFolder.t277'/>" + " <span style='color:#017BEC;'>" + fileRows +" </span>" + strLang42 + "]";
 						} else {
 							alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
@@ -194,10 +194,11 @@
 						
 						tdElmt4.textContent = result[i]["fileName"];
 						
+						tdElmt5.setAttribute("style", "text-align:center;");
 						if (result[i]["folderFileType"] == 'F') {
 							tdElmt5.textContent = getFileSize(result[i]["fileSize"]);
 						} else {
-							tdElmt5.textContent = "";
+							tdElmt5.textContent = "-";
 						}
 						
 						tdElmt6.textContent = result[i]["createName"];
@@ -211,9 +212,10 @@
 						}
 						
 						tdElmt10.textContent = getUserSimpleListStr(result[i]["userList"]);
+						var userListStr = result[i]["userList"];
 						tdElmt10.addEventListener("click", function() {
 							//TODO: 공유자 목록 보기
-							alert(1);
+							alert(userListStr);
 						});
 						
 						trElmt.appendChild(tdElmt1);
@@ -481,22 +483,22 @@
 				<li id=""><a onClick="favourite()"       style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t216'/></span></a></li>
 				<li id=""><a onClick="configShare()"     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t217'/></span></a></li>
 				<li id=""><a onClick="deleteShare()"     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t218'/></span></a></li>
+				<li>
+					<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect" onchange="refresh();">
+						<option value=""><spring:message code='ezWebFolder.t191'/></option>
+						<option value="document"><spring:message code='ezWebFolder.t192'/></option>
+						<option value="music"><spring:message code='ezWebFolder.t193'/></option>
+						<option value="video"><spring:message code='ezWebFolder.t194'/></option>
+						<option value="image"><spring:message code='ezWebFolder.t195'/></option>
+						<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
+						<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
+					</select>
+				</li>
 				<li id="right" style="float:right;">
 					<label for="webfolderlistoptiondiv"><spring:message code='ezWebFolder.t215'/></label>
 					<img src ="/images/kr/cm/btn_arrow_down.gif" mode="off" id="webfolderlistoptiondiv" onclick="optionView(this);">
 				</li>
 			</ul>
-			<div style="position: absolute; top: 0px; right: 85px;">
-				<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect" onchange="refresh();">
-					<option value=""><spring:message code='ezWebFolder.t191'/></option>
-					<option value="document"><spring:message code='ezWebFolder.t192'/></option>
-					<option value="music"><spring:message code='ezWebFolder.t193'/></option>
-					<option value="video"><spring:message code='ezWebFolder.t194'/></option>
-					<option value="image"><spring:message code='ezWebFolder.t195'/></option>
-					<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
-					<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
-				</select>
-			</div>
 		</div>
 		
 		<script type="text/javascript">
@@ -551,7 +553,7 @@
 					<th width="30px"><img src='/images/ImgIcon/icon-flag.gif' /></th><!-- 즐겨찾기 -->
 					<th width="30px"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 					<th width="50%"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
-					<th width="70px">크기</th><!-- 크기 -->
+					<th width="70px" style="text-align:center;">크기</th><!-- 크기 -->
 					<th width="100px"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
 					<th width="100px"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
 					<th width="100px"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
