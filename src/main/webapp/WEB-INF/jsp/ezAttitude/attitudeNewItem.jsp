@@ -40,6 +40,7 @@
  			var content = '${attitudeInfo.content}';
 			var attitudeId = "<c:out value='${attitudeInfo.attitudeId}'/>";
 			var dateType = "<c:out value='${attitudeInfo.dateType}'/>";
+			var pAttitudeTypeList = ${attitudeTypeList}; 
 			var holidayFlag = false;
 			var closedDay = "";
 			
@@ -153,6 +154,7 @@
 		    }
 			
 			var selectType = "";
+			var modFirstFlag = true;
 			function form_change(obj) {
 				// 근태종류를 선택하면 폼이 바뀌어야 된다.
 				// A05일 경우 subSelectAtti에서 변경해준다.
@@ -166,7 +168,7 @@
 					selectType = $(obj).val();
 				}
 				
-				if (mode == "mod") {
+				if (mode == "mod" && modFirstFlag) {
 					selectType = typeId;
 					if ($("#selectAtti option[value='" + selectType + "']").length == 0) {
 						$("#selectAtti").val("A05");
@@ -175,6 +177,7 @@
 						$("#selectAtti").val(selectType);
 					}
 				}
+				
 				if (selectType == "" || selectType == undefined) {
 					selectType = $("#selectAtti").val();
 				}
@@ -191,17 +194,26 @@
 						typeId : selectType
 					},
 					success : function (result) {
+						if (!modFirstFlag) {
+							if ($("input[name=region]").length != 0) {
+								region = $("input[name=region]").val();
+							}
+							mobile = $("input[name=mobile]").val();
+							bizSub = $("input[name=bizsub]").val();
+						} else {
+							modFirstFlag = false;
+						}
+						
 						$("#attiwriteForm tr").not("tr:first").remove();
 						$("#attiwriteForm tbody").after(result.formHtml);
 						$("#writerName").text(writerName);
-						
 						setDatePicker($("#periodblock").attr("datetype"));
 						
-						if (mode == "mod") {
+						if ($("input[name=region]").length != 0) {
 							$("input[name=region]").val(region);
-							$("input[name=mobile]").val(mobile);
-							$("input[name=bizsub]").val(bizSub);
 						}
+						$("input[name=mobile]").val(mobile);
+						$("input[name=bizsub]").val(bizSub);
 					}
 				})
 			}
@@ -332,13 +344,13 @@
 												</c:if>
 											</c:forEach>
 										</select>
-									<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)">
-										<c:forEach var="item" items="${attitudeTypeList }">
-											<c:if test="${item.parentId eq 'A05'}">
-												<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
-											</c:if>
-										</c:forEach>
-									</select>
+										<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)">
+											<c:forEach var="item" items="${attitudeTypeList }">
+												<c:if test="${item.parentId eq 'A05'}">
+													<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
+												</c:if>
+											</c:forEach>
+										</select>
 									</td>
 								</tr>
 	                        </table>

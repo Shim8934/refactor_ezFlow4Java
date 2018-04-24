@@ -313,7 +313,7 @@
 						} 
 						} else if (result[i].dateType == '3') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1] + "</td></tr>"); 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
 						} else if (result[i].dateType == '1') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>"); 
@@ -694,11 +694,11 @@
 		
 		<table>
 			<tr>
-				<td style="vertical-align:top; width:92%;">
+				<td style="vertical-align:top; width:91%;">
 					<div style="vertical-align:top;" id="attiCalendar"></div>
 				</td>
 				<td style="vertical-align:top; width:10px;">&nbsp;</td>
-				<td style="vertical-align:top; width:8%; margin-left:5px;">
+				<td style="vertical-align:top; width:9%; margin-left:5px;">
 					<div style="vertical-align:top;" id="attiStatis">
 					</div>
 				</td>
@@ -713,36 +713,6 @@
 		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
-<<<<<<< HEAD
-			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
-			    	<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태수정신청</th>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">구분
-						<td>지각</td>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">출근시각</th>
-						<td id="originInCom"></td>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">변경시각</th>
-						<td id="transInCom">
-							<span id="periodblock">
-								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-								<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> :<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
-							</span>
-						</td>
-					</tr>
-					<tr>
-						<th style="width:90px;height:30px">승인상태</th>
-						<td id="apprStatus">상태(진행, 반려)</td>
-					</tr>
-					<tr>
-						<td colspan="2" style="margin:0px; padding:0px;"><textarea class="textarea" style="width:100%; height:120px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea></td>
-					</tr>
-=======
 			    <table class="popuplist" id="addpopup_list" style="display:block; width:500px; margin:10px 0px 0px 1px;">
 				    <thead>
 				    	<tr>
@@ -760,9 +730,7 @@
 				    		<th style="height:30px">일시</th>
 						</tr>
 				    </tbody>
->>>>>>> 1085f7d4be69737d00e35b93d0ae9cc715486074
 				</table>
-				<!-- /내용 -->
 				<br />
 				<div style="text-align:center;">
 					<a class="imgbtn"><span onclick="attiModAppl()" >신청</span></a>
