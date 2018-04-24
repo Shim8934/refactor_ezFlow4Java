@@ -140,7 +140,7 @@
 			$(function() {
 				try {
 					retVal = parent.ladder_pre_set_dialogArguments[0];
-					retFunc = parent.ladder_pre_set_dialogArguments[1];                
+					retFunc = parent.ladder_pre_set_dialogArguments[1];
 	            } catch (e) {
 	                try {
 	                	retVal = opener.ladder_pre_set_dialogArguments[0];

@@ -150,10 +150,9 @@
 	            var totalLen = totalRows.length;
 	
 	            var stridlength = 0;
-	            var attendants = RetValue;
 	            /* if (attendants != undefined && attendants != null && attendants["id"] != undefined && attendants["id"] != "") */
-	            if(!!attendants && !! attendants["id"]) {
-	                stridlength = attendants["id"].length;
+	            if(!!RetValue && !! RetValue["id"]) {
+	                stridlength = RetValue["id"].length;
 	            }
 	
 	            for (var i = 0; i < stridlength; i++) {
@@ -169,13 +168,13 @@
 	                var strDeptName2;
 	                var strPic;
 	
-	                strName = attendants["name"][i];
-	                strId = attendants["id"][i];
+	                strName = RetValue["name"][i];
+	                strId = RetValue["id"][i];
 	                /* strName1 = attendants["name1"][i]; */
-	                strName2 = attendants["name2"][i];
+	                strName2 = RetValue["name2"][i];
 	                /* strDeptName1 = attendants["deptname"][i];
 	                strDeptName2 = attendants["deptname2"][i]; */
-	                strPic = attendants["pic"][i];
+	                strPic = RetValue["pic"][i];
 	
 	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
@@ -1352,6 +1351,7 @@
 		        } else {
 		            window.returnValue = rtn;
 		        } 
+		        
 		        window.close();
 		    }
 		

@@ -24,15 +24,21 @@
 			// event
 			function mouseHover(obj, event) {
 				if(event.type == "mouseenter") {
+					obj.classList.remove("spanDefault");
 					obj.classList.add("spanMouseActiveHover");
 				} else {
 					obj.classList.remove("spanMouseActiveHover");
+					if(!obj.classList.contains("spanMouseActiveClick")) {
+						obj.classList.add("spanDefault");
+					}
 				}
 			}
 			function userClick(obj, event) {
 				if(obj.classList.contains("spanMouseActiveClick")) {
 					obj.classList.remove("spanMouseActiveClick");
+					obj.classList.add("spanDefault");
 				} else {
+					obj.classList.remove("spanDefault");
 					obj.classList.add("spanMouseActiveClick");
 				}
 			}
@@ -45,7 +51,7 @@
 					var retValLen = retVal["userId"].length;
 					
 					for(var i = 0; i < retValLen; i++) {
-						html += "<span _userId='" + retVal["userId"][i] + "' onmouseenter='mouseHover(this, event);' onmouseleave='mouseHover(this, event);' onclick='userClick(this, event);'>" + retVal["userName"][i] + " | " + retVal["deptName"][i] + " | " + retVal["userId"][i] + "</span>";
+						html += "<span _userId='" + retVal["userId"][i] + "' class='spanDefault' onmouseenter='mouseHover(this, event);' onmouseleave='mouseHover(this, event);' onclick='userClick(this, event);'>" + retVal["userName"][i] + " | " + retVal["deptName"][i] + " | " + retVal["userId"][i] + "</span>";
 					}
 					$userInfo.html(html);
 				}
@@ -60,15 +66,9 @@
 				} 
 				$("#btn_addRealUser").on("click", function() {
 					addAttendant($(this).attr("_flag"));
-					/* if(typeof retFunc === "function") {
-						retFunc(retVal, "real");
-					} */
 				});
 				$("#btn_addAnonyUser").on("click", function() {
 					addAttendant($(this).attr("_flag"));
-					/* if(typeof retFunc === "function") {
-						retFunc(retVal, "anony");
-					} */
 				});
 				$("#btn_SaveAprLineTempletName").on("click", function() {
 					var bmName = $("#TxtAprLineTempletName").val();
@@ -105,18 +105,30 @@
 		</script>
 		<style type="text/css">
 			#userInfo {
-				padding: 0, 10px;
+				height: 90px;
+				overflow-y: auto;
+				border: 1px solid #dddddd;
+				background-color: #dddddd; 
 			}
 			#userInfo span {
 				display: block;
 				height: 20px;
 				cursor: pointer;
+				padding: 5px 10px;
+				line-height: 20px;
+				border-bottom: 1px solid #dddddd;
+			}
+			#userInfo span:last-child {
+				border-bottom: 0;
 			}
 			.spanMouseActiveClick {
 				background-color: #e5efff;
 			}
 			.spanMouseActiveHover {
-				background-color: #DDD;
+				background-color: #dddddd;
+			}
+			.spanDefault {
+				background-color: #ffffff;
 			}
 		</style>
 	</head>
@@ -146,7 +158,7 @@
 					<!-- <span id="usernames"></span> -->
 				</c:when>
 				<c:when test="${popupType == 'overlapOnlyName'}">
-					<h1 id="h1Title" style="margin-bottom: 30px;">이름 중복 검색</h1>
+					<h1 id="h1Title">이름 중복 검색</h1>
 					<span>▒ 이름이 여러명 검색되었습니다. 추가할 유저를 선택하세요.</span>
 					<p id="userInfo"></p>
 				</c:when>
