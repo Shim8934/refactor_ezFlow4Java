@@ -104,7 +104,7 @@
 		   			}
 		   			
 		   			if (chkFlag) {
-		   				managerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept});
+		   				managerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept, "pctinput" : 100});
 		   				authList.push({"userName" : userName, "userId" : receiverId});
 		   			} else {
 		   				alert("이미 추가된 사용자 입니다.");
@@ -148,7 +148,7 @@
 			    		strHTML += "(" + managerArray[i].userDept + ")";
 			    		strHTML += "</td>";
 			    		strHTML += "<td>";
-			    		strHTML += "<input type='text' id='pctinput' style='width:40px;text-align:center'> %";
+			    		strHTML += "<input type='text' name='" + managerArray[i].userId + "' value='100' style='width:40px;text-align:center'> %";
 			    		strHTML += "</td>";
 			    		strHTML += "</tr>";
 			    		strHTML += "</table>";
@@ -188,6 +188,10 @@
    			});
 	   		
 	   		function ok_Click() {
+	   			for(var i =0;i<managerArray.length;i++) {
+	   				managerArray[i].pctinput = $("input[name='"+managerArray[i].userId+"']").val();
+	   				alert(managerArray[i].pctinput);
+	   			}
 	   			selectHeadManager();
 	   			//opener.selReceiver = JSON.stringify(receiverList);
 	   			//opener.showReceiver();

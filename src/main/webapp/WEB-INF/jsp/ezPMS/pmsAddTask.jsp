@@ -35,9 +35,7 @@ var weightInput = null;
 var planStartDate = "${planStartDate}";
 var planEndDate = "${planEndDate}";
 var managerList = null;
-var viewerList = [];
 var overview = null;
-var endAlamStatus = null;
 var headManagerId = null;
 
  $(function() {
@@ -122,11 +120,15 @@ var headManagerId = null;
 	});
  });
  
- function openMemberList() {
+function openMemberList() {
 		 var win;
 		 var feature = GetOpenPosition(760, 700);
 		 DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.8, "/ezPMS/goProjectMemberList.do?projectId=" + projectId, "",
 				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+}
+
+function openGroupTree() {
+	
 }
  
  function addTask() {
