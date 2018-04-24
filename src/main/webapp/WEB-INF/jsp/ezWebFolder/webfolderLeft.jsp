@@ -232,7 +232,7 @@
   				<span style="display:inline-block;width:100%;" onclick="folderList('C');"><spring:message code='ezWebFolder.t233' /></span>
   			</h2>  
     		<ul class ="tree">
-    			<li style="padding: 0px; display: unset;">
+    			<li style="padding: 0px; background: none;">
 	    			<div id="tree" style="width:210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
     			</li>
 <!-- 	  			<li id ="company"></li> -->
@@ -241,7 +241,7 @@
   				<span style="display:inline-block; width:100%;" onclick="folderList('D');"><spring:message code='ezWebFolder.t234' /></span>
   			</h2>  
     		<ul class ="tree">
-    			<li style="padding: 0px; display: unset;">
+    			<li style="padding: 0px; background: none;">
     				<div id ="treeDept" style="width: 210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
     			</li>
 <!-- 	  			<li id ="dept"></li> -->
@@ -251,7 +251,7 @@
   				<span style="display:inline-block;width:100%;" onclick="folderList('U');"><spring:message code='ezWebFolder.t235' /></span>
   			</h2>  
     		<ul class ="tree">
-	    		<li style="padding: 0px; display: unset;">
+	    		<li style="padding: 0px; background: none;">
 	    			<div id ="treePer" style="width: 210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
 	    		</li>
 <!-- 	  			<li id="person"></li> -->

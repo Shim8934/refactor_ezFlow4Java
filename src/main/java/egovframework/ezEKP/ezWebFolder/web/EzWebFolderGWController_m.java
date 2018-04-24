@@ -110,7 +110,7 @@ public class EzWebFolderGWController_m {
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
 			List<ShareVO> list = ezWebFolderService_m.getSharingList(userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-			Map<String, Integer> countInfo = ezWebFolderService_m.getSharingCount(userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			Map<String, Long> countInfo = ezWebFolderService_m.getSharingCount(userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
 			data.put("list", list);
 			data.putAll(countInfo);
@@ -183,7 +183,7 @@ public class EzWebFolderGWController_m {
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
 			List<ShareVO> list = ezWebFolderService_m.getSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-			Map<String, Integer> countInfo = ezWebFolderService_m.getSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			Map<String, Long> countInfo = ezWebFolderService_m.getSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
 			data.put("list", list);
 			data.putAll(countInfo);
@@ -382,7 +382,7 @@ public class EzWebFolderGWController_m {
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
 			List<ShareVO> list = ezWebFolderService_m.getHiddenSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, tenantId);
-			Map<String, Integer> countInfo = ezWebFolderService_m.getHiddenSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, tenantId);
+			Map<String, Long> countInfo = ezWebFolderService_m.getHiddenSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, tenantId);
 			
 			data.put("list", list);
 			data.putAll(countInfo);
@@ -833,6 +833,7 @@ public class EzWebFolderGWController_m {
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
+		int retoreSize = fileIDList.length + folderIDList.length;
 		JSONObject result = new JSONObject();
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -847,17 +848,19 @@ public class EzWebFolderGWController_m {
 			return result;
 		}
 		
-		try {
-			
-			ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId, userId, offset, companyId, timeUTC);
-			
-			result.put("status", "ok");
-			result.put("code", "0");
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t314", locale));
-			result.put("status", "error");
-			result.put("code", "1");
+		for (int i = 0 ; i< retoreSize ; i++) {
+			try {
+				
+				ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId, userId, offset, companyId, timeUTC);
+				
+				result.put("status", "ok");
+				result.put("code", "0");
+			} catch (Exception e) {
+				e.printStackTrace();
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t314", locale));
+				result.put("status", "error");
+				result.put("code", "1");
+			}
 		}
 		
 		logger.debug("restoreTrashCan ended");

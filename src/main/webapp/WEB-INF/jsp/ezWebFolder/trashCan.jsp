@@ -36,7 +36,6 @@
 		var strErr		= "<spring:message code = 'ezWebFolder.t107'/>";
 		var strLang39	= "<spring:message code = 'ezWebFolder.t135'/>";
 		var strLang40 	= "<spring:message code = 'ezWebFolder.t136'/>";
-		var strLang41   = "<spring:message code = 'ezWebFolder.t137'/>";
 		var strLang42   = "<spring:message code = 'ezWebFolder.t138'/>";
 		
 		var currentPage = "1";
@@ -129,8 +128,8 @@
 					$('#tblFileList tr td').remove();
 					renderFileListElement(trashCanList);
 					makePageSelPage();
-					document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " 파일 수 " + "<span style='color:#017BEC;'>" 
-					+ fileCnt +"</span>"+", " +strLang41 + " 폴더 수 " + "<span style='color:#017BEC;'>" + folderCnt +" </span>" + strLang42 + "]";
+					document.getElementById("mailBoxInfo").innerHTML = " - [파일 수 " + "<span style='color:#017BEC;'>" 
+					+ fileCnt +"</span>"+"/ 폴더 수 " + "<span style='color:#017BEC;'>" + folderCnt +" </span>" + strLang42 + "]";
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);

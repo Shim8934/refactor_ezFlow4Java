@@ -128,7 +128,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public Map<String, Integer> getSharingCount(String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+	public Map<String, Long> getSharingCount(String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
 		
@@ -151,24 +151,24 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		List<Map<String, Object>> list = ezWebFolderDAO_m.getSharingCount(map);
 		
-		int fileCount	 = 0;
-		int folderCount	 = 0;
-		int totalCount	 = 0;
-		int totalPage	 = 0;
+		long fileCount	 = 0;
+		long folderCount	 = 0;
+		long totalCount	 = 0;
+		long totalPage	 = 0;
 		
 		for (Map<String, Object> info : list) {
-			String folderFileType = (String)info.get("FOLDERFILE_TYPE");
+			String folderFileType = (String)info.get("folderfile_type");
 			if (folderFileType.equals("D")) {
-				folderCount = (int)(long)info.get("COUNT");
+				folderCount = (Long) info.get("count");
 			} else if (folderFileType.equals("F")) {
-				fileCount = (int)(long)info.get("COUNT");
+				fileCount = (Long) info.get("count");
 			}
 		}
 		
 		totalCount	= fileCount + folderCount;
 		totalPage	= (totalCount + pageSize - 1) / pageSize;
 		
-		Map<String, Integer> countInfo = new HashMap<String, Integer>();
+		Map<String, Long> countInfo = new HashMap<String, Long>();
 		countInfo.put("fileCount", fileCount);
 		countInfo.put("folderCount", folderCount);
 		countInfo.put("totalCount", totalCount);
@@ -179,7 +179,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public Map<String, Integer> getSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+	public Map<String, Long> getSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
 		
@@ -205,24 +205,24 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		List<Map<String, Object>> list = ezWebFolderDAO_m.getSharedCount(map);
 		
-		int fileCount	 = 0;
-		int folderCount	 = 0;
-		int totalCount	 = 0;
-		int totalPage	 = 0;
+		long fileCount	 = 0;
+		long folderCount = 0;
+		long totalCount	 = 0;
+		long totalPage	 = 0;
 		
 		for (Map<String, Object> info : list) {
-			String folderFileType = (String)info.get("FOLDERFILE_TYPE");
+			String folderFileType = (String)info.get("folderfile_type");
 			if (folderFileType.equals("D")) {
-				folderCount = (int)(long)info.get("COUNT");
+				folderCount = (Long) info.get("count");
 			} else if (folderFileType.equals("F")) {
-				fileCount = (int)(long)info.get("COUNT");
+				fileCount = (Long) info.get("count");
 			}
 		}
 		
 		totalCount	= fileCount + folderCount;
 		totalPage	= (totalCount + pageSize - 1) / pageSize;
 		
-		Map<String, Integer> countInfo = new HashMap<String, Integer>();
+		Map<String, Long> countInfo = new HashMap<String, Long>();
 		countInfo.put("fileCount", fileCount);
 		countInfo.put("folderCount", folderCount);
 		countInfo.put("totalCount", totalCount);
@@ -400,7 +400,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 
 	@Override
-	public Map<String, Integer> getHiddenSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception {
+	public Map<String, Long> getHiddenSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception {
 		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -412,24 +412,24 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		List<Map<String, Object>> list = ezWebFolderDAO_m.getHiddenSharedCount(map);
 		
-		int fileCount	 = 0;
-		int folderCount	 = 0;
-		int totalCount	 = 0;
-		int totalPage	 = 0;
+		long fileCount	 = 0;
+		long folderCount = 0;
+		long totalCount	 = 0;
+		long totalPage	 = 0;
 		
 		for (Map<String, Object> info : list) {
-			String folderFileType = (String)info.get("FOLDERFILE_TYPE");
+			String folderFileType = (String)info.get("folderfile_type");
 			if (folderFileType.equals("D")) {
-				folderCount = (int)(long)info.get("COUNT");
+				folderCount = (Long) info.get("count");
 			} else if (folderFileType.equals("F")) {
-				fileCount = (int)(long)info.get("COUNT");
+				fileCount = (Long) info.get("count");
 			}
 		}
 		
 		totalCount	= fileCount + folderCount;
 		totalPage	= (totalCount + pageSize - 1) / pageSize;
 		
-		Map<String, Integer> countInfo = new HashMap<String, Integer>();
+		Map<String, Long> countInfo = new HashMap<String, Long>();
 		countInfo.put("fileCount", fileCount);
 		countInfo.put("folderCount", folderCount);
 		countInfo.put("totalCount", totalCount);
@@ -584,9 +584,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 			
 			if (fileVO != null) {
-				deleteFile(file, tenantId);
-				ezWebFolderService.saveLog("P", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
-				realFileDelete(fileVO.getFileName(), realPath, userInfo);
+				int isFileDeleted = deleteFile(file, tenantId);
+				
+				if (isFileDeleted > 0) {
+					realFileDelete(fileVO, realPath, userInfo, userName1,  userName2);
+				}
 			}
 		}
 		
@@ -594,15 +596,17 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
 			
 			if (folderVO != null) {
-				deleteFolder(folderVO);
-				deleteAllFilesInFolder(folderVO);
-				realFileDeleteInFolder(folderVO.getFolderPath(), companyId, realPath, userInfo, offset, tenantId);
+				int isFolderDeleted = deleteFolder(folderVO);
+				
+				if (isFolderDeleted > 0) {
+					deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2);
+				}
 			}
 		}
 	}
 
 	@Override
-	public void realFileDelete(String fileName, String realPath, LoginVO userInfo) throws Exception {
+	public int realFileDelete(FileVO fileVO, String realPath, LoginVO userInfo, String userName1, String userName2) throws Exception {
 		
 		String pDirPath = getWebFolderDirPath(userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
@@ -611,39 +615,29 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			pDirPath = pDirPath + commonUtil.separator;
 		}
 		
-		File file = new File(pDirPath + fileName);
+		File file = new File(pDirPath + fileVO.getFileName());
+		int isDeleted = -1;
 		
 		if (file.exists()) {
 			if (file.delete()) {
-				LOGGER.debug(fileName + "delete is success");
+				isDeleted = 1;
+				ezWebFolderService.saveLog("P", userInfo.getCompanyID(), userInfo.getOffset(), userInfo.getId(), userName1, userName2, 
+						fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), userInfo.getTenantId());
+				LOGGER.debug(fileVO.getFileName() + "delete is success");
 			} else {
-				LOGGER.debug(fileName + "delete is fail");
+				isDeleted = 1;
+				LOGGER.debug(fileVO.getFileName() + "delete is fail");
 			}
 		} else {
-			throw new FileNotFoundException(fileName);
+			isDeleted = 1;
+			throw new FileNotFoundException(fileVO.getFileName());
 		}
+		
+		return isDeleted;
 	}
 	
 	@Override
-	public void realFileDeleteInFolder(String folderPath, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId) throws Exception {
-		List<TrashCanVO> innerFolderList = getFolderByFolderPath(folderPath, tenantId, companyId);
-		
-		for (TrashCanVO innerfolder : innerFolderList) {
-			List<TrashCanVO> innserFileList = getFileByFolderId(innerfolder.getTrashCanId(), tenantId, userInfo.getId());
-			
-			if (innserFileList != null) {
-				for (TrashCanVO innerfile : innserFileList) {
-					FileVO file = ezWebFolderService.getFileByFileId(innerfile.getTrashCanId(), offset, tenantId);
-					ezWebFolderService.saveLog("P", companyId, offset, userInfo.getId(),userInfo.getDisplayName1(), userInfo.getDisplayName2(), innerfile.getTrashCanName(), String.valueOf(innerfile.getTrashCanSize()), innerfile.getTrashCanExt(), file.getFileTypeName(), tenantId);
-					realFileDelete(innerfile.getTrashCanName(), realPath, userInfo);
-				}
-			}
-		}
-		
-	}
-	
-	@Override
-	public void deleteFile(String fileId, int tenantId) throws Exception {
+	public int deleteFile(String fileId, int tenantId) throws Exception {
 
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("fileId", fileId);
@@ -656,10 +650,12 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		} else {
 			LOGGER.debug("deleteFile is fail");
 		}
+		
+		return result;
 	}
 
 	@Override
-	public void deleteFolder (FolderVO folderVO) throws Exception {
+	public int deleteFolder (FolderVO folderVO) throws Exception {
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderVO.getFolderPath());
@@ -673,17 +669,31 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		} else {
 			LOGGER.debug("deleteFolder is fail");
 		}
+		
+		return result;
 	}
 
 	@Override
-	public void deleteAllFilesInFolder(FolderVO folderVO) throws Exception {
+	public void deleteAllFilesInFolder(FolderVO folderVO, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId, String userId, String userName1, String userName2) throws Exception {
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderVO.getFolderPath());
 		map.put("tenantId", folderVO.getTenantId());
 		map.put("companyId", folderVO.getCompanyId());
 		
-		int result = ezWebFolderDAO.deleteAllFilesInFolder(map);
+		int result = -1;
+		List<String> searchFiles = ezWebFolderDAO.selectAllFilesInFolder(map);
+		
+		for (String file : searchFiles) {
+			map.put("fileId", file);
+			result = ezWebFolderDAO.deleteFile(map);
+			
+			if (result > 0) {
+				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
+				realFileDelete(fileVO, realPath, userInfo, userName1, userName2);
+				ezWebFolderService.saveLog("P", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+			}
+		}
 		
 		if (result > 0) {
 			LOGGER.debug("deleteAllFilesInFolder is success");
@@ -739,7 +749,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public void restoreFolder(String folderPath, int tenantId, String userId, String companyId, String timeUTC) throws Exception{
+	public int restoreFolder(String folderPath, int tenantId, String userId, String companyId, String timeUTC) throws Exception{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath);
@@ -755,11 +765,14 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		} else {
 			LOGGER.debug("restoreFolder is fail");
 		}
+		
+		return result;
 	}
 	
 	@Override
 	public void restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC) throws Exception {
-
+		int isRestored = -1;
+		
 		for (String file : fileIDList) {
 			if (!file.equals("")) {
 				FileVO fileVO  = ezWebFolderService.getFileByFileId(file, offset, tenantId);
@@ -780,8 +793,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				FolderVO upperFolderVO = ezWebFolderService.getFolderByFolderId(folderVO.getFolderUpper(), offset, tenantId);
 				
 				if (upperFolderVO != null && upperFolderVO.getUseStatus().equals("Y")) {
-					restoreFolder(folderVO.getFolderPath(), tenantId, userId, companyId, timeUTC);
-					restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC);
+					isRestored = restoreFolder(folderVO.getFolderPath(), tenantId, userId, companyId, timeUTC);
+					
+					if (isRestored == 1) {
+						restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC);
+					}
 				}
 			}
 		}
@@ -795,7 +811,14 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("userId", userId);
 		map.put("timeUTC", timeUTC);
 		
-		int result = ezWebFolderDAO.restoreAllFilesInFolder(map);
+		int result = -1;
+		List<String> searchFiles = ezWebFolderDAO.selectAllFilesInFolder(map);
+		
+		for (String file : searchFiles) {
+			map.put("fileId", file);
+			result = ezWebFolderDAO.restoreAllFilesInFolder(map);
+		}
+		
 		
 		if (result > 0) {
 			LOGGER.debug("restoreFileInFolder is success");
@@ -811,7 +834,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 	@Override
 	public List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception {
-		setSearchDateOffset(searchInfo, offset);
+		SearchVO searchDateInfo = createSearchDateInfo(searchInfo, offset);
 
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
@@ -823,8 +846,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("searchFileName", searchInfo.getSearchFileName());
 		parameterMap.put("searchCreatorName", searchInfo.getSearchCreateName());
 		parameterMap.put("searchFileType", searchInfo.getSearchFileType());
-		parameterMap.put("searchStartDate", searchInfo.getSearchStartDate());
-		parameterMap.put("searchEndDate", searchInfo.getSearchEndDate());
+		parameterMap.put("searchStartDate", searchDateInfo.getSearchStartDate());
+		parameterMap.put("searchEndDate", searchDateInfo.getSearchEndDate());
 		parameterMap.put("startIndex", startIndex);
 		parameterMap.put("listCount", listCount);
 
@@ -835,8 +858,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Override
 	public Map<String, Integer> getFavoriteCount(String userId, String offset, int tenantId, SearchVO searchInfo) throws Exception {
-		setSearchDateOffset(searchInfo, offset);
-
+		SearchVO searchDateInfo = createSearchDateInfo(searchInfo, offset);
+		
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
 		parameterMap.put("offset", commonUtil.getMinuteUTC(offset));
@@ -846,8 +869,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("searchFileName", searchInfo.getSearchFileName());
 		parameterMap.put("searchCreatorName", searchInfo.getSearchCreateName());
 		parameterMap.put("searchFileType", searchInfo.getSearchFileType());
-		parameterMap.put("searchStartDate", searchInfo.getSearchStartDate());
-		parameterMap.put("searchEndDate", searchInfo.getSearchEndDate());
+		parameterMap.put("searchStartDate", searchDateInfo.getSearchStartDate());
+		parameterMap.put("searchEndDate", searchDateInfo.getSearchEndDate());
 
 		Integer folderCount = ezWebFolderDAO.getFavoriteFolderCount(parameterMap);
 		Integer fileCount = ezWebFolderDAO.getFavoriteFileCount(parameterMap);
@@ -981,6 +1004,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		ezWebFolderDAO.moveSubFolders(map);
 	}
 	
+	@Override
 	public void moveFile (String fileId, String folderId, int tenantId, String timeUTC) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("fileId",   fileId);
@@ -991,15 +1015,18 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		ezWebFolderDAO.moveFile(map);
 	}
 	
-	private void setSearchDateOffset(SearchVO searchInfo, String offset) {
+	private SearchVO createSearchDateInfo(SearchVO searchInfo, String offset) {
 		String startDate = searchInfo.getSearchStartDate();
 		String endDate = searchInfo.getSearchEndDate();
 		
 		if (startDate.isEmpty() || endDate.isEmpty()) {
-			return;
+			return searchInfo;
 		}
+
+		SearchVO result = new SearchVO();
+		result.setSearchStartDate(commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, false));
+		result.setSearchEndDate(commonUtil.getDateStringInUTC(endDate + " 23:59:59", offset, false));
 		
-		searchInfo.setSearchStartDate(commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true));
-		searchInfo.setSearchEndDate(commonUtil.getDateStringInUTC(endDate + " 23:59:59", offset, true));
+		return result;
 	}
 }

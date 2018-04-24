@@ -42,34 +42,39 @@
 
 	<!-- ShareFile resultMap -->
     <resultMap id="shareVO" class="ShareVO">
-        <result property="fileId"                 column="file_id"                columnIndex="1"  />
-        <result property="fileName"               column="file_name"              columnIndex="2"  />
-        <result property="folderFileType"         column="folderfile_type"        columnIndex="3"  />
-        <result property="folderType"             column="folder_type"            columnIndex="4"  />
-        <result property="filePosition"           column="file_path"              columnIndex="5"  />
-        <result property="fileSize"               column="file_size"              columnIndex="6"  />
-        <result property="fileExt"                column="file_ext"               columnIndex="7"  />
-        <result property="folderPath"             column="folder_path"            columnIndex="8"  />
-        <result property="ownerId"                column="owner_id"               columnIndex="9"  />
-        <result property="useStatus"              column="use_status"             columnIndex="10" />
-        <result property="createId"               column="create_id"              columnIndex="11" />
-        <result property="createName"             column="create_name"            columnIndex="12" />
-        <result property="createDate"             column="create_date"            columnIndex="13" />
-        <result property="updateId"               column="update_id"          	  columnIndex="14" />
-        <result property="updateDate"             column="update_date"            columnIndex="15" />
-        <result property="typeId"                 column="type_id"                columnIndex="16" />
-        <result property="typeName"               column="type_name"              columnIndex="17" />        
-        <result property="fileIconUrl"            column="type_icon"              columnIndex="18" />
-<!--    <result property="shareStatus"            column="share_status"        	  columnIndex="19" /> -->
-        <result property="favouriteStatus"        column="favorite_status"        columnIndex="20" />
-        <result property="shareId"                column="share_id"  		      columnIndex="21" />
-        <result property="sharerId"               column="sharer_id"  		      columnIndex="22" />
-        <result property="sharerName"             column="sharer_name"		      columnIndex="23" />
-        <result property="userList"               column="user_list"			  columnIndex="24" />
-        <result property="shareDate"              column="share_date"             columnIndex="25" />
-        <result property="subStatus"              column="sub_status"             columnIndex="26" />
-        <result property="tenantId"               column="tenant_id"              columnIndex="27" />
+        <result property="fileId"                 column="FILE_ID"                columnIndex="1"  />
+        <result property="fileName"               column="FILE_NAME"              columnIndex="2"  />
+        <result property="folderFileType"         column="FOLDERFILE_TYPE"        columnIndex="3"  />
+        <result property="folderType"             column="FOLDER_TYPE"            columnIndex="4"  />
+        <result property="filePosition"           column="FILE_PATH"              columnIndex="5"  />
+        <result property="fileSize"               column="FILE_SIZE"              columnIndex="6"  />
+        <result property="fileExt"                column="FILE_EXT"               columnIndex="7"  />
+        <result property="folderPath"             column="FOLDER_PATH"            columnIndex="8"  />
+        <result property="ownerId"                column="OWNER_ID"               columnIndex="9"  />
+        <result property="useStatus"              column="USE_STATUS"             columnIndex="10" />
+        <result property="createId"               column="CREATE_ID"              columnIndex="11" />
+        <result property="createName"             column="CREATE_NAME"            columnIndex="12" />
+        <result property="createDate"             column="CREATE_DATE"            columnIndex="13" />
+        <result property="updateId"               column="UPDATE_ID"          	  columnIndex="14" />
+        <result property="updateDate"             column="UPDATE_DATE"            columnIndex="15" />
+        <result property="typeId"                 column="TYPE_ID"                columnIndex="16" />
+        <result property="typeName"               column="TYPE_NAME"              columnIndex="17" />        
+        <result property="fileIconUrl"            column="TYPE_ICON"              columnIndex="18" />
+<!--    <result property="shareStatus"            column="SHARE_STATUS"        	  columnIndex="19" /> -->
+        <result property="favouriteStatus"        column="FAVORITE_STATUS"        columnIndex="20" />
+        <result property="shareId"                column="SHARE_ID"  		      columnIndex="21" />
+        <result property="sharerId"               column="SHARER_ID"  		      columnIndex="22" />
+        <result property="sharerName"             column="SHARER_NAME"		      columnIndex="23" />
+        <result property="userList"               column="USER_LIST"			  columnIndex="24"         nullValue="" />
+        <result property="shareDate"              column="SHARE_DATE"             columnIndex="25" />
+        <result property="subStatus"              column="SUB_STATUS"             columnIndex="26" />
+        <result property="tenantId"               column="TENANT_ID"              columnIndex="27" />
     </resultMap>
+	
+	<resultMap id="countMap" class="HashMap">
+		<result property="folderfile_type"        column="FOLDERFILE_TYPE"        columnIndex="1"  />
+        <result property="count"               	  column="COUNT"                  columnIndex="2"           javaType="Long" />
+	</resultMap>
 	
 	<sql id="searchTerm">
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -125,14 +130,14 @@
 		<isNotEqual property="endrollStartDate" compareValue="">
 			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DATE_FOMAT(FILES.CREATE_DATE, '%Y-%m-%d') >= #endrollStartDate# AND DATE_FORMAT(FILES.CREATE_DATE, '%Y-%m-%d') <= #endrollEndDate#)
+					(DATE_FOMAT(FILES.CREATE_DATE, '%Y-%m-%d %H:%i:%s') >= #endrollStartDate# AND DATE_FORMAT(FILES.CREATE_DATE, '%Y-%m-%d %H:%i:%s') <= #endrollEndDate#)
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 		<isNotEqual property="delStartDate" compareValue="">
 			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DATE_FOMAT(FILES.UPDATE_DATE, '%Y-%m-%d') >= #delStartDate# AND DATE_FORMAT(FILES.UPDATE_DATE, '%Y-%m-%d') <= #delEndDate#)
+					(DATE_FOMAT(FILES.UPDATE_DATE, '%Y-%m-%d %H:%i:%s') >= #delStartDate# AND DATE_FORMAT(FILES.UPDATE_DATE, '%Y-%m-%d %H:%i:%s') <= #delEndDate#)
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -162,14 +167,14 @@
 		<isNotEqual property="endrollStartDate" compareValue="">
 			<isNotEqual property="endrollEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d') >= #endrollStartDate# AND DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d')<= #endrollEndDate#)
+					(DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d %H:%i:%s') >= #endrollStartDate# AND DATE_FORMAT(FOLDER.CREATE_DATE, '%Y-%m-%d %H:%i:%s')<= #endrollEndDate#)
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 		<isNotEqual property="delStartDate" compareValue="">
 			<isNotEqual property="delEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d') >= #delStartDate# AND DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d')<= #delEndDate#)
+					(DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d %H:%i:%s') >= #delStartDate# AND DATE_FORMAT(FOLDER.UPDATE_DATE, '%Y-%m-%d %H:%i:%s')<= #delEndDate#)
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -188,7 +193,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 				<![CDATA[
-					RESULT.TARGET_NAME1 LIKE CONCAT ('%', #searchFileName#, '%') OR RESULT.TARGET_NAME2 LIKE CONCAT ('%', #searchFileName#, '%')
+					RESULT.TARGET_NAME LIKE CONCAT ('%', #searchFileName#, '%')
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreatorName" compareValue="" prepend="AND">
@@ -404,7 +409,7 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.getSharingCount" parameterClass="Map" resultClass="HashMap">
+	<select id="EzWebFolderDAO_m.getSharingCount" parameterClass="Map" resultMap="countMap">
 		<![CDATA[
 			SELECT
 				UU.FOLDERFILE_TYPE,
@@ -500,7 +505,7 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.getSharedCount" parameterClass="Map" resultClass="HashMap">
+	<select id="EzWebFolderDAO_m.getSharedCount" parameterClass="Map" resultMap="countMap">
 		<![CDATA[
 			SELECT
 				UU.FOLDERFILE_TYPE,
@@ -1037,7 +1042,8 @@
 					FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
 		            'folder'	AS TRASHCAN_EXT,
 					0 	AS TRASHCAN_SIZE,
-					DATE_ADD(FOLDER.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+					DATE_FORMAT(FOLDER.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+					DATE_FORMAT(FOLDER.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
 					DATE_ADD(FOLDER.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
 					FOLDER.CREATE_NAME1 AS CREATE_NAME1,
 		            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
@@ -1066,8 +1072,8 @@
 				END  AS TRASHCAN_ICON_URL,
 				FILES.FILE_EXT		AS TRASHCAN_EXT,
 				FILES.FILE_SIZE 	AS TRASHCAN_SIZE,
-				DATE_ADD(FILES.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				DATE_ADD(FILES.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				DATE_FORMAT(FILES.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+				DATE_FORMAT(FILES.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
 	            FILES.CREATE_NAME1 AS CREATE_NAME1,
 	            FILES.CREATE_NAME1 AS CREATE_NAME2,
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
@@ -1085,7 +1091,7 @@
 	 	<![CDATA[
 				) R
 			GROUP BY R.TRASHCAN_ID
-			ORDER BY R.UPDATE_DATE DESC
+			ORDER BY R.TRASHCAN_EXT,R.UPDATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]> 
 	</select>
@@ -1100,8 +1106,8 @@
 				FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
 				FILES.FILE_EXT		AS TRASHCAN_EXT,
 				FILES.FILE_SIZE 	AS TRASHCAN_SIZE,
-				DATE_ADD(FILES.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				DATE_ADD(FILES.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				DATE_FORMAT(FILES.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+				DATE_FORMAT(FILES.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
 	            FILES.CREATE_NAME1 AS CREATE_NAME1,
 	            FILES.CREATE_NAME1 AS CREATE_NAME2,
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
@@ -1161,10 +1167,10 @@
 		]]>
 	</delete>
 	
-	<delete id="EzWebFolderDAO_m.deleteAllFilesInFolder" parameterClass="Map">
-		<![CDATA[
-			DELETE
-			FROM
+	<select id="EzWebFolderDAO_m.selectAllFilesInFolder" parameterMap="Map" resultClass="String">
+		SELECT
+				f.FILE_ID
+    	 FROM
 				TBL_WEBFOLDER_FILE f JOIN
 					(
 					SELECT
@@ -1181,9 +1187,8 @@
 			WHERE
 				f.TENANT_ID = #tenantId#
 			AND
-				f.USE_STATUS = 'T'
-		]]>
-	</delete>
+				f.USE_STATUS = 'T';
+	</select>
 	
 	<select id="EzWebFolderDAO_m.getFolderByFolderPath"  parameterClass="Map" resultMap="trashCanVO">
 		<![CDATA[
@@ -1195,8 +1200,8 @@
 				FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
 	            'folder'	AS TRASHCAN_EXT,
 				0 	AS TRASHCAN_SIZE,
-				DATE_ADD(FOLDER.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				DATE_ADD(FOLDER.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				DATE_FORMAT(FOLDER.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
+				DATE_FORMAT(FOLDER.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
 				FOLDER.CREATE_NAME1 AS CREATE_NAME1,
 	            FOLDER.CREATE_NAME1 AS CREATE_NAME2,
 	            "" AS FILE_FOLDER_ID,
@@ -1406,8 +1411,7 @@
 				WHERE
 					FAVOR.TARGET_TYPE = 'F' AND
 					FAVOR.USER_ID = #userId# AND
-					FAVOR.TENANT_ID = #tenantId# AND
-					FILES.USE_STATUS = 'Y'
+					FAVOR.TENANT_ID = #tenantId#
 			) AS RESULT
 			WHERE
 					RESULT.USE_STATUS = 'Y'
