@@ -169,7 +169,7 @@ function menu_SelectRange2() {
 				}
 				else {
 					var feature = GetOpenPosition(730, 700);
-					g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
+					g_windowReference = window.open(szUrl, "SelectRange", "height=680,width=600,resizable=no,center=yes" + feature);
 				}
 			}
 			
