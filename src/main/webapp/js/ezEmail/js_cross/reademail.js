@@ -1,6 +1,4 @@
-﻿﻿
-
-var m_bPrevNext = false;
+﻿var m_bPrevNext = false;
 var real_href = "";
 
 function get_mail(flag) {
