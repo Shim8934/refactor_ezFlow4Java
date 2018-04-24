@@ -91,7 +91,7 @@
 			function orderSelect(type) {
 				
 				if (searchMode == true) {
-					alert("<spring:message code='ezEmail.letter31'/>");
+					alert("<spring:message code='ezEmail.letter33'/>");
 					return;
 				}
 				
@@ -114,14 +114,14 @@
 			function orderChange() {
 				
 				if (searchMode == true) {
-					alert("<spring:message code='ezEmail.letter31'/>");
+					alert("<spring:message code='ezEmail.letter33'/>");
 					return;
 				}
 				
 				var liArr = $('div.lmLetter').find('li');
 				
 				if ($(liArr).attr("class") == 'lmNoData' || moveChk == false) {
-					alert("<spring:message code='ezEmail.letter32'/>");
+					alert("<spring:message code='ezEmail.letter34'/>");
 					return;
 				}
 					
@@ -189,7 +189,7 @@
 				 if (type === "add") {
 					 
 					 if (searchMode == true) {
-						 alert("<spring:message code='ezEmail.letter31'/>");
+						 alert("<spring:message code='ezEmail.letter33'/>");
 						 return;
 					 }
 					 

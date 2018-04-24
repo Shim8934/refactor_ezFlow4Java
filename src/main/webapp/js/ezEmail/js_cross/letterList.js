@@ -49,8 +49,8 @@ function disableChk() {
 	}
 }
 
-// 예외처리                  (문자, 특수문자 허용여부, 길이)
-function strChk(str, speChar, strLen) {
+// 예외처리                  (문자, 특수문자 허용여부, 길이, 대상 메시지)
+function strChk(str, speChar, strLen, kindMsg) {
 	// 공백, 특수문자, 길이
 	var strTrim = str.trim();
 	var msg = "";
@@ -61,13 +61,13 @@ function strChk(str, speChar, strLen) {
 			var speCha = /[`~!<>@#$%^&*|\\\"\';:\/?]/gi;
 			
 			if (speCha.test(strTrim)) {
-				msg = specialMsg;
+				msg = specialMsg + "\n" + specialMsg2;
 			}	
 		}
 		
 		if (strLen !== undefined) {
-			if (strTrim.length > strLen) {
-				msg = strLen + lengthMsg;
+			if (strTrim.length >= strLen) {
+				msg = kindMsg + strLen.toString() + lengthMsg;
 			} 
 		}
 	}else {

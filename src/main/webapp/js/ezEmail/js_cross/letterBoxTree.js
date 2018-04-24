@@ -266,8 +266,8 @@ function deleteLetterBox() {
 function submitClick() {
 	var formData = $("#myForm").serialize();
 	var formUrl = "/admin/ezEmail/updateLetterBox.do";
-	var disName = strChk($("#myForm #display").val(), false, 40);
-	var disName2 = strChk($("#myForm #display2").val(), false, 40);
+	var disName = strChk($("#myForm #display").val(), false, 40, letterBoxNameMsg);
+	var disName2 = strChk($("#myForm #display2").val(), false, 40, letterBoxNameMsg);
 	var disMsg = disName.msg !== "" ? disName.msg : disName2.msg !== "" ? disName2.msg : "";
 	
 	if (document.getElementById("letterbox_no").disabled) {

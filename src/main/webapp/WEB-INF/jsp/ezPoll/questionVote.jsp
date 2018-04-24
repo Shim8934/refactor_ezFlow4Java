@@ -3027,7 +3027,14 @@
 		  			var paramsArr = params.split(",");
 		  			pollType = paramsArr[4];
 		  		}
-		  		window.parent.frames["right"].location.href = "/ezPoll/pollList.do?qstId=" + qstId + "&gotoList=" + gotoList + "&params=" + params;
+		  		
+		  		if(window.parent.frames["right"] !== undefined){
+			  		window.parent.frames["right"].location.href = "/ezPoll/pollList.do?qstId=" + qstId + "&gotoList=" + gotoList + "&params=" + params;
+		  		}
+		  		//알림 메일로 받았을 경우 처리.
+		  		else {
+			  		window.location.href = "/ezPoll/pollList.do?qstId=" + qstId + "&gotoList=" + gotoList + "&params=" + params;
+		  		}
 		  	}
 		  	
 		</script>

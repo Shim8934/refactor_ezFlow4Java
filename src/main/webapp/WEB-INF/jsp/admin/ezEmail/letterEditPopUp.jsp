@@ -56,6 +56,11 @@
 			var popLetterId = "${letterId}"; // 수정일 경우  처음에는 null 이후 modifyLoad()에서 저장됨
 			var popLetterNo = "${letterNo}"; // 저장일 경우 -1
 			var modifyData = ""; // modifyLoad()에서 저장
+			var specialMsg = "<spring:message code='ezEmail.kyj17'/>"; // 해당 특수문자는 입력할 수 없습니다.
+			var specialMsg2 = "<spring:message code='ezEmail.letter9'/>"; //
+			var lengthMsg = opener.lengthMsg; // "<spring:message code='ezEmail.letter14'/>"; // 자 이하로 입력 가능합니다.
+			var contentMsg = "<spring:message code='ezEmail.letter10'/>"; // "<spring:message code='ezEmail.letter15'/>"; // 내용을 입력해주세요.
+			var letterNameMsg = opener.letterNameMsg; // "<spring:message code='ezEmail.letter32'/>"; // 편지지명은
 			
 			window.onload = function() {
 				console.log(popUpType);
@@ -109,8 +114,8 @@
 				var displayname2 = $("#displayname2").val();
 				var letterJson = {};
 				
-				var disName = strChk(displayname, true, 40);
-				var disName2 = strChk(displayname2, true, 40);
+				var disName = strChk(displayname, true, 40, letterNameMsg);
+				var disName2 = strChk(displayname2, true, 40, letterNameMsg);
 				var msg = disName.msg != "" ? disName.msg : disName2.msg != "" ? disName2.msg : "";
 				
 				if (msg != "") { // 편지지명 없을때 return
