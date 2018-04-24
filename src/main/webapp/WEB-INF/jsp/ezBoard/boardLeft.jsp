@@ -504,8 +504,8 @@
 					window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
 		        } else {
 		        	window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
-		            SetTreeviewUnSelect("");		            
 		        }
+	            SetTreeviewUnSelect("");		            
 			}
 
 		    function toggleQuestionList() {

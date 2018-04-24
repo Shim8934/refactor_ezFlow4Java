@@ -930,8 +930,8 @@
 			</table>
 			
 			<div class="wrap" style="min-width: 800px;">
-				<input type="button" id="backToList" style="background: #dddddd; color: #000000;" value="<spring:message code="ezLadder.t083"/>" />
 				<input type="button" class="ladderBtn" id="makeLad" disabled="disabled" value="<spring:message code="ezLadder.t018"/>">
+				<input type="button" id="backToList" style="background: #dddddd; color: #000000;" value="<spring:message code="ezLadder.t083"/>" />
 			</div>
 		</form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
