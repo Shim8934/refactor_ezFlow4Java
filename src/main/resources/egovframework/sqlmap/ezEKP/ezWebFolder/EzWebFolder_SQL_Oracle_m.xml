@@ -1169,7 +1169,7 @@
 			TARGET_ID = #targetId# AND
 			TARGET_TYPE = #targetType# AND
 			USER_ID = #userId# AND
-			TENANT_ID = #tenantId#
+			TENANT_ID = #xtenantId#
 	</delete>
 	
 	<select id="EzWebFolderDAO_m.getTrashFileCount" resultClass="Integer">
@@ -1230,5 +1230,4 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</update>
-
 </sqlMap>

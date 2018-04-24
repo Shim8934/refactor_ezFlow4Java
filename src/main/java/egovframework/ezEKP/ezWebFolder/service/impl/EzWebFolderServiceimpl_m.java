@@ -746,7 +746,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				if (fileVO != null) {
 					FolderVO folderVO = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
 					
-					if (folderVO != null) {
+					if (folderVO != null && folderVO.getUseStatus().equals("Y")) {
 						restoreFile(file, tenantId, userId, timeUTC);
 					}
 				}
@@ -758,7 +758,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
 				FolderVO upperFolderVO = ezWebFolderService.getFolderByFolderId(folderVO.getFolderUpper(), offset, tenantId);
 				
-				if (upperFolderVO != null && folderVO.getFolderPath().startsWith(upperFolderVO.getFolderPath())) {
+				if (upperFolderVO != null && upperFolderVO.getUseStatus().equals("Y")) {
 					restoreFolder(folderVO.getFolderPath(), tenantId, userId, companyId, timeUTC);
 					restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC);
 				}

@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" >
-		var primary               = "<c:out value='${primary}'/>";
+			var primary           = "<c:out value='${primary}'/>";
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
 			var primary           = "<c:out value='${primary}'/>";
@@ -46,7 +46,6 @@
 			}
 			
 			function renderData(result) {
-				//var bttnAdd = document.getElementById("addFoldersBttn");
 				var divTree = document.getElementById("folderTree");
 				
 				while (divTree.hasChildNodes()) {
@@ -496,13 +495,12 @@
 	<body class="mainbody">
 		<h1><spring:message code='ezWebFolder.t126' /></h1>
 		<div id="companySelect" style="margin: 10px 0px;">
-			<span style="font-size: 16px; display:inline-block; height: 21px; vertical-align: middle;"><b>회사 선택: </b></span>
-			<select id="companyList" style="font-size: 13px; border-radius: 3px; height: 25px; display:inline-block;" onchange="change();">
+			<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b>회사 선택: </b></span>
+			<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="change();">
 				<c:forEach var="item" items="${list}">
 					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 				</c:forEach>
 			</select>
-			<a class="webfolderBttn3" id="addFoldersBttn" style=""><span onclick="addAllFolders();"><spring:message code='ezWebFolder.t228'/></span></a>
 		</div>
 		
 		<div style="height: 450px; width: 100%;">
