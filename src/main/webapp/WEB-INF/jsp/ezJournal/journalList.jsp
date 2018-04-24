@@ -38,28 +38,28 @@
 						<img src="/images/newAttach.gif" style="vertical-align: middle;">
 					</th>
 				<c:if test="${listType eq 'recv' or listType eq 'temp' }">
-					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="8" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: left; width:15%;" class="h5_center">
+					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="8" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: left; width:13%;" class="h5_center">
 						<spring:message code='ezJournal.t12'/>
 					</th>
 				</c:if>
-				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:<c:choose><c:when test="${listType eq 'mine' or listType eq 'temp'}">60%</c:when><c:otherwise>40%</c:otherwise></c:choose>;" class="h5_center">
+				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:*;" class="h5_center">
 					<spring:message code='ezJournal.t56'/>
 				</th>
 				<c:if test="${listType eq 'recv' }">
-					<th id="BoardList_TH_4" onclick="setListOrder(this)" order="6" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:15%;" class="h5_center">
+					<th id="BoardList_TH_4" onclick="setListOrder(this)" order="6" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:10%;" class="h5_center">
 						<spring:message code='ezJournal.t40'/>
 					</th>
 				</c:if>
 				<c:if test="${listType eq 'department' or listType eq 'recv' }">
-					<th id="BoardList_TH_5" onclick="setListOrder(this)" order="5" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:15%;" class="h5_center">
+					<th id="BoardList_TH_5" onclick="setListOrder(this)" order="5" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:12%;" class="h5_center">
 						<spring:message code='ezJournal.t34'/>
 					</th>
 				</c:if>
-				<th id="BoardList_TH_6" onclick="setListOrder(this)" order="3" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20%;" class="h5_center">
+				<th id="BoardList_TH_6" onclick="setListOrder(this)" order="3" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:12%;" class="h5_center">
 					<spring:message code='ezJournal.t35'/>
 				</th>
 				<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine' }">
-					<th id="BoardList_TH_8" onclick="setListOrder(this)" order="7" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20%;" class="h5_center">
+					<th id="BoardList_TH_8" onclick="setListOrder(this)" order="7" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:15%;" class="h5_center">
 						<spring:message code='ezJournal.t22'/>
 					</th>
 				</c:if>

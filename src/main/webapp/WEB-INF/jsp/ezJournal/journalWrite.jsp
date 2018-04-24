@@ -236,6 +236,7 @@
                     self.resizeTo(785, 830);
                 }
 	    		
+	    		// IE10에서 에디터사이즈 조절
 	    		if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
 		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 310 + "PX";
 		    	}
