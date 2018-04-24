@@ -43,6 +43,8 @@ var strLang42 = "작성자만이 삭제할 수 있습니다.";
 var strLang43 = "사다리 제목";
 var strLang44 = "사다리 종류";
 var strLang45 = "참여자";
+var strLang46 = "이 사다리 게임을 삭제하시겠습니까?";
+var strLang47 = "이 사다리 게임을 시작하시겠습니까?";
 
 	/** boh */
 var strLang100 = "검색결과";

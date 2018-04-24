@@ -205,9 +205,7 @@
 			}
 			
 			function loadPreLadderSetting() {
-				/* retladinfo = getPreLadder(ladderID); */
 				if(!!retFunc) {
-					/* retFunc(retladinfo["lad"], retladinfo["ladline"]); */
 					retFunc(ladderID);
 				}
 				

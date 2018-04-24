@@ -15,7 +15,6 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-		<script type="text/javascript" src="/js/ezLadder/ladderSetting.js"></script>
 		<script type="text/javascript" src="/js/ezLadder/ladder.js"></script>
 		
 		<script type="text/javascript">
@@ -46,10 +45,8 @@
 					max: 0,
 					slide: function( event, ui ) {
 						$("#amount").text(ui.value);
-						console.log("dd");
 					},
 					stop: function(event, ui) {
-						console.log(ui.value);
 						lineCnt = ui.value;
 					}
 				});
@@ -102,7 +99,6 @@
 				
 				$(".ladderType")
 					.on("click", function() {
-						console.log("타입 클릭....");
 						var imgs = $(".ladderType[_num='" + ladderType + "']").find("img");
 						
 						imgs.removeClass("active");
@@ -171,6 +167,12 @@
 				
 			});
 			
+			function add_user_change_ulsize(usernum) {
+				$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
+				$("#ladderCanvas").attr("width", (usernum * 150) + "px");
+				
+			}
+			
 			function setLadderTypeDiv() {
 				var html = "";
 				var len = $("#itemList li").length;
@@ -230,6 +232,30 @@
 					}
 				}
 				totalmoney = totalmoney.toString().replace(regexp, ',');
+			}
+			
+			/** 재사용 사다리 정보 가져오기 */
+			function getPreLadder(ladderID) {
+				var templist = [];
+				var ladinfo = [];
+				
+				$.ajax({
+					type: "GET",
+					url: "/ezLadder/getLadderGame.do",
+					traditional: true,
+					dataType: "json",
+					async : false,
+					data: {
+						"ladderId": ladderID,
+						"mode": "pre"
+					},
+					success: function(result) {
+						ladinfo["lad"] = result.vo;
+						ladinfo["ladline"] = result.list;
+					}
+				});
+				
+				return ladinfo;
 			}
 			
 			function ladderSetInitVar(ladderId) {
@@ -340,7 +366,6 @@
 			
 			function manage_attendant_complete(rtn) {
 				setAllUser_(rtn);
-				console.log(rtn);
 			}
 
 			/** 참여자 변경될때 슬라이더 바 조절 */
@@ -655,7 +680,6 @@
 						var picsrc = "/images/ezLadder/icon_defaultAttendant.png";
 						html = "";
 						
-						console.log(attendants["id"][i]);
 						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
 							html += '<li class="attendant"><div style="height: 140px; padding-top:  20px;">';
 							html += '<div class="userPicWraper"><img src="' + picsrc + '" width="60px" height="60px" /></div>';
@@ -704,33 +728,7 @@
 				}
 				
 				$("#ladderLineBox").scrollLeft(len * 150);
-				console.log(attendants.id);
 			}
-			
-			/** 유저 정보 xml로 가져오기 */
-			/* var adCount;        
-	        var xmlDOM;
-			function getAttendantAJAX(attendantName) {
-				adCount = 0;
-				xmlDOM = createXmlDom();
-		        
-		        $.ajax({
-		    		url : "/ezOrgan/getSearchList.do",
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		data : {
-		    			search : "displayName::" + attendantName,
-		    			cell   : "company;description;title;displayName;mail",
-		    			prop   : "displayName;description;extensionAttribute2",
-		    			type   : "user"
-		    		},
-		    		success: function(xml){
-		    			xmlDOM = loadXMLString(xml);
-		                adCount = xmlDOM.getElementsByTagName("ROW").length;
-		    		}    		
-		    	});
-			} */
 			
 			var nameSearchResult;
 			function getUserArray(names) {
@@ -744,7 +742,6 @@
 						"searchUserName": names
 					},
 					success: function(resultName) {
-						console.log(resultName);
 						nameSearchResult = resultName.JSONObjectList;
 					}
 					
@@ -808,6 +805,9 @@
 			.ui-widget-header {
 				background: #ddeeff;
 			}
+			.ui-widget-content {
+				border: 1px solid #dddddd;
+			}
 			.ladderType, .ladderSecret {
 				width: 50px;
 				height: 50px;
@@ -837,6 +837,10 @@
 			}
 			.active {
 				display: inline;
+			}
+			#addBomb:hover, #cutBomb:hover {
+				border: 1px solid #0470e4;
+				color: #0470e4;
 			}
 		</style>
 	</head>
@@ -927,8 +931,8 @@
 			</table>
 			
 			<div class="wrap" style="min-width: 800px;">
-				<button type="button" id="returnList" style="float: left;"><spring:message code="ezLadder.t083"/></button>
 				<input type="button" class="ladderBtn" id="makeLad" disabled="disabled" value="<spring:message code="ezLadder.t018"/>">
+				<input type="button" id="returnList" style="background: #dddddd; color: #000000;" value="<spring:message code="ezLadder.t083"/>" />
 			</div>
 		</form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

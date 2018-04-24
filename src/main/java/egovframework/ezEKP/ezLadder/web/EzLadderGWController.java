@@ -95,14 +95,7 @@ public class EzLadderGWController {
 		String sort = request.getParameter("sort");
 		String sortFlag = request.getParameter("sortFlag");
 		
-		logger.debug("mode : " + mode);
-		logger.debug("currPage : " + page);
-		logger.debug("searchSelect : " + searchSelect);
-		logger.debug("searchInput : " + searchInput);
-		logger.debug("sort : " + sort);	
-		logger.debug("sortFlag : " + sortFlag);	
 		vo.setUserId(userId);
-
 	
 		int totalLadder = 0;
 		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
@@ -154,8 +147,9 @@ public class EzLadderGWController {
 		return result;
 	}
 	
-	/** boh */
-	/***/
+	/** 
+	 * 참여자 이름 검색으로 바로 추가 
+	 * */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ladder/ladders/writers/{writerId}/searchUser", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwSelectSearchUser(@PathVariable String writerId, @RequestBody String [] searchUserName, HttpServletRequest request) {
@@ -200,6 +194,7 @@ public class EzLadderGWController {
 		
 		return result;
 	}
+	
 	/**
 	 * 사다리 게임 추가
 	 * */
@@ -404,11 +399,11 @@ public class EzLadderGWController {
 					cmt.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
 				}
 				else {
-					cmt.setPic("/images/ezLadder/icon_defaultAttendant.png");
+					cmt.setPic("");
 				}
 			} 
 			else {
-				cmt.setPic("/images/ezLadder/icon_defaultAttendant.png");
+				cmt.setPic("");
 			}
 			
 			result.put("status", "ok");
@@ -526,12 +521,7 @@ public class EzLadderGWController {
 		String mode = request.getParameter("mode");
 		String searchSelect = request.getParameter("searchSelect");
 		String searchInput = request.getParameter("searchInput");
-
 		
-		logger.debug("mode : " + mode);
-		logger.debug("currPage : " + page);
-		logger.debug("searchSelect : " + searchSelect);
-		logger.debug("searchInput : " + searchInput);	
 		vo.setUserId(userId);
 		
 		int totalLadder = 0;
@@ -659,14 +649,11 @@ public class EzLadderGWController {
 	 */
 	@RequestMapping(value = "ladder/ladders/delete/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
 	public JSONObject gwDeleteLadderList(@PathVariable String userId,  HttpServletRequest request) {
-
 		logger.debug("web G/W LADDER [GET /ladder/delete/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		String tenant_Id = request.getParameter("tenant_Id");
 		String ladderId = request.getParameter("ladderId");
-		logger.debug("ladderId : " + ladderId );
-		logger.debug("tenant_Id : " + tenant_Id );
 
 		try {
 	
@@ -753,7 +740,7 @@ public class EzLadderGWController {
 		File f = new File(filePath);
 		
 		if (f.exists() && !f.isDirectory()) { 
-		    return true;
+			return true;
 		}
 		else {
 			return false;

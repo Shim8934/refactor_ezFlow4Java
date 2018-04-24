@@ -865,7 +865,6 @@
 		    
 		    var pSeach = false;
 		    function DisplayUserImageList() {
-		    	console.log("DisplayUserImageList");
 		        var xmlRtn = pListXML_Info;
 		        document.getElementById("DeptUserImgList").innerHTML = "";
 		        document.getElementById("txtlist_Layer").scrollTop = "0";
@@ -1113,7 +1112,6 @@
 		    }
 		    var issearch = false;
 		    function search_click(type) {
-		    	console.log("search");
 		        listContentArry = new Array();
 	
 		        if ($.trim($("#keyword").val()) == "") {

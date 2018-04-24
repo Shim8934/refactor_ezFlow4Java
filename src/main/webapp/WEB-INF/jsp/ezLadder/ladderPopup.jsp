@@ -158,8 +158,8 @@
 					<!-- <span id="usernames"></span> -->
 				</c:when>
 				<c:when test="${popupType == 'overlapOnlyName'}">
-					<h1 id="h1Title">이름 중복 검색</h1>
-					<span>▒ 이름이 여러명 검색되었습니다. 추가할 유저를 선택하세요.</span>
+					<h1 id="h1Title"><spring:message code="ezLadder.t036" /></h1>
+					<span>▒ <spring:message code="ezLadder.t084" /></span>
 					<p id="userInfo"></p>
 				</c:when>
 				<c:when test="${popupType == 'cmtdelete'}">
@@ -176,7 +176,7 @@
 					<input type="submit" value="<spring:message code="ezLadder.t109" />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
 				</c:when>
 				<c:when test="${popupType == 'overlapOnlyName'}">
-					<input type="submit" value="참여자 추가" id="btn_addRealUser" _flag="real">
+					<input type="submit" value="<spring:message code="ezLadder.t071" />" id="btn_addRealUser" _flag="real">
 					<input type="submit" value="<spring:message code="ezLadder.t109" />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
 				</c:when>
 				<c:otherwise>

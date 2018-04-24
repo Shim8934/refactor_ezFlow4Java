@@ -27,13 +27,9 @@
 
 /* 사다리 만들기 */
 .input {
-	border: 1px solid #ccc;
+	border: 1px solid #ddd;
 	padding: 0px 20px;
 }
-
-/* .input:focus {
-    border: 1px solid #555;
-} */
 
 .fullwidth {
 	width: 100%;
@@ -126,17 +122,15 @@
 }
 
 .ladderBtn, #returnList {
-	float: right;
 	cursor: pointer;
-	background: #dddddd;
+	background: #0470e4;
 	color: white;
 	border-radius: 5px;
-	font-weight: bold;
 	display: inline-block;
 	height: 45px;
 	line-height: 45px;
 	padding: 0 20px;
-	border: 0;
+	border: 1px solid #ccc;
 }
 
 .attendant > div {

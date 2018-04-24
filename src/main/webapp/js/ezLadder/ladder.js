@@ -32,7 +32,7 @@ function changeSpeed(speed, flag) { // 속도 변화
 	}
 }
 
-function setDefaultLad() { // 세로선, 유저, 아이템 나타나기
+function setDefaultLad() { // 세로선 나타나기
 	for(var i = 0; i < wInfo; i++) {
 		drawLadLine('H', startXPoint + (wSize * i), startYPoint);
 		

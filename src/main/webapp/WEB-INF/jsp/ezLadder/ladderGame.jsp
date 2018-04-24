@@ -45,20 +45,146 @@
 		    }
 		});
 		
-		window.onload = function() {
+		/** 페이지 들어갔을때 스크롤 사다리 위쪽으로 바로 이동시켜주는 펑션 */
+		/* window.onload = function() {
 			var firstScrollTop = $("#attendantList").offset().top - 5;
 			$("html, body").animate({"scrollTop": firstScrollTop}, 300);
-		}
-	
+		} */
+		
+		var dragcnt = 0;
+		var originalPosition_left = 0;
+		$(function() {
+			if(deleteFlag == 1) {
+				window.location.href = "/ezLadder/ladderMain.do?brdID=7"; 
+			}
+			initValues();
+			ladder_window_resize();
+			
+			if(status == 0) {
+				var usernum = _ladderLine.length;
+				add_user_change_ulsize(usernum);
+				changeUser(usernum);
+				
+				if(writerId == id) {
+					// 대기상태
+					$(".ladderDrag")
+					.draggable({ // 드래그 리스트
+						revert: "invalid",
+						revertDuration: 400,
+						zIndex: 100,
+						addClasses: false,
+						start: function(event, ui) {
+							if(dragcnt == 0) {
+								originalPosition_left = ui.originalPosition.left;
+								dragcnt++;
+							}
+							dragloc = {"id": ui.helper[0].id, "beforeLeft": 0, "left": 0, "top": ui.originalPosition.top};
+							if(ui.position.left >= 0) {
+								dragloc.beforeLeft = Math.round(ui.position.left/150);
+							} else {
+								dragloc.beforeLeft = Math.round(Math.abs(ui.position.left/150)) * -1;
+							}
+						}
+					})
+					.droppable({ // 드랍 리스트
+						accept: ".ladderDrag",
+						addClasses: false,
+						drop: function(event, ui) {
+							droploc = {"id": $(this).attr("id"), "left": 0};
+							
+							var _thisleft = Math.round($(this).css("left").split("px")[0]/150);
+							
+							if(ui.position.left >= 0) {
+								dragloc.left = Math.round(ui.position.left/150);
+							} else {
+								dragloc.left = Math.round(Math.abs(ui.position.left/150)) * -1;
+							}
+							
+							var moveValue = dragloc.left - dragloc.beforeLeft;
+							droploc.left = _thisleft - moveValue;
+							
+							afterDrag();
+							changeListOrder();
+						},
+						
+					});
+				}
+			} else if(status == 1) {
+				// 완료상태
+				canvasSetting();
+			}
+			
+			if(mode !== "preview") {
+				// 프리뷰가 아닐때 댓글 웹소켓 연결
+				getCmtSockConnect();
+			}
+			
+			$(window).resize(function() {
+				ladder_window_resize();
+			});
+			
+			$(document)
+				.on("click", function() {
+					showEditPanel();
+				})
+				.on("click", "img[name='editComtButton']", function(event) {
+					event.stopPropagation();
+					showEditPanel($(this).attr("_comtIndex"));
+				})
+				.on("click", "#sendBttn", function() {
+					addComt($("#comment_input").val());
+				})
+				.on("click", "[id^='_eCmt']", function() {
+					modifyComt($(this).attr("_comtIndex").slice(8));
+				})
+				.on("click", "[id^='clA1cmt']", function() {
+					modifyComt($(this).attr("_comtIndex"));
+				})
+				.on("click", "[id^='clA2cmt']", function() {
+					modifyComt($(this).attr("_comtIndex"), true);
+				})
+				.on("click", "[id^='_dCmt']", function() {
+					deleteComt($(this).attr("_comtIndex"));
+				})
+				.on("click", "#autoDirection", function() {
+					// 사다리 자동 진행
+					clickUserOrder = 0;
+					aniAllUser();
+				})
+				.on("click", "#immediatelyDirection", function() {
+					// 사다리 바로 보기
+					clickUserOrder = 0;
+					popAllUser();
+				})
+				.on("mouseenter", "[id^='drag']", function() {
+					var $this = $(this);
+					$this.find("span").css("border-color", "#2568b3");
+					if($this.find("span").hasClass("userPicWraper_d")) {
+						$this.find("img").attr("src", "/images/ezLadder/icon_defaultAttendant_hover.png");
+					}
+				})
+				.on("mouseleave", "[id^='drag']", function() {
+					var $this = $(this);
+					$this.find("span").css("border-color", "#9e9e9e");
+					if($this.find("span").hasClass("userPicWraper_d")) {
+						$(this).find("img").attr("src", "/images/ezLadder/icon_defaultAttendant.png");
+					}
+				})
+			$("#usePreladder").on("click", function() {
+				window.location.href = "/ezLadder/setLadder.do?ladderId=" + ${vo.ladderId};
+			});
+		});
 		
 		function ladder_window_resize() {
-			/* var win_width = $(window).width() - 70; */
 			var win_width = $(window).width() - 70;
 			var line_width = $("#attendantList").css("width").replace(/[^0-9]/g,'') * 1;
 			var title_width = win_width - $(".ladderGame_info").width();
 			
-			/* $(".setTable").css("width", win_width + "px"); */
-			$("#ladderLineBox").css("width", win_width + "px");
+			var $setTable = $(".setTable");
+			var $lineBox = $("#ladderLineBox");
+			var $startButton = $("#startButton");
+			
+			$lineBox.css("width", win_width + "px");
 			$(".ladderGame_title").css("width", title_width);
 			
 			if(line_width > win_width) {
@@ -67,7 +193,9 @@
 				$("#blackBox").css("width", (win_width + 50) + "px");
 			}
 			
-			$("#startButton").css("left", $(".setTable").width()/2 - 250).css("top", $(".setTable").height()/2);
+			$("#startButton")
+				.css("left", $setTable.width() / 2 - $startButton.width() / 2)
+				.css("top", ($setTable.height() - $lineBox.height()) + ($lineBox.height() / 2 - $startButton.height() / 2));
 		}
 		
 		function initValues() {
@@ -113,126 +241,11 @@
 			});
 		}
 		
-		var dragcnt = 0;
-		var originalPosition_left = 0;
-		$(function() {
-			if(deleteFlag == 1) {
-				window.location.href = "/ezLadder/ladderMain.do?brdID=7"; 
-			}
-			initValues();
-			ladder_window_resize();
-			
-			if(status == 0 && writerId == id) {
-				// 대기상태
-				$(".ladderDrag")
-				.draggable({ // 드래그 리스트
-					revert: "invalid",
-					revertDuration: 400,
-					zIndex: 100,
-					addClasses: false,
-					start: function(event, ui) {
-						if(dragcnt == 0) {
-							originalPosition_left = ui.originalPosition.left;
-							dragcnt++;
-						}
-						dragloc = {"id": ui.helper[0].id, "beforeLeft": 0, "left": 0, "top": ui.originalPosition.top};
-						if(ui.position.left >= 0) {
-							dragloc.beforeLeft = Math.round(ui.position.left/150);
-						} else {
-							dragloc.beforeLeft = Math.round(Math.abs(ui.position.left/150)) * -1;
-						}
-					}
-				})
-				.droppable({ // 드랍 리스트
-					accept: ".ladderDrag",
-					addClasses: false,
-					drop: function(event, ui) {
-						droploc = {"id": $(this).attr("id"), "left": 0};
-						
-						var _thisleft = Math.round($(this).css("left").split("px")[0]/150);
-						
-						if(ui.position.left >= 0) {
-							dragloc.left = Math.round(ui.position.left/150);
-						} else {
-							dragloc.left = Math.round(Math.abs(ui.position.left/150)) * -1;
-						}
-						
-						var moveValue = dragloc.left - dragloc.beforeLeft;
-						droploc.left = _thisleft - moveValue;
-						
-						afterDrag();
-						changeListOrder();
-					},
-					
-				});
-			} else if(status == 1) {
-				// 완료상태
-				canvasSetting();
-			}
-			
-			if(mode !== "preview") {
-				// 프리뷰가 아닐때 댓글 웹소켓 연결
-				getCmtSockConnect();
-			}
-			
-			$(window).resize(function() {
-				ladder_window_resize();
-			});
-			
-			$(document)
-				.on("click", function() {
-					showEditPanel();
-				})
-				.on("click", "img[name='editComtButton']", function(event) {
-					event.stopPropagation();
-					showEditPanel($(this).attr("_comtIndex"));
-				})
-				.on("click", "#sendBttn", function() {
-					addComt($("#comment_input").val());
-				})
-				.on("click", "[id^='_eCmt']", function() {
-					modifyComt($(this).attr("_comtIndex").slice(8));
-				})
-				.on("click", "[id^='clA1cmt']", function() {
-					modifyComt($(this).attr("_comtIndex"));
-				})
-				.on("click", "[id^='clA2cmt']", function() {
-					modifyComt($(this).attr("_comtIndex"), true);
-				})
-				.on("click", "[id^='_dCmt']", function() {
-					deleteComt($(this).attr("_comtIndex"));
-				})
-				.on("click", "#autoDirection", function() {
-					// 사다리 자동 진행
-					clickUserOrder = 0;
-					aniAllUser();
-				})
-				.on("click", "#immediatelyDirection", function() {
-					// 사다리 바로 보기
-					/* var $immediatelyDirection = $("#immediatelyDirection");
-					$immediatelyDirection.attr("disabled", "disabled"); */
-					clickUserOrder = 0;
-					popAllUser();
-					/* $immediatelyDirection.removeAttr("disabled"); */
-				})
-				.on("mouseenter", "[id^='drag']", function() {
-					var $this = $(this);
-					$this.find("span").css("border-color", "#2568b3");
-					if($this.find("span").hasClass("userPicWraper_d")) {
-						$this.find("img").attr("src", "/images/ezLadder/icon_defaultAttendant_hover.png");
-					}
-				})
-				.on("mouseleave", "[id^='drag']", function() {
-					var $this = $(this);
-					$this.find("span").css("border-color", "#9e9e9e");
-					if($this.find("span").hasClass("userPicWraper_d")) {
-						$(this).find("img").attr("src", "/images/ezLadder/icon_defaultAttendant.png");
-					}
-				})
-			$("#usePreladder").on("click", function() {
-				window.location.href = "/ezLadder/setLadder.do?ladderId=" + ${vo.ladderId};
-			});
-		});
+		function add_user_change_ulsize(usernum) {
+			$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
+			$("#ladderCanvas").attr("width", (usernum * 150) + "px");
+		}
+		
 		/** 웹소켓 */
 		var addCommentView = [];
 		function getCmtSockConnect() {
@@ -359,14 +372,14 @@
 		function deleteLadder(idx) {
 			allData = [idx, searchSelect, searchInput, mode, currPage, back ];	
 		
-			if (confirm('삭제 하시겠습니까?')) {
+			if (confirm(strLang46)) {
 				window.location.href= '/ezLadder/deleteLadder.do?allData=' + allData;
 			} 
 		}
 		/** 사다리 시작 (대기->완료) */
 		function start(idx) {
 			allData = [idx, searchSelect, searchInput, mode, currPage, _ladderLine.length, lineCnt ];	
-			if (confirm('시작하시겠습니까?')) {
+			if (confirm(strLang47)) {
 				jQuery.ajaxSettings.traditional = true;
 				$.ajax({
 					type: "POST",
@@ -727,7 +740,7 @@
 										</div>
 									</c:when>
 									<c:otherwise>
-										<div style="width: 500px; height: 150px; background: white; opacity: 0.7; text-align: center;">
+										<div style="width: 500px; height: 150px; background: white; text-align: center;">
 											<span style="font-size: large; color: maroon; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
 											<span style="display: inline-block;"><spring:message code="ezLadder.t049" /></span>
 										</div>
@@ -735,7 +748,7 @@
 								</c:choose>
 						</div>
 							<div class="directionBtn"></div>
-							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px;">
+							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px; padding-top: 20px; padding-bottom: 20px;">
 								<div style="height: 100px; margin-bottom: 20px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
@@ -759,13 +772,13 @@
 										</c:forEach>
 									</ul>
 								</div>
-								<div id="lineDiv" style="position: relative; height: 675px; z-index: 1;">
-									<div id="blackBox" style="height: 675px;background: darkgray;position: absolute;left: -50px;right: 0;">
+								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
+									<div id="blackBox" style="height: 400px;background: #000000;opacity: 0.2;position: absolute;left: -50px;right: 0;">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>
-									<canvas id='ladderCanvasLine' width='0' height='675'></canvas>
-									<canvas id='ladderCanvas' width='0' height='675'></canvas>
+									<canvas id='ladderCanvasLine' width='0' height='400'></canvas>
+									<canvas id='ladderCanvas' width='0' height='400'></canvas>
 								</div>
 								<ul id="itemList" style="margin-top: 10px; width: ${fn:length(list) * 150}px; height: 50px;">
 									<c:forEach var="line" items="${list}">
