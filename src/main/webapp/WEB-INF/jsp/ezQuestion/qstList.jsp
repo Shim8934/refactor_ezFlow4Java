@@ -35,11 +35,11 @@
 		    
 			window.onload = function() {
 				makePageSelPage();
-				var height = parseInt(document.documentElement.clientHeight - 180);
+				var height = parseInt(document.documentElement.clientHeight - 160);
 	            document.getElementById("QstDiv").style.height = height + "px";
 			};
 			 window.onresize = function () {
-				 var height = parseInt(document.documentElement.clientHeight - 180);
+				 var height = parseInt(document.documentElement.clientHeight - 160);
 				 document.getElementById("QstDiv").style.height = height + "px";
 			};
 			
