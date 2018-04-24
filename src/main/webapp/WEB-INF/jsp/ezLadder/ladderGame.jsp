@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css" type="text/css">
 	<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
 	<link rel="stylesheet" href="/css/ezLadder/ladderPreList.css" type="text/css">
+	<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 	<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
@@ -804,7 +805,7 @@
 								<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code='ezLadder.t106' /></div></button>
 								<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code='ezLadder.t107' /></div></button>
 							</div>
-							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px;">
+							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px; padding-top: 20px;">
 								<div style="height: 100px; margin-bottom: 20px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">

@@ -62,9 +62,9 @@
 				});
 				$("#title").on("input", function() {
 					if($("#title").val() == "") {
-						$("#makeLad").attr("disabled", "disabled").css({"background": "#dddddd", "cursor": "default"});
+						$("#makeLad").attr("disabled", "disabled");
 					} else {
-						$("#makeLad").removeAttr("disabled").css({"background": "#0470e4", "cursor": "pointer"});
+						$("#makeLad").removeAttr("disabled");
 					}
 				});
 				$("#ladderPreList")
@@ -321,7 +321,7 @@
 				
 				setAllUser_(lineInfo, "preladder");
 				
-				$("#makeLad").removeAttr("disabled").css({"background": "#0470e4", "cursor": "pointer"});
+				$("#makeLad").removeAttr("disabled");
 			}
 			
 			/** 참여자, 아이템 배열을 현재 input box 정보로 셋팅 */
@@ -931,7 +931,7 @@
 			
 			<div class="wrap" style="min-width: 800px;">
 				<input type="button" class="ladderBtn" id="makeLad" disabled="disabled" value="<spring:message code="ezLadder.t018"/>">
-				<input type="button" id="backToList" style="background: #dddddd; color: #000000;" value="<spring:message code="ezLadder.t083"/>" />
+				<input type="button" id="backToList" style="background: #efefef; color: #000000;" value="<spring:message code="ezLadder.t083"/>" />
 			</div>
 		</form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
