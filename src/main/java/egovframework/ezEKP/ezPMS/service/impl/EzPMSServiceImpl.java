@@ -311,8 +311,24 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId) {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.debug("getProjectMainSetting started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		ProjectMainSettingVO mainSetting = new ProjectMainSettingVO();
+		
+		try{
+			mainSetting = ezPMSDAO.getProjectMainSetting(map);
+			System.out.println(mainSetting.getUserMail());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		
+		LOGGER.debug("[mainSetting] userMail : " + mainSetting.getUserMail());
+		LOGGER.debug("getProjectMainSetting ended.");
+		return mainSetting;
 	}
 
 	@Override

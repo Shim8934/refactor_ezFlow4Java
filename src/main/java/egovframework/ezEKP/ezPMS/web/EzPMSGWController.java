@@ -174,6 +174,33 @@ public class EzPMSGWController {
 		return result;
 	}
 	
+	//프로젝트관리 메인 화면 설정 정보 호출
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/users/{userId}/setting", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getMainSetting(@PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/setting] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			ProjectMainSettingVO projectSetting = ezPMSService.getProjectMainSetting(userId, Integer.parseInt(request.getParameter("tenantId")));
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", projectSetting);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/setting] ended.");
+		return result;
+	}
+	
 	//프로젝트관리 메인 화면 설정
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/users/{userId}/setting", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
