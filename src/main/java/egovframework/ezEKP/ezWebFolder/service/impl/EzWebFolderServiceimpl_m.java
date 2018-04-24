@@ -1018,15 +1018,15 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	private SearchVO createSearchDateInfo(SearchVO searchInfo, String offset) {
 		String startDate = searchInfo.getSearchStartDate();
 		String endDate = searchInfo.getSearchEndDate();
-		
+
 		if (startDate.isEmpty() || endDate.isEmpty()) {
 			return searchInfo;
 		}
 
 		SearchVO result = new SearchVO();
-		result.setSearchStartDate(commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, false));
-		result.setSearchEndDate(commonUtil.getDateStringInUTC(endDate + " 23:59:59", offset, false));
-		
+		result.setSearchStartDate(commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true));
+		result.setSearchEndDate(commonUtil.getDateStringInUTC(endDate + " 23:59:59", offset, true));
+
 		return result;
 	}
 }
