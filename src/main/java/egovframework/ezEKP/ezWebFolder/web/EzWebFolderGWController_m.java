@@ -110,7 +110,7 @@ public class EzWebFolderGWController_m {
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
 			List<ShareVO> list = ezWebFolderService_m.getSharingList(userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-			Map<String, Integer> countInfo = ezWebFolderService_m.getSharingCount(userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			Map<String, Long> countInfo = ezWebFolderService_m.getSharingCount(userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
 			data.put("list", list);
 			data.putAll(countInfo);
@@ -183,7 +183,7 @@ public class EzWebFolderGWController_m {
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
 			List<ShareVO> list = ezWebFolderService_m.getSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-			Map<String, Integer> countInfo = ezWebFolderService_m.getSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			Map<String, Long> countInfo = ezWebFolderService_m.getSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
 			data.put("list", list);
 			data.putAll(countInfo);
@@ -382,7 +382,7 @@ public class EzWebFolderGWController_m {
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
 			List<ShareVO> list = ezWebFolderService_m.getHiddenSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, tenantId);
-			Map<String, Integer> countInfo = ezWebFolderService_m.getHiddenSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, tenantId);
+			Map<String, Long> countInfo = ezWebFolderService_m.getHiddenSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, tenantId);
 			
 			data.put("list", list);
 			data.putAll(countInfo);

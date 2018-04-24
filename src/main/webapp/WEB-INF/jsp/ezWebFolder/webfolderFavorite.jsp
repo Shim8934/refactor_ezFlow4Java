@@ -482,7 +482,7 @@
 				checkboxColumn.appendChild(inputElement);
 				
 				fileIconElement = document.createElement("img");
-				fileIconElement.setAttribute("class", "noneDrag");
+				fileIconElement.setAttribute("class", "none-drag");
 				fileIconElement.addEventListener("click", function() { favoriteModule.onImageClick(this); });
 				fileIconElement.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 				
@@ -503,7 +503,7 @@
 				
 				nameColumn.textContent = resultJson[columnMap.name];
 				creatorColumn.textContent = resultJson[columnMap.creatorName];
-				createDateColumn.textContent = resultJson[columnMap.createDate].substring(0, 10);
+				createDateColumn.textContent = resultJson[columnMap.createDate];//.substring(0, 10);
 				absolutePathColumn.textContent = resultJson[columnMap.path];
 				sizeColumn.style.textAlign = "center;"
 				
@@ -918,7 +918,7 @@
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
 				<th width="15px" ><input type="checkbox" onchange="rowModule.selectAll(this.checked)" id="_checkAll"></th>
-				<th width="20px" ><img src='/images/ImgIcon/icon-flag.gif'/></th>
+				<th width="20px" ><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th>
 				<th width="40px" ><spring:message code='ezWebFolder.t188'/></th>
 				<th width="330px"><spring:message code='ezWebFolder.t156'/></th>
 				<th width="60px" ><spring:message code='ezWebFolder.t157'/></th>
