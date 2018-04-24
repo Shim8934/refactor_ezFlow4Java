@@ -91,5 +91,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		// TODO Auto-generated method stub
 		insert("addProjectMember", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getRemainingWeight(String projectId) {
+		return (Map<String, Object>) select("getRemainingWeight", projectId);
+	}
 	
 }

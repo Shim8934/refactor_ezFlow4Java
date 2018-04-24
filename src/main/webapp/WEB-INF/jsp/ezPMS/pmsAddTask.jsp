@@ -12,6 +12,7 @@
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/dist/jstree.js"></script>
+<script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <!-- date picker -->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
@@ -31,7 +32,9 @@ var projectName = null;
 var writerId = "${writerId}";
 var writerName = "${writerName}";
 var writerDeptName = "${writerDeptName}";
-var weightInput = null;
+var weight = null;
+var projectStartDate = "${projectStartDate}";
+var projectEndDate = "${projectEndDate}";
 var planStartDate = "${planStartDate}";
 var planEndDate = "${planEndDate}";
 var managerList = null;
@@ -39,6 +42,8 @@ var overview = null;
 var headManagerId = null;
 var groupId = "";
 var groupName = "";
+var remainingWeight = "${remainingWeight}";
+var weightInput = "${weightInput}";
 
  $(function() {
 	 $("#Sdatepicker").datepicker({
@@ -113,13 +118,6 @@ var groupName = "";
 		  
 		  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
  
-	$("#daysBeforeAlam").change(function() {
-		var state = $("#daysBeforeAlam option:selected").val();
-		if(state == "write") {
-			$("#daysBeforeAlam").css("display", "none");
-			$("#write").css("display", "");
-		}
-	});
  });
  
 function openMemberList() {
@@ -135,17 +133,6 @@ function openGroupTree() {
 	 	DivPopUpShow($('body').prop('scrollWidth') * 0.4, $('body').prop('scrollHeight') * 0.7, "/ezPMS/goGroupTree.do?projectId=" + projectId, "",
 			 	"height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
- 
- function addTask() {
-	 taskName = $("#taskName").val();
-	 planStartDate = $("#Sdatepicker").val();
-	 planEndDate = $("#Edatepicker").val();
-	 managerList = $("#managers").text();
-	 upperGroup = $("#upperGroup").text();
-	 viewerList = $("#viewers").text();
-	 overview = $("#overview").val();
-	 
- }
 
  function popupClose() {
 	parent.DivPopUpHidden();
@@ -175,6 +162,140 @@ function setUpperGroup() {
 	$("#upperGroup").html(groupName);
 }
 
+function addTask() {
+	 taskName = $("#taskName").val().trim();
+	 planStartDate = $("#Sdatepicker").val();
+	 planEndDate = $("#Edatepicker").val();
+	 weight = $("#weight").val();
+	 overview = convertString($("#overview").val().trim());
+	 
+	 //업무 이름 길이 제한
+	 if (taskName.length == 0) {
+		 alert("업무명을 입력해주세요.");
+		 return;
+	 } else if (taskName.length > 100) {
+		 alert("업무명은 100자를 초과할 수 없습니다.");
+		 return;
+	 }
+	 
+	 //날짜 제한
+	 var startDateArr = planStartDate.split('-');
+	 var endDateArr = planEndDate.split('-');
+	 
+	 var startDateComp = new Date(planStartDate);
+	 var endDateComp = new Date(planEndDate);
+	 
+	 var today = new Date();
+	 var todayComp = new Date(today.getFullYear(), today.getMonth()-1, today.getDay());
+	 
+	 var projectStartDateComp = new Date(projectStartDate);
+	 var projectEndDateComp = new Date(projectEndDate);
+	 
+	//1. 시작일 > 종료일은 불가능
+	 if (startDateComp.getTime() > endDateComp.getTime()) {
+		  alert("시작날짜가 종료날짜보다 늦을 수 없습니다.");
+		  return;
+	  }
+	  
+	//2. 종료일 < 현재일일 떄, 지연업무로 넘어갈 것이라는 confirm창 띄우기
+	 if (endDateComp.getTime() < todayComp.getTime()) {
+		 var confCheck = confirm("종료일이 현재일보다 빠르기 때문에 업무의 상태가 지연으로 변경됩니다. 계속하시겠습니까?");
+		 
+		 if (confCheck != true) {
+			 return;
+		 }
+	 }
+	
+	//3. 업무의 계획 시작일과 계획 종료일은 프로젝트 시작일과 종료일범위를 벗어날수 없음
+	if (startDateComp.getTime() < projectStartDateComp.getTime()) {
+		alert(startDateComp.getTime() + " <<<<>>>> " + projectStartDateComp.getTime());
+		alert("업무의 계획 시작일은 프로젝트의 시작일보다 이를 수 없습니다.");
+		return;
+	}
+	if (endDateComp.getTime() > projectEndDateComp.getTime()) {
+		alert("업무의 계획 종료일은 프로젝트의 종료일보다 늦을 수 없습니다.");
+		return;
+	}
+	
+	// 담당자 검사
+	if(managerList == null) {
+		var managerFlag = confirm("담당자를 지정하지 않으셨습니다. 계속하시겠습니까?");
+		
+		if (managerFlag != true) {
+			return;
+		} 
+	}
+	
+	//상위그룹 미지정
+	if(groupId == "") {
+		var upperGroupFlag = confirm("상위그룹을 지정하지 않을 경우 프로젝트 하위에 그룹이 생성됩니다. 계속하시겠습니까?");
+		
+		if (upperGroupFlag != true) {
+			return;
+		} 
+	}
+	
+	// 가중치 검사
+	if(weightInput == 1) {
+		if(weight == ""){
+			alert("가중치를 입력해 주십시오.");
+			return;
+		}
+		if(isNaN(weight)) {
+			alert("가중치는 숫자만 입력 가능합니다.");
+			return;
+		}
+		if(Number(weight) > remainingWeight) {
+			alert("가중치는 프로젝트의 잔여가중치를 초과할 수 없습니다.");
+			return;
+		}
+	}
+	
+	
+
+	
+	data = {
+			taskName : taskName,
+			projectId : projectId,
+			groupId : groupId,
+			planStartDate : planStartDate,
+			planEndDate : planEndDate,
+			overview	 : overview,
+			headManagerId : headManagerId,
+			managerList : managerList,
+			weight : weight,
+			writerId : writerId
+	}
+	
+	console.log(taskName);
+	console.log(projectId);
+	console.log(groupId);
+	console.log(planStartDate);
+	console.log(planEndDate);
+	console.log(overview);
+	console.log(headManagerId);
+	console.log(managerList);
+	console.log(weight);
+	console.log(writerId);
+	
+	$.ajax({
+		type : "POST",
+		url : "/ezPMS/addTask.do",
+		dataType : "json",
+		contentType: "application/json; charset=UTF-8",
+		data :JSON.stringify(data),
+		success : function(result) {
+			alert("<spring:message code='ezTask.t150' />");
+			
+			try { parent.setProjectList(); } catch (e) { alert("error1")}
+			popupClose();
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert("error2");
+		}
+	});
+}
+
 </script>
 </head>
 <body class="popup">
@@ -199,7 +320,7 @@ function setUpperGroup() {
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openMemberList()"><span>담당자</span></a></th>
-				<td colspan="3" style="height:70px" id="managers">은정</td>
+				<td colspan="3" style="height:70px" id="managers"></td>
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openGroupTree()"><span>상위그룹</span></a></th>
@@ -207,9 +328,18 @@ function setUpperGroup() {
 			</tr>
 			<tr>
 				<th>가중치</th>
-				<td colspan="3" >
-				<input type="text" id="weight" style="width:40px;text-align:center"> % 잔여 가중치 100%
-				</td>
+				<c:choose>
+      				<c:when test="${weightInput == 0}">
+						<td colspan="3">
+						가중치 자동 계산
+						</td>
+					</c:when>
+      				<c:when test="${weightInput == 1}">
+						<td colspan="3">
+						<input type="text" id="weight" style="width:40px;text-align:center"> %  &nbsp; 프로젝트 잔여 가중치 ${remainingWeight} % 
+						</td>
+					</c:when>
+   				</c:choose>
 			</tr>
 			<tr>
 				<th>업무개요</th>

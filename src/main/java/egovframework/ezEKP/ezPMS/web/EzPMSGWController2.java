@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezPMS.web;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -97,10 +98,16 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			Gson gson = new Gson();
 			ProjectTaskVO vo = new ProjectTaskVO();
-			vo = gson.fromJson(jsonParam.toJSONString(), ProjectTaskVO.class);
-			vo.setTenantId(info.getTenantId());
+			vo.setTenantId(Integer.parseInt(request.getParameter("tenantId")));
+			vo.setProjectId(Long.parseLong(projectId));
+			vo.setGroupId(Long.parseLong(request.getParameter("groupId")));
+			vo.setTaskName(request.getParameter("taskName"));
+			vo.setPlanStartDate(request.getParameter("planStartDate"));
+			vo.setPlanEndDate(request.getParameter("planEndDate"));
+			vo.setWeight(Float.parseFloat(request.getParameter("weight")));
+			vo.setOverview(request.getParameter("overview"));
+			vo.setHeadManagerId(request.getParameter("headManagerId"));
 			
 			ezPMSService.addTask(vo);
 			
@@ -441,7 +448,7 @@ public class EzPMSGWController2 {
 	
 	
 	/**
-	 * 프로젝트관리 잔여 가중치 조회
+	 * 프로젝트관리 잔여 가중치 및 시작일/종료일 조회
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/weight/{projectId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
@@ -453,11 +460,11 @@ public class EzPMSGWController2 {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			
-			String remainingWeight = ezPMSService.getRemainingWeight(projectId);
+			Map<String, Object> data = ezPMSService.getRemainingWeight(projectId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", remainingWeight);
+			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
