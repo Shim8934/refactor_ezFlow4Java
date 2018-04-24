@@ -218,19 +218,10 @@
 		where 
 			tenant_id = #tenantId#
 			and 
-				USER_ID in (
-					select TO_CHAR(dept.cn) user_Id		
-					from tbl_deptmaster dept 
-						left outer join tbl_addjobmaster addj on dept.cn = addj.deptid 
-					where TO_CHAR(addj.cn) = #userId# 
-				union all 
-					select owner_id usrId 
-					from tbl_webfolder_folderuser usr inner join tbl_webfolder_folder folder 
-						on usr.folder_id = folder.folder_id  
-					where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# 
-
-				)
-			or user_id = #userId# or user_id= #deptId#
+				USER_ID in 
+					<iterate property="idList" open="(" close=")" conjunction=",">
+			            #idList[].id#
+			         </iterate>
     </sql>
     <select id="EzWebFolderDAO_y.checkRootFolder" parameterClass="Map" resultClass="Integer"> 
 		<![CDATA[
@@ -516,37 +507,26 @@
 	            
    		<include refid="fileListSelect"/>
 		<isEqual property="folderType" compareValue="C" >
-   			<![CDATA[
-   			from tbl_webfolder_folder folder left join  (
-			
-				select 	
-					REGEXP_SUBSTR(fld.FOLDER_PATH, '[^|]+', 2,  2) as a,
-					fld.folder_id, 
-					fld.folder_name1,
-					fld.folder_path, 
-					fld.folder_type, 
-					fld.tenant_id
-				from tbl_webfolder_folder fld inner join 
-			
-				(
-			]]>
-			<include refid="checkAddJob"/>
-			<![CDATA[	
-				) users on fld.folder_id = users.folder_id
-	
-				where fld.folder_type = #folderType#
-				
-				and users.tenant_id = #tenantId#
-				
-			) t on folder.FOLDER_PATH like ('%' || t.folder_path || '%') and folder.tenant_id = t.tenant_id 
-	        
-			inner join tbl_webfolder_file f on folder.FOLDER_ID = f.folder_id 
-			inner join tbl_webfolder_filetype type on type.TYPE_ID = f.TYPE_ID and type.tenant_id = f.tenant_id 
-		where 
-				f.tenant_id = #tenantId#
-			and f.use_status ='Y'
-			
-			]]>	
+   			FROM 
+					TBL_WEBFOLDER_FOLDER folder JOIN TBL_WEBFOLDER_FILE f
+						ON folder.FOLDER_ID = f.FOLDER_ID AND folder.TENANT_ID = f.TENANT_ID
+					JOIN (	
+						SELECT FF.FOLDER_PATH
+						FROM TBL_WEBFOLDER_FOLDER FF
+						JOIN TBL_WEBFOLDER_FOLDERUSER FU
+						ON FF.FOLDER_ID = FU.FOLDER_ID
+						AND FF.TENANT_ID = FU.TENANT_ID
+						AND FF.FOLDER_TYPE = 'C'
+						AND FU.USER_ID IN 
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+						WHERE FF.TENANT_ID = #tenantId# ) FP
+					ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
+					JOIN TBL_WEBFOLDER_FILETYPE type 
+						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
+				 WHERE F.USE_STATUS = 'Y'
+				 AND F.TENANT_ID = #tenantId#
    		</isEqual>
    		<isNotEqual property="folderType" compareValue="C">
 			<![CDATA[
@@ -641,37 +621,26 @@
 		]]>
 		<include refid="fileListSelect"/>
 			<isEqual property="folderType" compareValue="C" >
-	   			<![CDATA[
-	   			from tbl_webfolder_folder folder  left join  (
-				
-					select 	
-						REGEXP_SUBSTR(fld.FOLDER_PATH, '[^|]+', 2,  2) as a,,
-						fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type, fld.tenant_id
-					from tbl_webfolder_folder fld inner join 
-				
-					(
-					]]>
-					<include refid="checkAddJob"/>
-					<![CDATA[
-						
-					)  users on fld.folder_id = users.folder_id 
-		
-					where fld.folder_type = #folderType#
-					
-					and users.tenant_id = #tenantId#
-					
-				)t on folder.FOLDER_PATH like (t.folder_path||'%') 
-		        
-				inner join tbl_webfolder_file f on folder.FOLDER_ID = f.folder_id
-				inner join tbl_webfolder_filetype type on type.TYPE_ID = f.TYPE_ID and type.tenant_id = #tenantId# 
-		        
-				
-				where 
-				f.tenant_id = #tenantId#
-				and f.use_status ='Y'
-				and t.tenant_id = #tenantId#
-
-				]]>	
+	   			FROM 
+					TBL_WEBFOLDER_FOLDER folder JOIN TBL_WEBFOLDER_FILE f
+						ON folder.FOLDER_ID = f.FOLDER_ID AND folder.TENANT_ID = f.TENANT_ID
+					JOIN (	
+						SELECT FF.FOLDER_PATH
+						FROM TBL_WEBFOLDER_FOLDER FF
+						JOIN TBL_WEBFOLDER_FOLDERUSER FU
+						ON FF.FOLDER_ID = FU.FOLDER_ID
+						AND FF.TENANT_ID = FU.TENANT_ID
+						AND FF.FOLDER_TYPE = 'C'
+						AND FU.USER_ID IN 
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+						WHERE FF.TENANT_ID = #tenantId# ) FP
+					ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
+					JOIN TBL_WEBFOLDER_FILETYPE type 
+						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
+				 WHERE F.USE_STATUS = 'Y'
+				 AND F.TENANT_ID = #tenantId#
 	   		</isEqual>
 	   		<isNotEqual property="folderType" compareValue="C">
 				<![CDATA[
@@ -698,7 +667,6 @@
 		<![CDATA[
 			
 			ORDER BY FOLDER_SORT,CREATE_DATE desc 
-			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
 	
@@ -792,41 +760,31 @@
 					f.FOLDER_ID	  			AS FOLDER_ID,
 					f.USE_STATUS   			AS USE_STATUS,
 					decode ( #primary# , '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
-					f.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE
+					f.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 					f.TENANT_ID    ,
 					type.TYPE_NAME 	AS filetype_name    	   		
 			]]>	
 				<isEqual property="folderType" compareValue="C" >
-		   			<![CDATA[
-		   			from tbl_webfolder_folder folder  left join  (
-					
-						select 	
-							REGEXP_SUBSTR(fld.FOLDER_PATH, '[^|]+', 2,  2) as a,
-							fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type, fld.tenant_id
-						from tbl_webfolder_folder fld inner join 
-					
-						(
-					]]>
-					<include refid="checkAddJob"/>
-					<![CDATA[
-							
-						) users on fld.folder_id = users.folder_id 
-			
-						where fld.folder_type = #folderType#
-						
-						and users.tenant_id = #tenantId#
-						
-					) t on folder.FOLDER_PATH like ('%'||t.folder_path||'%') 
-			        
-					inner join tbl_webfolder_file f on folder.FOLDER_ID = f.folder_id
-					inner join tbl_webfolder_filetype type on type.TYPE_ID = f.TYPE_ID and type.tenant_id = #tenantId# 
-			        
-					
-				where 
-					f.tenant_id = #tenantId#
-				and f.use_status ='Y'
-				and t.tenant_id = #tenantId#
-					]]>	
+		   			FROM 
+					TBL_WEBFOLDER_FOLDER folder JOIN TBL_WEBFOLDER_FILE f
+						ON folder.FOLDER_ID = f.FOLDER_ID AND folder.TENANT_ID = f.TENANT_ID
+					JOIN (	
+						SELECT FF.FOLDER_PATH
+						FROM TBL_WEBFOLDER_FOLDER FF
+						JOIN TBL_WEBFOLDER_FOLDERUSER FU
+						ON FF.FOLDER_ID = FU.FOLDER_ID
+						AND FF.TENANT_ID = FU.TENANT_ID
+						AND FF.FOLDER_TYPE = 'C'
+						AND FU.USER_ID IN 
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+						WHERE FF.TENANT_ID = #tenantId# ) FP
+					ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
+					JOIN TBL_WEBFOLDER_FILETYPE type 
+						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
+				 WHERE F.USE_STATUS = 'Y'
+				 AND F.TENANT_ID = #tenantId#
 		   		</isEqual>
 		   		<isNotEqual property="folderType" compareValue="C">
 					<![CDATA[
@@ -880,42 +838,26 @@
    			SELECT file_id
 		]]>	
 			<isEqual property="folderType" compareValue="C" >
-		  		<![CDATA[
-		   			from tbl_webfolder_folder folder  
-		   			left join  (
-						select 	
-							REGEXP_SUBSTR(fld.FOLDER_PATH, '[^|]+', 2,  2) as a,
-							fld.folder_id, 
-							fld.folder_name1,
-							fld.folder_path, 
-							fld.folder_type, 
-							fld.tenant_id
-						from tbl_webfolder_folder fld 
-						inner join (
-				]]>
-				<include refid="checkAddJob"/>
-				<![CDATA[
-						
-						) users on fld.folder_id = users.folder_id
-						where fld.folder_type = #folderType#
-						and users.tenant_id = #tenantId#
-					) t 
-					on folder.FOLDER_PATH like ('%'||t.folder_path ||'%') 
-					inner join tbl_webfolder_file f 
-						on folder.FOLDER_ID = f.folder_id 
-						and f.tenant_id = folder.tenant_id
-					inner join tbl_webfolder_filetype tp 
-					on tp.TYPE_ID = f.TYPE_ID 
-		               and tp.tenant_id = t.tenant_id 
-		               and f.tenant_id = tp.tenant_id
-				        
-						
-					where 
-					f.tenant_id = #tenantId#
-					and f.use_status ='Y'
-							
-							
-				]]>	
+		  		FROM 
+					TBL_WEBFOLDER_FOLDER folder JOIN TBL_WEBFOLDER_FILE f
+						ON folder.FOLDER_ID = f.FOLDER_ID AND folder.TENANT_ID = f.TENANT_ID
+					JOIN (	
+						SELECT FF.FOLDER_PATH
+						FROM TBL_WEBFOLDER_FOLDER FF
+						JOIN TBL_WEBFOLDER_FOLDERUSER FU
+						ON FF.FOLDER_ID = FU.FOLDER_ID
+						AND FF.TENANT_ID = FU.TENANT_ID
+						AND FF.FOLDER_TYPE = 'C'
+						AND FU.USER_ID IN 
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+						WHERE FF.TENANT_ID = #tenantId# ) FP
+					ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
+					JOIN TBL_WEBFOLDER_FILETYPE type 
+						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
+				 WHERE F.USE_STATUS = 'Y'
+				 AND F.TENANT_ID = #tenantId#
 	   		</isEqual>
 	   		<isNotEqual property="folderType" compareValue="C">
 				<![CDATA[
