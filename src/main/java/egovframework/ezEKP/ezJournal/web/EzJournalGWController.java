@@ -1783,7 +1783,7 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			List<JournalAuthorVO> userList = ezJournalService.getDeptUserList(info.getTenantId(), key, value,lang);
+			List<JournalAuthorVO> userList = ezJournalService.getDeptUserList(info.getTenantId(), key, value,info.getCompanyId(), lang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
