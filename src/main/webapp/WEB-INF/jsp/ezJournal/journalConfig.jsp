@@ -186,7 +186,7 @@
             <p id="JournalEnv_sub3"><span divname="JournalEnv_div3" id="1tab3">하위부서열람관리</span></p>
         </div>
     </div>
-    <div id="JournalEnv_content1" style="width:100%;height:90%; padding-top:10px; display:none">
+    <div id="JournalEnv_content1" style="margin-left:10px; width:100%;height:90%; padding-top:10px; display:none">
     	<br/>	
    		<h2><spring:message code="ezJournal.t115" /></h2>
    		<span class="txt"><spring:message code="ezJournal.t117" /></span>
@@ -250,7 +250,7 @@
        		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezCircular.t26" /></span></a>
    		</div>
 	</div>		
-    <div id="JournalEnv_content2" style="width:100%;height:90%; padding-top:10px; display:none">
+    <div id="JournalEnv_content2" style="margin-left:10px; width:100%;height:90%; padding-top:10px; display:none">
 	    <br/>	
    		<h2><spring:message code="ezJournal.t116" /></h2>
    		<span class="txt"><spring:message code="ezJournal.t121" /></span>
@@ -282,9 +282,8 @@
        		<a class="imgbtn" onclick="saveMailAlert()"><span><spring:message code="ezCircular.t25" /></span></a>
    		</div>
 	</div>		
-    <div id="JournalEnv_content3" style="width:100%;height:90%; padding-top:10px; display:none">
+    <div id="JournalEnv_content3" style="margin-left:10px; width:100%;height:90%; padding-top:10px; display:none">
 	    <br/>
-<%-- 		<h2><spring:message code="ezWebFolder.t239" /></h2> --%>
 		<h2>부서열람관리</h2>
 		<span class="txt">▒하위 부서의 열람을 설정할 수 있습니다.</span>
 		<br />
