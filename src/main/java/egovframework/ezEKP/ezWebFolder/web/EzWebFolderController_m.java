@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +31,6 @@ import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
-@SuppressWarnings("unchecked")
 @Controller
 public class EzWebFolderController_m {
 	@Autowired
@@ -40,86 +41,81 @@ public class EzWebFolderController_m {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController_m.class);
 	
+	@RequestMapping(value="/ezWebFolder/webfolderSharingList.do")
+	public String webfolderSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		model.addAttribute("primary", userInfo.getLang());
+		return "ezWebFolder/webfolderSharingList";
+	}
+	
 	@RequestMapping(value="/ezWebFolder/getSharingList.do")
 	public @ResponseBody String getSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getSharingList started.");
 		
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
-		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/sharing";
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		HttpHeaders headers  = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("pageNum", orElse(request.getParameter("pageNum"), "1"));
+		param.put("pageSize", orElse(request.getParameter("pageSize"), "0"));
+		param.put("searchFileType", orElse(request.getParameter("searchFileType"), ""));
+		param.put("searchExt", orElse(request.getParameter("searchExt"), ""));
+		param.put("searchFileName", orElse(request.getParameter("searchFileName"), ""));
+		param.put("searchCreatorName", orElse(request.getParameter("searchCreatorName"), ""));
+		param.put("searchStartDate", orElse(request.getParameter("searchStartDate"), ""));
+		param.put("searchEndDate", orElse(request.getParameter("searchEndDate"), ""));
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("pageNum",           orElse(request.getParameter("pageNum"), "1"))
-				.queryParam("pageSize",          orElse(request.getParameter("pageSize"), "0"))
-				.queryParam("searchFileType",    orElse(request.getParameter("searchFileType"), ""))
-				.queryParam("searchExt",         orElse(request.getParameter("searchExt"), ""))
-				.queryParam("searchFileName",    orElse(request.getParameter("searchFileName"), ""))
-				.queryParam("searchCreatorName", orElse(request.getParameter("searchCreatorName"), ""))
-				.queryParam("searchStartDate",   orElse(request.getParameter("searchStartDate"), ""))
-				.queryParam("searchEndDate",     orElse(request.getParameter("searchEndDate"), ""));
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", param, request, "get", null);
 		
 		logger.debug("getSharingList ended.");
-		return result.getBody();
+		return resultBody.toString();
+	}
+	
+	@RequestMapping(value="/ezWebFolder/webfolderSharedList.do")
+	public String webfolderSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		model.addAttribute("primary", userInfo.getLang());
+		return "ezWebFolder/webfolderSharedList";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getSharedList.do")
 	public @ResponseBody String getSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getSharedList started.");
 		
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
-		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/shared";
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		HttpHeaders headers  = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("pageNum", orElse(request.getParameter("pageNum"), "1"));
+		param.put("pageSize", orElse(request.getParameter("pageSize"), "0"));
+		param.put("searchFileType", orElse(request.getParameter("searchFileType"), ""));
+		param.put("searchExt", orElse(request.getParameter("searchExt"), ""));
+		param.put("searchFileName", orElse(request.getParameter("searchFileName"), ""));
+		param.put("searchCreatorName", orElse(request.getParameter("searchCreatorName"), ""));
+		param.put("searchStartDate", orElse(request.getParameter("searchStartDate"), ""));
+		param.put("searchEndDate", orElse(request.getParameter("searchEndDate"), ""));
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("pageNum",           orElse(request.getParameter("pageNum"), "1"))
-				.queryParam("pageSize",          orElse(request.getParameter("pageSize"), "0"))
-				.queryParam("searchFileType",    orElse(request.getParameter("searchFileType"), ""))
-				.queryParam("searchExt",         orElse(request.getParameter("searchExt"), ""))
-				.queryParam("searchFileName",    orElse(request.getParameter("searchFileName"), ""))
-				.queryParam("searchCreatorName", orElse(request.getParameter("searchCreatorName"), ""))
-				.queryParam("searchStartDate",   orElse(request.getParameter("searchStartDate"), ""))
-				.queryParam("searchEndDate",     orElse(request.getParameter("searchEndDate"), ""));
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared", param, request, "get", null);
 		
 		logger.debug("getSharedList ended.");
-		return result.getBody();
+		return resultBody.toString();
+	}
+	
+	@RequestMapping(value="/ezWebFolder/addShareView.do")
+	public String addShareView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		model.addAttribute("type", "NEW");
+		model.addAttribute("userInfo", commonUtil.userInfo(loginCookie));
+		return "/ezWebFolder/shareUsersSelect";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/addShare.do")
-	public @ResponseBody String addShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, @RequestBody String requestBody) throws Exception {
+	public @ResponseBody String addShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam) throws Exception {
 		logger.debug("addShare started.");
 		
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
-		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/sharing";
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		HttpHeaders headers  = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(requestBody, headers);
-		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
-		
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", null, request, "post", jsonParam);
 		
 		logger.debug("addShare ended.");
-		return result.getBody();
+		return resultBody.toString();
 	}
 	
 	@RequestMapping(value="/ezWebFolder/trashCan.do")

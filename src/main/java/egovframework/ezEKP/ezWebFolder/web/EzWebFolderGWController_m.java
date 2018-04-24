@@ -59,12 +59,13 @@ public class EzWebFolderGWController_m {
 	
 	/**
 	 * 공유한 리스트 조회
+	 *
 	 */
 	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSharingList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("getSharingList started.");
 		
-		String serverName 	= orElse(request.getHeader("host-name"), "");
+		String serverName 	= orElse(request.getHeader("x-user-host"), "");
 		String pageNum 		= orElse(request.getHeader("pageNum"), "1");
 		String pageSize 	= orElse(request.getHeader("pageSize"), "0");
 		
@@ -137,7 +138,7 @@ public class EzWebFolderGWController_m {
 	public JSONObject getSharedList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("getSharedList started.");
 		
-		String serverName 	= orElse(request.getHeader("host-name"), "");
+		String serverName 	= orElse(request.getHeader("x-user-host"), "");
 		String pageNum 		= orElse(request.getHeader("pageNum"), "1");
 		String pageSize 	= orElse(request.getHeader("pageSize"), "0");
 		
@@ -210,7 +211,7 @@ public class EzWebFolderGWController_m {
 	public JSONObject addShare(@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception {
 		logger.debug("addShare started.");
 		
-		String serverName     = orElse(request.getHeader("host-name"), "");
+		String serverName     = orElse(request.getHeader("x-user-host"), "");
 		String folderFileId   = orElse((String) jsonObject.get("folderFileId"), "");
 		String folderFileType = orElse((String) jsonObject.get("folderFileType"), "");
 		List<Map<String, String>> userList = (List<Map<String, String>>) jsonObject.get("userList");
@@ -258,7 +259,7 @@ public class EzWebFolderGWController_m {
 	public JSONObject updateShare(@PathVariable String userId, @PathVariable String shareId, HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception {
 		logger.debug("updateShare started.");
 		
-		String serverName = orElse(request.getHeader("host-name"), "");
+		String serverName = orElse(request.getHeader("x-user-host"), "");
 		List<Map<String, String>> userList = (List<Map<String, String>>) jsonObject.get("userList");
 		logger.debug("serverName: " + serverName + " || userId: " + userId + " || shareId: " + shareId);
 		logger.debug("userList:" + userList);
@@ -303,7 +304,7 @@ public class EzWebFolderGWController_m {
 	public JSONObject deleteShare(@PathVariable String userId, @PathVariable String shareId, HttpServletRequest request) throws Exception {
 		logger.debug("deleteShare started.");
 		
-		String serverName = orElse(request.getHeader("host-name"), "");
+		String serverName = orElse(request.getHeader("x-user-host"), "");
 		logger.debug("serverName: " + serverName + " || userId: " + userId + " || shareId: " + shareId);
 		
 		JSONObject result = new JSONObject();
@@ -346,7 +347,7 @@ public class EzWebFolderGWController_m {
 	public JSONObject getHiddenSharedList(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("getHiddenSharedList started.");
 		
-		String serverName = orElse(request.getHeader("host-name"), "");
+		String serverName = orElse(request.getHeader("x-user-host"), "");
 		String pageNum 		= orElse(request.getHeader("pageNum"), "1");
 		String pageSize 	= orElse(request.getHeader("pageSize"), "0");
 		logger.debug("serverName: " + serverName + " || userId: " + userId + " || pageNum: " + pageNum + " || pageSize: " + pageSize);
@@ -409,7 +410,7 @@ public class EzWebFolderGWController_m {
 	public JSONObject hideShare(@PathVariable String userId, @PathVariable String shareId, HttpServletRequest request) throws Exception {
 		logger.debug("hideShare started.");
 		
-		String serverName = orElse(request.getHeader("host-name"), "");
+		String serverName = orElse(request.getHeader("x-user-host"), "");
 		logger.debug("serverName: " + serverName + " || userId: " + userId + " || shareId: " + shareId);
 		
 		JSONObject result = new JSONObject();
@@ -452,7 +453,7 @@ public class EzWebFolderGWController_m {
 	public JSONObject showShare(@PathVariable String userId, @PathVariable String shareId, HttpServletRequest request) throws Exception {
 		logger.debug("showShare started.");
 		
-		String serverName = orElse(request.getHeader("host-name"), "");
+		String serverName = orElse(request.getHeader("x-user-host"), "");
 		logger.debug("serverName: " + serverName + " || userId: " + userId + " || shareId: " + shareId);
 		
 		JSONObject result = new JSONObject();
