@@ -947,7 +947,7 @@ public class EzWebFolderGWController_m {
 	}
 	
 	private String getFolderPath(String[] paths, String offset, String primaryLang, int tenantId) throws Exception {
-		StringBuilder result = new StringBuilder("/");
+		StringBuilder result = new StringBuilder();
 		String folderName;
 		
 		for (String path : paths) {

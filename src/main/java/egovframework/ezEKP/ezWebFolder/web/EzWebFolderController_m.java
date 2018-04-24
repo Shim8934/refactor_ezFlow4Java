@@ -45,7 +45,7 @@ public class EzWebFolderController_m {
 		logger.debug("getSharingList started.");
 		
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/sharing";
 		
 		HttpHeaders headers  = new HttpHeaders();
@@ -75,7 +75,7 @@ public class EzWebFolderController_m {
 		logger.debug("getSharedList started.");
 		
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/shared";
 		
 		HttpHeaders headers  = new HttpHeaders();
@@ -105,7 +105,7 @@ public class EzWebFolderController_m {
 		logger.debug("addShare started.");
 		
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/sharing";
 		
 		HttpHeaders headers  = new HttpHeaders();
@@ -145,7 +145,7 @@ public class EzWebFolderController_m {
 		logger.debug("getUsrListCount Started.");
 
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/getUserListCount";
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -178,7 +178,7 @@ public class EzWebFolderController_m {
 		logger.debug("getTrashCanList Started.");
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/" + user.getId() + "/getTrashCanList";
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -249,7 +249,7 @@ public class EzWebFolderController_m {
 		logger.debug("pemanentDeleteFile Started.");
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/file-permanent-delete";
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -287,7 +287,7 @@ public class EzWebFolderController_m {
 		logger.debug("restoreFile Started");
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/restore-trashCan";
 		
 		
@@ -335,7 +335,7 @@ public class EzWebFolderController_m {
 		
 		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
 		
-		String gwServerUrl	= config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl	= config.getProperty("config.webFolderGwServerURL");
 		String requestUrl	= gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/favorites";
 		
 		HttpHeaders headers  = new HttpHeaders();
@@ -372,7 +372,7 @@ public class EzWebFolderController_m {
 		
 		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
 		
-		String gwServerUrl	= config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl	= config.getProperty("config.webFolderGwServerURL");
 		String requestUrl	= gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/favorite";
 		
 		HttpHeaders headers  = new HttpHeaders();
@@ -406,7 +406,7 @@ public class EzWebFolderController_m {
 		requesetObject.put("targetType", orElse(request.getParameter("targetType"), ""));
 		requesetObject.put("tenantId", user.getTenantId());
 		
-		String gwServerUrl	= config.getProperty("config.webfolderGwServerURL");
+		String gwServerUrl	= config.getProperty("config.webFolderGwServerURL");
 		String requestUrl	= gwServerUrl + "/rest/ezwebfolder/users/" + user.getId() + "/favorite";
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -455,7 +455,7 @@ public class EzWebFolderController_m {
 		logger.debug("request.getParameter(fileList)=" + request.getParameter("fileList"));
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/move-TrashCan";
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
