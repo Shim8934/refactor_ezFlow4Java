@@ -33,9 +33,15 @@
 		    var receve = "${receve}";
 		    var adminYN = "${adminYN}";
 		    
-			window.onload = function(){
+			window.onload = function() {
 				makePageSelPage();
-			}
+				var height = parseInt(document.documentElement.clientHeight - 180);
+	            document.getElementById("QstDiv").style.height = height + "px";
+			};
+			 window.onresize = function () {
+				 var height = parseInt(document.documentElement.clientHeight - 180);
+				 document.getElementById("QstDiv").style.height = height + "px";
+			};
 			
 			function checkUserPollStatus(pItemNo, pflag){
 				$.ajax({
@@ -396,7 +402,7 @@
 		        document.getElementById("tblPageRayer").innerHTML = strtext; //document.all.tblPageNum1.innerHTML + strtext;
 		    }
 		
-		    function makePageSelPage(){
+		    function makePageSelPage() {
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
@@ -404,61 +410,66 @@
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
-		        if(totalPage > 1 && pageNum != 1){
+		        if(totalPage > 1 && pageNum != 1) {
 		            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
-		        }else{
+		        } else {
 		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
-		        if(totalPage > BlockSize){
-		            if(pageNum > BlockSize){
+		        if (totalPage > BlockSize) {
+		            if (pageNum > BlockSize) {
 		                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
-		            }else{
+		            } else {
 		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		                PagingHTML += strtext;
 		            }
-		        }else{
+		        } else {
 		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
 		        var i;
 		        var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-		        if(totalPage >= (startNum + parseInt(BlockSize))){
+		        if (totalPage >= (startNum + parseInt(BlockSize))) {
 		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
-		        }else{
+		        } else {
 		            MaxNum = totalPage;
 		        }
-		        for(i = startNum; i <= MaxNum; i++){
-		            if(i == pageNum){
+		        for (i = startNum; i <= MaxNum; i++) {
+		            if (i == pageNum){
 		                strtext = "<span class='on'>" + i + "</span>";
 		                PagingHTML += strtext;
-		            }else{
+		            } else {
 						strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i + "</span>";
 		                PagingHTML += strtext;
 		            }
 		        }
-		        if(totalPage > BlockSize){
-	            	if(totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)){
+		        
+		        if (MaxNum == 0) {
+		        	PagingHTML += "<span class='on'>" + 1 + "</span>";
+		        }
+		       
+		        if (totalPage > BlockSize) {
+	            	if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	            	    strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
 	            	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
-	            	}else{
+	            	} else {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
 		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 	            	}
-		        }else{
+		        } else {
 		            strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
 		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
-		        if(totalPage > 1 && totalPage != 1 && (totalPage != pageNum)){
+		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
 		            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
-		        }else{
+		        } else {
 		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
@@ -576,7 +587,8 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>		 
 		<form method="post">
-			<table id="QstList" class="mainlist" style="width:100%"> 
+		<div id = "QstDiv" style="overflow:auto;">
+			<table id="QstList" class="mainlist" style="width:100%;"> 
 			    <tr> 
 					<th width="30px" align="center"> <spring:message code="ezQuestion.t306" /></th> 
 					<th><spring:message code="ezQuestion.t307" /></th> 
@@ -588,7 +600,7 @@
 			    </tr>
 			 	<c:forEach var="list" items="${list}"> 
 			        <tr id="${list.itemNo}" class="white"> 
-			        	<td style="padding:0"> <input type="checkbox" id="menuCheck+<c:out value ="${list.itemNo}"/>+" value=<c:out value="${list.itemNo}"/>></td> 
+			        	<td style="padding:0;"> <input type="checkbox" id="menuCheck+<c:out value ="${list.itemNo}"/>+" value=<c:out value="${list.itemNo}"/>></td> 
 			          	<td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title="<c:out value ="${list.title}"/>" onClick="title_OnClick('<c:out value ="${list.receve}"/>&itemNo=<c:out value ="${list.itemNo}"/>')" ><nobr><c:out value ="${list.title}"/></nobr></td>
 			          	<c:if test="${list.publicFlg == 0}">
 			          		<td><spring:message code = 'ezQuestion.t238' /></td>	
@@ -620,6 +632,7 @@
 		       		</tr> 
 		        </c:if> 
 			</table> 
+			</div>
 		</form>
 		 
 		<div id="tblPageRayer"></div>
