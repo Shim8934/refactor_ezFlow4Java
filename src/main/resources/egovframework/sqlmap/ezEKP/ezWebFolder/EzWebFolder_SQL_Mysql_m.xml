@@ -188,7 +188,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 				<![CDATA[
-					RESULT.TARGET_NAME1 LIKE CONCAT ('%', #searchFileName#, '%') OR RESULT.TARGET_NAME2 LIKE CONCAT ('%', #searchFileName#, '%')
+					RESULT.TARGET_NAME LIKE CONCAT ('%', #searchFileName#, '%')
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreatorName" compareValue="" prepend="AND">
@@ -1406,8 +1406,7 @@
 				WHERE
 					FAVOR.TARGET_TYPE = 'F' AND
 					FAVOR.USER_ID = #userId# AND
-					FAVOR.TENANT_ID = #tenantId# AND
-					FILES.USE_STATUS = 'Y'
+					FAVOR.TENANT_ID = #tenantId#
 			) AS RESULT
 			WHERE
 					RESULT.USE_STATUS = 'Y'

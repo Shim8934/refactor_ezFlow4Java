@@ -199,11 +199,13 @@
 		<isNotEqual property="searchStartDate" compareValue="">
 			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					RESULT.CREATE_DATE >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND RESULT.CREATE_DATE <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS')
+					RESULT.CREATE_DATE >= #searchStartDate# AND RESULT.CREATE_DATE <= #searchEndDate#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 	</sql>
+	<!-- 					RESULT.CREATE_DATE >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND RESULT.CREATE_DATE <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS')
+	 -->
 	
 	<select id="EzWebFolderDAO_m.getSharingList" parameterClass="Map" resultMap="shareVO">
 		<![CDATA[
@@ -1376,13 +1378,14 @@
 				    ORDER BY
 				        TARGET_TYPE ASC, CREATE_DATE DESC
 			    ) ORDER_RESULT
+			    WHERE ROWNUM <= (#startIndex# + #listCount#)
 			)
 			WHERE
-			    NUM >= #startIndex# + 1 AND NUM < (#startIndex# + #listCount# + 1)
+			    NUM >= #startIndex# + 1
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.getFavoriteFolderCount" parameterClass="Map" resultClass="Integer">
+	<select id="EzWebFolderDAO_m.getFavoriteFolderCount" resultClass="Integer">
 		<![CDATA[
 			SELECT
 				COUNT(RESULT.TARGET_NAME) COUNT
@@ -1412,7 +1415,7 @@
 		<include refid="searchFavorite"/>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.getFavoriteFileCount" parameterClass="Map" resultClass="Integer">
+	<select id="EzWebFolderDAO_m.getFavoriteFileCount" resultClass="Integer">
 		<![CDATA[
 			SELECT
 				COUNT(RESULT.TARGET_NAME) COUNT

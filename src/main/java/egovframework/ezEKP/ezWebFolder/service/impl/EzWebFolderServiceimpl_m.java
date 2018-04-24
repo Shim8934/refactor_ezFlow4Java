@@ -811,7 +811,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 	@Override
 	public List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception {
-		setSearchDateOffset(searchInfo, offset);
+		SearchVO searchDateInfo = createSearchDateInfo(searchInfo, offset);
 
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
@@ -823,8 +823,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("searchFileName", searchInfo.getSearchFileName());
 		parameterMap.put("searchCreatorName", searchInfo.getSearchCreateName());
 		parameterMap.put("searchFileType", searchInfo.getSearchFileType());
-		parameterMap.put("searchStartDate", searchInfo.getSearchStartDate());
-		parameterMap.put("searchEndDate", searchInfo.getSearchEndDate());
+		parameterMap.put("searchStartDate", searchDateInfo.getSearchStartDate());
+		parameterMap.put("searchEndDate", searchDateInfo.getSearchEndDate());
 		parameterMap.put("startIndex", startIndex);
 		parameterMap.put("listCount", listCount);
 
@@ -835,8 +835,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Override
 	public Map<String, Integer> getFavoriteCount(String userId, String offset, int tenantId, SearchVO searchInfo) throws Exception {
-		setSearchDateOffset(searchInfo, offset);
-
+		SearchVO searchDateInfo = createSearchDateInfo(searchInfo, offset);
+		
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
 		parameterMap.put("offset", commonUtil.getMinuteUTC(offset));
@@ -846,8 +846,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("searchFileName", searchInfo.getSearchFileName());
 		parameterMap.put("searchCreatorName", searchInfo.getSearchCreateName());
 		parameterMap.put("searchFileType", searchInfo.getSearchFileType());
-		parameterMap.put("searchStartDate", searchInfo.getSearchStartDate());
-		parameterMap.put("searchEndDate", searchInfo.getSearchEndDate());
+		parameterMap.put("searchStartDate", searchDateInfo.getSearchStartDate());
+		parameterMap.put("searchEndDate", searchDateInfo.getSearchEndDate());
 
 		Integer folderCount = ezWebFolderDAO.getFavoriteFolderCount(parameterMap);
 		Integer fileCount = ezWebFolderDAO.getFavoriteFileCount(parameterMap);
@@ -991,15 +991,18 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		ezWebFolderDAO.moveFile(map);
 	}
 	
-	private void setSearchDateOffset(SearchVO searchInfo, String offset) {
+	private SearchVO createSearchDateInfo(SearchVO searchInfo, String offset) {
 		String startDate = searchInfo.getSearchStartDate();
 		String endDate = searchInfo.getSearchEndDate();
 		
 		if (startDate.isEmpty() || endDate.isEmpty()) {
-			return;
+			return searchInfo;
 		}
+
+		SearchVO result = new SearchVO();
+		result.setSearchStartDate(commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, false));
+		result.setSearchEndDate(commonUtil.getDateStringInUTC(endDate + " 23:59:59", offset, false));
 		
-		searchInfo.setSearchStartDate(commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true));
-		searchInfo.setSearchEndDate(commonUtil.getDateStringInUTC(endDate + " 23:59:59", offset, true));
+		return result;
 	}
 }
