@@ -35,6 +35,7 @@
 	        var strSearch = "<c:out value='${pSearchString}' />";
 	        var RetValue;
 	        var ReturnFunction;
+	        var deptClickFlag;
 	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -380,6 +381,7 @@
 							}
 							
 							/** boh add : 부서 클릭하면 부서 전체 list 추가하기*/
+							deptClickFlag = true;
 							listContentArry = new Array();
 							
 							var tempListContent = $("#txtlist_table tr[id^='MailUserlist_']");
@@ -410,11 +412,14 @@
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
 	        function event_listMover(obj) {
-	            for (var i = 0; i < listContentArry.length; i++) {
-	                if (document.getElementById(listContentArry[i]) == obj) {
-	                    return;
-	                }
-	            }
+	        	if(!deptClickFlag) {
+		            for (var i = 0; i < listContentArry.length; i++) {
+		                if (document.getElementById(listContentArry[i]) == obj) {
+		                    return;
+		                }
+		            }
+	        	}
+	        	
 	            if (p_ListOrderObject != obj) {
 	                for (var RowCnt = 0; RowCnt < obj.childNodes.length; RowCnt++) {
 	                    obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorOver;
@@ -422,12 +427,13 @@
 	            }
 	        }
 	        function event_listMout(obj) {
-	
-	            for (var i = 0; i < listContentArry.length; i++) {
-	                if (document.getElementById(listContentArry[i]) == obj) {
-	                    return;
-	                }
-	            }
+				if(!deptClickFlag) {
+		            for (var i = 0; i < listContentArry.length; i++) {
+		                if (document.getElementById(listContentArry[i]) == obj) {
+		                    return;
+		                }
+		            }
+				}
 	            if (p_ListOrderObject != obj) {
 	                for (var RowCnt = 0; RowCnt < obj.childNodes.length; RowCnt++) {
 	                    obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
@@ -479,6 +485,7 @@
 	        var listEventCheckbox = false;
 	        var listSubEventCheckbox = false;
 	        function event_listclick(obj) {
+				deptClickFlag = false;
 	            if (!listEventCheckbox) {
 	                if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
 	                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
