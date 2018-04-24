@@ -132,8 +132,8 @@
 				$(".ladderPreList_right").scrollTop(0);
 				$ladderPreview.attr("src", previewSrc);
 				if($ladderPreview.css("height") === "0px") {
-					$ladderPreview.css("height", "1360px");
-					$("#ladderPreviewLayer").css("height", "1320px");
+					$ladderPreview.css("height", "1202px");
+					$("#ladderPreviewLayer").css("height", "1178px");
 				}
 			}
 			
