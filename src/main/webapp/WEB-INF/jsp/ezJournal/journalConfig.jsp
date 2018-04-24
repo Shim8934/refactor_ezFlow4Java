@@ -37,12 +37,21 @@
                 	if (document.getElementById("JournalEnv_content1").style.display == "none") {
                 		document.getElementById("JournalEnv_content1").style.display = "";
                 		document.getElementById("JournalEnv_content2").style.display = "none";
+                		document.getElementById("JournalEnv_content3").style.display = "none";
                 	}
                     break;
                 case "JournalEnv_div2":
                 	if (document.getElementById("JournalEnv_content2").style.display == "none") {
                 		document.getElementById("JournalEnv_content2").style.display = "";
                 		document.getElementById("JournalEnv_content1").style.display = "none";
+                		document.getElementById("JournalEnv_content3").style.display = "none";
+                	}
+                    break;
+                case "JournalEnv_div3":
+                	if (document.getElementById("JournalEnv_content3").style.display == "none") {
+                		document.getElementById("JournalEnv_content3").style.display = "";
+                		document.getElementById("JournalEnv_content1").style.display = "none";
+                		document.getElementById("JournalEnv_content2").style.display = "none";
                 	}
                     break;
             }
@@ -174,6 +183,7 @@
         <div class="portlet_tabpart01_top" id="tab1">
             <p id="JournalEnv_sub1"><span divname="JournalEnv_div1" id="1tab1"><spring:message code="ezJournal.t115" /></span></p>
             <p id="JournalEnv_sub2"><span divname="JournalEnv_div2" id="1tab2"><spring:message code="ezJournal.t116" /></span></p>
+            <p id="JournalEnv_sub3"><span divname="JournalEnv_div3" id="1tab3">하위부서열람관리</span></p>
         </div>
     </div>
     <div id="JournalEnv_content1" style="width:100%;height:90%; padding-top:10px; display:none">
@@ -271,6 +281,35 @@
     	<div style="width:480px;text-align:center;">      
        		<a class="imgbtn" onclick="saveMailAlert()"><span><spring:message code="ezCircular.t25" /></span></a>
    		</div>
+	</div>		
+    <div id="JournalEnv_content3" style="width:100%;height:90%; padding-top:10px; display:none">
+	    <br/>
+<%-- 		<h2><spring:message code="ezWebFolder.t239" /></h2> --%>
+		<h2>부서열람관리</h2>
+		<span class="txt">▒하위 부서의 열람을 설정할 수 있습니다.</span>
+		<br />
+		<table class="content" style="width: 650px;margin-top:5px; border: none;">
+			<tr>
+				<td style="min-width: 350px;">
+					<div id="deptList" style="height: 350px; width: 100%; overflow: auto;">
+					</div>
+				</td>
+				<td style="min-width: 60px; border-top: none; border-bottom: none;">
+					<div style="text-align: center;"><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_dept2();" style="cursor:pointer"></div>
+					<div style="text-align: center;"><img src="/images/arr_left.gif"  width="16" height="16" vspace="3" onclick="unselect_dept2();" style="cursor:pointer"></div>
+				</td>
+				<td style="min-width: 240px; padding: 0px;">
+					<div id="selectedDepts" style="width: 100%; height: 350px; overflow: auto;">
+					</div>
+				</td>
+			</tr>
+		
+		</table>
+	 	<br />
+		<div style="width:623px;text-align:center;">      
+			<a class="imgbtn" onclick="saveAuthEnv();"><span><spring:message code="ezCircular.t25" /></span></a>
+       		<a class="imgbtn" onclick="authCancel();"><span><spring:message code="ezCircular.t26" /></span></a>
+		</div>
 	</div>		
 </body>
 <script type="text/javascript">

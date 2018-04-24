@@ -507,7 +507,7 @@
 			'yes' as mine
 		from 
 			jmocha.tbl_deptmaster d
-		left join 
+		inner join 
 			jmocha.tbl_usermaster u on (d.CN = u.DEPARTMENT and u.TENANT_ID = d.TENANT_ID)
 		where 
 			u.CN = #userId#
