@@ -693,6 +693,106 @@
 		</isNotEmpty>
 	</select>
 	
+	<select id="ezAttitudeAdminDAO.getAttitudeAbsentCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+			FROM
+				TBL_USERMASTER A
+			LEFT JOIN
+				TBL_ATTITUDE B
+			ON
+				A.cn = B.writer_id 
+			AND
+				A.tenant_id = B.tenant_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.physicaldeliveryofficename = #companyId#
+			AND
+				(
+					(B.start_date < #searchStartDate# OR B.start_date > #searchEndDate#)
+				AND
+					(B.end_date < #searchStartDate# OR B.end_date >= #searchEndDate#)
+				AND
+					(B.start_date >= #searchStartDate# OR B.end_date < #searchEndDate#)
+				)
+		]]>
+		
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			A.description LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			A.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			A.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeAbsentList" parameterClass="Map" resultClass="AdminAttitudeVO">
+		<![CDATA[
+			SELECT 
+				B.attitude_id AS attitudeid,
+				B.company_id AS companyid,
+				B.tenant_id AS tenantid,
+				B.writer_id AS writerid,
+				B.dept_id AS deptid,
+				B.modappl,
+				B.ip,
+				B.date_type AS datetype,
+				B.type_id AS typeid,
+				A.displayname AS username,
+                A.description AS deptname,
+                A.title AS usertitle
+			FROM
+				TBL_USERMASTER A
+			LEFT JOIN
+				TBL_ATTITUDE B
+			ON
+				A.cn = B.writer_id
+			AND
+				A.tenant_id = B.tenant_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.physicaldeliveryofficename = #companyId#
+			AND
+				(
+					(B.start_date < #searchStartDate# OR B.start_date > #searchEndDate#)
+				AND
+					(B.end_date < #searchStartDate# OR B.end_date >= #searchEndDate#)
+				AND
+					(B.start_date >= #searchStartDate# OR B.end_date < #searchEndDate#)
+				)
+		]]>
+			
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			C.description LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			C.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			C.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="orderCell">
+			ORDER BY
+				$orderCell$ $orderOption$,
+				C.displayname
+		</isNotEmpty>
+		<isEmpty property="orderCell">
+			ORDER BY
+				C.displayname
+		</isEmpty>
+		<isNotEmpty property="limit">
+			<![CDATA[
+				LIMIT 
+					#limit#, #listSize# 
+			]]>
+		</isNotEmpty>
+	</select>
+	
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultMap="attitudeAuthor">
 		<![CDATA[
 			SELECT 
