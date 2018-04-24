@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -59,7 +61,29 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController.class);
 
 	@RequestMapping(value = "/ezWebFolder/webfolderMain.do")
-	public String webfolderMain(HttpServletRequest req, Model model) {
+	public String webfolderMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String url = gwServerUrl + "/rest/ezwebfolder/users/" +userInfo.getId() + "/checkRootFolder";
+		
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", req.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody;
+		try {
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			String status                 = resultBody.get("status").toString();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		return "ezWebFolder/webfolderMain";
 	}
 

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezWebFolder.t165' /></title>
+		<title>공유 추가/수정</title>
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
@@ -37,12 +37,12 @@
 		</style>
 	</head>
 	<body class="popup">
-		<h1><spring:message code='ezWebFolder.t165' /></h1>
+		<h1>공유 추가/수정</h1>
 		<table> 
 			<tr> 
 				<td width="195" valign="top">
 					<h2><spring:message code='ezWebFolder.t177' /></h2>
-					<div style="overflow:auto; width:280px; height:270px; background-color:#ffffff; white-space: nowrap;" id="TreeView" class="box"></div>
+					<div style="overflow:auto; width:280px; height:270px; background-color:#ffffff; white-space: nowrap; padding:0;" id="TreeView" class="box"></div>
 				</td>
 				<td width="30" align="center" valign="middle"> 
 					<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_dept();" style="cursor:pointer"></div>
@@ -51,9 +51,12 @@
 				<td valign="top">
 					<h2><spring:message code='ezWebFolder.t178' /></h2>
 					<div class="listview" style="margin-bottom:5px">
-						<div id="DeptListView" style="OVERFLOW:auto;WIDTH:220px;HEIGHT:270px;border:0">
+						<div id="DeptListView" style="overflow:auto;width:280px;height:270px;border:0">
 							<table id="DListView" class="mainlist" style="width:100%;">
-								<tr><th style="text-align:center; width:100%;"><spring:message code='ezWebFolder.t142'/></th></tr>
+								<tr>
+									<th style="text-align:center; width:60%;"><spring:message code='ezWebFolder.t142'/></th>
+									<th style="text-align:center; width:40%;">하위폴더공유</th>
+								</tr>
 							</table>
 						</div>
 					</div>
@@ -61,12 +64,8 @@
 			</tr>
 			<tr>
 				<td valign="top">
-					<div>
-						<h2 style="display: inline-block;"><spring:message code='ezWebFolder.t179' /></h2>
-						<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="width:130px; margin-left: 33px;">
-						<a class="imgbtn btnSearch" id="cnkeybtn" onclick="cnsearch_click()" style="margin-top: 3px;"><span>검색</span></a>
-					</div>
-					<div class="listview" style="margin-top:5px;margin-bottom:5px">
+					<h2 style="display: inline-block;"><spring:message code='ezWebFolder.t179' /></h2>
+					<div class="listview" style="margin-top:3px;margin-bottom:5px">
 						<div id="OrganListView" style="overflow:auto; width:280px; height:240px;border:0">
 							<table id="Organ" class="mainlist" style="width: 100%;">
 								<tr id="Organ_TH" style="">
@@ -85,24 +84,22 @@
 				<td valign="top">
 					<h2><spring:message code='ezWebFolder.t180' /></h2>
 					<div class="listview" style="margin-top:5px;margin-bottom:5px">
-						<div id="MemberListView" style="overflow:auto; width:220px; height:240px;border:0">
+						<div id="MemberListView" style="overflow:auto; width:280px; height:240px;border:0">
 							<table id="MListView" class="mainlist" style="width:100%;">
-								<tr><th style="text-align:center; width:100%;"><spring:message code='ezWebFolder.t175'/></th></tr>
+								<tr>
+									<th style="text-align:center; width:60%;"><spring:message code='ezWebFolder.t175'/></th>
+									<th style="text-align:center; width:40%;">하위폴더공유</th>
+								</tr>
 							</table>
 						</div>
 					</div>
 				</td> 
 			</tr>
-			<tr>
+			<tr style="height:35px;">
 				<td>
-					<div style="display:inline-block;">
-						<input id="btnRadion1" type="radio" name="fileConditon" style="width:13px;height:13px;vertical-align:middle;" value="1" checked>
-						<label for="btnRadio1">파일</label>
-					</div>
-					<div style="display:inline-block;">
-						<input id="btnRadion2" type="radio" name="fileConditon" style="width:13px;height:13px;vertical-align:middle;" value="2">
-						<label for="btnRadio2">하위폴더 + 파일</label>
-					</div>
+					<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="width:120px;">
+					<a class="imgbtn btnSearch" id="cnkeybtn" onclick="cnsearch_click()"><span>검색</span></a>
+					<input id="shareSub" type="checkbox" style="margin-top:3px;margin-left:10px;vertical-align:middle;" checked /><label for="shareSub">하위폴더 공유</label>
 				</td>
 				<td></td>
 				<td>
