@@ -98,7 +98,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map.put("restDueday", workingDays);
 			
 			//프로젝트 총괄담당자 정보 불러오기
-			ProjectMemberVO headManagerInfo = getUserInfo(newProject.getHeadManagerId(), Integer.parseInt(tenantId));
+			ProjectMemberVO headManagerInfo = getUserInfo(newProject.getHeadManagerId(), Integer.parseInt(tenantId), "user");
 			map.put("headManagerDeptname", headManagerInfo.getUserDeptname());
 			map.put("headManagerDeptname2", headManagerInfo.getUserDeptname2());
 			map.put("headManagerName", headManagerInfo.getUserName());
@@ -433,17 +433,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	    return workingDays;
 	}
 	
-	//프로젝트 총괄 담당자의 유저 정보 불러오기
+	//유저 정보 불러오기
 	@Override
-	public ProjectMemberVO getUserInfo(String userId, int tenantId) throws Exception {
-		ProjectMemberVO headManager = new ProjectMemberVO();
+	public ProjectMemberVO getUserInfo(String userId, int tenantId, String nameType) throws Exception {
+		ProjectMemberVO userInfo = new ProjectMemberVO();
 		
 		HashMap<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
+		param.put("nameType", nameType);
 		
-		headManager = ezPMSDAO.getUserInfo(param);
-		return headManager;
+		userInfo = ezPMSDAO.getUserInfo(param);
+		return userInfo;
 	}
 	
 	@Override
@@ -467,7 +468,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map.put("userPosition", projectMemberList.getUserPosition());
 			map.put("userPosition2", projectMemberList.getUserPosition2());
 			map.put("memberRoleId", projectMemberList.getMemberRoleId());
-			map.put("userIdType", "user");
+			map.put("userIdType", projectMemberList.getUserIdType());
 			map.put("projectId", projectMemberList.getProjectId());
 			map.put("tenantId", tenantId);
 			

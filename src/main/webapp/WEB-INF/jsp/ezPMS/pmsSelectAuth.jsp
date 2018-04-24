@@ -116,6 +116,7 @@
 	   			p_title = title;
    				p_selectedWindow = selectedWindow;
    				type = title.id;
+   				console.log(type);
 	   		}
 	   		
 	   		
@@ -161,28 +162,43 @@
 	   		}
 	   		
 	   		// 선택한 사람을 권한 추가
-	   		function setAuthorViewUser(authName) {
-	   			if (selUserId != "" && selUserId != undefined) {
-		   			var receiverId = selUserId;
-		   			userName = selUserName;
-		   			var chkFlag = true;
-		   			userDept = selUserDept;
+	   		function setAuthorViewUser(authName, isUser) {
+	   			if ((selUserId != "" && selUserId != undefined) || isUser == false) {
+	   				var chkFlag = true;
+	   				
+		   			if (isUser == false) {
+		   				var deptId = $(".jstree-clicked").attr('id');
+		   				var regExp2 = deptId.lastIndexOf("_");
+		   				deptId = deptId.substring(0,regExp2);
+		   				receiverId = deptId;
+		   				
+			   			var str = $(".jstree-clicked").text();
+		   				userDept = str;
+		   				userName = str;
+		   				
+		   				nameType = "dept";
+		   			} else {
+		   				var receiverId = selUserId;
+			   			userName = selUserName;
+			   			userDept = selUserDept;
+			   			nameType = "user";
+		   			}
 		   			
 		   			for(var i = 0; i < authList.length; i++) {
 		   				if (authList[i].userId == receiverId) {
 		   					chkFlag = false;
 		   				}
 		   			}
-		   			
+		   			alert(nameType);
 		   			if (chkFlag) {
 		   				if (authName == "manager") {
-		   					managerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept});
+		   					managerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept, "nameType" : nameType});
 		   					authList.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept});
 		   				} else if (authName == "participant") {
-		   					participantArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 2, "userDept" : userDept});
+		   					participantArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 2, "userDept" : userDept, "nameType" : nameType});
 		   					authList.push({"userName" : userName, "userId" : receiverId, "roleId" : 2, "userDept" : userDept});
 		   				} else {
-		   					viewerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 3, "userDept" : userDept});
+		   					viewerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 3, "userDept" : userDept, "nameType" : nameType});
 		   					authList.push({"userName" : userName, "userId" : receiverId, "roleId" : 3, "userDept" : userDept});
 		   				}
 		   			} else {
@@ -282,7 +298,7 @@
 		    }
 	   		
 	   		function applyReceiver(authName) {
-  				setAuthorViewUser(authName.id);
+  				setAuthorViewUser(authName.id, true);
 	   		}
 	   		
 	   		$(document).ready(function() {
@@ -316,7 +332,7 @@
 	   				drawReceiverList("viewer");
 	   			} else {
 		   			authList.push({"userName" : userName, "userId" : userId, "roleId" : 1, "userDept" : replaceString(userDept)});
-		   			managerArray.push({"userName" : userName, "userId" : userId, "roleId" : 1, "userDept" : replaceString(userDept)});
+		   			managerArray.push({"userName" : userName, "userId" : userId, "roleId" : 1, "userDept" : replaceString(userDept), "nameType" : "user"});
 		   			drawReceiverList("manager");
 	   			}
 		   		
@@ -379,8 +395,11 @@
 	   			var feature = GetOpenPosition(150, 150);
 	   		 
 	   			DivPopUpShow(400, 300, "/ezPMS/selectHeadManager.do");
-	   		};
+	   		}
 	   		
+	   		function deptSelect() {
+	   			setAuthorViewUser(type, false);
+	   		}
 		</script>
 		<style>
 			tr.hover:not(.selectTR):hover{background:#eee; color:#fff;}
@@ -442,7 +461,7 @@
 				                                </td>
 				                                <td>
 				                                    <div style="float: right; margin-right: 5px; position: relative;">
-				                                       
+				                                       <a class="imgbtn"><span onclick="deptSelect()">부서 선택</span></a>
 				                                    </div>
 				                                </td> 
 				                                <td></td>   

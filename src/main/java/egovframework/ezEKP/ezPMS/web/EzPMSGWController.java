@@ -124,9 +124,14 @@ public class EzPMSGWController {
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("viewerList"));
 			
 			for (int i = 0; i < projectMemberList.size(); i++) {
-				ProjectMemberVO member = ezPMSService.getUserInfo((String)projectMemberList.get(i).get("userId"), Integer.parseInt(request.getParameter("tenantId")));
+				String userId = (String)projectMemberList.get(i).get("userId");
+				int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+				String nameType = (String)projectMemberList.get(i).get("nameType");
+				System.out.println("nameType : " + nameType);
+				ProjectMemberVO member = ezPMSService.getUserInfo(userId, tenantId, nameType);
 				member.setMemberRoleId((int)projectMemberList.get(i).get("roleId"));
 				member.setProjectId(projectId);
+				member.setUserIdType(nameType);
 				ezPMSService.addProjectMember(member, Integer.parseInt(request.getParameter("tenantId")));
 			}
 			

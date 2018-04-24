@@ -101,7 +101,7 @@ public interface EzPMSService {
 
 	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId);
 
-	ProjectMemberVO getUserInfo(String userId, int tenantId) throws Exception;
+	ProjectMemberVO getUserInfo(String userId, int tenantId, String nameType) throws Exception;
 	
 	public String getRemainingWeight(String projectId);
 

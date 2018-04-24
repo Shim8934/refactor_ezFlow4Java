@@ -422,7 +422,8 @@
 	</select>
 	
 	<select id="getUserInfo" parameterClass="Map" resultMap="userInfoVO">
-		<![CDATA[
+		<isEqual property="nameType" compareValue="user">
+			<![CDATA[
 			SELECT 
 				A.CN AS userId, 
 				A.DISPLAYNAME AS userName, 
@@ -436,14 +437,34 @@
 			LEFT JOIN 
 				tbl_deptmaster B 
 			ON 
-				A.tenant_id = B.tenant_id 
-			AND 
 				A.department = B.CN
+			AND 
+				A.tenant_id = B.tenant_id 
 			WHERE 
 				A.tenant_id = #tenantId# 
 			AND 
 				A.CN = #userId#
-		]]>
+			]]>
+		</isEqual>
+		<isNotEqual property="nameType" compareValue="user">
+		<![CDATA[
+			SELECT 
+				CN AS userId,
+				DISPLAYNAME	AS userName,
+				DISPLAYNAME2 AS userName2,
+				" "	AS userPosition,
+				" "	As userPosition2,
+				DISPLAYNAME AS userDeptname, 
+				DISPLAYNAME2 AS userDeptname2 
+			FROM
+				tbl_deptmaster 
+			WHERE 
+				tenant_id = #tenantId# 
+			AND
+				CN = #userId#
+			]]>
+		</isNotEqual>
+		
 	</select>
 	
 	<insert id="addProjectMember" parameterClass="Map">

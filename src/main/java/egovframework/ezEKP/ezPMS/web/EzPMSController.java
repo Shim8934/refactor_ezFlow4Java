@@ -172,31 +172,38 @@ public class EzPMSController {
 	public String addNewProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS addNewProject started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String url = "/rest/ezPMS/projects";
-		String writerName = userInfo.getDisplayName1();
-		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String projectId = "";
 		
-		param.put("writerName", writerName);
-		param.put("creatorId", userInfo.getId());
-		param.put("tenantId", userInfo.getTenantId());
-		param.put("createDate", today);
-		param.put("creatorName", userInfo.getDisplayName1());
-		param.put("creatorName2", userInfo.getDisplayName2());
-		param.put("creatorDeptname", userInfo.getDeptName1());
-		param.put("creatorDeptname2", userInfo.getDeptName2());
-		
-		JSONObject jsonList = new JSONObject();
-		jsonList.put("managerList", param.get("managerList"));
-		jsonList.put("participantList", param.get("participantList"));
-		jsonList.put("viewerList", param.get("viewerList"));
+		try{
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String url = "/rest/ezPMS/projects";
+			String writerName = userInfo.getDisplayName1();
+			String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+			
+			param.put("writerName", writerName);
+			param.put("creatorId", userInfo.getId());
+			param.put("tenantId", userInfo.getTenantId());
+			param.put("createDate", today);
+			param.put("creatorName", userInfo.getDisplayName1());
+			param.put("creatorName2", userInfo.getDisplayName2());
+			param.put("creatorDeptname", userInfo.getDeptName1());
+			param.put("creatorDeptname2", userInfo.getDeptName2());
+			
+			JSONObject jsonList = new JSONObject();
+			jsonList.put("managerList", param.get("managerList"));
+			jsonList.put("participantList", param.get("participantList"));
+			jsonList.put("viewerList", param.get("viewerList"));
 
-		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
+			JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
+			
+			Map<String, Object> data = (Map<String, Object>) result.get("data");
+			projectId = String.valueOf(data.get("projectId"));
+			
+			LOGGER.debug("projectId : " + projectId);
+		} catch(Exception e) {
+			LOGGER.debug("ERROR : " + e.getMessage());
+		}
 		
-		Map<String, Object> data = (Map<String, Object>) result.get("data");
-		String projectId = String.valueOf(data.get("projectId"));
-		
-		LOGGER.debug("projectId : " + projectId);
 		LOGGER.debug("ezPMS addNewProject ended");
 		return projectId;
 	}
