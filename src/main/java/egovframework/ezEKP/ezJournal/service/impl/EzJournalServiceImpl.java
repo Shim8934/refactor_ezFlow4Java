@@ -160,7 +160,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("companyId", jsonParam.get("companyId"));
 		map.put("tenantId", jsonParam.get("tenantId"));
 		
-		logger.debug("insertForm map" + map);
+//		logger.debug("insertForm map" + map);
 		
 		String tenantId = jsonParam.get("tenantId").toString();
 		String formId = ezJournalDAO.insertForm(map) + "";
@@ -309,11 +309,11 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("companyId", jsonParam.get("companyId"));
 		map.put("tenantId", jsonParam.get("tenantId"));
 		
-		logger.debug("updateForm map" + map);
+//		logger.debug("updateForm map" + map);
 		String tenantId = jsonParam.get("tenantId").toString();
 		String isDeptChanged = (String) jsonParam.get("isDeptChanged");
 		
-		logger.debug("isDeptChanged : " + isDeptChanged);
+//		logger.debug("isDeptChanged : " + isDeptChanged);
 		ezJournalDAO.updateJournalForm(map);
 		
 		if (isDeptChanged.equals("Y")) {
@@ -404,11 +404,11 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("favoriteName", jsonParam.get("favoriteName"));
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
-		logger.debug("saveFavorite map" + map);
+//		logger.debug("saveFavorite map" + map);
 		
 		String tenantId = jsonParam.get("tenantId").toString();
 		
-		logger.debug((String)jsonParam.get("receiverList"));
+//		logger.debug((String)jsonParam.get("receiverList"));
 		
 //		List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
 		Gson gson = new Gson();
@@ -484,17 +484,17 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("favoriteName", jsonParam.get("favoriteName"));
 		map.put("favoriteId", favoriteId);
 		
-		logger.debug("modifyFavorite map" + map);
+//		logger.debug("modifyFavorite map" + map);
 		
 		String tenantId = jsonParam.get("tenantId").toString();
 		
-		logger.debug((String)jsonParam.get("receiverList"));
+//		logger.debug((String)jsonParam.get("receiverList"));
 		
 	//	List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
 		Gson gson = new Gson();
 		List<Map<String, Object>> receivers = gson.fromJson(jsonParam.get("receiverList").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
 		
-		logger.debug("receivers : " + receivers);
+//		logger.debug("receivers : " + receivers);
 		if (receivers != null) {
 			ezJournalDAO.deleteFavoriteUser(map);
 			ezJournalDAO.updateFavoriteName(map);
@@ -595,7 +595,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		logger.debug("getJournalFormContent map : " + map);
+//		logger.debug("getJournalFormContent map : " + map);
 		
 		String lastFormId = ezJournalDAO.getJournalLastFormId(map);
 		
@@ -716,7 +716,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", uploadFilePath);
 				
-				logger.debug("uploadFilePath : " + uploadFilePath);
+//				logger.debug("uploadFilePath : " + uploadFilePath);
 				
 				ezJournalDAO.insertJournalAttach(attachMap);
 			
@@ -747,7 +747,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		String receiverIDs = jsonParam.get("receiverIDs").toString();
 //		String receiverList = jsonParam.get("receiverList").toString();
 		
-		logger.debug("receiverIDs : " + receiverIDs);
+//		logger.debug("receiverIDs : " + receiverIDs);
 		
 		if (receiverIDs != null && !receiverIDs.equals("")) {
 			
@@ -945,7 +945,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		ezJournalDAO.deleteReceiver(map);
 		
 		String receiverIDs = jsonParam.get("receiverIDs").toString();
-		logger.debug("receiverIDs : " + receiverIDs);
+//		logger.debug("receiverIDs : " + receiverIDs);
 
 		if (receiverIDs != null && !receiverIDs.equals("")) {
 			
@@ -1115,7 +1115,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("tenantId", tenantId);
 		
 		String viewerCount = ezJournalDAO.getViewerCount(map);
-		logger.debug("조회자몇명 ? : " + viewerCount);
+//		logger.debug("조회자몇명 ? : " + viewerCount);
 		logger.debug("getJournalViewerCount ended.");
 		return viewerCount;
 	}
@@ -1129,7 +1129,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("tenantId", tenantId);
 		
 		String viewerCount = ezJournalDAO.getReceiverCount(map);
-		logger.debug("수신자몇명 ? : " + viewerCount);
+//		logger.debug("수신자몇명 ? : " + viewerCount);
 		logger.debug("getReceiverCount ended.");
 		return viewerCount;
 	}
