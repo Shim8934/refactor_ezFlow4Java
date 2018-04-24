@@ -116,10 +116,12 @@
 				    },
 				    success : function(json){
 				    	alert("승인되었습니다.");
-						window.close();
 			            try {
 			                window.opener.att_refresh();
-			            } catch (e) { }
+			            } catch (e) {
+			            window.opener.getAttitudeMainList();
+		        		}
+			            window.close();
 				    }
 			    });
 		    }
@@ -147,10 +149,12 @@
 				    },
 				    success : function(json){
 				    	alert("반려되었습니다.");
-						window.close();
-			            try {
+				    	try {
 			                window.opener.att_refresh();
-			            } catch (e) { }
+			            } catch (e) {
+			            window.opener.getAttitudeMainList();
+		        		}
+			            window.close();
 				    }
 			    });
 		    }

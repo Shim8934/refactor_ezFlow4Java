@@ -154,7 +154,7 @@
 		]]>
 	</update>
 
-	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultClass="AttitudeUserConfigVO">
+	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultClass="AttitudeUserConfigVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				TBL_USERMASTER.cn AS userid,
@@ -163,7 +163,7 @@
 				TBL_USERMASTER.title AS usertitle,
 				TBL_USERMASTER.displayname AS userName,
 				TBL_USERMASTER.description AS deptName,
-				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime, '0', '1') AS compareTime
+				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') AS compareTime
 			FROM
 				TBL_USERMASTER
 			LEFT JOIN
@@ -414,28 +414,6 @@
 	</insert>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigInfo" parameterClass="Map" resultClass="AttitudeUserConfigVO">
-		<!-- <![CDATA[
-			SELECT
-				A.user_id,
-				SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', A.work_starttime), INTERVAL #offsetMin# minute), 12, 5) as work_starttime,
-				SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', A.work_endtime), INTERVAL #offsetMin# minute), 12, 5) as work_endtime,
-				B.displayname
-			FROM
-				TBL_ATTITUDE_USER_CONF A
-			INNER JOIN 
-				TBL_USERMASTER B 
-			ON 
-				A.user_id = B.cn
-			AND
-				A.tenant_id = B.tenant_id
-			WHERE 
-				A.tenant_id = #tenantId#
-			AND 
-				A.company_id = #companyId#
-			AND
-				A.user_Id = #selectUserId#
-		]]> -->
-		
 		<![CDATA[
 			SELECT
 				TBL_USERMASTER.cn AS userid,
@@ -444,7 +422,7 @@
 				TBL_USERMASTER.title AS usertitle,
 				TBL_USERMASTER.displayname AS userName,
 				TBL_USERMASTER.description AS deptName,
-				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime, '0', '1') AS compareTime
+				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') AS compareTime
 			FROM
 				TBL_USERMASTER
 			LEFT JOIN
@@ -499,14 +477,14 @@
 	<insert id="ezAttitudeAdminDAO.saveAttitudeUserConfig" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_ATTITUDE_USER_CONF
-				(USER_ID, TENANT_ID, WORK_STARTTIME, WORK_ENDTIME, COMPANY_ID, DEPT_ID)
+				(user_id, tenant_id, work_starttime, work_endtime, company_id, dept_id)
 			SELECT
-				#userId# as USER_ID,
-				#tenantId# as TENANT_ID,
-				#workStartTime# as WORK_STARTTIME,
-				#workEndTime# as WORK_ENDTIME,
-				PHYSICALDELIVERYOFFICENAME as COMPANY_ID,
-				DEPARTMENT as DEPT_ID
+				#userId# AS user_id,
+				#tenantId# AS tenant_id,
+				#workStartTime# AS work_starttime,
+				#workEndTime# AS work_endtime,
+				physicaldeliveryofficename AS company_id,
+				department AS dept_id
 			FROM
 				TBL_USERMASTER
 			WHERE
@@ -514,8 +492,8 @@
 			AND
 				tenant_id = #tenantId#
 			ON DUPLICATE KEY UPDATE
-				WORK_STARTTIME = #workStartTime#,
-				WORK_ENDTIME = #workEndTime#
+				work_starttime = #workStartTime#,
+				work_endtime = #workEndTime#
 		]]>
 	</insert>
 	
@@ -714,6 +692,106 @@
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
 			C.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeAbsentCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+			FROM
+				TBL_USERMASTER A
+			LEFT JOIN
+				TBL_ATTITUDE B
+			ON
+				A.cn = B.writer_id 
+			AND
+				A.tenant_id = B.tenant_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.physicaldeliveryofficename = #companyId#
+			AND
+				(
+					(B.start_date < #searchStartDate# OR B.start_date > #searchEndDate#)
+				AND
+					(B.end_date < #searchStartDate# OR B.end_date >= #searchEndDate#)
+				AND
+					(B.start_date >= #searchStartDate# OR B.end_date < #searchEndDate#)
+				)
+		]]>
+		
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			A.description LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			A.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			A.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeAbsentList" parameterClass="Map" resultClass="AdminAttitudeVO">
+		<![CDATA[
+			SELECT 
+				B.attitude_id AS attitudeid,
+				B.company_id AS companyid,
+				B.tenant_id AS tenantid,
+				B.writer_id AS writerid,
+				B.dept_id AS deptid,
+				B.modappl,
+				B.ip,
+				B.date_type AS datetype,
+				B.type_id AS typeid,
+				A.displayname AS username,
+                A.description AS deptname,
+                A.title AS usertitle
+			FROM
+				TBL_USERMASTER A
+			LEFT JOIN
+				TBL_ATTITUDE B
+			ON
+				A.cn = B.writer_id
+			AND
+				A.tenant_id = B.tenant_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.physicaldeliveryofficename = #companyId#
+			AND
+				(
+					(B.start_date < #searchStartDate# OR B.start_date > #searchEndDate#)
+				AND
+					(B.end_date < #searchStartDate# OR B.end_date >= #searchEndDate#)
+				AND
+					(B.start_date >= #searchStartDate# OR B.end_date < #searchEndDate#)
+				)
+		]]>
+			
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			C.description LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			C.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			C.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="orderCell">
+			ORDER BY
+				$orderCell$ $orderOption$,
+				C.displayname
+		</isNotEmpty>
+		<isEmpty property="orderCell">
+			ORDER BY
+				C.displayname
+		</isEmpty>
+		<isNotEmpty property="limit">
+			<![CDATA[
+				LIMIT 
+					#limit#, #listSize# 
+			]]>
 		</isNotEmpty>
 	</select>
 	

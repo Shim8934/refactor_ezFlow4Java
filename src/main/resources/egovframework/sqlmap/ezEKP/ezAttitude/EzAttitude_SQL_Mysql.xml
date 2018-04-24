@@ -59,7 +59,7 @@
 	</resultMap>
 	
 	<resultMap id="attitudeStatis" class="AttitudeStatisVO">
-		<result property="count"			column="count"			columnIndex="1"/>
+		<result property="count"			column="COUNT"			columnIndex="1"/>
 		<result property="typeId"			column="TYPE_ID"			columnIndex="2"/>
 	</resultMap>
 	
@@ -198,7 +198,8 @@
 					(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
 				)
 			ORDER BY
-				A.TYPE_ID
+				A.TYPE_ID,
+				A.START_DATE
 		]]>
 	</select>
 
@@ -478,7 +479,7 @@
 			                        date_add(START_DATE, INTERVAL +#offsetMin# minute)
 								   )
 							   )
-						) + COUNT(TYPE_ID) AS count,
+						) + COUNT(TYPE_ID) AS COUNT,
 			       TYPE_ID
 			FROM   
 				jmocha.tbl_attitude

@@ -94,7 +94,6 @@
 	    	});
 	    	
 	    	function company_change(){
-	    		
 	    		pCompanyId = $("select[name=ListCompany]").val();
 	    		
 	    		getUserConfList();
@@ -218,7 +217,7 @@
 	    	} */
 	    	
 	    	function editUserConf(selectUserId) {
-    			var url = "/admin/ezAttitude/editAttitudeUserConf.do?selectUserId=" + selectUserId;
+    			var url = "/admin/ezAttitude/editAttitudeUserConf.do?selectUserId=" + selectUserId + "&companyId=" + pCompanyId;
 	    		
 	    		if (CrossYN()) {
 	    			OpenWin = GetOpenWindow(url, "", "340", "180");

@@ -150,16 +150,13 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		update("ezAttitudeDAO.attModAppModify", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void attSaveAppModify(Map<String, Object> map) throws Exception {
 		insert("ezAttitudeDAO.attSaveAppModify", map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void attAppUpdate(Map<String, Object> map) throws Exception {
 		update("ezAttitudeDAO.attAppUpdate", map);
 	}
-		
 
 	@SuppressWarnings("unchecked")
 	public List<AdminAttitudeVO> getAttitudeList2(Map<String, Object> map) {
@@ -168,6 +165,15 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 
 	public String getAttitudeCount2(Map<String, Object> map) {
 		return (String) select("ezAttitudeAdminDAO.getAttitudeCount2", map);
+	}
+	
+	public String getAttitudeAbsentCount(Map<String, Object> map) {
+		return (String) select("ezAttitudeAdminDAO.getAttitudeAbsentCount", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<AdminAttitudeVO> getAttitudeAbsentList(Map<String, Object> map) {
+		return (List<AdminAttitudeVO>) list("ezAttitudeAdminDAO.getAttitudeAbsentList", map);
 	}
 	
 	public AttitudeVO getAttitudeInfo(Map<String, Object> map) {

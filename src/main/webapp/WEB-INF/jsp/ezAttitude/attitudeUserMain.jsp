@@ -298,7 +298,7 @@
 					for (var i = 0; i < result.length; i++) {
 						startDate = result[i].startDate.split(" ")[0]; 
 						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : ""); 
-						imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>"; 
+						imgPath = "<img width='16px' height='16px' style='vertical-align:top; margin-right:3px; margin-top:2px;' src='" + result[i].imgPath + "'/>"; 
 						 
 						if (result[i].dateType == '4' || result[i].dateType == '5') { 
 						subDate = calDateRange(startDate, endDate); 
@@ -306,14 +306,15 @@
 						 
 						for (var j = 0; j<= subDate; j++) {
 							betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
-							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2); 
+							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
+							var resultRegion = result[i].region.length >= 12 ? result[i].region.substring(0,12) + ".." : result[i].region;
 							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
 									"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>"  
-									+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].region + "</td></tr>"); 
+									+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + (resultRegion != "" ? " : " + resultRegion : "") + "</td></tr>"); 
 						} 
 						} else if (result[i].dateType == '3') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1] + "</td></tr>"); 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
 						} else if (result[i].dateType == '1') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>"); 
@@ -376,15 +377,11 @@
 		        return (to_dt.getTime() - from_dt.getTime()) / 1000 / 60 / 60 / 24;
 		    }
 			
-			
-			/**
-			* 
-			*/
 			function attitudeNewItem(obj) {
 				var date = $(obj).attr("dispdate");
 				
 				if (CrossYN()) {
-                    var OpenWin = window.open("/ezAttitude/attitudeNewItem.do?date=" + date + "&mode=new", "attitudeNewItem", GetOpenWindowfeature(650, 580));
+                    var OpenWin = window.open("/ezAttitude/attitudeNewItem.do?date=" + date + "&mode=new", "attitudeNewItem", GetOpenWindowfeature(810, 790));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
@@ -429,7 +426,7 @@
 				var pAttitudeId = $(obj).attr("attitudeId"); 
 				var pTypeId = $(obj).attr("typeId");
 				if (CrossYN()) {
-					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(650, 580));
+					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(810, 790));
 					
 					try { OpenWin.focus(); } catch (e) { }
 				} else {
@@ -555,9 +552,9 @@
 				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
 				    		}
 				    		if (json[i].endDate == null) {
-				    			objTr.append($("<td style='width:70%'></td>").text("\u00a0" + json[i].startDate));
+				    			objTr.append($("<td style='width:70%; text-align:center'></td>").text("\u00a0" + json[i].startDate));
 				    		} else {
-					    		objTr.append($("<td style='width:70%'></td>").text("\u00a0" + json[i].startDate+ "\u00a0~\u00a0" + json[i].endDate));				    			
+					    		objTr.append($("<td style='width:70%; text-align:center'></td>").text("\u00a0" + json[i].startDate+ "\u00a0~\u00a0" + json[i].endDate));				    			
 				    		}
 
 				    		$("#addpopup_list tbody").append(objTr);
@@ -599,29 +596,24 @@
 						deptFlag : deptFlag,
 					},
 					success : function(json) {
-						console.log(json);
 				    	$('#addpopupDay_list tbody').children('tr').not(":first").remove();
 				    	
-				    	if (json.length == 0) {
-				    		var uvobjTr = $("<tr></tr>").append($("<td style='width:5%; display:none;'></td>"));
-				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
-				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
-				    		uvobjTr.append($("<td style='width:20%; height:0px; display:;'></td>"));
-				    		uvobjTr.append($("<td style='width:60%; height:0px; display:;'></td>"));
-				    		$("#addpopupDay_list tbody").append(uvobjTr);
-				    		
-				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px;'></td>").text("내역이 없습니다."));
-				    		$("#addpopupDay_list tbody").append(objTr);
-				    	}
+				    	var j = 0;
 				    	
 				    	for(var i = 0; i < json.length; i++) {
+				    		if (json[i].typeId == "A01" || json[i].typeId == "A03") {
+								console.log(j);
+								j++;
+								continue;
+							}
+				    		
 				    		if (json[i].apprStatus == 1) {
 				    			json[i].apprStatus = "승인";
 				    		} else {
 				    			json[i].apprStatus = "반려";
 				    		}
 
-				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i+1)));
+				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i-j+1)));
 				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].typeName));
 				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
 				    		if (json[i].writerDeptName.length > 6) {
@@ -630,11 +622,23 @@
 				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
 				    		}
 				    		if (json[i].endDate == null) {
-				    			objTr.append($("<td style='width:60%'></td>").text("\u00a0" + json[i].startDate));
+				    			objTr.append($("<td style='width:60%; text-align:center'></td>").text("\u00a0" + json[i].startDate));
 				    		} else {
-					    		objTr.append($("<td style='width:60%'></td>").text("\u00a0" + json[i].startDate+ "\u00a0~\u00a0" + json[i].endDate));				    			
+					    		objTr.append($("<td style='width:60%; text-align:center'></td>").text("\u00a0" + json[i].startDate+ "\u00a0~\u00a0" + json[i].endDate));				    			
 				    		}
 
+				    		$("#addpopupDay_list tbody").append(objTr);
+				    	}
+				    	
+				    	if (json.length == j) {
+				    		var uvobjTr = $("<tr></tr>").append($("<td style='width:5%; display:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:20%; height:0px; display:;'></td>"));
+				    		uvobjTr.append($("<td style='width:60%; height:0px; display:;'></td>"));
+				    		$("#addpopupDay_list tbody").append(uvobjTr);
+				    		
+				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px;'></td>").text("내역이 없습니다."));
 				    		$("#addpopupDay_list tbody").append(objTr);
 				    	}
 				    },
@@ -694,11 +698,11 @@
 		
 		<table>
 			<tr>
-				<td style="vertical-align:top; width:92%;">
+				<td style="vertical-align:top; width:91%;">
 					<div style="vertical-align:top;" id="attiCalendar"></div>
 				</td>
 				<td style="vertical-align:top; width:10px;">&nbsp;</td>
-				<td style="vertical-align:top; width:8%; margin-left:5px;">
+				<td style="vertical-align:top; width:9%; margin-left:5px;">
 					<div style="vertical-align:top;" id="attiStatis">
 					</div>
 				</td>
@@ -713,36 +717,6 @@
 		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
-<<<<<<< HEAD
-			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
-			    	<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;근태수정신청</th>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">구분
-						<td>지각</td>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">출근시각</th>
-						<td id="originInCom"></td>
-					</tr>
-					<tr>
-			  			<th style="width:90px;height:30px">변경시각</th>
-						<td id="transInCom">
-							<span id="periodblock">
-								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-								<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> :<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
-							</span>
-						</td>
-					</tr>
-					<tr>
-						<th style="width:90px;height:30px">승인상태</th>
-						<td id="apprStatus">상태(진행, 반려)</td>
-					</tr>
-					<tr>
-						<td colspan="2" style="margin:0px; padding:0px;"><textarea class="textarea" style="width:100%; height:120px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;"></textarea></td>
-					</tr>
-=======
 			    <table class="popuplist" id="addpopup_list" style="display:block; width:500px; margin:10px 0px 0px 1px;">
 				    <thead>
 				    	<tr>
@@ -757,17 +731,11 @@
 				    		<th style="height:30px">No.</th>
 				    		<th style="height:30px">사원명</th>
 				    		<th style="height:30px">부서명</th>
-				    		<th style="height:30px">일시</th>
+				    		<th style="height:30px; text-align:center">일시</th>
 						</tr>
 				    </tbody>
->>>>>>> 1085f7d4be69737d00e35b93d0ae9cc715486074
 				</table>
-				<!-- /내용 -->
 				<br />
-				<div style="text-align:center;">
-					<a class="imgbtn"><span onclick="attiModAppl()" >신청</span></a>
-					<a class="imgbtn" rel="modal:close"><span>취소</span></a>
-			    </div>
 			</div>
 			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
 		</div>
@@ -791,17 +759,12 @@
 				    		<th style="height:30px">근태유형</th>
 				    		<th style="height:30px">사원명</th>
 				    		<th style="height:30px">부서명</th>
-				    		<th style="height:30px">일시</th>
+				    		<th style="height:30px; text-align:center">일시</th>
 						</tr>
 				    </tbody>
 				</table>
 				<!-- /내용 -->
 				<br />
-				<div style="text-align:center;">
-					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
-					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
-			    </div>
-			</div>
 			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
 		</div>
 		<div class="shadow"></div>
