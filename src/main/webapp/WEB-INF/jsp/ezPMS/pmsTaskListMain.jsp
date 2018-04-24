@@ -28,7 +28,7 @@
 	};
 	
 	$(document).ready(function() {
-		getProjectTaskTree(containerId, projectId);
+		getProjectTaskTree(containerId, projectId, false);
 	});
 	
 	

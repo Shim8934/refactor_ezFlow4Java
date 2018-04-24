@@ -1,13 +1,13 @@
 /**
  * 프로젝트 업무트리 가져오기
  */
-function getProjectTaskTree(containerId, projectId) {
+function getProjectTaskTree(containerId, projectId, onlyGroup) {
 	$.ajax({
 		type : "post",
 		dataType : "json",
 		url : "/ezPMS/projectTaskTree.do",
 		data : {
-			"projectId" : projectId
+			"projectId" : projectId, "onlyGroup" : onlyGroup
 		},
 		success : function(data) {
 			$("#"+containerId).jstree({

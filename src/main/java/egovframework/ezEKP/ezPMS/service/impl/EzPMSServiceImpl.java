@@ -315,7 +315,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId) {
+	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId, String onlyGroup) {
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("project_Id", projectId);
@@ -330,14 +330,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			}
 		}
 		
-		List<ProjectTaskTreeVO> list2 = ezPMSDAO.getProjectTaskTree(map);
-		
-		System.out.println(list2.size());
-		
-		for(int i = 0; i < list2.size(); i++) {
-			ProjectTaskTreeVO vo = list2.get(i);
-			vo.setIcon("jstree-file");
-			list.add(vo);
+		if(onlyGroup.equals("false")) {
+			List<ProjectTaskTreeVO> list2 = ezPMSDAO.getProjectTaskTree(map);
+			
+			for(int i = 0; i < list2.size(); i++) {
+				ProjectTaskTreeVO vo = list2.get(i);
+				vo.setIcon("jstree-file");
+				list.add(vo);
+			}
 		}
 		
 		return list;
@@ -462,5 +462,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		}
 		
 		LOGGER.debug("Service ezPMS addProjectMember Ended");
+	}
+
+	@Override
+	public String getRemainingWeight(String projectId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
