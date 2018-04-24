@@ -662,6 +662,7 @@
 	        <div class="ladder" onclick="ladder_Func(1)">
 	        <h2><span><spring:message code="ezBoard.l001" /></span></h2>
 	        </div>
+	        <ul></ul>
 	        <h3>
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
