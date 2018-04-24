@@ -901,7 +901,7 @@ public class EzAttitudeAdminBOMController {
 	 * @param request
 	 * @param loginCookie
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConfSave.do")
+	/*@RequestMapping(value = "/admin/ezAttitude/attitudeUserConfSave.do")
 	@ResponseBody
 	public void attitudeUserConfSave(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LOGGER.debug("attitudeUserConfSave started");
@@ -926,7 +926,7 @@ public class EzAttitudeAdminBOMController {
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		
 		LOGGER.debug("attitudeUserConfSave ended");
-	}
+	}*/
 	/**
 	 * 사용자 근태설정 삭제
 	 * @param request
@@ -974,7 +974,6 @@ public class EzAttitudeAdminBOMController {
 	/**
 	 * 관리자 사용자별 근태설정 메인화면 호출
 	 */
-	//여기 그냥 화면만 떙기고 리스트는 post로 다시 땅기면
 	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConf.do")
 	public String attitudeUserConf(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
 		LOGGER.debug("/admin/ezAttitude/attitudeUserConf started");
@@ -1103,12 +1102,12 @@ public class EzAttitudeAdminBOMController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String selectUserId = request.getParameter("selectUserId");
+		String companyId = request.getParameter("companyId");
 		
 		LOGGER.debug("selectUserId = " + selectUserId);
 		
-		//조직도 회사,부서 리스트
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/users-attitude-confs";
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudereg";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1117,7 +1116,8 @@ public class EzAttitudeAdminBOMController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("selectUserId", selectUserId);
+				.queryParam("selectUserId", selectUserId)
+				.queryParam("companyId", companyId);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -1142,12 +1142,87 @@ public class EzAttitudeAdminBOMController {
 		if(status.equals("ok")){
 			jObject = (JSONObject) resultBody.get("data");
 			
-			model.addAttribute("attitudeUserConfVO", jObject);
+			model.addAttribute("companyStartTime", jObject.get("workStartTime"));
+			model.addAttribute("companyEndTime", jObject.get("workEndTime"));
+		}
+		
+		url = gwServerUrl + "/rest/ezattitude/users/users-attitude-confs";
+		
+		entity = new HttpEntity<>(headers);
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("selectUserId", selectUserId);
+		
+		rest = new RestTemplate();
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		LOGGER.debug("status : " + status);
+		
+		jObject = new JSONObject();
+		
+		if(status.equals("ok")){
+			jObject = (JSONObject) resultBody.get("data");
+			
+			model.addAttribute("vo", jObject);
 		}
 		
 		LOGGER.debug("/admin/ezAttitude/editAttitudeUserConf ended");
 		
 		return "admin/ezAttitude/editAttitudeUserConf";
+	}
+	
+	/**
+	 * 사용자별 근무시간 수정
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeUserConfig.do")
+	@ResponseBody
+	public String saveAttitudeUserConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LOGGER.debug("saveAttitudeUserConfig started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String selectUserId = request.getParameter("selectUserId");
+		String workStartTime = request.getParameter("workStartTime");
+		String workEndTime = request.getParameter("workEndTime");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/users/ezattitude/user-attitude-confs";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("selectUserId", selectUserId)
+				.queryParam("workStartTime", workStartTime)
+				.queryParam("workEndTime", workEndTime);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		LOGGER.debug("saveAttitudeUserConfig ended");
+		
+		return status;
 	}
 	
 	/**

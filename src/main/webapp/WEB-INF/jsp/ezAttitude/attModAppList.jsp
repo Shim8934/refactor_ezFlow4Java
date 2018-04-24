@@ -923,10 +923,10 @@
 			    			json[i].apprStatus = "반려";
 			    		}
 
-			    		var objTr = $("<tr></tr>").append($("<td style='width:50%'></td>").text(json[i].apprDate));
+			    		var objTr = $("<tr></tr>").append($("<td style='width:50%'></td>").text("\u00a0" + json[i].apprDate));
 			    		
-			    		objTr.append($("<td style='width:25%'></td>").text(json[i].apprUserName));
-			    		objTr.append($("<td style='width:25%'></td>").text(json[i].apprStatus));
+			    		objTr.append($("<td style='width:25%'></td>").text("\u00a0" + json[i].apprUserName));
+			    		objTr.append($("<td style='width:25%'></td>").text("\u00a0" + json[i].apprStatus));
 			    		
 			    		$("#addpopup_list tbody").append(objTr);
 			    	}
