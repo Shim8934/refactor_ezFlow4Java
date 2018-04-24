@@ -298,7 +298,7 @@
 					for (var i = 0; i < result.length; i++) {
 						startDate = result[i].startDate.split(" ")[0]; 
 						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : ""); 
-						imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>"; 
+						imgPath = "<img width='16px' height='16px' style='vertical-align:top; margin-right:3px; margin-top:2px;' src='" + result[i].imgPath + "'/>"; 
 						 
 						if (result[i].dateType == '4' || result[i].dateType == '5') { 
 						subDate = calDateRange(startDate, endDate); 
@@ -306,10 +306,11 @@
 						 
 						for (var j = 0; j<= subDate; j++) {
 							betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
-							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2); 
+							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
+							var resultRegion = result[i].region.length >= 12 ? result[i].region.substring(0,12) + ".." : result[i].region;
 							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
 									"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>"  
-									+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].region + "</td></tr>"); 
+									+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + (resultRegion != "" ? " : " + resultRegion : "") + "</td></tr>"); 
 						} 
 						} else if (result[i].dateType == '3') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
@@ -376,10 +377,6 @@
 		        return (to_dt.getTime() - from_dt.getTime()) / 1000 / 60 / 60 / 24;
 		    }
 			
-			
-			/**
-			* 
-			*/
 			function attitudeNewItem(obj) {
 				var date = $(obj).attr("dispdate");
 				
