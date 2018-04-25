@@ -78,6 +78,7 @@ function treeOnclick() {
 		}
 		
 		$(".searchDis").removeAttr("disabled");
+		searchMode = false;
     });
 }
 

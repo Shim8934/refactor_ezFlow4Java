@@ -7,6 +7,11 @@
 		<title><spring:message code='ezStatistics.t1013'/></title>
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
+		<style>
+			.mainlist tr th {
+				border-top:0px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
     	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezStatistics.e1' />"></script>

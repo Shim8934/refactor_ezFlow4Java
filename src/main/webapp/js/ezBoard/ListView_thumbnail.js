@@ -596,6 +596,8 @@ function ListView() {
     //리스트뷰 바디 생성
     function GetTableBodyObj() {
         var oTbody = document.createElement("TBODY");
+        oTbody.id = _thisID + "_BODY";
+        oTbody.style.width = "100%";
         oTbody.style.backgroundColor = m_strColorDefault;
 
         var oRows = _dataSource.getElementsByTagName("ROW");

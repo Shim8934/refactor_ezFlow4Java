@@ -803,11 +803,9 @@
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "ITEMID", "Y");
 	            }
 	        }
-	        
 	        xmlhttp = createXMLHttpRequest();
 	        xmlhttp.open("POST", "/ezEmail/mailInterAttachCK.do", false);
 	        xmlhttp.send(xmlDoc);
-	        
 	        var aitem;
 	        var xmlReturnValue = createXmlDom();
 	        var objNode;
@@ -830,19 +828,19 @@
 		            
 		            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
 		            var folderPath = "<spring:message code='ezEmail.t99000027' />";
+	        	    var scheme = document.location.protocol + "//" + document.location.hostname;
+	        	    
+	                if (document.location.port != "80") {
+	                	scheme += ":" + document.location.port;
+	                }
 		            
-		            // 첨부 파일에 클릭하면 다운로드 할 수 있도록 url을 넣어준다. (yjks)
+		            /* 2018-04-25 김유진 - 파일 첨부시 href에 넣어줄 aitem 수정 */
 		            for (var i = 0; i < filelist.length; i++) {
 		                filename = SelectSingleNodeValue(filelist[i], "NAME");
 		                path = SelectSingleNodeValue(filelist[i], "PATH");
 		                big_yn = SelectSingleNodeValue(filelist[i], "BIG");
 		                size = SelectSingleNodeValue(filelist[i], "SIZE");
 		                attid = SelectSingleNodeValue(filelist[i], "ITEMID");
-		        	    var scheme = document.location.protocol + "//" + document.location.hostname;
-		        	    
-		                if (document.location.port != "80") {
-		                	scheme += ":" + document.location.port;
-		                }
 		                
 		                if (big_yn == "Y") {
 		                	// 대용량 첨부시 
@@ -855,7 +853,6 @@
 			                aitem = "/ezEmail/downloadAttach.do?" 
 			                				+ "mode=Attach"
 			                				+ "&folderPath=" + encodeURIComponent(folderPath)
-			                				+ "&uid=" + encodeURIComponent(g_url) 
 			                				+ "&filename=" + encodeURIComponent(filename);
 		                }
 		                
@@ -864,10 +861,11 @@
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "URL", aitem);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "BIG", big_yn);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "ITEMID", attid);
+		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "UID", g_url);
 		            }
-		            
 		            returnvalue(strXML);
 	        	}
+	        	
 	        } else {
 	            alert(xmlhttp.status + " : " + strLang241);
 	        }
