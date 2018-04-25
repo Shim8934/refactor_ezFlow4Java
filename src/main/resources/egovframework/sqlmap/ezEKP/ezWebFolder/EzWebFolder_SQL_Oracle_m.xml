@@ -1057,8 +1057,8 @@
 					FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
 		            'folder'	AS TRASHCAN_EXT,
 					'0' 	AS TRASHCAN_SIZE,
-					FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
-					FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
+					FOLDER.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+					FOLDER.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
 					FOLDER.CREATE_NAME1 AS CREATE_NAME1,
 		            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
 		            '' AS FILE_FOLDER_ID,
@@ -1104,8 +1104,8 @@
 		<include refid="searchTrashCanFile"/>
 	 	<![CDATA[
 				) A
-			ORDER BY A.TRASHCAN_EXT,A.UPDATE_DATE DESC
-			WHERE rownum <= #pStart# + #pEnd# ) B
+			WHERE rownum <= #pStart# + #pEnd#
+			ORDER BY A.TRASHCAN_EXT,A.UPDATE_DATE DESC ) B
 		WHERE B.rnum >= #pStart# + 1
 		]]> 
 	</select>
@@ -1127,8 +1127,8 @@
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
 	            '' as FOLDER_UPPER
 			FROM
-				tbl_webfolder_file AS FILES
-				INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+				tbl_webfolder_file  FILES
+				INNER JOIN TBL_WEBFOLDER_FILETYPE  FILE_TYPE
 				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
 			WHERE
 				FILES.USE_STATUS = 'T' AND
@@ -1144,7 +1144,7 @@
 		    SELECT
 				FOLDER.FOLDER_PATH
 			FROM 
-				TBL_WEBFOLDER_FOLDER AS FOLDER
+				TBL_WEBFOLDER_FOLDER  FOLDER
 			where
 				FOLDER.FOLDER_ID = #folderId# AND 
 				FOLDER.TENANT_ID = #tenantId#
@@ -1183,10 +1183,10 @@
 		]]>
 	</delete>
 	
-	<delete id="EzWebFolderDAO_m.deleteAllFilesInFolder" parameterClass="Map">
-		<![CDATA[
-			DELETE
-			FROM
+	<select id="EzWebFolderDAO_m.selectAllFilesInFolder" parameterClass="Map" resultClass="String">
+		SELECT
+				f.FILE_ID
+    	 FROM
 				TBL_WEBFOLDER_FILE f JOIN
 					(
 					SELECT
@@ -1203,9 +1203,8 @@
 			WHERE
 				f.TENANT_ID = #tenantId#
 			AND
-				f.USE_STATUS = 'T'
-		]]>
-	</delete>
+				f.USE_STATUS = 'T';
+	</select>
 	
 	<select id="EzWebFolderDAO_m.getFolderByFolderPath"  parameterClass="Map" resultMap="trashCanVO">
 		<![CDATA[
@@ -1224,8 +1223,8 @@
 	            "" AS FILE_FOLDER_ID,
 	            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
 			FROM
-				TBL_WEBFOLDER_FOLDER AS FOLDER
-				LEFT JOIN TBL_WEBFOLDER_FILETYPE AS FILE_TYPE
+				TBL_WEBFOLDER_FOLDER  FOLDER
+				LEFT JOIN TBL_WEBFOLDER_FILETYPE  FILE_TYPE
 				ON FILE_TYPE.TYPE_NAME = 'folder'
 			WHERE
 				FOLDER_PATH LIKE #folderPath# || '%'
@@ -1490,11 +1489,11 @@
 		SELECT
 			count(FILES.FILE_id )
 		FROM
-			tbl_webfolder_file AS FILES
+			tbl_webfolder_file FILES
 		WHERE
-			FILES.USE_STATUS = 'T' AND
-			FILES.DELETER_ID = #userId# AND
-			FILES.TENANT_ID = #tenantId#
+			USE_STATUS = 'T' AND
+			DELETER_ID = #userId# AND
+			TENANT_ID = #tenantId#
 		<include refid="searchTrashCanFile"/>
 	</select>
 	
@@ -1502,11 +1501,11 @@
 		SELECT
 			count(FOLDER.FOLDER_id)    
 		FROM
-			tbl_webfolder_folder AS FOLDER
+			tbl_webfolder_folder FOLDER
 		WHERE
-			FOLDER.USE_STATUS = 'T' AND
-			FOLDER.DELETER_ID = #userId# AND
-			FOLDER.TENANT_ID = #tenantId#
+			USE_STATUS = 'T' AND
+			DELETER_ID = #userId# AND
+			TENANT_ID = #tenantId#
 		<include refid="searchTrashCanFolder"/>
 	</select>
 	
