@@ -49,17 +49,60 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	private EzPMSDAO ezPMSDAO;
 
 	@Override
-	public List<ProjectInfoVO> getProjectList(int tenantId, MCommonVO userInfo, String status,
-			Map<String, Object> map, String offset, String lang) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status,
+			Map<String, Object> search, String offset, String lang) {
+		LOGGER.debug("Service getProjectList started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("status", "W");
+		map.put("offset", offset);
+		map.put("lang", lang);
+		map.put("deptId", deptId);
+		
+		List<ProjectInfoVO> projectList = ezPMSDAO.getProjectList(map);
+		
+		try{
+			for (int i = 0; i < projectList.size(); i++) {
+				ProjectInfoVO project = projectList.get(i);
+				
+				if (!project.getStatus().equals("C")) {
+					Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
+					Date today = new Date();
+					String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
+					Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
+					
+					int restDueday = getWorkinDays(now, endDate);
+					
+					projectList.get(i).setRestDueday(restDueday);
+				}
+				
+				if (project.getStatus().equals("W")) {
+					projectList.get(i).setStatus("대기");
+				} else if (project.getStatus().equals("L")) {
+					projectList.get(i).setStatus("지연");
+				} else if (project.getStatus().equals("P")) {
+					projectList.get(i).setStatus("진행");
+				} else if (project.getStatus().equals("C")) {
+					projectList.get(i).setStatus("완료");
+				} else if (project.getStatus().equals("S")) {
+					projectList.get(i).setStatus("보류");
+				} else if (project.getStatus().equals("D")) {
+					projectList.get(i).setStatus("삭제");
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.debug("ERROR : " + e.getMessage());
+		}
+		
+		LOGGER.debug("Service getProjectList ended.");
+		return projectList;
 	}
 
 	@Override
 	public int addNewProject(ProjectInfoVO newProject, String tenantId) {
 		LOGGER.debug("Service addNewProject started.");
-		
-		System.out.println(newProject.getProjectName());
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("projectName", newProject.getProjectName());
@@ -84,7 +127,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getCreateDate());
 			
-			int workingDays = getWorkinDays(startDate, endDate);
+			int createAndStartDateComp = createDate.compareTo(startDate);
+			int workingDays = 0;
+			
+			if (createAndStartDateComp <= 0) {
+				workingDays = getWorkinDays(startDate, endDate);
+			} else {
+				workingDays = getWorkinDays(createDate, endDate);
+			}
 			
 			int createAndEndDateComp = createDate.compareTo(endDate);
 			
@@ -310,12 +360,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId) {
+	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId, String nameType) {
 		LOGGER.debug("getProjectMainSetting started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
+		map.put("nameType", nameType);
+		
 		ProjectMainSettingVO mainSetting = new ProjectMainSettingVO();
 		
 		try{

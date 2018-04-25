@@ -62,24 +62,21 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String status = request.getParameter("status");
+			String deptId = request.getParameter("deptId");
 			
-//			Map<String, Object> search = new HashMap<>();
-			String projectName = request.getParameter("projectName");
-			String planStartDate = request.getParameter("planStartDate");
-			String overview = request.getParameter("overview");	
+			Map<String, Object> search = new HashMap<>();
 			
 			//프로젝트 리스트 가져오기
-			//List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), info, status, search, info.getOffSet(), lang);
+			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, info.getOffSet(), lang);
 			
+			LOGGER.debug("projectList Count : " + projectList.size());
 			//프로젝트 리스트 환경설정 가져오기
 			//ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, info.getTenantId());
 			
 			
-			JSONObject data = new JSONObject();
-			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", data);
+			result.put("data", projectList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -191,7 +188,9 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ProjectMainSettingVO projectSetting = ezPMSService.getProjectMainSetting(userId, Integer.parseInt(request.getParameter("tenantId")));
+			String nameType = request.getParameter("nameType");
+			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+			ProjectMainSettingVO projectSetting = ezPMSService.getProjectMainSetting(userId, tenantId, nameType);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

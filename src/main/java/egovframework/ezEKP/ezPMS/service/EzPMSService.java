@@ -21,7 +21,7 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 public interface EzPMSService {
 
-	public List<ProjectInfoVO> getProjectList(int tenantId, MCommonVO userInfo, String status, Map<String, Object> map, String offset, String lang);
+	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status, Map<String, Object> search, String offset, String lang);
 	
 	public int addNewProject(ProjectInfoVO newProject, String tenantId);
 	
@@ -87,7 +87,7 @@ public interface EzPMSService {
 	
 	public String getUserRole(String userId, int projectId, int tenantId);
 	
-	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId);
+	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId, String nameType);
 	
 	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId, String onlyGroup);
 

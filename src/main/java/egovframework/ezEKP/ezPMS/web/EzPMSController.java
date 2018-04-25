@@ -11,6 +11,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.plaf.synth.SynthSplitPaneUI;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -82,14 +83,20 @@ public class EzPMSController {
 		
 		String url = "/rest/ezPMS/projects/userId/"+userInfo.getId();
 		
-		Map<String, Object> param = new HashMap<String, Object>();
+		Map<String, Object> param = new HashMap<String, Object>();		
+		param.put("deptId", userInfo.getDeptID());
 		
-		
-		
+		//상태별 프로젝트 목록 화면
+		param.put("status", request.getParameter("status"));
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
-		
 		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {		
+			JSONArray projectList = (JSONArray) result.get("data");
+			model.addAttribute("projectList", projectList);
+			request.setAttribute("projectList", projectList);
+		}
 		
 		model.addAttribute("status", status);
 		
@@ -464,7 +471,7 @@ public class EzPMSController {
 	}
 	
 	/**
-	 * 수신자 선택화면 호출
+	 * 담당자, 참여자, 조회자 선택화면 호출
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/pmsSelectAuth.do")
@@ -498,9 +505,6 @@ public class EzPMSController {
 					dept.put("state", state);
 				}
 			}
-			
-			System.out.println(userInfo.getDeptName1());
-			System.out.println(userInfo.getDeptName());
 			
 			model.addAttribute("type", request.getParameter("type"));
 			model.addAttribute("deptList", deptList);
@@ -559,8 +563,44 @@ public class EzPMSController {
 	 * 프로젝트 총괄 책임자 선택 화면 호출
 	 */
 	@RequestMapping(value="/ezPMS/selectHeadManager.do")
-	public String selectHeadManager() {
+	public String selectHeadManager(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		return "ezPMS/selectHeadManager";
+	}
+	
+	/**
+	 * 프로젝트 총괄 책임자 선택 화면 호출
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/getDeptUserList.do")
+	@ResponseBody
+	public JSONObject getDeptUserList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("getDeptUserList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		String key = request.getParameter("key");
+		param.put("key",key );
+		param.put("value", request.getParameter("value"));
+		param.put("userId", userInfo.getId());
+		param.put("lang", userInfo.getLang());
+		
+		LOGGER.debug(request.getParameter("key"));
+		LOGGER.debug(request.getParameter("value"));
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/users", param, request,"get",null);
+		String status = resultBody.get("status").toString();
+		
+		JSONObject result = new JSONObject();
+		
+		if (status.equals("ok")) {		
+			JSONArray userList = (JSONArray) resultBody.get("data");
+			
+			result.put("userList", userList);
+			
+		}
+		
+		LOGGER.debug("getDeptUserList ended");
+		return result;
 	}
 	
 	// 알림메일 발송
@@ -597,6 +637,8 @@ public class EzPMSController {
 		try {
 			for (int i = 0; i < nameList.size(); i++) {
 				String userId = (String)nameList.get(i).get("userId");
+				
+				param.put("nameType", (String)nameList.get(i).get("nameType"));
 				
 				JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/users/"+userId+"/setting", param, request, "get", null);
 				String status = resultBody.get("status").toString();

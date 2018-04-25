@@ -493,7 +493,7 @@
 		]]>
 	</select>
 	
-	<select id="projectMainSetting" parameterClass="Map" resultMap="projectMainSettingVO">
+	<select id="getProjectMainSetting" parameterClass="Map" resultMap="projectMainSettingVO">
 		<![CDATA[
 			SELECT 
 				p.setting_id as SETTING_ID,
@@ -509,6 +509,8 @@
 				u.mail as USER_MAIL,
 				u.displayname as USER_NAME,
 				u.displayname2 as USER_NAME2
+		]]>
+		<isEqual property="nameType" compareValue="user">
 			FROM 
 				tbl_usermaster u
 			LEFT JOIN 
@@ -517,10 +519,73 @@
 				u.CN = p.user_id 
 				AND 
 				u.tenant_id = p.tenant_id
-			) WHERE 
+			)
+		</isEqual>
+		<isNotEqual property="nameType" compareValue="user">
+			FROM 
+				tbl_deptmaster u
+			LEFT JOIN 
+				tbl_pms_setting p
+			ON (
+				u.CN = p.user_id 
+				AND 
+				u.tenant_id = p.tenant_id
+			)
+		</isNotEqual>
+		 WHERE 
 				u.CN = #userId# 
 			AND	
 				u.tenant_id = #tenantId#
+	</select>
+	
+	
+	<select id="getProjectList" parameterClass="Map" resultMap="projectInfoVO">
+		<![CDATA[
+			SELECT DISTINCT
+				A.PROJECT_ID AS PROJECT_ID, 
+				A.TENANT_ID AS TENANT_ID,
+				A.PROJECT_NAME AS PROJECT_NAME, 
+				A.PLAN_START_DATE AS PLAN_START_DATE,
+				A.PLAN_END_DATE AS PLAN_END_DATE, 
+				A.REAL_START_DATE AS REAL_START_DATE, 
+				A.REAL_END_DATE AS REAL_END_DATE,
+				A.HEAD_MANAGER_ID AS HEAD_MANAGER_ID, 
+				A.HEAD_MANAGER_NAME AS HEAD_MANAGER_NAME, 
+				A.HEAD_MANAGER_NAME2 AS HEAD_MANAGER_NAME2,
+				A.HEAD_MANAGER_DEPTNAME AS HEAD_MANAGER_DEPTNAME, 
+				A.HEAD_MANAGER_DEPTNAME2 AS HEAD_MANAGER_DEPTNAME2, 
+				A.STATUS AS STATUS, 
+				A.PROGRESS AS PROGRESS, 
+				A.OVERVIEW AS OVERVIEW,  
+				A.WEIGHT_INPUT AS WEIGHT_INPUT, 
+				A.CREATOR_ID AS CREATOR_ID, 
+				A.CREATE_DATE AS CREATE_DATE, 
+				A.CREATOR_NAME AS CREATOR_NAME, 
+				A.CREATOR_NAME2 AS CREATOR_NAME2, 
+				A.CREATOR_DEPTNAME AS CREATOR_DEPTNAME,
+				A.CREATOR_DEPTNAME2 AS CREATOR_DEPTNAME2, 
+				A.WORKINGDAY AS WORKINGDAY, 
+				A.REST_DUEDAY AS REST_DUEDAY, 
+				A.ALAM_MAIL_STATUS AS ALAM_MAIL_STATUS  
+			FROM 
+				tbl_pms_project A
+			JOIN 
+				tbl_pms_member B
+			ON
+				A.PROJECT_ID = B.PROJECT_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID 
+			WHERE 
+				( B.USER_ID = #userId# 
+				OR 
+				  B.USER_ID = #deptId# 
+				)
+			AND  
+				A.STATUS = #status# 
+			AND 
+				A.TENANT_ID = #tenantId#
+			ORDER BY 
+				PLAN_END_DATE DESC
 		]]>
 	</select>
 </sqlMap>

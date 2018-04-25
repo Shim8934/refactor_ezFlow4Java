@@ -393,7 +393,6 @@
 	   		
 	   		function selectHeadManager(){
 	   			var feature = GetOpenPosition(150, 150);
-	   		 
 	   			DivPopUpShow(400, 300, "/ezPMS/selectHeadManager.do");
 	   		}
 	   		

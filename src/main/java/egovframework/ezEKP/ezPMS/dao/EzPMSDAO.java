@@ -100,6 +100,11 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	 * 프로젝트관리 메인 환경설정 리스트 가져오기 (+메일)
 	 */
 	public ProjectMainSettingVO getProjectMainSetting(Map<String, Object> map) {
-		return (ProjectMainSettingVO) select("projectMainSetting", map);
+		return (ProjectMainSettingVO) select("getProjectMainSetting", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ProjectInfoVO> getProjectList(Map<String, Object> map) {
+		return (List<ProjectInfoVO>) list("getProjectList", map);
 	}
 }
