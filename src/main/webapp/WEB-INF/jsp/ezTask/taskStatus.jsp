@@ -122,7 +122,7 @@
 						size: 135
 					}).on('circle-animation-progress', function(event, progress) {
 						$(this).find('strong').html(completerate + '%');
-// 						$(this).find('strong').css("color", "");
+						$(this).find('strong').css("color", "");
 					});
 				} else {
 					$('.taskProgressBar').circleProgress({
