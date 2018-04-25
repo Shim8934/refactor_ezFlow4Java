@@ -53,15 +53,18 @@
 			}
 			
 		}
-		function afterSuccess(reason) {
-			if (!reason) {
+		function afterSuccess(code) {
+			if (code == '0') {
 				parent.folderList(folderType);
 				parent.returnFunction(folderType);
 				parent.DivPopUpHidden();
 				window.close();
-			}
-			else {
-				alert(reason);
+			}else if(code == '2') {
+				alert("하위 파일 또는 폴더를 이동 또는 복사할 권한이 없습니다.");
+				window.close();
+			}else {
+				alert("복사 또는 이동에 문제가 생김");
+				window.close();
 				return;
 			}
 		}
@@ -158,8 +161,8 @@
 				dataType: "JSON",
 				async: false,
 				success : function(data) {
-					var reason = data.reason;
-					afterSuccess(reason);
+					var code = data.code;
+					afterSuccess(code);
 					
 				},
 				error : function(error) {
