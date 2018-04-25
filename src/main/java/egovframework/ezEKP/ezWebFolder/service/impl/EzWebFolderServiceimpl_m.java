@@ -484,9 +484,19 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		int totalPages = 0;
 		int pStart 	   = 0;
 		
+		if (!endrollStartDate.equals("") && !endrollEndDate.equals("")) {
+			endrollStartDate = commonUtil.getDateStringInUTC(endrollStartDate + " 00:00:00", offset, true);
+			endrollEndDate   = commonUtil.getDateStringInUTC(endrollEndDate + " 23:59:59", offset, true);
+		}
+		
+		if (!delStartDate.equals("") && !delEndDate.equals("")) {
+			delStartDate = commonUtil.getDateStringInUTC(delStartDate + " 00:00:00", offset, true);
+			delEndDate   = commonUtil.getDateStringInUTC(delEndDate + " 23:59:59", offset, true);
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
-		map.put("offset", offset);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantId", tenantId);
 		map.put("searchExt", searchExt);
 		map.put("searchFileName", searchFileName);
@@ -770,8 +780,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public void restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC) throws Exception {
-		int isRestored = -1;
+	public int restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC) throws Exception {
+		int successCount = 0;
 		
 		for (String file : fileIDList) {
 			if (!file.equals("")) {
@@ -782,6 +792,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					
 					if (folderVO != null && folderVO.getUseStatus().equals("Y")) {
 						restoreFile(file, tenantId, userId, timeUTC);
+						successCount += 1;
 					}
 				}
 			}
@@ -793,14 +804,17 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				FolderVO upperFolderVO = ezWebFolderService.getFolderByFolderId(folderVO.getFolderUpper(), offset, tenantId);
 				
 				if (upperFolderVO != null && upperFolderVO.getUseStatus().equals("Y")) {
-					isRestored = restoreFolder(folderVO.getFolderPath(), tenantId, userId, companyId, timeUTC);
+					int isRestored = restoreFolder(folderVO.getFolderPath(), tenantId, userId, companyId, timeUTC);
 					
 					if (isRestored == 1) {
 						restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC);
+						successCount += 1;
 					}
 				}
 			}
 		}
+		
+		return successCount;
 	}
 	
 	@Override

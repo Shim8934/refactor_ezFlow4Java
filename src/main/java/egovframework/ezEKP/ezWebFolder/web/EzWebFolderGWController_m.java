@@ -849,19 +849,22 @@ public class EzWebFolderGWController_m {
 			return result;
 		}
 		
-		for (int i = 0 ; i< retoreSize ; i++) {
-			try {
-				
-				ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId, userId, offset, companyId, timeUTC);
-				
-				result.put("status", "ok");
+		try {
+			
+			int succssCount = ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId, userId, offset, companyId, timeUTC);
+			
+			if (succssCount == retoreSize) {
 				result.put("code", "0");
-			} catch (Exception e) {
-				e.printStackTrace();
-				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t314", locale));
-				result.put("status", "error");
-				result.put("code", "1");
-			}
+			 } else {
+				 result.put("code", "1");
+			 }
+			
+			result.put("status", "ok");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t314", locale));
+			result.put("status", "error");
+			result.put("code", "1");
 		}
 		
 		logger.debug("restoreTrashCan ended");
