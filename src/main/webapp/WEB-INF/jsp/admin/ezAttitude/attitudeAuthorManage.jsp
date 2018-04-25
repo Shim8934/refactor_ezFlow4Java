@@ -61,8 +61,8 @@
 	                    html += "<tr id='" + result[i].userId + "' onclick='listClick(this);' ondblclick='author_modify()' style='cursor: pointer;'>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userName + "</td>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userTitle + "</td>";
-	                    html += "<td style='width:30%;color:gray;'>" + result[i].userDeptName + "</td>";
-	                    html += "<td style='width:30%;color:gray;'>" + result[i].authDeptName + "</td>";
+	                    html += "<td style='width:20%;color:gray;'>" + result[i].userDeptName + "</td>";
+	                    html += "<td style='width:40%;color:gray;'>" + result[i].authDeptName + "</td>";
 	                    html += "</tr>";
 	                }
                 } else {
@@ -147,22 +147,21 @@
 	      		</li>
 	      	</ul>
 		    <ul>
-		        <li><span onClick="author_add()">권한추가</span></li>
+		        <li><span onClick="author_add()">권한등록</span></li>
 		        <li><span onClick="author_modify()">권한수정</span></li>
 		        <li><span onClick="author_delete()">권한삭제</span></li>
 		    </ul>
 		</div>
-	    <br />
-	    <table style="width: 700px; height: 396px;" >
-            <tr>
-                <td>
-                    <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 100%;">
+<!-- 	    <table style="width: 700px; height: 396px;" > -->
+<!--             <tr> -->
+<!--                 <td> -->
+                    <div style="width: 100%; height: 100%;">
                         <table class="mainlist" style="width: 100%;">
                             <tr>
-                                <th style="width: 20%;"><span>사용자</span></th>
+                                <th style="width: 20%;"><span>이름</span></th>
                                 <th style="width: 20%;"><span>직위</span></th>
-                                <th style="width: 30%;"><span>부서</span></th>
-                                <th style="width: 30%;"><span>관리부서</span></th>
+                                <th style="width: 20%;"><span>부서</span></th>
+                                <th style="width: 40%;"><span>권한부서</span></th>
                             </tr>
                         </table>
                         <div id="contentlist" name="contentlist" style="height: 360px; overflow-y: auto;">
@@ -175,9 +174,9 @@
                             </table>
                         </div>
                     </div>
-                </td>
-            </tr>
-        </table>
+<!--                 </td> -->
+<!--             </tr> -->
+<!--         </table> -->
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>

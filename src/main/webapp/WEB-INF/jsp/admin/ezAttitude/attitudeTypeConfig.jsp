@@ -50,9 +50,9 @@
                 if (result.length != null && result.lenth != 0) {
 	                for (var i = 0; i < result.length; i++) {
 	                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='cursor: pointer;'>";
-	                    html += "<td style='width:35%;color:gray;'>" + result[i].typeName + "</td>";
-	                    html += "<td style='width:45%;color:gray;'><input type='radio' name='useRadio"+ i +"' value='1' /> 사용 <input type='radio' name='useRadio"+ i +"' value='0' />사용안함</td>";
-	                    html += "<td style='width:20%;color:gray;'><img id='icon' src='"+ result[i].imgPath +"' width='16px;' height='16px;' alt='' border='0'></td>";
+	                    html += "<td style='width:50%;color:gray;padding-left:15px;'>" + result[i].typeName + "</td>";
+	                    html += "<td style='width:25%;color:gray;text-align: center;'><input type='radio' name='useRadio"+ i +"' value='1' /></td>";
+	                    html += "<td style='width:25%;color:gray;text-align: center;'><input type='radio' name='useRadio"+ i +"' value='0' /></td>";
 	                    html += "</tr>";
 	                }
                 } else {
@@ -105,8 +105,7 @@
 	        function add_type() {
 	            if (CrossYN()) {
 	            	saveType_dialogArguments[0] = $("#ListCompany").val();
-// 	            	saveType_dialogArguments[1] = save_type_Complete;
-                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=540px, height=200px', GetOpenWindowfeature(800, 520));
+                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=350px, height=170px', GetOpenWindowfeature(800, 520));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
@@ -121,9 +120,8 @@
 	        //유형 상세보기
 	        function dbclick(obj) {
 	        	saveType_dialogArguments[0] = $("#ListCompany").val();
-//             	saveType_dialogArguments[1] = save_type_Complete;
             	var typeId = obj.id;
-	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + typeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=540px, height=200px', GetOpenWindowfeature(800, 520));
+	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + typeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=350px, height=170px', GetOpenWindowfeature(800, 520));
 	        	
 	        	try { OpenWin.focus(); } catch (e) { }
 	        }
@@ -152,18 +150,18 @@
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
 	      	</ul>
 	  	</div>
-	  	<table style="width: 500px; height: 380px;" >
+	  	<table style="width: 280px; height: 380px;" >
             <tr>
                 <td>
                     <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 100%;">
                         <table class="mainlist" style="width: 100%;">
                             <tr>
-                                <th style="width: 35%;"><span><spring:message code='ezAttitude.t35' /></span></th>
-                                <th style="width: 45%;"><span><spring:message code='ezAttitude.t36' /></span></th>
-                                <th style="width: 20%;"><span><spring:message code='ezAttitude.t37' /></span></th>
+                                <th style="width: 50%;padding-left:15px;"><span><spring:message code='ezAttitude.t35' /></span></th>
+                                <th style="width: 21%;text-align: center;"><span><spring:message code='ezAttitude.t36' /></span></th>
+                                <th style="width: 29%;text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
                             </tr>
                         </table>
-                        <div id="contentlist" name="contentlist" style="height: 400px; overflow-y: auto;">
+                        <div id="contentlist" name="contentlist" style="height: 350px; overflow-y: auto;">
                             <table class="mainlist" style="width: 100%;">
                                 <tr>
                                     <td style="text-align: center;">
@@ -179,6 +177,5 @@
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-<!--****************************************************페이징자리******************************************************************** -->
 	</body>
 </html>
