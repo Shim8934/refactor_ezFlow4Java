@@ -304,7 +304,10 @@ public class EzWebFolderController_m {
 		
 		if (!status.equals("ok")) {
 			String reason = resultBody.get("reason").toString();
+			String code = resultBody.get("code").toString();
+			
 			model.addAttribute("reason", reason);
+			model.addAttribute("code", code);
 		}
 		
 		
