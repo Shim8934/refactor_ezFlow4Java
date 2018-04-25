@@ -33,6 +33,7 @@
 	   		var userDeptId;
 	   		//회사 아이디
 	   		var companyId;
+	   		var userAddIds = [];
 	   	
 	   		function close_Click(){
 	   			window.close();
@@ -97,14 +98,19 @@
 		   						if($(this).attr("mine")=='Y'){
 		   							userDeptId=$(this).attr("targetId");
 		   						} 
+		   						if($(this).attr("mine")=='A'){
+		   							userAddIds.push($(this).attr("targetId"));
+		   						} 
 		   					})
 	   					} else {
 		   					$("#authorDeptList tr").each(function(){
-		   						if($(this).attr("mine")!='Y'){
+		   						if($(this).attr("mine")=='Y'){
+		   							userDeptId=$(this).attr("targetId");
+		   						} else if($(this).attr("mine")=='A'){
+		   							userAddIds.push($(this).attr("targetId"));
+		   						} else {
 			   						lpDepts.push($(this).attr("targetId"));
 			   						lpDeptNames.push($(this).find("td").text());
-		   						} else {
-		   							userDeptId=$(this).attr("targetId");
 		   						}
 		   					})
 	   					}
@@ -132,6 +138,7 @@
 // 		   			opener.deptNames = lpDeptNames;
 		   			opener.setDeptName(JSON.stringify(lpDepts), JSON.stringify(lpDeptNames));
 		   			opener.userDeptId = userDeptId;
+		   			opener.userAddIds = userAddIds;
 					window.close();
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");

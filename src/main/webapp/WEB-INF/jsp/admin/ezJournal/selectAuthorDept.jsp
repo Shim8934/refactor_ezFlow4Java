@@ -49,7 +49,10 @@
 					'core' : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
 					 'themes' : {'responsive' : true}
-				});
+				}).on('ready.jstree', function(e, data) {
+					var offset = $(".jstree-clicked").offset();
+		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+			    });
 	   		}
 	   		
 	   		var currentNode;
@@ -67,7 +70,7 @@
 							}
 						}
 			   			if(flag){
-				   			if (childrenId!=opener.userDeptId) {
+				   			if (childrenId!=opener.userDeptId && opener.userAddIds.indexOf(childrenId) == -1) {
 					   			$("#lplistView .mainlist_free").append("<tr targetId="+childrenId+" targetName="+childrenName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+childrenName+"</td></tr>");
 					   			lpDepts.push(childrenId);
 					   			lpDeptNames.push(childrenName);
@@ -83,7 +86,7 @@
 						}
 					}
 		   			if(flag){
-			   			if (lpDeptId!=opener.userDeptId) {
+			   			if (lpDeptId!=opener.userDeptId && opener.userAddIds.indexOf(lpDeptId) == -1) {
 				   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
 				   			lpDepts.push(lpDeptId);
 				   			lpDeptNames.push(lpDeptName);

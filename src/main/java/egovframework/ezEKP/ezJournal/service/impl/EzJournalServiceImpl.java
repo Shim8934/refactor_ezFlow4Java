@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -1165,6 +1166,27 @@ public class EzJournalServiceImpl implements EzJournalService {
 		
 		logger.debug("checkJournalAuth ended");
 		return ezJournalDAO.checkJournalAuth(param);
+	}
+
+	@Override
+	public List<DeptViewVO> getCheifBoss(String userId, int tenantId) throws Exception {
+		logger.debug("getCheifBoss started");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("userId", userId);
+		
+		List<DeptViewVO> cheifDeptList = ezJournalDAO.selectCheifBossList(param);
+		List<DeptViewVO> addCheifDeptList = new ArrayList<DeptViewVO>();
+		
+		for (DeptViewVO deptViewVO : cheifDeptList) {
+			param.put("deptId", deptViewVO.getId());
+			addCheifDeptList.addAll(ezJournalDAO.selectCheifBoss(param));
+		}
+		cheifDeptList.addAll(addCheifDeptList);
+		
+		logger.debug("getCheifBoss ended");
+		return cheifDeptList;
 	}
 	
 }
