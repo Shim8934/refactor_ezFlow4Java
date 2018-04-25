@@ -47,6 +47,84 @@
 			.span_list table td:hover, .td_day:hover {
 				background-color:#edf4fd;
 			}
+			
+			.attiVacation {
+			    border-radius: 2px;
+			    display: inline-block;
+			    width: 11px;
+			    height: 11px;
+			    border: 1px solid #35b07e;
+			    background: #35b07e;
+			    overflow: hidden;
+			    margin: -2px 5px 0px 0px;
+			    padding: 0;
+			    vertical-align: middle;
+			}
+			
+			.attiDefault {
+			    border-radius: 2px;
+			    display: inline-block;
+			    width: 11px;
+			    height: 11px;
+			    border: 1px solid #017ddf;
+			    background: #018bfa;
+			    overflow: hidden;
+			    margin: -2px 5px 0px 0px;
+			    padding: 0;
+			    vertical-align: middle;
+			}
+			
+			.attiOutCom {
+			    border-radius: 2px;
+			    display: inline-block;
+			    width: 11px;
+			    height: 11px;
+			    border: 1px solid #605e60;
+			    background: #605e60;
+			    overflow: hidden;
+			    margin: -2px 5px 0px 0px;
+			    padding: 0;
+			    vertical-align: middle;
+			}
+			
+			.attiLate {
+			    border-radius: 2px;
+			    display: inline-block;
+			    width: 11px;
+			    height: 11px;
+			    border: 1px solid #ff4b00;
+			    background: #ff4b00;
+			    overflow: hidden;
+			    margin: -2px 5px 0px 0px;
+			    padding: 0;
+			    vertical-align: middle;
+			}
+			
+			.attiModLate {
+			    border-radius: 2px;
+			    display: inline-block;
+			    width: 11px;
+			    height: 11px;
+			    border: 1px solid #fffa00;
+			    background: #fffa00;
+			    overflow: hidden;
+			    margin: -2px 5px 0px 0px;
+			    padding: 0;
+			    vertical-align: middle;
+			}
+			
+			.attiWeekCom {
+			    border-radius: 2px;
+			    display: inline-block;
+			    width: 11px;
+			    height: 11px;
+			    border: 1px solid #aaa9ed;
+			    background: #aaa9ed;
+			    overflow: hidden;
+			    margin: -2px 5px 0px 0px;
+			    padding: 0;
+			    vertical-align: middle;
+			}
 		</style>
 		<script>
 			var pMode = "";
@@ -190,7 +268,7 @@
 								searchByTypeId(this);
 							});	
 						} else {
-							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일")
+							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr({"id":result[i].typeId, "parentId":result[i].parentId}).text("0일")
 						}
 						objTr.append(objTd);
 						objTbody.append(objTr);
@@ -321,7 +399,8 @@
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + (result[i].modAppl == '1' ? " <i class='fas fa-pencil-alt' style='color:#aefa9a;'></i>" : "") + "</td></tr>"); 
 						} 
-					}	
+					}
+					setAttitudeSquare();
 				} else {
 					for (var i = 0; i < result.length; i++) {
 						if (result[i].typeId != 'A01' && result[i].typeId != 'A03') {
@@ -677,6 +756,35 @@
 				 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 				}
 		    }
+			
+			function setAttitudeSquare(){
+				//tdClassName = attiVacation, attiDefault, attiOutCom, attiLate, attiModLate, attiWeekCom
+				$("span[name=span_list] td[attitudeid]").each(function(index){
+					var squareSpan = $("<span></span>");
+					var tdTypeId = $(this).attr("typeid");
+					var tdParentId = $("#attiStatis td[typeid=" + tdTypeId + "]").attr("parentid");
+					var tdClassName = "";
+					switch(tdTypeId)
+					{
+						case "A01": case "A03": case "A06": case "A08": //출근, 퇴근, 외출, 조퇴
+						    tdClassName = "attiDefault";
+							break;
+						case "A04": case "A09": case "A10": //외근, 출장, 휴가
+							tdClassName = "attiOutCom";
+							break;
+						case "A07": //휴근
+							tdClassName = "attiWeekCom";
+							break;
+						case "A02": //지각
+							tdClassName = $(this).attr("modAppl") == 1 ? "attiModLate" : "attiLate";
+							break;
+						default: //나머지 휴가
+							tdClassName = "attiVacation";
+							break;
+					}
+					$(this).prepend(squareSpan.addClass(tdClassName));
+				});
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">
