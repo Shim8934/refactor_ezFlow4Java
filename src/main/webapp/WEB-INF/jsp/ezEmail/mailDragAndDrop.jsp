@@ -349,6 +349,7 @@
 		        AttatchReturnValue = null;
 		    }
 
+		 	// 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
 		    function SetAttachItemLink(filepath, url, big, itemid, g_url) {
 		        var TRRows = document.getElementById("lstAttachLink").getElementsByTagName("TR");
 		        
@@ -379,7 +380,8 @@
 		            }
 		        }
 		    }
-		   
+		 	
+		 	// 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
 		    function updateItemUid() {
 		    	var TRRows = document.getElementById("lstAttachLink").getElementsByTagName("TR");
 		    	var nextUid = parseInt(currUid) + 1;
@@ -397,6 +399,7 @@
 		    	currUid = nextUid;
 		    }
 		    
+		 	// 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
 		    function FileDownload(obj, fileIndex, fileUid) {
 				var emptyStr = "";
 				
@@ -486,6 +489,7 @@
 			                	}
 			                }
 		                    
+		                 	// 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
 			                updateItemUid();
 		                }                
 		                

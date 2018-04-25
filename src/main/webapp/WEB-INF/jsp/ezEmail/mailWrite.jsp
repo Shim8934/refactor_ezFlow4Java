@@ -834,7 +834,7 @@
 	                	scheme += ":" + document.location.port;
 	                }
 		            
-		            // 첨부 파일에 클릭하면 다운로드 할 수 있도록 url을 넣어준다. (yjks)
+		            // 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
 		            for (var i = 0; i < filelist.length; i++) {
 		                filename = SelectSingleNodeValue(filelist[i], "NAME");
 		                path = SelectSingleNodeValue(filelist[i], "PATH");
