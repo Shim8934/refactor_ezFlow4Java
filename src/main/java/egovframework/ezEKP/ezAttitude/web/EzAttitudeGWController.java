@@ -749,11 +749,8 @@ public class EzAttitudeGWController {
 			} else {
 				typeId = "A" + MaxTypeId;
 			}
-//			//formList 구하기
-//			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
 			
 			data.put("typeId", typeId);
-//			data.put("formList", formList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -815,19 +812,15 @@ public class EzAttitudeGWController {
 			
 			AttitudeTypeVO typeInfo = ezAttitudeService.getAttitudeTypeInfo(info.getTenantId(), companyId, attitudetypeId);
 			//imgPath 셋팅
-			String imgPath = typeInfo.getImgPath();
-			if (!imgPath.equals("")) {
-				imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
-				typeInfo.setImgPath(imgPath);
-			} else {
-				typeInfo.setImgPath("/images/default_pic.jpg");
-			}
-
-			//formList 구하기
-//			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
+//			String imgPath = typeInfo.getImgPath();
+//			if (!imgPath.equals("")) {
+//				imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+//				typeInfo.setImgPath(imgPath);
+//			} else {
+//				typeInfo.setImgPath("/images/default_pic.jpg");
+//			}
 			
 			data.put("typeInfo", typeInfo);
-//			data.put("formList", formList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -372,15 +372,12 @@ public class EzAttitudeAdminBOMController {
 		String status = resultBody.get("status").toString();
 		
 		JSONObject data = new JSONObject();
-//		JSONArray formList = new JSONArray();
 		String typeId = "";
 		
 		if (status.equals("ok")) {
 			data = (JSONObject) resultBody.get("data");
-//			formList = (JSONArray) data.get("formList");
 			typeId = (String) data.get("typeId");
 			
-//			model.addAttribute("formList", formList);
 			model.addAttribute("typeId", typeId);
 			model.addAttribute("companyId", companyId);
 		}
@@ -426,15 +423,12 @@ public class EzAttitudeAdminBOMController {
 		String status = resultBody.get("status").toString();
 		
 		JSONObject data = new JSONObject();
-		JSONArray formList = new JSONArray();
 		JSONObject typeInfo = new JSONObject();
 		
 		if (status.equals("ok")) {
 			data = (JSONObject) resultBody.get("data");
-//			formList = (JSONArray) data.get("formList");
 			typeInfo = (JSONObject) data.get("typeInfo");
 			
-//			model.addAttribute("formList", formList);
 			model.addAttribute("typeInfo", typeInfo);
 			model.addAttribute("companyId", companyId);
 		}

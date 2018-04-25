@@ -124,26 +124,27 @@
     				</table>
     			</td> 
   			</tr>
-  			<tr>
-  				<th><spring:message code='ezAttitude.t43' /></th>
-  				<td style="">
-  					<table width="100%;">
-  						<tr>
-	  						<td style="width:20%;">
-	  							<a class="imgbtn" style="background:none;">
-	  								<span onclick="btnimagefile_onclick()">파일추가</span>
-	  							</a>
-	  						</td>
-	  						<td style="width:40%">
-	  							<img id="preview" name="preview" src="${typeInfo.imgPath}" width="16px;" height="16px;" alt="" border="0" style="display: block;">
-	  						</td>
-	  						<td>
-	  							★ 아이콘 크기 : 16px * 16px
-	  						</td>
-	  					</tr>
-  					</table>
-  				</td>
-  			</tr>
+  			<!-- 아이콘을 하려 했던 부분 -->
+<!--   			<tr> -->
+<%--   				<th><spring:message code='ezAttitude.t43' /></th> --%>
+<!--   				<td style=""> -->
+<!--   					<table width="100%;"> -->
+<!--   						<tr> -->
+<!-- 	  						<td style="width:20%;"> -->
+<!-- 	  							<a class="imgbtn" style="background:none;"> -->
+<!-- 	  								<span onclick="btnimagefile_onclick()">파일추가</span> -->
+<!-- 	  							</a> -->
+<!-- 	  						</td> -->
+<!-- 	  						<td style="width:40%"> -->
+<%-- 	  							<img id="preview" name="preview" src="${typeInfo.imgPath}" width="16px;" height="16px;" alt="" border="0" style="display: block;"> --%>
+<!-- 	  						</td> -->
+<!-- 	  						<td> -->
+<!-- 	  							★ 아이콘 크기 : 16px * 16px -->
+<!-- 	  						</td> -->
+<!-- 	  					</tr> -->
+<!--   					</table> -->
+<!--   				</td> -->
+<!--   			</tr> -->
 		</table>
 		<div class="btnposition">
 	        <a class="imgbtn"><span onclick="OK_Click();" >저장</span></a>
