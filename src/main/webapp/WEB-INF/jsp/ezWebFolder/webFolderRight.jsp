@@ -671,9 +671,10 @@
 				return;
 			}
 			
-			addShareDialogArguments[0] = rowModule.getRowInfo(selectedRows[0]);
+			var folderFileId = rowModule.getRowInfo(selectedRows[0]).id;
+			var folderFileType = rowModule.getRowInfo(selectedRows[0]).type;
 			addShareDialogArguments[1] = refreshView;
-            var OpenWin = window.open("/ezWebFolder/addShareView.do", "addShareView", GetOpenWindowfeature(610, 685));
+            var OpenWin = window.open("/ezWebFolder/addShareView.do?folderFileId=" + folderFileId + "&folderFileType=" + folderFileType, "addShareView", GetOpenWindowfeature(610, 685));
             try { OpenWin.focus(); } catch (e) { }
 		}
     </script>
