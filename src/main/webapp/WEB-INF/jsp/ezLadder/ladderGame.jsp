@@ -631,14 +631,13 @@
 			background: beige;
 		}
 		
-		.directionBtn {
-			height: 50px;
+		.directionBtn {			
 			position: relative;
-			margin-top: 20px;
+			margin-top: 11px;
 		}
 		
 		.direcDiv {
-			height: 80px;
+			height: 60px;
 			width: 150px;
 			position: absolute;
 			top: 0;
@@ -673,37 +672,60 @@
 			border-radius: 15px;
 			margin-left: 5px;
 		}
+		.name {
+			color : #000;
+			font-size: 14px;
+			padding-top: 3px;
+		}
+		.team {
+			color : #000;
+			padding-top: 5px;
+		}
+		.date {
+			color: #aaa9a9;
+			padding-top: 6px;
+		}
 	</style>
 </head>
 	<body class="mainbody">
 		<h1><spring:message code='ezLadder.t001' /></h1>
 		<div class="fullwidth">
+			<div style="height:50px">
+				<div style="float:left;margin-top:3px;margin-bottom:10px">
+					<p class="pic" style="float:left;margin:5px 10px"><img src="${empty vo.pic ? '/images/poll/default_pic_vote.gif' : vo.pic}" width="48px" height="48px" style="position: relative;"></p>
+					<div style="float:left;margin:1px 8px">
+						<span class="name" style="float:left">${vo.writerName}</span>
+						<span class="team" style="float:left">${vo.deptName}</span>
+						<span class="date" style="float:left">${vo.writeDate}</span>
+					</div>
+				</div>	
+				<div class="ladderGame_info" style="float:right">
+					<ul class="attribute">
+						<li><img src="/images/ezLadder/icon_game0${vo.type}.png" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" width="45px;" height="45px;"></li>
+						<li><img src="/images/ezLadder/icon_status0${vo.status}.png" title="<spring:message code='ezLadder.t07${vo.status+4}'/>" width="45px;" height="45px;"></li>
+						<li><img src="/images/ezLadder/icon_secretflag0${vo.secretFlag}.png" title="<spring:message code='ezLadder.t007${vo.secretFlag}'/>" width="45px;" height="45px;"></li>
+					</ul>
+					<ul class="edit">
+						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_reuse.png" width="45px;" height="45px;" id="usePreladder" title="<spring:message code='ezLadder.t082'/>"></li>
+						<c:choose>
+							<c:when test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" title="<spring:message code='ezLadder.t077'/>" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:when>
+							<c:when test="${vo.writerId != id}"><li><img src="/images/ezLadder/icon_imposDelete.png" title="<spring:message code='ezLadder.t077'/>" width="45px;" height="45px;"></li></c:when>
+						</c:choose>
+					</ul>
+				</div>
+			</div>
 			<table class="setTable" style="position: relative; width: 100%;">
 				<tr>
 					<td>
 						<div class="ladderPreList_right" style="width: 100%; min-width: 800px; border: 0; height: auto;">
-							<h2 style="border: 1px solid #DDD;">
+							<h2 style="border: 1px solid #DDD;overflow: hidden">
 								<p class="ladderGame_title"><c:out value="${vo.title}" /></p>
-								<div class="ladderGame_info">
-									<ul class="attribute">
-										<li><img src="/images/ezLadder/icon_game0${vo.type}.png" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" width="45px;" height="45px;"></li>
-										<li><img src="/images/ezLadder/icon_status0${vo.status}.png" title="<spring:message code='ezLadder.t07${vo.status+4}'/>" width="45px;" height="45px;"></li>
-										<li><img src="/images/ezLadder/icon_secretflag0${vo.secretFlag}.png" title="<spring:message code='ezLadder.t007${vo.secretFlag}'/>" width="45px;" height="45px;"></li>
-									</ul>
-									<p class="pic"><img src="${empty vo.pic ? '/images/ezLadder/icon_defaultAttendant.png' : vo.pic}" width="60px;" height="60px;" style="position: relative;top: -2px;left: -2px;"></p>
-									<div class="txt">
-										<span class="name">${vo.writerName}</span>
-										<span class="team">${vo.deptName}</span>
-										<span class="date">${vo.writeDate}</span>
+								<c:if test="${vo.status eq 1}">
+									<div class="directionBtn">
+										<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code='ezLadder.t106' /></div></button>
+										<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code='ezLadder.t107' /></div></button>
 									</div>
-									<ul class="edit">
-										<li style="cursor: pointer;"><img src="/images/ezLadder/icon_reuse.png" width="45px;" height="45px;" id="usePreladder" title="<spring:message code='ezLadder.t082'/>"></li>
-										<c:choose>
-											<c:when test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" title="<spring:message code='ezLadder.t077'/>" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:when>
-											<c:when test="${vo.writerId != id}"><li><img src="/images/ezLadder/icon_imposDelete.png" title="<spring:message code='ezLadder.t077'/>" width="45px;" height="45px;"></li></c:when>
-										</c:choose>
-									</ul>
-								</div>
+								</c:if>	
 							</h2>
 							<!-- <div class="ladderGame_view">
 								
@@ -743,7 +765,7 @@
 				<tr>
 					<td>
 						<c:if test="${vo.status eq 0}">
-						<div id="startButton" style="position: absolute; z-index: 100; top: 0; left: 0;">
+							<div id="startButton" style="position: absolute; z-index: 100; top: 0; left: 0;">
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
@@ -757,9 +779,8 @@
 										</div>
 									</c:otherwise>
 								</c:choose>
-						</div>
-							<div class="directionBtn"></div>
-							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px; padding-top: 20px; padding-bottom: 20px;">
+							</div>
+							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px; padding-top: 30px; padding-bottom: 20px; border-top:0px">
 								<div style="height: 100px; margin-bottom: 20px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
@@ -784,7 +805,7 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 400px;background: #000000; opacity: 0.4; position: absolute;left: -50px;right: 0;">
+									<div id="blackBox" style="height: 400px;background: #dfdfdf; position: absolute;left: -50px;right: 0;">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>
@@ -804,12 +825,8 @@
 						</c:if>
 							
 						<c:if test="${vo.status eq 1}">
-							<div class="directionBtn">
-								<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code='ezLadder.t106' /></div></button>
-								<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code='ezLadder.t107' /></div></button>
-							</div>
-							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px; padding-top: 20px;">
-								<div style="height: 100px; margin-bottom: 20px;">
+							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px; padding-top: 20px; border-top:0px">
+								<div style="height: 100px; margin-top:10px; margin-bottom: 20px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
 											<li>
