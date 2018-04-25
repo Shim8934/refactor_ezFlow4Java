@@ -596,6 +596,7 @@ function ListView() {
     //리스트뷰 바디 생성
     function GetTableBodyObj() {
         var oTbody = document.createElement("TBODY");
+        /* 2018-04-25 홍승비 - 썸네일 미리보기 스크립트 에러 수정을 위해 ID 부여 */
         oTbody.id = _thisID + "_BODY";
         oTbody.style.width = "100%";
         oTbody.style.backgroundColor = m_strColorDefault;
