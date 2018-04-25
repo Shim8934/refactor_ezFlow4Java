@@ -259,8 +259,8 @@ public class EzWebFolderGWController_y {
 				checkSbCreater = service.checkCreater(folderId, tenantId, comId, userId);
 				if (checkSbCreater != 1) {
 					LOGGER.debug("subFolder or SubFile is not mine!");
-					result.put("status", "error");
-					result.put("code", "1");
+					result.put("status", "ok");
+					result.put("code", "2");
 					return result;
 			
 				}
@@ -470,13 +470,13 @@ public class EzWebFolderGWController_y {
 			} else {
 				totalpages = (totalCount/listCount)+1;
 			}
-			if ( currPage > totalpages ) {
+			if ( currPage > totalpages & totalCount != 0) {
 				currPage = totalpages;
 				pStart = (listCount*currPage )-listCount;
 				pEnd = listCount;
 			}else {
 				currPage = currPage;
-				pStart = (listCount*currPage )-listCount;
+//				pStart = (listCount*currPage )-listCount;
 				pEnd = listCount;
 			}
 			

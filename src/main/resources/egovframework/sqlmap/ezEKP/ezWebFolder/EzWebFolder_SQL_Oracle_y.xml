@@ -1154,28 +1154,56 @@
 	
 	<select id="EzWebFolderDAO_y.checkSubCreater" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			select count(DISTINCT decode (create_id ,#userId#,'1','0')) as checked 
-			from tbl_webfolder_folder 
-			where folder_path like (
-				select (folder_path||'%')
-				from tbl_webfolder_folder   
-				where folder_id like ('%|'||#folderId#||'|%')  
-					and TENANT_ID = #tenantId#
-					and company_id = #comId#
-				)
-			and tenant_id = #tenantId#
+			SELECT CASE WHEN (
+                 SELECT COUNT(*)
+                   FROM (
+                            select create_id
+                            from tbl_webfolder_folder where folder_path like #folderPath# || '%' and tenant_id = #tenantId#
+                            GROUP BY create_id
+                        )
+                 ) = (
+                     SELECT COUNT(*)
+                       FROM (
+                            select create_id
+                            from tbl_webfolder_folder where folder_path like #folderPath# || '%' and tenant_id = #tenantId#
+                            GROUP BY create_id
+                      )
+                 WHERE CREATE_ID = #userId#
+                 ) THEN '1'
+			     ELSE '0'
+			     END AS RESULT
+			FROM DUAL
 		]]>
 	</select>
 	<select id="EzWebFolderDAO_y.checkFileCreater" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			select count(DISTINCT decode(ffile.create_id ,#userId#,'1','0')) as checked  
-			from tbl_webfolder_file ffile inner join (
-				select folder_id
-				from tbl_webfolder_folder  
-				where   folder_path like ('%|' || #folderId# || '|%') 
-                    and TENANT_ID = #tenantId#
-					and company_id = #comId#) a on ffile.folder_id = a.folder_id
-			where ffile.tenant_id = #tenantId#
+			SELECT CASE WHEN (
+                 SELECT COUNT(*)
+                   FROM (
+                            select f.create_id from tbl_webfolder_file f inner join (
+	                            select folder_id 
+	                            from tbl_webfolder_folder 
+	                            where folder_path like #folderPath# || '%'
+                            	and tenant_id = #tenantId#
+                            ) t on f.folder_id = t.folder_id
+                            group by create_id 
+                        )
+                 ) = (
+                     SELECT COUNT(*)
+                       FROM (
+                            select f.create_id from tbl_webfolder_file f inner join (
+                            	select folder_id 
+	                            from tbl_webfolder_folder 
+	                            where folder_path like #folderPath# || '%'
+                            	and tenant_id = #tenantId#
+                            ) t on f.folder_id = t.folder_id 
+                            group by create_id 
+                      )
+                 WHERE CREATE_ID = #userId#
+                 ) THEN '1'
+			     ELSE '0'
+			     END AS RESULT
+			FROM DUAL
 		]]>
 	</select>
 	

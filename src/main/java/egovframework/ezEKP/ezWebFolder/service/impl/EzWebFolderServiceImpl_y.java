@@ -628,7 +628,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	// 폴더 delete
 	
 	@Override
-	public void deleteSubFldAFile(String folderId, int tenantId, String comId , String userId, String timeUTF) {
+	public void deleteSubFldAFile(String folderId, int tenantId, String comId , String userId, String timeUTF) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
  		map.put("folderId", folderId);
@@ -651,11 +651,12 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	}
 
 	@Override
-	public int checkCreater(String folderId, int tenantId,String comId, String userId) {
+	public int checkCreater(String folderId, int tenantId,String comId, String userId) throws Exception {
 		
 		// 자기 하위에 있는 폴더, 파일들이 모두 본인이 creater인지 확인  
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		FolderVO folder = getFolderDetail(folderId, userId, tenantId, comId);
 		int result = 0;
 		int resultFld = 0;
 		int resultFile = 0;
@@ -663,15 +664,16 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("tenantId", tenantId);
 		map.put("comId", comId);
 		map.put("userId", userId);
+		map.put("folderPath", folder.getFolderPath());
 		LOGGER.debug("folderId : "+folderId+"comId : "+comId+ "userId"+userId+"deleteSubFldAFile  Method");
 		resultFld = ezWebFolderDAO_y.checkSubCreater(map);
 		LOGGER.debug("resultFld : "+resultFld);
+		
+		// resultFile = 2 면 자신이 아닌 사람이 만든 파일이 존재 
 		resultFile = ezWebFolderDAO_y.checkFileCreater(map);
 		LOGGER.debug("resultFile : "+resultFile);
 		// 1이 리턴되면 모두 다 내가 만든 파일 
 		if (resultFile == 1 && resultFld == 1) {
-			result = 1;
-		}else if (resultFile == 0 && resultFld == 1) {
 			result = 1;
 		} else {
 			result =0;
