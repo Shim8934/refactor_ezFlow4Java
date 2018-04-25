@@ -1160,8 +1160,6 @@
 				FILE_ID    = #fileId#
 			AND
 				TENANT_ID  = #tenantId#
-			AND
-				COMPANY_ID = #companyId#	
 			AND 
 				USE_STATUS = 'T'
 		]]>
@@ -1203,7 +1201,7 @@
 			WHERE
 				f.TENANT_ID = #tenantId#
 			AND
-				f.USE_STATUS = 'T';
+				f.USE_STATUS = 'T'
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getFolderByFolderPath"  parameterClass="Map" resultMap="trashCanVO">
@@ -1495,8 +1493,7 @@
 				OWNER_ID     = #ownerId#,
 				FOLDER_PATH  = replace(FOLDER_PATH, #oldPath#, #newPath#),
 				FOLDER_LEVEL = FOLDER_LEVEL + #levelDistance#,
-				USE_STATUS = 'Y',
-				UPDATE_DATE = #timeUTC#
+				USE_STATUS = 'Y'
 			WHERE
 				FOLDER_PATH like #oldPath# || '_' ||  '%'
 			AND
