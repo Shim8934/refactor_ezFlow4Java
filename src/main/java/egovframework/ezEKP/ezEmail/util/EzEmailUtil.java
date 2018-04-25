@@ -982,17 +982,31 @@ public class EzEmailUtil {
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
 			Part p = null;
+			boolean isHtmlPartAlreadyProcessed = false;
 			
 			for (int i = 0; i < count; i++) {
 				p = mp.getBodyPart(i);
-				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
-				htmlBody += tempList.get(0);
-				pAttachListHtml += tempList.get(1);
-				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
-				filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
 				
-				if (tempList.get(4).equals("OK")) {
-					isAttach = "OK";
+				if (p.isMimeType("text/html")) {
+					isHtmlPartAlreadyProcessed = true;
+				}
+				
+				// 안드로이드 삼성 메일앱이 메일 발송 시 Sent 폴더에 넣은 메일이 
+				// alternative part가 아닌 mixed part에 text/html과 text/plain을 함께
+				// 넣어 메일이 두 번 반복해 보이는 현상이 있어 추가함
+				if (isHtmlPartAlreadyProcessed && p.isMimeType("text/plain")) {
+					logger.debug("contentType=" + p.getContentType());
+					logger.debug("disposition=" + p.getDisposition());	
+				} else {				
+					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+					htmlBody += tempList.get(0);
+					pAttachListHtml += tempList.get(1);
+					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
+					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+					
+					if (tempList.get(4).equals("OK")) {
+						isAttach = "OK";
+					}
 				}
 			}
 		} else if (part.isMimeType("multipart/related")) {

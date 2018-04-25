@@ -196,8 +196,8 @@
       					<label for="mpWeekly"><spring:message code="ezResource.t281"/></label>
       				<input id="mpMontly" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(2);'>
       					<label for="mpMontly"><spring:message code="ezResource.t282"/></label>
-      				<input id="mpYealy" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(3);'>
-      					<label for="mpYealy"><spring:message code="ezResource.t283"/></label>
+      				<input id="mpYearly" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(3);'>
+      					<label for="mpYearly"><spring:message code="ezResource.t283"/></label>
     			</td>
   			</tr>
   			<tr id='divRecurPatterns' name="divRecurPatterns" style="display:none">

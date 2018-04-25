@@ -1664,10 +1664,6 @@ function makePageSelPage() {
     else {
         MaxNum = totalPage;
     }
-    
-    if(totalPage == "0") {
-    	MaxNum = 1;
-    }
     for (i = startNum; i <= MaxNum; i++) {
         if (i == pageNum) {
             strtext = "<span class='on'>" + i + "</span>";
@@ -1677,6 +1673,10 @@ function makePageSelPage() {
             strtext = "<span onclick = 'goToPageByNum(" + i + ")'>" + i + "</span>";
             PagingHTML += strtext;
         }
+    }
+    if (i == 1) {
+    	strtext = "<span class='on'>" + i + "</span>";
+        PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {

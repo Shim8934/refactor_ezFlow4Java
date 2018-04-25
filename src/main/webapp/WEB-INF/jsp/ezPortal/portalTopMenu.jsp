@@ -36,6 +36,7 @@
 			var selObjClass = "";
 			var SkinExist = "${skinExist}";
 			var pNoneActiveX = "${noneActiveX}";
+			var useHWP = "${useHWP}";
 			
 			// 2009.11.25 - 소스보기시 개인정보 유출방지
 			var pwd = "";
@@ -87,20 +88,27 @@
 				    	 //브라우저 정보 가져오기
 				    	var userAgent = window.navigator.userAgent;
 						
-				    	//IE9 일때만 ActiveX 설치하게 설정
-						if (userAgent.indexOf("Trident/5.0") > 0) {
-							//var objectNode = document.getElementById("objectDiv");
-					    	 //objectNode.innerHTML = "<OBJECT id='i_icd2' style='DISPLAY: none' codeBase='/files/ezIcd2.cab#version=1,0,0,13' data='data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=='classid='CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900' VIEWASTEXT></OBJECT>";
-					    	 //var objectProgressNode = document.getElementById("objectProgressDiv");
-					    	 //objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>";
-					    	 GetObject();
-					    	 ezNotieSetting();
-					    	 
-					    	 /* var objectProgressNode = document.getElementById("objectProgressDiv");
-					    	 objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>"; */
-					    	 
-						}
-				        
+				    	if (useHWP == "YES") {
+				    		//한글기안기 사용일때는 ie9,10,11 전부 activeX 설치
+							if (userAgent.indexOf("Trident/5.0") > 0 || userAgent.indexOf("Trident/6.0") > 0 || userAgent.indexOf("Trident/7.0") > 0) {
+						    	 GetObject();
+						    	 ezNotieSetting();
+							}
+				    	} else {
+				    		//IE9 일때만 ActiveX 설치하게 설정
+							if (userAgent.indexOf("Trident/5.0") > 0) {
+								//var objectNode = document.getElementById("objectDiv");
+						    	 //objectNode.innerHTML = "<OBJECT id='i_icd2' style='DISPLAY: none' codeBase='/files/ezIcd2.cab#version=1,0,0,13' data='data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=='classid='CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900' VIEWASTEXT></OBJECT>";
+						    	 //var objectProgressNode = document.getElementById("objectProgressDiv");
+						    	 //objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>";
+						    	 GetObject();
+						    	 ezNotieSetting();
+						    	 
+						    	 /* var objectProgressNode = document.getElementById("objectProgressDiv");
+						    	 objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>"; */
+						    	 
+							}
+				    	}
 				    } 
 	//				window.setInterval("update_connectinfo()", 30000);	
 				}

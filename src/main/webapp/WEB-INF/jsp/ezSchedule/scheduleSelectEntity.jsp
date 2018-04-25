@@ -627,7 +627,8 @@
 		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
+		            //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
+		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
 		        
@@ -638,7 +639,8 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
+		                //document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -651,7 +653,8 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
+	                    //document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }

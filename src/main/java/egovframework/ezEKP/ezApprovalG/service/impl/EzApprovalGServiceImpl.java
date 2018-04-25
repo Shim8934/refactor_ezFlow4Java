@@ -17198,8 +17198,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (!apprFromYEAR.equals("") && apprFromYEAR != null) {
-			tmpEndDate1 = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprFromYEAR, apprFromMONTH, apprFromDAY, true), offset, false).trim();
-			tmpEndDate2 = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprToYEAR, apprToMONTH, apprToDAY, false), offset, false).trim();
+			tmpEndDate1 = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprFromYEAR, apprFromMONTH, apprFromDAY, true), offset, true).trim();
+			tmpEndDate2 = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprToYEAR, apprToMONTH, apprToDAY, false), offset, true).trim();
 		}
 		
 		if (!myApprFromYEAR.equals("") && myApprFromYEAR != null) {
@@ -17357,7 +17357,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String draftDeptName, String formID, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
 			String docState, int querySize, int querySize2, int querySize3, String orderOption1, String orderOption2, String alFlag, String langType, String approvUser, String companyID, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
 		logger.debug("getSearchDocList started");
-
+		
+		System.out.println("시간 : " + tmpEndDate1);
+		System.out.println("시간 : " + tmpEndDate2);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_CONTID", containerID);
@@ -17379,10 +17382,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTER", drafter.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
 		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
 		map.put("v_FORMID", formID.trim());
-		map.put("v_ENDDATE1", tmpStartDate1);
-		map.put("v_ENDDATE2", tmpStartDate2);
-		map.put("v_STARTDATE1", tmpEndDate1);
-		map.put("v_STARTDATE2", tmpEndDate2);
+		map.put("v_ENDDATE1", tmpEndDate1);
+		map.put("v_ENDDATE2", tmpEndDate2);
+		map.put("v_STARTDATE1", tmpStartDate1);
+		map.put("v_STARTDATE2", tmpStartDate2);
 		map.put("v_PROCESSDATE1", tmpProcessDate1);
 		map.put("iv_APRFLAG", aprFlag);
 		map.put("alFlag", alFlag);

@@ -2647,14 +2647,15 @@
 				}).on("click", "#imgPopup", function(e){
 					var popupOption = "resizable=yes, scrollbars=yes, location=no, status=no";
 					var title = e.target.getAttribute("_filename");
-					var imgPopupWindow = window.open(title, title, popupOption);
+					var imgPopupWindow = window.open("", title, popupOption);
 					imgPopupWindow.document.write(
 							"<table style='width:100%; height:100%;'>"
 						   		+"<td style='vertical-align:middle;'>"
 						   			+"<img src='" + e.target.src + "' title='" + title + "' style='display:block; margin:auto;'/>"
 						   		+"</td>"
 				   		  +"</table>"
-					);
+					);					
+					imgPopupWindow.document.title = title;
 					imgPopupWindow.document.close();
 				});
 		    }
@@ -2670,18 +2671,18 @@
 		  		imgPopupBox.removeClass("imgPopupBoxOff imgPopupBoxMagnify").addClass("imgPopupBox");
 	    		imgPopupDiv.removeClass("imgPopupDivMagnify").addClass("imgPopupDiv");
 	    		imgPopup.removeClass("imgPopupOff imgPopupMagnify").addClass("imgPopup");
-	    		imgPopup.attr("src",e.target.src);
-	    		imgPopup.attr("_filename",e.target.getAttribute("_filename"));
-	    		imgPopup.attr("title",e.target.getAttribute("_filename"));
+	    		imgPopup.attr("src", e.target.src);
+	    		imgPopup.attr("_filename", e.target.getAttribute("_filename"));
+	    		imgPopup.attr("title", e.target.getAttribute("_filename"));
 	    		
 	    		var imgPB_LeftOffset = (window.innerWidth-imgPopupBox.width()) / 2;
 	    		var imgPB_TopOffset = (window.innerHeight-imgPopupBox.height()) / 2 + window.pageYOffset;
 	    		var imgP_LeftOffset = (imgPopup.parent().width()-imgPopup.width()) / 2;
 	    		
-	    		imgPopupBox.css("left", imgPB_LeftOffset);
-	    		imgPopupBox.css("top",imgPB_TopOffset);
-	    		imgPopup.css({"left": imgP_LeftOffset, "zoom": ""});
-	    		imgPopup.css("top",((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH);
+	    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
+	    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
+	    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+	    		
 	    		//imgPopup.css({"left": 0, "zoom": ""});
 	    		$("#thumbMagnifyBtn").removeClass("fa fa-minus-square").addClass("fa fa-plus-square");
 	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().removeClass("iPBInnerDiv_Top").addClass("iPBInnerDiv_TopOff");
@@ -2722,7 +2723,7 @@
 		    		$imgPopupBox.css("top", iPBTopOffset);
 	    		}
 	    		$imgPopupDiv.width(imgPopup.offsetWidth);	    		
-	    		$imgPopup.css("left",($imgPopup.parent().width()-$imgPopup.width()) / 2);
+	    		//$imgPopup.css("left",($imgPopup.parent().width()-$imgPopup.width()) / 2);
 	    		
 	    		var imgPopupDivSH = imgPopupDiv.scrollHeight;
 	    		var imgPopupDivCH = imgPopupDiv.clientHeight;
@@ -2744,7 +2745,7 @@
 	    		} */
 		  	}
 		  	
-		  	//썸네일 이미지 팝업박스를 숨겨준다.
+		  	//썸네일 이미지 팝업박스를 토글해준다.
 		  	function toggleImgPopupBox(e){
 		  		var imgPopupBox = $("#imgPopupBox");
 		  		var imgPopupDiv = $("#imgPopupDiv");
@@ -3015,6 +3016,25 @@
 		  				window.parent.frames["right"].location.href = "/ezPoll/pollVote.do?qstId=" + qstId;
 		  			}
 		  		}, 1000)
+		  	}
+		  	
+		  	//목록 버튼 눌렀을 때 리스트로 이동.
+		  	function gotoList(){
+		  		var gotoList = 1;
+	  			var params = "<c:out value='${params}'/>";
+		  		var pollType = 1;
+		  		if(params != null){
+		  			var paramsArr = params.split(",");
+		  			pollType = paramsArr[4];
+		  		}
+		  		
+		  		if(window.parent.frames["right"] !== undefined){
+			  		window.parent.frames["right"].location.href = "/ezPoll/pollList.do?qstId=" + qstId + "&gotoList=" + gotoList + "&params=" + params;
+		  		}
+		  		//알림 메일로 받았을 경우 처리.
+		  		else {
+			  		window.location.href = "/ezPoll/pollList.do?qstId=" + qstId + "&gotoList=" + gotoList + "&params=" + params;
+		  		}
 		  	}
 		  	
 		</script>
@@ -3301,11 +3321,14 @@
 						<td id="voteBtnFooter" class="voteTdBg" colspan="3" >
 							<div class="voteTdBg_layout">
 	                            <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
-	                                <div id="_finish" onclick="finishVote();">
+	                                <div id="_finish" class="voteBtnFooterInner" onclick="finishVote();">
 	                                    <img src="/images/verified.png" style="display:none; height:15px; width:15px; float:left; vertical-align:middle; margin:12px 5px; cursor: pointer;">				
 	                                    <div style="display:block; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
 	                                </div> 
 	                            </c:if>
+	                            <div id="_gotoList" class="voteBtnFooterInner" onclick="gotoList();">
+                                    <div style="display:block; cursor: pointer;"><spring:message code = 'ezCommunity.t168'/></div>
+                                </div>
 	                    	</div>        
 						</td>					
 					</tr>

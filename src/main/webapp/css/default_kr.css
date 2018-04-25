@@ -1759,7 +1759,7 @@ form{display:inline;margin:0}
 .right_tabpartContent .right_CopSearchLayout{padding:3px 0px 7px 0px; border-bottom:1px dashed #ddd; overflow:hidden;}
 .right_tabpartContent .right_CopSearchLayout .right_CopSearch{float:right; padding:0; margin:0;}
 .right_tabpartListLayout{table-layout:fixed; }
-.right_tabpartListLayout td{border-bottom:1px solid #cfcdcd;}
+.right_tabpartListLayout td{border-bottom:1px solid #ddd;}
 .right_tabpartList{margin:0; padding:14px 0px;}
 .right_tabpartList dt{float:left; width:84px; height:60px; margin-right:24px; border:1px solid #bab6b7; overflow:hidden;}
 .right_tabpartList dd{float:none; line-height:20px; height:20px; color:#666; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
