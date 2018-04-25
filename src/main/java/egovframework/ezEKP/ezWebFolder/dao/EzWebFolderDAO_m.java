@@ -6,8 +6,9 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
-
+import egovframework.ezEKP.ezWebFolder.vo.ShareSubVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
+import egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -16,27 +17,35 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	
 	public List<ShareVO> getSharingList(Map<String, Object> map) {
-		return (List<ShareVO>)list("EzWebFolderDAO_m.getSharingList", map);
+		return (List<ShareVO>) list("EzWebFolderDAO_m.getSharingList", map);
 	}
 	
 	public List<ShareVO> getSharedList(Map<String, Object> map) {
-		return (List<ShareVO>)list("EzWebFolderDAO_m.getSharedList", map);
+		return (List<ShareVO>) list("EzWebFolderDAO_m.getSharedList", map);
 	}
 	
 	public List<Map<String, Object>> getSharingCount(Map<String, Object> map) {
-		return (List<Map<String, Object>>)list("EzWebFolderDAO_m.getSharingCount", map);
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getSharingCount", map);
 	}
 	
 	public List<Map<String, Object>> getSharedCount(Map<String, Object> map) {
-		return (List<Map<String, Object>>)list("EzWebFolderDAO_m.getSharedCount", map);
+		return (List<Map<String, Object>>) list("EzWebFolderDAO_m.getSharedCount", map);
+	}
+	
+	public List<SimpleShareVO> getShareInfo(Map<String, Object> map) {
+		return (List<SimpleShareVO>) list("EzWebFolderDAO_m.getShareInfo", map);
+	}
+	
+	public List<ShareSubVO> getShareSubInfo(Map<String, Object> map) {
+		return (List<ShareSubVO>) list("EzWebFolderDAO_m.getShareSubInfo", map);
 	}
 	
 	public List<String> getUserNameList(Map<String, Object> map) {
-		return (List<String>)list("EzWebFolderDAO_m.getUserNameList", map);
+		return (List<String>) list("EzWebFolderDAO_m.getUserNameList", map);
 	}
 	
 	public List<String> getFolderUserIdList_D(Map<String, Object> map) {
-		return (List<String>)list("EzWebFolderDAO_m.getFolderUserIdList_D", map);
+		return (List<String>) list("EzWebFolderDAO_m.getFolderUserIdList_D", map);
 	}
 	
 	public int isShared(Map<String, Object> map) {
@@ -162,4 +171,5 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	public void moveFile(Map<String, Object> map) {
 		update("EzWebFolderDAO_m.moveFile", map);
 	}
+	
 }

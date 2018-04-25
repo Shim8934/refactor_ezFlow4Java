@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
+import egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -22,6 +23,8 @@ public interface EzWebFolderService_m {
 	public Map<String, Long> getSharingCount(String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
 	
 	public Map<String, Long> getSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
+	
+	public List<SimpleShareVO> getShareInfo(String sharerId, String folderFileId, String folderFileType, String primary, String offset, int tenantId) throws Exception;
 	
 	public List<Map<String, String>> getPermissionIdList(String userId, String deptId, String compId, int tenantId) throws Exception;
 	
@@ -84,4 +87,5 @@ public interface EzWebFolderService_m {
 	void movSubFolders(String userId, String folderType, String oldPath, String newPath, String timeUTC, String ownerId, int levelDistance, int tenantId) throws Exception;
 
 	void moveFile(String fileId, String folderId, int tenantId, String timeUTC) throws Exception;
+	
 }

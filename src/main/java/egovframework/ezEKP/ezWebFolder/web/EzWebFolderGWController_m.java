@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
+import egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -59,7 +60,6 @@ public class EzWebFolderGWController_m {
 	
 	/**
 	 * 공유한 리스트 조회
-	 *
 	 */
 	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSharingList(@PathVariable String userId, HttpServletRequest request) {
@@ -128,6 +128,108 @@ public class EzWebFolderGWController_m {
 		}
 		
 		logger.debug("getSharingList ended.");
+		return result;
+	}
+	
+	/**
+	 * 특정 폴더 또는 파일에 대한 공유 정보 조회
+	 */
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType}/all", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getSharingInfo(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) {
+		logger.debug("getSharingInfo started.");
+		
+		String serverName = orElse(request.getHeader("x-user-host"), "");
+		
+		logger.debug("serverName: " + serverName + " || userId: " + userId + " || folderFileId: " + folderFileId + " || folderFileType: " + folderFileType);
+		
+		JSONObject result = new JSONObject();
+		
+		// 요청  파라미터 비어있을 경우 에러 리턴
+		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("")) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+			logger.debug("parameter error. getSharingInfo ended.");
+			return result;
+		}
+		
+		try {
+			// TODO: commonInfoWeb 안타도록 수정
+			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId  = common.getTenantId();
+			String offset = common.getOffSet();
+			String lang   = common.getLang();
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			
+			List<SimpleShareVO> list = ezWebFolderService_m.getShareInfo("", folderFileId, folderFileType, userInfo.getPrimary(), offset, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", list);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		logger.debug("getSharingInfo ended.");
+		return result;
+	}
+	
+	/**
+	 * 특정 폴더 또는 파일에 대해 특정 사용자가 공유한 정보 조회
+	 */
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getUserSharingInfo(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) {
+		logger.debug("getUserSharingInfo started.");
+		
+		String serverName = orElse(request.getHeader("x-user-host"), "");
+		
+		logger.debug("serverName: " + serverName + " || userId: " + userId + " || folderFileId: " + folderFileId + " || folderFileType: " + folderFileType);
+		
+		JSONObject result = new JSONObject();
+		
+		// 요청  파라미터 비어있을 경우 에러 리턴
+		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("")) {
+			result.put("status", "error");
+			result.put("code", 1);
+			
+			logger.debug("parameter error. getUserSharingInfo ended.");
+			return result;
+		}
+		
+		try {
+			// TODO: commonInfoWeb 안타도록 수정
+			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId  = common.getTenantId();
+			String offset = common.getOffSet();
+			String lang   = common.getLang();
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			
+			List<SimpleShareVO> list = ezWebFolderService_m.getShareInfo(userId, folderFileId, folderFileType, userInfo.getPrimary(), offset, tenantId);
+			
+			SimpleShareVO shareInfo = null;
+			
+			if (list.size() > 0) {
+				shareInfo = list.get(0);
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", shareInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		logger.debug("getUserSharingInfo ended.");
 		return result;
 	}
 	

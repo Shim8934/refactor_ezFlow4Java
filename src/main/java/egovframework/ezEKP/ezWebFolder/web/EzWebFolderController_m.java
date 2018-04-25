@@ -101,21 +101,46 @@ public class EzWebFolderController_m {
 	
 	@RequestMapping(value="/ezWebFolder/addShareView.do")
 	public String addShareView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		model.addAttribute("type", "NEW");
+		logger.debug("addShareView started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String folderFileId = request.getParameter("folderFileId");
+		String folderFileType = request.getParameter("folderFileType");
+		
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
+		
+		if (((String) resultBody.get("status")).equals("ok")) {
+			JSONObject shareInfo = (JSONObject) resultBody.get("data");
+			
+			if (shareInfo == null) {
+				model.addAttribute("type", "NEW");
+			} else {
+				model.addAttribute("type", "EDIT");
+				model.addAttribute("shareInfo", shareInfo);
+			}
+		}
+		
 		model.addAttribute("userInfo", commonUtil.userInfo(loginCookie));
+		model.addAttribute("folderFileId", folderFileId);
+		model.addAttribute("folderFileType", folderFileType);
+		
+		logger.debug("addShareView ended.");
 		return "/ezWebFolder/shareUsersSelect";
 	}
 	
-	@RequestMapping(value="/ezWebFolder/addShare.do")
-	public @ResponseBody String addShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam) throws Exception {
+	@RequestMapping(value="/ezWebFolder/addShare.do", method=RequestMethod.POST)
+	public @ResponseBody String addShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody JSONObject jsonParam, Model model) throws Exception {
 		logger.debug("addShare started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", null, request, "post", jsonParam);
 		
+		model.addAttribute("result", resultBody);
+		
 		logger.debug("addShare ended.");
-		return resultBody.toString();
+		return  resultBody.toString();
 	}
 	
 	@RequestMapping(value="/ezWebFolder/trashCan.do")
