@@ -53,8 +53,13 @@
 			}
 			
 		}
-		function afterSuccess(code) {
+		function afterSuccess(code,obj) {
 			if (code == '0') {
+				if(obj == "move") {
+					alert("폴더이동에 성공하셨습니다.");
+				}else if(obj == "copy") {
+					alert("폴더복사에 성공하셨습니다.");
+				}
 				parent.folderList(folderType);
 				parent.returnFunction(folderType);
 				parent.DivPopUpHidden();
@@ -162,7 +167,7 @@
 				async: false,
 				success : function(data) {
 					var code = data.code;
-					afterSuccess(code);
+					afterSuccess(code,obj);
 					
 				},
 				error : function(error) {

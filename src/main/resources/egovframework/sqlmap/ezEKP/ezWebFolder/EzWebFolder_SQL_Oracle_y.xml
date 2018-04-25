@@ -119,9 +119,9 @@
 					f.USE_STATUS     		AS USE_STATUS   ,
 					f.CREATE_ID	    		AS CREATE_ID    ,
 					decode ( #primary# , '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
-					f.CREATE_DATE + NUMTODSINTERVAL(540, 'MINUTE') AS CREATE_DATE,
+					f.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 					f.UPDATE_ID	  			as UPDATE_ID,
-					f.UPDATE_DATE + NUMTODSINTERVAL(540, 'MINUTE') AS UPDATE_DATE,    	 
+					f.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,    	 
 					f.TENANT_ID    			as TENANT_ID,
 					type.TYPE_ICON   		as TYPE_ICON ,
 					folder.FOLDER_PATH	  	as FOLDER_PATH,
@@ -134,7 +134,7 @@
                         	 	select fav.target_id 
                         	 	from tbl_webfolder_favor fav
                                 where fav.USER_ID = #userId# and fav.tenant_id = #tenantId# and f.file_id = fav.target_id
-                                                and fav.target_type = 'F')),'a',1,2) as t
+                                                and fav.target_type = 'F')),'a',0,1) as t
                         from dual) as FAVORITE_STATUS,
 					decode (#primary#,'1','1','0') as FILESHARE_STATUS ,
 					decode (f.FILE_EXT , 'folder',0,1) as FOLDER_SORT,
@@ -156,9 +156,9 @@
 				folder.USE_STATUS   AS USE_STATUS   ,     
 				folder.CREATE_ID	AS CREATE_ID    ,     
 				decode ( #primary# , '1' , folder.CREATE_NAME1, folder.CREATE_NAME2) as CREATE_NAME1,
-				folder.CREATE_DATE + NUMTODSINTERVAL(540, 'MINUTE') AS CREATE_DATE,
+				folder.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 				folder.UPDATE_ID	  ,
-				folder.UPDATE_DATE + NUMTODSINTERVAL(540, 'MINUTE') AS UPDATE_DATE,  	
+				folder.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,  	
 				folder.TENANT_ID	as TENANT_ID    ,
 				type.TYPE_ICON		AS TYPE_ICON    ,     
 				folder.FOLDER_PATH  AS FOLDER_PATH  ,     
@@ -203,8 +203,8 @@
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(TO_DATE(t.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') >= #searchStartDate# 
-					AND TO_CHAR(t.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') <= #searchEndDate#)
+				(TO_CHAR(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
+					AND TO_CHAR(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
 			]]>
 		</isNotEqual>	
     </sql>
@@ -415,7 +415,7 @@
 			or tt.folder_id = ff.folder_id or ff.FOLDER_PATH like '%'||tt.folder_path||'%'
 			where ff.tenant_id = #tenantId#
 			and ff.owner_id = #comId#
-			and ff.use_status = 'Y'
+			and ff.USE_STATUS = 'Y'
 		union all 
 			 select ff.FOLDER_ID as id ,decode( ff.folder_upper , 'root', '##', ff.FOLDER_UPPER )as parent,
 				decode ( ff.FOLDER_UPPER , 'root', 1,0) as selected,
@@ -424,7 +424,7 @@
 			from tbl_webfolder_folder ff 
 			where ff.tenant_id = #tenantId#
 				and ff.owner_id = #comId#
-				and ff.use_status = 'Y' and ff.COMPANY_ID = #comId#
+				and ff.USE_STATUS = 'Y' and ff.COMPANY_ID = #comId#
                 and ff.folder_type = #folderType# and ff.folder_upper = 'root'
 			
 			
@@ -479,16 +479,16 @@
 		   		]]>	
 				<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 					<![CDATA[
-						(TO_CHAR(f.CREATE_DATE, 'YYYY-MM-DD') >= #searchStartDate# AND TO_CHAR(f.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+						(TO_CHAR(f.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') >= #searchStartDate# AND TO_CHAR(f.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') <= #searchEndDate#)
 					]]>
 				</isNotEqual>
 				<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 					<![CDATA[
-						type.TYPE_NAME LIKE ('%'|| #searchFileType#|| '%')
+						type.TYPE_NAME LIKE ('%'|| #searchFileType#||'%')
 		       		]]> 
 				</isNotEqual>
 			<![CDATA[
-				ORDER BY FOLDER_SORT
+				ORDER BY FOLDER_SORT, CREATE_DATE DESC
                 ) t 
 			where ROWNUM <= #pEnd# + #pStart#
               
@@ -517,6 +517,7 @@
 						ON FF.FOLDER_ID = FU.FOLDER_ID
 						AND FF.TENANT_ID = FU.TENANT_ID
 						AND FF.FOLDER_TYPE = 'C'
+						AND FF.USE_STATUS = 'Y'
 						AND FU.USER_ID IN 
 						<iterate property="idList" open="(" close=")" conjunction=",">
 							#idList[].id#
@@ -525,8 +526,8 @@
 					ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
 					JOIN TBL_WEBFOLDER_FILETYPE type 
 						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
-				 WHERE F.USE_STATUS = 'Y'
-				 AND F.TENANT_ID = #tenantId#
+				 WHERE f.USE_STATUS = 'Y'
+				 AND f.TENANT_ID = #tenantId#
    		</isEqual>
    		<isNotEqual property="folderType" compareValue="C">
 			<![CDATA[
@@ -537,7 +538,7 @@
 					tbl_webfolder_folder 
 				where folder_path like (#folderPath# || '%') 
 					and tenant_id = #tenantId# 
-					and folder_type = #folderType#) folder 
+					and folder_type = #folderType# and USE_STATUS = 'Y') folder 
 				on f.folder_id = folder.folder_id 
 				and folder.tenant_id = f.tenant_id
 				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
@@ -546,7 +547,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(TO_CHAR(f.CREATE_DATE, 'YYYY-MM-DD') >= #searchStartDate# AND TO_CHAR(f.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+				(TO_CHAR(f.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') >= #searchStartDate# AND TO_CHAR(f.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') <= #searchEndDate#)
  			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -555,7 +556,7 @@
        		]]> 
 		</isNotEqual>
 		<![CDATA[
-			ORDER BY FOLDER_SORT
+			ORDER BY FOLDER_SORT, CREATE_DATE DESC
 	            ) teat
 	                
 	           where ROWNUM <= #pEnd# + #pStart#
@@ -609,7 +610,7 @@
 		<include refid="searchAll"/>
 		<![CDATA[
 			
-				ORDER BY FOLDER_SORT
+				ORDER BY FOLDER_SORT, CREATE_DATE DESC
                 ) tear 
 				where ROWNUM <= #pEnd# + #pStart#
 	              
@@ -635,6 +636,7 @@
 						JOIN TBL_WEBFOLDER_FOLDERUSER FU
 						ON FF.FOLDER_ID = FU.FOLDER_ID
 						AND FF.TENANT_ID = FU.TENANT_ID
+						AND FF.USE_STATUS = 'Y'
 						AND FF.FOLDER_TYPE = 'C'
 						AND FU.USER_ID IN 
 						<iterate property="idList" open="(" close=")" conjunction=",">
@@ -657,7 +659,7 @@
 					where 
 							folder_path like (#folderPath# || '%') 
 						and tenant_id = #tenantId# 
-						and folder_type = #folderType#
+						and folder_type = #folderType# and use_status = 'Y'
 					) folder on f.folder_id = folder.folder_id
 					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
 					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
@@ -713,9 +715,9 @@
 			</isNotEqual>		
 			<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 				<![CDATA[
-					type.TYPE_NAME LIKE '%'|| #searchFileType# ||'%'
+					type.TYPE_NAME LIKE ('%'|| #searchFileType#||'%')
 	       		]]> 
-			</isNotEqual>		
+			</isNotEqual>	
 			<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 				<![CDATA[
 						folder.folder_name1 LIKE '%' || #searchFileName# || '%'
@@ -725,8 +727,8 @@
 			</isNotEqual>
 			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(TO_DATE(t.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') >= #searchStartDate# 
-					AND TO_CHAR(t.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') <= #searchEndDate#)
+					(TO_CHAR(folder.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') >= #searchStartDate# 
+					AND TO_CHAR(folder.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') <= #searchEndDate#)
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -765,6 +767,7 @@
 							folder_path like (#folderPath#||'%') 
 						and tenant_id = #tenantId# 
 						and folder_type = #folderType#
+						and use_status = 'Y'
 					) 
 						folder on folder.folder_id  = f.folder_id
 						
@@ -796,7 +799,7 @@
 					decode ( #primary# , '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
 					f.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 					f.TENANT_ID    ,
-					type.TYPE_NAME 	AS filetype_name    	   		
+					type.TYPE_NAME 			AS filetype_name    	   		
 			]]>	
 				<isEqual property="folderType" compareValue="C" >
 		   			FROM 
@@ -808,6 +811,7 @@
 						JOIN TBL_WEBFOLDER_FOLDERUSER FU
 						ON FF.FOLDER_ID = FU.FOLDER_ID
 						AND FF.TENANT_ID = FU.TENANT_ID
+						AND FF.USE_STATUS='Y'
 						AND FF.FOLDER_TYPE = 'C'
 						AND FU.USER_ID IN 
 						<iterate property="idList" open="(" close=")" conjunction=",">
@@ -817,8 +821,8 @@
 					ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
 					JOIN TBL_WEBFOLDER_FILETYPE type 
 						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
-				 WHERE F.USE_STATUS = 'Y'
-				 AND F.TENANT_ID = #tenantId#
+				 WHERE f.USE_STATUS = 'Y'
+				 AND f.TENANT_ID = #tenantId#
 		   		</isEqual>
 		   		<isNotEqual property="folderType" compareValue="C">
 					<![CDATA[
@@ -852,7 +856,7 @@
 					select *
 					from tbl_webfolder_folder  
 					where folder_id = #folderId# 
-					and tenant_id = #tenantId# ) t 
+					and tenant_id = #tenantId# and use_status='Y' ) t 
 				on t.folder_id  = f.folder_id
 				inner join  tbl_webfolder_filetype type 
 				ON type.TYPE_ID = f.TYPE_ID 
@@ -886,7 +890,7 @@
 						<iterate property="idList" open="(" close=")" conjunction=",">
 							#idList[].id#
 						</iterate>
-						WHERE FF.TENANT_ID = #tenantId# ) FP
+						WHERE FF.TENANT_ID = #tenantId# and use_status='Y' ) FP
 					ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
 					JOIN TBL_WEBFOLDER_FILETYPE type 
 						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
@@ -903,7 +907,8 @@
 						where 
 								folder_path like (#folderPath# || '%') 
 							and tenant_id = #tenantId# 
-							and folder_type = #folderType#) t on f.folder_id = t.folder_id
+							and folder_type = #folderType#
+							and use_status='Y') t on f.folder_id = t.folder_id
 					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  
 								and type.tenant_id = f.tenant_id 
 					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'

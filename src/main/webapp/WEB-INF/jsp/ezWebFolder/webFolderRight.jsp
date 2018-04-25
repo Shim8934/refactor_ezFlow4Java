@@ -154,6 +154,7 @@
 		// folderPath 는 숫자 
 		function namePath(folderPath,originalPath) {
 			var orginalPathElmt = document.getElementById("originalPath");
+			folderPath = folderPath.substring(1,folderPath.length-1);
 			path = originalPath.split("/");
 			originPath = folderPath.split("|");
 			$('#originalPath').empty();
@@ -172,6 +173,7 @@
 				detailName.textContent = path[i] ;
 				detailName.setAttribute("style", "font-size:18px; ");
 				nameTag.appendChild(detailName);
+				
 				if(path.length ==2) {
 					detailName = document.createElement("span");
 					detailName.textContent =  " <spring:message code='ezWebFolder.t291' /> "; // 모든파일
@@ -199,8 +201,8 @@
 			searchCreateName = "";
 			searchEndDate = "";
 			searchStartDate = "";
+			$("#idSelect").val("all");
 			getFileList(param);
-			$('#idSelect').ddslick('select', {index: 0 });
 		}
 		
 		function renderData(result) {
@@ -370,6 +372,7 @@
 	    
 	   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
    		function search(type) {
+   			
 	        if (type == "basic") {
 	
 	           if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
@@ -435,9 +438,11 @@
 		
 		function doLayerPopup(obj) {
 	        btn_PostDate_Clear();
-	        document.getElementById("searchExt").value = "";
-	        document.getElementById("searchFileName").value = "";
-	        document.getElementById("searchCreateName").value = "";
+	        $('#searchExt').val(searchExt);               
+            $('#searchFileName').val(searchFileName) ;
+            $('#searchCreateName').val(searchCreateName);
+            $('#Sdatepicker').val(searchStartDate);
+            $('#Edatepicker').val(searchEndDate) ;
 	    
 	        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
         	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"left\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
@@ -787,7 +792,7 @@
 		<div class="popupwrap4">
 			<table class="content" style="margin-top:10px;">  
 				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAddress.t312' /></th>
+					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' /></th>
 				</tr>
 				<tr>
 		           <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
@@ -816,7 +821,7 @@
 				<tr>
 					<td style="text-align:center;">
 						<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142' /></span></a>
-						<a class="imgbtn"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+						<a class="imgbtn" rel="modal:close"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
 					</td>
 				</tr>
 			</table>
