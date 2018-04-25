@@ -766,7 +766,7 @@
 		SELECT
 			#id#,                  #sharerId#,            DISPLAYNAME,
 			DISPLAYNAME2,          #folderFileId#,        #folderFileType#,
-			#userNameList#,        #shareDate#,           #tenantId#
+			#userNameList#,        TO_DATE(#shareDate#, 'YYYY-MM-DD HH24:MI:SS'),           #tenantId#
 		FROM TBL_USERMASTER
 		WHERE CN = #sharerId#
 		AND TENANT_ID = #tenantId#
@@ -839,9 +839,9 @@
 						#idList[].id#
 					</iterate>
 					AND TENANT_ID = #tenantId#
-				) AS UD
+				) UD
 			),
-			SHARE_DATE = #shareDate#
+			SHARE_DATE = TO_DATE(#shareDate#, 'YYYY-MM-DD HH24:MI:SS')
 		WHERE
 			SHARE_ID = #shareId#
 		AND
@@ -1084,7 +1084,7 @@
 		)
 		SELECT
 			#id#,                  #shareId#,             #userId#,
-			DISPLAYNAME,           DISPLAYNAME2,          #hideDate#,
+			DISPLAYNAME,           DISPLAYNAME2,          TO_DATE(#hideDate#, 'YYYY-MM-DD HH24:MI:SS'),
 			#tenantId#
 		FROM TBL_USERMASTER
 		WHERE CN = #userId#

@@ -661,7 +661,6 @@
 			refreshView();
 		}
        
-		var addShareDialogArguments = new Array();
 		function addShare() {
 			var selectedRows = rowModule.getSelectedRows();
 			var selectedLength = selectedRows.length;
@@ -671,14 +670,13 @@
 				return;
 			}
 			
-			if (selectedLength > 2) {
+			if (selectedLength > 1) {
 				alert("하나만 선택하세요.");
 				return;
 			}
 			
 			var folderFileId = rowModule.getRowInfo(selectedRows[0]).id;
 			var folderFileType = rowModule.getRowInfo(selectedRows[0]).type;
-			addShareDialogArguments[1] = refreshView;
             var OpenWin = window.open("/ezWebFolder/addShareView.do?folderFileId=" + folderFileId + "&folderFileType=" + folderFileType, "addShareView", GetOpenWindowfeature(610, 685));
             try { OpenWin.focus(); } catch (e) { }
 		}
