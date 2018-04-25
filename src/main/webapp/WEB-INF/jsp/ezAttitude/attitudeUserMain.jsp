@@ -66,8 +66,8 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid #017ddf;
-			    background: #018bfa;
+			    border: 1px solid #d1ddec;
+			    background: #d1ddec;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;
 			    padding: 0;
@@ -105,8 +105,8 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid #fffa00;
-			    background: #fffa00;
+			    border: 1px solid orange;
+			    background: orange;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;
 			    padding: 0;
@@ -397,7 +397,7 @@
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + "</td></tr>"); 
 						} else { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + (result[i].modAppl == '1' ? " <i class='fas fa-pencil-alt' style='color:#aefa9a;'></i>" : "") + "</td></tr>"); 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + (result[i].modAppl == '1' ? " <i class='fas fa-pencil-alt'></i>" : "") + "</td></tr>"); 
 						} 
 					}
 					setAttitudeSquare();
@@ -766,7 +766,7 @@
 					var tdClassName = "";
 					switch(tdTypeId)
 					{
-						case "A01": case "A03": case "A06": case "A08": //출근, 퇴근, 외출, 조퇴
+						case "A01": case "A03": case "A06": //출근, 퇴근, 외출, 조퇴
 						    tdClassName = "attiDefault";
 							break;
 						case "A04": case "A09": case "A10": //외근, 출장, 휴가
@@ -775,7 +775,7 @@
 						case "A07": //휴근
 							tdClassName = "attiWeekCom";
 							break;
-						case "A02": //지각
+						case "A02": case "A08": //지각
 							tdClassName = $(this).attr("modAppl") == 1 ? "attiModLate" : "attiLate";
 							break;
 						default: //나머지 휴가
