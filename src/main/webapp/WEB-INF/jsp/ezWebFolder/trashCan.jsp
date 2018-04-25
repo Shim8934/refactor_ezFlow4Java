@@ -27,7 +27,6 @@
 	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script type="text/javascript" src="/js/ezWebFolder/bnk.js" ></script>
     <script type="text/javascript">
    		var userInfo = {
    			lang:		"${userInfo.lang}"
@@ -36,6 +35,7 @@
 		var strErr		= "<spring:message code = 'ezWebFolder.t107'/>";
 		var strLang39	= "<spring:message code = 'ezWebFolder.t135'/>";
 		var strLang40 	= "<spring:message code = 'ezWebFolder.t136'/>";
+		var strLang41   = "<spring:message code = 'ezWebFolder.t137'/>";
 		var strLang42   = "<spring:message code = 'ezWebFolder.t138'/>";
 		
 		var currentPage = "1";
@@ -65,13 +65,6 @@
 			document.getElementById("listcount").value = blockSize;
 			renderFileList();
 			window.onresize();
-			$('#idSelect').ddslick({
-				onSelected: function(selectedElmt){
-					//callback function: do something with selectedData;
-					document.getElementById("idSelect").value = selectedElmt.selectedData["value"];
-					changeValue(document.getElementById("idSelect").value);
-				}
-			});
 	    };
 	    
 	    function changeValue(value) {
@@ -128,8 +121,8 @@
 					$('#tblFileList tr td').remove();
 					renderFileListElement(trashCanList);
 					makePageSelPage();
-					document.getElementById("mailBoxInfo").innerHTML = " - [파일 수 " + "<span style='color:#017BEC;'>" 
-					+ fileCnt +"</span>"+"/ 폴더 수 " + "<span style='color:#017BEC;'>" + folderCnt +" </span>" + strLang42 + "]";
+					document.getElementById("mailBoxInfo").innerHTML = " - [ 폴더 " + "<span style='color:#017BEC;'>" 
+					+ folderCnt +" </span>"+ strLang42 +" / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>" + strLang42 + "]";
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -385,6 +378,7 @@
 	        	searchOptionHidden();
 	        }
 	    }
+   	   
 	    function searchOptionHidden() {
 	        document.getElementById("layer_popup").style.display = "none";
 	        document.getElementById("SearchOption").setAttribute("mode", "off");
@@ -501,11 +495,17 @@
 					"folderList" :  folderList.toString()
 				},
 				success : function (data) {
-					alert("<spring:message code = 'ezWebFolder.t289'/>");
+					
+					if (data.code == 0) {
+						alert("<spring:message code = 'ezWebFolder.t289'/>");
+					} else if (data.code == 1) {
+						alert("<spring:message code = 'ezWebFolder.t290'/>");
+					}
+
 					refreshView();
 				},
 				error : function(error) {
-					alert("<spring:message code = 'ezWebFolder.t290'/>");
+						alert("<spring:message code = 'ezWebFolder.t292'/>");
 				}
 			})
        }
@@ -548,15 +548,15 @@
 			<li id=""><a onClick="filePermanentDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t19'/></span></a></li>
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
 			<li id="right" style="float:right;"><spring:message code='ezWebFolder.t215'/><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
-			<li id="right" style="float:right;">
-				<select class="select" id="idSelect" onchange="idChange(this.value);" style="width:100px; display:none;">
-					<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
-					<option value="document" data-imagesrc="/images/webfolder/msWord.png"       ><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
-					<option value="music" data-imagesrc="/images/webfolder/mp3.png"      ><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
-					<option value="video" data-imagesrc="/images/webfolder/mp4.png"      ><spring:message code='ezWebFolder.t194'/></option><!-- 영상 -->
-					<option value="image" data-imagesrc="/images/webfolder/jpg.png"      ><spring:message code='ezWebFolder.t195'/></option><!-- 그림 -->
-					<option value="folder" data-imagesrc="/images/webfolder/fldr.png"    ><spring:message code='ezWebFolder.t213'/></option><!-- 폴더 -->
-					<option value="zip" data-imagesrc="/images/webfolder/zip.png"        ><spring:message code='ezWebFolder.t196'/></option><!-- 압축파일 -->
+			<li id="right" style="float:left;">
+				<select class="select" id="idSelect" onchange="idChange(this.value);" style="width:100px;">
+					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
+					<option value="document"><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
+					<option value="music"><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
+					<option value="video"><spring:message code='ezWebFolder.t194'/></option><!-- 영상 -->
+					<option value="image"><spring:message code='ezWebFolder.t195'/></option><!-- 그림 -->
+					<option value="folder"><spring:message code='ezWebFolder.t213'/></option><!-- 폴더 -->
+					<option value="zip"><spring:message code='ezWebFolder.t196'/></option><!-- 압축파일 -->
 				</select>
 			
 			</li>

@@ -128,10 +128,6 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return update ("EzWebFolderDAO_m.restoreFolder", map);
 	}
 	
-	public int restoreAllFilesInFolder (Map<String, Object> map) {
-		return update ("EzWebFolderDAO_m.restoreAllFilesInFolder", map);
-	}
-	
 	public List<TrashCanVO> getFileListByFolderId (Map<String, Object> map) {
 		return (List<TrashCanVO>) list ("EzWebFolderDAO_m.getFileListByFolderId", map);
 	}

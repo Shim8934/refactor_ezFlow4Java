@@ -76,7 +76,7 @@ public interface EzWebFolderService_m {
 
 	public int restoreFolder (String folderPath, int tenantId, String userId, String companyId, String timeUTC) throws Exception;
 	
-	public void restoreTrashCan (String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC) throws Exception;
+	public int restoreTrashCan (String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC) throws Exception;
 	
 	public void restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC) throws Exception;
 

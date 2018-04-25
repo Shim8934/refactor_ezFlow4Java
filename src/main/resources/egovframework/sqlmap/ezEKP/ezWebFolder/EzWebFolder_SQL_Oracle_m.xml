@@ -12,19 +12,19 @@
 	
 	<!-- TrashFile resultMap -->
 	<resultMap id="trashCanVO" class="TrashCanVO">
-		<result property="trashCanId"      column="TRASHCAN_ID"        columnIndex="1"/>
-		<result property="trashCanName"    column="TRASHCAN_NAME"      columnIndex="2"/>
-		<result property="trashCanIconUrl" column="TRASHCAN_ICON_URL"  columnIndex="3"/>
-		<result property="trashCanPath"    column="TRASHCAN_PATH"      columnIndex="4"/>
-		<result property="trashCanExt"     column="TRASHCAN_EXT"       columnIndex="5"/>
-		<result property="trashCanSize"    column="TRASHCAN_SIZE"      columnIndex="6"/>
-		<result property="createId"        column="TRASHCAN_ID"        columnIndex="7"/>
-		<result property="createName1"     column="CREATE_NAME1"       columnIndex="8"/>
-		<result property="createName2"     column="CREATE_NAME2"       columnIndex="9"/>
-		<result property="createDate"      column="CREATE_DATE"        columnIndex="10"/>
-		<result property="updateDate"      column="UPDATE_DATE"        columnIndex="11"/>
-		<result property="fileFolderId"    column="FILE_FOLDER_ID"     columnIndex="12"/>
-		<result property="folderUpper"     column="FOLDER_UPPER"       columnIndex="13"/>
+		<result property="trashCanId"      column="TRASHCAN_ID"/>
+		<result property="trashCanName"    column="TRASHCAN_NAME"/>
+		<result property="trashCanIconUrl" column="TRASHCAN_ICON_URL"/>
+		<result property="trashCanPath"    column="TRASHCAN_PATH"/>
+		<result property="trashCanExt"     column="TRASHCAN_EXT"/>
+		<result property="trashCanSize"    column="TRASHCAN_SIZE"/>
+		<result property="createId"        column="TRASHCAN_ID"/>
+		<result property="createName1"     column="CREATE_NAME1"/>
+		<result property="createName2"     column="CREATE_NAME2"/>
+		<result property="createDate"      column="CREATE_DATE"/>
+		<result property="updateDate"      column="UPDATE_DATE"/>
+		<result property="fileFolderId"    column="FILE_FOLDER_ID"/>
+		<result property="folderUpper"     column="FOLDER_UPPER"/>
 	</resultMap>
 	
 	<!-- FavoriteFile resultMap -->
@@ -1100,12 +1100,12 @@
 	
 	<select id="EzWebFolderDAO_m.getTrashCanList" parameterClass="Map" resultMap="trashCanVO">
 		<![CDATA[
-		SELECT B.rnum, B.TRASHCAN_ID, B.TRASHCAN_NAME, B.TRASHCAN_PATH, 
+		SELECT B.rnum, B.TRASHCAN_ID, B.TRASHCAN_NAME, B.TRASHCAN_PATH, B.TRASHCAN_SIZE, 
 				B.TRASHCAN_ICON_URL, B.TRASHCAN_EXT, B.CREATE_DATE, B.UPDATE_DATE, 
 				B.CREATE_NAME1, B.CREATE_NAME2, B.FILE_FOLDER_ID, B.FOLDER_UPPER
 		FROM (
 			SELECT
-				rownum as rnum, A.TRASHCAN_ID, A.TRASHCAN_NAME, A.TRASHCAN_PATH, 
+				rownum as rnum, A.TRASHCAN_ID, A.TRASHCAN_NAME, A.TRASHCAN_PATH, A.TRASHCAN_SIZE,
 				A.TRASHCAN_ICON_URL, A.TRASHCAN_EXT, A.CREATE_DATE, A.UPDATE_DATE, 
 				A.CREATE_NAME1, A.CREATE_NAME2, A.FILE_FOLDER_ID, A.FOLDER_UPPER
 			FROM (
@@ -1116,9 +1116,9 @@
 					FOLDER.FOLDER_PATH 	AS TRASHCAN_PATH,
 					FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
 		            'folder'	AS TRASHCAN_EXT,
-					'0' 	AS TRASHCAN_SIZE,
-					FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
-					FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
+					TO_NUMBER('0') 	AS TRASHCAN_SIZE,
+					FOLDER.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+					FOLDER.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
 					FOLDER.CREATE_NAME1 AS CREATE_NAME1,
 		            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
 		            '' AS FILE_FOLDER_ID,
@@ -1145,7 +1145,7 @@
 				ELSE FILE_TYPE.TYPE_ICON 
 				END  AS TRASHCAN_ICON_URL,
 				FILES.FILE_EXT		AS TRASHCAN_EXT,
-				FILES.FILE_SIZE 	AS TRASHCAN_SIZE,
+				TO_NUMBER(FILES.FILE_SIZE) 	AS TRASHCAN_SIZE,
 				FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 				FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
 	            FILES.CREATE_NAME1 AS CREATE_NAME1,
@@ -1164,8 +1164,8 @@
 		<include refid="searchTrashCanFile"/>
 	 	<![CDATA[
 				) A
-			ORDER BY A.TRASHCAN_EXT,A.UPDATE_DATE DESC
-			WHERE rownum <= #pStart# + #pEnd# ) B
+			WHERE rownum <= #pStart# + #pEnd#
+			ORDER BY A.TRASHCAN_EXT,A.UPDATE_DATE DESC ) B
 		WHERE B.rnum >= #pStart# + 1
 		]]> 
 	</select>
@@ -1187,8 +1187,8 @@
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
 	            '' as FOLDER_UPPER
 			FROM
-				tbl_webfolder_file AS FILES
-				INNER JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+				tbl_webfolder_file  FILES
+				INNER JOIN TBL_WEBFOLDER_FILETYPE  FILE_TYPE
 				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
 			WHERE
 				FILES.USE_STATUS = 'T' AND
@@ -1204,7 +1204,7 @@
 		    SELECT
 				FOLDER.FOLDER_PATH
 			FROM 
-				TBL_WEBFOLDER_FOLDER AS FOLDER
+				TBL_WEBFOLDER_FOLDER  FOLDER
 			where
 				FOLDER.FOLDER_ID = #folderId# AND 
 				FOLDER.TENANT_ID = #tenantId#
@@ -1220,8 +1220,6 @@
 				FILE_ID    = #fileId#
 			AND
 				TENANT_ID  = #tenantId#
-			AND
-				COMPANY_ID = #companyId#	
 			AND 
 				USE_STATUS = 'T'
 		]]>
@@ -1243,10 +1241,10 @@
 		]]>
 	</delete>
 	
-	<delete id="EzWebFolderDAO_m.deleteAllFilesInFolder" parameterClass="Map">
-		<![CDATA[
-			DELETE
-			FROM
+	<select id="EzWebFolderDAO_m.selectAllFilesInFolder" parameterClass="Map" resultClass="String">
+		SELECT
+				f.FILE_ID
+    	 FROM
 				TBL_WEBFOLDER_FILE f JOIN
 					(
 					SELECT
@@ -1259,13 +1257,12 @@
 									TENANT_ID = #tenantId#
 								AND
 									COMPANY_ID = #companyId#	
-					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
+					)  d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
 			WHERE
 				f.TENANT_ID = #tenantId#
 			AND
 				f.USE_STATUS = 'T'
-		]]>
-	</delete>
+	</select>
 	
 	<select id="EzWebFolderDAO_m.getFolderByFolderPath"  parameterClass="Map" resultMap="trashCanVO">
 		<![CDATA[
@@ -1284,8 +1281,8 @@
 	            "" AS FILE_FOLDER_ID,
 	            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
 			FROM
-				TBL_WEBFOLDER_FOLDER AS FOLDER
-				LEFT JOIN TBL_WEBFOLDER_FILETYPE AS FILE_TYPE
+				TBL_WEBFOLDER_FOLDER  FOLDER
+				LEFT JOIN TBL_WEBFOLDER_FILETYPE  FILE_TYPE
 				ON FILE_TYPE.TYPE_NAME = 'folder'
 			WHERE
 				FOLDER_PATH LIKE #folderPath# || '%'
@@ -1300,8 +1297,8 @@
 		UPDATE
 			TBL_WEBFOLDER_FILE
 		SET
-			USE_STATUS = 'Y',
-			UPDATE_DATE = #timeUTC#
+			USE_STATUS = 'Y', 
+			UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 		WHERE
 			TENANT_ID = #tenantId#
 		AND
@@ -1315,7 +1312,7 @@
 			TBL_WEBFOLDER_FOLDER
 		SET
 			USE_STATUS = 'Y',
-			UPDATE_DATE = #timeUTC#
+			UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 		WHERE
 			TENANT_ID = #tenantId#
 		AND
@@ -1324,31 +1321,6 @@
 			DELETER_ID = #userId#
 		AND
 			COMPANY_ID = #companyId#	
-	</update>
-	
-	<update id="EzWebFolderDAO_m.restoreAllFilesInFolder" parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_WEBFOLDER_FILE f JOIN
-					(
-					SELECT
-					  *
-					FROM
-						TBL_WEBFOLDER_FOLDER
-								WHERE
-									FOLDER_PATH LIKE #folderPath# || '%'
-								AND
-									TENANT_ID = #tenantId#
-					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
-			SET
-				f.USE_STATUS = 'Y',
-				f.DELETER_ID = #userId#,
-				f.UPDATE_DATE = #timeUTC#
-			WHERE
-				f.TENANT_ID = #tenantId#
-			AND
-				f.USE_STATUS = 'T'
-		]]>
 	</update>
 	
 	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteVO">
@@ -1550,11 +1522,11 @@
 		SELECT
 			count(FILES.FILE_id )
 		FROM
-			tbl_webfolder_file AS FILES
+			tbl_webfolder_file FILES
 		WHERE
-			FILES.USE_STATUS = 'T' AND
-			FILES.DELETER_ID = #userId# AND
-			FILES.TENANT_ID = #tenantId#
+			USE_STATUS = 'T' AND
+			DELETER_ID = #userId# AND
+			TENANT_ID = #tenantId#
 		<include refid="searchTrashCanFile"/>
 	</select>
 	
@@ -1562,11 +1534,11 @@
 		SELECT
 			count(FOLDER.FOLDER_id)    
 		FROM
-			tbl_webfolder_folder AS FOLDER
+			tbl_webfolder_folder FOLDER
 		WHERE
-			FOLDER.USE_STATUS = 'T' AND
-			FOLDER.DELETER_ID = #userId# AND
-			FOLDER.TENANT_ID = #tenantId#
+			USE_STATUS = 'T' AND
+			DELETER_ID = #userId# AND
+			TENANT_ID = #tenantId#
 		<include refid="searchTrashCanFolder"/>
 	</select>
 	
@@ -1576,13 +1548,12 @@
 				tbl_webfolder_folder
 			SET
 				FOLDER_TYPE  = #folderType#,
-				UPDATE_DATE  = #updateTime#,
+				UPDATE_DATE  = TO_DATE(#updateTime#, 'YYYY-MM-DD HH24:MI:SS'), 
 				UPDATE_ID    = #userId#,
 				OWNER_ID     = #ownerId#,
 				FOLDER_PATH  = replace(FOLDER_PATH, #oldPath#, #newPath#),
 				FOLDER_LEVEL = FOLDER_LEVEL + #levelDistance#,
-				USE_STATUS = 'Y',
-				UPDATE_DATE = #timeUTC#
+				USE_STATUS = 'Y'
 			WHERE
 				FOLDER_PATH like #oldPath# || '_' ||  '%'
 			AND
@@ -1597,7 +1568,7 @@
 			SET
 				FOLDER_ID = #folderId#,
 				USE_STATUS = 'Y',
-				UPDATE_DATE = #timeUTC#
+				UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE
 				FILE_ID = #fileId#
 			AND
