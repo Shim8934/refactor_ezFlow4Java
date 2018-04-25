@@ -208,7 +208,7 @@ function PreviewRayerChange_photo(pGubun) {
             CurrentHeight = document.documentElement.clientHeight - 110;
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = "100%";
-            // 크로스 브라우징 중복 코드 삭제
+            /* 2018-04-25 홍승비 - 크로스 브라우징 중복 코드 삭제 */
             document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
             document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
             g_bPrevShow = false;
@@ -246,7 +246,7 @@ function PreviewRayerChange_photo(pGubun) {
             document.getElementById("ResizeBarW").style.width = CurrenWidth + "px";
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
-            // 크로스 브라우징 중복 코드 삭제
+            /* 2018-04-25 홍승비 - 크로스 브라우징 중복 코드 삭제 */
 			document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
 

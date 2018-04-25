@@ -650,6 +650,7 @@
 					var newimage = new Image();
 			        newimage.src = document.getElementById("mainimages").src;
 
+			        /* 2018-04-25 홍승비 - 기존 setTimeout을 이미지.onload로 수정 */
 			        newimage.onload = function() {
 					    var we = newimage.width;
 						var he = newimage.height;
