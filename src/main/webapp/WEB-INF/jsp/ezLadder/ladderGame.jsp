@@ -554,7 +554,7 @@
 				
 				html += '<div style="display: inline-block;">';
 				html += '<div style="display: block; float:left; border:1px solid #ddd;padding-left: 0px;margin-left: 20px; width: 1310px; border-radius: 3px;">';
-				html += '<textarea id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow: hidden; outline: none; border: none; resize: none; padding: 5px; width: 1300px; height: 14px;">';
+				html += '<textarea id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow: hidden; outline: none; border: none; resize: none; padding: 5px; width: 1300px; height: 20px;" maxlength="500">';
 				html += editTemp + '</textarea></div></div>';
 				html += '<div style="padding: 5px 0px 5px 20px; clear: both;">';
 				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '"><spring:message code="ezLadder.t109" /></button>';

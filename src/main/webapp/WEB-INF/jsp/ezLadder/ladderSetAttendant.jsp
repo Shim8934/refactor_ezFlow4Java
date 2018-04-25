@@ -16,7 +16,6 @@
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezLadder/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezLadder/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/ezLadder/ladderSetting.js"></script>
         <script type="text/javascript" src="/js/Common.js"></script>        
         <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
         <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
@@ -183,7 +182,7 @@
 	                /* pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>"; */
 	                /* pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>"; */
-	                pparsingXML = pparsingXML + "<DATA9><![CDATA[" + strPic + "]]></DATA9>";
+	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strPic + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                
 	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -801,7 +800,11 @@
 						strpic = "";
 					} else {
 						strId = userlist["userId"][i];
-						strpic = userlist["pic"][i];
+						if(!userlist["pic"][i]) {
+							strpic = "/images/ezLadder/icon_defaultAttendant.png";
+						} else {
+							strpic = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userlist["pic"][i];
+						}
 					}
 					strName = userlist["userName"][i];
 					strName2 = userlist["userName2"][i];
@@ -1337,7 +1340,7 @@
 		        	}
 		        	rtn["userId"][i] = GetAttribute(totalRows[i], "DATA1");
 		        	if(!!GetAttribute(totalRows[i], "DATA4")) {
-			        	rtn["pic"][i] = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + GetAttribute(totalRows[i], "DATA4");
+			        	rtn["pic"][i] = GetAttribute(totalRows[i], "DATA4");
 		        	} else {
 		        		rtn["pic"][i] = "";
 		        	}
