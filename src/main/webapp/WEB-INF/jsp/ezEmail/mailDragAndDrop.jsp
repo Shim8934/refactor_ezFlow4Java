@@ -42,6 +42,7 @@
 		    var isfileup = false;
 		    var isbigyn = "N";
 			var alertCnt = 1;
+			var currUid = 0;
 		    
 		    function onDrop(evt) {
 		       
@@ -290,7 +291,7 @@
 		        
 		        isfileup = false;
 		    }
-			
+		
 		    function uploadComplete2(evt) {
 		        document.getElementById('prog_bar').style.width = "0%";
 		        document.getElementById('prog_num').innerHTML = "0";
@@ -331,7 +332,7 @@
 		        
 		        isfileup = false;
 		    }
-		
+		    
 		    function FileUpdataAfterComplete() {
 		        var filelist = SelectNodes(AttatchReturnValue, "DATA/ROW");
 		        
@@ -340,14 +341,16 @@
 		            var FileURL = SelectSingleNodeValue(filelist[i], "URL");
 		            var FileBIG = SelectSingleNodeValue(filelist[i], "BIG");
 		            var FileITEMID = SelectSingleNodeValue(filelist[i], "ITEMID");
+		            var g_url = SelectSingleNodeValue(filelist[i], "UID");
 		            
-		            SetAttachItemLink(FilePath, FileURL, FileBIG, FileITEMID);
+		            SetAttachItemLink(FilePath, FileURL, FileBIG, FileITEMID, g_url);
 		        }
 		        
 		        AttatchReturnValue = null;
 		    }
-		    
-		    function SetAttachItemLink(filepath, url, big, itemid) {
+
+		    /* 2018-04-25 김유진 - 첨부 파일 업로드 시 필요한 prop를 set해주는 메서드 수정 */
+		    function SetAttachItemLink(filepath, url, big, itemid, g_url) {
 		        var TRRows = document.getElementById("lstAttachLink").getElementsByTagName("TR");
 		        
 		        for (var i = 0; i < TRRows.length; i++) {
@@ -356,24 +359,64 @@
 		               
 		        		if (GetAttribute(TRRows.item(i), "value") == filepath) {
 		                	var index = parseInt(TRRows.item(i).getAttribute("_fileindex"));
-		                	var pUrl = url;
 		                	
-		                	if (big == "N") {
-		                		pUrl = url + "&index=0";
-		                	}
-		                	
-		                    TRRows.item(i).childNodes.item(1).setAttribute("_href", pUrl);
+		                    currUid = g_url;
+		                    TRRows.item(i).childNodes.item(1).setAttribute("_href", url);
+		                    TRRows.item(i).setAttribute("_uid", g_url);
 		                    TRRows.item(i).setAttribute("_big", big);
 		                    TRRows.item(i).setAttribute("_itemid", itemid);
 		                    TRRows.item(i).childNodes.item(1).setAttribute("style", "cursor:pointer");
-		                    TRRows.item(i).childNodes.item(1).onclick = function () { FileDownload(this); };
+		                    TRRows.item(i).childNodes.item(1).onclick = function () { 
+			                    var fileIndex = $(this).closest('tr').attr('_fileindex');
+		                    	var fileUid = $(this).closest('tr').attr('_uid');
+		                    	
+		                    	FileDownload(this, fileIndex, parseInt(fileUid)); 
+		                    };
 		                }
+		        		
+		        		if (GetAttribute(TRRows.item(i), "_uid") < g_url) {
+		        			TRRows.item(i).setAttribute("_uid", g_url);
+		        		}
 		            }
 		        }
 		    }
+		 	
+		    /* 2018-04-25 김유진 - 첨부 파일삭제시 file 업로드 임시보관함 uid 업데이트 메서드 */
+		    function updateItemUid() {
+		    	var TRRows = document.getElementById("lstAttachLink").getElementsByTagName("TR");
+		    	var nextUid = parseInt(currUid) + 1;
+		    	
+		    	for (var i = 0; i < TRRows.length; i++) {
+		    		
+		    		if (GetAttribute(TRRows.item(i), "value") != null && GetAttribute(TRRows.item(i), "value") != "") {
+			    		
+		    			if (GetAttribute(TRRows.item(i), "_uid") == currUid) {
+		        			TRRows.item(i).setAttribute("_uid", nextUid);
+		        		} 
+		    		}
+		    	}
+
+		    	currUid = nextUid;
+		    }
 		    
-		    function FileDownload(obj) {
-		    	window.parent.DownloadAttach(GetAttribute(obj, "_href"));
+		    /* 2018-04-25 김유진 - 일반첨부시 해당 index와 uid를 받아서 download href를 넘겨주는 메서드 */
+		    function FileDownload(obj, fileIndex, fileUid) {
+				var emptyStr = "";
+				
+		    	if (typeof (fileIndex) == "undefined" || fileIndex == null) {
+		    		fileIndex = emptyStr;
+		    	} else if (typeof (fileUid) == "undefiend" || fileUid == null) {
+		    		fileUid = emptyStr;
+		    	}
+		    	
+		    	if (fileIndex != emptyStr && fileUid != emptyStr) {
+		    		var href = GetAttribute(obj, "_href");
+		    		href = href + "&index=" + fileIndex + "&uid=" + fileUid;
+		    		window.parent.DownloadAttach(href);
+		    	} else {
+			    	window.parent.DownloadAttach(GetAttribute(obj, "_href"));
+		    	}
+		    	
 		    }
 		    
 		    function uploadFailed(evt) {
@@ -445,6 +488,9 @@
 				                	$('#filelist tr:eq(' + j + ')').attr("_fileindex",$('#filelist tr:eq(' + j + ')').attr("_fileindex") - 1);
 			                	}
 			                }
+		                    
+		                 	// 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
+			                updateItemUid();
 		                }                
 		                
 		                document.getElementById("filelist").removeChild(document.getElementById("filelist").childNodes[i]);
