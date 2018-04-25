@@ -45,11 +45,11 @@ var strLang44 = "사다리 종류";
 var strLang45 = "참여자";
 var strLang46 = "이 사다리 게임을 삭제하시겠습니까?";
 var strLang47 = "이 사다리 게임을 시작하시겠습니까?";
-
-	/** boh */
-var strLang100 = "검색결과";
-var strLang101 = "꽝 더하기";
-var strLang102 = "꽝 빼기";
-var strLang103 = "꽝";
-var strLang104 = "개";
-var strLang105 = "원";
+var strLang48 = "꽝!";
+var strLang49 = "패스";
+var strLang50 = "검색결과";
+var strLang51 = "꽝 더하기";
+var strLang52 = "꽝 빼기";
+var strLang53 = "꽝";
+var strLang54 = "개";
+var strLang55 = "원";
