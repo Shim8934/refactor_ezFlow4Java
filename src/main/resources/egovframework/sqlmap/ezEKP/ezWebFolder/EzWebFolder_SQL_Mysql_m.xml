@@ -1248,31 +1248,6 @@
 			COMPANY_ID = #companyId#	
 	</update>
 	
-	<update id="EzWebFolderDAO_m.restoreAllFilesInFolder" parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_WEBFOLDER_FILE f JOIN
-					(
-					SELECT
-					  *
-					FROM
-						TBL_WEBFOLDER_FOLDER
-								WHERE
-									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
-								AND
-									TENANT_ID = #tenantId#
-					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
-			SET
-				f.USE_STATUS = 'Y',
-				f.DELETER_ID = #userId#,
-				f.UPDATE_DATE = #timeUTC#
-			WHERE
-				f.TENANT_ID = #tenantId#
-			AND
-				f.USE_STATUS = 'T'
-		]]>
-	</update>
-	
 	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteVO">
 		<![CDATA[
 			SELECT

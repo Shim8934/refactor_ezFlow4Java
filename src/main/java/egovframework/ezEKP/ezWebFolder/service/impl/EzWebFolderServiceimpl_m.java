@@ -830,7 +830,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		for (String file : searchFiles) {
 			map.put("fileId", file);
-			result = ezWebFolderDAO.restoreAllFilesInFolder(map);
+			result = ezWebFolderDAO.restoreFile(map);
 		}
 		
 		
