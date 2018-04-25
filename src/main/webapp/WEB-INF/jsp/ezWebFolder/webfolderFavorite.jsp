@@ -359,8 +359,7 @@
 		}
 		
 		function setMailBoxInfo(folderCount, fileCount) {
-			dom.mailBoxInfo.innerHTML = " - [" + message.total + " <spring:message code='ezWebFolder.t277'/> " + "<span style='color:#017BEC;'>" 
-			+ fileCount + "</span>, " + message.total + " <spring:message code='ezWebFolder.t276'/> " + "<span style='color:#017BEC;'>" + folderCount +" </span>" + message.count + "]";
+			dom.mailBoxInfo.innerHTML = " - [ <spring:message code='ezWebFolder.t276'/> <span style='color:#017BEC;'>" + folderCount +" </span> / <spring:message code='ezWebFolder.t277'/> <span style='color:#017BEC;'>" + fileCount + "</span>" + message.count + "]";
 			$("#listcount").val(blockSize).prop("selected", true);
 		}
 		
@@ -503,7 +502,7 @@
 				
 				nameColumn.textContent = resultJson[columnMap.name];
 				creatorColumn.textContent = resultJson[columnMap.creatorName];
-				createDateColumn.textContent = resultJson[columnMap.createDate];//.substring(0, 10);
+				createDateColumn.textContent = resultJson[columnMap.createDate].substring(0, 10);
 				absolutePathColumn.textContent = resultJson[columnMap.path];
 				sizeColumn.style.textAlign = "center;"
 				
@@ -842,7 +841,7 @@
     
     <span id="mailBoxInfo"></span>
 	
-	<div id="originalPathWrapper" style="height:40px;">
+	<div id="originalPathWrapper" style="height:40px; display: none;">
 		<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;" id ="originalPath"></span>
 	</div>
 	<div id="mainmenu2" favoritemode>

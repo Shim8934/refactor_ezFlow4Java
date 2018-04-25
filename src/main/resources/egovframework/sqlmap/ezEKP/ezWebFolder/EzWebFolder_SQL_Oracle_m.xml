@@ -1387,7 +1387,7 @@
 					<include refid="searchFavorite"/>
 		<![CDATA[
 				    ORDER BY
-				        TARGET_TYPE ASC, CREATE_DATE DESC
+				        TARGET_TYPE ASC, CREATE_DATE DESC, TARGET_NAME ASC
 			    ) ORDER_RESULT
 			    WHERE ROWNUM <= (#startIndex# + #listCount#)
 			)
