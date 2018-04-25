@@ -1558,6 +1558,7 @@ public class EzJournalGWController {
 		LOGGER.debug("ezJournal G/W getOption started.");
 		
 		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
@@ -1565,9 +1566,14 @@ public class EzJournalGWController {
 			
 			JournalEnvVO journalOpt = ezJournalService.getUserJournalEnv(userId, info.getTenantId());
 			
+			List<DeptViewVO> deptList = ezJournalService.getCheifBoss(userId, info.getTenantId());
+			
+			data.put("journalOpt", journalOpt);
+			data.put("deptList", deptList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", journalOpt);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");

@@ -19,6 +19,7 @@
 	    	var deptNames = [];
 	    	var userDeptId;
 	    	var userDeptName;
+	    	var userAddIds = [];
 	    
 	    	//사원 세팅
 	    	function setSelectedUser(userId, userName){
@@ -94,6 +95,9 @@
 				    		<c:when test="${dept.mine eq 'yes' }">
 				    			userDeptName = '${fn:replace(dept.deptName, "'", "\\'") }';
 				    			userDeptId = '${fn:replace(dept.deptId, "'", "\\'") }';
+					    	</c:when>
+				    		<c:when test="${dept.mine eq 'add' }">
+				    			userAddIds.push('${fn:replace(dept.deptId, "'", "\\'") }');
 					    	</c:when>
 					    	<c:otherwise>
 								deptNames.push('${fn:replace(dept.deptName, "'", "\\'") }');

@@ -513,6 +513,19 @@
 			u.CN = #userId#
 		and 
 			u.TENANT_ID = #tenantId#
+		union
+		select
+			d.DISPLAYNAME$lang$ dept_name,
+			d.CN dept_id,
+			'add' as mine
+		from 
+			jmocha.tbl_deptmaster d
+		right join 
+			jmocha.tbl_addjobmaster a on (d.CN = a.deptid and a.TENANT_ID = d.TENANT_ID)
+		where 
+			a.CN = #userId#
+		and 
+			a.TENANT_ID = #tenantId#
 		order by dept_name
 	</select>
 
@@ -1381,5 +1394,54 @@
 		select journal_content,journal_title from tbl_journal
 		where tenant_id=#tenantId#
 		and journal_id in ($journalIdS$)
+	</select>
+	
+	<!-- 내가 부서장인 부서 리스트 -->
+	<select id="selectCheifBossList" parameterClass="map" resultMap="deptViewMap">
+		select 
+		d.CN as id,
+		'##' as parent,
+		d.extensionattribute2 as companyId,
+		d.DISPLAYNAME as text,
+		case d.CN
+			when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and cn=#userId# and dept_id = d.CN)
+			then 'Y'
+			else 'N'
+		end as isComp,
+		case d.CN
+			when (select department from tbl_usermaster where tenant_id = #tenantId# and cn=#userId#) then 'yes'
+			else 'no'
+		end as myDept
+		from
+			tbl_deptmaster d 
+		where 
+			d.tenant_id = #tenantId#
+		and 	
+			d.EXTENSIONATTRIBUTE9 = #userId#
+		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME
+	</select>
+	
+	<!-- 내가 부서장인 부서의 하위 부서 리스트 -->
+	<select id="selectCheifBoss" parameterClass="map" resultMap="deptViewMap">
+		select 
+		d.CN as id,
+		d.extensionattribute1 as parent,
+		d.extensionattribute2 as companyId,
+		d.DISPLAYNAME as text,
+		case d.CN
+			when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and cn=#userId# and dept_id = d.CN)
+			then 'Y'
+			else 'N'
+		end as isComp,
+		case d.CN
+			when (select department from tbl_usermaster where tenant_id = #tenantId# and cn=#userId#) then 'yes'
+			else 'no'
+		end as myDept
+		from
+			tbl_deptmaster d 
+		where 
+			d.tenant_id = #tenantId#
+		and DEPT_CD_PATH like concat('%,',#deptId#,',%') 
+		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME
 	</select>
 </sqlMap>
