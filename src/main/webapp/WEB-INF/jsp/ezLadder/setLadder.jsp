@@ -179,9 +179,9 @@
 					if(len > 0 && bombnum > len) {
 						bombnum = len;
 					}
-					html += "<div style='float: right; padding-top: 7px;'><div id='addBomb' class='typeOpbtn' style='margin-right: 10px;' onselectstart='return false'>" + strLang101 + "</div>";	
-					html += "<div id='cutBomb' class='typeOpbtn' style='margin-right: 30px;' onselectstart='return false'>" + strLang102 + "</div>";
-					html += "<div id='bombnum' style='display: inline-block;'>" + strLang103 + "<span style='margin: 0px 5px 0px 15px;'>" + bombnum + "</span>" + strLang104 + "</div></div>";
+					html += "<div style='float: right; padding-top: 7px;'><div id='addBomb' class='typeOpbtn' style='margin-right: 10px;' onselectstart='return false'>" + strLang51 + "</div>";	
+					html += "<div id='cutBomb' class='typeOpbtn' style='margin-right: 30px;' onselectstart='return false'>" + strLang52 + "</div>";
+					html += "<div id='bombnum' style='display: inline-block;'>" + strLang53 + "<span style='margin: 0px 5px 0px 15px;'>" + bombnum + "</span>" + strLang54 + "</div></div>";
 					$("#itemList").empty();
 					for(var i = 0; i < len; i++) {
 						$("#itemList").append("<li class='item'><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' /><input name='items' style='display: none;' _itemindex='" + i + "' ></li>");
@@ -196,7 +196,7 @@
 				} else {
 					if(ladderType == "1") {
 						getMoney();
-						html += "<div id='totalmoney' style='float: right; line-height: 50px;'>$<span style='margin: 0px 5px 0px 15px;'>" + totalmoney + "</span>" + strLang105 + "</div>";
+						html += "<div id='totalmoney' style='float: right; line-height: 50px;'>$<span style='margin: 0px 5px 0px 15px;'>" + totalmoney + "</span>" + strLang55 + "</div>";
 					}
 					$("#itemList").empty();
 					for(var i = 0; i < len; i++) {
@@ -302,7 +302,7 @@
 				if(ladderType == "0") {
 					bombnum = 0;
 					lineInfo.forEach(function(line, index) {
-						if(line["item"] == "<spring:message code='ezLadder.t056' />") {
+						if(line["item"] == strLang48) {
 							bombnum++;
 						}
 					});
@@ -773,7 +773,7 @@
 				
 				items.forEach(function(item, index) {
 					if(ladderType == "0") {
-						items[index] = index < bombnum ? "<spring:message code='ezLadder.t056'/>" : "<spring:message code='ezLadder.t057'/>";
+						items[index] = index < bombnum ? strLang48 : strLang49;
 					} else if(ladderType == "2") {
 						items[index] = index + 1;
 					}
