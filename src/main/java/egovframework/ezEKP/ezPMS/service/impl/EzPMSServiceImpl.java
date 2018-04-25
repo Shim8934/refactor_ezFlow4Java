@@ -33,6 +33,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
+import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -144,7 +145,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				map.put("status", "W");
 			}
 						
-			map.put("workingDay", workingDays);
+			//map.put("workingDay", workingDays);
+			map.put("workingDay", 0);
 			map.put("restDueday", workingDays);
 			
 			//프로젝트 총괄담당자 정보 불러오기
@@ -300,9 +302,85 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int addTask(ProjectTaskVO task) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList) {
+		LOGGER.debug("Service addTask started.");
+		Long taskId = (long) 0;
+		
+		try {
+			
+			String projectId = taskVO.getProjectId()+"";
+			
+			// 정렬 순서 구하기
+			int sortOrder = ezPMSDAO.getSortOrder(taskVO.getGroupId()+"");
+			taskVO.setSortOrder(sortOrder);
+			
+			// 투입률 총합
+			float sumPctinput = 0;
+			
+			taskVO.setRealProgress((float) 0);
+			taskVO.setMemberCount(taskMemberList.size());
+			
+			//workingday 계산
+			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanStartDate());
+			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanEndDate());
+			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getWriteDate());
+			
+			int calWorkingDays = getWorkinDays(startDate, endDate);
+			
+			int createAndEndDateComp = createDate.compareTo(endDate);
+			
+			if(createAndEndDateComp > 0) {
+				taskVO.setStatus("L");
+			} else {
+				taskVO.setStatus("W");
+			}
+			
+			//업무 총괄담당자 정보 불러오기
+			ProjectMemberVO headManagerInfo = getUserInfo(taskVO.getHeadManagerId(), taskVO.getTenantId(), "user");
+			taskVO.setHeadManagerName(headManagerInfo.getUserName());
+			taskVO.setHeadManagerName2(headManagerInfo.getUserName2());
+			taskVO.setHeadManagerDeptname(headManagerInfo.getUserDeptname());
+			taskVO.setHeadManagerDeptname2(headManagerInfo.getUserDeptname2());
+			
+			taskId = ezPMSDAO.addTask(taskVO);
+			
+			for(int i=0;i<taskMemberList.size();i++) {
+				TaskMemberVO taskMemberVO = taskMemberList.get(i);
+				taskMemberVO.setTaskId(taskId);
+				sumPctinput += taskMemberVO.getPctinput();
+				ezPMSDAO.addTaskMember(taskMemberVO);
+			}
+			
+			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
+			
+			HashMap<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("projectId", projectId);
+			map1.put("workingday", taskWorkingday);
+			ezPMSDAO.updateProjectWorkingday(map1);
+			
+			HashMap<String, Object> map2 = new HashMap<String, Object>();
+			
+			// 가중치 계산
+			if(taskVO.getWeight() == -1) {
+				int projectWorkingday = ezPMSDAO.getProjectWorkingday(projectId);
+				float calWeight = (taskWorkingday / projectWorkingday) * 100;
+				System.out.println(">>>>>>>>>>>>>>" + calWeight + " = " + taskWorkingday + " + " + projectWorkingday);
+				map2.put("weight", calWeight);
+			} else {
+				map2.put("weight", taskVO.getWeight());
+			}
+			map2.put("taskId", taskId);
+			map2.put("workingday", taskWorkingday);
+			
+			ezPMSDAO.updateTaskWDNW(map2);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("Service addTask ended.");
+		
+		return taskId.intValue();
 	}
 
 	@Override

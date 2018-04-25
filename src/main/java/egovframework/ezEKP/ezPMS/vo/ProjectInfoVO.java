@@ -73,7 +73,7 @@ public class ProjectInfoVO {
 	    private String creatorDeptname2;
 
 	    // 업무일 
-	    private int workingday;
+	    private float workingday;
 
 	    // 남은 기한 
 	    private int restDueday;
@@ -220,11 +220,11 @@ public class ProjectInfoVO {
 	        this.creatorDeptname2 = creatorDeptname2;
 	    }
 
-	    public int getWorkingday() {
+	    public float getWorkingday() {
 	        return workingday;
 	    }
 
-	    public void setWorkingday(int workingday) {
+	    public void setWorkingday(float workingday) {
 	        this.workingday = workingday;
 	    }
 
