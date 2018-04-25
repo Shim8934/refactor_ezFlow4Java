@@ -71,12 +71,12 @@ $(function(){
 </head>
 <body class="mainbody">
 	<h1>프로젝트 관리</h1>
-	<div id="mainmenu">	<button onclick="goToProjectDetails()">project</button>
-	<button id="newProject" onclick="addNewProject()">new project</button>
-	<button id="changeToMemo" class="viewType">메모형식</button>
-	<button id="changeToBoard" class="viewType">게시판형식</button>
+	<div id="mainmenu">
+		<a class="imgbtn" id="projectDetail" onclick="goToProjectDetails()"><span>project</span></a>
+		<a class="imgbtn" id="newProject" onclick="addNewProject()"><span>new project</span></a>
+		<a class="imgbtn viewType" id="cancel" onclick="changeToMemo()"><span>메모형식</span></a>
+		<a class="imgbtn viewType" id="cancel" onclick="changeToBoard()"><span>게시판형식</span></a>
 	</div>
-
 	
 	<span id="MailListRayer" style="border: 0px solid blue; width: 100%; height: 484px; vertical-align: top; overflow: hidden; display: inline-block;"> 
 	<div style="width: 100%; height: 434px;" id="divList">
