@@ -105,21 +105,21 @@
 		</script>
 	</head>
 	<body class="popup">
-		<h1>유형 추가/수정</h1>
+		<h1><spring:message code='ezAttitude.t39' /></h1>
 		<table class="content"> 
   			<tr> 
-    			<th><spring:message code='ezAttitude.t40' /></th> 
+    			<th><spring:message code='ezAttitude.t35' /></th> 
     			<td style="padding:0">
     				<table width="100%">
 			        	<tr class="primary">
 <%-- 			          		<th><c:out value = '${langPrimary}' /></th> --%>
 			          		<th><spring:message code='ezAttitude.t41' /></th>
-			          		<td><input id="typeName" type="text" style="width:98%" value="<c:out value = '${typeInfo.typeName}' />"></td>
+			          		<td><input id="typeName" type="text" style="width:100%" value="<c:out value = '${typeInfo.typeName}' />"></td>
 			        	</tr>
 			        	<tr class="secondary">
 <%-- 			          		<th><c:out value = '${langSecondary}' /></th> --%>
 			          		<th><spring:message code='ezAttitude.t42' /></th>
-			          		<td><input id="typeName2" type="text" style="width:98%" value="<c:out value = '${typeInfo.typeName2}' />"></td>
+			          		<td><input id="typeName2" type="text" style="width:100%" value="<c:out value = '${typeInfo.typeName2}' />"></td>
 			        	</tr>
     				</table>
     			</td> 

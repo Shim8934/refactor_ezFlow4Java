@@ -50,7 +50,7 @@
                 if (result.length != null && result.lenth != 0) {
 	                for (var i = 0; i < result.length; i++) {
 	                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='cursor: pointer;'>";
-	                    html += "<td style='width:50%;color:gray;'>" + result[i].typeName + "</td>";
+	                    html += "<td style='width:50%;color:gray;padding-left:15px;'>" + result[i].typeName + "</td>";
 	                    html += "<td style='width:25%;color:gray;text-align: center;'><input type='radio' name='useRadio"+ i +"' value='1' /></td>";
 	                    html += "<td style='width:25%;color:gray;text-align: center;'><input type='radio' name='useRadio"+ i +"' value='0' /></td>";
 	                    html += "</tr>";
@@ -156,7 +156,7 @@
                     <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 100%;">
                         <table class="mainlist" style="width: 100%;">
                             <tr>
-                                <th style="width: 50%;"><span><spring:message code='ezAttitude.t35' /></span></th>
+                                <th style="width: 50%;padding-left:15px;"><span><spring:message code='ezAttitude.t35' /></span></th>
                                 <th style="width: 21%;text-align: center;"><span><spring:message code='ezAttitude.t36' /></span></th>
                                 <th style="width: 29%;text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
                             </tr>
