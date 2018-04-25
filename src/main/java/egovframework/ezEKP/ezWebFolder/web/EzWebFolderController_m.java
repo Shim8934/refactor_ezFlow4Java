@@ -174,33 +174,24 @@ public class EzWebFolderController_m {
 		logger.debug("getTrashCanList Started.");
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url = gwServerUrl + "/rest/ezwebfolder/" + user.getId() + "/getTrashCanList";
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("tenantId", user.getTenantId())
-										.queryParam("offset", user.getOffset())
-										.queryParam("currPage", Integer.parseInt(orElse(request.getParameter("currPage"), "1")))                   
-										.queryParam("listCount", Integer.parseInt(orElse(request.getParameter("listCount"), "0")))
-										.queryParam("searchExt", orElse(request.getParameter("searchExt"), "" ))               
-										.queryParam("searchFileName", orElse(request.getParameter("searchFileName"), ""))               
-										.queryParam("searchCreateName", orElse(request.getParameter("searchCreateName"), ""))               
-										.queryParam("searchFileType", orElse(request.getParameter("searchFileType"), ""))               
-										.queryParam("endrollStartDate", orElse(request.getParameter("enrollStartDate"), ""))               
-										.queryParam("endrollEndDate", orElse(request.getParameter("enrollEndDate"), ""))               
-										.queryParam("delStartDate", orElse(request.getParameter("delStartDate"), ""))               
-										.queryParam("delEndDate", orElse(request.getParameter("delEndDate"), ""));               
+		Map<String, Object> param = new HashMap<String, Object>();
 		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		param.put("tenantId", user.getTenantId());
+		param.put("offset", user.getOffset());
+		param.put("currPage", Integer.parseInt(orElse(request.getParameter("currPage"), "1")));                 
+		param.put("listCount", Integer.parseInt(orElse(request.getParameter("listCount"), "0")));
+		param.put("searchExt", orElse(request.getParameter("searchExt"), "" ));               
+		param.put("searchFileName", orElse(request.getParameter("searchFileName"), ""));               
+		param.put("searchCreateName", orElse(request.getParameter("searchCreateName"), ""));               
+		param.put("searchFileType", orElse(request.getParameter("searchFileType"), ""));               
+		param.put("endrollStartDate", orElse(request.getParameter("enrollStartDate"), ""));               
+		param.put("endrollEndDate", orElse(request.getParameter("enrollEndDate"), ""));               
+		param.put("delStartDate", orElse(request.getParameter("delStartDate"), ""));               
+		param.put("delEndDate", orElse(request.getParameter("delEndDate"), ""));   
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		RestTemplate rest = new RestTemplate();
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + user.getId() + "/getTrashCanList", param, request, "post", null);
 		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -240,27 +231,18 @@ public class EzWebFolderController_m {
 		logger.debug("pemanentDeleteFile Started.");
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url = gwServerUrl + "/rest/ezwebfolder/file-permanent-delete";
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("tenantId", user.getTenantId())
-										.queryParam("offset", user.getOffset())
-										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
-										.queryParam("fileList", orElse(request.getParameter("fileList"), ""))
-										.queryParam("folderList", orElse(request.getParameter("folderList"), ""));
+		Map<String, Object> param = new HashMap<String, Object>();
 		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		param.put("tenantId", user.getTenantId());
+		param.put("offset", user.getOffset());
+		param.put("userId", user.getId());                 
+		param.put("lang", user.getLang());
+		param.put("fileList", orElse(request.getParameter("fileList"), ""));               
+		param.put("folderList", orElse(request.getParameter("folderList"), ""));               
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		RestTemplate rest = new RestTemplate();
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/file-permanent-delete", param, request, "delete", null);
 		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		String status = resultBody.get("status").toString();
 		
 		if (!status.equals("ok")) {
@@ -278,28 +260,18 @@ public class EzWebFolderController_m {
 		logger.debug("restoreFile Started");
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url = gwServerUrl + "/rest/ezwebfolder/restore-trashCan";
 		
+		Map<String, Object> param = new HashMap<String, Object>();
 		
-		UriComponentsBuilder butilder = UriComponentsBuilder.fromHttpUrl(url)
-											.queryParam("tenantId", user.getTenantId())
-											.queryParam("userId", user.getId())
-											.queryParam("offset", user.getOffset())
-											.queryParam("companyId", user.getCompanyID())
-											.queryParam("fileList", orElse(request.getParameter("fileList"), ""))
-											.queryParam("folderList", orElse(request.getParameter("folderList"), ""));
+		param.put("tenantId", user.getTenantId());
+		param.put("offset", user.getOffset());
+		param.put("userId", user.getId());                 
+		param.put("companyId", user.getCompanyID());
+		param.put("fileList", orElse(request.getParameter("fileList"), ""));               
+		param.put("folderList", orElse(request.getParameter("folderList"), ""));               
 		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(butilder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/restore-trashCan", param, request, "post", null);
+
 		String status = resultBody.get("status").toString();
 		
 		if (!status.equals("ok")) {
@@ -404,28 +376,19 @@ public class EzWebFolderController_m {
 		logger.debug("request.getParameter(fileList)=" + request.getParameter("fileList"));
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url = gwServerUrl + "/rest/ezwebfolder/move-TrashCan";
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("tenantId", user.getTenantId())
-										.queryParam("offset", user.getOffset())
-										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
-										.queryParam("folderId", orElse(request.getParameter("folderId"), ""))
-										.queryParam("fileList", orElse(request.getParameter("fileList"), ""))
-										.queryParam("folderList", orElse(request.getParameter("folderList"), ""));
+		Map<String, Object> param = new HashMap<String, Object>();
 		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		param.put("tenantId", user.getTenantId());
+		param.put("offset", user.getOffset());
+		param.put("userId", user.getId());                 
+		param.put("lang", user.getLang());
+		param.put("folderId", orElse(request.getParameter("folderId"), ""));               
+		param.put("fileList", orElse(request.getParameter("fileList"), ""));               
+		param.put("folderList", orElse(request.getParameter("folderList"), ""));               
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		RestTemplate rest = new RestTemplate();
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/move-TrashCan", param, request, "post", null);
 		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		String status = resultBody.get("status").toString();
 		
 		if (!status.equals("ok")) {

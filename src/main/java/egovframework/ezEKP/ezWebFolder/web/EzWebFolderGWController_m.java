@@ -708,7 +708,7 @@ public class EzWebFolderGWController_m {
 	public JSONObject getTrashCanList (@PathVariable String userId, HttpServletRequest request, Locale locale) {
 		String offset =  orElse(request.getParameter("offset"), "");
 		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
-		String serverName =  orElse(request.getHeader("host-name"), "");
+		String serverName =  orElse(request.getHeader("x-user-host"), "");
 		
 		int listCount 	        = Integer.parseInt(orElse(request.getParameter("listCount"), "10"));
 		int currPage 	        = Integer.parseInt(orElse(request.getParameter("currPage"), "1"));
@@ -816,7 +816,7 @@ public class EzWebFolderGWController_m {
 		String fileList     = orElse(request.getParameter("fileList"), "");
 		String folderList   = orElse(request.getParameter("folderList"), "");
 		String userId       = orElse(request.getParameter("userId"), "");
-		String serverName   = orElse(request.getHeader("host-name"), "");
+		String serverName   = orElse(request.getHeader("x-user-host"), "");
 		String lang         = orElse(request.getParameter("lang"), "");
 		
 		logger.debug("filePermanetDelete Started.");
@@ -859,7 +859,7 @@ public class EzWebFolderGWController_m {
 		String offset= orElse(request.getParameter("offset"), "");
 		String companyId = orElse(request.getParameter("companyId"), "");
 		String userId = orElse(request.getParameter("userId"), "");
-		String serverName   = orElse(request.getHeader("host-name"), "");
+		String serverName   = orElse(request.getHeader("x-user-host"), "");
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
 
@@ -914,7 +914,7 @@ public class EzWebFolderGWController_m {
 		String lang = orElse(request.getParameter("lang"), "");
 		String userId = orElse(request.getParameter("userId"), "");
 		String folderId = orElse(request.getParameter("folderId"), "");
-		String serverName   = orElse(request.getHeader("host-name"), "");
+		String serverName   = orElse(request.getHeader("x-user-host"), "");
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
 		
