@@ -640,7 +640,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			}
 		} else {
 			isDeleted = 1;
-			throw new FileNotFoundException(fileVO.getFileName());
+			LOGGER.error("File is Not Found:" + fileVO.getFileName());
 		}
 		
 		return isDeleted;
