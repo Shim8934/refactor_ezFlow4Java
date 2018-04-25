@@ -429,6 +429,10 @@
 							'<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code="ezLadder.t106" /></div></button>' +
 							'<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code="ezLadder.t107" /></div></button>'
 					);
+					$("#immediatelyDirection").removeAttr("disabled").css({"background" : "darkcyan", "cursor" : "pointer"});
+					$("#autoDirection").removeAttr("disabled").css({"background" : "salmon", "cursor" : "pointer"});
+					$("#direcTextDiv").css("color", "#000000")
+					
 					var html = '';
 					_ladderLine.forEach(function(line, index) {
 						html += '<li><div id="drag' + index + '" style="cursor: pointer;">';
@@ -720,12 +724,18 @@
 						<div class="ladderPreList_right" style="width: 100%; min-width: 800px; border: 0; height: auto;">
 							<h2 style="border: 1px solid #DDD;overflow: hidden">
 								<p class="ladderGame_title"><c:out value="${vo.title}" /></p>
-								<c:if test="${vo.status eq 1}">
-									<div class="directionBtn">
-										<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code='ezLadder.t106' /></div></button>
-										<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code='ezLadder.t107' /></div></button>
-									</div>
-								</c:if>	
+								<div class="directionBtn">
+									<c:choose>
+										<c:when test="${vo.status eq 0}">
+											<button id="immediatelyDirection" class="direcDiv" disabled="disabled" align="center" style="right: 5px; background: #dddddd; cursor: default;"><div class="direcTextDiv" style="color: #999999"><spring:message code='ezLadder.t106' /></div></button>
+											<button id="autoDirection" class="direcDiv" disabled="disabled" align="center" style="right: 160px; background: #dddddd; cursor: default;"><div class="direcTextDiv" style="color: #999999"><spring:message code='ezLadder.t107' /></div></button>
+										</c:when>
+										<c:otherwise>
+											<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code='ezLadder.t106' /></div></button>
+											<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code='ezLadder.t107' /></div></button>
+										</c:otherwise>
+									</c:choose>
+								</div>
 							</h2>
 							<!-- <div class="ladderGame_view">
 								
