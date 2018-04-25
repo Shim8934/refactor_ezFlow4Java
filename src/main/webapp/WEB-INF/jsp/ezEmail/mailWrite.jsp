@@ -834,7 +834,7 @@
 	                	scheme += ":" + document.location.port;
 	                }
 		            
-		            // 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
+		            /* 2018-04-25 김유진 - 파일 첨부시 href에 넣어줄 aitem 수정 */
 		            for (var i = 0; i < filelist.length; i++) {
 		                filename = SelectSingleNodeValue(filelist[i], "NAME");
 		                path = SelectSingleNodeValue(filelist[i], "PATH");
