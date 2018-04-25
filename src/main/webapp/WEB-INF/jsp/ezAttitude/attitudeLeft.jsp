@@ -9,7 +9,7 @@
 		<title>left_attitude</title>
 		<link rel="stylesheet" href="/css/email_tree.css" type="text/css"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
-		<link rel="stylesheet" href="/css/main.css" type="text/css"/>
+		<link rel="stylesheet" href="/css/main.css" type="text/css"/>		
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>
