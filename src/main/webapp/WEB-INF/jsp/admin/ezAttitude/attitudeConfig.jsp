@@ -123,7 +123,7 @@
 	            			attitudeModAppl : $('input[name=attitude_mod_appl]:checked').val(),
 	            			closedDateAttitude : $('input[name=close_date_attitude]:checked').val()},
 	            	success : function() {
-	            		alert('설정이 변경되었습니다.');
+	            		alert('저장되었습니다.');
 	            		company_change();
 	            	},
 	            	error : function() {
