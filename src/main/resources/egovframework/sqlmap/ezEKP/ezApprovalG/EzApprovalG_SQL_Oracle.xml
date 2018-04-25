@@ -824,7 +824,7 @@
   							isPublic,
   							orgDocID,
   							receivedDate,
-							to_date(A.startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,  							urgentApproval,
+							to_date(startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,  							urgentApproval,
   							writerDeptID,
   							writerDeptName,
   							writerDeptName2,
@@ -905,28 +905,31 @@
         	  AND	    
 					AprState != '001'
 			 </isEqual>
-			 ) AS A
+			 )  A
           	WHERE 
           		1=1
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 	    			AND 
 						#v_PSUBQUERY#
 	  		</isGreaterThan>
-	    			$v_PORDERBYSUB$	 
-				<![CDATA[
-						AND 
+	  			<![CDATA[
+	  				AND 
 							ROWNUM <= #v_PQUERYSIZESUB#
-								) B 
 				]]>
+	    			$v_PORDERBYSUB$	 
+				
+						
+								) B 
+				<![CDATA[
+					where
+								ROWNUM <= #v_PQUERYSIZEMAIN# 
+								]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
-					<![CDATA[
-					AND
-								ROWNUM <= #v_PQUERYSIZEMAIN# 
-								]]>
+					
 		</isEqual>
 		
 		<isEqual property="v_PLISTTYPE" compareValue="2">
@@ -24434,34 +24437,34 @@
 			AND 
 				APRTYPE <> '015'
 			]]>
-			) AS A
+			)  A
 		WHERE
 			1 = 1
 		AND 
 		<isEqual property="v_COUNTTYPE" compareValue="SIXHGAP">
-			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 6/(24)
+			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') - 6/(24)
 		</isEqual>
 		
 		<isEqual property="v_COUNTTYPE" compareValue="ONEDGAP">
-			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 1
+			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') - 1
 		AND 
-			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 6/(24) > A.STARTDATE
+			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') - 6/(24) > A.STARTDATE
 		</isEqual>
 		
 		<isEqual property="v_COUNTTYPE" compareValue="SEVENDGAP">
-			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 7
+			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') - 7
 		AND 
-			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 1 > A.STARTDATE
+			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') - 1 > A.STARTDATE
 		</isEqual>
 		
 		<isEqual property="v_COUNTTYPE" compareValue="ONEMGAP">
-			A.STARTDATE >= ADD_MONTHS(#v_NOWTIME# , 1)
+			A.STARTDATE >= ADD_MONTHS(TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') , 1)
 		AND 
-			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 7 > A.STARTDATE
+			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') - 7 > A.STARTDATE
 		</isEqual>
 		
 		<isEqual property="v_COUNTTYPE" compareValue="OTHER">
-			ADD_MONTHS(#v_NOWTIME# , 1) > A.STARTDATE
+			ADD_MONTHS(TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') , 1) > A.STARTDATE
 		</isEqual>
 	</select>
 </sqlMap>
