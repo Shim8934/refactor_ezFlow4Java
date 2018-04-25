@@ -112,7 +112,7 @@
 	   						window.close();
 		   				},
 		   				error : function() {
-		   					alert("권한을 추가하는 도중 에러 발생");
+		   					alert("권한을 등록하는 도중 에러 발생");
 		   				}
 		   			});
 	    		} else {
