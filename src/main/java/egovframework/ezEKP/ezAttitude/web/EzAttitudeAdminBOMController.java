@@ -270,7 +270,7 @@ public class EzAttitudeAdminBOMController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/companies/" + request.getParameter("companyId") + "/attitudetypes";//TODO
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + request.getParameter("companyId") + "/attitudetypes";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1856,7 +1856,6 @@ public class EzAttitudeAdminBOMController {
 	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthorDept.do")
 	public String selectAttitudeAuthorDept(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception{
 		LOGGER.debug("selectAttitudeAuthorDept started");
-		/*
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String companyId = request.getParameter("companyId");
@@ -1903,6 +1902,8 @@ public class EzAttitudeAdminBOMController {
 				} else{
 					dept.put("icon", "icon-dept");
 				}
+				
+				//만약 자신의 부서가 있다면 해당 부서의 내용으로 넣는다.
 				if (dept.get("myDept").equals("yes")) {
 					JSONObject state = new JSONObject();
 					state.put("opened", "true");
@@ -1912,7 +1913,7 @@ public class EzAttitudeAdminBOMController {
 			}
 			model.addAttribute("deptList", deptList);
 		}
-		*/
+		/*
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -1949,6 +1950,7 @@ public class EzAttitudeAdminBOMController {
 			}
 			model.addAttribute("deptList", deptList);
 		}
+		 */
 		
 		LOGGER.debug("selectAttitudeAuthorDept ended");
 		

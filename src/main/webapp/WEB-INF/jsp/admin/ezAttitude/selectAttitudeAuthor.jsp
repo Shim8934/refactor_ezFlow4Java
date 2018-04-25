@@ -57,10 +57,11 @@
 			    });
 	   		}
 	   		
-	   		function goScroll(){
-				var offset = $("#opensol").offset();
-	   	        $('html, body').animate({scrollTop : offset.top}, 400);
-	   		}
+// 	   		function goScroll(){
+// // 				var offset = $("#opensol").offset();
+// 				var offset = $(".jstree-clicked").offset();
+// 	   	        $('html, body').animate({scrollTop : offset.top}, 400);
+// 	   		}
 	   		
 	   		//사원 리스트 뿌리기
 	   		function setUserList(key,value,deptName){
