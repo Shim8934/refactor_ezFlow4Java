@@ -800,7 +800,11 @@
 						strpic = "";
 					} else {
 						strId = userlist["userId"][i];
-						strpic = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userlist["pic"][i];
+						if(!userlist["pic"][i]) {
+							strpic = "/images/ezLadder/icon_defaultAttendant.png";
+						} else {
+							strpic = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userlist["pic"][i];
+						}
 					}
 					strName = userlist["userName"][i];
 					strName2 = userlist["userName2"][i];
