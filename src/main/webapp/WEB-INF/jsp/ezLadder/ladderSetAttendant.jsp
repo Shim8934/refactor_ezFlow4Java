@@ -16,7 +16,6 @@
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezLadder/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezLadder/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/ezLadder/ladderSetting.js"></script>
         <script type="text/javascript" src="/js/Common.js"></script>        
         <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
         <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>

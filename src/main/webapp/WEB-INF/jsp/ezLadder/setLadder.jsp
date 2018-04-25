@@ -604,7 +604,7 @@
 							attendants["name"][totalLen] = alluser["userName"][j];
 							attendants["name2"][totalLen] = alluser["userName2"][j];
 							attendants["pic"][totalLen] = alluser["pic"][j];
-							attendants["order"][totalLen] = totalLen++;
+							attendants["order"][totalLen] = totalLen;
 							j++;
 						} else if(overlapuser["temporder"].indexOf(i) != -1) {
 							if(!overlapuser["userId"][k] || type == "anony") {
@@ -616,9 +616,11 @@
 							attendants["name"][totalLen] = overlapuser["userName"][k];
 							attendants["name2"][totalLen] = overlapuser["userName2"][k];
 							attendants["pic"][totalLen] = overlapuser["pic"][k];
-							attendants["order"][totalLen] = totalLen++;
+							attendants["order"][totalLen] = totalLen;
 							k++;
 						}
+						items[totalLen] = "";
+						totalLen++;
 					}
 					
 					setAttendantsView();
@@ -655,6 +657,9 @@
 						attendants["name2"][order] = userdata["userName2"][order];
 						attendants["pic"][order] = userdata["pic"][order];
 						attendants["order"][order] = order; 
+						if(items.length - 1 < order) {
+							items[order] = "";
+						}
 					}
 				}
 				/* 사람 수 제한시 */
