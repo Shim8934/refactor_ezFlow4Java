@@ -83,7 +83,7 @@
         }
     }
 
-    //하위부서?
+    //하위부서
     function RequestData(pNodeID, pTreeID) {
         var TreeIdx = pNodeID;
         var treeNode = new TreeNode();
@@ -356,15 +356,15 @@
 
     //엑셀내려받기 버튼 클릭시
     function btnexportexcel_onclick() {
-        document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
+//         document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
         
-        if (document.getElementById("saveExcelData").value == "") {
-        	alert("<spring:message code='ezStatistics.t1019' />");
-        	return ;
-        }
+//         if (document.getElementById("saveExcelData").value == "") {
+//         	alert("<spring:message code='ezStatistics.t1019' />");
+//         	return ;
+//         }
         
-        document.getElementById("formAgent").target = "saveExcel";
-        document.getElementById("formAgent").submit();
+//         document.getElementById("formAgent").target = "saveExcel";
+//         document.getElementById("formAgent").submit();
     }
 
     //검색
@@ -459,17 +459,6 @@
             }
         }
     }
-    //?
-//     function SelelctDept_complite(deptid){
-//    		if (deptid != "") {
-//             bSearch = true;
-//             g_xmlHTTP = createXMLHttpRequest();
-//             var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-//             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-//             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-//             g_xmlHTTP.send(strQuery);
-//         }
-//    }
     
     function event_getDeptFullTree() {
         if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
@@ -552,45 +541,16 @@
         	}
         });
     }
-//     function event_displayUserList2() {
-//         if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-//             if (g_xmlHTTP.statusText == "OK") {
-//                 if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0)
-//                     alert("<spring:message code='ezStatistics.t1016' />");
-//                 else {
-//                     var retXml = createXmlDom();
 
-//                     if (document.getElementById("UserList").innerHTML != "")
-//                         document.getElementById("UserList").innerHTML = "";
-
-//                     var headerData = createXmlDom();
-//                     headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
-//                     if (g_xmlHTTP.responseText != "") {
-//                         if (CrossYN()) {
-//                             var xmlRtn = g_xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-//                             var Node = headerData.importNode(xmlRtn, true);
-//                             headerData.documentElement.appendChild(Node);
-//                         }
-//                         else {
-//                             var xmlRtn = g_xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-//                             headerData.documentElement.appendChild(xmlRtn);
-//                         }
-//                     }
-//                     var pUserList = new ListView();
-//                     pUserList.SetID("lvUserList");
-//                     pUserList.SetRowOnClick("getmailstatistics");
-//                     pUserList.SetSelectFlag(false);
-//                     pUserList.SetHeightFree(true);
-//                     pUserList.DataSource(headerData);
-//                     pUserList.DataBind("UserList");
-//                 }
-//             }
-//             else
-//                 alert(g_xmlHTTP.statusText)
-
-//             g_xmlHTTP = null;
-//         }
-//     }
+	//근태유형,년도 변경시 이벤트
+	function selectBox_change() {	
+	    var pUserList = new ListView();
+	    pUserList.LoadFromID("lvUserList");
+	    
+    	if (pUserList.GetSelectedRows()[0] != undefined) {
+    		getAttitudeStatistics();
+    	}
+	}
 
     </script>
 </head>
@@ -616,7 +576,7 @@
             <td style="width: 99%">
                 <span id="topmenu" style="width: 500px">
                 <spring:message code='ezStatistics.t1002' /> : 
-                <select id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
+                <select id="selyear" onchange="makeoptionyear(); selectBox_change()"></select>
                     <spring:message code='ezStatistics.t55' />
 		            &nbsp;&nbsp;
 					<select id="searchopt">
@@ -627,7 +587,7 @@
                     <a class="imgbtn" style="vertical-align: middle"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
                     &nbsp;&nbsp;
                     	근태유형 : 
-	                <select name="attitudeType" id="attitudeType" style="margin-top:4px; padding-right:40px;">
+	                <select name="attitudeType" id="attitudeType" onchange="selectBox_change()" style="margin-top:4px; padding-right:40px;">
 		      		</select>
                 </span>
             </td>
