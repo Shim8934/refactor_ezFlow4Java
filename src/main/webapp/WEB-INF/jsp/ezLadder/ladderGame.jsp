@@ -322,6 +322,7 @@
 			}
 			
 			$("canvas").attr("width", (wInfo * wSize));
+			$("#ladderLineBox").css("padding-bottom", "50px");
 			
 			ladderDrawInitSettingVar();
 			setDefaultLad();
