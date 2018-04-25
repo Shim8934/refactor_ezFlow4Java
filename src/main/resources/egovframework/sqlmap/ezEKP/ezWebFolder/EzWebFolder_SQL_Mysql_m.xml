@@ -1167,7 +1167,7 @@
 		]]>
 	</delete>
 	
-	<select id="EzWebFolderDAO_m.selectAllFilesInFolder" parameterMap="Map" resultClass="String">
+	<select id="EzWebFolderDAO_m.selectAllFilesInFolder" parameterClass="Map" resultClass="String">
 		SELECT
 				f.FILE_ID
     	 FROM
