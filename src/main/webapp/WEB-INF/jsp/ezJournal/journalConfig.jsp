@@ -10,8 +10,23 @@
     <link rel="stylesheet" href="/css/Tab.css" type="text/css" />
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+    <link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
+	<script type="text/javascript" src="/js/jstree/jstree.js"></script>
     <script type="text/javascript">
+    var treeContent = ${deptList};
+    
     	$(document).ready(function() {
+    		$('#treeview').on('changed.jstree', function (e, data) {
+		     	var id = data.instance.get_node(data.selected).id;
+		     	var deptName = $("#"+id+" a:first").text();
+			  }).jstree({ 
+				'core'   : {'data' : treeContent, 'multiple' : false},
+				'plugins': ["wholerow"],
+				'themes' : {'responsive' : true}
+			}).on('ready.jstree', function(e, data) {
+				var offset = $(".jstree-clicked").offset();
+	   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+		    });
     	//	$("#HContent").val("<c:out value="${journalEnv.previewHcontent}"/>").attr("selected", "selected");
     	//	$("#WContent").val("<c:out value="${journalEnv.previewWcontent}"/>").attr("selected", "selected");
     	});
@@ -290,7 +305,7 @@
 		<table class="content" style="width: 650px;margin-top:5px; border: none;">
 			<tr>
 				<td style="min-width: 350px;">
-					<div id="deptList" style="height: 350px; width: 100%; overflow: auto;">
+					<div id="treeview" style="height: 350px; width: 100%; overflow: auto;">
 					</div>
 				</td>
 				<td style="min-width: 60px; border-top: none; border-bottom: none;">

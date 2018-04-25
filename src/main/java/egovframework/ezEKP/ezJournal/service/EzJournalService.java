@@ -416,4 +416,12 @@ public interface EzJournalService {
 	 * @throws Exception
 	 */
 	public JournalAuthCheckVO checkJournalAuth(String userId,String journalId,int tenantId) throws Exception; 
+	
+	/**
+	 * 내가 부서장인 부서들과 그 하위 부서 리스트
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public List<DeptViewVO> getCheifBoss(String userId, int tenantId) throws Exception; 
 }
