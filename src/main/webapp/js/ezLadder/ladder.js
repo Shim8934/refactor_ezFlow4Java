@@ -325,7 +325,7 @@ function drawLadLine(flag, startX, startY) {
 		var cv = canvas.getContext('2d');
 		
 		cv.strokeStyle = 'DimGray';
-		cv.lineWidth = 3;
+		cv.lineWidth = 1;
 		
 		cv.beginPath();
 		cv.moveTo(startX, startY);
@@ -349,7 +349,7 @@ function drawPathLine(user, moveX, moveY, type) {
 		var cv = canvas.getContext('2d');
 		
 		cv.strokeStyle = pathUser['color'];
-		cv.lineWidth = 5;
+		cv.lineWidth = 3;
 		
 		if(moveY == startYPoint) {
 			if(type == 'one' || user == 0) {
