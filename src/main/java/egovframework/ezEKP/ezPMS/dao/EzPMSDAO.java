@@ -12,7 +12,9 @@ import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
+import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPMSDAO")
@@ -102,4 +104,29 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public ProjectMainSettingVO getProjectMainSetting(Map<String, Object> map) {
 		return (ProjectMainSettingVO) select("projectMainSetting", map);
 	}
+	
+	public Long addTask(ProjectTaskVO vo) {
+		return (Long) insert("addTask", vo);
+	}
+	
+	public void addTaskMember(TaskMemberVO vo) {
+		insert("addTaskMember", vo);
+	}
+	
+	public int getProjectWorkingday (String projectId) {
+		return (int) select("getProjectWorkingday", projectId);
+	}
+	
+	public void updateProjectWorkingday (Map<String, Object> map) {
+		update("updateProjectWorkingday", map);
+	}
+	
+	public void updateTaskWDNW (Map<String, Object> map) {
+		update("updateTaskWDNW", map);
+	}
+
+	public int getSortOrder(String upperGroupId) {
+		return (int) select("getSortOrder", upperGroupId);
+	}
+
 }

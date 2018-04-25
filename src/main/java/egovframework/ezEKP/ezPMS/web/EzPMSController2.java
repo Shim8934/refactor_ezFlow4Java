@@ -219,11 +219,13 @@ public class EzPMSController2 {
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
+			String taskId = (String) resultBody.get("data");
+			model.addAttribute("data", taskId);
 		}
 				
 		LOGGER.debug("ezPMS addTask ended");
 		
-		return "";
+		return "json";
 	}
 	
 	

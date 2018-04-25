@@ -188,9 +188,12 @@
    			});
 	   		
 	   		function ok_Click() {
+	   			if(managerArray.length == 0) {
+	   				alert("최소 1명 이상의 담당자를 지정해주세요");
+	   				return;
+	   			}
 	   			for(var i =0;i<managerArray.length;i++) {
 	   				managerArray[i].pctinput = $("input[name='"+managerArray[i].userId+"']").val();
-	   				alert(managerArray[i].pctinput);
 	   			}
 	   			selectHeadManager();
 	   			//opener.selReceiver = JSON.stringify(receiverList);

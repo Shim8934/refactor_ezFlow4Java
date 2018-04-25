@@ -219,20 +219,15 @@ function addTask() {
 	
 	// 담당자 검사
 	if(managerList == null) {
-		var managerFlag = confirm("담당자를 지정하지 않으셨습니다. 계속하시겠습니까?");
-		
-		if (managerFlag != true) {
-			return;
-		} 
+		// 현재 총괄담당자 null 허용 불가
+		alert("최소 1명 이상의 담당자를 지정해주세요.");
+		return;
 	}
 	
 	//상위그룹 미지정
 	if(groupId == "") {
-		var upperGroupFlag = confirm("상위그룹을 지정하지 않을 경우 프로젝트 하위에 그룹이 생성됩니다. 계속하시겠습니까?");
-		
-		if (upperGroupFlag != true) {
-			return;
-		} 
+		alert("상위그룹을 지정해주세요.");
+		return;
 	}
 	
 	// 가중치 검사
@@ -249,9 +244,9 @@ function addTask() {
 			alert("가중치는 프로젝트의 잔여가중치를 초과할 수 없습니다.");
 			return;
 		}
+	} else {
+		weight = -1;
 	}
-	
-	
 
 	
 	data = {
@@ -283,11 +278,11 @@ function addTask() {
 		url : "/ezPMS/addTask.do",
 		dataType : "json",
 		contentType: "application/json; charset=UTF-8",
-		data :JSON.stringify(data),
-		success : function(result) {
+		data : JSON.stringify(data),
+		success : function(data) {
 			alert("<spring:message code='ezTask.t150' />");
 			
-			try { parent.setProjectList(); } catch (e) { alert("error1")}
+			parent.location.reload();
 			popupClose();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
@@ -336,7 +331,7 @@ function addTask() {
 					</c:when>
       				<c:when test="${weightInput == 1}">
 						<td colspan="3">
-						<input type="text" id="weight" style="width:40px;text-align:center"> %  &nbsp; 프로젝트 잔여 가중치 ${remainingWeight} % 
+						<input type="text" id="weight" value="0" style="width:40px;text-align:center"> %  &nbsp; 프로젝트 잔여 가중치 ${remainingWeight} % 
 						</td>
 					</c:when>
    				</c:choose>

@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
+import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 public interface EzPMSService {
@@ -67,7 +68,7 @@ public interface EzPMSService {
 	
 	public List<ProjectGroupVO> getGroupList(SearchVO search);
 	
-	public int addTask(ProjectTaskVO task);
+	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList);
 	
 	public List<ProjectMemberScheduleVO> getMemberScheduleList(int projectId, String startDate, String endDate);
 	

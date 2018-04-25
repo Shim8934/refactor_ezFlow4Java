@@ -62,7 +62,7 @@ public class ProjectTaskVO {
     private String headManagerDeptname2;
 
     // 게시자 아이디 
-    private Long writerId;
+    private String writerId;
 
     // 게시 일 
     private String writeDate;
@@ -89,7 +89,7 @@ public class ProjectTaskVO {
     private int sortOrder;
 
     // 업무일 
-    private int workingday;
+    private float workingday;
 
     // 남은 기한 
     private int restDueday;
@@ -226,15 +226,15 @@ public class ProjectTaskVO {
         this.headManagerDeptname2 = headManagerDeptname2;
     }
 
-    public Long getWriterId() {
-        return writerId;
-    }
+    public String getWriterId() {
+		return writerId;
+	}
 
-    public void setWriterId(Long writerId) {
-        this.writerId = writerId;
-    }
+	public void setWriterId(String writerId) {
+		this.writerId = writerId;
+	}
 
-    public String getWriterName() {
+	public String getWriterName() {
         return writerName;
     }
 
@@ -290,11 +290,11 @@ public class ProjectTaskVO {
         this.sortOrder = sortOrder;
     }
 
-    public int getWorkingday() {
+    public float getWorkingday() {
         return workingday;
     }
 
-    public void setWorkingday(int workingday) {
+    public void setWorkingday(float workingday) {
         this.workingday = workingday;
     }
 

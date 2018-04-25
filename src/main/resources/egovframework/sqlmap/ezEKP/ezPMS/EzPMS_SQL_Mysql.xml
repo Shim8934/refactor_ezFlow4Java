@@ -17,6 +17,7 @@
 	<typeAlias 	alias="deptInfoVO" 									type="egovframework.ezEKP.ezPMS.vo.DeptInfoVO" />
 	<typeAlias 	alias="companyVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO" />
 	<typeAlias 	alias="UserInfoVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectMemberVO"/>
+	<typeAlias 	alias="TaskMemberVO" 									type="egovframework.ezEKP.ezPMS.vo.TaskMemberVO"/>
 	
     <resultMap id="projectInfoVO" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
@@ -523,4 +524,91 @@
 				u.tenant_id = #tenantId#
 		]]>
 	</select>
+	
+	<insert id="addTask" parameterClass="ProjectTaskVO">
+		<![CDATA[
+    		INSERT INTO tbl_pms_task(
+    			tenant_id, 				project_id, 			group_id, 		task_name,			status,			plan_start_date,			plan_end_date, 
+    			real_progress,			weight,				overview	,		member_count,
+    			head_manager_id, 		head_manager_name,		head_manager_name2, 		head_manager_deptname, 	head_manager_deptname2, 
+    			writer_id,				write_date, 			writer_name, 			writer_name2, 			writer_deptname, 		writer_deptname2, 
+    			sort_order, 			workingday
+    		) 
+    		VALUES ( 
+    			#tenantId#, 				#projectId#, 			#groupId#, 		#taskName#,			#status#,			#planStartDate#,			#planEndDate#, 
+    			#realProgress#,			#weight#,				#overview#,		#memberCount#,
+    			#headManagerId#, 		#headManagerName#,		#headManagerName2#, 		#headManagerDeptname#,			#headManagerDeptname2#, 
+    			#writerId#,				#writeDate#, 			#writerName#, 			#writerName2#, 			#writerDeptname#, 		#writerDeptname2#, 
+    			#sortOrder#, 			#workingday#
+    		)
+    	]]>
+    	<selectKey keyProperty="taskId" resultClass="long">
+    		SELECT
+    			last_insert_id() as id
+    	</selectKey>
+	</insert>
+	
+	<insert id="addTaskMember" parameterClass="TaskMemberVO">
+		<![CDATA[
+			INSERT INTO tbl_pms_taskmember (
+				tenant_id,			task_id,			user_id,		user_name,
+				user_name2,			user_deptname,		user_deptname2,		pctinput
+			) VALUES (
+				#tenantId#,			#taskId#,		#userId#,		#userName#,
+				#userName2#,		#userDeptname#,		#userDeptname2#,	#pctinput#
+			)
+		]]>
+	</insert>
+	
+	<update id="updateProjectWorkingday" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				tbl_pms_project
+			SET
+				workingday = workingday + #workingday#
+			WHERE
+				project_id = #projectId#			
+		]]>
+	</update>
+	
+	<select id="getProjectWorkingday" parameterClass="String" resultClass="int">
+		SELECT
+			workingday
+		FROM
+			tbl_pms_project
+		WHERE
+			project_id = #projectId#
+	</select>
+	
+	<update id="updateTaskWDNW" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				tbl_pms_task
+			SET
+				workingday = #workingday#,
+				weight = #weight#
+			WHERE
+				task_id = #taskId#			
+		]]>
+	</update>
+	
+	<select id="getSortOrder" parameterClass="String" resultClass="int">
+		SELECT
+			MAX(a.sort_order) + 1
+		FROM
+			(SELECT
+				sort_order
+			FROM
+				tbl_pms_task
+			WHERE
+				group_id = #groupId#
+			UNION
+			SELECT
+				sort_order
+			FROM
+				tbl_pms_group
+			WHERE
+				upper_group_id = #groupId#) a
+	</select>
+	
 </sqlMap>
