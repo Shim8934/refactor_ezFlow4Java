@@ -202,7 +202,10 @@
 	    function addAttitude(obj) {
 	    	var pTypeId = obj.getAttribute("type");
 	    	var pDateType = obj.getAttribute("datetype");
-	    	
+	    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
+	    		alert("출근 후 퇴근이 가능합니다.");
+	    		return;
+	    	}
 	    	$.ajax({
 	    		type : "POST",
 	    		async : true,

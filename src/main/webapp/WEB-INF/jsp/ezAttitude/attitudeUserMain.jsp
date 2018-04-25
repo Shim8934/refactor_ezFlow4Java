@@ -41,7 +41,6 @@
 			
 			#attiCalendar td[typeId=A01], #attiCalendar td[typeId=A03] {
 				cursor : context-menu;
-				color : rgb(102,180,255);
 			}
 			
 			.span_list table td:hover, .td_day:hover {
