@@ -303,6 +303,11 @@
 		                PagingHTML += strtext;
 		            }
 		        }
+		        
+		        if (MaxNum == 0) {
+		        	PagingHTML += "<span class='on'>" + 1 + "</span>";
+		        }
+		        
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
@@ -652,7 +657,7 @@
 		</c:if>
 		<c:if test="${boardInfo.buttonHidden == 'N'}">
 			<script type="text/javascript">
-			    parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t00010'/>" + " " + "${boardName}" + "<span id='mailBoxInfo'></span>";
+			    parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" + "<span id='mailBoxInfo'></span>";
 			</script>
 			<br />
 			<div id="mainmenu">
@@ -675,7 +680,7 @@
 		</c:if>	
 		<c:if test="${boardInfo.buttonHidden != N}">
 		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t00010'/>" + " " + "${boardName}" + "<span id='mailBoxInfo'></span>";
+		        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" + "<span id='mailBoxInfo'></span>";
 		    </script>
 		</c:if>
 		    <div id="layer_Viewpopup" style="width: 150px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
