@@ -13,7 +13,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 	        $(function() {
-	        	window.open("/ezPMS/pmsProjectList.do", "right");
+	        	window.open("/ezPMS/pmsProjectListMain.do", "right");
 	        	
 	        	$("#pmsSetting").click(function() {
 	        		window.open("/ezPMS/pmsSetting.do", "right");
@@ -24,7 +24,7 @@
 	        	});
 	        	
 	        	$("#projectList").click(function() {
-	        		window.open("/ezPMS/pmsProjectList.do", "right");
+	        		window.open("/ezPMS/pmsProjectListMain.do", "right");
 	        	})
 	        });
 	    </script>

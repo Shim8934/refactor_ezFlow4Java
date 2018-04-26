@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.plaf.synth.SynthSplitPaneUI;
 
+import org.hsqldb.result.Result;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -74,20 +75,49 @@ public class EzPMSController {
 	/**
 	 * 메인페이지화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPMS/pmsProjectList.do")
+	@RequestMapping(value = "/ezPMS/pmsProjectListMain.do")
 	public String projectList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		
 		LOGGER.debug("ezPMS projectList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String deptId = userInfo.getDeptID();
+		String projectStatus = request.getParameter("status");
+		int tenantId = userInfo.getTenantId();
 		
-		String url = "/rest/ezPMS/projects/userId/"+userInfo.getId();
+		String settingUrl = "/rest/ezPMS/users/" + userId + "/setting";
+		String url = "/rest/ezPMS/projects/userId/"+userId;
+		String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
 		
 		Map<String, Object> param = new HashMap<String, Object>();		
-		param.put("deptId", userInfo.getDeptID());
+		param.put("deptId", deptId);
+		param.put("nameType", "user");
+		param.put("tenantId", tenantId);
 		
-		//상태별 프로젝트 목록 화면
-		param.put("status", request.getParameter("status"));
+		//상태별 프로젝트 보기
+		if (projectStatus != null) {
+			param.put("status", projectStatus);
+		} else {
+			param.put("status", "P");
+		}
+		
+		JSONObject settingResult = commonUtil.getJsonFromRestApi(settingUrl, param, request, "get", null);
+		String settingStatus = settingResult.get("status").toString();
+		
+		if(settingStatus.equals("ok")) {
+			JSONObject listSetting = (JSONObject) settingResult.get("data");
+			
+			model.addAttribute("viewType", listSetting.get("viewType"));
+			model.addAttribute("progressColor", listSetting.get("progressColor"));
+			model.addAttribute("completeColor", listSetting.get("completeColor"));
+			model.addAttribute("overdueColor", listSetting.get("overdueColor"));
+			model.addAttribute("holdColor", listSetting.get("holdColor"));
+			
+			param.put("projectSort", listSetting.get("projectSort"));
+			param.put("listNumber", listSetting.get("listNumber"));
+			param.put("listProjectStatus", listSetting.get("listProjectStatus"));
+		}
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		String status = result.get("status").toString();
@@ -98,10 +128,25 @@ public class EzPMSController {
 			request.setAttribute("projectList", projectList);
 		}
 		
+		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
+		String countStatus = result.get("status").toString();
+		
+		if (countStatus.equals("ok")) {
+			JSONObject countJson = (JSONObject) countResult.get("data");
+			int projectListCount = 0;
+			
+			if (countJson.get("projectListCount").toString() != null) {
+				projectListCount = Integer.parseInt(countJson.get("projectListCount").toString());
+				model.addAttribute("projectListCount", projectListCount);
+			} 
+			
+			model.addAttribute("projectListCount", projectListCount);
+		}
+		
 		model.addAttribute("status", status);
 		
 		LOGGER.debug("ezPMS projectList ended");
-		return "ezPMS/pmsProjectList";
+		return "ezPMS/pmsProjectListMain";
 	}
 	
 	/**

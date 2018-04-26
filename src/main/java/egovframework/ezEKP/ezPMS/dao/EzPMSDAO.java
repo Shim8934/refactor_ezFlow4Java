@@ -134,4 +134,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (int) select("getSortOrder", upperGroupId);
 	}
 
+	public int getProjectListCount(Map<String, Object> map) {
+		return (int) select("getProjectListCount", map);
+	}
+
 }

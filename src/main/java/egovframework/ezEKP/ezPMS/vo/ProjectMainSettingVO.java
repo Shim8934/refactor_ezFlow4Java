@@ -12,7 +12,7 @@ public class ProjectMainSettingVO {
     private String userId;
 
     // 화면 종류 
-    private String viewType;
+    private int viewType;
 
     // 진행률 색상 
     private String progressColor;
@@ -27,10 +27,13 @@ public class ProjectMainSettingVO {
     private String holdColor;
 
     // 프로젝트 정렬 
-    private String projectSort;
-
+    private int projectSort;
+    
     // 리스트 개수 
-    private String listNumber;
+    private int listNumber;
+    
+    // 메인화면 프로젝트 상태
+    private String listProjectStatus;
     
     // 사용자 메일
     private String userMail;
@@ -89,11 +92,11 @@ public class ProjectMainSettingVO {
         this.userId = userId;
     }
 
-    public String getViewType() {
+    public int getViewType() {
         return viewType;
     }
 
-    public void setViewType(String viewType) {
+    public void setViewType(int viewType) {
         this.viewType = viewType;
     }
 
@@ -129,19 +132,27 @@ public class ProjectMainSettingVO {
         this.holdColor = holdColor;
     }
 
-    public String getProjectSort() {
+    public int getProjectSort() {
         return projectSort;
     }
 
-    public void setProjectSort(String projectSort) {
+    public void setProjectSort(int projectSort) {
         this.projectSort = projectSort;
     }
 
-    public String getListNumber() {
+    public int getListNumber() {
         return listNumber;
     }
 
-    public void setListNumber(String listNumber) {
+    public void setListNumber(int listNumber) {
         this.listNumber = listNumber;
     }
+
+	public String getListProjectStatus() {
+		return listProjectStatus;
+	}
+
+	public void setListProjectStatus(String listProjectStatus) {
+		this.listProjectStatus = listProjectStatus;
+	}
 }
