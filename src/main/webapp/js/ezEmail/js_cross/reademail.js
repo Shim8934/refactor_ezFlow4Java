@@ -968,7 +968,7 @@ function Item_View_APPR(pBoardID, pItemID, pgubun) {
     /* 2018-04-26 홍승비 - 포토, 썸네일게시물 승인을 위해 .aspx->.do로 수정 */
     if (getNodeText(xmlhttp.responseXML.documentElement) != "0") {
         if (pgubun == "3" || pgubun == "4") {
-            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=770,width=765, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         }
         else {
             window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=720,width=765, status = no, scrollbars=1, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
