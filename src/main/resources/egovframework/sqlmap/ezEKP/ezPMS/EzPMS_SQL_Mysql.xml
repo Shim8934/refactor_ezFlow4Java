@@ -103,7 +103,7 @@
     </resultMap>
     
     <resultMap id="projectTaskVO" class="ProjectTaskVO">
-    	<result property="taskId"							column="MEMBER_ID"					columnIndex="1"/>
+    	<result property="taskId"							column="TASK_ID"					columnIndex="1"/>
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
     	<result property="groupId"							column="GROUP_ID"					columnIndex="4"/>
@@ -866,7 +866,7 @@
 		</isNotNull>
 		<isNotNull property="headManagerName">
 			AND
-				B.HEAD_MANAGER_NAME LIKE CONCAT('%',#headManagerName#,'%')
+				A.HEAD_MANAGER_NAME LIKE CONCAT('%',#headManagerName#,'%')
 		</isNotNull>
 		<isNotNull property="planStartDate">
 			AND
