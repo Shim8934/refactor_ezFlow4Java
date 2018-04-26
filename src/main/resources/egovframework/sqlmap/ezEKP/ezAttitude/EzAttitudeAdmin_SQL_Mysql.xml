@@ -701,11 +701,26 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeAbsentCount" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				COUNT(*)
+				COUNT(DISTINCT(A.cn))
 			FROM
 				TBL_USERMASTER A
 			LEFT JOIN
-				TBL_ATTITUDE B
+				(SELECT
+					*
+				FROM
+					TBL_ATTITUDE C
+				WHERE
+					C.tenant_id = #tenantId#
+				AND
+					C.company_id = #companyId#
+				AND
+					(
+						(C.start_date < #searchStartDate# OR C.start_date > #searchEndDate#)
+					AND
+						(C.end_date < #searchStartDate# OR C.end_date >= #searchEndDate#)
+					AND
+						(C.start_date >= #searchStartDate# OR C.end_date < #searchEndDate#)
+					)) B
 			ON
 				A.cn = B.writer_id 
 			AND
@@ -715,13 +730,7 @@
 			AND
 				A.physicaldeliveryofficename = #companyId#
 			AND
-				(
-					(B.start_date < #searchStartDate# OR B.start_date > #searchEndDate#)
-				AND
-					(B.end_date < #searchStartDate# OR B.end_date >= #searchEndDate#)
-				AND
-					(B.start_date >= #searchStartDate# OR B.end_date < #searchEndDate#)
-				)
+				B.start_date IS NULL
 		]]>
 		
 		<isNotEmpty prepend="AND" property="searchDeptName">
@@ -737,23 +746,30 @@
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeAbsentList" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
-			SELECT 
-				B.attitude_id AS attitudeid,
-				B.company_id AS companyid,
-				B.tenant_id AS tenantid,
-				B.writer_id AS writerid,
-				B.dept_id AS deptid,
-				B.modappl,
-				B.ip,
-				B.date_type AS datetype,
-				B.type_id AS typeid,
+			SELECT
+				DISTINCT(A.cn) AS userid,
 				A.displayname AS username,
                 A.description AS deptname,
                 A.title AS usertitle
 			FROM
 				TBL_USERMASTER A
 			LEFT JOIN
-				TBL_ATTITUDE B
+				(SELECT
+					*
+				FROM
+					TBL_ATTITUDE C
+				WHERE
+					C.tenant_id = #tenantId#
+				AND
+					C.company_id = #companyId#
+				AND
+					(
+						(C.start_date < #searchStartDate# OR C.start_date > #searchEndDate#)
+					AND
+						(C.end_date < #searchStartDate# OR C.end_date >= #searchEndDate#)
+					AND
+						(C.start_date >= #searchStartDate# OR C.end_date < #searchEndDate#)
+					)) B
 			ON
 				A.cn = B.writer_id
 			AND
@@ -763,32 +779,26 @@
 			AND
 				A.physicaldeliveryofficename = #companyId#
 			AND
-				(
-					(B.start_date < #searchStartDate# OR B.start_date > #searchEndDate#)
-				AND
-					(B.end_date < #searchStartDate# OR B.end_date >= #searchEndDate#)
-				AND
-					(B.start_date >= #searchStartDate# OR B.end_date < #searchEndDate#)
-				)
+				B.start_date IS NULL
 		]]>
 			
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			C.description LIKE CONCAT('%', #searchDeptName#, '%')
+			A.description LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			C.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			A.displayname LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			C.title LIKE CONCAT('%', #searchTitle#, '%')
+			A.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="orderCell">
 			ORDER BY
 				$orderCell$ $orderOption$,
-				C.displayname
+				A.displayname
 		</isNotEmpty>
 		<isEmpty property="orderCell">
 			ORDER BY
-				C.displayname
+				A.displayname
 		</isEmpty>
 		<isNotEmpty property="limit">
 			<![CDATA[
