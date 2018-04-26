@@ -680,7 +680,7 @@
 	                        }
 	            		}
 	            	}
-	            } else { // 2018.04.26 회람판 수정 (문성업) - 시작 부분  
+	            } else { // 2018.04.26 회람판 수정 (문성업) -시작 부분  
 		           if (p_ListOrderObject == "" || p_ListOrderObject == null) { //(수정)조직도에서 어느 부서원 클릭 안 할 때 ->화살표를 누르면 자신 제외하고 전체 부서원 출력
 		                    /* alert("<spring:message code='ezCircular.t148' />");
 		                    return; */
