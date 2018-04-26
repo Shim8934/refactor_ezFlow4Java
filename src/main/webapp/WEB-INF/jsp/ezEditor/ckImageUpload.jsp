@@ -49,7 +49,7 @@
 		            return;
 		        
 		        var fileExt = file.substring(file.lastIndexOf(".") + 1);
-		        var reg = /gif|GIF|jpg|JPG|jpeg|JPEG|png|PNG/i;
+		        var reg = /gif|GIF|jpg|JPG|jpeg|JPEG|png|PNG|bmp|BMP/i;
 		        
 		        if (reg.test(fileExt) == false) {
 		        	alert("<spring:message code='ezCommunity.lhj03'/>");

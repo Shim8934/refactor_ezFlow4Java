@@ -60,8 +60,8 @@
 			var specialMsg2 = "<spring:message code='ezEmail.letter9'/>"; //
 			var lengthMsg = opener.lengthMsg; // "<spring:message code='ezEmail.letter14'/>"; // 자 이하로 입력 가능합니다.
 			var contentMsg = "<spring:message code='ezEmail.letter10'/>"; // "<spring:message code='ezEmail.letter15'/>"; // 내용을 입력해주세요.
-			var letterNameMsg = opener.letterNameMsg; // "<spring:message code='ezEmail.letter32'/>"; // 편지지명은
-			
+			var letterNameMsg = "<spring:message code='ezEmail.letter32'/>"; // "<spring:message code='ezEmail.letter32'/>"; // 편지지명은
+			                            
 			window.onload = function() {
 				console.log(popUpType);
 				if (popUpType == "modify") {
