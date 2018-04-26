@@ -4040,6 +4040,54 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 편지쓰기 창에서 입력받은 메일이 존재하는지 검색. 
+	 */
+	@RequestMapping(value="/ezEmail/mailCheck.do")
+	@ResponseBody
+	public List<String> mailCheck(@CookieValue("loginCookie") String loginCookie, Locale locale, 
+			Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailCheck started.");
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String email = request.getParameter("name");
+		List<String> resultList = new ArrayList<String>();
+
+		String inputParams = "address=" + URLEncoder.encode(email, "UTF-8");;
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getAliasMail";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (object.get("resultCode").equals("OK")) {
+        	JSONArray array = (JSONArray)object.get("result");
+        	
+        	if (array != null) { 
+        		int len = array.size();
+        		for (int i=0; i<len; i++){ 
+        			resultList.add((String)array.get(i));
+        		} 
+        	} 
+        }
+		
+        int usercnt = ezOrganAdminService.userCountCheck(email, loginVO.getTenantId());
+        
+        if (usercnt >= 0) {
+        	object.put("usercnt", usercnt);
+        }
+        
+        
+        logger.debug("usercnt="  + usercnt);
+		logger.debug("mailCheck ended.");
+		
+		return resultList;
+	}
+	
+	/**
 	 * 메일 옵션화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/letterOption.do")
