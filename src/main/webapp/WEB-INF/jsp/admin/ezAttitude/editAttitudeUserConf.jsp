@@ -77,7 +77,7 @@
 			</tr>
 			<tr>
 				<th>근무시간</th>
-				<td><span><input id="workStartTime" type="text" style="width:80px;" <c:if test="${vo.compareTime == '0'}">readonly="true"</c:if> value="${vo.workStartTime }"/>&nbsp; ~ <input id="workEndTime" type="text" style="width:80px;" <c:if test="${vo.compareTime == '0'}">readonly="true"</c:if> value="${vo.workEndTime }"/></span></td>
+				<td><span><input id="workStartTime" type="text" style="width:50px;" <c:if test="${vo.compareTime == '0'}">readonly="true"</c:if> value="${vo.workStartTime }"/>&nbsp; ~ &nbsp;<input id="workEndTime" type="text" style="width:50px;" <c:if test="${vo.compareTime == '0'}">readonly="true"</c:if> value="${vo.workEndTime }"/></span></td>
 			</tr>
 		</table> 
 		

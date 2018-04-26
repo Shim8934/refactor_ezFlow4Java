@@ -205,7 +205,7 @@
 						
 						$("#attiwriteForm tr").not("tr:first").remove();
 						$("#attiwriteForm tbody").after(result.formHtml);
-						$("#writerName").text(writerName);
+						$("#writerName").closest("tr").remove();
 						setDatePicker($("#periodblock").attr("datetype"));
 						
 						if ($("input[name=region]").length != 0) {

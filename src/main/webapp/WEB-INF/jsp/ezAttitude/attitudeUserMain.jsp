@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
-		<link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />
+		<link rel="stylesheet" href="/css/ezAttitude/Calendar_cross.css" type="text/css" />
 		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
@@ -36,7 +36,7 @@
 				color : red;
 			}
 			
-			#attiCalendar td[modappl='1'] {
+			#attiCalendar td[modappl='1'][typeId=A02] {
 				color : orange;
 			}
 			
@@ -245,14 +245,14 @@
 			* 통계바 메소드
 			*/
 			function getAttiTypeList_After(result) {
-					var objTable = $("<table></table>").css({"cellpadding":"0", "cellspacing":"0", "border":"0", "width":"100%"});
+					var objTable = $("<table></table>").css({"cellpadding":"0", "cellspacing":"0", "border":"0", "width":"100%", "height":"739px"});
 					var objTbody = $("<tbody></tbody>");
 					var objTr = "";
 					var objTd = "";
 					var calendarHeight = $("#attiCalendar").css("height");
 					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1 - 2));
 					
-					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":tdHeight, "background-color": "#edf4fd"}).text($("#calTitle").text())));
+					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"34px", "background-color": "#edf4fd"}).text($("#calTitle").text())));
 					for (var i = 0; i < result.length; i++) {
 						
 						if (result[i].typeId == 'A01' || result[i].typeId == 'A03') {
@@ -260,7 +260,7 @@
 						}
 						objTr = $("<tr></tr>").append($("<th></th>").text(result[i].typeName));
 						if (deptFlag == "true") {
-							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px", "cursor" : "pointer"})
+							objTd = $("<td></td>").css({"width" : "80px", "cursor" : "pointer"})
 							.attr("id",result[i].typeId).text("0일")
 							.attr("onmouseover","this.style.color='#164aad'")
 							.attr("onmouseout","this.style.color='#666'")
@@ -268,7 +268,7 @@
 								searchByTypeId(this);
 							});	
 						} else {
-							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr({"id":result[i].typeId, "parentId":result[i].parentId}).text("0일")
+							objTd = $("<td></td>").css({"width" : "80px"}).attr({"id":result[i].typeId, "parentId":result[i].parentId}).text("0일")
 						}
 						objTr.append(objTd);
 						objTbody.append(objTr);
@@ -277,11 +277,11 @@
 					objTable.append(objTbody);
 					$("#attiStatis").append(objTable);
 					
-					if (calendarHeight != $("#attiStatis").css("Height")) {
-						var statisHeight = $("#attiStatis").css("Height");
-						tdHeight = tdHeight + (calendarHeight.substr(0, calendarHeight.length - 2) - statisHeight.substr(0, statisHeight.length - 2));
-						$("#attiStatis tr:eq(0) th").css("height", tdHeight + "px");
-					}
+// 					if (calendarHeight != $("#attiStatis").css("Height")) {
+// 						var statisHeight = $("#attiStatis").css("Height");
+// 						tdHeight = tdHeight + (calendarHeight.substr(0, calendarHeight.length - 2) - statisHeight.substr(0, statisHeight.length - 2));
+// 						$("#attiStatis tr:eq(0) th").css("height", tdHeight + "px");
+// 					}
 			}
 			
 			/**
@@ -397,7 +397,7 @@
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + "</td></tr>"); 
 						} else { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + (result[i].modAppl == '1' ? " <i class='fas fa-pencil-alt'></i>" : "") + "</td></tr>"); 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + (result[i].modAppl == '1' ? "  <i class='fas fa-pencil-alt'></i>" : "") + "</td></tr>"); 
 						} 
 					}
 					setAttitudeSquare();
@@ -431,6 +431,7 @@
 						}
 					}
 					$("td[typeid=A02][modappl=0]").css('cursor','context-menu');
+					setAttitudeSquare();
 				}
 			}
 			
@@ -811,7 +812,7 @@
 				</td>
 				<td style="vertical-align:top; width:10px;">&nbsp;</td>
 				<td style="vertical-align:top; width:9%; margin-left:5px;">
-					<div style="vertical-align:top;" id="attiStatis">
+					<div style="vertical-align:top; height:739px;" id="attiStatis">
 					</div>
 				</td>
 			</tr>

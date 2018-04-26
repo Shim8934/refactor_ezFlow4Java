@@ -11,15 +11,13 @@
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 	    <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<!--     <script type="text/javascript" src="/js/mouseeffect.js"></script> -->
-	<!--     <script type="text/javascript" src="/js/Common.js"></script> -->
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
 	    <!-- data picker-->		
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <style>
-	    	#attiBoardList td {
+	    	#contentlist table.mainlist td {
 	    		overflow : hidden;
 	    		white-space : nowrap;
 	    		text-overflow : ellipsis;
@@ -52,6 +50,7 @@
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var adminCompany = "${adminCompany}";
+	    	var listSize = 19;
 	    	
 	    	$(function(){
 	    		//회사리스트
@@ -71,7 +70,7 @@
 	    		$("#Edatepicker").val("${searchEndDate}");
 	    		
 	    		//헤더 클릭 시 정렬
-	    		$(document).on('click', '#attiBoardList th', function(){
+	    		$(document).on('click', '#contentlist table.mainlist th', function(){
 	    			if (!$(this).find("input[type=checkbox]").length) { // checkbox는 sort에서 제외
 	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
 	    					src = "";
@@ -87,7 +86,7 @@
 		    				orderOption = "DESC";
 		    			}
 		    			
-		    			$("#attiBoardList th").find("img").remove();
+		    			$("#contentlist table.mainlist th").find("img").remove();
 		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
 		    			
 		    			getUserConfList();
@@ -141,9 +140,6 @@
 			    };
 			    
 			    $.datepicker.setDefaults($.datepicker.regional["ko"]);
-			    
-			    $("#Sdatepicker").datepicker('disable');
-		        $("#Edatepicker").datepicker('disable');
 			});
 			
 	    	function company_change(){
@@ -160,14 +156,8 @@
 	    			typeId = "";
 	    		}
 	    		
-	    		//검색기간 사용 유무
-	    		if (usedate) {
-	    			searchStartDate = $("#Sdatepicker").val();
-	    			searchEndDate = $("#Edatepicker").val();
-	    		} else {
-	    			searchStartDate = "";
-	    			searchEndDate = "";
-	    		}
+    			searchStartDate = $("#Sdatepicker").val();
+    			searchEndDate = $("#Edatepicker").val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
 					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
@@ -223,7 +213,7 @@
 	    	function getUserConfList_after(result){
 	    		var resultHtml = "";
 	    		
-	    		$("#attiBoardList tbody").html("");
+	    		$("#contentlist table.mainlist tbody").html("");
 	    		
 	    		for (var i = 0; i < result.length; i ++) {
 	    			resultHtml += "<tr userid='" + result[i].writerId + "'>"
@@ -246,41 +236,12 @@
 	    		}
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
 	    		}
 	    		
-	    		$("#attiBoardList tbody").append(resultHtml);
+	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
-	    	
-	    	//true = 검색 / false = 취소
-	    	/* function searchUserConf(searchFlag){
-	    		if ($("#layer_popup").css("display") == "none") {
-	    			$("#layer_popup").css("display", "");
-	    		} else {
-	    			//취소
-	    			$("#layer_popup").css("display", "none");
-	//     			searchReset();
-	    		}
-	    		
-	    		if (searchFlag) {
-	    			pageNum = 1;
-	    			
-	    			getUserConfList();
-	    		}
-	    	} */
-	    	
-	    	//검색조건 초기화 함수
-	    	/* function searchReset() {
-	    		//조회자 초기화
-	    		$('#receiverlist span').remove();
-	    		//검색기간 초기화
-	    		DateSearch_Click();
-	//     		$('#usedate').prop('ckecked', false);
-	    		
-	//     		$("#Sdatepicker").datepicker('disable');
-	//          $("#Edatepicker").datepicker('disable');  		
-	    	} */
 	    	
 	    	//페이지 이동 함수
 	    	function goToPageByNum(pCurPage){
@@ -293,53 +254,6 @@
 	    		getUserConfList();
 	    	}
 	    	
-	    	//검색 > 조회자검색 버튼 클릭시
-	    	/* function search_user() {
-	        	var searchIdList = ""; // 조회자 id 리스트
-	        	var searchNameList = ""; // 조회자 name 리스트
-	        	var spanIdx = $('#receiverlist').find('span').length;
-	        	
-	   			for (var i = 0; i < spanIdx; i++) {
-	   				searchIdList += $('#receiverlist span').eq(i).attr('id') + ",";
-	   				searchNameList += $('#receiverlist span').eq(i).text() + ",";
-	   			}
-	   			//마지막 ',' 제거
-	   			searchIdList = searchIdList.slice(0, -1);
-	   			searchNameList = searchNameList.slice(0, -1);
-	    		
-				var url = "/admin/ezAttitude/getSearchList.do?companyId=" + $('#ListCompany').val() + "&searchIdList=" + searchIdList + "&searchNameList=" + searchNameList;
-	    		window.open(url, "view", "width=940, height=580");
-	    	} */
-	    	
-			var usedate = false;
-			//검색기간 사용 체크박스 클릭시
-			function DateSearch_Click() {
-		        if(usedate){
-		        	usedate = false;
-		            $("#Sdatepicker").datepicker('disable');
-		            $("#Edatepicker").datepicker('disable');
-		        } else {
-		        	usedate = true;
-		            $("#Sdatepicker").datepicker('enable');
-		            $("#Edatepicker").datepicker('enable');
-		        }
-		    }
-			
-			//검색조건 저장(엑셀 다운로드 할때 필요)
-			/* function saveSearchRequirement(companyId, typeId, userIdList, startDate, endDate) {
-				sCompanyId = companyId;
-				
-				if (typeId == null) {
-					sTypeId = "";
-				} else{
-					sTypeId = typeId;
-				}
-				
-				sUserIdList = userIdList;
-				sStartDate = startDate;
-				sEndDate = endDate;
-			} */
-			
 			function searchUserConfList(searchType){
 	    		if (searchType == "search") {
 	    			searchUserName = $("#searchUserName").val();
@@ -348,8 +262,6 @@
 	    			searchStartDate = $("#searchStartDate").val();
 	    			searchEndDate = $("#searchEndDate").val();
 	    			searchAttitudeType = $("select[id='searchAttitudeType']").val();
-	    			
-// 	    			searchAttitudeType = $("[type='radio']:checked").val();
 	    		} else {
 	    			//새로고침
 	    			$("#searchUserName").val("");
@@ -369,12 +281,11 @@
 	    		
 	    		pageNum = 1;
     			getUserConfList();
-    			
 	    	}
 			
 			//엑셀 다운로드
 			function exportExcel() {
-				if ($('#attiBoardList tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
+				if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
 					alert('출력할 내용이 없습니다');
 					return;
 				}
@@ -414,10 +325,8 @@
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50"></td>
 					<td style="width: 3%;">검색기간</td>
 					<td>
-						<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" /><label for="usedate">검색기간 사용&nbsp;</label>
-						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
-						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
-						<div style="margin-top:9px">&nbsp;(검색기간 미지정시 오늘날짜로 검색)</div> 
+						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
+						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
 					</td>
 					<td style=" width:*;" colspan=2>
 						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
@@ -428,74 +337,23 @@
 			</tbody>
 		</table>
 		
-	  	<!-- <div id="mainmenu">
-	  		<ul class="on">
-	  			<li class="off"><span onclick="searchUserConf(false)">검색</span></li>
-	  			<li class="off"><span onclick="exportExcel()">엑셀다운로드</span></li>
-	  		</ul>
-	  	</div> -->
-	  	
-	  	<!-- <div id="layer_popup" style="width: 500px; position: absolute; left: 10px; top: 130px; background-color: rgb(255, 255, 255); display:none;">
-	  		<div class="popupwrap1">
-	  			<div class="popupwrap2">
-	  				<table class="content">
-	  					<tbody>
-	  						<tr>
-	  							<th style="text-align:center">구분</th>
-	  							<td>
-	  								<select name="attitudeType" id="attitudeType" style="margin-top:4px; padding-right:40px;">
-	  								</select>
-	  							</td>
-	  						</tr>
-	  						<tr>
-	  							<th style="text-align:center;" rowspan="2"><a href="#" id="imgbutton" class="imgbtn"><span onclick="search_user()">조회자</span></a></th>
-	  							<td><input type="text" id="txt" style="width:98%" value=""/></td>
-	  						</tr>
-	  						<tr>
-	  							<td><div id="receiverlist" style="OVERFLOW-Y: auto; height: 17px;"></div></td>
-	  						</tr>
-	  						<tr>
-	  							<th style="text-align:center">검색기간</th>
-	  							<td>
-					      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" /><label for="usedate">검색기간 사용&nbsp;</label>
-					            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
-					      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
-					          		<div style="margin-top:9px">&nbsp;(검색기간 미지정시 오늘날짜로 검색)</div> 
-                        		</td>
-	  						</tr>
-	  					</tbody>
-	  				</table>
-	  				<br>
-	  				<table style="width:100%">
-	  					<tbody>
-	  						<tr>
-	  							<td style="text-align:center">
-	  								<a class="imgbtn"><span onclick="searchUserConf(true)">검색</span></a>
-	  								<a class="imgbtn"><span onclick="searchUserConf(false)">취소</span></a>
-	  							</td>
-	  						</tr>
-	  					</tbody>
-	  				</table>
-	  			</div>
-	  		</div>
-	  		<div class="shadow">
-	  		</div>
-	  	</div> -->
-	  	
-		<table id="attiBoardList" class="mainlist" style="width:100%;">
-			<thead>
-				<tr>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
-					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
-					<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_time">시간</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
+	  	<div id="contentlist" style="width:100%; height:620px;">
+			<table class="mainlist" style="width:100%;">
+				<thead>
+					<tr>
+						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
+						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
+						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
+						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
+						<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
+						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_time">시간</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+	  	</div>
+		<div id="runtime" style="color: #666; padding-top: 10px"></div>
 		<div id="tblPageRayer">
 		</div>
 		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>

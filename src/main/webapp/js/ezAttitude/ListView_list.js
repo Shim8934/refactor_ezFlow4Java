@@ -18,21 +18,6 @@ $(document).on('click', '#HeaderAllCheckBox', function() {
 	})
 })
 
-//tr클릭 시 체크박스 선택/해제
-$(document).on('click', '#attiBoardList tr:not(#attiBoardList tr:eq(0))', function() {
-	if ($(this).parents("#layer_popup").length) {
-		return;
-	}
-	var checkValue = "";
-	if ($(this).find("input[type='checkbox']").is(":checked") == true) {
-		checkValue = false;
-		$(this).css("background-color", m_strColorDefault);
-	} else {
-		checkValue = true;
-		$(this).css("background-color", m_strColorSelect);
-	}
-	$(this).find("input[type='checkbox']").prop("checked", checkValue);
-})
 //tr클릭 시 - 휴가유형관리, 근태권한 관리
 $(document).on('click', '#contentlist table.mainlist tr', function(e) {
 	if(e.type == "click") {
@@ -45,19 +30,6 @@ $(document).on('click', '#contentlist table.mainlist tr', function(e) {
 	}
 })
 
-//tr hover시 배경색 변경
-$(document).on('mouseover mouseleave', '#attiBoardList tr', function(e) {
-	if ($(this).parents("#layer_popup").length) {
-		return;
-	}
-	if ($(this).find("input[type='checkbox']:not(#HeaderAllCheckBox)").is(":checked") == false) {
-		if (e.type == "mouseover") {
-			$(this).css("background-color", m_strColorOver);
-		} else {
-			$(this).css("background-color", m_strColorDefault);
-		}
-	}
-})
 //tr hover시 배경색 변경 - 휴가유형관리, 근태권한 관리
 $(document).on('mouseover mouseleave', '#contentlist table.mainlist tr', function(e) {
 	if($(this).attr("class") == "selectTR") {
@@ -70,27 +42,15 @@ $(document).on('mouseover mouseleave', '#contentlist table.mainlist tr', functio
 	}
 })
 
-//td클릭 시 체크박스 선택/해제
-$(document).on('click', "#attiBoardList tr input[type='checkbox']:not(#HeaderAllCheckBox)", function() {
-	var checkValue = "";
-	if ($(this).is(":checked") == true) {
-		checkValue = false;
-	} else {
-		checkValue = true;
-	}
-	
-	$(this).prop("checked", checkValue);
-})
 /** jQuery 옵션 끝*/
-
 //tr 클릭이벤트 부여
 function addTrClickEvent(func) {
-	$("#attiBoardList tr:not(#attiBoardList tr:eq(0))").unbind('click').on('click', func);
+	$("#contentlist tr:not(#contentlist tr:eq(0))").unbind('click').on('click', func);
 }
 
 //tr 더블클릭이벤트 부여
 function addTrDblclickEvent(func) {
-	$("#attiBoardList tr:not(#attiBoardList tr:eq(0))").unbind('dblclick').on('dblclick', func);
+	$("#contentlist tr:not(#contentlist tr:eq(0))").unbind('dblclick').on('dblclick', func);
 }
 
 //attitude 페이징 중복 함수, 페이징 셋팅
@@ -115,12 +75,16 @@ function makePageSelPageAtti() {
 		pagingHtml += "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'/></span><span class='ptxt' onclick='goToPageByNum(" + (pageNum - 1) + ")'>이전</span>";
 	}
 	
-	var maxNum = ""; // 현재 블록의 마지막 페이지를 저장하는 변수
+	var maxNum = 1; // 현재 블록의 마지막 페이지를 저장하는 변수
 	var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1; // 현재 페이지의 1페이지 변수
 	if (totalPage >= startNum + blockSize) {
 		maxNum = (startNum + blockSize) - 1;
 	} else {
-		maxNum = totalPage
+		if (totalPage == 0) {
+			totalPage = 1;
+		}
+		
+		maxNum = totalPage;
 	}
 	
 	//페이지 셋팅
