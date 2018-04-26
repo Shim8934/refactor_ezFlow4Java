@@ -1304,7 +1304,7 @@
 				
 		        //직인의뢰함에서 타입을 END로 주기위해
 		        var url;
-		        if (pListTypeValue == 7) {
+		        if (pListTypeValue == 7 || pListTypeValue == 8 || pListTypeValue == 9) {
 		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END";	
 		        } else {
 		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";

@@ -3646,7 +3646,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else {
 				for(int i = 0; i< hlength; i ++){
 					resultXML.append("<CELL>");
-					resultXML.append("<VALUE>");
+					resultXML.append("<VALUE><![CDATA[");
 					FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase();
 					
 					if(FieldName.equals("APRMEMBERDEPTNAME")) {
@@ -3662,7 +3662,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					
 					resultXML.append(getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet));
-					resultXML.append("</VALUE>");
+					resultXML.append("]]></VALUE>");
 					
 					if (i == 0) {
 						resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent()) + "</DATA1>");
@@ -3670,8 +3670,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA3>");
 						resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("APRDEPTSN").item(k).getTextContent()) + "</DATA4>");
 						resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("APRDEPTMEMBERSN").item(k).getTextContent()) + "</DATA5>");
-						resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent()) + "</DATA10>");
-						resultXML.append("<DATA11>" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent()) + "</DATA11>");
+						resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent()) + "]]></DATA10>");
+						resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent()) + "]]></DATA11>");
 					}
 					
 					resultXML.append("</CELL>");
