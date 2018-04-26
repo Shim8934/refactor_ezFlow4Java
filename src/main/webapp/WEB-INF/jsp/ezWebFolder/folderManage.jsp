@@ -65,59 +65,7 @@
             else
                 window.close();
         }
-        /*
-        function folderList(obj) {
-			folderType = obj;
-			$.ajax ({
-				type :"POST",
-				async: false,
-				url  : "/ezWebFolder/folderList.do",
-				data : { 
-						 "folderId"   : folderId
-						,"folderType" : obj
-					},
-				dataType: "JSON",
-				success : function (data) {
-					test = data.data;
-		        	$.jstree.destroy();
-					$('#folderTree').jstree({
-						
-						'core' : {
-							"animation" : 0,
-							'data' : data.data,
-							"multiple" : false,
-							'themes' : {
-								"theme"      : "default",
-								"dots"       : false,
-								'responsive' : false,
-								'variant'    : 'small',
-								'stripes'    : false
-							}
-						},
-						"types" : {
-							"default": {
-								"icon" :"/images/OrganTree_cross/fldr.gif" 
-							}
-						},
-						"grid": {
-							"width"       : "25",
-							"margin-left" : "10"
-						},
-						'plugins': ["core","types","json_data","changed","themes"]
-					});
-			   		
-				},
-				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134' />" + error);
-				}
-			});
-			$("#folderTree").on("changed.jstree", function (e, data) {
-			   folderId = data.selected[0]; 
-			   createId = folderId != null ? data.node.original.createId : ""; 
-			   parent   = data.node.original.parent; 
-			   console.log("The selected nodes are:" + folderId);
-			});
-	    }*/
+        
         function folderList(obj) {
 	    	$('#folderTree').jstree('destroy');
 			folderType = obj;
@@ -162,6 +110,7 @@
 						createId = folderId != null ? data.node.original.createId : ""; 
 						parent   = data.node.original.parent; 
 						console.log("The selected nodes are:" + folderId);
+						alert(folderId);
 					});
 				},
 				error : function(error) {
@@ -170,6 +119,10 @@
 			});
 	    }
         
+        function radioOnclick(obj) {
+        	folderId="";
+        	folderList(obj);
+        }
         
         function add_onclick() {
             if (folderId == "") {
@@ -187,6 +140,19 @@
             if (folderId == "") {
                 alert("<spring:message code='ezWebFolder.t256'/>");
                 return;
+            }
+            if ( parent =='#' ) {
+	            alert("최상위 폴더는 수정할 수 없습니다.");
+	            return;
+            }else if (folderType == "C") {
+            	for ( var i = 0 ; i <test.length; i++) {
+            		if (test[i].id == parent) {
+            			if(test[i].parent == '#') {
+            				alert("관리자만  관리가 가능한 폴더입니다.");
+				            return;
+            			} 
+            		}
+            	}
             }
             if (userId !=createId ) {
             	alert("<spring:message code='ezWebFolder.t258'/>");
@@ -207,12 +173,25 @@
                 alert("<spring:message code='ezWebFolder.t259'/>");
                 return;
             }
+            if ( parent =='#' ) {
+	            alert("최상위 폴더는 삭제할 수 없습니다.");
+	            return;
+            }else if (folderType == "C") {
+            	for ( var i = 0 ; i <test.length; i++) {
+            		if (test[i].id == parent) {
+            			if(test[i].parent == '#') {
+            				alert("관리자만  관리가 가능한 폴더입니다.");
+				            return;
+            			} 
+            		}
+            	}
+            }
             if (userId !=createId ) {
             	alert("<spring:message code='ezWebFolder.t260'/>");
             	
             	return;
-            }else {
             }
+            
             deleteFolderDlg_cross_dialogArguments[0] = folderId;
             deleteFolderDlg_cross_dialogArguments[1] = add_onclick_Complete
             console.log("folderId delete_onclick function" + folderId);
@@ -227,17 +206,23 @@
             }
            	
             if ( parent =='#' ) {
-	            alert("<spring:message code='ezWebFolder.t262'/>");
+	            alert("최상위 폴더는 이동할 수 없습니다.");
 	            return;
             }else if (folderType == "C") {
             	for ( var i = 0 ; i <test.length; i++) {
             		if (test[i].id == parent) {
             			if(test[i].parent == '#') {
-				            alert("<spring:message code='ezWebFolder.t262'/>");
+				            alert("관리자만  관리가 가능한 폴더입니다.");
 				            return;
             			} 
             		}
             	}
+            }
+            
+            if (userId !=createId ) {
+            	alert("폴더생성자가 아닙니다. 폴더를 이동할 권한이 없습니다.");
+            	
+            	return;
             }
             moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
             moveCopyFolderDlg_cross_dialogArguments[1] = "move";
@@ -248,7 +233,7 @@
         }
         function copy_onclick() {
             if (folderId == "") {
-                alert("<spring:message code='ezWebFolder.t261'/>");
+                alert("복사할 폴더를 선택하세요");
                 return;
             }
            	
@@ -293,9 +278,9 @@
 	
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('C');"> <span><spring:message code='ezWebFolder.t233'/></span>
-			<input name="treeType" id="radio2" type="radio" value="D"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('D');"> <span><spring:message code='ezWebFolder.t234'/></span>
-			<input name="treeType" id="radio3" type="radio" value="U"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('U');"> <span><spring:message code='ezWebFolder.t235'/></span>
+			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="radioOnclick('C');"> <span><spring:message code='ezWebFolder.t233'/></span>
+			<input name="treeType" id="radio2" type="radio" value="D"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="radioOnclick('D');"> <span><spring:message code='ezWebFolder.t234'/></span>
+			<input name="treeType" id="radio3" type="radio" value="U"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="radioOnclick('U');"> <span><spring:message code='ezWebFolder.t235'/></span>
 		</div>
 	</div>
 	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto;" id="folderTree"></div>

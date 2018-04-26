@@ -607,11 +607,11 @@
 						
 						where folder_path like (#folderPath#||'%') 
 					]]>
-		<include refid="searchAll"/>
-		<![CDATA[
-			
-				ORDER BY FOLDER_SORT, CREATE_DATE DESC
-                ) tear 
+					<include refid="searchAll"/>
+					<![CDATA[
+						
+					ORDER BY FOLDER_SORT, CREATE_DATE DESC
+	                ) tear 
 				where ROWNUM <= #pEnd# + #pStart#
 	              
 	            )
@@ -620,12 +620,15 @@
 	</select>
 	<select id="EzWebFolderDAO_y.searchFileListR" resultMap="fileVO" parameterClass="Map">
 		<![CDATA[
-			SELECT DISTINCT
-					t.*	 
-			from 
-				(
+    		select * from ( 
+	            select tear.*, ROWNUM rownums 
+		        	from (
+						SELECT DISTINCT
+								t.*	 
+						from 
+							(
 		]]>
-		<include refid="fileListSelect"/>
+			<include refid="fileListSelect"/>
 			<isEqual property="folderType" compareValue="C" >
 	   			FROM 
 					TBL_WEBFOLDER_FOLDER folder JOIN TBL_WEBFOLDER_FILE f
@@ -673,8 +676,14 @@
 		<include refid="searchAll"/>
 		<![CDATA[
 			
-			ORDER BY FOLDER_SORT,CREATE_DATE desc 
+				ORDER BY FOLDER_SORT,CREATE_DATE desc 
+				 ) tear 
+			where ROWNUM <= #pEnd# + #pStart#
+	              
+	            )
+	        where rownums >= #pStart#
 		]]>	
+		
 	</select>
 	
 	<select id="EzWebFolderDAO_y.getFldToTalCount" resultClass="Integer" parameterClass="Map">   
