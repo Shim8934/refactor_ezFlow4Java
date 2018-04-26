@@ -307,7 +307,7 @@ function addFavorite(projectId) {
 		        <div class="shadow">
 		        </div>
 		    </div>
-	<div id = "memoStyleDiv" style="max-height:484px; width:100%; overflow:auto; display:none;">
+	<div id = "memoStyleDiv" style="height:80%; width:100%; overflow:auto; display:none;">
 		<c:forEach items="${projectList }" var="project" >
 			<table id="${project.projectId }" style="margin:10px 20px; float:left; position:relative; border:solid 1px gray; clear:none; width:360px; left:2%;">
 				<tr>
@@ -347,11 +347,13 @@ function addFavorite(projectId) {
 			</table>
 		</c:forEach>
 	</div>
-	<span id="MailListRayer" style="border: 0px solid blue; width: 100%; height: 484px; vertical-align: top; overflow: hidden; display: none;"> 
-	<div style="width: 100%; height: 434px;" id="divList">
+	
+	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block; height: 737px; width: 100%;">
+	<div style="width:100%; overflow:auto;" id="divList">
 	<div id="lvBoardList">
-	<table class="mainlist" style="min-width:579px;" width="100%" border="0" multiselectable="false" useocs="false" cellspacing="0" cellpadding="0">
-		<tr>
+	<table id="boardList" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" rowondblclick="ItemRead_onclick(this)" width="100%" border="0" class="mainlist" style="min-width: 569px;">
+		<thead id="BoardList_THEAD">
+		<tr id="BoardList_TH">
 			<th style="width: 50px; text-align:center"><input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
 			<th style="width: 20%">프로젝트명</th>
 			<th>총괄 담당자</th>
@@ -362,10 +364,9 @@ function addFavorite(projectId) {
 			<th style="width:20%;">프로젝트 기간</th>
 			<th>상태</th>
 		</tr>
-		</table>
-		<div style="overflow: auto; min-width: 579px; height: 396px;">
-		<table class="mainlist" style="width:100%">
-			<c:forEach items="${projectList }" var="project" >
+		</thead>
+		<tbody style="background-color: rgb(255, 255, 255);">
+		<c:forEach items="${projectList }" var="project" >
 				<tr>
 					<td style="width: 50px; cursor: default; text-align:center"><input type="checkbox" style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;"></td>
 					<td style="width: 20%; text-align:left;"><c:out value="${project.projectName }"/></td>
@@ -379,15 +380,12 @@ function addFavorite(projectId) {
 					<td><div style="width:40px; background-color:rgb(224, 224, 224); margin-left:10px;"><c:out value="${project.status }"/></div></td>
 				</tr>
 			</c:forEach>
+		</tbody>
+			
 			</table>
 		</div>
-		
-	</div>
-		
-	</div>
-		</span>
-	
-	
+		</div>
+	</span>
 	<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
 		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
