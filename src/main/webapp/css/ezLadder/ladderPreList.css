@@ -37,7 +37,7 @@ body{margin:0px; padding:0px; font-family: 'Gulim', 'arial', 'verdana';}
 .ladderGame_info .txt span.name{font-size: 14px; font-weight: bold; color: #2568b3;}
 .ladderGame_info .txt span.date{color: #777;}
 .ladderGame_info .edit{float:left; list-style:none; margin:0px 8px; padding:0px;}
-.ladderGame_info .edit li{float:left; margin:0px 10px 0px 0px; border: 1px solid #DDD; border-radius: 15px; background: #FFF; width: 45px; height: 45px;}
+.ladderGame_info .edit li{float:left; margin:0px 10px 0px 0px; border: 1px solid #DDD; border-radius: 15px; background: #FFF; width: 45px; height: 45px; overflow: hidden;}
 
 .ladderGame_view{clear:both; width:796px; height:100%;}
 .btn_preview{float:right; margin:12px 20px 0px 0px;}
