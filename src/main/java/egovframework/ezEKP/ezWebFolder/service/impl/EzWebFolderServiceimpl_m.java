@@ -952,7 +952,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 
 	@Override
-	public void deleteFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception {
+	public int deleteFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception {
 		
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
@@ -960,7 +960,18 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("targetType", targetType);
 		parameterMap.put("tenantId", tenantId);
 
-		ezWebFolderDAO.deleteFavorite(parameterMap);
+		return ezWebFolderDAO.deleteFavorite(parameterMap);
+	}
+	
+	@Override
+	public int deleteFavoritesInFolder(String userId, String folderId, int tenantId) throws Exception {
+		
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("userId", userId);
+		parameterMap.put("folderId", folderId);
+		parameterMap.put("tenantId", tenantId);
+
+		return ezWebFolderDAO.deleteFavoritesInFolder(parameterMap);
 	}
 
 	@Override
