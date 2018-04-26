@@ -417,7 +417,7 @@
 	            }
 	        }
 	        
-	        function infoview_click() { 
+	        function infoview_click() { //어느 직원도 선택 안하고 버튼 눌렀을 때
 	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
 	                alert("<spring:message code='ezCircular.t148' />");
 	                return;
@@ -680,8 +680,8 @@
 	                        }
 	            		}
 	            	}
-	            } else { // 2018.04.26 회람판 수정 (문성업) -시작 부분  
-		           if (p_ListOrderObject == "" || p_ListOrderObject == null) { //(수정)조직도에서 어느 부서원 클릭 안 할 때 ->화살표를 누르면 자신 제외하고 전체 부서원 출력
+	            } else { // 2018.04.26 회람판 수정 (문성업) - 시작 부분  
+		           if (p_ListOrderObject == "" || p_ListOrderObject == null) { //수정 
 		                    /* alert("<spring:message code='ezCircular.t148' />");
 		                    return; */
 		                	var treeView = new TreeView();
@@ -711,7 +711,7 @@
 		       				            pparsingXML = pparsingXML + "<DATA6><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></DATA6>";
 		       				            pparsingXML = pparsingXML + "<DATA7><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("TITLE")[i]) + "]]></DATA7>";
 		       				            pparsingXML = pparsingXML + "<DATA8>" + getNodeText(xmlRtn.getElementsByTagName("TELEPHONENUMBER")[i]) + "</DATA8>";
-		       				            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i])+ "]]></VALUE></CELL></ROW>"; //수정
+		       				            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i])+ "]]></VALUE></CELL></ROW>";
 		       				            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		       				            Resultxml = loadXMLString(pparsingXML2);
 
@@ -753,8 +753,8 @@
 		    					error : function(jqXHR, textStatus, errorThrown) {
 		    										
 		    					}
-		    				}); 
-		                }else{ //2018.04.26  회람판 오류 수정 (문성업)- 조직도에서 클릭한 한 부서에 부서원을 클릭해서 회람자에서 출력된 상태에서 다른 부서에서 부서원을 클릭하지 않았는데 전체 부서원이 출력되지 않는 오류 수정 
+		    				}); //끝
+		                }else{ //이 부분 수정
 		                	 if (listContentArry != "") {
 		 		                for (var i = 0; i < listContentArry.length; i++) {
 		 		                	strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
@@ -822,7 +822,7 @@
 		 		
 		 		                    }
 		 		                }
-		                  }    //끝
+		                  }    
 		 		          else{
 		                    strId = p_ListOrderObject.getAttribute("_data2");
 		                    strName = p_ListOrderObject.getAttribute("_data4");
@@ -889,8 +889,6 @@
 	            
 		        var listid ="MsgToList";
 		        _RowObjectID = null;
-		        //2018-04-26 김보미 - 화살표 선택 버그 수정
-		        listContentArry = new Array();
 		    }
 	    
 		    function CheckMailReceiver(selRow, option) {
@@ -935,7 +933,7 @@
 		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		        	SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
+		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
 		        
@@ -946,7 +944,7 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		            	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -959,7 +957,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
