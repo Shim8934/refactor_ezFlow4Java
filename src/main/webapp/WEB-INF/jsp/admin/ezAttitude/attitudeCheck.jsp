@@ -11,8 +11,6 @@
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 	    <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<!--     <script type="text/javascript" src="/js/mouseeffect.js"></script> -->
-	<!--     <script type="text/javascript" src="/js/Common.js"></script> -->
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
 	    <!-- data picker-->		
@@ -52,6 +50,7 @@
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var adminCompany = "${adminCompany}";
+	    	var listSize = 19;
 	    	
 	    	$(function(){
 	    		//회사리스트
@@ -474,20 +473,23 @@
 	  		</div>
 	  	</div> -->
 	  	
-		<table id="attiBoardList" class="mainlist" style="width:100%;">
-			<thead>
-				<tr>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
-					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
-					<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
-					<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_time">시간</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
+	  	<div id="listDiv" style="height:620px;">
+			<table id="attiBoardList" class="mainlist" style="width:100%;">
+				<thead>
+					<tr>
+						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
+						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
+						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
+						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
+						<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
+						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_time">시간</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+	  	</div>
+		<div id="runtime" style="color: #666; padding-top: 10px"></div>
 		<div id="tblPageRayer">
 		</div>
 		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
