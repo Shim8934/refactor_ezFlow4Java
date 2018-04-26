@@ -138,17 +138,17 @@ function ladderDrawInitSettingVar() {
 
 function moveUserPicImg(type) {
 	if(!!$(".goLadder").length && clickUserOrder != $(".goLadder").parent().attr("id").slice(4)) {
-		$("[id^='drag']").find("div").removeClass("goLadder").css({"outline": "1px solid #dddddd", "background": "#ffffff"})
+		$("[id^='drag']").find("div").removeClass("goLadder").css({"background": "#ffffff"})
 	}
 	
 	if(type != "popall") {
-		$("#drag" + clickUserOrder).find("div").addClass("goLadder").css({"outline": "1px solid #0470e4", "background": "#ddeeff"});
+		$("#drag" + clickUserOrder).find("div").addClass("goLadder").css({"background": "#ffffff", "color" : "#2568b3"});
 	}
 	
 	pathUser = checkUserPath[clickUserOrder];
 	var userImgHtml;
 	if($("#drag" + clickUserOrder + " span").hasClass("userPicWraper_d")) {
-		userImgHtml = '<span class="userPicWraper" style="border-color: #2568b3"><img src="/images/ezLadder/icon_defaultAttendant_hover.png" width="60px" height="60px" style="display: block;"></span>';
+		userImgHtml = '<span class="userPicWraper" style="border-color: #2568b3"><img src="/images/ezLadder/icon_defaultAttendant_hover.png" width="48px" height="48px" style="display: block;"></span>';
 	} else {
 		userImgHtml = document.getElementById("drag"+clickUserOrder).children[0].outerHTML;
 	}
@@ -164,7 +164,7 @@ function moveUserPicImg(type) {
 		if(userStatus[clickUserOrder] == 0) {
 			$("#moveImgUser" + clickUserOrder).remove();
 			
-			moveLeft = canvasLeft + wSize * resultOrder;
+			moveLeft = canvasLeft + wSize * resultOrder + 12;
 			
 			$("#lineDiv span:eq(0)").append(userImgHtml);
 			$("#lineDiv span:last")
@@ -176,7 +176,7 @@ function moveUserPicImg(type) {
 		ladderAnimationComplete(type);
 	} else {
 		
-		moveLeft = canvasLeft + wSize * clickUserOrder;
+		moveLeft = canvasLeft + wSize * clickUserOrder + 12;
 		moveTop = canvasTop;
 		
 		$("#lineDiv span:eq(0)").append(userImgHtml);
@@ -285,7 +285,7 @@ function printUserPath(locX, locY, moveX, moveY, type) { // 유저 경로 그리
 				if(moveX <= startXPoint + (locX - 1) * wSize) {
 					locX--;
 					moveX = startXPoint + locX * wSize;
-					moveLeft = canvasLeft + locX * wSize;
+					moveLeft = canvasLeft + locX * wSize + 12;
 				}
 			} else if(path['direction'] == 'right') {
 				moveX += moveSpeed;
@@ -293,7 +293,7 @@ function printUserPath(locX, locY, moveX, moveY, type) { // 유저 경로 그리
 				if(moveX >= startXPoint + (locX + 1) * wSize) {
 					locX++;
 					moveX = startXPoint + locX * wSize;
-					moveLeft = canvasLeft + locX * wSize;
+					moveLeft = canvasLeft + locX * wSize + 12;
 				}
 			} 
 		} else {
@@ -324,7 +324,7 @@ function drawLadLine(flag, startX, startY) {
 	if(canvas.getContext) {
 		var cv = canvas.getContext('2d');
 		
-		cv.strokeStyle = 'DimGray';
+		cv.strokeStyle = '#999';
 		cv.lineWidth = 1;
 		
 		cv.beginPath();
@@ -349,7 +349,7 @@ function drawPathLine(user, moveX, moveY, type) {
 		var cv = canvas.getContext('2d');
 		
 		cv.strokeStyle = pathUser['color'];
-		cv.lineWidth = 3;
+		cv.lineWidth = 2;
 		
 		if(moveY == startYPoint) {
 			if(type == 'one' || user == 0) {

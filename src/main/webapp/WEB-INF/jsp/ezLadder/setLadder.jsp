@@ -686,7 +686,7 @@
 						
 						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
 							html += '<li class="attendant"><div style="height: 140px; padding-top:  20px;">';
-							html += '<div class="userPicWraper"><img src="' + picsrc + '" width="60px" height="60px" /></div>';
+							html += '<div class="userPicWraper"><img src="' + picsrc + '" width="48px" height="48px" /></div>';
 							html += '<div style="margin-top: 10px;"><span>'
 							html += '<input type="text" class="input" name="userNames" style="line-height: 30px;" id="userNames' + i + '" maxlength="' + maxname + '" /></span></div>';
 							html += '<input type="text" name="userName2s" style="display: none;" />';
@@ -703,7 +703,7 @@
 							}
 							
 							html += '<li class="attendant"><div style="height: 140px; padding-top:  20px;">';
-							html += '<div class="userPicWraper"><img src="' + picsrc + '" width="60px" height="60px" /></div>';
+							html += '<div class="userPicWraper"><img src="' + picsrc + '" width="48px" height="48px" /></div>';
 							html += '<div style="margin-top: 10px;"><span>'
 							html += '<input type="text" class="input" readonly="readonly" name="userNames" style="line-height: 30px; background: rgb(244, 245, 245)" /></span></div>';
 							html += '<input type="text" name="userName2s" style="display: none;" />';

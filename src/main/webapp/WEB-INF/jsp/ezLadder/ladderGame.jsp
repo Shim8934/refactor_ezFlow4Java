@@ -168,7 +168,7 @@
 				})
 				.on("mouseleave", "[id^='drag']", function() {
 					var $this = $(this);
-					$this.find("span").css("border-color", "#9e9e9e");
+					$this.find("span").css("border-color", "#ccc");
 					if($this.find("span").hasClass("userPicWraper_d")) {
 						$(this).find("img").attr("src", "/images/ezLadder/icon_defaultAttendant.png");
 					}
@@ -349,16 +349,16 @@
 			var $resultLi = $("#itemList li:eq(" + resultOrder + ")");
 			var $resultDiv = $("#itemList li:eq(" + resultOrder + ")").find("div");
 			
-			$(".resultItem").css({"outline": "1px solid #dddddd", "background": "#ffffff"});
-			$(".resultUser").css({"background": "#dddddd", "color": "#000000"});
-
-			$resultDiv.eq(0).css({"outline": "1px solid #0470e4", "background": "#ddeeff"});
+			$(".resultItem").css({"background": "#ffffff"});
+			$(".resultUser").css({"background": "#f2f2f2", "color": "#000000"});
+			
+			$resultDiv.eq(0).css({"outline": "1px solid #2568b3", "background": "#ffffff", "color" : "#2568b3"});
 			if($resultDiv.length == 1) {
 				var html = "<div title='" + _ladderLine[clickUserOrder].userName + "' class='resultUser' style='line-height: 30px; height: 30px; background: #0470e4; color: #ffffff; margin-top: 10px; border-radius: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + _ladderLine[clickUserOrder].userName + "</div>";
 				$resultLi.append(html);
 				$moveImgUser = $("#moveImgUser" + clickUserOrder);
 			} else {
-				$resultDiv.eq(1).css({"background": "#0470e4", "color": "#ffffff"});
+				$resultDiv.eq(1).css({"background": "#2568b3", "color": "#ffffff"});
 				$moveImgUser = $("#copyUser");
 			}
 			
@@ -366,8 +366,8 @@
 				var scrollval = (resultOrder * 150 - $("#ladderLineBox").width()/2) + 75;
 				$("#ladderLineBox").animate({"scrollLeft": scrollval}, 400);
 			} else {
-				$(".resultItem").css({"outline": "1px solid #dddddd", "background": "#ffffff"});
-				$(".resultUser").css({"background": "#dddddd", "color": "#000000"});
+				$(".resultItem").css({"background": "#ffffff"});
+				$(".resultUser").css({"background": "#f2f2f2", "color": "#000000"});
 			}
 			
 			if($moveImgUser.attr("_result") == "0") {
@@ -439,11 +439,11 @@
 						var picsrc = !line.pic ? "/images/ezLadder/icon_defaultAttendant.png" : "/admin/ezOrgan/getPersonalInfo.do?fileName=" + line.pic;
 						html += '<li><div id="drag' + index + '" style="cursor: pointer;">';
 						if(!line.pic) {
-							html += '<span class="userPicWraper_d"><img src="/images/ezLadder/icon_defaultAttendant.png" width="60px" height="60px" style="display: block;" /></span>';
+							html += '<span class="userPicWraper_d"><img src="/images/ezLadder/icon_defaultAttendant.png" width="48px" height="48px" style="display: block;" /></span>';
 						} else {
-							html += '<span class="userPicWraper"><img src="' + picsrc + '" width="60px" height="60px" /></span>';
+							html += '<span class="userPicWraper"><img src="' + picsrc + '" width="48px" height="48px" /></span>';
 						}
-						html += '<div title="' + line.userName + '" style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap">' + line.userName + '</span></div></div></li>';
+						html += '<div title="' + line.userName + '" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap">' + line.userName + '</span></div></div></li>';
 					});
 					$("#attendantList").html(html);
 					canvasSetting();
@@ -657,7 +657,7 @@
 			width: 100%;
 			height: 30px;
 			top: 12px;
-			background: #EEE;
+			background: #f2f2f2;
 			line-height: 29px;
 			position: absolute;
 		}
@@ -798,7 +798,7 @@
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
-											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top: 25px;"/></a>
+											<a href="#" onclick="start(${vo.ladderId}); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top: 10px;"/></a>
 										</div>
 									</c:when>
 									<c:otherwise>
@@ -810,7 +810,7 @@
 								</c:choose>
 							</div>
 							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px; padding-top: 30px; padding-bottom: 20px; border-top:0px">
-								<div style="height: 100px; margin-bottom: 20px;">
+								<div style="height: 100px;">
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
 											<li _attendantIndex="${status.index}">
@@ -818,23 +818,23 @@
 													<c:choose>
 														<c:when test="${empty line.pic}">
 															<span class="userPicWraper_d">
-																<img src="/images/ezLadder/icon_defaultAttendant.png" width="60px" height="60px" style="display: block;" />
+																<img src="/images/ezLadder/icon_defaultAttendant.png" width="48px" height="48px" style="display: block;" />
 															</span>
 														</c:when>
 														<c:otherwise>
 															<span class="userPicWraper">
-																<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${line.pic}" width="60px" height="60px" />
+																<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${line.pic}" width="48px" height="48px" />
 															</span>
 														</c:otherwise>
 													</c:choose>
-													<div title="${line.userName}" style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
+													<div title="${line.userName}" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
 												</div>
 											</li>
 										</c:forEach>
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 400px;background: #dfdfdf; position: absolute;left: -50px;right: 0;">
+									<div id="blackBox" style="height: 380px;background: #f5faff; position: absolute;left: -50px;right: 0;border-top:1px solid #dde4ed;border-bottom:1px solid #dde4ed">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>
@@ -863,16 +863,16 @@
 														<c:choose>
 															<c:when test="${empty line.pic}">
 																<span class="userPicWraper_d">
-																	<img src="/images/ezLadder/icon_defaultAttendant.png" width="60px" height="60px" style="display: block;" />
+																	<img src="/images/ezLadder/icon_defaultAttendant.png" width="48px" height="48px" style="display: block;" />
 																</span>
 															</c:when>
 															<c:otherwise>
 																<span class="userPicWraper">
-																	<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${line.pic}" width="60px" height="60px" />
+																	<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${line.pic}" width="48px" height="48px" />
 																</span>
 															</c:otherwise>
 														</c:choose>
-													<div title="${line.userName}" style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
+													<div title="${line.userName}" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
 												</div>
 											</li>
 										</c:forEach>
