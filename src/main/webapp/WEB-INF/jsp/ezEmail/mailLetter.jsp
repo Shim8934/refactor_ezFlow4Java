@@ -68,6 +68,27 @@
 				text-align: center;
 			}
 			
+			#span1 {
+				margin-right: 10px;
+			    display: inline-block;
+			    overflow: hidden;
+			    text-overflow: ellipsis;
+			    white-space: nowrap;
+			    float: left;
+				width: 70%;
+			    margin: 0px;
+			    text-align: left;
+			}
+			
+			#b1 {
+			    width: 30%;
+			    display: inline-block;
+			    overflow: hidden;
+			    text-overflow: ellipsis;
+			    white-space: nowrap;
+			    text-align: left;
+			}
+			
 		</style>
 	
 	</head>
@@ -121,6 +142,8 @@
 			var previewMsg = "<spring:message code='ezBoard.t431'/>"; // 미리보기 
 			var dataNoMsg= "<spring:message code='main.t00026'/>"; // 데이터가 없습니다.
 			var selectLetterMsg ="<spring:message code='ezEmail.letter5'/>"; // 편지지를 선택하세요!
+			var letterListMsg = "<spring:message code='ezEmail.letter2'/>"; //편지지 목록
+			var letterPathMsg = "<spring:message code='main.t4003'/>"; //경로
 	    
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록

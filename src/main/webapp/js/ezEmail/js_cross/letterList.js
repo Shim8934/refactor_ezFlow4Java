@@ -169,7 +169,11 @@ function addLetterList(jsonArr) {
 			letterListHtml += "<span style='float:left'>" + langDisplayName.replace(/</gi, "&lt;") + "</span>";
 			
 			if (pageType == 'letter_user') {
+				
 				if (searchMode) {
+					$(".lmLetterTitle").empty();
+					$(".lmLetterTitle").html("<span id='span1'>" + letterListMsg + "</span><b id='b1'>" + letterPathMsg + "</b>");
+					
 					var boxName = "";
 					$.ajax({
 						type:"POST",
@@ -181,7 +185,6 @@ function addLetterList(jsonArr) {
 						},
 						error:function(data){
 							alert("error");
-							//console.log(data);
 						}
 					});
 					
@@ -195,6 +198,12 @@ function addLetterList(jsonArr) {
 			letterListHtml += "</li>";
 		}
 	} else {
+		
+		if (searchMode == true && pageType == "letter_user") {
+			$(".lmLetterTitle").empty();
+			$(".lmLetterTitle").html("<span id='span1'>" + letterListMsg + "</span><b id='b1'>" + letterPathMsg + "</b>");
+		}
+		
     	letterListHtml = "<li class='lmNoData'>" + dataNoMsg + "</li>";
 	}
 	
