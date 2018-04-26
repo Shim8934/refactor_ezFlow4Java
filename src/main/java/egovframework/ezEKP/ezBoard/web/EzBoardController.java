@@ -4963,7 +4963,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287", userInfo.getLocale()));
 		}
 		
-		if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
+		if (adjacentItemsEnableFlag != null && showAdjacent != null && adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
 			if (boardItem.getUpperItemIDTree() == null || boardItem.getUpperItemIDTree().equals("")) {
 				boardItem.setUpperItemIDTree(itemID);
 			}
