@@ -676,4 +676,152 @@
 				upper_group_id = #groupId#) a
 	</select>
 	
+	<select id="getProjectDetail" parameterClass="Map" resultMap="projectInfoVO">
+		<![CDATA[
+			SELECT DISTINCT
+				A.PROJECT_ID AS PROJECT_ID, 
+				A.TENANT_ID AS TENANT_ID,
+				A.PROJECT_NAME AS PROJECT_NAME, 
+				A.PLAN_START_DATE AS PLAN_START_DATE,
+				A.PLAN_END_DATE AS PLAN_END_DATE, 
+				A.REAL_START_DATE AS REAL_START_DATE, 
+				A.REAL_END_DATE AS REAL_END_DATE,
+				A.HEAD_MANAGER_ID AS HEAD_MANAGER_ID, 
+				A.HEAD_MANAGER_NAME AS HEAD_MANAGER_NAME, 
+				A.HEAD_MANAGER_NAME2 AS HEAD_MANAGER_NAME2,
+				A.HEAD_MANAGER_DEPTNAME AS HEAD_MANAGER_DEPTNAME, 
+				A.HEAD_MANAGER_DEPTNAME2 AS HEAD_MANAGER_DEPTNAME2, 
+				A.STATUS AS STATUS, 
+				A.PROGRESS AS PROGRESS, 
+				A.OVERVIEW AS OVERVIEW,  
+				A.WEIGHT_INPUT AS WEIGHT_INPUT, 
+				A.CREATOR_ID AS CREATOR_ID, 
+				A.CREATE_DATE AS CREATE_DATE, 
+				A.CREATOR_NAME AS CREATOR_NAME, 
+				A.CREATOR_NAME2 AS CREATOR_NAME2, 
+				A.CREATOR_DEPTNAME AS CREATOR_DEPTNAME,
+				A.CREATOR_DEPTNAME2 AS CREATOR_DEPTNAME2, 
+				A.WORKINGDAY AS WORKINGDAY, 
+				A.REST_DUEDAY AS REST_DUEDAY, 
+				A.ALAM_MAIL_STATUS AS ALAM_MAIL_STATUS  
+			FROM 
+				tbl_pms_project A
+			JOIN 
+				tbl_pms_member B
+			ON
+				A.PROJECT_ID = B.PROJECT_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID 
+			WHERE 
+				( B.USER_ID = #userId# 
+				OR 
+				  B.USER_ID = #deptId# 
+				)
+			AND  
+				A.STATUS = #status# 
+			AND 
+				A.TENANT_ID = #tenantId#
+			AND
+				A.PROJECT_ID = #projectId#
+			ORDER BY 
+				PLAN_END_DATE DESC
+		]]>
+	</select>
+	
+	<select id="getTaskList" parameterClass="Map" resultMap="projectTaskVO">
+		<![CDATA[
+			SELECT DISTINCT
+				A.task_id,
+				A.tenant_id,
+				A.project_id,
+				A.group_id,
+				A.task_name,
+				A.status,
+				A.plan_start_date,
+				A.plan_end_date,
+				A.real_start_date,
+				A.real_end_date,
+				A.real_progress,
+				A.weight,
+				A.overview,
+				A.member_count,
+				A.head_manager_id,
+				A.head_manager_name,
+				A.head_manager_name2,
+				A.head_manager_deptname,
+				A.head_manager_deptname2,
+				A.writer_id,
+				A.write_date,
+				A.writer_name,
+				A.writer_name2,
+				A.writer_deptname,
+				A.writer_deptname2,
+				A.tree_depth,
+				A.ancester_group,
+				A.sort_order,
+				A.workingday,
+				A.rest_dueday,
+				A.link_task_id,
+				A.del_status
+			FROM 
+				tbl_pms_task A
+			JOIN 
+				tbl_pms_project B
+			ON
+				A.PROJECT_ID = B.PROJECT_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			JOIN
+				tbl_pms_member C
+			ON	
+				A.PROJECT_ID = C.PROJECT_ID
+			JOIN
+				tbl_pms_group D
+			ON
+				A.GROUP_ID = D.GROUP_ID
+			WHERE 
+				C.USER_ID = #userId#
+			AND  
+				A.PROJECT_ID = #projectId#
+			AND 
+				A.TENANT_ID = #tenantId#
+		]]>
+		<isNotNull property="status">
+			AND
+				B.STATUS LIKE CONCAT('%',#status#,'%')
+		</isNotNull>
+		<isNotNull property="taskName">
+			AND
+				A.TASK_NAME LIKE CONCAT('%',#taskName#,'%')
+		</isNotNull>
+		<isNotNull property="upperGroupName">
+			AND
+				D.GROUP_NAME IN
+					(SELECT 
+						PGA.GROUP_NAME 
+                     FROM 
+                     	TBL_PMS_GROUP PGA 
+                     JOIN 
+                     	TBL_PMS_GROUP PGB 
+                     ON 
+                     	PGA.UPPER_GROUP_ID = PGB.GROUP_ID
+                     WHERE 
+                     	PGB.GROUP_NAME LIKE CONCAT('%',#upperGroupName#,'%')
+                    )
+		</isNotNull>
+		<isNotNull property="headManagerName">
+			AND
+				B.HEAD_MANAGER_NAME LIKE CONCAT('%',#headManagerName#,'%')
+		</isNotNull>
+		<isNotNull property="planStartDate">
+			AND
+				A.PLAN_START_DATE LIKE CONCAT('%',#planStartDate#,'%')
+		</isNotNull>
+		<isNotNull property="planEndDate">
+			AND
+				A.PLAN_END_DATE LIKE CONCAT('%',#planEndDate#,'%')
+		</isNotNull>
+			ORDER BY 
+				PLAN_END_DATE DESC
+	</select>
 </sqlMap>

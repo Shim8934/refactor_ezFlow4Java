@@ -64,8 +64,8 @@ public class EzPMSController2 {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String projectId = request.getParameter("projectId");
-		String onlyGroup = request.getParameter("onlyGroup");
 		
+		String onlyGroup = request.getParameter("onlyGroup");
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("onlyGroup", onlyGroup);
@@ -343,6 +343,47 @@ public class EzPMSController2 {
 		LOGGER.debug("ezPMS goGroupTree ended");
 		
 		return "/ezPMS/groupTree";
+	}
+	
+	/**
+	 * 프로젝트관리 멤버리스트 페이지 호출함수
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/getProjectForGantt.do")
+	public String getProjectForGantt(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS getProjectForGantt started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String projectId = request.getParameter("projectId");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray taskList = (JSONArray) resultBody.get("data");
+			model.addAttribute("taskList", taskList);
+		}
+		
+		JSONObject resultBody2 = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		status = resultBody2.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray projectDetail = (JSONArray) resultBody2.get("data");
+			model.addAttribute("projectDetail", projectDetail);
+		}
+		
+		model.addAttribute("projectId", projectId);
+		
+		LOGGER.debug("ezPMS getProjectForGantt ended");
+		
+		return "/ezPMS/taskListGantt";
 	}
 	
 }

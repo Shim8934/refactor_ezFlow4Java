@@ -133,5 +133,16 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public int getSortOrder(String upperGroupId) {
 		return (int) select("getSortOrder", upperGroupId);
 	}
+	
+	public ProjectInfoVO getProjectDetails(Map<String, Object> map) {
+		return (ProjectInfoVO) select("getProjectDetails", map); 
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ProjectTaskVO> getTaskList(Map<String, Object> map) {
+		return (List<ProjectTaskVO>) list("getTaskList", map); 
+	}
+	
+	
 
 }
