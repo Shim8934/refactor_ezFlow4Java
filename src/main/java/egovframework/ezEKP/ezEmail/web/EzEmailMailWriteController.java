@@ -1419,7 +1419,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	}
         }
         
-        logger.debug("mailInterUploadXCK started.");
+        logger.debug("mailInterUploadXCK ended.");
         return xmlList;
 	}
 	
