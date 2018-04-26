@@ -76,6 +76,7 @@ function fileupload() {
 				alert(reason);
 			}
 			else {
+				alert(strSuccess);
 				refreshView();
 			}
 		},

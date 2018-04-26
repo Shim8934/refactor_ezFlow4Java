@@ -218,7 +218,7 @@ public class EzWebFolderGWController {
 			int tenantId                      = loginService.getTenantId(serverName);
 			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, tenantId);
 			
-			if (Integer.parseInt(newValue) < Integer.parseInt(webfolderConfig.getUploadLimit())) {
+			if (Double.parseDouble(newValue) < Double.parseDouble(webfolderConfig.getUploadLimit())) {
 				result.put("status", "error");
 				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t26", locale));
 				return result;
