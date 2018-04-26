@@ -104,7 +104,7 @@
 					  <option value="title" <c:if test = "${searchSelect eq 'title' }" >selected="selected"</c:if>><spring:message code="ezLadder.t003"/></option>
 					  <option value="kind" <c:if test = "${searchSelect eq 'kind' }" >selected="selected"</c:if>><spring:message code="ezLadder.t002"/></option>
 					  <option value="writer" <c:if test = "${searchSelect eq 'writer' }" >selected="selected"</c:if>><spring:message code="ezLadder.t004"/></option>
-					  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>><spring:message code="ezLadder.t127"/></option>
+					  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>><spring:message code="ezLadder.t013"/></option>
 					</select>
 					
 					<a href="#"><img src="/images/ezLadder/btn_search.png" border="0" width='20px' height='20px' style="vertical-align:middle; float:right;" onclick="searchLadder()" ></a>
@@ -135,9 +135,9 @@
 					<th onClick="listSort(0)" width="80px"><spring:message code="ezLadder.t002"/> <span id="sort_0" ></span></th> 
 					<th onClick="listSort(1)"><spring:message code="ezLadder.t003"/> <span id="sort_1" ></span></th> 
 					<th onClick="listSort(2)" width="140px"><spring:message code="ezLadder.t004"/> <span id="sort_2" ></span></th>
-					<th onClick="listSort(3)" width="140px"><spring:message code="ezLadder.t005"/> <span id="sort_3" ></span></th> 
+					<th onClick="listSort(3)" width="140px"><spring:message code="ezLadder.t025"/> <span id="sort_3" ></span></th> 
 					<th onClick="listSort(4)" width="80px"><spring:message code="ezLadder.t006"/> <span id="sort_4" ></span></th> 
-					<th onClick="listSort(5)" width="80px"><spring:message code="ezLadder.t0070"/> <span id="sort_5" ></span></th>
+					<th onClick="listSort(5)" width="80px"><spring:message code="ezLadder.t007"/> <span id="sort_5" ></span></th>
 					<th onClick="listSort(6)" width="80px"><spring:message code="ezLadder.t008"/> <span id="sort_6" ></span></th>
 			    </tr>
 				 <c:forEach items="${list }" var="vo">
@@ -159,7 +159,7 @@
 						
 						<c:choose>
 							<c:when test="${vo.secretFlag eq 0 }">
-								<td><img class="effect" title="<spring:message code='ezLadder.t0070'/>" src ='/images/ezLadder/icon_public_thirty.png' /></td>
+								<td><img class="effect" title="<spring:message code='ezLadder.t007'/>" src ='/images/ezLadder/icon_public_thirty.png' /></td>
 							</c:when>
 							<c:otherwise>
 								<td><img class="effect" title="<spring:message code='ezLadder.t076'/>" src ='/images/ezLadder/icon_private_thirty.png' /></td>

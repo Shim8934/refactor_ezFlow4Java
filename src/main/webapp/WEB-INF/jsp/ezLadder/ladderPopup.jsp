@@ -134,21 +134,21 @@
 	<body class="popup">
 			<c:choose>
 				<c:when test="${popupType == 'add'}">
-					<h1 id="h1Title"><spring:message code="ezLadder.t021" /></h1>
-					<span>▒ <spring:message code="ezLadder.t065" /><spring:message code="ezLadder.t059" /></span>
+					<h1 id="h1Title"><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></h1>
+					<span>▒ <spring:message code="ezLadder.t065" /> <spring:message code="ezLadder.t059" /></span>
 					<div class="nobox" style="margin-top:10px">
 						<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="20">
 					</div>
 				</c:when>
 				<c:when test="${popupType == 'modify'}">
-					<h1 id="h1Title"><spring:message code="ezLadder.t061" /></h1> 
-					<span>▒ <spring:message code="ezLadder.t066" /><spring:message code="ezLadder.t059" /></span>
+					<h1 id="h1Title"><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t052" /></h1> 
+					<span>▒ <spring:message code="ezLadder.t066" /> <spring:message code="ezLadder.t059" /></span>
 					<div class="nobox" style="margin-top:10px">
 						<input type="text" class="text" style="width:100%;height:25px;border:1px solid #ccc" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="20">
 					</div>
 				</c:when>
 				<c:when test="${popupType == 'delete'}">
-					<h1 id="h1Title" style="margin-bottom: 30px;"><spring:message code="ezLadder.t062" /></h1>
+					<h1 id="h1Title" style="margin-bottom: 30px;"><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t053" /></h1>
 					<span>▒ <spring:message code="ezLadder.t067" /></span>
 				</c:when>
 				<c:when test="${popupType == 'overlap'}">
@@ -162,7 +162,7 @@
 					<p id="userInfo"></p>
 				</c:when>
 				<c:when test="${popupType == 'cmtdelete'}">
-					<h1 id="h1Title" style="margin-bottom: 30px;"><spring:message code="ezLadder.t053" /></h1>
+					<h1 id="h1Title" style="margin-bottom: 30px;"><spring:message code="ezLadder.t062" /> <spring:message code="ezLadder.t053" /></h1>
 					<span>▒ <spring:message code="ezLadder.t051" /></span>
 				</c:when>
 			</c:choose>
@@ -172,15 +172,15 @@
 				<c:when test="${popupType == 'overlap'}">
 					<input type="submit" value="<spring:message code="ezLadder.t068" />" id="btn_addRealUser" _flag="real">
 					<input type="submit" value="<spring:message code="ezLadder.t069" />" id="btn_addAnonyUser" _flag="anony">
-					<input type="submit" value="<spring:message code="ezLadder.t109" />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
+					<input type="submit" value="<spring:message code="ezLadder.t087" />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
 				</c:when>
 				<c:when test="${popupType == 'overlapOnlyName'}">
 					<input type="submit" value="<spring:message code="ezLadder.t071" />" id="btn_addRealUser" _flag="real">
-					<input type="submit" value="<spring:message code="ezLadder.t109" />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
+					<input type="submit" value="<spring:message code="ezLadder.t087" />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
 				</c:when>
 				<c:otherwise>
-					<input type="submit" value="<spring:message code="ezLadder.t108" />" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName">
-					<input type="submit" value="<spring:message code="ezLadder.t109" />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
+					<input type="submit" value="<spring:message code="ezLadder.t086" />" id="btn_SaveAprLineTempletName" name="btn_SaveAprLineTempletName">
+					<input type="submit" value="<spring:message code="ezLadder.t087" />" id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName">
 				</c:otherwise>
 			</c:choose>
 		</div>

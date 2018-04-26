@@ -381,14 +381,14 @@
 		function deleteLadder(idx) {
 			allData = [idx, searchSelect, searchInput, mode, currPage, back ];	
 		
-			if (confirm(strLang46)) {
+			if (confirm(strLang16)) {
 				window.location.href= '/ezLadder/deleteLadder.do?allData=' + allData;
 			} 
 		}
 		/** 사다리 시작 (대기->완료) */
 		function start(idx) {
 			allData = [idx, searchSelect, searchInput, mode, currPage, _ladderLine.length, lineCnt ];	
-			if (confirm(strLang47)) {
+			if (confirm(strLang17)) {
 				jQuery.ajaxSettings.traditional = true;
 				$.ajax({
 					type: "POST",
@@ -426,8 +426,8 @@
 							"<canvas id='ladderCanvas' width='0' height='675'></canvas>"
 						);
 					$(".directionBtn").html(
-							'<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code="ezLadder.t106" /></div></button>' +
-							'<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code="ezLadder.t107" /></div></button>'
+							'<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code="ezLadder.t056" /></div></button>' +
+							'<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code="ezLadder.t057" /></div></button>'
 					);
 					$("#immediatelyDirection").removeAttr("disabled").css({"background" : "darkcyan", "cursor" : "pointer"});
 					$("#autoDirection").removeAttr("disabled").css({"background" : "salmon", "cursor" : "pointer"});
@@ -493,8 +493,8 @@
 						if(id == cmt["userId"]) {
 							html = '<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" name="editComtButton" _comtIndex="editComt' + cmt["id"] + '" />';
 							html += '<div id="editComt' + cmt["id"] + '" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; width: 120px;" tabindex=0>';
-							html += '<div id="_eCmt' + cmt["id"] + '" _comtIndex="editComt' + cmt["id"] + '" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;"><spring:message code="ezLadder.t052" /></div>';
-							html += '<div id="_dCmt' + cmt["id"] + '" _comtIndex="' + cmt["id"] + '" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;"><spring:message code="ezLadder.t053" /></div></div>';
+							html += '<div id="_eCmt' + cmt["id"] + '" _comtIndex="editComt' + cmt["id"] + '" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;"><spring:message code="ezLadder.t062" /> <spring:message code="ezLadder.t052" /></div>';
+							html += '<div id="_dCmt' + cmt["id"] + '" _comtIndex="' + cmt["id"] + '" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;"><spring:message code="ezLadder.t062" /> <spring:message code="ezLadder.t053" /></div></div>';
 							
 							$("[_comtindex='" + cmt["id"] + "'] td:last").append(html);
 							
@@ -561,7 +561,7 @@
 				html += '<textarea id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow: hidden; outline: none; border: none; resize: none; padding: 5px; width: 1300px; height: 20px;" maxlength="500">';
 				html += editTemp + '</textarea></div></div>';
 				html += '<div style="padding: 5px 0px 5px 20px; clear: both;">';
-				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '"><spring:message code="ezLadder.t109" /></button>';
+				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '"><spring:message code="ezLadder.t087" /></button>';
 				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '" style="background-color: rgb(0, 72, 150);"><spring:message code="ezLadder.t072" /></button></div>';
 			} 
 			
@@ -707,7 +707,14 @@
 					<ul class="attribute">
 						<li><img src="/images/ezLadder/icon_game0${vo.type}.png" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" width="45px;" height="45px;"></li>
 						<li><img src="/images/ezLadder/icon_status0${vo.status}.png" title="<spring:message code='ezLadder.t07${vo.status+4}'/>" width="45px;" height="45px;"></li>
-						<li><img src="/images/ezLadder/icon_secretflag0${vo.secretFlag}.png" title="<spring:message code='ezLadder.t007${vo.secretFlag}'/>" width="45px;" height="45px;"></li>
+						<c:choose>
+							<c:when test="${vo.secretFlag eq 0}">
+								<li><img src="/images/ezLadder/icon_secretflag00.png" title="<spring:message code='ezLadder.t007'/>" width="45px;" height="45px;"></li>
+							</c:when>
+							<c:otherwise>
+								<li><img src="/images/ezLadder/icon_secretflag01.png" title="<spring:message code='ezLadder.t076'/>" width="45px;" height="45px;"></li>
+							</c:otherwise>
+						</c:choose>
 					</ul>
 					<ul class="edit">
 						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_reuse.png" width="45px;" height="45px;" id="usePreladder" title="<spring:message code='ezLadder.t082'/>"></li>
@@ -727,12 +734,12 @@
 								<div class="directionBtn">
 									<c:choose>
 										<c:when test="${vo.status eq 0}">
-											<button id="immediatelyDirection" class="direcDiv" disabled="disabled" align="center" style="right: 5px; background: #dddddd; cursor: default;"><div class="direcTextDiv" style="color: #999999"><spring:message code='ezLadder.t106' /></div></button>
-											<button id="autoDirection" class="direcDiv" disabled="disabled" align="center" style="right: 160px; background: #dddddd; cursor: default;"><div class="direcTextDiv" style="color: #999999"><spring:message code='ezLadder.t107' /></div></button>
+											<button id="immediatelyDirection" class="direcDiv" disabled="disabled" align="center" style="right: 5px; background: #dddddd; cursor: default;"><div class="direcTextDiv" style="color: #999999"><spring:message code='ezLadder.t056' /></div></button>
+											<button id="autoDirection" class="direcDiv" disabled="disabled" align="center" style="right: 160px; background: #dddddd; cursor: default;"><div class="direcTextDiv" style="color: #999999"><spring:message code='ezLadder.t057' /></div></button>
 										</c:when>
 										<c:otherwise>
-											<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code='ezLadder.t106' /></div></button>
-											<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code='ezLadder.t107' /></div></button>
+											<button id="immediatelyDirection" class="direcDiv" align="center" style="right: 5px; background: darkcyan;"><div class="direcTextDiv"><spring:message code='ezLadder.t056' /></div></button>
+											<button id="autoDirection" class="direcDiv" align="center" style="right: 160px; background: salmon;"><div class="direcTextDiv"><spring:message code='ezLadder.t057' /></div></button>
 										</c:otherwise>
 									</c:choose>
 								</div>
@@ -912,8 +919,8 @@
 								<c:if test="${_comt.userId == id}">								
 									<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" name="editComtButton" _comtIndex="editComt<c:out value ="${_comt.id}"/>" />
 									<div id="editComt<c:out value ="${_comt.id}"/>" style="float:right; display: none; position: absolute; top:30px; right:28px; z-index: 10 ; border: 1px solid #ddd; background-color: #576652; color: white; width: 120px;" tabindex=0>							
-										<div id="_eCmt<c:out value ="${_comt.id}" />" _comtIndex="editComt<c:out value ="${_comt.id}" />" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;"><spring:message code="ezLadder.t052" /></div>
-										<div id="_dCmt<c:out value ="${_comt.id}" />"_comtIndex="<c:out value ="${_comt.id}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;"><spring:message code="ezLadder.t053" /></div>
+										<div id="_eCmt<c:out value ="${_comt.id}" />" _comtIndex="editComt<c:out value ="${_comt.id}" />" style="border-bottom: 1px solid #ddd; text-align: center; padding:6px 0px; color:#333; background:#eaeaea; cursor: pointer;"><spring:message code="ezLadder.t062" /> <spring:message code="ezLadder.t052" /></div>
+										<div id="_dCmt<c:out value ="${_comt.id}" />"_comtIndex="<c:out value ="${_comt.id}" />" style="text-align: center; padding:6px 0px; background:#eaeaea; color:#333; cursor: pointer;"><spring:message code="ezLadder.t062" /> <spring:message code="ezLadder.t053" /></div>
 									</div>
 								</c:if>
 							</td>
