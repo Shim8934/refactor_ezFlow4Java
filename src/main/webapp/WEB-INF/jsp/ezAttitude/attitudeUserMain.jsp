@@ -36,7 +36,7 @@
 				color : red;
 			}
 			
-			#attiCalendar td[modappl='1'] {
+			#attiCalendar td[modappl='1'][typeId=A02] {
 				color : orange;
 			}
 			
