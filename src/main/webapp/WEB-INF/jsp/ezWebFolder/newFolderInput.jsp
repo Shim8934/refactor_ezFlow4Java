@@ -39,6 +39,14 @@
 	            }
 	            catch (e)
 	            { }
+	            if (functionType == "insert") {
+	            	$('#title').text('폴더 생성');
+	            	$('.txt').text('<spring:message code='ezWebFolder.t265' />');
+	            }else if(functionType == "update") {
+	            	$('#title').text('폴더 수정');
+	            	$('.txt').text('수정할 폴더명을 입력하세요.');
+	            }
+	            	
 	        }
 	        function btn_ok_onclick() {
 	        	
@@ -112,8 +120,8 @@
 	    </script>
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
-	    <h1>테스트</h1>
-	    <div class="txt"><spring:message code='ezWebFolder.t265' /></div>
+	    <h1 id ="title"></h1>
+	    <div class="txt"><span></span></div>
 	    <div class="nobox">
 	    	<span id = "ko_lang"><spring:message code='ezWebFolder.t226' /></span>
 	        <input id="txt_FolderName1" type="text" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:2px" >

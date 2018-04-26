@@ -80,7 +80,7 @@
 		</ul>
 	</div>
 	
-	<div style="margin: 10px;"><spring:message code='ezWebFolder.t109'/></div>
+	<div style="margin: 10px;">삭제하시겠습니까?</div>
 	
 	<div style="margin-top: 15px;"><hr size="0" style="color:#fff; background-color:#fff; margin: 0px 10px; border-top: 1px solid #304D7F;"></div>
 	
