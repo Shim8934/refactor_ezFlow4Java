@@ -185,7 +185,7 @@
 			</c:when>
 			<c:otherwise>
 				<tr selected="false" class="" style="background-color: rgb(255, 255, 255);">
-					<td	style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colspan="<c:choose><c:when test="${listType eq 'mine'}">10</c:when><c:when test="${listType eq 'recv' }">11</c:when><c:when test="${listType eq 'department' }">9</c:when><c:otherwise>7</c:otherwise></c:choose>">
+					<td	style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colspan="<c:choose><c:when test="${listType eq 'mine'}">9</c:when><c:when test="${listType eq 'recv' }">10</c:when><c:when test="${listType eq 'department' }">8</c:when><c:otherwise>6</c:otherwise></c:choose>">
 						<spring:message code='ezJournal.t125'/>
 					</td>
 				</tr>
