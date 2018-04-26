@@ -51,8 +51,6 @@
 	    	var adminCompany = "${adminCompany}";
 	    	var listSize = 19;
 	    	
-	    	//"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"
-	    	//레이어 만들고 업데이트하는 로직 추가, 추가,삭제 기존로직 타고 다지우고
 	    	$(function(){
 	    		$('#searchStartTime').timepicker({ 'timeFormat': 'H:i' });
         		$('#searchEndTime').timepicker({ 'timeFormat': 'H:i' });
@@ -71,26 +69,24 @@
 	    		
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '#attiBoardList th', function(){
-	    			if (!$(this).find("input[type=checkbox]").length) { // checkbox는 sort에서 제외
-	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
-	    					src = "";
-	    					orderOption = "";
-	    					orderCell = $(this).attr("colname");
-	    				}
-	    			
-		    			if (orderOption == "" || orderOption == "DESC") {
-		    				src = '/images/etc/view-sortup.gif';
-		    				orderOption = "ASC";
-		    			} else {
-		    				src = '/images/etc/view-sortdown.gif';
-		    				orderOption = "DESC";
-		    			}
-		    			
-		    			$("#attiBoardList th").find("img").remove();
-		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
-		    			
-		    			getUserConfList();
+    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+    					src = "";
+    					orderOption = "";
+    					orderCell = $(this).attr("colname");
+    				}
+    			
+	    			if (orderOption == "" || orderOption == "DESC") {
+	    				src = '/images/etc/view-sortup.gif';
+	    				orderOption = "ASC";
+	    			} else {
+	    				src = '/images/etc/view-sortdown.gif';
+	    				orderOption = "DESC";
 	    			}
+	    			
+	    			$("#attiBoardList th").find("img").remove();
+	    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+	    			
+	    			getUserConfList();
 	    		});
 	    	});
 	    	
@@ -136,7 +132,6 @@
 	    		
 	    		result.forEach(function(vo, index) {
 	    			resultHtml += "<tr userid='" + vo.userId + "'>";
-// 	    			resultHtml += "<tr userid='" + vo.userId + "'><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>"
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
@@ -179,7 +174,6 @@
 	    		
 	    		pageNum = 1;
     			getUserConfList();
-    			
 	    	}
 	    	
 	    	//페이지 이동 함수
@@ -193,30 +187,6 @@
 	    		getUserConfList();
 	    	}
 	    	
-	    	//추가/변경 버튼 클릭시
-	    	/* function userConfSave(userid) {
-	    		var url = "";
-	    		
-	    		if(userid == null) {
-		    		selectedCheck();
-	    		}
-	    		
-	    		if(selecUserList == "" || selecUserList == null) {
-	    			url = "/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val();
-	    		} else {
-	    			url = "/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val() + "&userList=" + selecUserList;
-	    		}
-	    		
-	    		if (CrossYN()) {
-	    			//GetOpenWindow(url, target, popUpW, popUpH, resizeFlag)
-	    			OpenWin = GetOpenWindow(url, "", "1140", "630");
-	    			
-	    			try { OpenWin.focus();} catch (e) { }
-	    		} else {
-	    			showModalDialog("/admin/ezAttitude/saveAttitudeUserConf.do?companyId=" + $('#ListCompany').val(), null, "dialogHeight:400px; dialogWidth:465px; status:no; help:no; scroll:no; edge:sunken");
-	    		}
-	    	} */
-	    	
 	    	function editUserConf(selectUserId) {
     			var url = "/admin/ezAttitude/editAttitudeUserConf.do?selectUserId=" + selectUserId + "&companyId=" + pCompanyId;
 	    		
@@ -228,33 +198,6 @@
 	    			showModalDialog(url, null, "dialogWidth:340px; dialogHeight:180px; status:no; help:no; scroll:no; edge:sunken");
 	    		}
 	    	}
-	    	
-	    	//삭제버튼
-	    	/* function delUserConf() {
-	    		selectedCheck();
-	    		
-	    		if(selecUserList == "" || selecUserList == null) {
-	    			alert('사원을 선택해 주세요!');
-	    		} else {
-					if (confirm("삭제하시면 선택한 사용자는 회사 설정시간에 따르게됩니다")) {
-			    		$.ajax({
-			    			data : "POST",
-			    			async : false,
-			    			url : "/admin/ezAttitude/delAttitudeUserConf.do",
-			    			data : {
-			    				companyId : pCompanyId,
-			    				selecUserList : selecUserList
-			    			},
-			    			success : function(){
-			    				company_change();
-			    			},
-			    			error : function() {
-			    				alert('삭제하는도중 에러 발생');
-			    			}
-			    		});
-					}
-	    		}
-	    	} */
 	    	
 	    	function userDbClick() {
 	    		editUserConf($(this).attr('userid'));
@@ -276,44 +219,6 @@
 	      		</li>
 	      	</ul>
 	  	</div>
-<!-- 	  	<div id="mainmenu"> -->
-<!-- 	  		<ul class="on"> -->
-<!-- 	  			<li class="off"><span onclick="userConfSave()">추가/변경</span></li> -->
-<!-- 	  			<li class="off"><span onclick="searchUserConf(false)">검색</span></li> -->
-<!-- 	  			<li class="off"><span onclick="delUserConf()">삭제</span></li> -->
-<!-- 	  		</ul> -->
-<!-- 	  	</div> -->
-	  	<!-- <div id="layer_popup" style="width: 500px; position: absolute; left: 10px; top: 130px; background-color: rgb(255, 255, 255); display:none;">
-	  		<div class="popupwrap1">
-	  			<div class="popupwrap2">
-	  				<table class="content">
-	  					<tbody>
-	  						<tr>
-	  							<th style="text-align:center">부서명</th>
-	  							<td><input type="text" id="txtDeptName" style="width:98%" value=""/></td>
-	  						</tr>
-	  						<tr>
-	  							<th style="text-align:center">사원명</th>
-	  							<td><input type="text" id="txtUserName" style="width:98%" value=""/></td>
-	  						</tr>
-	  					</tbody>
-	  				</table>
-	  				<br>
-	  				<table style="width:100%">
-	  					<tbody>
-	  						<tr>
-	  							<td style="text-align:center">
-	  								<a class="imgbtn"><span onclick="searchUserConf(true)">검색</span></a>
-	  								<a class="imgbtn"><span onclick="searchUserConf(false)">취소</span></a>
-	  							</td>
-	  						</tr>
-	  					</tbody>
-	  				</table>
-	  			</div>
-	  		</div>
-	  		<div class="shadow">
-	  		</div>
-	  	</div> -->
 	  	
 	  	<table id="searchTable" style="width:100%;">
 			<tbody>
@@ -326,8 +231,8 @@
 					<td style="width: 20%;">
 						<span style="width: 90%;">
 							<input type="radio" name="searchCompareValue" id="searchCompareValueAll" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/>&nbsp;모두
-							<input type="radio" name="searchCompareValue" id="searchCompareValue0" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;같은
-							<input type="radio" name="searchCompareValue" id="searchCompareValue1" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;다른
+							<input type="radio" name="searchCompareValue" id="searchCompareValue0" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;미사용
+							<input type="radio" name="searchCompareValue" id="searchCompareValue1" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;사용
 						</span>
 					</td>
 				</tr>

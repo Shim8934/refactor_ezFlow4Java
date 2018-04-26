@@ -115,11 +115,15 @@ function makePageSelPageAtti() {
 		pagingHtml += "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'/></span><span class='ptxt' onclick='goToPageByNum(" + (pageNum - 1) + ")'>이전</span>";
 	}
 	
-	var maxNum = ""; // 현재 블록의 마지막 페이지를 저장하는 변수
+	var maxNum = 1; // 현재 블록의 마지막 페이지를 저장하는 변수
 	var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1; // 현재 페이지의 1페이지 변수
 	if (totalPage >= startNum + blockSize) {
 		maxNum = (startNum + blockSize) - 1;
 	} else {
+		if (totalPage == 0) {
+			totalPage = 1;
+		}
+		
 		maxNum = totalPage
 	}
 	
