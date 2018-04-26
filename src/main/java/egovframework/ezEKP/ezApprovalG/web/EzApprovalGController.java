@@ -7164,10 +7164,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String docID = doc.getElementsByTagName("pDocID").item(0).getTextContent();
+		String mode = doc.getElementsByTagName("mode").item(0).getTextContent();
 		String pHTML = doc.getElementsByTagName("pHtml").item(0).getTextContent().replace("\r\n", "\n").replace("\n", "\r\n");
 
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-		String fileName = docID + "-" + commonUtil.getTodayUTCTime("yyyyMMddHHmmss")+ ".mht";
+		String fileName = docID + "-" + commonUtil.getTodayUTCTime("yyyyMMddHHmmss")+ "." + mode;
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)  + commonUtil.separator + "history" ;
 		String dirPath2 = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID);
 		String realPath = commonUtil.getRealPath(request);
@@ -7186,7 +7187,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				file2.mkdirs();
 			}
 		
-			stream = new ByteArrayInputStream(pHTML.getBytes("UTF-8"));
+			if (mode.equals("hwp")) {
+				stream = new ByteArrayInputStream(Base64.decodeBase64(pHTML));
+			} else {
+				stream = new ByteArrayInputStream(pHTML.getBytes("UTF-8"));
+			}
 			
 			bos = new FileOutputStream(realPath + dirPath + commonUtil.separator  + fileName);
 			

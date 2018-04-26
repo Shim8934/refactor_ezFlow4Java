@@ -1352,3 +1352,47 @@ function setRecevInfo(ret) {
         }
     }
 }
+function UpdateDocHistory(pHtml) {
+	var xmlhttp2 = createXMLHttpRequest();
+	var xmlpara = createXmlDom();
+	var objNode;
+	createNodeInsert(xmlpara, objNode, "PARAMETER");
+	createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
+	createNodeAndInsertText(xmlpara, objNode, "pHtml", pHtml);
+	createNodeAndInsertText(xmlpara, objNode, "mode", "hwp");
+
+    xmlhttp2.open("POST", "/ezApprovalG/uploadDocHistory.do", false);
+	xmlhttp2.send(xmlpara);
+	
+	var URL = xmlhttp2.responseText;
+    if (URL.length < 255 && URL != "FALSE") {
+        var xmlhttp = createXMLHttpRequest();
+        var xmlpara = createXmlDom();
+        var objNode;
+        createNodeInsert(xmlpara, objNode, "PARAMETER");
+        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
+        createNodeAndInsertText(xmlpara, objNode, "pURL", URL);
+        createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
+        createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
+        createNodeAndInsertText(xmlpara, objNode, "pUserJobTitle", arr_userinfo[13]);
+        createNodeAndInsertText(xmlpara, objNode, "pUserDeptID", arr_userinfo[4]);
+        createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", arr_userinfo[15]);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
+        
+        xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
+        xmlhttp.send(xmlpara);
+        if (xmlhttp != null && xmlhttp.readyState == 4) {
+         	 if (xmlhttp.statusText == "OK") {
+         		
+         	 } else {
+         		 var pAlertContent = strLang89;
+                OpenAlertUI(pAlertContent);
+         	 }
+       }
+   } else {
+       var pAlertContent = strLang90;
+       OpenAlertUI(pAlertContent);
+   }
+}

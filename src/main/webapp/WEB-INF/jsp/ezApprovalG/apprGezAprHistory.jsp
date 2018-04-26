@@ -42,10 +42,10 @@
 		        	//hwp사용안함
 		            if (CrossYN()) {
 // 		                pUrl = "DocViewerHWP_Cross.aspx?DocHref=" + escapenew(Arguments[0]);
-		                pUrl = "DocViewerHWP.aspx?DocHref=" + escapenew(Arguments[0]);
+		            	pUrl = "/ezApprovalG/docViewerHWP.do?docHref=" + encodeURI(Arguments[0]);
 		            }
 		            else {
-		                pUrl = "/ezApprovalG/docViewerHWP.do?docHref=" + escapenew(Arguments[0]);
+		                pUrl = "/ezApprovalG/docViewerHWP.do?docHref=" + encodeURI(Arguments[0]);
 		            }
 		        }
 		        else {
