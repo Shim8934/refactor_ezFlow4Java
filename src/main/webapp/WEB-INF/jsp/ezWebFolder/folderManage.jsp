@@ -110,7 +110,6 @@
 						createId = folderId != null ? data.node.original.createId : ""; 
 						parent   = data.node.original.parent; 
 						console.log("The selected nodes are:" + folderId);
-						alert(folderId);
 					});
 				},
 				error : function(error) {
@@ -121,7 +120,7 @@
         
         function radioOnclick(obj) {
         	folderId="";
-        	folderList(obj);
+	        folderList(obj);
         }
         
         function add_onclick() {
@@ -281,12 +280,12 @@
 			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="radioOnclick('C');"> <span><spring:message code='ezWebFolder.t233'/></span>
 			<input name="treeType" id="radio2" type="radio" value="D"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="radioOnclick('D');"> <span><spring:message code='ezWebFolder.t234'/></span>
 			<input name="treeType" id="radio3" type="radio" value="U"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="radioOnclick('U');"> <span><spring:message code='ezWebFolder.t235'/></span>
+			<input name="treeType" id="radio4" type="radio" value="S"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="radioOnclick('S');"> <span><spring:message code='ezWebFolder.t266'/></span>
 		</div>
 	</div>
 	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto;" id="folderTree"></div>
 	
 	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
-		<a class="imgbtn"><span onclick=""><spring:message code="ezWebFolder.t254"/></span></a>
       	<a class="imgbtn" onclick="add_onclick()"><span><spring:message code="ezWebFolder.t255"/></span></a>
       	<a class="imgbtn" onclick="update_onclick()"><span><spring:message code="ezWebFolder.t162"/></span></a>
       	<a class="imgbtn" onclick="move_onclick()"><span><spring:message code="ezWebFolder.t121"/></span></a>

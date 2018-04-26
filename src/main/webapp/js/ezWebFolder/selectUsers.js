@@ -197,3 +197,38 @@ function menu_SelectRange_IE2() {
 	
 	g_windowReference.focus();
 }
+
+//CrossBrowser적용
+function CrossYN() {
+	var ua     = navigator.userAgent;
+	var result = true;
+
+	// 크로스 브라우저 IE9이하:false IE외: true
+	if (/msie 10/i.test(ua))      {result = true; }
+	else if (/msie/i.test(ua))    {result = false;}
+	else if (/firefox/i.test(ua)) {result = true; }
+	else if (/chrome/i.test(ua))  {result = true; }
+	else if (/safari/i.test(ua))  {result = true; }
+	else if (/opera/i.test(ua))   {result = true; }
+	else if (/trident/i.test(ua)) {result = true; }
+	
+	return result;
+}
+
+function GetOpenPosition(popUpW, popUpH) {
+	//2011.07.28 FireFox는 ShowModalDialog() 호출시 화면 중앙에 뜨지 않아 top, left를 지정해 줘야한다.
+	var heigth   = window.screen.availHeight;
+	var width    = window.screen.availWidth;
+	var left     = 0;
+	var top      = 0;
+	var pleftpos = parseInt(width) - popUpW;
+	heigth       = parseInt(heigth) - popUpH;
+	width        = parseInt(width) - pleftpos;
+	
+	left = pleftpos / 2;
+	top  = heigth / 2;
+	
+	var feature = ",left=" + left + ",top=" + top;
+	
+	return feature;
+}
