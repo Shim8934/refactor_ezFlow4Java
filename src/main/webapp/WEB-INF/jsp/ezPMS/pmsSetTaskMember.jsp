@@ -104,7 +104,7 @@
 		   			}
 		   			
 		   			if (chkFlag) {
-		   				managerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept, "pctinput" : 100});
+		   				managerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept, "pctinput" : 100, "nameType" : "user"});
 		   				authList.push({"userName" : userName, "userId" : receiverId});
 		   			} else {
 		   				alert("이미 추가된 사용자 입니다.");
