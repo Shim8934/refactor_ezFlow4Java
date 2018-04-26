@@ -710,6 +710,7 @@
 						<li><img src="/images/ezLadder/icon_secretflag0${vo.secretFlag}.png" title="<spring:message code='ezLadder.t007${vo.secretFlag}'/>" width="45px;" height="45px;"></li>
 					</ul>
 					<ul class="edit">
+						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_list.png" width="45px;" height="45px;" id="toList" title="<spring:message code='ezLadder.t083'/>"></li>
 						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_reuse.png" width="45px;" height="45px;" id="usePreladder" title="<spring:message code='ezLadder.t082'/>"></li>
 						<c:choose>
 							<c:when test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" title="<spring:message code='ezLadder.t077'/>" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:when>
@@ -881,7 +882,7 @@
 			
 			
 		</div>
-		<!-- 아직 아이콘 만드는 중 <button type="button" id="backToList">목록으로 ㅎㅎ</button> -->
+		
 		<c:if test="${mode != 'preview' }">
 			<div id="commentArea" style="border:1px solid #DDD; margin:15px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
 				<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none;">
