@@ -160,14 +160,8 @@
 	    			typeId = "";
 	    		}
 	    		
-	    		//검색기간 사용 유무
-	    		if (usedate) {
-	    			searchStartDate = $("#Sdatepicker").val();
-	    			searchEndDate = $("#Edatepicker").val();
-	    		} else {
-	    			searchStartDate = "";
-	    			searchEndDate = "";
-	    		}
+    			searchStartDate = $("#Sdatepicker").val();
+    			searchEndDate = $("#Edatepicker").val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
 					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
@@ -311,19 +305,19 @@
 	    		window.open(url, "view", "width=940, height=580");
 	    	} */
 	    	
-			var usedate = false;
+// 			var usedate = false;
 			//검색기간 사용 체크박스 클릭시
-			function DateSearch_Click() {
-		        if(usedate){
-		        	usedate = false;
-		            $("#Sdatepicker").datepicker('disable');
-		            $("#Edatepicker").datepicker('disable');
-		        } else {
-		        	usedate = true;
-		            $("#Sdatepicker").datepicker('enable');
-		            $("#Edatepicker").datepicker('enable');
-		        }
-		    }
+// 			function DateSearch_Click() {
+// 		        if(usedate){
+// 		        	usedate = false;
+// 		            $("#Sdatepicker").datepicker('disable');
+// 		            $("#Edatepicker").datepicker('disable');
+// 		        } else {
+// 		        	usedate = true;
+// 		            $("#Sdatepicker").datepicker('enable');
+// 		            $("#Edatepicker").datepicker('enable');
+// 		        }
+// 		    }
 			
 			//검색조건 저장(엑셀 다운로드 할때 필요)
 			/* function saveSearchRequirement(companyId, typeId, userIdList, startDate, endDate) {
@@ -414,10 +408,8 @@
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50"></td>
 					<td style="width: 3%;">검색기간</td>
 					<td>
-						<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" /><label for="usedate">검색기간 사용&nbsp;</label>
-						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
-						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
-						<div style="margin-top:9px">&nbsp;(검색기간 미지정시 오늘날짜로 검색)</div> 
+						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
+						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
 					</td>
 					<td style=" width:*;" colspan=2>
 						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
