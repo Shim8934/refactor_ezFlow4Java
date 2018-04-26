@@ -83,7 +83,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
 					
 					int restDueday = getWorkinDays(now, endDate);
-					
 					projectList.get(i).setRestDueday(restDueday);
 				}
 				
@@ -221,7 +220,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public ProjectInfoVO getProjectDetails(int projectId, String userId, int tenantId, String offset, String lang) {
-		// TODO Auto-generated method stub
+		LOGGER.debug("getProjectDetail started");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("project_Id", projectId);
+		param.put("lang", lang);
+		param.put("user_Id", userId);
+		param.put("tenant_Id", tenantId);
+		param.put("offset", offset);
+		
+		LOGGER.debug("getProjectDetail ended");
 		return null;
 	}
 
@@ -334,8 +342,25 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectTaskVO> getTaskList(SearchVO search) {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.debug("getTaskList started");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", "juhongsun");
+		param.put("projectId", search.getProjectId());
+		param.put("taskName", search.getTaskName());
+		param.put("upperGroupName", search.getUpperGroupName());
+		param.put("headManagerName", search.getMemberId());
+		param.put("overview", search.getOverview());
+		param.put("planStartDate", search.getPlanStartDate());
+		param.put("planEndDate", search.getPlanEndDate());
+		param.put("lang", ""); //파라미터로 받아와야함.
+		param.put("status", "C");
+		param.put("tenantId", search.getTenantId());
+		
+		List<ProjectTaskVO> list = ezPMSDAO.getTaskList(param);
+		
+		LOGGER.debug("getTaskList ended");
+		return list;
 	}
 
 	@Override

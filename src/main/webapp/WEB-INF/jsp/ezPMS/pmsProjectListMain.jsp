@@ -258,7 +258,7 @@ function addFavorite(projectId) {
 				<option>자주가는 프로젝트</option>
 			</select>
 		</li>
-		<li><span onclick="goProjectDetails">project(임시)</span></li>
+		<li><span onclick="goToProjectDetails()">project(임시)</span></li>
 		<li><span id="newProject" onclick="addNewProject()">새 프로젝트</span></li>
 		<li><span id="deleteProject" onclick="deleteProject()">삭제</span></li>
 		<li><span id="changeProjectStatus" onclick="changeProjectStatus()">프로젝트 상태 변경</span></li>

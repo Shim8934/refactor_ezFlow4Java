@@ -70,6 +70,7 @@ public class EzPMSGWController2 {
 			SearchVO search = new SearchVO();
 			search.setTenantId(info.getTenantId());
 			search.setProjectId(Integer.parseInt(projectId));
+			search.setMemberId(info.getUserId());
 			
 			List<ProjectTaskVO> taskList = ezPMSService.getTaskList(search);
 			
