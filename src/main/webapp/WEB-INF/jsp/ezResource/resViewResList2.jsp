@@ -152,11 +152,7 @@
 	    	               	document.getElementById("tbar2").style.display = "none";
 	                	} else {
 	                		document.getElementById("mainmenu").style.display = "none";
-	                	} 	
-	            		
-		                document.getElementById("ToDaybtn").style.display = "none";
-	                	document.getElementById("Weekbtn").style.display = "none";
-	                	document.getElementById("TR_Line2").style.display = "none";
+	                	} 
 	                	document.getElementById("tdDateCalendarViewer").innerHTML = document.getElementById("EmptyMsg").innerHTML;
 	                	document.getElementById("weeklyline").style.display = "none";
 	            	}
