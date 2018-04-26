@@ -732,7 +732,7 @@
 						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_reuse.png" width="45px;" height="45px;" id="usePreladder" title="<spring:message code='ezLadder.t082'/>"></li>
 						<c:choose>
 							<c:when test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" title="<spring:message code='ezLadder.t077'/>" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:when>
-							<c:when test="${vo.writerId != id}"><li><img src="/images/ezLadder/icon_imposDelete.png" title="<spring:message code='ezLadder.t077'/>" width="45px;" height="45px;"></li></c:when>
+							<c:when test="${vo.writerId != id}"><li><img src="/images/ezLadder/icon_imposDelete.png" title="<spring:message code='ezLadder.t078'/>" width="45px;" height="45px;"></li></c:when>
 						</c:choose>
 					</ul>
 				</div>
