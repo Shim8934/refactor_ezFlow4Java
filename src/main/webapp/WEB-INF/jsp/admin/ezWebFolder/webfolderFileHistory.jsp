@@ -5,27 +5,32 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/organ_tree.css"                       type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>"   type="text/css">
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"            type="text/css">
-		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css"           type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"                ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"                             ></script>
-		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"           ></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"        ></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"      ></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/ezWebFolder/adminTable.js"                  ></script>
 		<script type="text/javascript" >
 			var blockSize    = 10;
 			var currentPage  = null;
 			var totalRows    = null;
 			var totalPages   = null;
 			var primary      = "<c:out value='${primary}'/>";
-			var strLang39    = "<spring:message code = 'ezWebFolder.t135'/>";
-			var strLang40    = "<spring:message code = 'ezWebFolder.t136'/>";
-			var strLang41    = "<spring:message code = 'ezWebFolder.t137'/>";
-			var strLang42    = "<spring:message code = 'ezWebFolder.t138'/>";
+			var strLang39    = "<spring:message code='ezWebFolder.t135'/>";
+			var strLang40    = "<spring:message code='ezWebFolder.t136'/>";
+			var strLang41    = "<spring:message code='ezWebFolder.t137'/>";
+			var strLang42    = "<spring:message code='ezWebFolder.t138'/>";
+			var strActType1  = "<spring:message code='ezWebFolder.t160'/>";
+			var strActType2  = "<spring:message code='ezWebFolder.t161'/>";
+			var strActType3  = "<spring:message code='ezWebFolder.t162'/>";
+			var strActType4  = "<spring:message code='ezWebFolder.t111'/>";
+			var strActType5  = "<spring:message code='ezWebFolder.t19' />";
+			var strActType6  = "<spring:message code='ezWebFolder.t287'/>";
+			var strNoData    = "<spring:message code='ezWebFolder.t144'/>";
 			var startDateStr = "";
 			var endDateStr   = "";
 			var fileExtStr   = "";
@@ -125,81 +130,13 @@
 			}
 			
 			function renderData(result) {
-				var tableList = document.getElementById("tblFileHistory");
-				
-				while (tableList.rows.length > 1) {
-					tableList.deleteRow(1);
-				}
-				
-				if (result == null || result.length == 0) {
-					var trElmt = document.createElement("tr");
-					var tdElmt = document.createElement("td");
-					tdElmt.setAttribute("colspan", "6");
-					tdElmt.setAttribute("align", "center");
-					tdElmt.setAttribute("bgcolor", "#FFFFFF");
-					tdElmt.innerHTML = "<spring:message code='ezWebFolder.t144'/>";
-					
-					trElmt.appendChild(tdElmt);
-					tableList.appendChild(trElmt);
-				}
-				else {
-					var len = result.length;
-					for (var i = 0; i < len; i++) {
-						var trElmt  = document.createElement("tr");
-						var tdElmt1 = document.createElement("td");
-						var tdElmt2 = document.createElement("td");
-						var tdElmt3 = document.createElement("td");
-						var tdElmt4 = document.createElement("td");
-						var tdElmt5 = document.createElement("td");
-						var tdElmt6 = document.createElement("td");
-						
-						trElmt.setAttribute("class", "bnkWebFolder");
-						tdElmt1.textContent = result[i]["fileType"];
-						
-						tdElmt2.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
-						tdElmt2.textContent = result[i]["fileName"];
-						
-						tdElmt3.textContent = getFileSize(result[i]["fileSize"]);
-						
-						tdElmt4.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
-						
-						if (primary == "1") {
-							tdElmt4.textContent = result[i]["createName1"];
-						}
-						else {
-							tdElmt4.textContent = result[i]["createName2"];
-						}
-						
-						switch(result[i]["logType"]) {
-							case "C":
-								tdElmt5.textContent = "<spring:message code='ezWebFolder.t160' />";
-								break;
-							case "D":
-								tdElmt5.textContent = "<spring:message code='ezWebFolder.t161' />";
-								break;
-							case "U":
-								tdElmt5.textContent = "<spring:message code='ezWebFolder.t162' />";
-								break;
-							case "R":
-								tdElmt5.textContent = "<spring:message code='ezWebFolder.t111' />";
-								break;
-							case "P":
-								tdElmt5.textContent = "<spring:message code='ezWebFolder.t19' />";
-								break;
-						}
-						
-						tdElmt6.setAttribute("style","text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
-						tdElmt6.textContent = result[i]["createDate"].substring(0, 19);
-						
-						trElmt.appendChild(tdElmt1);
-						trElmt.appendChild(tdElmt2);
-						trElmt.appendChild(tdElmt3);
-						trElmt.appendChild(tdElmt4);
-						trElmt.appendChild(tdElmt5);
-						trElmt.appendChild(tdElmt6);
-						tableList.appendChild(trElmt);
-					}
-				}
+				var tableView = new TableView();
+				tableView.setTableId("tblFileHistory");
+				tableView.setTableType("filelog");
+				tableView.setSelectedClass("bnkWebFolder2");
+				tableView.setUnselectClass("bnkWebFolder");
+				tableView.setDataSource(result);
+				tableView.renderTable();
 			}
 			
 			function startSearch() {
@@ -319,7 +256,7 @@
 			<div style="margin: 10px;">
 				<table class="content" style="border-collapse: collapse; width: 100%;">
 					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t24'/></th>
+						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t24'/></th>
 					</tr>
 					<tr>
 						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t151'/></th>

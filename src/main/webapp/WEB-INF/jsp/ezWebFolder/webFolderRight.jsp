@@ -35,6 +35,7 @@
 		var strLang40 	= "<spring:message code = 'ezWebFolder.t136'/>";
 		var strLang41   = "<spring:message code = 'ezWebFolder.t137'/>";
 		var strLang42   = "<spring:message code = 'ezWebFolder.t138'/>";
+		var strSuccess  = "<spring:message code = 'ezWebFolder.t27'/>";
 		var pStart = 0;
 		var pEnd =10;
 		var folderId = "${folderId}";

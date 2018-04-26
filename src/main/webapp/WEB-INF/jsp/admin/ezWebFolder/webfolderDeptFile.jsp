@@ -14,8 +14,8 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"      ></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"              ></script>
+		<script type="text/javascript" src="/js/ezWebFolder/adminTable.js"                  ></script>
 		<script type="text/javascript" src="/js/jquery-ui/jquery-ui.js"                     ></script>
-		<script type="text/javascript" src="/js/ezWebFolder/bnk.js"                         ></script>
 		<script type="text/javascript">
 			var blockSize    = 10;
 			var currentPage  = null;
@@ -26,6 +26,8 @@
 			var strLang40    = "<spring:message code='ezWebFolder.t136'/>";
 			var strLang41    = "<spring:message code='ezWebFolder.t137'/>";
 			var strLang42    = "<spring:message code='ezWebFolder.t138'/>";
+			var strNoData    = "<spring:message code='ezWebFolder.t144'/>";
+			var strSuccess   = "<spring:message code='ezWebFolder.t27' />";
 			var startDateStr = "";
 			var endDateStr   = "";
 			var fileExtStr   = "";
@@ -132,104 +134,13 @@
 			}
 			
 			function renderData(result) {
-				document.getElementById("_checkAll").checked = false;
-				var tableList = document.getElementById("tblFileList");
-				
-				while (tableList.rows.length > 1) {
-					tableList.deleteRow(1);
-				}
-				
-				if (result == null || result.length == 0) {
-					var trElmt = document.createElement("tr");
-					var tdElmt = document.createElement("td");
-					tdElmt.setAttribute("colspan", "9");
-					tdElmt.setAttribute("align", "center");
-					tdElmt.setAttribute("bgcolor", "#FFFFFF");
-					tdElmt.innerHTML = "<spring:message code='ezWebFolder.t144' />";
-					tdElmt.setAttribute("id", "nodataRow");
-					
-					trElmt.appendChild(tdElmt);
-					tableList.appendChild(trElmt);
-				}
-				else {
-					var len = result.length;
-					for (var i = 0; i < len; i++) {
-						var trElmt  = document.createElement("tr");
-						var tdElmt1 = document.createElement("td");
-						var tdElmt2 = document.createElement("td");
-						var tdElmt3 = document.createElement("td");
-						var tdElmt4 = document.createElement("td");
-						var tdElmt5 = document.createElement("td");
-						var tdElmt6 = document.createElement("td");
-						var tdElmt7 = document.createElement("td");	
-						var tdElmt8 = document.createElement("td");	
-						var tdElmt9 = document.createElement("td");
-						
-						trElmt.setAttribute("class", "bnkWebFolder");
-						trElmt.setAttribute("_fileId", result[i]["fileId"]);
-						trElmt.setAttribute("_filePath", result[i]["filePath"]);
-						trElmt.onclick = function(event) {clickRow(event);};
-						trElmt.ondblclick = function(event) {downloadFileByDbClick(event);};
-						
-						var inputElmt = document.createElement("input");
-						inputElmt.setAttribute("type", "checkbox");
-						inputElmt.setAttribute("value", result[i]["fileId"]);
-						inputElmt.setAttribute("class", "checkBnk");
-						inputElmt.onclick = function(e){getChecked(e);};
-						tdElmt1.appendChild(inputElmt);
-						
-						var fileIconElmt = document.createElement("img");
-						fileIconElmt.setAttribute("class", "webFolderImg");
-						fileIconElmt.src = result[i]["fileIconUrl"];
-						tdElmt2.appendChild(fileIconElmt);
-						tdElmt3.textContent = result[i]["fileName"];
-						tdElmt3.setAttribute("title", result[i]["fileName"]);
-						tdElmt3.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
-						tdElmt4.textContent = getFileSize(result[i]["fileSize"]);
-						
-						if (primary == "1") {
-							tdElmt5.textContent = result[i]["createName1"];
-						}
-						else {
-							tdElmt5.textContent = result[i]["createName2"];
-						}
-						
-						tdElmt6.textContent = result[i]["createDate"].substring(0, 10);
-						tdElmt7.textContent = result[i]["updateDate"].substring(0, 10);
-						tdElmt8.textContent = result[i]["filePosition"];
-						tdElmt8.setAttribute("title", result[i]["filePosition"]);
-						tdElmt8.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
-						tdElmt9.textContent = result[i]["downloadCnt"];
-						tdElmt9.setAttribute("style","text-align: center;");
-						
-						trElmt.appendChild(tdElmt1);
-						trElmt.appendChild(tdElmt2);
-						trElmt.appendChild(tdElmt3);
-						trElmt.appendChild(tdElmt4);
-						trElmt.appendChild(tdElmt5);
-						trElmt.appendChild(tdElmt6);
-						trElmt.appendChild(tdElmt7);
-						trElmt.appendChild(tdElmt8);
-						trElmt.appendChild(tdElmt9);
-						tableList.appendChild(trElmt);
-					}
-				} 
-			}
-			
-			function clickRow(e) {
-				//e.stopPropagation();
-				//e.preventDefault();
-				var trElmt    = e.currentTarget;
-				var inputElmt = trElmt.firstElementChild.firstElementChild;
-				
-				if (inputElmt.checked == true) {
-					inputElmt.checked = false;
-					trElmt.setAttribute("class", "bnkWebFolder");
-				}
-				else {
-					inputElmt.checked = true;
-					trElmt.setAttribute("class", "bnkWebFolder2");
-				}
+				var tableView = new TableView();
+				tableView.setTableId("tblFileList");
+				tableView.setTableType("filelist");
+				tableView.setSelectedClass("bnkWebFolder2");
+				tableView.setUnselectClass("bnkWebFolder");
+				tableView.setDataSource(result);
+				tableView.renderTable();
 			}
 			
 			function startSearch() {
@@ -273,19 +184,28 @@
 				window.parent.frames["left"].getDepartmentData(document.getElementById("companyList").value, 1, "folderTree2");
 			}
 			
-			function fileDownload() {
+			function getCheckedRowInfo() {
 				var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+				var filesList     = [];
 				
 				if (listOfChecked.length <= 0) {
-					alert("<spring:message code='ezWebFolder.t108'/>");
-					return;
+					return null;
 				}
-				
-				var filesList = [];
 				
 				for (var i = 0; i < listOfChecked.length; i++) {
 					var fileFolderId = listOfChecked[i].getAttribute("_fileId");
 					filesList.push(fileFolderId);
+				}
+				
+				return filesList;
+			}
+			
+			function fileDownload() {
+				var filesList = getCheckedRowInfo();
+				
+				if (filesList == null) {
+					alert("<spring:message code='ezWebFolder.t108'/>");
+					return;
 				}
 				
 				var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
@@ -297,18 +217,11 @@
 			}
 			
 			function fileDelete() {
-				var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+				var filesList = getCheckedRowInfo();
 				
-				if (listOfChecked.length <= 0) {
+				if (filesList == null) {
 					alert("<spring:message code='ezWebFolder.t108'/>");
 					return;
-				}
-				
-				var filesList = [];
-				
-				for (var i = 0; i < listOfChecked.length; i++) {
-					var fileFolderId = listOfChecked[i].getAttribute("_fileId");
-					filesList.push(fileFolderId);
 				}
 				
 				window.parent.frames["left"].document.body.style.overflow = "hidden";
@@ -317,68 +230,35 @@
 			}
 			
 			function fileRename() {
-				var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+				var filesList = getCheckedRowInfo();
 				
-				if (listOfChecked.length <= 0) {
+				if (filesList == null) {
 					alert("<spring:message code='ezWebFolder.t108'/>");
 					return;
 				}
 				
-				if (listOfChecked.length > 1) {
+				if (filesList.length > 1) {
 					alert("<spring:message code='ezWebFolder.t115'/>");
 					return;
 				}
 				
-				var fileId = listOfChecked[0].getAttribute("_fileId");
+				var fileId = filesList[0].getAttribute("_fileId");
 				window.parent.frames["left"].document.body.style.overflow = "hidden";
 				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
 				DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 			}
 			
 			function fileMove() {
-				var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+				var filesList = getCheckedRowInfo();
 				
-				if (listOfChecked.length <= 0) {
+				if (filesList == null) {
 					alert("<spring:message code='ezWebFolder.t108'/>");
 					return;
-				}
-				
-				var filesList = [];
-				
-				for (var i = 0; i < listOfChecked.length; i++) {
-					var fileFolderId = listOfChecked[i].getAttribute("_fileId");
-					filesList.push(fileFolderId);
 				}
 				
 				window.parent.frames["left"].document.body.style.overflow = "hidden";
 				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
 				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString() + "&mode=admin");
-			}
-			
-			function getChecked(event) {
-				event.stopPropagation();
-				var checkboxElmt = event.currentTarget;
-				var trElmt       = checkboxElmt.parentElement.parentElement;
-				trElmt.setAttribute("class", checkboxElmt.checked == true ? "bnkWebFolder2" : "bnkWebFolder");
-			}
-			
-			function getCheckAll(obj) {
-				var listInputs = document.getElementsByClassName("checkBnk");
-				
-				if (obj.checked == true) {
-					for (var i = 0; i < listInputs.length; i++) {
-						listInputs[i].checked = true;
-						var trElmt            = listInputs[i].parentElement.parentElement;
-						trElmt.setAttribute("class", "bnkWebFolder2");
-					}
-				}
-				else {
-					for (var i = 0; i < listInputs.length; i++) {
-						var trElmt            = listInputs[i].parentElement.parentElement;
-						listInputs[i].checked = false;
-						trElmt.setAttribute("class", "bnkWebFolder");
-					}
-				}
 			}
 			
 			function refresh() {
@@ -410,17 +290,6 @@
 				}
 			}
 			
-			function downloadFileByDbClick(event) {
-				event.stopPropagation();
-				event.preventDefault();
-				var trElmt       = event.currentTarget;
-				var fileFolderId = trElmt.getAttribute("_fileId");
-				var filesList    = [];
-				filesList.push(fileFolderId);
-				
-				var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
-				AttachDownFrame.location.href = downloadUrl;
-			}
 		</script>
 	</head>
 	<body class="mainbody" onresize="preProcessing();">
@@ -467,7 +336,7 @@
 			<div style="margin: 10px;">
 				<table class="content" style="border-collapse: collapse; width: 100%;">
 					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t22'/></th>
+						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t22'/></th>
 					</tr>
 					<tr>
 						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t151'/></th>
@@ -524,7 +393,7 @@
 		<div id="dragDropArea" style="margin: 10px 0px; overflow-y: auto;">
 			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 				<tr>
-					<th width="10px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
+					<th width="10px" ><input type="checkbox"></th>
 					<th width="40px" ><spring:message code='ezWebFolder.t188'/></th>
 					<th width="160px"><spring:message code='ezWebFolder.t156'/></th>
 					<th width="60px" ><spring:message code='ezWebFolder.t157'/></th>
