@@ -241,7 +241,7 @@
 										<c:if test="${file.fileType == 'ecm'}">
 											<c:set var="imagePath" value="/images/ecm.png" />
 										</c:if>
-										<img src="${imagePath}" />&nbsp; <a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&journalId=${journal.journalId}">${file.fileName }&nbsp;(${file.fileTransSize })</a><br>
+										<img src="${imagePath}" />&nbsp; <a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&journalId=${journal.journalId}"><c:out value='${file.fileName }'/>&nbsp;(${file.fileTransSize })</a><br>
 									</div>
 								</c:forEach>
 							</div>

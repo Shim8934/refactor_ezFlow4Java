@@ -1404,12 +1404,13 @@
 		d.extensionattribute2 as companyId,
 		d.DISPLAYNAME as text,
 		case d.CN
-			when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and cn=#userId# and dept_id = d.CN)
+			when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and user_id=#userId# and dept_id = d.CN)
 			then 'Y'
 			else 'N'
 		end as isComp,
 		case d.CN
 			when (select department from tbl_usermaster where tenant_id = #tenantId# and cn=#userId#) then 'yes'
+			when (select deptid from tbl_addjobmaster where tenant_id = #tenantId# and cn=#userId# and deptid=d.CN) then 'add'
 			else 'no'
 		end as myDept
 		from
@@ -1429,12 +1430,13 @@
 		d.extensionattribute2 as companyId,
 		d.DISPLAYNAME as text,
 		case d.CN
-			when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and cn=#userId# and dept_id = d.CN)
+			when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and user_id=#userId# and dept_id = d.CN)
 			then 'Y'
 			else 'N'
 		end as isComp,
 		case d.CN
 			when (select department from tbl_usermaster where tenant_id = #tenantId# and cn=#userId#) then 'yes'
+			when (select deptid from tbl_addjobmaster where tenant_id = #tenantId# and cn=#userId# and deptid=d.CN) then 'add'
 			else 'no'
 		end as myDept
 		from
@@ -1444,4 +1446,16 @@
 		and DEPT_CD_PATH like concat('%,',#deptId#,',%') 
 		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME
 	</select>
+	
+	<!-- 권한 부서 한개 삭제 -->
+	<delete id="deleteAuthDeptOne" parameterClass="Map">
+		delete from
+			jmocha.tbl_journal_auth 
+		where 
+			user_id=#userId# 
+		and
+			tenant_id=#tenantId#
+		and
+			dept_id=#deptId#
+	</delete>
 </sqlMap>

@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.ibm.icu.text.IDNA.Info;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -643,7 +642,6 @@ public class EzJournalGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			
 			String userId = (String) jsonParam.get("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
@@ -823,7 +821,6 @@ public class EzJournalGWController {
 		LOGGER.debug("userId=" + userId);
 		
 		Gson gson = new Gson();
-
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -997,7 +994,6 @@ public class EzJournalGWController {
 	        	fileInfo.put("resultUpload", resultUpload[i]);
 	        	filelist.add(i, fileInfo);
 	        }
-
 	        result.put("data", filelist);
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1070,7 +1066,7 @@ public class EzJournalGWController {
 	
 	
 	/**
-	 * 업무일지 G/W [DELETE] 첨부파일 삭제
+	 * 업무일지 G/W [DELETE] 첨부파일 삭제 (임시파일)
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/attachfiles", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
@@ -1083,7 +1079,7 @@ public class EzJournalGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,  userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 		
 		//	String mode = "";
 		//	if (request.getParameter("mode") != null || request.getParameter("mode").equals("")) {

@@ -363,7 +363,22 @@ public class EzJournalServiceImpl implements EzJournalService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", jsonParam.get("userId"));
 		map.put("tenantId", jsonParam.get("tenantId"));
-		ezJournalDAO.deleteAuthDept(map);
+		if (jsonParam.get("admin").equals("Y")){
+			ezJournalDAO.deleteAuthDept(map);
+		} else {
+			List<DeptViewVO> cheifDeptList = ezJournalDAO.selectCheifBossList(map);
+			List<DeptViewVO> addCheifDeptList = new ArrayList<DeptViewVO>();
+			
+			for (DeptViewVO deptViewVO : cheifDeptList) {
+				map.put("deptId", deptViewVO.getId());
+				addCheifDeptList.addAll(ezJournalDAO.selectCheifBoss(map));
+			}
+			cheifDeptList.addAll(addCheifDeptList);
+			for (DeptViewVO deptViewVO : cheifDeptList) {
+				map.put("deptId", deptViewVO.getId());
+				ezJournalDAO.deleteAuthDeptOne(map);
+			}
+		}
 		Gson gson = new Gson();
 		
 		List<String> deptList = gson.fromJson(jsonParam.get("depts").toString(), new TypeToken<List<String>>(){}.getType());
@@ -832,11 +847,15 @@ public class EzJournalServiceImpl implements EzJournalService {
 			String thisContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").html();
 			String nextContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("nextJournal").html();
 			
-			// #146bb8
-			formThisHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");
+			// #146bb8 rgb(0, 144, 208)
+//			formThisHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");
+//			formThisHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
+			formThisHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + journal.getJournalTitle().trim() + "</span></p>");
 			formThisHtml.append(thisContent.trim() + "<p></p><p></p>");
 			
-			formNextHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");   
+//			formNextHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");   
+//			formNextHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
+			formNextHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + journal.getJournalTitle().trim() + "</span></p>");
 			formNextHtml.append(nextContent.trim() + "<p></p><p></p>");
 		}
 		

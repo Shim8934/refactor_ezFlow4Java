@@ -525,7 +525,13 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<DeptViewVO> selectCheifBossList(Map<String, Object> param) {
-		return (List<DeptViewVO>) list("selectCheifBossList",param);
+		List<DeptViewVO> result = null;
+		try {
+			result = (List<DeptViewVO>) list("selectCheifBossList",param);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	/**
@@ -536,6 +542,14 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<DeptViewVO> selectCheifBoss(Map<String, Object> param) {
 		return (List<DeptViewVO>) list("selectCheifBoss",param);
+	}
+
+	/**
+	 * 하나의 열람권한 부서만 삭제
+	 * @param map
+	 */
+	public void deleteAuthDeptOne(Map<String, Object> map) {
+		delete("deleteAuthDeptOne", map);
 	}
 
 }

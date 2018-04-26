@@ -699,7 +699,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			case "sum":
 				jsonParam.put("userId", userId);
 				restUrl = "/rest/ezjournal/journals-sum" ;
-				logger.debug(jsonParam.toString());
+				logger.debug("***" + jsonParam.toString());
 				result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
 				break;
 			default:
@@ -868,7 +868,7 @@ public class EzJournalController extends EgovFileMngUtil {
                 fileJson.put("bytes", bytes);
                 fileJson.put("fileSize", fileSize[i]);
                 fileJson.put("originalFilename", originalFilename);
-                fileJson.put("typeId", typeId);
+//              fileJson.put("typeId", typeId);
                 
                 jsonArray.add(fileJson);
             }
@@ -877,7 +877,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		jsonObject.put("cnt", cnt);
 		jsonObject.put("maxSize", maxSize);
 		jsonObject.put("userId",userInfo.getId());
-		jsonObject.put("typeId", typeId);
+//		jsonObject.put("typeId", typeId);
         
 		HttpEntity<JSONObject> entity = new HttpEntity(jsonObject, headers);
 		
@@ -1939,6 +1939,28 @@ public class EzJournalController extends EgovFileMngUtil {
 		logger.debug("journalConfig ended");
 		
 		return "/ezJournal/journalConfig";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezJournal/saveChiefAuthDept.do")
+	@ResponseBody
+	public String saveChiefAuthDept(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie){
+		logger.debug("saveChiefAuthDept started");
+		
+		JSONObject jsonString = new JSONObject();
+		String userId= ((LoginVO)commonUtil.userInfo(loginCookie)).getId();
+		
+		String depts = request.getParameter("depts");
+		jsonString.put("userId", userId);
+		jsonString.put("depts", depts);
+		jsonString.put("admin", "N");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", null, request, "post", jsonString);
+		
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("saveChiefAuthDept ended");
+		return status;
 	}
 	
 }

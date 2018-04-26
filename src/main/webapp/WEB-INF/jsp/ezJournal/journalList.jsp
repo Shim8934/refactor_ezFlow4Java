@@ -139,35 +139,35 @@
 					<c:if test="${nowDay <= jDay }">
 						<img src="/images/i_new.gif">
 					</c:if>
-						${journal.journalTitle}
+						<c:out value='${journal.journalTitle}'/>
 						<c:if test="${journal.replyCount gt 0}">
 							<!-- <a onclick=""><span onclick="quickReply('${journal.journalId }','${journal.journalTitle }');" style="color: #c64200">[${journal.replyCount }]</span></a> -->
-							<a onclick=""><span style="color: #c64200">[${journal.replyCount }]</span></a>
+							<a onclick=""><span style="color: #c64200">[<c:out value='${journal.replyCount }'/>]</span></a>
 						</c:if>
 					</td>
 					<c:if test="${listType eq 'recv' }">
 						<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-							${journal.deptName}
+							<c:out value='${journal.deptName}'/>
 						</td>
 					</c:if>
 					<c:if test="${listType eq 'department' or listType eq 'recv' }">
 						<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-							${journal.writerName}
+							<c:out value='${journal.writerName}'/>
 						</td>
 					</c:if>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-						${journal.journalDate}
+						<c:out value='${journal.journalDate}'/>
 					</td>
 					<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine' }">
 						<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-							${journal.formName}
+							<c:out value='${journal.formName}'/>
 						</td>
 					</c:if>
 					<c:if test="${listType eq 'mine' }">
 						<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
 							<c:choose>
 								<c:when test="${journal.totalRecv ne 0}">
-									${journal.checkRecv} / ${journal.totalRecv}
+									<c:out value='${journal.checkRecv}'/> / <c:out value='${journal.totalRecv}'/>
 								</c:when>
 								<c:otherwise>
 									<span>-</span>
@@ -177,7 +177,7 @@
 					</c:if>
 					<c:if test="${listType eq 'department' or listType eq 'mine' }">
 						<td	onclick="selectedTR(this);" class="viewCount" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-							${journal.viewCount}
+							<c:out value='${journal.viewCount}'/>
 						</td>
 					</c:if>
 				</tr>
@@ -185,7 +185,7 @@
 			</c:when>
 			<c:otherwise>
 				<tr selected="false" class="" style="background-color: rgb(255, 255, 255);">
-					<td	style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colspan="<c:choose><c:when test="${listType eq 'mine'}">10</c:when><c:when test="${listType eq 'recv' }">11</c:when><c:when test="${listType eq 'department' }">9</c:when><c:otherwise>7</c:otherwise></c:choose>">
+					<td	style="text-align: center; font-weight: normal; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colspan="<c:choose><c:when test="${listType eq 'mine'}">9</c:when><c:when test="${listType eq 'recv' }">10</c:when><c:when test="${listType eq 'department' }">8</c:when><c:otherwise>6</c:otherwise></c:choose>">
 						<spring:message code='ezJournal.t125'/>
 					</td>
 				</tr>

@@ -19278,7 +19278,8 @@
 			SUMMARY , 
 			FormName2 , 
 			ItemName2, 
-			TENANT_ID  
+			TENANT_ID,
+            PUBLICITYYN  
 		  FROM 
 		  	TBL_EXPAPRDOCINFO
 		  WHERE  
@@ -21466,7 +21467,7 @@
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_AprState#, 
-   			ProcessDate = #v_SYSDATE#
+   			ProcessDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS')
 		WHERE 
 			DocID = #v_DOCID# 
 		AND 
