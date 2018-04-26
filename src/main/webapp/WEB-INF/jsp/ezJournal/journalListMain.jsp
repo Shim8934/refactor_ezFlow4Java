@@ -367,6 +367,10 @@
 						journalIdList : JSON.stringify(journalIdList)
 					},
 					success : function() {
+						if(listType == 'recv'){
+							parent.left.setRecvCount();
+							setRecvCount();
+						}
 						setJournalList();
 					},
 					error : function() {
