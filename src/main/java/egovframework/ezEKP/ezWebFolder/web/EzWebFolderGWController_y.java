@@ -250,7 +250,7 @@ public class EzWebFolderGWController_y {
 			if (folderId.equals("") || serverName.equals("") || uppId.equals("") || offset.equals("") || mode.equals("") ) {
 				LOGGER.debug("Parameter error!");
 				result.put("status", "error");
-				result.put("code", "1");
+				result.put("code", 1);
 				return result;
 			}
 			
@@ -260,7 +260,7 @@ public class EzWebFolderGWController_y {
 				if (checkSbCreater != 1) {
 					LOGGER.debug("subFolder or SubFile is not mine!");
 					result.put("status", "ok");
-					result.put("code", "2");
+					result.put("code", 2);
 					return result;
 			
 				}

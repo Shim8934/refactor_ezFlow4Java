@@ -18,7 +18,7 @@
 		<script type="text/javascript">
 			var pCompanyID        = "<c:out value='${userInfo.companyID}'/>";
 			var primary           = "<c:out value='${userInfo.primary}'/>";
-			var fileInfo         = null;
+			var arrSubFolder   = [];
 			var selectedDept      = "";
 			var selectedUser      = "";
 			var strErrMsg         = "<spring:message code='ezWebFolder.t134'/>";
@@ -27,9 +27,9 @@
 			var strAlertMsg       = "<spring:message code='ezWebFolder.t171'/>";
 			var strSearchError    = "<spring:message code='ezWebFolder.t232'/>";
 			var strSearchNotFound = "<spring:message code='ezWebFolder.t172'/>";
-			
+			var folderFileId      = "<c:out value='${folderFileId}'/>";
+			var folderFileType    = "<c:out value='${folderFileType}'/>";
 			window.onload = function () {
-				fileInfo = window.opener.addShareDialogArguments[0];
 				preProcess();
 			}
 			
@@ -72,22 +72,29 @@
 				$.ajax({
 					type: "POST",
 					url: "/ezWebFolder/addShare.do",
+					contentType: 'application/json',
 					data: JSON.stringify({
-						"folderFileId" : fileInfo.id,
-						"folderFileType" : fileInfo.type,
+						"folderFileId" : folderFileId,
+						"folderFileType" : folderFileType,
 						"userList" : requestArray
 					}),
-					dataType: "json",
+					dataType: "JSON",
 					async: false,
 					success : function(data) {
 						if (data.status == "ok") {
-							alert(strAlertMsg);
+							alert("공유를 추가헸습니다.");
+							
+							try {
+								window.opener.refreshView();
+							} catch(e) {}
+							
+			                window.close();
 						} else {
-							alert(strErrMsg + data.code);
+							alert(strErrMsg + " code: " + data.code);
 						}
 					},
 					error : function(error) {
-						alert(strErrMsg + error);
+						alert(strErrMsg);
 					}
 				});
 			}

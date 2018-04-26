@@ -211,11 +211,11 @@
 							tdElmt9.textContent = result[i]["folderPath"].slice(0, -(result[i]["fileName"].length + 1));
 						}
 						
-						tdElmt10.textContent = getUserSimpleListStr(result[i]["userList"]);
-						var userListStr = result[i]["userList"];
+						tdElmt10.textContent = getUserSimpleListStr(result[i]["userListStr"]);
+						var userListStr = result[i]["userListStr"];
 						tdElmt10.addEventListener("click", function() {
 							//TODO: 공유자 목록 보기
-							alert(userListStr);
+							alert(this.textContent);
 						});
 						
 						trElmt.appendChild(tdElmt1);

@@ -3,10 +3,12 @@
 
 <sqlMap namespace="ezWebFolder_m">
 	<!-- FolderFile typeAlias  -->
-	<typeAlias alias="TrashCanVO"		type="egovframework.ezEKP.ezWebFolder.vo.TrashCanVO"/>
-	<typeAlias alias="ShareVO"			type="egovframework.ezEKP.ezWebFolder.vo.ShareVO"/>
-	<typeAlias alias="FolderFileVO"		type="egovframework.ezEKP.ezWebFolder.vo.FolderFileVO"/>
-	<typeAlias alias="FavoriteVO"		type="egovframework.ezEKP.ezWebFolder.vo.FavoriteVO"/>
+	<typeAlias alias="TrashCanVO"       type="egovframework.ezEKP.ezWebFolder.vo.TrashCanVO"/>
+	<typeAlias alias="ShareVO"          type="egovframework.ezEKP.ezWebFolder.vo.ShareVO"/>
+	<typeAlias alias="FolderFileVO"     type="egovframework.ezEKP.ezWebFolder.vo.FolderFileVO"/>
+	<typeAlias alias="FavoriteVO"       type="egovframework.ezEKP.ezWebFolder.vo.FavoriteVO"/>
+	<typeAlias alias="SimpleShareVO"    type="egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO"/>
+	<typeAlias alias="ShareSubVO"	    type="egovframework.ezEKP.ezWebFolder.vo.ShareSubVO"/>
 	
 	<!-- TrashFile resultMap -->
 	<resultMap id="trashCanVO" class="TrashCanVO">
@@ -65,14 +67,33 @@
         <result property="shareId"                column="SHARE_ID"  		      columnIndex="21" />
         <result property="sharerId"               column="SHARER_ID"  		      columnIndex="22" />
         <result property="sharerName"             column="SHARER_NAME"		      columnIndex="23" />
-        <result property="userList"               column="USER_LIST"			  columnIndex="24"         nullValue="" />
+        <result property="userListStr"            column="USER_LIST"			  columnIndex="24"         nullValue="" />
         <result property="shareDate"              column="SHARE_DATE"             columnIndex="25" />
         <result property="subStatus"              column="SUB_STATUS"             columnIndex="26" />
         <result property="tenantId"               column="TENANT_ID"              columnIndex="27" />
     </resultMap>
 	
+	<!-- ShareInfo resultMap -->
+    <resultMap id="simpleShareVO" class="SimpleShareVO">
+    	<result property="shareId"                column="SHARE_ID"               columnIndex="1"  />
+    	<result property="sharerId"               column="SHARER_ID"              columnIndex="2"  />
+    	<result property="sharerName"             column="SHARER_NAME"            columnIndex="3"  />
+    	<result property="folderFileId"           column="FOLDERFILE_ID"          columnIndex="4"  />
+    	<result property="folderFileType"         column="FOLDERFILE_TYPE"        columnIndex="5"  />
+    	<result property="shareDate"              column="SHARE_DATE"             columnIndex="6"  />
+    	<result property="tenantId"               column="TENANT_ID"              columnIndex="7"  />
+    </resultMap>
+    
+    <!-- ShareSubInfo resultMap -->
+    <resultMap id="shareSubVO" class="ShareSubVO">
+    	<result property="userId"                 column="USER_ID"                columnIndex="1"  />
+    	<result property="userName"               column="USER_NAME"              columnIndex="2"  />
+    	<result property="userType"               column="USER_TYPE"              columnIndex="3"  />
+    	<result property="subStatus"              column="SUB_STATUS"             columnIndex="4"  />
+    </resultMap>
+    
 	<resultMap id="countMap" class="HashMap">
-		<result property="folderfile_type"        column="FOLDERFILE_TYPE"        columnIndex="1"  />
+		<result property="folderfileType"         column="FOLDERFILE_TYPE"        columnIndex="1"  />
         <result property="count"               	  column="COUNT"                  columnIndex="2"           javaType="Long" />
 	</resultMap>
 	
@@ -614,6 +635,40 @@
 		]]>
 	</select>
 	
+	<select id="EzWebFolderDAO_m.getShareInfo" parameterClass="Map" resultMap="simpleShareVO">
+		SELECT
+			SHARE_ID,
+			SHARER_ID,
+			CASE WHEN #primary# = '1'
+				THEN SHARER_NAME1
+				ELSE SHARER_NAME2
+			END AS SHARER_NAME,
+			FOLDERFILE_ID,
+			FOLDERFILE_TYPE,
+			DATE_FORMAT(DATE_ADD(SHARE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS SHARE_DATE,
+			TENANT_ID
+		FROM TBL_WEBFOLDER_SHARE
+		WHERE FOLDERFILE_ID = #folderFileId#
+		AND FOLDERFILE_TYPE = #folderFileType#
+		<isNotEqual property="sharerId" compareValue="">
+			AND SHARER_ID = #sharerId#
+		</isNotEqual>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.getShareSubInfo" parameterClass="Map" resultMap="shareSubVO">
+		SELECT
+			USER_ID,
+			CASE WHEN #primary# = '1'
+				THEN USER_NAME1
+				ELSE USER_NAME2
+			END AS USER_NAME,
+			USER_TYPE,
+			SUB_STATUS,
+		FROM TBL_WEBFOLDER_SHARE_SUB
+		WHERE SHAERE_ID = #shareId#
+		ORDER BY SEQ_ID
+	</select>
+	
 	<select id="EzWebFolderDAO_m.getUserNameList" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -892,7 +947,7 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.getHiddenSharedCount" parameterClass="Map" resultClass="HashMap">
+	<select id="EzWebFolderDAO_m.getHiddenSharedCount" parameterClass="Map" resultMap="countMap">
 		<![CDATA[
 			SELECT
 				UU.FOLDERFILE_TYPE,
@@ -1246,31 +1301,6 @@
 			DELETER_ID = #userId#
 		AND
 			COMPANY_ID = #companyId#	
-	</update>
-	
-	<update id="EzWebFolderDAO_m.restoreAllFilesInFolder" parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_WEBFOLDER_FILE f JOIN
-					(
-					SELECT
-					  *
-					FROM
-						TBL_WEBFOLDER_FOLDER
-								WHERE
-									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
-								AND
-									TENANT_ID = #tenantId#
-					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
-			SET
-				f.USE_STATUS = 'Y',
-				f.DELETER_ID = #userId#,
-				f.UPDATE_DATE = #timeUTC#
-			WHERE
-				f.TENANT_ID = #tenantId#
-			AND
-				f.USE_STATUS = 'T'
-		]]>
 	</update>
 	
 	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteVO">

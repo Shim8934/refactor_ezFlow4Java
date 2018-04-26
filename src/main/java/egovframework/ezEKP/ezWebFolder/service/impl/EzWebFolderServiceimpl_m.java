@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
+import egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -152,12 +153,12 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		List<Map<String, Object>> list = ezWebFolderDAO_m.getSharingCount(map);
 		
 		long fileCount	 = 0;
-		long folderCount	 = 0;
+		long folderCount = 0;
 		long totalCount	 = 0;
 		long totalPage	 = 0;
 		
 		for (Map<String, Object> info : list) {
-			String folderFileType = (String)info.get("folderfile_type");
+			String folderFileType = (String) info.get("folderfileType");
 			if (folderFileType.equals("D")) {
 				folderCount = (Long) info.get("count");
 			} else if (folderFileType.equals("F")) {
@@ -211,7 +212,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		long totalPage	 = 0;
 		
 		for (Map<String, Object> info : list) {
-			String folderFileType = (String)info.get("folderfile_type");
+			String folderFileType = (String) info.get("folderfileType");
 			if (folderFileType.equals("D")) {
 				folderCount = (Long) info.get("count");
 			} else if (folderFileType.equals("F")) {
@@ -257,6 +258,29 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		}
 		
 		return isShared;
+	}
+	
+	@Override
+	public List<SimpleShareVO> getShareInfo(String sharerId, String folderFileId, String folderFileType, String primary, String offset, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("sharerId", sharerId);
+		map.put("folderFileId", folderFileId);
+		map.put("folderFileType", folderFileType);
+		map.put("primary", primary);
+		map.put("offset", offset);
+		map.put("tenantId",	tenantId);
+		
+		List<SimpleShareVO> shareInfoList = ezWebFolderDAO_m.getShareInfo(map);
+		
+		for (SimpleShareVO shareInfo : shareInfoList) {
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map.put("shareId", shareInfo.getShareId());
+			map.put("tenantId", shareInfo.getTenantId());
+			
+			shareInfo.setUserList(ezWebFolderDAO_m.getShareSubInfo(map2));
+		}
+		
+		return shareInfoList;
 	}
 	
 	@Override
@@ -418,7 +442,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		long totalPage	 = 0;
 		
 		for (Map<String, Object> info : list) {
-			String folderFileType = (String)info.get("folderfile_type");
+			String folderFileType = (String) info.get("folderfileType");
 			if (folderFileType.equals("D")) {
 				folderCount = (Long) info.get("count");
 			} else if (folderFileType.equals("F")) {
@@ -640,7 +664,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			}
 		} else {
 			isDeleted = 1;
-			throw new FileNotFoundException(fileVO.getFileName());
+			LOGGER.error("File is Not Found:" + fileVO.getFileName());
 		}
 		
 		return isDeleted;
@@ -830,7 +854,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		for (String file : searchFiles) {
 			map.put("fileId", file);
-			result = ezWebFolderDAO.restoreAllFilesInFolder(map);
+			result = ezWebFolderDAO.restoreFile(map);
 		}
 		
 		
@@ -1043,4 +1067,5 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 		return result;
 	}
+
 }

@@ -475,17 +475,19 @@ public class EzWebFolderController_y {
 		ResponseEntity<JSONObject> 	result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
 		
 		JSONObject resultBody = result.getBody();
-		String status                 = (String) resultBody.get("status");
+		String status               = resultBody.get("status").toString();
+		String code                 = resultBody.get("code").toString();
+		
 		LOGGER.debug("moveFolder status " + status);
-		if (!status.equals("ok")) {
-			String reason      = resultBody.get("reason").toString();
-			model.addAttribute("reason", reason);
+		if (status.equals("ok")) {
 			LOGGER.debug("Move Folder finishes!");
+			model.addAttribute("status",status);
+			model.addAttribute("code",code);
 		}else {
 			LOGGER.debug("move Folder Fail");
+			model.addAttribute("status",status);
+			model.addAttribute("code",code);
 		}
-		
-		
 		
 		return "json";
 		
