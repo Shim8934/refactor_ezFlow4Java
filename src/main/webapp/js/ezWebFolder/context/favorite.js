@@ -1,7 +1,7 @@
-var favoriteModule = (function() {
+var favoriteContext = (function() {
 	
-	function onCheckAllClick() {
-		var selectedRows = rowModule.getSelectedRows();
+	function toggleAll() {
+		var selectedRows = rowContext.getSelectedRows();
 		var selectedLength = selectedRows.length;
 		
 		if (selectedLength === 0) {
@@ -25,7 +25,7 @@ var favoriteModule = (function() {
 			rowElement = selectedRows[i];
 			imageElement = rowElement.querySelector("img:first-child");
 			successHandle = function() { toggleImage(rowElement, imageElement); };
-			rowInfo = rowModule.getRowInfo(selectedRows[i]);
+			rowInfo = rowContext.getRowInfo(selectedRows[i]);
 			
 			requestAjax(rowInfo.id, rowInfo.type, false, successHandle);
 		}
@@ -40,21 +40,8 @@ var favoriteModule = (function() {
     	toggleFavorite(rowElement, true, successHandle, successHandle);
     }
     
-	function toggleImage(rowElement, imageElement) {
-		if (rowElement.hasAttribute("favorite")) {
-			imageElement.src = "/images/ImgIcon/view-flag.gif";
-			rowElement.removeAttribute("favorite");
-		} else {
-			imageElement.src = "/images/ImgIcon/icon-flag.gif";
-			rowElement.setAttribute("favorite", "");
-		}
-	}
-	
-	// TODO 이 윗줄부터 click event라서 jsp로 옮겨야 할지 말지 고민 중
-	// 또한 attribute 이름을 통일시켜야함. targetId, targetPath, targetType, favorite 으로 통일 예정
-	// 통일 시 변수로 따로 저장해도 괜찮을듯 
     function toggleFavorite(rowElement, isAsync, addHandler, deleteHandler) {
-    	var rowInfo = rowModule.getRowInfo(rowElement);
+    	var rowInfo = rowContext.getRowInfo(rowElement);
 
 		if (rowInfo.isFavorite) {
 			deleteFavorite(rowInfo.id, rowInfo.type, isAsync, deleteHandler);
@@ -69,6 +56,18 @@ var favoriteModule = (function() {
     
     function deleteFavorite(targetId, targetType, isAsync, successHandler) {
     	requestFavoriteAjax("/ezWebFolder/deleteFavorite.do", isAsync, {targetId: targetId, targetType: targetType}, successHandler);
+	}
+    
+    /** private function **/
+    
+	function toggleImage(rowElement, imageElement) {
+		if (rowElement.hasAttribute("favorite")) {
+			imageElement.src = "/images/ImgIcon/view-flag.gif";
+			rowElement.removeAttribute("favorite");
+		} else {
+			imageElement.src = "/images/ImgIcon/icon-flag.gif";
+			rowElement.setAttribute("favorite", "");
+		}
 	}
 
 	function requestFavoriteAjax(url, isAsync, data, successHandler) {
@@ -95,8 +94,8 @@ var favoriteModule = (function() {
 	}
     
     return {
-		onCheckAllClick : onCheckAllClick,
 		onImageClick : onImageClick,
+    	toggleAll : toggleAll,
 		toggleFavorite : toggleFavorite,
 		addFavorite : addFavorite,
 		deleteFavorite : deleteFavorite

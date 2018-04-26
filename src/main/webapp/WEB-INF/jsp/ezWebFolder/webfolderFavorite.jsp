@@ -16,8 +16,9 @@
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<!-- module -->
-	<script type="text/javascript" src="/js/ezWebFolder/rowModule.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/favoriteModule.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
     <script type="text/javascript">
     	/* pagination variable: 리팩토링, 함수도 포함 대상임.	*/
     		var pagination = {
@@ -458,7 +459,7 @@
 				row.setAttribute("class", "bnkWebFolder");
 				row.setAttribute("targetId", resultJson[columnMap.id]);
 				row.setAttribute("targetPath", resultJson[columnMap.path]);
-				row.addEventListener("click", function(event) { rowModule.onRowClick(this); });
+				row.addEventListener("click", function(event) { rowContext.onRowClick(this); });
 				
 				if (!isFromFolder && isFolder) {
 					row.setAttribute("folderType", targetType.charAt(2));
@@ -474,7 +475,7 @@
 				inputElement.setAttribute("type", "checkbox");
 				inputElement.setAttribute("value", resultJson[columnMap.id]);
 				inputElement.setAttribute("class", "checkBnk");
-				inputElement.addEventListener("change", function(event) { event.stopPropagation(); rowModule.onCheckboxChange(this); });
+				inputElement.addEventListener("change", function(event) { event.stopPropagation(); rowContext.onCheckboxChange(this); });
 				inputElement.addEventListener("click", function(event) { event.stopPropagation(); });
 				inputElement.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 				
@@ -482,7 +483,7 @@
 				
 				fileIconElement = document.createElement("img");
 				fileIconElement.setAttribute("class", "none-drag");
-				fileIconElement.addEventListener("click", function() { favoriteModule.onImageClick(this); });
+				fileIconElement.addEventListener("click", function() { favoriteContext.onImageClick(this); });
 				fileIconElement.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 				
 				if (isFromFolder && resultJson[columnMap.favoriteStatus] === "0") {
@@ -732,7 +733,7 @@
 			}
 			
 			function getSelectedFoldersAndFiles() {
-				var selectedRows = rowModule.getSelectedRows();
+				var selectedRows = rowContext.getSelectedRows();
 				var selectedLength = selectedRows.length;
 				
 				if (selectedLength <= 0) {
@@ -745,7 +746,7 @@
 				var rowInfo;
 				
 				for (var i = 0; i < selectedLength; i++) {
-					rowInfo = rowModule.getRowInfo(selectedRows[i]);
+					rowInfo = rowContext.getRowInfo(selectedRows[i]);
 					
 					if (rowInfo.type === 'D') {
 						folders.push(rowInfo.id);
@@ -838,9 +839,7 @@
 </head>
 <body class="mainbody">
     <h1 onclick='context.setListAsFavorite();' style="cursor: pointer; display: inline-block;">즐겨찾기</h1>
-    
     <span id="mailBoxInfo"></span>
-	
 	<div id="originalPathWrapper" style="height:40px; display: none;">
 		<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;" id ="originalPath"></span>
 	</div>
@@ -852,7 +851,7 @@
 			<li id="" onClick="fileRename()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 			<li id="" onClick="fileMove()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
 			<li id=""><img src="/images/i_bar.gif"></li>
-			<li id="" onClick="favoriteModule.onCheckAllClick()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t281'/></span></a></li>
+			<li id="" onClick="favoriteContext.toggleAll()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t281'/></span></a></li>
 <%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
 			<li id=""><img src="/images/i_bar.gif"></li>
 			<li id="SearchOption" favoritemenu mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
@@ -916,7 +915,7 @@
 	<div id="dragDropArea" style="margin: 10px 0px; overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
-				<th width="15px" ><input type="checkbox" onchange="rowModule.selectAll(this.checked)" id="_checkAll"></th>
+				<th width="15px" ><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
 				<th width="20px" ><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th>
 				<th width="40px" ><spring:message code='ezWebFolder.t188'/></th>
 				<th width="330px"><spring:message code='ezWebFolder.t156'/></th>

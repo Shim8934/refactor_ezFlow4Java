@@ -1,4 +1,4 @@
-var rowModule = (function() {
+var rowContext = (function() {
 	var className = {
 		selected : "bnkWebFolder2",
 		unselected : "bnkWebFolder"
