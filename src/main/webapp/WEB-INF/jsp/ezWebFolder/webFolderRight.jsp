@@ -246,6 +246,10 @@
 					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'folder' : 'file');
 					trElmt.addEventListener("click", function(event) { rowModule.onRowClick(this); });
 					
+					if (result[i]["fileTypeName"] != 'folder') {
+						trElmt.addEventListener("dblclick", function(event) {downloadFileByDbClick(event);});
+					}
+					
 					var inputElmt = document.createElement("input");
 					inputElmt.setAttribute("type", "checkbox");
 					inputElmt.setAttribute("value", result[i]["fileId"]);
@@ -680,6 +684,18 @@
 			var folderFileType = rowModule.getRowInfo(selectedRows[0]).type;
             var OpenWin = window.open("/ezWebFolder/addShareView.do?folderFileId=" + folderFileId + "&folderFileType=" + folderFileType, "addShareView", GetOpenWindowfeature(610, 685));
             try { OpenWin.focus(); } catch (e) { }
+		}
+		
+		function downloadFileByDbClick(event) {
+			event.stopPropagation();
+			event.preventDefault();
+			var trElmt       = event.currentTarget;
+			var fileFolderId = trElmt.getAttribute("targetId");
+			var filesList    = [];
+			filesList.push(fileFolderId);
+			
+			var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
+			AttachDownFrame.location.href = downloadUrl;
 		}
     </script>
 </head>
