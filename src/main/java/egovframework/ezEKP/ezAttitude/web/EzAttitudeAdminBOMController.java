@@ -335,6 +335,7 @@ public class EzAttitudeAdminBOMController {
 		
 		String status = resultBody.get("status").toString();
 		
+		LOGGER.debug("status :" + status);
 		LOGGER.debug("saveAttitudeTypeConfig ended.");
 	}
 	

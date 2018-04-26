@@ -317,7 +317,7 @@
 	<update id="ezAttitudeAdminDAO.updateAttitudeTypeConfig" parameterClass="Map">
 		<![CDATA[
 			UPDATE TBL_ATTITUDE_TYPE
-			SET=/
+			SET
 				ISUSE = #isuse#
 			WHERE
 				COMPANY_ID = #companyId#
