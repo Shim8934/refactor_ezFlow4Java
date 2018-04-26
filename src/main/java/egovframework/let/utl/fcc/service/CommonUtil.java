@@ -1014,7 +1014,13 @@ public class CommonUtil {
 		html = html.replace("&sup3;", "³");
 		html = html.replace("&acute;", "´");
 		html = html.replace("&mu;", "μ");
+<<<<<<< HEAD
 		html = html.replace("&para;", "¶");
+=======
+		html = html.replace("&pa "
+				+ " "
+				+ ";", "¶");
+>>>>>>> master
 		html = html.replace("&middot;", "·");
 		html = html.replace("&cedil;", "¸");
 		html = html.replace("&sup1;", "¹");
@@ -1051,7 +1057,11 @@ public class CommonUtil {
 	 */
 	public JSONObject getJsonFromRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
 		logger.debug("getJsonFromRestApi started");
+<<<<<<< HEAD
 		String gwServerUrl = "http://localhost:8080";
+=======
+		String gwServerUrl = config.getProperty("config.journalGWServerURL");
+>>>>>>> master
 		String url = gwServerUrl + restUrl ;
 		
 		HttpHeaders headers = new HttpHeaders();
