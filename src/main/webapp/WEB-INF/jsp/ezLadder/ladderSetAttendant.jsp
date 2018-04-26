@@ -160,28 +160,19 @@
 	                var pparsingXML2 = "";
 	
 	                pparsingXML2 = "<LISTVIEWDATA2><ROWS>"
-	                var strName;
 	                var strId;
-	                var strName1;
+	                var strName;
 	                var strName2;
-	                var strDeptName1;
-	                var strDeptName2;
 	                var strPic;
 	
-	                strName = RetValue["name"][i];
 	                strId = RetValue["id"][i];
-	                /* strName1 = attendants["name1"][i]; */
+	                strName = RetValue["name"][i];
 	                strName2 = RetValue["name2"][i];
-	                /* strDeptName1 = attendants["deptname"][i];
-	                strDeptName2 = attendants["deptname2"][i]; */
 	                strPic = RetValue["pic"][i];
 	
 	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-	                /* pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
-	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>"; */
-	                /* pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>"; */
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strPic + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                
@@ -800,11 +791,12 @@
 						strpic = "";
 					} else {
 						strId = userlist["userId"][i];
-						if(!userlist["pic"][i]) {
+						strpic = userlist["pic"][i];
+						/* if(!userlist["pic"][i]) {
 							strpic = "/images/ezLadder/icon_defaultAttendant.png";
 						} else {
 							strpic = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userlist["pic"][i];
-						}
+						} */
 					}
 					strName = userlist["userName"][i];
 					strName2 = userlist["userName2"][i];
@@ -813,7 +805,7 @@
 					pparsingXML += "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 					pparsingXML += "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 					pparsingXML += "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-					pparsingXML += "<DATA4>" + strpic + "</DATA4>";
+					pparsingXML += "<DATA4><![CDATA[" + strpic + "]]></DATA4>";
 					pparsingXML += "<VALUE>"  + strName + "</VALUE></CELL></ROW>";
 					pparsingXML += "</ROWS></LISTVIEWDATA2>";
 				

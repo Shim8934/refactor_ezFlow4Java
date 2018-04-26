@@ -233,11 +233,12 @@
 				url: "/ezLadder/serUserOrder.do",
 				dataType: "json",
 				traditional: true,
+				async : false,
 				data: {
 					"ladderId": ladderId,
-					"firstUser": _ladderLine[ladId1].userId,
+					"firstUser": _ladderLine[ladId1].lineId,
 					"firstUserOrder": ladorder1,
-					"secondUser": _ladderLine[ladId2].userId,
+					"secondUser": _ladderLine[ladId2].lineId,
 					"secondUserOrder": ladorder2,
 					"firstItem": _ladderLine[ladId1].item,
 					"secondItem": _ladderLine[ladId2].item
@@ -435,11 +436,12 @@
 					
 					var html = '';
 					_ladderLine.forEach(function(line, index) {
+						var picsrc = !line.pic ? "/images/ezLadder/icon_defaultAttendant.png" : "/admin/ezOrgan/getPersonalInfo.do?fileName=" + line.pic;
 						html += '<li><div id="drag' + index + '" style="cursor: pointer;">';
 						if(!line.pic) {
 							html += '<span class="userPicWraper_d"><img src="/images/ezLadder/icon_defaultAttendant.png" width="60px" height="60px" style="display: block;" /></span>';
 						} else {
-							html += '<span class="userPicWraper"><img src="' + line.pic + '" width="60px" height="60px" /></span>';
+							html += '<span class="userPicWraper"><img src="' + picsrc + '" width="60px" height="60px" /></span>';
 						}
 						html += '<div title="' + line.userName + '" style="line-height: 30px; background: white; height: 30px; outline: 1px solid #ddd; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap">' + line.userName + '</span></div></div></li>';
 					});
@@ -474,7 +476,7 @@
 				},
 				success: function(data) {
 					var cmt = data["myComment"];
-					var picsrc = !cmt["pic"] ? "/images/ezLadder/icon_defaultAttendant.png" : cmt["pic"];
+					var picsrc = !cmt["pic"] ? "/images/ezLadder/icon_defaultAttendant.png" : "/admin/ezOrgan/getPersonalInfo.do?fileName=" + cmt["pic"];
 					if(flag == "add") { 
 						// add
 						var html = '<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="' + cmt["id"] + '">';
@@ -696,7 +698,16 @@
 		<div class="fullwidth">
 			<div style="height:50px">
 				<div style="float:left;margin-top:3px;margin-bottom:10px">
-					<p class="pic" style="float:left;margin:5px 10px"><img src="${empty vo.pic ? '/images/poll/default_pic_vote.gif' : vo.pic}" width="48px" height="48px" style="position: relative;"></p>
+					<p class="pic" style="float:left;margin:5px 10px">
+						<c:choose>
+							<c:when test="${empty vo.pic}">
+								<img src="/images/poll/default_pic_vote.gif" width="48px" height="48px" style="position: relative;">
+							</c:when>
+							<c:otherwise>
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${vo.pic}" width="48px" height="48px" style="position: relative;">
+							</c:otherwise>
+						</c:choose>
+					</p>
 					<div style="float:left;margin:1px 8px">
 						<span class="name" style="float:left">${vo.writerName}</span>
 						<span class="team" style="float:left">${vo.deptName}</span>
@@ -812,7 +823,7 @@
 														</c:when>
 														<c:otherwise>
 															<span class="userPicWraper">
-																<img src="${line.pic}" width="60px" height="60px" />
+																<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${line.pic}" width="60px" height="60px" />
 															</span>
 														</c:otherwise>
 													</c:choose>
@@ -857,7 +868,7 @@
 															</c:when>
 															<c:otherwise>
 																<span class="userPicWraper">
-																	<img src="${line.pic}" width="60px" height="60px" />
+																	<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${line.pic}" width="60px" height="60px" />
 																</span>
 															</c:otherwise>
 														</c:choose>

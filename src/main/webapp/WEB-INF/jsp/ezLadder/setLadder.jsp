@@ -605,6 +605,7 @@
 							attendants["name2"][totalLen] = alluser["userName2"][j];
 							attendants["pic"][totalLen] = alluser["pic"][j];
 							attendants["order"][totalLen] = totalLen;
+							items[totalLen++] = "";
 							j++;
 						} else if(overlapuser["temporder"].indexOf(i) != -1) {
 							if(!overlapuser["userId"][k] || type == "anony") {
@@ -617,10 +618,9 @@
 							attendants["name2"][totalLen] = overlapuser["userName2"][k];
 							attendants["pic"][totalLen] = overlapuser["pic"][k];
 							attendants["order"][totalLen] = totalLen;
+							items[totalLen++] = "";
 							k++;
 						}
-						items[totalLen] = "";
-						totalLen++;
 					}
 					
 					setAttendantsView();
@@ -694,7 +694,8 @@
 							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 22px; right: 10px; cursor: pointer;"></span></div></li>';
 						} else {
 							if(attendants["pic"][i] !== "") {
-								picsrc = attendants["pic"][i];
+								picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
+								
 								/* if(attendants["pic"][i].substring(0, 10) == "/ezCommon/") {
 								} else {
 									picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];

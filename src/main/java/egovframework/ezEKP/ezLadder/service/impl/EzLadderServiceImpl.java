@@ -519,14 +519,18 @@ public class EzLadderServiceImpl implements EzLadderService {
 		logger.debug("setUserOrder started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("LadderId", ladVO.getLadderId());
-		map.put("firstUser", firstUser);
-		map.put("secondUserOrder", secondUserOrder);
-		map.put("secondItem", secondItem);
 		map.put("tenant_id", ladVO.getTenant_id());
+		
+		map.put("origUser", firstUser);
+		map.put("origOrder", firstUserOrder);
+		map.put("changeOrder", secondUserOrder);
+		map.put("changeItem", secondItem);
 		ezLadderDAO.setUserOrder(map);
-		map.put("firstUser", secondUser);
-		map.put("secondUserOrder", firstUserOrder);
-		map.put("secondItem", firstItem);
+		
+		map.put("origUser", secondUser);
+		map.put("origOrder", secondUserOrder);
+		map.put("changeOrder", firstUserOrder);
+		map.put("changeItem", firstItem);
 		ezLadderDAO.setUserOrder(map);
 		logger.debug("setUserOrder started.");
 	}
