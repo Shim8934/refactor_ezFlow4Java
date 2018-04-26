@@ -1196,7 +1196,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId,
+	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String deptId,
 			String offset, String year, String typeId, int tenantId)
 			throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1206,6 +1206,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String startTime = "-01 00:00:00";
 		
 		map.put("userId", userId);
+		map.put("deptId", deptId);
 		map.put("offsetMin", offsetMin);
 		map.put("year", year);
 		map.put("startTime", startTime);
