@@ -49,6 +49,7 @@
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var selecUserList = "";//리스트에 선택된 userList(,로 구분)
 	    	var adminCompany = "${adminCompany}";
+	    	var listSize = 19;
 	    	
 	    	//"overflow":"hidden", "white-space":"nowrap", "text-overflow":"ellipsis", "cursor":"pointer"
 	    	//레이어 만들고 업데이트하는 로직 추가, 추가,삭제 기존로직 타고 다지우고
@@ -140,7 +141,7 @@
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
 	    			resultHtml += "<td>" + vo.workStartTime + " ~ " + vo.workEndTime + "</td>";
-	    			resultHtml += "<td>" + vo.compareTime + "</td></tr>";
+	    			resultHtml += "<td>" + (vo.compareTime == '0' ? '미사용' : '사용') + "</td></tr>";
 	    		});
 	    		
 	    		if (resultHtml == "") {
@@ -317,23 +318,25 @@
 	  	<table id="searchTable" style="width:100%;">
 			<tbody>
 				<tr>
-					<td style="width: 5%;">부서</td>
+					<td style="width: 3%;">부서</td>
 					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;"></td>
-					<td style="width:5.5%;">이름</td>
+					<td style="width: 3%;">이름</td>
 					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;"></td>
-					<td style="width: 5%;">근무시간</td>
-					<td style="width: 20%;"><span id="topmenu"><input id="searchStartTime" type="text" style="width:80px;"/>&nbsp; ~ <input id="searchEndTime" type="text" style="width:80px;"/></span></td>
-				</tr>
-				<tr>
-					<td style="width: 5%;">직위</td>
-					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50"></td>
-					<td style="width: 5.5%;">회사규율이랑비교</td>
-					<td style="width: 11%;">
+					<td style="width: 3%;">탄력근무</td>
+					<td style="width: 20%;">
 						<span style="width: 90%;">
 							<input type="radio" name="searchCompareValue" id="searchCompareValueAll" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/>&nbsp;모두
 							<input type="radio" name="searchCompareValue" id="searchCompareValue0" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;같은
 							<input type="radio" name="searchCompareValue" id="searchCompareValue1" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;다른
 						</span>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 3%;">직위</td>
+					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50"></td>
+					<td style="width: 3%;">근무시간</td>
+					<td>
+						<span id="topmenu"><input id="searchStartTime" type="text" style="width:50px;"/>&nbsp; ~ &nbsp;<input id="searchEndTime" type="text" style="width:50px;"/></span>
 					</td>
 					<td style=" width:*;" colspan=2>
 						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
@@ -343,20 +346,23 @@
 			</tbody>
 		</table>
 		
-		<table id="attiBoardList" class="mainlist" style="width:100%;">
-			<thead>
-				<tr>
-<!-- 					<th style="width:10%;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th> -->
-					<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
-					<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
-					<th style="width:25%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
-					<th style="width:25%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="work_starttime">근무시간</th>
-					<th style="width:5%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="compareTime">1이면다름</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
+		<div id="listDiv" style="height:620px;">
+			<table id="attiBoardList" class="mainlist" style="width:100%;">
+				<thead>
+					<tr>
+						<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
+						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
+						<th style="width:25%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
+						<th style="width:25%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="work_starttime">근무시간</th>
+						<th style="width:5%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="compareTime">탄력근무</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+		
+		<div id="runtime" style="color: #666; padding-top: 10px"></div>
 		<div id="tblPageRayer">
 		</div>
 	</body>
