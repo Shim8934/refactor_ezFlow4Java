@@ -209,7 +209,7 @@
 			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchCompareValue">
-			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime, '0', '1') = #searchCompareValue#
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') = #searchCompareValue#
 		</isNotEmpty>
 		
 		<isNotEmpty property="orderCell">
@@ -274,7 +274,7 @@
 			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchCompareValue">
-			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime, '0', '1') = #searchCompareValue#
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') = #searchCompareValue#
 		</isNotEmpty>
 	</select>
 	
@@ -631,22 +631,21 @@
 		<isNotEmpty property="orderCell">
 			ORDER BY
 				$orderCell$ $orderOption$,
-				startdate desc,
-				enddate desc,
-				starttime desc
+				startdate DESC,
+				enddate DESC,
+				starttime DESC
 		</isNotEmpty>
 		<isEmpty property="orderCell">
 			ORDER BY
-				startdate desc,
-				enddate desc,
-				starttime desc
+				startdate DESC,
+				enddate DESC,
+				starttime DESC
 		</isEmpty>
-		<isNotEmpty property="limit">
-			<![CDATA[
-				LIMIT 
-					#limit#, #listSize# 
-			]]>
-		</isNotEmpty>
+		
+		<![CDATA[
+			LIMIT
+				#limit#, #listSize#
+		]]>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
