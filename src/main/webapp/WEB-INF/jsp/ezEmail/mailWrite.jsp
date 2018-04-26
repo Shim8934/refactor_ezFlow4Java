@@ -853,7 +853,8 @@
 			                aitem = "/ezEmail/downloadAttach.do?" 
 			                				+ "mode=Attach"
 			                				+ "&folderPath=" + encodeURIComponent(folderPath)
-			                				+ "&filename=" + encodeURIComponent(filename);
+			                				+ "&filename=" + encodeURIComponent(filename)
+			                				+ "&tid=" + tid;
 		                }
 		                
 		                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
