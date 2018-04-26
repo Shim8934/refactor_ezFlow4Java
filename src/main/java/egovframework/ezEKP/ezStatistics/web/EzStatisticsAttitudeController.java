@@ -75,7 +75,7 @@ public class EzStatisticsAttitudeController {
 		}
 		
 		model.addAttribute("companyId", topid);				
-		model.addAttribute("deptID", userInfo.getDeptID());
+		model.addAttribute("deptId", userInfo.getDeptID());
 		
 		//회사리스트 - companyList
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -113,29 +113,29 @@ public class EzStatisticsAttitudeController {
 		}
 		
 		//근태유형(구분) 리스트
-		gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		url = gwServerUrl + "/rest/ezattitude/companies/" + adminCompany + "/attitudetypes";//TODO
-		
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		entity = new HttpEntity<>(headers);
-		
-		builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId());
-		
-		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		resultBody = (JSONObject) jp.parse(result.getBody());
-				
-		status = resultBody.get("status").toString();
-		
-		JSONArray typeList = new JSONArray();
-		if (status.equals("ok")) {		
-			typeList = (JSONArray) resultBody.get("data");
-			
-			model.addAttribute("typeList", typeList);
-		}
+//		gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+//		url = gwServerUrl + "/rest/ezattitude/companies/" + adminCompany + "/attitudetypes";//TODO
+//		
+//		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+//		headers.set("x-user-host", request.getServerName());
+//		
+//		entity = new HttpEntity<>(headers);
+//		
+//		builder = UriComponentsBuilder.fromHttpUrl(url)
+//				.queryParam("userId", userInfo.getId());
+//		
+//		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//		
+//		resultBody = (JSONObject) jp.parse(result.getBody());
+//				
+//		status = resultBody.get("status").toString();
+//		
+//		JSONArray typeList = new JSONArray();
+//		if (status.equals("ok")) {		
+//			typeList = (JSONArray) resultBody.get("data");
+//			
+//			model.addAttribute("typeList", typeList);
+//		}
 		
 		return "ezStatistics/statisticsAttitudeUser";
 	}
@@ -306,22 +306,17 @@ public class EzStatisticsAttitudeController {
 	/**
 	 * 개인별 통계 현황 데이터 반환 함수
 	 */
-	@RequestMapping(value="/ezStatistics/getAttitudeUser.do",method=RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezStatistics/getAttitudeUser.do")
 	@ResponseBody
-	public String getAttitudeUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-        //관리자 권한체크
-		LoginVO user = commonUtil.checkAdmin(loginCookie);
-		
-		if (user == null) {
-			return "cmm/error/adminDenied";
-		}
+	public JSONArray getAttitudeUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String selectUserId = request.getParameter("userId");
 		String year = request.getParameter("year");
 		String typeId = request.getParameter("typeId");
-		String startDate = year + "-01-01";//2018-01-01
-		String endDate = year + "-12-31";//2018-12-31
+//		String startDate = year + "-01-01";//2018-01-01
+//		String endDate = year + "-12-31";//2018-12-31
 		String offset = userInfo.getOffset();
 
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
@@ -335,8 +330,10 @@ public class EzStatisticsAttitudeController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("offset", offset)
-				.queryParam("startDate", startDate)
-				.queryParam("endDate", endDate)
+				.queryParam("year", year)
+//				.queryParam("startDate", startDate)
+//				.queryParam("endDate", endDate)
+				.queryParam("typeId", typeId)
 				.queryParam("userId", userInfo.getId());
 		
 		RestTemplate rest = new RestTemplate();
@@ -349,66 +346,37 @@ public class EzStatisticsAttitudeController {
 				
 		String status = resultBody.get("status").toString();
 		
-		/*
-		Document doc = commonUtil.convertStringToDocument(bodyData);
-		String sDate = doc.getElementsByTagName("SDATE").item(0).getTextContent();
-		String eDate = doc.getElementsByTagName("EDATE").item(0).getTextContent();
-		
-		String tenantIdParam = "tenantId=" + user.getTenantId();
-		String searchIdParam = "searchId=" + userId;
-		String typeParam = "type=3";
-		String userLangParam = "userLang=" + user.getPrimary();
-		
-		String inputParams = tenantIdParam + "&" + sDateParam + "&" + eDateParam + "&" + searchIdParam
-								+ "&" + typeParam + "&" + userLangParam;
-
-		logger.debug("inputParams=" + inputParams);
-		
-		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/statMailAnalysis";			
-		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-		logger.debug("response=" + response);		
-		
-		JSONArray resultArray = null;
-		
-		if (response != null) {
-			JSONParser jsonParser = new JSONParser();
-			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-			String resultCode = (String)responseObj.get("resultCode");
-
-			if (resultCode.equalsIgnoreCase("OK")) {
-				resultArray = (JSONArray)responseObj.get("result");
-			}				
-		}						
-		
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("<DATA>");
-
-		if (resultArray != null && resultArray.size() > 0) {
-			for (int i = 0; i < resultArray.size(); i++) {
-				sb.append("<ROW>");
-				
-				Map<String, String> rowObject = (Map<String, String>)resultArray.get(i);
-				
-				for (String colName : rowObject.keySet()) {
-					String colValue = rowObject.get(colName);
-					sb.append("<" + colName + ">");	
-					sb.append(commonUtil.cleanValue(colValue));
-					sb.append("</" + colName + ">");
-				}
-				
-				sb.append("</ROW>");
-			}
+		JSONArray list = new JSONArray();
+		if (status.equals("ok")) {		
+			list = (JSONArray) resultBody.get("data");
 		}
 		
-		sb.append("</DATA>");
-		
-		String returnData = sb.toString();
-		
-		return returnData;	
-		*/
-		return "**********************************************************************************************************************************";
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append("<DATA>");
+//
+//		if (list != null && list.size() > 0) {
+//			for (int i = 0; i < list.size(); i++) {
+//				sb.append("<ROW>");
+//				
+//				Map<String, String> rowObject = (Map<String, String>)list.get(i);
+//				
+//				for (String colName : rowObject.keySet()) {
+//					String colValue = rowObject.get(colName);
+//					sb.append("<" + colName + ">");	
+//					sb.append(commonUtil.cleanValue(colValue));
+//					sb.append("</" + colName + ">");
+//				}	
+//				
+//				sb.append("</ROW>");
+//			}
+//		}
+//		
+//		sb.append("</DATA>");
+//		
+//		String returnData = sb.toString();
+//		
+//		return returnData;	
+		return list;
 	}
 }

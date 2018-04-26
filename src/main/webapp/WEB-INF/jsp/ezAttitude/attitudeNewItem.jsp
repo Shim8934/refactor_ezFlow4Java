@@ -88,6 +88,7 @@
 		        if (mode == "mod") {
 					uploadSDate = pStartDate;
 					uploadEDate = pEndDate;
+					modFirstFlag = false;
 		        } else {
 					uploadSDate = date + " 00:00:00";
 					uploadEDate = date + " 23:59:59";
@@ -200,8 +201,6 @@
 							}
 							mobile = $("input[name=mobile]").val();
 							bizSub = $("input[name=bizsub]").val();
-						} else {
-							modFirstFlag = false;
 						}
 						
 						$("#attiwriteForm tr").not("tr:first").remove();

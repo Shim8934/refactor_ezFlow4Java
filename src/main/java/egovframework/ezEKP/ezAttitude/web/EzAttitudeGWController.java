@@ -749,11 +749,8 @@ public class EzAttitudeGWController {
 			} else {
 				typeId = "A" + MaxTypeId;
 			}
-//			//formList 구하기
-//			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
 			
 			data.put("typeId", typeId);
-//			data.put("formList", formList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -815,19 +812,15 @@ public class EzAttitudeGWController {
 			
 			AttitudeTypeVO typeInfo = ezAttitudeService.getAttitudeTypeInfo(info.getTenantId(), companyId, attitudetypeId);
 			//imgPath 셋팅
-			String imgPath = typeInfo.getImgPath();
-			if (!imgPath.equals("")) {
-				imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
-				typeInfo.setImgPath(imgPath);
-			} else {
-				typeInfo.setImgPath("/images/default_pic.jpg");
-			}
-
-			//formList 구하기
-//			List<AttitudeFormVO> formList = ezAttitudeService.getAttitudeFormList(info.getTenantId());
+//			String imgPath = typeInfo.getImgPath();
+//			if (!imgPath.equals("")) {
+//				imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+//				typeInfo.setImgPath(imgPath);
+//			} else {
+//				typeInfo.setImgPath("/images/default_pic.jpg");
+//			}
 			
 			data.put("typeInfo", typeInfo);
-//			data.put("formList", formList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1846,36 +1839,39 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 통계 [GET] 개인 근태 유형별 통계 -----임시
 	 */
-//	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-//	public JSONObject getAttitudeUserCount(@PathVariable String userId, @PathVariable String attitudetypeId, HttpServletRequest request) {
-//		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] started.");
-//		
-//		JSONObject result = new JSONObject();
-//		try{
-//			String serverName = request.getHeader("x-user-host");
-//			String offset = request.getParameter("offset");
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getAttitudeUserCount(@PathVariable String userId, @PathVariable String attitudetypeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] started.");
+		
+		JSONObject result = new JSONObject();
+		try{
+			String serverName = request.getHeader("x-user-host");
+			String offset = request.getParameter("offset");
+			String year = request.getParameter("year");
+			String typeId = request.getParameter("typeId");
 //			String startDate = request.getParameter("startDate");
 //			String endDate = request.getParameter("endDate");
-//			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-//			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
 //			String startDate = startDate + " 00:00:00";
 //			String endDate = endDate + " 23:59:59";
-//			
-//			List<AttitudeStatisVO> resultList;
-//			
-//			
+			
+			List<AttitudeStatisVO> resultList;
+			
+			
 //			resultList = ezAttitudeService.getAttitudeUserStatistics(userId, offset, startDate, endDate, info.getTenantId());
-//			
-//			
-//			result.put("status", "ok");
-//			result.put("code", 0);
-//			result.put("data", resultList);
-//		} catch (Exception e) {
-//			result.put("status", "error");
-//			result.put("code", 1);
-//			result.put("data", "");
-//		}
-//		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] ended.");
-//		return result;
-//	}
+			resultList = ezAttitudeService.getAttitudeUserStatistics(userId, offset, year, typeId, info.getTenantId());
+			
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", resultList);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] ended.");
+		return result;
+	}
 }

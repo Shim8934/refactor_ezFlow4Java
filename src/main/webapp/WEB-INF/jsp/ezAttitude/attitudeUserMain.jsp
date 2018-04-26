@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>  
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -41,11 +42,88 @@
 			
 			#attiCalendar td[typeId=A01], #attiCalendar td[typeId=A03] {
 				cursor : context-menu;
-				color : rgb(102,180,255);
 			}
 			
 			.span_list table td:hover, .td_day:hover {
 				background-color:#edf4fd;
+			}
+			
+			.attiVacation {
+			    border-radius: 2px;
+			    display: inline-block;
+			    width: 11px;
+			    height: 11px;
+			    border: 1px solid #35b07e;
+			    background: #35b07e;
+			    overflow: hidden;
+			    margin: -2px 5px 0px 0px;
+			    padding: 0;
+			    vertical-align: middle;
+			}
+			
+			.attiDefault {
+			    border-radius: 2px;
+			    display: inline-block;
+			    width: 11px;
+			    height: 11px;
+			    border: 1px solid #d1ddec;
+			    background: #d1ddec;
+			    overflow: hidden;
+			    margin: -2px 5px 0px 0px;
+			    padding: 0;
+			    vertical-align: middle;
+			}
+			
+			.attiOutCom {
+			    border-radius: 2px;
+			    display: inline-block;
+			    width: 11px;
+			    height: 11px;
+			    border: 1px solid #605e60;
+			    background: #605e60;
+			    overflow: hidden;
+			    margin: -2px 5px 0px 0px;
+			    padding: 0;
+			    vertical-align: middle;
+			}
+			
+			.attiLate {
+			    border-radius: 2px;
+			    display: inline-block;
+			    width: 11px;
+			    height: 11px;
+			    border: 1px solid #ff4b00;
+			    background: #ff4b00;
+			    overflow: hidden;
+			    margin: -2px 5px 0px 0px;
+			    padding: 0;
+			    vertical-align: middle;
+			}
+			
+			.attiModLate {
+			    border-radius: 2px;
+			    display: inline-block;
+			    width: 11px;
+			    height: 11px;
+			    border: 1px solid orange;
+			    background: orange;
+			    overflow: hidden;
+			    margin: -2px 5px 0px 0px;
+			    padding: 0;
+			    vertical-align: middle;
+			}
+			
+			.attiWeekCom {
+			    border-radius: 2px;
+			    display: inline-block;
+			    width: 11px;
+			    height: 11px;
+			    border: 1px solid #aaa9ed;
+			    background: #aaa9ed;
+			    overflow: hidden;
+			    margin: -2px 5px 0px 0px;
+			    padding: 0;
+			    vertical-align: middle;
 			}
 		</style>
 		<script>
@@ -190,7 +268,7 @@
 								searchByTypeId(this);
 							});	
 						} else {
-							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr("id",result[i].typeId).text("0일")
+							objTd = $("<td></td>").css({"height": tdHeight + "px", "width" : "80px"}).attr({"id":result[i].typeId, "parentId":result[i].parentId}).text("0일")
 						}
 						objTr.append(objTd);
 						objTbody.append(objTr);
@@ -297,8 +375,7 @@
 				if (deptFlag == false){
 					for (var i = 0; i < result.length; i++) {
 						startDate = result[i].startDate.split(" ")[0]; 
-						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : ""); 
-						imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>"; 
+						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
 						 
 						if (result[i].dateType == '4' || result[i].dateType == '5') { 
 						subDate = calDateRange(startDate, endDate); 
@@ -306,27 +383,29 @@
 						 
 						for (var j = 0; j<= subDate; j++) {
 							betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
-							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2); 
+							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
+							var resultRegion = result[i].region.length >= 12 ? result[i].region.substring(0,12) + ".." : result[i].region;
 							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>"  
-									+ (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].region + "</td></tr>"); 
+									"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" + 
+									result[i].typeName + (resultRegion != "" ? " : " + resultRegion : "") + "</td></tr>"); 
 						} 
 						} else if (result[i].dateType == '3') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
 						} else if (result[i].dateType == '1') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + "</td></tr>"); 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + "</td></tr>"); 
 						} else { 
-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
+							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + (result[i].modAppl == '1' ? " <i class='fas fa-pencil-alt'></i>" : "") + "</td></tr>"); 
 						} 
-					}	
+					}
+					setAttitudeSquare();
 				} else {
 					for (var i = 0; i < result.length; i++) {
 						if (result[i].typeId != 'A01' && result[i].typeId != 'A03') {
 							startDate = result[i].startDate.split(" ")[0];
 							endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
-							imgPath = "<img width='20px' height='20px' style='vertical-align:top; margin-right:3px' src='" + result[i].imgPath + "'/>";
 							
 							if (result[i].dateType == '4' || result[i].dateType == '5') {
 								subDate = calDateRange(startDate, endDate);
@@ -336,17 +415,18 @@
 									betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1));
 									var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
 									$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
-											"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" 
-											+ (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+											"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" +
+											result[i].writerName + " : " + result[i].typeName + "</td></tr>");
 								}
 							} else if (result[i].dateType == '3') {
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
 							} else if (result[i].dateType == '1') {
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + "</td></tr>");
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + + result[i].writerName + "</td></tr>");
 							} else {
-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append("<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + (result[i].imgPath != undefined ? imgPath : "") + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
 							}	
 						}
 					}
@@ -376,10 +456,6 @@
 		        return (to_dt.getTime() - from_dt.getTime()) / 1000 / 60 / 60 / 24;
 		    }
 			
-			
-			/**
-			* 
-			*/
 			function attitudeNewItem(obj) {
 				var date = $(obj).attr("dispdate");
 				
@@ -680,6 +756,35 @@
 				 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 				}
 		    }
+			
+			function setAttitudeSquare(){
+				//tdClassName = attiVacation, attiDefault, attiOutCom, attiLate, attiModLate, attiWeekCom
+				$("span[name=span_list] td[attitudeid]").each(function(index){
+					var squareSpan = $("<span></span>");
+					var tdTypeId = $(this).attr("typeid");
+					var tdParentId = $("#attiStatis td[typeid=" + tdTypeId + "]").attr("parentid");
+					var tdClassName = "";
+					switch(tdTypeId)
+					{
+						case "A01": case "A03": case "A06": //출근, 퇴근, 외출, 조퇴
+						    tdClassName = "attiDefault";
+							break;
+						case "A04": case "A09": case "A10": //외근, 출장, 휴가
+							tdClassName = "attiOutCom";
+							break;
+						case "A07": //휴근
+							tdClassName = "attiWeekCom";
+							break;
+						case "A02": case "A08": //지각
+							tdClassName = $(this).attr("modAppl") == 1 ? "attiModLate" : "attiLate";
+							break;
+						default: //나머지 휴가
+							tdClassName = "attiVacation";
+							break;
+					}
+					$(this).prepend(squareSpan.addClass(tdClassName));
+				});
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">
