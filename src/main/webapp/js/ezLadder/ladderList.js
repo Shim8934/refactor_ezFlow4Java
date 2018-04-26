@@ -120,7 +120,7 @@ function searchLadder() {
 		searchOption ='off';
 	}
 	if(searchInput==="") {
-		alert(strLang39);
+		alert(strLang14);
 		searchSelect = '';
 		return;
 	}
@@ -133,7 +133,7 @@ function searchLadder() {
 
 //삭제 불가
 function imposDelete(){
-	alert(strLang42);
+	alert(strLang15);
 	return;
 }
 
@@ -275,9 +275,9 @@ function makePageSelPage() {
 
 	document.getElementById("tblPageRayer").innerHTML = "";
 	if(document.getElementById("mailBoxInfo") !== null) {
-		document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang16
+		document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang8
 		+ "<span style='color:#017BEC;'> " + totalLadder + " </span>"
-		+ strLang17 + "]";
+		+ strLang9 + "]";
 	}
 
 	if (totalPage > 1 && pageNum != 1) {
@@ -291,16 +291,16 @@ function makePageSelPage() {
 	if (totalPage > blockSize) {
 		if (pageNum > blockSize) {
 			strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>"
-					+ strLang14 + "</span>";
+					+ strLang6 + "</span>";
 			PagingHTML += strtext;
 		} else {
 			strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>"
-					+ strLang14 + "</span>";
+					+ strLang6 + "</span>";
 			PagingHTML += strtext;
 		}
 	} else {
 		strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>"
-				+ strLang14 + "</span>";
+				+ strLang6 + "</span>";
 		PagingHTML += strtext;
 	}
 
@@ -328,20 +328,20 @@ function makePageSelPage() {
 	if (totalPage > blockSize) {
 		if (totalPage >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
 			strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>"
-					+ strLang15 + "</span>";
+					+ strLang7 + "</span>";
 			strtext = strtext
 					+ "<span class='btnimg' onClick='return selafterBlock()' ><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 			PagingHTML += strtext;
 		} else {
 			strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>"
-					+ strLang15 + "</span>";
+					+ strLang7 + "</span>";
 			strtext = strtext
 					+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 			PagingHTML += strtext;
 		}
 	} else {
 		strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>"
-				+ strLang15 + "</span>"; 
+				+ strLang7 + "</span>"; 
 		strtext = strtext
 				+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		PagingHTML += strtext;

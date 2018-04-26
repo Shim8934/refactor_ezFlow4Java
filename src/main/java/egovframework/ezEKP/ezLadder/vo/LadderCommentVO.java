@@ -79,7 +79,7 @@ public class LadderCommentVO {
 		return pic;
 	}
 	public void setPic(String pic) {
-		this.pic = pic;
+		this.pic = pic == null ? "" : pic;
 	}
 	public String getOffset() {
 		return offset;

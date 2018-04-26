@@ -165,7 +165,7 @@ public class EzLadderGWController {
 			
 			List<LadderLineVO> resultUser = ezLadderService.selectSearchUser(searchUserName, tenant_id, lang);
 			
-			for(LadderLineVO line : resultUser) {
+			/*for(LadderLineVO line : resultUser) {
 				String imagePath = line.getPic();
 				if (imagePath != null && !imagePath.equals("")) {
 					String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", line.getTenant_id())+ commonUtil.separator + imagePath;
@@ -179,7 +179,7 @@ public class EzLadderGWController {
 				} else {
 					line.setPic("");
 				}
-			}
+			}*/
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -577,7 +577,18 @@ public class EzLadderGWController {
 			List<LadderLineVO> list = ezLadderService.getLadderLineParticipant(ladVO);
 			List<LadderCommentVO> cmtlist = ezLadderService.selectComments(cmtVO);
 			
-			String imagePath = "";
+			vo.setPic(ezOrganService.getPropertyValue(vo.getWriterId(), "extensionAttribute2", vo.getTenant_id()));
+			for(LadderLineVO lineVO : list) {
+				lineVO.setPic(ezOrganService.getPropertyValue(lineVO.getUserId(), "extensionAttribute2", lineVO.getTenant_id()));
+			}
+			for(LadderCommentVO commentVO : cmtlist) {
+				commentVO.setPic(ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id()));
+			}
+			
+			
+			
+			
+			/*String imagePath = "";
 			String realPath = "";
 			String fullPath = "";
 			
@@ -625,7 +636,7 @@ public class EzLadderGWController {
 				} else {
 					commentVO.setPic("");
 				}
-			}
+			}*/
 			
 			result.put("status", "ok");
 			result.put("code", "0");
