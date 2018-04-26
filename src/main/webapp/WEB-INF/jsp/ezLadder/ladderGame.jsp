@@ -173,7 +173,7 @@
 						$(this).find("img").attr("src", "/images/ezLadder/icon_defaultAttendant.png");
 					}
 				})
-				$("#backToList").on("click", function() {
+				$("#toList").on("click", function() {
 					window.location.href = '/ezLadder/ladderMain.do?&mode=' + mode + '&currPage=' + currPage + '&searchSelect=' 
 							+ searchSelect + '&searchInput=' + searchInput + '&sort=' + sort + '&sortFlag=' + sortFlag;
 				});
@@ -637,11 +637,11 @@
 		
 		.directionBtn {			
 			position: relative;
-			margin-top: 11px;
+			margin-top: 8px;
 		}
 		
 		.direcDiv {
-			height: 60px;
+			height: 50px;
 			width: 150px;
 			position: absolute;
 			top: 0;
@@ -653,10 +653,10 @@
 		
 		.direcTextDiv {
 			width: 100%;
-			height: 37px;
-			top: 13px;
+			height: 30px;
+			top: 12px;
 			background: #EEE;
-			line-height: 37px;
+			line-height: 29px;
 			position: absolute;
 		}
 		
@@ -717,6 +717,7 @@
 						</c:choose>
 					</ul>
 					<ul class="edit">
+						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_list.png" width="45px;" height="45px;" id="toList" title="<spring:message code='ezLadder.t083'/>"></li>
 						<li style="cursor: pointer;"><img src="/images/ezLadder/icon_reuse.png" width="45px;" height="45px;" id="usePreladder" title="<spring:message code='ezLadder.t082'/>"></li>
 						<c:choose>
 							<c:when test="${vo.writerId == id}"><li style="cursor: pointer;"><img src="/images/ezLadder/icon_posDelete.png" title="<spring:message code='ezLadder.t077'/>" width="45px;" height="45px;" onclick="deleteLadder(${vo.ladderId})"></li></c:when>
@@ -888,7 +889,7 @@
 			
 			
 		</div>
-		<!-- 아직 아이콘 만드는 중 <button type="button" id="backToList">목록으로 ㅎㅎ</button> -->
+		
 		<c:if test="${mode != 'preview' }">
 			<div id="commentArea" style="border:1px solid #DDD; margin:15px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
 				<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none;">
