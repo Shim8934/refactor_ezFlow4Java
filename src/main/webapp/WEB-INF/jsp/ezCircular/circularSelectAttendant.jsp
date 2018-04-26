@@ -749,7 +749,7 @@
 		                }
 		            } else {
 		                if (p_ListOrderObject == "") {
-		                    alert("<spring:message code='ezCircular.t148' />");
+		                    alert("<spring:message code='ezCircular.t53' />");
 		                    return;
 		                }
 		                
@@ -819,6 +819,8 @@
 	            
 		        var listid ="MsgToList";
 		        _RowObjectID = null;
+		        //2018-04-26 김보미 - 화살표 선택 버그 수정
+		        listContentArry = new Array();
 		    }
 	    
 		    function CheckMailReceiver(selRow, option) {
