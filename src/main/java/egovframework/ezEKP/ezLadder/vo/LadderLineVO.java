@@ -6,6 +6,8 @@ public class LadderLineVO {
 	
 	private int tenant_id;
 	private int ladderId;
+	/** 라인 아이디 (pk) */
+	private String lineId;
 	/** 참여자 아이디 */
 	private String userId;
 	/** 참여자 이름 */
@@ -52,6 +54,12 @@ public class LadderLineVO {
 	}
 	public void setLadderId(int ladderId) {
 		this.ladderId = ladderId;
+	}
+	public String getLineId() {
+		return lineId;
+	}
+	public void setLineId(String lineId) {
+		this.lineId = lineId;
 	}
 	public String getUserId() {
 		return userId;

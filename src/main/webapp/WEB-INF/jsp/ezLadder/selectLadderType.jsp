@@ -41,30 +41,30 @@
 	<body class="mainbody">
 		<h1><spring:message code="ezLadder.t018" /></h1>
 		<div class="gameType_wrap">
-		    <h2><spring:message code='ezLadder.t104' /></h2>
+		    <h2><spring:message code='ezLadder.t001' /></h2>
 		    <ul>
 		    	<li class="gameType0" onClick='selectLadType(0)'>
 		        	<dl>
 		            	<dt><spring:message code='ezLadder.t101' /></dt>
-		                <dd><spring:message code='ezLadder.t113' /><br><spring:message code='ezLadder.t114' /></dd>
+		                <dd><spring:message code='ezLadder.t088' /><br><spring:message code='ezLadder.t089' /></dd>
 		            </dl>
 		        </li>
 		        <li class="gameType1" onClick='selectLadType(1)'>
 		        	<dl>
 		            	<dt><spring:message code='ezLadder.t102' /></dt>
-		                <dd><spring:message code='ezLadder.t115' /><br><spring:message code='ezLadder.t116' /></dd>
+		                <dd><spring:message code='ezLadder.t090' /><br><spring:message code='ezLadder.t091' /></dd>
 		            </dl>
 		        </li>
 		        <li class="gameType2" onClick='selectLadType(2)'>
 		        	<dl>
 		            	<dt><spring:message code='ezLadder.t103' /></dt>
-		                <dd><spring:message code='ezLadder.t117' /><br><spring:message code='ezLadder.t118' /></dd>
+		                <dd><spring:message code='ezLadder.t092' /><br><spring:message code='ezLadder.t093' /></dd>
 		            </dl>
 		        </li>
 		        <li class="gameType3" onClick='selectLadType(3)'>
 		        	<dl>
 		            	<dt><spring:message code='ezLadder.t104' /></dt>
-		                <dd><spring:message code='ezLadder.t119' /><br><spring:message code='ezLadder.t120' /></dd>
+		                <dd><spring:message code='ezLadder.t094' /><br><spring:message code='ezLadder.t095' /></dd>
 		            </dl>
 		        </li>
 		    </ul>

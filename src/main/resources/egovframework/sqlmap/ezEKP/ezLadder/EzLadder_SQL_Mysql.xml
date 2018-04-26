@@ -1361,7 +1361,7 @@
 	
 	<select id="EzLadderDAO.ladderGameParticipant" resultClass="LadderLineVO">
 		SELECT
-			*
+			TENANT_ID, LADDERID, ID AS LINEID, USERID, USERNAME, USERNAME2, RESULTUSERID, RESULTUSERNAME, RESULTUSERNAME2, ITEM, LADDERORDER
 		FROM
 			TBL_LADDER_LINE
 		WHERE
@@ -1400,9 +1400,11 @@
 		UPDATE
 			TBL_LADDER_LINE
 		SET
-			LADDERORDER = #secondUserOrder#, ITEM = #secondItem#
+			LADDERORDER = #changeOrder#, ITEM = #changeItem#
 		WHERE
-			USERID = #firstUser#
+			ID = #origUser#
+		AND
+			LADDERORDER = #origOrder#
 		AND
 			TENANT_ID = #tenant_id#
 		AND

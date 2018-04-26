@@ -179,9 +179,9 @@
 					if(len > 0 && bombnum > len) {
 						bombnum = len;
 					}
-					html += "<div style='float: right; padding-top: 7px;'><div id='addBomb' class='typeOpbtn' style='margin-right: 10px;' onselectstart='return false'>" + strLang51 + "</div>";	
-					html += "<div id='cutBomb' class='typeOpbtn' style='margin-right: 30px;' onselectstart='return false'>" + strLang52 + "</div>";
-					html += "<div id='bombnum' style='display: inline-block;'>" + strLang53 + "<span style='margin: 0px 5px 0px 15px;'>" + bombnum + "</span>" + strLang54 + "</div></div>";
+					html += "<div style='float: right; padding-top: 7px;'><div id='addBomb' class='typeOpbtn' style='margin-right: 10px;' onselectstart='return false'>" + strLang21 + "</div>";	
+					html += "<div id='cutBomb' class='typeOpbtn' style='margin-right: 30px;' onselectstart='return false'>" + strLang22 + "</div>";
+					html += "<div id='bombnum' style='display: inline-block;'>" + strLang23 + "<span style='margin: 0px 5px 0px 15px;'>" + bombnum + "</span>" + strLang9 + "</div></div>";
 					$("#itemList").empty();
 					for(var i = 0; i < len; i++) {
 						$("#itemList").append("<li class='item'><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' /><input name='items' style='display: none;' _itemindex='" + i + "' ></li>");
@@ -196,7 +196,7 @@
 				} else {
 					if(ladderType == "1") {
 						getMoney();
-						html += "<div id='totalmoney' style='float: right; line-height: 50px;'>$<span style='margin: 0px 5px 0px 15px;'>" + totalmoney + "</span>" + strLang55 + "</div>";
+						html += "<div id='totalmoney' style='float: right; line-height: 50px;'>$<span style='margin: 0px 5px 0px 15px;'>" + totalmoney + "</span>" + strLang24 + "</div>";
 					}
 					$("#itemList").empty();
 					for(var i = 0; i < len; i++) {
@@ -302,7 +302,7 @@
 				if(ladderType == "0") {
 					bombnum = 0;
 					lineInfo.forEach(function(line, index) {
-						if(line["item"] == strLang48) {
+						if(line["item"] == strLang18) {
 							bombnum++;
 						}
 					});
@@ -605,6 +605,7 @@
 							attendants["name2"][totalLen] = alluser["userName2"][j];
 							attendants["pic"][totalLen] = alluser["pic"][j];
 							attendants["order"][totalLen] = totalLen;
+							items[totalLen++] = "";
 							j++;
 						} else if(overlapuser["temporder"].indexOf(i) != -1) {
 							if(!overlapuser["userId"][k] || type == "anony") {
@@ -617,10 +618,9 @@
 							attendants["name2"][totalLen] = overlapuser["userName2"][k];
 							attendants["pic"][totalLen] = overlapuser["pic"][k];
 							attendants["order"][totalLen] = totalLen;
+							items[totalLen++] = "";
 							k++;
 						}
-						items[totalLen] = "";
-						totalLen++;
 					}
 					
 					setAttendantsView();
@@ -694,7 +694,8 @@
 							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 22px; right: 10px; cursor: pointer;"></span></div></li>';
 						} else {
 							if(attendants["pic"][i] !== "") {
-								picsrc = attendants["pic"][i];
+								picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
+								
 								/* if(attendants["pic"][i].substring(0, 10) == "/ezCommon/") {
 								} else {
 									picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
@@ -778,7 +779,7 @@
 				
 				items.forEach(function(item, index) {
 					if(ladderType == "0") {
-						items[index] = index < bombnum ? strLang48 : strLang49;
+						items[index] = index < bombnum ? strLang18 : strLang19;
 					} else if(ladderType == "2") {
 						items[index] = index + 1;
 					}
@@ -861,7 +862,7 @@
 								<div id="ladderPreList" style="top: 7px; right: 11px;"><img  title="<spring:message code='ezLadder.t079'/>" src="/images/ezLadder/icon_preLadder.png"/></div>
 							</div>
 							<div id="ladderSecret" style="position: absolute; right: 0;">
-								<img src="/images/ezLadder/icon_public.png" title="<spring:message code='ezLadder.t0070'/>" class="default icon" _flag="0"/>
+								<img src="/images/ezLadder/icon_public.png" title="<spring:message code='ezLadder.t007'/>" class="default icon" _flag="0"/>
 								<img src="/images/ezLadder/icon_private.png" title="<spring:message code='ezLadder.t076'/>" class="select icon" _flag="1"/>
 							</div>
 							<input name="secretFlag" style="display: none;" />
@@ -883,22 +884,6 @@
 											<img title="<spring:message code='ezLadder.t10${typenum + 1}'/>" src="/images/ezLadder/icon_game0${typenum}_hover.png" class="typehover icon"/>
 										</div>
 									</c:forEach>
-									<%-- <div class="ladderType" _num="0">
-										<img title="<spring:message code='ezLadder.t101'/>" src="/images/ezLadder/icon_game00_no.png" class="default icon"/>
-										<img title="<spring:message code='ezLadder.t101'/>" src="/images/ezLadder/icon_game00.png" class="select icon"/>
-									</div>
-									<div class="ladderType" _num="1">
-										<img title="<spring:message code='ezLadder.t102'/>" src="/images/ezLadder/icon_game01_no.png" class="default icon"/>
-										<img title="<spring:message code='ezLadder.t102'/>" src="/images/ezLadder/icon_game01.png" class="select icon"/>
-									</div>
-									<div class="ladderType" _num="2">
-										<img title="<spring:message code='ezLadder.t103'/>" src="/images/ezLadder/icon_game02_no.png" class="default icon"/>
-										<img title="<spring:message code='ezLadder.t103'/>" src="/images/ezLadder/icon_game02.png" class="select icon"/>
-									</div>
-									<div class="ladderType" _num="3">
-										<img title="<spring:message code='ezLadder.t104'/>" src="/images/ezLadder/icon_game03_no.png" class="default icon"/>
-										<img title="<spring:message code='ezLadder.t104'/>" src="/images/ezLadder/icon_game03.png" class="select icon"/>
-									</div> --%>
 								<input name="type" style="display: none;" />
 							</div>
 						</div>

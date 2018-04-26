@@ -108,13 +108,13 @@
 						$.each(result.list, function(index, value) {
 							var preType; 
 							switch(value.type) {
-								case 0: preType = strLang19;
+								case 0: preType = strLang10;
 									break;
-								case 1: preType = strLang20;
+								case 1: preType = strLang11;
 									break;
-								case 2: preType = strLang21;
+								case 2: preType = strLang12;
 									break;
-								case 3: preType = strLang22;
+								case 3: preType = strLang13;
 									break;
 							}
 							
@@ -189,13 +189,13 @@
 				ladderList["list"].forEach(function(ladder, index) {
 					var searchLadderType;
 					switch (ladder["type"]) {
-					case 0: searchLadderType = strLang19;
+					case 0: searchLadderType = strLang10;
 							break;
-					case 1: searchLadderType = strLang20;
+					case 1: searchLadderType = strLang11;
 							break;
- 					case 2: searchLadderType = strLang21;
+ 					case 2: searchLadderType = strLang12;
 							break;
-					case 3: searchLadderType = strLang22;
+					case 3: searchLadderType = strLang13;
 							break;
 					} 
 					

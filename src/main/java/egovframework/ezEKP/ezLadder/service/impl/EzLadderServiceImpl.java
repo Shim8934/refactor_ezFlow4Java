@@ -519,14 +519,18 @@ public class EzLadderServiceImpl implements EzLadderService {
 		logger.debug("setUserOrder started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("LadderId", ladVO.getLadderId());
-		map.put("firstUser", firstUser);
-		map.put("secondUserOrder", secondUserOrder);
-		map.put("secondItem", secondItem);
 		map.put("tenant_id", ladVO.getTenant_id());
+		
+		map.put("origUser", firstUser);
+		map.put("origOrder", firstUserOrder);
+		map.put("changeOrder", secondUserOrder);
+		map.put("changeItem", secondItem);
 		ezLadderDAO.setUserOrder(map);
-		map.put("firstUser", secondUser);
-		map.put("secondUserOrder", firstUserOrder);
-		map.put("secondItem", firstItem);
+		
+		map.put("origUser", secondUser);
+		map.put("origOrder", secondUserOrder);
+		map.put("changeOrder", firstUserOrder);
+		map.put("changeItem", firstItem);
 		ezLadderDAO.setUserOrder(map);
 		logger.debug("setUserOrder started.");
 	}
@@ -710,11 +714,11 @@ public class EzLadderServiceImpl implements EzLadderService {
 			}
 		}
 
-		String subject = egovMessageSource.getMessage("ezLadder.t111", userInfo.getLocale());	// 메일제목
+		String subject = egovMessageSource.getMessage("ezLadder.t096", userInfo.getLocale());	// 메일제목
 		StringBuilder bodyContent = new StringBuilder("");	// 메일 링크
 		bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
 		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t003", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;\"><a href='/ezLadder/getLadderGame.do?ladderId=" + lad.getLadderId() + "&searchSelect=none&searchInput=none&mode=none&currPage=1'>" + commonUtil.cleanValue(ladVO.getTitle()) + "</a></span></br>");
-		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t112", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
+		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t004", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
 		bodyContent.append("</div>");
 				
 		// 참여자에게 메일 발송

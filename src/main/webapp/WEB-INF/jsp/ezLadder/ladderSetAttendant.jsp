@@ -101,9 +101,9 @@
 	            if (pGubun == "") {
 	//	                document.getElementById("btnAddUser").style.display = "";
 	                if (CrossYN())
-	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezLadder.t127'/>";
+	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezLadder.t013'/>";
 	                else
-	                    document.getElementById("ToTitleStr").innerText = "<spring:message code='ezLadder.t127'/>";
+	                    document.getElementById("ToTitleStr").innerText = "<spring:message code='ezLadder.t013'/>";
 	            }
 	
 	            $("#1tab1").click();
@@ -136,7 +136,7 @@
 	            	treeView.DataBind("TreeView");
 	            	
 	                if (type == "group") {
-	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezLadder.t127'/>";	
+	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezLadder.t013'/>";	
 	                }
 	            }
 	            catch (ErrMsg) {
@@ -160,28 +160,19 @@
 	                var pparsingXML2 = "";
 	
 	                pparsingXML2 = "<LISTVIEWDATA2><ROWS>"
-	                var strName;
 	                var strId;
-	                var strName1;
+	                var strName;
 	                var strName2;
-	                var strDeptName1;
-	                var strDeptName2;
 	                var strPic;
 	
-	                strName = RetValue["name"][i];
 	                strId = RetValue["id"][i];
-	                /* strName1 = attendants["name1"][i]; */
+	                strName = RetValue["name"][i];
 	                strName2 = RetValue["name2"][i];
-	                /* strDeptName1 = attendants["deptname"][i];
-	                strDeptName2 = attendants["deptname2"][i]; */
 	                strPic = RetValue["pic"][i];
 	
 	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-	                /* pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
-	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>"; */
-	                /* pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>"; */
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strPic + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                
@@ -800,11 +791,12 @@
 						strpic = "";
 					} else {
 						strId = userlist["userId"][i];
-						if(!userlist["pic"][i]) {
+						strpic = userlist["pic"][i];
+						/* if(!userlist["pic"][i]) {
 							strpic = "/images/ezLadder/icon_defaultAttendant.png";
 						} else {
 							strpic = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userlist["pic"][i];
-						}
+						} */
 					}
 					strName = userlist["userName"][i];
 					strName2 = userlist["userName2"][i];
@@ -813,7 +805,7 @@
 					pparsingXML += "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 					pparsingXML += "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 					pparsingXML += "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-					pparsingXML += "<DATA4>" + strpic + "</DATA4>";
+					pparsingXML += "<DATA4><![CDATA[" + strpic + "]]></DATA4>";
 					pparsingXML += "<VALUE>"  + strName + "</VALUE></CELL></ROW>";
 					pparsingXML += "</ROWS></LISTVIEWDATA2>";
 				
@@ -902,7 +894,7 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang50 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang20 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -915,7 +907,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang50 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang20 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1125,7 +1117,7 @@
 		        listContentArry = new Array();
 	
 		        if ($.trim($("#keyword").val()) == "") {
-		        	alert("<spring:message code='ezLadder.t121' />");
+		        	alert("<spring:message code='ezLadder.t085' />");
 		            document.all("keyword").focus();
 		            return;
 		        }
@@ -1291,8 +1283,8 @@
 									html += "<td style='width:22%'>" + group.userName + " <spring:message code='ezLadder.t070' /> " + group.count + " <spring:message code='ezLadder.t105' /></td>";
 								}
 								html += "<td style='width:6%'><img class='editBmIcon' src='/images/option3.png' name='editBmGroup_" + index + "' height='25' width='25'>";
-								html += "<div id='editBmGroup_" + index + "' style='display: none; position: absolute; background: #f8f8f8; z-index: 10; border: 1px solid #cfcfcf; text-align: center;'><div name='modify' style='width: 150px; padding: 8px 10px; border-bottom: 1px solid #cfcfcf;'><spring:message code='ezLadder.t061' /></div>";
-								html += "<div name='delete' style='width: 150px; padding: 8px 10px;'><spring:message code='ezLadder.t062' /></div></div>";
+								html += "<div id='editBmGroup_" + index + "' style='display: none; position: absolute; background: #f8f8f8; z-index: 10; border: 1px solid #cfcfcf; text-align: center;'><div name='modify' style='width: 150px; padding: 8px 10px; border-bottom: 1px solid #cfcfcf;'><spring:message code='ezLadder.t061' /> <spring:message code='ezLadder.t052' /></div>";
+								html += "<div name='delete' style='width: 150px; padding: 8px 10px;'><spring:message code='ezLadder.t061' /> <spring:message code='ezLadder.t053' /></div></div>";
 					    		html += "</td></tr>";
 							});
 				    	
@@ -1395,16 +1387,16 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang14 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang6 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang14 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang6 + "</span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang14 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang6 + "</span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -1428,18 +1420,18 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang15 + "</span>";
+		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang7 + "</span>";
 		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang15 + "</span>";
+		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang7 + "</span>";
 		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang15 + "</span>";
+		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang7 + "</span>";
 		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 		            PagingHTML += strtext;
 		        }
@@ -1734,11 +1726,11 @@
 	                        </td>
 	                        <td style="vertical-align: top;">
 	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:4px;">
-	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezLadder.t127'/></span>
+	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezLadder.t013'/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox" style="position: relative;">
 	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 484px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
-	                                <div id="ladderBmBtn"><spring:message code='ezLadder.t021'/></div>
+	                                <div id="ladderBmBtn"><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></div>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -1747,8 +1739,8 @@
 	    	</tr> 
 	 	</table>	    
 		<div class="btnposition">
-	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezLadder.t108' /></span></a>
-	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezLadder.t109' /></span></a>
+	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezLadder.t086' /></span></a>
+	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezLadder.t087' /></span></a>
 		</div>
 		
 		<!-- popup start -->
