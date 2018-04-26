@@ -431,19 +431,19 @@
 		        var openLocation;
 	
 		        if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
-		            openLocation = "/myoffice/ezApprovalG/ezViewWord/ezDeptRecevUI_word_Cross.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
+		            openLocation = "/ezApprovalG/recev.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag);
 		        }
 		        else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		            openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezDeptRecevUI_HWP_Cross.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
+		            openLocation = "/ezApprovalG/recev.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag);
 		        }
 		        else {
 		            if (CrossYN()) {
-		                openLocation = "/myoffice/ezApprovalG/ReceivUI/recev_CK.aspx?DocID=";
+		                openLocation = "/ezApprovalG/recev.do?docID=";
 		            } else {
-		            	openLocation = "/myoffice/ezApprovalG/ReceivUI/recev_TFI.aspx?DocID=";
+		            	openLocation = "/ezApprovalG/recev.do?docID=";
 		            }
 	
-		            openLocation = openLocation + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
+		            openLocation = openLocation + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag);
 		        }
 		        
 		        openwindow(openLocation, "receive", 880, 550);
