@@ -363,7 +363,22 @@ public class EzJournalServiceImpl implements EzJournalService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", jsonParam.get("userId"));
 		map.put("tenantId", jsonParam.get("tenantId"));
-		ezJournalDAO.deleteAuthDept(map);
+		if (jsonParam.get("admin").equals("Y")){
+			ezJournalDAO.deleteAuthDept(map);
+		} else {
+			List<DeptViewVO> cheifDeptList = ezJournalDAO.selectCheifBossList(map);
+			List<DeptViewVO> addCheifDeptList = new ArrayList<DeptViewVO>();
+			
+			for (DeptViewVO deptViewVO : cheifDeptList) {
+				map.put("deptId", deptViewVO.getId());
+				addCheifDeptList.addAll(ezJournalDAO.selectCheifBoss(map));
+			}
+			cheifDeptList.addAll(addCheifDeptList);
+			for (DeptViewVO deptViewVO : cheifDeptList) {
+				map.put("deptId", deptViewVO.getId());
+				ezJournalDAO.deleteAuthDeptOne(map);
+			}
+		}
 		Gson gson = new Gson();
 		
 		List<String> deptList = gson.fromJson(jsonParam.get("depts").toString(), new TypeToken<List<String>>(){}.getType());

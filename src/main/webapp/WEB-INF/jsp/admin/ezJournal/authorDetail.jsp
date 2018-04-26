@@ -138,7 +138,11 @@
 // 		   			opener.deptNames = lpDeptNames;
 		   			opener.setDeptName(JSON.stringify(lpDepts), JSON.stringify(lpDeptNames));
 		   			opener.userDeptId = userDeptId;
-		   			opener.userAddIds = userAddIds;
+		   			if (userAddIds.length > 0) {
+			   			opener.userAddIds = JSON.stringify(userAddIds);
+					} else {
+						opener.userAddIds.length = 0;
+					}
 					window.close();
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
