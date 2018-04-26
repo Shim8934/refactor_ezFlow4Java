@@ -417,7 +417,7 @@
 	            }
 	        }
 	        
-	        function infoview_click() {
+	        function infoview_click() { 
 	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
 	                alert("<spring:message code='ezCircular.t148' />");
 	                return;
@@ -680,80 +680,150 @@
 	                        }
 	            		}
 	            	}
-	            } else {
-		            if (listContentArry != "") {
-		                for (var i = 0; i < listContentArry.length; i++) {
-		                	strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-		                    strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
-		                    strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
-		                    strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-		                    strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
-		                    strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
-		                    jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
-		                    phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
-		
-		                    var listid = "MsgToList";
-		                    var getlistview = new ListView();
-		                    getlistview.LoadFromID(listid);
-		                    var IsInsert = CheckMailReceiver(strId, "3");
-		                    
-		                    if (strId == "<c:out value='${userID}' />") {
-		                        alert("<spring:message code='ezCircular.t149' />");
-		                        continue;
-		                    }
-		
-		                    if (!IsInsert) {
-		                        pparsingXML2 = "";
-		                        pparsingXML = "";
-		                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-		
-		                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-		                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
-		                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-		                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
-		                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
-		                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
-		                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
-		                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-		                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
-		                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-		                        Resultxml = loadXMLString(pparsingXML2);
-		
-		                        var listview = new ListView();
-		                        listview.LoadFromID(listid);
-		
-		                        var MaxID = 0;
-		                        var InitTr = listview.GetDataRows();
-		                        var MaxCntNum = 0;
-		                        for (var j = 0  ; j < InitTr.length  ; j++) {
-		                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-		                            if (MaxID < curnum) {
-		                                MaxID = curnum;
-		                                MaxCntNum = j;
-		                            }
-		                        }
-		
-		                        var objTr = listview.AddRow(InitTr.length);
-		                        if (MaxCntNum != 0)
-		                            MaxCntNum = MaxCntNum + 1;
-		                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-		                        listview.AddDataRow(objTr, Resultxml);
-		
-		                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-		                        for (var y = 0; y < _tdlength; y++) {
-		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-		                        }
-		
-		                    }
-		                }
-		            } else {
-		                if (p_ListOrderObject == "") {
-		                    alert("<spring:message code='ezCircular.t53' />");
-		                    return;
-		                }
-		                
-		                if (p_ListOrderObject != "") {
+	            } else { // 2018.04.26 회람판 수정 (문성업) - 시작 부분  
+		           if (p_ListOrderObject == "" || p_ListOrderObject == null) { //(수정)조직도에서 어느 부서원 클릭 안 할 때 ->화살표를 누르면 자신 제외하고 전체 부서원 출력
+		                    /* alert("<spring:message code='ezCircular.t148' />");
+		                    return; */
+		                	var treeView = new TreeView();
+		    		        treeView.LoadFromID("FromTreeView");
+		    		        var nodeIdx = treeView.GetSelectNode();
+		    		       
+		    		        $.ajax({
+		    					url : '/ezSchedule/getDeptUserList.do',
+		    					method : 'POST',
+		    					async : false,
+		    					dataType : "xml",
+		    					data : {
+		    						deptID : nodeIdx.GetNodeData("CN")	
+		    					},
+		       					success : function(text) {
+		       						xmlRtn = text;   						
+		       						
+		       						for (var i = 0 ; i < SelectNodes(xmlRtn, "DATA/ROW").length ; i++) {
+		       				            pparsingXML2 = "";
+		       				            pparsingXML = "";
+		       				            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		       				            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(xmlRtn.getElementsByTagName("CN")[i]) + "</DATA1>";
+		       				            pparsingXML = pparsingXML + "<DATA2><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></DATA2>";
+		       				            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME2")[i]) + "]]></DATA3>";
+		       				            pparsingXML = pparsingXML + "<DATA4><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DESCRIPTION")[i]) + "]]></DATA4>";
+		       				            pparsingXML = pparsingXML + "<DATA5><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DESCRIPTION2")[i]) + "]]></DATA5>";
+		       				            pparsingXML = pparsingXML + "<DATA6><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></DATA6>";
+		       				            pparsingXML = pparsingXML + "<DATA7><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("TITLE")[i]) + "]]></DATA7>";
+		       				            pparsingXML = pparsingXML + "<DATA8>" + getNodeText(xmlRtn.getElementsByTagName("TELEPHONENUMBER")[i]) + "</DATA8>";
+		       				            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i])+ "]]></VALUE></CELL></ROW>"; //수정
+		       				            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		       				            Resultxml = loadXMLString(pparsingXML2);
+
+		       				            var listid = "MsgToList";
+		       				            var listview = new ListView();
+		       				            listview.LoadFromID(listid);
+
+		       				            var MaxID = 0;
+		       				            var InitTr = listview.GetDataRows();
+
+		       				            if (getNodeText(xmlRtn.getElementsByTagName("CN")[i]) == "<c:out value='${userID}' />")
+		       				                continue;
+		       				            //else {
+		       				            if (listview.ExistRow("DATA1", getNodeText(xmlRtn.getElementsByTagName("CN")[i])))
+		       				                continue;		            
+		       		                    
+		       				            var MaxCntNum = 0;
+		       				            for (var j = 0  ; j < InitTr.length  ; j++) {
+		       				                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		       				                if (MaxID < curnum) {
+		       				                    MaxID = curnum;
+		       				                    MaxCntNum = j;
+		       				                }
+		       				            }
+
+		       				            var objTr = listview.AddRow(InitTr.length);
+		       				            if (MaxCntNum != 0)
+		       				                MaxCntNum = MaxCntNum + 1;
+		       				            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		       				            listview.AddDataRow(objTr, Resultxml);
+
+		       				            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+		       				            for (var y = 0; y < _tdlength; y++) {
+		       				                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+		       				                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+		       				            }
+		       				        }
+		    					},
+		    					error : function(jqXHR, textStatus, errorThrown) {
+		    										
+		    					}
+		    				}); 
+		                }else{ //2018.04.26  회람판 오류 수정 (문성업)- 조직도에서 클릭한 한 부서에 부서원을 클릭해서 회람자에서 출력된 상태에서 다른 부서에서 부서원을 클릭하지 않았는데 전체 부서원이 출력되지 않는 오류 수정 
+		                	 if (listContentArry != "") {
+		 		                for (var i = 0; i < listContentArry.length; i++) {
+		 		                	strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
+		 		                    strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
+		 		                    strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
+		 		                    strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
+		 		                    strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
+		 		                    strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
+		 		                    jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
+		 		                    phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+		 		                    
+		 		                    
+		 		                    var listid = "MsgToList";
+		 		                    var getlistview = new ListView();
+		 		                    getlistview.LoadFromID(listid);
+		 		                    var IsInsert = CheckMailReceiver(strId, "3");
+		 		                    
+		 		                    if (strId == "<c:out value='${userID}' />") {
+		 		                        alert("<spring:message code='ezCircular.t149' />");
+		 		                        continue;
+		 		                    }
+		 		
+		 		                    if (!IsInsert) {
+		 		                        pparsingXML2 = "";
+		 		                        pparsingXML = "";
+		 		                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		 		
+		 		                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+		 		                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
+		 		                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
+		 		                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
+		 		                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
+		 		                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
+		 		                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
+		 		                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+		 		                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+		 		                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		 		                        Resultxml = loadXMLString(pparsingXML2);
+		 		
+		 		                        var listview = new ListView();
+		 		                        listview.LoadFromID(listid);
+		 		
+		 		                        var MaxID = 0;
+		 		                        var InitTr = listview.GetDataRows();
+		 		                        var MaxCntNum = 0;
+		 		                        for (var j = 0  ; j < InitTr.length  ; j++) {
+		 		                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		 		                            if (MaxID < curnum) {
+		 		                                MaxID = curnum;
+		 		                                MaxCntNum = j;
+		 		                            }
+		 		                        }
+		 		
+		 		                        var objTr = listview.AddRow(InitTr.length);
+		 		                        if (MaxCntNum != 0)
+		 		                            MaxCntNum = MaxCntNum + 1;
+		 		                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		 		                        listview.AddDataRow(objTr, Resultxml);
+		 		
+		 		                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+		 		                        for (var y = 0; y < _tdlength; y++) {
+		 		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+		 		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+		 		                        }
+		 		
+		 		                    }
+		 		                }
+		                  }    //끝
+		 		          else{
 		                    strId = p_ListOrderObject.getAttribute("_data2");
 		                    strName = p_ListOrderObject.getAttribute("_data4");
 		                    strDeptNM = p_ListOrderObject.getAttribute("_data5");
@@ -865,7 +935,7 @@
 		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
+		        	SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
 		        
@@ -876,7 +946,7 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
+		            	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
