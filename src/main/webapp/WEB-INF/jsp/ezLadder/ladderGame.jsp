@@ -173,7 +173,7 @@
 						$(this).find("img").attr("src", "/images/ezLadder/icon_defaultAttendant.png");
 					}
 				})
-				$("#backToList").on("click", function() {
+				$("#toList").on("click", function() {
 					window.location.href = '/ezLadder/ladderMain.do?&mode=' + mode + '&currPage=' + currPage + '&searchSelect=' 
 							+ searchSelect + '&searchInput=' + searchInput + '&sort=' + sort + '&sortFlag=' + sortFlag;
 				});
@@ -637,11 +637,11 @@
 		
 		.directionBtn {			
 			position: relative;
-			margin-top: 11px;
+			margin-top: 8px;
 		}
 		
 		.direcDiv {
-			height: 60px;
+			height: 50px;
 			width: 150px;
 			position: absolute;
 			top: 0;
@@ -653,10 +653,10 @@
 		
 		.direcTextDiv {
 			width: 100%;
-			height: 37px;
-			top: 13px;
+			height: 30px;
+			top: 12px;
 			background: #EEE;
-			line-height: 37px;
+			line-height: 29px;
 			position: absolute;
 		}
 		
