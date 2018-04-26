@@ -629,11 +629,15 @@
 		<isNotEmpty property="orderCell">
 			ORDER BY
 				$orderCell$ $orderOption$,
-				C.displayname
+				startdate desc,
+				enddate desc,
+				starttime desc
 		</isNotEmpty>
 		<isEmpty property="orderCell">
 			ORDER BY
-				C.displayname
+				startdate desc,
+				enddate desc,
+				starttime desc
 		</isEmpty>
 		<isNotEmpty property="limit">
 			<![CDATA[
