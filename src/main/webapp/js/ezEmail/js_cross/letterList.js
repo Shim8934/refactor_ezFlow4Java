@@ -67,7 +67,7 @@ function strChk(str, speChar, strLen, kindMsg) {
 		
 		if (strLen !== undefined) {
 			if (strTrim.length >= strLen) {
-				msg = kindMsg + strLen.toString() + lengthMsg;
+				msg = kindMsg + " " + strLen + lengthMsg;      
 			} 
 		}
 	}else {
@@ -262,3 +262,4 @@ $(document).on("mouseover", ".lmLetterListUl li:not('.lmLetterSelect')", functio
 $(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect')",function(){
 	$(this).css("background","none");
 });
+

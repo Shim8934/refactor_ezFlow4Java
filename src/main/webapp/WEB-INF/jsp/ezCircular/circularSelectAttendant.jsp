@@ -749,7 +749,7 @@
 		                }
 		            } else {
 		                if (p_ListOrderObject == "") {
-		                    alert("<spring:message code='ezCircular.t148' />");
+		                    alert("<spring:message code='ezCircular.t53' />");
 		                    return;
 		                }
 		                

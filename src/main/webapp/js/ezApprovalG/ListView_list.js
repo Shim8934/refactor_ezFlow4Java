@@ -612,6 +612,11 @@ function ListView() {
             	colCount = 3;
             }
             
+            // 변경내역 > 첨부파일이력 > 데이터 없을시 쪽수 컬럼 빈칸 안뜨게 2018-04-26 강민수92
+            if(_thisID == "lvAttachList") {
+            	colCount = 5;
+            }
+            
             objTd.setAttribute("colSpan", colCount);
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
