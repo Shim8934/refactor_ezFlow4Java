@@ -110,33 +110,7 @@ public class EzStatisticsAttitudeController {
 			
 			model.addAttribute("companyList", companyList);
 			model.addAttribute("adminCompany", adminCompany);
-		}
-		
-		//근태유형(구분) 리스트
-//		gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-//		url = gwServerUrl + "/rest/ezattitude/companies/" + adminCompany + "/attitudetypes";//TODO
-//		
-//		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-//		headers.set("x-user-host", request.getServerName());
-//		
-//		entity = new HttpEntity<>(headers);
-//		
-//		builder = UriComponentsBuilder.fromHttpUrl(url)
-//				.queryParam("userId", userInfo.getId());
-//		
-//		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-//		
-//		resultBody = (JSONObject) jp.parse(result.getBody());
-//				
-//		status = resultBody.get("status").toString();
-//		
-//		JSONArray typeList = new JSONArray();
-//		if (status.equals("ok")) {		
-//			typeList = (JSONArray) resultBody.get("data");
-//			
-//			model.addAttribute("typeList", typeList);
-//		}
-		
+		}		
 		return "ezStatistics/statisticsAttitudeUser";
 	}
 	
@@ -160,8 +134,8 @@ public class EzStatisticsAttitudeController {
 			topid = "Top";
 		}
 		
-		model.addAttribute("companyID", topid);		
-		model.addAttribute("deptID", userInfo.getDeptID());
+		model.addAttribute("companyId", topid);		
+		model.addAttribute("deptId", userInfo.getDeptID());
 		
 		//회사리스트 - companyList
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -315,8 +289,6 @@ public class EzStatisticsAttitudeController {
 		String selectUserId = request.getParameter("userId");
 		String year = request.getParameter("year");
 		String typeId = request.getParameter("typeId");
-//		String startDate = year + "-01-01";//2018-01-01
-//		String endDate = year + "-12-31";//2018-12-31
 		String offset = userInfo.getOffset();
 
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
@@ -331,8 +303,6 @@ public class EzStatisticsAttitudeController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("offset", offset)
 				.queryParam("year", year)
-//				.queryParam("startDate", startDate)
-//				.queryParam("endDate", endDate)
 				.queryParam("typeId", typeId)
 				.queryParam("userId", userInfo.getId());
 		
@@ -351,32 +321,51 @@ public class EzStatisticsAttitudeController {
 			list = (JSONArray) resultBody.get("data");
 		}
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append("<DATA>");
-//
-//		if (list != null && list.size() > 0) {
-//			for (int i = 0; i < list.size(); i++) {
-//				sb.append("<ROW>");
-//				
-//				Map<String, String> rowObject = (Map<String, String>)list.get(i);
-//				
-//				for (String colName : rowObject.keySet()) {
-//					String colValue = rowObject.get(colName);
-//					sb.append("<" + colName + ">");	
-//					sb.append(commonUtil.cleanValue(colValue));
-//					sb.append("</" + colName + ">");
-//				}	
-//				
-//				sb.append("</ROW>");
-//			}
-//		}
-//		
-//		sb.append("</DATA>");
-//		
-//		String returnData = sb.toString();
-//		
-//		return returnData;	
+		return list;
+	}
+	/**
+	 * 부서별 통계 현황 데이터 반환 함수
+	 */
+	@RequestMapping(value="/ezStatistics/getAttitudeDept.do")
+	@ResponseBody
+	public JSONArray getAttitudeDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String deptId = request.getParameter("deptId");
+		String year = request.getParameter("year");
+		String typeId = request.getParameter("typeId");
+		String offset = userInfo.getOffset();
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
+		String url = gwServerUrl + "/rest/ezattitude/depts/"+deptId+"/attitudetypes/"+typeId+"/attitude-count";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("offset", offset)
+				.queryParam("year", year)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray list = new JSONArray();
+		if (status.equals("ok")) {		
+			list = (JSONArray) resultBody.get("data");
+		}
+		
 		return list;
 	}
 }

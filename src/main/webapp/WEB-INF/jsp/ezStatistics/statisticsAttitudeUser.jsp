@@ -26,10 +26,11 @@
     var adminCompany = "${adminCompany}";
 	
 	document.onselectstart = function () {
-    if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
-        return false;
-    else
-        return true;
+	    if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
+	        return false;
+	    } else {
+	        return true;
+	    }
 	};
 	
     window.onload = function () {
@@ -83,7 +84,7 @@
         }
     }
 
-    //하위부서
+    //[+] 버튼
     function RequestData(pNodeID, pTreeID) {
         var TreeIdx = pNodeID;
         var treeNode = new TreeNode();
@@ -324,7 +325,7 @@
 		html += "<tr>";
 		html += "<td rowspan='3'>"+selectUserName+"</td>";
 // 		html += "<td>" + result[0].typeName + "일수</td>";
-		html += "<td>데이터</td>";
+		html += "<td>일수</td>";
 		html += "<td>" + result[0].count + "</td>";
 		html += "<td>" + result[1].count + "</td>";
 		html += "<td>" + result[2].count + "</td>";
@@ -343,7 +344,7 @@
 		html += "</tr>";
 		html += "<tr>";
 // 		html += "<td>" + result[0].typeName + "일수</td>";
-		html += "<td>데이터</td>";
+		html += "<td>일수</td>";
 		html += "<td>" + result[6].count + "</td>";
 		html += "<td>" + result[7].count + "</td>";
 		html += "<td>" + result[8].count + "</td>";
@@ -612,10 +613,18 @@
             </td>
             <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
                 <div id="viewdata" style="display:none">
+	                <div class="statistics_addition">
+	                    <dl>
+	                        <dt class="colorbox_wrap"><span style="background: #4bb2c5" class="colorbox"></span></dt>
+	                        <dd id="colorbox" class="additiontext">일수</dd>
+	                    </dl>
+	                </div>
                     <div id="chartdiv" style="width: 100%; text-align: center; display: none;">
                         <div id="statisticschart" style="width: 800px; height: 480px; float: left; font-size: 16px;">
                         </div>
                     </div>
+                    <br/>
+					<br/>
                     <table id="statisticstable" class="tstyle2" style="text-align: center; width: 100%; border: 1px solid rgb(218, 218, 218);"></table>
                 </div>
                 <div id="seluser" class="statistics_select" style="margin:0 auto">
