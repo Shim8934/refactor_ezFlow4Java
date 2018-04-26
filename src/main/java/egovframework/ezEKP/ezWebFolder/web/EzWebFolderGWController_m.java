@@ -979,6 +979,8 @@ public class EzWebFolderGWController_m {
 		Date date                  = new Date();
 		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 		
+			
+		
 		if (fileIDList.length == 0 & folderIDList.length == 0|| serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
@@ -988,8 +990,12 @@ public class EzWebFolderGWController_m {
 		}
 		
 		try {
+			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+			String lang   = common.getLang();
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
-			int succssCount = ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId, userId, offset, companyId, timeUTC);
+			int succssCount = ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId,
+					userId, offset, companyId, timeUTC, userInfo.getDisplayName(), userInfo.getDeptName2());
 			
 			if (succssCount == retoreSize) {
 				result.put("code", "0");

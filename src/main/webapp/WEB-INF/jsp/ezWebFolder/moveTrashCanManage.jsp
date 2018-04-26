@@ -116,7 +116,7 @@
             }
            	
             if ( parent =='#' ) {
-	            alert("<spring:message code='ezWebFolder.t262'/>");
+	            alert("<spring:message code='ezWebFolder.t293'/>");
 	            return;
             }
             

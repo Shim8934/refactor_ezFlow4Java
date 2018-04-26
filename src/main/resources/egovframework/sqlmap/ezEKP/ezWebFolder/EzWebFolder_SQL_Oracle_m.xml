@@ -1125,7 +1125,7 @@
 		            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
 				FROM
 					tbl_webfolder_folder FOLDER
-					JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
+					LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
 					ON FILE_TYPE.TYPE_NAME = 'folder'
 				WHERE
 					FOLDER.USE_STATUS = 'T' AND
@@ -1574,10 +1574,12 @@
 			count(FILES.FILE_id )
 		FROM
 			tbl_webfolder_file FILES
+			LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
+			ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
 		WHERE
-			USE_STATUS = 'T' AND
-			DELETER_ID = #userId# AND
-			TENANT_ID = #tenantId#
+			FILES.USE_STATUS = 'T' AND
+			FILES.DELETER_ID = #userId# AND
+			FILES.TENANT_ID = #tenantId#
 		<include refid="searchTrashCanFile"/>
 	</select>
 	
@@ -1586,10 +1588,12 @@
 			count(FOLDER.FOLDER_id)    
 		FROM
 			tbl_webfolder_folder FOLDER
+			LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
+			ON FILE_TYPE.TYPE_NAME = 'folder'
 		WHERE
-			USE_STATUS = 'T' AND
-			DELETER_ID = #userId# AND
-			TENANT_ID = #tenantId#
+			FOLDER.USE_STATUS = 'T' AND
+			FOLDER.DELETER_ID = #userId# AND
+			FOLDER.TENANT_ID = #tenantId#
 		<include refid="searchTrashCanFolder"/>
 	</select>
 	

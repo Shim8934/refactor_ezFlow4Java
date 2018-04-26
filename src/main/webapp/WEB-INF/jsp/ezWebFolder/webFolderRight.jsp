@@ -39,6 +39,7 @@
 		var strLang40 	= messages.strLang9;
 		var strLang41   = messages.strLang10;
 		var strLang42   = messages.strLang11;
+		var strSuccess  = "<spring:message code = 'ezWebFolder.t27'/>";
 		var pStart = 0;
 		var pEnd =10;
 		var folderId = "${folderId}";
@@ -243,6 +244,10 @@
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
 					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'folder' : 'file');
 					trElmt.addEventListener("click", function(event) { rowContext.onRowClick(this); });
+					
+					if (result[i]["fileTypeName"] != 'folder') {
+						trElmt.addEventListener("dblclick", function(event) {downloadFileByDbClick(event);});
+					}
 					
 					var inputElmt = document.createElement("input");
 					inputElmt.setAttribute("type", "checkbox");
@@ -651,6 +656,18 @@
 			var folderFileType = folderFileInfo.type;
             var OpenWin = window.open("/ezWebFolder/addShareView.do?folderFileId=" + folderFileId + "&folderFileType=" + folderFileType, "addShareView", GetOpenWindowfeature(610, 685));
             try { OpenWin.focus(); } catch (e) { }
+		}
+		
+		function downloadFileByDbClick(event) {
+			event.stopPropagation();
+			event.preventDefault();
+			var trElmt       = event.currentTarget;
+			var fileFolderId = trElmt.getAttribute("targetId");
+			var filesList    = [];
+			filesList.push(fileFolderId);
+			
+			var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
+			AttachDownFrame.location.href = downloadUrl;
 		}
     </script>
 </head>

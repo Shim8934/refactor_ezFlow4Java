@@ -27,6 +27,9 @@
 	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+	<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/rowModule.js"></script>
+	<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
    		var userInfo = {
    			lang:		"${userInfo.lang}"
@@ -48,6 +51,13 @@
 		var folderCnt = 0;
 		var trashCanList = [];
 		var searchFileType = "";
+		var enrollStartDate = "";
+		var enrollEndDate = "";
+		var delStartDate = "";
+		var delEndDate = "";
+		var searchExt = "";               
+        var searchFileName = "";
+        var searchCreateName = "";
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -69,9 +79,11 @@
 	    
 	    function changeValue(value) {
 	    	   searchFileType = value;
+	    	   
 	    	   if( value == "all" ) {
 	    		   searchFileType = "";
 	    	   }
+	    	   
 	    	   currentPage = 1;
 	    	   refreshView();
 	    }
@@ -360,27 +372,29 @@
 		}
 	    
    	   function doLayerPopup(obj) {
-	        btn_PostDate_Clear();
-	        document.getElementById("searchExt").value = "";
-	        document.getElementById("searchFileName").value = "";
-	        document.getElementById("searchCreateName").value = "";
-	    
-	        if (obj.getAttribute("mode") == "off") {
-	            document.getElementById("layer_popup").style.left = "10px";
-// 	            if (pAdminType == "y")
-// 	                document.getElementById("layer_popup").style.top = "56px";
-// 	            else
-	                document.getElementById("layer_popup").style.top = "100px";
-	            document.getElementById("layer_popup").style.display = "";           
-	            obj.setAttribute("mode", "on");
-	        }
-	        else {
-	        	searchOptionHidden();
-	        }
+	   		 btn_PostDate_Clear();
+	         $('#enrollStartDate').val(enrollStartDate);
+	         $('#enrollEndDate').val(enrollEndDate) ;
+	         $('#delStartDate').val(delStartDate);
+	         $('#delEndDate').val(delEndDate) ;
+	         $('#searchExt').val(searchExt);               
+	         $('#searchFileName').val(searchFileName) ;
+	         $('#searchCreateName').val(searchCreateName);
+		    
+		        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	     	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"left\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	     	
+	     	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	     	
+	     	$("#srarchpopup").css("left", popupX);
+	     	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	     	
+	     	$("#srarchpopup").modal();
+	     	
 	    }
    	   
 	    function searchOptionHidden() {
-	        document.getElementById("layer_popup").style.display = "none";
+	    	$.modal.close();
 	        document.getElementById("SearchOption").setAttribute("mode", "off");
 	    }
    	   
@@ -412,7 +426,7 @@
     	   var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
     	   
 	   	   if (listOfChecked.length <= 0) {
-	   			alert("<spring:message code = 'ezWebFolder.t108'/>");
+	   			alert("<spring:message code = 'ezWebFolder.t295'/>");
 	   			return;
 	   	   }
 	   	   
@@ -467,7 +481,7 @@
 			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
     	   
 	   	   if (listOfChecked.length <= 0) {
-	   			alert("<spring:message code = 'ezWebFolder.t108'/>");
+	   			alert("<spring:message code = 'ezWebFolder.t295'/>");
 	   			return;
 	   	   }
 	   	   
@@ -516,7 +530,7 @@
 			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
     	   
 	   	   if (listOfChecked.length <= 0) {
-	   			alert("<spring:message code = 'ezWebFolder.t108'/>");
+	   			alert("<spring:message code = 'ezWebFolder.t295'/>");
 	   			return;
 	   	   }
 	   	   
@@ -549,7 +563,7 @@
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
 			<li id="right" style="float:right;"><spring:message code='ezWebFolder.t215'/><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
 			<li id="right" style="float:left;">
-				<select class="select" id="idSelect" onchange="idChange(this.value);" style="width:100px;">
+				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="width:100px;">
 					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
 					<option value="document"><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
 					<option value="music"><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
@@ -622,60 +636,55 @@
 	<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+        <iframe style="border:none;" id="iFrameLayer"></iframe>
     </div>
-    
-    <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
-          <div class="popupwrap1">
-            <div class="popupwrap2">
-		        <table class="content">  
-			        <tr>
-			           <th style="text-align:center"><spring:message code='ezWebFolder.t190' /></th>
-			           <td>
-			               <input type="text" class="Sdatepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
-			                ~
-			               <input type="text" class="Edatepicker" id="enrollEndDate" style="width:80px;text-align:center" readonly="readonly">
-			           </td>
-			       </tr>
-			        <tr>
-			           <th style="text-align:center"><spring:message code='ezWebFolder.t288'/></th>
-			           <td>
-			               <input type="text" class="Sdatepicker" id="delStartDate" style="width:80px;text-align:center" readonly="readonly">
-			                ~
-			               <input type="text" class="Edatepicker" id="delEndDate" style="width:80px;text-align:center" readonly="readonly">
-			           </td>
-			       </tr>
-			       
-			        <tr>
-			            <th style="text-align:center"><spring:message code='ezWebFolder.t152'/></th>
-			            <td><input type="text" id="searchExt" style="width:100%" value=""></td>
-			        </tr>
-			        <tr>
-			            <th style="text-align:center"><spring:message code='ezWebFolder.t153'/></th>
-			            <td><input type="text" id="searchFileName" style="width:100%" value=""></td>
-			        </tr>  
-			         <tr>
-			            <th style="text-align:center"><spring:message code='ezWebFolder.t154'/></th>
-			            <td><input type="text" id="searchCreateName" style="width:100%" value=""></td>
-			        </tr>    
-			       
-		   		 </table>
-			    <br />
-			    <table style="width:100%">
-			        <tr>
-			            <td style="text-align:center;">
-			                <a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
-			                <a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
-			                <a class="imgbtn"><span onClick="searchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a>
-			            </td>
-			        </tr>
-			    </table>
-	           </div>
-	         </div>
-	        
-	        <div class="shadow">
-	        </div>
+    <div id="srarchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
+		<div class="popupwrap4">
+			<table class="content" style="margin-top:10px;">  
+				<tr>
+					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' /></th>
+				</tr>
+				<tr>
+		           <th style="text-align:center"><spring:message code='ezWebFolder.t190' /></th>
+		           <td>
+		               <input type="text" class="Sdatepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
+		                ~
+		               <input type="text" class="Edatepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
+		           </td>
+				</tr>
+				<tr>
+		           <th style="text-align:center"><spring:message code='ezWebFolder.t288' /></th>
+		           <td>
+		               <input type="text" class="Sdatepicker" id="delStartDate" style="width:80px;text-align:center" readonly="readonly">
+		                ~
+		               <input type="text" class="Edatepicker" id="delEndDate" style="width:80px;text-align:center" readonly="readonly">
+		           </td>
+				</tr>
+		       
+		        <tr>
+		            <th style="text-align:center"><spring:message code='ezWebFolder.t152' /></th><!-- 확장자 -->
+		            <td><input type="text" id="searchExt" style="width:98%" value="" name="searchExt"></td>
+		        </tr>
+		        <tr>
+		            <th style="text-align:center"><spring:message code='ezWebFolder.t153' /></th><!-- 파일명 -->
+		            <td><input type="text" id="searchFileName" style="width:98%" value="" name="searchFileName"></td>
+		        </tr>  
+		         <tr>
+		            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 작성자 -->
+		            <td><input type="text" id="searchCreateName" style="width:98%" value="" name="searchCreateName"></td>
+		        </tr>    
+			</table>
+			<br/>
+			<table style="width:100%">
+				<tr>
+					<td style="text-align:center;">
+						<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142' /></span></a>
+						<a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+					</td>
+				</tr>
+			</table>
 		</div>
+	</div>	
 	<div id="tblPageRayer"></div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
