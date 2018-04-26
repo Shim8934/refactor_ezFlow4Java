@@ -12,27 +12,27 @@
 
     <!-- question resultMap -->
     <resultMap id="pollQuestion" class="PollQuestionVO">
-        <result property="qstId"                column="ID"                        columnIndex="1"  />               
-        <result property="tenantId"         	column="TENANT_ID"                 columnIndex="2"  />
-        <result property="content"         		column="CONTENT"               	   columnIndex="3"   			jdbcType="CLOB" 			javaType="java.lang.String"/>
-        <result property="multiSelect"          column="MULTI_SELECT"              columnIndex="4"  />
-        <result property="createDate"           column="CREATE_DATE"               columnIndex="5"	/>
-        <result property="startDate"            column="START_DATE"                columnIndex="6"	/>
-        <result property="endDate"            	column="END_DATE"              	   columnIndex="7"  />
-        <result property="target"               column="TARGET"                    columnIndex="8"  />
-        <result property="title"               	column="TITLE"                     columnIndex="9"	/>
-        <result property="secretVote"           column="SECRET_VOTE"               columnIndex="10"  />
-        <result property="creator"           	column="CREATOR"                   columnIndex="11"	/>
-        <result property="creatorName1"         column="CREATOR_NAME1"             columnIndex="12" />
-        <result property="creatorName2"         column="CREATOR_NAME2"             columnIndex="13" />
-        <result property="filePath"          	column="FILE_PATH"                 columnIndex="14" 			jdbcType="CLOB" 			javaType="java.lang.String"/>
-        <result property="resultFirst"          column="RESULT_FIRST"              columnIndex="15" />
-        <result property="isMofifying"          column="IS_MODIFYING"              columnIndex="16" />
-        <result property="setDate"          	column="SET_DATE"              	   columnIndex="17" />
-        <result property="isSorting"          	column="IS_SORTING"                columnIndex="18" />
-        <result property="isSelOnlyOnce"        column="IS_SELONLYONCE"            columnIndex="19" />
-        <result property="sendPostNotice"   	column="SENDPOSTNOTICE"		   	   columnIndex="20" />
-        <result property="openToAll" 			column="OPENTOALL"		  	 	   columnIndex="21" />
+        <result property="qstId"                column="id"                        columnIndex="1"  />               
+        <result property="tenantId"         	column="tenant_id"                 columnIndex="2"  />
+        <result property="content"         		column="content"               	   columnIndex="3"   			jdbcType="CLOB" 			javaType="java.lang.String"/>
+        <result property="multiSelect"          column="multi_select"              columnIndex="4"  />
+        <result property="createDate"           column="create_date"               columnIndex="5"	/>
+        <result property="startDate"            column="start_date"                columnIndex="6"	/>
+        <result property="endDate"            	column="end_date"              	   columnIndex="7"  />
+        <result property="target"               column="target"                    columnIndex="8"  />
+        <result property="title"               	column="title"                     columnIndex="9"	/>
+        <result property="secretVote"           column="secret_vote"               columnIndex="10"  />
+        <result property="creator"           	column="creator"                   columnIndex="11"	/>
+        <result property="creatorName1"         column="creator_name1"             columnIndex="12" />
+        <result property="creatorName2"         column="creator_name2"             columnIndex="13" />
+        <result property="filePath"          	column="file_path"                 columnIndex="14" 			jdbcType="CLOB" 			javaType="java.lang.String"/>
+        <result property="resultFirst"          column="result_first"              columnIndex="15" />
+        <result property="isMofifying"          column="is_modifying"              columnIndex="16" />
+        <result property="setDate"          	column="set_date"              	   columnIndex="17" />
+        <result property="isSorting"          	column="is_sorting"                columnIndex="18" />
+        <result property="isSelOnlyOnce"        column="is_selonlyonce"            columnIndex="19" />
+        <result property="sendPostNotice"   	column="sendpostnotice"		   	   columnIndex="20" />
+        <result property="openToAll" 			column="opentoall"		  	 	   columnIndex="21" />
         
     </resultMap>    
     
