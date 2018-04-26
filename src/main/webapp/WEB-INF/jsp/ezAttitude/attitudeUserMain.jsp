@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
-		<link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />
+		<link rel="stylesheet" href="/css/ezAttitude/Calendar_cross.css" type="text/css" />
 		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
@@ -397,7 +397,7 @@
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + "</td></tr>"); 
 						} else { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + (result[i].modAppl == '1' ? " <i class='fas fa-pencil-alt'></i>" : "") + "</td></tr>"); 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + (result[i].modAppl == '1' ? "  <i class='fas fa-pencil-alt'></i>" : "") + "</td></tr>"); 
 						} 
 					}
 					setAttitudeSquare();
@@ -431,6 +431,7 @@
 						}
 					}
 					$("td[typeid=A02][modappl=0]").css('cursor','context-menu');
+					setAttitudeSquare();
 				}
 			}
 			
