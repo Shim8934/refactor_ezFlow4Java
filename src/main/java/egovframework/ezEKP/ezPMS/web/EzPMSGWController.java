@@ -63,16 +63,17 @@ public class EzPMSGWController {
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String status = request.getParameter("status");
 			String deptId = request.getParameter("deptId");
-			
+
+			//검색 및 환경설정 세팅
 			Map<String, Object> search = new HashMap<>();
+			search.put("projectSort", request.getParameter("projectSort"));
+			search.put("listNumber", request.getParameter("listNubmer"));
+			search.put("listProjectStatus", request.getParameter("listProjectStatus"));
 			
 			//프로젝트 리스트 가져오기
 			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, info.getOffSet(), lang);
 			
 			LOGGER.debug("projectList Count : " + projectList.size());
-			//프로젝트 리스트 환경설정 가져오기
-			//ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, info.getTenantId());
-			
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -190,8 +191,13 @@ public class EzPMSGWController {
 			
 			String nameType = request.getParameter("nameType");
 			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+			
 			ProjectMainSettingVO projectSetting = ezPMSService.getProjectMainSetting(userId, tenantId, nameType);
 			
+			//test용
+			projectSetting.setListProjectStatus("W");
+			
+			LOGGER.debug("projectSetting : " + projectSetting.getViewType());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", projectSetting);
@@ -217,9 +223,24 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ProjectMainSettingVO project = new ProjectMainSettingVO();
+			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 			
-			ezPMSService.updateMainSetting(project, info.getTenantId());
+			ProjectMainSettingVO project = new ProjectMainSettingVO();
+			project.setViewType(Integer.parseInt(request.getParameter("viewType")));
+			project.setProgressColor(request.getParameter("progressColor"));
+			project.setCompleteColor(request.getParameter("completeColor"));
+			project.setOverdueColor(request.getParameter("overdueColor"));
+			project.setHoldColor(request.getParameter("holdColor"));
+			project.setProjectSort(Integer.parseInt(request.getParameter("projectSort")));
+			project.setListNumber(Integer.parseInt(request.getParameter("listNumber")));
+			project.setListProjectStatus(request.getParameter("listProjectStatus"));
+			project.setUserId(userId);
+			
+			LOGGER.debug("[parameter] viewType : " + project.getViewType() + ", progressColor : " + project.getProgressColor() + ", completeColor : " + project.getCompleteColor() + 
+					", overdueColor : " + project.getOverdueColor() + ", holdColor : " + project.getHoldColor() + ", projectSort : " + project.getProjectSort() + ", listNumber : " + project.getListNumber() + ", listProjectStatus : " + project.getListProjectStatus());
+			
+			
+			ezPMSService.updateMainSetting(project, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -524,8 +545,14 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			ProjectInfoVO project = new ProjectInfoVO();
+			project.setStatus("W");
 			
-			int projectListCount = ezPMSService.getProjectListCount(project, info.getTenantId());
+			String deptId = request.getParameter("deptId");
+			
+			LOGGER.debug("status : " + project.getStatus() + ", deptId : " + deptId);
+			int projectListCount = ezPMSService.getProjectListCount(project, info.getTenantId(), userId, deptId);
+			
+			LOGGER.debug("projectListCount : " + projectListCount);
 			
 			JSONObject data = new JSONObject();
 			data.put("projectListCount", projectListCount);

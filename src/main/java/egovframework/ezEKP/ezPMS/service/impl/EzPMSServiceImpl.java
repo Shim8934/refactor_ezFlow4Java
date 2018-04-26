@@ -57,10 +57,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
-		map.put("status", "W");
 		map.put("offset", offset);
 		map.put("lang", lang);
 		map.put("deptId", deptId);
+		
+		if (search.get("projectSort").equals("1")) {
+			map.put("projectSort", search.get("PLAN_START_DATE"));
+		} else {
+			map.put("projectSort", search.get("PLAN_END_DATE"));
+		}
+		
+		map.put("listNumber", search.get("listNumber"));
+		map.put("listProjectStatus", search.get("listProjectStatus"));
 		
 		List<ProjectInfoVO> projectList = ezPMSDAO.getProjectList(map);
 		
@@ -172,8 +180,36 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void updateMainSetting(ProjectMainSettingVO project, int tenantId) {
-		// TODO Auto-generated method stub
+		LOGGER.debug("Service updateMainSetting started");
 		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", project.getUserId());
+		param.put("tenantId", tenantId);
+		param.put("nameType", "user");
+		
+		ProjectMainSettingVO projectSetting = ezPMSDAO.getProjectMainSetting(param);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", project.getUserId());
+		map.put("tenantId", tenantId);
+		map.put("viewType", project.getViewType());
+		map.put("progressColor", project.getProgressColor());
+		map.put("completeColor", project.getCompleteColor());
+		map.put("overdueColor", project.getOverdueColor());
+		map.put("holdColor", project.getHoldColor());
+		map.put("projectSort", project.getProjectSort());
+		map.put("listNumber", project.getListNumber());
+		map.put("listProjectStatus", project.getListProjectStatus());
+		
+		if (projectSetting.getUserId() == null) {
+			LOGGER.debug("DAO insertMainSetting started");
+			ezPMSDAO.insertMainSetting(map);
+		} else {
+			LOGGER.debug("DAO updateMainSetting started");
+			ezPMSDAO.updateMainSetting(map);
+		}
+		
+		LOGGER.debug("Service updateMainSetting ended");
 	}
 
 	@Override
@@ -262,9 +298,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getProjectListCount(ProjectInfoVO project, int tenantId) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("status", project.getStatus());
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("deptId", deptId);
+		
+		int projectListCount = ezPMSDAO.getProjectListCount(map);
+		
+		return projectListCount;
 	}
 
 	@Override
@@ -473,11 +516,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		ProjectMainSettingVO mainSetting = new ProjectMainSettingVO();
 		
+		LOGGER.debug("[Parameter] userId : " + userId + ", tenantId : " + tenantId + ", nameType : " + nameType);
 		try{
 			mainSetting = ezPMSDAO.getProjectMainSetting(map);
-			System.out.println(mainSetting.getUserMail());
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("ERROR : " + e.getMessage());
 		}
 		
 		

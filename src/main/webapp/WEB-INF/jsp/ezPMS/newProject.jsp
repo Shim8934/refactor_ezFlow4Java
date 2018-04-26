@@ -147,13 +147,18 @@ var headManagerId = null;
 		 return;
 	 }
 	 
+	 if (headManagerId == null) {
+		 alert("한 명의 총괄 담당자가 등록되어야 합니다.");
+		 return;
+	 }
+	 
 	 if ($("#endAlam").prop("checked") == false) {
 		 endAlamStatus = -1;
 	 } else {
 		 if ($("#daysBeforeAlam option:selected").text() == "직접입력") {
 			 endAlamStatus = $("#write").val();
 			 
-			 if (endAlamStatus.match(/[^0-9]/g).length > 0) {
+			 if (endAlamStatus.match(/[^0-9]/g) != null) {
 				 alert("문자는 입력할 수 없습니다.");
 				 return;
 			 }
@@ -214,18 +219,18 @@ var headManagerId = null;
 		contentType: "application/json; charset=UTF-8",
 		data :JSON.stringify(data),
 		success : function(result) {
-			alert(result);
-			
 			sendNotiMail(result, projectName);
 			alert("새프로젝트가 추가되었습니다.");
 			
-			try { parent.setProjectList(); } catch (e) {}
+			try { 
+				parent.setProjectList(); 
+			} catch (e) {}
+			
+			windowRefresh();
 			popupClose();
-			
-			
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
-			alert("error2");
+			alert("error");
 		}
 	});
  }

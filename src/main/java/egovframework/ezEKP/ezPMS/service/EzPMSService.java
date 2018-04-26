@@ -52,7 +52,7 @@ public interface EzPMSService {
 	
 	public List<TaskLogListVO> getTaskLogList(int taskId, int groupId, Map<String, Object> map, String offset, String lang, int tenantId);
 	
-	public int getProjectListCount(ProjectInfoVO project, int tenantId);
+	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId);
 	
 	public int getTaskListCount(String status, String mytask, int projectId, int tenantId);
 	

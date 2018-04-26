@@ -189,7 +189,7 @@
 		   					chkFlag = false;
 		   				}
 		   			}
-		   			alert(nameType);
+		   			
 		   			if (chkFlag) {
 		   				if (authName == "manager") {
 		   					managerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept, "nameType" : nameType});

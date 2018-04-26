@@ -145,4 +145,16 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	
 	
 
+	public int getProjectListCount(Map<String, Object> map) {
+		return (int) select("getProjectListCount", map);
+	}
+	
+	public void insertMainSetting(Map<String, Object> map) {
+		insert("insertMainSetting", map);
+	}
+	
+	public void updateMainSetting(Map<String, Object> map) {
+		update("updateMainSetting", map);
+	}
+
 }
