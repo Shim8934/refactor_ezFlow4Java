@@ -71,9 +71,14 @@ function treeOnclick() {
     			return;
     		}
     		
+		} else if (pageType === "letter_user") {
+			var letterBoxNo = data.node.id === "undefined" ? "1" : data.node.id;
+			getLetterList(letterBoxNo); // 편지지 리스트
+			
+			$(".lmLetterTitle").empty();
+			$(".lmLetterTitle").html(letterListMsg);
 		} else { // 편지지 관리, 사용자 편지지 팝업
 			var letterBoxNo = data.node.id === "undefined" ? "1" : data.node.id;
-			
 			getLetterList(letterBoxNo); // 편지지 리스트
 		}
 		
