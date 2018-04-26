@@ -13,6 +13,16 @@
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
 <script type="text/javascript">
+
+var viewType = "${viewType}";
+var projectSort = "${projectSort}";
+var progressColor = "${progressColor}";
+var completeColor = "${completeColor}";
+var overdueColor = "${overdueColor}";
+var holdColor = "${holdColor}";
+var listNumber = "${listNumber}";
+var listProjectStatus = "${listProjectStatus}";
+
 function goToProjectDetails() {
 	window.open("/ezPMS/getProjectDetails.do", "right");
 }
@@ -37,7 +47,6 @@ function addProjectPopup(popUpW, popUpH, URL) {
 
 $(function(){
 	var projectList = new Array();
-	var viewType = "${viewType}";
 	
 	<c:forEach items="${projectList}" var="project">
 		var json = new Object();
@@ -48,6 +57,22 @@ $(function(){
 	
 	for (var i = 0; i < projectList.length; i++) {
 		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
+			percentage : projectList[i].progress,
+			fillBackGroundColor:"#9b59b6",
+			height:'15px',
+			radius:'15px',
+			width : '80%'
+		});
+		
+		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
+			percentage : projectList[i].progress,
+			fillBackGroundColor:"#9b59b6",
+			height:'15px',
+			radius:'15px',
+			width : '80%'
+		});
+		
+		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : projectList[i].progress,
 			fillBackGroundColor:"#9b59b6",
 			height:'15px',
@@ -98,18 +123,53 @@ function MailOptionHiddenOutside(e) {
 }
 
 function changeMemoStyle() {
+	viewType = 0;
+	
+	changeMainSetting();
+	
 	$("#MailListRayer").css("display", "none");
 	$("#memoStyleDiv").css("display", "");
 	$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
 	$("#boardStyle").attr("src", "/images/kr/cm/btn_bottomframe.gif");
+
 }
 
 function changeBoardStyle() {
+	viewType = 1;
+	
+	changeMainSetting();
+	
 	$("#memoStyleDiv").css("display", "none");
 	$("#MailListRayer").css("display", "");
 	$("#memoStyle").attr("src", "/images/kr/cm/btn_noframe.gif");
 	$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
+}
+
+function changeMainSetting() {
 	
+	data = {
+		projectSort : projectSort,
+		viewType : viewType,
+		progressColor : progressColor,
+		completeColor : completeColor,
+		overdueColor  : overdueColor,
+		holdColor     : holdColor,
+		listNumber : listNumber,
+		listProjectStatus : listProjectStatus
+	}
+	
+	$.ajax({
+		type : "POST",
+		dataType: "json",
+		contentType: "application/json; charset=UTF-8",
+		url : "/ezPMS/updateMainSetting.do",
+		data :JSON.stringify(data),
+		success : function(result) {
+			console.log(result);
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+		}
+	});
 }
 
 function addFavorite(projectId) {
@@ -174,6 +234,11 @@ function addFavorite(projectId) {
 
 .memoTd {
 	width : 30%;
+}
+
+.restDueday {
+	font-family : Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;
+	font-weight : bold;
 }
 </style>
 </head>
@@ -244,37 +309,40 @@ function addFavorite(projectId) {
 		    </div>
 	<div id = "memoStyleDiv" style="max-height:484px; width:100%; overflow:auto; display:none;">
 		<c:forEach items="${projectList }" var="project" >
-			<table id="${project.projectId }" style="margin:10px; float:left; position:relative; border:solid 1px gray; clear:none; width:30%;">
+			<table id="${project.projectId }" style="margin:10px 20px; float:left; position:relative; border:solid 1px gray; clear:none; width:360px; left:2%;">
 				<tr>
-					<th colspan="2"><input type="checkbox" style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer; float:left"><c:out value="${project.projectName }"/><img class="star" style="cursor:pointer; float:right;" draggable="false" src="/images/ImgIcon/view-flag.gif" onclick="addFavorite(${project.projectId })"></th>
+					<th colspan="2" style="height:30px; font-size:15px;"><input type="checkbox" style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer; float:left"><c:out value="${project.projectName }"/><img class="star" style="cursor:pointer; float:right;" draggable="false" src="/images/ImgIcon/view-flag.gif" onclick="addFavorite(${project.projectId })"></th>
 				</tr>
 				<tr>
-					<td colspan="2"><c:out value="${project.status }"/></td>
+					<td colspan="2">&nbsp;&nbsp;<c:out value="${project.status }"/></td>
 				</tr>
+				<tr><td colspan="2" >&nbsp;</td></tr>
 				<tr>
 				
-					<td  colspan="2">D <c:choose><c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }"/></c:when>
+					<td colspan="2" style="text-align:center; font-size:20px;" class="restDueday">D <c:choose><c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }"/></c:when>
 								<c:otherwise>+ <c:out value="${-project.restDueday }"/></c:otherwise></c:choose>  </td>
 				</tr>
 				<tr>
-					<td  colspan="2"><c:out value="${project.planStartDate }"/> ~ <c:out value="${project.planEndDate }"/></td>
+					<td colspan="2" style="text-align:center">(<c:out value="${project.planStartDate }"/> ~ <c:out value="${project.planEndDate }"/>)</td>
 				</tr>
+				<tr><td colspan="2" >&nbsp;</td></tr>
+				<tr><td colspan="2" >&nbsp;</td></tr>
 				<tr>
-					<td class="memoTd">총괄 담당자</td>
+					<td class="memoTd">&nbsp;&nbsp;총괄 담당자</td>
 					<td><c:out value="${project.headManagerName }"/></td>
 				</tr>
 				<tr>
-					<td class="memoTd">전체 진행률</td>
+					<td class="memoTd">&nbsp;&nbsp;전체 진행률</td>
 					<td><div name="${project.projectId }" style="margin-right:2px;"></div>&nbsp;<div style="margin-top:5px; display:inline-block;"><c:out value="${project.progress }"/></div></td>
 					
 				</tr>
 				<tr>
-					<td class="memoTd">완료된 업무</td>
-					<td></td>
+					<td class="memoTd">&nbsp;&nbsp;완료된 업무</td>
+					<td><div complete="${project.projectId }" style="margin-right:2px;"></div>&nbsp;<div style="margin-top:5px; display:inline-block;"><c:out value="${project.progress }"/></div></td>
 				</tr>
 				<tr>
-					<td class="memoTd">지연된 업무</td>
-					<td></td>
+					<td class="memoTd">&nbsp;&nbsp;지연된 업무</td>
+					<td><div overdue="${project.projectId }" style="margin-right:2px;"></div>&nbsp;<div style="margin-top:5px; display:inline-block;"><c:out value="${project.progress }"/></div></td>
 				</tr>
 			</table>
 		</c:forEach>
@@ -288,10 +356,10 @@ function addFavorite(projectId) {
 			<th style="width: 20%">프로젝트명</th>
 			<th>총괄 담당자</th>
 			<th style="width: 10%; text-align:center">전체 진행률</th>
-			<th>완료된 업무</th>
-			<th>기한 지난 업무</th>
+			<th style="width: 10%; text-align:center">완료된 업무</th>
+			<th style="width: 10%; text-align:center">기한 지난 업무</th>
 			<th>남은 기간</th>
-			<th style="width:20%; text-align : center;">프로젝트 기간</th>
+			<th style="width:20%;">프로젝트 기간</th>
 			<th>상태</th>
 		</tr>
 		</table>
@@ -303,9 +371,9 @@ function addFavorite(projectId) {
 					<td style="width: 20%; text-align:left;"><c:out value="${project.projectName }"/></td>
 					<td><c:out value="${project.headManagerName }"/></td>
 					<td style="width: 10%"><div name="${project.projectId }" style="margin-right:2px;"></div>&nbsp;<div style="margin-top:5px; display:inline-block;"><c:out value="${project.progress }"/></div></td>
-					<td></td>
-					<td></td>
-					<td>D <c:choose><c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }"/></c:when>
+					<td style="width: 10%"><div complete="${project.projectId }" style="margin-right:2px;"></div>&nbsp;<div style="margin-top:5px; display:inline-block;"><c:out value="${project.progress }"/></div></td>
+					<td style="width: 10%"><div overdue="${project.projectId }" style="margin-right:2px;"></div>&nbsp;<div style="margin-top:5px; display:inline-block;"><c:out value="${project.progress }"/></div></td>
+					<td style="text-align:center;">D <c:choose><c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }"/></c:when>
 								<c:otherwise>+ <c:out value="${-project.restDueday }"/></c:otherwise></c:choose>  </td>
 					<td style="width:20%"><c:out value="${project.planStartDate }"/> ~ <c:out value="${project.planEndDate }"/></td>
 					<td><div style="width:40px; background-color:rgb(224, 224, 224); margin-left:10px;"><c:out value="${project.status }"/></div></td>

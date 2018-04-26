@@ -699,4 +699,36 @@
 			AND 
 				A.TENANT_ID = #tenantId#
 	</select>
+	
+	<insert id="insertMainSetting" parameterClass="map">
+		<![CDATA[
+			INSERT INTO 
+				tbl_pms_setting (
+					TENANT_ID, 		USER_ID, 		VIEW_TYPE, 		PROGRESS_COLOR, 		COMPLETE_COLOR, 	OVERDUE_COLOR, 
+					HOLD_COLOR, 	PROJECT_SORT, 	LIST_NUMBER, 	LIST_PROJECT_STATUS
+				) 
+			VALUES (
+					#tenantId#, 	#userId#, 		#viewType#, 	#progressColor#, 		#completeColor#, 	#overdueColor#,
+					#holdColor#, 	#projectSort#, 	#listNumber#, 	#listProjectStatus#
+				)
+		]]>
+	</insert>
+	
+	<update id="updateMainSetting" parameterClass="map">
+	<![CDATA[
+		UPDATE 
+			tbl_pms_setting 
+		SET
+			VIEW_TYPE = #viewType#, PROGRESS_COLOR = #progressColor#, 
+			COMPLETE_COLOR = #completeColor#, OVERDUE_COLOR = #overdueColor#,
+			HOLD_COLOR = #holdColor#, PROJECT_SORT = #projectSort#, 
+			LIST_NUMBER = #listNumber#, LIST_PROJECT_STATUS = #listProjectStatus# 
+		WHERE
+			USER_ID = #userId# 
+		AND
+			TENANT_ID = #tenantId#
+	]]>
+	</update>
+	
+	
 </sqlMap>

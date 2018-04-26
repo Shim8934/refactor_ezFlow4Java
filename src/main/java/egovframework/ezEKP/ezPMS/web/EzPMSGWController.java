@@ -223,9 +223,24 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ProjectMainSettingVO project = new ProjectMainSettingVO();
+			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 			
-			ezPMSService.updateMainSetting(project, info.getTenantId());
+			ProjectMainSettingVO project = new ProjectMainSettingVO();
+			project.setViewType(Integer.parseInt(request.getParameter("viewType")));
+			project.setProgressColor(request.getParameter("progressColor"));
+			project.setCompleteColor(request.getParameter("completeColor"));
+			project.setOverdueColor(request.getParameter("overdueColor"));
+			project.setHoldColor(request.getParameter("holdColor"));
+			project.setProjectSort(Integer.parseInt(request.getParameter("projectSort")));
+			project.setListNumber(Integer.parseInt(request.getParameter("listNumber")));
+			project.setListProjectStatus(request.getParameter("listProjectStatus"));
+			project.setUserId(userId);
+			
+			LOGGER.debug("[parameter] viewType : " + project.getViewType() + ", progressColor : " + project.getProgressColor() + ", completeColor : " + project.getCompleteColor() + 
+					", overdueColor : " + project.getOverdueColor() + ", holdColor : " + project.getHoldColor() + ", projectSort : " + project.getProjectSort() + ", listNumber : " + project.getListNumber() + ", listProjectStatus : " + project.getListProjectStatus());
+			
+			
+			ezPMSService.updateMainSetting(project, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

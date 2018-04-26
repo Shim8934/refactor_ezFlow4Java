@@ -113,7 +113,10 @@ public class EzPMSController {
 			model.addAttribute("completeColor", listSetting.get("completeColor"));
 			model.addAttribute("overdueColor", listSetting.get("overdueColor"));
 			model.addAttribute("holdColor", listSetting.get("holdColor"));
-			
+			model.addAttribute("projectSort", listSetting.get("projectSort"));
+			model.addAttribute("listNumber", listSetting.get("listNumber"));
+			model.addAttribute("listProjectStatus", listSetting.get("listProjectStatus"));
+		
 			param.put("projectSort", listSetting.get("projectSort"));
 			param.put("listNumber", listSetting.get("listNumber"));
 			param.put("listProjectStatus", listSetting.get("listProjectStatus"));
@@ -270,7 +273,7 @@ public class EzPMSController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezPMS/deleteProject.do")
-	public String deleteProject(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	public String deleteProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS deleteProject started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -291,16 +294,30 @@ public class EzPMSController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezPMS/updateMainSetting.do")
-	public String updateMainSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	@ResponseBody
+	public String updateMainSetting(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS updateMainSetting started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String url = "/rest/ezPMS/users/" + userId + "/setting";
 		
-				
+		System.out.println(param.get("viewType"));
+		param.put("tenantId", userInfo.getTenantId());
+		param.put("viewType", param.get("viewType"));
+		param.put("progressColor", param.get("progressColor"));
+		param.put("completeColor", param.get("completeColor"));
+		param.put("overdueColor", param.get("overdueColor"));
+		param.put("holdColor", param.get("holdColor"));
+		param.put("projectSort", param.get("projectSort"));
+		param.put("listNumber", param.get("listNumber"));
+		param.put("listProjectStatus", param.get("listProjectStatus"));
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
+		String status = result.get("status").toString();
+		
 		LOGGER.debug("ezPMS updateMainSetting ended");
-		return null;
+		return status;
 	}
 	
 	/**
