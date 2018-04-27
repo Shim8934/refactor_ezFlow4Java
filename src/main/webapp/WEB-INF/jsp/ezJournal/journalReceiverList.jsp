@@ -45,14 +45,10 @@
 			            <table class="popuplist" style="width:100%;">
 				            <c:forEach items="${viewerList }" var="viewer" varStatus="status">
 								<tr userid="${viewer.userId }" onclick="show_info(this);" style="background-color: rgb(255, 255, 255);">
-									<td align="left"
-										style="width: 130px; text-align: center; cursor: pointer;">${viewer.userName }</td>
-									<td align="left"
-										style="width: 130px; text-align: center; cursor: pointer;">${viewer.deptName }</td>
-									<td align="left"
-										style="width: 130px; text-align: center; cursor: pointer;">${viewer.jikwi }</td>
-									<td align="left"
-										style="width: 130px; text-align: center; cursor: pointer;">${viewer.date }</td>
+									<td align="left" style="width: 130px; text-align: center; cursor: pointer;"><c:out value='${viewer.userName }'/></td>
+									<td align="left" style="width: 130px; text-align: center; cursor: pointer;"><c:out value='${viewer.deptName }'/></td>
+									<td align="left" style="width: 130px; text-align: center; cursor: pointer;"><c:out value='${viewer.jikwi }'/></td>
+									<td align="left" style="width: 130px; text-align: center; cursor: pointer;"><c:out value='${viewer.date }'/></td>
 								</tr>
 				            </c:forEach>
 						</table>

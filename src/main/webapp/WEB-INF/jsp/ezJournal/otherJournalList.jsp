@@ -61,10 +61,10 @@
 							<tr style="cursor:pointer;" journalId="${journal.journalId }" onclick="selectedTR(this);" ondblclick="bindOtherJournal();">
 <!-- 								<td style="width:13px; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"> -->
 <%-- 								<input type="radio" value="${journal.journalId }" name="otherJournalRadio" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td> --%>
-								<td align="left" style="width: 300px; text-align: left;">${journal.journalTitle }</td>
+								<td align="left" style="width: 300px; text-align: left;"><c:out value='${journal.journalTitle }'/></td>
 <!-- 								<td align="left" -->
 <%-- 									style="width: 130px; text-align: center; cursor: pointer;">${journal.formName }</td> --%>
-								<td align="left" style="width: 130px; text-align: left;">${journal.journalDate }</td>
+								<td align="left" style="width: 130px; text-align: left;"><c:out value='${journal.journalDate }'/></td>
 							</tr>
 			            </c:forEach>
 		            </c:when>

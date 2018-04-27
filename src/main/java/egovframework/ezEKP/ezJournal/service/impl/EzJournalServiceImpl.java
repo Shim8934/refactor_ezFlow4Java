@@ -240,6 +240,9 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("companyId", companyId);
 		param.put("lang", lang);
 		List<DeptViewVO> deptList = ezJournalDAO.getDeptViewVO(param);
+		for(int i=0; i < deptList.size(); i++) {
+			deptList.get(i).setText(commonUtil.cleanValue(deptList.get(i).getText())); 
+		}
 		
 		logger.debug("getDeptViewList ended");
 		return deptList;
@@ -254,6 +257,9 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("userId", userId);
 		param.put("lang", lang);
 		List<JournalAuthorVO> deptList = ezJournalDAO.getAuthDeptList(param);
+//		for(int i=0; i < deptList.size(); i++) {
+//			deptList.get(i).setDeptName(commonUtil.cleanValue(deptList.get(i).getDeptName())); 
+//		}
 		
 		logger.debug("getAuthDeptList ended");
 		return deptList;

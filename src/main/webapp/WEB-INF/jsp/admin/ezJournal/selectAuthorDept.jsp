@@ -118,13 +118,14 @@
 	   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
 	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
 	   				$(".selectTR").remove();
-	   			} else {
+	   			} else {l
 	   				alert("<spring:message code='ezOrgan.t249'/>");
 	   			}
 	   		}
 	   		
 	   		//오프너의 부서 이름과 아이디 세팅
 	   		function setAuthorViewDept(){
+	   			console.log("**" + lpDeptNames);
 	   			opener.setDeptName(JSON.stringify(lpDepts),JSON.stringify(lpDeptNames));
 	   			window.close();
 	   		}
@@ -144,7 +145,7 @@
 	   			});
 	   			for (var i = 0; i < opener.deptIds.length; i++) {
 	   				lpDeptId=opener.deptIds[i];
-	   				lpDeptName=opener.deptNames[i];
+	   				lpDeptName=opener.deptNames[i].replace(/&/gi, "&amp;");
 	   				addDeptInLP();
 				}
    			});

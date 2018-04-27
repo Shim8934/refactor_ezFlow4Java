@@ -470,7 +470,9 @@ public class EzJournalAdminController {
 				JSONObject jo = (JSONObject) authList.get(i);
 				String [] authDeptArr = jo.get("authDept").toString().split("%");
 				if (authDeptArr.length > 1) {
-					jo.replace("authDept", authDeptArr[0] + egovMessageSource.getMessage("ezJournal.t124") + (authDeptArr.length - 1));
+					jo.replace("authDept", commonUtil.cleanValue(authDeptArr[0]) + egovMessageSource.getMessage("ezJournal.t124", userInfo.getLocale()) + (authDeptArr.length - 1));
+				} else {
+					jo.replace("authDept", commonUtil.cleanValue(authDeptArr[0]));
 				}
 			}
 			model.addAttribute("authList", authList);
