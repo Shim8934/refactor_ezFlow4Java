@@ -5,6 +5,7 @@ var favoriteContext = (function() {
 		var selectedLength = selectedRows.length;
 		
 		if (selectedLength === 0) {
+			alert(messages.strLang5);
 			return;
 		}
 		

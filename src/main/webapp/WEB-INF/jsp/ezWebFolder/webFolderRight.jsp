@@ -246,6 +246,9 @@
 					var tdElmt9 = document.createElement("td");
 					var tdElmt10 = document.createElement("td");
 					
+					setTextOverflowEllipsis(tdElmt4, tdElmt5, tdElmt6, tdElmt7, tdElmt8, tdElmt9, tdElmt10);
+					setTextAlignCenter(tdElmt2, tdElmt3, tdElmt5, tdElmt10);
+
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
 					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'folder' : 'file');
@@ -285,13 +288,11 @@
 					tdElmt3.appendChild(fileIconElmt);
 					
 					tdElmt4.textContent = result[i]["fileName"];
-					tdElmt5.setAttribute("text-align", "center");
 					if(result[i]["typeId"] == "folder") {
 						tdElmt5.textContent = ' - ';
 					}else {
 						tdElmt5.textContent = getFileSize(result[i]["fileSize"]);
 					}
-					tdElmt5.style.textAlign = "center";
 // 					if (primary == "1") {
 						tdElmt6.textContent = result[i]["createName1"];
 // 					}
@@ -334,6 +335,28 @@
 					tableList.appendChild(trElmt);
 				}
 			} 
+		}
+		
+		function setTextOverflowEllipsis() {
+			var element;
+			argumentsLength = arguments.length;
+			
+			for (var i = 0; i < argumentsLength; i++) {
+				element = arguments[i];
+				element.style.overflow = "hidden";
+				element.style.textOverflow = "ellipsis";
+				element.style.whiteSpace = "nowrap";
+			}
+		}
+		
+		function setTextAlignCenter() {
+			var element;
+			argumentsLength = arguments.length;
+			
+			for (var i = 0; i < argumentsLength; i++) {
+				element = arguments[i];
+				element.style.textAlign = "center";
+			}
 		}
 		
 		function dbClickFunction(obj) {
@@ -421,7 +444,9 @@
             $('#Edatepicker').val(searchRequirement.endDate);
 	    
 	        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
-        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"left\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        var leftBody = parent.frames["left"].document.body;
+	        leftBody.style.overflow = "hidden";
+        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].searchOptionHidden();document.body.style.overflow=\"auto\";'></div>").appendTo(leftBody);        	
         	
         	var popupX = parent.document.body.clientWidth / 2 - (500 / 2) - 220;
         	
@@ -660,24 +685,24 @@
 	<div style="height:40px;">
 		<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;" id ="originalPath" ></span>
 	</div>
-	<div id="mainmenu2">
+	<div id="mainmenu">
 		<ul>
-			<li id=""><a onClick="fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-			<li id="upload"><a onClick="fileUpload2()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-			<li id=""><a onClick="fileDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
-			<li id=""><a onClick="fileRename()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
-			<li id=""><a onClick="fileMove()"     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
-			<li id=""><a onClick="addShare()"     style="margin-top: 3px;"><span>공유추가</span></a></li>
-			<li id=""><img src="/images/i_bar.gif"></li>
-			<li id=""><a onClick="favoriteContext.toggleAll()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t281'/></span></a></li>
+			<li><span onClick="fileDownload()"><spring:message code='ezWebFolder.t186'/></span></li>
+			<li id="upload"><span onClick="fileUpload2()"><spring:message code='ezWebFolder.t187'/></span></li>
+			<li><span onClick="fileDelete()"><spring:message code='ezWebFolder.t274'/></span></li>
+			<li><span onClick="fileRename()"><spring:message code='ezWebFolder.t273'/></span></li>
+			<li><span onClick="fileMove()"><spring:message code='ezWebFolder.t275'/></span></li>
+			<li><span onClick="addShare()">공유추가</span></li>
+			<li><img src="/images/i_bar.gif"></li>
+			<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 <%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
-			<li id=""><img src="/images/i_bar.gif"></li>
-			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
-			<li id=""><img src="/images/i_bar.gif"></li>
+			<li><img src="/images/i_bar.gif"></li>
+			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
+			<li><img src="/images/i_bar.gif"></li>
 <!-- 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li> -->
-			<li id=""><a onClick="refreshView()"style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
-			<li id="right" style="float:right;"><span><spring:message code='ezWebFolder.t215'/></span><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
-			<li id="right" style="float:left;">
+			<li><span onClick="refreshView()"><spring:message code='ezWebFolder.t139'/></span></li>
+			<li style="float:right;"><span><spring:message code='ezWebFolder.t215'/></span><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
+			<li style="float:left;">
 				<select class="select" id="idSelect" onchange="onFileTypeChange(this.value);" style="width:100px; ">
 					<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
 					<option value="document" data-imagesrc="/images/webfolder/msWord.png"       ><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
@@ -691,7 +716,7 @@
 		</ul>
 	</div>
 	<script type="text/javascript">
-		selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
+		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	</script>
 	
     <div id="progress-wrp" style="display: none;">
@@ -733,15 +758,15 @@
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
 				<th width="20px"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
-				<th width="40px"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
-				<th width="40px"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
-				<th width="240px"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
-				<th width="60px" style="text-align : center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
-				<th width="80px"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-				<th width="80px"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
-				<th width="80px"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
-				<th width="210px"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-				<th width="40px"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
+				<th style="width: 18px; text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
+				<th style="width: 30px; text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
+				<th style="width: 29%;"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
+				<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
+				<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
+				<th style="width: 9%;"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+				<th style="width: 9%;"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
+				<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
+				<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
 			</tr>
 		</table>
 	</div>

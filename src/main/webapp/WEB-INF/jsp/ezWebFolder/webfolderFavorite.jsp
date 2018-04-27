@@ -203,15 +203,6 @@
 			// dom elements setup
 			initDomElement();
 			
-			// file type filter setup
-			$('#idSelect').ddslick({
-				onSelected: function(selectedElmt) {
-					//callback function: do something with selectedData;
-					document.getElementById("idSelect").value = selectedElmt.selectedData["value"];
-					onFileTypeChange(document.getElementById("idSelect").value);
-				}
-			});
-			
 			// context event handle setup
 			context.setOnListTypeChangeEventListener(function(isFavoriteMode) {
 				// TODO: 즐겨찾기 메뉴 보이기/숨기기 html, js 소스 정리
