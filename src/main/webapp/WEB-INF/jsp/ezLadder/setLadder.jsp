@@ -755,7 +755,7 @@
 			
 			/** 사다리 만들기 */
 			function makeLadder() {
-				if(!$("#title").val()) {
+				if(!$("#title").val().trim()) {
 					alert("<spring:message code='ezLadder.t019'/>");
 					return;
 				}
@@ -921,7 +921,7 @@
 			</table>
 			
 			<div class="wrap" style="min-width: 800px;">
-				<input type="button" class="ladderBtn" id="makeLad" disabled="disabled" value="<spring:message code="ezLadder.t018"/>">
+				<input type="button" class="ladderBtn" id="makeLad" value="<spring:message code="ezLadder.t018"/>">
 				<input type="button" id="backToList" style="background: #efefef; color: #000000;" value="<spring:message code="ezLadder.t083"/>" />
 			</div>
 		</form>
