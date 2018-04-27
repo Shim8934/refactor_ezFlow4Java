@@ -17,8 +17,7 @@ function TableView() {
 	var _dataSource      = "";
 	var _tableType       = "";
 	
-	function setDataSource(dataSource) {_dataSource = dataSource;}
-	
+	//public functions
 	function setTableId(tableId) {
 		_tableId         = tableId;
 		var tableList    = document.getElementById(_tableId);
@@ -26,10 +25,9 @@ function TableView() {
 		tableList.setAttribute("style", "-webkit-touch-callout: none;-webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; " + currentStyle);
 	}
 	
-	function setTableType(tableType) {_tableType = tableType;}
-	
+	function setDataSource(dataSource)       {_dataSource = dataSource;}
+	function setTableType(tableType)         {_tableType = tableType;}
 	function setSelectedClass(selectedClass) {_selectedClass = selectedClass;}
-	
 	function setUnselectClass(unselectClass) {_unselectClass = unselectClass;}
 	
 	//Row process functions
@@ -83,9 +81,8 @@ function TableView() {
 	}
 	
 	function toggleAllRow(flag) {
-		var rowClass = flag == true ? _unselectClass : _selectedClass;
-		var setClass = flag == true ? _selectedClass : _unselectClass;
-		
+		var rowClass   = flag == true ? _unselectClass : _selectedClass;
+		var setClass   = flag == true ? _selectedClass : _unselectClass;
 		var listOfRows = document.getElementsByClassName(rowClass);
 		
 		for (var i = listOfRows.length - 1; i >= 0; i--) {
@@ -163,7 +160,7 @@ function TableView() {
 				var tdElmt5 = document.createElement("td");
 				var tdElmt6 = document.createElement("td");
 				
-				trElmt.setAttribute("class", "bnkWebFolder");
+				trElmt.setAttribute("class", _unselectClass);
 				tdElmt1.textContent = _dataSource[i]["fileType"];
 				
 				tdElmt2.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
@@ -172,33 +169,15 @@ function TableView() {
 				tdElmt3.textContent = getFileSize(_dataSource[i]["fileSize"]);
 				
 				tdElmt4.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
-				
-				if (primary == "1") {
-					tdElmt4.textContent = _dataSource[i]["createName1"];
-				}
-				else {
-					tdElmt4.textContent = _dataSource[i]["createName2"];
-				}
+				tdElmt4.textContent = primary == "1" ? _dataSource[i]["createName1"] : _dataSource[i]["createName2"];
 				
 				switch(_dataSource[i]["logType"]) {
-					case "C":
-						tdElmt5.textContent = strActType1;
-						break;
-					case "D":
-						tdElmt5.textContent = strActType2;
-						break;
-					case "U":
-						tdElmt5.textContent = strActType3;
-						break;
-					case "R":
-						tdElmt5.textContent = strActType4;
-						break;
-					case "P":
-						tdElmt5.textContent = strActType5;
-						break;
-					case "RE":
-						tdElmt5.textContent = strActType6;
-						break;
+					case "C" : tdElmt5.textContent = strActType1; break;
+					case "D" : tdElmt5.textContent = strActType2; break;
+					case "U" : tdElmt5.textContent = strActType3; break;
+					case "R" : tdElmt5.textContent = strActType4; break;
+					case "P" : tdElmt5.textContent = strActType5; break;
+					case "RE": tdElmt5.textContent = strActType6; break;
 				}
 				
 				tdElmt6.setAttribute("style","text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
@@ -254,7 +233,7 @@ function TableView() {
 				trElmt.setAttribute("userId", _dataSource[i]["userId"]);
 				trElmt.onclick = function(event) {clickRow(event);};
 				
-				var inputElmt = document.createElement("input");
+				var inputElmt  = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
 				inputElmt.setAttribute("class", "checkBnk");
 				inputElmt.setAttribute("value", "0");
@@ -284,11 +263,11 @@ function TableView() {
 				
 				tdElmt8.setAttribute("style","white-space:nowrap; text-align:center;");
 				
-				var span = document.createElement("span");
+				var span        = document.createElement("span");
 				span.className  = "workProgressBar";
 				span.innerHTML += "<span class='bar' usedrate='rategrogressBar" + i + "'></span>&nbsp;";
 				
-				var span2 = document.createElement("span");
+				var span2           = document.createElement("span");
 				span2.style.display = "inline-block";
 				span.appendChild(span2);
 				tdElmt8.appendChild(span);
@@ -365,14 +344,7 @@ function TableView() {
 				tdElmt3.setAttribute("title", _dataSource[i]["fileName"]);
 				tdElmt3.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
 				tdElmt4.textContent = getFileSize(_dataSource[i]["fileSize"]);
-				
-				if (primary == "1") {
-					tdElmt5.textContent = _dataSource[i]["createName1"];
-				}
-				else {
-					tdElmt5.textContent = _dataSource[i]["createName2"];
-				}
-				
+				tdElmt5.textContent = primary == "1" ? _dataSource[i]["createName1"] : _dataSource[i]["createName2"];
 				tdElmt6.textContent = _dataSource[i]["createDate"].substring(0, 10);
 				tdElmt7.textContent = _dataSource[i]["updateDate"].substring(0, 10);
 				tdElmt8.textContent = _dataSource[i]["filePosition"];
@@ -406,5 +378,4 @@ function TableView() {
 		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
 		AttachDownFrame.location.href = downloadUrl;
 	}
-	
 }
