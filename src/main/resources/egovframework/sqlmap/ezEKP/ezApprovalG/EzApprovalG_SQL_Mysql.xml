@@ -7857,7 +7857,7 @@
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
-		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
 		   	</isEqual>
 		   	<isNotEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
@@ -11772,7 +11772,7 @@
 	   	</isEqual>
 	   	LIKE 'ADDRESS%' AND TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 	   	<isEqual property="v_MODELENGTH" compareValue="2">
-	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
+	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y','0')
 	   	</isEqual>
 	   	<isNotEqual  property="v_MODELENGTH" compareValue="2">
 	   	AND TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
@@ -24249,3 +24249,4 @@
 		</isEqual>
 	</select>
 </sqlMap>
+

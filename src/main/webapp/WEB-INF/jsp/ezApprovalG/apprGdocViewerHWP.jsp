@@ -81,7 +81,7 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <td height="908">
                 <div style="height: 100%">
                     <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "", "");</script>
                 </div>

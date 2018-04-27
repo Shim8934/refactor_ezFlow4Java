@@ -12,11 +12,11 @@
 		<config>src/main/resources/egovframework/spring/com/context-transaction.xml</config>
 		<config>src/main/resources/egovframework/spring/com/context-aspect.xml</config>
 		<config>src/main/resources/egovframework/spring/com/context-common.xml</config>
-		<config>src/main/webapp/WEB-INF/config/egovframework/springmvc/egov-com-servlet.xml</config>
+ 		<config>src/main/webapp/WEB-INF/config/egovframework/springmvc/egov-com-servlet.xml</config>
 		<config>src/main/resources/egovframework/spring/com/context-idgen.xml</config>
 		<config>src/main/resources/egovframework/spring/com/context-datasource.xml</config>
 		<config>src/main/resources/egovframework/spring/com/context-sqlMap.xml</config>
-		<config>src/main/resources/egovframework/spring/com/context-properties.xml</config>
+ 		<config>src/main/resources/egovframework/spring/com/context-properties.xml</config>
 	</autoconfigs>
 	<configSets>
 	</configSets>

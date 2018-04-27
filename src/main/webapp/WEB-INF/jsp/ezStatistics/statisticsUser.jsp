@@ -25,7 +25,7 @@
 	    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <script type="text/javascript">
 	        var xmlHttp = createXMLHttpRequest();
-			
+
 			document.onselectstart = function () {
 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	            return false;
@@ -426,6 +426,7 @@
 	                searchdept();
 	        }
 	
+	        var searchdept_cross_dialogArguments = new Array();
 	        function searchdept() {
 	            if (keyword.value.trim() == "") {
 	                alert("<spring:message code='ezStatistics.t1010'/>");
@@ -474,9 +475,19 @@
 	                var rgParams = new Array();
 	                rgParams["addrBook"] = xmlDom;
 	                rgParams["deptid"] = "";
-	                var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
-	                feature = feature + GetShowModalPosition(540, 460);
-	                window.showModalDialog("/ezStatistics/checkName2.do", rgParams, feature);
+	                
+	                var agent = navigator.userAgent.toLowerCase(); 
+	    			if (CrossYN()) {
+	    				searchdept_cross_dialogArguments[0] = rgParams;
+	    				searchdept_cross_dialogArguments[1] = SelelctDept_complite;
+	    				var OpenWin = window.open("/ezStatistics/statisticsCheckName2.do", "", GetOpenWindowfeature(609, 372));    
+	    				try { OpenWin.focus(); } catch (e) { }				
+	    			} 
+	    			else {    
+	             	   var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
+	             	   feature = feature + GetShowModalPosition(540, 460);
+	            	    window.showModalDialog("/ezStatistics/checkName2.do", rgParams, feature);
+	    			}
 	
 	                if (rgParams["deptid"] != "") {
 	                    bSearch = true;
@@ -488,6 +499,17 @@
 	                }
 	            }
 	        }
+	        
+	        function SelelctDept_complite(deptid){
+	       	 if (deptid != "") {
+	                bSearch = true;
+	                g_xmlHTTP = createXMLHttpRequest();
+	                var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+	                g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+	                g_xmlHTTP.send(strQuery);
+	            }
+	       }
 	
 	        function event_getDeptFullTree() {
 	            if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {

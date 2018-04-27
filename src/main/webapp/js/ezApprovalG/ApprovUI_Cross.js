@@ -3174,7 +3174,8 @@ function UpdateDocHistory(pHtml) {
     createNodeInsert(xmlpara, objNode, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
     createNodeAndInsertText(xmlpara, objNode, "pHtml", ConvertHTMLtoMHT(pHtml));
-
+    createNodeAndInsertText(xmlpara, objNode, "mode", "mht");
+    
     xmlhttp2.open("POST", "/ezApprovalG/uploadDocHistory.do", false);
     xmlhttp2.send(xmlpara);
 

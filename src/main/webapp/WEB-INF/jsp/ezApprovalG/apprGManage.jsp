@@ -510,7 +510,7 @@
                                 if (GetAttribute(tr,"data4") == "file") {
                                     window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
                                 } else {
-                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl);
+                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
                                 }
                             }
 
@@ -1304,7 +1304,7 @@
 				
 		        //직인의뢰함에서 타입을 END로 주기위해
 		        var url;
-		        if (pListTypeValue == 7) {
+		        if (pListTypeValue == 7 || pListTypeValue == 8 || pListTypeValue == 9) {
 		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END";	
 		        } else {
 		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR";

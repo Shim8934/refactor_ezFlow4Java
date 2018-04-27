@@ -71,13 +71,19 @@ function treeOnclick() {
     			return;
     		}
     		
+		} else if (pageType === "letter_user") {
+			var letterBoxNo = data.node.id === "undefined" ? "1" : data.node.id;
+			getLetterList(letterBoxNo); // 편지지 리스트
+			
+			$(".lmLetterTitle").empty();
+			$(".lmLetterTitle").html(letterListMsg);
 		} else { // 편지지 관리, 사용자 편지지 팝업
 			var letterBoxNo = data.node.id === "undefined" ? "1" : data.node.id;
-			
 			getLetterList(letterBoxNo); // 편지지 리스트
 		}
 		
 		$(".searchDis").removeAttr("disabled");
+		searchMode = false;
     });
 }
 
@@ -265,8 +271,8 @@ function deleteLetterBox() {
 function submitClick() {
 	var formData = $("#myForm").serialize();
 	var formUrl = "/admin/ezEmail/updateLetterBox.do";
-	var disName = strChk($("#myForm #display").val(), false, 40);
-	var disName2 = strChk($("#myForm #display2").val(), false, 40);
+	var disName = strChk($("#myForm #display").val(), false, 40, letterBoxNameMsg);
+	var disName2 = strChk($("#myForm #display2").val(), false, 40, letterBoxNameMsg);
 	var disMsg = disName.msg !== "" ? disName.msg : disName2.msg !== "" ? disName2.msg : "";
 	
 	if (document.getElementById("letterbox_no").disabled) {

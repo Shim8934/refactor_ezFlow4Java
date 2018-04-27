@@ -1723,7 +1723,7 @@ function makePageSelPageBrd() {
         }
     }
     if (i == 1) {
-    	strtext = "<span class='off'>" + i + "</span>";
+    	strtext = "<span class='on'>" + i + "</span>";
         PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {

@@ -355,6 +355,8 @@ function MakeAddressList() {
             /*SubPTag.appendChild(pContentSub);*/
 
             var ULTag = document.createElement("ul");
+            /* 2018-04-25 장진혁 - 주소록 카드형식 UI 틀어짐현상때문에 수정 */
+            ULTag.style.marginTop = "12px";
 
             var UITag1 = document.createElement("li");
             UITag1.className = "name";            

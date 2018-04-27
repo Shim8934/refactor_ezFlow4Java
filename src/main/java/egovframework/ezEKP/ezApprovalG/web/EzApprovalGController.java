@@ -2273,21 +2273,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String checkLine = "";
 		
-		// 결재 문서의 첨부를 다운받으려 하는사람이 결재라인에 있는지 체크 추가 2018-04-10 천성준
-		if (docID != null && docStatus != null) {
-			checkLine = ezApprovalGService.checkAprLine(docID.trim(), docStatus, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
-		}
-
 		logger.debug("docID : " + docID);
 		logger.debug("docStatus : " + docStatus);
 		logger.debug("filePath : " + filePath);
 		logger.debug("fileName : " + fileName);
-		logger.debug("checkLine : " + checkLine);
-		
+
 		//관리자는 권한 제한없도록 추가
 		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+			
 			result = "PERMISSION";
 		} else {
+			// 결재 문서의 첨부를 다운받으려 하는사람이 결재라인에 있는지 체크 추가 2018-04-10 천성준
+			if (docID != null && docStatus != null) {
+				checkLine = ezApprovalGService.checkAprLine(docID.trim(), docStatus, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			}
+			
 			if (docStatus != null && (docStatus.toUpperCase().equals("APR") || docStatus.toUpperCase().equals("TMP"))) {
 				if (docID != null && !docID.equals("")) {
 					String checkMode = "";
@@ -2319,6 +2319,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			logger.debug("docStatus = " + docStatus + "|| result = " + result);
 		}
+		
+
 		
 		//2017-04-02 클라이언트단에서 replace해서 받아와야함.
 		//fileName = fileName.replaceAll("&amp;", "&").replaceAll("&lt", "<").replaceAll("&gt;", ">");
@@ -7162,10 +7164,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String docID = doc.getElementsByTagName("pDocID").item(0).getTextContent();
+		String mode = doc.getElementsByTagName("mode").item(0).getTextContent();
 		String pHTML = doc.getElementsByTagName("pHtml").item(0).getTextContent().replace("\r\n", "\n").replace("\n", "\r\n");
 
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-		String fileName = docID + "-" + commonUtil.getTodayUTCTime("yyyyMMddHHmmss")+ ".mht";
+		String fileName = docID + "-" + commonUtil.getTodayUTCTime("yyyyMMddHHmmss")+ "." + mode;
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)  + commonUtil.separator + "history" ;
 		String dirPath2 = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID);
 		String realPath = commonUtil.getRealPath(request);
@@ -7184,7 +7187,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				file2.mkdirs();
 			}
 		
-			stream = new ByteArrayInputStream(pHTML.getBytes("UTF-8"));
+			if (mode.equals("hwp")) {
+				stream = new ByteArrayInputStream(Base64.decodeBase64(pHTML));
+			} else {
+				stream = new ByteArrayInputStream(pHTML.getBytes("UTF-8"));
+			}
 			
 			bos = new FileOutputStream(realPath + dirPath + commonUtil.separator  + fileName);
 			
@@ -7644,6 +7651,23 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.updateSusinState(docID, recDate, mode, deptID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("updateSusinState ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 민원인주소 우편번호검색 사용 여부 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/getUseZipCodeSearchInApr.do")
+	@ResponseBody
+	public String getUseZipCodeSearchInApr(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getUseZipCodeSearchInApr started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezCommonService.getTenantConfig("useZipCodeSearchInApr", userInfo.getTenantId());
+		
+		logger.debug("getUseZipCodeSearchInApr ended.");
 		
 		return result;
 	}

@@ -989,7 +989,7 @@
 				<li class = "approvalG"><span style="width:100%;display:inline-block;" id="APPROVAL5" onClick="setPresentValue('<spring:message code='ezApprovalG.t257'/>');convMain('6','')"><img src="/images/ImgIcon/icon_senddoc.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t257'/><span id=count6></span></span></li>
 				</c:if>
 				<c:if test="${approvalFlag == 'G'}">
-				<c:if test="${infoXML != ''}">
+				<c:if test="${infoXML != '' && infoXML != null }">
 					<li><span style="width:100%;display:inline-block;cursor:pointer;"  id="APPROVAL9" onClick="setPresentValue('<spring:message code='ezApprovalG.t1751'/>');convMain('9','')" ><img src="/images/ImgIcon/icon_listsenddoc.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1751'/></span></li>
 				</c:if>
 				</c:if>

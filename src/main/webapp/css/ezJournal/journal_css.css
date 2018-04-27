@@ -1,0 +1,60 @@
+.journal-layer {
+  display: none;
+  position: fixed;
+  _position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+
+.journal-layer .dimBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: .5;
+  filter: alpha(opacity=50);
+}
+
+.pop-layer {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: auto;
+  height: auto;
+  z-index: 10;
+  border-radius: 4px;
+  background: url('/images/kr/cm/popup_bg.gif') #ffffff repeat-x left top ;
+  padding: 5px 10px 10px;
+  margin: 0
+}
+
+.pop-layer h1 {
+	font-size: 11pt;
+	font-weight: bold;
+	color: #fff;
+	height: 44px;
+	margin-left: 1px;
+	margin-bottom: 8px;
+	line-height: 36px;
+}
+
+.journal-layer .pop-layer {
+  display: block;
+}
+
+a.btn-layerClose {
+  display: inline-block;
+  height: 25px;
+  padding: 0 14px 0;
+  border: 1px solid #304a8a;
+  background-color: #3f5a9d;
+  font-size: 13px;
+  color: #fff;
+  line-height: 25px;
+}

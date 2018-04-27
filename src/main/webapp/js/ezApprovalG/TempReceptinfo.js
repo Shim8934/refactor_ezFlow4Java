@@ -485,11 +485,13 @@ var aprdepttempletname_cross_dialogArguments = new Array();
 var tempmode;
 function btn_AprDeptTempletSave_onclick(mode) {
     tempmode = mode;
-    if (isExistDept(true)) {
-        var parameter = strLang1002;
-        OpenAlertUI(parameter);
-        return;
-    }
+    
+    //외부 수신자도 즐겨찾기 저장 가능하게 주석처리 2018-03-21 강민수92
+//    if (isExistDept(true)) {
+//        var parameter = strLang1002;
+//        OpenAlertUI(parameter);
+//        return;
+//    }
 
     var templistviewsn = "";
     var templisttviewname = "";
