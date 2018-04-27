@@ -1564,7 +1564,7 @@
 				            FAVOR.TARGET_ID = RESULT.TARGET_ID
 				            AND FAVOR.TARGET_TYPE = RESULT.TARGET_TYPE
 				            AND RESULT.TENANT_ID = #tenantId#
-				            AND FOLDER_PATH LIKE '%$folderId$%'
+				            AND FOLDER_PATH LIKE '%|$folderId$|%'
 					)
 		]]>
 	</delete>
