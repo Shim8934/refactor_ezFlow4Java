@@ -126,7 +126,7 @@
 				type.TYPE_ICON   		as TYPE_ICON ,
 				folder.FOLDER_PATH	  	as FOLDER_PATH,
 				folder.FOLDER_NAME1    	as FOLDER_NAME1,
-				NVL2(s.user_id,'0','1') as FAVORITE_STATUS,
+				NVL2(s.user_id,'1','0') as FAVORITE_STATUS,
 				decode (#primary#,'1','1','0') as FILESHARE_STATUS ,
 				decode (f.FILE_EXT , 'folder',0,1) as FOLDER_SORT,
 				type.TYPE_NAME 	AS filetype_name    		
@@ -154,7 +154,7 @@
 				type.TYPE_ICON		AS TYPE_ICON    ,     
 				folder.FOLDER_PATH  AS FOLDER_PATH  ,     
 				folder.FOLDER_NAME1 AS FOLDER_NAME1 ,    
-				NVL2(s.user_id,'0','1') as FAVORITE_STATUS,
+				NVL2(s.user_id,'1','0') as FAVORITE_STATUS,
                 decode (#primary#,'1','1','0')as FILESHARE_STATUS ,
 				decode (FILE_EXT , 'folder',0,1) as FOLDER_SORT,
 				type.TYPE_NAME 	AS filetype_name  
@@ -444,8 +444,9 @@
 							and folder_type = #folderType# 
 						) folder 
 							on folder.folder_id  = f.folder_id
-					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id  = #tenantId#
-					left outer join tbl_webfolder_favor s on f.file_id = s.target_id  
+					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id  = #tenantId# 
+					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+						and s.tenant_id = #tenantId# and s.target_type ='F'
 					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'  
 					
 				]]>
@@ -453,7 +454,8 @@
 		        <![CDATA[
 			            from 
 				            tbl_webfolder_filetype type LEFT OUTER JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder'
-				            left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id  
+				            left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
+				            	and s.tenant_id = #tenantId# and s.target_type ='D'
 			            where 
 								folder.tenant_id = #tenantId#	 
 							and 
@@ -516,7 +518,8 @@
 					ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
 					JOIN TBL_WEBFOLDER_FILETYPE type 
 						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#
-					left outer join tbl_webfolder_favor s on f.file_id = s.target_id    
+					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+						and s.tenant_id = #tenantId# and s.target_type ='F'   
 				 WHERE f.USE_STATUS = 'Y'
 				 AND f.TENANT_ID = #tenantId#
    		</isEqual>
@@ -533,7 +536,8 @@
 				on f.folder_id = folder.folder_id 
 				and folder.tenant_id = f.tenant_id
 				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
-				left outer join tbl_webfolder_favor s on f.file_id = s.target_id  
+				left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+						and s.tenant_id = #tenantId# and s.target_type ='F' 
 				where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 			]]>
 		</isNotEqual>
@@ -577,14 +581,16 @@
 								where folder_path like (#folderPath#||'%') and tenant_id = #tenantId# and folder_type = #folderType# ) 
 									folder on folder.folder_id  = f.folder_id
 							inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
-							left outer join tbl_webfolder_favor s on f.file_id = s.target_id   
+							left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+								and s.tenant_id = #tenantId# and s.target_type ='F'   
 							where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 							
 						]]>
 						<include refid="fldSelect"/>
 						<![CDATA[
 						    from tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder' and folder.tenant_id = #tenantId#
-						    left outer join tbl_webfolder_favor s on folder.file_id = s.target_id  
+						    left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
+				            	and s.tenant_id = #tenantId# and s.target_type ='D' 
 						    where 
 									folder.tenant_id = #tenantId# 
 								and
@@ -643,7 +649,8 @@
 					ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
 					JOIN TBL_WEBFOLDER_FILETYPE type 
 						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#
-					left outer join tbl_webfolder_favor s on f.file_id = s.target_id    
+					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+						and s.tenant_id = #tenantId# and s.target_type ='F'    
 				 WHERE f.USE_STATUS = 'Y'
 				 AND f.TENANT_ID = #tenantId#
 	   		</isEqual>
@@ -660,7 +667,8 @@
 						and folder_type = #folderType# and use_status = 'Y'
 					) folder on f.folder_id = folder.folder_id
 					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
-					left outer join tbl_webfolder_favor s on f.file_id = s.target_id   
+					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+						and s.tenant_id = #tenantId# and s.target_type ='F'   
 					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 				]]>
 			</isNotEqual>
