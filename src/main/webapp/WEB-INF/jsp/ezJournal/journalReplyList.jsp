@@ -190,16 +190,16 @@
 								style="height: 40px; text-align: left; border: 1px solid #e2e2e2; background-color: #white;">
 								<td style="padding-left: 3px;"><span
 									style="cursor: pointer"
-									onclick="OpenUserInfo(${reply.replyWriter});">${reply.replyWriterName }</span></td>
+									onclick="OpenUserInfo(${reply.replyWriter});"><c:out value='${reply.replyWriterName }'/></span></td>
 								<td
-									style="text-align: left; vertical-align: middle; padding: 10px; word-wrap: break-word; line-height: 1.5">${reply.replyContent }
+									style="text-align: left; vertical-align: middle; padding: 10px; word-wrap: break-word; line-height: 1.5"><c:out value='${reply.replyContent }'/>
 									<c:if test="${reply.mine eq 'Y' }">
 									<img src="/images/ImgIcon/comment_del.gif"
 									style="cursor: pointer; vertical-align: middle; inline-block; padding-bottom: 1.6px"
 									onclick="deleteJournalReply(${reply.replyId })">
 									</c:if>
 									</td>
-								<td style="text-align: right; padding-right: 8px">${reply.replyDate }</td>
+								<td style="text-align: right; padding-right: 8px"><c:out value='${reply.replyDate }'/></td>
 							</tr>
 							</c:forEach>
 						</c:otherwise>

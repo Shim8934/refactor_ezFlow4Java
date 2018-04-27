@@ -450,7 +450,7 @@
 			
 			</table>
 		 	<br />
-			<div style="width:623px;text-align:center;">      
+			<div style="width:650px;text-align:center;">      
 				<a class="imgbtn" onclick="saveAuthEnv();"><span><spring:message code="ezCircular.t25" /></span></a>
 	       		<a class="imgbtn" onclick="authCancel();"><span><spring:message code="ezCircular.t26" /></span></a>
 			</div>

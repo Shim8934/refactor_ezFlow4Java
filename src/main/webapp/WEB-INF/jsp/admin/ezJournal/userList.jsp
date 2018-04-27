@@ -33,7 +33,7 @@
 			<tbody>
 				<tr>
 			    	<th style="white-space:normal">
-			    		<span id="selectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">${keyword }-[<span style="color:#017BEC;">${userCount }명</span>]</span>
+			    		<span id="selectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;"><c:out value='${keyword }'/>-[<span style="color:#017BEC;"><c:out value='${userCount }'/><spring:message code='main.t20000'/></span>]</span>
 			    		<span style="float:right;">
                            <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_onlist.gif" class="icon_btn" id="txtlist"></span>
                            <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
@@ -70,13 +70,13 @@
 						<td style="width: 75%;">
 							<table class="organinfo">
 								<tr>
-									<td class="name" style="text-align: left;">${user.userName }</td>
+									<td class="name" style="text-align: left;"><c:out value='${user.userName }'/></td>
 								</tr>
 								<tr>
-									<td style="text-align: left;">${user.deptName }</td>
+									<td style="text-align: left;"><c:out value='${user.deptName }'/></td>
 								</tr>
 								<tr>
-									<td style="text-align: left;"><img class="icon" src="/images/OrganTree/icon_mail.gif">${user.mail }</td>
+									<td style="text-align: left;"><img class="icon" src="/images/OrganTree/icon_mail.gif"><c:out value='${user.mail }'/></td>
 								</tr>
 							</table>
 						</td>

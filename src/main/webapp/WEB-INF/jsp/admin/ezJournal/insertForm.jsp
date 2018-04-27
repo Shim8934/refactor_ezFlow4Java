@@ -289,7 +289,7 @@
 				<tr>                
 					<th style="width:100px; text-align:center"><spring:message code='ezJournal.t22'/></th>
                     <td style="width:50%;">
-                        <input type="text" id="tbFormName" name="tbFormName" value="${formName}" maxlength="50" style="width:100%">
+                        <input type="text" id="tbFormName" name="tbFormName" value="<c:out value='${formName}'/>" maxlength="50" style="width:100%">
                         <input type="text" id="tbFormID" name="tbFormID" style="display: none" readonly>
                     </td>
                     <th style="width:100px; text-align:center"><spring:message code='ezJournal.t12'/></th>
@@ -308,7 +308,7 @@
                 <tr>
                     <th style="width:100px; text-align:center"><spring:message code='ezJournal.t24'/></th>
                     <td style="width:40%;" colspan="3">
-                        <input type="text" id="tbDescript" name="tbDescript" value="${formInfo}" style="WIDTH: 100%" maxlength="50">
+                        <input type="text" id="tbDescript" name="tbDescript" value="<c:out value='${formInfo}'/>" style="WIDTH: 100%" maxlength="50">
                     </td>
                 </tr>
                 <tr>

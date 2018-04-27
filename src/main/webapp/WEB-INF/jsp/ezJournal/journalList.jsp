@@ -3,11 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<style>
-	#tblPageRayer .pagenavi span{
-		margin : 0px;
-	}
-</style>
 <script>
 	setTotalCount("${totalCount}");
 </script>
@@ -198,7 +193,7 @@
 <div id='runtime' style="color: #666; padding-top: 5px"></div>
 <c:choose>
 <c:when test="${paging.endPage>0 }">
-<div id="tblPageRayer" style="width:470px; margin:6px auto;">
+<div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
 	<div class="pagenavi">   
 		<c:choose>
 				<c:when test="${paging.currentPage gt 1}">   
@@ -248,7 +243,7 @@
 </div>
 </c:when>
 <c:otherwise>
-<div id="tblPageRayer" style="width:470px; margin:6px auto;">
+<div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
 	<div class="pagenavi">  
 		<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>
 		<span class="btnimg"><img src="/images/sub/btn_prev01.gif" width="16" height="16"></span>
