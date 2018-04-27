@@ -1,5 +1,5 @@
 var strLang1 = "사다리 게임";
-var strLang2 = "종류";
+var strLang2 = "種類";
 var strLang3 = "タイトル";
 var strLang4 = "作成者";
 var strLang5 = "作成日";

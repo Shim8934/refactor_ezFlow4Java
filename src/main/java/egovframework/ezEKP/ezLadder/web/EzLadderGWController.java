@@ -582,7 +582,7 @@ public class EzLadderGWController {
 				lineVO.setPic(ezOrganService.getPropertyValue(lineVO.getUserId(), "extensionAttribute2", lineVO.getTenant_id()));
 			}
 			for(LadderCommentVO commentVO : cmtlist) {
-				commentVO.setPic(ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id()));
+				commentVO.setPic("/admin/ezOrgan/getPersonalInfo.do?fileName=" + ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id()));
 			}
 			
 			

@@ -476,7 +476,7 @@
 				},
 				success: function(data) {
 					var cmt = data["myComment"];
-					var picsrc = !cmt["pic"] ? "/images/ezLadder/icon_defaultAttendant.png" : "/admin/ezOrgan/getPersonalInfo.do?fileName=" + cmt["pic"];
+					var picsrc = !cmt["pic"] ? "/images/ezLadder/icon_defaultAttendant.png" : cmt["pic"];
 					if(flag == "add") { 
 						// add
 						var html = '<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="' + cmt["id"] + '">';
