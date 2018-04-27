@@ -148,6 +148,10 @@
 				search_Set("1");
 			}
 			
+			function refreshView() {
+				search_Set(currentPage);
+			}
+			
 			function startSearch() {
 				var inputVal = document.getElementById("inputSearch").value;
 				
@@ -317,7 +321,7 @@
 		<div style="position: relative; height: 27px; margin-bottom: 10px;">
 			<div style="position: relative;">
 				<a id="btnSearch" class="webfolderBttn2" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123'/></span></a>
-				<a id="btnRefresh" class="webfolderBttn2" onClick="change();"><span><spring:message code='ezWebFolder.t139'/></span></a>
+				<a id="btnRefresh" class="webfolderBttn2" onClick="refreshView();"><span><spring:message code='ezWebFolder.t139'/></span></a>
 				<div id="searchPanel" style="z-index: 2000; position: fixed; height: auto; width: 500px; border: 1px solid #666666; background-color: #f2f2f2; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
 					<div style="margin: 10px;">
 						<table style="border-collapse: collapse; width: 100%;">

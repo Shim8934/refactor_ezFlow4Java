@@ -204,13 +204,8 @@
 				return returnValue;
 			}
 			
-			function refresh() {
-				startDateStr = "";
-				endDateStr   = "";
-				fileExtStr   = "";
-				fileNameStr  = "";
-				userNameStr  = "";
-				search_Set("1");
+			function refreshView() {
+				search_Set(currentPage);
 			}
 			
 		</script>
@@ -232,9 +227,9 @@
 		<div id="mainmenu2" style="position: relative;">
 			<ul>
 				<li id=""><a id="btnSearch"  style="margin-top: 3px;" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
-				<li id=""><a id="btnRefresh" style="margin-top: 3px;" onClick="change();"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
+				<li id=""><a id="btnRefresh" style="margin-top: 3px;" onClick="refreshView();"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 				<li id="">
-					<select style="height: 29px; border-radius: 3px; padding: 0px; width: 85px;" id="fileTypeSelect" onchange="refresh();">
+					<select style="height: 29px; border-radius: 3px; padding: 0px; width: 85px;" id="fileTypeSelect" onchange="change();">
 						<option value="1" selected><spring:message code='ezWebFolder.t191'/></option>
 						<option value="2"         ><spring:message code='ezWebFolder.t192'/></option>
 						<option value="3"         ><spring:message code='ezWebFolder.t193'/></option>
