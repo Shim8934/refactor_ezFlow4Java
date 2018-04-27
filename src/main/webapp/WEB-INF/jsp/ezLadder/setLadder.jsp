@@ -60,13 +60,7 @@
 					makeLadder();
 					return false;
 				});
-				/* $("#title").on("input", function() {
-					if($("#title").val() == "") {
-						$("#makeLad").attr("disabled", "disabled");
-					} else {
-						$("#makeLad").removeAttr("disabled");
-					}
-				}); */
+				
 				$("#ladderPreList")
 					.on("click", function() {
 						preLadderList();
@@ -379,11 +373,12 @@
 					} else {
 						$("#slider-range-min").slider("option", "value", lineCnt);
 					}
+					$("#amount").text($("#slider-range-min").slider("value"));
 				} else {
 					$("#slider-range-min").slider("option", "max", 0);
 					$("#slider-range-min").slider("option", "value", 0);
+					$("#amount").text(0);
 				}
-				$("#amount").text($("#slider-range-min").slider("value"));
 			}
 
 			/** 참여자 삭제 */
@@ -755,7 +750,7 @@
 			
 			/** 사다리 만들기 */
 			function makeLadder() {
-				if(!$("#title").val()) {
+				if(!$("#title").val().trim()) {
 					alert("<spring:message code='ezLadder.t019'/>");
 					return;
 				}
@@ -770,8 +765,6 @@
 						return;
 					}
 				}
-				
-				/* $("#makeLad").attr("disabled", "disabled"); */
 				
 				$("input[name='secretFlag']").val($("#ladderSecret .active").attr("_flag"));
 				$("input[name='type']").val(ladderType);
