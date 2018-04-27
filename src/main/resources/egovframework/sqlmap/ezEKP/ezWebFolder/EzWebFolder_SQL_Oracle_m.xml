@@ -864,29 +864,30 @@
 			AND TENANT_ID  = #tenantId#
 		</isEqual>
 		<isEqual property="folderFileType" compareValue="D">
-			DELETE S 
-			FROM TBL_WEBFOLDER_SHARE S
-			JOIN (
-				SELECT
-					 FOLDER_ID AS FOLDERFILE_ID,
-					 'D' AS FOLDERFILE_TYPE,
-					 TENANT_ID
-				FROM TBL_WEBFOLDER_FOLDER
-				WHERE FOLDER_PATH LIKE ('%|' || #folderFileId# || '|%')
-				UNION
-				SELECT
-					FILE_ID AS FOLDERFILE_ID,
-					'F' AS FOLDERFILE_TYPE,
-					TENANT_ID
-				FROM TBL_WEBFOLDER_FILE F
-				JOIN TBL_WEBFILDER_FOLDER D
-				ON F.FOLDER_ID = D.FOLDER_ID
-				AND F.TENANT_ID = D.TENANT_ID 
-				WHERE D.FOLDER_PATH LIKE ('%|' || #folderFileId# || '|%') ) DF
-			ON S.FOLDERFILE_ID = DF.FOLDER_ID
-			AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
-			AND S.TENANT_ID = DF.TENANT_ID
-			WHERE S.TENANT_ID = #tenantId#
+			DELETE FROM TBL_WEBFOLDER_SHARE S
+            WHERE EXISTS (
+                SELECT 1
+                FROM (
+                    SELECT
+                         FOLDER_ID AS FOLDERFILE_ID,
+                         'D' AS FOLDERFILE_TYPE,
+                         TENANT_ID
+                    FROM TBL_WEBFOLDER_FOLDER
+                    WHERE FOLDER_PATH LIKE ('%|' || #folderFileId# || '|%')
+                    UNION
+                    SELECT
+                        F.FILE_ID AS FOLDERFILE_ID,
+                        'F' AS FOLDERFILE_TYPE,
+                        F.TENANT_ID
+                    FROM TBL_WEBFOLDER_FILE F
+                    JOIN TBL_WEBFOLDER_FOLDER D
+                    ON F.FOLDER_ID = D.FOLDER_ID
+                    AND F.TENANT_ID = D.TENANT_ID 
+                    WHERE D.FOLDER_PATH LIKE ('%|' || #folderFileId# || '|%') ) DF
+                WHERE S.FOLDERFILE_ID = DF.FOLDERFILE_ID
+                AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
+                AND S.TENANT_ID = DF.TENANT_ID
+                AND S.TENANT_ID = #tenantId# )
 		</isEqual>
 	</delete>
 	
