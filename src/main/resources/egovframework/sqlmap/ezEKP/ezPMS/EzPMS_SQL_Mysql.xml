@@ -586,9 +586,11 @@
 			AND  
 				A.STATUS = #listProjectStatus# 
 			AND 
-				A.TENANT_ID = #tenantId#
+				A.TENANT_ID = #tenantId# 
 			ORDER BY 
-				#projectSort# DESC
+				$projectSort$
+			limit 
+				#startCount#, #listNumber# 
 		]]>
 	</select>
 	

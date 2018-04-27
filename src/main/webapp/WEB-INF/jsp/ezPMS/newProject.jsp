@@ -199,7 +199,7 @@ var headManagerId = null;
 		 }
 	 }
 	
-	data = {
+	var data = {
 			projectName : projectName,
 			weightInput : weightInput,
 			planStartDate : planStartDate,
@@ -219,15 +219,17 @@ var headManagerId = null;
 		contentType: "application/json; charset=UTF-8",
 		data :JSON.stringify(data),
 		success : function(result) {
-			sendNotiMail(result, projectName);
-			alert("새프로젝트가 추가되었습니다.");
-			
 			try { 
+				
+				sendNotiMail(result, projectName);
+				alert("새프로젝트가 추가되었습니다.");
 				parent.setProjectList(); 
-			} catch (e) {}
+				popupClose();
 			
-			windowRefresh();
-			popupClose();
+			} catch (e) {
+				alert("error 발생");
+				return;
+			}
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert("error");
@@ -288,7 +290,7 @@ var headManagerId = null;
 		 data : JSON.stringify(data),
 		 url : "/ezPMS/sendNotiMail.do",
 		 success : function() {
-			 
+			 console.log("sending mail works");
 		 }
 	 });
  }

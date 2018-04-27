@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezPMS.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -29,6 +31,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezJournal.vo.JournalPagination;
+import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -83,24 +87,14 @@ public class EzPMSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String deptId = userInfo.getDeptID();
-		String projectStatus = request.getParameter("status");
 		int tenantId = userInfo.getTenantId();
 		
 		String settingUrl = "/rest/ezPMS/users/" + userId + "/setting";
-		String url = "/rest/ezPMS/projects/userId/"+userId;
-		String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
 		
 		Map<String, Object> param = new HashMap<String, Object>();		
 		param.put("deptId", deptId);
 		param.put("nameType", "user");
 		param.put("tenantId", tenantId);
-		
-		//상태별 프로젝트 보기
-		if (projectStatus != null) {
-			param.put("status", projectStatus);
-		} else {
-			param.put("status", "P");
-		}
 		
 		JSONObject settingResult = commonUtil.getJsonFromRestApi(settingUrl, param, request, "get", null);
 		String settingStatus = settingResult.get("status").toString();
@@ -116,27 +110,66 @@ public class EzPMSController {
 			model.addAttribute("projectSort", listSetting.get("projectSort"));
 			model.addAttribute("listNumber", listSetting.get("listNumber"));
 			model.addAttribute("listProjectStatus", listSetting.get("listProjectStatus"));
-		
-			param.put("projectSort", listSetting.get("projectSort"));
-			param.put("listNumber", listSetting.get("listNumber"));
-			param.put("listProjectStatus", listSetting.get("listProjectStatus"));
 		}
 		
-		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
-		String status = result.get("status").toString();
-		
-		if (status.equals("ok")) {		
-			JSONArray projectList = (JSONArray) result.get("data");
-			model.addAttribute("projectList", projectList);
-			request.setAttribute("projectList", projectList);
-		}
+
+		String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
 		
 		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
-		String countStatus = result.get("status").toString();
+		String countStatus = countResult.get("status").toString();
 		
+		int projectListCount = 0;
 		if (countStatus.equals("ok")) {
 			JSONObject countJson = (JSONObject) countResult.get("data");
-			int projectListCount = 0;
+			
+			if (countJson.get("projectListCount").toString() != null) {
+				projectListCount = Integer.parseInt(countJson.get("projectListCount").toString());
+				model.addAttribute("projectListCount", projectListCount);
+			} 
+			
+			model.addAttribute("projectListCount", projectListCount);
+		}
+		LOGGER.debug("ezPMS projectList ended");
+		return "ezPMS/pmsProjectListMain";
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value = "/ezPMS/getProjectList.do")
+	public String getProjectList(@CookieValue("loginCookie") String loginCookie,@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String deptId = userInfo.getDeptID();
+		int tenantId = userInfo.getTenantId();
+		String viewType = param.get("viewType").toString();
+		int currentPage = (int) param.remove("currentPage");
+		int listNumber = Integer.parseInt(param.get("listNumber").toString());
+		String projectSort = param.get("projectSort").toString();
+		
+		if(projectSort == null || projectSort.equals("")) {
+			projectSort = "0";
+		}
+		
+		String url = "/rest/ezPMS/projects/userId/"+userId;
+		String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
+		
+		param.put("deptId", deptId);
+		param.put("nameType", "user");
+		param.put("tenantId", tenantId);
+		param.put("projectSort", projectSort);
+		
+		//현재 페이지
+		param.put("currentPage", currentPage);
+		//한 페이지에 보여질 개수
+		param.put("listNumber", listNumber);
+		
+		
+		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
+		String countStatus = countResult.get("status").toString();
+		
+		int projectListCount = 0;
+		if (countStatus.equals("ok")) {
+			JSONObject countJson = (JSONObject) countResult.get("data");
 			
 			if (countJson.get("projectListCount").toString() != null) {
 				projectListCount = Integer.parseInt(countJson.get("projectListCount").toString());
@@ -146,12 +179,28 @@ public class EzPMSController {
 			model.addAttribute("projectListCount", projectListCount);
 		}
 		
-		model.addAttribute("status", status);
+		System.out.println(projectSort + "  " + projectListCount + " " + currentPage + " " + listNumber);
 		
-		LOGGER.debug("ezPMS projectList ended");
-		return "ezPMS/pmsProjectListMain";
+		//프로젝트 총 개수
+		param.put("listCount", projectListCount);
+		
+		ProjectPagination paging = new ProjectPagination(projectListCount,listNumber, 10, currentPage);
+		model.addAttribute("paging", paging);
+		
+		param.put("startCount", paging.getStartCount());
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {		
+			JSONArray projectList = (JSONArray) result.get("data");
+			model.addAttribute("projectList", projectList);
+			model.addAttribute("viewType", viewType);
+			request.setAttribute("projectList", projectList);
+		}
+		
+		return "ezPMS/pmsProjectList";
 	}
-	
 	/**
 	 * 나의 업무 화면 호출 함수
 	 */
@@ -721,19 +770,23 @@ public class EzPMSController {
 				toArr[i] = toArrList.get(i);
 			}
 			
+			String subject = "";
+			String content = "";
+			
 			for (int i = 0; i < toArr.length; i++) {
-				String subject = "[" + projectName + "] 프로젝트 " + authName + "로 지정되었습니다."; 
+				subject = "[" + projectName + "] 프로젝트 " + authName + "로 지정되었습니다."; 
 				
-				String content = "<p>" + "[" + projectName + "] 프로젝트 " + authName + "로 지정되었습니다." + "</p>";
+				content = "<p>" + "[" + projectName + "] 프로젝트 " + authName + "로 지정되었습니다." + "</p>";
 				content += "<p></p>";
 				content += "<a href='#' target='' onclick='getProjectInfo(" + projectId + ");'>[" + projectName + "] 프로젝트로 이동</a>";
 				
-				InternetAddress from;
-				from = new InternetAddress(userInfo.getEmail());
-				from.setPersonal(userInfo.getDisplayName());
-				
-				ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, content, false);
 			}
+
+			InternetAddress from;
+			from = new InternetAddress(userInfo.getEmail());
+			from.setPersonal(userInfo.getDisplayName());
+			
+			ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, content, false);
 			
 			LOGGER.debug("getToArrMailList ended");
 			return toArr;

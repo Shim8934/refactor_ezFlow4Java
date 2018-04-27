@@ -63,12 +63,16 @@ public class EzPMSGWController {
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String status = request.getParameter("status");
 			String deptId = request.getParameter("deptId");
-
+			
 			//검색 및 환경설정 세팅
 			Map<String, Object> search = new HashMap<>();
 			search.put("projectSort", request.getParameter("projectSort"));
-			search.put("listNumber", request.getParameter("listNubmer"));
+			search.put("listNumber", request.getParameter("listNumber"));
 			search.put("listProjectStatus", request.getParameter("listProjectStatus"));
+			search.put("listCount", request.getParameter("listCount"));
+			search.put("currentpage", request.getParameter("currentpage"));
+			search.put("startCount", request.getParameter("startCount"));
+
 			
 			//프로젝트 리스트 가져오기
 			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, info.getOffSet(), lang);

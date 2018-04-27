@@ -11,7 +11,18 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
+<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
+<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
+<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+<!-- time picker-->
+<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+<script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script type="text/javascript">
 
 var viewType = "${viewType}";
@@ -22,6 +33,12 @@ var overdueColor = "${overdueColor}";
 var holdColor = "${holdColor}";
 var listNumber = "${listNumber}";
 var listProjectStatus = "${listProjectStatus}";
+var currentPage = 1;
+var orderNum; 
+var orderHow;
+var projectIdList = [];
+var CurrentHeight = document.documentElement.clientHeight - 110;
+var projectTotalCount = "${projectListCount}"
 
 function goToProjectDetails() {
 	window.open("/ezPMS/getProjectDetails.do", "right");
@@ -30,6 +47,19 @@ function goToProjectDetails() {
 function addNewProject(){ 
 	addProjectPopup(845, 555, "/ezPMS/newProject.do");
 }
+
+$(document).ready(function(){
+	$(window).resize(function() {
+		CurrentHeight = $(window).height()-110;
+		if (viewType == 0) {
+			document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
+		} else {
+			document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+			document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
+		}
+	});
+});
+
 
 function addProjectPopup(popUpW, popUpH, URL) {
     try {
@@ -46,6 +76,9 @@ function addProjectPopup(popUpW, popUpH, URL) {
 }
 
 $(function(){
+	
+	setProjectList();
+	
 	var projectList = new Array();
 	
 	<c:forEach items="${projectList}" var="project">
@@ -82,12 +115,13 @@ $(function(){
 	}
 	
 	if(viewType == 0) {
-		$("#memoStyleDiv").css("display", "");
-		$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
+		$("#listcountTR").css("display", "none");
 	} else {
-		$("#MailListRayer").css("display", "inline-block");
-		$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
+		$("#listcountTR").css("display", "");
 	}
+	
+	$("#listSort option[value='"+ projectSort +"']").attr("selected", true);
+	$("#listcount option[value='"+ listNumber +"']").attr("selected", true);
 });
 
 function MailOptionView(obj, flag) {
@@ -111,6 +145,7 @@ function MailOptionHidden() {
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
     document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
 }
+
 //레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
 function MailOptionHiddenOutside(e) {
 	var container = $('#layer_Viewpopup');
@@ -126,23 +161,23 @@ function changeMemoStyle() {
 	viewType = 0;
 	
 	changeMainSetting();
+	setProjectList();
 	
-	$("#MailListRayer").css("display", "none");
-	$("#memoStyleDiv").css("display", "");
 	$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
 	$("#boardStyle").attr("src", "/images/kr/cm/btn_bottomframe.gif");
-
+	$("#listcountTR").css("display", "none");
 }
 
 function changeBoardStyle() {
 	viewType = 1;
 	
 	changeMainSetting();
+	setProjectList();
 	
-	$("#memoStyleDiv").css("display", "none");
-	$("#MailListRayer").css("display", "");
 	$("#memoStyle").attr("src", "/images/kr/cm/btn_noframe.gif");
 	$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
+	$("#listcountTR").css("display", "");
+	
 }
 
 function changeMainSetting() {
@@ -175,6 +210,150 @@ function changeMainSetting() {
 function addFavorite(projectId) {
 	$("#"+projectId).find(".star").attr("src", "/images/ImgIcon/icon-flag.gif");
 }
+
+function ListCount(listCountNum) {
+	listNumber = listCountNum;
+	
+	changeMainSetting();
+	setProjectList();
+}
+
+function ChangeProjectSort(sortType) {
+	projectSort = sortType;
+	
+	changeMainSetting();
+	setProjectList();
+	
+}
+//페이지 번호에 의한 셋팅
+function goToPageByNum(page){
+	currentPage = page;
+	setProjectList();
+}
+
+
+//정렬에 의한 리스트 셋팅
+function setListOrder(elem){
+	
+	orderNum = $(elem).attr("order");
+	orderHow = $(elem).attr("sort");
+	
+	if(orderHow == null){
+		orderHow='asc';
+	} else if(orderHow == 'asc'){
+		orderHow='desc';
+	} else if(orderHow == 'desc'){
+		orderHow='asc';
+	}
+	
+	setProjectList();
+}
+
+function setInitOrder(){
+	
+	$("#BoardList_TH th").each(function () {
+	
+		if(orderNum == $(this).attr("order")) {
+			if(orderHow == 'asc'){
+				$(this).attr("sort","asc");
+				$(this).append(' <img src="/images/etc/view-sortdown.gif" align="absmiddle">');
+			} else if(orderHow == 'desc'){
+				$(this).attr("sort","desc");
+				$(this).append(' <img src="/images/etc/view-sortup.gif" align="absmiddle">');
+			}
+		}
+	});
+}
+
+function setProjectList() {
+	
+	var param = {
+		projectSort : projectSort,
+		viewType : viewType,
+		progressColor : progressColor,
+		completeColor : completeColor,
+		overdueColor  : overdueColor,
+		holdColor     : holdColor,
+		listNumber : listNumber,
+		listProjectStatus : listProjectStatus,
+		currentPage : currentPage,
+		projectTotalCount : projectTotalCount
+		//뒤에 검색부분이 들어갈 예정
+	}
+	
+	
+	$.ajax({
+		type : "post",
+		contentType : "application/json",
+		dataType : "html",
+		data : JSON.stringify(param),
+		url : "/ezPMS/getProjectList.do",
+		success : function(projectList) {
+			$("#prjectList").html(projectList);
+		}	
+	});
+}
+
+//tr선택시 - 메모지용
+function selectedMemoTR(elem){
+//		onPreview = false;
+	var parentElem = $(elem).parent().parent();
+	$(".projectList").removeClass("selectTR");
+	$(".projectList").find("input[type='checkbox']").removeProp("checked");
+	$(parentElem).addClass("selectTR");
+	$(parentElem).find("input[type='checkbox']").prop("checked","true");
+}
+
+//tr선택시 - 게시판용
+function selectedTR(elem){
+//		onPreview = false;
+	var parentElem = $(elem).parent();
+	$("#projectList tr").removeClass("selectTR");
+	$("#projectList tr").find("input[type='checkbox']").removeProp("checked");
+	$(parentElem).addClass("selectTR");
+	$(parentElem).find("input[type='checkbox']").prop("checked","true");
+}
+
+//체크박스 전체선택 혹은 해제
+function selectedAllTR(elem) {
+	if ($(elem).is(":checked")) {
+		 $('input:checkbox[name="boardCheckbox"]').each(function() {
+			 $(this).prop("checked","true");
+			 $(this).parent().parent().addClass("selectTR");
+		 });
+	} else {
+		 $('input:checkbox[name="boardCheckbox"]').each(function() {
+			 $(this).removeProp("checked","true");
+			 $(this).parent().parent().removeClass("selectTR");
+		 });
+	}
+}
+
+//게시판용
+function checkedCheckbox(elem) {
+	console.log(elem);
+	if ($(elem).is(":checked")) {
+		$(elem).prop("checked","true");
+		$(elem).parent().parent().addClass("selectTR");
+	} else {
+		$(elem).removeProp("checked");
+		$(elem).parent().parent().removeClass("selectTR");
+	}
+}
+
+//메모용
+function checkedCheckboxMemo(elem) {
+	console.log($(elem).is(":checked"));
+	console.log(elem);
+	if ($(elem).is(":checked")) {
+		$(elem).prop("checked","true");
+		$(elem).parent().parent().parent().parent().addClass("selectTR");
+	} else {
+		$(elem).removeProp("checked");
+		$(elem).parent().parent().parent().parent().removeClass("selectTR");
+	}
+}
+
 </script>
 <style type="text/css">
 .viewType {
@@ -240,6 +419,23 @@ function addFavorite(projectId) {
 	font-family : Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;
 	font-weight : bold;
 }
+
+#MailListRayer tr:not (.selectTR ):hover {
+	background-color: rgb(244, 245, 245);
+}
+
+#basicFormList td:not (.selectTD ):hover {
+	background-color: rgb(244, 245, 245);
+}
+
+.selectTR {
+	background-color: rgb(233, 241, 255);
+}
+
+.selectTD {
+	background-color: rgb(233, 241, 255);
+}
+
 </style>
 </head>
 <body class="mainbody">
@@ -263,7 +459,7 @@ function addFavorite(projectId) {
 		<li><span id="deleteProject" onclick="deleteProject()">삭제</span></li>
 		<li><span id="changeProjectStatus" onclick="changeProjectStatus()">프로젝트 상태 변경</span></li>
 		<li><span id="addFavorite" onclick="addFavorite()">즐겨찾기 추가</span></li>
-		<li><span id="searchProject" onclick="searchProject()">검색</span></li>
+		<li><span id="searchProject" onclick="showSearchDiv()">검색</span></li>
 		<li id="right">
 	        <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="memoStyle" onclick="changeMemoStyle()">
 	        <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="boardStyle" onclick="changeBoardStyle()">
@@ -283,13 +479,13 @@ function addFavorite(projectId) {
 		                    <tr>
 		                        <th>리스트 설정</th>
 		                        <td>
-		                            <select id="listSort" style="WIDTH: 82px; height: 20px;">
-		                                <option value="sortEndDate">완료일 순</option>
-		                                <option value="sortStartDate">시작일 순</option>
+		                            <select id="listSort" style="WIDTH: 82px; height: 20px;" onchange="ChangeProjectSort(this.value);">
+		                                <option value="0">완료일 순</option>
+		                                <option value="1">시작일 순</option>
 		                            </select>    
 		                        </td>
 		                    </tr>
-		                    <tr>
+		                    <tr id="listcountTR">
 		                        <th><spring:message code='ezBoard.t10021' /></th>
 		                        <td>
 		                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="ListCount(this.value);">
@@ -307,85 +503,15 @@ function addFavorite(projectId) {
 		        <div class="shadow">
 		        </div>
 		    </div>
-	<div id = "memoStyleDiv" style="height:80%; width:100%; overflow:auto; display:none;">
-		<c:forEach items="${projectList }" var="project" >
-			<table id="${project.projectId }" style="margin:10px 20px; float:left; position:relative; border:solid 1px gray; clear:none; width:360px; left:2%;">
+	<div id = "searchDiv" style="display:none">
+		<table class="content">
+			<tbody>
 				<tr>
-					<th colspan="2" style="height:30px; font-size:15px;"><input type="checkbox" style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer; float:left"><c:out value="${project.projectName }"/><img class="star" style="cursor:pointer; float:right;" draggable="false" src="/images/ImgIcon/view-flag.gif" onclick="addFavorite(${project.projectId })"></th>
 				</tr>
-				<tr>
-					<td colspan="2">&nbsp;&nbsp;<c:out value="${project.status }"/></td>
-				</tr>
-				<tr><td colspan="2" >&nbsp;</td></tr>
-				<tr>
-				
-					<td colspan="2" style="text-align:center; font-size:20px;" class="restDueday">D <c:choose><c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }"/></c:when>
-								<c:otherwise>+ <c:out value="${-project.restDueday }"/></c:otherwise></c:choose>  </td>
-				</tr>
-				<tr>
-					<td colspan="2" style="text-align:center">(<c:out value="${project.planStartDate }"/> ~ <c:out value="${project.planEndDate }"/>)</td>
-				</tr>
-				<tr><td colspan="2" >&nbsp;</td></tr>
-				<tr><td colspan="2" >&nbsp;</td></tr>
-				<tr>
-					<td class="memoTd">&nbsp;&nbsp;총괄 담당자</td>
-					<td><c:out value="${project.headManagerName }"/></td>
-				</tr>
-				<tr>
-					<td class="memoTd">&nbsp;&nbsp;전체 진행률</td>
-					<td><div name="${project.projectId }" style="margin-right:2px;"></div>&nbsp;<div style="margin-top:5px; display:inline-block;"><c:out value="${project.progress }"/></div></td>
-					
-				</tr>
-				<tr>
-					<td class="memoTd">&nbsp;&nbsp;완료된 업무</td>
-					<td><div complete="${project.projectId }" style="margin-right:2px;"></div>&nbsp;<div style="margin-top:5px; display:inline-block;"><c:out value="${project.progress }"/></div></td>
-				</tr>
-				<tr>
-					<td class="memoTd">&nbsp;&nbsp;지연된 업무</td>
-					<td><div overdue="${project.projectId }" style="margin-right:2px;"></div>&nbsp;<div style="margin-top:5px; display:inline-block;"><c:out value="${project.progress }"/></div></td>
-				</tr>
-			</table>
-		</c:forEach>
+			</tbody>
+		</table>
 	</div>
-	
-	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block; height: 737px; width: 100%;">
-	<div style="width:100%; overflow:auto;" id="divList">
-	<div id="lvBoardList">
-	<table id="boardList" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" rowondblclick="ItemRead_onclick(this)" width="100%" border="0" class="mainlist" style="min-width: 569px;">
-		<thead id="BoardList_THEAD">
-		<tr id="BoardList_TH">
-			<th style="width: 50px; text-align:center"><input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
-			<th style="width: 20%">프로젝트명</th>
-			<th>총괄 담당자</th>
-			<th style="width: 10%; text-align:center">전체 진행률</th>
-			<th style="width: 10%; text-align:center">완료된 업무</th>
-			<th style="width: 10%; text-align:center">기한 지난 업무</th>
-			<th>남은 기간</th>
-			<th style="width:20%;">프로젝트 기간</th>
-			<th>상태</th>
-		</tr>
-		</thead>
-		<tbody style="background-color: rgb(255, 255, 255);">
-		<c:forEach items="${projectList }" var="project" >
-				<tr>
-					<td style="width: 50px; cursor: default; text-align:center"><input type="checkbox" style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;"></td>
-					<td style="width: 20%; text-align:left;"><c:out value="${project.projectName }"/></td>
-					<td><c:out value="${project.headManagerName }"/></td>
-					<td style="width: 10%"><div name="${project.projectId }" style="margin-right:2px;"></div>&nbsp;<div style="margin-top:5px; display:inline-block;"><c:out value="${project.progress }"/></div></td>
-					<td style="width: 10%"><div complete="${project.projectId }" style="margin-right:2px;"></div>&nbsp;<div style="margin-top:5px; display:inline-block;"><c:out value="${project.progress }"/></div></td>
-					<td style="width: 10%"><div overdue="${project.projectId }" style="margin-right:2px;"></div>&nbsp;<div style="margin-top:5px; display:inline-block;"><c:out value="${project.progress }"/></div></td>
-					<td style="text-align:center;">D <c:choose><c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }"/></c:when>
-								<c:otherwise>+ <c:out value="${-project.restDueday }"/></c:otherwise></c:choose>  </td>
-					<td style="width:20%"><c:out value="${project.planStartDate }"/> ~ <c:out value="${project.planEndDate }"/></td>
-					<td><div style="width:40px; background-color:rgb(224, 224, 224); margin-left:10px;"><c:out value="${project.status }"/></div></td>
-				</tr>
-			</c:forEach>
-		</tbody>
-			
-			</table>
-		</div>
-		</div>
-	</span>
+	<div id = "prjectList"></div>
 	<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
 		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>

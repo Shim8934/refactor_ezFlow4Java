@@ -61,15 +61,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("lang", lang);
 		map.put("deptId", deptId);
 		
+		System.out.println(search.get("projectSort"));
 		if (search.get("projectSort").equals("1")) {
-			map.put("projectSort", search.get("PLAN_START_DATE"));
+			map.put("projectSort", "PLAN_START_DATE");
 		} else {
-			map.put("projectSort", search.get("PLAN_END_DATE"));
+			map.put("projectSort", "PLAN_END_DATE");
 		}
 		
-		map.put("listNumber", search.get("listNumber"));
-		map.put("listProjectStatus", search.get("listProjectStatus"));
+		search.remove("projectSort");
 		
+		map.putAll(search);
+		
+		System.out.println(map.get("projectSort"));
 		List<ProjectInfoVO> projectList = ezPMSDAO.getProjectList(map);
 		
 		try{

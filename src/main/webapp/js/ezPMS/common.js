@@ -62,3 +62,7 @@ function replaceString(p_str) {
 function popupClose() {
 	parent.DivPopUpHidden();
 }
+ 
+function showSearchDiv() {
+	$("#searchDiv").slideToggle();
+}
