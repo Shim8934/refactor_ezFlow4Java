@@ -8132,11 +8132,11 @@ CREATE TABLE `tbl_vote_comment` (
   `USER_ID` varchar(50) NOT NULL,
   `USER_NAME1` varchar(120) NOT NULL,
   `USER_NAME2` varchar(120) NOT NULL,
-  `TEXT_CONTENT` varchar(500) NOT NULL DEFAULT '',
-  `IMAGE_TYPE` varchar(50) NOT NULL DEFAULT '',
-  `FILE_TYPE` varchar(250) NOT NULL DEFAULT '',
-  `FILE_NAME` varchar(250) NOT NULL DEFAULT '',
-  `FILE_PATH` varchar(250) NOT NULL DEFAULT '',
+  `TEXT_CONTENT` varchar(500) DEFAULT '',
+  `IMAGE_TYPE` varchar(50) DEFAULT '',
+  `FILE_TYPE` varchar(250) DEFAULT '',
+  `FILE_NAME` varchar(250) DEFAULT '',
+  `FILE_PATH` varchar(250) DEFAULT '',
   `CMT_TIME` varchar(50) NOT NULL,
   PRIMARY KEY (`ID`,`QST_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -8812,4 +8812,3 @@ CREATE TABLE `tbl_journal_view` (
   KEY `FK_tbl_journal_view_journal_id_tbl_journal_journal_id` (`journal_id`),
   CONSTRAINT `FK_tbl_journal_view_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지조회';
-

@@ -239,7 +239,7 @@
 	    var pUserList = new ListView();
 	    pUserList.LoadFromID("lvUserList");
     	var selectUserId = pUserList.GetSelectedRows()[0].getAttribute("DATA2");
-    	var selectUserName = pUserList.GetSelectedRows()[0].getAttribute("DATA4");
+    	var selectUserName = pUserList.GetSelectedRows()[0].getElementsByTagName("td")[0].childNodes[0].nodeValue;
     	$.ajax({
         	type : "POST",
         	dataType : "json",
@@ -247,8 +247,10 @@
         	async : false,
         	data : {userId : selectUserId, typeId : $("#attitudeType").val(), year : $("#selyear").val() },
         	success : function(result){
-        		event_getAttitudeStatistics(result);
-        		chartTable(result, selectUserName);
+        		company_typeList(result.companyId);
+        		
+        		event_getAttitudeStatistics(result.list);
+        		chartTable(result.list, selectUserName);
         	},
         	error : function(error){
         		
@@ -277,6 +279,10 @@
                 $("#nodata").css({"display":""});
             	$("#viewdata").css({"display":"none"});
             	return;
+            } else {
+                $("#seluser").css({"display":"none"});
+                $("#nodata").css({"display":""});
+                $("#viewdata").css({"display":"none"});
             }
         } else {
             $("#seluser").css({"display":"none"});
@@ -357,15 +363,15 @@
 
     //엑셀내려받기 버튼 클릭시
     function btnexportexcel_onclick() {
-//         document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
+        document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
         
-//         if (document.getElementById("saveExcelData").value == "") {
-//         	alert("<spring:message code='ezStatistics.t1019' />");
-//         	return ;
-//         }
+        if (document.getElementById("saveExcelData").value == "") {
+        	alert("<spring:message code='ezStatistics.t1019' />");
+        	return ;
+        }
         
-//         document.getElementById("formAgent").target = "saveExcel";
-//         document.getElementById("formAgent").submit();
+        document.getElementById("formAgent").target = "saveExcel";
+        document.getElementById("formAgent").submit();
     }
 
     //검색
@@ -530,7 +536,7 @@
                     }
                     var pUserList = new ListView();
                     pUserList.SetID("lvUserList");
-                    pUserList.SetRowOnClick("getmailstatistics");
+                    pUserList.SetRowOnClick("getAttitudeStatistics");
                     pUserList.SetSelectFlag(false);
                     pUserList.SetHeightFree(true);
                     pUserList.DataSource(headerData);

@@ -1837,28 +1837,29 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 통계 [GET] 개인 근태 유형별 통계 -----임시
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getAttitudeUserCount(@PathVariable String userId, @PathVariable String attitudetypeId, HttpServletRequest request) {
+	@RequestMapping(value = "/rest/ezattitude/users/{selectUserId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getAttitudeUserCount(@PathVariable String selectUserId, @PathVariable String attitudetypeId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] started.");
 		
 		JSONObject result = new JSONObject();
 		try{
 			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
 			String offset = request.getParameter("offset");
 			String year = request.getParameter("year");
 			String deptId = "";
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			MCommonVO selectUserInfo = mOptionService.commonInfoWeb(serverName, selectUserId);
 			
-//			String startDate = startDate + " 00:00:00";
-//			String endDate = endDate + " 23:59:59";
+			List<AttitudeStatisVO> resultList = ezAttitudeService.getAttitudeUserStatistics(selectUserId, deptId, offset, year, attitudetypeId, info.getTenantId());
 			
-//			List<AttitudeStatisVO> resultList = ezAttitudeService.getAttitudeUserStatistics(userId, offset, startDate, endDate, info.getTenantId());
-			List<AttitudeStatisVO> resultList = ezAttitudeService.getAttitudeUserStatistics(userId, deptId, offset, year, attitudetypeId, info.getTenantId());
-			
+			JSONObject data = new JSONObject();
+			data.put("list", resultList);
+			data.put("companyId", selectUserInfo.getCompanyId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", resultList);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

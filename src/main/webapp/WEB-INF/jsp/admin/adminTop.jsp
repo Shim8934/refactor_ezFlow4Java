@@ -76,9 +76,10 @@
 	                case "menu18":
 	                    parent.frames["bottom"].location.href = "/admin/ezSystem/systemMain.do";
 	                    break;
-	                case "menu19":
-	                    parent.frames["bottom"].location.href = "/admin/ezJournal/journalMain.do";
-	                    break;
+// 	                   업무일지
+// 	                case "menu19":
+// 	                    parent.frames["bottom"].location.href = "/admin/ezJournal/journalMain.do";
+// 	                    break;
 				    case "menu20":
 				        parent.frames["bottom"].location.href = "/myoffice/ezStatistics/ezLog/index_Log.aspx";
 				        break;

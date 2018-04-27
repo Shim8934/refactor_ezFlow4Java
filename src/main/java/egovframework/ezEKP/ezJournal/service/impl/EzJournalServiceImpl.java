@@ -5,9 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -39,7 +39,6 @@ import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-
 
 @Service("ezJournalService")
 public class EzJournalServiceImpl implements EzJournalService {
@@ -162,7 +161,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("companyId", jsonParam.get("companyId"));
 		map.put("tenantId", jsonParam.get("tenantId"));
 		
-		logger.debug("insertForm map" + map);
+//		logger.debug("insertForm map" + map);
 		
 		String tenantId = jsonParam.get("tenantId").toString();
 		String formId = ezJournalDAO.insertForm(map) + "";
@@ -261,13 +260,14 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 	
 	@Override
-	public List<JournalAuthorVO> getDeptUserList(int tenantId, String key ,String value, String lang) throws Exception{
+	public List<JournalAuthorVO> getDeptUserList(int tenantId, String key ,String value, String companyId, String lang) throws Exception{
 		logger.debug("getDeptUserList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
 		param.put("key", key);
 		param.put("value", value);
+		param.put("companyId", companyId);
 		param.put("lang", lang);
 		List<JournalAuthorVO> userList = ezJournalDAO.getDeptUserList(param);
 		
@@ -310,11 +310,11 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("companyId", jsonParam.get("companyId"));
 		map.put("tenantId", jsonParam.get("tenantId"));
 		
-		logger.debug("updateForm map" + map);
+//		logger.debug("updateForm map" + map);
 		String tenantId = jsonParam.get("tenantId").toString();
 		String isDeptChanged = (String) jsonParam.get("isDeptChanged");
 		
-		logger.debug("isDeptChanged : " + isDeptChanged);
+//		logger.debug("isDeptChanged : " + isDeptChanged);
 		ezJournalDAO.updateJournalForm(map);
 		
 		if (isDeptChanged.equals("Y")) {
@@ -363,7 +363,22 @@ public class EzJournalServiceImpl implements EzJournalService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", jsonParam.get("userId"));
 		map.put("tenantId", jsonParam.get("tenantId"));
-		ezJournalDAO.deleteAuthDept(map);
+		if (jsonParam.get("admin").equals("Y")){
+			ezJournalDAO.deleteAuthDept(map);
+		} else {
+			List<DeptViewVO> cheifDeptList = ezJournalDAO.selectCheifBossList(map);
+			List<DeptViewVO> addCheifDeptList = new ArrayList<DeptViewVO>();
+			
+			for (DeptViewVO deptViewVO : cheifDeptList) {
+				map.put("deptId", deptViewVO.getId());
+				addCheifDeptList.addAll(ezJournalDAO.selectCheifBoss(map));
+			}
+			cheifDeptList.addAll(addCheifDeptList);
+			for (DeptViewVO deptViewVO : cheifDeptList) {
+				map.put("deptId", deptViewVO.getId());
+				ezJournalDAO.deleteAuthDeptOne(map);
+			}
+		}
 		Gson gson = new Gson();
 		
 		List<String> deptList = gson.fromJson(jsonParam.get("depts").toString(), new TypeToken<List<String>>(){}.getType());
@@ -405,11 +420,11 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("favoriteName", jsonParam.get("favoriteName"));
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
-		logger.debug("saveFavorite map" + map);
+//		logger.debug("saveFavorite map" + map);
 		
 		String tenantId = jsonParam.get("tenantId").toString();
 		
-		logger.debug((String)jsonParam.get("receiverList"));
+//		logger.debug((String)jsonParam.get("receiverList"));
 		
 //		List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
 		Gson gson = new Gson();
@@ -485,17 +500,17 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("favoriteName", jsonParam.get("favoriteName"));
 		map.put("favoriteId", favoriteId);
 		
-		logger.debug("modifyFavorite map" + map);
+//		logger.debug("modifyFavorite map" + map);
 		
 		String tenantId = jsonParam.get("tenantId").toString();
 		
-		logger.debug((String)jsonParam.get("receiverList"));
+//		logger.debug((String)jsonParam.get("receiverList"));
 		
 	//	List<Map<String, Object>> receivers = JsonUtil.JsonToList((String) jsonParam.get("receiverList")); 
 		Gson gson = new Gson();
 		List<Map<String, Object>> receivers = gson.fromJson(jsonParam.get("receiverList").toString(), new TypeToken<List<Map<String, Object>>>(){}.getType());
 		
-		logger.debug("receivers : " + receivers);
+//		logger.debug("receivers : " + receivers);
 		if (receivers != null) {
 			ezJournalDAO.deleteFavoriteUser(map);
 			ezJournalDAO.updateFavoriteName(map);
@@ -596,7 +611,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		logger.debug("getJournalFormContent map : " + map);
+//		logger.debug("getJournalFormContent map : " + map);
 		
 		String lastFormId = ezJournalDAO.getJournalLastFormId(map);
 		
@@ -672,7 +687,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		String journalId = ezJournalDAO.insertJournal(map) + "";
 		
 		String fileList = jsonParam.get("fileList").toString();
-		logger.debug("fileList정보 : " + fileList.toString());
+//		logger.debug("fileList정보 : " + fileList.toString());
 	
 		// 첨부파일 저장
 		Map<String, Object> attachMap = new HashMap<String, Object>();
@@ -717,7 +732,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", uploadFilePath);
 				
-				logger.debug("uploadFilePath : " + uploadFilePath);
+//				logger.debug("uploadFilePath : " + uploadFilePath);
 				
 				ezJournalDAO.insertJournalAttach(attachMap);
 			
@@ -748,7 +763,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		String receiverIDs = jsonParam.get("receiverIDs").toString();
 //		String receiverList = jsonParam.get("receiverList").toString();
 		
-		logger.debug("receiverIDs : " + receiverIDs);
+//		logger.debug("receiverIDs : " + receiverIDs);
 		
 		if (receiverIDs != null && !receiverIDs.equals("")) {
 			
@@ -816,10 +831,11 @@ public class EzJournalServiceImpl implements EzJournalService {
 		String journalIdS = "";
 		
 		for (int i = 0; i < journalIdList.size(); i++) {
-			if(i==0){
+			
+			if (i == 0){
 				journalIdS = journalIdList.get(i);
 			} else {
-				journalIdS += ","+journalIdList.get(i);
+				journalIdS += "," + journalIdList.get(i);
 			}
 		}
 		param.put("journalIdS", journalIdS);
@@ -831,10 +847,15 @@ public class EzJournalServiceImpl implements EzJournalService {
 			String thisContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").html();
 			String nextContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("nextJournal").html();
 			
-			formThisHtml.append("<p> - " + journal.getJournalTitle().trim() + " - </p>");
+			// #146bb8 rgb(0, 144, 208)
+//			formThisHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");
+//			formThisHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
+			formThisHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + journal.getJournalTitle().trim() + "</span></p>");
 			formThisHtml.append(thisContent.trim() + "<p></p><p></p>");
 			
-			formNextHtml.append("<p> - " + journal.getJournalTitle().trim() + " - </p>");   
+//			formNextHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");   
+//			formNextHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
+			formNextHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + journal.getJournalTitle().trim() + "</span></p>");
 			formNextHtml.append(nextContent.trim() + "<p></p><p></p>");
 		}
 		
@@ -944,7 +965,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		ezJournalDAO.deleteReceiver(map);
 		
 		String receiverIDs = jsonParam.get("receiverIDs").toString();
-		logger.debug("receiverIDs : " + receiverIDs);
+//		logger.debug("receiverIDs : " + receiverIDs);
 
 		if (receiverIDs != null && !receiverIDs.equals("")) {
 			
@@ -1114,7 +1135,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("tenantId", tenantId);
 		
 		String viewerCount = ezJournalDAO.getViewerCount(map);
-		logger.debug("조회자몇명 ? : " + viewerCount);
+//		logger.debug("조회자몇명 ? : " + viewerCount);
 		logger.debug("getJournalViewerCount ended.");
 		return viewerCount;
 	}
@@ -1128,7 +1149,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("tenantId", tenantId);
 		
 		String viewerCount = ezJournalDAO.getReceiverCount(map);
-		logger.debug("수신자몇명 ? : " + viewerCount);
+//		logger.debug("수신자몇명 ? : " + viewerCount);
 		logger.debug("getReceiverCount ended.");
 		return viewerCount;
 	}
@@ -1164,6 +1185,27 @@ public class EzJournalServiceImpl implements EzJournalService {
 		
 		logger.debug("checkJournalAuth ended");
 		return ezJournalDAO.checkJournalAuth(param);
+	}
+
+	@Override
+	public List<DeptViewVO> getCheifBoss(String userId, int tenantId) throws Exception {
+		logger.debug("getCheifBoss started");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("userId", userId);
+		
+		List<DeptViewVO> cheifDeptList = ezJournalDAO.selectCheifBossList(param);
+		List<DeptViewVO> addCheifDeptList = new ArrayList<DeptViewVO>();
+		
+		for (DeptViewVO deptViewVO : cheifDeptList) {
+			param.put("deptId", deptViewVO.getId());
+			addCheifDeptList.addAll(ezJournalDAO.selectCheifBoss(param));
+		}
+		cheifDeptList.addAll(addCheifDeptList);
+		
+		logger.debug("getCheifBoss ended");
+		return cheifDeptList;
 	}
 	
 }

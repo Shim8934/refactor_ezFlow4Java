@@ -209,6 +209,11 @@
 			            PagingHTML += strtext;
 			        }
 			    }
+		        
+		        if (MaxNum == 0) {
+		        	PagingHTML += "<span class='on'>" + 1 + "</span>";
+		        }
+		        
 			    if (totalPage > BlockSize) {
 			        if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 			            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezTask.t998' />" + "</span>";
@@ -400,14 +405,16 @@
 	
 			            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
 				        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
-				            tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='float:left; max-width: 500px; overflow: hidden; text-overflow: ellipsis; display: block;'>" + SelectSingleNodeValue(node, "TITLE") + "</div>" + "<div style='display: block;'><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></div>";
+				           // tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='float:left; max-width: 500px; overflow: hidden; text-overflow: ellipsis; display: block;'>" + SelectSingleNodeValue(node, "TITLE") + "</div>" + "<div style='display: block;'><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></div>"; 
+				            tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; width: 100%;'>" + SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;[" + commentCount + "]</font></div>";
 				            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")) + " [" + commentCount + "]");
 				        } else {
-				        	tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
+				        	// tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
+				        	tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; width: 100%;'>" + SelectSingleNodeValue(node, "TITLE") + "</div>";
 				            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")));
 	
-				            tr.cells[4].style.overflow = "hidden";
-				            tr.cells[4].style.textOverflow = "ellipsis";
+				            //tr.cells[4].style.overflow = "hidden";
+				            //tr.cells[4].style.textOverflow = "ellipsis";
 				        }
 	
 				        if (useTodoMemo == "YES") {
@@ -473,19 +480,19 @@
 					        }
 					        
 	
-					        if (useTodoMemo == 'YES') {
+					        /* if (useTodoMemo == 'YES') {
 								if ($("#titleid" + i + "").outerWidth() > 900) {
 									$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
 								} else {
-							        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
-								}
+							        //$("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
+								} 
 					        } else {
 								if ($("#titleid" + i + "").outerWidth() > 1000) {
 									$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
 								} else {
-							        $("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
-								}
-					        }
+							        //$("#titleid" + i + "").css("width", $("#titleid" + i + "").outerWidth());
+								} 
+					        } */
 	
 							if (taskstatus == '4' && completerate == '0') {
 								$(".bar[taskid=taskProgressBar" + i + "]").find(".percentCount").css("color", delayColor);
@@ -973,14 +980,20 @@
 						<col style ="width:20px;">
 						<col style ="width:100px;">
 						<c:if test="${useTodoMemo == 'YES'}">
-							<col >
+							<col style = "width:100%;">
+							<col style ="width:30px;">
+							<col style ="width:30%;">
+							<%-- <col >
 							<col style ="width:50px;">
-							<col style ="width:140px;">
+							<col style ="width:140px;"> --%>
 						</c:if>
 						<c:if test="${useTodoMemo == 'NO'}">
-							<col >
+							<col style = "width:100%;">
+							<col style = "width:30px;">
+							<col style = "width:30%;">
+							<%-- <col >
 							<col style ="width:50px;">
-							<col style ="width:30px;">
+							<col style ="width:30px;"> --%>
 						</c:if>
 		                <col style ="width:100px;">
 						<col style ="width:130px;" id="col_progress">

@@ -62,6 +62,7 @@
 				preProcessing();				
 				makePageSelPage();
 				getConnect();
+				paginationProcess();
 				creatorResultAlert();
 			}		
 			
@@ -266,6 +267,7 @@
 		    		url : "/ezPoll/checkPoll.do",
 		    		data : {
 		    			qstId : pReceve
+		    			
 		    		},
 		    		success: function(data) {		    			
 						var result = JSON.parse(data).result;					
@@ -442,6 +444,16 @@
 		    	if(resultFirst === "2"){
 			    	alert("<spring:message code = 'ezPoll.hdp08'/>");
 		    	}
+		    }
+		    
+		    //목록 버튼 눌렀을 때, 해당 필터와 페이지로 보여주기 위함.
+		    function paginationProcess(){
+		    	var pollType = ${pollType};
+				var gotoList = ${gotoList};
+				if(gotoList === 1){
+					pollType = pollType == 0 ? 1 : pollType;
+					document.querySelector("input[value='"+ pollType +"']").checked = true;
+				}
 		    }
 		    
 		</script>

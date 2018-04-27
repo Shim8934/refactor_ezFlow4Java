@@ -31,6 +31,9 @@
 	   		var updateUserId;
 	   		//선택된 유저으,ㅣ부서
 	   		var userDeptId;
+	   		//회사 아이디
+	   		var companyId;
+	   		var userAddIds = [];
 	   	
 	   		function close_Click(){
 	   			window.close();
@@ -62,7 +65,7 @@
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key":key, "value":value,"deptName":deptName},
+	   				data:{"key":key, "value":value, "deptName":deptName, "companyId":companyId},
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
 	   					if(picList.length==0 && key!="DEPARTMENT"){
@@ -91,13 +94,23 @@
 	   					var deptList = $("#authorDeptList tr");
 	   					if(deptList.length==1){
 	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezApprovalG.t431"/></td></tr>');
+		   					$("#authorDeptList tr").each(function(){
+		   						if($(this).attr("mine")=='Y'){
+		   							userDeptId=$(this).attr("targetId");
+		   						} 
+		   						if($(this).attr("mine")=='A'){
+		   							userAddIds.push($(this).attr("targetId"));
+		   						} 
+		   					})
 	   					} else {
 		   					$("#authorDeptList tr").each(function(){
-		   						if($(this).attr("mine")!='Y'){
+		   						if($(this).attr("mine")=='Y'){
+		   							userDeptId=$(this).attr("targetId");
+		   						} else if($(this).attr("mine")=='A'){
+		   							userAddIds.push($(this).attr("targetId"));
+		   						} else {
 			   						lpDepts.push($(this).attr("targetId"));
 			   						lpDeptNames.push($(this).find("td").text());
-		   						} else {
-		   							userDeptId=$(this).attr("targetId");
 		   						}
 		   					})
 	   					}
@@ -125,6 +138,11 @@
 // 		   			opener.deptNames = lpDeptNames;
 		   			opener.setDeptName(JSON.stringify(lpDepts), JSON.stringify(lpDeptNames));
 		   			opener.userDeptId = userDeptId;
+		   			if (userAddIds.length > 0) {
+			   			opener.userAddIds = JSON.stringify(userAddIds);
+					} else {
+						opener.userAddIds.length = 0;
+					}
 					window.close();
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
@@ -132,6 +150,7 @@
 	   		}
 	   		
 	   		$(document).ready(function(){
+	   			companyId = opener.companyId;
 	   			treeContent = ${deptList};
 		   		setDeptList();
    			});

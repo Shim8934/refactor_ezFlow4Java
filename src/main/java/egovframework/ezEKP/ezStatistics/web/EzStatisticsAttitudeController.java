@@ -282,7 +282,7 @@ public class EzStatisticsAttitudeController {
 	 */
 	@RequestMapping(value="/ezStatistics/getAttitudeUser.do")
 	@ResponseBody
-	public JSONArray getAttitudeUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public JSONObject getAttitudeUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -316,12 +316,21 @@ public class EzStatisticsAttitudeController {
 				
 		String status = resultBody.get("status").toString();
 		
+		JSONObject resultJson = new JSONObject();
 		JSONArray list = new JSONArray();
+		JSONObject data = new JSONObject();
+		String companyId = "";
 		if (status.equals("ok")) {		
-			list = (JSONArray) resultBody.get("data");
+			data = (JSONObject) resultBody.get("data");
+			
+			list = (JSONArray) data.get("list");
+			companyId = (String) data.get("companyId");
+			
+			resultJson.put("list", list);
+			resultJson.put("companyId", companyId);
 		}
 		
-		return list;
+		return resultJson;
 	}
 	/**
 	 * 부서별 통계 현황 데이터 반환 함수
