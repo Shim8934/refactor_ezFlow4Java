@@ -42,6 +42,11 @@
 	            }
 	            catch (e)
 	            { }
+	    	if( moveCopyType == "move") {
+	    		$('#topMenu').text("폴더 이동");
+	    	}else  {
+	    		$('#topMenu').text("폴더 복사");
+	    	}
 	    	
 	    	
 		});	
@@ -180,7 +185,7 @@
 </head>
 <body class="popup">
 	<div id="menu">
-		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t120'/></div>
+		<h1 id ="topMenu"><spring:message code='ezWebFolder.t120'/></h1>
 	</div>
 	<div id="close">
 		<ul>

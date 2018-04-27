@@ -72,7 +72,7 @@
 </head>
 <body class="popup"> 
 	<div id="menu">
-		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t117'/></div>
+		<h1 id ="topMenu"><spring:message code='ezWebFolder.t117'/></h1>
 	</div>
 	<div id="close">
 		<ul>

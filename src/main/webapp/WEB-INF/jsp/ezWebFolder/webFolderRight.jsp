@@ -10,7 +10,6 @@
 	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>	
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
@@ -21,6 +20,7 @@
 	<script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/popup.js"                       ></script>
     <script type="text/javascript">
     	
     	var file 		 = new Array();
@@ -426,17 +426,20 @@
             $('#Edatepicker').val(searchRequirement.endDate);
 	    
 	        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
-        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"left\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
-        	
+        	$("<div id='blockLeft' class='blockLeft' style='width:100%; height:100%; display: none; z-index: 10;overflow:hidden;' onclick='parent.frames[\"left\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        openLeftPanel();
+	        
         	var popupX = parent.document.body.clientWidth / 2 - (500 / 2) - 220;
         	
         	$("#srarchpopup").css("left", popupX);
         	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
         	
         	$("#srarchpopup").modal();
+        	
 	    }
 		
 	    function searchOptionHidden() {
+ 	    	closeLeftPanel();
 	    	$.modal.close();
 	    }
    	   
@@ -513,6 +516,7 @@
 					if (result != "ok") {
 						alert(messages.strLang13);
 					} else {
+						openLeftPanel();
 						DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
 					}
 					
@@ -557,6 +561,7 @@
 					if (result != "ok") {
 						alert(messages.strLang13);
 					} else {
+						openLeftPanel();
 						DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 					}
 				},
@@ -577,7 +582,7 @@
 				alert(messages.strLang1);
 				return;
 			}
-			
+			openLeftPanel();
 			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString());
 		}
 		
@@ -657,6 +662,23 @@
 			
 			var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
 			AttachDownFrame.location.href = downloadUrl;
+		}
+		
+		function openLeftPanel() {
+			var leftFrame = window.parent.frames["left"].document;
+			var blockLeft = leftFrame.getElementById("blockLeft");
+			var height    = Math.max(leftFrame.documentElement.clientHeight, leftFrame.documentElement.scrollHeight);
+			leftFrame.body.style.overflow = "hidden";
+			blockLeft.style.height        = height + "px";
+			blockLeft.style.display       = "";
+		}
+
+		function closeLeftPanel() {
+			var leftFrame = window.parent.frames["left"].document;
+			var blockLeft = leftFrame.getElementById("blockLeft");
+			leftFrame.body.style.overflow = "auto";
+			blockLeft.style.height        = "100%";
+			blockLeft.style.display       = "none";
 		}
     </script>
 </head>

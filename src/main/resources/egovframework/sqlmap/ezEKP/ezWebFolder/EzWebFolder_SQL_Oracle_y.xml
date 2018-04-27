@@ -62,7 +62,7 @@
         <result property="favouriteStatus"      column="FAVORITE_STATUS"  		columnIndex="19"/>
         <result property="fileShareStatus"      column="FILESHARE_STATUS"		columnIndex="20"/>
         <result property="folderSort"      		column="FOLDER_SORT"			columnIndex="21"/>
-        <result property="fileTypeName"         column="FILETYPE_NAME"          columnIndex="22" />
+        <result property="fileTypeName"         column="TYPE_NAME"          columnIndex="22" />
 <!--         <result property="fileTypeId"           column="filetype_id"            columnIndex="16" /> -->
 <!--         <result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" /> -->
 <!--         <result property="tenantId"         	column="tenant_id"              columnIndex="19" /> -->
@@ -129,7 +129,7 @@
 				NVL2(s.user_id,'1','0') as FAVORITE_STATUS,
 				decode (#primary#,'1','1','0') as FILESHARE_STATUS ,
 				decode (f.FILE_EXT , 'folder',0,1) as FOLDER_SORT,
-				type.TYPE_NAME 	AS filetype_name    		
+				type.TYPE_NAME 	AS TYPE_NAME    		
 		]]>	
     </sql>
     <sql id="fldSelect">
@@ -157,7 +157,7 @@
 				NVL2(s.user_id,'1','0') as FAVORITE_STATUS,
                 decode (#primary#,'1','1','0')as FILESHARE_STATUS ,
 				decode (FILE_EXT , 'folder',0,1) as FOLDER_SORT,
-				type.TYPE_NAME 	AS filetype_name  
+				type.TYPE_NAME 	AS TYPE_NAME  
 		]]>			      
     </sql>
     
@@ -476,7 +476,7 @@
 				</isNotEqual>
 				<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 					<![CDATA[
-						t.filetype_name LIKE ('%' || #searchFileType# || '%')
+						t.TYPE_NAME LIKE ('%' || #searchFileType# || '%')
 		       		]]> 
 				</isNotEqual>
 				
@@ -805,7 +805,7 @@
 				decode ( #primary# , '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
 				f.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 				f.TENANT_ID    ,
-				type.TYPE_NAME 			AS filetype_name    	   		
+				type.TYPE_NAME 			AS TYPE_NAME    	   		
 		]]>	
 			<isEqual property="folderType" compareValue="C" >
 	   			FROM 
