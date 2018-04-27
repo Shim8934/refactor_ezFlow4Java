@@ -125,7 +125,6 @@
 	   		
 	   		//오프너의 부서 이름과 아이디 세팅
 	   		function setAuthorViewDept(){
-	   			console.log("**" + lpDeptNames);
 	   			opener.setDeptName(JSON.stringify(lpDepts),JSON.stringify(lpDeptNames));
 	   			window.close();
 	   		}
