@@ -162,7 +162,7 @@
    						$("#title").val(result.journalTitle);
    						message.SetEditorContent(result.journalContent);
    					//	opener.journalIdList = [];
-   						opener.journalIdList.length = 0;
+//    						opener.journalIdList.length = 0;
    						if(mode=="sum"){
    			    			setTimeout(function(){
    								$('#loading').hide();
@@ -235,6 +235,11 @@
                 } else {
                     self.resizeTo(785, 830);
                 }
+	    		
+	    		// IE10에서 에디터사이즈 조절
+	    		if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
+		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 310 + "PX";
+		    	}
 				
 	    		selTypeId = $("#optType").find("option:selected").val();
 	    		
@@ -255,7 +260,7 @@
 	    			
 	    			var fileList = '${fileList}';
 	    			if (fileList != null && fileList != "") {
-	    				fileList = fileList.replace(/&nbsp;/gi, " ");
+	    			//	fileList = fileList.replace(/&nbsp;/gi, " ");
 	    				fileList = decodeURIComponent(fileList);
 		    			dadiframe.setAttachFileInfo(fileList);
 	    			}
@@ -305,11 +310,12 @@
 					
 					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
 		    		getJournalForm(selFormId);
-		    		opener.sumFormId = "";
+// 		    		opener.sumFormId = "";
 					break;
 					
 				case 'reuse': case 'modify': case 'temp':
 					selFormId = "${journal.formId}";
+					console.log(selFormId);
 			//		var selectedType = $("#optType");
 			//		getFormList(selectedType);
 					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
@@ -482,7 +488,7 @@
 					if (i == 0) {
 						fileList = GetAttribute(filelist[i + 1], "fileinfo");
 					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
+						fileList += "/" + GetAttribute(filelist[i + 1], "fileinfo");
 	        		}
 				}
 				
@@ -534,7 +540,7 @@
 					if (i == 0) {
 						fileList = GetAttribute(filelist[i + 1], "fileinfo");
 					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
+						fileList += "/" + GetAttribute(filelist[i + 1], "fileinfo");
 	        		}
 				}
 				

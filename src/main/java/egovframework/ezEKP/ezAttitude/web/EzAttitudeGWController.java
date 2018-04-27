@@ -1646,8 +1646,6 @@ public class EzAttitudeGWController {
 			String searchTitle = request.getParameter("searchTitle");
 			String searchStartDate = request.getParameter("searchStartDate");
 			String searchEndDate = request.getParameter("searchEndDate");
-			String pageNum = request.getParameter("pageNum");
-			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
 			String orderOption = request.getParameter("orderOption");
 			String offsetMin = request.getParameter("offsetMin");
@@ -1657,7 +1655,7 @@ public class EzAttitudeGWController {
 			String offset = info.getOffSet();
 			
 			String totalCount = ezAttitudeService.getAttitudeAbsentCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, offset, companyId, tenantID);
-			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID);
+			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, companyId, tenantID);
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
@@ -1839,29 +1837,54 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 통계 [GET] 개인 근태 유형별 통계 -----임시
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getAttitudeUserCount(@PathVariable String userId, @PathVariable String attitudetypeId, HttpServletRequest request) {
+	@RequestMapping(value = "/rest/ezattitude/users/{selectUserId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getAttitudeUserCount(@PathVariable String selectUserId, @PathVariable String attitudetypeId, HttpServletRequest request) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] started.");
+		
+		JSONObject result = new JSONObject();
+		try{
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String offset = request.getParameter("offset");
+			String year = request.getParameter("year");
+			String deptId = "";
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			MCommonVO selectUserInfo = mOptionService.commonInfoWeb(serverName, selectUserId);
+			
+			List<AttitudeStatisVO> resultList = ezAttitudeService.getAttitudeUserStatistics(selectUserId, deptId, offset, year, attitudetypeId, info.getTenantId());
+			
+			JSONObject data = new JSONObject();
+			data.put("list", resultList);
+			data.put("companyId", selectUserInfo.getCompanyId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] ended.");
+		return result;
+	}
+	/**
+	 * G/W 통계 [GET] 부서 근태 유형별 통계 -----임시
+	 */
+	@RequestMapping(value = "/rest/ezattitude/depts/{deptId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getAttitudeDeptCount(@PathVariable String deptId, @PathVariable String attitudetypeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/depts/"+deptId+"/attitudetypes/{attitudetypeId}/attitude-count] started.");
 		
 		JSONObject result = new JSONObject();
 		try{
 			String serverName = request.getHeader("x-user-host");
 			String offset = request.getParameter("offset");
 			String year = request.getParameter("year");
-			String typeId = request.getParameter("typeId");
-//			String startDate = request.getParameter("startDate");
-//			String endDate = request.getParameter("endDate");
+			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			userId = "";
 			
-//			String startDate = startDate + " 00:00:00";
-//			String endDate = endDate + " 23:59:59";
-			
-			List<AttitudeStatisVO> resultList;
-			
-			
-//			resultList = ezAttitudeService.getAttitudeUserStatistics(userId, offset, startDate, endDate, info.getTenantId());
-			resultList = ezAttitudeService.getAttitudeUserStatistics(userId, offset, year, typeId, info.getTenantId());
-			
+			List<AttitudeStatisVO> resultList = ezAttitudeService.getAttitudeUserStatistics(userId, deptId, offset, year, attitudetypeId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1871,7 +1894,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/depts/"+deptId+"/attitudetypes/{attitudetypeId}/attitude-count] ended.");
 		return result;
 	}
 }

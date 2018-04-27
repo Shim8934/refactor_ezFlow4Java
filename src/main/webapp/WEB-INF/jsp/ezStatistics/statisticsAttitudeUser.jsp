@@ -26,10 +26,11 @@
     var adminCompany = "${adminCompany}";
 	
 	document.onselectstart = function () {
-    if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
-        return false;
-    else
-        return true;
+	    if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
+	        return false;
+	    } else {
+	        return true;
+	    }
 	};
 	
     window.onload = function () {
@@ -83,7 +84,7 @@
         }
     }
 
-    //하위부서
+    //[+] 버튼
     function RequestData(pNodeID, pTreeID) {
         var TreeIdx = pNodeID;
         var treeNode = new TreeNode();
@@ -238,7 +239,7 @@
 	    var pUserList = new ListView();
 	    pUserList.LoadFromID("lvUserList");
     	var selectUserId = pUserList.GetSelectedRows()[0].getAttribute("DATA2");
-    	var selectUserName = pUserList.GetSelectedRows()[0].getAttribute("DATA4");
+    	var selectUserName = pUserList.GetSelectedRows()[0].getElementsByTagName("td")[0].childNodes[0].nodeValue;
     	$.ajax({
         	type : "POST",
         	dataType : "json",
@@ -246,8 +247,10 @@
         	async : false,
         	data : {userId : selectUserId, typeId : $("#attitudeType").val(), year : $("#selyear").val() },
         	success : function(result){
-        		event_getAttitudeStatistics(result);
-        		chartTable(result, selectUserName);
+        		company_typeList(result.companyId);
+        		
+        		event_getAttitudeStatistics(result.list);
+        		chartTable(result.list, selectUserName);
         	},
         	error : function(error){
         		
@@ -276,6 +279,10 @@
                 $("#nodata").css({"display":""});
             	$("#viewdata").css({"display":"none"});
             	return;
+            } else {
+                $("#seluser").css({"display":"none"});
+                $("#nodata").css({"display":""});
+                $("#viewdata").css({"display":"none"});
             }
         } else {
             $("#seluser").css({"display":"none"});
@@ -324,7 +331,7 @@
 		html += "<tr>";
 		html += "<td rowspan='3'>"+selectUserName+"</td>";
 // 		html += "<td>" + result[0].typeName + "일수</td>";
-		html += "<td>데이터</td>";
+		html += "<td>일수</td>";
 		html += "<td>" + result[0].count + "</td>";
 		html += "<td>" + result[1].count + "</td>";
 		html += "<td>" + result[2].count + "</td>";
@@ -343,7 +350,7 @@
 		html += "</tr>";
 		html += "<tr>";
 // 		html += "<td>" + result[0].typeName + "일수</td>";
-		html += "<td>데이터</td>";
+		html += "<td>일수</td>";
 		html += "<td>" + result[6].count + "</td>";
 		html += "<td>" + result[7].count + "</td>";
 		html += "<td>" + result[8].count + "</td>";
@@ -356,15 +363,15 @@
 
     //엑셀내려받기 버튼 클릭시
     function btnexportexcel_onclick() {
-//         document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
+        document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
         
-//         if (document.getElementById("saveExcelData").value == "") {
-//         	alert("<spring:message code='ezStatistics.t1019' />");
-//         	return ;
-//         }
+        if (document.getElementById("saveExcelData").value == "") {
+        	alert("<spring:message code='ezStatistics.t1019' />");
+        	return ;
+        }
         
-//         document.getElementById("formAgent").target = "saveExcel";
-//         document.getElementById("formAgent").submit();
+        document.getElementById("formAgent").target = "saveExcel";
+        document.getElementById("formAgent").submit();
     }
 
     //검색
@@ -529,7 +536,7 @@
                     }
                     var pUserList = new ListView();
                     pUserList.SetID("lvUserList");
-                    pUserList.SetRowOnClick("getmailstatistics");
+                    pUserList.SetRowOnClick("getAttitudeStatistics");
                     pUserList.SetSelectFlag(false);
                     pUserList.SetHeightFree(true);
                     pUserList.DataSource(headerData);
@@ -612,10 +619,18 @@
             </td>
             <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
                 <div id="viewdata" style="display:none">
+	                <div class="statistics_addition">
+	                    <dl>
+	                        <dt class="colorbox_wrap"><span style="background: #4bb2c5" class="colorbox"></span></dt>
+	                        <dd id="colorbox" class="additiontext">일수</dd>
+	                    </dl>
+	                </div>
                     <div id="chartdiv" style="width: 100%; text-align: center; display: none;">
                         <div id="statisticschart" style="width: 800px; height: 480px; float: left; font-size: 16px;">
                         </div>
                     </div>
+                    <br/>
+					<br/>
                     <table id="statisticstable" class="tstyle2" style="text-align: center; width: 100%; border: 1px solid rgb(218, 218, 218);"></table>
                 </div>
                 <div id="seluser" class="statistics_select" style="margin:0 auto">

@@ -17,7 +17,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <style>
-	    	#attiBoardList td {
+	    	#contentlist table.mainlist td {
 	    		overflow : hidden;
 	    		white-space : nowrap;
 	    		text-overflow : ellipsis;
@@ -70,7 +70,7 @@
 	    		$("#Edatepicker").val("${searchEndDate}");
 	    		
 	    		//헤더 클릭 시 정렬
-	    		$(document).on('click', '#attiBoardList th', function(){
+	    		$(document).on('click', '#contentlist table.mainlist th', function(){
 	    			if (!$(this).find("input[type=checkbox]").length) { // checkbox는 sort에서 제외
 	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
 	    					src = "";
@@ -86,7 +86,7 @@
 		    				orderOption = "DESC";
 		    			}
 		    			
-		    			$("#attiBoardList th").find("img").remove();
+		    			$("#contentlist table.mainlist th").find("img").remove();
 		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
 		    			
 		    			getUserConfList();
@@ -213,7 +213,7 @@
 	    	function getUserConfList_after(result){
 	    		var resultHtml = "";
 	    		
-	    		$("#attiBoardList tbody").html("");
+	    		$("#contentlist table.mainlist tbody").html("");
 	    		
 	    		for (var i = 0; i < result.length; i ++) {
 	    			resultHtml += "<tr userid='" + result[i].writerId + "'>"
@@ -239,7 +239,7 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
 	    		}
 	    		
-	    		$("#attiBoardList tbody").append(resultHtml);
+	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
 	    	
@@ -267,25 +267,43 @@
 	    			$("#searchUserName").val("");
 	    			$("#searchDeptName").val("");
 	    			$("#searchTitle").val("");
-	    			$("#searchStartDate").val("");
-	    			$("#searchEndDate").val("");
+	    			$("#searchStartDate").val("${searchStartDate}");
+	    			$("#searchEndDate").val("${searchEndDate}");
 	    			$("select[id='searchAttitudeType']").val('all');
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";
 	    			searchTitle = "";
-	    			searchStartDate = "";
-	    			searchEndDate = "";
-	    			searchAttitudeType = "";
+	    			searchStartDate = "${searchStartDate}";
+	    			searchEndDate = "${searchEndDate}";
+	    			searchAttitudeType = "all";
 	    		}
 	    		
 	    		pageNum = 1;
     			getUserConfList();
 	    	}
 			
+			function popupAbsentList() {
+				searchUserName = $("#searchUserName").val();
+    			searchDeptName = $("#searchDeptName").val();
+    			searchTitle = $("#searchTitle").val();
+    			searchStartDate = $("#searchStartDate").val();
+    			searchEndDate = $("#searchEndDate").val();
+    			
+    			var url = "/admin/ezAttitude/popupAbsentedList.do?companyId=" + pCompanyId + "&searchUserName=" + searchUserName + "&searchDeptName=" + searchDeptName + "&searchTitle=" + searchTitle + "&searchStartDate=" + searchStartDate + "&searchEndDate=" + searchEndDate;
+	    		
+	    		if (CrossYN()) {
+	    			OpenWin = GetOpenWindow(url, "", "600", "700");
+	    			
+	    			try { OpenWin.focus();} catch (e) { }
+	    		} else {
+	    			showModalDialog(url, null, "dialogWidth:600px; dialogHeight:700px; status:no; help:no; scroll:no; edge:sunken");
+	    		}
+	    	}
+			
 			//엑셀 다운로드
 			function exportExcel() {
-				if ($('#attiBoardList tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
+				if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
 					alert('출력할 내용이 없습니다');
 					return;
 				}
@@ -332,13 +350,14 @@
 						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchUserConfList('refresh');">새로고침</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="exportExcel();">엑셀저장</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="popupAbsentList();">미입력자 목록</span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
 		</table>
 		
-	  	<div id="listDiv" style="width:100%; height:620px;">
-			<table id="attiBoardList" class="mainlist" style="width:100%;">
+	  	<div id="contentlist" style="width:100%; height:620px;">
+			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
 						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>

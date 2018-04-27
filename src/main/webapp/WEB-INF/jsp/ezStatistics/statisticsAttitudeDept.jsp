@@ -22,20 +22,24 @@
     <script type="text/javascript">
     var xmlHttp = null;
     var Tab1_flag = true;
+    var adminCompany = "${adminCompany}";
 	
 	document.onselectstart = function () {
-        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
             return false;
-        else
+        } else {
             return true;
+        }
     };
 	
     window.onload = function () {
-        if (CrossYN())
+        if (CrossYN()) {
             document.getElementById("topmenu").style.cssFloat = "";
-        else
+        } else {
             document.getElementById("topmenu").style.whiteSpace = "nowrap";
+        }
 
+      	//년도 설정(조회기간)
         makeoptionyear();
 
         var xmlpara = createXmlDom();
@@ -43,8 +47,8 @@
         var xmlHTTP = createXMLHttpRequest();
         var objNode;
         createNodeInsert(xmlpara, objNode, "DATA");
-        createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
-        createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyID}");
+        createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptId}");
+        createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyId}");
         createNodeAndInsertText(xmlpara, objNode, "PROP", "");
         xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
         xmlHTTP.send(xmlpara);
@@ -59,18 +63,31 @@
         treeView.SetNodeClick("TreeViewNodeClick");
         treeView.DataSource(xmlTree);
         treeView.DataBind("TreeView");
+        
+        //처음 select는 관리자로 되어있으니까 관리자 회사의 근태유형 출력.
+        company_typeList(adminCompany);
     }
 
+    //조직도 회사/부서 클릭시
     var selDeptID;
+    var selDeptName;
     function TreeViewNodeClick() {
         var nodeIdx = 1;
         var treeView = new TreeView();
         treeView.LoadFromID("FromTreeView");
         var selnode = treeView.GetSelectNode();
         selDeptID = selnode.GetNodeData("CN");
-        getmailstatistics();
+        selDeptName = selnode.GetNodeData("value");
+        
+        //만약 회사 클릭시
+        if (selnode.GetNodeData("SETNODEICONBYNAME") != "") {
+        	company_typeList(selDeptID);
+        }
+        //통계
+        getAttitudeStatistics();
     }
 
+    //[+] 버튼
     function RequestData(pNodeID, pTreeID) {
         var TreeIdx = pNodeID;
         var treeNode = new TreeNode();
@@ -79,6 +96,7 @@
         GetDeptSubTreeInfo(deptID, TreeIdx);
     }
 
+    //하위부서 정보
     function GetDeptSubTreeInfo(deptID, TreeIdx) {
         var xmlHTTP = createXMLHttpRequest();
         var xmlRtn = createXmlDom();
@@ -110,6 +128,7 @@
         treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
     }
 
+    //조회기간 년도 (현재년도에서 -5년까지)
     var isfirst = true;
     var tempyear;
     function makeoptionyear() {
@@ -148,290 +167,84 @@
             }
         }
     }
+    
+    //회사 클릭시마다 근태유형 selectbox 변경
+    function company_typeList(companyId) {
+    	$.ajax({
+        	type : "POST",
+        	dataType : "json",
+        	url : "/ezStatistics/attitudeTypeList.do",
+        	async : false,
+        	data : {companyId : companyId},
+        	success : function(result){
+        		var html = "";
+        		if (result.length != null && result.length != 0) {
+	                for (var i = 0; i < result.length; i++) {
+		        		html += "<option value='" + result[i].typeId + "'>" + result[i].typeName + "</option>";
+	                }
+        		}
+        		$("#attitudeType").html(html);
+        	},
+        	error : function(error){
+//         		OpenAlertUI(linealt2 + error)
+        	}
+        });
+    }
 
-    function Tab1_NewTabIni(pTabNodeID) {
-        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
-            if (document.getElementById(pTabNodeID).childNodes[i].nodeName == "P") {
-                if (document.getElementById(pTabNodeID).childNodes[i].childNodes[0].nodeName == "SPAN") {
-                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseover = function () { Tab1_MouserOver(this); };;
-                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseout = function () { Tab1_MouserOut(this); };;
-                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onclick = function () { Tab1_MouseClick(this); };;
+    //부서클릭시
+    function getAttitudeStatistics() {
+    	$.ajax({
+        	type : "POST",
+        	dataType : "json",
+        	url : "/ezStatistics/getAttitudeDept.do",
+        	async : false,
+        	data : {deptId : selDeptID, typeId : $("#attitudeType").val(), year : $("#selyear").val() },
+        	success : function(result){
+        		event_getAttitudeStatistics(result);
+        		chartTable(result, selDeptName);
+        	},
+        	error : function(error){
+        		
+        	}
+        });
+    }
+    
+    function event_getAttitudeStatistics(result) {
+        $("#statisticschart").html("");
+        $("#statisticstable").html("");
+        $("#chartdiv").css({"display":"none"});
 
-                    if (Tab1_flag) {
-                        document.getElementById(pTabNodeID).childNodes[i].childNodes[0].className = "tabon";
-                        Tab1_SelectID = document.getElementById(pTabNodeID).childNodes[i].childNodes[0].id;
-                        Tab1_flag = false;
-                    }
-
-                }
-            }
+	    var data = new Array();
+	    var zeroCnt = 0;
+        for (var i = 0; i < result.length; i++) {
+        	data.push(result[i].count);
+        	
+        	if (result[i].count == 0) {
+        		zeroCnt++;
+        	}
+        }
+        
+        if (zeroCnt == 12) {
+            $("#nodata").css({"display":""});
+            $("#viewdata").css({"display":"none"});
+//             return;
+        } else {
+            $("#nodata").css({"display":"none"});
+            $("#viewdata").css({"display":""});
+            
+	        drawingchart(data);
         }
     }
 
-    function Tab1_MouserOver(obj) {
-        obj.className = "tabover";
-    }
-    function Tab1_MouserOut(obj) {
-        if (Tab1_SelectID != obj.id)
-            obj.className = "";
-    }
-    function Tab1_MouseClick(obj) {
-        obj.className = "tabon";
-        if (obj.id != Tab1_SelectID) {
-            if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
-                document.getElementById(Tab1_SelectID).className = "";
-
-            obj.className = "tabon";
-            Tab1_SelectID = obj.id;
-            ChangeTab(obj);
-        }
-    }
-
-
-    function getmailstatistics() {
-        xmlHttp = createXMLHttpRequest();
-        var xmlDoc = createXmlDom();
-
-        var objRoot, objNode
-        objNode = createNodeInsert(xmlDoc, objNode, "PARAM");
-        createNodeAndInsertText(xmlDoc, objNode, "DEPTID", selDeptID);
-        createNodeAndInsertText(xmlDoc, objNode, "SDATE", document.getElementById("selyear").value);
-        createNodeAndInsertText(xmlDoc, objNode, "EDATE", document.getElementById("selyear").value);
-        xmlHttp.open("POST", "/ezStatistics/getMailDept.do", true);
-        xmlHttp.onreadystatechange = event_getmailstatistics;
-        xmlHttp.send(xmlDoc);
-    }
-
-    var data = new Array();
-    var data2 = new Array();
-    function event_getmailstatistics() {
-        if (xmlHttp != null && xmlHttp.readyState == 4) {
-            data = new Array();
-            data2 = new Array();
-            document.getElementById("statisticschart").innerHTML = "";
-            document.getElementById("statisticstable").innerHTML = "";
-            document.getElementById("chartdiv").style.display = "none";
-           
-            var resultxml = loadXMLString(xmlHttp.responseText);
-
-            if (SelectNodes(resultxml, "DATA/ROW").length == 0) {
-                document.getElementById("nodata").style.display = "";
-                document.getElementById("viewdata").style.display = "none";
-                return;
-            }
-            document.getElementById("nodata").style.display = "none";
-            document.getElementById("viewdata").style.display = "";
-
-            var _Table = document.createElement("TABLE");
-            _Table.style.textAlign = "center";
-            _Table.style.width = "100%";
-            _Table.className = "tstyle2";
-            _Table.style.border = "1px solid #dadada"
-
-            var _Tr = document.createElement("TR");
-
-            var start = document.getElementById("selyear").value;
-
-            var _Th = document.createElement("TH");
-            _Th.style.textAlign = "center";
-            _Th.innerHTML = "<spring:message code='ezStatistics.t83' />";
-            _Tr.appendChild(_Th);
-
-            _Th = document.createElement("TH");
-            _Th.style.textAlign = "center";
-            _Th.style.width = "130px";
-            _Th.innerHTML = "<spring:message code='ezStatistics.t1000' />";
-
-            var nowyear = new Date().getYear();
-            var moncnt = 12;
-
-            var ticks = "<spring:message code='ezStatistics.t218' />".split(";");
-            _Tr.appendChild(_Th);
-            for (var i = 0; i < 6; i++) {
-                var _Th2 = document.createElement("TH");
-                _Th2.style.textAlign = "center";
-                _Th2.innerHTML = ticks[i];
-                _Tr.appendChild(_Th2);
-            }
-            _Table.appendChild(_Tr);
-
-            var tempcn = "";
-            var j = 0;
-            for (var k = 0; k < SelectNodes(resultxml, "DATA/ROW").length; k++) {
-                var tempdata = new Array();
-                var tempdata2 = new Array();
-                var curcn;
-                if (CrossYN())
-                    curcn = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[k], "CN").textContent;
-                else
-                    curcn = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[k], "CN").text;
-                if (tempcn != curcn) {
-                    tempcn = curcn
-                    var _Tr2 = document.createElement("TR");
-                    var _Tr3 = document.createElement("TR");
-                    var _Tr4 = document.createElement("TR");
-                    var _Tr5 = document.createElement("TR");
-                    var _Tr6 = document.createElement("TR");
-
-                    var _Td = document.createElement("TD");
-                    _Td.rowSpan = "5";
-
-                    if (CrossYN())
-                        _Td.innerHTML = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[k], "DISPLAYNAME").textContent;
-                    else
-                        _Td.innerHTML = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[k], "DISPLAYNAME").text;
-
-                    _Tr2.appendChild(_Td);
-
-                    for (var i = 0; i < moncnt; i++) {
-                        if (i == 6) {
-                            var _Th = document.createElement("TH");
-                            _Th = document.createElement("TH");
-                            _Th.style.textAlign = "center";
-                            _Th.innerHTML = "<spring:message code='ezStatistics.t1000' />";
-
-                            var nowyear = new Date().getYear();
-
-                            _Tr4.appendChild(_Th);
-                            for (var l = 6; l < 12; l++) {
-                                var _Th2 = document.createElement("TH");
-                                _Th2.style.textAlign = "center";
-                                _Th2.innerHTML = ticks[l];
-                                _Tr4.appendChild(_Th2);
-                            }
-                        }
-                        if (i == 0) {
-                            _Td = document.createElement("TD");
-                            _Td.innerHTML = tabledata[0];
-                            var _Td2 = document.createElement("TD");
-                            _Td2.innerHTML = tabledata[1];
-
-                            _Tr2.appendChild(_Td);
-                            _Tr3.appendChild(_Td2);
-                        }
-                        else if (i == 6) {
-                            _Td = document.createElement("TD");
-                            _Td.innerHTML = tabledata[0];
-                            var _Td2 = document.createElement("TD");
-                            _Td2.innerHTML = tabledata[1];
-
-                            _Tr5.appendChild(_Td);
-                            _Tr6.appendChild(_Td2);
-                        }
-
-                        var _Td = document.createElement("TD");
-                        var _Td2 = document.createElement("TD");
-
-                        var mon = parseInt(i + 1);
-                        if (mon < 10)
-                            mon = "0" + mon;
-
-                        var date = start + mon;
-
-                        var yyyymm;
-
-                        if (SelectNodes(resultxml, "DATA/ROW").length > j) {
-                            if (CrossYN()) {
-                                yyyymm = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], "DT_MM").textContent;
-                                selcn = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], "CN").textContent;
-                            }
-                            else {
-                                yyyymm = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], "DT_MM").text;
-                                selcn = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], "CN").text;
-                            }
-                        }
-
-                        if (date == yyyymm.trim() && curcn == selcn) {
-                            var maildata;
-                            if (CrossYN())
-                                maildata = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], tabledata[2]).textContent;
-                            else
-                                maildata = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], tabledata[2]).text;
-
-                            if (maildata != "") {
-                                if (tabledata[2] == "RECEIVEINSIZE" || tabledata[2] == "RECEIVEOUTSIZE") {
-                                    _Td.innerHTML = getmailsize(maildata);
-                                    tempdata.push( parseInt(maildata) / 1024 / 1024);
-                                }
-                                else {
-                                    _Td.innerHTML = maildata;
-                                    tempdata.push( parseInt(maildata));
-                                }
-                            }
-                            else {
-                                _Td.innerHTML = "0";
-                                tempdata.push(0);
-                            }
-
-                            if (CrossYN())
-                                maildata = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], tabledata[3]).textContent;
-                            else
-                                maildata = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], tabledata[3]).text;
-
-                            if (maildata != "") {
-                                if (tabledata[2] == "RECEIVEINSIZE" || tabledata[2] == "RECEIVEOUTSIZE") {
-                                    _Td2.innerHTML = getmailsize(maildata);
-                                    tempdata2.push( parseInt(maildata) / 1024 / 1024);
-                                }
-                                else {
-                                    _Td2.innerHTML = maildata;
-                                    tempdata2.push( parseInt(maildata));
-                                }
-                            }
-                            else {
-                                _Td2.innerHTML = "0";
-                                tempdata2.push(0);
-                            }
-
-                            j++;
-                        }
-                        else {
-                            tempdata.push(0);
-                            tempdata2.push(0);
-                            _Td.innerHTML = "0";
-                            _Td2.innerHTML = "0";
-                        }
-                        if (i > 5) {
-                            _Tr5.appendChild(_Td);
-                            _Tr6.appendChild(_Td2);
-                        }
-                        else {
-                            _Tr2.appendChild(_Td);
-                            _Tr3.appendChild(_Td2);
-                        }
-                    }
-                    data.push(tempdata);
-                    data2.push(tempdata2);
-                    _Table.appendChild(_Tr2);
-                    _Table.appendChild(_Tr3);
-                    _Table.appendChild(_Tr4);
-                    _Table.appendChild(_Tr5);
-                    _Table.appendChild(_Tr6);
-                }
-            }
-            document.getElementById("statisticstable").innerHTML = _Table.outerHTML;
-
-            if (CrossYN()) {
-                document.getElementById("colorbox").textContent = tabledata[0];
-                document.getElementById("colorbox2").textContent = tabledata[1];
-            }
-            else {
-                document.getElementById("colorbox").innerText = tabledata[0];
-                document.getElementById("colorbox2").innerText = tabledata[1];
-            }
-
-            drawingchart();
-        }
-    } 
-
-    function drawingchart(type) {
-        if (data[0] == undefined) {
+    //차트그리기
+    function drawingchart(data) {
+        if (data == undefined || data.length == 0) {
             return;
         }
-        document.getElementById("statisticschart").innerHTML = "";
-        document.getElementById("chartdiv").style.display = "";
+        $("#statisticschart").html("");
+        $("#chartdiv").css({"display" : ""});
         var ticks = "<spring:message code='ezStatistics.t218' />".split(";");
-        plot2 = $.jqplot('statisticschart', [data[0], data2[0]], {
+        plot2 = $.jqplot('statisticschart', [data], {
             animate: false,
             seriesDefaults: {
                 renderer: $.jqplot.BarRenderer,
@@ -444,30 +257,54 @@
             }
         });
     }
-
-    function getmailsize(size) {
-        if (parseInt(size) / 1024 / 1024 / 1024 > 1)
-            return (parseInt(size) / 1024 / 1024 / 1024).toFixed(1) + "GB";
-        else if (parseInt(size) / 1024 / 1024 > 1)
-            return (parseInt(size) / 1024 / 1024).toFixed(1) + "MB";
-        else if (parseInt(size) / 1024 > 1)
-            return (parseInt(size) / 1024).toFixed(1) + "KB";
-        else
-            return (parseInt(size)).toFixed(1) + "B";
+    
+    function chartTable(result, selectUserName) {
+    	var months = "<spring:message code='ezStatistics.t218' />".split(";");
+    	var html = "";
+    	html += "<tr>";
+		html += "<th style='text-align: center;'><spring:message code='ezStatistics.t83' /> </th>";
+		html += "<th style='text-align: center;'><spring:message code='ezStatistics.t1000' /> </th>";
+		html += "<th style='text-align: center;'>" + months[0] + "</th>";
+		html += "<th style='text-align: center;'>" + months[1] + "</th>";
+		html += "<th style='text-align: center;'>" + months[2] + "</th>";
+		html += "<th style='text-align: center;'>" + months[3] + "</th>";
+		html += "<th style='text-align: center;'>" + months[4] + "</th>";
+		html += "<th style='text-align: center;'>" + months[5] + "</th>";
+		html += "</tr>";
+		html += "<tr>";
+		html += "<td rowspan='3'>"+selectUserName+"</td>";
+// 		html += "<td>" + result[0].typeName + "일수</td>";
+		html += "<td>일수</td>";
+		html += "<td>" + result[0].count + "</td>";
+		html += "<td>" + result[1].count + "</td>";
+		html += "<td>" + result[2].count + "</td>";
+		html += "<td>" + result[3].count + "</td>";
+		html += "<td>" + result[4].count + "</td>";
+		html += "<td>" + result[5].count + "</td>";
+		html += "</tr>";
+		html += "<tr>";
+		html += "<th style='text-align: center;'>데이터</th>";
+		html += "<th style='text-align: center;'>" + months[6] + "</th>";
+		html += "<th style='text-align: center;'>" + months[7] + "</th>";
+		html += "<th style='text-align: center;'>" + months[8] + "</th>";
+		html += "<th style='text-align: center;'>" + months[9] + "</th>";
+		html += "<th style='text-align: center;'>" + months[10] + "</th>";
+		html += "<th style='text-align: center;'>" + months[11] + "</th>";
+		html += "</tr>";
+		html += "<tr>";
+// 		html += "<td>" + result[0].typeName + "일수</td>";
+		html += "<td>일수</td>";
+		html += "<td>" + result[6].count + "</td>";
+		html += "<td>" + result[7].count + "</td>";
+		html += "<td>" + result[8].count + "</td>";
+		html += "<td>" + result[9].count + "</td>";
+		html += "<td>" + result[10].count + "</td>";
+		html += "<td>" + result[11].count + "</td>";
+		html += "</tr>";
+		$('#statisticstable').html(html);
     }
-
-    var tabledata = new Array("<spring:message code='ezStatistics.t38' />", "<spring:message code='ezStatistics.t40' />", "RECEIVEINCNT", "SENDINCNT");
-    function ChangeTab(obj) {
-        var pSelectTab = obj.getAttribute("divname");
-        tabledata = new Array();
-        switch (pSelectTab) {
-            case "passTab": tabledata.push("<spring:message code='ezStatistics.t38' />", "<spring:message code='ezStatistics.t40' />", "RECEIVEINCNT", "SENDINCNT"); getmailstatistics(); break;
-            case "bujaeTab": tabledata.push("<spring:message code='ezStatistics.t39' />", "<spring:message code='ezStatistics.t41' />", "RECEIVEOUTCNT", "SENDOUTCNT"); getmailstatistics(); break;
-            case "bujaeGTab": tabledata.push("<spring:message code='ezStatistics.t42' />", "<spring:message code='ezStatistics.t44' />", "RECEIVEINSIZE", "SENDINSIZE"); getmailstatistics(); break;
-            case "noticeTab": tabledata.push("<spring:message code='ezStatistics.t43' />", "<spring:message code='ezStatistics.t45' />", "RECEIVEOUTSIZE", "SENDOUTSIZE"); getmailstatistics(); break;
-        }
-    }
-
+    
+    
     function btnexportexcel_onclick() {
         document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
         document.getElementById("formAgent").target = "saveExcel";
@@ -578,6 +415,17 @@
             }
         }
     }
+    
+	//근태유형,년도 변경시 이벤트
+	function selectBox_change() {	
+		var treeView = new TreeView();
+        treeView.LoadFromID("FromTreeView");
+        var selnode = treeView.GetSelectNode();
+	    
+    	if (selnode != undefined) {
+    		getAttitudeStatistics();
+    	}
+	}
 
     </script>
 </head>
@@ -587,25 +435,18 @@
         <tr>
             <td style="width: 99%">
                 <span id="topmenu" style="width: 500px">
-                 	회사선택 : 
-				<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
-					<c:forEach var = "companyItem" items="${companyList }">
-						<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
-					</c:forEach>
-	      		</select>
-                 &nbsp;&nbsp;
                 <spring:message code='ezStatistics.t1002' /> : 
-                <select id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
+                <select id="selyear" onchange="makeoptionyear(); selectBox_change()"></select>
                     <spring:message code='ezStatistics.t55' />
 		            &nbsp;&nbsp;
 					부서검색 :
-                    <input id="keyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
-                    <a class="imgbtn" style="vertical-align: middle"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
+                    <input id="deptkeyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
+                    <a class="imgbtn" style="vertical-align: middle"><span onclick="searchdept()"><spring:message code='ezStatistics.t36' /></span></a>
                     &nbsp;&nbsp;
                     	근태유형 : 
-                    <select>
-                    	<option>구분1</option>
-                    </select>
+	                <select name="attitudeType" id="attitudeType" onchange="selectBox_change()" style="margin-top:4px; padding-right:40px;">
+		      		</select>
+                </span>
                 </span>
             </td>
             <td>
@@ -628,21 +469,19 @@
             </td>
             <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
                 <div id="viewdata">
-                    <div class="statistics_addition">
-                        <dl>
-                            <dt class="colorbox_wrap"><span style="background: #4bb2c5" class="colorbox"></span></dt>
-                            <dd id="colorbox" class="additiontext"><spring:message code='ezStatistics.t38' /></dd>
-                        </dl>
-                        <dl>
-                            <dt class="colorbox_wrap"><span style="background: #eaa229" class="colorbox"></span></dt>
-                            <dd id="colorbox2" class="additiontext"><spring:message code='ezStatistics.t40' /></dd>
-                        </dl>
-                    </div>
-                   <div id="chartdiv" style="width: 100%; text-align: center; display: none;">
-                       <div id="statisticschart" style="width: 820px; height: 480px; float: left; font-size: 16px;">
-                       </div>
-                   </div>
-                    <div id="statisticstable"></div>
+	                <div class="statistics_addition">
+	                    <dl>
+	                        <dt class="colorbox_wrap"><span style="background: #4bb2c5" class="colorbox"></span></dt>
+	                        <dd id="colorbox" class="additiontext">일수</dd>
+	                    </dl>
+	                </div>
+                	<div id="chartdiv" style="width: 100%; text-align: center; display: none;">
+                    	<div id="statisticschart" style="width: 820px; height: 480px; float: left; font-size: 16px;">
+                    	</div>
+					</div>
+					<br/>
+					<br/>
+					<table id="statisticstable" class="tstyle2" style="text-align: center; width: 100%; border: 1px solid rgb(218, 218, 218);"></table>
                 </div>
                 <div id="nodata" class="statistics_nodata" style="display:none;margin:0 auto">
                     <dl class="statistics_txt">
@@ -661,6 +500,5 @@
 </body>
     <script type="text/javascript">
         selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-        Tab1_NewTabIni("tab1");
     </script>
 </html>

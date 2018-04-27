@@ -175,7 +175,7 @@
 		                    var objTd2 = document.createElement("TD");
 
 		                    objTd2.setAttribute("NAME", "fileName");
-		                    objTd2.innerHTML = pFileName;
+		                    objTd2.innerText = pFileName;
 		                    objTd2.style.wordWrap = "break-word";
 		                    objTr.appendChild(objTd2);
 

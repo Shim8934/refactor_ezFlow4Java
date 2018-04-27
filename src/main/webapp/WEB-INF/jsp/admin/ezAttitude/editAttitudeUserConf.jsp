@@ -58,9 +58,6 @@
 					}
    				}
    			});
-			
-			opener.getUserConfList();
-			window.close();
 		}
 		
 		function btncancel_onclick() {

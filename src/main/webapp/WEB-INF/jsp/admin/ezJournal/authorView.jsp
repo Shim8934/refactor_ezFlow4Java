@@ -14,11 +14,12 @@
 	    <script type="text/javascript">	
 	    	var selectedUser;
 	    	var selectedUserName;
-	    	var companyId = "<c:out value="${companyId}" />";
+	    	var companyId = "<c:out value='${companyId}'/>";
 	    	var deptIds = [];
 	    	var deptNames = [];
 	    	var userDeptId;
 	    	var userDeptName;
+	    	var userAddIds = [];
 	    
 	    	//사원 세팅
 	    	function setSelectedUser(userId, userName){
@@ -41,7 +42,7 @@
 	    		}else{
 		    		var url = "/admin/ezJournal/selectAuthorDept.do";
 					url+="?companyId="+companyId+"&userId="+selectedUser;
-					window.open(url, "authorDept", GetOpenWindowfeature(500, 560));
+					window.open(url, "authorDept", GetOpenWindowfeature(500, 570));
 	    		}
 	    	}
 	    	 
@@ -95,6 +96,9 @@
 				    			userDeptName = '${fn:replace(dept.deptName, "'", "\\'") }';
 				    			userDeptId = '${fn:replace(dept.deptId, "'", "\\'") }';
 					    	</c:when>
+				    		<c:when test="${dept.mine eq 'add' }">
+				    			userAddIds.push('${fn:replace(dept.deptId, "'", "\\'") }');
+					    	</c:when>
 					    	<c:otherwise>
 								deptNames.push('${fn:replace(dept.deptName, "'", "\\'") }');
 								deptIds.push('${fn:replace(dept.deptId, "'", "\\'") }');
@@ -121,7 +125,7 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t142' /></th>
 	            <td>
-	                <textarea rows="3" id="txtdept" style="margin-top:4px; width:77%; resize: none;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	                <textarea rows="3" id="txtdept" style="margin-top:2px; margin-bottom:2px; width:77%; resize: none;" onfocus="this.blur();" readonly="readonly" ></textarea>
 	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:15px;"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>

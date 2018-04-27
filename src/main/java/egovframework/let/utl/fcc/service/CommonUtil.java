@@ -961,6 +961,90 @@ public class CommonUtil {
 		
 		return dbType;
 	}
+
+	/**
+	/*
+	 * 테넌트에 따른 설정정보 얻어오는 메서드
+	 */
+	public String getTenantConfigRest(String property, String userId, HttpServletRequest request) throws Exception {
+
+		String gwServerUrl = config.getProperty("config.journalGWServerURL");
+		String url = gwServerUrl + "/rest/ezcommon/configs";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+		        .queryParam("property", property)
+		        .queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+				
+		String status = resultBody.get("status").toString();
+		
+		String propertyValue = "";
+		if (status.equals("ok")) {
+			propertyValue = (String) resultBody.get("data");
+		}
+        
+        return propertyValue;
+    }
+	
+	//html entity unescape 메서드 2018-04-06 강민수92
+	public String htmlUnescape(String html) throws Exception {
+		html = html.replace("&amp;", "&");
+		html = html.replace("&quot;", "\"");
+		html = html.replace("&#39;", "'");
+		html = html.replace("&lt;", "<");
+		html = html.replace("&gt;", ">");
+		html = html.replace("&iexcl;", "¡");
+		html = html.replace("&curren;", "¤");
+		html = html.replace("&sect;", "§");
+		html = html.replace("&ordf;", "ª");
+		html = html.replace("&deg;", "°");
+		html = html.replace("&plusmn;", "±");
+		html = html.replace("&sup2;", "²");
+		html = html.replace("&sup3;", "³");
+		html = html.replace("&acute;", "´");
+		html = html.replace("&mu;", "μ");
+		html = html.replace("&pa "
+				+ " "
+				+ ";", "¶");
+		html = html.replace("&middot;", "·");
+		html = html.replace("&cedil;", "¸");
+		html = html.replace("&sup1;", "¹");
+		html = html.replace("&ordm;", "º");
+		html = html.replace("&frac14;", "¼");
+		html = html.replace("&frac12;", "½");
+		html = html.replace("&frac34;", "¾");
+		html = html.replace("&iquest;", "¿");
+		html = html.replace("&AElig;", "Æ");
+		html = html.replace("&ETH;", "Ð");
+		html = html.replace("&times;", "×");
+		html = html.replace("&Oslash;", "Ø");
+		html = html.replace("&THORN;", "Þ");
+		html = html.replace("&szlig;", "ß");
+		html = html.replace("&aelig;", "æ");
+		html = html.replace("&eth;", "ð");
+		html = html.replace("&divide;", "÷");
+		html = html.replace("&oslash;", "ø");
+		html = html.replace("&thorn;", "þ");
+		
+		String result = html;
+		
+		logger.debug("html result : " + result); 
+		return result;
+		
+	}
 	
 	/**
 	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
@@ -1021,86 +1105,5 @@ public class CommonUtil {
 		}
 		logger.debug("getJsonFromRestApi ended");
 		return resultBody;
-	}
-	
-	/**
-	 * 테넌트에 따른 설정정보 얻어오는 메서드
-	 */
-	public String getTenantConfigRest(String property, String userId, HttpServletRequest request) throws Exception {
-
-		String gwServerUrl = config.getProperty("config.journalGWServerURL");
-		String url = gwServerUrl + "/rest/ezcommon/configs";
-				
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-		        .queryParam("property", property)
-		        .queryParam("userId", userId);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-				
-		String status = resultBody.get("status").toString();
-		
-		String propertyValue = "";
-		if (status.equals("ok")) {
-			propertyValue = (String) resultBody.get("data");
-		}
-        
-        return propertyValue;
-    }
-	
-	//html entity unescape 메서드 2018-04-06 강민수92
-	public String htmlUnescape(String html) throws Exception {
-		html = html.replace("&amp;", "&");
-		html = html.replace("&quot;", "\"");
-		html = html.replace("&#39;", "'");
-		html = html.replace("&lt;", "<");
-		html = html.replace("&gt;", ">");
-		html = html.replace("&iexcl;", "¡");
-		html = html.replace("&curren;", "¤");
-		html = html.replace("&sect;", "§");
-		html = html.replace("&ordf;", "ª");
-		html = html.replace("&deg;", "°");
-		html = html.replace("&plusmn;", "±");
-		html = html.replace("&sup2;", "²");
-		html = html.replace("&sup3;", "³");
-		html = html.replace("&acute;", "´");
-		html = html.replace("&mu;", "μ");
-		html = html.replace("&para;", "¶");
-		html = html.replace("&middot;", "·");
-		html = html.replace("&cedil;", "¸");
-		html = html.replace("&sup1;", "¹");
-		html = html.replace("&ordm;", "º");
-		html = html.replace("&frac14;", "¼");
-		html = html.replace("&frac12;", "½");
-		html = html.replace("&frac34;", "¾");
-		html = html.replace("&iquest;", "¿");
-		html = html.replace("&AElig;", "Æ");
-		html = html.replace("&ETH;", "Ð");
-		html = html.replace("&times;", "×");
-		html = html.replace("&Oslash;", "Ø");
-		html = html.replace("&THORN;", "Þ");
-		html = html.replace("&szlig;", "ß");
-		html = html.replace("&aelig;", "æ");
-		html = html.replace("&eth;", "ð");
-		html = html.replace("&divide;", "÷");
-		html = html.replace("&oslash;", "ø");
-		html = html.replace("&thorn;", "þ");
-		
-		String result = html;
-		
-		logger.debug("html result : " + result); 
-		return result;
-		
 	}
 }

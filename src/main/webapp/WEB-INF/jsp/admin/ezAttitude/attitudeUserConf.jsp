@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>사용자별 근태관리</title>
+		<title>근태시간관리</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -16,7 +16,7 @@
 	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
 	    
 	    <style>
-	    	#attiBoardList td {
+	    	#contentlist table.mainlist td {
 	    		overflow : hidden;
 	    		white-space : nowrap;
 	    		text-overflow : ellipsis;
@@ -68,7 +68,7 @@
 		        }
 	    		
 	    		//헤더 클릭 시 정렬
-	    		$(document).on('click', '#attiBoardList th', function(){
+	    		$(document).on('click', '#contentlist table.mainlist th', function(){
     				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
     					src = "";
     					orderOption = "";
@@ -83,7 +83,7 @@
 	    				orderOption = "DESC";
 	    			}
 	    			
-	    			$("#attiBoardList th").find("img").remove();
+	    			$("#contentlist table.mainlist th").find("img").remove();
 	    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
 	    			
 	    			getUserConfList();
@@ -128,7 +128,7 @@
 	    	
 	    	function getUserConfList_after(result){
 	    		var resultHtml = "";
-	    		$("#attiBoardList tbody").html("");
+	    		$("#contentlist table.mainlist tbody").html("");
 	    		
 	    		result.forEach(function(vo, index) {
 	    			resultHtml += "<tr userid='" + vo.userId + "'>";
@@ -143,7 +143,7 @@
 	    			resultHtml = "<tr><td colspan='5' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
 	    		}
 	    		
-	    		$("#attiBoardList tbody").append(resultHtml);
+	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
 	    	
@@ -239,7 +239,7 @@
 				<tr>
 					<td style="width: 3%;">직위</td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50"></td>
-					<td style="width: 3%;">근무시간</td>
+					<td style="width: 3%;">근태시간</td>
 					<td>
 						<span id="topmenu"><input id="searchStartTime" type="text" style="width:50px;"/>&nbsp; ~ &nbsp;<input id="searchEndTime" type="text" style="width:50px;"/></span>
 					</td>
@@ -251,8 +251,8 @@
 			</tbody>
 		</table>
 		
-		<div id="listDiv" style="height:620px;">
-			<table id="attiBoardList" class="mainlist" style="width:100%;">
+		<div id="contentlist" style="width:100%; height:620px;">
+			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
 						<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>

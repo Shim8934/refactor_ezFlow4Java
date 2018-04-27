@@ -908,7 +908,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		String strIndex = request.getParameter("index");
 		int index = -1;
-		if(strIndex != null){
+		
+		if (strIndex != null) {
 			index = Integer.parseInt(strIndex);
 		}
 		logger.debug("index=" + index);
@@ -933,6 +934,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					logger.error("Message not found. uid=" + uid);
 				} else {
 					Part part = null;
+					
 					if (index == -1) {
 						part = message;
 					}
