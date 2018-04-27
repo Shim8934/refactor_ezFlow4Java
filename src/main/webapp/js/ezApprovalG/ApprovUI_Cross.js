@@ -282,13 +282,21 @@ function AprrovMappingSign(ret) {
         
         if (junGyulFlag == "1") {
             //전결자, 결재안함 결재칸에 전결String
-            for (var i = pAprMemberSignSN; i < LastKyulSN; i++) {
+           /* for (var i = pAprMemberSignSN; i < LastKyulSN; i++) {
             	signID = pSusinSN2 + "sign" + i;
             	
             	var field = message.GetListItem(fields, signID);
                 if (field) {
                 	field.innerHTML = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang6 + "</P>";
                 }
+            }*/
+        	
+    		/* 2018-04-27 천성준 - 전결자만 결재칸에 전결 표시 >> 전결자 결재칸에 전결String */
+        	signID = pSusinSN2 + "sign" + pAprMemberSignSN;
+        	
+        	var field = message.GetListItem(fields, signID);
+            if (field) {
+            	field.innerHTML = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang6 + "</P>";
             }
             
             //최종결재자 인덱스 구하기
