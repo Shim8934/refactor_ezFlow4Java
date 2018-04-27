@@ -74,9 +74,16 @@
 			$('#upload').css('display','none');
 			pEnd= pStart + blockSize;
 			getFileList(folderId);
-			var divList          = document.getElementById("dragDropArea");
-			var reheight         = document.documentElement.clientHeight - 220;
-			divList.style.height = reheight + "px";
+			
+			searchContext.setSearchStartEventHandler(function() {
+				getFileList(folderId);
+			});
+			
+			searchContext.setFileTypeChangeEventHandler(function() {
+				getFileList(folderId);
+			})
+			
+			window.onresize();
 	    };
 	    
 	    // 폴더관리
@@ -91,7 +98,10 @@
 	    		alert(messages.strLang14);
 	    		return;
 	    	}
+	    	
+	    	searchRequirement = searchContext.getCurrentRequirement();
 	    	folderId = a;
+	    	
 			$.ajax ({
 				type:"POST",
 				async: false,
@@ -102,12 +112,12 @@
 					 "currPage"   		: currentPage,
 					 "listCount"  		: blockSize,
 					 "pStart" 			: pStart,
-					 "searchExt" 		: searchExt,
-					 "searchFileName" 	: searchFileName,
-					 "searchCreateName" : searchCreateName,
-					 "searchFileType" 	: searchFileType,
-					 "searchStartDate" 	: searchStartDate,
-					 "searchEndDate" 	: searchEndDate
+					 "searchExt" 		: searchRequirement.extension,
+					 "searchFileName" 	: searchRequirement.name,
+					 "searchCreateName" : searchRequirement.creatorName,
+					 "searchFileType" 	: searchContext.getFileType(),
+					 "searchStartDate" 	: searchRequirement.startDate,
+					 "searchEndDate" 	: searchRequirement.endDate
 					},
 				dataType: "JSON",
 				success : function (data) {
@@ -147,6 +157,7 @@
 					 + messages.strLang11 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
 						+ fileCnt +" </span>"  + messages.strLang11 + " ]";
 					$("#listcount").val(blockSize).prop("selected", true);
+					parent.frames["left"].drawVolume();
 				},
 				error : function(error) {
 					alert(messages.strLang7 + error);
@@ -196,12 +207,7 @@
 		}
 		
 		function nameFileList(param) {
-			searchFileType = "";  
-			searchExt ="";        
-			searchFileName = "";  
-			searchCreateName = "";
-			searchEndDate = "";
-			searchStartDate = "";
+			searchContext.clearRequirement();
 			$("#idSelect").val("all");
 			getFileList(param);
 		}
@@ -336,15 +342,7 @@
 		}
 		
 	   	$(function () {
-	        $("#Sdatepicker").datepicker({
-	            changeMonth: true,
-	            changeYear: true,
-	            autoSize: true,
-	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.gif",
-	            buttonImageOnly: true
-	        });
-	        $("#Edatepicker").datepicker({
+	        $(".datepicker").datepicker({
 	            changeMonth: true,
 	            changeYear: true,
 	            autoSize: true,
@@ -353,17 +351,13 @@
 	            buttonImageOnly: true
 	        });
 	
-	        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	        $("#Sdatepicker").datepicker('setDate', "");
-	
-	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	        $("#Edatepicker").datepicker('setDate', "");
+	        $(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $(".datepicker").datepicker('setDate', "");
 	     });
 	   	
 	   	// 날짜 초기화 버튼
 	   	function btn_PostDate_Clear() {
-	        $("#Sdatepicker").datepicker('setDate', "");
-	        $("#Edatepicker").datepicker('setDate', "");
+	        $(".datepicker").datepicker('setDate', "");
 	    }
 	    
 	    function goToPageByNum(Value) {
@@ -374,75 +368,67 @@
 	    }
 	    
 	   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
-   		function search(type) {
-   			
-	        if (type == "basic") {
+		function search(type) {
+			if (type == "basic") {
+				requirement = {
+					startDate: $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val(),
+					endDate: $('#Edatepicker').datepicker({ dateFormat: 'yy-mm-dd' }).val(),
+					name: $('#searchFileName').val(),
+					creatorName: $('#searchCreateName').val(),
+					extension: $('#searchExt').val()
+				};
+	        	
+				if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" && requirement.startDate == "") {
+					alert(messages.strLang20);// 검색조건을 입력하세요 
+					return;
+				}
 	
-	           if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert(messages.strLang20);// 검색조건을 입력하세요 
-	                return;
-	            }
+				if (requirement.startDate != "" && requirement.endDate == "") {
+					alert(messages.strLang18);
+					return;
+				}
+	           
+				if (requirement.startDate == "" && requirement.endDate != "") {
+					alert(messages.strLang18);
+					return;
+				}
 	
-	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert(messages.strLang18);
-	                return;
-	            }
-	            
-	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-	                alert(messages.strLang18);
-	                return;
-	            }
-	            
-	            if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-	                alert(messages.strLang19);
-	                return;
-	            }
-	            
-	            searchExt = $('#searchExt').val();               
-	            searchFileName = $('#searchFileName').val();     
-	            searchCreateName = $('#searchCreateName').val(); 
-	            searchStartDate = $('#Sdatepicker').val(); 
-	            searchEndDate = $('#Edatepicker').val(); 
-	        } else if (type == "quick") {
-	            if (document.getElementById("txt_keyword").value == "") {
-	                alert(messages.strLang20);
-	                return;
-	            }
-	        }
-	        searchOptionHidden();
-// 	        MakeSubCondition();
-	        getFileList(folderId);
+				if (new Date(requirement.startDate) > new Date(requirement.endDate)) {
+					alert(messages.strLang19);
+					return;
+				}
+           
+				searchContext.search(requirement.startDate, requirement.endDate, requirement.name, requirement.creatorName, requirement.extension);
+			} else if (type == "quick") {
+				if (document.getElementById("txt_keyword").value == "") {
+					alert(messages.strLang20);
+					return;
+				}
+			}
+			
+			searchOptionHidden();
 		}
 		
 		function doLayerPopup(obj) {
 	        btn_PostDate_Clear();
-	        $('#searchExt').val(searchExt);               
-            $('#searchFileName').val(searchFileName) ;
-            $('#searchCreateName').val(searchCreateName);
-            $('#Sdatepicker').val(searchStartDate);
-            $('#Edatepicker').val(searchEndDate) ;
+	        
+	        var searchRequirement = searchContext.getCurrentRequirement();
+	        
+	        $('#searchExt').val(searchRequirement.extension);               
+            $('#searchFileName').val(searchRequirement.name);
+            $('#searchCreateName').val(searchRequirement.creatorName);
+            $('#Sdatepicker').val(searchRequirement.startDate);
+            $('#Edatepicker').val(searchRequirement.endDate);
 	    
 	        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
         	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"left\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
         	
-        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+        	var popupX = parent.document.body.clientWidth / 2 - (500 / 2) - 220;
         	
         	$("#srarchpopup").css("left", popupX);
         	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
         	
         	$("#srarchpopup").modal();
-        	
-	        if (obj.getAttribute("mode") == "off") {
-	            document.getElementById("layer_popup").style.left = "10px";
-// 	            if (pAdminType == "y")
-// 	                document.getElementById("layer_popup").style.top = "56px";
-// 	            else
-	                document.getElementById("layer_popup").style.top = "100px";
-	            document.getElementById("layer_popup").style.display = "";           
-	            obj.setAttribute("mode", "on");
-	        } else {
-	        	searchOptionHidden();
-	        }
 	    }
 		
 	    function searchOptionHidden() {
@@ -626,15 +612,13 @@
 			refreshView();
 		}
        
-		function changeValue(value) {
-			searchFileType = value;
-			
-			if ( value == "all" ) {
-				searchFileType = "";
+		function onFileTypeChange(value) {
+			if (value == "all") {
+				value = "";
 			}
 			
 			currentPage = 1;
-			refreshView();
+			searchContext.setFileType(value);
 		}
        
 		function addShare() {
@@ -694,7 +678,7 @@
 			<li id=""><a onClick="refreshView()"style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 			<li id="right" style="float:right;"><span><spring:message code='ezWebFolder.t215'/></span><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
 			<li id="right" style="float:left;">
-				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="width:100px; ">
+				<select class="select" id="idSelect" onchange="onFileTypeChange(this.value);" style="width:100px; ">
 					<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
 					<option value="document" data-imagesrc="/images/webfolder/msWord.png"       ><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
 					<option value="music" data-imagesrc="/images/webfolder/mp3.png"      ><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
@@ -778,9 +762,9 @@
 				<tr>
 		           <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
 		           <td>
-		               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+		               <input type="text" id="Sdatepicker" class="datepicker" style="width:80px;text-align:center" readonly="readonly">
 		                ~
-		               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+		               <input type="text" id="Edatepicker" class="datepicker" style="width:80px;text-align:center" readonly="readonly">
 		           </td>
 				</tr>
 		       
@@ -802,7 +786,7 @@
 				<tr>
 					<td style="text-align:center;">
 						<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142' /></span></a>
-						<a class="imgbtn" rel="modal:close"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+						<a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
 					</td>
 				</tr>
 			</table>
