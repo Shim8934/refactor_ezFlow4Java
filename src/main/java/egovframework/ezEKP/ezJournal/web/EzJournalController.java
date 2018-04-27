@@ -157,7 +157,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		if (status.equals("ok")) {			
 			//업무일지 환경설정
-			JSONObject journalEnv =  (JSONObject) resultBody.get("data");
+			JSONObject journalEnv =  (JSONObject) ((JSONObject) resultBody.get("data")).get("journalOpt");
 			logger.debug("journalEnv : " + journalEnv);
 			model.addAttribute("journalEnv", journalEnv);
 		}
@@ -374,18 +374,15 @@ public class EzJournalController extends EgovFileMngUtil {
 				if (fileList != null && fileList.size() > 0) {
 					for (int i = 0; i < fileList.size(); i++) {
 						JSONObject file = (JSONObject) fileList.get(i);
-						logger.debug("**fileName:" + file.get("fileName"));
 						file.put("pFileName", file.get("fileName"));
-					//	file.put("pFileName", file.get("fileEncodeName"));
-					//	file.put("fileName", file.get("fileEncodeName"));
+					//	file.put("fileName", file.get("fileName"));
 						String filePath = file.get("filePath").toString();
 						filePath = filePath.substring(filePath.indexOf("{"), filePath.indexOf("}") + 1);
 						file.put("pUploadSN", filePath);
 						file.put("resultUpload", "true");
-//						file.put("fileSize", file.get("fileSize"));
 						fileList.set(i, file);
 					}
-					model.addAttribute("fileList", URLEncoder.encode(fileList.toString().replaceAll(" ", "&nbsp;"), "UTF-8"));
+					model.addAttribute("fileList", URLEncoder.encode(fileList.toString(), "UTF-8").replaceAll("\\+", "%20"));
 				}
 			}
 			
@@ -702,7 +699,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			case "sum":
 				jsonParam.put("userId", userId);
 				restUrl = "/rest/ezjournal/journals-sum" ;
-				logger.debug(jsonParam.toString());
+				logger.debug("***" + jsonParam.toString());
 				result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
 				break;
 			default:
@@ -871,7 +868,7 @@ public class EzJournalController extends EgovFileMngUtil {
                 fileJson.put("bytes", bytes);
                 fileJson.put("fileSize", fileSize[i]);
                 fileJson.put("originalFilename", originalFilename);
-                fileJson.put("typeId", typeId);
+//              fileJson.put("typeId", typeId);
                 
                 jsonArray.add(fileJson);
             }
@@ -880,7 +877,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		jsonObject.put("cnt", cnt);
 		jsonObject.put("maxSize", maxSize);
 		jsonObject.put("userId",userInfo.getId());
-		jsonObject.put("typeId", typeId);
+//		jsonObject.put("typeId", typeId);
         
 		HttpEntity<JSONObject> entity = new HttpEntity(jsonObject, headers);
 		
@@ -1681,7 +1678,6 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezJournal/journalDetailContent.do")
 	public String getJournalContent(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getJournalContent started");
@@ -1692,7 +1688,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		String journalId = request.getParameter("journalId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId, param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId, param, request, "get", null);
 		
 		String status = resultBody.get("status").toString();
 		
@@ -1769,7 +1765,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("ok")) {			
-			JSONObject journalEnv = (JSONObject) resultBody.get("data");
+			JSONObject journalEnv = (JSONObject) ((JSONObject) resultBody.get("data")).get("journalOpt");
 			
 			String replyAlert = (String) journalEnv.get("replyAlert");
 			
@@ -1833,7 +1829,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				String status = resultBody.get("status").toString();
 				
 				if (status.equals("ok")) {			
-					JSONObject journalEnv = (JSONObject) resultBody.get("data");
+					JSONObject journalEnv = (JSONObject) ((JSONObject) resultBody.get("data")).get("journalOpt");
 					
 					String recvAlert = (String) journalEnv.get("recvAlert");
 					
@@ -1918,14 +1914,53 @@ public class EzJournalController extends EgovFileMngUtil {
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
-			JSONObject journalEnv = (JSONObject) result.get("data");
+			JSONObject journalEnv = (JSONObject) ((JSONObject) result.get("data")).get("journalOpt");
+			JSONArray deptList = (JSONArray) ((JSONObject) result.get("data")).get("deptList");
 			logger.debug("journalEnv:" + journalEnv);
+			logger.debug("deptList:" + deptList);
+			
+			for (int i = 0; i < deptList.size(); i++) {
+				JSONObject dept = (JSONObject) deptList.get(i);
+				
+				dept.put("icon", "icon-dept");
+				
+				if (dept.get("myDept").equals("yes")) {
+					JSONObject state = new JSONObject();
+					state.put("selected", "true");
+					state.put("opened", "true");
+					dept.put("state", state);
+				}
+			}
+			
 			model.addAttribute("journalEnv", journalEnv);
+			model.addAttribute("deptList", deptList);
 		}
 		
 		logger.debug("journalConfig ended");
 		
 		return "/ezJournal/journalConfig";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezJournal/saveChiefAuthDept.do")
+	@ResponseBody
+	public String saveChiefAuthDept(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie){
+		logger.debug("saveChiefAuthDept started");
+		
+		JSONObject jsonString = new JSONObject();
+		String userId= ((LoginVO)commonUtil.userInfo(loginCookie)).getId();
+		
+		String depts = request.getParameter("depts");
+		jsonString.put("userId", userId);
+		jsonString.put("depts", depts);
+		jsonString.put("admin", "N");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", null, request, "post", jsonString);
+		
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("saveChiefAuthDept ended");
+		return status;
 	}
 	
 }

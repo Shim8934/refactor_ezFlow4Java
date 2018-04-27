@@ -234,6 +234,7 @@
 			/* 2018.03.23 서주연 - #12114 */
 	        if (GetAttribute(srcEl,"dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 	            if (GetAttribute(srcEl,"dispTime") != null) {
+
 	                selsd = GetAttribute(srcEl,"dispTime");
 	                
 	                if (selsd != null) { 
@@ -241,8 +242,8 @@
 	            	}
 	            }
 	        } else {
-	            selsd = srcEl.getAttribute("dispDate");
-            	seled = srcEl.getAttribute("dispDate");
+	            selsd = GetAttribute(srcEl, "dispDate");
+            	seled = GetAttribute(srcEl, "dispDate");
 	        }
 	       
 	        var feature = GetOpenPosition(820, 700);

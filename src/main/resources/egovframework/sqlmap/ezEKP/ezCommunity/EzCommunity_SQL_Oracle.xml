@@ -1550,6 +1550,20 @@
 		]]>
 	</select>
 	
+	<select id="EzCommunityDAO.adminLogoGet2"					parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
+		<![CDATA[
+			SELECT
+				c_logo,
+				c_logo_thumbnail
+			FROM
+				TBL_C_CLUB 
+			WHERE
+				RTRIM(c_clubno) = #v_CODE#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</select>
+	
 <!-- 	<procedure id="EzCommunityDAO.getBoardList"					parameterClass="Map"		resultClass="CommunityBoardInfoVO"> -->
 <!-- 		{CALL EZSP_GETBOARDLIST(#v_CODE#, #v_LANG#, #v_POSITION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -5630,7 +5644,19 @@
 			UPDATE
 				TBL_C_CLUB
 			SET
-				c_clubbanner = #v_BANNERFILENAME#
+				c_logo = #v_LOGOFILENAME#
+			WHERE
+				RTRIM(c_clubno) = #v_FILENAME#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+	<update id="EzCommunityDAO.adminLogoOkUpdate3"			parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUB
+			SET
+				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
 			WHERE
 				RTRIM(c_clubno) = #v_FILENAME#
 			AND

@@ -1,13 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="<spring:message code='ezJournal.c1'/>"
-	type="text/css">
+<link rel="stylesheet" href="<spring:message code='ezJournal.c1'/>" type="text/css">
 <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -17,21 +15,15 @@
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/Common.js"></script>
 <!-- data picker-->
-<script type="text/javascript"
-	src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-<script type="text/javascript"
-	src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-<script type="text/javascript"
-	src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 <link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-<link href="/js/jquery/jquery.modal.css" rel="stylesheet"
-	type="text/css" />
+<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 <!-- time picker-->
-<link rel="stylesheet" type="text/css"
-	href="/js/jquery/timeControls/jquery.timepicker.css" />
-<script type="text/javascript"
-	src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 
 <style>
@@ -97,7 +89,7 @@
 	background-color: rgb(233, 241, 255);
 }
 
-#lvBoardList #journalList tr.noView td {
+#lvBoardList #journalList tr<c:if test="${listType ne 'temp' }">.noView</c:if> td {
 	font-weight: bold;
 }
 </style>
@@ -142,43 +134,53 @@
 		    var journalIdList = [];
 		    var replyJournalTitle;
 			
-			window.onresize = function ()
-		    {
+			window.onresize = function () {
 		        MailOptionHidden();
 		        journalPreviewRayerChange(pPreviewShow_HOW);
 		        var textContentSize;
-				textContentSize = $("#PreviewRayerH").height()-55;
-				$("#Preview_ContentH").css("height",textContentSize);
-				textContentSize = $("#PreviewRayerW").height()-80;
-				$("#Preview_ContentW").css("height",textContentSize);
+				textContentSize = $("#PreviewRayerH").height() - 55;
+				$("#Preview_ContentH").css("height", textContentSize);
+				textContentSize = $("#PreviewRayerW").height() - 80;
+				$("#Preview_ContentW").css("height", textContentSize);
 // 		        Window_resize();
+		    };
+		    
+			document.onselectstart = function () { return false; };
+		    window.onload = function () {
+		    	if (navigator.userAgent.indexOf('Firefox') != -1) {
+		            document.body.style.MozUserSelect = 'none';
+		            document.body.style.WebkitUserSelect = 'none';
+		            document.body.style.khtmlUserSelect = 'none';
+		            document.body.style.oUserSelect = 'none';
+		            document.body.style.UserSelect = 'none';
+		        }
 		    };
 			
 			//업무일지 리스트 뿌리기
-			function setJournalList(){
+			function setJournalList() {
 				var url = "/ezJournal/journalList.do";
 				var jsonParam={};
-				jsonParam["listType"]=listType;
-				jsonParam["formId"]=$("#formId").val();
-				jsonParam["typeId"]=typeId;
-				jsonParam["currentPage"]=currentPage;
-				jsonParam["listCnt"]=listCnt;
-				jsonParam["deptId"]=$("#dept").val();
-				jsonParam["writerName"]=searchWriter;
-				jsonParam["journalTitle"]=searchTitle;
-				jsonParam["formName"]=searchFormName;
-				jsonParam["journalText"]=searchContent;
-				jsonParam["startDate"]=searchStartDate;
-				jsonParam["endDate"]=searchEndDate;
-				jsonParam["orderNum"]=orderNum;
-				jsonParam["orderHow"]=orderHow;
+				jsonParam["listType"] = listType;
+				jsonParam["formId"] = $("#formId").val();
+				jsonParam["typeId"] = typeId;
+				jsonParam["currentPage"] = currentPage;
+				jsonParam["listCnt"] = listCnt;
+				jsonParam["deptId"] = $("#dept").val();
+				jsonParam["writerName"] = searchWriter;
+				jsonParam["journalTitle"] = searchTitle;
+				jsonParam["formName"] = searchFormName;
+				jsonParam["journalText"] = searchContent;
+				jsonParam["startDate"] = searchStartDate;
+				jsonParam["endDate"] = searchEndDate;
+				jsonParam["orderNum"] = orderNum;
+				jsonParam["orderHow"] = orderHow;
 				
 				$.ajax({
-	   				type:"post",
-	   				contentType:'application/json',
-	   				dataType:"html",
-	   				data:JSON.stringify(jsonParam),
-	   				url:url,
+	   				type : "post",
+	   				contentType : 'application/json',
+	   				dataType : "html",
+	   				data : JSON.stringify(jsonParam),
+	   				url : url,
 	   				success: function(journalList){
 	   					$("#MailListRayer").html(journalList);
 	   					journalPreviewRayerChange(pPreviewShow_HOW);
@@ -202,13 +204,13 @@
 			
 			//페이지 번호에 의한 셋팅
 			function goToPageByNum(page){
-				currentPage=page;
+				currentPage = page;
 				setJournalList();
 			}
 			
 			//양식명에 의한 셋팅
 			function goToPageByFormName() {
-				currentPage=1;
+				currentPage = 1;
 				searchWriter = "";   
 				searchTitle = "";    
 				searchFormName = ""; 
@@ -265,16 +267,20 @@
 				var searchFlag = $("input[type='radio'][name='searchKey']:checked").val();
 				searchWriter = "";
 				searchTitle = "";
+				
 				if(searchFlag == 'journalWriter'){
 					searchWriter = $("#searchValue").val().trim();
+				
 					if (searchWriter == "") {
 						alert("<spring:message code='ezBoard.t192' />");
 	                	return;
 					}
 					setJournalList();
 					$("#searchValue").val("");
+				
 				} else if(searchFlag == 'journalTitle'){
 					searchTitle = $("#searchValue").val().trim();
+				
 					if (searchTitle == "") {
 						alert("<spring:message code='ezBoard.t192' />");
 	                	return;
@@ -287,11 +293,8 @@
 			//상세검색 레이어팝업
 			function doLayerPopup() {
 				$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
-	        	
 	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-	        	
 	        	$("#srarchpopup").css("left", popupX);
-	        	
 				$("#srarchpopup").modal(
 // 						{
 // 					  escapeClose: false,
@@ -338,9 +341,9 @@
 			function sumSearchOptionHidden() {
 		        document.getElementById("selectSumJournal").style.display = "none";
 		        $("#basicFormList").html("");
-		        sumFormId="";
-		        sumTypeId="";
-		        journalIdList=[];
+		        sumFormId = "";
+		        sumTypeId = "";
+		        journalIdList = [];
 		        $.modal.close();
 		    }
 			
@@ -364,6 +367,10 @@
 						journalIdList : JSON.stringify(journalIdList)
 					},
 					success : function() {
+						if(listType == 'recv'){
+							parent.left.setRecvCount();
+							setRecvCount();
+						}
 						setJournalList();
 					},
 					error : function() {
@@ -376,36 +383,34 @@
 				var basicFormFlag = true;
 				var selects = $(".selectTR");
 				selects.each(function(){
-					if($(this).attr("formStatus")!='basic'){
+					
+					if($(this).attr("formStatus") != 'basic'){
 						basicFormFlag = false;
 					}
 				});
-				if(selects.length==0){
+				if(selects.length == 0){
 					alert("<spring:message code='ezJournal.t148'/>");
 					return;
 				}
 				if(basicFormFlag){
 					var url = "/ezJournal/getFormList.do";
 					$.ajax({
-		   				type:"post",
-		   				dataType:"json",
-		   				url:url,
+		   				type : "post",
+		   				dataType : "json",
+		   				url : url,
 		   				success: function(forms){
 // 		   					var trs = "<tr><th style='text-align: center;'><spring:message code='ezJournal.t72' /></th></tr>";
-							var trs ="<tr><th style='margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;'><spring:message code='ezJournal.t70' /></th></tr>";
+							var trs = "<tr><th style='margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;'><spring:message code='ezJournal.t70' /></th></tr>";
 		   					$(forms).each(function(){
-		   						trs += "<tr onclick='sumFormClick(this);' ondblclick='writeSumJournal();' style='cursor:pointer;' sumTypeId="+this.typeId+" sumFormId="+this.formId+"><td>"+this.formName+"</td></tr>";
+		   						trs += "<tr onclick='sumFormClick(this);' ondblclick='writeSumJournal();' style='cursor:pointer;' sumTypeId=" + this.typeId + " sumFormId=" + this.formId + "><td>" + this.formName + "</td></tr>";
 		   					})
 	   						$("#basicFormList").html(trs);
 		   				}
 		   			});
 					
 					$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].sumSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
-		        	
 		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 150;
-		        	
 		        	$("#sumpopup").css("left", popupX);
-		        	
 					$("#sumpopup").modal(
 // 							{
 // 						  escapeClose: false,
@@ -424,6 +429,7 @@
 			
 			//취합하기
 			function writeSumJournal(){
+				journalIdList.length = 0;
 				if(sumFormId != null && sumFormId != undefined && sumFormId != ""){
 					 $('input:checkbox[name="journalCheckbox"]:checked').each(function() {
 						 var sumJournalId = $(this).parent().parent().attr("id");
@@ -436,7 +442,7 @@
 					Openwin.focus();
 					document.getElementById("selectSumJournal").style.display = "none";
 			        $("#basicFormList").html("");
-			        sumTypeId="";
+			        sumTypeId = "";
 				//	sumFormId = "";
 			        $.modal.close();
 				} else {
@@ -448,14 +454,14 @@
 			function sumFormClick(elem){
 				var parentElem = $(elem).parent();
 				$(parentElem).find("td").removeClass("selectTD");
-				sumFormId=$(elem).attr("sumFormId");
-				sumTypeId=$(elem).attr("sumTypeId");
+				sumFormId = $(elem).attr("sumFormId");
+				sumTypeId = $(elem).attr("sumTypeId");
 				$(elem).find("td").addClass("selectTD");
 			}
 			
 			//부서에 의한 페이지 세팅
 			function goToPageByDeptId(){
-				currentPage=1;
+				currentPage = 1;
 				searchWriter = "";   
 				searchTitle = "";    
 				searchFormName = ""; 
@@ -478,34 +484,34 @@
 	   			var vc = $(parentElem).find(".viewCount");
 	   			$(parentElem).find("input[type='checkbox']").prop("checked","true");
 	   			var journalId=$(parentElem).attr("id");
-	   			if (pPreviewShow_HOW=='W' || pPreviewShow_HOW=='H') {
+	   			if (pPreviewShow_HOW == 'W' || pPreviewShow_HOW == 'H') {
 		   			if($(parentElem).hasClass("noView")){
-		   				if($(parentElem).attr("mine")=='N'){
+		   				if($(parentElem).attr("mine") == 'N'){
 		   	   				$(vc).text(parseInt($(vc).text())+1);
 		   				}
 			   			$(parentElem).removeClass("noView");
 		   			}
 // 	   				$("#ifrmPreViewH").attr("src","/ezJournal/journalPreview.do?journalId="+journalId);
 					$.ajax({
-		   				type:"post",
-		   				dataType:"html",
-		   				data:{journalId:journalId},
-		   				url:"/ezJournal/journalPreview.do",
-		   				success: function(journal){
+		   				type : "post",
+		   				dataType : "html",
+		   				data : {journalId : journalId},
+		   				url : "/ezJournal/journalPreview.do",
+		   				success : function(journal){
 							$("#Preview_ContentW").html(journal);
 							$("#Preview_ContentH").html(journal);
 							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId="+journalId);
-							if(listType=='recv'){
+							if(listType == 'recv'){
 								parent.left.setRecvCount();
 // 								setJournalList();
 								setRecvCount();
 								$(parentElem).find("td:eq(1)").find("img").attr("src", "/images/ImgIcon/icon-msg-read.gif");
 							}
 							var textContentSize;
-							textContentSize = $("#PreviewRayerH").height()-55;
-							$("#Preview_ContentH").css("height",textContentSize);
-							textContentSize = $("#PreviewRayerW").height()-80;
-							$("#Preview_ContentW").css("height",textContentSize);
+							textContentSize = $("#PreviewRayerH").height() - 55;
+							$("#Preview_ContentH").css("height", textContentSize);
+							textContentSize = $("#PreviewRayerW").height() - 80;
+							$("#Preview_ContentW").css("height", textContentSize);
 // 		   					ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 // 		   					ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 		   				}
@@ -513,9 +519,9 @@
 				}
 			}
 			
-			//서렉트박스 전체선택 혹은 해제
-			function selectedAllTR(elem){
-				if($(elem).is(":checked")){
+			//체크박스 전체선택 혹은 해제
+			function selectedAllTR(elem) {
+				if($(elem).is(":checked")) {
 					 $('input:checkbox[name="journalCheckbox"]').each(function() {
 						 $(this).prop("checked","true");
 						 $(this).parent().parent().addClass("selectTR");
@@ -529,19 +535,19 @@
 			}
 			
 			//양식명 세럭트박스 만들기
-			function setFormName(){
-				var url = "/ezJournal/getFormList.do?typeId="+typeId;
+			function setFormName() {
+				var url = "/ezJournal/getFormList.do?typeId=" + typeId;
 				if(listType == "department" || listType == "mine"){
-					url += "&deptId="+$("#dept").val();
+					url += "&deptId=" + $("#dept").val();
 				}
 				$.ajax({
-	   				type:"post",
-	   				dataType:"json",
-	   				url:url,
-	   				success: function(forms){
-	   					var opts="<option value=''>양식선택</option>";
-	   					$(forms).each(function(){
-	   						opts +="<option value="+this.formId+">"+this.formName+"</option>";
+	   				type : "post",
+	   				dataType : "json",
+	   				url : url,
+	   				success : function(forms){
+	   					var opts = "<option value=''><spring:message code='ezJournal.t76'/></option>";
+	   					$(forms).each(function() {
+	   						opts += "<option value=" + this.formId + ">" + this.formName + "</option>";
 	   					})
 	   					$("#formId").html(opts);
 	   				}
@@ -568,20 +574,22 @@
 			
 			function savePreviewRayer(viewHow){
 				$.ajax({
-	   				type:"post",
-	   				data:{viewenv:viewHow},
-	   				url:"/ezJournal/saveJournalEnv.do",
-	   				success: function(){
+	   				type : "post",
+	   				data : {viewenv : viewHow},
+	   				url : "/ezJournal/saveJournalEnv.do",
+	   				success : function() {
 	   					journalPreviewRayerChange(viewHow);
 	   				}
 	   			});
 			}
 			function saveJournalEnv(){
 				$.ajax({
-	   				type:"post",
-	   				data:{"previewWcontent":pMailPreVDiv,"previewHcontent":pMailPreVDiv_H},
-	   				url:"/ezJournal/saveJournalEnv.do",
-	   				success: function(){
+	   				type : "post",
+	   				data : {"previewWcontent" : pMailPreVDiv, 
+	   						"previewHcontent" : pMailPreVDiv_H
+	   					   },
+	   				url : "/ezJournal/saveJournalEnv.do",
+	   				success : function(){
 	   				}
 	   			});
 			}
@@ -637,13 +645,13 @@
 // 						document.getElementById("Preview_HeaderH").style.display = "none";
 						g_bPrevShow = true;
 						
-						if(onPreview==false){
+						if(onPreview == false){
 							$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
 							$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
 // 							ifrmPreViewW.document
 // 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 						}
-						onPreview=true;
+						onPreview = true;
 					} else if (pGubun == "H") {
 						if (parent.document.getElementById("tab1")) {
 							CurrenWidth = document.documentElement.clientWidth + 7;
@@ -686,12 +694,12 @@
 
 						g_bPrevShow = true;
 						
-						if(onPreview==false){
+						if(onPreview == false){
 							$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
 							$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
 // 							ifrmPreViewH.documentr.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
 						}
-						onPreview=true;
+						onPreview = true;
 					}
 					
 					MailOptionHidden();
@@ -756,7 +764,7 @@
 				orderNum = $(elem).attr("order");
 				orderHow = $(elem).attr("sort");
 				
-				if(orderHow==null){
+				if(orderHow == null){
 					orderHow='asc';
 				} else if(orderHow == 'asc'){
 					orderHow='desc';
@@ -770,7 +778,7 @@
 				
 				$("#BoardList_TH th").each(function () {
 				
-					if(orderNum==$(this).attr("order")) {
+					if(orderNum == $(this).attr("order")) {
 						if(orderHow == 'asc'){
 							$(this).attr("sort","asc");
 							$(this).append(' <img src="/images/etc/view-sortdown.gif" align="absmiddle">');
@@ -832,7 +840,7 @@
 				}
 				
 				for (var i = 0; i < journalIdList.length; i++) {
-					if ($("#"+journalIdList[i]).attr("mine")=="N") {
+					if ($("#" + journalIdList[i]).attr("mine") == "N") {
 						alert("<spring:message code='ezBoard.t265'/>");
 						return;
 					}
@@ -889,68 +897,55 @@
 			});
 		</script>
 </head>
-<body class="mainbody" style="overflow: hidden;"
-	onmousemove="journalPreviewResize(event);"
-	onmouseup="journalPreviewEnd(event);">
+<body class="mainbody" style="overflow: hidden;" onmousemove="journalPreviewResize(event);" onmouseup="journalPreviewEnd(event);">
 	<c:choose>
 		<c:when test="${listType eq 'department' }">
-			<h1>
-				<spring:message code='ezJournal.t49' />
+			<h1><spring:message code='ezJournal.t49' />	
 		</c:when>
 		<c:when test="${listType eq 'mine' }">
-			<h1>
-				<spring:message code='ezJournal.t50' />
+			<h1><spring:message code='ezJournal.t50' />	
 		</c:when>
 		<c:when test="${listType eq 'recv' }">
-			<h1>
-				<spring:message code='ezJournal.t51' />
+			<h1><spring:message code='ezJournal.t51' />
 		</c:when>
 		<c:when test="${listType eq 'temp' }">
-			<h1>
-				<spring:message code='ezJournal.t52' />
+			<h1><spring:message code='ezJournal.t52' />
 		</c:when>
 	</c:choose>
-	<c:if test="${typeId ne null && typeId ne 'undefined' }">
-				 - <spring:message code='${typeId }' />
+	<c:if test = "${typeId ne null && typeId ne 'undefined' }">
+		 - <spring:message code='${typeId }' />
 	</c:if>
 	<c:choose>
 		<c:when test="${listType eq 'recv' }">
 			<span id="mailBoxInfo">[<spring:message code='ezJournal.t161' />
-				<span id="recvCount" style="color: #017BEC;"></span> <spring:message
-					code='ezJournal.t55' /> / <spring:message code='ezJournal.t54' /> <span
-				id="totalCount" style="color: #017BEC;"></span> <spring:message
-					code='ezJournal.t55' />]
+				<span id="recvCount" style="color: #017BEC;"></span> 
+					<spring:message code='ezJournal.t55' /> / <spring:message code='ezJournal.t54' /> 
+				<span id="totalCount" style="color: #017BEC;"></span> 
+					<spring:message code='ezJournal.t55' />]
 			</span>
 		</c:when>
 		<c:otherwise>
 			<span id="mailBoxInfo">[<spring:message code='ezJournal.t54' />
-				<span id="totalCount" style="color: #017BEC;"></span> <spring:message
-					code='ezJournal.t55' />]
+				<span id="totalCount" style="color: #017BEC;"></span> <spring:message code='ezJournal.t55' />]
 			</span>
 		</c:otherwise>
 	</c:choose>
 	<span style="float: right; font-weight: normal; color: black;">
-		<c:if
-			test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
+		<c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
 			<input name="searchKey" id="Radio1" type="radio" value="journalTitle"
 				checked
 				style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 			<label for="Radio1">&nbsp;<spring:message code='ezBoard.t208' /></label>
-		</c:if> <c:if test="${listType eq 'department' or listType eq 'recv' }">
+		</c:if> 
+		<c:if test="${listType eq 'department' or listType eq 'recv' }">
 			<input name="searchKey" id="Radio2" type="radio"
 				value="journalWriter"
 				style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
-			<label for="Radio2">&nbsp;<spring:message
-					code='ezJournal.t34' /></label>
-		</c:if> &nbsp; <c:if
-			test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-			<input id="searchValue"
-				style="width: 150px; height: 20px; border-right: 0px; vertical-align: top"
-				onfocus="journalKeywordClear(this);"
-				onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
-			<a href="#" style="float: right"><img
-				src="../../images/sub/bsearch.gif" border="0"
-				onclick="quickSearch()"></a>
+			<label for="Radio2">&nbsp;<spring:message code='ezJournal.t34' /></label>
+		</c:if> &nbsp; 
+		<c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
+			<input id="searchValue" style="width: 150px; height: 20px; border-right: 0px; vertical-align: top" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
+			<a href="#" style="float: right"><img src="../../images/sub/bsearch.gif" border="0" onclick="quickSearch()"></a>
 		</c:if>
 	</span>
 	</h1>
@@ -958,81 +953,62 @@
 		<ul>
 			<!-- 		  	일지쓰기 -->
 			<c:if test="${listType eq 'department' or listType eq 'mine' }">
-				<li><span onClick="writejournal()"><spring:message
-							code='ezJournal.t57' /></span></li>
+				<li><span onClick="writejournal()"><spring:message code='ezJournal.t57' /></span></li>
 			</c:if>
 			<!-- 		  	확인완료 -->
 			<c:if test="${listType eq 'recv' }">
-				<li><span onClick="doViewJournal();"><spring:message
-							code='ezJournal.t58' /></span></li>
+				<li><span onClick="doViewJournal();"><spring:message code='ezJournal.t58' /></span></li>
 			</c:if>
 			<!-- 		  	읽음표시 -->
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<li><span onClick="doViewJournal();"><spring:message
-							code='ezBoard.t204' /></span></li>
+				<li><span onClick="doViewJournal();"><spring:message code='ezBoard.t204' /></span></li>
 			</c:if>
 			<!-- 		  	수정 -->
 			<c:if test="${listType eq 'temp' }">
-				<li><span onClick="modifyJournal()"><spring:message
-							code='ezJournal.t107' /></span></li>
+				<li><span onClick="modifyJournal()"><spring:message code='ezJournal.t107' /></span></li>
 			</c:if>
 			<!-- 		  	삭제 -->
 <%-- 			<c:if --%>
 <%-- 				test="${listType eq 'temp' or listType eq 'recv' or listType eq 'mine'}"> --%>
-			<li><span onClick="deleteJournal()"><spring:message
-						code='ezJournal.t108' /></span></li>
+			<li><span onClick="deleteJournal()"><spring:message code='ezJournal.t108' /></span></li>
 <%-- 			</c:if> --%>
-			<c:if
-				test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine'}">
+			<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine'}">
 				<!-- 		  	상세검색 -->
-				<li><span id="SearchOption" onClick="doLayerPopup(this);"
-					mode="off"><spring:message code='ezJournal.t59' /></span></li>
+				<li><span id="SearchOption" onClick="doLayerPopup(this);" mode="off"><spring:message code='ezJournal.t59' /></span></li>
 				<!-- 		  	취합 -->
-				<li><span onClick="doSelectSumJournal();"><spring:message
-							code='ezJournal.t60' /></span></li>
+				<li><span onClick="doSelectSumJournal();"><spring:message code='ezJournal.t60' /></span></li>
 			</c:if>
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<li style="background: none; padding-right: 2px;"><img
-					src="/images/i_bar.gif" alt=""></li>
+				<li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif" alt=""></li>
 			</c:if>
 			<c:if test="${listType eq 'department'}">
-				<li style="background: none"><select id="dept"
-					onchange="goToPageByDeptId();">
-						<c:forEach items="${deptList}" var="dept">
-							<option value="${dept.deptId}"
-								<c:if test="${dept.mine eq 'yes' }">selected</c:if>>${dept.deptName }</option>
-						</c:forEach>
+				<li style="background: none"><select id="dept" onchange="goToPageByDeptId();">
+					<c:forEach items="${deptList}" var="dept">
+						<option value="${dept.deptId}"
+							<c:if test="${dept.mine eq 'yes' }">selected</c:if>>${dept.deptName }
+						</option>
+					</c:forEach>
 				</select></li>
 			</c:if>
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<li style="background: none"><select id="formId"
-					onchange="goToPageByFormName();">
-				</select></li>
+				<li style="background: none"><select id="formId" onchange="goToPageByFormName();"></select></li>
 			</c:if>
 			<li style=""></li>
-			<li id="right"><img src="/images/kr/cm/btn_noframe.gif"
-				width="22" height="20" class="btnimg" id="PreViewNone" status="off"
-				onclick="savePreviewRayer('NONE')"> <img
-				src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20"
-				class="btnimg" id="PreViewBottom" status="off"
-				onclick="savePreviewRayer('W')"> <img
-				src="/images/kr/cm/btn_leftframe.gif" width="22" height="20"
-				class="btnimg" id="PreViewleft" status="off"
-				onclick="savePreviewRayer('H')"> <img
-				src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off"
-				id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
+			<li id="right">
+				<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" status="off" onclick="savePreviewRayer('NONE')">
+				<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" status="off" onclick="savePreviewRayer('W')"> 
+				<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" status="off" onclick="savePreviewRayer('H')"> 
+				<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
+			</li>
 		</ul>
 	</div>
 	<script type="text/javascript">
-		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		</script>
-	<div id="layer_Viewpopup"
-		style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
+	    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+	</script>
+	<div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
 		<div class="popupwrap1">
 			<div class="popupwrap2">
-				<table
-					style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;"
-					class="list_element">
+				<table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
 					<caption></caption>
 					<colgroup>
 						<col style="width: 80px;">
@@ -1040,8 +1016,7 @@
 					</colgroup>
 					<tr>
 						<th><spring:message code='ezBoard.t10021' /></th>
-						<td><select id="listcount" style="WIDTH: 40px; height: 20px;"
-							onchange="goToPageByListCnt(this);">
+						<td><select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="goToPageByListCnt(this);">
 								<c:forEach begin="1" end="5" varStatus="status">
 									<c:choose>
 										<c:when test="${journalEnv.listCnt eq  status.index*10}">
@@ -1060,141 +1035,122 @@
 		<div class="shadow"></div>
 	</div>
 
-	<div
-		style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;"
-		id="mailPanel"></div>
-	<div
-		style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;"
-		id="ResizeBarH"></div>
-	<div
-		style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;"
-		id="ResizeBarW"></div>
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
+	<div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
+	<div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 
-	<span id="MailListRayer"
-		style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
-
+	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
 	</span>
 
 	<!-- 		    보기설정을 다르게 했을때 보여주는 화면 -->
-	<span id="PreviewRayerH"
-		style="border: 0px solid red; width: 500px; height: 100%; overflow: hidden; vertical-align: top; display: none; margin-left: -5px;">
-		<span class="previewmail_bar_h"
-		onmousedown="PreviewH_onMouserDown(event);"
-		style="cursor: w-resize; display: inline-block;">
+	<span id="PreviewRayerH" style="border: 0px solid red; width: 500px; height: 100%; overflow: hidden; vertical-align: top; display: none; margin-left: -5px;">
+		<span class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
 			<p class="hbar_dotted">
 				<img src="/images/prevview_hbar_dotted.gif">
 			</p>
-	</span> <span id="PreContent_RayerH"
-		style="position: absolute; border: 0px solid blue;"> <span
-			style="width: 100%; height: 100px; display: block;"> <!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
+		</span> 
+		<span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;"> 
+			<span style="width: 100%; height: 100px; display: block;"> 
+				<!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
 				<!-- 		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;"> -->
 				<!-- 		                    </div> --> <!-- 		                </span> -->
 
-				<div id="Preview_ContentH"
-					style="text-align: center; border-top: 1px solid #eeeeee;"></div> <!-- 		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe> -->
+				<div id="Preview_ContentH" style="text-align: center; border-top: 1px solid #eeeeee;"></div> 
+				<!-- 		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe> -->
+			</span>
 		</span>
 	</span>
-	</span>
 
-	<span id="PreviewRayerW"
-		style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
-		<span onmousedown="PreviewW_onMouserDown(event);"
-		style="cursor: s-resize; width: 100%; display: list-item;"
-		class="previewmail_bar" name="PreviewBar" id="PreviewBar"> <img
-			src="/images/prevview_bar_dotted.gif">
-	</span> <span onmousedown="PreviewW_onMouserDown(event);"
-		style="margin: 2px; margin-bottom: -4.9px; cursor: s-resize; width: 100%; display: list-item;"
-		class="previewmail_bar" name="PreviewBar" id=""> </span> <span
-		id="PreContent_RayerW" style="display: block;"> <span
-			style="width: 100%; height: 100px; display: block;"> <!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
+	<span id="PreviewRayerW" style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
+		<span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar"> 
+			<img src="/images/prevview_bar_dotted.gif">
+		</span> 
+		<span onmousedown="PreviewW_onMouserDown(event);" style="margin: 2px; margin-bottom: -4.9px; cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id=""> </span > 
+		<span id="PreContent_RayerW" style="display: block;"> 
+			<span style="width: 100%; height: 100px; display: block;"> 
+				<!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
 				<!-- 		                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;"> -->
 				<!-- 		                    </div> --> <!-- 		                </span> -->
 
 				<div id="Preview_ContentW" style="text-align: center;"></div>
+			</span>
 		</span>
-	</span>
 	</span>
 	<div id="ListInfo" style="display: none"></div>
 
-	<div class="jquery-modal blocker current" id="layer_popup"
-		style="display: none;">
-		<div id="srarchpopup" class="popupwrap1 modal"
-			style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
+	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
+		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<table class="content">
 				<tr>
-					<th class="layerHeader" colspan="2"><img
-						src="/images/kr/left/left_mail.png"
-						style="vertical-align: middle; padding-bottom: 1px"> <spring:message
-							code='ezJournal.t1' /> <spring:message code='ezJournal.t43' /></th>
+					<th class="layerHeader" colspan="2">
+						<img src="/images/kr/left/left_mail.png" style="vertical-align: middle; padding-bottom: 1px"> 
+						<spring:message code='ezJournal.t1' /> <spring:message code='ezJournal.t43' />
+					</th>
 				</tr>
 				<c:if test="${listType ne 'mine' }">
 					<tr>
-						<th style="text-align: center"><spring:message
-								code='ezJournal.t34' /></th>
-						<td><input type="text" onfocus="journalKeywordClear(this);"
-							onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}"
-							id="searchWriter" style="width: 98%" value=""></td>
+						<th style="text-align: center">
+							<spring:message code='ezJournal.t34' />
+						</th>
+						<td>
+							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchWriter" style="width: 98%" value="">
+						</td>
 					</tr>
 				</c:if>
 				<tr>
-					<th style="text-align: center"><spring:message
-							code='ezBoard.t208' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);"
-						onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}"
-						id="searchTitle" style="width: 98%" value=""></td>
+					<th style="text-align: center">
+						<spring:message code='ezBoard.t208' />
+					</th>
+					<td>
+						<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 98%" value="">
+					</td>
 				</tr>
 				<tr>
-					<th style="text-align: center"><spring:message
-							code='ezEmail.t649' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);"
-						onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}"
-						id="searchContent" style="width: 98%" value=""></td>
+					<th style="text-align: center">
+						<spring:message code='ezEmail.t649' />
+					</th>
+					<td>
+						<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchContent" style="width: 98%" value="">
+					</td>
 				</tr>
 				<tr>
-					<th style="text-align: center"><spring:message
-							code='ezJournal.t22' /></th>
-					<td><input type="text" onfocus="journalKeywordClear(this);"
-						onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}"
-						id="searchFormName" style="width: 98%" value=""></td>
+					<th style="text-align: center">
+						<spring:message code='ezJournal.t22' />
+					</th>
+					<td>
+						<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchFormName" style="width: 98%" value="">
+					</td>
 				</tr>
 				<tr>
-					<th style="text-align: center"><spring:message
-							code='ezBoard.t210' /></th>
-					<td><input type="text" id="Sdatepicker"
-						style="width: 80px; text-align: center" readonly="readonly">
-						~ <input type="text" id="Edatepicker"
-						style="width: 80px; text-align: center" readonly="readonly">
+					<th style="text-align: center">
+						<spring:message code='ezBoard.t210' />
+					</th>
+					<td>
+						<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly">
+						~ 
+						<input type="text" id="Edatepicker" style="width: 80px; text-align: center" readonly="readonly">
 					</td>
 				</tr>
 			</table>
 			<br />
 			<table style="width: 100%">
 				<tr>
-					<td style="text-align: center;"><a class="imgbtn"><span
-							onClick="goToPageBySearch()"><spring:message
-									code='ezBoard.t188' /></span></a> <a class="imgbtn"><span
-							onClick="BoardSearchOptionHidden()"><spring:message
-									code='ezBoard.t15' /></span></a></td>
+					<td style="text-align: center;">
+						<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezBoard.t188' /></span></a> 
+						<a class="imgbtn"><span onClick="BoardSearchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a>
+					</td>
 				</tr>
 			</table>
 		</div>
 	</div>
-	<div
-		style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;"
-		id="mailPanel_sub">&nbsp;</div>
-	<div class="layerpopup"
-		style="z-index: 2000; position: absolute; display: none;"
-		id="iFramePanel_sub">
-		<iframe src="<spring:message code='main.kms4' />"
-			style="border: none;" id="iFrameLayer_sub"></iframe>
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
+	<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel_sub">
+		<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer_sub"></iframe>
 	</div>
-	<div class="jquery-modal blocker current" id="selectSumJournal"
-		style="display: none;">
-		<div id="sumpopup" class="popupwrap1 modal popup"
-			style="text-align: center; width: 300px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 500px; display: inline-block;">
+	<div class="jquery-modal blocker current" id="selectSumJournal" style="display: none;">
+		<div id="sumpopup" class="popupwrap1 modal popup" style="text-align: center; width: 300px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 500px; display: inline-block;">
 			<%-- 			<h1 style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic;"><spring:message code='ezJournal.t70' /></h1> --%>
-			<table class="mainlist" id="basicFormList"
-				style="width: 100%; border: 1px solid #ddd !important; border-top: none;">
+			<table class="mainlist" id="basicFormList" style="width: 100%; border: 1px solid #ddd !important; border-top: none;">
 				<!-- 				<tr> -->
 				<%-- 					<th style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;"><spring:message code='ezJournal.t70' /></th> --%>
 				<!-- 				</tr>			 -->
@@ -1202,11 +1158,10 @@
 			<br />
 			<table style="width: 100%">
 				<tr>
-					<td style="text-align: center;"><a class="imgbtn"><span
-							onClick="writeSumJournal();"><spring:message
-									code='ezJournal.t60' /></span></a> <a class="imgbtn"><span
-							onClick="sumSearchOptionHidden();"><spring:message
-									code='ezBoard.t15' /></span></a></td>
+					<td style="text-align: center;">
+						<a class="imgbtn"><span onClick="writeSumJournal();"><spring:message code='ezJournal.t60' /></span></a> 
+						<a class="imgbtn"><span onClick="sumSearchOptionHidden();"><spring:message code='ezBoard.t15' /></span></a>
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -1316,6 +1271,41 @@
 	    }
 	}
 	
+	function PreviewH_onMouserDown(e) {
+	    curevent = (typeof event == 'undefined' ? e : event);
+
+	    var newPos_H = curevent.clientX;
+
+	    if (newPos_H < parseInt(CurrenWidth * 0.40)) {
+	        newPos_H = parseInt(CurrenWidth * 0.40);
+	    }
+	    else if (newPos_H > parseInt(CurrenWidth * 0.65)) {
+	        newPos_H = parseInt(CurrenWidth * 0.65);
+	    }
+
+	    document.getElementById("ResizeBarH").style.left = newPos_H + "px";
+	    document.getElementById("ResizeBarH").style.display = "";
+	    document.getElementById("mailPanel").style.display = "";
+	    PreviewH_Move = true;
+	}
+	function PreviewW_onMouserDown(e) {
+	    curevent = (typeof event == 'undefined' ? e : event);
+
+	    var newPos_W = curevent.clientY;
+
+	    if (newPos_W < (parseInt(CurrentHeight * 0.25) + 90)) {
+	        newPos_W = parseInt(CurrentHeight * 0.25) + 90;
+	    }
+	    else if (newPos_W > (parseInt(CurrentHeight * 0.65) + 90)) {
+	        newPos_W = (parseInt(CurrentHeight * 0.65) + 90);
+	    }
+
+	    document.getElementById("ResizeBarW").style.top = newPos_W + "px";
+	    document.getElementById("ResizeBarW").style.display = "";
+	    document.getElementById("mailPanel").style.display = "";
+	    PreviewW_Move = true;
+	}
+	
 	//유저정보
 	function OpenUserInfo(pUserID) {
 		var result = GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
@@ -1325,8 +1315,8 @@
 	function goJournalDetail(elem){
 		var vc = $(elem).find(".viewCount");
 		if($(elem).hasClass("noView")){
-			if($(elem).attr("mine")=='N'){
-   				$(vc).text(parseInt($(vc).text())+1);
+			if($(elem).attr("mine") == 'N'){
+   				$(vc).text(parseInt($(vc).text()) + 1);
 			}
    			$(elem).removeClass("noView");
 		}
@@ -1339,8 +1329,7 @@
 		var Openwin;
 		if (listType === "temp") {
 			var typeId = $(elem).attr("typeId");
-			var formId = $(elem).attr("formId");
-			Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + typeId + "&formId=" + formId + "&journalId=" + journalId + "&mode=temp", "",
+			Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=temp", "",
 							"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 								+ feature);
 			Openwin.focus();
@@ -1349,7 +1338,7 @@
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			Openwin.focus();
-			if(listType=='recv'){
+			if(listType == 'recv'){
 				$(elem).find("td:eq(1)").find("img").attr("src", "/images/ImgIcon/icon-msg-read.gif");
 			}
 		}
@@ -1363,7 +1352,7 @@
 //         var top = (heigth - 300) / 2;
 //         var szHref = "/ezJournal/journalReply.do?journalId="+journalId;
 //         DivPopUpShow_sub(520, 420, szHref);
-		 DivPopUpShow_sub($('body').prop('scrollWidth') * 0.6, $('body').prop('scrollHeight') * 0.6, "/ezJournal/journalReply.do?journalId="+journalId);
+		 DivPopUpShow_sub($('body').prop('scrollWidth') * 0.6, $('body').prop('scrollHeight') * 0.6, "/ezJournal/journalReply.do?journalId=" + journalId);
 	 }
 	 
 	function setTotalCount(totalCount) {

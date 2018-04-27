@@ -49,7 +49,10 @@
 					'core' : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
 					 'themes' : {'responsive' : true}
-				});
+				}).on('ready.jstree', function(e, data) {
+					var offset = $(".jstree-clicked").offset();
+		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+			    });
 	   		}
 	   		
 	   		var currentNode;
@@ -67,7 +70,7 @@
 							}
 						}
 			   			if(flag){
-				   			if (childrenId!=opener.userDeptId) {
+				   			if (childrenId!=opener.userDeptId && opener.userAddIds.indexOf(childrenId) == -1) {
 					   			$("#lplistView .mainlist_free").append("<tr targetId="+childrenId+" targetName="+childrenName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+childrenName+"</td></tr>");
 					   			lpDepts.push(childrenId);
 					   			lpDeptNames.push(childrenName);
@@ -83,7 +86,7 @@
 						}
 					}
 		   			if(flag){
-			   			if (lpDeptId!=opener.userDeptId) {
+			   			if (lpDeptId!=opener.userDeptId && opener.userAddIds.indexOf(lpDeptId) == -1) {
 				   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
 				   			lpDepts.push(lpDeptId);
 				   			lpDeptNames.push(lpDeptName);
@@ -167,14 +170,14 @@
        	<table>
             <tr>
                 <td class="box" style="width: 250px; height: 465px;">
-                    <div style="width: 100%; height: 100%; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
                 </td>
                 <td style="width: 30px; text-align: center;" rowspan="2">                            
                       <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
                       <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept()">
-                 		</td>
-                <td class="listview" style="width: 250px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
-                	<div style="width: 100%; height: 100%; overflow: auto;">
+           		</td>
+                <td class="listview" style="width: 200px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
+                	<div style="width: 200px; height: 494px; overflow: auto;">
 	                	<table class="mainlist_free">
 						</table>
 					</div>

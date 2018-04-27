@@ -38,7 +38,7 @@
 			}
 			.viewtxt > span > span {
 				font-size: 14px;
-			}			
+			}	
 			
 			#menu > ul:nth-child(2) > li {
 				margin: 0 2px !important;
@@ -777,22 +777,27 @@
 	        }
 	        AttachFileInfo(strXML);
 	    }
-	
+		
 	    function FileUpdateAfter(strXML) {
-	        tempXML = strXML;
+	        
+	    	tempXML = strXML;
 	        pAttachXml = loadXMLString(strXML);
+	        
 	        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
 	        var xmlDoc = createXmlDom();
 	        var objNode;
 	        var objRow;
 	        var objRows;
 	        var objRowRow;
+	        
 	        objNode = createNodeInsert(xmlDoc, objNode, "DATA");
 	        createNodeAndInsertText(xmlDoc, objNode, "CMD", "ADD");
 	        createNodeAndInsertText(xmlDoc, objNode, "URL", g_url);
 	        objRow = createNodeAndAppandNode(xmlDoc, objNode, objRow, "FILELIST");
+	        
 	        for (var i = 0; i < nodes.length; i++) {
-	            if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
+	            
+	        	if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
 	                objRows = createNodeAndAppandNode(xmlDoc, objRow, objRows, "FILE");
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "NAME", getNodeText(GetChildNodes(nodes[i])[2]));
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "PATH", getNodeText(GetChildNodes(nodes[i])[4]));
@@ -810,45 +815,65 @@
 	        var objRow;
 	        var objRows;
 	        objNode = createNodeInsert(xmlReturnValue, objNode, "DATA");
+	        
 	        if (xmlhttp.status == "200") {
+	        	
 	        	if (xmlhttp.responseText.indexOf("NO APPEND failed.") > -1) {
 	        		alert(strLang241);
-	        	}
-		       	else {
+	        	} else {
 		        	xmlDoc = loadXMLString(xmlhttp.responseText);
 		
-		            if (CrossYN())
+		            if (CrossYN()) {
 		                g_url = xmlDoc.getElementsByTagName("URL").item(0).textContent;
-		            else
+		            } else {
 		                g_url = xmlDoc.getElementsByTagName("URL").item(0).text;
+		            }
+		            
 		            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
+		            var folderPath = "<spring:message code='ezEmail.t99000027' />";
+	        	    var scheme = document.location.protocol + "//" + document.location.hostname;
+	        	    
+	                if (document.location.port != "80") {
+	                	scheme += ":" + document.location.port;
+	                }
+		            
+		            /* 2018-04-25 김유진 - 파일 첨부시 href에 넣어줄 aitem 수정 */
 		            for (var i = 0; i < filelist.length; i++) {
 		                filename = SelectSingleNodeValue(filelist[i], "NAME");
 		                path = SelectSingleNodeValue(filelist[i], "PATH");
 		                big_yn = SelectSingleNodeValue(filelist[i], "BIG");
 		                size = SelectSingleNodeValue(filelist[i], "SIZE");
 		                attid = SelectSingleNodeValue(filelist[i], "ITEMID");
-		                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
+		                
 		                if (big_yn == "Y") {
-		                    bigtrue = bigtrue + 1;
-		                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURIComponent(path) + "&filedate=" + encodeURIComponent(attid.split('/')[0]);
+		                	// 대용량 첨부시 
+		                	bigtrue = bigtrue + 1;
+		                	aitem = scheme  + "/ezEmail/downloadAttachCommon.do?"
+		                					+ "fileid=" + encodeURIComponent(path)
+		                					+ "&filedate=" + encodeURIComponent(attid.split('/')[0])
+		                					+ "&tid=" + tid;
+		                } else {
+		                	// 일반파일 첨부시
+			                aitem = "/ezEmail/downloadAttach.do?" 
+			                				+ "mode=Attach"
+			                				+ "&folderPath=" + encodeURIComponent(folderPath)
+			                				+ "&filename=" + encodeURIComponent(filename)
 		                }
-		                else {
-		                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
-		                }
+		                
 		                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "FILEPATH", path);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "URL", aitem);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "BIG", big_yn);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "ITEMID", attid);
+		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "UID", g_url);
 		            }
-		            
 		            returnvalue(strXML);
 	        	}
-	        }
-	        else {
+	        	
+	        } else {
 	            alert(xmlhttp.status + " : " + strLang241);
 	        }
+	        
 	        return xmlReturnValue;
 	    }
 	
