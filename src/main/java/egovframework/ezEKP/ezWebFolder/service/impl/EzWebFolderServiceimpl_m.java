@@ -632,6 +632,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				
 				if (isFileDeleted > 0) {
 					realFileDelete(fileVO, realPath, userInfo, userName1,  userName2);
+					deleteFavorite(userId, fileVO.getFileId(), "F", tenantId);
 				}
 			}
 		}
@@ -736,6 +737,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 				realFileDelete(fileVO, realPath, userInfo, userName1, userName2);
 				ezWebFolderService.saveLog("P", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				deleteFavorite(userId, fileVO.getFileId(), "F", tenantId);
 			}
 		}
 		
@@ -775,10 +777,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public void restoreFile(String fileId, int tenantId, String userId, String timeUTC) throws Exception {
+	public void restoreFile(FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("fileId", fileId);
+		map.put("fileId", fileVO.getFileId());
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
 		map.put("timeUTC", timeUTC);
@@ -786,6 +788,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		int result = ezWebFolderDAO.restoreFile(map);
 		
 		if (result > 0) {
+			ezWebFolderService.saveLog("RE", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 			LOGGER.debug("restoreFile is success");
 		} else {
 			LOGGER.debug("restoreFile is fail");
@@ -814,7 +817,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public int restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC) throws Exception {
+	public int restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC, String userName1, String userName2) throws Exception {
 		int successCount = 0;
 		
 		for (String file : fileIDList) {
@@ -825,7 +828,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					FolderVO folderVO = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
 					
 					if (folderVO != null && folderVO.getUseStatus().equals("Y")) {
-						restoreFile(file, tenantId, userId, timeUTC);
+						restoreFile(fileVO, tenantId,  userId, timeUTC, companyId, offset, userName1, userName2);
 						successCount += 1;
 					}
 				}
@@ -841,7 +844,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					int isRestored = restoreFolder(folderVO.getFolderPath(), tenantId, userId, companyId, timeUTC);
 					
 					if (isRestored == 1) {
-						restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC);
+						restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
 						successCount += 1;
 					}
 				}
@@ -852,7 +855,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public void restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC) throws Exception {
+	public void restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath);
 		map.put("tenantId", tenantId);
@@ -865,14 +868,18 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		for (String file : searchFiles) {
 			map.put("fileId", file);
 			result = ezWebFolderDAO.restoreFile(map);
+			
+			if (result > 0) {
+				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
+				ezWebFolderService.saveLog("RE", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				
+				LOGGER.debug("restoreFileInFolder is success");
+			} else {
+				LOGGER.debug("restoreFileInFolder is fail");
+			}
 		}
 		
 		
-		if (result > 0) {
-			LOGGER.debug("restoreFileInFolder is success");
-		} else {
-			LOGGER.debug("restoreFileInFolder is fail");
-		}
 		
 	}
 			
@@ -962,7 +969,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 
 	@Override
-	public void deleteFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception {
+	public int deleteFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception {
 		
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
@@ -970,7 +977,18 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("targetType", targetType);
 		parameterMap.put("tenantId", tenantId);
 
-		ezWebFolderDAO.deleteFavorite(parameterMap);
+		return ezWebFolderDAO.deleteFavorite(parameterMap);
+	}
+	
+	@Override
+	public int deleteFavoritesInFolder(String userId, String folderId, int tenantId) throws Exception {
+		
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("userId", userId);
+		parameterMap.put("folderId", folderId);
+		parameterMap.put("tenantId", tenantId);
+
+		return ezWebFolderDAO.deleteFavoritesInFolder(parameterMap);
 	}
 
 	@Override
@@ -995,7 +1013,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				
 				if (destFolderVO != null) {
 					moveFolder(folderVO, destFolderVO, userId, offset, tenantId, timeUTC);
-					restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC);
+					restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
 				}
 			}
 		}

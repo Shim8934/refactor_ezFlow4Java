@@ -71,7 +71,7 @@ function displaySubFolder(divTree, divElmt, list) {
 	
 	var imgElmt2 = document.createElement("img");
 	imgElmt2.setAttribute("class", "webfolderImg");
-	imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
+	imgElmt2.src = "/images/webfolder/fldr.png";
 	
 	var spanFolderName = document.createElement("span");
 	spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
@@ -122,9 +122,6 @@ function getSelected(obj) {
 			previousElmt.style.color      = "";
 			previousElmt.style.fontWeight = "normal";
 		}
-		else {
-			return;
-		}
 	}
 	
 	selectedFolder       = obj.getAttribute("name");
@@ -134,7 +131,7 @@ function getSelected(obj) {
 	window.parent.frames["right"].folderId = selectedFolder;
 	window.parent.frames["right"].toggleUploadBttn(obj.getAttribute("level"));
 	window.parent.frames["right"].reloadSelectBox();
-	window.parent.frames["right"].search_Set("1");
+	window.parent.frames["right"].refresh();
 }
 
 function getDetailTree(obj) {

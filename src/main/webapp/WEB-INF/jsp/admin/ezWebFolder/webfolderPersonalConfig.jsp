@@ -5,17 +5,14 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="/css/organ_tree.css"                     type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezOrgan.e1'/>"></script>
+		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"          type="text/css">
+		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css"         type="text/css">
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"     ></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"                  ></script>
 		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
+		<script type="text/javascript" src="/js/ezWebFolder/adminTable.js"       ></script>
 		<script type="text/javascript" >
 			var blockSize   = 10;
 			var searchStr   = "";
@@ -27,13 +24,7 @@
 			var strLang40   = "<spring:message code='ezWebFolder.t136'/>";
 			var strLang41   = "<spring:message code='ezWebFolder.t137'/>";
 			var strLang42   = "<spring:message code='ezWebFolder.t138'/>";
-			var checkedArr  = [];
-			
-			window.onresize = function () {
-				var divList          = document.getElementById("mainSetting");
-				var reheight         = document.documentElement.clientHeight - 190;
-				divList.style.height = reheight + "px";
-			};
+			var strNoData   = "<spring:message code='ezWebFolder.t144'/>";
 			
 			window.onload = function() {
 				search_Set("1");
@@ -46,19 +37,24 @@
 				divList.style.height = reheight + "px";
 			}
 			
+			function keyPressPanel(e) {
+				if (e.which == 27 && document.getElementById("mailPanel").style.display == "") {openSearchPanel();}
+			}
+			
 			function openSearchPanel() {
 				var searchPanel = document.getElementById("searchPanel");
 				if (searchPanel.style.display == "none") {
 					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
-					document.getElementById("mailPanel").style.display = "";
+					document.getElementById("mailPanel").style.display                              = "";
 					var position              = getPosition(502, 128);
 					searchPanel.style.top     = position[0] + "px";
 					searchPanel.style.right   = position[1] + "px";
 					searchPanel.style.display = "";
+					fogPanel.focus();
 				}
 				else {
 					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
-					document.getElementById("mailPanel").style.display = "none";
+					document.getElementById("mailPanel").style.display                              = "none";
 					searchPanel.style.display = "none";
 				}
 				
@@ -95,94 +91,13 @@
 			}
 			
 			function renderData(result) {
-				document.getElementById("_checkAll").checked = false;
-				var tableList = document.getElementById("tblFileStorage");
-				
-				while (tableList.rows.length > 1) {
-					tableList.deleteRow(1);
-				}
-				
-				if (result == null || result.length == 0) {
-					var trElmt = document.createElement("tr");
-					var tdElmt = document.createElement("td");
-					tdElmt.setAttribute("colspan", "8");
-					tdElmt.setAttribute("align", "center");
-					tdElmt.setAttribute("bgcolor", "#FFFFFF");
-					tdElmt.innerHTML = "<spring:message code='ezWebFolder.t144'/>";
-					
-					trElmt.appendChild(tdElmt);
-					tableList.appendChild(trElmt);
-				}
-				else {
-					var len = result.length;
-					for (var i = 0; i < len; i++) {
-						var trElmt  = document.createElement("tr");
-						var tdElmt1 = document.createElement("td");
-						var tdElmt2 = document.createElement("td");
-						var tdElmt3 = document.createElement("td");
-						var tdElmt4 = document.createElement("td");
-						var tdElmt5 = document.createElement("td");
-						var tdElmt6 = document.createElement("td");
-						var tdElmt7 = document.createElement("td");
-						var tdElmt8 = document.createElement("td");
-						
-						trElmt.setAttribute("class", "bnkWebFolder");
-						trElmt.setAttribute("usedAmount", result[i]["totalUsed"]);
-						trElmt.setAttribute("userId", result[i]["userId"]);
-						trElmt.onclick = function(event) {clickRow(this, event);};
-						
-						var inputElmt = document.createElement("input");
-						inputElmt.setAttribute("type", "checkbox");
-						inputElmt.setAttribute("class", "checkBnk");
-						inputElmt.setAttribute("value", "0");
-						inputElmt.setAttribute("usedAmount", result[i]["totalUsed"]);
-						inputElmt.setAttribute("userId", result[i]["userId"]);
-						inputElmt.onclick = function(evt) {getChecked(this, evt);};
-						
-						tdElmt1.appendChild(inputElmt);
-						
-						tdElmt2.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
-						tdElmt2.textContent = result[i]["companyName"];
-						
-						tdElmt3.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
-						tdElmt3.textContent = result[i]["departmentName"];
-						
-						tdElmt4.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
-						tdElmt4.textContent = result[i]["userName"];
-						
-						tdElmt5.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
-						tdElmt5.textContent = result[i]["jobTitle"];
-						
-						tdElmt6.setAttribute("style","text-align: center;");
-						tdElmt6.textContent = getFileSize(result[i]["totalUsed"]);
-						
-						tdElmt7.setAttribute("style","text-align: center;");
-						tdElmt7.textContent = result[i]["totalCapacity"] + "GB";
-						
-						tdElmt8.setAttribute("style","white-space:nowrap; text-align:center;");
-						
-						var span = document.createElement("span");
-						span.className  = "workProgressBar";
-						span.innerHTML += "<span class='bar' usedrate='rategrogressBar" + i + "'></span>&nbsp;";
-						
-						var span2 = document.createElement("span");
-						span2.style.display = "inline-block";
-						span.appendChild(span2);
-						tdElmt8.appendChild(span);
-						
-						trElmt.appendChild(tdElmt1);
-						trElmt.appendChild(tdElmt2);
-						trElmt.appendChild(tdElmt3);
-						trElmt.appendChild(tdElmt4);
-						trElmt.appendChild(tdElmt5);
-						trElmt.appendChild(tdElmt6);
-						trElmt.appendChild(tdElmt7);
-						trElmt.appendChild(tdElmt8);
-						tableList.appendChild(trElmt);
-						
-						initProgressBar("rategrogressBar" + i, "3", result[i]["usedRate"]);
-					}
-				}
+				var tableView = new TableView();
+				tableView.setTableId("tblFileStorage");
+				tableView.setTableType("configTable");
+				tableView.setSelectedClass("bnkWebFolder2");
+				tableView.setUnselectClass("bnkWebFolder");
+				tableView.setDataSource(result);
+				tableView.renderTable();
 			}
 			
 			function initProgressBar(barID, color, completerate) {
@@ -233,6 +148,10 @@
 				search_Set("1");
 			}
 			
+			function refreshView() {
+				search_Set(currentPage);
+			}
+			
 			function startSearch() {
 				var inputVal = document.getElementById("inputSearch").value;
 				
@@ -249,87 +168,35 @@
 				search_Set("1");
 			}
 			
-			function clickRow(obj, e) {
-				e.stopPropagation();
-				e.preventDefault();
+			function getSelectedRowInfo() {
+				var listOfSelectedRows = document.getElementsByClassName("bnkWebFolder2");
+				var userList       = [];
+				var usedAmountList = [];
+				if (listOfSelectedRows.length == 0) {
+					return null;
+				}
 				
-				var inputElmt = obj.firstElementChild.firstElementChild;
-				var newUser = {};
-				newUser["userId"]      = obj.getAttribute("userId");
-				newUser["usedAmount"]  = obj.getAttribute("usedAmount");
+				for (var i = 0; i < listOfSelectedRows.length; i++) {
+					userList.push(listOfSelectedRows[i].getAttribute("userId"));
+					usedAmountList.push(listOfSelectedRows[i].getAttribute("usedAmount"));
+				}
 				
-				if (inputElmt.checked == true) {
-					inputElmt.checked = false;
-					
-					var pos = null;
-					checkedArr.map(function(obj, index) { if(obj["userId"] == newUser["userId"]) { pos = index; return true; }}).filter(isFinite);
-					
-					if (pos != -1) {
-						obj.setAttribute("style", "");
-						checkedArr.splice(pos, 1);
-					}
-				}
-				else {
-					inputElmt.checked = true;
-					checkedArr.push(newUser);
-					obj.setAttribute("style", "background-color: #e9f1ff;");
-				}
-			}
-			
-			function getChecked(obj, event) {
-				event.stopPropagation();
-				
-				var newUser = {};
-				newUser["userId"]     = obj.getAttribute("userId");
-				newUser["usedAmount"] = obj.getAttribute("usedAmount");
-				
-				if (obj.checked == true) {
-					checkedArr.push(newUser);
-					obj.parentElement.parentElement.setAttribute("style", "background-color: #e9f1ff;");
-				}
-				else {
-					var pos = null;
-					checkedArr.map(function(obj, index) { if(obj["userId"] == newUser["userId"]) { pos = index; return true; }}).filter(isFinite);
-					
-					if (pos != -1) {
-						obj.parentElement.parentElement.setAttribute("style", "");
-						checkedArr.splice(pos, 1);
-					}
-				}
-			}
-			
-			function getCheckAll(obj) {
-				var listInputs = document.getElementsByClassName("checkBnk");
-				
-				checkedArr = [];
-				if (obj.checked == true) {
-					for (var i = 0; i < listInputs.length; i++) {
-						listInputs[i].checked = true;
-						var newUser = {};
-						newUser["userId"]      = listInputs[i].getAttribute("userId");
-						newUser["usedAmount"]  = listInputs[i].getAttribute("usedAmount");
-						listInputs[i].parentElement.parentElement.setAttribute("style", "background-color: #e9f1ff;");
-						checkedArr.push(newUser);
-					}
-				}
-				else {
-					for (var i = 0; i < listInputs.length; i++) {
-						listInputs[i].parentElement.parentElement.setAttribute("style", "");
-						listInputs[i].checked = false;
-					}
-				}
+				return {userList: userList, usedAmountList: usedAmountList};
 			}
 			
 			function changeStorageVal() {
-				var newValue = document.getElementById("storageVal").value;
-				var userList = [];
+				var newValue    = document.getElementById("storageVal").value;
+				var checkedList = getSelectedRowInfo();
 				
-				if (checkedArr.length <= 0) {
+				if (checkedList == null) {
 					alert("<spring:message code='ezWebFolder.t208'/>");
 					document.getElementById("storageVal").value = "";
 					document.getElementById("storageVal").focus();
 					return;
 				}
+				
+				var userIdList = checkedList["userList"];
+				var amountList = checkedList["usedAmountList"];
 				
 				if (!isValid(newValue)) {
 					alert("<spring:message code='ezWebFolder.t207'/>");
@@ -338,20 +205,18 @@
 					return;
 				}
 				
-				for (var i = 0; i < checkedArr.length; i++) {
-					if (parseFloat(checkedArr[i]["usedAmount"]) > parseFloat(newValue)*1073741824) {
+				for (var i = 0; i < amountList.length; i++) {
+					if (parseFloat(amountList[i]) > parseFloat(newValue)*1073741824) {
 						alert("<spring:message code='ezWebFolder.t209'/>");
 						return;
 					}
-					
-					userList.push(checkedArr[i]["userId"]);
 				}
 				
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/updateCapacities.do",
 					data: {
-						"userListParam" : userList.toString(),
+						"userListParam" : userIdList.toString(),
 						"companyId"     : document.getElementById("companyList").value,
 						"newStorage"    : newValue
 					},
@@ -368,7 +233,6 @@
 							alert("<spring:message code='ezWebFolder.t252'/>");
 							document.getElementById("storageVal").value = "";
 							search_Set(currentPage);
-							checkedArr = [];
 						}
 					},
 					error : function(error) {
@@ -378,22 +242,20 @@
 			}
 			
 			function changeToDefault() {
-				var userList = [];
+				var checkedList = getSelectedRowInfo();
 				
-				if (checkedArr.length <= 0) {
+				if (checkedList == null) {
 					alert("<spring:message code='ezWebFolder.t208'/>");
 					return;
 				}
 				
-				for (var i = 0; i < checkedArr.length; i++) {
-					userList.push(checkedArr[i]["userId"]);
-				}
+				var userIdList = checkedList["userList"];
 				
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/restoreCapacities.do",
 					data: {
-						"userListParam" : userList.toString(),
+						"userListParam" : userIdList.toString(),
 						"companyId"     : document.getElementById("companyList").value
 					},
 					dataType: "text",
@@ -442,7 +304,7 @@
 			
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="mainbody" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
 		<h1>
 			<spring:message code='ezWebFolder.t103'/>
 			<span id="mailBoxInfo"></span>
@@ -459,12 +321,12 @@
 		<div style="position: relative; height: 27px; margin-bottom: 10px;">
 			<div style="position: relative;">
 				<a id="btnSearch" class="webfolderBttn2" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123'/></span></a>
-				<a id="btnRefresh" class="webfolderBttn2" onClick="change();"><span><spring:message code='ezWebFolder.t139'/></span></a>
+				<a id="btnRefresh" class="webfolderBttn2" onClick="refreshView();"><span><spring:message code='ezWebFolder.t139'/></span></a>
 				<div id="searchPanel" style="z-index: 2000; position: fixed; height: auto; width: 500px; border: 1px solid #666666; background-color: #f2f2f2; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
 					<div style="margin: 10px;">
 						<table style="border-collapse: collapse; width: 100%;">
 							<tr>
-								<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t23'/></th>
+								<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t23'/></th>
 							</tr>
 							<tr>
 								<th style="width: 100px; min-width: 100px; height: 30px;"><spring:message code='ezWebFolder.t141'/></th>
@@ -500,7 +362,7 @@
 		<div id="mainSetting" style="margin: 10px 0px; height:500px; overflow: auto;">
 			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileStorage">
 				<tr>
-					<th width="10px"><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
+					<th width="10px"><input type="checkbox"></th>
 					<th width="120px"  style=""><spring:message code='ezWebFolder.t146'/></th>
 					<th width="120px"  style=""><spring:message code='ezWebFolder.t142'/></th>
 					<th width="120px" style=""><spring:message code='ezWebFolder.t143'/></th>
@@ -513,7 +375,7 @@
 		</div>
 		
 		<div id="tblPageRayer"></div>
-		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel" tabindex="0">&nbsp;</div>
 		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	</body>
 </html>

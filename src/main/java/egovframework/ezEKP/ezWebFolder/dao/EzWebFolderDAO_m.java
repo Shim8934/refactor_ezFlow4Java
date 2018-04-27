@@ -152,8 +152,12 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		insert("EzWebFolderDAO_m.addFavorite", map);
 	}
 	
-	public void deleteFavorite(Map<String, Object> map) {
-		delete("EzWebFolderDAO_m.deleteFavorite", map);
+	public int deleteFavorite(Map<String, Object> map) {
+		return delete("EzWebFolderDAO_m.deleteFavorite", map);
+	}
+	
+	public int deleteFavoritesInFolder(Map<String, Object> map) {
+		return delete("EzWebFolderDAO_m.deleteFavoritesInFolder");
 	}
 
 	public int getTrashFileCount(Map<String, Object> map) {

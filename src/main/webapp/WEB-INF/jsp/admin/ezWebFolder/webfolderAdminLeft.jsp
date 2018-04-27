@@ -114,8 +114,8 @@
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
 		<div id="left" style="overflow: auto">
-			<div class="left_admin" title="<spring:message code='ezWebFolder.t10'/>">
-				<img src="/images/admin/first.png" width="16px" height="16px">&nbsp;<spring:message code="main.t29"/>
+			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10'/>">
+				<span><spring:message code="main.t29"/></span>
 			</div>
 			
 			<h2>
@@ -135,7 +135,7 @@
 				<span style="display:inline-block;width:100%;" onClick="companyFile(this);"><spring:message code='ezWebFolder.t127'/></span>
 			</h2>
 			<ul></ul>
-			<div id="folderTree" style="min-height: 200px; display: none; overflow-x: auto; white-space: nowrap;"></div>
+			<div id="folderTree" style="min-height: 200px; display: none; overflow-x: auto; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
 			
 			<h2>
 				<span style="display:inline-block;width:100%;" onClick="departmentFolder();"><spring:message code='ezWebFolder.t219'/></span>
@@ -146,7 +146,7 @@
 				<span style="display:inline-block;width:100%;" onClick="departmentFile(this);"><spring:message code='ezWebFolder.t220'/></span>
 			</h2>
 			<ul></ul>
-			<div id="folderTree2" style="min-height: 200px; display: none; overflow-x: auto; white-space: nowrap;"></div>
+			<div id="folderTree2" style="min-height: 200px; display: none; overflow-x: auto; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
 			
 			<h2>
 				<span style="display:inline-block;width:100%;" onClick="fileTransactionHistory();"><spring:message code='ezWebFolder.t128'/></span>

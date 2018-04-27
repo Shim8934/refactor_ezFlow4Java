@@ -767,7 +767,7 @@
 									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
 								AND
 									TENANT_ID = #tenantId#
-					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
+					) d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
 			SET
 				f.USE_STATUS = 'T',
 				f.DELETER_ID = #userId#
@@ -821,14 +821,14 @@
 		SELECT
 			c.CN AS DEPT_ID,
 			CASE WHEN #primary# = '1' THEN c.DISPLAYNAME ELSE c.DISPLAYNAME2 END AS DEPT_NAME,
-			c.level AS LEVEL,
+			c.DEPT_LEVEL AS "LEVEL",
 			c.has_sub AS HAS_SUB
 		FROM
 		(
 			SELECT
 				b.*,
-				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER d WHERE b.CN = d.EXTENSIONATTRIBUTE1 AND b.TENANT_ID = d.TENANT_ID) = 0 THEN 0 ELSE 1 END AS "HAS_SUB",
-				#level#                                                                                                                                  AS "LEVEL" 
+				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER d WHERE b.CN = d.EXTENSIONATTRIBUTE1 AND b.TENANT_ID = d.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				#level#                                                                                                                                  AS DEPT_LEVEL 
 			FROM 
 				TBL_DEPTMASTER b
 			WHERE
@@ -840,8 +840,8 @@
 			
 			SELECT 
 				a.*,
-				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER e WHERE a.CN = e.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = e.TENANT_ID) = 0 THEN 0 ELSE 1 END AS "HAS_SUB",
-				(#level# + 1)                                                                                                                            AS "LEVEL"
+				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER e WHERE a.CN = e.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = e.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				(#level# + 1)                                                                                                                            AS DEPT_LEVEL
 			FROM
 				TBL_DEPTMASTER a
 			WHERE
@@ -850,7 +850,7 @@
 				a.TENANT_ID           = #tenantId#
 		) c
 		ORDER BY
-			LEVEL, lpad(NVL(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
+			DEPT_LEVEL, lpad(NVL(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
 	</select>
 	
 	<select id="EzWebFolderDAO.getAllSimpleSubDepts" resultMap="simpleDeptVO">
@@ -1044,7 +1044,7 @@
 								(a.CN = #userId# OR d.CN = #deptId#)
 							AND
 								d.TENANT_ID = #tenantId#
-						) AS s ON f.OWNER_ID = s.CN AND f.TENANT_ID = s.TENANT_ID AND f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'D' AND f.OWNER_ID = s.CN
+						) s ON f.OWNER_ID = s.CN AND f.TENANT_ID = s.TENANT_ID AND f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'D' AND f.OWNER_ID = s.CN
 			WHERE
 				f.FOLDER_TYPE  = 'D'
 			AND
@@ -1080,7 +1080,7 @@
 										(a.CN = #userId# OR d.CN = #deptId#)
 									AND
 										d.TENANT_ID = #tenantId#
-								) AS s ON f1.OWNER_ID = s.CN AND f1.TENANT_ID = s.TENANT_ID AND f1.FOLDER_UPPER = 'root' AND f1.FOLDER_TYPE = 'D' AND f1.OWNER_ID = s.CN
+								) s ON f1.OWNER_ID = s.CN AND f1.TENANT_ID = s.TENANT_ID AND f1.FOLDER_UPPER = 'root' AND f1.FOLDER_TYPE = 'D' AND f1.OWNER_ID = s.CN
 					WHERE
 						f1.TENANT_ID = #tenantId#
 						
@@ -1103,11 +1103,11 @@
 																							tbl_deptmaster
 																						WHERE
 																							EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
-																					) AS d2 ON d1.DEPT_CD_PATH LIKE CONCAT(d2.DEPT_CD_PATH, '%')
-													) AS s1 ON s1.CN = f2.OWNER_ID AND s1.TENANT_ID = f2.TENANT_ID
+																					) d2 ON d1.DEPT_CD_PATH LIKE CONCAT(d2.DEPT_CD_PATH, '%')
+													) s1 ON s1.CN = f2.OWNER_ID AND s1.TENANT_ID = f2.TENANT_ID
 					WHERE
 						f2.TENANT_ID = #tenantId#
-				) AS f
+				) f
 			WHERE
 				f.FOLDER_TYPE = 'D'
 			AND
@@ -1142,12 +1142,12 @@
 																		WHERE
 																			(a.CN = #userId# OR d.CN = #deptId#)
 																		AND
-																			d.TENANT_ID = #tenantId#) AS s ON u.USER_ID = s.CN AND u.USER_TYPE = 'dept'  AND u.TENANT_ID = s.TENANT_ID
+																			d.TENANT_ID = #tenantId#) s ON u.USER_ID = s.CN AND u.USER_TYPE = 'dept'  AND u.TENANT_ID = s.TENANT_ID
 										WHERE
 											u.TENANT_ID = #tenantId#
 										AND
 											((u.USER_ID = #userId# AND u.USER_TYPE = 'user') OR (u.USER_ID = s.CN AND u.USER_TYPE = 'dept')) 
-									) AS s ON f.TENANT_ID = s.TENANT_ID AND f.FOLDER_ID = s.FOLDER_ID
+									) s ON f.TENANT_ID = s.TENANT_ID AND f.FOLDER_ID = s.FOLDER_ID
 			WHERE
 				f.FOLDER_TYPE  = 'C'
 			AND
@@ -1211,18 +1211,18 @@
 																														tbl_deptmaster
 																													WHERE
 																														EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
-																												) AS d4 ON d3.DEPT_CD_PATH LIKE CONCAT(d4.DEPT_CD_PATH, '%')
-																				) AS s1 ON s1.CN = f.OWNER_ID AND s1.TENANT_ID = f.TENANT_ID
+																												) d4 ON d3.DEPT_CD_PATH LIKE CONCAT(d4.DEPT_CD_PATH, '%')
+																				) s1 ON s1.CN = f.OWNER_ID AND s1.TENANT_ID = f.TENANT_ID
 												)
-											) AS a ON d2.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND d2.TENANT_ID = a.TENANT_ID
+											) a ON d2.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND d2.TENANT_ID = a.TENANT_ID
 									WHERE
 										d2.TENANT_ID = #tenantId#
-								) AS s ON u.USER_ID = s.CN AND u.USER_TYPE = 'dept' AND u.TENANT_ID = s.TENANT_ID
+								) s ON u.USER_ID = s.CN AND u.USER_TYPE = 'dept' AND u.TENANT_ID = s.TENANT_ID
 						WHERE
 							u.TENANT_ID = #tenantId#
 						AND
 							((u.USER_ID = #userId# AND u.USER_TYPE = 'user') OR (u.USER_ID = s.CN AND u.USER_TYPE = 'dept'))
-					) AS s ON f.TENANT_ID = s.TENANT_ID AND f.FOLDER_ID = s.FOLDER_ID
+					) s ON f.TENANT_ID = s.TENANT_ID AND f.FOLDER_ID = s.FOLDER_ID
 			WHERE
 				f.FOLDER_TYPE  = 'C'
 			AND
@@ -1352,7 +1352,7 @@
 		WHERE
 			EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
 		ORDER BY
-			LEVEL, lpad(NVL(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
+			"LEVEL", lpad(NVL(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
 	</select>
 	
 	<select id="EzWebFolderDAO.getSelectedDeptsForChief" resultMap="simpleDeptVO">
@@ -1370,7 +1370,7 @@
 									TBL_DEPTMASTER
 								WHERE
 									EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
-							) AS d1 ON s.DEPT_CD_PATH LIKE ||(d1.DEPT_CD_PATH, '%')
+							) d1 ON s.DEPT_CD_PATH LIKE CONCAT(d1.DEPT_CD_PATH, '%')
 							 JOIN
 							(
 								SELECT
@@ -1385,12 +1385,12 @@
 												tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
 												ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
 											)
-										) AS a ON d2.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND d2.TENANT_ID = a.TENANT_ID
-							) AS s2 ON s.CN = s2.CN and s.TENANT_ID = s2.TENANT_ID
+										) a ON d2.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND d2.TENANT_ID = a.TENANT_ID
+							) s2 ON s.CN = s2.CN and s.TENANT_ID = s2.TENANT_ID
 		WHERE
 			s.TENANT_ID = #tenantId#
 		ORDER BY
-			LEVEL, lpad(NVL(s.EXTENSIONATTRIBUTE15, 0),6,0), s.DISPLAYNAME
+			"LEVEL", lpad(NVL(s.EXTENSIONATTRIBUTE15, 0),6,0), s.DISPLAYNAME
 	</select>
 	
 	<select id="EzWebFolderDAO.checkFilesOwner" resultClass="Integer">

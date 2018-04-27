@@ -1161,7 +1161,7 @@
 		            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
 				FROM
 					tbl_webfolder_folder FOLDER
-					JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
+					LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
 					ON FILE_TYPE.TYPE_NAME = 'folder'
 				WHERE
 					FOLDER.USE_STATUS = 'T' AND
@@ -1398,7 +1398,7 @@
 							FILES.TYPE_ID,
 							FOLDER.FOLDER_PATH 	AS TARGET_PATH,
 							FILES.FILE_EXT		AS TARGET_EXT,
-							FILES.FILE_SIZE 	AS TARGET_SIZE,
+							TO_NUMBER(FILES.FILE_SIZE) AS TARGET_SIZE,
 							FILES.CREATE_ID		AS CREATOR_ID,
 							FILES.CREATE_NAME1,
 							FILES.CREATE_NAME2,
@@ -1423,7 +1423,7 @@
 							SUB_FILETYPE.TYPE_ID,
 							FOLDER.FOLDER_PATH	AS TARGET_PATH,
 							SUB_FILETYPE.FILE_EXT AS TARGET_EXT,
-							''					AS TARGET_SIZE,
+							0					AS TARGET_SIZE,
 							FOLDER.CREATE_ID	AS CREATOR_ID,
 							FOLDER.CREATE_NAME1,
 							FOLDER.CREATE_NAME2,
@@ -1467,10 +1467,11 @@
 	<select id="EzWebFolderDAO_m.getFavoriteFolderCount" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(RESULT.TARGET_NAME) COUNT
+				COUNT(RESULT.TARGET_NAME_1) COUNT
 			FROM (
 				SELECT
-					FOLDER.FOLDER_NAME1 AS TARGET_NAME,
+					FOLDER.FOLDER_NAME1 AS TARGET_NAME_1,
+					FOLDER.FOLDER_NAME2 AS TARGET_NAME_2,
 					'folder' AS TARGET_EXT,
 					FILE_TYPE.TYPE_NAME,
 					FOLDER.CREATE_NAME1,
@@ -1497,10 +1498,11 @@
 	<select id="EzWebFolderDAO_m.getFavoriteFileCount" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(RESULT.TARGET_NAME) COUNT
+				COUNT(RESULT.TARGET_NAME_1) COUNT
 			FROM (
 				SELECT
-					FILES.FILE_NAME 	AS TARGET_NAME,
+					FILES.FILE_NAME 	AS TARGET_NAME_1,
+					FILES.FILE_NAME 	AS TARGET_NAME_2,
 					FILES.FILE_EXT		AS TARGET_EXT,
 					FILE_TYPE.TYPE_NAME,
 					FILES.CREATE_NAME1,
@@ -1554,15 +1556,66 @@
 			TENANT_ID = #tenantId#
 	</delete>
 	
+	<delete id="EzWebFolderDAO_m.deleteFavoritesInFolder">
+		<![CDATA[
+			DELETE
+			FROM
+			    TBL_WEBFOLDER_FAVOR FAVOR
+			WHERE
+				FAVOR.USER_ID = #userId#
+			    AND (FAVOR.TARGET_ID, FAVOR.TARGET_TYPE, FAVOR.TENANT_ID)
+				    IN 
+					(
+						SELECT
+				            RESULT.TARGET_ID,
+				            RESULT.TARGET_TYPE,
+				            RESULT.TENANT_ID
+				        FROM
+				            TBL_WEBFOLDER_FAVOR FAVOR
+					        JOIN (
+					            SELECT
+					                FILES.FILE_ID AS TARGET_ID,
+					                'F' AS TARGET_TYPE,
+					                JOIN_FOLDER.FOLDER_PATH,
+					                FILES.TENANT_ID
+					            FROM
+					                TBL_WEBFOLDER_FILE FILES
+					            JOIN
+					                TBL_WEBFOLDER_FOLDER JOIN_FOLDER
+					            ON
+					                JOIN_FOLDER.FOLDER_ID = FILES.FOLDER_ID
+					                AND JOIN_FOLDER.TENANT_ID = FILES.TENANT_ID
+					            
+					            UNION
+					            
+					            SELECT
+					                FOLDER.FOLDER_ID AS TARGET_ID,
+					                'D' AS TARGET_TYPE,
+					                FOLDER.FOLDER_PATH,
+					                FOLDER.TENANT_ID
+					            FROM 
+					                TBL_WEBFOLDER_FOLDER FOLDER
+					        ) RESULT
+				        ON
+				            FAVOR.TARGET_ID = RESULT.TARGET_ID
+				            AND FAVOR.TARGET_TYPE = RESULT.TARGET_TYPE
+				            AND RESULT.TENANT_ID = #tenantId#
+				            AND FOLDER_PATH LIKE '%$folderId$%'
+					)
+		]]>
+	</delete>
+	
 	<select id="EzWebFolderDAO_m.getTrashFileCount" resultClass="Integer">
 		SELECT
 			count(FILES.FILE_id )
 		FROM
 			tbl_webfolder_file FILES
+			LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
+			ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
 		WHERE
-			USE_STATUS = 'T' AND
-			DELETER_ID = #userId# AND
-			TENANT_ID = #tenantId#
+			FILES.USE_STATUS = 'T' AND
+			FILES.DELETER_ID = #userId# AND
+			FILES.TENANT_ID = #tenantId#
 		<include refid="searchTrashCanFile"/>
 	</select>
 	
@@ -1571,10 +1624,12 @@
 			count(FOLDER.FOLDER_id)    
 		FROM
 			tbl_webfolder_folder FOLDER
+			LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
+			ON FILE_TYPE.TYPE_NAME = 'folder'
 		WHERE
-			USE_STATUS = 'T' AND
-			DELETER_ID = #userId# AND
-			TENANT_ID = #tenantId#
+			FOLDER.USE_STATUS = 'T' AND
+			FOLDER.DELETER_ID = #userId# AND
+			FOLDER.TENANT_ID = #tenantId#
 		<include refid="searchTrashCanFolder"/>
 	</select>
 	
