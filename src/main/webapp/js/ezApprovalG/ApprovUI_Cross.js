@@ -31,7 +31,7 @@ function putBansongSign() {
     var CurrentDate = RtnVal.split(".");
     var s = CurrentDate[1] + "." + CurrentDate[2];
     // aprType 9(개인병렬협조), 11(부서순차협조), 12(부서병렬협조)
-    if (pAprLineType == strAprType11 || pAprLineType == strAprType12) {
+    if (pAprLineType == strAprType11 || pAprLineType == strAprType12 || pAprLineType == strAprType9) {
         var phabyuisign;
         var phabyuidate;
         var phabyuijikwee;
@@ -64,11 +64,11 @@ function putBansongSign() {
         var habyuidateID = phabyuidate + pAprMemberSN;
         var field = message.GetListItem(fields, habyuidateID);
         if (field) {
-        	setNodeText(field , RtnVal);
+        	setNodeText(field , s);
             signInfo[signCnt] = habyuidateID;
             SignType[signCnt] = "TEXT";
             SignName[signCnt] = habyuidateID;
-            SignContent[signCnt] = RtnVal;
+            SignContent[signCnt] = s;
             signCnt = signCnt + 1;
         }
     }
@@ -282,13 +282,21 @@ function AprrovMappingSign(ret) {
         
         if (junGyulFlag == "1") {
             //전결자, 결재안함 결재칸에 전결String
-            for (var i = pAprMemberSignSN; i < LastKyulSN; i++) {
+           /* for (var i = pAprMemberSignSN; i < LastKyulSN; i++) {
             	signID = pSusinSN2 + "sign" + i;
             	
             	var field = message.GetListItem(fields, signID);
                 if (field) {
                 	field.innerHTML = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang6 + "</P>";
                 }
+            }*/
+        	
+    		/* 2018-04-27 천성준 - 전결자만 결재칸에 전결 표시 >> 전결자 결재칸에 전결String */
+        	signID = pSusinSN2 + "sign" + pAprMemberSignSN;
+        	
+        	var field = message.GetListItem(fields, signID);
+            if (field) {
+            	field.innerHTML = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang6 + "</P>";
             }
             
             //최종결재자 인덱스 구하기
