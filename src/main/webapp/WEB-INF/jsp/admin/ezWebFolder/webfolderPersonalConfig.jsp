@@ -26,12 +26,6 @@
 			var strLang42   = "<spring:message code='ezWebFolder.t138'/>";
 			var strNoData   = "<spring:message code='ezWebFolder.t144'/>";
 			
-			window.onresize = function () {
-				var divList          = document.getElementById("mainSetting");
-				var reheight         = document.documentElement.clientHeight - 190;
-				divList.style.height = reheight + "px";
-			};
-			
 			window.onload = function() {
 				search_Set("1");
 				preProcessing();
@@ -43,19 +37,24 @@
 				divList.style.height = reheight + "px";
 			}
 			
+			function keyPressPanel(e) {
+				if (e.which == 27 && document.getElementById("mailPanel").style.display == "") {openSearchPanel();}
+			}
+			
 			function openSearchPanel() {
 				var searchPanel = document.getElementById("searchPanel");
 				if (searchPanel.style.display == "none") {
 					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
-					document.getElementById("mailPanel").style.display = "";
+					document.getElementById("mailPanel").style.display                              = "";
 					var position              = getPosition(502, 128);
 					searchPanel.style.top     = position[0] + "px";
 					searchPanel.style.right   = position[1] + "px";
 					searchPanel.style.display = "";
+					fogPanel.focus();
 				}
 				else {
 					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
-					document.getElementById("mailPanel").style.display = "none";
+					document.getElementById("mailPanel").style.display                              = "none";
 					searchPanel.style.display = "none";
 				}
 				
@@ -301,7 +300,7 @@
 			
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="mainbody" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
 		<h1>
 			<spring:message code='ezWebFolder.t103'/>
 			<span id="mailBoxInfo"></span>
@@ -372,7 +371,7 @@
 		</div>
 		
 		<div id="tblPageRayer"></div>
-		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel" tabindex="0">&nbsp;</div>
 		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	</body>
 </html>

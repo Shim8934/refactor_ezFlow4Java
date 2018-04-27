@@ -75,6 +75,17 @@ function setButtons(mode) {
 	fileUpElmt.onclick      = function() {this.value = null;};
 }
 
+function keyPressPanel(e) {
+	if (e.which == 27 && document.getElementById("mailPanel").style.display == "") {
+		if (document.getElementById("iFramePanel").style.display == "none") {
+			openSearchPanel();
+		}
+		else {
+			closeAllPopup();
+		}
+	}
+}
+
 function reloadSelectBox() {
 	document.getElementById("fileTypeSelect").selectedIndex = 0;
 }
@@ -87,19 +98,19 @@ function preProcessing() {
 
 function openSearchPanel() {
 	var searchPanel = document.getElementById("searchPanel");
+	var fogPanel    = document.getElementById("mailPanel");
 	if (searchPanel.style.display == "none") {
-		window.parent.frames["left"].document.body.style.overflow = "hidden";
-		window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
-		document.getElementById("mailPanel").style.display = "";
+		openLeftPanel();
+		fogPanel.style.display    = "";
 		var position              = DivPopUpPosition(516, 247);
 		searchPanel.style.top     = position[0] + "px";
 		searchPanel.style.right   = position[1] + "px";
 		searchPanel.style.display = "";
+		fogPanel.focus();
 	}
 	else {
-		window.parent.frames["left"].document.body.style.overflow = "auto";
-		window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
-		document.getElementById("mailPanel").style.display = "none";
+		closeLeftPanel();
+		fogPanel.style.display    = "none";
 		searchPanel.style.display = "none";
 	}
 	
@@ -187,6 +198,23 @@ function changeCompanyForDeptFile() {
 	window.parent.frames["left"].getDepartmentData(document.getElementById("companyList").value, 1, "folderTree2");
 }
 
+function openLeftPanel() {
+	var leftFrame = window.parent.frames["left"].document;
+	var blockLeft = leftFrame.getElementById("blockLeft");
+	var height    = Math.max(leftFrame.documentElement.clientHeight, leftFrame.documentElement.scrollHeight);
+	leftFrame.body.style.overflow = "hidden";
+	blockLeft.style.height        = height + "px";
+	blockLeft.style.display       = "";
+}
+
+function closeLeftPanel() {
+	var leftFrame = window.parent.frames["left"].document;
+	var blockLeft = leftFrame.getElementById("blockLeft");
+	leftFrame.body.style.overflow = "auto";
+	blockLeft.style.height        = "100%";
+	blockLeft.style.display       = "none";
+}
+
 function getCheckedRowInfo() {
 	var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
 	var filesList     = [];
@@ -219,8 +247,7 @@ function fileDelete() {
 	
 	if (filesList == null) {alert(strLang38); return;}
 	
-	window.parent.frames["left"].document.body.style.overflow = "hidden";
-	window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+	openLeftPanel();
 	DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
 }
 
@@ -231,8 +258,7 @@ function fileRename() {
 	if (filesList.length > 1) {alert(strLang37); return;}
 	
 	var fileId = filesList[0];
-	window.parent.frames["left"].document.body.style.overflow = "hidden";
-	window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+	openLeftPanel();
 	DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 }
 
@@ -241,8 +267,7 @@ function fileMove() {
 	
 	if (filesList == null) {alert(strLang38); return;}
 	
-	window.parent.frames["left"].document.body.style.overflow = "hidden";
-	window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+	openLeftPanel();
 	DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString() + "&mode=admin");
 }
 

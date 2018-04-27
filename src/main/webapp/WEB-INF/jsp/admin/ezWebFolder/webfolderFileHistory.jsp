@@ -37,12 +37,6 @@
 			var fileNameStr  = "";
 			var userNameStr  = "";
 			
-			window.onresize = function () {
-				var divList          = document.getElementById("mainSetting");
-				var reheight         = document.documentElement.clientHeight - 185;
-				divList.style.height = reheight + "px";
-			};
-			
 			window.onload = function () {
 				$("#Sdatepicker").datepicker({
 					changeMonth: true,
@@ -74,11 +68,15 @@
 				divList.style.height = reheight + "px";
 			}
 			
+			function keyPressPanel(e) {
+				if (e.which == 27 && document.getElementById("mailPanel").style.display == "") {openSearchPanel();}
+			}
+			
 			function openSearchPanel() {
 				var searchPanel = document.getElementById("searchPanel");
 				if (searchPanel.style.display == "none") {
 					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
-					document.getElementById("mailPanel").style.display = "";
+					document.getElementById("mailPanel").style.display                              = "";
 					var position              = getPosition(516, 247);
 					searchPanel.style.top     = position[0] + "px";
 					searchPanel.style.right   = position[1] + "px";
@@ -86,7 +84,7 @@
 				}
 				else {
 					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
-					document.getElementById("mailPanel").style.display = "none";
+					document.getElementById("mailPanel").style.display                              = "none";
 					searchPanel.style.display = "none";
 				}
 				
@@ -217,7 +215,7 @@
 			
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="mainbody" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
 		<h1>
 			<spring:message code='ezWebFolder.t128'/>
 			<span id="mailBoxInfo"></span>
