@@ -19278,8 +19278,7 @@
 			SUMMARY , 
 			FormName2 , 
 			ItemName2, 
-			TENANT_ID,
-            PUBLICITYYN  
+			TENANT_ID
 		  FROM 
 		  	TBL_EXPAPRDOCINFO
 		  WHERE  

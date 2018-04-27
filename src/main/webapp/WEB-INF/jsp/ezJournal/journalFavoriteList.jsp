@@ -6,9 +6,9 @@
 		<c:when test="${fn:length(favoriteList) > 0}">
 			<c:forEach items="${favoriteList}" var="favorite" varStatus="status">
 				<tr favoriteid="${favorite.favoriteId}" class="hover" onclick="getFavoriteUser(this)">
-					<td>${status.count }</td>
-					<td>${favorite.favoriteName }</td>
-					<td>${fn:substring(favorite.favoriteDate, 0, 10) }</td>
+					<td><c:out value='${status.count }'/></td>
+					<td><c:out value='${favorite.favoriteName }'/></td>
+					<td><c:out value='${fn:substring(favorite.favoriteDate, 0, 10) }'/></td>
 				</tr>
 			</c:forEach>
 		</c:when>
