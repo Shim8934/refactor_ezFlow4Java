@@ -504,9 +504,23 @@ function checkedCheckboxMemo(elem) {
 		        </div>
 		    </div>
 	<div id = "searchDiv" style="display:none">
-		<table class="content">
+		<table class="content" style="width:80%">
 			<tbody>
 				<tr>
+					<th>프로젝트명 </th>
+					<td><input type="text" id="searchByName" style="width:50%; margin-right:5px;"><a class="imgbtn"><span>프로젝트 선택</span></a></td>
+					<th>담당자</th>
+					<td style="width:40%"><input type="text" id="searchByUser"></td>
+				</tr>
+				<tr>
+					<th>시작일 </th>
+					<td><input type="text" id="searchByStartDate"><a class="imgbtn"><span>날짜 초기화</span></a></td>
+					<th>종료일</th>
+					<td><input type="text" id="searchByEndDate"><a class="imgbtn"><span>날짜 초기화</span></a></td>
+				</tr>
+				<tr>
+					<th>개요</th>
+					<td colspan="3"><input type="text" style="width:90%"></td>
 				</tr>
 			</tbody>
 		</table>
