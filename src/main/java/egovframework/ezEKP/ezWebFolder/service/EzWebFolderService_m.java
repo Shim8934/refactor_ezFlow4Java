@@ -64,13 +64,12 @@ public interface EzWebFolderService_m {
 	
 	List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception;
 	
-	/** 
-	 * @return
-	 * 	  key : value<br>
-	 * 	"totalCount" : 합산 개수<br>
-	 *	"folderCount" : 폴더 개수<br>
-	 *	"fileCount" : 파일 개수<br>
-	 * **/
+	/**
+	 * @return key : value<br>
+	 *         "totalCount" : 합산 개수<br>
+	 *         "folderCount" : 폴더 개수<br>
+	 *         "fileCount" : 파일 개수<br>
+	 **/
 	Map<String, Integer> getFavoriteCount(String userId, String offset, int tenantId, SearchVO searchInfo) throws Exception;
 	
 	boolean isExistsFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception;
@@ -79,10 +78,12 @@ public interface EzWebFolderService_m {
 	
 	int deleteFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception;
 	
+	int deleteFavoriteAnyUser(String targetId, String targetType, int tenantId) throws Exception;
+	
 	/** 
-	 * @return 해당 폴더를 포함한 하위 항목의 즐겨찾기를 모두 해제
-	 * **/
-	int deleteFavoritesInFolder(String userId, String folderId, int tenantId) throws Exception;
+	 * @return 해당 폴더를 포함한 하위 항목의 모든 즐겨찾기를 삭제
+	 **/
+	int deleteFavoritesInFolder(String folderId, int tenantId) throws Exception;
 	
 	void restoreFile (FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
 	
