@@ -60,13 +60,13 @@
 					makeLadder();
 					return false;
 				});
-				$("#title").on("input", function() {
+				/* $("#title").on("input", function() {
 					if($("#title").val() == "") {
 						$("#makeLad").attr("disabled", "disabled");
 					} else {
 						$("#makeLad").removeAttr("disabled");
 					}
-				});
+				}); */
 				$("#ladderPreList")
 					.on("click", function() {
 						preLadderList();
@@ -755,7 +755,7 @@
 			
 			/** 사다리 만들기 */
 			function makeLadder() {
-				if(!$("#title").val().trim()) {
+				if(!$("#title").val()) {
 					alert("<spring:message code='ezLadder.t019'/>");
 					return;
 				}
@@ -771,7 +771,7 @@
 					}
 				}
 				
-				$("#makeLad").attr("disabled", "disabled");
+				/* $("#makeLad").attr("disabled", "disabled"); */
 				
 				$("input[name='secretFlag']").val($("#ladderSecret .active").attr("_flag"));
 				$("input[name='type']").val(ladderType);
