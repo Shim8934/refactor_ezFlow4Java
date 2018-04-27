@@ -86,7 +86,7 @@
 			
 			var imgElmt2 = document.createElement("img");
 			imgElmt2.setAttribute("class", "webfolderImg");
-			imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
+			imgElmt2.src = "/images/webfolder/fldr.png";
 			
 			var spanFolderName = document.createElement("span");
 			spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];

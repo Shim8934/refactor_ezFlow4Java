@@ -84,7 +84,7 @@
 				
 				var imgElmt2 = document.createElement("img");
 				imgElmt2.setAttribute("class", "webfolderImg");
-				imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
+				imgElmt2.src = "/images/webfolder/fldr.png";
 				
 				var spanFolderName = document.createElement("span");
 				spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
@@ -518,7 +518,7 @@
 			<table style="border-collapse: collapse; width: 100%;">
 				<tr>
 					<td style="width: 350px; min-width: 350px;">
-						<div id="folderTree" style="width: 350px; height: 450px; border: 1px solid #666666; overflow: auto; white-space: nowrap;"></div>
+						<div id="folderTree" style="width: 350px; height: 450px; border: 1px solid #666666; overflow: auto; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
 					</td>
 					<td>
 						<div style="width: 500px; height: 450px; border: 1px solid #cccccc; margin-left: 10px;">

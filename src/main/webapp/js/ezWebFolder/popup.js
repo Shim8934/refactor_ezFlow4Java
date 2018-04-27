@@ -22,8 +22,9 @@ function DivPopUpShow(popUpW, popUpH, URL) {
 		document.getElementById("iFramePanel").style.height  = popUpH + "px";
 		document.getElementById("iFrameLayer").style.width   = popUpW + "px";
 		document.getElementById("iFrameLayer").style.height  = popUpH + "px";
-        document.getElementById("mailPanel").style.display   = "";
-        document.getElementById("iFramePanel").style.display = "";
+		document.getElementById("mailPanel").style.display   = "";
+		document.getElementById("iFramePanel").style.display = "";
+		document.getElementById("mailPanel").focus();
 	} catch (e) {}
 }
 

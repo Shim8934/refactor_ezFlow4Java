@@ -32,7 +32,7 @@
 			var strSuccess = "<spring:message code='ezWebFolder.t27' />";
 		</script>
 	</head>
-	<body class="mainbody" onload="init('comp');" onresize="preProcessing();">
+	<body class="mainbody" onload="init('comp');" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
 		<h1>
 			<spring:message code='ezWebFolder.t127'/>
 			<span id="mailBoxInfo"></span>
@@ -140,7 +140,7 @@
 		
 		<input id="file" type="file" multiple="multiple"/>
 		<iframe name="AttachDownFrame" id="AttachDownFrame"></iframe>
-		<div class="wfFogPanel" style="display: none;" id="mailPanel">&nbsp;</div>
+		<div class="wfFogPanel" style="display: none;" id="mailPanel" tabindex="0">&nbsp;</div>
 		<div class="layerpopup wfPopup" style="display: none;" id="iFramePanel"><iframe src="" style="border:none;" id="iFrameLayer"></iframe></div>
 		
 		<div id="tblPageRayer"></div>
