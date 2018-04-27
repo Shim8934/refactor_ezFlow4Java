@@ -799,12 +799,6 @@
 			ORDER BY
 				A.displayname
 		</isEmpty>
-		<isNotEmpty property="limit">
-			<![CDATA[
-				LIMIT 
-					#limit#, #listSize# 
-			]]>
-		</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultMap="attitudeAuthor">

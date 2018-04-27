@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>사용자별 근태관리</title>
+		<title>근태시간관리</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -239,7 +239,7 @@
 				<tr>
 					<td style="width: 3%;">직위</td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50"></td>
-					<td style="width: 3%;">근무시간</td>
+					<td style="width: 3%;">근태시간</td>
 					<td>
 						<span id="topmenu"><input id="searchStartTime" type="text" style="width:50px;"/>&nbsp; ~ &nbsp;<input id="searchEndTime" type="text" style="width:50px;"/></span>
 					</td>

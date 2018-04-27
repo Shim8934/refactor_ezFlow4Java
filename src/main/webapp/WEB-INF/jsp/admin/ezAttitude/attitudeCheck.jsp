@@ -283,6 +283,24 @@
     			getUserConfList();
 	    	}
 			
+			function popupAbsentList() {
+				searchUserName = $("#searchUserName").val();
+    			searchDeptName = $("#searchDeptName").val();
+    			searchTitle = $("#searchTitle").val();
+    			searchStartDate = $("#searchStartDate").val();
+    			searchEndDate = $("#searchEndDate").val();
+    			
+    			var url = "/admin/ezAttitude/popupAbsentedList.do?companyId=" + pCompanyId + "&searchUserName=" + searchUserName + "&searchDeptName=" + searchDeptName + "&searchTitle=" + searchTitle + "&searchStartDate=" + searchStartDate + "&searchEndDate=" + searchEndDate;
+	    		
+	    		if (CrossYN()) {
+	    			OpenWin = GetOpenWindow(url, "", "600", "700");
+	    			
+	    			try { OpenWin.focus();} catch (e) { }
+	    		} else {
+	    			showModalDialog(url, null, "dialogWidth:600px; dialogHeight:700px; status:no; help:no; scroll:no; edge:sunken");
+	    		}
+	    	}
+			
 			//엑셀 다운로드
 			function exportExcel() {
 				if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
@@ -332,6 +350,7 @@
 						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchUserConfList('refresh');">새로고침</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="exportExcel();">엑셀저장</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="popupAbsentList();">미입력자 목록</span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>

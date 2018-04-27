@@ -1032,19 +1032,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("getAttitudeAbsentCount ended. result = " + result);
 		
-		return "";
+		return result;
 	}
 	
 	@Override
-	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId) throws Exception {
+	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeAbsentList started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		int limit = 0;
-		
-		if (pageNum != null && !pageNum.equals("")) {
-			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
-		}
 		
 		//날짜
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1082,17 +1077,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchEndDate", searchEndDate);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
-		map.put("listSize", listSize);
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		map.put("limit", limit != 0 ? limit : null);
 
 		List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeAbsentList(map);
 		
 		LOGGER.debug("getAttitudeAbsentList ended.");
 		
-		return null;
+		return resultList;
 	}
 
 	@Override
