@@ -267,16 +267,16 @@
 	    			$("#searchUserName").val("");
 	    			$("#searchDeptName").val("");
 	    			$("#searchTitle").val("");
-	    			$("#searchStartDate").val("");
-	    			$("#searchEndDate").val("");
+	    			$("#searchStartDate").val("${searchStartDate}");
+	    			$("#searchEndDate").val("${searchEndDate}");
 	    			$("select[id='searchAttitudeType']").val('all');
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";
 	    			searchTitle = "";
-	    			searchStartDate = "";
-	    			searchEndDate = "";
-	    			searchAttitudeType = "";
+	    			searchStartDate = "${searchStartDate}";
+	    			searchEndDate = "${searchEndDate}";
+	    			searchAttitudeType = "all";
 	    		}
 	    		
 	    		pageNum = 1;
