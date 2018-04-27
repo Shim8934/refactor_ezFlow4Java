@@ -5226,46 +5226,53 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String strDocState = "";
 			String strAprState = "";
 			String aprType_aprState = "";
+			String aprDocUserID = "";
 
 			for (int k = 0; k < docListNode.getLength(); k++) {
 				strDocState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
 				strAprState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
-				// docState : 공람, aprState : 대기, aprState : 보류
-				if (strDocState.equals("015") || (!strAprState.equals("002") && !strAprState.equals("005"))) {
+				aprDocUserID = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
+				/* 2018-04-27 천성준 - 부재자 결재문서는 일괄결재에서 제외시킨다 */
+				if (!aprDocUserID.equals(userID)) {
 					docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
 				} else {
-					String href = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(3).getTextContent();
-
-					if (!docListNode.item(k).getChildNodes().item(0).getChildNodes().item(7).getTextContent().equals(userInfo.getDeptID()) && useAdditionalRole.equals("YES")) {
+					// docState : 공람, aprState : 대기, aprState : 보류
+					if (strDocState.equals("015") || (!strAprState.equals("002") && !strAprState.equals("005"))) {
 						docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
 					} else {
-  						aprType_aprState = ezApprovalGService.getAprType_AprState(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent(), docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent(), strDocState, companyID, userInfo.getTenantId());
-						
-						String mhtOrHwp = "MHT";
-						
-						if (href.length() > 0) {
-							if (href.substring(href.length() - 4).toUpperCase().equals(".HWP")) {
-								mhtOrHwp = "HWP";
-							}
-						}
-						// aprType -> 001(결재), 019(검토), 004(전결), 007(참조)
-						// 결재, 검토, 전결, 참조 제외 모두 제거
-						if (!aprType_aprState.split("/")[0].equals("001") && !aprType_aprState.split("/")[0].equals("019") && !aprType_aprState.split("/")[0].equals("004") && !aprType_aprState.split("/")[0].equals("007")) {
+						String href = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(3).getTextContent();
+	
+						if (!docListNode.item(k).getChildNodes().item(0).getChildNodes().item(7).getTextContent().equals(userInfo.getDeptID()) && useAdditionalRole.equals("YES")) {
 							docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
 						} else {
-							cnt++;
+	  						aprType_aprState = ezApprovalGService.getAprType_AprState(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent(), docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent(), strDocState, companyID, userInfo.getTenantId());
 							
-						    sbStr.append("<tr>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(20).getTextContent() + "|" + mhtOrHwp + "|" + strDocState + "\")'></td>");
-                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("DOCTITLE").item(k).getTextContent()) + "</TD>");
-                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent()) + "</TD>");
-                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERNAME").item(k).getTextContent()) + "</TD>");
-                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("STARTDATE").item(k).getTextContent()) + "</TD>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(0).getTextContent()) + "</TD>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(1).getChildNodes().item(0).getTextContent()) + "</TD>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(2).getChildNodes().item(0).getTextContent()) + "</TD>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(3).getChildNodes().item(0).getTextContent()) + "</TD>");
-                            sbStr.append("</tr>");    
+							String mhtOrHwp = "MHT";
+							
+							if (href.length() > 0) {
+								if (href.substring(href.length() - 4).toUpperCase().equals(".HWP")) {
+									mhtOrHwp = "HWP";
+								}
+							}
+							// aprType -> 001(결재), 019(검토), 004(전결), 007(참조)
+							// 결재, 검토, 전결, 참조 제외 모두 제거
+							if (!aprType_aprState.split("/")[0].equals("001") && !aprType_aprState.split("/")[0].equals("019") && !aprType_aprState.split("/")[0].equals("004") && !aprType_aprState.split("/")[0].equals("007")) {
+								docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
+							} else {
+								cnt++;
+								
+							    sbStr.append("<tr>");
+	                            sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(20).getTextContent() + "|" + mhtOrHwp + "|" + strDocState + "\")'></td>");
+	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("DOCTITLE").item(k).getTextContent()) + "</TD>");
+	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent()) + "</TD>");
+	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERNAME").item(k).getTextContent()) + "</TD>");
+	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("STARTDATE").item(k).getTextContent()) + "</TD>");
+	                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(0).getTextContent()) + "</TD>");
+	                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(1).getChildNodes().item(0).getTextContent()) + "</TD>");
+	                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(2).getChildNodes().item(0).getTextContent()) + "</TD>");
+	                            sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(docListNode.item(k).getChildNodes().item(3).getChildNodes().item(0).getTextContent()) + "</TD>");
+	                            sbStr.append("</tr>");    
+							}
 						}
 					}
 				}

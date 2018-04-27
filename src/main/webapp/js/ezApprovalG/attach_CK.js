@@ -1,4 +1,4 @@
-﻿/**
+﻿﻿/**
  * 첨부파일 리스트 추출
  * */
 function InitAttach(pDocID) {
@@ -194,8 +194,8 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     		strSize = parseInt(temppFileSize) + "B";
     	
     	pAttachxml = pAttachxml + "<VALUE>" + strSize + "</VALUE>";
-//    	pAttachxml = pAttachxml + "</CELL><CELL>";
-//    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>";
+    	pAttachxml = pAttachxml + "</CELL><CELL>";
+    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>";
     	pAttachxml = pAttachxml + "</CELL></ROW></ROWS></LISTVIEWDATA>";
     } else {
     	pAttachxml = "<LISTVIEWDATA><HEADERS>";
@@ -327,8 +327,8 @@ function AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation) {
         strSize = parseInt(pFileSize) + "B";
 
     pAttachxml = pAttachxml + "<VALUE>" + strSize + "</VALUE>";
-//    pAttachxml = pAttachxml + "</CELL><CELL>";
-//    pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>";
+    pAttachxml = pAttachxml + "</CELL><CELL>";
+    pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>";
     pAttachxml = pAttachxml + "</CELL></ROW></ROWS></LISTVIEWDATA>";
     Resultxml = loadXMLString(pAttachxml);
     return Resultxml;

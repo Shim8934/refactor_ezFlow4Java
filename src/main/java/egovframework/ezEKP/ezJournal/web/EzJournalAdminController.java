@@ -698,6 +698,7 @@ public class EzJournalAdminController {
 		String depts = request.getParameter("depts");
 		jsonString.put("userId", userId);
 		jsonString.put("depts", depts);
+		jsonString.put("admin", "Y");
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", null, request, "post", jsonString);
 		
 		String status = resultBody.get("status").toString();

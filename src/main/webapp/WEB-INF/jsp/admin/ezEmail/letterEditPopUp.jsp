@@ -60,8 +60,8 @@
 			var specialMsg2 = "<spring:message code='ezEmail.letter9'/>"; //
 			var lengthMsg = opener.lengthMsg; // "<spring:message code='ezEmail.letter14'/>"; // 자 이하로 입력 가능합니다.
 			var contentMsg = "<spring:message code='ezEmail.letter10'/>"; // "<spring:message code='ezEmail.letter15'/>"; // 내용을 입력해주세요.
-			var letterNameMsg = opener.letterNameMsg; // "<spring:message code='ezEmail.letter32'/>"; // 편지지명은
-			
+			var letterNameMsg = "<spring:message code='ezEmail.letter32'/>"; // "<spring:message code='ezEmail.letter32'/>"; // 편지지명은
+			                            
 			window.onload = function() {
 				console.log(popUpType);
 				if (popUpType == "modify") {
@@ -113,6 +113,14 @@
 				var displayname = $("#displayname").val();
 				var displayname2 = $("#displayname2").val();
 				var letterJson = {};
+				
+				// p 태그 margin 
+				var pTagmargin = "<div id='pMargin'><style>p {margin-top:0; margin-bottom:0;}</style></div>";
+				
+				if (letterContent.indexOf("<div id='pMargin'>") == -1) {
+					letterContent = pTagmargin + letterContent;
+				}
+				
 				
 				var disName = strChk(displayname, true, 40, letterNameMsg);
 				var disName2 = strChk(displayname2, true, 40, letterNameMsg);

@@ -1941,4 +1941,26 @@ public class EzJournalController extends EgovFileMngUtil {
 		return "/ezJournal/journalConfig";
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezJournal/saveChiefAuthDept.do")
+	@ResponseBody
+	public String saveChiefAuthDept(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie){
+		logger.debug("saveChiefAuthDept started");
+		
+		JSONObject jsonString = new JSONObject();
+		String userId= ((LoginVO)commonUtil.userInfo(loginCookie)).getId();
+		
+		String depts = request.getParameter("depts");
+		jsonString.put("userId", userId);
+		jsonString.put("depts", depts);
+		jsonString.put("admin", "N");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", null, request, "post", jsonString);
+		
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("saveChiefAuthDept ended");
+		return status;
+	}
+	
 }

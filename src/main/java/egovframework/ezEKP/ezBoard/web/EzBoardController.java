@@ -3758,7 +3758,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 			
 			strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
-			strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
+			/* 2018-04-27 홍승비 - 화면에 표시되는 파일명 특문처리 수정 */
+			strXML.append("<PFILENAME><![CDATA[" + commonUtil.cleanValue(pFileName[i]) + "]]></PFILENAME>");
 			strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
 			strXML.append("<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>");
 			strXML.append("</NODE>");
@@ -4963,7 +4964,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287", userInfo.getLocale()));
 		}
 		
-		if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
+		if (adjacentItemsEnableFlag != null && showAdjacent != null && adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
 			if (boardItem.getUpperItemIDTree() == null || boardItem.getUpperItemIDTree().equals("")) {
 				boardItem.setUpperItemIDTree(itemID);
 			}
