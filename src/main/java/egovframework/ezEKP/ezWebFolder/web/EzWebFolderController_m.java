@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getSharingList.do")
-	public @ResponseBody String getSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public @ResponseBody String getSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getSharingList started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -71,14 +72,14 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/webfolderSharedList.do")
-	public String webfolderSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+	public String webfolderSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
 		return "ezWebFolder/webfolderSharedList";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getSharedList.do")
-	public @ResponseBody String getSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public @ResponseBody String getSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getSharedList started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -99,6 +100,31 @@ public class EzWebFolderController_m {
 		return resultBody.toString();
 	}
 	
+	@RequestMapping(value="/ezWebFolder/getShareUserList.do", method=RequestMethod.POST)
+	public @ResponseBody String getShareUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getShareUserList started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String folderFileId = request.getParameter("folderFileId");
+		String folderFileType = request.getParameter("folderFileType");
+		
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
+		String result = "";
+		
+		
+		if (((String) resultBody.get("status")).equals("ok")) {
+			JSONObject shareInfo = (JSONObject) resultBody.get("data");
+			JSONArray userList = (JSONArray) shareInfo.get("userList");
+			result = userList.toString();
+		}
+		
+		logger.debug("result: " + result);
+		
+		logger.debug("getShareUserList ended.");
+		return result;
+	}
+	
 	@RequestMapping(value="/ezWebFolder/addShareView.do")
 	public String addShareView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addShareView started.");
@@ -117,7 +143,6 @@ public class EzWebFolderController_m {
 				model.addAttribute("type", "NEW");
 			} else {
 				model.addAttribute("type", "EDIT");
-				model.addAttribute("shareInfo", shareInfo);
 			}
 		}
 		

@@ -426,7 +426,7 @@ public class EzWebFolderGWController_m {
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
 			
-			ezWebFolderService_m.deleteShare(shareId, userId, offset, tenantId);
+			ezWebFolderService_m.deleteShare(shareId, userId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
