@@ -101,7 +101,7 @@ var searchContext = (function() {
 		setSearchPageEnableEventHandler: setSearchPageEnableEventHandler,
 		setSearchPageDisableEventHandler: setSearchPageDisableEventHandler,
 		setSearchStartEventHandler: setSearchStartEventHandler,
-		setFileTypeChangeEventHandler : setFileTypeChangeEventHandler,
+		setFileTypeChangeEventHandler: setFileTypeChangeEventHandler,
 		isSearchPage: isSearchPage,
 		clearRequirement: clearRequirement,
 		search: search
