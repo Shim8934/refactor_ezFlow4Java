@@ -245,7 +245,7 @@
 			* 통계바 메소드
 			*/
 			function getAttiTypeList_After(result) {
-					var objTable = $("<table></table>").css({"cellpadding":"0", "cellspacing":"0", "border":"0", "width":"100%", "height":"739px"});
+					var objTable = $("<table></table>").css({"cellpadding":"0", "cellspacing":"0", "border":"0", "width":"100%", "height":$("#attiCalendar").css("height")});
 					var objTbody = $("<tbody></tbody>");
 					var objTr = "";
 					var objTd = "";
@@ -259,17 +259,14 @@
 							continue;
 						}
 						objTr = $("<tr></tr>").append($("<th></th>").text(result[i].typeName));
-						if (deptFlag == "true") {
-							objTd = $("<td></td>").css({"width" : "80px", "cursor" : "pointer"})
-							.attr("id",result[i].typeId).text("0일")
-							.attr("onmouseover","this.style.color='#164aad'")
-							.attr("onmouseout","this.style.color='#666'")
-							.click(function() {
-								searchByTypeId(this);
-							});	
-						} else {
-							objTd = $("<td></td>").css({"width" : "80px"}).attr({"id":result[i].typeId, "parentId":result[i].parentId}).text("0일")
-						}
+						objTd = $("<td></td>").css({"width" : "80px", "cursor" : "pointer"})
+						.attr("id",result[i].typeId).text("0일")
+						.attr("parentId",result[i].parentId)
+						.attr("onmouseover","this.style.color='#164aad'")
+						.attr("onmouseout","this.style.color='#666'")
+						.click(function() {
+							searchByTypeId(this);
+						});	
 						objTr.append(objTd);
 						objTbody.append(objTr);
 					}
