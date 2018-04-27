@@ -607,7 +607,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		logger.debug("lineCnt : " + lineCnt);
 		Random random = new Random();
 		int[] choice = new int[lineCnt];// 선택된 선 번호
-		int jungbockCnt = 0;// 중복 카운트
+	
 		lineCnt = 0;
 
 		while (true) {
@@ -632,15 +632,6 @@ public class EzLadderServiceImpl implements EzLadderService {
 			if (lineCnt == choice.length) {// 선 갯수를 만족한다면 break
 				break;
 			}
-
-			/*jungbockCnt++;// 만들 수 없는 사다리 배제
-			if (jungbockCnt >= 100000) {
-				jungbockCnt = 0;
-				lineCnt = 0;
-				for (int i = 0; i < choice.length; i++) {
-					choice[i] = 0;
-				}
-			}*/
 		}
 		logger.debug("getLineArray ended.");
 		return choice;
@@ -653,7 +644,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		logger.debug("getLine started.");
 		// height를 일단 10으로 통일함. 추후 height를 사용자 수(size)에 따라 유동적으로 줄지는 논의 필요
 		int height = 40;
-		String lineArr="";
+
 		int[] line = new int[size * height];
 		for (int i = 0; i < lineArray.length; i++) {
 			int temp = lineArray[i];
@@ -692,22 +683,37 @@ public class EzLadderServiceImpl implements EzLadderService {
 	public void sendLadderMail(LadderVO lad, LadderLineVO ladLines, String logCookie, int len) throws Exception {
 
 		LoginVO userInfo = commonUtil.userInfo(logCookie);	
-		String lang = commonUtil.getMultiData(userInfo.getLang(), lad.getTenant_id());
-		lad.setLang(lang);
-		lad.setOffset(userInfo.getOffset());
-		LadderVO ladVO =  getLadderGame(lad);
-			
+	
 		int cnt = 0;
 		String[] receiverID = new String[len];
 		String[] receiverName = new String[len];
 		for(int i=0; i<len; i++) {
-			if(ladLines.getUserIds()[i].length()>=15) {
+			boolean jungBock = false;
+			if(ladLines.getUserIds()[i].length()>=15) {		// 익명참여자의 아이디가 anoyAttendant로 시작해서 구분해주기 위해
 				if(!ladLines.getUserIds()[i].substring(0,15).equals("anonyAttendant_")){
+					for(int checkCnt = 0; checkCnt<cnt; checkCnt++) {
+						if(receiverID[checkCnt].equals(ladLines.getUserIds()[i])){
+							jungBock = true;
+							break;
+						}
+					}
+					if(jungBock == true) {
+						continue;
+					}
 					receiverID[cnt] = ladLines.getUserIds()[i];
 					receiverName[cnt] = ladLines.getUserNames()[i];
 					cnt++;
 				}
-			} else {
+			} else { // 참여자
+				for(int checkCnt = 0; checkCnt<cnt; checkCnt++) { 
+					if(receiverID[checkCnt].equals(ladLines.getUserIds()[i])){
+						jungBock = true;
+						break;
+					}
+				}
+				if(jungBock == true) {
+					continue;
+				}
 				receiverID[cnt] = ladLines.getUserIds()[i];
 				receiverName[cnt] = ladLines.getUserNames()[i];
 				cnt++;
@@ -717,35 +723,24 @@ public class EzLadderServiceImpl implements EzLadderService {
 		String subject = egovMessageSource.getMessage("ezLadder.t096", userInfo.getLocale());	// 메일제목
 		StringBuilder bodyContent = new StringBuilder("");	// 메일 링크
 		bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
-		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t003", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;\"><a href='/ezLadder/getLadderGame.do?ladderId=" + lad.getLadderId() + "&searchSelect=none&searchInput=none&mode=none&currPage=1'>" + commonUtil.cleanValue(ladVO.getTitle()) + "</a></span></br>");
+		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t003", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;\"><a href='/ezLadder/getLadderGame.do?ladderId=" + lad.getLadderId() + "&searchSelect=none&searchInput=none&mode=none&currPage=1'>" + commonUtil.cleanValue(lad.getTitle()) + "</a></span></br>");
 		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t004", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
 		bodyContent.append("</div>");
 				
 		// 참여자에게 메일 발송
-		List<String> mail = new ArrayList<String>();
+		InternetAddress from = new InternetAddress();
+		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+		from.setAddress(userInfo.getEmail());
+		InternetAddress[] toArr = new InternetAddress[cnt];
+		
 		for (int i=0; i<cnt; i++) {
 			OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
-			InternetAddress from = new InternetAddress();
-			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-			from.setAddress(userInfo.getEmail());
-									
+						
 			InternetAddress to = new InternetAddress();
 			to.setPersonal(receiverName[i].trim(), "UTF-8");
 			to.setAddress(AccessUserInfo.getMail());
-			mail.add(to.getAddress());
-			
-			boolean jungbock = false;
-			for(int check=0; check<mail.size()-1; check++) {
-				if(mail.get(check).equals(to.getAddress()))
-				{
-					jungbock = true;
-					break;
-				}
-			}
-			if(jungbock == true) {
-				continue;
-			}
-			ezEmailService.sendMail(logCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+			toArr[i] = to;
 		}
+		ezEmailService.sendMail(logCookie, from, toArr, null, null, subject, bodyContent.toString(), false);
 	}
 }
