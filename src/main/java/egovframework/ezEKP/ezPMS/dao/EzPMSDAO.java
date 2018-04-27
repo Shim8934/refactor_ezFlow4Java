@@ -47,7 +47,7 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<ProjectCompanyVO> getCompanyList(Map<String, Object> map){
-		return (List<ProjectCompanyVO>) list("selectCompanyList",map);
+		return (List<ProjectCompanyVO>) list("EzPMSDAO.selectCompanyList",map);
 	}
 	
 	/**
@@ -57,7 +57,7 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<DeptViewVO> getDeptViewVO(Map<String, Object> map){
-		return (List<DeptViewVO>) list("selectDeptList",map);
+		return (List<DeptViewVO>) list("EzPMSDAO.selectDeptList",map);
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<ProjectUserVO> getDeptUserList(Map<String, Object> map){
-		return (List<ProjectUserVO>) list("selectUserList",map);
+		return (List<ProjectUserVO>) list("EzPMSDAO.selectUserList",map);
 	}
 
 	/**
@@ -81,80 +81,80 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	}
 
 	public int addNewProject(Map<String, Object> map) {
-		return (int) insert("addNewProject", map);
+		return (int) insert("EzPMSDAO.addNewProject", map);
 	}
 	
 	public ProjectMemberVO getUserInfo(HashMap<String, Object> map) {
-		return (ProjectMemberVO) select("getUserInfo", map);
+		return (ProjectMemberVO) select("EzPMSDAO.getUserInfo", map);
 	}
 
 	public void addProjectMember(HashMap<String, Object> map) {
 		// TODO Auto-generated method stub
-		insert("addProjectMember", map);
+		insert("EzPMSDAO.addProjectMember", map);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getRemainingWeight(String projectId) {
-		return (Map<String, Object>) select("getRemainingWeight", projectId);
+		return (Map<String, Object>) select("EzPMSDAO.getRemainingWeight", projectId);
 	}
 	
 	/**
 	 * 프로젝트관리 메인 환경설정 리스트 가져오기 (+메일)
 	 */
 	public ProjectMainSettingVO getProjectMainSetting(Map<String, Object> map) {
-		return (ProjectMainSettingVO) select("getProjectMainSetting", map);
+		return (ProjectMainSettingVO) select("EzPMSDAO.getProjectMainSetting", map);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<ProjectInfoVO> getProjectList(Map<String, Object> map) {
-		return (List<ProjectInfoVO>) list("getProjectList", map);
+		return (List<ProjectInfoVO>) list("EzPMSDAO.getProjectList", map);
 	}
 	
 	public Long addTask(ProjectTaskVO vo) {
-		return (Long) insert("addTask", vo);
+		return (Long) insert("EzPMSDAO.addTask", vo);
 	}
 	
 	public void addTaskMember(TaskMemberVO vo) {
-		insert("addTaskMember", vo);
+		insert("EzPMSDAO.addTaskMember", vo);
 	}
 	
 	public int getProjectWorkingday (String projectId) {
-		return (int) select("getProjectWorkingday", projectId);
+		return (int) select("EzPMSDAO.getProjectWorkingday", projectId);
 	}
 	
 	public void updateProjectWorkingday (Map<String, Object> map) {
-		update("updateProjectWorkingday", map);
+		update("EzPMSDAO.updateProjectWorkingday", map);
 	}
 	
 	public void updateTaskWDNW (Map<String, Object> map) {
-		update("updateTaskWDNW", map);
+		update("EzPMSDAO.updateTaskWDNW", map);
 	}
 
 	public int getSortOrder(String upperGroupId) {
-		return (int) select("getSortOrder", upperGroupId);
+		return (int) select("EzPMSDAO.getSortOrder", upperGroupId);
 	}
 	
 	public ProjectInfoVO getProjectDetails(Map<String, Object> map) {
-		return (ProjectInfoVO) select("getProjectDetails", map); 
+		return (ProjectInfoVO) select("EzPMSDAO.getProjectDetails", map); 
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<ProjectTaskVO> getTaskList(Map<String, Object> map) {
-		return (List<ProjectTaskVO>) list("getTaskList", map); 
+		return (List<ProjectTaskVO>) list("EzPMSDAO.getTaskList", map); 
 	}
 	
 	
 
 	public int getProjectListCount(Map<String, Object> map) {
-		return (int) select("getProjectListCount", map);
+		return (int) select("EzPMSDAO.getProjectListCount", map);
 	}
 	
 	public void insertMainSetting(Map<String, Object> map) {
-		insert("insertMainSetting", map);
+		insert("EzPMSDAO.insertMainSetting", map);
 	}
 	
 	public void updateMainSetting(Map<String, Object> map) {
-		update("updateMainSetting", map);
+		update("EzPMSDAO.updateMainSetting", map);
 	}
 
 }
