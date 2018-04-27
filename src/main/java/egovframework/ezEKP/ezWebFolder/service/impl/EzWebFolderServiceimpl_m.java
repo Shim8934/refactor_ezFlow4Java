@@ -267,15 +267,15 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("folderFileId", folderFileId);
 		map.put("folderFileType", folderFileType);
 		map.put("primary", primary);
-		map.put("offset", offset);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantId",	tenantId);
 		
 		List<SimpleShareVO> shareInfoList = ezWebFolderDAO_m.getShareInfo(map);
 		
 		for (SimpleShareVO shareInfo : shareInfoList) {
 			Map<String, Object> map2 = new HashMap<String, Object>();
-			map.put("shareId", shareInfo.getShareId());
-			map.put("tenantId", shareInfo.getTenantId());
+			map2.put("shareId", shareInfo.getShareId());
+			map2.put("tenantId", shareInfo.getTenantId());
 			
 			shareInfo.setUserList(ezWebFolderDAO_m.getShareSubInfo(map2));
 		}
@@ -392,12 +392,22 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public void deleteShare(String shareId, String sharerId, String offset, int tenantId) throws Exception {
+	public void deleteShare(String shareId, String sharerId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("shareId",  shareId);
 		map.put("tenantId", tenantId);
 		
 		ezWebFolderDAO_m.deleteShare(map);
+	}
+	
+	@Override
+	public void deleteShareWithSub(String folderFileId, String folderFileType, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("folderFileId", folderFileId);
+		map.put("folderFileType", folderFileType);
+		map.put("tenantId", tenantId);
+		
+		ezWebFolderDAO_m.deleteShareWithSub(map);
 	}
 	
 	@Override

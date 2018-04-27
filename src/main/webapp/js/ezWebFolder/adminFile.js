@@ -60,8 +60,8 @@ function setButtons(mode) {
 	libttns[3].firstElementChild.onclick  = function() {fileRename();};
 	libttns[4].firstElementChild.onclick  = function() {fileMove();};
 	libttns[5].firstElementChild.onclick  = function() {openSearchPanel();};
-	libttns[6].firstElementChild.onclick  = function() {refresh();};
-	libttns[7].firstElementChild.onchange = function() {refresh();};
+	libttns[6].firstElementChild.onclick  = function() {refreshView();};
+	libttns[7].firstElementChild.onchange = function() {search_Set("1");};
 	
 	var divBttnElmt                          = document.getElementsByClassName("wfdivBttn")[0];
 	var searchBttns                          = divBttnElmt.children;

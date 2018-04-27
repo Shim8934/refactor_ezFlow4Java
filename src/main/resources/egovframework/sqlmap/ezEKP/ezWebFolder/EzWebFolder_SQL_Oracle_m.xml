@@ -664,6 +664,7 @@
 		FROM TBL_WEBFOLDER_SHARE
 		WHERE FOLDERFILE_ID = #folderFileId#
 		AND FOLDERFILE_TYPE = #folderFileType#
+		AND TENANT_ID = #tenantId#
 		<isNotEqual property="sharerId" compareValue="">
 			AND SHARER_ID = #sharerId#
 		</isNotEqual>
@@ -677,9 +678,10 @@
 				ELSE USER_NAME2
 			END AS USER_NAME,
 			USER_TYPE,
-			SUB_STATUS,
+			SUB_STATUS
 		FROM TBL_WEBFOLDER_SHARE_SUB
-		WHERE SHAERE_ID = #shareId#
+		WHERE SHARE_ID = #shareId#
+		AND TENANT_ID = #tenantId#
 		ORDER BY SEQ_ID
 	</select>
 	
@@ -852,6 +854,41 @@
 		DELETE FROM TBL_WEBFOLDER_SHARE
 		WHERE SHARE_ID = #shareId#
 		AND TENANT_ID  = #tenantId#
+	</delete>
+	
+	<delete id="EzWebFolderDAO_m.deleteShareWithSub">
+		<isEqual property="folderFileType" compareValue="F">
+			DELETE FROM TBL_WEBFOLDER_SHARE
+			WHERE FOLDERFILE_ID = #folderFileId#
+			AND FOLDERFILE_TYPE = 'F'
+			AND TENANT_ID  = #tenantId#
+		</isEqual>
+		<isEqual property="folderFileType" compareValue="D">
+			DELETE FROM TBL_WEBFOLDER_SHARE S
+            WHERE EXISTS (
+                SELECT 1
+                FROM (
+                    SELECT
+                         FOLDER_ID AS FOLDERFILE_ID,
+                         'D' AS FOLDERFILE_TYPE,
+                         TENANT_ID
+                    FROM TBL_WEBFOLDER_FOLDER
+                    WHERE FOLDER_PATH LIKE ('%|' || #folderFileId# || '|%')
+                    UNION
+                    SELECT
+                        F.FILE_ID AS FOLDERFILE_ID,
+                        'F' AS FOLDERFILE_TYPE,
+                        F.TENANT_ID
+                    FROM TBL_WEBFOLDER_FILE F
+                    JOIN TBL_WEBFOLDER_FOLDER D
+                    ON F.FOLDER_ID = D.FOLDER_ID
+                    AND F.TENANT_ID = D.TENANT_ID 
+                    WHERE D.FOLDER_PATH LIKE ('%|' || #folderFileId# || '|%') ) DF
+                WHERE S.FOLDERFILE_ID = DF.FOLDERFILE_ID
+                AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
+                AND S.TENANT_ID = DF.TENANT_ID
+                AND S.TENANT_ID = #tenantId# )
+		</isEqual>
 	</delete>
 	
 	<select id="EzWebFolderDAO_m.getHiddenSharedList" parameterClass="Map" resultMap="shareVO">

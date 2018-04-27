@@ -24,7 +24,6 @@ function DivPopUpShow(popUpW, popUpH, URL) {
 		document.getElementById("iFrameLayer").style.height  = popUpH + "px";
 		document.getElementById("mailPanel").style.display   = "";
 		document.getElementById("iFramePanel").style.display = "";
-		document.getElementById("mailPanel").focus();
 	} catch (e) {}
 }
 
@@ -59,7 +58,10 @@ function DivPopUpPosition(popUpW, popUpH) {
 }
 
 function closeAllPopup() {
-	window.parent.frames["left"].document.body.style.overflow = "auto";
-	window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
+	var leftFrame = window.parent.frames["left"].document;
+	var blockLeft = leftFrame.getElementById("blockLeft");
+	leftFrame.body.style.overflow = "auto";
+	blockLeft.style.height        = "100%";
+	blockLeft.style.display       = "none";
 	DivPopUpHidden();
 }

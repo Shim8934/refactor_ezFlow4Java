@@ -34,7 +34,9 @@ public interface EzWebFolderService_m {
 	
 	void updateShare(String shareId, String sharerId, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
 	
-	void deleteShare(String shareId, String sharerId, String offset, int tenantId) throws Exception;
+	public void deleteShare(String shareId, String sharerId, int tenantId) throws Exception;
+	
+	public void deleteShareWithSub(String folderFileId, String folderFileType, int tenantId) throws Exception;
 	
 	List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception;
 
