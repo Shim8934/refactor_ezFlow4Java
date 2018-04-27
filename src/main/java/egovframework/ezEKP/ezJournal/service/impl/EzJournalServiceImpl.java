@@ -16,6 +16,7 @@ import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -844,8 +845,35 @@ public class EzJournalServiceImpl implements EzJournalService {
 			
 		for (JournalVO journal : journalList) {
 			String journalContent = journal.getJournalContent();
-			String thisContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").html();
-			String nextContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("nextJournal").html();
+			Elements thisElems = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").children();
+
+			synchronized (thisElems) {
+				Iterator<Element> it = thisElems.iterator();
+				while (it.hasNext()) {
+					String elemText = it.next().html();
+					if (elemText.equals("&nbsp;")) {
+						it.remove();
+					} else {
+						break;
+					}
+				}
+			}
+			String thisContent = thisElems.toString();
+			
+			Elements nextElems = Jsoup.parseBodyFragment(journalContent).body().getElementById("nextJournal").children();
+
+			synchronized (nextElems) {
+				Iterator<Element> it = nextElems.iterator();
+				while (it.hasNext()) {
+					String elemText = it.next().html();
+					if (elemText.equals("&nbsp;")) {
+						it.remove();
+					} else {
+						break;
+					}
+				}
+			}
+			String nextContent = nextElems.toString();
 			
 			// #146bb8 rgb(0, 144, 208)
 //			formThisHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");
