@@ -87,7 +87,7 @@
 		            		<c:if test="${company.selected eq 'selected' }">
 		            			selected
 		            		</c:if>
-			            	>${company.companyName }</option>
+			            	><c:out value='${company.companyName }'/></option>
 		            	</c:forEach>
 		            </select><br/><br/>
 	            </span>
@@ -111,10 +111,10 @@
 				    <c:when test="${fn:length(authList) ne 0}">
 					    <c:forEach items="${authList }" var="auth">
 					    	<tr ondblclick="updateAuth();" id="${auth.userId}" userName="${auth.userName }" onclick="selectedTR(this);" style="cursor: pointer;">
-					    		<td style="text-align: left;">${auth.userName } </td>
-					    		<td style="text-align: left;">${auth.jikwi } </td>
-					    		<td style="text-align: left;">${auth.deptName } </td>
-					    		<td style="text-align: left;">${auth.authDept } </td>
+					    		<td style="text-align: left;"><c:out value='${auth.userName }'/> </td>
+					    		<td style="text-align: left;"><c:out value='${auth.jikwi }'/> </td>
+					    		<td style="text-align: left;"><c:out value='${auth.deptName }'/> </td>
+					    		<td style="text-align: left;">${auth.authDept }</td>
 					    	</tr>
 					    </c:forEach>
 				    </c:when>
