@@ -296,7 +296,12 @@
 // 					tdElmt10.setAttribute("style","text-align: center;");
 					
 					if (result[i]["fileShareStatus"] == "1") {
-						tdElmt10.textContent = "<spring:message code='ezWebFolder.t105' />";
+						var spanElmt = document.createElement("span");
+						spanElmt.textContent = "<spring:message code='ezWebFolder.t105' />";
+						spanElmt.addEventListener("mouseover", function() { this.setAttribute("style", "font-weight:bold;color:blue;"); });
+						spanElmt.addEventListener("mouseout", function() { this.setAttribute("style", ""); });
+						spanElmt.addEventListener("click", function() { alert("공유정보조회 준비중!"); });
+						tdElmt10.appendChild(spanElmt);
 					}
 					else {
 						tdElmt10.textContent = "";
