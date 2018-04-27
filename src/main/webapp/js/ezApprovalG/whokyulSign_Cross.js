@@ -39,7 +39,9 @@ var s = "";
 	        } else {
 	        	WhoKyul_Complete("OK");
 	        }
-	    }
+	    } else {
+	    	DivPopUpHidden();
+	    } 
 	}
 
 	function WhoKyul_Complete(RtnVal) {

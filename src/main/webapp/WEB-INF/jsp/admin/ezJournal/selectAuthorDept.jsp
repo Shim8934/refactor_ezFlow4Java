@@ -118,7 +118,7 @@
 	   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
 	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
 	   				$(".selectTR").remove();
-	   			} else {
+	   			} else {l
 	   				alert("<spring:message code='ezOrgan.t249'/>");
 	   			}
 	   		}
@@ -144,7 +144,7 @@
 	   			});
 	   			for (var i = 0; i < opener.deptIds.length; i++) {
 	   				lpDeptId=opener.deptIds[i];
-	   				lpDeptName=opener.deptNames[i];
+	   				lpDeptName=opener.deptNames[i].replace(/&/gi, "&amp;");
 	   				addDeptInLP();
 				}
    			});

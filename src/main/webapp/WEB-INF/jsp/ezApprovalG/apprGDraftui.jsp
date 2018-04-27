@@ -1299,8 +1299,12 @@
 		
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
-		
+		        
+				if(DraftFlag == "REDRAFT" && SusinSN == "1" && DocState == "011" && AprState == "004") {
+					pGubun = "11";
+				}
 		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "mht";
+		        
 		        if (ListType == "21") {
 		            OpenUrl += "&docSN=" + DocSN;
 				}
