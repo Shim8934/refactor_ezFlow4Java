@@ -31,7 +31,7 @@ function putBansongSign() {
     var CurrentDate = RtnVal.split(".");
     var s = CurrentDate[1] + "." + CurrentDate[2];
     // aprType 9(개인병렬협조), 11(부서순차협조), 12(부서병렬협조)
-    if (pAprLineType == strAprType11 || pAprLineType == strAprType12) {
+    if (pAprLineType == strAprType11 || pAprLineType == strAprType12 || pAprLineType == strAprType9) {
         var phabyuisign;
         var phabyuidate;
         var phabyuijikwee;
@@ -64,11 +64,11 @@ function putBansongSign() {
         var habyuidateID = phabyuidate + pAprMemberSN;
         var field = message.GetListItem(fields, habyuidateID);
         if (field) {
-        	setNodeText(field , RtnVal);
+        	setNodeText(field , s);
             signInfo[signCnt] = habyuidateID;
             SignType[signCnt] = "TEXT";
             SignName[signCnt] = habyuidateID;
-            SignContent[signCnt] = RtnVal;
+            SignContent[signCnt] = s;
             signCnt = signCnt + 1;
         }
     }
