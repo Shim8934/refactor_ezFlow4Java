@@ -342,6 +342,27 @@
 				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileId=" + fileId);
 			}
 			
+			function addShare() {
+				var selectedRows = rowContext.getSelectedRows();
+				var selectedLength = selectedRows.length;
+				
+				if (selectedLength == 0) {
+					alert("파일 또는 폴더를 선택하세요.");
+					return;
+				}
+				
+				if (selectedLength > 1) {
+					alert("하나만 선택하세요.");
+					return;
+				}
+				
+				var folderFileInfo = rowContext.getRowInfo(selectedRows[0]);
+				var folderFileId = folderFileInfo.id;
+				var folderFileType = folderFileInfo.type;
+	            var openWindow = window.open("/ezWebFolder/addShareView.do?folderFileId=" + folderFileId + "&folderFileType=" + folderFileType, "addShareView", GetOpenWindowfeature(610, 685));
+	            try { openWindow.focus(); } catch (e) { }
+			}
+			
 			function clickRow(obj, e) {
 				e.stopPropagation();
 				e.preventDefault();
@@ -429,10 +450,6 @@
 				document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 			}
 			
-			function configShare() {
-				menu_SelectRange2();
-			}
-			
 			function getUserSimpleListStr(userListStr) {
 				var result = "";
 				var userArr = userListStr.split(",");
@@ -481,7 +498,7 @@
 				<li id=""><a onClick="openSearchPanel()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
 				<li id=""><a onClick="refresh()"         style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 				<li id=""><a onClick="favourite()"       style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t216'/></span></a></li>
-				<li id=""><a onClick="configShare()"     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t217'/></span></a></li>
+				<li id=""><a onClick="addShare()"        style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t217'/></span></a></li>
 				<li id=""><a onClick="deleteShare()"     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t218'/></span></a></li>
 				<li>
 					<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect" onchange="refresh();">

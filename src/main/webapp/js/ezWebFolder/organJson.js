@@ -19,7 +19,12 @@ function preProcess() {
 }
 
 function initRangeData(initData) {
-	var jsonObj = JSON.parse(initData);
+	if (typeof(initData) == "string") {
+		var jsonObj = JSON.parse(initData);
+	} else {
+		var jsonObj = initData;
+	}
+	
 	var deptArray = jsonObj["dept"];
 	var userArray = jsonObj["user"];
 	

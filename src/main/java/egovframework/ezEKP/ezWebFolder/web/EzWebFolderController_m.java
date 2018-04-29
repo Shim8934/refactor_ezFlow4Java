@@ -101,7 +101,7 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/getShareUserList.do", method=RequestMethod.POST)
-	public @ResponseBody String getShareUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public @ResponseBody String getShareUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getShareUserList started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -112,15 +112,41 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
 		String result = "";
 		
-		
 		if (((String) resultBody.get("status")).equals("ok")) {
 			JSONObject shareInfo = (JSONObject) resultBody.get("data");
-			JSONArray userList = (JSONArray) shareInfo.get("userList");
-			result = userList.toString();
+			
+			if (shareInfo != null) {
+				JSONArray userListJson = (JSONArray) shareInfo.get("userList");
+				JSONObject userAndDeptList = new JSONObject();
+				JSONArray userList = new JSONArray();
+				JSONArray deptList = new JSONArray();
+				
+				for (int i = 0; i < userListJson.size(); i++) {
+					JSONObject orgObj = (JSONObject) userListJson.get(i);
+					JSONObject obj = new JSONObject();
+					if (((String) orgObj.get("userType")).equals("U")) {
+						obj.put("userId", (String) orgObj.get("userId")); 
+						obj.put("userName", (String) orgObj.get("userName")); 
+						userList.add(obj);
+					} else {
+						obj.put("deptId", (String) orgObj.get("userId")); 
+						obj.put("deptName", (String) orgObj.get("userName")); 
+						deptList.add(obj);
+					}
+				}
+				
+				userAndDeptList.put("user", userList);
+				userAndDeptList.put("dept", deptList);
+				
+				shareInfo.put("userList", userAndDeptList);
+				
+				result = resultBody.toString();
+			}
+		} else {
+			result = resultBody.toString();
 		}
 		
 		logger.debug("result: " + result);
-		
 		logger.debug("getShareUserList ended.");
 		return result;
 	}
@@ -129,7 +155,7 @@ public class EzWebFolderController_m {
 	public String addShareView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addShareView started.");
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String folderFileId = request.getParameter("folderFileId");
 		String folderFileType = request.getParameter("folderFileType");
@@ -146,7 +172,7 @@ public class EzWebFolderController_m {
 			}
 		}
 		
-		model.addAttribute("userInfo", commonUtil.userInfo(loginCookie));
+		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("folderFileId", folderFileId);
 		model.addAttribute("folderFileType", folderFileType);
 		
@@ -155,14 +181,26 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/addShare.do", method=RequestMethod.POST)
-	public @ResponseBody String addShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody JSONObject jsonParam, Model model) throws Exception {
+	public @ResponseBody String addShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody JSONObject jsonParam) throws Exception {
 		logger.debug("addShare started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", null, request, "post", jsonParam);
+		String folderFileId = (String) jsonParam.get("folderFileId");
+		String folderFileType = (String) jsonParam.get("folderFileType");
 		
-		model.addAttribute("result", resultBody);
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
+		
+		if (((String) resultBody.get("status")).equals("ok")) {
+			JSONObject shareInfo = (JSONObject) resultBody.get("data");
+			
+			if (shareInfo == null) {
+				resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", null, request, "post", jsonParam);
+			} else {
+				String shareId = (String) shareInfo.get("shareId");
+				resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + shareId, null, request, "put", jsonParam);
+			}
+		}
 		
 		logger.debug("addShare ended.");
 		return  resultBody.toString();

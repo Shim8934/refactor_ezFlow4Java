@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="/js/ezWebFolder/organJson.js"></script>
 		<script type="text/javascript">
 			var type = "<c:out value='${type}'/>";
+			var pDeptID = "<c:out value='${userInfo.deptID}'/>";
 			var pCompanyID = "<c:out value='${userInfo.companyID}'/>";
 			var primary = "<c:out value='${userInfo.primary}'/>";
 			var arrSubFolder = [];
@@ -32,8 +33,38 @@
 			var folderFileType = "<c:out value='${folderFileType}'/>";
 			
 			window.onload = function () {
-				getData("", pCompanyID);
 				preProcess();
+			}
+			
+			function preProcess() {
+				document.onselectstart = function() {
+					return false;
+				}
+				
+				getData(pDeptID, pCompanyID);
+				
+				if (type == "EDIT") {
+					$.ajax({
+						type: "POST",
+						url: "/ezWebFolder/getShareUserList.do",
+						data: {
+							"folderFileId" : folderFileId,
+							"folderFileType" : folderFileType
+						},
+						dataType: "JSON",
+						async: false,
+						success : function(data) {
+							if (data.status == "ok") {
+								initRangeData(data.data.userList);
+							} else {
+								alert(strErrMsg + " code: " + data.code);
+							}
+						},
+						error : function(error) {
+							alert(strErrMsg);
+						}
+					});
+				}
 			}
 			
 			function addShare() {
@@ -82,7 +113,11 @@
 					async: false,
 					success : function(data) {
 						if (data.status == "ok") {
-							alert("공유를 추가헸습니다.");
+							if (type == "NEW") {
+								alert("공유를 추가헸습니다.");
+							} else {
+								alert("공유를 수정헸습니다.");
+							}
 							
 							try {
 								window.opener.refreshView();

@@ -275,6 +275,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		for (SimpleShareVO shareInfo : shareInfoList) {
 			Map<String, Object> map2 = new HashMap<String, Object>();
 			map2.put("shareId", shareInfo.getShareId());
+			map2.put("primary", primary);
 			map2.put("tenantId", shareInfo.getTenantId());
 			
 			shareInfo.setUserList(ezWebFolderDAO_m.getShareSubInfo(map2));
