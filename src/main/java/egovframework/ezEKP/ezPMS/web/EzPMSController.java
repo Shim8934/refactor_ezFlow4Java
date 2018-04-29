@@ -197,9 +197,16 @@ public class EzPMSController {
 			model.addAttribute("projectList", projectList);
 			model.addAttribute("viewType", viewType);
 			request.setAttribute("projectList", projectList);
+			
+			System.out.println(viewType);
+			if( viewType.equals("1")) {
+				viewType = "Board";
+			} else {
+				viewType = "Memo";
+			}
 		}
 		
-		return "ezPMS/pmsProjectList";
+		return "ezPMS/pmsProjectList" + viewType;
 	}
 	/**
 	 * 나의 업무 화면 호출 함수

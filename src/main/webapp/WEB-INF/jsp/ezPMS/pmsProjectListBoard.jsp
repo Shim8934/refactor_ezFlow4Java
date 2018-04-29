@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
@@ -74,91 +74,9 @@ $(function(){
 });
 
 </script>
+</head>
 <body>
-	<c:choose>
-		<c:when test="${viewType eq 0 }">
-			<div id="memoStyleDiv"
-				style="height: 80%; width: 100%; overflow: auto; display: none;">
-				<c:forEach items="${projectList }" var="project">
-					<table id="${project.projectId }" class="projectList"
-						style="margin: 10px 20px; float: left; position: relative; border: solid 1px gray; clear: none; width: 360px; left: 2%;">
-						<tr>
-							<th colspan="2" style="height: 30px; font-size: 15px;"><input
-								type="checkbox" onchange="checkedCheckboxMemo(this);"
-								name="memoCheckbox"
-								style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer; float: left">
-							<c:out value="${project.projectName }" /><img class="star"
-								style="cursor: pointer; float: right;" draggable="false"
-								src="/images/ImgIcon/view-flag.gif"
-								onclick="addFavorite(${project.projectId })"></th>
-						</tr>
-						<tr onclick="selectedMemoTR(this);">
-							<td colspan="2">&nbsp;&nbsp;<c:out
-									value="${project.status }" /></td>
-						</tr>
-						<tr>
-							<td colspan="2">&nbsp;</td>
-						</tr>
-						<tr onclick="selectedMemoTR(this);">
-
-							<td colspan="2" style="text-align: center; font-size: 20px;"
-								class="restDueday">D <c:choose>
-									<c:when test="${project.restDueday ge 0 }">- <c:out
-											value="${project.restDueday }" />
-									</c:when>
-									<c:otherwise>+ <c:out
-											value="${-project.restDueday }" />
-									</c:otherwise>
-								</c:choose>
-							</td>
-						</tr>
-						<tr onclick="selectedMemoTR(this);">
-							<td colspan="2" style="text-align: center">(<c:out
-									value="${project.planStartDate }" /> ~ <c:out
-									value="${project.planEndDate }" />)
-							</td>
-						</tr>
-						<tr onclick="selectedMemoTR(this);">
-							<td colspan="2">&nbsp;</td>
-						</tr>
-						<tr onclick="selectedMemoTR(this);">
-							<td colspan="2">&nbsp;</td>
-						</tr>
-						<tr onclick="selectedMemoTR(this);">
-							<td class="memoTd">&nbsp;&nbsp;총괄 담당자</td>
-							<td><c:out value="${project.headManagerName }" /></td>
-						</tr>
-						<tr onclick="selectedMemoTR(this);">
-							<td class="memoTd">&nbsp;&nbsp;전체 진행률</td>
-							<td><div name="${project.projectId }"
-									style="margin-right: 2px;"></div>&nbsp;
-								<div style="margin-top: 5px; display: inline-block;">
-									<c:out value="${project.progress }" />
-								</div></td>
-
-						</tr>
-						<tr onclick="selectedMemoTR(this);">
-							<td class="memoTd">&nbsp;&nbsp;완료된 업무</td>
-							<td><div complete="${project.projectId }"
-									style="margin-right: 2px;"></div>&nbsp;
-								<div style="margin-top: 5px; display: inline-block;">
-									<c:out value="${project.progress }" />
-								</div></td>
-						</tr>
-						<tr onclick="selectedMemoTR(this);">
-							<td class="memoTd">&nbsp;&nbsp;지연된 업무</td>
-							<td><div overdue="${project.projectId }"
-									style="margin-right: 2px;"></div>&nbsp;
-								<div style="margin-top: 5px; display: inline-block;">
-									<c:out value="${project.progress }" />
-								</div></td>
-						</tr>
-					</table>
-				</c:forEach>
-			</div>
-		</c:when>
-		<c:otherwise>
-			<span id="MailListRayer"
+<span id="MailListRayer"
 				style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: none;">
 				<div style="width: 100%; overflow: auto;" id="divList">
 					<div id="lvBoardList">
@@ -332,8 +250,7 @@ $(function(){
 									src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>
 								<span class="btnimg"><img
 									src="/images/sub/btn_prev01.gif" width="16" height="16"></span>
-								<span class="ptxt"> <spring:message
-										code='ezApproval.t931' /></span> <span class="on">1</span> <span
+								<span class="ptxt"> <spring:message code='ezApproval.t931' /></span> <span class="on">1</span> <span
 									class="ptxt"><spring:message code='ezApproval.t932' /></span> <span
 									class="btnimg"><img src="/images/sub/btn_next01.gif"
 									width="16" height="16"></span> <span class="btnimg"><img
@@ -345,7 +262,5 @@ $(function(){
 
 			</span>
 
-		</c:otherwise>
-	</c:choose>
 </body>
 </html>
