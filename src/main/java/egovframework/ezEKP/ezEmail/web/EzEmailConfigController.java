@@ -295,7 +295,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 			
@@ -1018,12 +1018,13 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						Element folderName = doc.createElement("FOLDERNAME");
 
 						String folderNameStr = (String)obj.get("value");
-						if (folderNameStr.equals(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
-							folderNameStr = egovMessageSource.getMessage("ezEmail.t99000025", locale);
-						}
+												
+						folderNameStr = ezEmailUtil.getDisplayNameFromFolderId(folderNameStr, locale);
+						
 						if (folderNameStr.lastIndexOf(".") > -1) {
 							folderNameStr = folderNameStr.substring(folderNameStr.lastIndexOf(".")+1);
 						}
+						
 						folderName.appendChild(doc.createCDATASection(folderNameStr));
 						tAction.appendChild(folderName);
 
@@ -1497,7 +1498,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
 			for (MailPOP3VO vo : pop3Settinglist) {
 				String boxId = vo.getSaveTo();
@@ -1539,7 +1540,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						
 						logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t269", locale) + egovMessageSource.getMessage("ezEmail.lhm08", locale));
 					} else {
-						final Folder folder = pa.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", locale));
+						final Folder folder = pa.getFolder(ezEmailUtil.getInboxFolderId());
 	
 						if (deleteYN.equals("Y")) {
 							folder.open(Folder.READ_WRITE);
