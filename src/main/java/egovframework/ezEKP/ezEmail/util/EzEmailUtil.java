@@ -122,8 +122,116 @@ public class EzEmailUtil {
 	@Autowired
 	private CommonUtil commonUtil;
 	
+	public String getInboxFolderId() {
+		return "INBOX";
+	}
+
+	public String getSentFolderId(Locale locale) {
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {
+			return "Sent";
+		} else {
+			return egovMessageSource.getMessage("ezEmail.t645", locale);
+		}
+	}
+
+	public String getDraftsFolderId(Locale locale) {
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {		
+			return "Drafts";
+		} else {
+			return egovMessageSource.getMessage("ezEmail.t646", locale);
+		}
+	}
+
+	public String getTrashFolderId(Locale locale) {
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {				
+			return "Trash";
+		} else {
+			return egovMessageSource.getMessage("ezEmail.t647", locale);
+		}
+	}
+
+	public String getPersonalFolderId(Locale locale) {
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {								
+			return "Personal folder";
+		} else {
+			return egovMessageSource.getMessage("ezEmail.t648", locale);
+		}
+	}
 	
+	public String getJunkFolderId(Locale locale) {
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {						
+			return "Junk E-Mail";
+		} else {
+			return egovMessageSource.getMessage("ezEmail.t99000029", locale);
+		}
+	}
     
+	public String getDisplayNameFromFolderId(String folderId, Locale locale) {
+		String displayName = folderId;
+		
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {								
+			if (folderId.equals("INBOX") || folderId.startsWith("INBOX.")) {
+				displayName = folderId.replaceFirst("INBOX", egovMessageSource.getMessage("ezEmail.t644", locale));
+			} else if (folderId.equals("Sent") || folderId.startsWith("Sent.")) {
+				displayName = folderId.replaceFirst("Sent", egovMessageSource.getMessage("ezEmail.t645", locale));
+			} else if (folderId.equals("Drafts") || folderId.startsWith("Drafts.")) {
+				displayName = folderId.replaceFirst("Drafts", egovMessageSource.getMessage("ezEmail.t646", locale));
+			} else if (folderId.equals("Trash") || folderId.startsWith("Trash.")) {
+				displayName = folderId.replaceFirst("Trash", egovMessageSource.getMessage("ezEmail.t647", locale));
+			} else if (folderId.equals("Personal folder") || folderId.startsWith("Personal folder.")) {
+				displayName = folderId.replaceFirst("Personal folder", egovMessageSource.getMessage("ezEmail.t648", locale));
+			} else if (folderId.equals("Junk E-Mail") || folderId.startsWith("Junk E-Mail.")) {
+				displayName = folderId.replaceFirst("Junk E-Mail", egovMessageSource.getMessage("ezEmail.t99000029", locale));
+			}
+		} else {
+			if (folderId.equals("INBOX") || folderId.startsWith("INBOX.")) {
+				displayName = folderId.replaceFirst("INBOX", egovMessageSource.getMessage("ezEmail.t644", locale));
+			}			
+		}
+		
+		return displayName;
+	}	
+	
+	public String getFolderIdFromDisplayName(String displayName, Locale locale) {
+		String folderId = displayName;
+		
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {	
+			if (displayName.equals(egovMessageSource.getMessage("ezEmail.t644", locale))) {
+				folderId = "INBOX";
+			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t645", locale))) {
+				folderId = "Sent";
+			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t646", locale))) {
+				folderId = "Drafts";
+			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t647", locale))) {
+				folderId = "Trash";
+			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t648", locale))) {
+				folderId = "Personal folder";
+			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t99000029", locale))) {
+				folderId = "Junk E-Mail";
+			}
+		} else {
+			if (displayName.equals(egovMessageSource.getMessage("ezEmail.t644", locale))) {
+				folderId = "INBOX";
+			}			
+		}
+		
+		return folderId;
+	}
+	
 	/**
 	 * returns a string containing size with a size unit(MB or KB or B) 
 	 */

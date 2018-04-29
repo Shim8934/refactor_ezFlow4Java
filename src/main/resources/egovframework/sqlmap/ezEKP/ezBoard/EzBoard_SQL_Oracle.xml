@@ -593,7 +593,7 @@
             ON 
                 A.itemid = C.itemid
             AND
-                C.ReadDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)
+                C.ReadDate > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5
             AND
                 C.tenant_id = #v_TENANTID#
             AND
@@ -602,8 +602,7 @@
                 C.itemid IS NULL  
             AND 
             	A.StartDate <= #nowDate#
-            AND 
-            	A.StartDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)
+            	A.StartDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
             AND 
             	A.EndDate > #nowDate#
             AND 
@@ -974,7 +973,7 @@
 		      			  	(A.APPRFLAG = 'Y' 
 		      			     OR A.APPRFLAG IS NULL)
 		      			  AND 
-		      			  	A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5) 
+		      			  	A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS') 
 		      			  AND 
 		      			  	A.STARTDATE <= #nowDate#
 		      			  AND 
@@ -996,7 +995,7 @@
 	      							 AND
 	      							 	S.USERID = #v_PUSERID# 
 	      							 AND 
-	      							 	S.READDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)))) T1
+	      							 	S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))) T1
       				WHERE RNUM <= #v_PENDROW# ) T2 
       		WHERE 
       			RNUM >= #v_PSTARTROW#

@@ -1,4 +1,4 @@
-﻿/*###########################################################################################
+﻿﻿/*###########################################################################################
 
 
 
@@ -811,14 +811,22 @@ function ListView() {
                 
                 // 첨부파일리스트에 쪽수 컬럼 제거 2018-03-21 강민수92
                 if (_thisID == "attachList") {
-                	 if (j == 3) {
+                	if (j == 1) {
+                		objTd.title = strValue;
+                	}
+                	
+                	if (j == 3) {
                 		objTd.style.display = "none";
                 	}
                 }
                 
                 // 변경내역 > 첨부파일 이력 쪽수 컬럼 제거 2018-04-26 강민수92
                 if (_thisID == "lvAttachList") {
-                	 if (j == 5) {
+                	if (j == 1) {
+                		objTd.title = strValue;
+                	}
+                	
+                	if (j == 5) {
                  		objTd.style.display = "none";
                  	}
                 }
@@ -875,6 +883,9 @@ function ListView() {
             var objTd = document.createElement("TD");
             
             if (objTrArr[0] == "attachList") {
+            	if (j == 1) {
+            		objTd.title = strValue;
+            	}
             	if (j == 3) {
             		objTd.style.display = "none";
             	}

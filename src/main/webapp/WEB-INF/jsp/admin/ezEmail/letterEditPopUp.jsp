@@ -114,6 +114,14 @@
 				var displayname2 = $("#displayname2").val();
 				var letterJson = {};
 				
+				// p 태그 margin 
+				var pTagmargin = "<div id='pMargin'><style>p {margin-top:0; margin-bottom:0;}</style></div>";
+				
+				if (letterContent.indexOf("<div id='pMargin'>") == -1) {
+					letterContent = pTagmargin + letterContent;
+				}
+				
+				
 				var disName = strChk(displayname, true, 40, letterNameMsg);
 				var disName2 = strChk(displayname2, true, 40, letterNameMsg);
 				var msg = disName.msg != "" ? disName.msg : disName2.msg != "" ? disName2.msg : "";
