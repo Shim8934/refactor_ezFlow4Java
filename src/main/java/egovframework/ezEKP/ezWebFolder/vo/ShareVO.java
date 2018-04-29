@@ -26,7 +26,6 @@ public class ShareVO {
 	private String sharerName;
 	private String userListStr;
 	private String shareDate;
-	private String subStatus;
 	private int    tenantId;
 	
 	public String getFileId() {
@@ -178,12 +177,6 @@ public class ShareVO {
 	}
 	public void setShareDate(String shareDate) {
 		this.shareDate = shareDate;
-	}
-	public String getSubStatus() {
-		return subStatus;
-	}
-	public void setSubStatus(String subStatus) {
-		this.subStatus = subStatus;
 	}
 	public int getTenantId() {
 		return tenantId;

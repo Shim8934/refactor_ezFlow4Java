@@ -348,7 +348,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		for (Map<String, String> userInfo : userList) {
 			map2.put("userId",    userInfo.get("id"));
 			map2.put("userType",  userInfo.get("type"));
-			map2.put("subStatus", userInfo.get("subStatus"));
 			
 			ezWebFolderDAO_m.insertShareSub(map2);
 		}
@@ -377,7 +376,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		for (Map<String, String> userInfo : userList) {
 			map.put("userId",    userInfo.get("id"));
 			map.put("userType",  userInfo.get("type"));
-			map.put("subStatus", userInfo.get("subStatus"));
 			
 			ezWebFolderDAO_m.insertShareSub(map);
 		}
