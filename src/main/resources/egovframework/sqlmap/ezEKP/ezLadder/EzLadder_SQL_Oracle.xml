@@ -1192,6 +1192,21 @@
 			USERID = #userId# 
 	</update>
 	
+	<update id="EzLadderDAO.setUserOrder">
+		UPDATE
+			TBL_LADDER_LINE
+		SET
+			LADDERORDER = #changeOrder#, ITEM = #changeItem#
+		WHERE
+			ID = #origUser#
+		AND
+			LADDERORDER = #origOrder#
+		AND
+			TENANT_ID = #tenant_id#
+		AND
+			LADDERID = #LadderId#
+	</update>
+	
 	<delete id="EzLadderDAO.deleteLadderComment" parameterClass="LadderCommentVO">
 		DELETE FROM
 			TBL_LADDER_COMMENT
