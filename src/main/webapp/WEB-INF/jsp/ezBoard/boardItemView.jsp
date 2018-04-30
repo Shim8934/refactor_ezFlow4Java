@@ -449,7 +449,6 @@
 		        window.resizeTo(785, 780);
 		    }
 		    function btn_Modify_Onclick() {
-		    	console.log("modify");
 		        if (Write_FG != "true" && gubun != "2") {
 		            alert("<spring:message code='ezBoard.t304' />");
 		            return;
