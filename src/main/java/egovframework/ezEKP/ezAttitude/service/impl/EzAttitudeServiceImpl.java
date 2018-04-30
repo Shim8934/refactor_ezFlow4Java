@@ -758,17 +758,37 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public void delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception {
+	public int delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("ids", ids);
-		map.put("delFlag", "1"); //0:삭제안함, 1:삭제
 		map.put("modappl", "0");
 		
-		ezAttitudeDAO.delUsersModifyAtt(map);
-		ezAttitudeDAO.attAppUpdate(map);
+		int data = 1;
+		int modCnt = 0;
+		
+		for (int i = 0; i < ids.length; i++) {
+			map.put("attModId", ids[i]);
+			AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+			if (!aav.getApprStatus().equals("0")) {
+				data = 0;
+				continue;
+			} else {
+				/*근태 수정신청 삭제.*/
+				ezAttitudeDAO.delUsersModifyAtt(map);
+				/*근태 수정신청이 삭제되고 원본 근태에 대해 수정신청 개수가 0개 일 때 원본 근태를 수정 가능한 상태로 변경.*/
+				modCnt = ezAttitudeDAO.getAttsModAttCount(map);
+				map.put("modCnt", modCnt);
+				LOGGER.debug("!#!@#!#!@#!@#!@#@# : " + modCnt);
+				if (modCnt == 0) {
+					ezAttitudeDAO.resetAttModApp(map);
+				}
+			}
+		}
+
+		return data;
 	}
 
 	@Override
@@ -813,7 +833,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Override
 	public AttitudeApplicationVO attModAppDetail(String companyId,
-			int tenantId, String userId, String attModId, String offset) throws Exception {
+			int tenantId, String userId, String attModId, String offset, String applCnt) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -822,12 +842,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("userId", userId);
 		map.put("attModId", attModId);
 		map.put("offset", offset);
+		map.put("applCnt", applCnt);
 		
 		return ezAttitudeDAO.attModAppDetail(map);
 	}
 
 	@Override
-	public void attModAppModify(String companyId,
+	public int attModAppModify(String companyId,
 			int tenantId, String userId, String attModId, String offset,
 			String content, String changeDate) throws Exception {
 			
@@ -842,7 +863,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("content", content);
 		map.put("changeDate", changeDate);
 		
-		ezAttitudeDAO.attModAppModify(map);
+		AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+		
+		if (aav.getApprStatus().equals("0")) {
+			return ezAttitudeDAO.attModAppModify(map);
+		} else {
+			return 0;
+		}
 	}
 	
 	@Override
@@ -872,9 +899,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offset", offset);
 		map.put("modappl", "1");
 		
+		/*근태수정신청 저장*/
 		ezAttitudeDAO.attSaveAppModify(map);
-		ezAttitudeDAO.addUsersModifyAttHistoryFirst(map);
-		ezAttitudeDAO.attAppUpdate(map);
+		/*근태수정신청이 된 항목 달력에 노란색 표시*/
+		ezAttitudeDAO.setAttModApp(map);
 	}
 
 	@Override
@@ -1126,7 +1154,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		ezAttitudeDAO.changeUsersAtt(map);
 		
 		//수정이 완료 되면 히스토리 기록
-		ezAttitudeDAO.addUsersModifyAttHistory(map);
+//		ezAttitudeDAO.addUsersModifyAttHistory(map);
 	}
 
 	@Override

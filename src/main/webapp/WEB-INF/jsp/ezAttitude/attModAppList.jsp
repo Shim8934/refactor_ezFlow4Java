@@ -242,9 +242,19 @@
 // 	    	date_reset();
 	    }
 	    
-	    function att_search() {
+	    function att_search(r) {
 // 	    	popup_close();
-			get_att_list();
+			if (r == "refresh") {
+				$("#writer_search").val("");
+    			$("#writerDept_search").val("");
+    			$("#appr_search").val("");
+    			if (usepostDate) {
+    				DateSearch_Click();
+    				$(usepostdate).prop("checked", false);
+    			}
+    			$("#Radio1").prop("checked", true);
+    			type = "all";
+			}
 			goToPageByNum("1");
 	    }
 	    
@@ -367,8 +377,12 @@
 		    	$('#AttList tbody').children( 'tr:not(:first)' ).remove();
 	    	}
 	    	
-	    	if (attList.length == 0) { 
-	    		$('#AttList tbody').append('<tr><td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
+	    	if (attList.length == 0) {
+	    		if (adminFlag != "true") {
+	    			$('#AttList tbody').append('<tr><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
+	    		} else {
+	    			$('#AttList tbody').append('<tr><td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');	
+	    		}
 	    	}
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
@@ -392,7 +406,7 @@
     			htmlStr += '<td>' + attList[i].originDate.substring(11,19) + ' -> ' + attList[i].changeDate.substring(11,19) + '</td>';
     			
     			if (attList[i].apprStatus == 0) {
-    				htmlStr += '<td id="attStauts">진행</td>';	
+    				htmlStr += '<td id="attStauts">신청</td>';	
     			}
     			if (attList[i].apprStatus == 1) {
     				htmlStr += '<td id="attStauts">승인</td>';	
@@ -706,7 +720,11 @@
 			    },
 			    success : function(json){
 			    	get_att_list(currentPage);
-					alert("삭제되었습니다.");
+			    	if (json == "error") {
+			    		alert("이미 승인 혹은 반려된 항목입니다.");			    			
+			    	} else {
+			    		alert("삭제되었습니다.");	
+			    	}
 			    },
 				complete : function() {
 					HiddenAttProgress();
@@ -880,14 +898,18 @@
 			var feature = GetOpenPosition(790, 760);
 			var tds =  t.getElementsByTagName("td");
 			var modAttId;
+			var applCnt;
 			
 			modAttId = tds[0].getElementsByTagName("input").item(0).getAttribute("value");
 			
+			applCnt = modAttId.split("\_")[1];
+			modAttId = modAttId.split("\_")[0];
+			
 			if (adminFlag == "true") {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId +"&adminFlag=" + adminFlag, "",
+				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag, "",
 			 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			} else {
-				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId, "",
+				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt, "",
 			 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 			}
 	    }
@@ -961,69 +983,96 @@
 </head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
 	<c:if test="${adminFlag == 'true'}">
-		<h1>근태수정현황 - 신청관리현황<span id="mailBoxInfo">[총 xxx개-xxxx년 xx월 xx일~xxxx년 xx월 xx일]</span></h1>
+		<h1>근태수정관리 - 신청관리현황<span id="mailBoxInfo"></span></h1>
 	</c:if>
 	<c:if test="${adminFlag == 'false'}">
-		<h1>근태수정현황 - 신청현황<span id="mailBoxInfo">[총 xxx개-xxxx년 xx월 xx일~xxxx년 xx월 xx일]</span></h1>
+		<h1>근태수정관리 - 신청현황<span id="mailBoxInfo"></span></h1>
 	</c:if>
         <div id="mainmenu">
+        <c:if test="${checkAdmin == 'true'}">
+	        <table id="searchTable" style="width:100%; margin-bottom:10px;">
+				<tbody>
+					<tr>
+						<td style="width: 3%;">신청자명</td>
+						<td style="width: 12%;"><input type="text" id="writer_search" style="width: 90%;" onkeyup="search_keypress(event);"></td>
+						<td style="width: 3%;">신청부서</td>
+						<td style="width: 11%;"><input type="text" id="writerDept_search" style="width: 100%;" onkeyup="search_keypress(event);"></td>
+					</tr>
+					<tr>
+						<td style="width: 3%;">승인자</td>
+						<td style="width: 12%;"><input type="text" id="appr_search" style="width: 90%;" maxlength="50" onkeyup="search_keypress(event);"></td>
+						<td style="width: 3%;">검색기간</td>
+						<td style="width: 9%;">
+							<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()" style="float:left; margin-left:0px;"><label for="usepostdate" style="float:left; margin:3px;">검색기간 사용</label>
+	                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
+							<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="float:right; margin-top:3px;"><span>새로고침</span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="float:right; margin-top:3px;"><span>검색</span></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</c:if>
         <ul id="tb_Parent">
         <c:if test="${adminFlag == 'true'}">
 			<li id="reply"><span onClick="modApprove()">승인</span></li>
         	<li id="search"><span onClick="modReturn()">반려</span></li>
 		</c:if>
-          <li><span onClick="attList_del()">삭제</span></li>
-          <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
-          <li id="search"><span onClick="search_popup()">검색</span></li>
+	        <li><span onClick="attList_del()">삭제</span></li>
+	        <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
+        <c:if test="${checkAdmin != 'true'}">
+        	<li id="search"><span onClick="search_popup()">검색</span></li>
+		</c:if>
 		  <li id="right">
 			  <span style="float:right;font-weight:normal;color:black;border: none;">
 		          <input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
-		          <input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;진행</label>
+		          <input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;신청</label>
 		          <input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;승인</label>
 		          <input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;반려</label>
 		  </li> 
         </ul>
         </div>
-        <div id="layer_popup" style="width:460px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
-          <div class="popupwrap1" style="background-color:#ffffff; position: relative;">
-            <div class="popupwrap2">
-              <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="content">
-              	<c:if test="${adminFlag == 'true' || checkAdmin =='true'}">
-					<tr>
-						<th nowrap>신청자명</th>
-						<td style="width:100%;"> 
-							<input id="writer_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
-						</td>
-					</tr>
-					<tr>
-						<th nowrap>신청부서명</th>
-						<td style="width:100%;"> 
-							<input id="writerDept_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
-						</td>
-					</tr>
-              	</c:if>
-              	  <tr>
-                    <th nowrap>승인자명</th>
-                    <td style="width:100%;"> 
-						<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
-	                </td>
-                  </tr>
-                  <tr>
-                    <th>변경일자기간</th>
-                    <td>
-                    	<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate">검색기간 사용</label>
-                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
-	                </td>
-                  </tr>
-              </table>
-              <div class="btnposition">
-		        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span>날짜초기화</span></a>
-		        <a class="imgbtn" id="cancelBtn" onclick="att_search()"><span>검색</span></a>
-		        <a class="imgbtn" id="cancelBtn" onclick="popup_close()"><span>취소</span></a>
-		      </div>
-            </div>
-          </div>
-        </div>
+        <c:if test="${checkAdmin != 'true'}">
+	        <div id="layer_popup" style="width:460px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+	          <div class="popupwrap1" style="background-color:#ffffff; position: relative;">
+	            <div class="popupwrap2" style="width:100%;">
+	              <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="content">
+	              	<c:if test="${adminFlag == 'true' || checkAdmin =='true'}">
+						<tr>
+							<th nowrap>신청자명</th>
+							<td style="width:100%;"> 
+								<input id="writer_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
+							</td>
+						</tr>
+						<tr>
+							<th nowrap>신청부서명</th>
+							<td style="width:100%;"> 
+								<input id="writerDept_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
+							</td>
+						</tr>
+	              	</c:if>
+	              	  <tr>
+	                    <th nowrap>승인자명</th>
+	                    <td style="width:100%;"> 
+							<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
+		                </td>
+	                  </tr>
+	                  <tr>
+	                    <th>변경일자기간</th>
+	                    <td>
+	                    	<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate">검색기간 사용</label>
+	                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
+		                </td>
+	                  </tr>
+	              </table>
+	              <div class="btnposition">
+			        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span>날짜초기화</span></a>
+			        <a class="imgbtn" id="cancelBtn" onclick="att_search()"><span>검색</span></a>
+			        <a class="imgbtn" id="cancelBtn" onclick="popup_close()"><span>취소</span></a>
+			      </div>
+	            </div>
+	          </div>
+	        </div>
+        </c:if>
         <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
             <div id="contentlist" name="contentlist" style="border:0px solid blue;height:550px;width:100%;overflow-y:auto;" onblur>
                 <table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
@@ -1045,7 +1094,7 @@
 			    	
 			    	<c:forEach var="list" items="${list}" varStatus="i"> 
 				        <tr id = "attList_${i.count}" class="white" draggable="true" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" style="cursor:pointer;">
-							<td style="padding:0"><input type="checkbox" class="checkAtt" id="attCheck_<c:out value ="${list.attitudeId}"/>" value=<c:out value="${list.attitudeId}" /> status=<c:out value="${list.apprStatus}"/> onclick="event_listCheckboxclick(this)"/></td>
+							<td style="padding:0"><input type="checkbox" class="checkAtt" id="attCheck_<c:out value ="${list.attitudeId}"/>_<c:out value ="${list.applCnt}"/>" value="<c:out value="${list.attitudeId}" />_<c:out value ="${list.applCnt}"/>" status=<c:out value="${list.apprStatus}"/> onclick="event_listCheckboxclick(this)"/></td>
 				          	<td>${i.count}</td>
 				          	<c:set var="changeDate" value="${list.changeDate}"/>
 				          	<c:set var="originDate" value="${list.originDate}"/>
@@ -1056,7 +1105,7 @@
 							</c:if>
 							<td>${fn:substring(originDate,11,19) } -> ${fn:substring(changeDate,11,19) }</td>
 							<c:if test="${list.apprStatus == 0}">
-				          		<td id="attStauts">진행</td>	
+				          		<td id="attStauts">신청</td>	
 				          	</c:if>
 				          	<c:if test="${list.apprStatus == 1}">
 				          		<td id="attStauts">승인</td>	
@@ -1070,20 +1119,17 @@
 				          			<span>내역확인</span>
 				          		</a>
 				          	</td>
-	<%-- 		          		<c:choose> --%>
-	<%-- 							<c:when test="${primary == '1'}"> --%>
-	<%-- 								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName1} </a> </td> --%>
-	<%-- 							</c:when> --%>
-	<%-- 							<c:otherwise> --%>
-	<%-- 								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName2} </a> </td> --%>
-	<%-- 							</c:otherwise> --%>
-	<%-- 						</c:choose>	 --%>
 				        </tr>
 		        </c:forEach>
 		        
 			    <c:if test="${list.size() == 0}"> 
 			        <tr>
-						<td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td>
+			        	<c:if test="${adminFlag == 'true'}">
+							<td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td>
+						</c:if>
+						<c:if test="${adminFlag != 'true'}">
+							<td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td>
+						</c:if>
 		       		</tr> 
 		        </c:if> 
                 </table>

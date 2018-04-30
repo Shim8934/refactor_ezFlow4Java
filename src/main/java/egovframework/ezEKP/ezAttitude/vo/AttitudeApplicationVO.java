@@ -49,6 +49,8 @@ public class AttitudeApplicationVO {
 	private String typeName;
 	/** 타입명2 */
 	private String typeName2;
+	/** 재신청 횟수 */
+	private String applCnt;
 	
 	
 	public String getAttitudeId() {
@@ -212,5 +214,11 @@ public class AttitudeApplicationVO {
 	}
 	public void setTypeId(String typeId) {
 		this.typeId = typeId;
+	}
+	public String getApplCnt() {
+		return applCnt;
+	}
+	public void setApplCnt(String applCnt) {
+		this.applCnt = applCnt;
 	}
 }
