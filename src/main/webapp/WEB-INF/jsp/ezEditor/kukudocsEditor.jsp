@@ -163,6 +163,7 @@
 	            defaultFontSize : defaultFontSize,
 	            fontSize : fontSize,
 	            fontFamily : fontFamily,
+	            defaultTableWidth : 700,
 	            customAlignMenu : customAlignMenu,
 	            useMenuBar : false,
 	            useHTMLMode : useHTMLMode,
