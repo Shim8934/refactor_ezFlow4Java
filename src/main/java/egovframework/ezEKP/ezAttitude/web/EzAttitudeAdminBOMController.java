@@ -1372,9 +1372,9 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("popupAbsentedList started.");
 		
 		String companyId = request.getParameter("companyId");
-		String searchUserName = request.getParameter("searchUserName");
-		String searchDeptName = request.getParameter("searchDeptName");
-		String searchTitle = request.getParameter("searchTitle");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
 		String searchStartDate = request.getParameter("startDate");
 		String searchEndDate = request.getParameter("endDate");
 		

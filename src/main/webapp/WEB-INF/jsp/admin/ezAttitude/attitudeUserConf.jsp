@@ -241,7 +241,7 @@
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50"></td>
 					<td style="width: 3%;">근태시간</td>
 					<td>
-						<span id="topmenu"><input id="searchStartTime" type="text" style="width:50px;"/>&nbsp; ~ &nbsp;<input id="searchEndTime" type="text" style="width:50px;"/></span>
+						<span id="topmenu"><input id="searchStartTime" type="text" style="width:50px; text-align:center;"/>&nbsp; ~ &nbsp;<input id="searchEndTime" type="text" style="width:50px; text-align:center;"/></span>
 					</td>
 					<td style=" width:*;" colspan=2>
 						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;

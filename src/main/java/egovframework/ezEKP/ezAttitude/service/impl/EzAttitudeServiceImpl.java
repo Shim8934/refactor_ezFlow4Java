@@ -889,10 +889,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		//날짜
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
+		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();*/
 		
-		if (searchStartDate.equals("") && searchEndDate.equals("")) {
+		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+		
+/*		if (searchStartDate.equals("") && searchEndDate.equals("")) {
 			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
 			
 			searchStartDate = localDate + " 00:00:00";
@@ -914,7 +917,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if (searchEndDate.equals("")) {
 				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 			}
-		}
+		}*/
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
@@ -945,10 +948,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
+		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();*/
 		
-		if (searchStartDate.equals("") && searchEndDate.equals("")) {
+		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+		
+		/*if (searchStartDate.equals("") && searchEndDate.equals("")) {
 			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
 			
 			searchStartDate = localDate + " 00:00:00";
@@ -970,7 +976,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if (searchEndDate.equals("")) {
 				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 			}
-		}
+		}*/
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
@@ -996,7 +1002,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+		
+		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
 		
 		if (searchStartDate.equals("") && searchEndDate.equals("")) {
@@ -1021,7 +1030,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if (searchEndDate.equals("")) {
 				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 			}
-		}
+		}*/
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
@@ -1046,8 +1055,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
+		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+		
 		//날짜
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
 		
 		if (searchStartDate.equals("") && searchEndDate.equals("")) {
@@ -1072,7 +1084,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if (searchEndDate.equals("")) {
 				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 			}
-		}
+		}*/
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);

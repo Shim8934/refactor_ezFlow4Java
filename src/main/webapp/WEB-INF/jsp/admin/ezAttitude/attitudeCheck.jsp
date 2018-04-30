@@ -53,6 +53,9 @@
 	    	var listSize = 19;
 	    	
 	    	$(function(){
+	    		$("#Sdatepicker").val("${searchStartDate}");
+	    		$("#Edatepicker").val("${searchEndDate}");
+	    		
 	    		//회사리스트
 		        if (document.getElementById("ListCompany").length == 0) {
 		            alert("<spring:message code = 'ezAttitude.t32' />");
@@ -65,9 +68,6 @@
 		    		
 		            company_change();
 		        }
-	    		
-	    		$("#Sdatepicker").val("${searchStartDate}");
-	    		$("#Edatepicker").val("${searchEndDate}");
 	    		
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '#contentlist table.mainlist th', function(){
@@ -259,16 +259,16 @@
 	    			searchUserName = $("#searchUserName").val();
 	    			searchDeptName = $("#searchDeptName").val();
 	    			searchTitle = $("#searchTitle").val();
-	    			searchStartDate = $("#searchStartDate").val();
-	    			searchEndDate = $("#searchEndDate").val();
+	    			searchStartDate = $("#Sdatepicker").val();
+	    			searchEndDate = $("#Edatepicker").val();
 	    			searchAttitudeType = $("select[id='searchAttitudeType']").val();
 	    		} else {
 	    			//새로고침
 	    			$("#searchUserName").val("");
 	    			$("#searchDeptName").val("");
 	    			$("#searchTitle").val("");
-	    			$("#searchStartDate").val("${searchStartDate}");
-	    			$("#searchEndDate").val("${searchEndDate}");
+	    			$("#Sdatepicker").val("${searchStartDate}");
+	    			$("#Edatepicker").val("${searchEndDate}");
 	    			$("select[id='searchAttitudeType']").val('all');
 	    			
 	    			searchUserName = "";
@@ -287,10 +287,10 @@
 				searchUserName = $("#searchUserName").val();
     			searchDeptName = $("#searchDeptName").val();
     			searchTitle = $("#searchTitle").val();
-    			searchStartDate = $("#searchStartDate").val();
-    			searchEndDate = $("#searchEndDate").val();
+    			searchStartDate = $("#Sdatepicker").val();
+    			searchEndDate = $("#Edatepicker").val();
     			
-    			var url = "/admin/ezAttitude/popupAbsentedList.do?companyId=" + pCompanyId + "&searchUserName=" + searchUserName + "&searchDeptName=" + searchDeptName + "&searchTitle=" + searchTitle + "&searchStartDate=" + searchStartDate + "&searchEndDate=" + searchEndDate;
+    			var url = "/admin/ezAttitude/popupAbsentedList.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate;
 	    		
 	    		if (CrossYN()) {
 	    			OpenWin = GetOpenWindow(url, "", "600", "700");
