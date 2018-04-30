@@ -378,7 +378,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", user.getLang())
+										.queryParam("lang", user.getLang())
+										.queryParam("userId", user.getId())
 										.queryParam("searchStr", searchStr)
 										.queryParam("searchOpt", searchOpt)
 										.queryParam("currentPage", currPage);
@@ -460,8 +461,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@RequestMapping(value="/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)
 	public String getFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String offset        = user.getOffset();
-		String primary       = user.getLang();
 		String currPage      = request.getParameter("currentPage");
 		String companyId     = request.getParameter("companyId");
 		String startDate     = request.getParameter("startDate") != null ? request.getParameter("startDate") : "";
@@ -479,8 +478,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", primary)
-										.queryParam("offset", offset)
+										.queryParam("userId", user.getId())
+										.queryParam("lang", user.getLang())
+										.queryParam("offset", user.getOffset())
 										.queryParam("companyId", companyId)
 										.queryParam("startDate", startDate)
 										.queryParam("fileExt", fileExt)
@@ -515,7 +515,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String pageNum      = request.getParameter("pageNum");
 		String pageSize     = request.getParameter("pageSize");
 		String companyID    = request.getParameter("companyID");
-		String primary      = user.getLang();
 		String gwServerUrl  = config.getProperty("config.webfolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolderadmin/webfolderadmin-list";
 		
@@ -525,7 +524,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", primary)
+										.queryParam("userId", user.getId())
+										.queryParam("lang", user.getLang())
 										.queryParam("companyId", companyID)
 										.queryParam("pageNum", pageNum)
 										.queryParam("pageSize", pageSize);
@@ -564,7 +564,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("companyId", companyId)
 										.queryParam("folderId", folderId)
 										.queryParam("userId", user.getId())
-										.queryParam("primary", user.getLang())
+										.queryParam("lang", user.getLang())
 										.queryParam("offset", user.getOffset());
 		
 		RestTemplate rest             = new RestTemplate();
@@ -598,7 +598,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("companyId", companyId)
 										.queryParam("folderId", folderId)
-										.queryParam("primary", user.getLang())
+										.queryParam("lang", user.getLang())
 										.queryParam("userId", user.getId())
 										.queryParam("offset", user.getOffset());
 		
@@ -767,7 +767,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("primary", user.getOffset())
+										.queryParam("lang", user.getLang())
 										.queryParam("offset", user.getOffset());
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
@@ -783,8 +783,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	@RequestMapping(value="/admin/ezWebFolder/getFileList.do", method = RequestMethod.POST)
 	public String getFileList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String primary     = user.getLang();
-		String offset      = user.getOffset();
 		String currPage    = request.getParameter("currentPage");
 		String startDate   = request.getParameter("startDate");
 		String endDate     = request.getParameter("endDate");
@@ -803,8 +801,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", primary)
-										.queryParam("offset", offset)
+										.queryParam("userId", user.getId())
+										.queryParam("lang", user.getLang())
+										.queryParam("offset", user.getOffset())
 										.queryParam("startDate", startDate)
 										.queryParam("fileExt", fileExt)
 										.queryParam("fileName", fileName)
@@ -843,7 +842,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String url          = gwServerUrl + "/rest/ezwebfolderadmin/folders/" + folderId + "/modes/" + mode+ "/folder-move";
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", user.getLang())
+										.queryParam("lang", user.getLang())
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId())
 										.queryParam("parentFld", parentFld);
@@ -1029,7 +1028,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String url          = gwServerUrl + "/rest/ezwebfolderadmin/company-folder/" + companyId;
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", user.getLang())
+										.queryParam("lang", user.getLang())
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId());
 		
@@ -1067,7 +1066,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String url          = gwServerUrl + "/rest/ezwebfolderadmin/dept-folder/" + companyId;
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", user.getLang())
+										.queryParam("lang", user.getLang())
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId());
 		
@@ -1105,7 +1104,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String url          = gwServerUrl + "/rest/ezwebfolderadmin/dept-check/" + folderId;
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", user.getLang())
+										.queryParam("lang", user.getLang())
 										.queryParam("offset", user.getOffset())
 										.queryParam("userId", user.getId());
 		
