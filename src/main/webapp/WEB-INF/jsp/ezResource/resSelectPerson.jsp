@@ -8,7 +8,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
 		<link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css" />
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezResource/control/TreeView.js"></script>
@@ -101,7 +100,7 @@
   						deptID : tempDeptID ,
   						cell : "company;description;displayName;title;telephoneNumber",
   						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
-  						//page : CurPage ,
+  						page : CurPage ,
   						type : "user"
   					} ,
       				success : function(data, textStatus, jqXHR) {
@@ -365,7 +364,8 @@
 		        document.getElementById("DeptUserImgList").innerHTML = "";
 		        document.getElementById("txtlist_Layer").scrollTop = "0";
 		        totalPage = 1;
-		        totalPage = Math.ceil(new Number(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length / 50));
+		        /* 2018-04-30 서주연 #12557 */
+		        totalPage = Math.ceil(new Number(getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) / 50));
 
 		        document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes
 		        while (document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.length > 1) {
@@ -776,88 +776,93 @@
 	</xml>
 	<body class="popup" >
 		<h1><spring:message code="ezResource.t128"/></h1>
-    	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<!-- 2018-04-30 서주연 #12556 -->
+		<table id="TreeViewTD">
+			<tr>
+				<td>
+    	<%-- <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
-		</div>
-
-    	<div class="portlet_tabpart03">
-        	<div class="portlet_tabpart03_top" id="tab1" style="border-left:1px solid #d3d2d2;">
-	            <table style="margin-top:5px;width:100%;">
-    	          <tr>
-        	        <td>
-            	        <div style="margin-left:5px;">
-                		    <input id="deptkeyword" value="" onkeyup="deptsearch_press(event)" style="width: 130px">
-                    			<a class="imgbtn" name="button" onClick="deptsearch_click()"><span><spring:message code="ezResource.t134"/></span></a>
-                    	</div>
-                	</td>
-                	<td>
-                    	<div style="float:right;margin-right:5px;">
-                    		<select id="search_type">
-                    			<option selected value="displayname"><spring:message code="ezResource.t135"/></option>
-                    			<option value="description"><spring:message code="ezResource.t132"/></option>
-                    			<option value="title"><spring:message code="ezResource.t10"/></option>
-                    			<option value="telephonenumber"><spring:message code="ezResource.t11"/></option>
-                    			<option value="mobile"><spring:message code="ezResource.t136"/></option>
-                    			<!-- 2018.02.20 김기하 #11640 -->
-                    			<%-- <option value="HomePhone"><spring:message code="ezResource.t137"/></option> --%>
-                    			<option value="facsimileTelephoneNumber"><spring:message code="ezResource.t138"/></option>
-                    			<option value="mail"><spring:message code="ezResource.t139"/></option>
-                    			<option value="streetAddress"><spring:message code="ezResource.t140"/></option>
-                    		</select>
-                    		<input id="keyword" value="" onkeyup="search_press(event)" style="width: 130px">
-                    			<a class="imgbtn" onClick="search_click('search')"><span><spring:message code="ezResource.t141"/></span></a>
-                    	</div>
-                	</td>
-              	</tr>
-            </table>
-        </div>
-    </div>
-    <table>
-        <tr>
-            <td><div class="box" id="TreeView" style="height: 400px; width: 300px; overflow-x: hidden; overflow-y: auto;"></div></td>
-            <td style="width: 5px;">&nbsp;</td>
-            <td class="listview">
-                <!-- <div id="OrganListView" style="border:0;width: 415px; height: 400px; overflow-x: hidden; overflow-y: auto;"></div> -->
-                <div>
-                	<table style="width: 425px; margin-top: -1px;" class="popup_mainlist">
-                    	<tr>
-                        	<th style="white-space:normal">
-                            	<span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
-                            	<span style="float: right;">
-                                	<span onclick="ChangeListView_onClick('TXT');">
-                                    	<img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist">
-                                	</span>
-                                	<span onclick="ChangeListView_onClick('IMG');">
-                                    	<img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist">
-                                	</span>
-                            	</span>
-                        	</th>
-                    	</tr>
-                	</table>
-				</div>
-          		<div style="vertical-align:top;height:340px;overflow:auto;width:425px;" id="txtlist_Layer">
-          			<table style="width:100%;border:1px solid #ddd;display:none;" id="txtlist_table" class="mainlist" > 
-              			<tr>
-                  			<td style="width:170px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t9"/></td>
-                  			<td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t10"/></td>
-                  			<td class="td_gray" style="font-weight:bold;"><spring:message code="ezResource.t11"/></td>
-              			</tr>
-          			</table>
-          			<table style="width:100%;border:1px solid #ddd;display:none;" id="Search_txtlist_table" class="mainlist" > 
-              			<tr>
-                  			<td style="width:130px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t132"/></td>
-                  			<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t9"/></td>
-                  			<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t10"/></td>
-                  			<td class="td_gray" style="font-weight:bold;"><spring:message code="ezResource.t11"/></td>
-              			</tr>
-          			</table>
-          		</div>
-		  		<div style="vertical-align:top;text-align:center;height:340px;overflow:auto;display:none;width:425px;" id="DeptUserImgList"></div>
-                <div id="tblPageRayer" style="text-align:center;border-top:1px solid #ddd"></div>
-            	</td>
-        	</tr>
-    	</table>
+		</div> --%>
+			    	<div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
+			        	<div class="portlet_tabpart03_top" id="tab1" style="border:1px solid #d3d2d2;">
+				            <table style="margin-top:3px;width:100%;">
+			    	          <tr>
+			        	        <td>
+			            	        <div style="margin-left:5px;">
+			                		    <input id="deptkeyword" value="" onkeyup="deptsearch_press(event)" style="width: 130px">
+			                    			<a class="imgbtn" name="button" onClick="deptsearch_click()"><span><spring:message code="ezResource.t134"/></span></a>
+			                    	</div>
+			                	</td>
+			                	<td>
+			                    	<div style="float:right;margin-right:5px;">
+			                    		<select id="search_type">
+			                    			<option selected value="displayname"><spring:message code="ezResource.t135"/></option>
+			                    			<option value="description"><spring:message code="ezResource.t132"/></option>
+			                    			<option value="title"><spring:message code="ezResource.t10"/></option>
+			                    			<option value="telephonenumber"><spring:message code="ezResource.t11"/></option>
+			                    			<option value="mobile"><spring:message code="ezResource.t136"/></option>
+			                    			<!-- 2018.02.20 김기하 #11640 -->
+			                    			<%-- <option value="HomePhone"><spring:message code="ezResource.t137"/></option> --%>
+			                    			<option value="facsimileTelephoneNumber"><spring:message code="ezResource.t138"/></option>
+			                    			<option value="mail"><spring:message code="ezResource.t139"/></option>
+			                    			<option value="streetAddress"><spring:message code="ezResource.t140"/></option>
+			                    		</select>
+			                    		<input id="keyword" value="" onkeyup="search_press(event)" style="width: 130px">
+			                    			<a class="imgbtn" onClick="search_click('search')"><span><spring:message code="ezResource.t141"/></span></a>
+			                    	</div>
+			                	</td>
+			              	</tr>
+			            </table>
+			        </div>
+			    </div>
+			    <table style="margin-top: 3px;">
+			        <tr>
+			            <td class="box">
+			            	<div id="TreeView" style="height: 400px; width: 300px; overflow-x: hidden; overflow-y: auto;"></div></td>
+			            <td style="width: 5px;">&nbsp;</td>
+			            <td class="listview" style="width: 425px;" id="orglistView">
+			                <!-- <div id="OrganListView" style="border:0;width: 415px; height: 400px; overflow-x: hidden; overflow-y: auto;"></div> -->
+			               	<table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
+			                   	<tr>
+			                       	<th style="white-space:normal">
+			                           	<span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+			                           	<span style="float: right;">
+			                               	<span onclick="ChangeListView_onClick('TXT');">
+			                                   	<img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist">
+			                               	</span>
+			                               	<span onclick="ChangeListView_onClick('IMG');">
+			                                   	<img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist">
+			                               	</span>
+			                           	</span>
+			                       	</th>
+			                   	</tr>
+			               	</table>
+			          		<div style="vertical-align:top;height:340px;overflow:auto;width:425px;" id="txtlist_Layer">
+			          			<table style="width:100%;border:1px solid #ddd;display:none;" id="txtlist_table" class="mainlist" > 
+			              			<tr>
+			                  			<td style="width:170px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t9"/></td>
+			                  			<td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t10"/></td>
+			                  			<td class="td_gray" style="font-weight:bold;"><spring:message code="ezResource.t11"/></td>
+			              			</tr>
+			          			</table>
+			          			<table style="width:100%;border:1px solid #ddd;display:none;" id="Search_txtlist_table" class="mainlist" > 
+			              			<tr>
+			                  			<td style="width:130px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t132"/></td>
+			                  			<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t9"/></td>
+			                  			<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t10"/></td>
+			                  			<td class="td_gray" style="font-weight:bold;"><spring:message code="ezResource.t11"/></td>
+			              			</tr>
+			          			</table>
+			          		</div>
+					  		<div style="vertical-align:top;text-align:center;height:340px;overflow:auto;display:none;width:425px;" id="DeptUserImgList"></div>
+			                <div id="tblPageRayer" style="text-align:center;border-top:1px solid #ddd"></div>
+			            	</td>
+			        	</tr>
+			    	</table>
+			    </td>
+		    </tr>
+		</table>
 		<div class="btnposition">
     		<a class="imgbtn" name="Dbutton" onClick="select_member()"><span><spring:message code="ezResource.t15"/></span></a>
     		<a class="imgbtn" name="Rbutton" onClick="window.close()"><span><spring:message code="ezResource.t16"/></span></a>
