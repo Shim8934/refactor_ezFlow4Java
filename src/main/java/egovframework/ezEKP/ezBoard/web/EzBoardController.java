@@ -3552,7 +3552,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardListVO.getTitle() != null && !boardListVO.getTitle().equals("")) {
 			boardListVO.setTitle(boardListVO.getTitle().replace("\\", "&#92;"));
 		}
-		
+		/* 2018-04-27 홍승비 - 게시요약의 \문자 변환 */ 
+		if (boardListVO.getABSTRACT() != null && !boardListVO.getABSTRACT().equals("")) {
+			boardListVO.setABSTRACT(boardListVO.getABSTRACT().replace("\\", "&#92;"));
+		}
+
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -3582,7 +3586,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
-
+		
+		logger.debug("boardListVO.getTitle()    ::    "+boardListVO.getTitle());
+		logger.debug("boardListVO.getAbstract()    ::    "+boardListVO.getABSTRACT());
+		logger.debug("boardListVO.getContent()    ::    "+boardListVO.getContent());
+		logger.debug("requestURL    ::    "+requestURL);
+		
 		logger.debug("newBoardItem ended");
 		return requestURL;
 	}

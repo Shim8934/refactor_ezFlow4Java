@@ -394,8 +394,9 @@
 
 	            var i = 0;
 	            var pos = 0;
-	            var filename = "";
 	            var filepath = "";
+	            var filenameOrg = "";
+		        var filenameView = "";
 	            var strAttach = "";
 	            var fileImage = "";
 
@@ -404,7 +405,9 @@
 
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	                filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-	                filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
+	                /* 2018-04-30 홍승비 - 커뮤니티 게시판 첨부파일명 특문처리 수정 */
+	                filenameOrg = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
+		            filenameView = ReplaceText(ReplaceText(ReplaceText(filenameOrg, ">", "&gt;"), "<", "&lt;"), "&", "&amp;");		           
 	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 	                var strTarget = "target='_blank'";
 	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
@@ -440,9 +443,9 @@
 	                var protocol = window.location.protocol;
 	                var serverName = window.location.hostname;
 
-	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filename) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
-	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filename) + "&filePath=" + encodeURIComponent(filepath) + ">";
-	                strAttach = strAttach + filename + "&nbsp;(" + filesize + ")</a><br>";
+	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
+	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath) + ">";
+	                strAttach = strAttach + filenameView + "&nbsp;(" + filesize + ")</a><br>";
 	            }
 	            document.getElementById('lstAttachLink').innerHTML = strAttach;
 	        }

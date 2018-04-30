@@ -225,7 +225,7 @@ public class EzEmailMailListController {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, 40*1000, 20*1000);
+					userEmail, password, egovMessageSource, locale, 40*1000, 20*1000, ezEmailUtil);
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
@@ -636,7 +636,7 @@ public class EzEmailMailListController {
 	        logger.debug("userEmail=" + userEmail);
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
@@ -653,7 +653,7 @@ public class EzEmailMailListController {
 			
 			if (useImapMoveCommand.equals("YES")) {
 				if (cmd.equalsIgnoreCase("BMOVE")) {
-					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
+					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale));			
 					sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
 				} else {			
 					sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
@@ -674,7 +674,7 @@ public class EzEmailMailListController {
 						isThereUserLevelQuota = true;
 					}
 									
-					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
+					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale));			
 					sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
 				}
 				
@@ -756,7 +756,7 @@ public class EzEmailMailListController {
 	        logger.debug("userEmail=" + userEmail);
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);
@@ -869,7 +869,7 @@ public class EzEmailMailListController {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
@@ -946,7 +946,7 @@ public class EzEmailMailListController {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
@@ -1018,7 +1018,7 @@ public class EzEmailMailListController {
 		String resultData = "ERROR";
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			Folder folder = ia.getFolder(folderPath);
 			folder.open(Folder.READ_ONLY);
 			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
@@ -1153,7 +1153,7 @@ public class EzEmailMailListController {
 	        logger.debug("userEmail=" + userAccount);
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, password, egovMessageSource, locale, 40*1000, 20*1000);
+					userAccount, password, egovMessageSource, locale, 40*1000, 20*1000, ezEmailUtil);
 			
 			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 			
