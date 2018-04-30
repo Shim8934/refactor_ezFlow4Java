@@ -681,7 +681,7 @@
 						document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
 						document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
 
-						document.getElementById("divList").style.overflow = "auto";
+// 						document.getElementById("divList").style.overflow = "auto";
 						document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
 						document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 						document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
@@ -706,6 +706,13 @@
 					PreviewMode_ChangeBtn();
 					isPreviewChange = false;
 				} catch (e) { 	}
+			}
+			
+			function journalListScroll(){
+				var thWidth = document.getElementById("journalListHead").clientWidth - document.getElementById("journalList").clientWidth;
+				if(thWidth > 0){ 
+					$("#BoardList_TH").append('<th style=width:8px;></th>');
+				} 
 			}
 
 			$(function() {
@@ -788,6 +795,7 @@
 						}
 					}
 				});
+				journalListScroll();
 			}
 
 			// 일지작성
