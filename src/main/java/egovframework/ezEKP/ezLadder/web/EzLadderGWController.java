@@ -165,22 +165,6 @@ public class EzLadderGWController {
 			
 			List<LadderLineVO> resultUser = ezLadderService.selectSearchUser(searchUserName, tenant_id, lang);
 			
-			/*for(LadderLineVO line : resultUser) {
-				String imagePath = line.getPic();
-				if (imagePath != null && !imagePath.equals("")) {
-					String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", line.getTenant_id())+ commonUtil.separator + imagePath;
-					String fullPath = request.getServletContext().getRealPath(realPath);
-					
-					if (checkExist(fullPath)) {
-						line.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
-					} else {
-						line.setPic("");
-					}
-				} else {
-					line.setPic("");
-				}
-			}*/
-			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", resultUser);
@@ -245,6 +229,7 @@ public class EzLadderGWController {
 	/**
 	 * 즐겨찾기 그룹 조회
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ladder/BMs/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwSelectBMGroup(@PathVariable String userId, LadderBmVO bmGroupVO, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [GET /ladder/BMs/users/" + userId + "] started.");
@@ -271,6 +256,7 @@ public class EzLadderGWController {
 	/**
 	 * 즐겨찾기 그룹 유저 조회
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ladder/BMs/{ladderBmId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwSelectBMUser(@PathVariable String userId, @PathVariable int ladderBmId, LadderBmUserVO bmUserVO, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [GET /ladder/BMs/" + ladderBmId + "/users/" + userId + "] started.");
@@ -297,6 +283,7 @@ public class EzLadderGWController {
 	/**
 	 * 즐겨찾기 그룹 추가
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ladder/BMs/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwInsertBMGroup(@PathVariable String userId, LadderBmVO bmGroupVO, LadderBmUserVO bmUsersVO, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [POST /ladder/BMs/users/" + userId + "] started.");
@@ -324,6 +311,7 @@ public class EzLadderGWController {
 	/**
 	 * 즐겨찾기 그룹 수정
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ladder/BMs/{ladderBmId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwUpdateBMGroup(@PathVariable String userId, @PathVariable int ladderBmId, LadderBmVO bmGroupVO, LadderBmUserVO bmUsersVO, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [PUT /ladder/BMs/" + ladderBmId + "/users/" + userId + "] started.");
@@ -350,6 +338,7 @@ public class EzLadderGWController {
 	/**
 	 * 즐겨찾기 그룹 삭제
 	 * */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ladder/BMs/{ladderBmId}/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject gwDeleteBMGroup(@PathVariable String userId, @PathVariable int ladderBmId, LadderBmVO bmGroupVO, LadderBmUserVO bmUsersVO, HttpServletRequest request) {
 		logger.debug("web G/W LADDER [DELETE /ladder/BMs/" + ladderBmId + "/users/" + userId + "] started.");
@@ -386,24 +375,7 @@ public class EzLadderGWController {
 		try {
 			LadderCommentVO cmt = ezLadderService.selectComment(cmtVO);
 			
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, cmt.getUserId());
-			
-			String imagePath = userInfo.getUserFileUrl();
-			if (imagePath != null && !imagePath.equals("")) {
-				String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", cmt.getTenant_id())+ commonUtil.separator + imagePath;
-				String fullPath = request.getServletContext().getRealPath(realPath);
-				
-				if (checkExist(fullPath)) {
-					cmt.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
-				}
-				else {
-					cmt.setPic("");
-				}
-			} 
-			else {
-				cmt.setPic("");
-			}
+			cmt.setPic(ezOrganService.getPropertyValue(cmt.getUserId(), "extensionAttribute2", cmt.getTenant_id()));
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -548,7 +520,6 @@ public class EzLadderGWController {
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("data", list);
-			/*result.put("data", null);*/
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -582,67 +553,8 @@ public class EzLadderGWController {
 				lineVO.setPic(ezOrganService.getPropertyValue(lineVO.getUserId(), "extensionAttribute2", lineVO.getTenant_id()));
 			}
 			for(LadderCommentVO commentVO : cmtlist) {
-				String picPath = ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id());
-				if(picPath!=null) {
-					picPath = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + picPath;
-				} else {
-					picPath = null;
-				}
-				commentVO.setPic(picPath);
+				commentVO.setPic(ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id()));
 			}
-			
-			
-			
-			
-			/*String imagePath = "";
-			String realPath = "";
-			String fullPath = "";
-			
-			imagePath = ezOrganService.getPropertyValue(vo.getWriterId(), "extensionAttribute2", vo.getTenant_id());
-			if (imagePath != null && !imagePath.equals("")) {
-				realPath = commonUtil.getUploadPath("upload_personal.PHOTO", vo.getTenant_id())+ commonUtil.separator + imagePath;
-				fullPath = request.getServletContext().getRealPath(realPath);
-				
-				if (checkExist(fullPath)) {
-					vo.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
-				} else {
-					vo.setPic("");
-				}
-			} else {
-				vo.setPic("");
-			}
-			for(LadderLineVO lineVO : list) {
-				imagePath = ezOrganService.getPropertyValue(lineVO.getUserId(), "extensionAttribute2", lineVO.getTenant_id());
-				
-				if (imagePath != null && !imagePath.equals("")) {
-					realPath = commonUtil.getUploadPath("upload_personal.PHOTO", lineVO.getTenant_id())+ commonUtil.separator + imagePath;
-					fullPath = request.getServletContext().getRealPath(realPath);
-					
-					if (checkExist(fullPath)) {
-						lineVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
-					} else {
-						lineVO.setPic("");
-					}
-				} else {
-					lineVO.setPic("");
-				}
-			}
-			for (LadderCommentVO commentVO : cmtlist) {
-				imagePath = ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id());
-				
-				if (imagePath != null && !imagePath.equals("")) {
-					realPath = commonUtil.getUploadPath("upload_personal.PHOTO", commentVO.getTenant_id())+ commonUtil.separator + imagePath;
-					fullPath = request.getServletContext().getRealPath(realPath);
-					
-					if (checkExist(fullPath)) {
-						commentVO.setPic("/ezCommon/downloadAttach.do?filePath=" + realPath);
-					} else {
-						commentVO.setPic("");
-					}
-				} else {
-					commentVO.setPic("");
-				}
-			}*/
 			
 			result.put("status", "ok");
 			result.put("code", "0");
