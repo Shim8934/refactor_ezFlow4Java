@@ -275,6 +275,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		for (SimpleShareVO shareInfo : shareInfoList) {
 			Map<String, Object> map2 = new HashMap<String, Object>();
 			map2.put("shareId", shareInfo.getShareId());
+			map2.put("primary", primary);
 			map2.put("tenantId", shareInfo.getTenantId());
 			
 			shareInfo.setUserList(ezWebFolderDAO_m.getShareSubInfo(map2));
@@ -348,7 +349,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		for (Map<String, String> userInfo : userList) {
 			map2.put("userId",    userInfo.get("id"));
 			map2.put("userType",  userInfo.get("type"));
-			map2.put("subStatus", userInfo.get("subStatus"));
 			
 			ezWebFolderDAO_m.insertShareSub(map2);
 		}
@@ -377,7 +377,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		for (Map<String, String> userInfo : userList) {
 			map.put("userId",    userInfo.get("id"));
 			map.put("userType",  userInfo.get("type"));
-			map.put("subStatus", userInfo.get("subStatus"));
 			
 			ezWebFolderDAO_m.insertShareSub(map);
 		}

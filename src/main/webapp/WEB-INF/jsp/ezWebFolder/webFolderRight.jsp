@@ -701,7 +701,7 @@
 			<li><span onClick="fileDelete()"><spring:message code='ezWebFolder.t274'/></span></li>
 			<li><span onClick="fileRename()"><spring:message code='ezWebFolder.t273'/></span></li>
 			<li><span onClick="fileMove()"><spring:message code='ezWebFolder.t275'/></span></li>
-			<li><span onClick="addShare()">공유추가</span></li>
+			<li><span onClick="addShare()">공유</span></li>
 			<li><img src="/images/i_bar.gif"></li>
 			<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 <%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>

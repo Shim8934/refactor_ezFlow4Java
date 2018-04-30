@@ -69,8 +69,7 @@
         <result property="sharerName"             column="sharer_name"		      columnIndex="23" />
         <result property="userListStr"            column="user_list"			  columnIndex="24"         nullValue="" />
         <result property="shareDate"              column="share_date"             columnIndex="25" />
-        <result property="subStatus"              column="sub_status"             columnIndex="26" />
-        <result property="tenantId"               column="tenant_id"              columnIndex="27" />
+        <result property="tenantId"               column="tenant_id"              columnIndex="26" />
     </resultMap>
 	
 	<!-- ShareInfo resultMap -->
@@ -89,7 +88,6 @@
     	<result property="userId"                 column="USER_ID"                columnIndex="1"  />
     	<result property="userName"               column="USER_NAME"              columnIndex="2"  />
     	<result property="userType"               column="USER_TYPE"              columnIndex="3"  />
-    	<result property="subStatus"              column="SUB_STATUS"             columnIndex="4"  />
     </resultMap>
 	
 	<resultMap id="countMap" class="HashMap">
@@ -281,7 +279,6 @@
 							ELSE SUBSTR(S.USER_NAME_LIST, INSTR(S.USER_NAME_LIST, '|') + 1)
 						END USER_LIST,
 						S.SHARE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS SHARE_DATE,
-						'' AS SUB_STATUS,
 						S.TENANT_ID
 					FROM (
 						SELECT
@@ -379,7 +376,6 @@
 							ELSE SUBSTR(S.USER_NAME_LIST, INSTR(S.USER_NAME_LIST, '|') + 1)
 						END USER_LIST,
 						S.SHARE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS SHARE_DATE,
-						SS.SUB_STATUS,
 						S.TENANT_ID
 					FROM TBL_WEBFOLDER_SHARE S
 					JOIN TBL_WEBFOLDER_SHARE_SUB SS
@@ -490,7 +486,6 @@
 						ELSE SUBSTR(S.USER_NAME_LIST, INSTR(S.USER_NAME_LIST, '|') + 1)
 					END USER_LIST,
 					S.SHARE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS SHARE_DATE,
-					'' AS SUB_STATUS,
 					S.TENANT_ID
 				FROM (
 					SELECT
@@ -586,7 +581,6 @@
 						ELSE SUBSTR(S.USER_NAME_LIST, INSTR(S.USER_NAME_LIST, '|') + 1)
 					END USER_LIST,
 					S.SHARE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS SHARE_DATE,
-					SS.SUB_STATUS,
 					S.TENANT_ID
 				FROM TBL_WEBFOLDER_SHARE S
 				JOIN TBL_WEBFOLDER_SHARE_SUB SS
@@ -677,8 +671,7 @@
 				THEN USER_NAME1
 				ELSE USER_NAME2
 			END AS USER_NAME,
-			USER_TYPE,
-			SUB_STATUS
+			USER_TYPE
 		FROM TBL_WEBFOLDER_SHARE_SUB
 		WHERE SHARE_ID = #shareId#
 		AND TENANT_ID = #tenantId#
@@ -736,7 +729,7 @@
 		FROM TBL_WEBFOLDER_SHARE
 		WHERE (
 			(FOLDERFILE_TYPE = 'D' AND FOLDERFILE_ID = #folderId#)
-			OR (FOLDERFILE_TYPE = 'D' AND SUB_STATUS = 'Y'
+			OR (FOLDERFILE_TYPE = 'D'
 			<isNotEmpty prepend="AND" property="parentIdList">
 				<iterate prepend="FOLDERFILE_ID IN " property="parentIdList" open="(" close=")" conjunction=",">
 					#parentIdList[]#
@@ -788,12 +781,12 @@
 		INSERT INTO TBL_WEBFOLDER_SHARE_SUB (
 			SEQ_ID,                SHARE_ID,              USER_ID,
 			USER_NAME1,            USER_NAME2,            USER_TYPE,
-			SUB_STATUS,            TENANT_ID
+			TENANT_ID
 		)
 		SELECT
 			#id#,                  #shareId#,             #userId#,
 			DISPLAYNAME,           DISPLAYNAME2,          #userType#,
-			#subStatus#,           #tenantId#
+			#tenantId#
 		<isEqual property="userType" compareValue="U">
 			FROM TBL_USERMASTER
 		</isEqual>
@@ -937,7 +930,6 @@
 							ELSE SUBSTR(S.USER_NAME_LIST, INSTR(S.USER_NAME_LIST, '|') + 1)
 						END USER_LIST,
 						S.SHARE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS SHARE_DATE,
-						SS.SUB_STATUS,
 						S.TENANT_ID
 					FROM TBL_WEBFOLDER_SHARE S
 					JOIN TBL_WEBFOLDER_SHARE_SUB SS
@@ -1044,7 +1036,6 @@
 						ELSE SUBSTR(S.USER_NAME_LIST, INSTR(S.USER_NAME_LIST, '|') + 1)
 					END USER_LIST,
 					S.SHARE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS SHARE_DATE,
-					SS.SUB_STATUS,
 					S.TENANT_ID
 				FROM TBL_WEBFOLDER_SHARE S
 				JOIN TBL_WEBFOLDER_SHARE_SUB SS

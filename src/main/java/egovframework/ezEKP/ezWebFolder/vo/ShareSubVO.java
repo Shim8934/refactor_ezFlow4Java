@@ -4,7 +4,6 @@ public class ShareSubVO {
 	private String userId;
 	private String userName;
 	private String userType;
-	private String subStatus;
 	
 	public String getUserId() {
 		return userId;
@@ -23,12 +22,6 @@ public class ShareSubVO {
 	}
 	public void setUserType(String userType) {
 		this.userType = userType;
-	}
-	public String getSubStatus() {
-		return subStatus;
-	}
-	public void setSubStatus(String subStatus) {
-		this.subStatus = subStatus;
 	}
 	
 }

@@ -19,7 +19,12 @@ function preProcess() {
 }
 
 function initRangeData(initData) {
-	var jsonObj = JSON.parse(initData);
+	if (typeof(initData) == "string") {
+		var jsonObj = JSON.parse(initData);
+	} else {
+		var jsonObj = initData;
+	}
+	
 	var deptArray = jsonObj["dept"];
 	var userArray = jsonObj["user"];
 	
@@ -349,15 +354,6 @@ function addUser(obj) {
 	tdElmt.textContent = userName;
 	trElmt.appendChild(tdElmt);
 	userList.appendChild(trElmt);
-	
-	var shareSub = document.getElementById("shareSub");
-	if (shareSub) {
-		var tdElmt2 = document.createElement("td");
-		tdElmt2.setAttribute("style", "text-align:center;");
-		tdElmt2.textContent = shareSub.checked ? "Y" : "N";
-		trElmt.setAttribute("shareSub", tdElmt2.textContent);
-		trElmt.appendChild(tdElmt2);
-	}
 }
 
 function addDept(obj) {
@@ -389,15 +385,6 @@ function addDept(obj) {
 	tdElmt.textContent = deptName;
 	trElmt.appendChild(tdElmt);
 	deptList.appendChild(trElmt);
-	
-	var shareSub = document.getElementById("shareSub");
-	if (shareSub) {
-		var tdElmt2 = document.createElement("td");
-		tdElmt2.setAttribute("style", "text-align:center;");
-		tdElmt2.textContent = shareSub.checked ? "Y" : "N";
-		trElmt.setAttribute("shareSub", tdElmt2.textContent);
-		trElmt.appendChild(tdElmt2);
-	}
 }
 
 function userSelect(obj) {

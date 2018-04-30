@@ -619,39 +619,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "json";
 	}
 	
-	@RequestMapping(value="/ezWebFolder/shareUsersSelect.do")
-	public String selectShareUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("select share users is running!");
-		
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
-		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-id/" + user.getId();
-		
-		HttpHeaders headers  = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("offset", user.getOffset())
-										.queryParam("lang", user.getLang());
-		RestTemplate rest             = new RestTemplate();
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		String status                 = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			String companyId = (String) resultBody.get("data");
-			model.addAttribute("pCompanyID", companyId);
-			model.addAttribute("primary", user.getLang());
-		}
-		
-		logger.debug("select share users finishes!");
-		return "/ezWebFolder/shareUsersSelect";
-	}
-	
 	@RequestMapping(value="/ezWebFolder/getDeptMembers.do", method = RequestMethod.POST)
 	public String getDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
