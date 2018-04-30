@@ -1142,6 +1142,19 @@
 			</isNotEqual>
 	</select>
 	
+	<select id="EzLadderDAO.ladderGameParticipant" resultClass="LadderLineVO">
+		SELECT
+			TENANT_ID, LADDERID, ID AS LINEID, USERID, USERNAME, USERNAME2, RESULTUSERID, RESULTUSERNAME, RESULTUSERNAME2, ITEM, LADDERORDER
+		FROM
+			TBL_LADDER_LINE
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			LADDERID = #ladderId#
+		ORDER BY
+			LADDERORDER
+	</select>
+	
 	<update id="EzLadderDAO.updateLadderComment" parameterClass="LadderCommentVO">
 		UPDATE 
 			TBL_LADDER_COMMENT
