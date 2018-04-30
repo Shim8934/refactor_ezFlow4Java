@@ -97,6 +97,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			isDefaultAtti = true;
 		}
 		
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+		
 		map.put("deptId", deptId);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
@@ -221,8 +223,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String offset, String ip, String typeId, String dateType, int tenantId) throws Exception {
 		LOGGER.debug("updateAttitude started");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("attitudeId", attitudeId);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);

@@ -1371,8 +1371,6 @@ public class EzAttitudeAdminBOMController {
 	public String popupAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("popupAbsentedList started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("searchUserName");
 		String searchDeptName = request.getParameter("searchDeptName");
