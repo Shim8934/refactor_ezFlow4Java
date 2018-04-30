@@ -824,7 +824,8 @@
   							isPublic,
   							orgDocID,
   							receivedDate,
-							to_date(A.startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,  							urgentApproval,
+                            to_char(startDate + $offsetMin$/(24*60),'YYYY-MM-DD HH24:MI:SS') as startDate,
+                            urgentApproval,
   							writerDeptID,
   							writerDeptName,
   							writerDeptName2,
@@ -880,7 +881,8 @@
 				  E.isPublic,
 				  E.orgDocID,
 				  E.receivedDate,
-				  to_date(E.startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,				  E.urgentApproval,
+				  to_char(startDate + $offsetMin$/(24*60),'YYYY-MM-DD HH24:MI:SS') as startDate,
+                  E.urgentApproval,
 				  E.writerDeptID,
 				  E.writerDeptName,
 				  E.writerDeptName2,
@@ -905,28 +907,31 @@
         	  AND	    
 					AprState != '001'
 			 </isEqual>
-			 ) AS A
+			 )  A
           	WHERE 
           		1=1
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 	    			AND 
 						#v_PSUBQUERY#
 	  		</isGreaterThan>
-	    			$v_PORDERBYSUB$	 
-				<![CDATA[
-						AND 
+	  			<![CDATA[
+	  				AND 
 							ROWNUM <= #v_PQUERYSIZESUB#
-								) B 
 				]]>
+	    			$v_PORDERBYSUB$	 
+				
+						
+								) B 
+				<![CDATA[
+					where
+								ROWNUM <= #v_PQUERYSIZEMAIN# 
+								]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
-					<![CDATA[
-					AND
-								ROWNUM <= #v_PQUERYSIZEMAIN# 
-								]]>
+					
 		</isEqual>
 		
 		<isEqual property="v_PLISTTYPE" compareValue="2">
@@ -963,7 +968,7 @@
   							href,
   							isPublic,
   							orgDocID,
-  							to_date(startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,
+  							to_char(startDate + $offsetMin$/(24*60),'YYYY-MM-DD HH24:MI:SS') as startDate,
   							urgentApproval,
   							writerDeptID,
   							writerDeptName,
@@ -1019,7 +1024,7 @@
 					E.href,
 					E.isPublic,
 					E.orgDocID,
-					DATE_ADD(DATE_FORMAT(E.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
+                    to_char(E.startDate + $offsetMin$/(24*60),'YYYY-MM-DD HH24:MI:SS') as startDate,
 					E.urgentApproval,
 					E.writerDeptID,
 					E.writerDeptName,
@@ -1043,7 +1048,7 @@
 			 		APRTYPE <> '015'
 			  AND 
 			 		DOCSTATE <> '007'
-		    ) AS A
+		    ) A
 		    ]]>
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 				<![CDATA[
@@ -1051,20 +1056,22 @@
 	    		]]>
 	  		</isGreaterThan>
 	  			<![CDATA[
-			  		$v_PORDERBYSUB$ 
-						AND 
-							ROWNUM <= #v_PQUERYSIZESUB# 
+			  		 
+						WHERE 
+							ROWNUM <= #v_PQUERYSIZESUB#
+                            $v_PORDERBYSUB$ 
 										) B
 				]]>
+                <![CDATA[
+                        WHERE
+                                ROWNUM <= #v_PQUERYSIZEMAIN# 
+                                ]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
-						<![CDATA[
-						AND
-								ROWNUM <= #v_PQUERYSIZEMAIN# 
-								]]>
+						
 		</isEqual>
 		
 		<isEqual property="v_PLISTTYPE" compareValue="3">
@@ -1165,7 +1172,7 @@
   							A.isPublic,
   							A.orgDocID,
   							A.receivedDate,
-  							to_date(A.startDate,'yyyy-MM-dd HH24:mi:ss') + $offsetMin$/(24*60) as startDate,
+  							to_char(A.startDate + $offsetMin$/(24*60),'YYYY-MM-DD HH24:MI:SS') as startDate,
   							A.urgentApproval,
   							A.writerDeptID,
   							A.writerDeptName,
@@ -1196,20 +1203,21 @@
 	    		]]>
 	  		</isGreaterThan>
 	  			<![CDATA[
-			  		$v_PORDERBYSUB$
-						AND 
+                            AND
 							ROWNUM <= #v_PQUERYSIZESUB#
+                            $v_PORDERBYSUB$
 									) B  
 				]]>
+                <![CDATA[
+                                WHERE
+                                ROWNUM <= #v_PQUERYSIZEMAIN# 
+               ]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
-								<![CDATA[
-								AND
-								ROWNUM <= #v_PQUERYSIZEMAIN# 
-								]]>
+								
 		</isEqual>
 		
 		<isNotEqual property="v_PLISTTYPE" compareValue="1">
@@ -19270,7 +19278,8 @@
 			SUMMARY , 
 			FormName2 , 
 			ItemName2, 
-			TENANT_ID  
+			TENANT_ID,
+            PUBLICITYYN  
 		  FROM 
 		  	TBL_EXPAPRDOCINFO
 		  WHERE  
@@ -21458,7 +21467,7 @@
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_AprState#, 
-   			ProcessDate = #v_SYSDATE#
+   			ProcessDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS')
 		WHERE 
 			DocID = #v_DOCID# 
 		AND 
@@ -24434,34 +24443,34 @@
 			AND 
 				APRTYPE <> '015'
 			]]>
-			) AS A
+			)  A
 		WHERE
 			1 = 1
 		AND 
 		<isEqual property="v_COUNTTYPE" compareValue="SIXHGAP">
-			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 6/(24)
+			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') - 6/(24)
 		</isEqual>
 		
 		<isEqual property="v_COUNTTYPE" compareValue="ONEDGAP">
-			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 1
+			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') - 1
 		AND 
-			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 6/(24) > A.STARTDATE
+			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') - 6/(24) > A.STARTDATE
 		</isEqual>
 		
 		<isEqual property="v_COUNTTYPE" compareValue="SEVENDGAP">
-			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 7
+			A.STARTDATE >= TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') - 7
 		AND 
-			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 1 > A.STARTDATE
+			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') - 1 > A.STARTDATE
 		</isEqual>
 		
 		<isEqual property="v_COUNTTYPE" compareValue="ONEMGAP">
-			A.STARTDATE >= ADD_MONTHS(#v_NOWTIME# , 1)
+			A.STARTDATE >= ADD_MONTHS(TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') , 1)
 		AND 
-			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS')) - 7 > A.STARTDATE
+			TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') - 7 > A.STARTDATE
 		</isEqual>
 		
 		<isEqual property="v_COUNTTYPE" compareValue="OTHER">
-			ADD_MONTHS(#v_NOWTIME# , 1) > A.STARTDATE
+			ADD_MONTHS(TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') , 1) > A.STARTDATE
 		</isEqual>
 	</select>
 </sqlMap>

@@ -15,8 +15,8 @@ function getCircularComment() {
 			if (commentType == 'totalComment') {
 				circularUserList = "<colgroup><col width='20%' /><col width='62%' /><col width='18%' /></colgroup>";
 				
-				list = result.circularUserList;
-				list.forEach(function(vo, index) {
+				userList = result.circularUserList;
+				userList.forEach(function(vo, index) {
 					circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
 					circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
 					
@@ -48,9 +48,9 @@ function getCircularComment() {
 				$("#circularUserList").append(circularUserList);
 				
 				circularCommentList = "";
-				list = result.circularCommentList;
+				commentList = result.circularCommentList;
 				
-				list.forEach(function(vo, index) {
+				commentList.forEach(function(vo, index) {
 					circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#fafafa;'>";
 					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle; margin-bottom:9px'/>&nbsp;" + vo.memberName + "</td>";
 					circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;'>" + vo.circularComment + "&nbsp;&nbsp;";
@@ -85,7 +85,7 @@ function getCircularComment() {
 				});
 				//2018-04-11 김보미 검색결과가 없을경우
 				if ($("#searchValue").val() != "" && $("#searchValue").val() != null) {
-					if (list.length == 0) {
+					if (userList.length == 0 && commentList == 0) {
 						circularCommentList = "<tr style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#white;'>";
 						circularCommentList += "<td colspan='3' style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:center;background-color:white;'>" + strLang16 + "</td>";
 						circularCommentList += "</tr>";

@@ -83,7 +83,6 @@
 	<resultMap class="AttitudeStatisVO" id="userStatistics">
 		<result property="count" column="COUNT" />
 		<result property="typeId" column="TYPE_ID" />
-		<result property="typeName" column="TYPE_NAME" />
 		<result property="statMonth" column="STAT_MONTH" />
 	</resultMap>
 	
@@ -317,7 +316,7 @@
 	<update id="ezAttitudeAdminDAO.updateAttitudeTypeConfig" parameterClass="Map">
 		<![CDATA[
 			UPDATE TBL_ATTITUDE_TYPE
-			SET=/
+			SET
 				ISUSE = #isuse#
 			WHERE
 				COMPANY_ID = #companyId#
@@ -642,10 +641,12 @@
 				starttime DESC
 		</isEmpty>
 		
-		<![CDATA[
-			LIMIT
-				#limit#, #listSize#
-		]]>
+		<isNotEmpty property="listSize">
+			<![CDATA[
+				LIMIT
+					#limit#, #listSize#
+			]]>
+		</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
@@ -701,11 +702,26 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeAbsentCount" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				COUNT(*)
+				COUNT(DISTINCT(A.cn))
 			FROM
 				TBL_USERMASTER A
 			LEFT JOIN
-				TBL_ATTITUDE B
+				(SELECT
+					*
+				FROM
+					TBL_ATTITUDE C
+				WHERE
+					C.tenant_id = #tenantId#
+				AND
+					C.company_id = #companyId#
+				AND
+					(
+						(C.start_date < #searchStartDate# OR C.start_date > #searchEndDate#)
+					AND
+						(C.end_date < #searchStartDate# OR C.end_date >= #searchEndDate#)
+					AND
+						(C.start_date >= #searchStartDate# OR C.end_date < #searchEndDate#)
+					)) B
 			ON
 				A.cn = B.writer_id 
 			AND
@@ -715,13 +731,7 @@
 			AND
 				A.physicaldeliveryofficename = #companyId#
 			AND
-				(
-					(B.start_date < #searchStartDate# OR B.start_date > #searchEndDate#)
-				AND
-					(B.end_date < #searchStartDate# OR B.end_date >= #searchEndDate#)
-				AND
-					(B.start_date >= #searchStartDate# OR B.end_date < #searchEndDate#)
-				)
+				B.start_date IS NULL
 		]]>
 		
 		<isNotEmpty prepend="AND" property="searchDeptName">
@@ -737,23 +747,30 @@
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeAbsentList" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
-			SELECT 
-				B.attitude_id AS attitudeid,
-				B.company_id AS companyid,
-				B.tenant_id AS tenantid,
-				B.writer_id AS writerid,
-				B.dept_id AS deptid,
-				B.modappl,
-				B.ip,
-				B.date_type AS datetype,
-				B.type_id AS typeid,
+			SELECT
+				DISTINCT(A.cn) AS userid,
 				A.displayname AS username,
                 A.description AS deptname,
                 A.title AS usertitle
 			FROM
 				TBL_USERMASTER A
 			LEFT JOIN
-				TBL_ATTITUDE B
+				(SELECT
+					*
+				FROM
+					TBL_ATTITUDE C
+				WHERE
+					C.tenant_id = #tenantId#
+				AND
+					C.company_id = #companyId#
+				AND
+					(
+						(C.start_date < #searchStartDate# OR C.start_date > #searchEndDate#)
+					AND
+						(C.end_date < #searchStartDate# OR C.end_date >= #searchEndDate#)
+					AND
+						(C.start_date >= #searchStartDate# OR C.end_date < #searchEndDate#)
+					)) B
 			ON
 				A.cn = B.writer_id
 			AND
@@ -763,39 +780,27 @@
 			AND
 				A.physicaldeliveryofficename = #companyId#
 			AND
-				(
-					(B.start_date < #searchStartDate# OR B.start_date > #searchEndDate#)
-				AND
-					(B.end_date < #searchStartDate# OR B.end_date >= #searchEndDate#)
-				AND
-					(B.start_date >= #searchStartDate# OR B.end_date < #searchEndDate#)
-				)
+				B.start_date IS NULL
 		]]>
 			
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			C.description LIKE CONCAT('%', #searchDeptName#, '%')
+			A.description LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			C.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			A.displayname LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			C.title LIKE CONCAT('%', #searchTitle#, '%')
+			A.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="orderCell">
 			ORDER BY
 				$orderCell$ $orderOption$,
-				C.displayname
+				A.displayname
 		</isNotEmpty>
 		<isEmpty property="orderCell">
 			ORDER BY
-				C.displayname
+				A.displayname
 		</isEmpty>
-		<isNotEmpty property="limit">
-			<![CDATA[
-				LIMIT 
-					#limit#, #listSize# 
-			]]>
-		</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultMap="attitudeAuthor">
@@ -899,20 +904,23 @@
 							   )
 						) + COUNT(A.TYPE_ID), 0) AS COUNT,
 			       A.TYPE_ID,
-			       B.TYPE_NAME,
 			       #months# AS STAT_MONTH
 			FROM   
 				TBL_ATTITUDE A
-			RIGHT OUTER JOIN
-				TBL_ATTITUDE_TYPE B
-			ON
-				(A.TYPE_ID = B.TYPE_ID)
 			WHERE
 				A.TENANT_ID = #tenantId#
 			AND
 				A.TYPE_ID = #typeId#
+		]]>
+		<isNotEmpty property="userId">
 			AND
 				A.WRITER_ID = #userId#
+		</isNotEmpty>
+		<isNotEmpty property="deptId">
+			AND
+				A.DEPT_ID = #deptId#
+		</isNotEmpty>
+		<![CDATA[
 			AND    
 				(
 					(A.START_DATE >= date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T') and A.START_DATE <= date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T')) 

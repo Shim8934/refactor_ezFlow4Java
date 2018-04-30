@@ -363,6 +363,7 @@
 						<select id="searchKeycode"> 
 							<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->
 							<option value="2"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->
+							<option value="3"><spring:message code="ezOrgan.t218"></spring:message></option> <!-- cn -->
 						</select>
 						<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
 						<a class="imgbtn" >

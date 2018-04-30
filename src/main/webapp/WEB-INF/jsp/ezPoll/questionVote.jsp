@@ -3018,6 +3018,25 @@
 		  		}, 1000)
 		  	}
 		  	
+		  	//목록 버튼 눌렀을 때 리스트로 이동.
+		  	function gotoList(){
+		  		var gotoList = 1;
+	  			var params = "<c:out value='${params}'/>";
+		  		var pollType = 1;
+		  		if(params != null){
+		  			var paramsArr = params.split(",");
+		  			pollType = paramsArr[4];
+		  		}
+		  		
+		  		if(window.parent.frames["right"] !== undefined){
+			  		window.parent.frames["right"].location.href = "/ezPoll/pollList.do?qstId=" + qstId + "&gotoList=" + gotoList + "&params=" + params;
+		  		}
+		  		//알림 메일로 받았을 경우 처리.
+		  		else {
+			  		window.location.href = "/ezPoll/pollList.do?qstId=" + qstId + "&gotoList=" + gotoList + "&params=" + params;
+		  		}
+		  	}
+		  	
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -3302,11 +3321,14 @@
 						<td id="voteBtnFooter" class="voteTdBg" colspan="3" >
 							<div class="voteTdBg_layout">
 	                            <c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
-	                                <div id="_finish" onclick="finishVote();">
+	                                <div id="_finish" class="voteBtnFooterInner" onclick="finishVote();">
 	                                    <img src="/images/verified.png" style="display:none; height:15px; width:15px; float:left; vertical-align:middle; margin:12px 5px; cursor: pointer;">				
 	                                    <div style="display:block; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
 	                                </div> 
 	                            </c:if>
+	                            <div id="_gotoList" class="voteBtnFooterInner" onclick="gotoList();">
+                                    <div style="display:block; cursor: pointer;"><spring:message code = 'ezCommunity.t168'/></div>
+                                </div>
 	                    	</div>        
 						</td>					
 					</tr>

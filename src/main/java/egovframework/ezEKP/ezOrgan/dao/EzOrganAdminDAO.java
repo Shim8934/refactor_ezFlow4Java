@@ -1268,6 +1268,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void insertCompanyInfo_I20(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I20", map);
     }
+    public void insertCompanyInfo_I21(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I20", map);
+    }
     
 	/**
 	 * 그룹웨어 계정으로 비즈메카톡 계정을 동기화한다.

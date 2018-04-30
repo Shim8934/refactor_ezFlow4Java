@@ -133,6 +133,9 @@
 		            showMonthAfterYear: true
 		        };
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		        
+		        $("#Cdatepicker").datepicker('disable');
+		        $("#Odatepicker").datepicker('disable');
 		    });
 		    
 		    var g_originalHTML = null;
@@ -219,14 +222,14 @@
 	                                    <tr>
 	                                        <th>기존시각</th>
 	                                        <td colspan="2">
-	                                        	<input type="text" id="Odatepicker" style="width:80px;text-align:center" disabled><input id="Otimepicker" disabled readonly="readonly" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	                                        	<input type="text" id="Odatepicker" style="width:80px;text-align:center"><input id="Otimepicker" disabled readonly="readonly" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
 	                                        <th>변경시각</th>
 	                                        <td colspan="2">
 	                                        	<span id="periodblock">
-	                                           		<input type="text" id="Cdatepicker" style="width:80px;text-align:center" disabled><input id="Ctimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	                                           		<input type="text" id="Cdatepicker" style="width:80px;text-align:center"><input id="Ctimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                            </span>
 	                                        </td>
 	                                    </tr>

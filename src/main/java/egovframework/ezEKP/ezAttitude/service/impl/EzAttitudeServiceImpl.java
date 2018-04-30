@@ -97,6 +97,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			isDefaultAtti = true;
 		}
 		
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+		
 		map.put("deptId", deptId);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
@@ -221,8 +223,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String offset, String ip, String typeId, String dateType, int tenantId) throws Exception {
 		LOGGER.debug("updateAttitude started");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("attitudeId", attitudeId);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
@@ -849,8 +852,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			int tenantId, String userId, String attModId, String offset,
 			String content, String changeDate) throws Exception {
 			
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
@@ -874,8 +878,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			, String writerTitle2, String writerDeptId, String writerDeptName, String writerDeptName2
 			,String changeDate, String delFlag, String content,String offset) throws Exception {
 			
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		map.put("attitudeId", attitudeId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1060,19 +1065,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("getAttitudeAbsentCount ended. result = " + result);
 		
-		return "";
+		return result;
 	}
 	
 	@Override
-	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId) throws Exception {
+	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeAbsentList started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		int limit = 0;
-		
-		if (pageNum != null && !pageNum.equals("")) {
-			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
-		}
 		
 		//날짜
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1110,17 +1110,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchEndDate", searchEndDate);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
-		map.put("listSize", listSize);
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		map.put("limit", limit != 0 ? limit : null);
 
 		List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeAbsentList(map);
 		
 		LOGGER.debug("getAttitudeAbsentList ended.");
 		
-		return null;
+		return resultList;
 	}
 
 	@Override
@@ -1224,7 +1222,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId,
+	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String deptId,
 			String offset, String year, String typeId, int tenantId)
 			throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1234,6 +1232,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String startTime = "-01 00:00:00";
 		
 		map.put("userId", userId);
+		map.put("deptId", deptId);
 		map.put("offsetMin", offsetMin);
 		map.put("year", year);
 		map.put("startTime", startTime);

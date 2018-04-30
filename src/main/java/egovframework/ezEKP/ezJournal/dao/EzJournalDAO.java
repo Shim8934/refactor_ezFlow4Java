@@ -517,5 +517,39 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public List<JournalVO> selectSumJournalList(Map<String, Object> param) {
 		return (List<JournalVO>) list("selectSumJournalList",param);
 	}
+	
+	/**
+	 * 내가 부서장인 부서 리스트
+	 * @param param
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<DeptViewVO> selectCheifBossList(Map<String, Object> param) {
+		List<DeptViewVO> result = null;
+		try {
+			result = (List<DeptViewVO>) list("selectCheifBossList",param);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	/**
+	 * 내가 부서장인 부서들의 하위부서 리스트
+	 * @param param
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<DeptViewVO> selectCheifBoss(Map<String, Object> param) {
+		return (List<DeptViewVO>) list("selectCheifBoss",param);
+	}
+
+	/**
+	 * 하나의 열람권한 부서만 삭제
+	 * @param map
+	 */
+	public void deleteAuthDeptOne(Map<String, Object> map) {
+		delete("deleteAuthDeptOne", map);
+	}
 
 }

@@ -335,6 +335,7 @@ public class EzAttitudeAdminBOMController {
 		
 		String status = resultBody.get("status").toString();
 		
+		LOGGER.debug("status :" + status);
 		LOGGER.debug("saveAttitudeTypeConfig ended.");
 	}
 	
@@ -1370,12 +1371,17 @@ public class EzAttitudeAdminBOMController {
 	public String popupAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("popupAbsentedList started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("searchUserName");
+		String searchDeptName = request.getParameter("searchDeptName");
+		String searchTitle = request.getParameter("searchTitle");
 		String searchStartDate = request.getParameter("startDate");
 		String searchEndDate = request.getParameter("endDate");
 		
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("searchUserName", searchUserName);
+		model.addAttribute("searchDeptName", searchDeptName);
+		model.addAttribute("searchTitle", searchTitle);
 		model.addAttribute("searchStartDate", searchStartDate);
 		model.addAttribute("searchEndDate", searchEndDate);
 		
@@ -1387,21 +1393,20 @@ public class EzAttitudeAdminBOMController {
 	/**
 	 * 근태조회 미입력자목록 조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/absentedList.do")
+	@RequestMapping(value = "/admin/ezAttitude/getAbsentedList.do")
 	@ResponseBody
-	public JSONObject absentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("absentedList started.");
+	public JSONObject getAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("getAbsentedList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		String companyId = request.getParameter("companyId");
-		String searchUserName = request.getParameter("searchUserName");
-		String searchStartDate = request.getParameter("searchStartDate");
-		String searchEndDate = request.getParameter("searchEndDate");
-		String pageNum = request.getParameter("pageNum");
-		String listSize = request.getParameter("listSize");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String searchStartDate = request.getParameter("startDate");
+		String searchEndDate = request.getParameter("endDate");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		
@@ -1416,11 +1421,10 @@ public class EzAttitudeAdminBOMController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
 				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
 				.queryParam("searchStartDate", searchStartDate)
 				.queryParam("searchEndDate", searchEndDate)
 				.queryParam("userId", userId)
-				.queryParam("pageNum", pageNum)
-				.queryParam("listSize", listSize)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
 				.queryParam("offsetMin", offsetMin);
@@ -1440,7 +1444,7 @@ public class EzAttitudeAdminBOMController {
 			jObject = (JSONObject) resultBody.get("data");
 		}
 		
-		LOGGER.debug("absentedList ended.");
+		LOGGER.debug("getAbsentedList ended.");
 		return jObject;
 	}
 	

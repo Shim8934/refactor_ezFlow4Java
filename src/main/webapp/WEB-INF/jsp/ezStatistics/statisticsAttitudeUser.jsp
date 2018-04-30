@@ -26,10 +26,11 @@
     var adminCompany = "${adminCompany}";
 	
 	document.onselectstart = function () {
-    if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
-        return false;
-    else
-        return true;
+	    if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
+	        return false;
+	    } else {
+	        return true;
+	    }
 	};
 	
     window.onload = function () {
@@ -66,7 +67,7 @@
         treeView.DataBind("TreeView");
         
         //처음 select는 관리자로 되어있으니까 관리자 회사의 근태유형 출력.
-        company_typeList(adminCompany);
+        company_typeList(adminCompany, typeId);
     }
 
     //조직도 회사,부서 클릭
@@ -79,11 +80,11 @@
         displayUserList(DeptID);
         //만약 회사 클릭시
         if (selnode.GetNodeData("SETNODEICONBYNAME") != "") {
-        	company_typeList(DeptID);
+        	company_typeList(DeptID, typeId);
         }
     }
 
-    //하위부서
+    //[+] 버튼
     function RequestData(pNodeID, pTreeID) {
         var TreeIdx = pNodeID;
         var treeNode = new TreeNode();
@@ -168,7 +169,7 @@
     }
     
     //회사 클릭시마다 근태유형 selectbox 변경
-    function company_typeList(companyId) {
+    function company_typeList(companyId, typeId) {
     	$.ajax({
         	type : "POST",
         	dataType : "json",
@@ -183,6 +184,9 @@
 	                }
         		}
         		$("#attitudeType").html(html);
+        		if(typeId != "" || typeId != null) {
+        			$("#attitudeType").val(typeId);
+        		}
         	},
         	error : function(error){
 //         		OpenAlertUI(linealt2 + error)
@@ -238,16 +242,19 @@
 	    var pUserList = new ListView();
 	    pUserList.LoadFromID("lvUserList");
     	var selectUserId = pUserList.GetSelectedRows()[0].getAttribute("DATA2");
-    	var selectUserName = pUserList.GetSelectedRows()[0].getAttribute("DATA4");
+    	var selectUserName = pUserList.GetSelectedRows()[0].getElementsByTagName("td")[0].childNodes[0].nodeValue;
+    	var typeId = $("#attitudeType").val();
     	$.ajax({
         	type : "POST",
         	dataType : "json",
         	url : "/ezStatistics/getAttitudeUser.do",
         	async : false,
-        	data : {userId : selectUserId, typeId : $("#attitudeType").val(), year : $("#selyear").val() },
+        	data : {userId : selectUserId, typeId : typeId, year : $("#selyear").val() },
         	success : function(result){
-        		event_getAttitudeStatistics(result);
-        		chartTable(result, selectUserName);
+        		company_typeList(result.companyId, typeId);
+        		
+        		event_getAttitudeStatistics(result.list);
+        		chartTable(result.list, selectUserName);
         	},
         	error : function(error){
         		
@@ -276,6 +283,10 @@
                 $("#nodata").css({"display":""});
             	$("#viewdata").css({"display":"none"});
             	return;
+            } else {
+                $("#seluser").css({"display":"none"});
+                $("#nodata").css({"display":""});
+                $("#viewdata").css({"display":"none"});
             }
         } else {
             $("#seluser").css({"display":"none"});
@@ -311,6 +322,7 @@
     function chartTable(result, selectUserName) {
     	var months = "<spring:message code='ezStatistics.t218' />".split(";");
     	var html = "";
+    	html += "<table class='tstyle2' style='text-align: center; width: 100%; border: 1px solid rgb(218, 218, 218);'>";
     	html += "<tr>";
 		html += "<th style='text-align: center;'><spring:message code='ezStatistics.t1015' /> </th>";
 		html += "<th style='text-align: center;'><spring:message code='ezStatistics.t1000' /> </th>";
@@ -323,8 +335,7 @@
 		html += "</tr>";
 		html += "<tr>";
 		html += "<td rowspan='3'>"+selectUserName+"</td>";
-// 		html += "<td>" + result[0].typeName + "일수</td>";
-		html += "<td>데이터</td>";
+		html += "<td>일수</td>";
 		html += "<td>" + result[0].count + "</td>";
 		html += "<td>" + result[1].count + "</td>";
 		html += "<td>" + result[2].count + "</td>";
@@ -342,8 +353,7 @@
 		html += "<th style='text-align: center;'>" + months[11] + "</th>";
 		html += "</tr>";
 		html += "<tr>";
-// 		html += "<td>" + result[0].typeName + "일수</td>";
-		html += "<td>데이터</td>";
+		html += "<td>일수</td>";
 		html += "<td>" + result[6].count + "</td>";
 		html += "<td>" + result[7].count + "</td>";
 		html += "<td>" + result[8].count + "</td>";
@@ -351,20 +361,21 @@
 		html += "<td>" + result[10].count + "</td>";
 		html += "<td>" + result[11].count + "</td>";
 		html += "</tr>";
+		html += "</table>";
 		$('#statisticstable').html(html);
     }
 
     //엑셀내려받기 버튼 클릭시
     function btnexportexcel_onclick() {
-//         document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
+        document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
         
-//         if (document.getElementById("saveExcelData").value == "") {
-//         	alert("<spring:message code='ezStatistics.t1019' />");
-//         	return ;
-//         }
+        if (document.getElementById("saveExcelData").value == "") {
+        	alert("<spring:message code='ezStatistics.t1019' />");
+        	return ;
+        }
         
-//         document.getElementById("formAgent").target = "saveExcel";
-//         document.getElementById("formAgent").submit();
+        document.getElementById("formAgent").target = "saveExcel";
+        document.getElementById("formAgent").submit();
     }
 
     //검색
@@ -418,21 +429,19 @@
         if (adCount == 0) {
             alert("<spring:message code='ezStatistics.t1011' />");
             return;
-        }
-        else if (adCount == 1) {
+        } else if (adCount == 1) {
             bSearch = true;
             g_xmlHTTP = createXMLHttpRequest();
 
-            if (CrossYN())
+            if (CrossYN()) {
                 var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
-            else
+            } else {
                 var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
-
+            }
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
             g_xmlHTTP.send(strQuery);
-        }
-        else {
+        } else {
             var rgParams = new Array();
             rgParams["addrBook"] = xmlDom;
             rgParams["deptid"] = "";
@@ -443,12 +452,12 @@
 				searchdept_cross_dialogArguments[1] = SelelctDept_complite;
 				var OpenWin = window.open("/ezStatistics/statisticsCheckName2.do", "", GetOpenWindowfeature(609, 372));    
 				try { OpenWin.focus(); } catch (e) { }				
-			} 
-			else {
+			} else {
 	            var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
 	            feature = feature + GetShowModalPosition(540, 460);
 	            window.showModalDialog("/ezStatistics/statisticsCheckName2.do", rgParams, feature);
 			}
+			
             if (rgParams["deptid"] != "") {
                 bSearch = true;
                 g_xmlHTTP = createXMLHttpRequest();
@@ -460,15 +469,27 @@
         }
     }
     
+    function SelelctDept_complite(deptid){
+      	 if (deptid != "") {
+               bSearch = true;
+               g_xmlHTTP = createXMLHttpRequest();
+               var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+               g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+               g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+               g_xmlHTTP.send(strQuery);
+          }
+     }
+    
     function event_getDeptFullTree() {
         if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
             if (g_xmlHTTP.statusText == "OK") {
                 if (!bSearch) {
                     try {
-                        if (CrossYN())
+                        if (CrossYN()) {
                             opener.opener.top.organview = g_xmlHTTP.responseXML;
-                        else
+                        } else {
                             window.dialogArguments["window"].opener.top.organview = g_xmlHTTP.responseXML;
+                        }
                     } catch (e) { }
                 }
 
@@ -484,7 +505,7 @@
                 treeView.DataSource(g_xmlHTTP.responseXML);
                 treeView.DataBind("TreeView");
             } else {
-                alert(g_xmlHTTP.statusText)
+                alert(g_xmlHTTP.statusText);
                 g_xmlHTTP = null;
             }
         }
@@ -506,13 +527,14 @@
         	data : {search : "displayname::" + keyword.value, cell : "displayName;description", prop : "", type : "user"},
         	success : function(result){	
         		var xmlDom = loadXMLString(result);
-        		if (xmlDom.getElementsByTagName("ROW").length == 0)
+        		if (xmlDom.getElementsByTagName("ROW").length == 0) {
                     alert("<spring:message code='ezStatistics.t1016' />");
-                else {
+        		} else {
                     var retXml = createXmlDom();
 
-                    if (document.getElementById("UserList").innerHTML != "")
+                    if (document.getElementById("UserList").innerHTML != "") {
                         document.getElementById("UserList").innerHTML = "";
+                    }
 
                     var headerData = createXmlDom();
                     headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
@@ -529,7 +551,7 @@
                     }
                     var pUserList = new ListView();
                     pUserList.SetID("lvUserList");
-                    pUserList.SetRowOnClick("getmailstatistics");
+                    pUserList.SetRowOnClick("getAttitudeStatistics");
                     pUserList.SetSelectFlag(false);
                     pUserList.SetHeightFree(true);
                     pUserList.DataSource(headerData);
@@ -612,11 +634,19 @@
             </td>
             <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
                 <div id="viewdata" style="display:none">
+	                <div class="statistics_addition">
+	                    <dl>
+	                        <dt class="colorbox_wrap"><span style="background: #4bb2c5" class="colorbox"></span></dt>
+	                        <dd id="colorbox" class="additiontext">일수</dd>
+	                    </dl>
+	                </div>
                     <div id="chartdiv" style="width: 100%; text-align: center; display: none;">
                         <div id="statisticschart" style="width: 800px; height: 480px; float: left; font-size: 16px;">
                         </div>
                     </div>
-                    <table id="statisticstable" class="tstyle2" style="text-align: center; width: 100%; border: 1px solid rgb(218, 218, 218);"></table>
+                    <br/>
+					<br/>
+					<div id="statisticstable"></div>
                 </div>
                 <div id="seluser" class="statistics_select" style="margin:0 auto">
                     <dl class="statistics_txt">
@@ -634,7 +664,7 @@
             </td>
         </tr>
     </table>
-    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXlsM.do">
+    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXlsWA.do">
         <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
         <input type="hidden" id="userAgent" name="userAgent" value="">
     </form>

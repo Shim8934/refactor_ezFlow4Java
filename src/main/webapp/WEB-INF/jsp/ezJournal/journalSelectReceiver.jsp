@@ -506,7 +506,7 @@
 	                            <img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver()">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                        	<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
+	                        	<div style="display: inline-flex; display: -ms-inline-flexbox; border-bottom: 1px solid #565b66; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
 									</h2>
