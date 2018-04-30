@@ -134,23 +134,13 @@
 				var $ladderPreview = $("#ladderPreview");
 				$(".ladderPreList_right").scrollTop(0);
 				$ladderPreview.attr("src", previewSrc);
-				
-				/* var previewH = document.getElementById("ladderPreview").contentWindow.document.body.clientHeight;
-				$ladderPreview.css("height", previewH + "px"); */
-				
-				/* if($ladderPreview.css("height") === "0px") {
-					$("#ladderPreviewLayer").css("height", "1178px");
-				} */
 			}
 			function onMyFrameLoad(obj) {
 				var previewObj = obj.contentWindow || obj.contentDocument;
-				console.log(previewObj);
 				if(previewObj.document) {
 					previewObj = previewObj.document;
 				}
 				
-				/* var clientH = previewObj.documentElement.clientHeight;
-				var offsetH = previewObj.documentElement.offsetHeight; */
 				var finalH = previewObj.documentElement.offsetHeight;
 				
 				obj.style.height = finalH + "px";
