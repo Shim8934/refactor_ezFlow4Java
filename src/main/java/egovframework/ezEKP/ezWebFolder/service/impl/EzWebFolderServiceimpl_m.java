@@ -631,7 +631,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				
 				if (isFileDeleted > 0) {
 					realFileDelete(fileVO, realPath, userInfo, userName1,  userName2);
-					deleteFavorite(userId, fileVO.getFileId(), "F", tenantId);
+					deleteFavoriteAnyUser(fileVO.getFileId(), "F", tenantId);
+					deleteShareWithSub(fileVO.getFileId(), "F", tenantId);
 				}
 			}
 		}
@@ -641,6 +642,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			
 			if (folderVO != null) {
 				int isFolderDeleted = deleteFolder(folderVO);
+				deleteFavoritesInFolder(folderVO.getFolderId(), tenantId);
+				deleteShareWithSub(folderVO.getFolderId(), "D", tenantId);
 				
 				if (isFolderDeleted > 0) {
 					deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2);
@@ -736,7 +739,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 				realFileDelete(fileVO, realPath, userInfo, userName1, userName2);
 				ezWebFolderService.saveLog("P", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
-				deleteFavorite(userId, fileVO.getFileId(), "F", tenantId);
+				deleteFavoriteAnyUser(fileVO.getFileId(), "F", tenantId);
+				deleteShareWithSub(fileVO.getFileId(), "F", tenantId);
 			}
 		}
 		
