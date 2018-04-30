@@ -831,8 +831,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			int tenantId, String userId, String attModId, String offset,
 			String content, String changeDate) throws Exception {
 			
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
@@ -850,8 +851,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			, String writerTitle2, String writerDeptId, String writerDeptName, String writerDeptName2
 			,String changeDate, String delFlag, String content,String offset) throws Exception {
 			
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		map.put("attitudeId", attitudeId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
