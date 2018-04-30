@@ -518,7 +518,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("companyId", companyId)
 										.queryParam("folderId", folderId)
 										.queryParam("type", type)
-										.queryParam("primary", user.getLang())
+										.queryParam("lang", user.getLang())
 										.queryParam("offset", user.getOffset());
 		
 		RestTemplate rest             = new RestTemplate();
@@ -564,7 +564,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("primary", user.getLang())
+										.queryParam("lang", user.getLang())
 										.queryParam("deptId", deptId)
 										.queryParam("companyId", companyId);
 		
@@ -601,7 +601,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", user.getLang())
+										.queryParam("userId", user.getId())
+										.queryParam("lang", user.getLang())
 										.queryParam("level", level);
 		
 		RestTemplate rest             = new RestTemplate();
@@ -632,7 +633,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", user.getLang());
+										.queryParam("userId", user.getId())
+										.queryParam("lang", user.getLang());
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -671,7 +673,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("fileList", fileList)
 										.queryParam("type", type)
 										.queryParam("mode", mode)
-										.queryParam("primary", user.getLang())
+										.queryParam("lang", user.getLang())
 										.queryParam("offset", user.getOffset());
 		
 		RestTemplate rest             = new RestTemplate();
@@ -747,7 +749,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", user.getLang());
+										.queryParam("lang", user.getLang());
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -780,7 +782,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", user.getLang());
+										.queryParam("lang", user.getLang());
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -811,7 +813,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("deptList", String.join(",", deptsList))
 										.queryParam("offset", user.getOffset())
-										.queryParam("primary", user.getLang())
+										.queryParam("lang", user.getLang())
 										.queryParam("userId", user.getId());
 		
 		RestTemplate rest             = new RestTemplate();
@@ -876,7 +878,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("primary", user.getLang());
+										.queryParam("lang", user.getLang());
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
