@@ -51,7 +51,6 @@
 		    var pNoneActiveX = "${NoneActiveX}";
 		    var isSecureMail = "${isSecureMail}";
 		    var useReSend = "${useReSend}";
-		    var compareFolderName = "<spring:message code="ezEmail.t645" />";
 		    
 		    window.onresize = window_onresize;
 		    
@@ -61,7 +60,7 @@
 				
 				var g_szRootFolderName = g_paramURL.split('/');
 			    
-			    if (useReSend == "YES" && g_szRootFolderName[0] == compareFolderName) {
+			    if (useReSend == "YES" && sentItems.toUpperCase() == "TRUE") {
 		    		$('#liReSend').css('display', 'block');
 		    	} 
 			    

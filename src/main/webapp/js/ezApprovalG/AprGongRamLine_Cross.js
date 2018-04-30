@@ -672,8 +672,53 @@ function UpdateLineHistory(_DOCID) {
  * 결재->회람(공람)-> 부서추가
  * */
 function btn_addDepartment() {
+	/* 2018-04-27 천성준 부서추가시, 하위부서가 존재하면 '하위부서원들을 회람자에 포함하겠습니까?' 알럿창 뜨게 수정 */
+	var treeView = new TreeView();
+	treeView.LoadFromID("FromTreeView");
+	var selnode = treeView.GetSelectNode();
+	var deptID = selnode.GetNodeData("CN");
+	var jsonInfo;
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		url : "/ezOrgan/getAllDeptID",
+		async : false,
+		data : {
+			deptID : deptID
+		},
+		success : function(result) {
+			jsonInfo = JSON.parse(result);
+		}
+	});
+	/* 하위부서가 존재하면 */
+	if (jsonInfo.length >= 2) {
+		/* '하위 부서원을 모두 포함하시겠습니까?' confirm창 팝업 */
+		if (confirm(strLangPJG02)) { 
+			/* 하위 부서원 추가 로직 */
+			for (var i=jsonInfo.length-1; i>=0; i--) {
+				getUserInDept(jsonInfo[i].cn);
+			}
+		/* 취소 클릭시 */
+		} else {
+			/* 제일 상위부서 부서원만 추가 */
+			getUserInDept(jsonInfo[0].cn);
+		}
+	/* 하위부서가 존재 안하면 */
+	} else {
+		var listView = new ListView();
+		listView.LoadFromID("DivUserList");
+		var listObj = listView.GetDataRows();
+		/* 해당부서 부서원 추가 로직 */
+		for (var i = listObj.length-1; i >= 0; i --) {
+			APRLINEATTENDADDFunction(listObj[i], "PERSON");
+		}
+	}
+	
+	/*
+	function btn_addDepartment() {
 	// 포함할 경우 하위부서 정보를 전부 가져와서 처리
-	if (confirm(strLangPJG02)) {
+	 	if (confirm(strLangPJG02)) {
 		var treeView = new TreeView();
 		treeView.LoadFromID("FromTreeView");
 		var selnode = treeView.GetSelectNode();
@@ -699,13 +744,13 @@ function btn_addDepartment() {
 	} else {
 		var listView = new ListView();
 		listView.LoadFromID("DivUserList");
-	
 		var listObj = listView.GetDataRows();
 		
 		for (var i = listObj.length-1; i >= 0; i --) {
 			APRLINEATTENDADDFunction(listObj[i], "PERSON");
 		}
 	}
+	*/
 
 }
 // 부서원 정보를 가져온다.

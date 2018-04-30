@@ -15,6 +15,11 @@
 	        .instance.sbHolder{
 	            width: 100%;
 	        }
+	        /* 2018-04-30 천성준 - (#12523)선택메뉴 bold체로 표시안됨 */
+	        #left ul li.on, #TopBoards ul li.on{
+				font-weight:bold;
+				color:black;
+			}
 	    </style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.7.2.min.js"></script>

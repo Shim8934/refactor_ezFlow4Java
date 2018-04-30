@@ -7496,8 +7496,10 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezCommunity.t126", locale) + "<br><br>");
 			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", locale) + boardInfo.getBoardName());
-			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + EgovDateUtil.getToday(""));
-			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t119", locale) + userInfo.getDisplayName() + "(" + userInfo.getTitle() + ", " + userInfo.getCompanyName() + ")");
+			/* 2018-04-30 이소담 - 커뮤니티 > 답변 알림메일 송부 > 메일 > 게시일자, 게시자, 비정상적으로 표시되어서 수정 */
+//			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + EgovDateUtil.getToday(""));
+			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + vo.getWriteDate());
+			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t119", locale) + userInfo.getDisplayName() + "(" + userInfo.getTitle() + ", "  + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", locale) + "<a onclick=\"" + "item_View_New_Community('" + boardID + "', '" + itemID + "', '" + communityID + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">" + vo.getTitle() + "</a>");
         	bodyContent.append("</DIV>");
     		

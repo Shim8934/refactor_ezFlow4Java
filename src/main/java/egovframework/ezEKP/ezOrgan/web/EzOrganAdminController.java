@@ -2749,7 +2749,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
         try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					vo.getMail(), password, egovMessageSource, locale);
+					vo.getMail(), password, egovMessageSource, locale, ezEmailUtil);
 			
 			for (int i = 0; i < mailboxList.size(); i++) {
 				ia.createFolder(mailboxList.get(i));
