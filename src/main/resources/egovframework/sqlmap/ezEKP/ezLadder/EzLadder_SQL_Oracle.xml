@@ -1026,6 +1026,36 @@
 	</select>
 	
 	<select id="EzLadderDAO.selectPreList" parameterClass="map" resultClass="LadderVO">
+		<![CDATA[
+		SELECT 
+			INB.*
+		FROM ( 
+			SELECT 
+				ROWNUM AS RNUM, INA.*
+			FROM (
+				SELECT 
+					NVL(O.LADDERID, L.LADDERID) ORIG_ID, O.CHANGELADDERID, L.LADDERID, L.TYPE, L.TITLE, L.WRITERID
+				FROM 
+					TBL_LADDER_ORDER O
+				RIGHT JOIN 
+					TBL_LADDER L
+				ON 
+					L.LADDERID = O.CHANGELADDERID
+				WHERE 
+					L.TENANT_ID = #tenantId#
+				AND 
+					L.WRITERID = #userId#
+				AND
+					L.DELETEFLAG = 0
+				ORDER BY 
+					ORIG_ID DESC
+				) INA
+			) INB
+		WHERE 
+			INB.RNUM > #startPoint# AND INB.RNUM <= #startPoint# + #endPoint#
+		]]>
+	
+	
 		<!-- SELECT 
 			IFNULL(O.LADDERID, L.LADDERID) ORIG_ID, O.CHANGELADDERID, L.LADDERID, L.TYPE, L.TITLE, L.WRITERID
 		FROM 
