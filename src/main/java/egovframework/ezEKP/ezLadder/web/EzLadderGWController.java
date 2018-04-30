@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @RestController
@@ -41,7 +42,7 @@ public class EzLadderGWController {
 	private CommonUtil commonUtil;
 	
 	@Autowired
-	private Properties config;
+	private Properties globals;
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
@@ -151,17 +152,11 @@ public class EzLadderGWController {
 	 * */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ladder/ladders/writers/{writerId}/searchUser", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject gwSelectSearchUser(@PathVariable String writerId, @RequestBody String [] searchUserName, HttpServletRequest request) {
+	public JSONObject gwSelectSearchUser(@PathVariable String writerId, @RequestBody String [] searchUserName, int tenant_id, String lang, HttpServletRequest request) {
 		
 		JSONObject result = new JSONObject();
 		
 		try {
-			String serverName = request.getHeader("x-user-host");
-			
-			MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, writerId);
-			
-			int tenant_id = userInfo.getTenantId();
-			String lang = userInfo.getLang();
 			
 			List<LadderLineVO> resultUser = ezLadderService.selectSearchUser(searchUserName, tenant_id, lang);
 			
@@ -190,21 +185,30 @@ public class EzLadderGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
+			String dbType = globals.getProperty("Globals.DbType");
 			String todayDate = commonUtil.getTodayUTCTime("");
 			
 			String logCookie = (String) jsonBodys.get("loginCookie");
-			
-			MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, writerId);
 			
 			ladVO.setTitle((String) jsonBodys.get("title"));
 			ladVO.setType((String) jsonBodys.get("type"));
 			ladVO.setSecretFlag((String) jsonBodys.get("secretFlag"));
 			ladVO.setLineCnt((String) jsonBodys.get("lineCnt"));
-			ladVO.setWriterName(userInfo.getUserName());
-			ladVO.setWriterName2(userInfo.getUserName2());
-			ladVO.setDeptName(userInfo.getDeptName());
-			ladVO.setDeptName2(userInfo.getDeptName2());
 			ladVO.setWriteDate(todayDate);
+			
+			if(dbType.equals("mysql")) {
+				MCommonVO userInfo = MOptionService.commonInfoWeb(serverName, writerId);
+				ladVO.setWriterName(userInfo.getUserName());
+				ladVO.setWriterName2(userInfo.getUserName2());
+				ladVO.setDeptName(userInfo.getDeptName());
+				ladVO.setDeptName2(userInfo.getDeptName2());
+			} else {
+				LoginVO userInfo = commonUtil.userInfo(logCookie);
+				ladVO.setWriterName(userInfo.getDisplayName());
+				ladVO.setWriterName2(userInfo.getDisplayName2());
+				ladVO.setDeptName(userInfo.getDeptName());
+				ladVO.setDeptName2(userInfo.getDeptName2());
+			}
 			
 			ladLineVO.setUserIds((ArrayList<String>) jsonBodys.get("userIds"));
 			ladLineVO.setUserNames((ArrayList<String>) jsonBodys.get("userNames"));
