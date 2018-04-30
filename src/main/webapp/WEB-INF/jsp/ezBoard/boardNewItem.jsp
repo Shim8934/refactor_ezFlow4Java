@@ -1288,15 +1288,14 @@
 		                return;
 		        }
 		    }
+		    /* 2018-04-30 홍승비 - 게시물 수정, 답변 시 특수문자 처리 */
 		    function ConvMakeXMLString(str) {
-		        str = ReplaceText(str, "&amp;", "&");
 		        str = ReplaceText(str, "&lt;", "<");
 		        str = ReplaceText(str, "&gt;", ">");
-		        str = ReplaceText(str, "&quot;", "\"");
-		        str = ReplaceText(str, "&#39;", "'");
 		        str = ReplaceText(str, "&#039;", "'");
-		        str = ReplaceText(str, "&#034;", "\'");
-		        str = ReplaceText(str, "&#92;", "\\");
+		        str = ReplaceText(str, "&#034;", "\"");
+		  	    str = ReplaceText(str, "&amp;", "&");	    
+		  		str = ReplaceText(str, "&#92;", "\\");
 		        return str;
 		    }
 		    function GetSmallUrl() {

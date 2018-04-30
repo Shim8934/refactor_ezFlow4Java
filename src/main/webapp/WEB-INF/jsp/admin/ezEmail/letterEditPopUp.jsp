@@ -115,9 +115,9 @@
 				var letterJson = {};
 				
 				// p 태그 margin 
-				var pTagmargin = "<div id='pMargin'><style>p {margin-top:0; margin-bottom:0;}</style></div>";
+				var pTagmargin = "<style>p {margin-top:0; margin-bottom:0;}</style>";
 				
-				if (letterContent.indexOf("<div id='pMargin'>") == -1) {
+				if (letterContent.indexOf("<style") == -1) {
 					letterContent = pTagmargin + letterContent;
 				}
 				
