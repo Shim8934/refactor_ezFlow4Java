@@ -117,7 +117,7 @@
 				canvasSetting();
 			}
 			
-			if(mode !== "preview" && !stompClient.connected) {
+			if(mode !== "preview" && (!stompClient || !stompClient.connected)) {
 				// 프리뷰가 아닐때, 웹소켓이 끊겼을때 웹소켓 연결
 				getCmtSockConnect();
 			}
