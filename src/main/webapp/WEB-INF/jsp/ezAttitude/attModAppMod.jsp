@@ -48,6 +48,9 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        
+		        $("#Odatepicker").datepicker('disable');
+		        $("#Cdatepicker").datepicker('disable');
 		    }
 		    
 		    window.onresize = function () {   	
@@ -174,7 +177,11 @@
 				    	alert("수정 중 오류 발생")
 				    },
 				    success : function(json){
-						alert("수정되었습니다.");
+				    	console.log(json);
+						if(json == 1)
+							alert("수정되었습니다.");
+						else 
+							alert("이미 승인 혹은 반려된 항목입니다.");
 						window.close();
 			            try {
 			                window.opener.att_refresh();
