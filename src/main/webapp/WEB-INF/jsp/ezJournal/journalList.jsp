@@ -84,12 +84,12 @@
 					<c:if test="${listType eq 'recv' }">
 						<c:choose>
 							<c:when test="${journal.isView == 'noView'}">
-								<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px; width:25px;">
+								<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:25px;">
 									<img style="cursor:pointer; vertical-align: middle;" src="/images/ImgIcon/view-document.gif">
 								</td>
 							</c:when>
 							<c:otherwise>
-								<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px; width:25px;">
+								<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:25px;">
 									<img style="cursor:pointer; vertical-align: middle;" draggable="false" src="/images/ImgIcon/icon-msg-read.gif">
 								</td>
 							</c:otherwise>
@@ -118,12 +118,12 @@
 					</c:choose>
 					<c:choose>
 						<c:when test="${journal.fileCount ne 0}">
-							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px; width:20px;">
+							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:20px;">
 								<img src="/images/newAttach.gif" style="vertical-align: middle;">
 							</td>
 						</c:when>
 						<c:otherwise>
-							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0px; width:20px;"></td>
+							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:20px;"></td>
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${listType eq 'recv' or listType eq 'temp' }">
