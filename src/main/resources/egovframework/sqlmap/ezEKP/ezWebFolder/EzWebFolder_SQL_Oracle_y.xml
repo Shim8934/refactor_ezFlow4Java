@@ -424,7 +424,7 @@
     </select>
     
     
-    <select id="EzWebFolderDAO_y.getFileList" resultMap="fileVO" parameterClass="Map">   
+    <select id="EzWebFolderDAO_y.getFileList" resultMap="fileVO" parameterClass="Map">
     	<![CDATA[
     		select * 
     		from ( 
@@ -485,7 +485,7 @@
                 ) pchk 
 			where ROWNUM <= #pEnd# + #pStart#
             )
-        where rownums >= #pStart#
+        where rownums >= #pStart# + 1
 	]]>	
 	</select>
 		
@@ -558,7 +558,7 @@
 	           where ROWNUM <= #pEnd# + #pStart#
               
             )
-        where rownums >= #pStart#
+        where rownums >= #pStart# + 1
 
 		]]>	
 	</select>
@@ -615,7 +615,7 @@
 				where ROWNUM <= #pEnd# + #pStart#
 	              
 	            )
-	        where rownums >= #pStart#
+	        where rownums >= #pStart# + 1
 		]]>	
 	</select>
 	<select id="EzWebFolderDAO_y.searchFileListR" resultMap="fileVO" parameterClass="Map">
@@ -684,7 +684,7 @@
 				 ) pchk 
 				where ROWNUM <= #pEnd# + #pStart#
 	            )
-	        where rownums >= #pStart#
+	        where rownums >= #pStart# + 1
 		]]>	
 		
 	</select>

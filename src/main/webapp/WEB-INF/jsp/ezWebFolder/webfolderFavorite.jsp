@@ -7,6 +7,7 @@
 	<title>Insert title here</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
+	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>	
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -21,10 +22,6 @@
 	<script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
     <script type="text/javascript">
     	/* pagination variable: 리팩토링, 함수도 포함 대상임.	*/
-    		var pagination = {
-    			startIndex: 0,
-    			listCount: 0
-    		};
     	
     		var searchInfo = (function() {
     			var fileType = "";
@@ -39,45 +36,13 @@
     			};
     		}());
     	
-			function setBlockSize(changedSize) {
+			function setListSize(changedSize) {
 				blockSize = changedSize;
 				currentPage = 1;
 				
 				context.refreshList();
 			}
-    	
-    		var currentPage = 1;
-    		var blockSize = 0;
-    		var totalPages = 0;
-    		var totalRows = 0;
-    		
-    	    function goToPageByNum(page) {
-    	    	currentPage = page;
-    	        pagination.startIndex = (blockSize * (currentPage - 1));
-    	        pagination.listCount = blockSize;
-
-    	        context.refreshList();
-    	    }
     	    
-    	    // TODO: 리펙토링
-    	    function tempSetPage(totalCount, listCount) {
-    	    	blockSize = listCount;
-    	    	totalRows = totalCount;
-    	    	totalPages = Math.max(~~(totalRows / blockSize), 1);
-    	    	
-    	    	if (totalPages * blockSize < totalRows) {
-    	    		totalPages++;
-    	    	}
-    	    	
-    	    	if (currentPage > totalPages) {
-    	    		goToPageByNum(totalPages);
-    	    	}
-    	    }
-    	    
-    		var strLang39	= "<spring:message code = 'ezWebFolder.t135'/>";
-    		var strLang40 	= "<spring:message code = 'ezWebFolder.t136'/>";
-    		var strLang41   = "<spring:message code = 'ezWebFolder.t137'/>";
-    		var strLang42   = "<spring:message code = 'ezWebFolder.t138'/>";
    		/*********************************************/
     	
     	var context = (function() {
@@ -215,6 +180,10 @@
 				}
 			});
 			
+			pagination.setPageChangeEventHandler(function() {
+				context.refreshList();
+			});
+			
 			// load favorite list
 			context.setListAsFavorite();
 			window.onresize();
@@ -274,17 +243,18 @@
 					searchCreatorName : $('#searchCreateName').val(),
 					searchStartDate: $('#Sdatepicker').val(),
 					searchEndDate: $('#Edatepicker').val(),
-					startIndex : pagination.startIndex,
-					listCount : blockSize
+					startIndex : pagination.startPosition(),
+					listCount : pagination.listSize()
 				},
 				
 				success : function (result) {
 					result = result.data;
 					// TODO: 리펙토링
-					tempSetPage(result.totalCount, result.listCount);
+					pagination.setListSize(result.listCount);
+					pagination.setAmount(result.totalCount);
+					pagination.build(true);
 					
 					renderList(result.targetList, false);
-					makePageSelPage();
 					
 					setMailBoxInfo(result.folderCount, result.fileCount);
 				},
@@ -308,9 +278,9 @@
 				data : { 
 					 "folderId"   : folderId,
 					 "folderType" : folderType,
-					 "currPage"   : currentPage,
-					 "listCount"  : blockSize,
-					 "pStart" : pagination.startIndex,
+					 "currPage"   : pagination.currentPage(),
+					 "listCount"  : pagination.listSize(),
+					 "pStart" : pagination.startPosition(),
 					 "searchExt" : $('#searchExt').val(),
 					 "searchFileName" : $('#searchFileName').val(),
 					 "searchCreateName" : $('#searchCreateName').val(),
@@ -318,11 +288,10 @@
 				},
 				success : function (result) {
 					result = result.data;
-					
-					currentPage = result.currPage;
-					totalRows = result.totalRows;
- 					blockSize = result.listCount;
-					totalPages = result.totalPages;
+
+					pagination.setListSize(result.listCount);
+					pagination.setAmount(result.totalRows);
+					pagination.build(true);
 					
 					var dragDropArea = dom.dragDropArea;
 					
@@ -339,9 +308,7 @@
 					}
 					
 					renderList(result.fileList, true);
-					makePageSelPage();
 					setNamePath(result.folderPath, result.originalPath);
-					
 					setMailBoxInfo(result.fldCnt, result.fileCnt);
 				},
 				error : function(error) {
@@ -352,7 +319,7 @@
 		
 		function setMailBoxInfo(folderCount, fileCount) {
 			dom.mailBoxInfo.innerHTML = " - [ <spring:message code='ezWebFolder.t276'/> <span style='color:#017BEC;'>" + folderCount +" </span> / <spring:message code='ezWebFolder.t277'/> <span style='color:#017BEC;'>" + fileCount + "</span>" + message.count + "]";
-			$("#listcount").val(blockSize).prop("selected", true);
+			$("#listcount").val(pagination.listSize()).prop("selected", true);
 		}
 		
 		// originalPath 는 한글 path
@@ -823,7 +790,7 @@
 				searchInfo.fileType = ""
 			};
 			
-			goToPageByNum(1);
+			pagination.setPage(1);
 			searchInfo.clear();
 		}
     </script>
@@ -883,7 +850,7 @@
                     <tr>
                         <th><spring:message code='ezBoard.t10021' /></th>
                         <td>
-                            <select id="listcount" style="width: 40px; height: 20px;" onchange="setBlockSize(this.value);">
+                            <select id="listcount" style="width: 40px; height: 20px;" onchange="pagination.setListSize(this.value);pagination.build();">
                                 <option value="10">10</option>
                                 <option value="20">20</option>
                                 <option value="30">30</option>
