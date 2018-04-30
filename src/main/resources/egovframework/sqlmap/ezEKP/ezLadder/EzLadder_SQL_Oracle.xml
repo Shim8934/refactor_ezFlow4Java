@@ -54,109 +54,120 @@
 	<select id="EzLadderDAO.getLadderList" remapResults="true" resultClass="LadderVO">
 		<![CDATA[
 			SELECT
-				E.LADDERID, 
-				E.TYPE, 
-				E.TITLE,
-				E.WRITERID, 
-				E.WRITERNAME$lang$, 
-				TO_CHAR(TO_DATE(E.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
-				E.STATUS, 
-				E.SECRETFLAG, 
-				E.DELETEFLAG
+				*
 			FROM
-				TBL_LADDER E
-			WHERE 
-				E.DELETEFLAG = 0 
-			AND 
-				E.TENANT_ID = #tenantId# 
-			AND 
-				E.LADDERID in
 			(
-			SELECT
-				A.LADDERID
-			FROM 
-				TBL_LADDER A
-			WHERE 
-			]]>
-			<isEqual property="mode" compareValue="all">
-				<![CDATA[
-				A.SECRETFLAG = 0 or A.LADDERID = ANY(
-												SELECT 
-													B.LADDERID 
-                                        		FROM 
-                                        			TBL_LADDER B 
-                                        		JOIN 
-                                        			TBL_LADDER_LINE C
-                                        		ON 
-                                        			B.LADDERID = C.LADDERID
-												WHERE 
-													C.USERID = #userId#)
-			OR
-			]]>
-			</isEqual>
-				<![CDATA[
-				A.WRITERID = #userId# 
-            )
-            ORDER BY
-            ]]>
-            <isEqual property="sort" compareValue="basic">
-            <![CDATA[
-				WRITEDATE 
-			]]>
-			</isEqual> 
-            <isEqual property="sort" compareValue="type">
-            <![CDATA[
-				E.TYPE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="title">
-            <![CDATA[
-				E.TITLE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="writerName">
-            <![CDATA[
-				E.WRITERNAME
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="writeDate">
-            <![CDATA[
-				E.WRITEDATE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="status">
-            <![CDATA[
-				E.STATUS 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="secretFlag">
-            <![CDATA[
-				E.SECRETFLAG 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="deleteFlag">
-            <![CDATA[
+				SELECT 
+					ROWNUM AS RNUM, F.*
+				FROM
 				(
-					CASE E.WRITERID
-					WHEN #userId# THEN 2
-					ELSE 1
-					END
-				)
-			]]>
-			</isEqual>
-			<isEqual property="sortFlag" compareValue="desc">
-            <![CDATA[
-				DESC, E.LADDERID DESC
-			]]>
-			</isEqual>
-			<isNotEqual property="sortFlag" compareValue="desc">
-			 <![CDATA[
-				ASC, E.LADDERID ASC
-			]]>
-			</isNotEqual>
-	<!-- 		LIMIT 
-				#startPoint#, #endPoint#  -->
-		
+					SELECT
+						E.LADDERID, 
+						E.TYPE, 
+						E.TITLE,
+						E.WRITERID, 
+						E.WRITERNAME$lang$, 
+						TO_CHAR(TO_DATE(E.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+						E.STATUS, 
+						E.SECRETFLAG, 
+						E.DELETEFLAG
+					FROM
+						TBL_LADDER E
+					WHERE 
+						E.DELETEFLAG = 0 
+					AND 
+						E.TENANT_ID = #tenantId# 
+					AND 
+						E.LADDERID in
+					(
+					SELECT
+						A.LADDERID
+					FROM 
+						TBL_LADDER A
+					WHERE 
+					]]>
+					<isEqual property="mode" compareValue="all">
+						<![CDATA[
+						A.SECRETFLAG = 0 or A.LADDERID = ANY(
+														SELECT 
+															B.LADDERID 
+		                                        		FROM 
+		                                        			TBL_LADDER B 
+		                                        		JOIN 
+		                                        			TBL_LADDER_LINE C
+		                                        		ON 
+		                                        			B.LADDERID = C.LADDERID
+														WHERE 
+															C.USERID = #userId#)
+					OR
+					]]>
+					</isEqual>
+						<![CDATA[
+						A.WRITERID = #userId# 
+		            )
+		            ORDER BY
+		            ]]>
+		            <isEqual property="sort" compareValue="basic">
+		            <![CDATA[
+						WRITEDATE 
+					]]>
+					</isEqual> 
+		            <isEqual property="sort" compareValue="type">
+		            <![CDATA[
+						E.TYPE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="title">
+		            <![CDATA[
+						E.TITLE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writerName">
+		            <![CDATA[
+						E.WRITERNAME
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writeDate">
+		            <![CDATA[
+						E.WRITEDATE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="status">
+		            <![CDATA[
+						E.STATUS 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="secretFlag">
+		            <![CDATA[
+						E.SECRETFLAG 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="deleteFlag">
+		            <![CDATA[
+						(
+							CASE E.WRITERID
+							WHEN #userId# THEN 2
+							ELSE 1
+							END
+						)
+					]]>
+					</isEqual>
+					<isEqual property="sortFlag" compareValue="desc">
+		            <![CDATA[
+						DESC, E.LADDERID DESC
+					]]>
+					</isEqual>
+					<isNotEqual property="sortFlag" compareValue="desc">
+					 <![CDATA[
+						ASC, E.LADDERID ASC
+					]]>
+					</isNotEqual>
+				<![CDATA[
+					) F 
+				) 
+			WHERE
+				RNUM > #startPoint# AND RNUM <= #startPoint# + #endPoint#
+		]]>
 	</select>
 	
 	<select id="EzLadderDAO.getPartLadderCount" resultClass="Integer">
@@ -187,93 +198,103 @@
 	<select id="EzLadderDAO.getPartLadderList" remapResults="true" resultClass="LadderVO">
 		<![CDATA[
 			SELECT
-				A.LADDERID, 
-				A.TYPE, 
-				A.TITLE,
-				A.WRITERID, 
-				A.WRITERNAME$lang$, 
-				TO_CHAR(TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
-				A.STATUS, 
-				A.SECRETFLAG, 
-				A.DELETEFLAG
-			FROM 
-				TBL_LADDER A
-			WHERE
-				A.DELETEFLAG = 0
-			AND 
-				A.TENANT_ID = #tenantId#
-			AND 
-				A.LADDERID = ANY(
-								SELECT 
-									B.LADDERID 
-                                FROM 
-                                    TBL_LADDER B 
-                                JOIN 
-                                    TBL_LADDER_LINE C
-                                ON 
-                                    B.LADDERID = C.LADDERID
-								WHERE 
-									C.USERID = #userId#)
-			ORDER BY
-			 ]]>
-			<isEqual property="sort" compareValue="basic">
-            <![CDATA[
-				A.WRITEDATE 
-			]]>
-			</isEqual>   
-            <isEqual property="sort" compareValue="type">
-            <![CDATA[
-				A.TYPE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="title">
-            <![CDATA[
-				A.TITLE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="writerName">
-            <![CDATA[
-				A.WRITERNAME
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="writeDate">
-            <![CDATA[
-				A.WRITEDATE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="status">
-            <![CDATA[
-				A.STATUS 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="secretFlag">
-            <![CDATA[
-				A.SECRETFLAG 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="deleteFlag">
-            <![CDATA[
+				*
+			FROM
+			(
+				SELECT
+					ROWNUM AS RNUM, D.*
+				FROM 
 				(
-					CASE A.WRITERID
-					WHEN #userId# THEN 2
-					ELSE 1
-					END
-				)
+					SELECT
+						A.LADDERID, 
+						A.TYPE, 
+						A.TITLE,
+						A.WRITERID, 
+						A.WRITERNAME$lang$, 
+						TO_CHAR(TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+						A.STATUS, 
+						A.SECRETFLAG, 
+						A.DELETEFLAG
+					FROM 
+						TBL_LADDER A
+					WHERE
+						A.DELETEFLAG = 0
+					AND 
+						A.TENANT_ID = #tenantId#
+					AND 
+						A.LADDERID = ANY(
+										SELECT 
+											B.LADDERID 
+		                                FROM 
+		                                    TBL_LADDER B 
+		                                JOIN 
+		                                    TBL_LADDER_LINE C
+		                                ON 
+		                                    B.LADDERID = C.LADDERID
+										WHERE 
+											C.USERID = #userId#)
+					ORDER BY
+					 ]]>
+					<isEqual property="sort" compareValue="basic">
+		            <![CDATA[
+						A.WRITEDATE 
+					]]>
+					</isEqual>   
+		            <isEqual property="sort" compareValue="type">
+		            <![CDATA[
+						A.TYPE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="title">
+		            <![CDATA[
+						A.TITLE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writerName">
+		            <![CDATA[
+						A.WRITERNAME
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writeDate">
+		            <![CDATA[
+						A.WRITEDATE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="status">
+		            <![CDATA[
+						A.STATUS 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="secretFlag">
+		            <![CDATA[
+						A.SECRETFLAG 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="deleteFlag">
+		            <![CDATA[
+						(
+							CASE A.WRITERID
+							WHEN #userId# THEN 2
+							ELSE 1
+							END
+						)
+					]]>
+					</isEqual>
+					<isEqual property="sortFlag" compareValue="desc">
+		            <![CDATA[
+						DESC, A.LADDERID DESC
+					]]>
+					</isEqual>
+					<isNotEqual property="sortFlag" compareValue="desc">
+					 <![CDATA[
+						ASC, A.LADDERID ASC
+					]]>
+					</isNotEqual>
+					<![CDATA[
+					) D)	
+				WHERE
+					RNUM > #startPoint# AND RNUM <= #startPoint# + #endPoint# 
 			]]>
-			</isEqual>
-			<isEqual property="sortFlag" compareValue="desc">
-            <![CDATA[
-				DESC, A.LADDERID DESC
-			]]>
-			</isEqual>
-			<isNotEqual property="sortFlag" compareValue="desc">
-			 <![CDATA[
-				ASC, A.LADDERID ASC
-			]]>
-			</isNotEqual>
-<!-- 			LIMIT 
-				#startPoint#, #endPoint#  -->
-	
 	</select>
 	
 	<select id="EzLadderDAO.searchSPartLadderCount" resultClass="Integer">
@@ -367,105 +388,15 @@
 		<isEqual property="searchSelect" compareValue="participant">
 		<![CDATA[
 			SELECT
-			DISTINCT 
-				A.LADDERID, 
-				A.TYPE, 
-				A.TITLE,
-				A.WRITERID, 
-				A.WRITERNAME$lang$, 
-				TO_CHAR(TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
-				A.STATUS, 
-				A.SECRETFLAG, 
-				A.DELETEFLAG
-			FROM 
-				TBL_LADDER A 
-			JOIN 
-				TBL_LADDER_LINE D
-			ON
-				A.LADDERID = D.LADDERID
-			WHERE
-				A.DELETEFLAG = 0
-			AND 
-				A.TENANT_ID = #tenantId#
-			AND 
-				A.LADDERID = ANY(
-								SELECT 
-									B.LADDERID 
-                                FROM 
-                                    TBL_LADDER B 
-                                JOIN 
-                                    TBL_LADDER_LINE C
-                                ON 
-                                    B.LADDERID = C.LADDERID
-								WHERE 
-									C.USERID = #userId#
-								) 
-			AND 
-				D.USERNAME
-			LIKE '%'||#searchInput#||'%'
-			ORDER BY 
-			 ]]>
-			<isEqual property="sort" compareValue="basic">
-            <![CDATA[
-				WRITEDATE 
-			]]>
-			</isEqual>   
-            <isEqual property="sort" compareValue="type">
-            <![CDATA[
-				A.TYPE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="title">
-            <![CDATA[
-				A.TITLE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="writerName">
-            <![CDATA[
-				A.WRITERNAME
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="writeDate">
-            <![CDATA[
-				A.WRITEDATE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="status">
-            <![CDATA[
-				A.STATUS 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="secretFlag">
-            <![CDATA[
-				A.SECRETFLAG 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="deleteFlag">
-            <![CDATA[
-				(
-					CASE A.WRITERID
-					WHEN #userId# THEN 2
-					ELSE 1
-					END
-				)
-			]]>
-			</isEqual>
-			<isEqual property="sortFlag" compareValue="desc">
-            <![CDATA[
-				DESC, A.LADDERID DESC
-			]]>
-			</isEqual>
-			<isNotEqual property="sortFlag" compareValue="desc">
-			 <![CDATA[
-				ASC, A.LADDERID ASC
-			]]>
-			</isNotEqual>
-		<!-- 	LIMIT 
-				#startPoint#, #endPoint#  -->
-		</isEqual>
-		<isNotEqual property="searchSelect" compareValue="participant">
-			<![CDATA[
+				*
+			FROM
+			(
 				SELECT
+					ROWNUM AS RNUM, E.*
+				FROM 
+				(
+				SELECT
+				DISTINCT 
 					A.LADDERID, 
 					A.TYPE, 
 					A.TITLE,
@@ -476,7 +407,11 @@
 					A.SECRETFLAG, 
 					A.DELETEFLAG
 				FROM 
-					TBL_LADDER A
+					TBL_LADDER A 
+				JOIN 
+					TBL_LADDER_LINE D
+				ON
+					A.LADDERID = D.LADDERID
 				WHERE
 					A.DELETEFLAG = 0
 				AND 
@@ -492,91 +427,197 @@
 	                                ON 
 	                                    B.LADDERID = C.LADDERID
 									WHERE 
-										C.USERID = #userId#)
-				]]>
-				<isEqual property="searchSelect" compareValue="title">
-			  	<![CDATA[
-			  		AND
-						A.TITLE
-					LIKE '%'||#searchInput#||'%'
-				]]>	  
-				</isEqual>
-				<isEqual property="searchSelect" compareValue="kind">
-			  	<![CDATA[
-			  		AND
-						A.TYPE
-					LIKE '%'||#searchInput#||'%'
-				]]>	  
-				</isEqual>
-				<isEqual property="searchSelect" compareValue="writer">
-			  	<![CDATA[
-			  		AND
-						A.WRITERNAME
-					LIKE '%'||#searchInput#||'%'
-				]]>	  
-				</isEqual>
-				<![CDATA[
-					ORDER BY 
+										C.USERID = #userId#
+									) 
+				AND 
+					D.USERNAME
+				LIKE '%'||#searchInput#||'%'
+				ORDER BY 
 				 ]]>
-			<isEqual property="sort" compareValue="basic">
-            <![CDATA[
-				WRITEDATE 
+				<isEqual property="sort" compareValue="basic">
+	            <![CDATA[
+					WRITEDATE 
+				]]>
+				</isEqual>   
+	            <isEqual property="sort" compareValue="type">
+	            <![CDATA[
+					A.TYPE 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="title">
+	            <![CDATA[
+					A.TITLE 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="writerName">
+	            <![CDATA[
+					A.WRITERNAME
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="writeDate">
+	            <![CDATA[
+					A.WRITEDATE 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="status">
+	            <![CDATA[
+					A.STATUS 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="secretFlag">
+	            <![CDATA[
+					A.SECRETFLAG 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="deleteFlag">
+	            <![CDATA[
+					(
+						CASE A.WRITERID
+						WHEN #userId# THEN 2
+						ELSE 1
+						END
+					)
+				]]>
+				</isEqual>
+				<isEqual property="sortFlag" compareValue="desc">
+	            <![CDATA[
+					DESC, A.LADDERID DESC
+				]]>
+				</isEqual>
+				<isNotEqual property="sortFlag" compareValue="desc">
+				 <![CDATA[
+					ASC, A.LADDERID ASC
+				]]>
+				</isNotEqual>
+				 <![CDATA[
+				) E)
+				WHERE 
+					RNUM > #startPoint# AND RNUM<= #startPoint# + #endPoint#
 			]]>
-			</isEqual> 	  
-            <isEqual property="sort" compareValue="type">
-            <![CDATA[
-				A.TYPE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="title">
-            <![CDATA[
-				A.TITLE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="writerName">
-            <![CDATA[
-				A.WRITERNAME
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="writeDate">
-            <![CDATA[
-				A.WRITEDATE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="status">
-            <![CDATA[
-				A.STATUS 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="secretFlag">
-            <![CDATA[
-				A.SECRETFLAG 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="deleteFlag">
-            <![CDATA[
+		</isEqual>
+		<isNotEqual property="searchSelect" compareValue="participant">
+			<![CDATA[
+				SELECT
+					*
+				FROM
 				(
-					CASE A.WRITERID
-					WHEN #userId# THEN 2
-					ELSE 1
-					END
-				)
-			]]>
-			</isEqual>
-			<isEqual property="sortFlag" compareValue="desc">
-            <![CDATA[
-				DESC, A.LADDERID DESC
-			]]>
-			</isEqual>
-			<isNotEqual property="sortFlag" compareValue="desc">
-			 <![CDATA[
-				ASC, A.LADDERID ASC
-			]]>
-			</isNotEqual>
-			
-				<!-- 	LIMIT 
-						#startPoint#, #endPoint#  -->
-			
+					SELECT
+						ROWNUM AS RNUM, D.*
+					FROM 
+					(
+						SELECT
+							A.LADDERID, 
+							A.TYPE, 
+							A.TITLE,
+							A.WRITERID, 
+							A.WRITERNAME$lang$, 
+							TO_CHAR(TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+							A.STATUS, 
+							A.SECRETFLAG, 
+							A.DELETEFLAG
+						FROM 
+							TBL_LADDER A
+						WHERE
+							A.DELETEFLAG = 0
+						AND 
+							A.TENANT_ID = #tenantId#
+						AND 
+							A.LADDERID = ANY(
+											SELECT 
+												B.LADDERID 
+			                                FROM 
+			                                    TBL_LADDER B 
+			                                JOIN 
+			                                    TBL_LADDER_LINE C
+			                                ON 
+			                                    B.LADDERID = C.LADDERID
+											WHERE 
+												C.USERID = #userId#)
+						]]>
+						<isEqual property="searchSelect" compareValue="title">
+					  	<![CDATA[
+					  		AND
+								A.TITLE
+							LIKE '%'||#searchInput#||'%'
+						]]>	  
+						</isEqual>
+						<isEqual property="searchSelect" compareValue="kind">
+					  	<![CDATA[
+					  		AND
+								A.TYPE
+							LIKE '%'||#searchInput#||'%'
+						]]>	  
+						</isEqual>
+						<isEqual property="searchSelect" compareValue="writer">
+					  	<![CDATA[
+					  		AND
+								A.WRITERNAME
+							LIKE '%'||#searchInput#||'%'
+						]]>	  
+						</isEqual>
+						<![CDATA[
+							ORDER BY 
+						 ]]>
+					<isEqual property="sort" compareValue="basic">
+		            <![CDATA[
+						WRITEDATE 
+					]]>
+					</isEqual> 	  
+		            <isEqual property="sort" compareValue="type">
+		            <![CDATA[
+						A.TYPE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="title">
+		            <![CDATA[
+						A.TITLE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writerName">
+		            <![CDATA[
+						A.WRITERNAME
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writeDate">
+		            <![CDATA[
+						A.WRITEDATE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="status">
+		            <![CDATA[
+						A.STATUS 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="secretFlag">
+		            <![CDATA[
+						A.SECRETFLAG 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="deleteFlag">
+		            <![CDATA[
+						(
+							CASE A.WRITERID
+							WHEN #userId# THEN 2
+							ELSE 1
+							END
+						)
+					]]>
+					</isEqual>
+					<isEqual property="sortFlag" compareValue="desc">
+		            <![CDATA[
+						DESC, A.LADDERID DESC
+					]]>
+					</isEqual>
+					<isNotEqual property="sortFlag" compareValue="desc">
+					 <![CDATA[
+						ASC, A.LADDERID ASC
+					]]>
+					</isNotEqual>
+					<![CDATA[
+						)D)
+					WHERE 
+						RNUM > #startPoint# AND RNUM <= #startPoint# + #endPoint#
+				]]>
         </isNotEqual> 
 	</select>
 	
@@ -696,243 +737,261 @@
 		<isEqual property="searchSelect" compareValue="participant">
 		<![CDATA[
 			SELECT
-			DISTINCT
-				D.LADDERID, 
-				D.TYPE, 
-				D.TITLE,
-				D.WRITERID, 
-				D.WRITERNAME$lang$, 
-				TO_CHAR(TO_DATE(D.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
-				D.STATUS, 
-				D.SECRETFLAG, 
-				D.DELETEFLAG
+				*
 			FROM
-				TBL_LADDER D
-			JOIN
-				TBL_LADDER_LINE E
-			ON
-				D.LADDERID = E.LADDERID
-			WHERE
-				D.DELETEFLAG = 0
-			AND 
-				D.TENANT_ID = #tenantId#
-			AND
-				D.LADDERID IN 
-							(
-							SELECT 
-								A.LADDERID
-							FROM 
-								TBL_LADDER A
-							WHERE 
-								A.SECRETFLAG = 0 or A.LADDERID = ANY(
-																SELECT 
-																	B.LADDERID 
-																FROM 
-																	TBL_LADDER B 
-																JOIN 
-																	TBL_LADDER_LINE C
-																ON 
-																	B.LADDERID = C.LADDERID
-																WHERE 
-																	C.USERID = #userId#)
-							OR
-								A.WRITERID = #userId#
-							)
-			AND 
-				E.USERNAME
-			LIKE '%'||#searchInput#||'%'
-			ORDER BY
-			 ]]>
-			<isEqual property="sort" compareValue="basic">
-            <![CDATA[
-				WRITEDATE 
-			]]>
-			</isEqual>   
-            <isEqual property="sort" compareValue="type">
-            <![CDATA[
-				D.TYPE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="title">
-            <![CDATA[
-				D.TITLE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="writerName">
-            <![CDATA[
-				D.WRITERNAME
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="writeDate">
-            <![CDATA[
-				D.WRITEDATE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="status">
-            <![CDATA[
-				D.STATUS 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="secretFlag">
-            <![CDATA[
-				D.SECRETFLAG 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="deleteFlag">
-            <![CDATA[
+			(
+				SELECT
+					ROWNUM AS RNUM, F.*
+				FROM
 				(
-					CASE D.WRITERID
-					WHEN #userId# THEN 2
-					ELSE 1
-					END
-				)
-			]]>
-			</isEqual>
-			<isEqual property="sortFlag" compareValue="desc">
-            <![CDATA[
-				DESC, D.LADDERID DESC
-			]]>
-			</isEqual>
-			<isNotEqual property="sortFlag" compareValue="desc">
-			 <![CDATA[
-				ASC, D.LADDERID ASC
-			]]>
-			</isNotEqual>
-			
-		<!-- 	LIMIT 
-				#startPoint#, #endPoint#  -->
-
+					SELECT
+					DISTINCT
+						D.LADDERID, 
+						D.TYPE, 
+						D.TITLE,
+						D.WRITERID, 
+						D.WRITERNAME$lang$, 
+						TO_CHAR(TO_DATE(D.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+						D.STATUS, 
+						D.SECRETFLAG, 
+						D.DELETEFLAG
+					FROM
+						TBL_LADDER D
+					JOIN
+						TBL_LADDER_LINE E
+					ON
+						D.LADDERID = E.LADDERID
+					WHERE
+						D.DELETEFLAG = 0
+					AND 
+						D.TENANT_ID = #tenantId#
+					AND
+						D.LADDERID IN 
+									(
+									SELECT 
+										A.LADDERID
+									FROM 
+										TBL_LADDER A
+									WHERE 
+										A.SECRETFLAG = 0 or A.LADDERID = ANY(
+																		SELECT 
+																			B.LADDERID 
+																		FROM 
+																			TBL_LADDER B 
+																		JOIN 
+																			TBL_LADDER_LINE C
+																		ON 
+																			B.LADDERID = C.LADDERID
+																		WHERE 
+																			C.USERID = #userId#)
+									OR
+										A.WRITERID = #userId#
+									)
+					AND 
+						E.USERNAME
+					LIKE '%'||#searchInput#||'%'
+					ORDER BY
+					 ]]>
+					<isEqual property="sort" compareValue="basic">
+		            <![CDATA[
+						WRITEDATE 
+					]]>
+					</isEqual>   
+		            <isEqual property="sort" compareValue="type">
+		            <![CDATA[
+						D.TYPE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="title">
+		            <![CDATA[
+						D.TITLE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writerName">
+		            <![CDATA[
+						D.WRITERNAME
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="writeDate">
+		            <![CDATA[
+						D.WRITEDATE 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="status">
+		            <![CDATA[
+						D.STATUS 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="secretFlag">
+		            <![CDATA[
+						D.SECRETFLAG 
+					]]>
+					</isEqual>
+					<isEqual property="sort" compareValue="deleteFlag">
+		            <![CDATA[
+						(
+							CASE D.WRITERID
+							WHEN #userId# THEN 2
+							ELSE 1
+							END
+						)
+					]]>
+					</isEqual>
+					<isEqual property="sortFlag" compareValue="desc">
+		            <![CDATA[
+						DESC, D.LADDERID DESC
+					]]>
+					</isEqual>
+					<isNotEqual property="sortFlag" compareValue="desc">
+					 <![CDATA[
+						ASC, D.LADDERID ASC
+					]]>
+					</isNotEqual>
+					 <![CDATA[
+						)F)
+					WHERE
+						RNUM > #startPoint# AND RNUM < #startPoint# + #endPoint#
+				]]>
 		</isEqual>
 		<isNotEqual property="searchSelect" compareValue="participant">
 			<![CDATA[
 				SELECT
-					D.LADDERID, 
-					D.TYPE, 
-					D.TITLE,
-					D.WRITERID,
-					D.WRITERNAME$lang$,
-					TO_CHAR(TO_DATE(D.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
-					D.STATUS, 
-					D.SECRETFLAG, 
-					D.DELETEFLAG
+					*
 				FROM
-					TBL_LADDER D
-				WHERE
-					D.DELETEFLAG = 0
-				AND 
-					D.TENANT_ID = #tenantId#
-				AND
-					D.LADDERID IN 
-								(
-								SELECT 
-									A.LADDERID
-								FROM 
-									TBL_LADDER A
-								WHERE 
-								]]>
-								<isEqual property="mode" compareValue="all">
-									<![CDATA[
-									A.SECRETFLAG = 0 or A.LADDERID = ANY(
-																	SELECT 
-																		B.LADDERID 
-																	FROM 
-																		TBL_LADDER B 
-																	JOIN 
-																		TBL_LADDER_LINE C
-																	ON 
-																		B.LADDERID = C.LADDERID
-																	WHERE 
-																		C.USERID = #userId#)
-								OR
-								]]>
-								</isEqual>
-									<![CDATA[
-									A.WRITERID = #userId#
-								)
-				]]>
-				<isEqual property="searchSelect" compareValue="title">
-			  	<![CDATA[
-			  		AND
-						D.TITLE
-					LIKE '%'||#searchInput#||'%'
-				]]>	  
-				</isEqual>
-				<isEqual property="searchSelect" compareValue="kind">
-			  	<![CDATA[
-			  		AND
-						D.TYPE
-					LIKE '%'||#searchInput#||'%'
-				]]>	  
-				</isEqual>
-				<isEqual property="searchSelect" compareValue="writer">
-			  	<![CDATA[
-			  		AND
-						D.WRITERNAME
-					LIKE '%'||#searchInput#||'%'
-				]]>	  
-				</isEqual>
-				<![CDATA[
-					ORDER BY 
-					 ]]>
-			<isEqual property="sort" compareValue="basic">
-            <![CDATA[
-				WRITEDATE 
-			]]>
-			</isEqual> 		  
-            <isEqual property="sort" compareValue="type">
-            <![CDATA[
-				D.TYPE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="title">
-            <![CDATA[
-				D.TITLE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="writerName">
-            <![CDATA[
-				D.WRITERNAME
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="writeDate">
-            <![CDATA[
-				D.WRITEDATE 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="status">
-            <![CDATA[
-				D.STATUS 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="secretFlag">
-            <![CDATA[
-				D.SECRETFLAG 
-			]]>
-			</isEqual>
-			<isEqual property="sort" compareValue="deleteFlag">
-            <![CDATA[
 				(
-					CASE D.WRITERID
-					WHEN #userId# THEN 2
-					ELSE 1
-					END
-				)
+					SELECT
+						ROWNUM AS RNUM, E.*
+					FROM
+					(
+					SELECT
+						D.LADDERID, 
+						D.TYPE, 
+						D.TITLE,
+						D.WRITERID,
+						D.WRITERNAME$lang$,
+						TO_CHAR(TO_DATE(D.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+						D.STATUS, 
+						D.SECRETFLAG, 
+						D.DELETEFLAG
+					FROM
+						TBL_LADDER D
+					WHERE
+						D.DELETEFLAG = 0
+					AND 
+						D.TENANT_ID = #tenantId#
+					AND
+						D.LADDERID IN 
+									(
+									SELECT 
+										A.LADDERID
+									FROM 
+										TBL_LADDER A
+									WHERE 
+									]]>
+									<isEqual property="mode" compareValue="all">
+										<![CDATA[
+										A.SECRETFLAG = 0 or A.LADDERID = ANY(
+																		SELECT 
+																			B.LADDERID 
+																		FROM 
+																			TBL_LADDER B 
+																		JOIN 
+																			TBL_LADDER_LINE C
+																		ON 
+																			B.LADDERID = C.LADDERID
+																		WHERE 
+																			C.USERID = #userId#)
+									OR
+									]]>
+									</isEqual>
+										<![CDATA[
+										A.WRITERID = #userId#
+									)
+					]]>
+					<isEqual property="searchSelect" compareValue="title">
+				  	<![CDATA[
+				  		AND
+							D.TITLE
+						LIKE '%'||#searchInput#||'%'
+					]]>	  
+					</isEqual>
+					<isEqual property="searchSelect" compareValue="kind">
+				  	<![CDATA[
+				  		AND
+							D.TYPE
+						LIKE '%'||#searchInput#||'%'
+					]]>	  
+					</isEqual>
+					<isEqual property="searchSelect" compareValue="writer">
+				  	<![CDATA[
+				  		AND
+							D.WRITERNAME
+						LIKE '%'||#searchInput#||'%'
+					]]>	  
+					</isEqual>
+					<![CDATA[
+						ORDER BY 
+						 ]]>
+				<isEqual property="sort" compareValue="basic">
+	            <![CDATA[
+					WRITEDATE 
+				]]>
+				</isEqual> 		  
+	            <isEqual property="sort" compareValue="type">
+	            <![CDATA[
+					D.TYPE 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="title">
+	            <![CDATA[
+					D.TITLE 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="writerName">
+	            <![CDATA[
+					D.WRITERNAME
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="writeDate">
+	            <![CDATA[
+					D.WRITEDATE 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="status">
+	            <![CDATA[
+					D.STATUS 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="secretFlag">
+	            <![CDATA[
+					D.SECRETFLAG 
+				]]>
+				</isEqual>
+				<isEqual property="sort" compareValue="deleteFlag">
+	            <![CDATA[
+					(
+						CASE D.WRITERID
+						WHEN #userId# THEN 2
+						ELSE 1
+						END
+					)
+				]]>
+				</isEqual>
+				<isEqual property="sortFlag" compareValue="desc">
+	            <![CDATA[
+					DESC, D.LADDERID DESC
+				]]>
+				</isEqual>
+				<isNotEqual property="sortFlag" compareValue="desc">
+				 <![CDATA[
+					ASC, D.LADDERID ASC
+				]]>
+				</isNotEqual>
+				 <![CDATA[
+					)E)
+				WHERE 
+					RNUM > #startPoint# AND RNUM <= #startPoint# + #endPoint#
 			]]>
-			</isEqual>
-			<isEqual property="sortFlag" compareValue="desc">
-            <![CDATA[
-				DESC, D.LADDERID DESC
-			]]>
-			</isEqual>
-			<isNotEqual property="sortFlag" compareValue="desc">
-			 <![CDATA[
-				ASC, D.LADDERID ASC
-			]]>
-			</isNotEqual>
-			
-				<!-- 	LIMIT 
-						#startPoint#, #endPoint#  -->
-			
         </isNotEqual> 
 	</select>
 
