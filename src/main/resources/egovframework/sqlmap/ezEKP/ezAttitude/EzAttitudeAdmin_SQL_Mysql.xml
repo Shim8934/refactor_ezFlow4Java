@@ -641,10 +641,12 @@
 				starttime DESC
 		</isEmpty>
 		
-		<![CDATA[
-			LIMIT
-				#limit#, #listSize#
-		]]>
+		<isNotEmpty property="listSize">
+			<![CDATA[
+				LIMIT
+					#limit#, #listSize#
+			]]>
+		</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
