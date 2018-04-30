@@ -44,8 +44,8 @@
 		
 		$(window).unload(function() {
 			if (stompClient !== null) {
-		        stompClient.disconnect();
-		    }
+				stompClient.disconnect();
+			}
 		});
 		
 		/** 페이지 들어갔을때 스크롤 사다리 위쪽으로 바로 이동시켜주는 펑션 */
@@ -117,8 +117,8 @@
 				canvasSetting();
 			}
 			
-			if(mode !== "preview") {
-				// 프리뷰가 아닐때 댓글 웹소켓 연결
+			if(mode !== "preview" && !stompClient.connected) {
+				// 프리뷰가 아닐때, 웹소켓이 끊겼을때 웹소켓 연결
 				getCmtSockConnect();
 			}
 			
@@ -476,7 +476,7 @@
 				},
 				success: function(data) {
 					var cmt = data["myComment"];
-					var picsrc = !cmt["pic"] ? "/images/ezLadder/icon_defaultAttendant.png" : cmt["pic"];
+					var picsrc = !cmt["pic"] ? "/images/ezLadder/icon_defaultAttendant.png" : "/admin/ezOrgan/getPersonalInfo.do?fileName=" + cmt["pic"];
 					if(flag == "add") { 
 						// add
 						var html = '<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="' + cmt["id"] + '">';
@@ -558,13 +558,13 @@
 				var editTemp= $("#cmtArea" + editComtFlag).html();
 				editTemp = editTemp.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n');
 				
-				html += '<div style="display: inline-block;">';
-				html += '<div style="display: block; float:left; border:1px solid #ddd;padding-left: 0px;margin-left: 20px; width: 1310px; border-radius: 3px;">';
-				html += '<textarea id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow: hidden; outline: none; border: none; resize: none; padding: 5px; width: 1300px; height: 20px;" maxlength="500">';
+				html += '<div style="display: inline-block; width: 100%; margin-top: 5px;">';
+				html += '<div style="display: block; float:left; border:1px solid #ddd;padding: 0 5px;;margin-left: 20px; border-radius: 3px; width: 95%; height: 30px; overflow: hidden;">';
+				html += '<textarea id="editCmtArea' + editComtFlag + '" cols="20" rows="1" style="display: inline-block; overflow-y: auto; outline: none; border: none; resize: none; padding: 0; margin: 5px 0; height: 20px; width: 100%; line-height: 20px;" maxlength="500">';
 				html += editTemp + '</textarea></div></div>';
 				html += '<div style="padding: 5px 0px 5px 20px; clear: both;">';
-				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '"><spring:message code="ezLadder.t087" /></button>';
-				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '" style="background-color: rgb(0, 72, 150);"><spring:message code="ezLadder.t072" /></button></div>';
+				html += '<button id="clA1cmt' + editComtFlag + '" class="voteCancelBttn" _comtindex="' + editComtFlag + '" style="width: 46px;"><spring:message code="ezLadder.t087" /></button>';
+				html += '<button id="clA2cmt' + editComtFlag + '" class="voteSaveBttn" _comtindex="' + editComtFlag + '"><spring:message code="ezLadder.t072" /></button></div>';
 			} 
 			
 			$("#div2Cmt" + comtIndex).toggle();
@@ -917,7 +917,16 @@
 					<c:forEach var="_comt" items="${cmtlist}">
 						<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="<c:out value ="${_comt.id}" />">
 							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
-								<div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;"><img src="${empty _comt.pic ? '/images/ezLadder/icon_defaultAttendant.png' : _comt.pic}" style="height: 38px; width:38px;"></div>
+								<div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;">
+								<c:choose>
+									<c:when test="${empty _comt.pic}">
+										<img src="/images/ezLadder/icon_defaultAttendant.png" style="height: 38px; width:38px;">
+									</c:when>
+									<c:otherwise>
+										<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${_comt.pic}" style="height: 38px; width:38px;">
+									</c:otherwise>
+								</c:choose>
+								</div>
 							</td>
 							<td>
 								<div class="userName">${_comt.userName}</div>

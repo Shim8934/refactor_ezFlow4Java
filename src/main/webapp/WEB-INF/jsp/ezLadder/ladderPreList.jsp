@@ -130,13 +130,31 @@
 			
 			function showLadderPreview() {
 				var previewSrc = "/ezLadder/getLadderGame.do?ladderId=" + ladderID + "&mode=preview";
+				
 				var $ladderPreview = $("#ladderPreview");
 				$(".ladderPreList_right").scrollTop(0);
 				$ladderPreview.attr("src", previewSrc);
-				if($ladderPreview.css("height") === "0px") {
-					$ladderPreview.css("height", "1202px");
+				
+				/* var previewH = document.getElementById("ladderPreview").contentWindow.document.body.clientHeight;
+				$ladderPreview.css("height", previewH + "px"); */
+				
+				/* if($ladderPreview.css("height") === "0px") {
 					$("#ladderPreviewLayer").css("height", "1178px");
+				} */
+			}
+			function onMyFrameLoad(obj) {
+				var previewObj = obj.contentWindow || obj.contentDocument;
+				console.log(previewObj);
+				if(previewObj.document) {
+					previewObj = previewObj.document;
 				}
+				
+				/* var clientH = previewObj.documentElement.clientHeight;
+				var offsetH = previewObj.documentElement.offsetHeight; */
+				var finalH = previewObj.documentElement.offsetHeight;
+				
+				obj.style.height = finalH + "px";
+				$("#ladderPreviewLayer").css("height", (finalH - 30) + "px")
 			}
 			
 			$(function() {
@@ -299,7 +317,7 @@
 						</div>
 						<div class="ladderPreList_right" style="position: relative;">
 							<div id="ladderPreviewLayer" style="width: 894px; position: absolute; z-index: 1000; background: white; opacity: 0;"></div>
-							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 877px;"></iframe>
+							<iframe id="ladderPreview" src="" scrolling="no" frameborder="0" style="width: 877px;" onload="onMyFrameLoad(this)"></iframe>
 						</div>
 					</div>
 				</div>
