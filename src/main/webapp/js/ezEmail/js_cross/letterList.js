@@ -240,6 +240,13 @@ function letterListCss(pageType, searchMode) {
 	}
 }
 
+// 미리보기 onload
+function onloadPreview(ifr) {
+	var ifrHead = $(ifr).contents().find("head");
+	
+	$(ifrHead).html("<style>p {margin-top: 0; margin-bottom: 0;}</style>");
+}
+
 // 편지지 선택 (개별 조회 미리보기)
 $(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect)", function(){
 	var letterNo = $(this).attr("data-letterno");
