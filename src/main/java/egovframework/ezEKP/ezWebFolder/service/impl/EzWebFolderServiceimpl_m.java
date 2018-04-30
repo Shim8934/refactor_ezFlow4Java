@@ -780,7 +780,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public void restoreFile(FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
+	public int restoreFile(FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("fileId", fileVO.getFileId());
@@ -788,6 +788,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("userId", userId);
 		map.put("timeUTC", timeUTC);
 		
+		int isFail = 0;
 		int result = ezWebFolderDAO.restoreFile(map);
 		
 		if (result > 0) {
@@ -795,7 +796,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			LOGGER.debug("restoreFile is success");
 		} else {
 			LOGGER.debug("restoreFile is fail");
+			isFail =  1;
 		}
+		
+		return isFail;
 	}
 	
 	@Override
@@ -821,7 +825,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public int restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC, String userName1, String userName2) throws Exception {
-		int successCount = 0;
+		int failCount = 0;
 		
 		for (String file : fileIDList) {
 			if (!file.equals("")) {
@@ -831,8 +835,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					FolderVO folderVO = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
 					
 					if (folderVO != null && folderVO.getUseStatus().equals("Y")) {
-						restoreFile(fileVO, tenantId,  userId, timeUTC, companyId, offset, userName1, userName2);
-						successCount += 1;
+						failCount += restoreFile(fileVO, tenantId,  userId, timeUTC, companyId, offset, userName1, userName2);
+					} else {
+						failCount += 1;
 					}
 				}
 			}
@@ -847,18 +852,19 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					int isRestored = restoreFolder(folderVO.getFolderPath(), tenantId, userId, companyId, timeUTC);
 					
 					if (isRestored == 1) {
-						restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
-						successCount += 1;
+						failCount += restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
 					}
+				} else {
+					failCount += 1;
 				}
 			}
 		}
 		
-		return successCount;
+		return failCount;
 	}
 	
 	@Override
-	public void restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
+	public int restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath);
 		map.put("tenantId", tenantId);
@@ -866,6 +872,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("timeUTC", timeUTC);
 		
 		int result = -1;
+		int failCount = 0;
 		List<String> searchFiles = ezWebFolderDAO.selectAllFilesInFolder(map);
 		
 		for (String file : searchFiles) {
@@ -875,15 +882,14 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			if (result > 0) {
 				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 				ezWebFolderService.saveLog("RE", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
-				
 				LOGGER.debug("restoreFileInFolder is success");
 			} else {
+				failCount += 1;
 				LOGGER.debug("restoreFileInFolder is fail");
 			}
 		}
 		
-		
-		
+		return failCount;
 	}
 			
 	private String getWebFolderDirPath(int tenantId) {

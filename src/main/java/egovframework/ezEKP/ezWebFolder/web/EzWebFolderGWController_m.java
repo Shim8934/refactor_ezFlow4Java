@@ -968,11 +968,9 @@ public class EzWebFolderGWController_m {
 		logger.debug("restoreTrashCan Started.");
 		logger.debug("tenantId=" + tenantId + ",userId=" + userId + ",serverName=" + serverName);
 		logger.debug("offset=" + offset + ",companyId=" + companyId);
-		logger.debug("fileList=" + fileList + ",folderList=" + folderList);
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
-		int retoreSize = fileIDList.length + folderIDList.length;
 		JSONObject result = new JSONObject();
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -994,13 +992,14 @@ public class EzWebFolderGWController_m {
 			String lang   = common.getLang();
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
-			int succssCount = ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId,
-					userId, offset, companyId, timeUTC, userInfo.getDisplayName(), userInfo.getDeptName2());
 			
-			if (succssCount == retoreSize) {
-				result.put("code", "0");
+			int failCount = ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId,
+					userId, offset, companyId, timeUTC, userInfo.getDisplayName1(), userInfo.getDisplayName2());
+			
+			if (failCount == 0) {
+				result.put("code", "1");
 			 } else {
-				 result.put("code", "1");
+				 result.put("code", "-1");
 			 }
 			
 			result.put("status", "ok");
@@ -1011,6 +1010,7 @@ public class EzWebFolderGWController_m {
 			result.put("code", "1");
 		}
 		
+		logger.debug("result=" + result);
 		logger.debug("restoreTrashCan ended");
 		return result;
 	}

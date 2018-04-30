@@ -362,14 +362,10 @@ public class EzWebFolderController_m {
 
 		String status = resultBody.get("status").toString();
 		
-		if (!status.equals("ok")) {
-			String reason = resultBody.get("reason").toString();
+		if (status.equals("ok")) {
 			String code = resultBody.get("code").toString();
-			
-			model.addAttribute("reason", reason);
 			model.addAttribute("code", code);
 		}
-		
 		
 		logger.debug("status=" + status);
 		logger.debug("restoreFile ended");
