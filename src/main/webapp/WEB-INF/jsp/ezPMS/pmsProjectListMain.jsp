@@ -36,16 +36,16 @@ var listProjectStatus = "${listProjectStatus}";
 var currentPage = 1;
 var orderNum; 
 var orderHow;
-var projectIdList = [];
 var CurrentHeight = document.documentElement.clientHeight - 110;
-var projectTotalCount = "${projectListCount}"
+var projectTotalCount = 0;
+var checkedVal = "";
 
 function goToProjectDetails() {
 	window.open("/ezPMS/getProjectDetails.do", "right");
 }
 
 function addNewProject(){ 
-	addProjectPopup(845, 555, "/ezPMS/newProject.do");
+	addProjectPopup(10, 20, 845, 555, "/ezPMS/newProject.do");
 }
 
 $(document).ready(function(){
@@ -61,12 +61,12 @@ $(document).ready(function(){
 });
 
 
-function addProjectPopup(popUpW, popUpH, URL) {
+function addProjectPopup(topPct, leftPct, popUpW, popUpH, URL) {
     try {
         var Position = DivPopUpPosition(popUpW, popUpH);
         document.getElementById("iFrameLayer").src = URL;
-        document.getElementById("iFramePanel").style.top = "10%";
-        document.getElementById("iFramePanel").style.left = "20%";
+        document.getElementById("iFramePanel").style.top = topPct + "%";
+        document.getElementById("iFramePanel").style.left = leftPct + "%";
         document.getElementById("iFramePanel").style.height = popUpH + "px";
         document.getElementById("iFrameLayer").style.width = popUpW + "px";
         document.getElementById("iFrameLayer").style.height = popUpH + "px";
@@ -120,9 +120,25 @@ $(function(){
 		$("#listcountTR").css("display", "");
 	}
 	
+	if (listProjectStatus != "F") {
+		$("#deleteFavorite").css("display", "none");
+	} else {
+		$("#deleteFavorite").css("display", "");
+		$("#addFavorite").css("display", "none");
+	}
+	
 	$("#listSort option[value='"+ projectSort +"']").attr("selected", true);
 	$("#listcount option[value='"+ listNumber +"']").attr("selected", true);
+	$("#listByStatus option[value='" + listProjectStatus + "']").attr("selected", true);
+	
 });
+
+function setTotalCount(totalCount) {
+	if (!totalCount) {
+		totalCount = 0;
+	}
+	$("#totalCount").text(totalCount);
+}
 
 function MailOptionView(obj, flag) {
     if (obj.getAttribute("mode") == "off") {
@@ -195,7 +211,7 @@ function changeMainSetting() {
 	
 	$.ajax({
 		type : "POST",
-		dataType: "json",
+		dataType: "text",
 		contentType: "application/json; charset=UTF-8",
 		url : "/ezPMS/updateMainSetting.do",
 		data :JSON.stringify(data),
@@ -331,7 +347,6 @@ function selectedAllTR(elem) {
 
 //게시판용
 function checkedCheckbox(elem) {
-	console.log(elem);
 	if ($(elem).is(":checked")) {
 		$(elem).prop("checked","true");
 		$(elem).parent().parent().addClass("selectTR");
@@ -343,8 +358,6 @@ function checkedCheckbox(elem) {
 
 //메모용
 function checkedCheckboxMemo(elem) {
-	console.log($(elem).is(":checked"));
-	console.log(elem);
 	if ($(elem).is(":checked")) {
 		$(elem).prop("checked","true");
 		$(elem).parent().parent().parent().parent().addClass("selectTR");
@@ -354,6 +367,183 @@ function checkedCheckboxMemo(elem) {
 	}
 }
 
+function changeProjectStatus() {
+	getCheckedVal();
+	
+	addProjectPopup(36, 38, 400, 162, "/ezPMS/changeProjectStatus.do");
+}
+
+function viewListByStatus(status) {
+	listProjectStatus = status;
+	
+	if (listProjectStatus != "F") {
+		$("#deleteFavorite").css("display", "none");
+		$("#addFavorite").css("display", "");
+		$("#changeProjectStatus").css("display", "");
+	} else {
+		$("#deleteFavorite").css("display", "");
+		$("#addFavorite").css("display", "none");
+		$("#changeProjectStatus").css("display", "none");
+	}
+	
+	if (listProjectStatus == "D") {
+		$("#deleteProject").text("영구삭제");
+	} else {
+		$("#deleteProject").text("삭제");
+	}
+	
+	setProjectList();
+}
+
+function deleteProject() {
+	getCheckedVal();
+	
+	if (listProjectStatus != "D") {
+		var response = confirm("프로젝트를 삭제하시겠습니까? \n 프로젝트는 삭제프로젝트로 상태가 변경됩니다.");
+		if (response == true) {
+			data = {
+				status : "D",
+				projectList : checkedVal
+			}
+			
+			$.ajax({
+				type : "POST",
+				dataType: "text",
+				contentType: "application/json; charset=UTF-8",
+				url : "/ezPMS/updateProjectStatus.do",
+				data :JSON.stringify(data),
+				success : function(result) {
+					if (result == "permitted") {
+						alert("상태가 변경되었습니다.");
+						checkedVal = "";
+						setProjectList();
+					} else {
+						alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
+						return;
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+				}
+			});
+		}
+		
+	} else {
+		var response = confirm("프로젝트를 영구 삭제하시겠습니까?");
+		if (response == true) {
+			data = {
+					status : "D",
+					projectList : checkedVal
+				}
+			
+			$.ajax({
+				type : "POST",
+				dataType: "text",
+				contentType: "application/json; charset=UTF-8",
+				url : "/ezPMS/deleteProject.do",
+				data :JSON.stringify(data),
+				success : function(result) {
+					if (result == "permitted") {
+						alert("프로젝트가 영구삭제 되었습니다.");
+						checkedVal = "";
+						setProjectList();
+					} else {
+						alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
+						return;
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+				}
+			});
+		}
+	}
+}
+
+function addFavorite() {
+	var response = confirm("프로젝트를 즐겨찾기 하시겠습니까?");
+	if (response == true) {
+		getCheckedVal();
+		
+		data = {
+				status : "F",
+				projectList : checkedVal
+		}
+		
+		$.ajax({
+			type : "POST",
+			contentType: "application/json; charset=UTF-8",
+			url : "/ezPMS/addFavoriteProject.do",
+			data :JSON.stringify(data),
+			success : function() {
+				alert("프로젝트가 즐겨찾기 되었습니다.");
+				checkedVal = "";
+				setProjectList(); 
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+			}
+		});
+	}
+}
+
+function deleteFavorite() {
+	var response = confirm("프로젝트를 해제 하시겠습니까?");
+	if (response == true) {
+		getCheckedVal();
+		
+		data = {
+				status : "F",
+				projectList : checkedVal
+		}
+		
+		$.ajax({
+			type : "POST",
+			contentType: "application/json; charset=UTF-8",
+			url : "/ezPMS/deleteFavoriteProject.do",
+			data :JSON.stringify(data),
+			success : function() {
+				alert("프로젝트가 즐겨찾기가 해제되었습니다.");
+				checkedVal = "";
+				setProjectList(); 
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+			}
+		});
+	}
+}
+
+function getCheckedVal() {
+
+	checkedVal = "";
+	
+	if (viewType == "1") {
+		$("input[type='checkbox']:checked").parent().parent().each(function(){
+			checkedVal += "_" + $(this).attr("id");
+		});
+		
+		if (checkedVal != "") {
+			if ($("input:checkbox[id='HeaderAllCheckBox']").is(":checked") == true) {
+				checkedVal = checkedVal.substring(14);
+			} else {
+				checkedVal = checkedVal.substring(1);
+			}
+		}
+		
+	} else {
+		$("input[type='checkbox']:checked").parent().parent().parent().parent().each(function(){
+			checkedVal += "_" + $(this).attr("id");
+		});
+		
+		if(checkedVal != "") {
+			checkedVal = checkedVal.substring(1);
+		}
+	}
+	
+	if (checkedVal == "") {
+		alert("하나 이상의 프로젝트를 선택해 주세요.");
+		return;
+	}
+	
+	
+}
 </script>
 <style type="text/css">
 .viewType {
@@ -439,25 +629,26 @@ function checkedCheckboxMemo(elem) {
 </style>
 </head>
 <body class="mainbody">
-	<h1>프로젝트 관리<span id="mailBoxInfo"> - [총 <span style="color:#017BEC;"> <c:out value="${projectListCount }"/> </span>개]</span></h1>
+	<h1>프로젝트 관리<span id="mailBoxInfo"> - [총 <span style="color:#017BEC;" id="totalCount"> </span>개]</span></h1>
 	<div id="mainmenu">
 	<ul>
 		<li>
-			<select style="height:27px;">
-				<option>전체 프로젝트</option>
-				<option>진행 프로젝트</option>
-				<option>대기 프로젝트</option>
-				<option>완료 프로젝트</option>
-				<option>지연 프로젝트</option>
-				<option>보류 프로젝트</option>
-				<option>삭제 프로젝트</option>
-				<option>자주가는 프로젝트</option>
+			<select style="height:27px;" id="listByStatus" onchange="viewListByStatus(this.value)">
+				<option value="A">전체 프로젝트</option>
+				<option value="P">진행 프로젝트</option>
+				<option value="W">대기 프로젝트</option>
+				<option value="C">완료 프로젝트</option>
+				<option value="L">지연 프로젝트</option>
+				<option value="S">보류 프로젝트</option>
+				<option value="D">삭제 프로젝트</option>
+				<option value="F">자주가는 프로젝트</option>
 			</select>
 		</li>
 		<li><span onclick="goToProjectDetails()">project(임시)</span></li>
 		<li><span id="newProject" onclick="addNewProject()">새 프로젝트</span></li>
 		<li><span id="deleteProject" onclick="deleteProject()">삭제</span></li>
 		<li><span id="changeProjectStatus" onclick="changeProjectStatus()">프로젝트 상태 변경</span></li>
+		<li><span id="deleteFavorite" onclick="deleteFavorite()">즐겨찾기 해제</span></li>
 		<li><span id="addFavorite" onclick="addFavorite()">즐겨찾기 추가</span></li>
 		<li><span id="searchProject" onclick="showSearchDiv()">검색</span></li>
 		<li id="right">

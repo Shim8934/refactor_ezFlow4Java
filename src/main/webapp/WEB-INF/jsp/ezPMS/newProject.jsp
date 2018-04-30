@@ -220,7 +220,6 @@ var headManagerId = null;
 		data :JSON.stringify(data),
 		success : function(result) {
 			try { 
-				
 				sendNotiMail(result, projectName);
 				alert("새프로젝트가 추가되었습니다.");
 				parent.setProjectList(); 

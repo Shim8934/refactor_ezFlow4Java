@@ -72,6 +72,7 @@ public class EzPMSGWController {
 			search.put("listCount", request.getParameter("listCount"));
 			search.put("currentpage", request.getParameter("currentpage"));
 			search.put("startCount", request.getParameter("startCount"));
+			search.put("viewType", request.getParameter("viewType"));
 
 			
 			//프로젝트 리스트 가져오기
@@ -129,7 +130,7 @@ public class EzPMSGWController {
 				String userId = (String)projectMemberList.get(i).get("userId");
 				int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 				String nameType = (String)projectMemberList.get(i).get("nameType");
-				System.out.println("nameType : " + nameType);
+				
 				ProjectMemberVO member = ezPMSService.getUserInfo(userId, tenantId, nameType);
 				member.setMemberRoleId((int)projectMemberList.get(i).get("roleId"));
 				member.setProjectId(projectId);
@@ -156,20 +157,42 @@ public class EzPMSGWController {
 	//프로젝트 삭제
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}", method = RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public JSONObject deleteProject(@PathVariable int projectId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects" + projectId + "] started.");
+	public JSONObject deleteProject(@PathVariable String projectId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String status = request.getParameter("status");
+			String userId = request.getParameter("userId");
+			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+			String deptId = request.getParameter("deptId");
 			
-			ezPMSService.deleteProject(info.getTenantId(), projectId);
+			LOGGER.debug("status : " + status + ", " + "userId : " + ", tenantId : " + tenantId + ", deptId : " + deptId);
+			
+			String[] projectIdList = projectId.split("_");
+			String roleCheck = "";
+			
+			for (int i = 0; i < projectIdList.length; i++) {
+				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, Integer.parseInt(projectIdList[i]), deptId);
+				LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
+				if (userRole != 1) {
+					roleCheck = "reject";
+				}
+			}
+			
+			if (roleCheck.equals("")) {
+				for (int i = 0; i < projectIdList.length; i++) {
+					ezPMSService.deleteProject(info.getTenantId(),Integer.parseInt(projectIdList[i]));	
+				}
+				roleCheck = "permitted";
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			
+			result.put("data", roleCheck);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -177,7 +200,7 @@ public class EzPMSGWController {
 		}
 		
 		
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects" + projectId + "] ended.");
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId + "] ended.");
 		return result;
 	}
 	
@@ -263,7 +286,7 @@ public class EzPMSGWController {
 	//프로젝트 상태 변경
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/status", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject udpateProjectStatus(@PathVariable int projectId, HttpServletRequest request) throws Exception {
+	public JSONObject udpateProjectStatus(@PathVariable String projectId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/status] started.");
 		
 		JSONObject result = new JSONObject();
@@ -272,16 +295,37 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String status = request.getParameter("status");
+			String userId = request.getParameter("userId");
+			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+			String deptId = request.getParameter("deptId");
 			
-			ezPMSService.updateProjectStatus(projectId, status, info.getTenantId());
+			LOGGER.debug("status : " + status + ", " + "userId : " + ", tenantId : " + tenantId + ", deptId : " + deptId);
+			
+			String[] projectIdList = projectId.split("_");
+			String roleCheck = "";
+			
+			for (int i = 0; i < projectIdList.length; i++) {
+				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, Integer.parseInt(projectIdList[i]), deptId);
+				LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
+				if (userRole != 1) {
+					roleCheck = "reject";
+				}
+			}
+			
+			if (roleCheck.equals("")) {
+				for (int i = 0; i < projectIdList.length; i++) {
+					ezPMSService.updateProjectStatus(Integer.parseInt(projectIdList[i]), status, info.getTenantId());	
+				}
+				roleCheck = "permitted";
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			
+			result.put("data", roleCheck);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");
+			result.put("data", e.getMessage());
 		}
 		
 		
@@ -414,7 +458,7 @@ public class EzPMSGWController {
 	//프로젝트 즐겨찾기 추가
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/userId/{userId}/favorites/{projectId}", method = RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject addFavoriteProject(@PathVariable String userId, @PathVariable int projectId, HttpServletRequest request) throws Exception {
+	public JSONObject addFavoriteProject(@PathVariable String userId, @PathVariable String projectId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/userId/" + userId + "/favorites/"+ projectId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -423,12 +467,14 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ezPMSService.addFavoriteProject(projectId, userId, info.getTenantId());
+			String[] projectIdList = projectId.split("_");
 			
+			for (int i = 0; i < projectIdList.length; i++) {
+				ezPMSService.addFavoriteProject(Integer.parseInt(projectIdList[i]), userId, info.getTenantId());
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -443,7 +489,7 @@ public class EzPMSGWController {
 	//프로젝트 즐겨찾기 삭제
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/userId/{userId}/favorites/{projectId}", method = RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public JSONObject deleteFavoriteProject(@PathVariable String userId, @PathVariable int projectId, HttpServletRequest request) throws Exception {
+	public JSONObject deleteFavoriteProject(@PathVariable String userId, @PathVariable String projectId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/userId/" + userId + "/favorites/"+ projectId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -452,12 +498,14 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ezPMSService.deleteFavortieProject(projectId, userId, info.getTenantId());
+			String[] projectIdList = projectId.split("_");
 			
+			for (int i = 0; i < projectIdList.length; i++) {
+				ezPMSService.deleteFavortieProject(Integer.parseInt(projectIdList[i]), userId, info.getTenantId());
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -549,7 +597,7 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			ProjectInfoVO project = new ProjectInfoVO();
-			project.setStatus("W");
+			project.setStatus(request.getParameter("listProjectStatus"));
 			
 			String deptId = request.getParameter("deptId");
 			
@@ -775,5 +823,5 @@ public class EzPMSGWController {
 			
 			LOGGER.debug("ezJournal G/W getUserList ended.");
 			return result;
-		}
+		}		
 }

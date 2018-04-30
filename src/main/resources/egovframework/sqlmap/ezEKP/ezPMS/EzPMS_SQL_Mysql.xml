@@ -578,20 +578,36 @@
 				A.PROJECT_ID = B.PROJECT_ID
 			AND
 				A.TENANT_ID = B.TENANT_ID 
+		]]> 
+		<isEqual property="listProjectStatus" compareValue="F">
+			JOIN 
+				tbl_pms_favorite F 
+			ON
+				A.PROJECT_ID = F.PROJECT_ID 
+			AND
+				A.TENANT_ID = F.TENANT_ID	
+		</isEqual> 
 			WHERE 
 				( B.USER_ID = #userId# 
 				OR 
 				  B.USER_ID = #deptId# 
 				)
-			AND  
-				A.STATUS = #listProjectStatus# 
 			AND 
-				A.TENANT_ID = #tenantId# 
+				A.TENANT_ID = #tenantId#
+			AND 
+				DEL_STATUS = 0
+		<isNotEqual property="listProjectStatus" compareValue="F">
+			<isNotEqual property="listProjectStatus" compareValue="A">
+				AND  
+					A.STATUS = #listProjectStatus#
+			</isNotEqual> 
+		</isNotEqual> 
 			ORDER BY 
 				$projectSort$
+		<isEqual property="viewType" compareValue="1">
 			limit 
 				#startCount#, #listNumber# 
-		]]>
+		</isEqual>
 	</select>
 	
 	<insert id="EzPMSDAO.addTask" parameterClass="ProjectTaskVO">
@@ -691,13 +707,27 @@
 				A.PROJECT_ID = B.PROJECT_ID
 			AND
 				A.TENANT_ID = B.TENANT_ID 
+		<isEqual property="status" compareValue="F">
+			JOIN 
+				tbl_pms_favorite F 
+			ON
+				A.PROJECT_ID = F.PROJECT_ID 
+			AND
+				A.TENANT_ID = F.TENANT_ID	
+		</isEqual> 
 			WHERE 
 				( B.USER_ID = #userId# 
 				OR 
 				  B.USER_ID = #deptId# 
 				)
-			AND  
-				A.STATUS = #status# 
+			AND 
+				A.DEL_STATUS = 0 
+		<isNotEqual property="status" compareValue="F">
+			<isNotEqual property="status" compareValue="A">
+				AND  
+					A.STATUS = #status#
+			</isNotEqual>
+		</isNotEqual>
 			AND 
 				A.TENANT_ID = #tenantId#
 
@@ -882,4 +912,71 @@
 				PLAN_END_DATE DESC
 	</select>
 	
+	<select id="EzPMSDAO.getUserProjectRole"  parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT DISTINCT
+			MEMBER_ROLE_ID 
+		FROM 
+			TBL_PMS_MEMBER 
+		WHERE  
+			(
+			 USER_Id = #userId#
+			 OR USER_ID = #deptId# 
+			 ) 
+		AND 
+			PROJECT_ID = #projectId# 
+		AND
+			TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateProjectStatus" parameterClass="map">
+	<![CDATA[
+			UPDATE
+				tbl_pms_project
+			SET
+				STATUS = #status#
+			WHERE
+				PROJECT_ID = #projectId# 
+			AND
+				TENANT_ID = #tenantId#			
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.deleteProject" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				tbl_pms_project
+			SET
+				DEL_STATUS = 1
+			WHERE
+				PROJECT_ID = #projectId# 
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<insert id="EzPMSDAO.addFavoriteProject" parameterClass="map">
+		<![CDATA[
+			INSERT INTO 
+				tbl_pms_favorite 
+				(TENANT_ID,		PROJECT_ID,		USER_ID) 
+			VALUES 
+				(#tenantId#,	#projectId#,	#userId#)
+			
+		]]>
+	</insert>
+	
+	<delete id="EzPMSDAO.deleteFavoriteProject" parameterClass="map">
+		<![CDATA[
+			DELETE FROM 
+				tbl_pms_favorite 
+			WHERE	
+				USER_ID = #userId#
+			AND	
+				PROJECT_ID = #projectId#
+			AND 
+				TENANT_ID = #tenantId#
+		]]>
+	</delete>
 </sqlMap>

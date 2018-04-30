@@ -157,4 +157,24 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		update("EzPMSDAO.updateMainSetting", map);
 	}
 
+	public int getUserProjectRole(HashMap<String, Object> map) {
+		return (int) select("EzPMSDAO.getUserProjectRole", map);
+	}
+
+	public void updateProjectStatus(HashMap<String, Object> map) {
+		update("EzPMSDAO.updateProjectStatus", map);
+	}
+
+	public void deleteProject(Map<String, Object> map) {
+		update("EzPMSDAO.deleteProject", map);
+	}
+
+	public void addFavoriteProject(Map<String, Object> map) {
+		insert ("EzPMSDAO.addFavoriteProject", map);		
+	}
+
+	public void deleteFavoriteProject(Map<String, Object> map) {
+		delete ("EzPMSDAO.deleteFavoriteProject", map);		
+	}
+
 }

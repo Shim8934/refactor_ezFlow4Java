@@ -20,7 +20,7 @@
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 110;
-//setTotalCount("${totalCount}");
+setTotalCount("${projectListCount}");
 
 $(function(){
 	var projectList = new Array();
@@ -76,7 +76,16 @@ $(function(){
 </script>
 <body>
 	<div id="memoStyleDiv" style="height: 80%; width: 100%; overflow: auto; display: none;">
-		<c:forEach items="${projectList }" var="project">
+		<c:choose>
+			<c:when test="${empty projectList}">
+				<table style="width:100%; height:100%">
+					<tr>
+						<td style="text-align:center; font-size:15px;">프로젝트가 없습니다.</td>
+					</tr>
+				</table>
+			</c:when>
+			<c:otherwise>
+				<c:forEach items="${projectList }" var="project">
 			<table id="${project.projectId }" class="projectList" style="margin: 10px 20px; float: left; position: relative; border: solid 1px gray; clear: none; width: 360px; left: 2%;">
 				<tr>
 					<th colspan="2" style="height: 30px; font-size: 15px;">
@@ -136,6 +145,8 @@ $(function(){
 				</tr>
 			</table>
 		</c:forEach>
+	</c:otherwise>
+	</c:choose>
 	</div>
 </body>
 </html>

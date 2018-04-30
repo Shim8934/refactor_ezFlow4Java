@@ -20,11 +20,11 @@
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 110;
-//setTotalCount("${totalCount}");
+setTotalCount("${projectListCount}");
 
 $(function(){
 	var projectList = new Array();
-	
+		
 	<c:forEach items="${projectList}" var="project">
 		var json = new Object();
 		json.projectId = "${project.projectId}";
@@ -76,52 +76,53 @@ $(function(){
 </script>
 </head>
 <body>
-<span id="MailListRayer"
-				style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: none;">
-				<div style="width: 100%; overflow: auto;" id="divList">
-					<div id="lvBoardList">
-						<table id="projectList" cellspacing="0" cellpadding="0"
-							multiselectable="false" useocs="false"
-							rowondblclick="ItemRead_onclick(this)" width="100%" border="0"
+	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: none;">
+		<div style="width: 100%; overflow: auto;" id="divList">
+			<div id="lvBoardList">
+				<table id="projectList" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowondblclick="ItemRead_onclick(this)" width="100%" border="0"
 							class="mainlist" style="min-width: 569px;">
-							<thead id="BoardList_THEAD">
-								<tr id="BoardList_TH">
-									<th id="BoardList_TH_0"
-										style="text-align: left; overflow: hidden; white-space: nowrap; cursor: pointer; width: 20px;"
-										class="h4_center" bgcolor="#CCCCCC"><input
-										type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox"
-										id="HeaderAllCheckBox" onchange="selectedAllTR(this);"
-										style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
-									</th>
-									<th id="BoardList_TH_1" onclick="setListOrder(this)" order="2"
-										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: *;"
-										class="h5_center">프로젝트명</th>
-									<th id="BoardList_TH_2" onclick="setListOrder(this)" order="6"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
-										class="h5_center">총괄 담당자</th>
-									<th id="BoardList_TH_3" onclick="setListOrder(this)" order="6"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
-										class="h5_center">전체 진행률</th>
-									<th id="BoardList_TH_4" onclick="setListOrder(this)" order="6"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
-										class="h5_center">완료된 업무</th>
-									<th id="BoardList_TH_5" onclick="setListOrder(this)" order="6"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
-										class="h5_center">기한 지난 업무</th>
-									<th id="BoardList_TH_6" onclick="setListOrder(this)" order="6"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
-										class="h5_center">남은 기간</th>
-									<th id="BoardList_TH_7" onclick="setListOrder(this)" order="6"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 15%;"
-										class="h5_center">프로젝트 기간</th>
-									<th id="BoardList_TH_8" onclick="setListOrder(this)" order="6"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 5%;"
-										class="h5_center">상태</th>
-								</tr>
+					<thead id="BoardList_THEAD">
+						<tr id="BoardList_TH">
+							<th id="BoardList_TH_0" style="text-align: left; overflow: hidden; white-space: nowrap; cursor: pointer; width: 20px;"
+								class="h4_center" bgcolor="#CCCCCC">
+								<input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);"
+									style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
+							</th>
+							<th id="BoardList_TH_1" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; 
+								text-overflow: ellipsis; cursor: pointer; width: *;" class="h5_center">프로젝트명</th>
+							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="6"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
+								class="h5_center">총괄 담당자</th>
+							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="6"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
+								class="h5_center">전체 진행률</th>
+							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="6"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
+								class="h5_center">완료된 업무</th>
+							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="6"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
+								class="h5_center">기한 지난 업무</th>
+							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="6"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
+								class="h5_center">남은 기간</th>
+							<th id="BoardList_TH_7" onclick="setListOrder(this)" order="6"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 15%;"
+								class="h5_center">프로젝트 기간</th>
+							<th id="BoardList_TH_8" onclick="setListOrder(this)" order="6"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 5%;"
+								class="h5_center">상태</th>
+							</tr>
 							</thead>
 							<tbody style="background-color: rgb(255, 255, 255);">
-								<c:forEach items="${projectList }" var="project">
-									<tr style="cursor: pointer;">
+								<c:choose>
+									<c:when test="${empty projectList}">
+										<tr>
+											<td colspan="9" style="text-align : center"> 프로젝트가 없습니다. </td>
+										</tr>
+									</c:when>
+									<c:otherwise>
+										<c:forEach items="${projectList }" var="project">
+									<tr style="cursor: pointer;" id="${project.projectId }">
 										<td style="width: 50px; cursor: default; text-align: center"><input
 											type="checkbox" onchange="checkedCheckbox(this);"
 											name="boardCheckbox"
@@ -170,8 +171,9 @@ $(function(){
 												value="${project.status }" /></td>
 									</tr>
 								</c:forEach>
+									</c:otherwise>
+								</c:choose>
 							</tbody>
-
 						</table>
 					</div>
 				</div> <c:choose>

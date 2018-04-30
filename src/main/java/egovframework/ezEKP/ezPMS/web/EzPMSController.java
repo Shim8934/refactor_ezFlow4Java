@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.jta.UserTransactionAdapter;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -112,28 +113,10 @@ public class EzPMSController {
 			model.addAttribute("listProjectStatus", listSetting.get("listProjectStatus"));
 		}
 		
-
-		String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
-		
-		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
-		String countStatus = countResult.get("status").toString();
-		
-		int projectListCount = 0;
-		if (countStatus.equals("ok")) {
-			JSONObject countJson = (JSONObject) countResult.get("data");
-			
-			if (countJson.get("projectListCount").toString() != null) {
-				projectListCount = Integer.parseInt(countJson.get("projectListCount").toString());
-				model.addAttribute("projectListCount", projectListCount);
-			} 
-			
-			model.addAttribute("projectListCount", projectListCount);
-		}
 		LOGGER.debug("ezPMS projectList ended");
 		return "ezPMS/pmsProjectListMain";
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/ezPMS/getProjectList.do")
 	public String getProjectList(@CookieValue("loginCookie") String loginCookie,@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 	
@@ -145,6 +128,7 @@ public class EzPMSController {
 		int currentPage = (int) param.remove("currentPage");
 		int listNumber = Integer.parseInt(param.get("listNumber").toString());
 		String projectSort = param.get("projectSort").toString();
+		String listProjectStatus = param.get("listProjectStatus").toString();
 		
 		if(projectSort == null || projectSort.equals("")) {
 			projectSort = "0";
@@ -157,54 +141,55 @@ public class EzPMSController {
 		param.put("nameType", "user");
 		param.put("tenantId", tenantId);
 		param.put("projectSort", projectSort);
-		
-		//현재 페이지
-		param.put("currentPage", currentPage);
-		//한 페이지에 보여질 개수
-		param.put("listNumber", listNumber);
-		
+		param.put("viewType", viewType);
 		
 		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
 		String countStatus = countResult.get("status").toString();
 		
 		int projectListCount = 0;
+		JSONArray projectList = new JSONArray();
+		
 		if (countStatus.equals("ok")) {
 			JSONObject countJson = (JSONObject) countResult.get("data");
 			
 			if (countJson.get("projectListCount").toString() != null) {
 				projectListCount = Integer.parseInt(countJson.get("projectListCount").toString());
 				model.addAttribute("projectListCount", projectListCount);
-			} 
-			
-			model.addAttribute("projectListCount", projectListCount);
-		}
-		
-		System.out.println(projectSort + "  " + projectListCount + " " + currentPage + " " + listNumber);
-		
-		//프로젝트 총 개수
-		param.put("listCount", projectListCount);
-		
-		ProjectPagination paging = new ProjectPagination(projectListCount,listNumber, 10, currentPage);
-		model.addAttribute("paging", paging);
-		
-		param.put("startCount", paging.getStartCount());
-		
-		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
-		String status = result.get("status").toString();
-		
-		if (status.equals("ok")) {		
-			JSONArray projectList = (JSONArray) result.get("data");
-			model.addAttribute("projectList", projectList);
-			model.addAttribute("viewType", viewType);
-			request.setAttribute("projectList", projectList);
-			
-			System.out.println(viewType);
+				
+				ProjectPagination paging = new ProjectPagination(projectListCount,listNumber, 10, currentPage);
+				model.addAttribute("paging", paging);
+				
+				if (projectListCount != 0) {
+					//현재 페이지
+					param.put("currentPage", currentPage);
+					//한 페이지에 보여질 개수
+					param.put("listNumber", listNumber);
+					//프로젝트 총 개수
+					param.put("listCount", projectListCount);
+					param.put("startCount", paging.getStartCount());
+					JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+					String status = result.get("status").toString();
+					
+					if (status.equals("ok")) {		
+						projectList = (JSONArray) result.get("data");
+						model.addAttribute("viewType", viewType);
+						
+					}
+				}
+			}
+
 			if( viewType.equals("1")) {
 				viewType = "Board";
 			} else {
 				viewType = "Memo";
 			}
+			
+			model.addAttribute("listProjectStatus", listProjectStatus);
+			model.addAttribute("projectList", projectList);
+			model.addAttribute("projectListCount", projectListCount);
 		}
+		LOGGER.debug("[result] projectSort : " + projectSort + ", projectLsitCount : " + projectListCount + ", currentPage : " + currentPage + ", listNumber : " + listNumber);
+		
 		
 		return "ezPMS/pmsProjectList" + viewType;
 	}
@@ -329,15 +314,27 @@ public class EzPMSController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezPMS/deleteProject.do")
+	@ResponseBody
 	public String deleteProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS deleteProject started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String projectId = request.getParameter("projectId");
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		String deptId = userInfo.getDeptID();
+		
+		String projectId = param.get("projectList").toString();
 		String url = "/rest/ezPMS/projects/" + projectId;
 		
+		param.put("userId", userId);
+		param.put("tenantId", tenantId);
+		param.put("deptId", deptId);
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
+		String data = result.get("data").toString();	
+		
 		LOGGER.debug("ezPMS deleteProject ended");
-		return null;
+		return data;
 	}
 	
 	/**
@@ -357,8 +354,7 @@ public class EzPMSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String url = "/rest/ezPMS/users/" + userId + "/setting";
-		
-		System.out.println(param.get("viewType"));
+
 		param.put("tenantId", userInfo.getTenantId());
 		param.put("viewType", param.get("viewType"));
 		param.put("progressColor", param.get("progressColor"));
@@ -377,7 +373,17 @@ public class EzPMSController {
 	}
 	
 	/**
-	 * 프로젝트 상태 변경
+	 * 프로젝트 상태변경 화면 호출
+	 */
+	@RequestMapping(value = "/ezPMS/changeProjectStatus.do")
+	public String changeProjectStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		LOGGER.debug("ezPMS changeProjectStatus started");
+		LOGGER.debug("ezPMS changeProjectStatus ended");
+		return "ezPMS/changeProjectStatus";
+	}
+	
+	/**
+	 * 프로젝트 상태 변경 실행
 	 * @param loginCookie
 	 * @param request
 	 * @param resp
@@ -385,15 +391,28 @@ public class EzPMSController {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/updateProjectStatus.do")
-	public String updateProjectStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	@ResponseBody
+	public String updateProjectStatus(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS updateProjectStatus started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String projectId = request.getParameter("projectId");
-		String url = "/rest/ezPMS/projects/" + projectId + "/status";
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		String deptId = userInfo.getDeptID();
+		
+		String projectIdList = param.get("projectList").toString();
+		String url = "/rest/ezPMS/projects/" + projectIdList + "/status";
+		
+		param.put("userId", userId);
+		param.put("tenantId", tenantId);
+		param.put("deptId", deptId);
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
+		String data = result.get("data").toString();		
 		
 		LOGGER.debug("ezPMS updateProjectStatus ended");
-		return null;
+		return data;
 	}
 	
 	/**
@@ -512,13 +531,15 @@ public class EzPMSController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezPMS/addFavoriteProject.do")
-	public String addFavoriteProject(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	public String addFavoriteProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS addFavoriteProject started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String projectId = request.getParameter("projectId");
+		String projectIdList = param.get("projectList").toString();
 		String userId = userInfo.getId();
+	
+		String url = "/rest/ezPMS/userId/" + userId + "/favorites/" + projectIdList;
 		
-		String url = "/rest/ezPMS/userId/" + userId + "/favorites/" + projectId;
+		commonUtil.getJsonFromRestApi(url, param, request, "post", null);
 		
 		LOGGER.debug("ezPMS addFavoriteProject ended");			
 		return null;
@@ -534,13 +555,15 @@ public class EzPMSController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezPMS/deleteFavoriteProject.do")
-	public String deleteFavoriteProject(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	public String deleteFavoriteProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS deleteFavoriteProject started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String projectId = request.getParameter("projectId");
+		String projectId = param.get("projectList").toString();
 		String userId = userInfo.getId();
 		
 		String url = "/rest/ezPMS/userId/" + userId + "/favorites/" + projectId;
+		
+		commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
 		
 		LOGGER.debug("ezPMS deleteFavoriteProject ended");				
 		return null;

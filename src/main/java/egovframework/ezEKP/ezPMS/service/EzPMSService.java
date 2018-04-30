@@ -92,18 +92,20 @@ public interface EzPMSService {
 	
 	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId, String onlyGroup);
 
-	List<ProjectUserVO> getDeptUserList(int tenantId, String key, String value, String lang) throws Exception;
+	public List<ProjectUserVO> getDeptUserList(int tenantId, String key, String value, String lang) throws Exception;
 
-	List<ProjectCompanyVO> getCompanyList(String userId, int tenantId, String companyId, String lang) throws Exception;
+	public List<ProjectCompanyVO> getCompanyList(String userId, int tenantId, String companyId, String lang) throws Exception;
 
-	List<DeptViewVO> getDeptViewList(String userId, String companyId, int tenantId, String lang) throws Exception;
+	public List<DeptViewVO> getDeptViewList(String userId, String companyId, int tenantId, String lang) throws Exception;
 	
 	public List<ProjectMemberVO> getProjectMemberList(int projectId, int roleId, String lang, int tenantId);
 
 	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId);
 
-	ProjectMemberVO getUserInfo(String userId, int tenantId, String nameType) throws Exception;
+	public ProjectMemberVO getUserInfo(String userId, int tenantId, String nameType) throws Exception;
 	
 	public Map<String, Object> getRemainingWeight(String projectId);
+
+	public int getUserProjectRole(String userId, int tenantId, int projectId, String deptId);
 
 }

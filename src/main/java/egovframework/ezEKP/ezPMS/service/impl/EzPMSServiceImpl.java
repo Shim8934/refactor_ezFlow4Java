@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPMS.service.impl;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.tools.ant.Project;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +63,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("lang", lang);
 		map.put("deptId", deptId);
 		
-		System.out.println(search.get("projectSort"));
 		if (search.get("projectSort").equals("1")) {
 			map.put("projectSort", "PLAN_START_DATE");
 		} else {
@@ -72,35 +73,38 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		map.putAll(search);
 		
-		System.out.println(map.get("projectSort"));
-		List<ProjectInfoVO> projectList = ezPMSDAO.getProjectList(map);
+		List<ProjectInfoVO> projectList = new ArrayList<ProjectInfoVO>();
 		
 		try{
-			for (int i = 0; i < projectList.size(); i++) {
-				ProjectInfoVO project = projectList.get(i);
-				
-				if (!project.getStatus().equals("C")) {
-					Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
-					Date today = new Date();
-					String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
-					Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
+			projectList = ezPMSDAO.getProjectList(map);
+			
+			if (projectList != null) {
+				for (int i = 0; i < projectList.size(); i++) {
+					ProjectInfoVO project = projectList.get(i);
 					
-					int restDueday = getWorkinDays(now, endDate);
-					projectList.get(i).setRestDueday(restDueday);
-				}
-				
-				if (project.getStatus().equals("W")) {
-					projectList.get(i).setStatus("대기");
-				} else if (project.getStatus().equals("L")) {
-					projectList.get(i).setStatus("지연");
-				} else if (project.getStatus().equals("P")) {
-					projectList.get(i).setStatus("진행");
-				} else if (project.getStatus().equals("C")) {
-					projectList.get(i).setStatus("완료");
-				} else if (project.getStatus().equals("S")) {
-					projectList.get(i).setStatus("보류");
-				} else if (project.getStatus().equals("D")) {
-					projectList.get(i).setStatus("삭제");
+					if (!project.getStatus().equals("C")) {
+						Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
+						Date today = new Date();
+						String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
+						Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
+						
+						int restDueday = getWorkinDays(now, endDate);
+						projectList.get(i).setRestDueday(restDueday);
+					}
+					
+					if (project.getStatus().equals("W")) {
+						projectList.get(i).setStatus("대기");
+					} else if (project.getStatus().equals("L")) {
+						projectList.get(i).setStatus("지연");
+					} else if (project.getStatus().equals("P")) {
+						projectList.get(i).setStatus("진행");
+					} else if (project.getStatus().equals("C")) {
+						projectList.get(i).setStatus("완료");
+					} else if (project.getStatus().equals("S")) {
+						projectList.get(i).setStatus("보류");
+					} else if (project.getStatus().equals("D")) {
+						projectList.get(i).setStatus("삭제");
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -177,8 +181,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void deleteProject(int tenantId, int projectId) {
-		// TODO Auto-generated method stub
+		LOGGER.debug("Service deleteProject started.");	
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.deleteProject(map);
+		
+		LOGGER.debug("Service deleteProject ended.");
 	}
 
 	@Override
@@ -217,8 +228,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void updateProjectStatus(int projectId, String status, int tenantId) {
-		// TODO Auto-generated method stub
+		LOGGER.debug("updateProjectStatus started.");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("status", status);
+		map.put("tenantId", tenantId);
 		
+		ezPMSDAO.updateProjectStatus(map);
+		
+		LOGGER.debug("updateProjectStatus ended.");
 	}
 
 	@Override
@@ -278,13 +296,23 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void addFavoriteProject(int projectId, String userId, int tenantId) {
-		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.addFavoriteProject(map);
 		
 	}
 
 	@Override
 	public void deleteFavortieProject(int projectId, String userId, int tenantId) {
-		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.deleteFavoriteProject(map);
 		
 	}
 
@@ -308,7 +336,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("userId", userId);
 		map.put("deptId", deptId);
 		
-		int projectListCount = ezPMSDAO.getProjectListCount(map);
+		int projectListCount = ezPMSDAO.getProjectListCount(map);		
 		
 		return projectListCount;
 	}
@@ -648,9 +676,23 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return userInfo;
 	}
 	
+	//유저의 프로젝트 role 확인
 	@Override
-	public List<ProjectMemberVO> getProjectMember(int projectId, int roleId,
-			String lang) {
+	public int getUserProjectRole (String userId, int tenantId, int projectId, String deptId) {
+		LOGGER.debug("DAO getUserProjectRole started");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("tenantId", tenantId);
+		param.put("projectId", projectId);	
+		param.put("deptId", deptId);
+		
+		int projectRole = ezPMSDAO.getUserProjectRole(param);
+		LOGGER.debug("DAO getUserProjectRole ended");
+		return projectRole;
+	}
+	
+	@Override
+	public List<ProjectMemberVO> getProjectMember(int projectId, int roleId, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
