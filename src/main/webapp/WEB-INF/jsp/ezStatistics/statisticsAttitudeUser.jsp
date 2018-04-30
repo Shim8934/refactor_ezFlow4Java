@@ -24,6 +24,7 @@
     var Tab1_flag = true;
     var xmlHttp = createXMLHttpRequest();
     var adminCompany = "${adminCompany}";
+    var typeId = "";
 	
 	document.onselectstart = function () {
 	    if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -170,6 +171,9 @@
     
     //회사 클릭시마다 근태유형 selectbox 변경
     function company_typeList(companyId, typeId) {
+    	if (typeId == null || typeId == "") {
+    		typeId = 'A01';
+    	}
     	$.ajax({
         	type : "POST",
         	dataType : "json",

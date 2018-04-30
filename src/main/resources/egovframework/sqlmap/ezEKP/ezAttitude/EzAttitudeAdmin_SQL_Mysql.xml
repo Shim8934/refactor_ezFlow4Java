@@ -88,30 +88,32 @@
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
 		<![CDATA[
-			SELECT
-				A.CN,
-				A.DISPLAYNAME,
-				A.DISPLAYNAME2
-			FROM
+			SELECT 
+				D.CN,
+				D.DISPLAYNAME$lang$
+			FROM 
+				TBL_DEPTMASTER D
+			LEFT JOIN
+				TBL_USERMASTER U ON D.TENANT_ID = U.TENANT_ID
+			WHERE
+				D.TENANT_ID = #tenantId#
+			AND 
+				U.CN = #userId#
+			AND 
+				U.TENANT_ID = #tenantId#
+			AND
 				(
-					SELECT
-					  CN,
-					  CASE #lang#
-					      WHEN '1' THEN DISPLAYNAME
-					      ELSE DISPLAYNAME2
-					      END DISPLAYNAME,
-					  CASE #lang#
-					  	  WHEN '1' THEN DISPLAYNAME2
-					  	  ELSE DISPLAYNAME
-					  	  END DISPLAYNAME2
-					FROM
-						TBL_DEPTMASTER
-					WHERE
-						TENANT_ID = #tenantId#
-					AND
-						(DEPTLEVEL = 1
-					OR
-						CN = 'Top') ) A
+					((substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 0 
+				AND
+					D.EXTENSIONATTRIBUTE2 = U.PHYSICALDELIVERYOFFICENAME))
+				OR
+					(substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 1)
+				)
+			AND 
+				D.EXTENSIONATTRIBUTE2 = d.CN
+			ORDER BY 
+				LPAD(IFNULL(D.EXTENSIONATTRIBUTE15, 0), 6, 0),
+				D.DISPLAYNAME$lang$
 				
 		]]>
 	</select>
@@ -810,8 +812,14 @@
 			    A.AUTH_DEPT_ID,
 			    B.DISPLAYNAME AS USERNAME,
 			    B.TITLE AS USERTITLE,
-			    B.DESCRIPTION AS USERDAPTNAME,
+			    B.DESCRIPTION AS USERDAPTNAME
+			]]>
+			<isEmpty prepend="," property="isGAdmin">
 			    group_concat(C.DISPLAYNAME order by 1) AS AUTHDEPTNAME
+			</isEmpty>
+			<isNotEmpty prepend="," property="isGAdmin">
+			    C.DISPLAYNAME AS AUTHDEPTNAME
+			</isNotEmpty>
 			FROM 
 				TBL_ATTITUDE_AUTH A
 			INNER JOIN
@@ -830,11 +838,15 @@
 				A.COMPANY_ID = #companyId#
 			AND
 				A.TENANT_ID = #tenantId#
+			<isNotEmpty prepend="AND" property="isGAdmin">
+				A.USER_ID = #userId#
+			</isNotEmpty>
+			<isEmpty property="isGAdmin">
 			GROUP BY 
 				A.USER_ID
 			ORDER BY
 				USERNAME
-		]]>
+			</isEmpty>
 	</select>
 	
 	<delete id="ezAttitudeAdminDAO.deleteAttitudeAuth" parameterClass="Map">
@@ -945,4 +957,41 @@
 		]]>
 <!-- 		</iterate> -->
 	</select>
+<!-- 	
+	<select id="getUserAuthList" parameterClass="Map" resultMap="attitudeAuthor">
+		<![CDATA[
+				SELECT 
+				A.USER_ID,
+			    A.TENANT_ID,
+			    A.COMPANY_ID,
+			    A.AUTH_DEPT_ID,
+			    B.DISPLAYNAME AS USERNAME,
+			    B.TITLE AS USERTITLE,
+			    B.DESCRIPTION AS USERDAPTNAME,
+			    C.DISPLAYNAME AS AUTHDEPTNAME
+			FROM 
+				TBL_ATTITUDE_AUTH A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				A.USER_ID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			INNER JOIN
+				TBL_DEPTMASTER C 
+			ON
+				A.AUTH_DEPT_ID = C.CN
+			AND
+				A.TENANT_ID = C.TENANT_ID
+			WHERE
+				A.COMPANY_ID = #companyId#
+			AND
+				A.TENANT_ID = #tenantId#
+			AND
+				A.USER_ID = #userId#
+			ORDER BY
+				USERNAME
+		]]>
+	</select>
+	-->
 </sqlMap>
