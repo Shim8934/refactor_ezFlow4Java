@@ -1054,26 +1054,6 @@
 		WHERE 
 			INB.RNUM > #startPoint# AND INB.RNUM <= #startPoint# + #endPoint#
 		]]>
-	
-	
-		<!-- SELECT 
-			IFNULL(O.LADDERID, L.LADDERID) ORIG_ID, O.CHANGELADDERID, L.LADDERID, L.TYPE, L.TITLE, L.WRITERID
-		FROM 
-			TBL_LADDER_ORDER O
-		RIGHT JOIN 
-			TBL_LADDER L
-		ON 
-			L.LADDERID = O.CHANGELADDERID
-		WHERE 
-			L.TENANT_ID = #tenantId#
-		AND 
-			L.WRITERID = #userId#
-		AND
-			L.DELETEFLAG = 0
-		ORDER BY 
-			ORIG_ID DESC
-		LIMIT 
-			#startPoint#, #endPoint# -->
 	</select>
 	
 	<select id="EzLadderDAO.searchPreLadderList" parameterClass="map" resultClass="LadderVO">
@@ -1235,21 +1215,27 @@
 	
 	<select id="EzLadderDAO.selectLadderBMGroupList" parameterClass="LadderBmVO" resultClass="LadderBmVO">
 		SELECT 
-			B.LADDERBMID, B.BMNAME, B.USERID, B.REGDATE, U.USERNAME, U.USERNAME2, COUNT(U.USERNAME)-1 COUNT
-		FROM 
-			TBL_LADDER_BM B
-		LEFT JOIN 
-			TBL_LADDER_BMUSER U
-		ON 
-			B.LADDERBMID = U.LADDERBMID
+			INB.LADDERBMID, INB.BMNAME, INB.USERID, INB.REGDATE, INB.USERNAME, INB.USERNAME2, INB.COUNT
+		FROM (
+			SELECT 
+				BM.LADDERBMID, BM.BMNAME, BM.USERID, BM.REGDATE, INA.USERNAME, INA.USERNAME2, MAX(USERNO) OVER (PARTITION BY BM.LADDERBMID) - 1 AS COUNT, INA.USERNO
+			FROM (
+				SELECT 
+					LADDERBMID, USERNAME, USERNAME2, ROW_NUMBER() OVER(PARTITION BY LADDERBMID ORDER BY ID ASC) AS USERNO FROM TBL_LADDER_BMUSER
+				) INA
+			RIGHT JOIN 
+				TBL_LADDER_BM BM
+			ON 
+				BM.LADDERBMID = INA.LADDERBMID
+			WHERE 
+				TENANT_ID = #tenant_id#
+			AND 
+				USERID = #userId#
+			) INB
 		WHERE 
-			B.TENANT_ID = #tenant_id#
-		AND
-			B.USERID = #userId#
-		GROUP BY 
-			B.LADDERBMID, U.USERNAME, B.BMNAME, B.USERID, B.REGDATE, U.USERNAME2
+			INB.USERNO = 1
 		ORDER BY 
-			B.LADDERBMID DESC
+			INB.LADDERBMID DESC
 	</select>
 	
 	<select id="EzLadderDAO.selectLadderBMUserList" parameterClass="LadderBmUserVO" resultClass="LadderBmUserVO">
@@ -1272,14 +1258,14 @@
 	</select>
 	
 	<insert id="EzLadderDAO.insertLadderBMGroup" parameterClass="LadderBmVO">
-		INSERT 
+		INSERT INTO
 			TBL_LADDER_BM (TENANT_ID, LADDERBMID, BMNAME, USERID, REGDATE)
 		VALUES 
 			(#tenant_id#, TBL_LADDER_BM_SEQ.NEXTVAL, #bmName#, #userId#, #regdate#)
 	</insert>
 	
 	<insert id="EzLadderDAO.insertLadderBMUser" parameterClass="LadderBmUserVO">
-		INSERT 
+		INSERT INTO
 			TBL_LADDER_BMUSER (TENANT_ID, ID, LADDERBMID, USERID, USERNAME, USERNAME2)
 		VALUES 
 			(#tenant_id#, TBL_LADDER_BMUSER_SEQ.NEXTVAL, 
