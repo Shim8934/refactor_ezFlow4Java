@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -204,6 +205,101 @@ public class EzWebFolderController_m {
 		
 		logger.debug("addShare ended.");
 		return  resultBody.toString();
+	}
+	
+	@RequestMapping(value="/ezWebFolder/hideShare.do", method=RequestMethod.POST)
+	public @ResponseBody String hideShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody List<String> shareIdList) throws Exception {
+		logger.debug("hideShare started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		JSONObject resultJson = new JSONObject();
+		
+		if (shareIdList == null || shareIdList.size() == 0) {
+			resultJson.put("status", "error");
+			resultJson.put("code", "1");
+			return resultJson.toString();
+		}
+		
+		String status = "ok";
+		String code = "0";
+		JSONArray errorArray = new JSONArray();
+		
+		for (String shareId : shareIdList) {
+			JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide/" + shareId, null, request, "post", null);
+			
+			if (!((String) resultBody.get("status")).equals("ok")) {
+				status = "error";
+				errorArray.add(shareId);
+				code = "2";
+			}
+		}
+		
+		resultJson.put("status", status);
+		resultJson.put("code", code);
+		resultJson.put("errorArray", errorArray);
+		
+		logger.debug("hideShare ended.");
+		return  resultJson.toString();
+	}
+	
+	@RequestMapping(value="/ezWebFolder/showShare.do", method=RequestMethod.POST)
+	public @ResponseBody String showShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody List<String> shareIdList) throws Exception {
+		logger.debug("showShare started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		JSONObject resultJson = new JSONObject();
+		
+		if (shareIdList == null || shareIdList.size() == 0) {
+			resultJson.put("status", "error");
+			resultJson.put("code", "1");
+			return resultJson.toString();
+		}
+		
+		String status = "ok";
+		String code = "0";
+		JSONArray errorArray = new JSONArray();
+		
+		for (String shareId : shareIdList) {
+			JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide/" + shareId, null, request, "delete", null);
+			
+			if (!((String) resultBody.get("status")).equals("ok")) {
+				status = "error";
+				errorArray.add(shareId);
+				code = "2";
+			}
+		}
+		
+		resultJson.put("status", status);
+		resultJson.put("code", code);
+		resultJson.put("errorArray", errorArray);
+		
+		logger.debug("showShare ended.");
+		return  resultJson.toString();
+	}
+	
+	@RequestMapping(value="/ezWebFolder/webfolderHiddenSharedList.do")
+	public String webfolderHiddenSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		model.addAttribute("primary", userInfo.getLang());
+		return "ezWebFolder/webfolderHiddenSharedList";
+	}
+	
+	@RequestMapping(value="/ezWebFolder/getHiddenSharedList.do")
+	public @ResponseBody String getHiddenSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getHiddenSharedList started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("pageNum", orElse(request.getParameter("pageNum"), "1"));
+		param.put("pageSize", orElse(request.getParameter("pageSize"), "0"));
+		
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide", param, request, "get", null);
+		
+		logger.debug("getHiddenSharedList ended.");
+		return resultBody.toString();
 	}
 	
 	@RequestMapping(value="/ezWebFolder/trashCan.do")
