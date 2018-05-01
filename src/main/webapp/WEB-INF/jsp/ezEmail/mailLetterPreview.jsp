@@ -30,7 +30,7 @@
 	</head>
 	<body style="width:890px; height:660px;">
 		<div class="lmPreViewTxt" style="text-align:center; padding-top: 30%;"></div>
-		<iframe src="" class="lmPreViewIframe" name="lmPreViewIframe" style="display:none; border:none; width:100%; height:100%;" ></iframe>
+		<iframe src="" class="lmPreViewIframe" onload="onloadPreview(this)" name="lmPreViewIframe" style="display:none; border:none; width:100%; height:100%;" ></iframe>
 	</body>
 </html>
 
