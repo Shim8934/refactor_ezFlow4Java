@@ -106,10 +106,46 @@
 		function btnClose_onclick() {
 			window.close();
 		}
+		
+		function searchPress(evt) {
+	        if (window.event) {
+	            if (window.event.keyCode == 13) {
+	            	getAbsentedList();
+	            }
+	        } else {
+	            if (evt.which == 13)
+	            	getAbsentedList();
+	        }
+	    }
 	</script>
 	
 	<body class="popup">
 		<h1>미입력자 목록</h1>
+		
+		<table id="searchTable" style="width:100%;">
+			<tbody>
+				<tr>
+					<td style="width: 3%;">부서</td>
+					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
+					<td style="width: 3%;">이름</td>
+					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
+					<td style="width: 3%;">직위</td>
+					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
+				</tr>
+				<tr>
+					<td style="width: 3%;">검색기간</td>
+					<td>
+						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
+						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
+					</td>
+					<td style=" width:*;" colspan=4>
+						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchUserConfList('refresh');">새로고침</span></a>&nbsp;
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
 		<div id="contentlist">
 			<table class="mainlist">
 				<thead>

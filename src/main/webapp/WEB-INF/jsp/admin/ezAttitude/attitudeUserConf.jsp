@@ -206,7 +206,7 @@
 	</head>
 	
 	<body class="mainbody">
-	    <h1>사용자별 근태관리<span id="mailBoxInfo"></span></h1>
+	    <h1>근태시간관리<span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
 	        	<li style="background: none;"><span style="border: none;"><b>회사선택</b></span></li>

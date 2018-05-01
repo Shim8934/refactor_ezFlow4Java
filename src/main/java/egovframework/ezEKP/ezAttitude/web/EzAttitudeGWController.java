@@ -1661,12 +1661,13 @@ public class EzAttitudeGWController {
 			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();
 			
-			String totalCount = ezAttitudeService.getAttitudeAbsentCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, offset, companyId, tenantID);
+//			String totalCount = ezAttitudeService.getAttitudeAbsentCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, offset, companyId, tenantID);
 			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, companyId, tenantID);
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
-			data.put("totalCount", totalCount);
+//			data.put("totalCount", totalCount);
+			data.put("totalCount", list.size());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
