@@ -18,21 +18,11 @@
     <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jsTree/dist/jstree.js"></script>
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-    
     <script>
         var PostTreeView = null;
         var treeconfig = "";
-        var ReturnFunction;
-        var CancelFunction;
-        var isDivPopUp = false;
         var test = [];
-        
-        var createId = "";
-        var id = "";
         var parent = "";
-        var companyFolderId = "";
-	    var deptFolderId    = "";
-	    var persFolderId    = "";
 		var folderId="";
 		var folderType = "${folderType}";
 		var checkedfileList = "${fileList}";
@@ -44,11 +34,11 @@
             else
                 return true;
         };
+        
         window.onload = function () {
     		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
     		folderList(folderType);
         }
-        var inputNameDlg_cross_dialogArguments = new Array();
         
         function folderList(obj) {
 			folderType = obj;
@@ -103,23 +93,22 @@
 			});
 	    }
         
-        var moveCopyFolderDlg_cross_dialogArguments = [];
         function move_onclick() {
-        	
-        	if (!confirm("<spring:message code='ezWebFolder.t283'/>")) {
-        		return;
-        	}
         	
             if (folderId == "") {
                 alert("<spring:message code='ezWebFolder.t261'/>");
                 return;
             }
            	
-            if ( parent =='#' ) {
+            if ( parent =='#' && checkedfileList.length > 0) {
 	            alert("<spring:message code='ezWebFolder.t293'/>");
 	            return;
             }
             
+        	if (!confirm("<spring:message code='ezWebFolder.t283'/>")) {
+        		return;
+        	}
+        	
             $.ajax ({
             	type : "POST",
             	async : false,
@@ -130,8 +119,8 @@
             		"folderList" : checkedfolderList,
             		"folderId" : folderId
             	},
-            	succss : function (data) {
-            		aler("<spring:message code='ezWebFolder.t284'/>");
+            	success : function (data) {
+            		alert("<spring:message code='ezWebFolder.t284'/>");
             	},
             	error : function(error) {
             		alert("<spring:message code='ezWebFolder.t285'/>");
@@ -142,26 +131,11 @@
             opener.refreshView();
            
         }
-        
-        function requestdata(event) {
-            if (!event) event = window.event;
-            var nodeIdx = event.nodeIdx;
-            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
-                nodeIdx = arguments[0].nodeIdx;
-            }
-//             var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false, true)
-//             PostTreeView.putchildxml(nodeIdx, childxml);
-        }
-        
-        function returnFunction(type) {
-        	folderType = type;
-        	$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
-        }
     </script>
 </head>
 
 <body scroll="no" class="popup">
-	<h1><span><spring:message code='ezWebFolder.t286'/></span></h1>
+	<h1><spring:message code='ezWebFolder.t286'/></h1>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<div style="position: absolute; top: 0px; right: 0px;">
 			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('C');"> <span><spring:message code='ezWebFolder.t233'/></span>
@@ -175,15 +149,11 @@
       	<a class="imgbtn" onclick="move_onclick()"><span><spring:message code="ezWebFolder.t121"/></span></a>
 	</div>
 	<div style="margin: 0px 0px 10px 200px; position:fixed;">
-		<a class="imgbtn" onclick="Window_Close();"><span onclick=""><spring:message code='ezWebFolder.t110'/></span></a>
+		<a class="imgbtn" onclick="window.close();"><span onclick=""><spring:message code='ezWebFolder.t110'/></span></a>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 	    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 	</div>
-	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
-	</div>
 </body>
 </html>
-

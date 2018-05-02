@@ -315,6 +315,7 @@
 		<div id="tblPageRayer"></div>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	</body>
 </html>

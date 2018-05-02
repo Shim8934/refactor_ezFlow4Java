@@ -25,10 +25,10 @@
 	<!-- time picker-->
 	<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/rowModule.js"></script>
 	<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
    		var userInfo = {
@@ -59,7 +59,6 @@
         var searchFileName = "";
         var searchCreateName = "";
 		
-		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
 			var divList          = document.getElementById("dragDropArea");
 			var reheight         = document.documentElement.clientHeight - 220;
@@ -70,7 +69,6 @@
 			return false;
 		}
 		
-		// fileList 화면 
 		window.onload = function () {
 			document.getElementById("listcount").value = blockSize;
 			renderFileList();
@@ -87,12 +85,6 @@
 	    	   currentPage = 1;
 	    	   refreshView();
 	    }
-	    
-	    // 폴더관리
-	    function openfolderManage() {
-        	var popupWindow = window.open("/ezWebFolder/folderManage.do", "", GetOpenWindowfeature(500, 500));
-            try { popupWindow.focus(); } catch (e) { }
-        }
 	    
 	    function renderFileList() {
 			$.ajax ({
@@ -206,6 +198,8 @@
 					tdName.textContent = resultElement["trashCanName"];
 					if (resultElement["trashCanExt"] != 'folder') {
 						tdSize.textContent = getFileSize(resultElement["trashCanSize"]);
+					} else {
+						tdSize.textContent = "-";
 					}
 					
 					if (userInfo.lang == "1") {
@@ -270,7 +264,6 @@
 	        $(".Edatepicker").datepicker('setDate', "");
 	     });
 	   	
-	   	// 날짜 초기화 버튼
 	   	function btn_PostDate_Clear() {
 	        $(".Sdatepicker").datepicker('setDate', "");
 	        $(".Edatepicker").datepicker('setDate', "");
@@ -284,7 +277,6 @@
 	        renderFileList();
 	    }
 	    
-	   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
    		function search(type) {
 	        if (type == "basic") {
 	
@@ -398,7 +390,6 @@
 	        document.getElementById("SearchOption").setAttribute("mode", "off");
 	    }
    	   
-   	   
    	   function optionView(obj){
    		 if (obj.getAttribute("mode") == "off") {
    	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
@@ -417,7 +408,6 @@
 	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
 	 	}
          
-     
        function refreshView() {
     	   renderFileList();
        }
@@ -509,7 +499,6 @@
 					"folderList" :  folderList.toString()
 				},
 				success : function (data) {
-					console.log(data);
 					if (data.code == "1") {
 						alert("<spring:message code = 'ezWebFolder.t289'/>");
 					} else if (data.code == "-1") {
@@ -523,8 +512,6 @@
 				}
 			})
        }
-       
-       var moveTrashCan_cross_dialogArguments = [];
        
        function moveTraschCan() {
 			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
@@ -564,15 +551,14 @@
 			<li id="right" style="float:right;"><spring:message code='ezWebFolder.t215'/><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
 			<li id="right" style="float:left;">
 				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="width:100px;">
-					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
-					<option value="document"><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
-					<option value="music"><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
-					<option value="video"><spring:message code='ezWebFolder.t194'/></option><!-- 영상 -->
-					<option value="image"><spring:message code='ezWebFolder.t195'/></option><!-- 그림 -->
-					<option value="folder"><spring:message code='ezWebFolder.t213'/></option><!-- 폴더 -->
-					<option value="zip"><spring:message code='ezWebFolder.t196'/></option><!-- 압축파일 -->
+					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option>
+					<option value="document"><spring:message code='ezWebFolder.t192'/></option>
+					<option value="music"><spring:message code='ezWebFolder.t193'/></option>
+					<option value="video"><spring:message code='ezWebFolder.t194'/></option>
+					<option value="image"><spring:message code='ezWebFolder.t195'/></option>
+					<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
+					<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
 				</select>
-			
 			</li>
 		</ul>
 	</div>
@@ -610,12 +596,10 @@
         </div>
         <div class="shadow">
         </div>
-
  	</div>
  	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id=""></div>
     <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
     <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
-	
 	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
@@ -628,7 +612,6 @@
 				<th width="80px" ><spring:message code='ezWebFolder.t190'/></th>
 				<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
 			</tr>
-			
 		</table>
 	</div>
 	<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px; display:none" /> 
@@ -660,7 +643,6 @@
 		               <input type="text" class="Edatepicker" id="delEndDate" style="width:80px;text-align:center" readonly="readonly">
 		           </td>
 				</tr>
-		       
 		        <tr>
 		            <th style="text-align:center"><spring:message code='ezWebFolder.t152' /></th><!-- 확장자 -->
 		            <td><input type="text" id="searchExt" style="width:98%" value="" name="searchExt"></td>

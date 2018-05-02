@@ -1132,9 +1132,12 @@
 		            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
 				FROM
 					tbl_webfolder_folder AS FOLDER
-					JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
-					ON FILE_TYPE.TYPE_NAME = 'folder'
+					LEFT JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
+						ON FILE_TYPE.TYPE_NAME = 'folder' AND FOLDER.TENANT_ID = FILE_TYPE.TENANT_ID
+					LEFT JOIN TBL_WEBFOLDER_FOLDER parent
+						ON FOLDER.FOLDER_UPPER = parent.FOLDER_ID AND FOLDER.TENANT_ID = parent.TENANT_ID
 				WHERE
+					parent.USE_STATUS = 'Y' AND
 					FOLDER.USE_STATUS = 'T' AND
 					FOLDER.DELETER_ID = #userId# AND
 					FOLDER.TENANT_ID = #tenantId#
@@ -1162,8 +1165,11 @@
 			FROM
 				tbl_webfolder_file AS FILES
 				LEFT JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
-				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
+					ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID AND FILES.TENANT_ID = FILE_TYPE.TENANT_ID
+				LEFT JOIN TBL_WEBFOLDER_FOLDER FOLDER
+					ON FILES.FOLDER_ID = FOLDER.FOLDER_ID AND FILES.TENANT_ID = FOLDER.TENANT_ID
 			WHERE
+				FOLDER.USE_STATUS    = 'Y' AND
 				FILES.USE_STATUS = 'T' AND
 				FILES.DELETER_ID = #userId# AND
 				FILES.TENANT_ID = #tenantId#
@@ -1207,7 +1213,6 @@
 	
 	<select id="EzWebFolderDAO_m.getFolderPath" parameterClass="Map" resultClass="String">
 		<![CDATA[
-		
 		    SELECT
 				FOLDER.FOLDER_PATH
 			FROM 
@@ -1262,12 +1267,8 @@
 									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
 								AND
 									TENANT_ID = #tenantId#
-								AND
-									COMPANY_ID = #companyId#	
 					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
 			WHERE
-				f.TENANT_ID = #tenantId#
-			AND
 				f.USE_STATUS = 'T';
 	</select>
 	
@@ -1305,7 +1306,8 @@
 			TBL_WEBFOLDER_FILE
 		SET
 			USE_STATUS = 'Y',
-			UPDATE_DATE = #timeUTC#
+			UPDATE_DATE = #timeUTC#,
+			DELETER_ID = null
 		WHERE
 			TENANT_ID = #tenantId#
 		AND
@@ -1319,7 +1321,8 @@
 			TBL_WEBFOLDER_FOLDER
 		SET
 			USE_STATUS = 'Y',
-			UPDATE_DATE = #timeUTC#
+			UPDATE_DATE = #timeUTC#,
+			DELETER_ID = null
 		WHERE
 			TENANT_ID = #tenantId#
 		AND
@@ -1576,10 +1579,13 @@
 		SELECT
 			count(FILES.FILE_id )
 		FROM
-			TBL_WEBFOLDER_FILE AS FILES
+			tbl_webfolder_file FILES
 			LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
-			ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID
+				ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID AND FILES.TENANT_ID = FILE_TYPE.TENANT_ID
+			LEFT JOIN TBL_WEBFOLDER_FOLDER FOLDER
+				ON FILES.FOLDER_ID = FOLDER.FOLDER_ID AND FILES.TENANT_ID = FOLDER.TENANT_ID
 		WHERE
+			FOLDER.USE_STATUS    = 'Y' AND
 			FILES.USE_STATUS = 'T' AND
 			FILES.DELETER_ID = #userId# AND
 			FILES.TENANT_ID = #tenantId#
@@ -1590,10 +1596,13 @@
 		SELECT
 			count(FOLDER.FOLDER_id)    
 		FROM
-			tbl_webfolder_folder AS FOLDER
+			tbl_webfolder_folder FOLDER
 			LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
-			ON FILE_TYPE.TYPE_NAME = 'folder'
+				ON FILE_TYPE.TYPE_NAME = 'folder' AND FOLDER.TENANT_ID = FILE_TYPE.TENANT_ID
+			LEFT JOIN TBL_WEBFOLDER_FOLDER parent
+				ON FOLDER.FOLDER_UPPER = parent.FOLDER_ID AND FOLDER.TENANT_ID = parent.TENANT_ID
 		WHERE
+			parent.USE_STATUS = 'Y' AND
 			FOLDER.USE_STATUS = 'T' AND
 			FOLDER.DELETER_ID = #userId# AND
 			FOLDER.TENANT_ID = #tenantId#
@@ -1612,7 +1621,8 @@
 				FOLDER_PATH  = replace(FOLDER_PATH, #oldPath#, #newPath#),
 				FOLDER_LEVEL = FOLDER_LEVEL + #levelDistance#,
 				USE_STATUS = 'Y',
-				UPDATE_DATE = #timeUTC#
+				UPDATE_DATE = #timeUTC#,
+				DELETER_ID = null
 			WHERE
 				FOLDER_PATH like concat(concat(#oldPath#, '_'), '%')
 			AND
@@ -1627,7 +1637,8 @@
 			SET
 				FOLDER_ID = #folderId#,
 				USE_STATUS = 'Y',
-				UPDATE_DATE = #timeUTC#
+				UPDATE_DATE = #timeUTC#,
+				DELETER_ID = null
 			WHERE
 				FILE_ID = #fileId#
 			AND

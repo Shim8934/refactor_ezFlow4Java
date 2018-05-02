@@ -184,9 +184,7 @@
 	</script>
 </head>
 <body class="popup">
-	<div id="menu">
-		<h1 id ="topMenu"><spring:message code='ezWebFolder.t120'/></h1>
-	</div>
+	<h1 id ="topMenu"><spring:message code='ezWebFolder.t120'/></h1>
 	<div id="close">
 		<ul>
 			<li><span onclick="Window_Close();"><spring:message code='ezWebFolder.t110'/></span></li>

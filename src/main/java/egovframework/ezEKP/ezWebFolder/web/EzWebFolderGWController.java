@@ -591,9 +591,13 @@ public class EzWebFolderGWController {
 			String companyId = userInfo.getCompanyID();
 			int tenantId     = userInfo.getTenantId();
 			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date                  = new Date();
+			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+			
 			FileVO fileVO    = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
 			String fileExt   = fileVO.getFileExt();
-			ezWebFolderService.updateFileName(fileId, newName + "." + fileExt, tenantId);
+			ezWebFolderService.updateFileName(fileId, newName + "." + fileExt, timeUTC, tenantId);
 			ezWebFolderService.saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 			
 			result.put("status", "ok");

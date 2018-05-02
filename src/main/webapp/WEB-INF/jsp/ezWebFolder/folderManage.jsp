@@ -98,7 +98,7 @@
 						},
 						"types" : {
 							"default": {
-								"icon" :"/images/OrganTree_cross/fldr.gif" 
+								"icon" :"/images/webfolder/fldr.png"
 							}
 						},
 						"grid": {
@@ -268,7 +268,6 @@
 
 <body scroll="no" class="popup" onload="javascript:window_onload()">
 	<h1>폴더관리</h1>
-	
 	<div id="close">
 		<ul>
 			<li><span onclick="Window_Close();"><spring:message code='ezWebFolder.t110'/></span></li>

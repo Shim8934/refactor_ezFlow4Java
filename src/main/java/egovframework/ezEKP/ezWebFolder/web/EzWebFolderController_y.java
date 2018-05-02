@@ -385,7 +385,7 @@ public class EzWebFolderController_y {
 		
 		String serverName = request.getServerName();
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url = gwServerUrl + "/rest/ezwebfolder/folders2/"+folderId;
+		String url = gwServerUrl + "/rest/ezwebfolder/folders/"+folderId;
 		
 		RestTemplate rest = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();

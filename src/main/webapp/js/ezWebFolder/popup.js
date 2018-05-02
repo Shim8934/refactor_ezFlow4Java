@@ -59,7 +59,7 @@ function DivPopUpPosition(popUpW, popUpH) {
 
 function closeAllPopup() {
 	var leftFrame = window.parent.frames["left"].document;
-	var blockLeft = leftFrame.getElementById("bnkBlockLeft");
+	var blockLeft = leftFrame.getElementById("blockLeft");
 	leftFrame.body.style.overflow = "auto";
 	blockLeft.style.height        = "100%";
 	blockLeft.style.display       = "none";
