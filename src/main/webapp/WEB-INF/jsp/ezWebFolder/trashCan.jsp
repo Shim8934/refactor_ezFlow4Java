@@ -525,8 +525,6 @@
 			})
        }
        
-       var moveTrashCan_cross_dialogArguments = [];
-       
        function moveTraschCan() {
 			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
     	   

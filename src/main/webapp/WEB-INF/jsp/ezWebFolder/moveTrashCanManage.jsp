@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jsTree/dist/jstree.js"></script>
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-    
     <script>
         var PostTreeView = null;
         var treeconfig = "";
@@ -103,7 +102,6 @@
 			});
 	    }
         
-        var moveCopyFolderDlg_cross_dialogArguments = [];
         function move_onclick() {
         	
             if (folderId == "") {
