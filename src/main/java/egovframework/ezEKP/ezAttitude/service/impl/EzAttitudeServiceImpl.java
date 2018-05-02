@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -1026,6 +1027,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		 * 3. order는 하긴했는데 짼 이름정렬 왜 젤위에 튀어나오지
 		 */
 		LOGGER.debug("totalList size = " + totalList.size());
+		
+		HashSet<AdminAttitudeVO> listSet = new HashSet<AdminAttitudeVO>(totalList);
+		totalList = new ArrayList<AdminAttitudeVO>(listSet);
 		
 		LOGGER.debug("distinct totalList size = " + totalList.size());
 		
