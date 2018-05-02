@@ -1362,7 +1362,7 @@
 	</insert>
 	
 	<update id="EzLadderDAO.updateLadderBMGroup" parameterClass="LadderBmVO">
-		<!-- UPDATE 
+		UPDATE 
 			TBL_LADDER_BM 
 		SET 
 			BMNAME = #bmName#, REGDATE = #regdate#
@@ -1371,22 +1371,22 @@
 		AND 
 			LADDERBMID = #ladderBmId#
 		AND 
-			USERID = #userId# -->
+			USERID = #userId#
 	</update>
 	
 	<delete id="EzLadderDAO.deleteLadderBMGroup" parameterClass="LadderBmVO">
-		<!-- DELETE FROM 
+		DELETE FROM 
 			TBL_LADDER_BM
 		WHERE 
 			TENANT_ID = #tenant_id#
 		AND 
 			LADDERBMID = #ladderBmId#
 		AND
-			USERID = #userId# -->
+			USERID = #userId#
 	</delete>
 	
-	<delete id="EzLadderDAO.deleteLadderBMUser" parameterClass="LadderBmUserVO">
-		<!-- DELETE FROM 
+	<!-- <delete id="EzLadderDAO.deleteLadderBMUser" parameterClass="LadderBmUserVO">
+		DELETE FROM 
 			TBL_LADDER_BMUSER
 		WHERE 
 			TENANT_ID = #tenant_id#
@@ -1395,15 +1395,15 @@
 		AND 
 			USERID = #userId#
 		AND 
-			USERNAME$lang$ = #userName# -->
-	</delete>
+			USERNAME$lang$ = #userName#
+	</delete> -->
 	
 	<delete id="EzLadderDAO.deleteLadderBMUserAll" parameterClass="LadderBmVO">
-		<!-- DELETE FROM 
+		DELETE FROM 
 			TBL_LADDER_BMUSER
 		WHERE 
 			TENANT_ID = #tenant_id#
 		AND 
-			LADDERBMID = #ladderBmId# -->
+			LADDERBMID = #ladderBmId#
 	</delete>
 </sqlMap>

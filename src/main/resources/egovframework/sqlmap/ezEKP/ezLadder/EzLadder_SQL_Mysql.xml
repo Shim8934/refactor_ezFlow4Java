@@ -1260,7 +1260,7 @@
 			USERID = #userId#
 	</delete>
 	
-	<delete id="EzLadderDAO.deleteLadderBMUser" parameterClass="LadderBmUserVO">
+	<!-- <delete id="EzLadderDAO.deleteLadderBMUser" parameterClass="LadderBmUserVO">
 		DELETE FROM 
 			TBL_LADDER_BMUSER
 		WHERE 
@@ -1271,7 +1271,7 @@
 			USERID = #userId#
 		AND 
 			USERNAME$lang$ = #userName#
-	</delete>
+	</delete> -->
 	
 	<delete id="EzLadderDAO.deleteLadderBMUserAll" parameterClass="LadderBmVO">
 		DELETE FROM 
