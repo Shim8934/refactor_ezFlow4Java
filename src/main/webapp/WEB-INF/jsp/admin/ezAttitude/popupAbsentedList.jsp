@@ -7,11 +7,15 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>미입력자 목록조회</title>
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/ezAttitude/ListView_list.js"></script>
+	    <!-- data picker-->
+	    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	</head>
 	
 	<script type="text/javascript">
@@ -28,10 +32,95 @@
     	var orderOption = ""; // 정렬 형식(ASC, DESC)
 		
 		$(function() {
+			
+			$("#Sdatepicker").val("${searchStartDate}");
+    		$("#Edatepicker").val("${searchEndDate}");
+    		
 			getAbsentedList();
+			
+			$(document).on('click', '#contentlist table.mainlist th', function(){
+   				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+   					src = "";
+   					orderOption = "";
+   					orderCell = $(this).attr("colname");
+   				}
+   			
+    			if (orderOption == "" || orderOption == "DESC") {
+    				src = '/images/etc/view-sortup.gif';
+    				orderOption = "ASC";
+    			} else {
+    				src = '/images/etc/view-sortdown.gif';
+    				orderOption = "DESC";
+    			}
+    			
+    			$("#contentlist table.mainlist th").find("img").remove();
+    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+    			
+    			getAbsentedList();
+    		});
+			
 		});
     	
+		//datepicker
+    	$(function () {
+		    $("#Sdatepicker").datepicker({
+		        changeMonth: true,
+		        changeYear: true,
+		        autoSize: true,
+		        showOn: "both",
+		        buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        buttonImageOnly: true
+		    });
+		    $("#Edatepicker").datepicker({
+		        changeMonth: true,
+		        changeYear: true,
+		        autoSize: true,
+		        showOn: "both",
+		        buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        buttonImageOnly: true
+		    });
+		});
+		    
+		var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
+		var monthStr = monthMsg.split(";");		    
+		var dayMsg = "일;월;화;수;목;금;토";
+		var dayStr = dayMsg.split(";");
+		
+		$(function () {
+		    $.datepicker.regional["ko"] = {
+		    	closeText: "닫기",
+		        prevText: "이전달",
+		        nextText: "다음달",
+				currentText: "오늘",
+		        monthNames: monthStr,
+		        monthNamesShort: monthStr,
+		        dayNames: dayStr,
+		        dayNamesShort: dayStr,
+		        dayNamesMin: dayStr,
+		        weekHeader: 'Wk',
+		        dateFormat: 'yy-mm-dd',
+		        firstDay: 0,
+		        isRTL: false,
+		        duration: 200,
+		        showAnim: 'show',
+		        showMonthAfterYear: true
+		    };
+		    
+		    $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		});
+		
     	function getAbsentedList() {
+    		if (!checkPattern()) {
+    			alert("날짜를 다시 지정해주세요.");
+    			return;
+    		}
+    		
+    		searchUserName = $("#searchUserName").val();
+			searchDeptName = $("#searchDeptName").val();
+			searchTitle = $("#searchTitle").val();
+    		searchStartDate = $("#Sdatepicker").val();
+    		searchEndDate = $("#Edatepicker").val();
+    		
     		$.ajax({
 				type : "post",
 				dastaType : "json",
@@ -117,6 +206,26 @@
 	            	getAbsentedList();
 	        }
 	    }
+		
+		function checkPattern() {
+			var datePattern =  /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
+			/* var timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/; */
+			
+			if (datePattern.test($("#Sdatepicker").val()) && datePattern.test($("#Edatepicker").val())) {
+				return true;
+			} else {
+				if (!datePattern.test($("#Sdatepicker").val())&& !datePattern.test($("Edatepicker").val())) {
+					$("#Sdatepicker").focus();
+					return false;
+				} else if (!datePattern.test($("#Sdatepicker").val())) {
+					$("#Sdatepicker").focus();
+					return false;
+				} else if (!datePattern.test($("#Edatepicker").val())) {
+					$("#Edatepicker").focus();
+					return false;
+				}
+			}
+		}
 	</script>
 	
 	<body class="popup">
@@ -133,26 +242,25 @@
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
 				</tr>
 				<tr>
-					<td style="width: 3%;">검색기간</td>
-					<td>
+					<td style="width: 5%;">검색기간</td>
+					<td colspan=4>
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
 					</td>
-					<td style=" width:*;" colspan=4>
-						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchUserConfList('refresh');">새로고침</span></a>&nbsp;
+					<td style=" width:*;">
+						<a class="imgbtn"><span onclick="getAbsentedList();">검색</span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
 		</table>
 		
 		<div id="contentlist">
-			<table class="mainlist">
+			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
-						<th>이름</th>
-						<th>직위</th>
-						<th>부서</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
 					</tr>
 				</thead>
 				<tbody></tbody>

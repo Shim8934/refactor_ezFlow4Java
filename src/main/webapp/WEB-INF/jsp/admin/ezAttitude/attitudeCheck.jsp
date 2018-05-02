@@ -89,7 +89,7 @@
 		    			$("#contentlist table.mainlist th").find("img").remove();
 		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
 		    			
-		    			getUserConfList();
+		    			getAttitudeCheckList();
 	    			}
 	    		});
 	    	});
@@ -145,10 +145,10 @@
 	    	function company_change(){
 	    		$('#receiverlist').empty();
 	    		pCompanyId = $("select[name=ListCompany]").val();
-	    		getUserConfList();
+	    		getAttitudeCheckList();
 	    	}
 	    	
-	    	function getUserConfList(){
+	    	function getAttitudeCheckList(){
 	    		//구분
 	    		var typeId = $('#attitudeType').val();
 	    		
@@ -185,7 +185,7 @@
 	    			success : function(result){
 	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
-	    				getUserConfList_after(result.list);
+	    				getAttitudeCheckList_after(result.list);
 	    				//구분 리스트
 	    				getAttitudeTypeList(result.typeList, result.typeId);
 	    			},
@@ -210,7 +210,7 @@
 	    		}
 	    	}
 	    	
-	    	function getUserConfList_after(result){
+	    	function getAttitudeCheckList_after(result){
 	    		var resultHtml = "";
 	    		
 	    		$("#contentlist table.mainlist tbody").html("");
@@ -251,10 +251,15 @@
 		    		pageNum = pCurPage;    			
 	    		}
 	    		
-	    		getUserConfList();
+	    		getAttitudeCheckList();
 	    	}
 	    	
-			function searchUserConfList(searchType){
+			function searchAttitudeCheckList(searchType){
+				if (!checkPattern()) {
+					alert("날짜를 다시 지정해주세요.")
+					return;
+				}
+				
 	    		if (searchType == "search") {
 	    			searchUserName = $("#searchUserName").val();
 	    			searchDeptName = $("#searchDeptName").val();
@@ -280,7 +285,7 @@
 	    		}
 	    		
 	    		pageNum = 1;
-    			getUserConfList();
+    			getAttitudeCheckList();
 	    	}
 			
 			function popupAbsentList() {
@@ -315,13 +320,33 @@
 			function searchPress(evt) {
 		        if (window.event) {
 		            if (window.event.keyCode == 13) {
-		            	searchUserConfList('search');
+		            	searchAttitudeCheckList('search');
 		            }
 		        } else {
 		            if (evt.which == 13)
-		            	searchUserConfList('search');
+		            	searchAattitudeCheckList('search');
 		        }
 		    }
+			
+			function checkPattern() {
+				var datePattern =  /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
+				/* var timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/; */
+				
+				if (datePattern.test($("#Sdatepicker").val()) && datePattern.test($("#Edatepicker").val())) {
+					return true;
+				} else {
+					if (!datePattern.test($("#Sdatepicker").val())&& !datePattern.test($("Edatepicker").val())) {
+						$("#Sdatepicker").focus();
+						return false;
+					} else if (!datePattern.test($("#Sdatepicker").val())) {
+						$("#Sdatepicker").focus();
+						return false;
+					} else if (!datePattern.test($("#Edatepicker").val())) {
+						$("#Edatepicker").focus();
+						return false;
+					}
+				}
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -358,8 +383,8 @@
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
 					</td>
 					<td style=" width:*;" colspan=2>
-						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchUserConfList('refresh');">새로고침</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');">검색</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');">새로고침</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="exportExcel();">엑셀저장</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="popupAbsentList();">미입력자 목록</span></a>&nbsp;
 					</td>
