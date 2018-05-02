@@ -82,6 +82,8 @@
         //만약 회사 클릭시
         if (selnode.GetNodeData("SETNODEICONBYNAME") != "") {
         	company_typeList(DeptID, typeId);
+        } else {
+        	company_typeList(selnode.GetNodeData("extensionattribute2"), typeId);
         }
     }
 
@@ -171,6 +173,9 @@
     
     //회사 클릭시마다 근태유형 selectbox 변경
     function company_typeList(companyId, typeId) {
+    	if (companyId == null || companyId == "") {
+    		return;
+    	}
     	if (typeId == null || typeId == "") {
     		typeId = 'A01';
     	}
@@ -179,7 +184,7 @@
         	dataType : "json",
         	url : "/ezStatistics/attitudeTypeList.do",
         	async : false,
-        	data : {companyId : companyId},
+        	data : {"companyId" : companyId},
         	success : function(result){
         		var html = "";
         		if (result.length != null && result.length != 0) {
