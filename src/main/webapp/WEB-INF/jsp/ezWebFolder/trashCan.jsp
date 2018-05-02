@@ -207,6 +207,8 @@
 					tdName.textContent = resultElement["trashCanName"];
 					if (resultElement["trashCanExt"] != 'folder') {
 						tdSize.textContent = getFileSize(resultElement["trashCanSize"]);
+					} else {
+						tdSize.textContent = "-";
 					}
 					
 					if (userInfo.lang == "1") {
