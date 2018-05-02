@@ -21,17 +21,8 @@
     <script>
         var PostTreeView = null;
         var treeconfig = "";
-        var ReturnFunction;
-        var CancelFunction;
-        var isDivPopUp = false;
         var test = [];
-        
-        var createId = "";
-        var id = "";
         var parent = "";
-        var companyFolderId = "";
-	    var deptFolderId    = "";
-	    var persFolderId    = "";
 		var folderId="";
 		var folderType = "${folderType}";
 		var checkedfileList = "${fileList}";
@@ -43,11 +34,11 @@
             else
                 return true;
         };
+        
         window.onload = function () {
     		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
     		folderList(folderType);
         }
-        var inputNameDlg_cross_dialogArguments = new Array();
         
         function folderList(obj) {
 			folderType = obj;
@@ -140,21 +131,6 @@
             opener.refreshView();
            
         }
-        
-        function requestdata(event) {
-            if (!event) event = window.event;
-            var nodeIdx = event.nodeIdx;
-            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
-                nodeIdx = arguments[0].nodeIdx;
-            }
-//             var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false, true)
-//             PostTreeView.putchildxml(nodeIdx, childxml);
-        }
-        
-        function returnFunction(type) {
-        	folderType = type;
-        	$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
-        }
     </script>
 </head>
 
@@ -179,9 +155,5 @@
 	<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 	    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 	</div>
-	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
-	</div>
 </body>
 </html>
-
