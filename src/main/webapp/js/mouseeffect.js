@@ -169,7 +169,7 @@ function toggleList() {
     if (level2El.item(this.listNum).className == "on"  && (itemId != undefined &&
 	    (itemId == "btn_Manager" || itemId == "Del_Cache" || itemId == "btn_MemberIn" || itemId == "btn_MemberOut"
 	    || GetAttribute(level2El.item(this.listNum).previousSibling, 'name') == "BoardAdminLeftOn"
-	    || itemId == "searchBoard" || itemId == "btn_MemberJoinIng" || itemId == "MYCONT" || itemId == "btn_MemberInfo"
+	    || itemId == "searchBoard" || itemId == "btn_MemberJoinIng" || itemId == "btn_MemberInfo"
         || itemId == "m01" || itemId == "m02" || itemId == "m03" || itemId == "m04" || itemId == "m05" || itemId == "m06" || itemId == "m07" || itemId == "m08" || itemId == "m09"))) {
         level1El.item(this.listNum).className = null;
         level2El.item(this.listNum).className = "off";

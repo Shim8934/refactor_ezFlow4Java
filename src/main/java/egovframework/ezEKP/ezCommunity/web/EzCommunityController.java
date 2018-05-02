@@ -213,20 +213,19 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pBoardID = request.getParameter("boardID");
 		}
 
+		/* 2018-05-02 홍승비 - 커뮤니티 썸네일과 포토게시판 썸네일 경로 다르게 수정 */
 		if (pType.toUpperCase().equals("COMMUNITYLOGO")) {
-			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "LOGO", userInfo.getTenantId());
-			
-	        if (pFilePath != null && !pFilePath.equals("")) {
-	            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
-	        }
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "LOGO", userInfo.getTenantId());			
+		}
+		else if (pType.toUpperCase().equals("COMMUNITYTHUM")) {			
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "COMMUNITYTHUM", userInfo.getTenantId());				
+		}
+		else if (pType.toUpperCase().equals("COMMUNITYBOARD")) {
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "COMMUNITYBOARD", userInfo.getTenantId());				
 		}
 		
-		if (pType.toUpperCase().equals("COMMUNITYTHUM")) {
-			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "COMMUNITYTHUM", userInfo.getTenantId());
-			
-	        if (pFilePath != null && !pFilePath.equals("")) {
-	            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
-	        }
+		if (pFilePath != null && !pFilePath.equals("")) {
+            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
 		}
 	}
 
@@ -267,35 +266,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		ezCommunityService.commMakeOk(userInfo, clubVO, request, response);
-	}
-	
-	/**
-	 * 커뮤니티만들기 IE9 로고 업로드
-	 */
-	@RequestMapping(value = "/ezCommunity/commMakeUpload.do")
-	public String commMakeUpload(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) {
-		logger.debug("commMakeUpload started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
-		String mode = request.getParameter("mode");
-		String fileName = request.getParameter("fileName");
-		String fileData = request.getParameter("fileData");
-		boolean result = false;
-		
-		try {
-			ezCommunityService.commMakeUpload(mode, fileName, fileData, logoPath, userInfo.getTenantId());
-			
-			result = true;
-		} catch (Exception e) {
-			result = false;
-		}
-		
-		logger.debug("commMakeUpload ended.");
-		
-		model.addAttribute("result", result);
-		
-		return "json";
 	}
 	
 	/**
@@ -2596,34 +2566,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "json";
 	}
 		
-	/**
-	 * 커뮤니티 환경설정화면 IE9 로고 업테이트 실행함수
-	 */
-	@RequestMapping(value = "/ezCommunity/adminLogoUploadIE9.do")
-	public String adminLogoUploadIE9(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("adminLogoUploadIE9 started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
-		String fileName = request.getParameter("fileName");
-		String fileData = request.getParameter("fileData");
-		String code = request.getParameter("code");
-		String type = request.getParameter("type");
-		String imageSrc = request.getParameter("imageSrc");
-		
-		logger.debug("fileName : " + fileName + ", code : " + code + ", type : " + type);
-		
-		try {
-			ezCommunityService.adminLogoUploadIE9(code, type, imageSrc, logoPath, fileName, fileData, userInfo.getTenantId());
-			model.addAttribute("result", true);
-		} catch (Exception e) {
-			model.addAttribute("result", false);
-			throw e;
-		}
-		
-		logger.debug("adminLogoUploadIE9 ended.");
-		return "json";
-	}
 	
 	/**
 	 * 커뮤니티 환경설정화면 썸네일 temp파일 저장 실행함수
@@ -4268,7 +4210,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 포토게시판 앍기화면 호출함수
+	 * 포토게시판 읽기화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/boardItemViewPhoto.do")
 	public String boardItemViewPhoto(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -4344,7 +4286,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile//s_", "/uploadFile/"));
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile/s_", "/uploadFile/"));
 			String pFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getExtensionAttribute5();
-			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + boardID + "&imgUrl=" + item.getExtensionAttribute5() + "&fileName=" + URLEncoder.encode((item.getExtensionAttribute4()).replace("+", "%20").replace("&amp;", "&"),"UTF-8");
+			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + boardID + "&imgUrl=" + item.getExtensionAttribute5() + "&fileName=" + URLEncoder.encode((item.getExtensionAttribute4()).replace("+", "%20").replace("&amp;", "&"),"UTF-8");
 			
 			File file = new File(pFilePath);
 			
