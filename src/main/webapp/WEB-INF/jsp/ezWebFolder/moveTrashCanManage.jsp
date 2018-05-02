@@ -106,20 +106,20 @@
         var moveCopyFolderDlg_cross_dialogArguments = [];
         function move_onclick() {
         	
-        	if (!confirm("<spring:message code='ezWebFolder.t283'/>")) {
-        		return;
-        	}
-        	
             if (folderId == "") {
                 alert("<spring:message code='ezWebFolder.t261'/>");
                 return;
             }
            	
-            if ( parent =='#' ) {
+            if ( parent =='#' && checkedfileList.length > 0) {
 	            alert("<spring:message code='ezWebFolder.t293'/>");
 	            return;
             }
             
+        	if (!confirm("<spring:message code='ezWebFolder.t283'/>")) {
+        		return;
+        	}
+        	
             $.ajax ({
             	type : "POST",
             	async : false,
@@ -161,7 +161,7 @@
 </head>
 
 <body scroll="no" class="popup">
-	<h1><span><spring:message code='ezWebFolder.t286'/></span></h1>
+	<h1><spring:message code='ezWebFolder.t286'/></h1>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<div style="position: absolute; top: 0px; right: 0px;">
 			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="folderList('C');"> <span><spring:message code='ezWebFolder.t233'/></span>
@@ -175,7 +175,7 @@
       	<a class="imgbtn" onclick="move_onclick()"><span><spring:message code="ezWebFolder.t121"/></span></a>
 	</div>
 	<div style="margin: 0px 0px 10px 200px; position:fixed;">
-		<a class="imgbtn" onclick="Window_Close();"><span onclick=""><spring:message code='ezWebFolder.t110'/></span></a>
+		<a class="imgbtn" onclick="window.close();"><span onclick=""><spring:message code='ezWebFolder.t110'/></span></a>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
