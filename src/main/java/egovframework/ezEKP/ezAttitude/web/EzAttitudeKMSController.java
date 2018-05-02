@@ -927,7 +927,8 @@ public class EzAttitudeKMSController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
-
+		String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+		
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
@@ -985,6 +986,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("adminFlag", adminFlag);
 		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("font", font);
 		
 		LOGGER.debug("attModAppDetail ended");
 		

@@ -260,7 +260,7 @@
 		        		region : $("input[name=region]").val(),
 		        		mobile : $("input[name=mobile]").val(),
 		        		bizSub : $("input[name=bizsub]").val(),
-		        		content : message.GetEditorContent().replace(/(^\s+)|(\s+$)/gi, ""),
+		        		content : message.GetEditorContent().replace(/(\s+)|(\s+)/gi, " "),
 		        		dateType : $("#periodblock").attr("datetype"),
 		        		startDate : startDate,
 		        		endDate : endDate,

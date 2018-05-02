@@ -129,6 +129,7 @@
 		<script>
 			var pMode = "";
 			var uselang = "<c:out value='${userInfo.lang}'/>";
+			var LunarUse = false;
 			var deptFlag = "${deptFlag}";
 			var adminFlag = "${adminFlag}";
 			var companyHoliday = "";        // 회사 휴무일
@@ -181,7 +182,7 @@
 			window.onload = function() {
 				select_memorialDays(uselang); // 공식 휴일 설정 => 언어에 따라 memorialDays에 변수가 담김
 				
-				getHolidayList();
+				scheduleGetLunarUse();
 			}
 			
 			//datepicker
@@ -224,6 +225,28 @@
 			    
 			    $("#Sdatepicker").datepicker('disable');
 			});
+			
+			function scheduleGetLunarUse() {
+			    $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezSchedule/scheduleGetLunarUse.do",
+		    		data : {
+		    			COMPANYID  : "${userInfo.companyID}"		    			
+		    		},
+		    		success: function(result) {		    			
+		    			if (result == "0") {
+		    				LunarUse = true;
+		    			} else if(result == "1") {
+		    				LunarUse = true;
+		    			} else {
+		    				LunarUse = false;
+		    			}		    			
+		    			getHolidayList();
+		    		}
+		        });
+			}
 			
 			/**
 			* 근태유형 메소드

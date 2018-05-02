@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -38,6 +39,9 @@ public class EzAttitudeBHSController {
 	
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
 	
 	@Resource(name="crypto")
 	private EgovFileScrty egovFileScrty;
@@ -549,6 +553,7 @@ public class EzAttitudeBHSController {
 		LOGGER.debug("/ezAttitude/attitudeItemView started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
 		
 		String userId = userInfo.getId();
 		String attitudeId = request.getParameter("attitudeId");
@@ -599,6 +604,8 @@ public class EzAttitudeBHSController {
 				model.addAttribute("attitudeInfo", attitudeVO);
 			}
 		} 
+		
+		model.addAttribute("font", font);
 		
 		LOGGER.debug("/ezAttitude/attitudeItemView ended");
 		return "/ezAttitude/attitudeItemView";

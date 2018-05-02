@@ -145,7 +145,7 @@ public class AttitudeVO {
 	}
 	public void setContent(String content) {
 		if (content != null) {
-			this.content = content.replace("\'", "\"");
+			this.content = content.replaceAll(": \'", ":").replaceAll("\';", ";");
 		}
 	}
 	public String getIp() {
