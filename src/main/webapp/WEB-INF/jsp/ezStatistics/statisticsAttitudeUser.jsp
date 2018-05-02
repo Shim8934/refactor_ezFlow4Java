@@ -52,7 +52,7 @@
         createNodeInsert(xmlpara, objNode, "DATA");
         createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptId}");
         createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyId}");
-        createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
         xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
         xmlHTTP.send(xmlpara);
         xmlTree = loadXMLString(xmlHTTP.responseText);
@@ -79,12 +79,8 @@
         var selnode = treeView.GetSelectNode();
         DeptID = selnode.GetNodeData("CN");
         displayUserList(DeptID);
-        //만약 회사 클릭시
-        if (selnode.GetNodeData("SETNODEICONBYNAME") != "") {
-        	company_typeList(DeptID, typeId);
-        } else {
-        	company_typeList(selnode.GetNodeData("extensionattribute2"), typeId);
-        }
+        //회사별 근태유형 리스트
+        company_typeList(selnode.GetNodeData("extensionattribute2"), typeId);
     }
 
     //[+] 버튼
@@ -395,17 +391,19 @@
             }
         }
         else {
-            if (e.which == 13)
+            if (e.which == 13){
                 search();
+            }
         }
     }
 
     //검색
     function search() {
-        if (document.getElementById("searchopt").value == "1")
+        if (document.getElementById("searchopt").value == "1") {
             searchuser();
-        else
+        } else {
             searchdept();
+        }
     }
 
     //부서로 검색
@@ -424,7 +422,7 @@
         	dataType : "text",
         	url : "/ezOrgan/getSearchList.do",
         	async : false,
-        	data : {search : "displayname::" + keyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
+        	data : {search : "displayname::" + keyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9;extensionAttribute2", prop : "", type : "group"},
         	success : function(result){	
         		xmlDom = loadXMLString(result);
                 adCount = xmlDom.getElementsByTagName("ROW").length;
@@ -443,9 +441,9 @@
             g_xmlHTTP = createXMLHttpRequest();
 
             if (CrossYN()) {
-                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
             } else {
-                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
             }
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -470,7 +468,7 @@
             if (rgParams["deptid"] != "") {
                 bSearch = true;
                 g_xmlHTTP = createXMLHttpRequest();
-                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
                 g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
                 g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
                 g_xmlHTTP.send(strQuery);
@@ -482,7 +480,7 @@
       	 if (deptid != "") {
                bSearch = true;
                g_xmlHTTP = createXMLHttpRequest();
-               var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+               var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
                g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
                g_xmlHTTP.send(strQuery);
