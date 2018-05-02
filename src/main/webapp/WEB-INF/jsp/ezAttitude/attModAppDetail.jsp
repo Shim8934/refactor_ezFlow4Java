@@ -42,6 +42,7 @@
 	        var offSetMin = "<c:out value='${offSetMin}'/>";
 	        var adminFlag = "<c:out value='${adminFlag}'/>";
 		    var timeCheck = false;
+		    var font = "<c:out value='${font}'/>";
 		    
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -54,8 +55,14 @@
 		        
 		        var doc = document.getElementById('message').contentWindow.document;
 				doc.open();
-// 				doc.write(content);
+ 				doc.write('${data.content}');
 				doc.close();
+				
+				var fontFamily = font.split("|")[0];
+				var fontSize = font.split("|")[1];
+				$("#message").contents().find("p").each(function(){
+					$(this).css({"font-size":fontSize, "font-family":fontFamily});	
+				});
 				
 				console.log(writerid);
 				console.log(userId);

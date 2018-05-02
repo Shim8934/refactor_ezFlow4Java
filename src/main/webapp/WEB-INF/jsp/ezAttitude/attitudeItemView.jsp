@@ -34,7 +34,6 @@
 			var font = "<c:out value='${font}'/>"
 			
 			window.onload = function () {
-				alert(font);
 				setHtml();
 			}
 			
@@ -54,11 +53,12 @@
 				doc.write('${attitudeInfo.content}');
 				doc.close();
 				
-				var fontSize = font.split("|")[1];
 				var fontFamily = font.split("|")[0];
+				var fontSize = font.split("|")[1];
 				$("#message").contents().find("p").each(function(){
 					$(this).css({"font-size":fontSize, "font-family":fontFamily});	
 				});
+				
 				var showTime = "";
 				switch (dateType) {
 					case "1":
