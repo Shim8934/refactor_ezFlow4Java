@@ -704,7 +704,7 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeAbsentList" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
 			SELECT
-				A.cn AS userid,
+				A.cn AS writerid,
 				A.displayname AS username,
                 A.description AS deptname,
                 A.title AS usertitle,
