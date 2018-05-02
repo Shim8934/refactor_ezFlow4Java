@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezPMS.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -9,6 +10,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.tools.ant.Project;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,16 +66,28 @@ public class EzPMSGWController {
 			String status = request.getParameter("status");
 			String deptId = request.getParameter("deptId");
 			
+			String searchByName = "";
+			if (!request.getParameter("searchByName").equals("{}")) {
+				searchByName = request.getParameter("searchByName").toString();
+			}
 			//검색 및 환경설정 세팅
 			Map<String, Object> search = new HashMap<>();
 			search.put("projectSort", request.getParameter("projectSort"));
 			search.put("listNumber", request.getParameter("listNumber"));
 			search.put("listProjectStatus", request.getParameter("listProjectStatus"));
 			search.put("listCount", request.getParameter("listCount"));
-			search.put("currentpage", request.getParameter("currentpage"));
+			search.put("currentPage", request.getParameter("currentPage"));
 			search.put("startCount", request.getParameter("startCount"));
 			search.put("viewType", request.getParameter("viewType"));
-
+			//정렬
+			search.put("orderWhat", request.getParameter("orderWhat"));
+			search.put("orderHow", request.getParameter("orderHow"));
+			//검색
+			search.put("searchByName", searchByName);
+			search.put("searchByUser", request.getParameter("searchByUser"));
+			search.put("searchByStartDate", request.getParameter("searchByStartDate"));
+			search.put("searchByEndDate", request.getParameter("searchByEndDate"));
+			search.put("searchByOverview", request.getParameter("searchByOverview"));
 			
 			//프로젝트 리스트 가져오기
 			List<ProjectInfoVO> projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, info.getOffSet(), lang);
@@ -469,12 +483,20 @@ public class EzPMSGWController {
 			
 			String[] projectIdList = projectId.split("_");
 			
-			for (int i = 0; i < projectIdList.length; i++) {
-				ezPMSService.addFavoriteProject(Integer.parseInt(projectIdList[i]), userId, info.getTenantId());
+			int addResult = 0;
+			
+			if (projectIdList.length == 1) {
+				addResult = ezPMSService.addFavoriteProject(Integer.parseInt(projectIdList[0]), userId, info.getTenantId());
+			} else {
+				for (int i = 0; i < projectIdList.length; i++) {
+					ezPMSService.addFavoriteProject(Integer.parseInt(projectIdList[i]), userId, info.getTenantId());
+				}
+				addResult = 0;
 			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", addResult);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -595,14 +617,29 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String lang = info.getLang();
+			String searchByName = "";
+			
+			if (lang.equals("1")) {
+				lang = "";
+			}
+			
+			if (!request.getParameter("searchByName").equals("{}")) {
+				searchByName = request.getParameter("searchByName").toString();
+			}
 			
 			ProjectInfoVO project = new ProjectInfoVO();
 			project.setStatus(request.getParameter("listProjectStatus"));
+			project.setProjectName(searchByName);
+			project.setPlanStartDate(request.getParameter("searchByStartDate"));
+			project.setPlanEndDate(request.getParameter("searchByEndDate"));
+			project.setOverview(request.getParameter("searchByOverview"));
+			project.setHeadManagerName(request.getParameter("searchByUser"));
 			
 			String deptId = request.getParameter("deptId");
 			
 			LOGGER.debug("status : " + project.getStatus() + ", deptId : " + deptId);
-			int projectListCount = ezPMSService.getProjectListCount(project, info.getTenantId(), userId, deptId);
+			int projectListCount = ezPMSService.getProjectListCount(project, info.getTenantId(), userId, deptId, lang);
 			
 			LOGGER.debug("projectListCount : " + projectListCount);
 			

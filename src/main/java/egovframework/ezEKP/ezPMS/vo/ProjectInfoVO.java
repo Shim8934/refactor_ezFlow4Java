@@ -84,6 +84,9 @@ public class ProjectInfoVO {
 	    // 프로젝트 멤버
 	    private List<ProjectMemberVO> projectMember;
 	    
+	    // 프로젝트 즐겨찾기 여부
+	    private int isFavorite;
+	    
 	    public int getProjectId() {
 	        return projectId;
 	    }
@@ -290,6 +293,14 @@ public class ProjectInfoVO {
 
 		public void setProjectMember(List<ProjectMemberVO> projectMember) {
 			this.projectMember = projectMember;
+		}
+
+		public int getIsFavorite() {
+			return isFavorite;
+		}
+
+		public void setIsFavorite(int isFavorite) {
+			this.isFavorite = isFavorite;
 		}
 
 }

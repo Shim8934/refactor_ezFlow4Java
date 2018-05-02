@@ -15,13 +15,15 @@
 <link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 <script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
+<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+
+<!-- time picker-->
+<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 <link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
-<!-- time picker-->
-<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script type="text/javascript">
 
@@ -34,14 +36,21 @@ var holdColor = "${holdColor}";
 var listNumber = "${listNumber}";
 var listProjectStatus = "${listProjectStatus}";
 var currentPage = 1;
-var orderNum; 
+var orderWhat; 
 var orderHow;
 var CurrentHeight = document.documentElement.clientHeight - 110;
 var projectTotalCount = 0;
 var checkedVal = "";
+//검색을 위한 변수
+var searchByNmae = "";
+var searchByUser = "";
+var searchByStartDate = "";
+var searchByEndDate = "";
+var searchByOverview = "";
 
-function goToProjectDetails() {
-	window.open("/ezPMS/getProjectDetails.do", "right");
+function goProjectDetails(elem) {
+	var projectId = $(elem).attr("id");
+	window.open("/ezPMS/getProjectDetails.do/"+projectId, "right");
 }
 
 function addNewProject(){ 
@@ -78,7 +87,8 @@ function addProjectPopup(topPct, leftPct, popUpW, popUpH, URL) {
 $(function(){
 	
 	setProjectList();
-	
+	getDatePicker();
+
 	var projectList = new Array();
 	
 	<c:forEach items="${projectList}" var="project">
@@ -130,8 +140,82 @@ $(function(){
 	$("#listSort option[value='"+ projectSort +"']").attr("selected", true);
 	$("#listcount option[value='"+ listNumber +"']").attr("selected", true);
 	$("#listByStatus option[value='" + listProjectStatus + "']").attr("selected", true);
-	
+	$("#deleteFavorite").css("display", "none");
 });
+
+function getDatePicker() {
+	$("#Sdatepicker").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		autoSize: true,
+		showOn: "both",
+		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		buttonImageOnly: true,
+		beforeShow: function (input) {
+			var i_offset = $(input).offset();
+			setTimeout(function () {
+				//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+			})
+		}
+	});
+
+	$("#Edatepicker").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		autoSize: true,
+		showOn: "both",
+		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		buttonImageOnly: true,
+		beforeShow: function (input) {
+			var i_offset = $(input).offset();
+			setTimeout(function () {
+				//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+			})
+		}
+	});
+	
+	var SDate = new Date();
+	var EDate = new Date();
+
+	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	$("#Sdatepicker").datepicker('setDate', "");
+	
+	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	$("#Edatepicker").datepicker('setDate', "");
+	
+	$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+			closeText: "<spring:message code='main.t3' />",
+			prevText: "<spring:message code='main.t0604' />",
+			nextText: "<spring:message code='main.t0605' />",
+			currentText: "<spring:message code='main.t0606' />",
+			monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+			             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+			             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+			             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+			monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+			                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+			                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+			                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+			dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+			           "<spring:message code='main.t0627' />"],
+			dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+			                "<spring:message code='main.t0627' />"],
+			dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+			              "<spring:message code='main.t0627' />"],
+			weekHeader: "Wk",
+			dateFormat: "yy-mm-dd",
+			firstDay: 0,
+			isRTL: false,
+			duration: 200,
+			showAnim: "show",
+			showMonthAfterYear: true
+	  };
+	  
+	  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+}
 
 function setTotalCount(totalCount) {
 	if (!totalCount) {
@@ -223,10 +307,6 @@ function changeMainSetting() {
 	});
 }
 
-function addFavorite(projectId) {
-	$("#"+projectId).find(".star").attr("src", "/images/ImgIcon/icon-flag.gif");
-}
-
 function ListCount(listCountNum) {
 	listNumber = listCountNum;
 	
@@ -236,7 +316,8 @@ function ListCount(listCountNum) {
 
 function ChangeProjectSort(sortType) {
 	projectSort = sortType;
-	
+	orderHow = "";
+	orderWhat = "";
 	changeMainSetting();
 	setProjectList();
 	
@@ -248,10 +329,10 @@ function goToPageByNum(page){
 }
 
 
-//정렬에 의한 리스트 셋팅
+//헤더 리스트 셋팅
 function setListOrder(elem){
 	
-	orderNum = $(elem).attr("order");
+	orderWhat = $(elem).attr("order");
 	orderHow = $(elem).attr("sort");
 	
 	if(orderHow == null){
@@ -269,7 +350,7 @@ function setInitOrder(){
 	
 	$("#BoardList_TH th").each(function () {
 	
-		if(orderNum == $(this).attr("order")) {
+		if(orderWhat == $(this).attr("order")) {
 			if(orderHow == 'asc'){
 				$(this).attr("sort","asc");
 				$(this).append(' <img src="/images/etc/view-sortdown.gif" align="absmiddle">');
@@ -282,7 +363,6 @@ function setInitOrder(){
 }
 
 function setProjectList() {
-	
 	var param = {
 		projectSort : projectSort,
 		viewType : viewType,
@@ -293,11 +373,19 @@ function setProjectList() {
 		listNumber : listNumber,
 		listProjectStatus : listProjectStatus,
 		currentPage : currentPage,
-		projectTotalCount : projectTotalCount
-		//뒤에 검색부분이 들어갈 예정
+		projectTotalCount : projectTotalCount,
+		//프로젝트 header 정렬
+		orderWhat : orderWhat,
+		orderHow : orderHow,
+		//프로젝트 검색
+		searchByName : searchByName,
+		searchByUser :	searchByUser,
+		searchByStartDate : searchByStartDate,
+		searchByEndDate : searchByEndDate,
+		searchByOverview : searchByOverview
 	}
 	
-	
+	console.log(currentPage);
 	$.ajax({
 		type : "post",
 		contentType : "application/json",
@@ -306,6 +394,7 @@ function setProjectList() {
 		url : "/ezPMS/getProjectList.do",
 		success : function(projectList) {
 			$("#prjectList").html(projectList);
+			setInitOrder();
 		}	
 	});
 }
@@ -375,6 +464,7 @@ function changeProjectStatus() {
 
 function viewListByStatus(status) {
 	listProjectStatus = status;
+	currentPage = 1;
 	
 	if (listProjectStatus != "F") {
 		$("#deleteFavorite").css("display", "none");
@@ -457,6 +547,37 @@ function deleteProject() {
 		}
 	}
 }
+function addFavoriteMemo(projectId) {
+	var response = confirm("프로젝트를 즐겨찾기 하시겠습니까?");
+	if (response == true) {
+		
+		data = {
+				status : "F",
+				projectList : projectId
+		}
+		
+		$.ajax({
+			type : "POST",
+			contentType: "application/json; charset=UTF-8",
+			url : "/ezPMS/addFavoriteProject.do",
+			data :JSON.stringify(data),
+			success : function(result) {
+				if (result == "0") {
+					alert("프로젝트가 즐겨찾기 되었습니다.");
+					$("#"+projectId).attr("src", "/images/ImgIcon/icon-flag.gif");
+					$("#"+projectId).attr("onclick", "deleteFavoriteMemo(this)");
+				
+				} else {
+					alert("이미 추가된 프로젝트 입니다.");
+					return;
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+			}
+		});
+		
+	}
+}
 
 function addFavorite() {
 	var response = confirm("프로젝트를 즐겨찾기 하시겠습니까?");
@@ -474,9 +595,14 @@ function addFavorite() {
 			url : "/ezPMS/addFavoriteProject.do",
 			data :JSON.stringify(data),
 			success : function() {
-				alert("프로젝트가 즐겨찾기 되었습니다.");
-				checkedVal = "";
-				setProjectList(); 
+				if (result == "0") {
+					alert("프로젝트가 즐겨찾기 되었습니다.");
+					checkedVal = "";
+					setProjectList(); 
+				} else {
+					alert("이미 추가된 프로젝트 입니다.");
+					return;
+				}
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 			}
@@ -543,6 +669,26 @@ function getCheckedVal() {
 	}
 	
 	
+}
+
+function getSearchProject() {
+	addProjectPopup(20, 30, 400, 300, "/ezPMS/getProjectNameList.do");
+}
+
+function searchProject() {
+	currentPage = 1;
+	listProjectStatus = "A";
+	searchByName = $("#searchByName").val();
+	searchByUser = $("#searchByUser").val();
+	searchByStartDate = $("#Sdatepicker").val();
+	searchByEndDate = $("#Edatepicker").val();
+	searchByOverview = $("#searchByOverview").val();
+	
+	setProjectList();
+}
+
+function emptyDate(elem){
+	$(elem).siblings('input').val("");
 }
 </script>
 <style type="text/css">
@@ -626,6 +772,9 @@ function getCheckedVal() {
 	background-color: rgb(233, 241, 255);
 }
 
+.listRow:hover {
+	background-color: rgb(233, 241, 255);
+}
 </style>
 </head>
 <body class="mainbody">
@@ -644,13 +793,13 @@ function getCheckedVal() {
 				<option value="F">자주가는 프로젝트</option>
 			</select>
 		</li>
-		<li><span onclick="goToProjectDetails()">project(임시)</span></li>
+		<li><span id="1" onclick="goProjectDetails(this)">project(임시)</span></li>
 		<li><span id="newProject" onclick="addNewProject()">새 프로젝트</span></li>
 		<li><span id="deleteProject" onclick="deleteProject()">삭제</span></li>
 		<li><span id="changeProjectStatus" onclick="changeProjectStatus()">프로젝트 상태 변경</span></li>
 		<li><span id="deleteFavorite" onclick="deleteFavorite()">즐겨찾기 해제</span></li>
 		<li><span id="addFavorite" onclick="addFavorite()">즐겨찾기 추가</span></li>
-		<li><span id="searchProject" onclick="showSearchDiv()">검색</span></li>
+		<li><span id="searchProject" onclick="showSearchDiv()">검색 <img src="/images/etc/view-sortup.gif" align="absmiddle" class="searchViewIcon"></span></li>
 		<li id="right">
 	        <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="memoStyle" onclick="changeMemoStyle()">
 	        <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="boardStyle" onclick="changeBoardStyle()">
@@ -694,27 +843,28 @@ function getCheckedVal() {
 		        <div class="shadow">
 		        </div>
 		    </div>
-	<div id = "searchDiv" style="display:none">
-		<table class="content" style="width:80%">
+	<div id = "searchDiv" style="display:none; margin-bottom:10px; display:none;">
+		<table class="content" style="width:80%; margin-bottom:5px;">
 			<tbody>
 				<tr>
 					<th>프로젝트명 </th>
-					<td><input type="text" id="searchByName" style="width:50%; margin-right:5px;"><a class="imgbtn"><span>프로젝트 선택</span></a></td>
+					<td style="width:50%"><input type="text" id="searchByName" style="width:50%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span>프로젝트 선택</span></a></td>
 					<th>담당자</th>
-					<td style="width:40%"><input type="text" id="searchByUser"></td>
+					<td><input type="text" id="searchByUser"></td>
 				</tr>
 				<tr>
 					<th>시작일 </th>
-					<td><input type="text" id="searchByStartDate"><a class="imgbtn"><span>날짜 초기화</span></a></td>
+					<td style="width:50%"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
 					<th>종료일</th>
-					<td><input type="text" id="searchByEndDate"><a class="imgbtn"><span>날짜 초기화</span></a></td>
+					<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span>날짜 초기화</span></a></td>
 				</tr>
 				<tr>
 					<th>개요</th>
-					<td colspan="3"><input type="text" style="width:90%"></td>
+					<td colspan="3"><input type="text" style="width:100%" id="searchByOverview"></td>
 				</tr>
 			</tbody>
 		</table>
+		<a class="imgbtn" onclick="searchProject()" style="margin-left:40%;"><span>검색</span></a>
 	</div>
 	<div id = "prjectList"></div>
 	<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>

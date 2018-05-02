@@ -64,5 +64,11 @@ function popupClose() {
 }
  
 function showSearchDiv() {
-	$("#searchDiv").slideToggle();
+	if ($("#searchDiv").css("display") == "none") {
+		$(".searchViewIcon").attr("src", "/images/etc/view-sortdown.gif");
+		$("#searchDiv").slideDown();
+	} else {
+		$(".searchViewIcon").attr("src", "/images/etc/view-sortup.gif");
+		$("#searchDiv").slideUp();
+	}
 }

@@ -88,27 +88,27 @@ $(function(){
 								<input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);"
 									style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 							</th>
-							<th id="BoardList_TH_1" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; 
+							<th id="BoardList_TH_1" onclick="setListOrder(this)" order="PROJECT_NAME" style="text-align: left; overflow: hidden; white-space: nowrap; 
 								text-overflow: ellipsis; cursor: pointer; width: *;" class="h5_center">프로젝트명</th>
-							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="6"
+							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
 								class="h5_center">총괄 담당자</th>
-							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="6"
+							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROGRESS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
 								class="h5_center">전체 진행률</th>
-							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="6"
+							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="COMPLETE_TASK"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
 								class="h5_center">완료된 업무</th>
-							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="6"
+							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="LATE_TASK"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
 								class="h5_center">기한 지난 업무</th>
-							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="6"
+							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="REST_DUEDAY"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
 								class="h5_center">남은 기간</th>
-							<th id="BoardList_TH_7" onclick="setListOrder(this)" order="6"
+							<th id="BoardList_TH_7" onclick="setListOrder(this)" order="PLAN_START_DATE"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 15%;"
 								class="h5_center">프로젝트 기간</th>
-							<th id="BoardList_TH_8" onclick="setListOrder(this)" order="6"
+							<th id="BoardList_TH_8" onclick="setListOrder(this)" order="STATUS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 5%;"
 								class="h5_center">상태</th>
 							</tr>
@@ -122,7 +122,7 @@ $(function(){
 									</c:when>
 									<c:otherwise>
 										<c:forEach items="${projectList }" var="project">
-									<tr style="cursor: pointer;" id="${project.projectId }">
+									<tr style="cursor: pointer;" id="${project.projectId }" class="listRow" ondblclick="goProjectDetails(this)">
 										<td style="width: 50px; cursor: default; text-align: center"><input
 											type="checkbox" onchange="checkedCheckbox(this);"
 											name="boardCheckbox"

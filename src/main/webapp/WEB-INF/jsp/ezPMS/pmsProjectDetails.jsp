@@ -88,7 +88,7 @@ function changeTab(clickTabId, nowTabAttr) {
 </script>
 </head>
 <body class="mainbody" style="height: 95%; overflow: hidden" marginwidth="0" marginheight="0">
-	<h1>Project Details<span id="mailBoxInfo"> - total : 12</span></h1>
+	<h1>Project Details : ${projectId }<span id="mailBoxInfo"> - total : 12</span></h1>
 	<div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
 	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab">overview</span></p>
