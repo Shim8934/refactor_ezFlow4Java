@@ -493,6 +493,7 @@
 		        	if (document.getElementById("txtContent").value != "") {		// DocContent
            			    TYPE += "CONTENT;";
           		        DATA += "<CONTENT>" + MakeXMLString(document.getElementById("txtContent").value.replace("'", "''")) + "</CONTENT>";
+		        	}
 		
 		            if (document.getElementById("txtWriterName").value != "")		// DrafterName
 		            {
@@ -519,7 +520,6 @@
 		            }
 		        }
 		       		SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
-		    	}
 		    }
 		    function btn_PostDate_Clear() {
 		        $("#Sdatepicker").datepicker('setDate', "");

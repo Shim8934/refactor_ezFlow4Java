@@ -1695,6 +1695,27 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("getChildrenDeptID ended.");
 		return jArr.toString();
 	}
+	
+	public String isProxyUser(int tenantId, String userId, String nowDateTime) throws Exception {
+		logger.debug("isProxyUser started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_CN",userId);
+		map.put("nowDate",nowDateTime);
+		
+		String result = ezOrganDAO.getPropertyValue_S2(map);
+		
+		if (result == null) {
+			result = "0";
+		}
+		
+		logger.debug("result : " + result);
+		
+		logger.debug("isProxyUser ended");
+		
+		return result;
+	}
 }
 
 

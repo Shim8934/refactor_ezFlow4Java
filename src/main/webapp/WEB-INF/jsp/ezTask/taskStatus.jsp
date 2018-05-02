@@ -101,6 +101,7 @@
 	        });
 	        
 	        /* progressBar 조회 */
+	        /* 2018-04-24 김민성 - 업무 완료율 100%시 색상 조정 */
 			function initProgressBar(completerate) {
 				if (taskstatus == '4') {
 					$('.taskProgressBar').circleProgress({

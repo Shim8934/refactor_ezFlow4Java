@@ -285,7 +285,7 @@
 					    	
 					    	list_params += currentPage + "," + checkSeeAll + "," + radioBttn + "," + mode1 + "," + pollType;
 							
-							document.location.href = "/ezPoll/pollVote.do?qstId=" + pReceve + "&params=" + list_params + "&search=" + searchParam + "&searchN=" + _searchPrm;
+							document.location.href = "/ezPoll/pollVote.do?brdId=" + brdID + "&qstId=" + pReceve + "&params=" + list_params + "&search=" + searchParam + "&searchN=" + _searchPrm;
 						}
 						else {
 							alert("<spring:message code = 'ezPoll.t233'/>");
