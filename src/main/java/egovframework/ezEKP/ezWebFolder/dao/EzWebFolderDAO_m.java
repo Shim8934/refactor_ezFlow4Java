@@ -108,8 +108,24 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return (List<FavoriteVO>) list("EzWebFolderDAO_m.getFavorites", map);
 	}
 	
-	public Integer getFavoriteFolderCount(Map<String, Object> map) {
-		return (Integer) select("EzWebFolderDAO_m.getFavoriteFolderCount", map);
+	public Map<String, Long> getFavoritesCount(Map<String, Object> map) {
+		return (Map<String, Long>) map("EzWebFolderDAO_m.getFavoritesCount", map, "targetType", "count");
+	}
+	
+	public Integer isExistsFavorite(Map<String, Object> map) {
+		return (Integer) select("EzWebFolderDAO_m.isExistsFavorite", map);
+	}
+	
+	public void addFavorite(Map<String, Object> map) {
+		insert("EzWebFolderDAO_m.addFavorite", map);
+	}
+	
+	public int deleteFavorite(Map<String, Object> map) {
+		return delete("EzWebFolderDAO_m.deleteFavorite", map);
+	}
+	
+	public int deleteFavoritesInFolder(Map<String, Object> map) {
+		return delete("EzWebFolderDAO_m.deleteFavoritesInFolder");
 	}
 	
 	public List<TrashCanVO> getTrashCanList (Map<String, Object> map) {
@@ -147,27 +163,7 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	public List<TrashCanVO> getFolderByFolderPath (Map<String, Object> map){
 		return (List<TrashCanVO>) list ("EzWebFolderDAO_m.getFolderByFolderPath", map);
 	}
-
-	public Integer getFavoriteFileCount(Map<String, Object> map) {
-		return (Integer) select("EzWebFolderDAO_m.getFavoriteFileCount", map);
-	}
 	
-	public Integer isExistsFavorite(Map<String, Object> map) {
-		return (Integer) select("EzWebFolderDAO_m.isExistsFavorite", map);
-	}
-	
-	public void addFavorite(Map<String, Object> map) {
-		insert("EzWebFolderDAO_m.addFavorite", map);
-	}
-	
-	public int deleteFavorite(Map<String, Object> map) {
-		return delete("EzWebFolderDAO_m.deleteFavorite", map);
-	}
-	
-	public int deleteFavoritesInFolder(Map<String, Object> map) {
-		return delete("EzWebFolderDAO_m.deleteFavoritesInFolder");
-	}
-
 	public int getTrashFileCount(Map<String, Object> map) {
 		return (Integer) select("EzWebFolderDAO_m.getTrashFileCount", map);
 	}

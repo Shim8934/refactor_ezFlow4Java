@@ -665,7 +665,7 @@ public class EzWebFolderGWController_m {
 				targetPath = getFolderPath(targetPath.split("\\|"), offset, primary, tenantId);
 				
 				// is folder
-				if ("D".equalsIgnoreCase(favoriteFile.getTargetType())) {
+				if (favoriteFile.getTargetType().startsWith("D")) {
 					// cut end slash
 					targetPath = targetPath.substring(0, targetPath.length() - 1);
 				} else {
@@ -675,7 +675,7 @@ public class EzWebFolderGWController_m {
 				favoriteFile.setTargetPath(targetPath);
 			}
 			
-			Map<String, Integer> favoriteCountMap = ezWebFolderService_m.getFavoriteCount(userId, offset, tenantId, searchInfo);
+			Map<String, Long> favoriteCountMap = ezWebFolderService_m.getFavoritesCount(userId, primary, offset, tenantId, searchInfo);
 			JSONObject data = new JSONObject();
 			
 			data.put("totalCount", favoriteCountMap.get("totalCount"));
