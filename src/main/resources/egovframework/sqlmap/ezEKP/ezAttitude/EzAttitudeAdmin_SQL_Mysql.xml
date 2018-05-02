@@ -900,8 +900,8 @@
 	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="authorVO">
 		<![CDATA[
 			SELECT 
-				CN AS authDeptId,
-				DISPLAYNAME AS authDeptName
+				CN AS deptId,
+				DISPLAYNAME AS deptName
 			FROM
 				TBL_DEPTMASTER
 			WHERE 
