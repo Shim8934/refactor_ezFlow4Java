@@ -1223,7 +1223,8 @@
 			update
 				tbl_webfolder_folder
 			set
-				use_status = 'T' ,
+				UPDATE_DATE  = TO_DATE(#timeUTC#,'YYYY-MM-DD HH24:MI:SS'),
+				USE_STATUS = 'T' ,
 				DELETER_ID = #userId#
 			where 
 			    	TENANT_ID = #tenantId#
@@ -1240,6 +1241,7 @@
 			update
 				tbl_webfolder_file
 			set
+				UPDATE_DATE  = TO_DATE(#timeUTC#,'YYYY-MM-DD HH24:MI:SS'),
 				use_status = 'T',
 				DELETER_ID = #userId#
 			where
@@ -1247,7 +1249,7 @@
                 select folder.folder_id
             
 				from tbl_webfolder_folder folder  
-				where folder.folder_path like ('|' || #folderId# || '|%') 
+				where folder.folder_path like ('%|' || #folderId# || '|%') 
                     and folder.TENANT_ID = #tenantId# 
 					and folder.company_id = #comId#
                 )

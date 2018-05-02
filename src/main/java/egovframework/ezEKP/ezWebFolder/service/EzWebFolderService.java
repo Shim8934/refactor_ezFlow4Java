@@ -23,8 +23,8 @@ public interface EzWebFolderService {
 	void insertFile(FileVO fileVO) throws Exception;
 	FileVO getFileByFileId(String fileId, String offset, int tenantId) throws Exception;
 	void deleteFileByFileId(String fileId, int tenantId) throws Exception;
-	void updateFileUseStatus(String userId, String fileId, int tenantId) throws Exception;
-	void updateFileName(String fileId, String newName, int tenantId) throws Exception;
+	void updateFileUseStatus(String userId, String fileId, String timeUTC, int tenantId) throws Exception;
+	void updateFileName(String fileId, String newName, String timeUTC, int tenantId) throws Exception;
 	void moveFile(String fileId, String folderId, int tenantId) throws Exception;
 	String getFileLogSequence(int tenantId) throws Exception;
 	FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception;

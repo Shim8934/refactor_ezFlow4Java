@@ -731,12 +731,13 @@
 			UPDATE
 				TBL_WEBFOLDER_FILE
 			SET
-				USE_STATUS = 'T',
-				DELETER_ID = #userId#
+				USE_STATUS  = 'T',
+				DELETER_ID  = #userId#,
+				UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE
-				FILE_ID    = #fileId#
+				FILE_ID     = #fileId#
 			AND
-				TENANT_ID  = #tenantId#
+				TENANT_ID   = #tenantId#
 		]]>
 	</update>
 	
@@ -745,12 +746,13 @@
 			UPDATE
 				TBL_WEBFOLDER_FOLDER
 			SET
-				USE_STATUS = 'T',
-				DELETER_ID = #userId#
+				USE_STATUS  = 'T',
+				DELETER_ID  = #userId#,
+				UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE
 				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
 			AND
-				TENANT_ID = #tenantId#
+				TENANT_ID   = #tenantId#
 		]]>
 	</update>
 	
@@ -770,9 +772,10 @@
 					) d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
 			SET
 				f.USE_STATUS = 'T',
-				f.DELETER_ID = #userId#
+				f.DELETER_ID = #userId#,
+				UPDATE_DATE  = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE
-				f.TENANT_ID = #tenantId#
+				f.TENANT_ID  = #tenantId#
 			AND
 				f.USE_STATUS = 'Y'
 		]]>
@@ -783,11 +786,12 @@
 			UPDATE
 				TBL_WEBFOLDER_FILE
 			SET
-				FILE_NAME = #name#
+				FILE_NAME   = #name#,
+				UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE
-				FILE_ID   = #fileId#
+				FILE_ID     = #fileId#
 			AND
-				TENANT_ID = #tenantId#
+				TENANT_ID   = #tenantId#
 		]]>
 	</update>
 	
@@ -798,7 +802,7 @@
 			SET
 				FOLDER_ID = #folderId#
 			WHERE
-				FILE_ID = #fileId#
+				FILE_ID   = #fileId#
 			AND
 				TENANT_ID = #tenantId#
 		]]>

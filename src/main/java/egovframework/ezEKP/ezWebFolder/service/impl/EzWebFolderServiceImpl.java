@@ -130,20 +130,23 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public void updateFileUseStatus(String userId, String fileId, int tenantId) throws Exception {
+	public void updateFileUseStatus(String userId, String fileId, String timeUTC, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("userId",   userId);
 		map.put("fileId",   fileId);
 		map.put("tenantId", tenantId);
+		map.put("timeUTC",  timeUTC);
 		ezWebFolderDAO.updateFileUseStatus(map);
 	}
 
 	@Override
-	public void updateFileName(String fileId, String newName, int tenantId) throws Exception {
+	public void updateFileName(String fileId, String newName, String timeUTC, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("fileId",   fileId);
 		map.put("name",     newName);
 		map.put("tenantId", tenantId);
+		map.put("timeUTC", timeUTC);
+		
 		ezWebFolderDAO.updateFileName(map);
 	}
 
@@ -248,10 +251,15 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 	@Override
 	public void updateFolderUseStatus(FolderVO folder, LoginVO userInfo) throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folder.getFolderPath());
 		map.put("userId",     userInfo.getId());
 		map.put("tenantId",   userInfo.getTenantId());
+		map.put("timeUTC",    timeUTC);
 		
 		//saveLog
 		List<FileVO> listFiles = getAllFilesInFolder(folder.getFolderId(), "", "0", "", "", "", "", "", "1", 0, 0, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
@@ -961,12 +969,15 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		int tenantId     = userInfo.getTenantId();
 		String offset    = userInfo.getOffset();
 		String userId    = userInfo.getId();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 		
 		for (int i = 0; i < fileIDList.length; i++) {
 			FileVO fileVO = getFileByFileId(fileIDList[i], offset, tenantId);
 			
 			//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
-			updateFileUseStatus(userId, fileIDList[i], tenantId);
+			updateFileUseStatus(userId, fileIDList[i], timeUTC, tenantId);
 			saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 		}
 	}

@@ -376,7 +376,7 @@ public class EzWebFolderGWController_y {
 	
 	// 폴더 삭제 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value ="/rest/ezwebfolder/folders2/{folderId}", method = RequestMethod.DELETE , produces = "application/json;charset=utf-8")
+	@RequestMapping(value ="/rest/ezwebfolder/folders/{folderId}", method = RequestMethod.DELETE , produces = "application/json;charset=utf-8")
 	public JSONObject folderDelete (@PathVariable String folderId , HttpServletRequest request,@RequestBody JSONObject jsonObject) {
 		JSONObject jsonObj = new JSONObject();
 		JSONObject data = new JSONObject();

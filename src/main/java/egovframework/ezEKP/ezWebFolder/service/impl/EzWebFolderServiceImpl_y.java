@@ -615,12 +615,13 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	// 폴더 명 업데이트
 
 	@Override
-	public void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2, String offset) {
+	public void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2, String timeUTC) {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
 		map.put("comId", comId);
+		map.put("timeUTC", timeUTC);
 		map.put("newFolderName1", newFolderName1);
 		map.put("newFolderName2", newFolderName2);
 		ezWebFolderDAO_y.updateFolder(map);
@@ -628,14 +629,14 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	// 폴더 delete
 	
 	@Override
-	public void deleteSubFldAFile(String folderId, int tenantId, String comId , String userId, String timeUTF) throws Exception {
+	public void deleteSubFldAFile(String folderId, int tenantId, String comId , String userId, String timeUTC) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
  		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
 		map.put("comId", comId);
 		map.put("userId", userId);
-		map.put("timeUTF", timeUTF);
+		map.put("timeUTC", timeUTC);
 		int result = 0;
 		LOGGER.debug("folderId : "+folderId+"comId : "+comId+ "userId"+userId+"deleteSubFldAFile  Method");
 		result = checkCreater(folderId, tenantId, comId, userId);

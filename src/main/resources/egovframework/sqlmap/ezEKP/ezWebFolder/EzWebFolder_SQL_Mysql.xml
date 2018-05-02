@@ -702,7 +702,8 @@
 				TBL_WEBFOLDER_FILE
 			SET
 				USE_STATUS = 'T',
-				DELETER_ID = #userId#
+				DELETER_ID = #userId#,
+				UPDATE_DATE = #timeUTC#
 			WHERE
 				FILE_ID    = #fileId#
 			AND
@@ -716,7 +717,8 @@
 				TBL_WEBFOLDER_FOLDER
 			SET
 				USE_STATUS = 'T',
-				DELETER_ID = #userId#
+				DELETER_ID = #userId#,
+				UPDATE_DATE = #timeUTC#
 			WHERE
 				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
 			AND
@@ -740,7 +742,8 @@
 					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
 			SET
 				f.USE_STATUS = 'T',
-				f.DELETER_ID = #userId#
+				f.DELETER_ID = #userId#,
+				UPDATE_DATE = #timeUTC#
 			WHERE
 				f.TENANT_ID = #tenantId#
 			AND
@@ -753,7 +756,8 @@
 			UPDATE
 				TBL_WEBFOLDER_FILE
 			SET
-				FILE_NAME = #name#
+				FILE_NAME = #name#,
+				UPDATE_DATE = #timeUTC#
 			WHERE
 				FILE_ID   = #fileId#
 			AND
