@@ -1133,7 +1133,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
-		map.put("isGAdmin", isGAdmin);
 		
 		return ezAttitudeDAO.getAttitudeAuthDeptList(map);
 	}
@@ -1225,5 +1224,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
 			return o2.getDeptName().compareTo(o1.getDeptName());
 		}
+	}
+
+	@Override
+	public List<JournalAuthorVO> getCompanyDeptList(String userId,
+			String companyId, int tenantId) {
+		LOGGER.debug("getCompanyDeptList started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("getCompanyDeptList ended");
+		
+		return ezAttitudeDAO.getCompanyDeptList(map);
+		
 	}
 }

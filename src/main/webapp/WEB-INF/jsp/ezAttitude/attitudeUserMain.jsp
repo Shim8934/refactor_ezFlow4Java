@@ -793,9 +793,9 @@
 				<c:if test="${adminFlag == 'true'}">
 <!-- 					<li id="reply"><span onClick="searchDept()">부서검색</span></li> -->
 					<li>
-						<select id="authDeptList" style="width:80px; margin-top:5px;">
-							<c:forEach var="item" items="${list}">
-							<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+						<select id="authDeptList" style="width:100px; margin-top:5px;">
+							<c:forEach var="item" items="${deptList}">
+							<option value="<c:out value='${item.deptId}'/>"><c:out value='${item.deptName}'/></option>
 							</c:forEach>
 						</select>
 					</li>

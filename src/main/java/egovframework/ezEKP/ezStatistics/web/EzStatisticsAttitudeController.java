@@ -246,6 +246,7 @@ public class EzStatisticsAttitudeController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String companyId = request.getParameter("companyId");
+		String isuse = "1";
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes";
@@ -258,6 +259,7 @@ public class EzStatisticsAttitudeController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
+				.queryParam("isuse", isuse)
 				.queryParam("statistics", "statistics");
 		
 		RestTemplate rest = new RestTemplate();
