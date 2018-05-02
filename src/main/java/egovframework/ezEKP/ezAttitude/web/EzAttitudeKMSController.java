@@ -1067,7 +1067,7 @@ public class EzAttitudeKMSController {
 		String isGAdmin = "";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		/*
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
 		
@@ -1115,7 +1115,7 @@ public class EzAttitudeKMSController {
 			data = (JSONArray) resultBody.get("data");
 		}
 
-
+*/
 			
 			
 		
