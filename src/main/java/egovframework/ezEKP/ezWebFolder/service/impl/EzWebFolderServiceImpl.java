@@ -268,6 +268,11 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			saveLog("R", userInfo.getCompanyID(), userInfo.getOffset(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), file.getFileName(), file.getFileSize(), file.getFileExt(), file.getFileTypeName(), userInfo.getTenantId());
 		}
 		
+		logger.debug("folderPath: " + folder.getFolderPath());
+		logger.debug("userId: " + userInfo.getId());
+		logger.debug("tenantId: " + userInfo.getTenantId());
+		logger.debug("timeUTC: " + timeUTC);
+		
 		//Update status for all files even in sub folders
 		ezWebFolderDAO.updateStatusAllFilesInFolder(map);
 		//Update status for all sub folders
