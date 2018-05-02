@@ -4076,8 +4076,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userLang = userInfo.getLang();
 		Document xmlDomSub = null;
 		
-		System.out.println("모드 : " + receiveDocMode);
-		
 		if (searchQuery.length() > 10) {
 			String tempQuery = "";
 			String returnQuery = "(1 = 1) ";
