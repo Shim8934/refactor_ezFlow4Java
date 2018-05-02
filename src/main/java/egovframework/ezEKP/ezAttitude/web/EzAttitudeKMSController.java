@@ -909,7 +909,7 @@ public class EzAttitudeKMSController {
 		
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
-		String status = resultBody.get("status").toString();
+		String status = resultBody.get("data").toString();
 
 		LOGGER.debug("modAttModApp ended");
 		
@@ -921,7 +921,7 @@ public class EzAttitudeKMSController {
 	 */
 	@RequestMapping(value="/ezAttitude/attModAppDetail.do")
 	public String attModAppDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
-			@RequestParam(required=true)String attModId,
+			@RequestParam(required=true)String attModId,@RequestParam(required=false)String applCnt,
 			@RequestParam(required=false)String adminFlag) throws Exception {
 		LOGGER.debug("attModAppDetail started");
 		
@@ -959,6 +959,7 @@ public class EzAttitudeKMSController {
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("userId", userInfo.getId())
 				.queryParam("sysLang", sysLang)
+				.queryParam("applCnt", applCnt)
 				.queryParam("offset", offsetMin);
 		
 		RestTemplate rest = new RestTemplate();
@@ -1063,12 +1064,61 @@ public class EzAttitudeKMSController {
 		LOGGER.debug("/ezAttitude/attitudeUserMain started");
 		
 		String adminFlag = "false";
+		String isGAdmin = "";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
-		if (userInfo.getRollInfo().indexOf("wa=1") != -1) {
+		/*
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = "";
+		
+		
+		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 admin
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			adminFlag = "true";
+			//권한부서 리스트
+			//c , k , wa -> 회사의 모든부서
+			url = gwServerUrl + "/rest/ezattitude/";
+			
+		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+			adminFlag = "true";
+			isGAdmin = "Y";
+			// g -> 자신의 부서 + auth TB 확인해볼것.
+			url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
 		}
+		
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("isGAdmin", isGAdmin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray data = new JSONArray();
+		
+		if(status.equals("ok")){
+			data = (JSONArray) resultBody.get("data");
+		}
+
+*/
+			
+			
+		
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("deptFlag", "true");

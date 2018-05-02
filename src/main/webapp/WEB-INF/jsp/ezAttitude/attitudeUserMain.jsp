@@ -574,10 +574,6 @@
 		        $.modal.close();
 		    }
 			
-			function searchDept() {
-				
-			}
-			
 			function excelDown() {
 				
 			}
@@ -818,7 +814,14 @@
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${adminFlag == 'true'}">
-					<li id="reply"><span onClick="searchDept()">부서검색</span></li>
+<!-- 					<li id="reply"><span onClick="searchDept()">부서검색</span></li> -->
+					<li>
+						<select id="authDeptList" style="width:80px; margin-top:5px;">
+							<c:forEach var="item" items="${list}">
+							<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+							</c:forEach>
+						</select>
+					</li>
 		        	<li id="search"><span onClick="excelDown()">엑셀다운로드</span></li>
 		        	<li id="search"><span onClick="sendMail()">근태미입력자 메일발송</span></li>
 				</c:if>

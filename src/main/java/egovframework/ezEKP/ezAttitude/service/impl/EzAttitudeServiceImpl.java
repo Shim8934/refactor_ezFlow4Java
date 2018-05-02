@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezAttitude.service.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -96,6 +97,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			
 			isDefaultAtti = true;
 		}
+		
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 		
 		map.put("deptId", deptId);
 		map.put("startDate", startDate);
@@ -221,8 +224,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String offset, String ip, String typeId, String dateType, int tenantId) throws Exception {
 		LOGGER.debug("updateAttitude started");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("attitudeId", attitudeId);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
@@ -569,12 +573,18 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId) throws Exception{
+	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId, String userId) throws Exception{
 		LOGGER.debug("getCompanyList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		
 		map.put("lang", lang);
 		map.put("tenantId", tenantId);
+		map.put("userId", userId);
 		
 		List<AttitudeDeptVO> companyList = ezAttitudeDAO.getCompanyList(map);
 		
@@ -755,17 +765,37 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public void delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception {
+	public int delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("ids", ids);
-		map.put("delFlag", "1"); //0:삭제안함, 1:삭제
 		map.put("modappl", "0");
 		
-		ezAttitudeDAO.delUsersModifyAtt(map);
-		ezAttitudeDAO.attAppUpdate(map);
+		int data = 1;
+		int modCnt = 0;
+		
+		for (int i = 0; i < ids.length; i++) {
+			map.put("attModId", ids[i]);
+			AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+			if (!aav.getApprStatus().equals("0")) {
+				data = 0;
+				continue;
+			} else {
+				/*근태 수정신청 삭제.*/
+				ezAttitudeDAO.delUsersModifyAtt(map);
+				/*근태 수정신청이 삭제되고 원본 근태에 대해 수정신청 개수가 0개 일 때 원본 근태를 수정 가능한 상태로 변경.*/
+				modCnt = ezAttitudeDAO.getAttsModAttCount(map);
+				map.put("modCnt", modCnt);
+				LOGGER.debug("!#!@#!#!@#!@#!@#@# : " + modCnt);
+				if (modCnt == 0) {
+					ezAttitudeDAO.resetAttModApp(map);
+				}
+			}
+		}
+
+		return data;
 	}
 
 	@Override
@@ -810,7 +840,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Override
 	public AttitudeApplicationVO attModAppDetail(String companyId,
-			int tenantId, String userId, String attModId, String offset) throws Exception {
+			int tenantId, String userId, String attModId, String offset, String applCnt) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -819,17 +849,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("userId", userId);
 		map.put("attModId", attModId);
 		map.put("offset", offset);
+		map.put("applCnt", applCnt);
 		
 		return ezAttitudeDAO.attModAppDetail(map);
 	}
 
 	@Override
-	public void attModAppModify(String companyId,
+	public int attModAppModify(String companyId,
 			int tenantId, String userId, String attModId, String offset,
 			String content, String changeDate) throws Exception {
 			
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
@@ -838,7 +870,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("content", content);
 		map.put("changeDate", changeDate);
 		
-		ezAttitudeDAO.attModAppModify(map);
+		AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+		
+		if (aav.getApprStatus().equals("0")) {
+			return ezAttitudeDAO.attModAppModify(map);
+		} else {
+			return 0;
+		}
 	}
 	
 	@Override
@@ -847,8 +885,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			, String writerTitle2, String writerDeptId, String writerDeptName, String writerDeptName2
 			,String changeDate, String delFlag, String content,String offset) throws Exception {
 			
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		map.put("attitudeId", attitudeId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -867,9 +906,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offset", offset);
 		map.put("modappl", "1");
 		
+		/*근태수정신청 저장*/
 		ezAttitudeDAO.attSaveAppModify(map);
-		ezAttitudeDAO.addUsersModifyAttHistoryFirst(map);
-		ezAttitudeDAO.attAppUpdate(map);
+		/*근태수정신청이 된 항목 달력에 노란색 표시*/
+		ezAttitudeDAO.setAttModApp(map);
 	}
 
 	@Override
@@ -883,33 +923,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
 		}
 		
-		//날짜
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
-		
-		if (searchStartDate.equals("") && searchEndDate.equals("")) {
-			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
-			
-			searchStartDate = localDate + " 00:00:00";
-			searchEndDate = localDate + " 23:59:59";
-			
-			Date startDate = sdf.parse(searchStartDate);
-			
-			cal = Calendar.getInstance();
-			cal.setTime(startDate);
-			cal.add(Calendar.DAY_OF_MONTH, -7);
-			
-			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
-			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
-		} else {
-			if (searchStartDate.equals("")) {
-				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
-			}
-			
-			if (searchEndDate.equals("")) {
-				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
-			}
-		}
+		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
@@ -940,32 +955,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
-		
-		if (searchStartDate.equals("") && searchEndDate.equals("")) {
-			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
-			
-			searchStartDate = localDate + " 00:00:00";
-			searchEndDate = localDate + " 23:59:59";
-			
-			Date startDate = sdf.parse(searchStartDate);
-			
-			cal = Calendar.getInstance();
-			cal.setTime(startDate);
-			cal.add(Calendar.DAY_OF_MONTH, -7);
-			
-			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
-			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
-		} else {
-			if (searchStartDate.equals("")) {
-				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
-			}
-			
-			if (searchEndDate.equals("")) {
-				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
-			}
-		}
+		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
@@ -986,106 +977,64 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public String getAttitudeAbsentCount(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String offset, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getAttitudeAbsentCount started.");
-		
-		String offsetMin = commonUtil.getMinuteUTC(offset);
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
-		
-		if (searchStartDate.equals("") && searchEndDate.equals("")) {
-			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
-			
-			searchStartDate = localDate + " 00:00:00";
-			searchEndDate = localDate + " 23:59:59";
-			
-			Date startDate = sdf.parse(searchStartDate);
-			
-			cal = Calendar.getInstance();
-			cal.setTime(startDate);
-			cal.add(Calendar.DAY_OF_MONTH, -7);
-			
-			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
-			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
-		} else {
-			if (searchStartDate.equals("")) {
-				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
-			}
-			
-			if (searchEndDate.equals("")) {
-				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
-			}
-		}
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("searchUserName", searchUserName);
-		map.put("searchDeptName", searchDeptName);
-		map.put("searchTitle", searchTitle);
-		map.put("searchStartDate", searchStartDate);
-		map.put("searchEndDate", searchEndDate);
-		map.put("offsetMin", offsetMin);
-		map.put("companyId", companyId);
-		map.put("tenantId", tenantId);
-		
-		String result = ezAttitudeDAO.getAttitudeAbsentCount(map);
-		
-		LOGGER.debug("getAttitudeAbsentCount ended. result = " + result);
-		
-		return result;
-	}
-	
-	@Override
 	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeAbsentList started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
-		//날짜
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
-		
-		if (searchStartDate.equals("") && searchEndDate.equals("")) {
-			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
-			
-			searchStartDate = localDate + " 00:00:00";
-			searchEndDate = localDate + " 23:59:59";
-			
-			Date startDate = sdf.parse(searchStartDate);
-			
-			cal = Calendar.getInstance();
-			cal.setTime(startDate);
-			cal.add(Calendar.DAY_OF_MONTH, -7);
-			
-			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
-			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
-		} else {
-			if (searchStartDate.equals("")) {
-				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
-			}
-			
-			if (searchEndDate.equals("")) {
-				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
-			}
-		}
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchTitle", searchTitle);
-		map.put("searchStartDate", searchStartDate);
-		map.put("searchEndDate", searchEndDate);
-		map.put("orderCell", orderCell);
-		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-
-		List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeAbsentList(map);
 		
-		LOGGER.debug("getAttitudeAbsentList ended.");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
 		
-		return resultList;
+		Date startDate = sdf.parse(searchStartDate);
+		cal.setTime(startDate);
+		
+		String tempDateTime = "";
+		
+		List<AdminAttitudeVO> totalList = new ArrayList<AdminAttitudeVO>();
+		
+		/* 2018-05-01 이효진 추후개선 미입력자이거말고 어떠케뽑는지 모르겟어서 */
+		while (true) {
+			tempDateTime = sdf.format(cal.getTime());
+			
+			map.put("searchStartDate", commonUtil.getDateStringInUTC(tempDateTime + " 00:00:00", offset, true));
+			map.put("searchEndDate", commonUtil.getDateStringInUTC(tempDateTime + " 23:59:59", offset, true));
+			
+			List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeAbsentList(map);
+			
+			LOGGER.debug("resultList size = " + resultList.size());
+			
+			totalList.addAll(resultList);
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			
+			if (tempDateTime.equals(searchEndDate)) {
+				break;
+			}
+		};
+		
+		/**
+		 * 1. custom안먹어서 날짜별 리스트 조회는되는데 중복 어떠케 날릴지, 
+		 * 2. param boolean받아서 startdate 없이 db에서 꺼내고, 중복제거된걸로해서 날짜별말고 전체통합데이터 조회 및 메일발송할떄 아이디리스트로 쓸수잇게
+		 * 3. order는 밑에만든 class로 어떠케 해보고
+		 */
+		LOGGER.debug("totalList size = " + totalList.size());
+		
+		LOGGER.debug("distinct totalList size = " + totalList.size());
+		
+		LOGGER.debug("sorting");
+		
+//		Collections.sort(totalList, );
+		
+		LOGGER.debug("getAttitudeAbsentList ended. size = " + totalList.size());
+		
+		return totalList;
 	}
 
 	@Override
@@ -1109,7 +1058,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		ezAttitudeDAO.changeUsersAtt(map);
 		
 		//수정이 완료 되면 히스토리 기록
-		ezAttitudeDAO.addUsersModifyAttHistory(map);
+//		ezAttitudeDAO.addUsersModifyAttHistory(map);
 	}
 
 	@Override
@@ -1179,11 +1128,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId,
-			String userId) throws Exception {
+			String userId, String isGAdmin) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
+		map.put("isGAdmin", isGAdmin);
 		
 		return ezAttitudeDAO.getAttitudeAuthDeptList(map);
 	}
@@ -1228,5 +1178,52 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		return list;
+	}
+	
+	
+	
+	
+	
+	/** 2018-05-02 미입력자 정렬*/
+	class ascName implements Comparator<AdminAttitudeVO> {
+		@Override
+		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
+			return o1.getUserName().compareTo(o2.getUserName());
+		}
+	}
+	
+	class descName implements Comparator<AdminAttitudeVO> {
+		@Override
+		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
+			return o2.getUserName().compareTo(o1.getUserName());
+		}
+	}
+	
+	class ascTitle implements Comparator<AdminAttitudeVO> {
+		@Override
+		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
+			return o1.getUserTitle().compareTo(o2.getUserTitle());
+		}
+	}
+	
+	class descTitle implements Comparator<AdminAttitudeVO> {
+		@Override
+		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
+			return o2.getUserTitle().compareTo(o1.getUserTitle());
+		}
+	}
+	
+	class ascDeptName implements Comparator<AdminAttitudeVO> {
+		@Override
+		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
+			return o1.getDeptName().compareTo(o2.getDeptName());
+		}
+	}
+	
+	class descDeptName implements Comparator<AdminAttitudeVO> {
+		@Override
+		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
+			return o2.getDeptName().compareTo(o1.getDeptName());
+		}
 	}
 }

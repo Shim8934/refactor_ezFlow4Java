@@ -30,7 +30,7 @@
 	        var username = "<c:out value='${data.writerName}'/>";
 	        var username2 = "<c:out value='${data.writerName2}'/>";
 	        var attid = "<c:out value='${data.attitudeId}'/>";
-	        var content = '${data.content}';
+/* 	        var content = '${data.content}' */
 	        var contentpath = "${contentPath}";
 	        var startDateStringOrgin = "<c:out value='${startDateStringOrgin}'/>";
 	        var endDateStringOrgin = "<c:out value='${endDateStringOrgin}'/>";
@@ -54,7 +54,7 @@
 		        
 		        var doc = document.getElementById('message').contentWindow.document;
 				doc.open();
-				doc.write(content);
+// 				doc.write(content);
 				doc.close();
 				
 				console.log(writerid);
@@ -158,6 +158,21 @@
 				    }
 			    });
 		    }
+		  	
+		  	function reMod() {
+		  		/**
+				* 근태수정신청
+				*/
+				var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 760) / 2;
+		        var pLeft = (pwidth - 790) / 2;
+				var feature = GetOpenPosition(790, 760);
+				
+				var attitudeId = attid; 
+				
+				window.location.href = "/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId;
+		  	}
 	    </script>
 	</head>
 
@@ -177,10 +192,13 @@
 	                            	<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 	                            	</c:if>
 <!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
-	                            	<c:if test="${userId == data.writerId}">
+	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0}">
 	                            	<li><span onclick="modify()">수정</span></li>
 	                            	</c:if>
-	                            	<c:if test="${adminFlag == 'true' || userId == data.writerId}">
+	                            	<c:if test="${userId == data.writerId && data.apprStatus != 0}">
+	                            	<li><span onclick="reMod()">재신청</span></li>
+	                            	</c:if>
+	                            	<c:if test="${(adminFlag == 'true' || userId == data.writerId) && data.apprStatus == 0}">
 	                            	<li><span onclick="del()">삭제</span></li>
 	                            	</c:if>
 	                            </ul>
@@ -219,7 +237,7 @@
 	                                    <tr>
 	                                        <th>승인상태</th>
                                         	<c:if test="${data.apprStatus == 0}">
-								          		<td colspan="2">진행</td>	
+								          		<td colspan="2">신청</td>	
 								          	</c:if>
 								          	<c:if test="${data.apprStatus == 1}">
 								          		<td colspan="2">승인</td>	

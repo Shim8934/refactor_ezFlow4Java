@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">    
     <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
     <script type="text/javascript" src="<spring:message code='ezStatistics.e1' />"></script>
+    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/js/mouseeffect.js"></script>
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     <script type="text/javascript" src="/js/ezStatistics/js/excanvas.js"></script>
@@ -19,6 +20,7 @@
     <script type="text/javascript" src="/js/ezStatistics/js/jquery.jqplot.min.js"></script>
     <script type="text/javascript" src="/js/ezStatistics/js/jqplot.categoryAxisRenderer.min.js"></script>
     <script type="text/javascript" src="/js/ezStatistics/js/jqplot.barRenderer.min.js"></script>    
+<!--     <script type="text/javascript" src="/js/showModalDialog.js"></script>     -->
     <script type="text/javascript">
     var xmlHttp = null;
     var Tab1_flag = true;
@@ -82,6 +84,8 @@
         //만약 회사 클릭시
         if (selnode.GetNodeData("SETNODEICONBYNAME") != "") {
         	company_typeList(selDeptID);
+        } else {
+        	company_typeList(selnode.GetNodeData("extensionattribute2"))
         }
         //통계
         getAttitudeStatistics();
@@ -193,15 +197,18 @@
 
     //부서클릭시
     function getAttitudeStatistics() {
+//     	var typeId = $("#attitudeType").val();  	
     	$.ajax({
         	type : "POST",
         	dataType : "json",
         	url : "/ezStatistics/getAttitudeDept.do",
         	async : false,
-        	data : {deptId : selDeptID, typeId : $("#attitudeType").val(), year : $("#selyear").val() },
+        	data : {deptId : selDeptID, typeId : typeId, year : $("#selyear").val() },
         	success : function(result){
         		event_getAttitudeStatistics(result);
         		chartTable(result, selDeptName);
+        		
+//         		$("#attitudeType").val(typeId);
         	},
         	error : function(error){
         		
@@ -227,7 +234,6 @@
         if (zeroCnt == 12) {
             $("#nodata").css({"display":""});
             $("#viewdata").css({"display":"none"});
-//             return;
         } else {
             $("#nodata").css({"display":"none"});
             $("#viewdata").css({"display":""});
@@ -261,6 +267,7 @@
     function chartTable(result, selectUserName) {
     	var months = "<spring:message code='ezStatistics.t218' />".split(";");
     	var html = "";
+    	html += "<table class='tstyle2' style='text-align: center; width: 100%; border: 1px solid rgb(218, 218, 218);'>";
     	html += "<tr>";
 		html += "<th style='text-align: center;'><spring:message code='ezStatistics.t83' /> </th>";
 		html += "<th style='text-align: center;'><spring:message code='ezStatistics.t1000' /> </th>";
@@ -273,7 +280,6 @@
 		html += "</tr>";
 		html += "<tr>";
 		html += "<td rowspan='3'>"+selectUserName+"</td>";
-// 		html += "<td>" + result[0].typeName + "일수</td>";
 		html += "<td>일수</td>";
 		html += "<td>" + result[0].count + "</td>";
 		html += "<td>" + result[1].count + "</td>";
@@ -292,7 +298,6 @@
 		html += "<th style='text-align: center;'>" + months[11] + "</th>";
 		html += "</tr>";
 		html += "<tr>";
-// 		html += "<td>" + result[0].typeName + "일수</td>";
 		html += "<td>일수</td>";
 		html += "<td>" + result[6].count + "</td>";
 		html += "<td>" + result[7].count + "</td>";
@@ -301,6 +306,7 @@
 		html += "<td>" + result[10].count + "</td>";
 		html += "<td>" + result[11].count + "</td>";
 		html += "</tr>";
+		html += "</table>";
 		$('#statisticstable').html(html);
     }
     
@@ -324,6 +330,7 @@
         }
     }
 
+    var searchdept_cross_dialogArguments = new Array();
     function searchdept() {
         if (deptkeyword.value.trim() == "") {
             alert("<spring:message code='ezStatistics.t1010' />");
@@ -352,28 +359,37 @@
         if (adCount == 0) {
             alert("<spring:message code='ezStatistics.t1011' />");
             return;
-        }
-        else if (adCount == 1) {
+		} else if (adCount == 1) {
             bSearch = true;
             g_xmlHTTP = createXMLHttpRequest();
 
-            if (CrossYN())
+            if (CrossYN()) {
                 var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
-            else
+            } else {
                 var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+            }
 
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
             g_xmlHTTP.send(strQuery);
-        }
-        else {
-            var rgParams = new Array();
+        } else {
+           	var rgParams = new Array();
             rgParams["addrBook"] = xmlDom;
             rgParams["deptid"] = "";
-            var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
-            feature = feature + GetShowModalPosition(540, 460);
-            window.showModalDialog("/ezStatistics/statisticsCheckName2.do", rgParams, feature);
 
+         	var agent = navigator.userAgent.toLowerCase(); 
+			if (CrossYN()) {
+				searchdept_cross_dialogArguments[0] = rgParams;
+				searchdept_cross_dialogArguments[1] = SelelctDept_complite;
+				var OpenWin = window.open("/ezStatistics/statisticsCheckName2.do", "", GetOpenWindowfeature(609, 372));    
+				try { OpenWin.focus(); } catch (e) { }				
+			} 
+			else {
+				var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
+		       	feature = feature + GetShowModalPosition(540, 460);
+				window.showModalDialog("/ezStatistics/statisticsCheckName2.do", rgParams, feature);
+			}
+         	
             if (rgParams["deptid"] != "") {
                 bSearch = true;
                 g_xmlHTTP = createXMLHttpRequest();
@@ -384,6 +400,17 @@
             }
         }
     }
+        
+    function SelelctDept_complite(deptid) {
+   	 if (deptid != "") {
+            bSearch = true;
+            g_xmlHTTP = createXMLHttpRequest();
+            var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+            g_xmlHTTP.send(strQuery);
+        }
+   }
 
     function event_getDeptFullTree() {
         if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
@@ -481,7 +508,8 @@
 					</div>
 					<br/>
 					<br/>
-					<table id="statisticstable" class="tstyle2" style="text-align: center; width: 100%; border: 1px solid rgb(218, 218, 218);"></table>
+<!-- 					<table id="statisticstable" class="tstyle2" style="text-align: center; width: 100%; border: 1px solid rgb(218, 218, 218);"></table> -->
+					<div id="statisticstable"></div>
                 </div>
                 <div id="nodata" class="statistics_nodata" style="display:none;margin:0 auto">
                     <dl class="statistics_txt">
@@ -492,7 +520,7 @@
             </td>
         </tr>
     </table>
-     <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXlsM.do">
+     <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXlsWA.do">
         <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
         <input type="hidden" id="userAgent" name="userAgent" value="">
     </form>

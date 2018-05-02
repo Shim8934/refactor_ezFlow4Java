@@ -104,10 +104,6 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
-
-		if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
-			return "cmm/error/adminDenied";
-		}
 		
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
         

@@ -883,7 +883,7 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			//테넌트별 회사리스트
-			List<AttitudeDeptVO> list = ezAttitudeService.getCompanyList(info.getPrimary(), info.getTenantId());
+			List<AttitudeDeptVO> list = ezAttitudeService.getCompanyList(info.getPrimary(), info.getTenantId(), userId);
 			data.put("list", list);
 			//로그인한 관리자의 회사
 			data.put("adminCompany", info.getCompanyId());
@@ -1421,6 +1421,8 @@ public class EzAttitudeGWController {
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
 		
+		int status = 0;
+		
 		try{
 			String[] ids = idList.split(",");
 
@@ -1434,16 +1436,20 @@ public class EzAttitudeGWController {
 
 			LOGGER.debug("companyId : " + companyId + ", tenantId : " + tenantId + ", idList : " + idList);
 			
-			ezAttitudeService.delUsersModifyAtt(companyId, tenantId, ids);
+			status = ezAttitudeService.delUsersModifyAtt(companyId, tenantId, ids);
 			
-			result.put("status", "ok");
+			if (status == 1) {
+				result.put("status", "ok");
+			} else {
+				result.put("status", "error");
+			}
 			result.put("code", 0);
-			result.put("data", data);
+			result.put("data", status);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
-			result.put("data", "");
+			result.put("data", status);
 		}
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/{userId}/modifyattitudes] ended.");
 		return result;
@@ -1527,11 +1533,12 @@ public class EzAttitudeGWController {
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
 			@RequestParam(value="userId", required=true) String userId,
-			@RequestParam(value="offset", required=true) String offset) throws Exception{
+			@RequestParam(value="offset", required=true) String offset,
+			@RequestParam(value="applCnt", required=true) String applCnt) throws Exception{
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
 		JSONObject result = new JSONObject();
 		try {
-			AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(companyId, tenantId, userId, attModId, offset);
+			AttitudeApplicationVO data = ezAttitudeService.attModAppDetail(companyId, tenantId, userId, attModId, offset, applCnt);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1557,17 +1564,17 @@ public class EzAttitudeGWController {
 			@RequestParam(value="changeDate", required=true) String changeDate) throws Exception{
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
 		JSONObject result = new JSONObject();
-		
+		int update = 0;
 		try {
-			ezAttitudeService.attModAppModify(companyId, tenantId, userId, attModId, offset, content, changeDate);
+			update = ezAttitudeService.attModAppModify(companyId, tenantId, userId, attModId, offset, content, changeDate);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", "success");
+			result.put("data", update);
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");
-			result.put("data", "");
+			result.put("data", update);
 		}
 		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] ended.");
@@ -1654,12 +1661,13 @@ public class EzAttitudeGWController {
 			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();
 			
-			String totalCount = ezAttitudeService.getAttitudeAbsentCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, offset, companyId, tenantID);
+//			String totalCount = ezAttitudeService.getAttitudeAbsentCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, offset, companyId, tenantID);
 			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, companyId, tenantID);
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
-			data.put("totalCount", totalCount);
+//			data.put("totalCount", totalCount);
+			data.put("totalCount", list.size());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1816,10 +1824,10 @@ public class EzAttitudeGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-//			String userId = request.getParameter("userId");
+			String isGAdmin = request.getParameter("isGAdmin");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), userId);
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), userId, isGAdmin);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

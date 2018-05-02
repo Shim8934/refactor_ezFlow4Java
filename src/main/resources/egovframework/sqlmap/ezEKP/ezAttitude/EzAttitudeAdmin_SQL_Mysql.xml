@@ -46,72 +46,74 @@
 	</resultMap>
 	
 	<resultMap class="authorVO" id="userMap">
-		<result property="userName" column="USER_NAME" />
-		<result property="userId" column="USER_ID" />
-		<result property="jikwi" column="JIKWI" />
-		<result property="mail" column="MAIL" />
-		<result property="deptName" column="DEPT_NAME" />
-		<result property="userImg" column="USER_IMG" />
+		<result property="userName" 				column="USER_NAME" 				columnIndex="1"/>
+		<result property="userId" 					column="USER_ID" 				columnIndex="2"/>
+		<result property="jikwi" 					column="JIKWI" 					columnIndex="3"/>
+		<result property="mail" 					column="MAIL" 					columnIndex="4"/>
+		<result property="deptName" 				column="DEPT_NAME" 				columnIndex="5"/>
+		<result property="userImg" 					column="USER_IMG" 				columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="deptViewVO" id="deptViewMap">
-      <result property="id"             column="ID" />
-      <result property="parent"          column="PARENT" />
-      <result property="companyId"       column="COMPANYID" />
-      <result property="text"          column="TEXT" />
-      <result property="isComp"          column="ISCOMP" />
-      <result property="myDept"          column="MYDEPT" />
+      <result property="id"             			column="ID" 					columnIndex="1"/>
+      <result property="parent"          			column="PARENT" 				columnIndex="2"/>
+      <result property="companyId"       			column="COMPANYID" 				columnIndex="3"/>
+      <result property="text"          				column="TEXT" 					columnIndex="4"/>
+      <result property="isComp"          			column="ISCOMP" 				columnIndex="5"/>
+      <result property="myDept"          			column="MYDEPT" 				columnIndex="6"/>
    </resultMap>
    
 	<resultMap id="attitudeAuthor" class="AttitudeAuthorVO">
-		<result  property="userId" 				column="USER_ID"				columnIndex="1"/>
-		<result  property="tenantId" 			column="TENANT_ID"				columnIndex="2"/>
-		<result  property="companyId" 			column="COMPANY_ID"				columnIndex="3"/>
-		<result  property="authDeptId" 			column="AUTH_DEPT_ID"			columnIndex="4"/>
-		<result  property="userName" 			column="USERNAME"				columnIndex="5"/>
-		<result  property="userTitle" 			column="USERTITLE"				columnIndex="6"/>
-		<result  property="userDeptName" 		column="USERDAPTNAME"			columnIndex="7"/>
-		<result  property="authDeptName" 		column="AUTHDEPTNAME"			columnIndex="8"/>
+		<result  property="userId" 					column="USER_ID"				columnIndex="1"/>
+		<result  property="tenantId" 				column="TENANT_ID"				columnIndex="2"/>
+		<result  property="companyId" 				column="COMPANY_ID"				columnIndex="3"/>
+		<result  property="authDeptId" 				column="AUTH_DEPT_ID"			columnIndex="4"/>
+		<result  property="userName" 				column="USERNAME"				columnIndex="5"/>
+		<result  property="userTitle" 				column="USERTITLE"				columnIndex="6"/>
+		<result  property="userDeptName" 			column="USERDAPTNAME"			columnIndex="7"/>
+		<result  property="authDeptName" 			column="AUTHDEPTNAME"			columnIndex="8"/>
 	</resultMap>
 	
 	<resultMap id="attitudeAuthorDept" class="authorVO">
-		<result property="deptName" column="dept_name" />
-		<result property="deptId" column="dept_id" />
-		<result property="mine" column="mine" />
+		<result property="deptName" 				column="dept_name" 				columnIndex="1"/>
+		<result property="deptId" 					column="dept_id" 				columnIndex="2"/>
+		<result property="mine" 					column="mine" 					columnIndex="3"/>
 	</resultMap>
 	
 	<resultMap class="AttitudeStatisVO" id="userStatistics">
-		<result property="count" column="COUNT" />
-		<result property="typeId" column="TYPE_ID" />
-		<result property="statMonth" column="STAT_MONTH" />
+		<result property="count" 					column="COUNT" 					columnIndex="1"/>
+		<result property="typeId" 					column="TYPE_ID" 				columnIndex="2"/>
+		<result property="statMonth" 				column="STAT_MONTH" 			columnIndex="3"/>
 	</resultMap>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
 		<![CDATA[
-			SELECT
-				A.CN,
-				A.DISPLAYNAME,
-				A.DISPLAYNAME2
-			FROM
+			SELECT 
+				D.CN,
+				D.DISPLAYNAME$lang$
+			FROM 
+				TBL_DEPTMASTER D
+			LEFT JOIN
+				TBL_USERMASTER U ON D.TENANT_ID = U.TENANT_ID
+			WHERE
+				D.TENANT_ID = #tenantId#
+			AND 
+				U.CN = #userId#
+			AND 
+				U.TENANT_ID = #tenantId#
+			AND
 				(
-					SELECT
-					  CN,
-					  CASE #lang#
-					      WHEN '1' THEN DISPLAYNAME
-					      ELSE DISPLAYNAME2
-					      END DISPLAYNAME,
-					  CASE #lang#
-					  	  WHEN '1' THEN DISPLAYNAME2
-					  	  ELSE DISPLAYNAME
-					  	  END DISPLAYNAME2
-					FROM
-						TBL_DEPTMASTER
-					WHERE
-						TENANT_ID = #tenantId#
-					AND
-						(DEPTLEVEL = 1
-					OR
-						CN = 'Top') ) A
+					((substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 0 
+				AND
+					D.EXTENSIONATTRIBUTE2 = U.PHYSICALDELIVERYOFFICENAME))
+				OR
+					(substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 1)
+				)
+			AND 
+				D.EXTENSIONATTRIBUTE2 = d.CN
+			ORDER BY 
+				LPAD(IFNULL(D.EXTENSIONATTRIBUTE15, 0), 6, 0),
+				D.DISPLAYNAME$lang$
 				
 		]]>
 	</select>
@@ -457,7 +459,7 @@
 			FROM 
 				TBL_USERMASTER 
 			WHERE
-				TENANT_ID=#tenantId#
+				TENANT_ID = #tenantId#
 		]]>
 		<isNotEqual property="key" compareValue="DEPARTMENT">
 			AND
@@ -613,11 +615,11 @@
 				)
 		]]>
 			
-		<isNotEmpty prepend="AND" property="searchAttitudeType">
+		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
 			<![CDATA[
 				A.type_id = #searchAttitudeType#
 			]]>
-		</isNotEmpty>
+		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			C.description LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
@@ -641,10 +643,12 @@
 				starttime DESC
 		</isEmpty>
 		
-		<![CDATA[
-			LIMIT
-				#limit#, #listSize#
-		]]>
+		<isNotEmpty property="listSize">
+			<![CDATA[
+				LIMIT
+					#limit#, #listSize#
+			]]>
+		</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
@@ -681,11 +685,11 @@
 				)
 		]]>
 			
-		<isNotEmpty prepend="AND" property="searchAttitudeType">
+		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
 			<![CDATA[
 				A.type_id = #searchAttitudeType#
 			]]>
-		</isNotEmpty>
+		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			C.description LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
@@ -697,59 +701,14 @@
 		</isNotEmpty>
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.getAttitudeAbsentCount" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT 
-				COUNT(DISTINCT(A.cn))
-			FROM
-				TBL_USERMASTER A
-			LEFT JOIN
-				(SELECT
-					*
-				FROM
-					TBL_ATTITUDE C
-				WHERE
-					C.tenant_id = #tenantId#
-				AND
-					C.company_id = #companyId#
-				AND
-					(
-						(C.start_date < #searchStartDate# OR C.start_date > #searchEndDate#)
-					AND
-						(C.end_date < #searchStartDate# OR C.end_date >= #searchEndDate#)
-					AND
-						(C.start_date >= #searchStartDate# OR C.end_date < #searchEndDate#)
-					)) B
-			ON
-				A.cn = B.writer_id 
-			AND
-				A.tenant_id = B.tenant_id
-			WHERE
-				A.tenant_id = #tenantId#
-			AND
-				A.physicaldeliveryofficename = #companyId#
-			AND
-				B.start_date IS NULL
-		]]>
-		
-		<isNotEmpty prepend="AND" property="searchDeptName">
-			A.description LIKE CONCAT('%', #searchDeptName#, '%')
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchUserName">
-			A.displayname LIKE CONCAT('%', #searchUserName#, '%')
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchTitle">
-			A.title LIKE CONCAT('%', #searchTitle#, '%')
-		</isNotEmpty>
-	</select>
-	
 	<select id="ezAttitudeAdminDAO.getAttitudeAbsentList" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
 			SELECT
-				DISTINCT(A.cn) AS userid,
+				A.cn AS userid,
 				A.displayname AS username,
                 A.description AS deptname,
-                A.title AS usertitle
+                A.title AS usertitle,
+                #searchStartDate# as startdate
 			FROM
 				TBL_USERMASTER A
 			LEFT JOIN
@@ -763,11 +722,11 @@
 					C.company_id = #companyId#
 				AND
 					(
-						(C.start_date < #searchStartDate# OR C.start_date > #searchEndDate#)
-					AND
-						(C.end_date < #searchStartDate# OR C.end_date >= #searchEndDate#)
-					AND
-						(C.start_date >= #searchStartDate# OR C.end_date < #searchEndDate#)
+						(C.start_date >= #searchStartDate# AND C.start_date <= #searchEndDate#)
+					OR
+						(C.end_date >= #searchStartDate# AND C.end_date < #searchEndDate#)
+					OR
+						(C.start_date < #searchStartDate# AND C.end_date >= #searchEndDate#)
 					)) B
 			ON
 				A.cn = B.writer_id
@@ -790,15 +749,6 @@
 		<isNotEmpty prepend="AND" property="searchTitle">
 			A.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
-		<isNotEmpty property="orderCell">
-			ORDER BY
-				$orderCell$ $orderOption$,
-				A.displayname
-		</isNotEmpty>
-		<isEmpty property="orderCell">
-			ORDER BY
-				A.displayname
-		</isEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultMap="attitudeAuthor">
@@ -810,28 +760,43 @@
 			    A.AUTH_DEPT_ID,
 			    B.DISPLAYNAME AS USERNAME,
 			    B.TITLE AS USERTITLE,
-			    B.DESCRIPTION AS USERDAPTNAME,
+			    B.DESCRIPTION AS USERDAPTNAME
+			]]>
+			<isEmpty prepend="," property="isGAdmin">
 			    group_concat(C.DISPLAYNAME order by 1) AS AUTHDEPTNAME
+			</isEmpty>
+			<isNotEmpty prepend="," property="isGAdmin">
+			    C.DISPLAYNAME AS AUTHDEPTNAME
+			</isNotEmpty>
 			FROM 
 				TBL_ATTITUDE_AUTH A
 			INNER JOIN
 				TBL_USERMASTER B
 			ON
-				(A.USER_ID = B.CN)
+				A.USER_ID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
 			INNER JOIN
 				TBL_DEPTMASTER C 
 			ON
-				(A.AUTH_DEPT_ID = C.CN)
+				A.AUTH_DEPT_ID = C.CN
+			AND
+				A.TENANT_ID = C.TENANT_ID
 			WHERE
 				A.COMPANY_ID = #companyId#
 			AND
 				A.TENANT_ID = #tenantId#
+			<isNotEmpty prepend="AND" property="isGAdmin">
+				A.USER_ID = #userId#
+			</isNotEmpty>
+			<isEmpty property="isGAdmin">
 			GROUP BY 
 				A.USER_ID
 			ORDER BY
 				USERNAME
-		]]>
+			</isEmpty>
 	</select>
+	
 	<delete id="ezAttitudeAdminDAO.deleteAttitudeAuth" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM 
@@ -852,7 +817,11 @@
 			FROM 
 				TBL_DEPTMASTER D
 			INNER JOIN 
-				TBL_ATTITUDE_AUTH A ON (D.CN = A.AUTH_DEPT_ID AND A.TENANT_ID = D.TENANT_ID)
+				TBL_ATTITUDE_AUTH A 
+			ON
+				D.CN = A.AUTH_DEPT_ID 
+			AND
+				A.TENANT_ID = D.TENANT_ID
 			WHERE 
 				A.USER_ID = #userId#
 			AND 
@@ -865,7 +834,11 @@
 			FROM 
 				TBL_DEPTMASTER D
 			LEFT JOIN 
-				TBL_USERMASTER U ON (D.CN = U.DEPARTMENT AND U.TENANT_ID = D.TENANT_ID)
+				TBL_USERMASTER U 
+			ON
+				D.CN = U.DEPARTMENT 
+			AND
+				U.TENANT_ID = D.TENANT_ID
 			WHERE 
 				U.CN = #userId#
 			AND 
@@ -932,4 +905,41 @@
 		]]>
 <!-- 		</iterate> -->
 	</select>
+<!-- 	
+	<select id="getUserAuthList" parameterClass="Map" resultMap="attitudeAuthor">
+		<![CDATA[
+				SELECT 
+				A.USER_ID,
+			    A.TENANT_ID,
+			    A.COMPANY_ID,
+			    A.AUTH_DEPT_ID,
+			    B.DISPLAYNAME AS USERNAME,
+			    B.TITLE AS USERTITLE,
+			    B.DESCRIPTION AS USERDAPTNAME,
+			    C.DISPLAYNAME AS AUTHDEPTNAME
+			FROM 
+				TBL_ATTITUDE_AUTH A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				A.USER_ID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			INNER JOIN
+				TBL_DEPTMASTER C 
+			ON
+				A.AUTH_DEPT_ID = C.CN
+			AND
+				A.TENANT_ID = C.TENANT_ID
+			WHERE
+				A.COMPANY_ID = #companyId#
+			AND
+				A.TENANT_ID = #tenantId#
+			AND
+				A.USER_ID = #userId#
+			ORDER BY
+				USERNAME
+		]]>
+	</select>
+	-->
 </sqlMap>
