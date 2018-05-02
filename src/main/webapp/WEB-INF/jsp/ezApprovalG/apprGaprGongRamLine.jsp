@@ -1130,7 +1130,7 @@
 	                </h2>
 	                <div class="listview" style="margin-top: 7px; margin-left: 1px">
 	                <c:if test="${approvalFlag == 'S'}">
-	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 710px; height: 550px; background-color: #ffffff;"></div>
+	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 730px; height: 550px; background-color: #ffffff;"></div>
 	                </c:if>
 	                <c:if test="${approvalFlag == 'G'}">
 	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 750px; height: 550px; background-color: #ffffff;"></div>
