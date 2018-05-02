@@ -12,6 +12,8 @@ public class FavoriteVO {
 	private String creatorId;
 	private String creatorName;
 	private String createDate;
+
+	private String favoriteStatus;
 	private int tenantId;
 
 	public String getTargetId() {
@@ -85,13 +87,21 @@ public class FavoriteVO {
 	public void setCreatorName(String creatorName) {
 		this.creatorName = creatorName;
 	}
-	
+
 	public String getCreateDate() {
 		return createDate;
 	}
 
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
+	}
+
+	public String getFavoriteStatus() {
+		return favoriteStatus;
+	}
+
+	public void setFavoriteStatus(String favoriteStatus) {
+		this.favoriteStatus = favoriteStatus;
 	}
 
 	public int getTenantId() {
@@ -104,8 +114,8 @@ public class FavoriteVO {
 
 	@Override
 	public String toString() {
-		return "FavoriteFileVO [targetId=" + targetId + ", targetName=" + targetName + ", targetType=" + targetType + ", targetIconUrl=" + targetIconUrl + ", targetPath=" + targetPath
-				+ ", targetExt=" + targetExt + ", targetSize=" + targetSize + ", creatorId=" + creatorId + ", creatorName=" + creatorName + ", createDate=" + createDate
+		return "FavoriteVO [targetId=" + targetId + ", targetName=" + targetName + ", targetType=" + targetType + ", targetIconUrl=" + targetIconUrl + ", targetPath=" + targetPath + ", targetExt="
+				+ targetExt + ", targetSize=" + targetSize + ", creatorId=" + creatorId + ", creatorName=" + creatorName + ", createDate=" + createDate + ", favoriteStatus=" + favoriteStatus
 				+ ", tenantId=" + tenantId + "]";
 	}
 }

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.json.simple.JSONObject;
@@ -914,18 +915,25 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("searchEndDate", searchDateInfo.getSearchEndDate());
 		parameterMap.put("startIndex", startIndex);
 		parameterMap.put("listCount", listCount);
-
-		List<FavoriteVO> result = ezWebFolderDAO.getFavorites(parameterMap);
-
-		return result;
+		
+		String[] searchTargets = { searchInfo.getSearchExt(), searchInfo.getSearchFileName(), searchInfo.getSearchCreateName() };
+		boolean hasSearchKeyword = Arrays.stream(searchTargets).anyMatch(str -> !str.toString().isEmpty());
+		
+		if (hasSearchKeyword) {
+			LOGGER.debug("insi: isContainsSubLit!!!!!!!!!!!!!!!!!");
+			parameterMap.put("isContainsSubList", "test");
+		}
+		
+		return ezWebFolderDAO.getFavorites(parameterMap);
 	}
 
 	@Override
-	public Map<String, Integer> getFavoriteCount(String userId, String offset, int tenantId, SearchVO searchInfo) throws Exception {
+	public Map<String, Long> getFavoritesCount(String userId, String primary, String offset, int tenantId, SearchVO searchInfo) throws Exception {
 		SearchVO searchDateInfo = createSearchDateInfo(searchInfo, offset);
 		
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
+		parameterMap.put("primary", primary);
 		parameterMap.put("offset", commonUtil.getMinuteUTC(offset));
 		parameterMap.put("tenantId", tenantId);
 		// search info
@@ -935,11 +943,19 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("searchFileType", searchInfo.getSearchFileType());
 		parameterMap.put("searchStartDate", searchDateInfo.getSearchStartDate());
 		parameterMap.put("searchEndDate", searchDateInfo.getSearchEndDate());
+		
+		String[] searchTargets = { searchInfo.getSearchExt(), searchInfo.getSearchFileName(), searchInfo.getSearchCreateName() };
+		boolean hasSearchKeyword = Arrays.stream(searchTargets).anyMatch(str -> !str.toString().isEmpty());
+		
+		if (hasSearchKeyword) {
+			parameterMap.put("isContainsSubList", "test");
+		}
+		
+		Map<String, Long> countMapList = ezWebFolderDAO.getFavoritesCount(parameterMap);
+		Long folderCount = Optional.ofNullable(countMapList.get("D")).orElse(0L);
+		Long fileCount = Optional.ofNullable(countMapList.get("F")).orElse(0L);
 
-		Integer folderCount = ezWebFolderDAO.getFavoriteFolderCount(parameterMap);
-		Integer fileCount = ezWebFolderDAO.getFavoriteFileCount(parameterMap);
-
-		Map<String, Integer> result = new HashMap<String, Integer>();
+		Map<String, Long> result = new HashMap<>();
 		result.put("totalCount", folderCount + fileCount);
 		result.put("folderCount", folderCount);
 		result.put("fileCount", fileCount);

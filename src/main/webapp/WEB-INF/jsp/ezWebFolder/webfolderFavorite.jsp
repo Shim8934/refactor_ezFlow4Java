@@ -120,6 +120,7 @@
     		favorite : {
     			id: "targetId",
     			path: "targetPath",
+    			favoriteStatus: "favoriteStatus",
     			iconUrl: "targetIconUrl",
     			name: "targetName",
     			size: "targetSize",
@@ -444,7 +445,7 @@
 				fileIconElement.addEventListener("click", function() { favoriteContext.onImageClick(this); });
 				fileIconElement.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 				
-				if (isFromFolder && resultJson[columnMap.favoriteStatus] === "0") {
+				if (resultJson[columnMap.favoriteStatus] === "0") {
 					fileIconElement.src = "/images/ImgIcon/view-flag.gif";
 				} else {
 					fileIconElement.src = "/images/ImgIcon/icon-flag.gif";
