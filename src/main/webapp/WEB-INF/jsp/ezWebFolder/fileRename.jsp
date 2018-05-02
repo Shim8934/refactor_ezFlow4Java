@@ -22,8 +22,7 @@
 		
 		function afterDeleteSuccess() {
 			parent.refreshView();
-			parent.DivPopUpHidden();
-			window.close();
+			wClose();
 		}
 		
 		function isValid(str){
