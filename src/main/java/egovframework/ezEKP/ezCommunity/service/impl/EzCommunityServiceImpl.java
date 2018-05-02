@@ -6800,7 +6800,48 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		logger.debug("commMakeOkInsert2 ended.");
 	}
+	
+	/*
+	public void commMakeOkSet1(String logoFileName, String thumbnailFileName, String fileName, int fileSize, int tenantID) throws Exception {
+		logger.debug("commMakeOkSet1 started.");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LOGOFILENAME", logoFileName);
+		map.put("v_LOGOFILENAME_THUMBNAIL", thumbnailFileName);
+		map.put("v_FILENAME", fileName);
+		map.put("v_FILESIZE", fileSize);
+		map.put("tenantID", tenantID);
+		
+		ezCommunityDAO.commMakeOkSet1Update(map);
+		
+		ezCommunityDAO.commMakeOkSet1Insert(map);
+		
+		logger.debug("commMakeOkSet1 ended.");
+	}
+	
+	public void commMakeOkSet2(String bannerFileName, String fileName, int fileSize, int tenantID) throws Exception {
+		logger.debug("commMakeOkSet2 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BANNERFILENAME", bannerFileName);
+		map.put("v_FILENAME", fileName);
+		map.put("v_FILESIZE", fileSize);
+		map.put("tenantID", tenantID);
+		
+		ezCommunityDAO.commMakeOkSet2Update(map);
+		
+		int count = ezCommunityDAO.commMakeOkSet2Select(map);
+		logger.debug("commMakeOkSet2Select count="+count);
+		
+		if (count > 0 ) {
+			ezCommunityDAO.commMakeOkSet2Update1(map);
+		} else {
+			ezCommunityDAO.commMakeOkSet2Insert(map);
+		}
+		
+		logger.debug("commMakeOkSet2 ended.");
+	}
+	 */
 	/* 2018-05-02 홍승비 - 커뮤니티 생성 시 로고, 썸네일 사이즈 저장 통합 */
 	public void commMakeOkSet1(int logoSize, int thumbSize, String code, int tenantID) throws Exception {
 		logger.debug("commMakeOkSet1 started.");
@@ -6814,6 +6855,45 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		ezCommunityDAO.commMakeOkSet1Insert(map);
 		
 		logger.debug("commMakeOkSet1 ended.");
+	}
+
+	//logo(상단 이미지) 저장
+	public void commMakeOkSet3(String logoFileName, String fileName, int fileSize, int tenantID) throws Exception {
+		logger.debug("commMakeOkSet3 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LOGOFILENAME", logoFileName);
+		map.put("v_FILENAME", fileName);
+		map.put("v_FILESIZE", fileSize);
+		map.put("tenantID", tenantID);
+		
+		ezCommunityDAO.commMakeOkSet3Update(map);
+		ezCommunityDAO.commMakeOkSet1Insert(map);
+		
+		logger.debug("commMakeOkSet3 ended.");
+	}
+	//thumbnail(대표 이미지) 저장
+	public void commMakeOkSet4(String thumbFileName, String fileName, int fileSize, int tenantID) throws Exception {
+		logger.debug("commMakeOkSet4 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_THUMBFILENAME", thumbFileName);
+		map.put("v_FILENAME", fileName);
+		map.put("v_FILESIZE", fileSize);
+		map.put("tenantID", tenantID);
+		
+		ezCommunityDAO.commMakeOkSet4Update(map);	
+		
+		int count = ezCommunityDAO.commMakeOkSet2Select(map);
+		logger.debug("commMakeOkSet4Select count="+count);
+		
+		if (count > 0 ) {
+			ezCommunityDAO.commMakeOkSet2Update1(map);
+		} else {
+			ezCommunityDAO.commMakeOkSet2Insert(map);
+		}
+		
+		logger.debug("commMakeOkSet4 ended.");
 	}
 	
 	public void guestEditOkDelete(String no, String code, int tenantID) throws Exception {
