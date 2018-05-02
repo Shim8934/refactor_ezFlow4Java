@@ -226,7 +226,6 @@
 	<body class="leftbody" style="overflow: auto; height:100%" onload="drawVolume();">
 		<div id="left" style="overflow: none">
 			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"><span><spring:message code='ezWebFolder.t10' /></span>
-				<img style="width:20px;height:20px;" onClick="refreshView()" class="ui-datepicker-trigger" src="/images/webfolder/reload.png" alt title>
 			</div>
 			<h2>
   				<span style="display:inline-block;width:100%;" onclick="folderList('C');"><spring:message code='ezWebFolder.t233' /></span>

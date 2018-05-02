@@ -407,6 +407,11 @@
 				return returnVal;
 			}
 			
+			function leftPanelProcess() {
+				document.getElementById("folderTree").style.overflow = "hidden";
+				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+			}
+			
 			function moveFolder() {
 				if (!selectedFolder) {
 					alert("<spring:message code='ezWebFolder.t181'/>");
@@ -423,7 +428,7 @@
 					}
 				}
 				
-				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+				leftPanelProcess();
 				DivPopUpShow(450, 480, "/admin/ezWebFolder/folderMoveConfirm.do?folderId=" + selectedFolder);
 			}
 			
@@ -443,7 +448,7 @@
 					}
 				}
 				
-				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+				leftPanelProcess();
 				DivPopUpShow(450, 130, "/admin/ezWebFolder/deleteFolderConfirm.do?folderId=" + selectedFolder);
 			}
 			
@@ -495,6 +500,7 @@
 			
 			function closeAllPopup() {
 				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
+				document.getElementById("folderTree").style.overflow = "auto";
 				DivPopUpHidden();
 			}
 		</script>

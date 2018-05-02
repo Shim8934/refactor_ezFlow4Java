@@ -731,12 +731,13 @@
 			UPDATE
 				TBL_WEBFOLDER_FILE
 			SET
-				USE_STATUS = 'T',
-				DELETER_ID = #userId#
+				USE_STATUS  = 'T',
+				DELETER_ID  = #userId#,
+				UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE
-				FILE_ID    = #fileId#
+				FILE_ID     = #fileId#
 			AND
-				TENANT_ID  = #tenantId#
+				TENANT_ID   = #tenantId#
 		]]>
 	</update>
 	
@@ -745,36 +746,43 @@
 			UPDATE
 				TBL_WEBFOLDER_FOLDER
 			SET
-				USE_STATUS = 'T',
-				DELETER_ID = #userId#
+				USE_STATUS  = 'T',
+				DELETER_ID  = #userId#,
+				UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE
 				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
 			AND
-				TENANT_ID = #tenantId#
+				TENANT_ID   = #tenantId#
 		]]>
 	</update>
 	
 	<update id="EzWebFolderDAO.updateStatusAllFilesInFolder" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				TBL_WEBFOLDER_FILE f JOIN
-					(
+				(
 					SELECT
-					  *
+						f.*
 					FROM
-						TBL_WEBFOLDER_FOLDER
-								WHERE
-									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
-								AND
-									TENANT_ID = #tenantId#
-					) d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
+						TBL_WEBFOLDER_FILE f JOIN
+							(
+							SELECT
+							  *
+							FROM
+								TBL_WEBFOLDER_FOLDER
+										WHERE
+											FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+										AND
+											TENANT_ID = #tenantId#
+							) d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
+				) f1
 			SET
-				f.USE_STATUS = 'T',
-				f.DELETER_ID = #userId#
+				f1.USE_STATUS  = 'T',
+				f1.DELETER_ID  = #userId#,
+				f1.UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE
-				f.TENANT_ID = #tenantId#
+				f1.TENANT_ID   = #tenantId#
 			AND
-				f.USE_STATUS = 'Y'
+				f1.USE_STATUS  = 'Y'
 		]]>
 	</update>
 	
@@ -783,11 +791,12 @@
 			UPDATE
 				TBL_WEBFOLDER_FILE
 			SET
-				FILE_NAME = #name#
+				FILE_NAME   = #name#,
+				UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE
-				FILE_ID   = #fileId#
+				FILE_ID     = #fileId#
 			AND
-				TENANT_ID = #tenantId#
+				TENANT_ID   = #tenantId#
 		]]>
 	</update>
 	
@@ -798,7 +807,7 @@
 			SET
 				FOLDER_ID = #folderId#
 			WHERE
-				FILE_ID = #fileId#
+				FILE_ID   = #fileId#
 			AND
 				TENANT_ID = #tenantId#
 		]]>

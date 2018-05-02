@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -585,6 +584,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("delEndDate", delEndDate);
 		
 		JSONObject result = new JSONObject();
+		
 		int fileCnt = ezWebFolderDAO.getTrashFileCount(map);
 		int folderCnt = ezWebFolderDAO.getTrashFolderCount(map);
 		
@@ -598,37 +598,19 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("pEnd", pEnd);
 		
 		List<TrashCanVO> trashCanList = ezWebFolderDAO.getTrashCanList(map);
-		List<TrashCanVO> resultList = new ArrayList<TrashCanVO>();
 		
 		currPage = totalPages == 0 ? 0 : currPage;
-		fileCnt = 0;
-		folderCnt = 0;
 		
 		if (trashCanList != null) {
 			for (TrashCanVO trashCan : trashCanList) {
-				if (trashCan.getTrashCanExt().equals("folder")) {
-					FolderVO upperFolder = ezWebFolderService.getFolderByFolderId(trashCan.getFolderUpper(), offset, tenantId);
-					
-					if (upperFolder.getUseStatus().equals("Y")) {
-						resultList.add(trashCan);
-						folderCnt += 1;
-					} 
-					
-				} else {
+				if (!trashCan.getTrashCanExt().equals("folder")) {
 					map.put("folderId", trashCan.getFileFolderId());
 					String folderPath = ezWebFolderDAO.getFolderPath(map);
 					
 					if (folderPath != null) {
 						trashCan.setTrashCanPath(folderPath);
 					}
-					
-					FolderVO folder = ezWebFolderService.getFolderByFolderId(trashCan.getFileFolderId(), offset, tenantId);
-					
-					if (folder != null && folder.getUseStatus().equals("Y")) {
-						resultList.add(trashCan);
-						fileCnt += 1;
-					}
-				}
+				} 
 			}
 		}
 		
@@ -637,7 +619,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		result.put("fileCnt", fileCnt);
 		result.put("folderCnt", folderCnt);
-		result.put("trashCanList", resultList);
+		result.put("trashCanList", trashCanList);
 		result.put("totalPages", totalPages);
 		result.put("currentPage", currPage);
 		result.put("totalRows", totalRows);
@@ -772,12 +754,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("tenantId", folderVO.getTenantId());
 		map.put("companyId", folderVO.getCompanyId());
 		
-		int result = -1;
 		List<String> searchFiles = ezWebFolderDAO.selectAllFilesInFolder(map);
 		
 		for (String file : searchFiles) {
 			map.put("fileId", file);
-			result = ezWebFolderDAO.deleteFile(map);
+			int result = ezWebFolderDAO.deleteFile(map);
 			
 			if (result > 0) {
 				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
@@ -786,12 +767,12 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				deleteFavoriteAnyUser(fileVO.getFileId(), "F", tenantId);
 				deleteShareWithSub(fileVO.getFileId(), "F", tenantId);
 			}
-		}
-		
-		if (result > 0) {
-			LOGGER.debug("deleteAllFilesInFolder is success");
-		} else {
-			LOGGER.debug("deleteAllFilesInFolder is fail");
+			
+			if (result > 0) {
+				LOGGER.debug("deleteAllFilesInFolder is success");
+			} else {
+				LOGGER.debug("deleteAllFilesInFolder is fail");
+			}
 		}
 	}
 
@@ -895,7 +876,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				if (upperFolderVO != null && upperFolderVO.getUseStatus().equals("Y")) {
 					int isRestored = restoreFolder(folderVO.getFolderPath(), tenantId, userId, companyId, timeUTC);
 					
-					if (isRestored == 1) {
+					if (isRestored > 0) {
 						failCount += restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
 					}
 				} else {
@@ -915,17 +896,18 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("userId", userId);
 		map.put("timeUTC", timeUTC);
 		
-		int result = -1;
 		int failCount = 0;
 		List<String> searchFiles = ezWebFolderDAO.selectAllFilesInFolder(map);
 		
 		for (String file : searchFiles) {
 			map.put("fileId", file);
-			result = ezWebFolderDAO.restoreFile(map);
+			
+			int result = ezWebFolderDAO.restoreFile(map);
 			
 			if (result > 0) {
 				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 				ezWebFolderService.saveLog("RE", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				
 				LOGGER.debug("restoreFileInFolder is success");
 			} else {
 				failCount += 1;
