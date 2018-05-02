@@ -403,6 +403,7 @@
 			            tr.cells[3].style.overflow = "hidden";
 			            tr.cells[3].style.textOverflow = "ellipsis";
 	
+			            /* 2018-04-24 김민성 - 업무명 길이 조절 */
 			            var commentCount = SelectSingleNodeValue(node, "HASCOMMENT");
 				        if (SelectSingleNodeValue(node, "HASCOMMENT") != "0") {
 				           // tr.cells[4].innerHTML = "<div id='titleid" + i + "' style='float:left; max-width: 500px; overflow: hidden; text-overflow: ellipsis; display: block;'>" + SelectSingleNodeValue(node, "TITLE") + "</div>" + "<div style='display: block;'><font color = '#c64200'>&nbsp;[" + commentCount + "]</font></div>"; 
@@ -479,7 +480,7 @@
 					        	initProgressBar("taskProgressBar" + i, taskstatus, completerate);
 					        }
 					        
-	
+					        /* 2018-04-24 김민성 - 업무명 길이 조절 */
 					        /* if (useTodoMemo == 'YES') {
 								if ($("#titleid" + i + "").outerWidth() > 900) {
 									$("#titleid" + i + "").css("vertical-align", "middle").css("overflow", "hidden").css("textOverflow", "ellipsis").css("display", "inline-block").css("width", "100%");
@@ -853,7 +854,10 @@
 		    		$("#checkboxAll").prop("checked", false);
 		    		$(".row_body").css("background", "");
 		    	}
-
+		    	
+		    	/* 18-05-02 김민성 - 특수문자 검색 문제 수정..? */
+		    	filter = filter.replace("<", "&lt;").replace(">", "&gt;");
+		    	
 		    	$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -973,7 +977,7 @@
 		<table style="WIDTH: 100%;overflow:AUTO;" id="list">
 			<tr>
 				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
-
+					<%-- 2018-04-24 김민성 - 업무명, 메모 길이 조절  --%>
 					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
 						<col style ="width:30px;">
 						<col style ="width:50px;">
