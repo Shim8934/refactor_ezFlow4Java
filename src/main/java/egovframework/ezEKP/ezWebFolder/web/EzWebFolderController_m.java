@@ -474,6 +474,7 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/move-TrashCan", param, request, "post", null);
 		
 		String status = resultBody.get("status").toString();
+		model.addAttribute("status", status);
 		
 		if (!status.equals("ok")) {
 			String reason = resultBody.get("reason").toString();
