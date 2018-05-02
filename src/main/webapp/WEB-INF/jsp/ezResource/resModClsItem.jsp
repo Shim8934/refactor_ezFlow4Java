@@ -25,15 +25,32 @@
 			function btnSave_Click() {
 				var re = /[\\/:*?\"<>|]/gi;
 				if( re.test(document.getElementById("Brd_NM").value)){
-					alert("<spring:message code="ezResource.kms1" />");
+					alert("<spring:message code='ezResource.kms1' />");
 					return;
 				}
 				
-				if (document.getElementById("Brd_NM").value == "") {
+				if (document.getElementById("Brd_NM").value.trim() == "") {
 					alert("<spring:message code="ezResource.t145"/>");
 					document.getElementById("Brd_NM").focus();
 					return;
 				}
+				
+				/* 2018-05-02 서주연 #12558 */
+				var brdNmTag = document.getElementById("Brd_NM");
+				var brdNm2Tag = document.getElementById("Brd_NM2");
+				var resLocTag = document.getElementById("ResLocation");
+				
+				if(CheckLenthForRes(brdNmTag, 50)){
+					return;	
+				};
+				
+				if(CheckLenthForRes(brdNm2Tag, 50)){
+					return;
+				};
+				
+				if(CheckLenthForRes(resLocTag , 50)){
+					return;
+				};	
 
 				var xmlPara = createXmlDom();
 				var xmlHttp = createXMLHttpRequest();
@@ -78,7 +95,7 @@
 					createNodeAndInsertText(xmlPara, objNode, "DATA", "0");
 				}
 
-				if (document.getElementById("Brd_NM2").value == "") {
+				if (document.getElementById("Brd_NM2").value.trim() == "") {
 					document.getElementById("Brd_NM2").value = document.getElementById("Brd_NM").value;
 				}
 				
@@ -182,18 +199,18 @@
           						<table style="width:100%">
               						<tr class="primary">
                 						<th>${langPrimary}</th>
-                						<td><input type="text" name="Brd_NM" id="Brd_NM" idval="${strBrdID}" value="<c:out value='${strBrdNm}' />" style="width: 98%" onBlur="CheckLen(this, 50)"></td>
+                						<td><input type="text" name="Brd_NM" id="Brd_NM" idval="${strBrdID}" value="<c:out value='${strBrdNm}' />" style="width: 98%"></td>
               						</tr>
               						<tr class="secondary">
                 						<th>${langSecondary}</th>
-                						<td><input type="text" name="Brd_NM2" id="Brd_NM2" idval="${strBrdID}" value="<c:out value='${strBrdNm2}' />" style="width: 98%" onBlur="CheckLen(this, 50)"></td>
+                						<td><input type="text" name="Brd_NM2" id="Brd_NM2" idval="${strBrdID}" value="<c:out value='${strBrdNm2}' />" style="width: 98%"></td>
 									</tr>
 								</table>          
 							</td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t148"/></th>
-          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="${resLocation}" style="width: 98%" onblur="CheckLen(this, 50)"></td>
+          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="${resLocation}" style="width: 98%"></td>
         				</tr>
         				<tr>
 							<th> <spring:message code="ezResource.t149"/></th>
