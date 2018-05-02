@@ -5624,59 +5624,31 @@
 <!-- 	</procedure> -->
 	<update id="EzCommunityDAO.adminLogoOkUpdate1"			parameterClass="Map">
 		<![CDATA[
-			UPDATE
-				TBL_C_CLUB
-			SET
-				c_logo = #v_LOGOFILENAME#,
-				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
-			WHERE
-				RTRIM(c_clubno) = #v_FILENAME#
-			AND
-				tenant_id = #tenantID#
+				UPDATE
+					TBL_C_CLUB
 		]]>
-	</update>
-	
-<!-- 	<procedure id="EzCommunityDAO.adminLogoOkUpdate2"			parameterClass="Map"> -->
-<!-- 		{CALL EZSP_ADMIN_LOGO_OK_UPDATE2(#v_BANNERFILENAME#, #v_FILENAME#)} -->
-<!-- 	</procedure> -->
-	<update id="EzCommunityDAO.adminLogoOkUpdate2"			parameterClass="Map">
+			<dynamic prepend="SET">
+				<isNotEmpty property="v_LOGOFILENAME" prepend=",">
+					<![CDATA[
+						c_logo = #v_LOGOFILENAME#
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="v_LOGOFILENAME_THUMBNAIL" prepend=",">
+					<![CDATA[
+						c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
+					]]>
+				</isNotEmpty>	
+				<isNotEmpty property="v_COPTYPE" prepend=",">
+					<![CDATA[
+						c_type = #v_COPTYPE#
+					]]>
+				</isNotEmpty>	
+			</dynamic>
 		<![CDATA[
-			UPDATE
-				TBL_C_CLUB
-			SET
-				c_logo = #v_LOGOFILENAME#
-			WHERE
-				RTRIM(c_clubno) = #v_FILENAME#
-			AND
-				tenant_id = #tenantID#
-		]]>
-	</update>
-	<update id="EzCommunityDAO.adminLogoOkUpdate3"			parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_C_CLUB
-			SET
-				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
-			WHERE
-				RTRIM(c_clubno) = #v_FILENAME#
-			AND
-				tenant_id = #tenantID#
-		]]>
-	</update>
-	
-<!-- 	<procedure id="EzCommunityDAO.adminCommType"				parameterClass="Map"> -->
-<!-- 		{CALL EZSP_ADMIN_COMM_TYPE(#v_COPTYPE#, #v_FILENAME#)} -->
-<!-- 	</procedure> -->
-	<update id="EzCommunityDAO.adminCommType"				parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_C_CLUB
-			SET
-				c_type = #v_COPTYPE#
-			WHERE
-				RTRIM(c_clubno) = #v_FILENAME#
-			AND
-				tenant_id = #tenantID#
+				WHERE
+					RTRIM(c_clubno) = #v_FILENAME#
+				AND
+					tenant_id = #tenantID#
 		]]>
 	</update>
 	

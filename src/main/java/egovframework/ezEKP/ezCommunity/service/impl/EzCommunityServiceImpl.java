@@ -1745,6 +1745,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return sb.toString();
 	}
 
+	/* 2018-04-30 홍승비 - 로고,썸네일,타입 통합하여 DB접근하도록 수정 */
 	@Override
 	public void adminLogoOk(MultipartHttpServletRequest request, int tenantID) throws Exception {
 		String attachFile = "", extName = "";
@@ -1752,19 +1753,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		String code = request.getParameter("code");
 		String copType = request.getParameter("type");
-		String imageSrc = request.getParameter("imageSrc");
 		MultipartFile logoFile = request.getFile("logo");
 		MultipartFile thumbFile = request.getFile("thumb");
+		String logoFileNameLogo = "";
+		String logoFileNameThumbnail = "";
 		
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", tenantID) + commonUtil.separator;
-		
+
 		//상단 이미지 저장
 		if (!logoFile.isEmpty()) {
-			String fileName = code;
 			attachFile = logoFile.getOriginalFilename();
 			iStart = attachFile.lastIndexOf(".");
 			extName = attachFile.substring(iStart);
-			String logoFileName = fileName + "_logo_Temp" + "." + extName;
+			String logoFileName = code + "_logo_Temp." + extName;
 			
 			File file = new File(logoPath + logoFileName);
 			logoFile.transferTo(file);
@@ -1777,29 +1778,18 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
 			
-			File newLogo = new File(logoPath + fileName + "_logo" + ".png");
+			File newLogo = new File(logoPath + code + "_logo.png");
 			ImageIO.write(outputImage, "png", newLogo);
-			String logoFileNameLogo = fileName + "_logo" + ".png";
+			logoFileNameLogo = code + "_logo.png";
 			
-			/*outputImage = new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
-			saveImage = outputImage.createGraphics();
-			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
-			
-			File newThumbnail = new File(logoPath + fileName + "_thumbnail" + ".png");
-			ImageIO.write(outputImage, "png", newThumbnail);
-			String logoFileNameThumbnail = fileName + "_thumbnail" + ".png";
-			*/
 			file.delete();
-			
-			adminLogoOkUpdate2(logoFileNameLogo, fileName, tenantID);
 		}
 		//썸네일 저장
 		if (!thumbFile.isEmpty()) {
-			String fileName = code;
 			attachFile = thumbFile.getOriginalFilename();
 			iStart = attachFile.lastIndexOf(".");
 			extName = attachFile.substring(iStart);
-			String thumbFileName = fileName + "_thumb_Temp" + "." + extName;
+			String thumbFileName = code + "_thumb_Temp." + extName;
 			
 			File file = new File(logoPath + thumbFileName);
 			thumbFile.transferTo(file);
@@ -1812,118 +1802,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
 			
-			File newThumbnail = new File(logoPath + fileName + "_thumbnail" + ".png");
+			File newThumbnail = new File(logoPath + code + "_thumbnail.png");
 			ImageIO.write(outputImage, "png", newThumbnail);
-			String logoFileNameThumbnail = fileName + "_thumbnail" + ".png";
+			logoFileNameThumbnail = code + "_thumbnail.png";
 			
 			file.delete();
-			
-			adminLogoOkUpdate3(logoFileNameThumbnail, fileName, tenantID);
 		}
-		
-		
-		if (!copType.equals("")) {
-			adminCommType(copType, code, tenantID);
-			
-			if (logoFile.isEmpty()) { 
-				if (imageSrc.indexOf("default_logo_type") > -1) {
-					adminLogoOkUpdate2("default_logo_" + copType + ".jpg", code, tenantID);
-				}
-			}
-		}
-	}
-	
-	@Override
-	public void adminLogoUploadIE9(String code, String copType, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception {
-		int iStart = 0;
-		if (fileData != null) {
-			iStart = fileName.lastIndexOf(".");
-			String extName = fileName.substring(iStart);
-			String logoFileName = code + "_logo_Temp" + "." + extName;
-			
-			File file = new File(logoPath + logoFileName);
-	        byte[] byteList = Base64.decodeBase64(fileData);
-	        
-	        FileOutputStream fos = null;
-	        
-	        try {
-	        	fos = new FileOutputStream(file);
-	            IOUtils.write(byteList, fos);
-	            
-	            BufferedImage inputImage = ImageIO.read(file);
-				BufferedImage outputImage = null;
-				Graphics2D saveImage = null;
-				
-				outputImage= new BufferedImage(894, 100, BufferedImage.TYPE_INT_RGB);
-				saveImage = outputImage.createGraphics();
-				saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
-				
-				File newLogo = new File(logoPath + code + "_logo" + ".png");
-				ImageIO.write(outputImage, "png", newLogo);
-				String logoFileNameLogo = code + "_logo" + ".png";
-				
-				adminLogoOkUpdate2(logoFileNameLogo, code, tenantID);
-				
-	        } catch (Exception e) {
-	        	throw e;
-	        } finally {
-	        	fos.close();
-	        	file.delete();
-	        }
-		}
-		
-		if (!copType.equals("")) {
-			adminCommType(copType, code, tenantID);
-			
-			if (fileData != null) { 
-				if (imageSrc.indexOf("default_logo_type") > -1) {
-					adminLogoOkUpdate2("default_logo_" + copType + ".jpg", fileName, tenantID);
-				}
-			}
-		}
-	}
-	
-	public void adminThumbUploadIE9(String code, String copType, String imageSrc, String thumbPath, String fileName, String fileData, int tenantID) throws Exception {
-		int iStart = 0;
-		if (fileData != null) {
-			iStart = fileName.lastIndexOf(".");
-			String extName = fileName.substring(iStart);
-			String thumbFileName = code + "_thumb_Temp" + "." + extName;
-			
-			File file = new File(thumbPath + thumbFileName);
-	        byte[] byteList = Base64.decodeBase64(fileData);
-	        
-	        FileOutputStream fos = null;
-	        
-	        try {
-	        	fos = new FileOutputStream(file);
-	            IOUtils.write(byteList, fos);
-	            
-	            BufferedImage inputImage = ImageIO.read(file);
-				BufferedImage outputImage = null;
-				Graphics2D saveImage = null;
-				
-				outputImage = new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
-				saveImage = outputImage.createGraphics();
-				saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
-				
-				File newThumbnail = new File(thumbPath + code + "_thumbnail" + ".png");
-				ImageIO.write(outputImage, "png", newThumbnail);
-				String logoFileNameThumbnail = code + "_thumbnail" + ".png";
 
-				adminLogoOkUpdate3(logoFileNameThumbnail, code, tenantID);
-				
-	        } catch (Exception e) {
-	        	throw e;
-	        } finally {
-	        	fos.close();
-	        	file.delete();
-	        }
-		}
-		
-		if (!copType.equals("")) {
-			adminCommType(copType, code, tenantID);
-		}
+		if(!logoFileNameLogo.equals("") || !logoFileNameThumbnail.equals("") || !copType.equals("")) {
+			adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, copType, code, tenantID);
+		}		
 	}
 
 	@Override
@@ -7062,72 +6950,21 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		ezCommunityDAO.pollEditOkUpdateQuestion(map);
 	}
 	
-/*	public void adminLogoOkUpdate1(String logoFileNameLogo, String logoFileNameThumbnail, String fileName, int tenantID) throws Exception {
+	/* 2018-04-30 홍승비 - 커뮤니티 로고,썸네일 수정 시 DB접근 통합 */
+	public void adminLogoOkUpdate1(String logoFileNameLogo, String logoFileNameThumbnail, String copType, String fileName, int tenantID) throws Exception {
 		logger.debug("adminLogoOkUpdate1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LOGOFILENAME", logoFileNameLogo);
 		map.put("v_LOGOFILENAME_THUMBNAIL", logoFileNameThumbnail);
+		map.put("v_COPTYPE", copType);
 		map.put("v_FILENAME",  fileName);
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.adminLogoOkUpdate1(map);
 		
 		logger.debug("adminLogoOkUpdate1 ended.");
-	}*/
-	//상단 이미지 저장
-	public void adminLogoOkUpdate2(String logoFileNameLogo, String fileName, int tenantID) throws Exception {
-		logger.debug("adminLogoOkUpdate2 started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_LOGOFILENAME", logoFileNameLogo);
-		map.put("v_FILENAME",  fileName);
-		map.put("tenantID", tenantID);
-		
-		ezCommunityDAO.adminLogoOkUpdate2(map);
-		
-		logger.debug("adminLogoOkUpdate2 ended.");
 	}
-	//썸네일 저장
-	public void adminLogoOkUpdate3(String logoFileNameThumbnail, String fileName, int tenantID) throws Exception {
-		logger.debug("adminLogoOkUpdate3 started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_LOGOFILENAME_THUMBNAIL", logoFileNameThumbnail);
-		map.put("v_FILENAME",  fileName);
-		map.put("tenantID", tenantID);
-		
-		ezCommunityDAO.adminLogoOkUpdate3(map);
-		
-		logger.debug("adminLogoOkUpdate3 ended.");
-	}
-	
-	public void adminCommType(String copType, String fileName, int tenantID) throws Exception {
-		logger.debug("adminCommType started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_COPTYPE", copType);
-		map.put("v_FILENAME", fileName);
-		map.put("tenantID", tenantID);
-		
-		ezCommunityDAO.adminCommType(map);
-		
-		logger.debug("adminCommType ended.");
-	}
-	
-	//TODO 미사용
-	/*public void adminLogoOkUpdate2(String bannerFileName, String fileName, int tenantID) throws Exception {
-		logger.debug("adminLogoOkUpdate2 started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BANNERFILENAME", bannerFileName);
-		map.put("v_FILENAME", fileName);
-		map.put("tenantID", tenantID);
-		
-		ezCommunityDAO.adminLoGoOkUpdate2(map);
-		
-		logger.debug("adminLogoOkUpdate2 ended.");
-	}*/
 
 	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef) throws Exception {
         String orgFilePath = pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht";

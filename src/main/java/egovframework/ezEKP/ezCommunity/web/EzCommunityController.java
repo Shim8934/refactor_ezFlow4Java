@@ -2596,34 +2596,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "json";
 	}
 		
-	/**
-	 * 커뮤니티 환경설정화면 IE9 로고 업테이트 실행함수
-	 */
-	@RequestMapping(value = "/ezCommunity/adminLogoUploadIE9.do")
-	public String adminLogoUploadIE9(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("adminLogoUploadIE9 started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
-		String fileName = request.getParameter("fileName");
-		String fileData = request.getParameter("fileData");
-		String code = request.getParameter("code");
-		String type = request.getParameter("type");
-		String imageSrc = request.getParameter("imageSrc");
-		
-		logger.debug("fileName : " + fileName + ", code : " + code + ", type : " + type);
-		
-		try {
-			ezCommunityService.adminLogoUploadIE9(code, type, imageSrc, logoPath, fileName, fileData, userInfo.getTenantId());
-			model.addAttribute("result", true);
-		} catch (Exception e) {
-			model.addAttribute("result", false);
-			throw e;
-		}
-		
-		logger.debug("adminLogoUploadIE9 ended.");
-		return "json";
-	}
 	
 	/**
 	 * 커뮤니티 환경설정화면 썸네일 temp파일 저장 실행함수
