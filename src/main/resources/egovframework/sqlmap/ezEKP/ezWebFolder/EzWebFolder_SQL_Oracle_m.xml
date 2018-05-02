@@ -811,28 +811,28 @@
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getShareIdList" parameterClass="Map" resultClass="Integer">
-		SELECT SHARE_ID
+		SELECT S.SHARE_ID
 		FROM TBL_WEBFOLDER_SHARE S
 		JOIN TBL_WEBFOLDER_SHARE_SUB SS
-		ON S1.SHARE_ID = SS.SHARE_ID
+		ON S.SHARE_ID = SS.SHARE_ID
 		AND SS.USER_ID IN
 		<iterate property="idList" open="(" close=")" conjunction=",">
 			#idList[].id#
 		</iterate>
 		AND S.TENANT_ID = SS.TENANT_ID
 		LEFT JOIN TBL_WEBFOLDER_SHARE_HIDE SH
-		ON S1.SHARE_ID = SH.SHARE_ID
-		AND S1.TENANT_ID = SH.TENANT_ID
+		ON S.SHARE_ID = SH.SHARE_ID
+		AND S.TENANT_ID = SH.TENANT_ID
 		AND SH.USER_ID = #userId#
-		WHERE FOLDERFILE_ID = #folderFileId#
-		AND FOLDERFILE_TYPE = #folderFileType#
+		WHERE S.FOLDERFILE_ID = #folderFileId#
+		AND S.FOLDERFILE_TYPE = #folderFileType#
 		<isEqual property="hideStatus" compareValue="Y">
 			AND SH.USER_ID IS NOT NULL
 		</isEqual>
 		<isNotEqual property="hideStatus" compareValue="Y">
 			AND SH.USER_ID IS NULL
 		</isNotEqual>
-		AND TENANT_ID = #tenantId#
+		AND S.TENANT_ID = #tenantId#
 	</select>
 	
 	<delete id="EzWebFolderDAO_m.deleteShareSub">

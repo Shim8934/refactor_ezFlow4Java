@@ -5,7 +5,7 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>"   type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -16,6 +16,7 @@
 		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
 		<!-- module -->
 		<script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
+		<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
@@ -108,12 +109,12 @@
 							folderRows  = data.folderCount;
 							totalRows   = data.totalCount;
 							
-// 							makePageSelPage();
+							makePageSelPage();
 							renderData(data.list);
 							checkedArr = [];
 							
 							document.getElementById("mailBoxInfo").innerHTML = " - [<spring:message code='ezWebFolder.t276'/> <span style='color:#017BEC;'>" 
-								+ folderRows + "</span> " + strLang42 + " / " + "<spring:message code='ezWebFolder.t277'/>" + " <span style='color:#017BEC;'>" + fileRows +" </span>" + strLang42 + "]";
+								+ folderRows + "</span> " + messages.strLang11 + " / " + "<spring:message code='ezWebFolder.t277'/>" + " <span style='color:#017BEC;'>" + fileRows +" </span>" + messages.strLang11 + "]";
 						} else {
 							alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
 						}
@@ -165,10 +166,10 @@
 						
 						trElmt.setAttribute("class", "bnkWebFolder");
 						trElmt.setAttribute("targetId", result[i]["fileId"]);
-						trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'folder' : 'file');
+						trElmt.setAttribute("targetType", result[i]["folderFileType"] == 'D' ? 'folder' : 'file');
 						trElmt.addEventListener("click", function(event) { rowContext.onRowClick(this); });
 						
-						if (result[i]["fileTypeName"] != 'folder') {
+						if (result[i]["folderFileType"] != 'D') {
 							trElmt.addEventListener("dblclick", function(event) {downloadFileByDbClick(event);});
 						}
 						
@@ -535,27 +536,6 @@
 				searchContext.setFileType(value);
 			}
 	       
-			function addShare() {
-				var selectedRows = rowContext.getSelectedRows();
-				var selectedLength = selectedRows.length;
-				
-				if (selectedLength == 0) {
-					alert("파일 또는 폴더를 선택하세요.");
-					return;
-				}
-				
-				if (selectedLength > 1) {
-					alert("하나만 선택하세요.");
-					return;
-				}
-				
-				var folderFileInfo = rowContext.getRowInfo(selectedRows[0]);
-				var folderFileId = folderFileInfo.id;
-				var folderFileType = folderFileInfo.type;
-	            var openWindow = window.open("/ezWebFolder/addShareView.do?folderFileId=" + folderFileId + "&folderFileType=" + folderFileType, "addShareView", GetOpenWindowfeature(610, 685));
-	            try { openWindow.focus(); } catch (e) { }
-			}
-			
 			function downloadFileByDbClick(event) {
 				event.stopPropagation();
 				event.preventDefault();
@@ -584,44 +564,11 @@
 				blockLeft.style.height        = "100%";
 				blockLeft.style.display       = "none";
 			}
-			
-			function hideShare() {
-				if (checkedArr.length <= 0) {
-					alert("<spring:message code='ezWebFolder.t108'/>");
-					return;
-				}
-				
-				var jsonStr = JSON.stringify(checkedArr);
-				
-				$.ajax({
-					type: "POST",
-					url: "/ezWebFolder/hideShare.do",
-					contentType : "application/json; charset=UTF-8",
-					data: jsonStr,
-					dataType: "JSON",
-					async: true,
-					success : function(result) {
-						if (result.status == "ok") {
-							refreshView();
-						} else {
-							alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
-						}
-					},
-					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134'/>");
-					}
-				});
-				
-			}
-			
-			function showHiddenSharedList(pPage) {
-				location.href = "/ezWebFolder/webfolderHiddenSharedList.do";
-			}
 		</script>
 	</head>
 	<body class="mainbody">
 		<h1>
-			<spring:message code='ezWebFolder.t214' />
+			공유폴더
 			<span id="mailBoxInfo"></span>
 		</h1>
 		
@@ -636,13 +583,13 @@
 				<li><a onClick="fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t117'/></span></a></li>
 				<li><a onClick="fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t118'/></span></a></li>
 				<li><a onClick="fileMove()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>
-				<li><a onClick="hideShare()" style="margin-top: 3px;"><span>공유숨김</span></a></li>
-				<li><a onClick="showHiddenSharedList(1)" style="margin-top: 3px;"><span>공유숨김목록</span></a></li>
+				<li><a onClick="shareContext.hideShare()" style="margin-top: 3px;"><span>공유숨김</span></a></li>
+				<li><a onClick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span>공유숨김목록</span></a></li>
 				<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 				<li><a onClick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 				<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 				<li>
-					<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect" onchange="refresh();">
+					<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect" onchange="onFileTypeChange(this.value);">
 						<option value=""><spring:message code='ezWebFolder.t191'/></option>
 						<option value="document"><spring:message code='ezWebFolder.t192'/></option>
 						<option value="music"><spring:message code='ezWebFolder.t193'/></option>
@@ -698,16 +645,16 @@
 		<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;">
 			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 				<tr>
-					<th width="30px"><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
-					<th width="30px"><img src='/images/ImgIcon/icon-flag.gif' /></th><!-- 즐겨찾기 -->
-					<th width="30px"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
-					<th width="50%"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
-					<th width="70px" style="text-align:center;">크기</th><!-- 크기 -->
-					<th width="100px"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-					<th width="100px"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
-					<th width="100px"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
-					<th width="50%"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-					<th width="110px">공유자</th><!-- 공유자 -->
+					<th width="20px"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
+					<th style="width: 18px; text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
+					<th style="width: 30px; text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
+					<th style="width: 29%;"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
+					<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
+					<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
+					<th style="width: 9%;"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+					<th style="width: 9%;"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
+					<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
+					<th style="width: 6%; text-align: center;">공유한 사람</th><!-- 공유한 사람 -->
 				</tr>
 			</table>
 		</div>
