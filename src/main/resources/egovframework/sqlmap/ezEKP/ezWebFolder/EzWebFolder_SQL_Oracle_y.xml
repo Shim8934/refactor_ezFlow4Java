@@ -32,11 +32,13 @@
 	
 	<!-- FolderTree resultMap -->
 	<resultMap id="folderTreeVO" class="FolderTreeVO">
-		<result property="id"        column="ID"        columnIndex="1"/>
-		<result property="text"      column="TEXT"      columnIndex="2"/>
-		<result property="parent"    column="PARENT"    columnIndex="3"/>
-		<result property="selected"  column="SELECTED"  columnIndex="4"/>
-		<result property="createId"  column="CREATEID"  columnIndex="5"/>
+		<result property="id"           column="ID"           />
+		<result property="text"         column="TEXT"         />
+		<result property="parent"       column="PARENT"       />
+		<result property="selected"     column="SELECTED"     />
+		<result property="createId"     column="CREATEID"     />
+		<result property="folderName1"  column="FOLDERNAME1"  />
+		<result property="folderName2"  column="FOLDERNAME2"  />
 	</resultMap>
 	
 	<!-- File resultMap -->
@@ -268,7 +270,9 @@
 			        THEN FOLDER_NAME1
 			        ELSE FOLDER_NAME2
 			    END TEXT,
-			    CREATE_ID AS CREATEID
+			    CREATE_ID AS CREATEID,
+			    FOLDER_NAME1 AS FOLDERNAME1, 
+			    FOLDER_NAME2 AS FOLDERNAME2  
 			FROM TBL_WEBFOLDER_FOLDER
 			WHERE USE_STATUS = 'Y'
 			AND FOLDER_TYPE = 'U'
@@ -294,7 +298,9 @@
 	        		THEN FOLDER_NAME1
 	        		ELSE FOLDER_NAME2
 	        	END TEXT,
-	        	CREATE_ID AS CREATEID
+	        	CREATE_ID AS CREATEID,
+			    FOLDER_NAME1 AS FOLDERNAME1, 
+			    FOLDER_NAME2 AS FOLDERNAME2  
 	        FROM TBL_WEBFOLDER_FOLDER
 	        WHERE USE_STATUS = 'Y'
 	        AND FOLDER_TYPE = 'D'
@@ -323,7 +329,9 @@
 	        		THEN F.FOLDER_NAME1
 	        		ELSE F.FOLDER_NAME2
 	        	END TEXT,
-	        	F.CREATE_ID AS CREATEID
+	        	F.CREATE_ID AS CREATEID,
+			    F.FOLDER_NAME1 AS FOLDERNAME1, 
+			    F.FOLDER_NAME2 AS FOLDERNAME2  
             FROM TBL_WEBFOLDER_FOLDER F
             JOIN (
 				SELECT FF.FOLDER_PATH
@@ -351,7 +359,9 @@
 	        		THEN FOLDER_NAME1
 	        		ELSE FOLDER_NAME2
 	        	END TEXT,
-	        	CREATE_ID AS CREATEID
+	        	CREATE_ID AS CREATEID,
+			    FOLDER_NAME1 AS FOLDERNAME1,
+			    FOLDER_NAME2 AS FOLDERNAME2
 	        FROM TBL_WEBFOLDER_FOLDER
 	        WHERE OWNER_ID = #compId#
 	        AND FOLDER_TYPE = 'C'
