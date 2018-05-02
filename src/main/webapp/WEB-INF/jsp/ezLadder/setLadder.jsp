@@ -162,7 +162,7 @@
 			
 			function add_user_change_ulsize(usernum) {
 				$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
-				$("#ladderCanvas").attr("width", (usernum * 150) + "px");
+				$("#ladderCanvas").attr("width", (usernum * 150));
 				
 			}
 			
@@ -392,6 +392,7 @@
 				
 				$(".attendant:eq(" + index + ")").remove();
 				$(".item:eq(" + index + ")").remove();
+				$("#tempItemList li:eq(" + index + ")").remove();
 				add_user_change_ulsize(attendants["id"].length);
 				
 				changeSliderValue();
