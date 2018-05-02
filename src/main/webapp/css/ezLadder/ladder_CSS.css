@@ -69,7 +69,7 @@
     height: 30px;
 }
 
-#attendantList input, #itemList input {
+#attendantList input, #itemList input, #tempItemList input {
     width: 100%;
     height: 30px;
     text-align: center;

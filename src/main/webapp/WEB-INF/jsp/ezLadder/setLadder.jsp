@@ -168,34 +168,32 @@
 			
 			function setLadderTypeDiv() {
 				var html = "";
+				var html2 = "";
 				var len = $("#itemList li").length;
+				var $itemList = $("#itemList");
+				var $tempItemList = $("#tempItemList");
+				
 				if(ladderType == "0") {
+					$itemList.css("display", "none");
+					$tempItemList.css("display", "block");
+					
 					if(len > 0 && bombnum > len) {
 						bombnum = len;
 					}
+					
 					html += "<div style='float: right; padding-top: 7px;'><div id='addBomb' class='typeOpbtn' style='margin-right: 10px;' onselectstart='return false'>" + strLang21 + "</div>";	
 					html += "<div id='cutBomb' class='typeOpbtn' style='margin-right: 30px;' onselectstart='return false'>" + strLang22 + "</div>";
 					html += "<div id='bombnum' style='display: inline-block;'>" + strLang23 + "<span style='margin: 0px 5px 0px 15px;'>" + bombnum + "</span>" + strLang9 + "</div></div>";
-					$("#itemList").empty();
-					for(var i = 0; i < len; i++) {
-						$("#itemList").append("<li class='item'><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' /><input name='items' style='display: none;' _itemindex='" + i + "' ></li>");
-						$(".tempItem:eq(" + i + ")").val("?");
-					}
 				} else if(ladderType == "2") {
-					$("#itemList").empty();
-					for(var i = 0; i < len; i++) {
-						$("#itemList").append("<li class='item'><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' /><input name='items' style='display: none;' _itemindex='" + i + "' ></li>");
-						$(".tempItem:eq(" + i + ")").val("?");
-					}
+					$itemList.css("display", "none");
+					$tempItemList.css("display", "block");
 				} else {
+					$itemList.css("display", "block");
+					$tempItemList.css("display", "none");
+					
 					if(ladderType == "1") {
 						getMoney();
 						html += "<div id='totalmoney' style='float: right; line-height: 50px;'>$<span style='margin: 0px 5px 0px 15px;'>" + totalmoney + "</span>" + strLang24 + "</div>";
-					}
-					$("#itemList").empty();
-					for(var i = 0; i < len; i++) {
-						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' maxlength='" + maxitem + "' /></li>");
-						$("input[name='items']:eq(" + i + ")").val(items[i]);
 					}
 				}
 				$("#ladderTypeOption").html(html);
@@ -336,8 +334,9 @@
 							attendants["name2"][i] = name;
 						}
 					}
-					if($("#itemList li").length != 0 && $("#itemList li input").attr("readonly") != "readonly") {
-						items[i] = $("#itemList li:eq(" + i + ") input").val();
+					var $itemList = $("#itemList");
+					if($itemList.find("li").length != 0 && $itemList.css("display") == "block") {
+						items[i] = $itemList.find("input").eq(i).val();
 					}
 				}
 			}
@@ -674,6 +673,7 @@
 				if(attendants !== null) {
 					$("#attendantList").html("");
 					$("#itemList").html("");
+					$("#tempItemList").html("");
 					
 					for(var i = 0; i < len; i++) {
 						var picsrc = "/images/ezLadder/icon_defaultAttendant.png";
@@ -690,11 +690,6 @@
 						} else {
 							if(attendants["pic"][i] !== "") {
 								picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
-								
-								/* if(attendants["pic"][i].substring(0, 10) == "/ezCommon/") {
-								} else {
-									picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
-								} */
 							}
 							
 							html += '<li class="attendant"><div style="height: 140px; padding-top:  20px;">';
@@ -713,14 +708,10 @@
 						$(thisLi + " input[name='userName2s']").val(attendants["name2"][i]);
 						$(thisLi + " input[name='userIds']").val(attendants["id"][i]);
 						
-						if(ladderType == "0" || ladderType == "2") {
-							$("#itemList").append("<li class='item'><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' /><input style='display: none;' name='items' _itemindex='" + i + "' /></li>");
-							$(".tempItem:eq(" + i + ")").val("?");
-						} else {
-							$("#itemList").append("<li class='item'><input type='text' class='input' name='items' id='items" + i + "' maxlength='" + maxitem + "' /></li>");
-							$("#itemList li:eq(" + i + ") input").val(items[i]);
-						}
+						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' id='items" + i + "' maxlength='" + maxitem + "' /></li>");
+						$("#tempItemList").append("<li><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' value='?' /></li>");
 						
+						$("#items" + i).val(items[i]);
 					}
 					changeSliderValue();
 					add_user_change_ulsize(attendants["id"].length);
@@ -907,7 +898,8 @@
 								<canvas id='ladderCanvasLine' width='0' height='250'></canvas>
 								<canvas id='ladderCanvas' width='0' height='250'></canvas>
 							</div>
-							<ul id="itemList" style="margin-top: 10px; height: 50px;"></ul>
+							<ul id="itemList" style="margin-top: 10px; height: 50px; display: block;"></ul>
+							<ul id="tempItemList" style="margin-top: 10px; height: 50px; display: none;"></ul>
 						</div>
 					</td>
 				</tr>
