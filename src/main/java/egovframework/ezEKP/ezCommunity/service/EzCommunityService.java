@@ -347,6 +347,8 @@ public interface EzCommunityService {
 
 	public void commMakeUpload(String mode, String fileName, String fileData, String logoPath, int tenantID) throws Exception;
 
+	public void adminLogoUploadIE9(String code, String type, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception;
+
 	public void joinOkSendMail(String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception;
 	
 	public void okNoSetSendMail(String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception;

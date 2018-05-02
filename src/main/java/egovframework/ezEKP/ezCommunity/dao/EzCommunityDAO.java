@@ -928,6 +928,15 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.adminLogoOkUpdate1", map);
 	}
 
+	public void adminCommType(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminCommType", map);
+	}
+
+	//TODO 미사용
+	/*public void adminLoGoOkUpdate2(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminLogoOkUpdate2", map);
+	}*/
+
 	public void adminHomeBoardSet(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.adminHomeBoardSet", map);
 	}
@@ -1133,6 +1142,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 
 	public String getOneLineReplyCount(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
 		return String.valueOf(select("EzCommunityDAO.getOneLineReplyCount", map));
 	}
 	// 2018-02-06 김보미 - 조회자 수
@@ -1151,7 +1161,13 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void commMakeOkSet4Update(Map<String, Object> map) {
 		update("EzCommunityDAO.commMakeOkSet4Update", map);	
 	}
-	/* 2018-05-02 홍승비 - 로고와 썸네일 경로 가져오기 */
+	//커뮤니티 관리자>상단 이미지, 썸네일 분리 
+	public void adminLogoOkUpdate2(Map<String, Object> map) {
+		update("EzCommunityDAO.adminLogoOkUpdate2", map);
+	}
+	public void adminLogoOkUpdate3(Map<String, Object> map) {
+		update("EzCommunityDAO.adminLogoOkUpdate3", map);
+	}
 	public CommunityClubVO adminLogoGet2(Map<String, Object> map) {
 		return (CommunityClubVO) select("EzCommunityDAO.adminLogoGet2", map);
 	}

@@ -270,35 +270,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 커뮤니티만들기 IE9 로고 업로드
-	 */
-	@RequestMapping(value = "/ezCommunity/commMakeUpload.do")
-	public String commMakeUpload(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) {
-		logger.debug("commMakeUpload started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
-		String mode = request.getParameter("mode");
-		String fileName = request.getParameter("fileName");
-		String fileData = request.getParameter("fileData");
-		boolean result = false;
-		
-		try {
-			ezCommunityService.commMakeUpload(mode, fileName, fileData, logoPath, userInfo.getTenantId());
-			
-			result = true;
-		} catch (Exception e) {
-			result = false;
-		}
-		
-		logger.debug("commMakeUpload ended.");
-		
-		model.addAttribute("result", result);
-		
-		return "json";
-	}
-	
-	/**
 	 * 게시판Tree 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/getSubBoards.do")

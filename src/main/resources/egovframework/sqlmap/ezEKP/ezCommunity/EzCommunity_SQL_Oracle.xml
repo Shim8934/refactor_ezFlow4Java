@@ -5652,6 +5652,50 @@
 		]]>
 	</update>
 	
+<!-- 	<procedure id="EzCommunityDAO.adminLogoOkUpdate2"			parameterClass="Map"> -->
+<!-- 		{CALL EZSP_ADMIN_LOGO_OK_UPDATE2(#v_BANNERFILENAME#, #v_FILENAME#)} -->
+<!-- 	</procedure> -->
+	<update id="EzCommunityDAO.adminLogoOkUpdate2"			parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUB
+			SET
+				c_logo = #v_LOGOFILENAME#
+			WHERE
+				RTRIM(c_clubno) = #v_FILENAME#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+	<update id="EzCommunityDAO.adminLogoOkUpdate3"			parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUB
+			SET
+				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
+			WHERE
+				RTRIM(c_clubno) = #v_FILENAME#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+	
+<!-- 	<procedure id="EzCommunityDAO.adminCommType"				parameterClass="Map"> -->
+<!-- 		{CALL EZSP_ADMIN_COMM_TYPE(#v_COPTYPE#, #v_FILENAME#)} -->
+<!-- 	</procedure> -->
+	<update id="EzCommunityDAO.adminCommType"				parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUB
+			SET
+				c_type = #v_COPTYPE#
+			WHERE
+				RTRIM(c_clubno) = #v_FILENAME#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+	
 <!-- 	<procedure id="EzCommunityDAO.adminHomeBoardSet"			parameterClass="Map"> -->
 <!-- 		{CALL EZSP_ADMIN_HOMEBOARD_SET(#v_CLEAR#, #v_POSITION#, #v_SN#, #v_CN#, #v_BOARDID#)} -->
 <!-- 	</procedure> -->
