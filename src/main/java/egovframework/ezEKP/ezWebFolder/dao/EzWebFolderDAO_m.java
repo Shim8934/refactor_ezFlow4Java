@@ -64,6 +64,10 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 		return (int) select("EzWebFolderDAO_m.getShareId", map);
 	}
 	
+	public List<Integer> getShareIdList(Map<String, Object> map) {
+		return (List<Integer>) list("EzWebFolderDAO_m.getShareIdList", map);
+	}
+	
 	public void updateShareUserNameList(Map<String, Object> map) {
 		update("EzWebFolderDAO_m.updateShareUserNameList", map);
 	}
@@ -175,5 +179,5 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	public void moveFile(Map<String, Object> map) {
 		update("EzWebFolderDAO_m.moveFile", map);
 	}
-	
+
 }

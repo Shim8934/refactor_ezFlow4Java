@@ -198,8 +198,7 @@ public class EzWebFolderController_m {
 			if (shareInfo == null) {
 				resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", null, request, "post", jsonParam);
 			} else {
-				String shareId = (String) shareInfo.get("shareId");
-				resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + shareId, null, request, "put", jsonParam);
+				resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "put", jsonParam);
 			}
 		}
 		
@@ -208,14 +207,17 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/hideShare.do", method=RequestMethod.POST)
-	public @ResponseBody String hideShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody List<String> shareIdList) throws Exception {
+	public @ResponseBody String hideShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody JSONObject jsonParam) throws Exception {
 		logger.debug("hideShare started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		JSONObject resultJson = new JSONObject();
 		
-		if (shareIdList == null || shareIdList.size() == 0) {
+		List<String> folderList = (List<String>) jsonParam.get("folder");
+		List<String> fileList = (List<String>) jsonParam.get("file");
+		
+		if (folderList == null || fileList == null) {
 			resultJson.put("status", "error");
 			resultJson.put("code", "1");
 			return resultJson.toString();
@@ -223,21 +225,27 @@ public class EzWebFolderController_m {
 		
 		String status = "ok";
 		String code = "0";
-		JSONArray errorArray = new JSONArray();
 		
-		for (String shareId : shareIdList) {
-			JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide/" + shareId, null, request, "post", null);
+		for (String folderId : folderList) {
+			JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide/" + folderId + "/D", null, request, "post", null);
 			
 			if (!((String) resultBody.get("status")).equals("ok")) {
 				status = "error";
-				errorArray.add(shareId);
+				code = "2";
+			}
+		}
+		
+		for (String fileId : fileList) {
+			JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide/" + fileId + "/F", null, request, "post", null);
+			
+			if (!((String) resultBody.get("status")).equals("ok")) {
+				status = "error";
 				code = "2";
 			}
 		}
 		
 		resultJson.put("status", status);
 		resultJson.put("code", code);
-		resultJson.put("errorArray", errorArray);
 		
 		logger.debug("hideShare ended.");
 		return  resultJson.toString();

@@ -32,19 +32,19 @@ public interface EzWebFolderService_m {
 	
 	void insertShare(String sharerId, String folderFileId, String folderFileType, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
 	
-	void updateShare(String shareId, String sharerId, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
+	void updateShare(String folderFileId, String folderFileType, String sharerId, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
 	
-	public void deleteShare(String shareId, String sharerId, int tenantId) throws Exception;
+	void deleteShare(String folderFileId, String folderFileType, String sharerId, int tenantId) throws Exception;
 	
-	public void deleteShareWithSub(String folderFileId, String folderFileType, int tenantId) throws Exception;
+	void deleteShareWithSub(String folderFileId, String folderFileType, int tenantId) throws Exception;
 	
 	List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception;
 
 	Map<String, Long> getHiddenSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception;
 	
-	void hideShare(String shareId, String userId, String offset, int tenantId) throws Exception;
+	void hideShare(String folderFileId, String folderFileType, String userId, String deptId, String compId, String offset, int tenantId) throws Exception;
 
-	void showShare(String shareId, String userId, String offset, int tenantId) throws Exception;
+	void showShare(String folderFileId, String folderFileType, String userId, String deptId, String compId, String offset, int tenantId) throws Exception;
 	
 	JSONObject getTrashCanList(String userId, String offset, int tenantId, int pStart, int pEnd, String searchExt, String searchFileName, String searchFileType, String searchCreateName, String endrollStartDate, String endrollEndDate, String delStartDate, String delEndDate) throws Exception;
 
