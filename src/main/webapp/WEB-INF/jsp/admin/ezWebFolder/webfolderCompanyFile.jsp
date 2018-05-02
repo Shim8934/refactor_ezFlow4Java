@@ -144,6 +144,7 @@
 		<div class="layerpopup wfPopup" style="display: none;" id="iFramePanel"><iframe src="" style="border:none;" id="iFrameLayer"></iframe></div>
 		
 		<div id="tblPageRayer"></div>
+		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	</body>
 </html>

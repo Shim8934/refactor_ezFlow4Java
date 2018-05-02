@@ -25,6 +25,7 @@
 	<!-- time picker-->
 	<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
