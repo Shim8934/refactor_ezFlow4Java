@@ -18,6 +18,8 @@
 	        var CancelFunction;
 	        var folderUppId = "";
 	        var functionType = "";
+	        var folderName1 = "";
+	        var folderName2 = "";
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -26,26 +28,29 @@
 	        };
 	        function window_onload() {
 	            try {
-	            	folderUppId = parent.inputNameDlg_cross_dialogArguments[0];
+	            	folderUppId    = parent.inputNameDlg_cross_dialogArguments[0];
 	                ReturnFunction = parent.inputNameDlg_cross_dialogArguments[1];
 	                CancelFunction = parent.inputNameDlg_cross_dialogArguments[2];
-	                functionType = parent.inputNameDlg_cross_dialogArguments[3];
-	            } catch (e) { }
-// 	            if (InputValue != "") {
-// 	                txt_FolderName.value = InputValue;
-// 	            }
+	                functionType   = parent.inputNameDlg_cross_dialogArguments[3];
+	                if (functionType == "insert") {
+		            	$('#title').text('폴더 생성');
+		            	$('.txt').text('<spring:message code='ezWebFolder.t265' />');
+		            }else if(functionType == "update") {
+		                folderName1    = parent.inputNameDlg_cross_dialogArguments[4];
+		                folderName2    = parent.inputNameDlg_cross_dialogArguments[5];
+		                $('#txt_FolderName1').val(folderName1);
+		                $('#txt_FolderName2').val(folderName2);
+		            	$('#title').text('폴더 수정');
+		            	$('.txt').text('수정할 폴더명을 입력하세요.');
+		            }
+	            } catch (e) {
+	            	
+	            }
 	            try {
 	                txt_FolderName.focus();
 	            }
 	            catch (e)
 	            { }
-	            if (functionType == "insert") {
-	            	$('#title').text('폴더 생성');
-	            	$('.txt').text('<spring:message code='ezWebFolder.t265' />');
-	            }else if(functionType == "update") {
-	            	$('#title').text('폴더 수정');
-	            	$('.txt').text('수정할 폴더명을 입력하세요.');
-	            }
 	            	
 	        }
 	        function btn_ok_onclick() {

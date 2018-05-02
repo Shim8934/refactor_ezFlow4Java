@@ -39,6 +39,8 @@
 		var userName = "<c:out value='${userName}'/>";
 		var folderId="";
 		var folderType = "${folderType}";
+		var folderName1 = "";
+		var folderName2 = "";
         if ("${isFolderManager}" == "1") {
         	isFolderManager = true;
         }
@@ -108,6 +110,8 @@
 					}).on('changed.jstree', function (e, data) {
 						folderId = data.selected[0]; 
 						createId = folderId != null ? data.node.original.createId : ""; 
+						folderName1 = folderName1 != null ? data.node.original.folderName1 : ""; 
+						folderName2 = folderName2 != null ? data.node.original.folderName2 : ""; 
 						parent   = data.node.original.parent; 
 						console.log("The selected nodes are:" + folderId);
 					});
@@ -133,6 +137,8 @@
             inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
             inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
             inputNameDlg_cross_dialogArguments[3] = functionType;
+            inputNameDlg_cross_dialogArguments[4] = folderName1;
+            inputNameDlg_cross_dialogArguments[5] = folderName2;
             DivPopUpShow(330, 170, "/ezWebFolder/inputNameDlg.do");
         }
         function update_onclick() {
@@ -164,6 +170,8 @@
             inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
             inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
             inputNameDlg_cross_dialogArguments[3] = functionType;
+            inputNameDlg_cross_dialogArguments[4] = folderName1;
+            inputNameDlg_cross_dialogArguments[5] = folderName2;
             DivPopUpShow(330, 170, "/ezWebFolder/inputNameDlg.do");
         }
         var deleteFolderDlg_cross_dialogArguments = [];

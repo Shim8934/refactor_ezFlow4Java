@@ -6,6 +6,8 @@ public class FolderTreeVO {
 	private String parent;
 	private String selected;
 	private String createId;
+	private String folderName1;
+	private String folderName2;
 	
 	public String getId() {
 		return id;
@@ -45,6 +47,22 @@ public class FolderTreeVO {
 
 	public void setCreateId(String createId) {
 		this.createId = createId;
+	}
+
+	public String getFolderName1() {
+		return folderName1;
+	}
+
+	public void setFolderName1(String folderName1) {
+		this.folderName1 = folderName1;
+	}
+
+	public String getFolderName2() {
+		return folderName2;
+	}
+
+	public void setFolderName2(String folderName2) {
+		this.folderName2 = folderName2;
 	}
 
 	@Override
