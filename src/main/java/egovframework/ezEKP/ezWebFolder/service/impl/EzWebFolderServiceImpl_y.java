@@ -226,6 +226,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("pStart", pStart);
 		map.put("pEnd", pEnd);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
 		LOGGER.debug("offset  :  " + commonUtil.getMinuteUTC(offset));
 		int fileTotalCnt = 0;
 		int fldTotalCnt = 0;

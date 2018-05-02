@@ -41,28 +41,29 @@
 	
 	<!-- File resultMap -->
     <resultMap id="fileVO" class="FileVO">
-        <result property="fileId"               column="FILE_ID"                columnIndex="1"  />              
-        <result property="fileName"         	column="FILE_NAME"              columnIndex="2"  />
-        <result property="filePath"         	column="FILE_PATH"              columnIndex="3"  />
-        <result property="fileSize"          	column="FILE_SIZE"              columnIndex="4"  />
-        <result property="typeId"          		column="TYPE_ID"                columnIndex="5"  />
-        <result property="downloadCnt"          column="DOWN_COUNT"             columnIndex="6"  />
-        <result property="fileExt"           	column="FILE_EXT"               columnIndex="7"	 />
-        <result property="folderId"           	column="FOLDER_ID"              columnIndex="8"  />
-        <result property="useStatus"        	column="USE_STATUS"         	columnIndex="9"	 />
-        <result property="createId"             column="CREATE_ID"            	columnIndex="10" />
-        <result property="createName1"          column="CREATE_NAME1"          	columnIndex="11" />
-        <result property="createDate"           column="CREATE_DATE"            columnIndex="12" />
-        <result property="updateId"             column="UPDATE_ID"              columnIndex="13" />
-        <result property="updateDate"           column="UPDATE_DATE"            columnIndex="14" />        
-        <result property="tenantId"         	column="TENANT_ID"              columnIndex="15" />
-        <result property="fileIconUrl"          column="TYPE_ICON"        		columnIndex="16" />
-        <result property="folderPath"           column="FOLDER_PATH"            columnIndex="17" />
-        <result property="folderName"           column="FOLDER_NAME1"           columnIndex="18" />
-        <result property="favouriteStatus"      column="FAVORITE_STATUS"  		columnIndex="19"/>
-        <result property="fileShareStatus"      column="FILESHARE_STATUS"		columnIndex="20"/>
-        <result property="folderSort"      		column="FOLDER_SORT"			columnIndex="21"/>
-        <result property="fileTypeName"         column="TYPE_NAME"          columnIndex="22" />
+        <result property="fileId"               column="FILE_ID"                 />              
+        <result property="fileName"         	column="FILE_NAME"               />
+        <result property="filePath"         	column="FILE_PATH"               />
+        <result property="fileSize"          	column="FILE_SIZE"               />
+        <result property="typeId"          		column="TYPE_ID"                 />
+        <result property="downloadCnt"          column="DOWN_COUNT"              />
+        <result property="fileExt"           	column="FILE_EXT"                />
+        <result property="folderId"           	column="FOLDER_ID"               />
+        <result property="useStatus"        	column="USE_STATUS"         	 />
+        <result property="createId"             column="CREATE_ID"            	 />
+        <result property="createName1"          column="CREATE_NAME1"          	 />
+        <result property="createName2"          column="CREATE_NAME2"          	 />
+        <result property="createDate"           column="CREATE_DATE"             />
+        <result property="updateId"             column="UPDATE_ID"               />
+        <result property="updateDate"           column="UPDATE_DATE"             />        
+        <result property="tenantId"         	column="TENANT_ID"               />
+        <result property="fileIconUrl"          column="TYPE_ICON"        		 />
+        <result property="folderPath"           column="FOLDER_PATH"             />
+        <result property="folderName"           column="FOLDER_NAME1"            />
+        <result property="favouriteStatus"      column="FAVORITE_STATUS"  		/>
+        <result property="fileShareStatus"      column="FILESHARE_STATUS"		/>
+        <result property="folderSort"      		column="FOLDER_SORT"			/>
+        <result property="fileTypeName"         column="TYPE_NAME"          />
 <!--         <result property="fileTypeId"           column="filetype_id"            columnIndex="16" /> -->
 <!--         <result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" /> -->
 <!--         <result property="tenantId"         	column="tenant_id"              columnIndex="19" /> -->
@@ -119,6 +120,7 @@
 				f.USE_STATUS     		AS USE_STATUS   ,
 				f.CREATE_ID	    		AS CREATE_ID    ,
 				decode ( #primary# , '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
+				f.CREATE_NAME2 as CREATE_NAME2,
 				f.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 				f.UPDATE_ID	  			as UPDATE_ID,
 				f.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,    	 
@@ -147,6 +149,7 @@
 				folder.USE_STATUS   AS USE_STATUS   ,     
 				folder.CREATE_ID	AS CREATE_ID    ,     
 				decode ( #primary# , '1' , folder.CREATE_NAME1, folder.CREATE_NAME2) as CREATE_NAME1,
+				folder.CREATE_NAME2 as CREATE_NAME2,
 				folder.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 				folder.UPDATE_ID	  ,
 				folder.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,  	
@@ -169,7 +172,9 @@
 		</isNotEqual>		
 		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 			<![CDATA[
-				t.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
+				(t.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
+				or
+				t.CREATE_NAME2 LIKE '%' || #searchCreateName# || '%')
        		]]> 
 		</isNotEqual>		
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -714,15 +719,15 @@
 			</isEqual>
 	         
 			<isNotEqual property="searchExt" compareValue="" prepend="AND">
-			<![CDATA[
-				type.FILE_EXT LIKE '%'|| #searchExt# || '%'
-       		]]> 
+				<![CDATA[
+					type.FILE_EXT LIKE '%'|| #searchExt# || '%'
+	       		]]> 
 			</isNotEqual>		
 			<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 				<![CDATA[
-					folder.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
+					(folder.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
 					or
-					folder.CREATE_NAME2 LIKE '%' || #searchCreateName# || '%'
+					folder.CREATE_NAME2 LIKE '%' || #searchCreateName# || '%')
 	       		]]> 
 			</isNotEqual>		
 			<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -732,9 +737,9 @@
 			</isNotEqual>	
 			<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 				<![CDATA[
-						folder.folder_name1 LIKE '%' || #searchFileName# || '%'
+						(folder.folder_name1 LIKE '%' || #searchFileName# || '%'
 					or
-						folder.folder_name2 LIKE '%' || #searchFileName# || '%'
+						folder.folder_name2 LIKE '%' || #searchFileName# || '%')
 	       		]]> 
 			</isNotEqual>
 			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
@@ -761,8 +766,9 @@
 						f.FILE_NAME 	  		AS FILE_NAME,
 						f.FILE_EXT	  			AS FILE_EXT,
 						f.FOLDER_ID	  			AS FOLDER_ID,
-						f.USE_STATUS   			AS FOLDER_NAME1,
+						f.USE_STATUS   			AS USE_STATUS,
 						decode ( #primary# , '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
+						f.CREATE_NAME2 as CREATE_NAME2,
 						f.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 						f.TENANT_ID    			AS TENANT_ID,
 						type.TYPE_NAME 			AS TYPE_NAME    	   		
@@ -776,8 +782,7 @@
 						and tenant_id = #tenantId# 
 						and folder_type = #folderType#
 						and use_status = 'Y'
-					) 
-						folder on folder.folder_id  = f.folder_id
+					) folder on folder.folder_id  = f.folder_id
 						
 				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
 				where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
@@ -802,33 +807,34 @@
 				f.FILE_EXT	  			AS FILE_EXT,
 				f.FOLDER_ID	  			AS FOLDER_ID,
 				f.USE_STATUS   			AS USE_STATUS,
-				decode ( #primary# , '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
+				decode ( #primary# , '1' , f.CREATE_NAME1, f.CREATE_NAME2) AS CREATE_NAME1,
+				f.CREATE_NAME2 AS CREATE_NAME2,
 				f.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
 				f.TENANT_ID    ,
 				type.TYPE_NAME 			AS TYPE_NAME    	   		
 		]]>	
 			<isEqual property="folderType" compareValue="C" >
-	   			FROM 
-				TBL_WEBFOLDER_FOLDER folder JOIN TBL_WEBFOLDER_FILE f
-					ON folder.FOLDER_ID = f.FOLDER_ID AND folder.TENANT_ID = f.TENANT_ID
-				JOIN (	
-					SELECT FF.FOLDER_PATH
-					FROM TBL_WEBFOLDER_FOLDER FF
-					JOIN TBL_WEBFOLDER_FOLDERUSER FU
-					ON FF.FOLDER_ID = FU.FOLDER_ID
-					AND FF.TENANT_ID = FU.TENANT_ID
-					AND FF.USE_STATUS='Y'
-					AND FF.FOLDER_TYPE = 'C'
-					AND FU.USER_ID IN 
-					<iterate property="idList" open="(" close=")" conjunction=",">
-						#idList[].id#
-					</iterate>
-					WHERE FF.TENANT_ID = #tenantId# ) FP
-				ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
-				JOIN TBL_WEBFOLDER_FILETYPE type 
-					ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
-			 WHERE f.USE_STATUS = 'Y'
-			 AND f.TENANT_ID = #tenantId#
+		   			FROM 
+					TBL_WEBFOLDER_FOLDER folder JOIN TBL_WEBFOLDER_FILE f
+						ON folder.FOLDER_ID = f.FOLDER_ID AND folder.TENANT_ID = f.TENANT_ID
+					JOIN (	
+						SELECT FF.FOLDER_PATH
+						FROM TBL_WEBFOLDER_FOLDER FF
+						JOIN TBL_WEBFOLDER_FOLDERUSER FU
+						ON FF.FOLDER_ID = FU.FOLDER_ID
+						AND FF.TENANT_ID = FU.TENANT_ID
+						AND FF.USE_STATUS='Y'
+						AND FF.FOLDER_TYPE = 'C'
+						AND FU.USER_ID IN 
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+						WHERE FF.TENANT_ID = #tenantId# ) FP
+					ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
+					JOIN TBL_WEBFOLDER_FILETYPE type 
+						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
+				 WHERE f.USE_STATUS = 'Y'
+				 AND f.TENANT_ID = #tenantId#
 	   		</isEqual>
 	   		<isNotEqual property="folderType" compareValue="C">
 				<![CDATA[
@@ -874,6 +880,11 @@
 				type.TYPE_NAME LIKE ('%'|| #searchFileType#||'%')
        		]]> 
 		</isNotEqual>
+		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
+			<![CDATA[
+				(TO_CHAR(f.CREATE_DATE, 'YYYY-MM-DD') >= #searchStartDate# AND TO_CHAR(f.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+			]]>
+		</isNotEqual>	
 			) totalCount
 	</select>
 	<select id="EzWebFolderDAO_y.getFileToTalCountR" resultClass="Integer" parameterClass="Map"> 
