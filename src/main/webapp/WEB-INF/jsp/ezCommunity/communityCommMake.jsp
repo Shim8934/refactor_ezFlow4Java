@@ -14,7 +14,7 @@
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 
-		<script type="text/javascript">			
+		<script type="text/javascript">		
 			function check() {
 		        var newID = "{" + GetGUID().toUpperCase() + "}";
 		        var new_subID = "{" + GetGUID().toUpperCase() + "}";
@@ -87,12 +87,15 @@
 	        }
 			
 			function back() {
-	            if ("${flag}" == '1'){
-	                window.open("/ezCommunity/mainPage.do", "right");
-	            }else{
-	                history.back(-1);
-	            }
-	        }
+				/* 18-04-30 김민성 - 커뮤니티 만들기 취소시 메인화면으로 이동 하도록 수정 */
+				window.open("/ezCommunity/mainPage.do", "right");
+				
+				/* if("${flag}" == '1'){
+		        	   window.open("/ezCommunity/mainPage.do", "right");
+		        }else{ 
+		               history.back(-1);
+		       }   */
+			}
 			
 	        function btn_AttachSelect_onclick(num) {
 	            if (num == "1"){
