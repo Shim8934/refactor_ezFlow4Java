@@ -857,11 +857,13 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		for (String file : searchFiles) {
 			map.put("fileId", file);
+			
 			int result = ezWebFolderDAO.restoreFile(map);
 			
 			if (result > 0) {
 				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 				ezWebFolderService.saveLog("RE", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				
 				LOGGER.debug("restoreFileInFolder is success");
 			} else {
 				failCount += 1;

@@ -1288,8 +1288,6 @@
 									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
 								AND
 									TENANT_ID = #tenantId#
-								AND
-									COMPANY_ID = #companyId#	
 					)  d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
 			WHERE
 				f.USE_STATUS = 'T'
