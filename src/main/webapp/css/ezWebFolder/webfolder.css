@@ -102,7 +102,8 @@
 #mainmenu2 li span img, #mainmenu2 li span.off img {vertical-align:middle;}
 #mainmenu2 li.on {}
 #mainmenu2 li.on > a > span {color:rgb(0, 72, 149); border-color:rgb(0, 72, 149);}
-#mainmenu2[favoritemode] > ul > li:not([favoritemenu]) {display:none;}
+#mainmenu[favoritemode] > ul > li:not([favoritemenu]) {display:none;}
+#mainmenu[favoritemode] ~ #layer_Viewpopup {top:90px !important;}
 #mainmenu2 > ul > li[hidden] {display:none;}
 #mainmenu2 > ul > li >a {margin-top:3px;}
 

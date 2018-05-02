@@ -745,7 +745,7 @@
 		<div id="dragDropArea">
 			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 				<tr>
-					<th width="20px"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
+					<th style="width: 20px;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
 					<th style="width: 18px; text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
 					<th style="width: 30px; text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 					<th style="width: 29%;"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->

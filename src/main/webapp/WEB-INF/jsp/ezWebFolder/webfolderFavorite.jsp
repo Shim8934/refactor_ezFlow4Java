@@ -178,10 +178,10 @@
 				// TODO: 즐겨찾기 메뉴 보이기/숨기기 html, js 소스 정리
 				if (isFavoriteMode) {
 					dom.originalPathWrapper.style.display = "none";
-					dom.mainmenu2.setAttribute("favoritemode", "");
+					dom.mainmenu.setAttribute("favoritemode", "");
 				} else {
 					dom.originalPathWrapper.style.display = "";
-					dom.mainmenu2.removeAttribute("favoritemode");
+					dom.mainmenu.removeAttribute("favoritemode");
 				}
 			});
 			
@@ -211,7 +211,7 @@
 	    	dom = (function(){
 	    		return {
 	    			mailBoxInfo : document.getElementById("mailBoxInfo"),
-	    	    	mainmenu2 : document.getElementById("mainmenu2"),
+	    	    	mainmenu : document.getElementById("mainmenu"),
 	    	    	upload : document.getElementById("upload"),
 	    	    	originalPath : document.getElementById("originalPath"),
 	    	    	originalPathWrapper : document.getElementById("originalPathWrapper"),
@@ -418,7 +418,17 @@
 				sizeColumn			= document.createElement("td");
 				creatorColumn		= document.createElement("td");
 				createDateColumn	= document.createElement("td");	
-				absolutePathColumn	= document.createElement("td");	
+				absolutePathColumn	= document.createElement("td");
+				
+				setStyles([nameColumn, sizeColumn, creatorColumn, createDateColumn, absolutePathColumn], function(style) {
+					style.overflow = "hidden";
+					style.textOverflow = "ellipsis";
+					style.whiteSpace = "nowrap";
+				});
+				
+				setStyles([checkboxColumn, favoriteIconColumn, fileIconColumn, sizeColumn], function(style) {
+					style.textAlign = "center";
+				})
 				
 				row.setAttribute("class", "bnkWebFolder");
 				row.setAttribute("targetId", resultJson[columnMap.id]);
@@ -478,7 +488,7 @@
 						onFolderDoubleClick(this);							
 					};
 					
-					sizeColumn.textContent = "";
+					sizeColumn.textContent = "-";
 				} else {
 					sizeColumn.textContent = getFileSize(resultJson[columnMap.size]);
 				}
@@ -493,6 +503,14 @@
 				row.appendChild(absolutePathColumn);
 				
 				dom.listTable.appendChild(row);
+			}
+		}
+		
+		function setStyles(elements, excutor) {
+			var length = elements.length;
+			
+			for (var i = 0; i < length; i++) {
+				excutor(elements[i].style);
 			}
 		}
 		
@@ -802,27 +820,26 @@
     </script>
 </head>
 <body class="mainbody">
-    <h1 onclick='context.setListAsFavorite();' style="cursor: pointer; display: inline-block;">즐겨찾기</h1>
-    <span id="mailBoxInfo"></span>
+    <h1 onclick='context.setListAsFavorite();' style="cursor: pointer; display: inline-block;">즐겨찾기<span id="mailBoxInfo"></span></h1>
     <div id ="pageArea"><!-- pagenation이 namePath로 움직이지 않도록 설정 -->
 		<div id="originalPathWrapper" style="height:40px; display: none;">
 			<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;" id ="originalPath"></span>
 		</div>
-		<div id="mainmenu2" favoritemode>
+		<div id="mainmenu" favoritemode>
 			<ul>
-				<li id="" favoritemenu onClick="fileDownload()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-				<li id="upload" onClick="fileUpload()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-				<li id="" onClick="fileDelete()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
-				<li id="" onClick="fileRename()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
-				<li id="" onClick="fileMove()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
+				<li id="" favoritemenu onClick="fileDownload()"><span><spring:message code='ezWebFolder.t186'/></span></li>
+				<li id="upload" onClick="fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
+				<li id="" onClick="fileDelete()"><span><spring:message code='ezWebFolder.t274'/></span></li>
+				<li id="" onClick="fileRename()"><span><spring:message code='ezWebFolder.t273'/></span></li>
+				<li id="" onClick="fileMove()"><span><spring:message code='ezWebFolder.t275'/></span></li>
 				<li id=""><img src="/images/i_bar.gif"></li>
-				<li id="" onClick="favoriteContext.toggleAll()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t281'/></span></a></li>
+				<li id="" favoritemenu onClick="favoriteContext.toggleAll()"><span><spring:message code='ezWebFolder.t281'/></span></li>
 	<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
 				<li id=""><img src="/images/i_bar.gif"></li>
-				<li id="SearchOption" favoritemenu mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
+				<li id="SearchOption" favoritemenu mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 				<li id=""><img src="/images/i_bar.gif"></li>
-				<li id="" onClick="contet.refreshList()"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
-				<li id="right" favoritemenu style="float:right;"><span><spring:message code='ezWebFolder.t215'/></span><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" onclick="optionView(this);"></li>
+				<li id="" onClick="contet.refreshList()"><span><spring:message code='ezWebFolder.t139'/></span></li>
+				<li id="right" favoritemenu style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" onclick="optionView(this);"></li>
 				<li id="right" favoritemenu style="float:right;">
 					<select class="select" id="idSelect" onchange="idChange(this.value);" style="width:100px; display:none;">
 						<option value="all" data-imagesrc="/images/webfolder/allTypes.png" selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
@@ -838,7 +855,7 @@
 		</div>
 		
 		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 	 	
 	    <div id="progress-wrp" style="display: none;">
@@ -880,14 +897,14 @@
 		<div id="dragDropArea">
 			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 				<tr>
-					<th width="15px" ><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
-					<th width="20px" ><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th>
-					<th width="40px" ><spring:message code='ezWebFolder.t188'/></th>
-					<th width="330px"><spring:message code='ezWebFolder.t156'/></th>
-					<th width="60px" ><spring:message code='ezWebFolder.t157'/></th>
-					<th width="120px"><spring:message code='ezWebFolder.t189'/></th>
-					<th width="80px" ><spring:message code='ezWebFolder.t190'/></th>
-					<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
+					<th style="width: 20px;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
+					<th style="width: 18px; text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th>
+					<th style="width: 30px; text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
+					<th style="width: 30%;"><spring:message code='ezWebFolder.t156'/></th>
+					<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th>
+					<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th>
+					<th style="width: 10%;"><spring:message code='ezWebFolder.t190'/></th>
+					<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th>
 				</tr>
 			</table>
 		</div>
