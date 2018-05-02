@@ -28,7 +28,7 @@ public interface EzWebFolderService_m {
 	
 	List<Map<String, String>> getPermissionIdList(String userId, String deptId, String compId, int tenantId) throws Exception;
 	
-	boolean isShared(String folderFileId, String folderFileType, String folderPath, int tenantId) throws Exception;
+	String checkShared(String folderFileId, String folderFileType, String folderPath, int tenantId) throws Exception;
 	
 	void insertShare(String sharerId, String folderFileId, String folderFileType, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
 	

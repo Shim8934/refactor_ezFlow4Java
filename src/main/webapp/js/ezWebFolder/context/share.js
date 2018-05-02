@@ -20,6 +20,18 @@ var shareContext = (function() {
         try { openWindow.focus(); } catch (e) { }
 	}
 	
+	function showShareInfo(target) {
+		var folderFileId = $(target).closest('tr').attr("targetId");
+		var folderFileType = $(target).closest('tr').attr("targetType");
+		
+		var openWindow = window.open("/ezWebFolder/showShareInfo.do?folderFileId=" + folderFileId + "&folderFileType=" + folderFileType, "shareInfo", GetOpenWindowfeature(400, 450));
+        try { openWindow.focus(); } catch (e) { }
+	}
+	
+	function showHiddenSharedList(pPage) {
+		location.href = "/ezWebFolder/webfolderHiddenSharedList.do";
+	}
+	
 	function addShare(folderFileId, folderFileType, userListInfo, isAsync, successHandle) {
 		requestShareAjax("/ezWebFolder/addShare.do", isAsync, {
 			folderFileId: folderFileId,
@@ -49,10 +61,6 @@ var shareContext = (function() {
 		}
 		
 		requestShareAjax("/ezWebFolder/deleteShare.do", false, targetInfos, refreshView);
-	}
-	
-	function showHiddenSharedList(pPage) {
-		location.href = "/ezWebFolder/webfolderHiddenSharedList.do";
 	}
 	
 	function hideShare() {
@@ -196,9 +204,10 @@ var shareContext = (function() {
 //		toggleAll: toggleAll,
 //		toggleFavorite: toggleFavorite,
 		addShareView: addShareView,
+		showShareInfo: showShareInfo,
+		showHiddenSharedList: showHiddenSharedList,
 		addShare: addShare,
 		deleteShare: deleteShare,
-		showHiddenSharedList: showHiddenSharedList,
 		hideShare: hideShare,
 		showShare: showShare
 	}

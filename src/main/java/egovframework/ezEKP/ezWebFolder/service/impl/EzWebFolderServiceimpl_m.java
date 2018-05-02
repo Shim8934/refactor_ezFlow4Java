@@ -233,30 +233,43 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public boolean isShared(String folderFileId, String folderFileType, String folderPath, int tenantId) throws Exception {
-		boolean isShared = false;
-		folderPath = folderPath.substring(1, folderPath.length() - 1);
-		String[] folderPathArr = folderPath.split("\\|");
-		List<String> folderIdList = new ArrayList<String>();
+	public String checkShared(String folderFileId, String folderFileType, String folderPath, int tenantId) throws Exception {
+		String result = "N";
 		
-		for (String id : folderPathArr) {
-			folderIdList.add(id);
-		}
-		
-		String folderId = folderIdList.remove(folderIdList.size() - 1);
+		LOGGER.debug("folderFileId=" + folderFileId + ",folderFileType=" + folderFileType + ",folderPath=" + folderPath);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("fileId", folderFileId);
-		map.put("folderId", folderId);
+		map.put("folderFileId", folderFileId);
 		map.put("folderFileType", folderFileType);
-		map.put("parentIdList", folderIdList);
 		map.put("tenantId",	tenantId);
 		
-		if (ezWebFolderDAO_m.isShared(map) > 0) {
-			isShared = true;
+		if (ezWebFolderDAO_m.checkShared1(map) > 0) {
+			result = "Y";
+		} else {
+			folderPath = folderPath.substring(1, folderPath.length() - 1);
+			String[] folderPathArr = folderPath.split("\\|");
+			List<String> folderIdList = new ArrayList<String>();
+			
+			if (folderFileType.equals("F")) {
+				for (int i = 0; i < folderPathArr.length; i++) {
+					folderIdList.add(folderPathArr[i]);
+				}
+			} else {
+				for (int i = 0; i < folderPathArr.length - 1; i++) {
+					folderIdList.add(folderPathArr[i]);
+				}
+			}
+			
+			if (folderIdList.size() > 0) {
+				map.put("folderIdList", folderIdList);
+				
+				if (ezWebFolderDAO_m.checkShared2(map) > 0) {
+					result = "S";
+				}
+			}
 		}
 		
-		return isShared;
+		return result;
 	}
 	
 	@Override

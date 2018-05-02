@@ -166,7 +166,7 @@
 						
 						trElmt.setAttribute("class", "bnkWebFolder");
 						trElmt.setAttribute("targetId", result[i]["fileId"]);
-						trElmt.setAttribute("targetType", result[i]["folderFileType"] == 'D' ? 'folder' : 'file');
+						trElmt.setAttribute("targetType", result[i]["folderFileType"] == 'D' ? 'D' : 'F');
 						trElmt.addEventListener("click", function(event) { rowContext.onRowClick(this); });
 						
 						if (result[i]["folderFileType"] != 'D') {

@@ -727,23 +727,23 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO_m.isShared" parameterClass="Map" resultClass="Integer">
-		SELECT 
-			COUNT(*) 
+	<select id="EzWebFolderDAO_m.checkShared1" parameterClass="Map" resultClass="Integer">
+		SELECT COUNT(*) 
 		FROM TBL_WEBFOLDER_SHARE
-		WHERE (
-			(FOLDERFILE_TYPE = 'D' AND FOLDERFILE_ID = #folderId#)
-			OR (FOLDERFILE_TYPE = 'D'
-			<isNotEmpty prepend="AND" property="parentIdList">
-				<iterate prepend="FOLDERFILE_ID IN " property="parentIdList" open="(" close=")" conjunction=",">
-					#parentIdList[]#
-				</iterate>
-			</isNotEmpty>
-			)
-			<isEqual property="folderFileType" compareValue="F">
-			OR (FOLDERFILE_TYPE = 'F' AND FOLDERFILE_ID = #fileId#)
-			</isEqual>
-		) AND TENANT_ID = #tenantId#
+		WHERE FOLDERFILE_TYPE = #folderFileType# 
+		AND FOLDERFILE_ID = #folderFileId#
+		AND TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzWebFolderDAO_m.checkShared2" parameterClass="Map" resultClass="Integer">
+		SELECT COUNT(*) 
+		FROM TBL_WEBFOLDER_SHARE
+		WHERE FOLDERFILE_TYPE = 'D'
+		AND FOLDERFILE_ID IN
+		<iterate property="folderIdList" open="(" close=")" conjunction=",">
+			#folderIdList[]#
+		</iterate>
+		AND TENANT_ID = #tenantId#
 	</select>
 	
 	<insert id="EzWebFolderDAO_m.insertShare" parameterClass="Map">

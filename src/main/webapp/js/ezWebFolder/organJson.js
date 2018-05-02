@@ -521,7 +521,7 @@ function cnsearch_click() {
 		rgParams["deptid"]   = "";
 		checkname2_cross_dialogArguments[0] = rgParams;
 		checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
-		var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(609, 352));
+		var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(700, 415));
 		try { checkName2_Cross.focus(); } catch (e) {}
 	}
 }

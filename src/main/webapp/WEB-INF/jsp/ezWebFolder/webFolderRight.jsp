@@ -258,7 +258,7 @@
 
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
-					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'folder' : 'file');
+					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'D' : 'F');
 					trElmt.addEventListener("click", function(event) { rowContext.onRowClick(this); });
 					
 					if (result[i]["fileTypeName"] != 'folder') {
@@ -316,12 +316,16 @@
 // 					tdElmt10.textContent = result[i]["downloadCnt"];
 // 					tdElmt10.setAttribute("style","text-align: center;");
 					
-					if (result[i]["fileShareStatus"] == "1") {
+					if (result[i]["fileShareStatus"] == "Y") {
 						var spanElmt = document.createElement("span");
-						spanElmt.textContent = messages.strLang2;
-						spanElmt.addEventListener("mouseover", function() { this.setAttribute("style", "font-weight:bold;color:blue;"); });
-						spanElmt.addEventListener("mouseout", function() { this.setAttribute("style", ""); });
-						spanElmt.addEventListener("click", function() { alert("공유정보조회 준비중!"); });
+						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
+						spanElmt.addEventListener("click", function () {
+							shareContext.showShareInfo(this);
+						});
+						tdElmt10.appendChild(spanElmt);
+					} else if (result[i]["fileShareStatus"] == "S") {
+						var spanElmt = document.createElement("span");
+						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
 						tdElmt10.appendChild(spanElmt);
 					} else {
 						tdElmt10.textContent = "";

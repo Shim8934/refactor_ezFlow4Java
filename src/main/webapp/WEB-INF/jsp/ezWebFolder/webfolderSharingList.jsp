@@ -125,6 +125,77 @@
 				});
 			}
 			
+			//TODO: 하위 폴더 들어가기
+// 			function getSubFileList(pPage) {
+// 				if(folderId == "") {
+// 		    		alert(messages.strLang14);
+// 		    		return;
+// 		    	}
+		    	
+// 		    	searchRequirement = searchContext.getCurrentRequirement();
+// 		    	folderId = a;
+		    	
+// 				$.ajax ({
+// 					type:"POST",
+// 					async: false,
+// 					url : "/ezWebFolder/fileList.do",
+// 					data : { 
+// 						 "folderId"   		: folderId,
+// 						 "folderType" 		: folderType,
+// 						 "currPage"   		: pagination.currentPage(),
+// 						 "listCount"  		: pagination.listSize(),
+// 						 "pStart" 			: pagination.startPosition(),
+// 						 "searchExt" 		: searchRequirement.extension,
+// 						 "searchFileName" 	: searchRequirement.name,
+// 						 "searchCreateName" : searchRequirement.creatorName,
+// 						 "searchFileType" 	: searchContext.getFileType(),
+// 						 "searchStartDate" 	: searchRequirement.startDate,
+// 						 "searchEndDate" 	: searchRequirement.endDate
+// 						},
+// 					dataType: "JSON",
+// 					success : function (data) {
+// 						var result = data.data;
+						
+// 						var fileCnt = result.fileCnt;
+// 						var fldCnt = result.fldCnt;
+						
+// 						var folderPath = result.folderPath;
+// 						var originalPath = result.originalPath;
+// 						var folderUpp = result.folderUpp;
+// 						var dragDropAreaElmt = document.getElementById("dragDropArea");
+// 						filelist = result.fileList;
+						
+// 						pagination.setListSize(result.listCount);
+// 						pagination.setAmount(result.totalRows);
+// 						pagination.build(true);
+						
+// 						if (folderUpp != 'root') {
+// 							$('#upload').css('display','inline');
+// 							dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
+// 							dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
+// 							dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
+// 						} else {
+// 							dragDropAreaElmt.ondragenter = null;
+// 							dragDropAreaElmt.ondragover  = null;
+// 							dragDropAreaElmt.ondragover  = null;
+// 						}
+						
+// 						$('#tblFileList tr td').parent().remove();
+// 						renderData(filelist);
+						
+// 						namePath(folderPath, originalPath);
+// 						document.getElementById("mailBoxInfo").innerHTML = " - [" + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
+// 						 + messages.strLang11 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
+// 							+ fileCnt +" </span>"  + messages.strLang11 + "]";
+// 						$("#listcount").val(result.listCount).prop("selected", true);
+// 						parent.frames["left"].drawVolume();
+// 					},
+// 					error : function(error) {
+// 						alert(messages.strLang7 + error);
+// 					}
+// 				});
+// 			}
+			
 			function renderData(result) {
 				var tableList = document.getElementById("tblFileList");
 				document.getElementById("_checkAll").checked = false;
@@ -166,7 +237,7 @@
 						
 						trElmt.setAttribute("class", "bnkWebFolder");
 						trElmt.setAttribute("targetId", result[i]["fileId"]);
-						trElmt.setAttribute("targetType", result[i]["folderFileType"] == 'D' ? 'folder' : 'file');
+						trElmt.setAttribute("targetType", result[i]["folderFileType"] == 'D' ? 'D' : 'F');
 						trElmt.addEventListener("click", function(event) { rowContext.onRowClick(this); });
 						
 						if (result[i]["folderFileType"] != 'D') {
@@ -228,11 +299,11 @@
 							alert(this.textContent);
 						});
 						
-// 						if(result[i]["typeId"] == "folder") {
-// 							trElmt.ondblclick = function() {
-// 								getFileList(this.getAttribute("targetId"));
-// 							};
-// 						}
+						if(result[i]["folderFileType"] == "D") {
+							trElmt.ondblclick = function() {
+								getFileList(this.getAttribute("targetId"));
+							};
+						}
 						
 						trElmt.appendChild(tdElmt1);
 						trElmt.appendChild(tdElmt2);
