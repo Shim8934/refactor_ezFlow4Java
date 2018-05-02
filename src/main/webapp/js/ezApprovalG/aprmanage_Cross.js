@@ -211,7 +211,6 @@ function getReceivedDocList(p_FormCd) {
     		async : false,
     		url : "/ezOrgan/isProxyUser.do",
     		success: function(xml){
-    			console.log(xml);
     			if (xml == 1) {
     				manager = "admin";
     			}
@@ -236,8 +235,6 @@ function getReceivedDocList(p_FormCd) {
     }
 
     CurrentDocList = "Receive";
-    
-    console.log(manager);
     
     $.ajax({
 		type : "POST",
