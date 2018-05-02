@@ -289,7 +289,12 @@ function monthDate(oThisDate, TDIndex) {
     //subTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
     subTd.setAttribute("dispDate", cell_ID);
     
-    subTd.innerHTML = pDateData + " (" + lunarDate2 + ") " + holidayname;
+    //음력분기 여기서 타면 됨
+    if (LunarUse) {
+    	subTd.innerHTML = pDateData + " (" + lunarDate2 + ") " + holidayname;
+    } else {
+    	subTd.innerHTML = pDateData + " " + holidayname;
+    }
     
     subTr.appendChild(subTd);
     subTable.appendChild(subTr);
