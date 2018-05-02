@@ -27,11 +27,12 @@
 			var region = "<c:out value='${attitudeInfo.region}'/>";
 			var mobile = "<c:out value='${attitudeInfo.mobile}'/>";
 			var bizSub = "<c:out value='${attitudeInfo.bizSub}'/>";
-			var content = '${attitudeInfo.content}';
 			var attitudeId = "<c:out value='${attitudeInfo.attitudeId}'/>";
 			var dateType = "<c:out value='${attitudeInfo.dateType}'/>";
 			var startDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var endDate = "<c:out value='${attitudeInfo.endDate}'/>";
+			var font = "<c:out value='${font}'/>"
+			
 			window.onload = function () {
 				setHtml();
 			}
@@ -49,8 +50,14 @@
 				
 				var doc = document.getElementById('message').contentWindow.document;
 				doc.open();
-				doc.write(content);
+				doc.write('${attitudeInfo.content}');
 				doc.close();
+				
+				var fontFamily = font.split("|")[0];
+				var fontSize = font.split("|")[1];
+				$("#message").contents().find("p").each(function(){
+					$(this).css({"font-size":fontSize, "font-family":fontFamily});	
+				});
 				
 				var showTime = "";
 				switch (dateType) {

@@ -573,12 +573,18 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId) throws Exception{
+	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId, String userId) throws Exception{
 		LOGGER.debug("getCompanyList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		
 		map.put("lang", lang);
 		map.put("tenantId", tenantId);
+		map.put("userId", userId);
 		
 		List<AttitudeDeptVO> companyList = ezAttitudeDAO.getCompanyList(map);
 		
@@ -1122,11 +1128,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId,
-			String userId) throws Exception {
+			String userId, String isGAdmin) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
+		map.put("isGAdmin", isGAdmin);
 		
 		return ezAttitudeDAO.getAttitudeAuthDeptList(map);
 	}

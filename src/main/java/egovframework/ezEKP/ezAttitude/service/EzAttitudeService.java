@@ -87,7 +87,7 @@ public interface EzAttitudeService {
 	
 	public void saveAttitudeUserConfig(String selectUserId, String workStartTime, String workEndTime, String offSet, int tenantId) throws Exception;
 	
-	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId) throws Exception;
+	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId, String userId) throws Exception;
 	
 	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName, String searchTitle, String searchStartTime, String searchEndTime, String searchCompareValue, String offsetMin) throws Exception;
 	
@@ -134,7 +134,7 @@ public interface EzAttitudeService {
 
 	public void saveAttitudeAuthDept(int tenantId, String companyId, String selectedUser, String deptIds) throws Exception;
 
-	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId,	String userId) throws Exception;
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId,	String userId, String isGAdmin) throws Exception;
 	
 //	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String offset, String startDate, String endDate, int tenantId) throws Exception;
 	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String deptId, String offset, String year,String typeId, int tenantId) throws Exception;

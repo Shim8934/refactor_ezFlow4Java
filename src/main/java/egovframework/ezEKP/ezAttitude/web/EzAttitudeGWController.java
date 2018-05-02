@@ -883,7 +883,7 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			//테넌트별 회사리스트
-			List<AttitudeDeptVO> list = ezAttitudeService.getCompanyList(info.getPrimary(), info.getTenantId());
+			List<AttitudeDeptVO> list = ezAttitudeService.getCompanyList(info.getPrimary(), info.getTenantId(), userId);
 			data.put("list", list);
 			//로그인한 관리자의 회사
 			data.put("adminCompany", info.getCompanyId());
@@ -1824,10 +1824,10 @@ public class EzAttitudeGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-//			String userId = request.getParameter("userId");
+			String isGAdmin = request.getParameter("isGAdmin");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), userId);
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), userId, isGAdmin);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

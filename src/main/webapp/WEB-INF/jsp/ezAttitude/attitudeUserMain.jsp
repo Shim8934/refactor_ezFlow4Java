@@ -129,6 +129,7 @@
 		<script>
 			var pMode = "";
 			var uselang = "<c:out value='${userInfo.lang}'/>";
+			var LunarUse = false;
 			var deptFlag = "${deptFlag}";
 			var adminFlag = "${adminFlag}";
 			var companyHoliday = "";        // 회사 휴무일
@@ -181,7 +182,7 @@
 			window.onload = function() {
 				select_memorialDays(uselang); // 공식 휴일 설정 => 언어에 따라 memorialDays에 변수가 담김
 				
-				getHolidayList();
+				scheduleGetLunarUse();
 			}
 			
 			//datepicker
@@ -224,6 +225,28 @@
 			    
 			    $("#Sdatepicker").datepicker('disable');
 			});
+			
+			function scheduleGetLunarUse() {
+			    $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezSchedule/scheduleGetLunarUse.do",
+		    		data : {
+		    			COMPANYID  : "${userInfo.companyID}"		    			
+		    		},
+		    		success: function(result) {		    			
+		    			if (result == "0") {
+		    				LunarUse = true;
+		    			} else if(result == "1") {
+		    				LunarUse = true;
+		    			} else {
+		    				LunarUse = false;
+		    			}		    			
+		    			getHolidayList();
+		    		}
+		        });
+			}
 			
 			/**
 			* 근태유형 메소드
@@ -551,10 +574,6 @@
 		        $.modal.close();
 		    }
 			
-			function searchDept() {
-				
-			}
-			
 			function excelDown() {
 				
 			}
@@ -795,7 +814,14 @@
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${adminFlag == 'true'}">
-					<li id="reply"><span onClick="searchDept()">부서검색</span></li>
+<!-- 					<li id="reply"><span onClick="searchDept()">부서검색</span></li> -->
+					<li>
+						<select id="authDeptList" style="width:80px; margin-top:5px;">
+							<c:forEach var="item" items="${list}">
+							<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+							</c:forEach>
+						</select>
+					</li>
 		        	<li id="search"><span onClick="excelDown()">엑셀다운로드</span></li>
 		        	<li id="search"><span onClick="sendMail()">근태미입력자 메일발송</span></li>
 				</c:if>
