@@ -156,8 +156,12 @@
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function() {
 			var divList          = dom.dragDropArea;
-			var reheight         = document.documentElement.clientHeight - 220;
+			var reheight         = document.documentElement.clientHeight - 200;
 			divList.style.height = reheight + "px";
+
+			var divList          = dom.pageArea;
+			var reheightPage     = document.documentElement.clientHeight - 120;
+			divList.style.height = reheightPage + "px";
 		};
 		
 		document.onselectstart = function() {
@@ -211,6 +215,7 @@
 	    	    	originalPath : document.getElementById("originalPath"),
 	    	    	originalPathWrapper : document.getElementById("originalPathWrapper"),
 	    	    	dragDropArea : document.getElementById("dragDropArea"),
+	    	    	pageArea : document.getElementById("pageArea"),
 	    	    	
 	    	    	allCheckBox : document.getElementById("_checkAll"),
 	    	    	listTable : document.getElementById("tblFileList")

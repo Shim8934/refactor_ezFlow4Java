@@ -110,7 +110,7 @@
 #companySelect {margin: 10px 0px;}
 #companySelect >span {font-size: 12px; display:inline-block; vertical-align: middle;}
 #companySelect >select {font-size:12px; height:20px; display:inline-block;}
-#dragDropArea {margin:10px 0px; overflow-y:auto;height:610px;}
+#dragDropArea {margin:10px 0px; overflow-y:auto; height:610px;}
 #fileTypeVal {height: 25px; padding: 0px; width: 85px;}
 #file {width:1px; height:1px; display:none;}
 #AttachDownFrame {width:0px; height:0px; display:none;}
@@ -122,4 +122,4 @@
 .wfSearchTd {border:1px solid #b6b6b6; background-color:#fff; min-width:367px; width:367px;}
 .wfFogPanel {width:100%; height:100%; position:absolute; top:0px; left:0px; z-index:1000; background:none rgba(0,0,0,0.5);}
 .wfPopup {z-index:2000; position:absolute;}
-#pageArea{height:710px;}
+#pageArea {height:710px;}

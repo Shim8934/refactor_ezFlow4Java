@@ -41,8 +41,8 @@
 			divList.style.height = reheight + "px";
 			
 			var divList          = document.getElementById("pageArea");
-			var reheight         = document.documentElement.clientHeight - 100;
-			divList.style.height = reheight + "px";
+			var reheightPage     = document.documentElement.clientHeight - 100;
+			divList.style.height = reheightPage + "px";
 			
 		};
 		
