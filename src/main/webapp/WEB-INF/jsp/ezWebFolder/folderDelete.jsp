@@ -71,7 +71,7 @@
 	</script>
 </head>
 <body class="popup"> 
-	<h1 id ="topMenu"><spring:message code='ezWebFolder.t117'/></h1>
+	<h1 id ="topMenu">폴더삭제</h1>
 	<div id="close">
 		<ul>
 			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110'/></span></li>
