@@ -29,7 +29,6 @@
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/rowModule.js"></script>
 	<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
    		var userInfo = {
