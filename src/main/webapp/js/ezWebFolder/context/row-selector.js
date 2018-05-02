@@ -140,6 +140,7 @@ var rowContext = (function() {
 		getSelectedRows: getSelectedRows,
 		getUnselectedRows: getSelectedRows,
 		getRowInfo: getRowInfo,
+		setSelectState: setSelectState,
 		clearFocus: clearFocus,
 		selectAll: selectAll
 	};

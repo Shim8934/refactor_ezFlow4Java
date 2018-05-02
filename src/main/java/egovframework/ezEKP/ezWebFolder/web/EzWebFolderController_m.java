@@ -466,14 +466,10 @@ public class EzWebFolderController_m {
 
 		String status = resultBody.get("status").toString();
 		
-		if (!status.equals("ok")) {
-			String reason = resultBody.get("reason").toString();
+		if (status.equals("ok")) {
 			String code = resultBody.get("code").toString();
-			
-			model.addAttribute("reason", reason);
 			model.addAttribute("code", code);
 		}
-		
 		
 		logger.debug("status=" + status);
 		logger.debug("restoreFile ended");
@@ -582,6 +578,7 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/move-TrashCan", param, request, "post", null);
 		
 		String status = resultBody.get("status").toString();
+		model.addAttribute("status", status);
 		
 		if (!status.equals("ok")) {
 			String reason = resultBody.get("reason").toString();

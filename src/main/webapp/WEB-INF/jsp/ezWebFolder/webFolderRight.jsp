@@ -23,25 +23,16 @@
 	<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
     <script type="text/javascript">
 		var file 		 = new Array();
-		var primary      = "<c:out value='${primary}'/>";
 		var strShared1	= messages.strLang2;
 		var strShared2	= messages.strLang3;
 		var strErr		= messages.strLang4;
 		var appType     = "user";
 		var userName = "${userInfo.userName}";
-		var currentPage = "1";
-		var totalPages = 0 ;
-		var totalRows = 0 ;
-		var blockSize = 0;
 		var filelist = [];
-		var strSuccess  = "<spring:message code = 'ezWebFolder.t27'/>";
-		var pStart = 0;
+		var strSuccess  = "<spring:message code='ezWebFolder.t27'/>";
 		var pEnd =10;
 		var folderId = "${folderId}";
 		var folderType = "${folderType}";
-		var fileCnt ;
-		var fldCnt;
-		var originalPath = "";
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -56,16 +47,15 @@
 		
 		$(function () {
 			$('#upload').css('display','none');
-			pEnd= pStart + blockSize;
 			getFileList(folderId);
 			
 			searchContext.setSearchStartEventHandler(function() {
 				getFileList(folderId);
 			});
 			
-			searchContext.setFileTypeChangeEventHandler(function() {
+			pagination.setPageChangeEventHandler(function() {
 				getFileList(folderId);
-			})
+			});
 			
 			window.onresize();
 			
@@ -105,9 +95,9 @@
 				data : { 
 					 "folderId"   		: folderId,
 					 "folderType" 		: folderType,
-					 "currPage"   		: currentPage,
-					 "listCount"  		: blockSize,
-					 "pStart" 			: pStart,
+					 "currPage"   		: pagination.currentPage(),
+					 "listCount"  		: pagination.listSize(),
+					 "pStart" 			: pagination.startPosition(),
 					 "searchExt" 		: searchRequirement.extension,
 					 "searchFileName" 	: searchRequirement.name,
 					 "searchCreateName" : searchRequirement.creatorName,
@@ -117,20 +107,20 @@
 					},
 				dataType: "JSON",
 				success : function (data) {
-					result = data.data;
+					var result = data.data;
 					
-					currentPage = result.currPage;
-					totalRows = result.totalRows;
-					fileCnt = result.fileCnt;
-					fldCnt = result.fldCnt;
+					var fileCnt = result.fileCnt;
+					var fldCnt = result.fldCnt;
 					
-					blockSize = result.listCount;
-					totalPages = result.totalPages;
-					filelist = result.fileList;
 					var folderPath = result.folderPath;
 					var originalPath = result.originalPath;
 					var folderUpp = result.folderUpp;
 					var dragDropAreaElmt = document.getElementById("dragDropArea");
+					filelist = result.fileList;
+					
+					pagination.setListSize(result.listCount);
+					pagination.setAmount(result.totalRows);
+					pagination.build(true);
 					
 					if (folderUpp != 'root') {
 						$('#upload').css('display','inline');
@@ -143,23 +133,20 @@
 						dragDropAreaElmt.ondragover  = null;
 					}
 					
-// 					$("#originalPath").text(originalPath); 
 					$('#tblFileList tr td').parent().remove();
 					renderData(filelist);
 					
-					makePageSelPage();
 					namePath(folderPath, originalPath);
 					document.getElementById("mailBoxInfo").innerHTML = " - [" + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
 					 + messages.strLang11 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
 						+ fileCnt +" </span>"  + messages.strLang11 + "]";
-					$("#listcount").val(blockSize).prop("selected", true);
+					$("#listcount").val(result.listCount).prop("selected", true);
 					parent.frames["left"].drawVolume();
 				},
 				error : function(error) {
 					alert(messages.strLang7 + error);
 				}
 			})
-			
 		};
 		
 		// originalPath 는 한글 path
@@ -203,7 +190,7 @@
 				}
 				
 				var imgElmt = document.createElement("img");
-				imgElmt.setAttribute("style", "height: 14px; width: 14px; display: inline-block; margin : 0px 6px;");
+				imgElmt.setAttribute("style", "height: 14px; width: 14px; display: inline-block; margin: 0px 6px;");
 				imgElmt.src = "/images/webfolder/arrow.png";
 				
 				if (i != length - 1) {
@@ -253,8 +240,15 @@
 					var tdElmt9 = document.createElement("td");
 					var tdElmt10 = document.createElement("td");
 					
-					setTextOverflowEllipsis(tdElmt4, tdElmt5, tdElmt6, tdElmt7, tdElmt8, tdElmt9, tdElmt10);
-					setTextAlignCenter(tdElmt2, tdElmt3, tdElmt5, tdElmt10);
+					setStyles([tdElmt4, tdElmt5, tdElmt6, tdElmt7, tdElmt8, tdElmt9, tdElmt10], function(style) {
+						style.overflow = "hidden";
+						style.textOverflow = "ellipsis";
+						style.whiteSpace = "nowrap";
+					});
+					
+					setStyles([tdElmt2, tdElmt3, tdElmt5, tdElmt10], function(style) {
+						style.textAlign = "center";
+					})
 
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
@@ -262,7 +256,10 @@
 					trElmt.addEventListener("click", function(event) { rowContext.onRowClick(this); });
 					
 					if (result[i]["fileTypeName"] != 'folder') {
-						trElmt.addEventListener("dblclick", function(event) {downloadFileByDbClick(event);});
+						trElmt.addEventListener("dblclick", function(event) {
+							downloadFileByDbClick(event);
+							rowContext.setSelectState(this, true);
+						});
 					}
 					
 					var inputElmt = document.createElement("input");
@@ -320,8 +317,7 @@
 						spanElmt.addEventListener("mouseout", function() { this.setAttribute("style", ""); });
 						spanElmt.addEventListener("click", function() { alert("공유정보조회 준비중!"); });
 						tdElmt10.appendChild(spanElmt);
-					}
-					else {
+					} else {
 						tdElmt10.textContent = "";
 					}
 					
@@ -347,38 +343,17 @@
 			} 
 		}
 		
-		function setTextOverflowEllipsis() {
-			var element;
-			argumentsLength = arguments.length;
+		function setStyles(elements, excutor) {
+			var length = elements.length;
 			
-			for (var i = 0; i < argumentsLength; i++) {
-				element = arguments[i];
-				element.style.overflow = "hidden";
-				element.style.textOverflow = "ellipsis";
-				element.style.whiteSpace = "nowrap";
-			}
-		}
-		
-		function setTextAlignCenter() {
-			var element;
-			argumentsLength = arguments.length;
-			
-			for (var i = 0; i < argumentsLength; i++) {
-				element = arguments[i];
-				element.style.textAlign = "center";
+			for (var i = 0; i < length; i++) {
+				excutor(elements[i].style);
 			}
 		}
 		
 	   	// 날짜 초기화 버튼
 	   	function clearDatepicker() {
 	        $(".datepicker").datepicker('setDate', "");
-	    }
-	    
-	    function goToPageByNum(Value) {
-	    	currentPage = Value;
-	        pStart = (blockSize * (currentPage)) - blockSize;
-	        pEnd = blockSize;
-	        getFileList(folderId);
 	    }
 	    
 	   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
@@ -623,9 +598,7 @@
 		}
 		
 		function changeCount(value) {
-			blockSize = value;
-			currentPage = 1;
-			pStart = 0;
+			pagination.setListSize(value);
 			refreshView();
 		}
        
@@ -634,8 +607,8 @@
 				value = "";
 			}
 			
-			currentPage = 1;
 			searchContext.setFileType(value);
+			pagination.setPage(1);
 		}
        
 		function addShare() {

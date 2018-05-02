@@ -130,8 +130,8 @@
             		"folderList" : checkedfolderList,
             		"folderId" : folderId
             	},
-            	succss : function (data) {
-            		aler("<spring:message code='ezWebFolder.t284'/>");
+            	success : function (data) {
+            		alert("<spring:message code='ezWebFolder.t284'/>");
             	},
             	error : function(error) {
             		alert("<spring:message code='ezWebFolder.t285'/>");

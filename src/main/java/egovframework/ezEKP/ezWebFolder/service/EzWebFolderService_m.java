@@ -87,13 +87,13 @@ public interface EzWebFolderService_m {
 	 **/
 	int deleteFavoritesInFolder(String folderId, int tenantId) throws Exception;
 	
-	void restoreFile (FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
+	int restoreFile (FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
 	
 	int restoreFolder (String folderPath, int tenantId, String userId, String companyId, String timeUTC) throws Exception;
 	
 	int restoreTrashCan (String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC, String userName1, String userName2) throws Exception;
 	
-	void restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
+	int restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
 
 	void moveTrashCan(String[] fileIDList, String[] folderIDList,String folderId, int tenantId, String userId, String offset, String companyId, String userName1, String userName2, String timeUTC) throws Exception;
 
