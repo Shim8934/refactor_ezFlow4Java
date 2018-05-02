@@ -40,7 +40,7 @@
 	    	var searchUserName = ""; // 검색조건 (사원명)
 	    	var searchDeptName = ""; // 검색조건 (부서명)
 	    	var searchTitle = ""; // 검색조건 (직위)
-	    	var searchAttitudeType = ""; // 검색조건(구분)
+	    	var searchAttitudeType = "total"; // 검색조건(구분)
 	    	//검색조건 (근무시간) Hr,Min 묶음으로
 	    	var searchStartDate = "${searchStartDate}";
 	    	var searchEndDate = "${searchEndDate}";
@@ -53,6 +53,9 @@
 	    	var listSize = 19;
 	    	
 	    	$(function(){
+	    		$("#Sdatepicker").val("${searchStartDate}");
+	    		$("#Edatepicker").val("${searchEndDate}");
+	    		
 	    		//회사리스트
 		        if (document.getElementById("ListCompany").length == 0) {
 		            alert("<spring:message code = 'ezAttitude.t32' />");
@@ -65,9 +68,6 @@
 		    		
 		            company_change();
 		        }
-	    		
-	    		$("#Sdatepicker").val("${searchStartDate}");
-	    		$("#Edatepicker").val("${searchEndDate}");
 	    		
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '#contentlist table.mainlist th', function(){
@@ -197,7 +197,7 @@
 	    	
 	    	//검색 > 구분selectBox
 	    	function getAttitudeTypeList(typeList, typeId) {
-	    		var html = "<option value=''>전체</option>";
+	    		var html = "<option value='total'>전체</option>";
 	    		
 	    		for (var i = 0; i < typeList.length; i ++) {
 	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
@@ -259,24 +259,24 @@
 	    			searchUserName = $("#searchUserName").val();
 	    			searchDeptName = $("#searchDeptName").val();
 	    			searchTitle = $("#searchTitle").val();
-	    			searchStartDate = $("#searchStartDate").val();
-	    			searchEndDate = $("#searchEndDate").val();
+	    			searchStartDate = $("#Sdatepicker").val();
+	    			searchEndDate = $("#Edatepicker").val();
 	    			searchAttitudeType = $("select[id='searchAttitudeType']").val();
 	    		} else {
 	    			//새로고침
 	    			$("#searchUserName").val("");
 	    			$("#searchDeptName").val("");
 	    			$("#searchTitle").val("");
-	    			$("#searchStartDate").val("${searchStartDate}");
-	    			$("#searchEndDate").val("${searchEndDate}");
-	    			$("select[id='searchAttitudeType']").val('all');
+	    			$("#Sdatepicker").val("${searchStartDate}");
+	    			$("#Edatepicker").val("${searchEndDate}");
+	    			$("select[id='searchAttitudeType']").val('total');
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";
 	    			searchTitle = "";
 	    			searchStartDate = "${searchStartDate}";
 	    			searchEndDate = "${searchEndDate}";
-	    			searchAttitudeType = "all";
+	    			searchAttitudeType = "total";
 	    		}
 	    		
 	    		pageNum = 1;
@@ -287,10 +287,10 @@
 				searchUserName = $("#searchUserName").val();
     			searchDeptName = $("#searchDeptName").val();
     			searchTitle = $("#searchTitle").val();
-    			searchStartDate = $("#searchStartDate").val();
-    			searchEndDate = $("#searchEndDate").val();
+    			searchStartDate = $("#Sdatepicker").val();
+    			searchEndDate = $("#Edatepicker").val();
     			
-    			var url = "/admin/ezAttitude/popupAbsentedList.do?companyId=" + pCompanyId + "&searchUserName=" + searchUserName + "&searchDeptName=" + searchDeptName + "&searchTitle=" + searchTitle + "&searchStartDate=" + searchStartDate + "&searchEndDate=" + searchEndDate;
+    			var url = "/admin/ezAttitude/popupAbsentedList.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate;
 	    		
 	    		if (CrossYN()) {
 	    			OpenWin = GetOpenWindow(url, "", "600", "700");
@@ -311,6 +311,17 @@
 		    	exportExcelframe.location.href="/admin/ezAttitude/excelFileExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&attitudeType=" + searchAttitudeType + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
 		    	exportExcelframe.target="_blank";
 			}
+			
+			function searchPress(evt) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		            	searchUserConfList('search');
+		            }
+		        } else {
+		            if (evt.which == 13)
+		            	searchUserConfList('search');
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -332,15 +343,15 @@
 			<tbody>
 				<tr>
 					<td style="width: 3%;">부서</td>
-					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;"></td>
+					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;">이름</td>
-					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;"></td>
+					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%">구분</td>
 					<td style="width: 20%;"><select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:40px;"></select></td>
 				</tr>
 				<tr>
 					<td style="width: 3%;">직위</td>
-					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50"></td>
+					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
 					<td style="width: 3%;">검색기간</td>
 					<td>
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
@@ -365,7 +376,7 @@
 						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
 						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
 						<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
-						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_time">시간</th>
+						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime">시간</th>
 					</tr>
 				</thead>
 				<tbody>

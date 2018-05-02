@@ -615,11 +615,11 @@
 				)
 		]]>
 			
-		<isNotEmpty prepend="AND" property="searchAttitudeType">
+		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
 			<![CDATA[
 				A.type_id = #searchAttitudeType#
 			]]>
-		</isNotEmpty>
+		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			C.description LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
@@ -643,10 +643,12 @@
 				starttime DESC
 		</isEmpty>
 		
-		<![CDATA[
-			LIMIT
-				#limit#, #listSize#
-		]]>
+		<isNotEmpty property="listSize">
+			<![CDATA[
+				LIMIT
+					#limit#, #listSize#
+			]]>
+		</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
@@ -683,11 +685,11 @@
 				)
 		]]>
 			
-		<isNotEmpty prepend="AND" property="searchAttitudeType">
+		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
 			<![CDATA[
 				A.type_id = #searchAttitudeType#
 			]]>
-		</isNotEmpty>
+		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			C.description LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
@@ -699,59 +701,14 @@
 		</isNotEmpty>
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.getAttitudeAbsentCount" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT 
-				COUNT(DISTINCT(A.cn))
-			FROM
-				TBL_USERMASTER A
-			LEFT JOIN
-				(SELECT
-					*
-				FROM
-					TBL_ATTITUDE C
-				WHERE
-					C.tenant_id = #tenantId#
-				AND
-					C.company_id = #companyId#
-				AND
-					(
-						(C.start_date < #searchStartDate# OR C.start_date > #searchEndDate#)
-					AND
-						(C.end_date < #searchStartDate# OR C.end_date >= #searchEndDate#)
-					AND
-						(C.start_date >= #searchStartDate# OR C.end_date < #searchEndDate#)
-					)) B
-			ON
-				A.cn = B.writer_id 
-			AND
-				A.tenant_id = B.tenant_id
-			WHERE
-				A.tenant_id = #tenantId#
-			AND
-				A.physicaldeliveryofficename = #companyId#
-			AND
-				B.start_date IS NULL
-		]]>
-		
-		<isNotEmpty prepend="AND" property="searchDeptName">
-			A.description LIKE CONCAT('%', #searchDeptName#, '%')
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchUserName">
-			A.displayname LIKE CONCAT('%', #searchUserName#, '%')
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchTitle">
-			A.title LIKE CONCAT('%', #searchTitle#, '%')
-		</isNotEmpty>
-	</select>
-	
 	<select id="ezAttitudeAdminDAO.getAttitudeAbsentList" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
 			SELECT
-				DISTINCT(A.cn) AS userid,
+				A.cn AS userid,
 				A.displayname AS username,
                 A.description AS deptname,
-                A.title AS usertitle
+                A.title AS usertitle,
+                #searchStartDate# as startdate
 			FROM
 				TBL_USERMASTER A
 			LEFT JOIN
@@ -765,11 +722,11 @@
 					C.company_id = #companyId#
 				AND
 					(
-						(C.start_date < #searchStartDate# OR C.start_date > #searchEndDate#)
-					AND
-						(C.end_date < #searchStartDate# OR C.end_date >= #searchEndDate#)
-					AND
-						(C.start_date >= #searchStartDate# OR C.end_date < #searchEndDate#)
+						(C.start_date >= #searchStartDate# AND C.start_date <= #searchEndDate#)
+					OR
+						(C.end_date >= #searchStartDate# AND C.end_date < #searchEndDate#)
+					OR
+						(C.start_date < #searchStartDate# AND C.end_date >= #searchEndDate#)
 					)) B
 			ON
 				A.cn = B.writer_id
@@ -792,15 +749,6 @@
 		<isNotEmpty prepend="AND" property="searchTitle">
 			A.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
-		<isNotEmpty property="orderCell">
-			ORDER BY
-				$orderCell$ $orderOption$,
-				A.displayname
-		</isNotEmpty>
-		<isEmpty property="orderCell">
-			ORDER BY
-				A.displayname
-		</isEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultMap="attitudeAuthor">

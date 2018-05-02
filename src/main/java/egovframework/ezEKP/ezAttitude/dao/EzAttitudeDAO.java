@@ -98,6 +98,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public int getUsersModiyAttCount(Map<String, Object> map) throws Exception {
 		return (int) select("ezAttitudeDAO.getUsersModiyAttCount", map);
 	}
+	
+	public int getAttsModAttCount(Map<String, Object> map) throws Exception {
+		return (int) select("ezAttitudeDAO.getAttsModAttCount", map);
+	}
 
 	public void updateAttitudeType(Map<String, Object> map) throws Exception {
 		update("ezAttitudeAdminDAO.updateAttitudeType", map);
@@ -128,6 +132,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void delUsersModifyAtt(Map<String, Object> map) throws Exception {
 		delete("ezAttitudeDAO.delUsersModifyAtt", map);
 	}
+	
+	public void delUsersModifyAttHistory(Map<String, Object> map) throws Exception {
+		delete("ezAttitudeDAO.delUsersModifyAttHistory", map);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<DeptViewVO> getDeptViewList(HashMap<String, String> map) throws Exception {
@@ -146,12 +154,20 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (AttitudeFormVO) select("ezAttitudeDAO.getFormBody", map);
 	}
 	
-	public void attModAppModify(Map<String, Object> map) throws Exception {
-		update("ezAttitudeDAO.attModAppModify", map);
+	public int attModAppModify(Map<String, Object> map) throws Exception {
+		return update("ezAttitudeDAO.attModAppModify", map);
 	}
 	
 	public void attSaveAppModify(Map<String, Object> map) throws Exception {
 		insert("ezAttitudeDAO.attSaveAppModify", map);
+	}
+	
+	public void setAttModApp(Map<String, Object> map) throws Exception {
+		update("ezAttitudeDAO.setAttModApp", map);
+	}
+	
+	public void resetAttModApp(Map<String, Object> map) throws Exception {
+		update("ezAttitudeDAO.resetAttModApp", map);
 	}
 
 	public void attAppUpdate(Map<String, Object> map) throws Exception {

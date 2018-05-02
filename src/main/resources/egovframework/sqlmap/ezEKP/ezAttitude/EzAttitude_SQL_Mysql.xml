@@ -20,6 +20,7 @@
 		<result property="apprStatus"		column="APPR_STATUS" 		columnIndex="5"/>
 		<result property="writerName"		column="WRITER_NAME" 		columnIndex="6"/>
 		<result property="writerDeptName"	column="WRITER_DEPT_NAME" 	columnIndex="7"/>
+		<result property="applCnt"			column="APPL_CNT" 			columnIndex="8"/>
 	</resultMap>
 		
 	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
@@ -369,10 +370,11 @@
 					a.attitude_id as ATTITUDE_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
 					a.appr_user_name as APPR_USER_NAME,
-					DATE_FORMAT(DATE_ADD(DATE_FORMAT(c.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
+					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
 					a.appr_status as APPR_STATUS,
 					a.writer_name as WRITER_NAME,
-					a.writer_dept_name as WRITER_DEPT_NAME
+					a.writer_dept_name as WRITER_DEPT_NAME,
+					APPL_CNT
 			FROM 
 				jmocha.tbl_attitude_modappl a 
 			inner 
@@ -383,20 +385,10 @@
 				a.COMPANY_ID = b.COMPANY_ID
 			and 
 				a.TENANT_ID = b.TENANT_ID
-			inner join
-				tbl_attitude_modappl_history c
-			on
-				a.ATTITUDE_ID = c.ATTITUDE_ID						
-			and
-				a.COMPANY_ID = c.COMPANY_ID
-			and 
-				a.TENANT_ID = c.TENANT_ID				
 			where 
 				a.COMPANY_ID = #companyId#
 			and 
 				a.TENANT_ID = #tenantId#
-			and 
-				c.mod_cnt = 0
 		]]>
 		<include refid="ezAttitudeDAO.searchQuery"/>
 	</select>
@@ -460,6 +452,17 @@
 			and
 				a.ATTITUDE_ID = #attModId#
 		]]>
+		<!-- 			applCnt가 없으면 제일 큰 거 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
+		<isNotEmpty property="applCnt">
+			and
+				a.APPL_CNT = #applCnt#
+		</isNotEmpty>
+		<isEmpty property="applCnt">
+			order by
+				a.APPL_CNT DESC
+			limit 
+				1
+		</isEmpty>
 	</select>
 	
 	<select id="ezAttitudeDAO.getAttitudeStatisList" parameterClass="Map" resultMap="attitudeStatis" remapResults="true">
@@ -540,6 +543,25 @@
 		<include refid="ezAttitudeDAO.searchQuery"/>
 	</select>
 	
+	<select id="ezAttitudeDAO.getAttsModAttCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+					count(*)
+			FROM 
+				jmocha.tbl_attitude_modappl a 
+			inner 
+				join tbl_attitude b 
+			on 
+				a.ATTITUDE_ID = b.ATTITUDE_ID
+			where 
+				a.COMPANY_ID = #companyId#
+			and 
+				a.TENANT_ID = #tenantId#
+			and
+				a.ATTITUDE_ID = #attModId#
+		]]>
+	</select>
+	
 	<select id="ezAttitudeDAO.getHolidayList" parameterClass="Map" resultMap="holiday">
 		<![CDATA[
 			SELECT
@@ -570,31 +592,59 @@
           	AND
         		COMPANY_ID = #companyId#
           	AND
+          		ATTITUDE_ID = #attModId#
 		]]>
-		<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
-		      #ids[]# 
-		</iterate>
 	</delete>
 	
-	<insert id="ezAttitudeAdminDAO.delUsersModifyAttHistoryFirst" parameterClass="Map">
-		DELETE FROM 
-			tbl_attitude_modappl_history
-		WHERE
-			TENANT_ID = #tenantId#
-        AND
-        	COMPANY_ID = #companyId#
-        AND
-			ATTITUDE_ID = #attitudeId#
-		AND
-			MOD_CNT = 0
-	</insert>
+	<delete id="ezAttitudeDAO.delUsersModifyAttHistory" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_ATTITUDE_MODAPPL_HISTORY
+          	WHERE
+          		TENANT_ID = #tenantId#
+          	AND
+        		COMPANY_ID = #companyId#
+          	AND
+          		ATTITUDE_ID = #attModId#
+		]]>
+	</delete>	
+
+	<update id="ezAttitudeDAO.setAttModApp" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ATTITUDE A
+			SET
+				A.MODAPPL = "1"
+          	WHERE
+          		A.TENANT_ID = #tenantId#
+          	AND
+        		A.COMPANY_ID = #companyId#
+        	AND 
+        		A.ATTITUDE_ID = #attitudeId#
+        ]]>
+	</update>
+	
+		<update id="ezAttitudeDAO.resetAttModApp" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ATTITUDE A
+			SET
+				A.MODAPPL = "0"
+          	WHERE
+          		A.TENANT_ID = #tenantId#
+          	AND
+        		A.COMPANY_ID = #companyId#
+        	AND 
+        		A.ATTITUDE_ID = #attModId#
+        ]]>
+	</update>
 
 	<update id="ezAttitudeDAO.attAppUpdate" parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				TBL_ATTITUDE A
 			INNER JOIN
-				TBL_ATTITUDE_MODAPPL_HISTORY B
+				TBL_ATTITUDE_MODAPPL
 			ON
 				A.TENANT_ID = B.TENANT_ID
 			AND
@@ -613,8 +663,6 @@
           		A.TENANT_ID = #tenantId#
           	AND
         		A.COMPANY_ID = #companyId#
-        	AND
-        		B.MOD_CNT = 0
         ]]>
 		<isNotEmpty property="attitudeId" prepend="and">
 				A.ATTITUDE_ID = #attitudeId#  
@@ -650,7 +698,8 @@
 		<![CDATA[
 			INSERT INTO 
 				TBL_ATTITUDE_MODAPPL(
-					ATTITUDE_ID, 
+					ATTITUDE_ID,
+					APPL_CNT, 
 					COMPANY_ID, 
 					TENANT_ID, 
 					WRITER_ID, 
@@ -667,7 +716,19 @@
 					CONTENT
 				)
 				VALUES(
-					#attitudeId#, 
+					#attitudeId#,
+					(
+					SELECT 
+						IFNULL(MAX(a.APPL_CNT) + 1, 0)
+					FROM
+						TBL_ATTITUDE_MODAPPL a
+					WHERE
+						TENANT_ID = #tenantId#
+		        	AND
+		        		COMPANY_ID = #companyId#
+		        	AND
+		        		ATTITUDE_ID = #attitudeId#
+					),
 					#companyId#, 
 					#tenantId#, 
 					#writerId#, 
@@ -902,6 +963,7 @@
 	<insert id="ezAttitudeAdminDAO.addUsersModifyAttHistoryFirst" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
 			ATTITUDE_ID,
+			APPL_CNT,
 			MOD_CNT,
 			COMPANY_ID,
 			TENANT_ID,
@@ -924,6 +986,7 @@
 			)
 		SELECT
 			A.ATTITUDE_ID,
+			APPL_CNT,
 			0,
 			A.COMPANY_ID,
 			A.TENANT_ID,

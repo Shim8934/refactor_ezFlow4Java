@@ -103,7 +103,7 @@ public interface EzAttitudeService {
 
 	public List<JournalAuthorVO> getDeptUserList(String tenantId, String key,	String value) throws Exception;
 
-	public void delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception;
+	public int delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception;
 
 	public List<DeptViewVO> getDeptViewList(String userId, String companyId, String tenantId) throws Exception;
 
@@ -111,15 +111,15 @@ public interface EzAttitudeService {
 	
 	public List<AdminAttitudeVO> getAttitudeList2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId) throws Exception;
 	
-	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId, String offset) throws Exception;
+	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId, String offset, String applCnt) throws Exception;
 	
 	public List<AttitudeApplicationVO> attModGetHistory(String companyId, int tenantId, String userId, String attModId, String offset) throws Exception;
 			
-	public void attModAppModify(String companyId, int tenantId, String userId, String attModId, String offset, String content, String changeDate) throws Exception;
+	public int attModAppModify(String companyId, int tenantId, String userId, String attModId, String offset, String content, String changeDate) throws Exception;
 
 	public String getAttitudeCount2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String offset, String companyId, int tenantId) throws Exception;
 	
-	public String getAttitudeAbsentCount(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String offset, String companyId, int tenantId) throws Exception;
+//	public String getAttitudeAbsentCount(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String offset, String companyId, int tenantId) throws Exception;
 	
 	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String companyId, int tenantId) throws Exception;
 	

@@ -909,7 +909,7 @@ public class EzAttitudeKMSController {
 		
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
-		String status = resultBody.get("status").toString();
+		String status = resultBody.get("data").toString();
 
 		LOGGER.debug("modAttModApp ended");
 		
@@ -921,7 +921,7 @@ public class EzAttitudeKMSController {
 	 */
 	@RequestMapping(value="/ezAttitude/attModAppDetail.do")
 	public String attModAppDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
-			@RequestParam(required=true)String attModId,
+			@RequestParam(required=true)String attModId,@RequestParam(required=false)String applCnt,
 			@RequestParam(required=false)String adminFlag) throws Exception {
 		LOGGER.debug("attModAppDetail started");
 		
@@ -959,6 +959,7 @@ public class EzAttitudeKMSController {
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("userId", userInfo.getId())
 				.queryParam("sysLang", sysLang)
+				.queryParam("applCnt", applCnt)
 				.queryParam("offset", offsetMin);
 		
 		RestTemplate rest = new RestTemplate();
