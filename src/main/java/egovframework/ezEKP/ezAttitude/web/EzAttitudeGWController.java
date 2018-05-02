@@ -317,7 +317,8 @@ public class EzAttitudeGWController {
 			@RequestParam(value="userId", required=true) String userId,
 			@RequestParam(value="offset", required=true) String offset,
 			@RequestParam(value="content", required=true) String content,
-			@RequestParam(value="changeDate", required=true) String changeDate) {
+			@RequestParam(value="changeDate", required=true) String changeDate,
+			@RequestParam(value="originDate", required=true) String originDate) {
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] started.");
 		
 		JSONObject result = new JSONObject();
@@ -332,11 +333,12 @@ public class EzAttitudeGWController {
 			LOGGER.debug("offset : " + offset);
 			LOGGER.debug("content : " + content);
 			LOGGER.debug("changeDate : " + changeDate);
+			LOGGER.debug("originDate : " + originDate);
 			LOGGER.debug("attitudeId : " + attitudeId);
 			
 			ezAttitudeService.attSaveAppModify(attitudeId, companyId, tenantId, userId, info.getUserName(), 
 					info.getUserName2(), info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), 
-					info.getDeptName2(), changeDate, "0", content, offset);
+					info.getDeptName2(), changeDate, "0", content, offset, originDate);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1479,8 +1481,9 @@ public class EzAttitudeGWController {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
-			ezAttitudeService.changeUsersModifyAtt(companyId, tenantId, ids, changeStatus, userId, info.getUserName(), info.getUserName2());
+			for (int i = 0; i < ids.length; i++) {
+				ezAttitudeService.changeUsersModifyAtt(companyId, tenantId, ids[i], changeStatus, userId, info.getUserName(), info.getUserName2(), info.getOffSet());
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1534,7 +1537,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="tenantId", required=true) int tenantId,
 			@RequestParam(value="userId", required=true) String userId,
 			@RequestParam(value="offset", required=true) String offset,
-			@RequestParam(value="applCnt", required=true) String applCnt) throws Exception{
+			@RequestParam(value="applCnt", required=false) String applCnt) throws Exception{
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/{attModId}] started.");
 		JSONObject result = new JSONObject();
 		try {
@@ -1544,6 +1547,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");

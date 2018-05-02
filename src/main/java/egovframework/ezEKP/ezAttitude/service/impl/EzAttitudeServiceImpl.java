@@ -85,9 +85,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				
 				LOGGER.debug("isValue : " + isValue + "////////" + resultVO.getWorkStartTime());
 				//시간을 비교해서 근태설정 시간보다 늦으면 지각 처리
-				
 				SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
-				
+
 				Date userConfTime = f.parse(resultConfDate);
 				Date userInTime = f.parse(compareDate);
 				
@@ -884,7 +883,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void attSaveAppModify(String attitudeId, String companyId,
 			int tenantId, String userId, String writerName, String writerName2, String writerTitle
 			, String writerTitle2, String writerDeptId, String writerDeptName, String writerDeptName2
-			,String changeDate, String delFlag, String content,String offset) throws Exception {
+			,String changeDate, String delFlag, String content,String offset, String originDate) throws Exception {
 			
 		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 		
@@ -901,6 +900,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("writerDeptName", writerDeptName);
 		map.put("writerDeptName2", writerDeptName2);
 		map.put("changeDate", changeDate);
+		map.put("originDate", originDate);
 		map.put("delFlag", delFlag);
 		map.put("content", content);
 		map.put("apprStatus", "0");
@@ -1076,26 +1076,66 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public void changeUsersModifyAtt(String companyId, int tenantId,
-			String[] ids, String changeStatus, String userId, String userName, String userName2) throws Exception {
+			String ids, String changeStatus, String userId, String userName, String userName2, String offSet) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String offsetMin = commonUtil.getMinuteUTC(offSet);
 		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("ids", ids);
+		map.put("ids", ids.split("_")[0]);
+		
+		if (ids.split("_").length > 1) {
+			map.put("applCnt", ids.split("_")[1]);
+		}
 		map.put("changeStatus", changeStatus);
+		map.put("offsetMin", offsetMin);
 		map.put("apprDate",commonUtil.getTodayUTCTime(""));
 		map.put("userId",userId);
 		map.put("displayName",userName);
 		map.put("displayName2",userName2);
-
+		
+		String typeId = "A01";
 		//승인, 반려 기록
 		ezAttitudeDAO.changeUsersModifyAtt(map);
 		
-		//사용자의 기존 지각 상태의 근태 수정
-		ezAttitudeDAO.changeUsersAtt(map);
-		
-		//수정이 완료 되면 히스토리 기록
-//		ezAttitudeDAO.addUsersModifyAttHistory(map);
+		//승인일 때 사용자의 기존 지각 상태의 근태 시간 상태 수정
+		if(changeStatus.equals("appr")){
+			ezAttitudeDAO.changeUsersAtt(map);
+
+			//사용자의 기존 지각 상태의 근태 유형 수정
+			AttitudeApplicationVO vo = ezAttitudeDAO.attDetail(map);
+			String startDate = vo.getOriginDate();
+			startDate = startDate.split(" ")[1];
+	
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			
+	//		boolean isDefaultAtti = false;
+			map1.put("writerId", vo.getWriterId());
+			map1.put("companyId", companyId);
+			map1.put("tenantId", tenantId);
+			
+			String isValue = ezAttitudeDAO.getIsAttitudeUserConf(map1);
+			map1.put("isValue", isValue);
+			
+			AttitudeUserConfigVO resultVO = ezAttitudeDAO.getAttitudeConfTime(map1);
+			String resultConfDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd") + " " + resultVO.getWorkStartTime() + ":00", offSet, false).substring(11);
+			
+			LOGGER.debug("startDate : " + startDate);
+			LOGGER.debug("resultConfDate : " + resultConfDate);
+			
+			SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
+			
+			Date userConfTime = f.parse(resultConfDate);
+			Date userInTime = f.parse(startDate);
+			
+			if (userInTime.after(userConfTime)) { //지각인 경우
+				typeId = "A02";
+			}
+			
+			map.put("typeId", typeId);
+			ezAttitudeDAO.changeUsersAttType(map);
+		}
 	}
 
 	@Override

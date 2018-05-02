@@ -124,9 +124,9 @@ public interface EzAttitudeService {
 	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String companyId, int tenantId) throws Exception;
 	
 	public void attSaveAppModify(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
-			String writerDeptId, String writerDeptName, String writerDeptName2 ,String changeDate, String delFlag, String content,String offset) throws Exception;
+			String writerDeptId, String writerDeptName, String writerDeptName2 ,String changeDate, String delFlag, String content,String offset, String originDate) throws Exception;
 	
-	public void changeUsersModifyAtt(String companyId, int tenantId, String[] ids, String changeStatus, String userId, String userName, String userName2) throws Exception;
+	public void changeUsersModifyAtt(String companyId, int tenantId, String ids, String changeStatus, String userId, String userName, String userName2, String offSet) throws Exception;
 
 	public List<AttitudeAuthorVO> getAttitudeAuthList(int tenantId,	String companyId) throws Exception;
 
