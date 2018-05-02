@@ -1050,7 +1050,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("userId",userId);
 		map.put("displayName",userName);
 		map.put("displayName2",userName2);
-		LOGGER.debug("############################commonUtil.getTodayUTCTime: "  + commonUtil.getTodayUTCTime("") + userName + userName2);
+
 		//승인, 반려 기록
 		ezAttitudeDAO.changeUsersModifyAtt(map);
 		

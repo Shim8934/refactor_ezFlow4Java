@@ -30,7 +30,7 @@
 	        var username = "<c:out value='${data.writerName}'/>";
 	        var username2 = "<c:out value='${data.writerName2}'/>";
 	        var attid = "<c:out value='${data.attitudeId}'/>";
-/* 	        var content = '${data.content}' */
+ 	        var content = '${data.content}'
 	        var contentpath = "${contentPath}";
 	        var startDateStringOrgin = "<c:out value='${startDateStringOrgin}'/>";
 	        var endDateStringOrgin = "<c:out value='${endDateStringOrgin}'/>";
@@ -66,6 +66,7 @@
 				
 				console.log(writerid);
 				console.log(userId);
+				console.log(adminFlag);
 		    }
 		    
 		    window.onresize = function () {   	

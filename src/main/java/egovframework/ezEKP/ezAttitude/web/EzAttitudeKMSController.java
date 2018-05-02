@@ -1118,10 +1118,6 @@ public class EzAttitudeKMSController {
 		}
 
 */
-			
-			
-		
-
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("deptFlag", "true");
 		model.addAttribute("adminFlag", adminFlag);
