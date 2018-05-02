@@ -1824,7 +1824,7 @@ public class EzAttitudeGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			String isGAdmin = request.getParameter("isGAdmin");
+			String isGAdmin = request.getParameter("isGAdmin");////////////////얘는 없어도 될듯한?
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), userId, isGAdmin);
@@ -1876,6 +1876,7 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/attitudetypes/{attitudetypeId}/attitude-count] ended.");
 		return result;
 	}
+	
 	/**
 	 * G/W 통계 [GET] 부서 근태 유형별 통계 -----임시
 	 */
@@ -1903,6 +1904,34 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/depts/"+deptId+"/attitudetypes/{attitudetypeId}/attitude-count] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 부서근태현황 [GET] 회사별 부서 리스트 조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/depts", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getCompanyDeptList(@PathVariable String companyId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/"+companyId+"/depts] started.");
+		
+		JSONObject result = new JSONObject();
+		try{
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			userId = "";
+			
+			List<JournalAuthorVO> resultList = ezAttitudeService.getCompanyDeptList(userId, companyId, info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", resultList);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/"+companyId+"/depts] ended.");
 		return result;
 	}
 }

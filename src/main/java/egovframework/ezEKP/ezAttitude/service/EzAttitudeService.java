@@ -138,5 +138,7 @@ public interface EzAttitudeService {
 	
 //	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String offset, String startDate, String endDate, int tenantId) throws Exception;
 	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String deptId, String offset, String year,String typeId, int tenantId) throws Exception;
+
+	public List<JournalAuthorVO> getCompanyDeptList(String userId, String companyId, int tenantId);
 	
 }

@@ -247,4 +247,8 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 			Map<String, Object> map) {
 		return (AttitudeStatisVO) select("ezAttitudeAdminDAO.getAttitudeUserStatistics", map);
 	}
+
+	public List<JournalAuthorVO> getCompanyDeptList(Map<String, Object> map) {
+		return (List<JournalAuthorVO>) list("ezAttitudeAdminDAO.getCompanyDeptList", map);
+	}
 }

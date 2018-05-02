@@ -1069,7 +1069,7 @@ public class EzAttitudeKMSController {
 		String isGAdmin = "";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		/*
+		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
 		
@@ -1079,11 +1079,11 @@ public class EzAttitudeKMSController {
 			adminFlag = "true";
 			//권한부서 리스트
 			//c , k , wa -> 회사의 모든부서
-			url = gwServerUrl + "/rest/ezattitude/";
+			url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/depts";
 			
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
 			adminFlag = "true";
-			isGAdmin = "Y";
+			isGAdmin = "Y";////////////////////////////////////////////없애도 될듯하다
 			// g -> 자신의 부서 + auth TB 확인해볼것.
 			url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
 		}
@@ -1097,7 +1097,6 @@ public class EzAttitudeKMSController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", userInfo.getCompanyID())
-				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("userId", userInfo.getId())
 				.queryParam("isGAdmin", isGAdmin);
 		
@@ -1111,13 +1110,13 @@ public class EzAttitudeKMSController {
 		
 		String status = resultBody.get("status").toString();
 		
-		JSONArray data = new JSONArray();
+		JSONArray deptList = new JSONArray();
 		
 		if(status.equals("ok")){
-			data = (JSONArray) resultBody.get("data");
+			deptList = (JSONArray) resultBody.get("data");
 		}
 
-*/
+		model.addAttribute("deptList", deptList);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("deptFlag", "true");
 		model.addAttribute("adminFlag", adminFlag);
