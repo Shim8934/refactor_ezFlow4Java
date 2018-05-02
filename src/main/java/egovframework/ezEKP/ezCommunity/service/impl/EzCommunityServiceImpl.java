@@ -2356,11 +2356,18 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("getCommunityThumInfo started.");
 		
 		String pSignatureDir = ""; 
-		pSignatureDir = commonUtil.getUploadPath("upload_community.LOGO", tenantID);		
+		
+		/* 2018-05-02 홍승비 - 커뮤니티 썸네일과 포토게시판 썸네일 경로 다르게 수정 */
+		if(pType.equals("LOGO") || pType.equals("COMMUNITYTHUM")) {
+			pSignatureDir = commonUtil.getUploadPath("upload_community.LOGO", tenantID);
+		}
+		else if(pType.equals("COMMUNITYBOARD")) {
+			pSignatureDir = commonUtil.getUploadPath("upload_community.ROOT", tenantID);
+		}
+		
 		String pResult = pSignatureDir + commonUtil.separator + pFileName;
 		
-		logger.debug("getCommunityThumInfo ended.");
-		
+		logger.debug("getCommunityThumInfo ended.");		
 		return pResult;
 	}
 
@@ -5563,6 +5570,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	            sb.append("<ItemLevel>" + item.getItemLevel() + "</ItemLevel>");
 	            sb.append("<ReadFlag>" + item.getReadFlag() + "</ReadFlag>");
 	            sb.append("<Abstract>" + commonUtil.cleanValue(item.getAbsTract()) + "</Abstract>");
+	            /* 2018-05-02 홍승비 - 포토게시판 썸네일 파일명 가져오도록 수정 */
+	            sb.append("<EXTENSIONATTRIBUTE4>" + commonUtil.cleanValue(item.getExtensionAttribute4()) + "</EXTENSIONATTRIBUTE4>");
 	            // 수정(200700228) : 포토게시판 기능 추가 관련 ExtensionAttribute5(Small 이미지 경로) 값 가져오도록 수정함.
 	            sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(item.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
 				sb.append("</NODE>");

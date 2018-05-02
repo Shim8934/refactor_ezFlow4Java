@@ -213,20 +213,19 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pBoardID = request.getParameter("boardID");
 		}
 
+		/* 2018-05-02 홍승비 - 커뮤니티 썸네일과 포토게시판 썸네일 경로 다르게 수정 */
 		if (pType.toUpperCase().equals("COMMUNITYLOGO")) {
-			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "LOGO", userInfo.getTenantId());
-			
-	        if (pFilePath != null && !pFilePath.equals("")) {
-	            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
-	        }
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "LOGO", userInfo.getTenantId());			
+		}
+		else if (pType.toUpperCase().equals("COMMUNITYTHUM")) {			
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "COMMUNITYTHUM", userInfo.getTenantId());				
+		}
+		else if (pType.toUpperCase().equals("COMMUNITYBOARD")) {
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "COMMUNITYBOARD", userInfo.getTenantId());				
 		}
 		
-		if (pType.toUpperCase().equals("COMMUNITYTHUM")) {
-			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "COMMUNITYTHUM", userInfo.getTenantId());
-			
-	        if (pFilePath != null && !pFilePath.equals("")) {
-	            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
-	        }
+		if (pFilePath != null && !pFilePath.equals("")) {
+            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
 		}
 	}
 
@@ -4211,7 +4210,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 포토게시판 앍기화면 호출함수
+	 * 포토게시판 읽기화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/boardItemViewPhoto.do")
 	public String boardItemViewPhoto(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -4287,7 +4286,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile//s_", "/uploadFile/"));
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile/s_", "/uploadFile/"));
 			String pFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getExtensionAttribute5();
-			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + boardID + "&imgUrl=" + item.getExtensionAttribute5() + "&fileName=" + URLEncoder.encode((item.getExtensionAttribute4()).replace("+", "%20").replace("&amp;", "&"),"UTF-8");
+			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + boardID + "&imgUrl=" + item.getExtensionAttribute5() + "&fileName=" + URLEncoder.encode((item.getExtensionAttribute4()).replace("+", "%20").replace("&amp;", "&"),"UTF-8");
 			
 			File file = new File(pFilePath);
 			
