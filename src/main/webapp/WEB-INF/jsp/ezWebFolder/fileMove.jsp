@@ -171,18 +171,18 @@
 				var childElmt = obj.parentElement.lastElementChild;
 				
 				if (obj.className == "webfolderMinus") {
-					obj.src = "/images/OrganTree_cross/plus_normal.gif";
+					obj.src = "/images/OrganTree_cross/plus.gif";
 					obj.setAttribute("class", "webfolderPlus");
 					childElmt.style.display = "none";
 				}
 				else {
-					obj.src = "/images/OrganTree_cross/minus_normal.gif";
+					obj.src = "/images/OrganTree_cross/minus.gif";
 					obj.setAttribute("class", "webfolderMinus");
 					childElmt.style.display = "";
 				}
 			}
 			else {
-				obj.src = "/images/OrganTree_cross/minus_normal.gif";
+				obj.src = "/images/OrganTree_cross/minus.gif";
 				obj.setAttribute("class", "webfolderMinus");
 				
 				$.ajax({
@@ -314,9 +314,7 @@
 	</script>
 </head>
 <body class="popup">
-	<div id="menu">
-		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t120'/></div>
-	</div>
+	<h1 id ="topMenu" ><spring:message code='ezWebFolder.t120'/></h1>
 	<div id="close">
 		<ul>
 			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110' /></span></li>
