@@ -639,8 +639,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String susinAdmin = "user";
 		String result = "";
+		String nowDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true);
 		
-		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
+		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1 || ezOrganService.isProxyUser(userInfo.getTenantId(), userInfo.getId(), nowDateTime).equals("1")) {
 			susinAdmin = "admin";
 		}
 		
@@ -4074,6 +4075,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String searchQuery = request.getParameter("searchQuery");
 		String userLang = userInfo.getLang();
 		Document xmlDomSub = null;
+		
+		System.out.println("모드 : " + receiveDocMode);
 		
 		if (searchQuery.length() > 10) {
 			String tempQuery = "";
