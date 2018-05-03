@@ -23,8 +23,10 @@
 			// event
 			function mouseHover(obj, event) {
 				if(event.type == "mouseenter") {
-					obj.classList.remove("spanDefault");
-					obj.classList.add("spanMouseActiveHover");
+					if(!obj.classList.contains("spanMouseActiveClick")) {
+						obj.classList.remove("spanDefault");
+						obj.classList.add("spanMouseActiveHover");
+					}
 				} else {
 					obj.classList.remove("spanMouseActiveHover");
 					if(!obj.classList.contains("spanMouseActiveClick")) {
@@ -50,9 +52,9 @@
 					var retValLen = retVal["userId"].length;
 					
 					for(var i = 0; i < retValLen; i++) {
-						html += "<span _userId='" + retVal["userId"][i] + "' class='spanDefault' onmouseenter='mouseHover(this, event);' onmouseleave='mouseHover(this, event);' onclick='userClick(this, event);'>" + retVal["userName"][i] + " | " + retVal["deptName"][i] + " | " + retVal["userId"][i] + "</span>";
+						html += '<span _userId="' + retVal["userId"][i] + '" class="spanWrap spanDefault" onmouseenter="mouseHover(this, event);" onmouseleave="mouseHover(this, event);" onclick="userClick(this, event);"><span class="o_name">' + retVal["userName"][i] + '</span><span class="o_dept">' + retVal["deptName"][i] + '</span><span class="o_id">' + retVal["userId"][i] + '</span></span>';
 					}
-					$userInfo.html(html);
+					$userInfo.append(html);
 				}
 			});
 			$(function() {
@@ -106,25 +108,38 @@
 			#userInfo {
 				height: 90px;
 				overflow-y: auto;
-				border: 1px solid #dddddd;
-				background-color: #dddddd; 
+				border: 1px solid #efefef;
+				background-color: #efefef; 
+				margin-top: 6px;
 			}
-			#userInfo span {
+			#userInfo .spanWrap {
 				display: block;
-				height: 20px;
+				height: 30px;
+				line-height: 30px;
+				border-bottom: 1px solid #efefef;
 				cursor: pointer;
-				padding: 5px 10px;
-				line-height: 20px;
-				border-bottom: 1px solid #dddddd;
 			}
-			#userInfo span:last-child {
+			#userInfo .spanWrap:last-child {
 				border-bottom: 0;
 			}
+			.spanWrap span {
+				display: inline-block;
+				padding-left: 5%
+			}
+			.spanWrap .o_name {
+				width: 26%
+			}
+			.spanWrap .o_dept {
+				width: 26%
+			}
+			.spanWrap .o_id {
+				width: 31%
+			}
 			.spanMouseActiveClick {
-				background-color: #e5efff;
+				background-color: #e9f1ff;
 			}
 			.spanMouseActiveHover {
-				background-color: #dddddd;
+				background-color: #f4f5f5;
 			}
 			.spanDefault {
 				background-color: #ffffff;
@@ -159,7 +174,7 @@
 				<c:when test="${popupType == 'overlapOnlyName'}">
 					<h1 id="h1Title"><spring:message code="ezLadder.t036" /></h1>
 					<span>▒ <spring:message code="ezLadder.t084" /></span>
-					<p id="userInfo"></p>
+					<p id="userInfo"><span class="spanWrap" style="background: #f8f8fa;"><span class="o_name">이름</span><span class="o_dept">부서</span><span class="o_id">아이디</span></span></p>
 				</c:when>
 				<c:when test="${popupType == 'cmtdelete'}">
 					<h1 id="h1Title" style="margin-bottom: 30px;"><spring:message code="ezLadder.t062" /> <spring:message code="ezLadder.t053" /></h1>
