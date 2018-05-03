@@ -1020,11 +1020,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			}
 		};
 		
-		/**
-		 * 1. custom안먹어서 날짜별 리스트 조회는되는데 중복 어떠케 날릴지, 
-		 * 2. param boolean받아서 startdate 없이 db에서 꺼내고, 중복제거된걸로해서 날짜별말고 전체통합데이터 조회 및 메일발송할떄 아이디리스트로 쓸수잇게
-		 * 3. order는 하긴했는데 짼 이름정렬 왜 젤위에 튀어나오지
-		 */
 		LOGGER.debug("totalList size = " + totalList.size());
 		
 		HashSet<AdminAttitudeVO> listSet = new HashSet<AdminAttitudeVO>(totalList);

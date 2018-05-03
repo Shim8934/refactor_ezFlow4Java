@@ -138,7 +138,7 @@
 			var modAttitudeId = "";         // 수정신청 근태ID
 			var modChangeDate = "";         // 수정신청 변경일자
 			var modContent = "";            // 수정신청 내용
-			
+						
 			$(function(){
 				//개인근태현황에서만 근태 등록 가능
 				if (deptFlag != "true") {
@@ -157,7 +157,6 @@
 					attitudeItemView(this);
 				})
 				
-				//근태수정신청 팝업창
 				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02]', function(){
 					//근태수정신청은 개인근태현황에서만 가능
 					var modappl = $(this).attr('modappl');
@@ -297,11 +296,6 @@
 					objTable.append(objTbody);
 					$("#attiStatis").append(objTable);
 					
-// 					if (calendarHeight != $("#attiStatis").css("Height")) {
-// 						var statisHeight = $("#attiStatis").css("Height");
-// 						tdHeight = tdHeight + (calendarHeight.substr(0, calendarHeight.length - 2) - statisHeight.substr(0, statisHeight.length - 2));
-// 						$("#attiStatis tr:eq(0) th").css("height", tdHeight + "px");
-// 					}
 			}
 			
 			/**
@@ -400,17 +394,17 @@
 						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
 						 
 						if (result[i].dateType == '4' || result[i].dateType == '5') { 
-						subDate = calDateRange(startDate, endDate); 
-						betweenDate = new Date(startDate); 
-						 
-						for (var j = 0; j<= subDate; j++) {
-							betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
-							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
-							var resultRegion = result[i].region.length >= 12 ? result[i].region.substring(0,12) + ".." : result[i].region;
-							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" + 
-									result[i].typeName + (resultRegion != "" ? " : " + resultRegion : "") + "</td></tr>"); 
-						} 
+							subDate = calDateRange(startDate, endDate); 
+							betweenDate = new Date(startDate); 
+							 
+							for (var j = 0; j<= subDate; j++) {
+								betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
+								var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
+								var resultRegion = result[i].region.length >= 12 ? result[i].region.substring(0,12) + ".." : result[i].region;
+								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
+										"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" + 
+										result[i].typeName + (resultRegion != "" ? " : " + resultRegion : "") + "</td></tr>"); 
+							} 
 						} else if (result[i].dateType == '3') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
@@ -831,6 +825,17 @@
 							break;
 					}
 					$(this).prepend(squareSpan.addClass(tdClassName));
+				});
+				
+				checkAttiModAppl();
+			}
+			
+			function checkAttiModAppl(){
+				$('#attiCalendar tr td[typeid=A02]').each(function(){
+					if (!attitudeModAppl) {
+						$(this).css("cursor", "context-menu");
+						$('#attiCalendar').off('dblclick', "tr td[typeid=A02]");
+					}
 				});
 			}
 			

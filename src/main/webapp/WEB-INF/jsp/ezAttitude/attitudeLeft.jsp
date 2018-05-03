@@ -76,13 +76,15 @@
 		<ul></ul>
 		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block">부서근태현황</span></h2>
 		<ul></ul>
-		<h2><span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block">근태수정관리</span></h2>
-		<ul>
-			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;신청현황</span></li>
-			<c:if test="${attitudeAdminCheck == true}">
-				<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;신청관리현황</span></li>
-			</c:if>
-		</ul>
+		<c:if test="${attitudeConfigVO.attitudeModAppl == 1 }">
+			<h2><span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block">근태수정관리</span></h2>
+			<ul>
+				<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;신청현황</span></li>
+				<c:if test="${attitudeAdminCheck == true}">
+					<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;신청관리현황</span></li>
+				</c:if>
+			</ul>
+		</c:if>
 	</div>
 	<script type="text/javascript">
 		var userOffset = "${userOffset}";

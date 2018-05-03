@@ -378,6 +378,11 @@
         	alert("<spring:message code='ezStatistics.t1019' />");
         	return ;
         }
+        //데이터가 없으면
+        if ($("#viewdata").css("display") == "none") {
+    		alert("<spring:message code='ezStatistics.t1008' />");
+    		return;
+    	}
         
         document.getElementById("formAgent").target = "saveExcel";
         document.getElementById("formAgent").submit();
