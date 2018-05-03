@@ -82,7 +82,7 @@
 		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon06.png"/>
 		    					</c:otherwise>
 		    				</c:choose>
-		    				<span style="display:inline-block; margin-top: 3px;">&nbsp;<spring:message code="${type.journaltypeId}"/></span></span></li>
+		    				<span style="display:inline-block; padding-top: 4px; padding-bottom: 1px;">&nbsp;<spring:message code="${type.journaltypeId}"/></span></span></li>
 		    			</c:forEach>
 		    		</c:when>
 		    	</c:choose>
@@ -113,11 +113,11 @@
 		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon06.png"/>
 		    					</c:otherwise>
 		    				</c:choose>
-						    <span style="display:inline-block; margin-top: 3px;">&nbsp;<spring:message code="${type.journaltypeId}"/></span></span></li>
+						    <span style="display:inline-block; padding-top: 4px; padding-bottom: 1px;">&nbsp;<spring:message code="${type.journaltypeId}"/></span></span></li>
 		    			</c:forEach>
 		    		</c:when>
 		    	</c:choose>
-		    </ul>
+		    </ul> 
 		    <h2><span listType='recv' onClick="goJournalList(this);" style="width:100%;display:inline-block;"><spring:message code='ezJournal.t51'/><c:if test="${recvCount ne 0 }"><span id="recvCount">(${recvCount })</span></c:if></span></h2>
 		    <ul>
 		    </ul>
