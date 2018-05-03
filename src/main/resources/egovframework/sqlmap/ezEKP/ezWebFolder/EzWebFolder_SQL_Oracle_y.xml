@@ -169,24 +169,26 @@
     <sql id="searchAll">
     	<isNotEqual property="searchExt" compareValue="" prepend="AND">
 			<![CDATA[
-				t.FILE_EXT LIKE '%'|| #searchExt# || '%'
+				(UPPER(t.FILE_EXT) LIKE UPPER('%'|| #searchExt# || '%')
+				or
+				LOWER(t.FILE_EXT) LIKE LOWER('%'|| #searchExt# || '%'))
        		]]> 
 		</isNotEqual>		
 		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 			<![CDATA[
-				(t.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
+				(t.CREATE_NAME1 LIKE ('%' || #searchCreateName# || '%')
 				or
-				t.CREATE_NAME2 LIKE '%' || #searchCreateName# || '%')
+				t.CREATE_NAME2 LIKE ('%' || #searchCreateName# || '%'))
        		]]> 
 		</isNotEqual>		
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 			<![CDATA[
-				t.TYPE_NAME LIKE '%'|| #searchFileType# ||'%'
+				t.TYPE_NAME LIKE ('%'|| #searchFileType# ||'%')
        		]]> 
 		</isNotEqual>		
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 			<![CDATA[
-				t.FILE_NAME LIKE '%' || #searchFileName# || '%'
+				t.FILE_NAME LIKE ('%' || #searchFileName# || '%')
        		]]> 
        		
 		</isNotEqual>

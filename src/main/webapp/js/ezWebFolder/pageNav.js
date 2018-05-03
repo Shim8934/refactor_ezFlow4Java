@@ -5,7 +5,7 @@ var pagination = (function() {
 	
 	var currentPage = 1;
 	var totalPage = 0;
-	var listSize = 10;
+	var listSize = 0;
 	
 	var startPosition = 0;
 	var itemAmount = 0;

@@ -409,6 +409,7 @@
 		}
 		
 		function doLayerPopup(obj) {
+	        optionHidden();
 	        var searchRequirement = searchContext.getCurrentRequirement();
 	        clearDatepicker();
 	        
