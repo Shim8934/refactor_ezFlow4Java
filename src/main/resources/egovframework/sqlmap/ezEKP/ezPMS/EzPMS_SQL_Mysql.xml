@@ -139,6 +139,18 @@
     	<result property="delStatus"						column="DEL_STATUS"					columnIndex="32"/>
     </resultMap>
     
+    <resultMap id="projectTaskMemberVO" class="ProjectTaskMemberVO">
+    	<result property="taskMemberId"						column="TASK_MEMBER_ID"				columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="taskId"							column="TASK_ID"					columnIndex="3"/>
+    	<result property="userId"							column="USER_ID"					columnIndex="4"/>
+    	<result property="userName"							column="USER_NAME"					columnIndex="5"/>
+		<result property="userName2"						column="USER_NAME2"					columnIndex="6"/>
+    	<result property="userDeptName"						column="USER_DEPTNAME"				columnIndex="7"/>
+    	<result property="userDeptName2"					column="USER_DEPTNAME2"				columnIndex="8"/>
+    	<result property="pctInput"							column="PCTINPUT"					columnIndex="9"/>
+    </resultMap>
+   
     <resultMap id="projectMemberScheduleVO" class="ProjectMemberScheduleVO">
     
     </resultMap>
