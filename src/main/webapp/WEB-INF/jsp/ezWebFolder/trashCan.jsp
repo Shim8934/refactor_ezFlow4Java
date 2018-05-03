@@ -458,7 +458,7 @@
 				}
 			}
     	   
-    	   var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(420, 490));
+    	   var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(450, 470));
            try { OpenWin.focus(); } catch (e) { }
            
            parent.frames["left"].drawVolume();

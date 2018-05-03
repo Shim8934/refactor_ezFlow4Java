@@ -56,7 +56,7 @@
 					parent = data.data[0]["parent"];
 		        	$.jstree.destroy();
 					$('#folderTree').jstree({
-						
+						'plugins': ["core","types","json_data","themes","ui"],
 						'core' : {
 							"animation" : 0,
 							'data' : data.data,
@@ -71,28 +71,33 @@
 						},
 						"types" : {
 							"default": {
-								"icon" :"/images/OrganTree_cross/fldr.gif" 
+								"icon" :"/images/webfolder/fldr.png" 
 							}
 						},
 						"grid": {
 							"width"       : "25",
 							"margin-left" : "10"
-						},
-						'plugins': ["core","types","json_data","changed","themes"]
-					});
+						}
 			   		
-				},
-				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134' />" + error);
-				}
-			});
-			$("#folderTree").on("changed.jstree", function (e, data) {
+			}).on('loaded.jstree', function() {
+				firFolderId = data.data[0]["id"];
+				var test = "#" + folderId;
+				var elmentTest = document.getElementById(firFolderId);
+				var childE = document.getElementById(firFolderId + "_anchor");
+				childE.setAttribute("class", "jstree-anchor jstree-clicked");
+				elmentTest.setAttribute("aria-selected", "true");
+				folderId = firFolderId;
+			}).on('changed.jstree', function (e, data) {
 				folderId = data.selected[0];
 				parent = data.node.original.parent;
-				console.log("changed.jstree" + new Date()); 
 			});
-	    }
-        
+	    },
+	    error : function(error) {
+			alert("<spring:message code='ezWebFolder.t134' />" + error);
+			}
+		});
+	}
+
         function move_onclick() {
         	
             if (folderId == "") {
