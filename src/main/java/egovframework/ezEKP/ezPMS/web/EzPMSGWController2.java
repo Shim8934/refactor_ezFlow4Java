@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
@@ -70,7 +71,8 @@ public class EzPMSGWController2 {
 			SearchVO search = new SearchVO();
 			search.setTenantId(info.getTenantId());
 			search.setProjectId(Integer.parseInt(projectId));
-			search.setMemberId(info.getUserId());
+			search.setMemberId(request.getParameter("headManagerName"));
+			
 			
 			List<ProjectTaskVO> taskList = ezPMSService.getTaskList(search);
 			
@@ -508,6 +510,37 @@ public class EzPMSGWController2 {
 		}
 		
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/weight/" + projectId + "] ended.");
+		return result;
+	}
+	
+	/**
+	 * 프로젝트관리 프로젝트 세부 정보 조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/users/{userId}/gantt", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getProjectDetailsforGantt(@PathVariable int projectId, @PathVariable String userId,HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/users/" + userId + "/gantt] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			
+			ProjectInfoVO data = ezPMSService.getProjectDetails(projectId, "juhongsun", info.getTenantId(), info.getOffSet(), lang);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");		
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/users/" + userId + "/gantt] ended.");
 		return result;
 	}
 		

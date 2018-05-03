@@ -252,6 +252,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ProjectInfoVO project = ezPMSDAO.getProjectDetails(map);
 		
 		LOGGER.debug("getProjectDetail ended");
+		
 		return project;
 	}
 
