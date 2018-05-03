@@ -100,7 +100,6 @@
 							var folderId = "";
 							folderId = data.selected[0];
 							getFileList(folderId);
-							console.log("changed.jstree" + new Date());
 						});
 					},
 					error : function(error) {
