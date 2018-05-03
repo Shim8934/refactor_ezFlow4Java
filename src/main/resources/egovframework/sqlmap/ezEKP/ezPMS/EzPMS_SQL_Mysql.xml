@@ -97,10 +97,10 @@
     </resultMap>
     
     <resultMap id="projectMemberVO" class="ProjectMemberVO">
-    	<result property="userId"							column="USER_ID"					columnIndex="5"/>
-    	<result property="userName"							column="USER_NAME"					columnIndex="6"/>
-    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="8"/>
-    	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="8"/>
+    	<result property="userId"							column="USER_ID"					columnIndex="1"/>
+    	<result property="userName"							column="USER_NAME"					columnIndex="2"/>
+    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="3"/>
+    	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="4"/>
     </resultMap>
     
     <resultMap id="projectTaskVO" class="ProjectTaskVO">
@@ -396,10 +396,12 @@
 		SELECT 
 			CN AS USER_ID,
 			DISPLAYNAME$lang$ AS USER_NAME,
-			DESCRIPTION$lang$ AS USER_DEPTNAME
+			DESCRIPTION$lang$ AS USER_DEPTNAME,
+			C.MEMBER_ROLE_ID AS MEMBER_ROLE_ID
 		FROM TBL_USERMASTER D JOIN
-		(SELECT
-			DISTINCT B.CN AS DEPARTMENT
+		(SELECT DISTINCT 
+			B.CN AS DEPARTMENT,
+			A.MEMBER_ROLE_ID AS MEMBER_ROLE_ID
 		FROM
 			TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
 		ON
