@@ -852,37 +852,55 @@
 	<select id="EzPMSDAO.getProjectDetails" parameterClass="Map" resultMap="projectInfoVO">
 	<![CDATA[
 		SELECT
-			PROJECT_ID, 
-			TENANT_ID,
-			PROJECT_NAME, 
-			PLAN_START_DATE,
-			PLAN_END_DATE, 
-			REAL_START_DATE, 
-			REAL_END_DATE,
-			HEAD_MANAGER_ID, 
-			HEAD_MANAGER_NAME, 
-			HEAD_MANAGER_NAME2,
-			HEAD_MANAGER_DEPTNAME, 
-			HEAD_MANAGER_DEPTNAME2, 
-			STATUS, 
-			PROGRESS, 
-			OVERVIEW,  
-			WEIGHT_INPUT, 
-			CREATOR_ID, 
-			CREATE_DATE, 
-			CREATOR_NAME, 
-			CREATOR_NAME2, 
-			CREATOR_DEPTNAME,
-			CREATOR_DEPTNAME2, 
-			WORKINGDAY, 
-			REST_DUEDAY, 
-			ALAM_MAIL_STATUS  
+			A.PROJECT_ID, 
+			A.TENANT_ID,
+			A.PROJECT_NAME, 
+			A.PLAN_START_DATE,
+			A.PLAN_END_DATE, 
+			A.REAL_START_DATE, 
+			A.REAL_END_DATE,
+			A.HEAD_MANAGER_ID, 
+			A.HEAD_MANAGER_NAME, 
+			A.HEAD_MANAGER_NAME2,
+			A.HEAD_MANAGER_DEPTNAME, 
+			A.HEAD_MANAGER_DEPTNAME2, 
+			A.STATUS, 
+			A.PROGRESS, 
+			A.OVERVIEW,  
+			A.WEIGHT_INPUT, 
+			A.CREATOR_ID, 
+			A.CREATE_DATE, 
+			A.CREATOR_NAME, 
+			A.CREATOR_NAME2, 
+			A.CREATOR_DEPTNAME,
+			A.CREATOR_DEPTNAME2, 
+			A.WORKINGDAY, 
+			A.REST_DUEDAY, 
+			A.ALAM_MAIL_STATUS,
+			IFNULL(F.FAVORITE_ID, 0) AS ISFAVORITE
 		FROM 
-			tbl_pms_project
+			tbl_pms_project	A
+		JOIN 
+			tbl_pms_member M	
+		ON	
+			A.PROJECT_ID = M.PROJECT_ID	
+		AND	
+			A.TENANT_ID = M.TENANT_ID
+		LEFT JOIN 
+				tbl_pms_favorite F 
+			ON
+				A.PROJECT_ID = F.PROJECT_ID 
+			AND
+				A.TENANT_ID = F.TENANT_ID	
 		WHERE 
 			A.TENANT_ID = #tenantId#
 		AND
-			A.PROJECT_ID = #projectId#
+			A.PROJECT_ID = #projectId#	
+		AND	
+			(M.USER_ID = #userId#	
+			OR	
+			M.USER_ID = #deptId#
+			)
 	]]>
 	</select>
 	

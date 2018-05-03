@@ -240,7 +240,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public ProjectInfoVO getProjectDetails(int projectId, String userId, int tenantId, String offset, String lang) {
+	public ProjectInfoVO getProjectDetails(int projectId, String userId, int tenantId, String offset, String lang, String deptId) {
 		LOGGER.debug("getProjectDetail started");
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -248,6 +248,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("lang", lang);
 		map.put("tenantId", tenantId);
 		map.put("offset", offset);
+		map.put("userId", userId);
+		map.put("deptId", deptId);
 		
 		ProjectInfoVO project = ezPMSDAO.getProjectDetails(map);
 		

@@ -10,11 +10,16 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
+<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
+<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 110;
+var progress = "${project.progress}";
 
 $(document).ready(function(){
 	$(window).resize(function() {
@@ -28,7 +33,18 @@ $(function() {
 	CurrentHeight = $(window).height()-110;
 	$(".overview").css("height", CurrentHeight + "px");
 	$(".kanban").css("height", CurrentHeight - 10 + "px");
+	initProgressBar();
 });
+
+function initProgressBar() {
+	$(".progress_graph").circleProgress({
+		value: 0.4,
+		fill : {color : "blue"},
+		size : 135
+	}).on('circle-animation-progress', function(event, progress) {
+		$(this).find('strong').html(40 + "%");
+	});
+}
 </script>
 <style type="text/css">
 #kanbanArea {
@@ -145,7 +161,9 @@ $(function() {
 		<div id="setting" class="icon">환경설정</div>
 	</div>
 <div id="overviewArea" class="overview rightPart">
-	${project.progress }<br>
+	<div class="circle progress_graph" style="width:100%; top:15px;">
+		<strong></strong>
+	</div>
 	${project.status }<br>
 	${project.restDueday }<br>
 	${project.planStartDate }<br>
