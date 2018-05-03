@@ -220,12 +220,6 @@
 					tdCreateDate.textContent = resultElement["createDate"].substring(0, 10);
 					tdAbsolutePath.textContent = resultElement["trashCanPath"];
 					
-					if(result[i]["trashCanType"] == "folder") {
-						trElement.ondblclick = function() {
-							dbClickFunction(this);							
-						};
-					}
-					
 					trElement.appendChild(tdCheckbox);
 					trElement.appendChild(tdFileIcon);
 					trElement.appendChild(tdName);

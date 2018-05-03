@@ -629,9 +629,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			}
 		}
 		
-		totalRows  = fileCnt + folderCnt;
-		totalPages = (totalRows + pEnd - 1)/pEnd;
-		
 		result.put("fileCnt", fileCnt);
 		result.put("folderCnt", folderCnt);
 		result.put("trashCanList", trashCanList);
