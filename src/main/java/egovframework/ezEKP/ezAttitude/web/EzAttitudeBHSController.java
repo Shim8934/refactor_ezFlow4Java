@@ -64,6 +64,7 @@ public class EzAttitudeBHSController {
 		String endDate =request.getParameter("endDate");
 		String deptFlag = "false";
 		String typeId = "";
+		String selectedDeptID = "";
 		
 		if (request.getParameter("deptFlag") != null && !request.getParameter("deptFlag").equals("")) {
 			deptFlag = request.getParameter("deptFlag");
@@ -71,6 +72,10 @@ public class EzAttitudeBHSController {
 		
 		if (request.getParameter("typeId") != null && !request.getParameter("typeId").equals("")) {
 			typeId = request.getParameter("typeId");
+		}
+		
+		if (request.getParameter("selectedDeptID") != null && !request.getParameter("selectedDeptID").equals("")) {
+			selectedDeptID = request.getParameter("selectedDeptID");
 		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -87,7 +92,8 @@ public class EzAttitudeBHSController {
 				.queryParam("startDate", startDate)
 				.queryParam("endDate", endDate)
 				.queryParam("deptFlag", deptFlag)
-				.queryParam("typeId", typeId);
+				.queryParam("typeId", typeId)
+				.queryParam("selectedDeptID", selectedDeptID);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -200,6 +206,35 @@ public class EzAttitudeBHSController {
 			attitudeAdminCheck = false;
 		}
 		
+		String userId = userInfo.getId();
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudereg";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject attitudeConfigVO = new JSONObject();
+		if (status.equals("ok")) {
+			attitudeConfigVO = (JSONObject) resultBody.get("data");
+			model.addAttribute("attitudeConfigVO", attitudeConfigVO);
+		}
+		
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("uselang", userInfo.getLang());
 		model.addAttribute("attitudeAdminCheck", attitudeAdminCheck);
@@ -283,6 +318,11 @@ public class EzAttitudeBHSController {
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/attitude-count";
 		String deptFlag = "false";
+		String selectedDeptID = "";
+		
+		if (request.getParameter("selectedDeptID") != null && !request.getParameter("selectedDeptID").equals("")) {
+			selectedDeptID = request.getParameter("selectedDeptID");
+		}
 		
 		if (request.getParameter("deptFlag") != null && !request.getParameter("deptFlag").equals("")) {
 			deptFlag = request.getParameter("deptFlag");
@@ -298,7 +338,8 @@ public class EzAttitudeBHSController {
 				.queryParam("userId", userId)
 				.queryParam("offset", userOffset)
 				.queryParam("date", date)
-				.queryParam("deptFlag", deptFlag);
+				.queryParam("deptFlag", deptFlag)
+				.queryParam("selectedDeptID", selectedDeptID);
 		
 		RestTemplate rest = new RestTemplate();
 		

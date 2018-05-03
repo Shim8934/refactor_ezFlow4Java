@@ -515,7 +515,6 @@ public class EzAttitudeAdminBOMController {
 		String saveMode = request.getParameter("saveMode");
 		String typeName = request.getParameter("typeName");
 		String typeName2 = request.getParameter("typeName2");
-		String imgPath = request.getParameter("imgPath");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
 		String url = "";
@@ -535,8 +534,7 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("userId", userInfo.getId())
 				.queryParam("typeId", typeId)
 				.queryParam("typeName", typeName)
-				.queryParam("typeName2", typeName2)
-				.queryParam("imgPath", imgPath);
+				.queryParam("typeName2", typeName2);
 		
 		RestTemplate rest = new RestTemplate();
 		

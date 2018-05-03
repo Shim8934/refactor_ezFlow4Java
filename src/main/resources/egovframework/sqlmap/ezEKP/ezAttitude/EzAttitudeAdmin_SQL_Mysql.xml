@@ -399,18 +399,18 @@
 	<insert id="ezAttitudeAdminDAO.insertAttitudeType" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_ATTITUDE_TYPE
-				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, IMG_PATH, PARENT_ID, FORM_ID)
+				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, PARENT_ID, FORM_ID)
 			VALUES
-				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, #imgPath#, 'A05', (SELECT 
-																									A.FORM_ID
-																								FROM 
-																									TBL_ATTITUDE_TYPE A
-																								WHERE 
-																									A.TENANT_ID = #tenantId#
-																								AND 
-																									A.COMPANY_ID = #companyId#
-																								AND 
-																									A.TYPE_ID = 'A11'))
+				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, 'A05', (SELECT 
+																						A.FORM_ID
+																					FROM 
+																						TBL_ATTITUDE_TYPE A
+																					WHERE 
+																						A.TENANT_ID = #tenantId#
+																					AND 
+																						A.COMPANY_ID = #companyId#
+																					AND 
+																						A.TYPE_ID = 'A11'))
 		]]>
 	</insert>
 	

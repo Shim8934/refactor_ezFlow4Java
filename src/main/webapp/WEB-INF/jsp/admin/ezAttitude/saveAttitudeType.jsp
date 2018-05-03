@@ -72,9 +72,10 @@
 //여기까지 파일
 
 			function OK_Click() {
-				var imgPath = $('#preview').attr('src');
-				var idx = imgPath.lastIndexOf('/');
-				imgPath = imgPath.substr(idx+1);
+				if ($('#typeName').val() == "") {
+					alert('휴가유형명을 입력해주세요');
+					return;
+				}
 				$.ajax({
 		        	type : "POST",
 		        	url : "/admin/ezAttitude/saveAttitudeType.do",
@@ -84,8 +85,7 @@
 		        		typeId : typeId,
 		        		saveMode : saveMode,
 		        		typeName : $('#typeName').val(),
-		        		typeName2 : $('#typeName2').val(),
-		        		imgPath : imgPath
+		        		typeName2 : $('#typeName2').val()
 		        	},
 		        	success : function(result) {
 		        			alert('저장되었습니다.');

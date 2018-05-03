@@ -307,13 +307,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void deptExcelDownload(String downMode, String pidList, int tenantId)
-			throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public List<Map<String, String>> getDeptAttitudeList(String pidList,
 			int tenantId) throws Exception {
 		// TODO Auto-generated method stub
@@ -458,35 +451,20 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public void insertAttitudeType(String typeId, String typeName, String typeName2,
-			String imgPath, int tenantId,
-			String companyId) throws Exception {
+			int tenantId, String companyId) throws Exception {
 		LOGGER.debug("insertAttitudeType started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("typeId", typeId);
 		map.put("typeName", typeName);
-		if(!typeName2.equals("") || typeName2 != null){
-			map.put("typeName2", typeName2);
-		}
-		if(!imgPath.equals("") || imgPath != null){
-			int idx = imgPath.lastIndexOf("/");
-			imgPath = imgPath.substring(idx+1);
-			map.put("imgPath", imgPath);
-		}
+		map.put("typeName2", typeName2);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
 		ezAttitudeDAO.insertAttitudeType(map);
 		
 		LOGGER.debug("insertAttitudeType ended");
-	}
-	
-	@Override
-	public void insertAttitudeTypeIcon(String typeId, String fileName,
-			String realPath, int tenantId) throws Exception {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -789,7 +767,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				/*근태 수정신청이 삭제되고 원본 근태에 대해 수정신청 개수가 0개 일 때 원본 근태를 수정 가능한 상태로 변경.*/
 				modCnt = ezAttitudeDAO.getAttsModAttCount(map);
 				map.put("modCnt", modCnt);
-				LOGGER.debug("!#!@#!#!@#!@#!@#@# : " + modCnt);
 				if (modCnt == 0) {
 					ezAttitudeDAO.resetAttModApp(map);
 				}

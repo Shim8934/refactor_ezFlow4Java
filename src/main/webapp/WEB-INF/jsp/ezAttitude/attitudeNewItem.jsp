@@ -18,6 +18,8 @@
 		<script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/Calendar/TabMenu.js"></script>
 	    <script type="text/javascript" src="/js/ezSchedule/lang/ezSchedule.js"></script>
+	    <script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
+		<script type="text/javascript" src="/js/Holiday.js"></script>
 		
 		<!-- data picker-->		
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
@@ -27,6 +29,7 @@
 		
 		<script type="text/javascript">
 			var writerName = "${userInfo.displayName}";
+			var uselang = "${userInfo.lang}";
 			var userOffset = "${userOffset}";
 			var companyId = "${companyId}";
 			var date = "${date}";
@@ -43,6 +46,7 @@
 			var pAttitudeTypeList = ${attitudeTypeList}; 
 			var holidayFlag = false;
 			var closedDay = "";
+			var holidayAttReg = true;
 			
 			window.onload = function () {
 				if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -52,8 +56,10 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+				select_memorialDays(uselang);
+				setHoliday();
 				
-				form_change();
+				
 			}
 			
 			window.onresize = function () {   	
@@ -85,14 +91,18 @@
 		        
 		        var uploadSDate = "";
 		        var uploadEDate = "";
-		        if (mode == "mod") {
+		        if (mode == "mod" && modFirstFlag) {
 					uploadSDate = pStartDate;
-					uploadEDate = pEndDate;
-					modFirstFlag = false;
+					uploadEDate = pEndDate;					
+		        } else if (!modFirstFlag) {
+		        	uploadSDate = startDate;
+		        	uploadEDate = endDate == "" ? startDate.split(" ")[0] + " 23:59:59" : endDate;
 		        } else {
 					uploadSDate = date + " 00:00:00";
 					uploadEDate = date + " 23:59:59";
 		        }
+		        
+		        modFirstFlag = false;
 				var sYear = uploadSDate.substring(0, 4);
 				var sMonth = uploadSDate.substring(5, 7);
 				var sDay = uploadSDate.substring(8, 10);
@@ -148,6 +158,10 @@
 			            showMonthAfterYear: true
 			        };
 		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		        
+		        $("#Sdatepicker").change(function(){
+		        	checkHoliday($(this).val());
+		        })
 			}
 			
 			function Editor_Complete() {
@@ -196,6 +210,7 @@
 					},
 					success : function (result) {
 						if (!modFirstFlag) {
+							dateTypeCheck();
 							if ($("input[name=region]").length != 0) {
 								region = $("input[name=region]").val();
 							}
@@ -207,7 +222,8 @@
 						$("#attiwriteForm tbody").after(result.formHtml);
 						$("#writerName").closest("tr").remove();
 						setDatePicker($("#periodblock").attr("datetype"));
-						
+					    
+						checkHoliday($("#Sdatepicker").val());
 						if ($("input[name=region]").length != 0) {
 							$("input[name=region]").val(region);
 						}
@@ -244,12 +260,13 @@
 						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd'}).val() + " " + $('#Etimepicker').val();
 						break;
 				}
-				
-				save_attitude();
 			}
 			
 			//저장
 			function save_attitude() {
+				dateTypeCheck();
+				attRegCheck();
+				return;
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezAttitude/attitudeSave.do",
@@ -274,10 +291,7 @@
 		        });
 			}
 			
-			function checkHoliday(obj) {
-				var now = new Date();
-				var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (parseInt(userOffset.split(':')[0]) * 3600000) + (parseInt(userOffset.split(':')[1]) * 60000);
-				now.setTime(tz);
+			function setHoliday() {
 				$.ajax({
 					type:"POST",
 					dataType : "json",
@@ -285,6 +299,8 @@
 					url : "/ezAttitude/getHolidayList.do",
 					data : {},
 					success : function(result) {
+						holidayAttReg = result.attitudeConfigVO.closedDateAttitude;
+						closedDay = result.attitudeConfigVO.closedDay.split(",");
 						for (var i = 0; i < result.holidayList.length; i++) {
 							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
 								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
@@ -297,19 +313,86 @@
 																		  result.holidayList[i].isRest == 1 ? true : false));
 							}
 						}
-						
-						var todayLunar = lunarCalc(now.getFullYear(), now.getMonth() + 1, now.getDate(), 1);
-						var todayMemorialDayList = memorialDayCheck(now, todayLunar);
-						var todayYearMemorialDayList = yearmemorialDayCheck(now, todayLunar);
-						
-						closedDay = result.attitudeConfigVO.closedDay.split(",");
-						if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0 || closedDay[now.getDay()] == "1") {
-							holidayFlag = true;
-						}
+						form_change();
 					}
 				});
 			}
 			
+			function checkHoliday(pDate){
+				var checkDate = new Date(pDate);
+				//휴무일근태등록이 0인 경우만 생각햇다, 1인 경우도 생각해야된다.
+				
+				//공휴일부터 체크
+				var todayLunar = lunarCalc(checkDate.getFullYear(), checkDate.getMonth() + 1, checkDate.getDate(), 1);
+				var todayMemorialDayList = memorialDayCheck(checkDate, todayLunar);
+				var todayYearMemorialDayList = yearmemorialDayCheck(checkDate, todayLunar);
+				
+				if (todayMemorialDayList != 0 || todayYearMemorialDayList.length != 0 || closedDay[checkDate.getDay()] == "1") {
+					$("#selectAtti option[value=A07]").css("display", "");
+				} else {
+					if ($('#selectAtti').val() == "A07") {
+						$("#selectAtti").val("A04");
+						form_change($("#selectAtti"));
+					}
+					$("#selectAtti option[value=A07]").css("display", "none");
+				}
+				
+// 				if (holidayAttReg == "0" && $("#Edatepicker").length == 0) {
+// 					//길이비교, 요일비교
+// 					if (todayMemorialDayList != 0 || todayYearMemorialDayList.length != 0 || closedDay[checkDate.getDay()] == "1") {
+// 						$("#selectAtti").val("A07");
+// 						$("#selectAtti option").not(":selected").css("display", "none");
+// 						$("#selectAtti option[value=A07]").css("display", "");
+// 						form_change($("#selectAtti"));
+// 						alert("휴일에는 휴근만 등록이 가능합니다. 다른 근태를 등록하시려면 날짜를 이동해주세요.");
+// 						//저 alert을 휴일에는 휴근만 등록이 가능하다고 하고, 휴근으로 돌려주지말고 아예 날짜를 선택을 못하게 막아버리는 건 또 어떻까 생각이 드네요.
+// 					} else if($("#selectAtti").val() == "A07") {
+// 						$("#selectAtti").val("A04");
+// 						$("#selectAtti option").css("display", "");
+// 						$("#selectAtti option[value=A07]").css("display", "none");
+// 						form_change($("#selectAtti"));
+// 					}
+// 				} else 
+// 				if ($("Edatepicker").length == 0){
+					//1인 경우에 휴근 열어주는 작업도 해야겟다.
+// 				}
+			}
+			
+			function attRegCheck() {
+				//만약에 날짜데로 나눠 줄꺼면 여기서 나눠서 들고가는게 맞는거 같은데.. 휴무일 다 나눌 수 있으니까
+				//안나눠주면 for문 돌려서 하나씩 체크하면 되구, 체크를 해서 돌린다음에 휴일이 잇으면 팅기게 하면 되구
+				//eDate가 ""면 파라미터 던질 때 sDate 던져버려
+				var subDate = "";
+				if (endDate == "") {
+					
+				} else {
+					subDate = calDateRange(startDate, endDate);
+				}
+				
+				alert(subDate);
+			}
+			
+			/**
+			* 두 날짜의 차이를 구하는 메소드
+			* val1 = startDate, val2 = endDate
+			*/
+		    function calDateRange(val1, val2)
+		    {
+		        var FORMAT = "-";
+
+		        // 년도, 월, 일로 분리
+		        var start_dt = val1.split(FORMAT);
+		        var end_dt = val2.split(FORMAT);
+
+		        // Number()를 이용하여 08, 09월을 10진수로 인식하게 함.
+		        start_dt[1] = (Number(start_dt[1]) - 1) + "";
+		        end_dt[1] = (Number(end_dt[1]) - 1) + "";
+
+		        var from_dt = new Date(start_dt[0], start_dt[1], start_dt[2]);
+		        var to_dt = new Date(end_dt[0], end_dt[1], end_dt[2]);
+
+		        return (to_dt.getTime() - from_dt.getTime()) / 1000 / 60 / 60 / 24;
+		    }
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -320,7 +403,7 @@
 	                    <td style="height: 20px">
 	                        <div id="menu">
 	                            <ul id="menuTable">	
-	                                <li><span onclick="dateTypeCheck()">저장 후 닫기</span></li>
+	                                <li><span onclick="save_attitude()">저장 후 닫기</span></li>
 	                            </ul>
 	                        </div>
 	                        <div id="close">
