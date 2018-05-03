@@ -106,7 +106,6 @@ function openSearchPanel() {
 		searchPanel.style.top     = position[0] + "px";
 		searchPanel.style.right   = position[1] + "px";
 		searchPanel.style.display = "";
-		fogPanel.focus();
 	}
 	else {
 		closeLeftPanel();

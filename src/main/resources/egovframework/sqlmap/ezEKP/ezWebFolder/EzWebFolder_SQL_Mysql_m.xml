@@ -1129,7 +1129,8 @@
 					FOLDER.CREATE_NAME1 AS CREATE_NAME1,
 		            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
 		            '' AS FILE_FOLDER_ID,
-		            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
+		            FOLDER.FOLDER_UPPER as FOLDER_UPPER,
+		             '0' AS SLEVEL
 				FROM
 					tbl_webfolder_folder AS FOLDER
 					LEFT JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
@@ -1142,10 +1143,9 @@
 						FOLDER.USE_STATUS = 'T'
 					AND
 						FOLDER.TENANT_ID = #tenantId#
+					AND
+						FOLDER.DELETER_ID = #userId#
 		]]>
-		<isNotEqual property="mode" compareValue="admin" prepend="AND">
-			FOLDER.DELETER_ID = #userId#
-		</isNotEqual>
 		
 		<include refid="searchTrashCanFolder"/>
 				UNION
@@ -1166,7 +1166,8 @@
 	            FILES.CREATE_NAME1 AS CREATE_NAME1,
 	            FILES.CREATE_NAME1 AS CREATE_NAME2,
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
-	            '' as FOLDER_UPPER
+	            '' as FOLDER_UPPER,
+	            '1' AS SLEVEL
 			FROM
 				tbl_webfolder_file AS FILES
 				LEFT JOIN TBL_WEBFOLDER_FILETYPE as FILE_TYPE
@@ -1179,16 +1180,15 @@
 					FILES.USE_STATUS = 'T'
 				AND
 					FILES.TENANT_ID = #tenantId#
+				AND
+					FILES.DELETER_ID = #userId#
 		]]>
-		<isNotEqual property="mode" compareValue="admin" prepend="AND">
-			FILES.DELETER_ID = #userId#
-		</isNotEqual>
 		
 		<include refid="searchTrashCanFile"/>
 	 	<![CDATA[
 				) R
 			GROUP BY R.TRASHCAN_ID
-			ORDER BY R.TRASHCAN_EXT,R.UPDATE_DATE DESC
+			ORDER BY R.SLEVEL, R.TRASHCAN_EXT,R.UPDATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]> 
 	</select>
@@ -1337,7 +1337,7 @@
 			TENANT_ID = #tenantId#
 		AND
 			FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
-		AND
+ 		AND
 			DELETER_ID = #userId#
 		AND
 			COMPANY_ID = #companyId#	
@@ -1600,9 +1600,8 @@
 				FILES.USE_STATUS = 'T'
 			AND
 				FILES.TENANT_ID = #tenantId#
-			<isNotEqual property="mode" compareValue="admin" prepend="AND">
-				FILES.DELETER_ID = #userId#
-			</isNotEqual>	
+			AND
+				FILES.DELETER_ID = #userId#	
 		<include refid="searchTrashCanFile"/>
 	</select>
 	
@@ -1621,9 +1620,8 @@
 				FOLDER.USE_STATUS = 'T'
 			AND
 				FOLDER.TENANT_ID = #tenantId#
-			<isNotEqual property="mode" compareValue="admin" prepend="AND">
+			AND
 				FOLDER.DELETER_ID = #userId#
-			</isNotEqual>
 		<include refid="searchTrashCanFolder"/>
 	</select>
 	

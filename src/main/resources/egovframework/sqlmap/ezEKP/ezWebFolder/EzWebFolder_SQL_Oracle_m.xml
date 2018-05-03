@@ -1174,85 +1174,89 @@
 				B.CREATE_NAME1, B.CREATE_NAME2, B.FILE_FOLDER_ID, B.FOLDER_UPPER
 		FROM (
 			SELECT
-				rownum as rnum, A.TRASHCAN_ID, A.TRASHCAN_NAME, A.TRASHCAN_PATH, A.TRASHCAN_SIZE,
-				A.TRASHCAN_ICON_URL, A.TRASHCAN_EXT, A.CREATE_DATE, A.UPDATE_DATE, 
-				A.CREATE_NAME1, A.CREATE_NAME2, A.FILE_FOLDER_ID, A.FOLDER_UPPER
+				C.*,
+				rownum as rnum
 			FROM (
 				SELECT
+					A.TRASHCAN_ID, A.TRASHCAN_NAME, A.TRASHCAN_PATH, A.TRASHCAN_SIZE,
+					A.TRASHCAN_ICON_URL, A.TRASHCAN_EXT, A.CREATE_DATE, A.UPDATE_DATE, 
+					A.CREATE_NAME1, A.CREATE_NAME2, A.FILE_FOLDER_ID, A.FOLDER_UPPER
+				FROM (
+					SELECT
+						distinct
+						FOLDER.FOLDER_id    AS TRASHCAN_ID,     
+						FOLDER.FOLDER_NAME1 AS TRASHCAN_NAME,
+						FOLDER.FOLDER_PATH 	AS TRASHCAN_PATH,
+						FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
+			            'folder'	AS TRASHCAN_EXT,
+						TO_NUMBER('0') 	AS TRASHCAN_SIZE,
+						FOLDER.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+						FOLDER.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
+						FOLDER.CREATE_NAME1 AS CREATE_NAME1,
+			            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
+			            '' AS FILE_FOLDER_ID,
+			            FOLDER.FOLDER_UPPER as FOLDER_UPPER,
+			            '0' AS SLEVEL
+					FROM
+						tbl_webfolder_folder FOLDER
+						LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
+							ON FILE_TYPE.TYPE_NAME = 'folder' AND FOLDER.TENANT_ID = FILE_TYPE.TENANT_ID
+						LEFT JOIN TBL_WEBFOLDER_FOLDER parent
+							ON FOLDER.FOLDER_UPPER = parent.FOLDER_ID AND FOLDER.TENANT_ID = parent.TENANT_ID
+					WHERE
+							parent.USE_STATUS = 'Y'
+						AND
+							FOLDER.USE_STATUS = 'T'
+						AND
+							FOLDER.TENANT_ID = #tenantId#
+						AND
+							FOLDER.DELETER_ID = #userId#
+			]]>
+		
+			<include refid="searchTrashCanFolder"/>
+					UNION
+			<![CDATA[	
+				SELECT
 					distinct
-					FOLDER.FOLDER_id    AS TRASHCAN_ID,     
-					FOLDER.FOLDER_NAME1 AS TRASHCAN_NAME,
-					FOLDER.FOLDER_PATH 	AS TRASHCAN_PATH,
-					FILE_TYPE.TYPE_ICON AS TRASHCAN_ICON_URL,
-		            'folder'	AS TRASHCAN_EXT,
-					TO_NUMBER('0') 	AS TRASHCAN_SIZE,
-					FOLDER.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
-					FOLDER.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
-					FOLDER.CREATE_NAME1 AS CREATE_NAME1,
-		            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
-		            '' AS FILE_FOLDER_ID,
-		            FOLDER.FOLDER_UPPER as FOLDER_UPPER,
-		            '0' AS SLEVEL
+					FILES.FILE_id       AS TRASHCAN_ID,
+					FILES.FILE_NAME 	AS TRASHCAN_NAME,
+					FILES.FILE_PATH 	AS TRASHCAN_PATH,
+					CASE WHEN FILE_TYPE.TYPE_ICON IS NULL 
+					THEN (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) 
+					ELSE FILE_TYPE.TYPE_ICON 
+					END  AS TRASHCAN_ICON_URL,
+					FILES.FILE_EXT		AS TRASHCAN_EXT,
+					TO_NUMBER(FILES.FILE_SIZE) 	AS TRASHCAN_SIZE,
+					FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+					FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
+		            FILES.CREATE_NAME1 AS CREATE_NAME1,
+		            FILES.CREATE_NAME1 AS CREATE_NAME2,
+		            FILES.FOLDER_ID AS FILE_FOLDER_ID,
+		            '' as FOLDER_UPPER,
+		            '1' AS SLEVEL
 				FROM
-					tbl_webfolder_folder FOLDER
+					tbl_webfolder_file FILES
 					LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
-						ON FILE_TYPE.TYPE_NAME = 'folder' AND FOLDER.TENANT_ID = FILE_TYPE.TENANT_ID
-					LEFT JOIN TBL_WEBFOLDER_FOLDER parent
-						ON FOLDER.FOLDER_UPPER = parent.FOLDER_ID AND FOLDER.TENANT_ID = parent.TENANT_ID
+						ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID AND FILES.TENANT_ID = FILE_TYPE.TENANT_ID
+					LEFT JOIN TBL_WEBFOLDER_FOLDER fd
+						ON FILES.FOLDER_ID = fd.FOLDER_ID AND FILES.TENANT_ID = fd.TENANT_ID
 				WHERE
-						parent.USE_STATUS = 'Y'
+						fd.USE_STATUS    = 'Y'
 					AND
-						FOLDER.USE_STATUS = 'T'
+						FILES.USE_STATUS = 'T'
 					AND
-						FOLDER.TENANT_ID = #tenantId#
-		]]>
-		<isNotEqual property="mode" compareValue="admin" prepend="AND">
-			FOLDER.DELETER_ID = #userId#
-		</isNotEqual>
+						FILES.TENANT_ID = #tenantId#
+					AND
+						FILES.DELETER_ID = #userId#
+			]]>
 		
-		<include refid="searchTrashCanFolder"/>
-				UNION
-		<![CDATA[	
-			SELECT
-				distinct
-				FILES.FILE_id       AS TRASHCAN_ID,
-				FILES.FILE_NAME 	AS TRASHCAN_NAME,
-				FILES.FILE_PATH 	AS TRASHCAN_PATH,
-				CASE WHEN FILE_TYPE.TYPE_ICON IS NULL 
-				THEN (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) 
-				ELSE FILE_TYPE.TYPE_ICON 
-				END  AS TRASHCAN_ICON_URL,
-				FILES.FILE_EXT		AS TRASHCAN_EXT,
-				TO_NUMBER(FILES.FILE_SIZE) 	AS TRASHCAN_SIZE,
-				FILES.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
-				FILES.UPDATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS UPDATE_DATE,
-	            FILES.CREATE_NAME1 AS CREATE_NAME1,
-	            FILES.CREATE_NAME1 AS CREATE_NAME2,
-	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
-	            '' as FOLDER_UPPER,
-	            '1' AS SLEVEL
-			FROM
-				tbl_webfolder_file FILES
-				LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
-					ON FILE_TYPE.TYPE_ID = FILES.TYPE_ID AND FILES.TENANT_ID = FILE_TYPE.TENANT_ID
-				LEFT JOIN TBL_WEBFOLDER_FOLDER fd
-					ON FILES.FOLDER_ID = fd.FOLDER_ID AND FILES.TENANT_ID = fd.TENANT_ID
-			WHERE
-					fd.USE_STATUS    = 'Y'
-				AND
-					FILES.USE_STATUS = 'T'
-				AND
-					FILES.TENANT_ID = #tenantId#
-		]]>
-		<isNotEqual property="mode" compareValue="admin" prepend="AND">
-			FILES.DELETER_ID = #userId#
-		</isNotEqual>
-		
-		<include refid="searchTrashCanFile"/>
-	 	<![CDATA[
-				) A
-			WHERE rownum <= #pStart# + #pEnd#
-			ORDER BY A.SLEVEL, A.TRASHCAN_EXT,A.UPDATE_DATE DESC ) B
+			<include refid="searchTrashCanFile"/>
+	 		<![CDATA[
+					) A
+					ORDER BY A.SLEVEL, A.TRASHCAN_EXT,A.UPDATE_DATE DESC
+				) C
+				WHERE rownum <= #pStart# + #pEnd#
+			) B
 		WHERE B.rnum >= #pStart# + 1
 		]]> 
 	</select>
@@ -1386,7 +1390,7 @@
 			TENANT_ID = #tenantId#
 		AND
 			FILE_ID = #fileId#
-		AND
+ 		AND
 			DELETER_ID = #userId#
 	</update>
 	
@@ -1401,8 +1405,8 @@
 			TENANT_ID = #tenantId#
 		AND
 			FOLDER_PATH LIKE #folderPath# || '%'
-<!-- 		AND
-			DELETER_ID = #userId# -->
+		AND
+			DELETER_ID = #userId#
 		AND
 			COMPANY_ID = #companyId#	
 	</update>
@@ -1783,9 +1787,8 @@
 				FILES.USE_STATUS = 'T'
 			AND
 				FILES.TENANT_ID = #tenantId#
-			<isNotEqual property="mode" compareValue="admin" prepend="AND">
+			AND
 				FILES.DELETER_ID = #userId#
-			</isNotEqual>
 		<include refid="searchTrashCanFile"/>
 	</select>
 	
@@ -1804,9 +1807,8 @@
 				FOLDER.USE_STATUS = 'T'
 			AND
 				FOLDER.TENANT_ID = #tenantId#
-			<isNotEqual property="mode" compareValue="admin" prepend="AND">
+			AND
 				FOLDER.DELETER_ID = #userId#
-			</isNotEqual>
 		<include refid="searchTrashCanFolder"/>
 	</select>
 	
