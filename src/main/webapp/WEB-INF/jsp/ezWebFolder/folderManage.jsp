@@ -113,8 +113,9 @@
 						folderName1 = folderName1 != null ? data.node.original.folderName1 : ""; 
 						folderName2 = folderName2 != null ? data.node.original.folderName2 : ""; 
 						parent   = data.node.original.parent; 
-						console.log("The selected nodes are:" + folderId);
 					});
+					console.log(folderType);
+					//$("input[value="+folderType+"]").attr('checked', true);
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
@@ -247,8 +248,6 @@
             moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
             moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
             moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
-            console.log("folderId copy_onclick function" + folderId);
-            console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
             DivPopUpShow(330, 500, "/ezWebFolder/folderMove.do");
         }
         function requestdata(event) {
@@ -269,7 +268,7 @@
 	    }
         function returnFunction(type) {
         	folderType = type;
-        	$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
+        	$('input:radio[name=treeType]:input[value='+folderType+']').prop("checked", true);
         }
     </script>
 </head>
