@@ -50,11 +50,11 @@ var searchByOverview = "";
 
 function goProjectDetails(elem) {
 	var projectId = $(elem).attr("id");
-	window.open("/ezPMS/getProjectDetails.do/"+projectId, "right");
+	window.open("/ezPMS/getProjectDetails.do?projectId="+projectId, "right");
 }
 
 function addNewProject(){ 
-	addProjectPopup(10, 20, 845, 555, "/ezPMS/newProject.do");
+	addProjectPopup(10, 20, 845, 555, "/ezPMS/newProject.do?mode=" + "new");
 }
 
 $(document).ready(function(){
@@ -68,21 +68,6 @@ $(document).ready(function(){
 		}
 	});
 });
-
-
-function addProjectPopup(topPct, leftPct, popUpW, popUpH, URL) {
-    try {
-        var Position = DivPopUpPosition(popUpW, popUpH);
-        document.getElementById("iFrameLayer").src = URL;
-        document.getElementById("iFramePanel").style.top = topPct + "%";
-        document.getElementById("iFramePanel").style.left = leftPct + "%";
-        document.getElementById("iFramePanel").style.height = popUpH + "px";
-        document.getElementById("iFrameLayer").style.width = popUpW + "px";
-        document.getElementById("iFrameLayer").style.height = popUpH + "px";
-        document.getElementById("mailPanel").style.display = "";
-        document.getElementById("iFramePanel").style.display = "";
-    } catch (e) {}
-}
 
 $(function(){
 	

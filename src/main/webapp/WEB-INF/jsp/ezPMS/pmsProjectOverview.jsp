@@ -17,9 +17,13 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
 <script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
+<script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 110;
 var progress = "${project.progress}";
+var status = "${project.status}";
+var strHTML = "";
+var projectId = "${project.projectId}";
 
 $(document).ready(function(){
 	$(window).resize(function() {
@@ -33,18 +37,84 @@ $(function() {
 	CurrentHeight = $(window).height()-110;
 	$(".overview").css("height", CurrentHeight + "px");
 	$(".kanban").css("height", CurrentHeight - 10 + "px");
+	
+	ableToChangeStatus();
 	initProgressBar();
 });
 
 function initProgressBar() {
+	var strStatus = "";
+	
+	switch(status){
+	case "P" :
+		strStatus = "진행";
+		break;
+	case "W" :
+		strStatus = "대기";
+		break;
+	case "L" :
+		strStatus = "지연";
+		break;
+	case "S" :
+		strStatus = "보류";
+		break;
+	case "C" :
+		strStatus = "완료";
+		break;
+	}
+	
 	$(".progress_graph").circleProgress({
 		value: 0.4,
 		fill : {color : "blue"},
-		size : 135
+		size : 134
 	}).on('circle-animation-progress', function(event, progress) {
-		$(this).find('strong').html(40 + "%");
+		$(this).find('strong').html(40 + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
 	});
 }
+
+function ableToChangeStatus() {	
+	switch(status){
+		case "L" :
+		case "P" :
+			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span onclick='changeStatus(C)'>";
+			strHTML += "프로젝트 완료";
+			strHTML += "</span></a> ";
+			strHTML += "<a class='imgbtn'><span onclick='changeStatus(S)'>";
+			strHTML += "프로젝트 보류";
+			strHTML += "</span></a>";
+			break;
+		case "W" :
+			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span onclick='changeStatus(P)'>";
+			strHTML += "프로젝트 진행";
+			strHTML += "</span></a> ";
+			strHTML += "<a class='imgbtn'><span onclick='changeStatus(S)'>";
+			strHTML += "프로젝트 보류";
+			strHTML += "</span></a>";
+			break;
+		case "S" :
+			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span onclick='changeStatus(P)'>";
+			strHTML += "프로젝트 진행";
+			strHTML += "</span></a> ";	
+			strHTML += "<a class='imgbtn'><span onclick='changeStatus(C)'>";
+			strHTML += "프로젝트 완료";
+			strHTML += "</span></a>";
+			break;
+		case "C" :
+			strHTML += "실제 시작일 : ";
+			strHTML += "${realStartDate}";
+			strHTML += "<br>";
+			strHTML += "실제 종료일 : ";
+			strHTML += "${realEndDate}";
+			break;
+	}
+	
+	$("#changeStatus").html(strHTML);
+}
+
+function editProjectInfo() {
+	addProjectPopup(10, 20, 845, 555, "/ezPMS/newProject.do?mode=" + "edit" + "&projectId=" + projectId);
+}
+
 </script>
 <style type="text/css">
 #kanbanArea {
@@ -97,6 +167,7 @@ function initProgressBar() {
 	display:inline-block;
 	float : right;
 }
+
 </style>
 </head>
 <body>
@@ -157,19 +228,40 @@ function initProgressBar() {
 
 <div id="iconArea" class="rightPart">
 		<div id="printReport" class="icon">출력</div>
-		<div id="editProjectInfo" class="icon"><img src="/images/ezLadder/icon_game03_no.png" style="width:40px; height:40px"></div>
+		<div id="editProjectInfo" class="icon" onclick="editProjectInfo()"><img src="/images/ezLadder/icon_game03_no.png" style="width:40px; height:40px"></div>
 		<div id="setting" class="icon">환경설정</div>
 	</div>
 <div id="overviewArea" class="overview rightPart">
-	<div class="circle progress_graph" style="width:100%; top:15px;">
-		<strong></strong>
+	<div class="circle progress_graph" style="width:95%; top:15px;">
+		<strong style="top:30px;"></strong>
 	</div>
-	${project.status }<br>
-	${project.restDueday }<br>
-	${project.planStartDate }<br>
-	${project.planEndDate }<br>
-	${project.overview }<br>
-	${project.headManagerName }<br>
+	<div style="text-align:center; font-size:30px; font-weight:bold;">D - ${project.restDueday }</div>
+	<div style="text-align:center;">${project.planStartDate } ~ ${project.planEndDate }</div>
+	<div id="changeStatus" style="text-align:center;"></div>
+	<div id="overview" style="width:95%; padding:5px; border:1px solid gray; margin:5px 0">${project.overview }</div>
+	<table style="width:95%; height:17%">
+		<tr>
+			<td><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px;" align="middle"><span>${project.headManagerName }</span></td>
+			<td><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 담당자보기 </td>
+		</tr>
+		<tr>
+			<td><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 참여자보기 </td>
+			<td><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 조회자보기 </td>
+		</tr>
+	</table>
+	<br>
+	<div id="commentDiv">
+		의견<span style="float:right; font-size:20px; padding-right:15px">+</span>
+		<hr style="text-align:center;margin-left:0px;border-bottom:0px; width:95%">
+	</div>
+	<div id="logDiv">
+		작업이력<span style="float:right; font-size:20px; padding-right:15px">+</span>
+		<hr style="text-align:center;margin-left:0px;border-bottom:0px; width:95%">
+	</div>
 </div>
+<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
+	<div class="layerpopup"  style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
+		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
+	</div>
 </body>
 </html>

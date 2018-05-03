@@ -14,8 +14,10 @@
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript">
+var projectId = "${projectId}";
+
 $(function() {
-	$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do/"+"${projectId}");
+	$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do?projectId="+projectId);
 	$("#1tab0").addClass("tabon");
 	
 	$("#1tab0").click(function(){
@@ -23,7 +25,7 @@ $(function() {
 		var nowTabAttr = $(".tabon").attr("id");
 		changeTab(clickTabId, nowTabAttr);
 		//개요
-		$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do/"+"${projectId}");
+		$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do?projectId="+projectId);
 		
 	});
 	
@@ -71,7 +73,6 @@ $(function() {
 		$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do");
 	});
 	$(".tab").hover(function(){
-		console.log($(this).attr("class"));
 		$(this).addClass("tabover");
 	},
 		function(){

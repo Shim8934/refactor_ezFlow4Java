@@ -72,3 +72,18 @@ function showSearchDiv() {
 		$("#searchDiv").slideUp();
 	}
 }
+
+//레이어팝업 top과 left %로 주기 위해 사용
+function addProjectPopup(topPct, leftPct, popUpW, popUpH, URL) {
+    try {
+        var Position = DivPopUpPosition(popUpW, popUpH);
+        document.getElementById("iFrameLayer").src = URL;
+        document.getElementById("iFramePanel").style.top = topPct + "%";
+        document.getElementById("iFramePanel").style.left = leftPct + "%";
+        document.getElementById("iFramePanel").style.height = popUpH + "px";
+        document.getElementById("iFrameLayer").style.width = popUpW + "px";
+        document.getElementById("iFrameLayer").style.height = popUpH + "px";
+        document.getElementById("mailPanel").style.display = "";
+        document.getElementById("iFramePanel").style.display = "";
+    } catch (e) {}
+}
