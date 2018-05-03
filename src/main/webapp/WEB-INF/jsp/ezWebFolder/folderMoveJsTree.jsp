@@ -65,8 +65,8 @@
 				}else if(obj == "copy") {
 					alert("폴더복사에 성공하셨습니다.");
 				}
-				parent.folderList(folderType);
 				parent.returnFunction(folderType);
+				parent.folderList(folderType);
 				parent.DivPopUpHidden();
 				window.close();
 			}else if(code == '2') {
@@ -84,13 +84,6 @@
 		}
 	    function folderList(obj) {
 //		    	folderId = "";
-			if ( obj == 'C') {
-				$element = '#tree';
-			}else if (obj == 'D') {
-				$element = '#treeDept';
-			}else if (obj == 'U') {
-				$element = '#treePer';
-			}
 			folderType = obj;
 			
 			$.ajax ({
