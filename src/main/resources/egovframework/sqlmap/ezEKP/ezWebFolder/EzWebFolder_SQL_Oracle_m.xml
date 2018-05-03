@@ -134,7 +134,9 @@
 	<sql id ="searchTrashCanFile">
 	<isNotEqual property="searchExt" compareValue="" prepend="AND">
 				<![CDATA[
-					FILES.FILE_EXT LIKE '%' || #searchExt# || '%'
+					UPPER(FILES.FILE_EXT) LIKE '%' || UPPER(#searchExt#) || '%'
+					OR
+					LOWER(FILES.FILE_EXT) LIKE '%' || LOWER(#searchExt#) || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
