@@ -243,15 +243,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public ProjectInfoVO getProjectDetails(int projectId, String userId, int tenantId, String offset, String lang) {
 		LOGGER.debug("getProjectDetail started");
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("project_Id", projectId);
-		param.put("lang", lang);
-		param.put("user_Id", userId);
-		param.put("tenant_Id", tenantId);
-		param.put("offset", offset);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("lang", lang);
+		map.put("tenantId", tenantId);
+		map.put("offset", offset);
+		
+		ProjectInfoVO project = ezPMSDAO.getProjectDetails(map);
 		
 		LOGGER.debug("getProjectDetail ended");
-		return null;
+		return project;
 	}
 
 	@Override

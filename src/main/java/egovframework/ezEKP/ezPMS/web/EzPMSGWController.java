@@ -362,11 +362,9 @@ public class EzPMSGWController {
 			
 			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang);
 			
-			JSONObject data = new JSONObject();
-			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", data);
+			result.put("data", project);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			

@@ -15,15 +15,15 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript">
 $(function() {
-	$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do");
+	$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do/"+"${projectId}");
 	$("#1tab0").addClass("tabon");
 	
 	$("#1tab0").click(function(){
 		var clickTabId = $(this).attr("id");
 		var nowTabAttr = $(".tabon").attr("id");
 		changeTab(clickTabId, nowTabAttr);
-		
-		$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do");
+		//개요
+		$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do/"+"${projectId}");
 		
 	});
 	

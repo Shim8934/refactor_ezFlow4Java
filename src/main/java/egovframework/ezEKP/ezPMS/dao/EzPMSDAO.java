@@ -143,7 +143,6 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (List<ProjectTaskVO>) list("EzPMSDAO.getTaskList", map); 
 	}
 	
-	
 
 	public int getProjectListCount(Map<String, Object> map) {
 		return (int) select("EzPMSDAO.getProjectListCount", map);

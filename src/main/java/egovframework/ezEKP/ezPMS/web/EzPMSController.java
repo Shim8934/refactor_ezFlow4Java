@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezJournal.vo.JournalPagination;
@@ -442,17 +444,27 @@ public class EzPMSController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezPMS/getProjectOverview.do")
-	public String getProjectOverview(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS getProjectDetails started");
+	@RequestMapping(value = "/ezPMS/getProjectOverview.do/{projectId}")
+	public String getProjectOverview(@CookieValue("loginCookie") String loginCookie, @PathVariable int projectId, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		LOGGER.debug("ezPMS getProjectOverview started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String projectId = request.getParameter("projectId");
 		String userId = userInfo.getId();
+		System.out.println(projectId);
+		String url = "/rest/ezPMS/projects/" + projectId + "/userId/" + userId;
 		
-		String url = "/rest/ezPMS/projects" + projectId + "/userId/" + userId;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
 		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		String status = result.get("status").toString();
 		
-		LOGGER.debug("ezPMS getProjectDetails ended");		
+		if (status.equals("ok")) {
+			JSONObject project = (JSONObject) result.get("data");
+			
+			model.addAttribute("project", project);
+		}
+		
+		LOGGER.debug("ezPMS getProjectOverview ended");		
 		return "ezPMS/pmsProjectOverview";
 	}
 	
