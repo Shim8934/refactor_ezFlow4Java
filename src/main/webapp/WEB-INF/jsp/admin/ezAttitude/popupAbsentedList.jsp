@@ -161,35 +161,28 @@
     		$("#contentlist table.mainlist tbody").append(resultHtml);
     	}
 		
-		//메일
+		//2018-05-03 이효진 메일작성부분 수정필요함
 		function btnSendMail_onclick() {
-			$.ajax({
-   				type:"post",
-   				dataType:"text",
-   				async : false,
-   				url:"/admin/ezAttitude/sendMail.do",
-   				data:{
-   					companyId : pCompanyId,
-   					userName : searchUserName,
-   					deptName : searchDeptName,
-   					title : searchTitle,
-   					searchStartDate : searchStartDate,
-   					searchEndDate : searchEndDate,
-   					pageNum : pageNum,
-   					listSize : listSize,
-   					orderCell : orderCell,
-   					orderOption : orderOption
-   				},
-   				success: function(result){
-					if (result == "ok") {
-						alert("성");
-	   					window.close();
-					} else {
-						alert("실");
-	   					window.close();
-					}
-   				}
-   			});
+// 			var MsgTo = "\"" + GetAttribute(listview.GetSelectedRows()[0], "DATA3") + "\" <" + GetAttribute(listview.GetSelectedRows()[0], "DATA4") + ">";
+			/* for () {
+				MsgTo = 
+			} */
+			
+			//임시
+			var msgTo = "\"" + "이름1" + "\" <" + "hyojin0414@kaoni.com" + ">";
+			msgTo += ",\"" + "이름2" + "\" <" + "hyojin0414@naver.com" + ">";
+			
+			var pheight = window.screen.availHeight;
+		    var conHeight = pheight * 0.8;
+		    var pwidth = window.screen.availWidth;
+		    var conWidth = pwidth * 0.8;
+		    if (conWidth > 890)
+		        conWidth = 890;
+		    var pTop = (pheight - conHeight) / 2;
+		    var pLeft = (pwidth - 890) / 2;
+	        var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+	        
+	        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(msgTo), "", feature);
 		}
 		
 		function btnClose_onclick() {
