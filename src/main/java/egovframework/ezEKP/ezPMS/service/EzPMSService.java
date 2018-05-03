@@ -32,7 +32,7 @@ public interface EzPMSService {
 	
 	public void updateProjectStatus(int projectId, String status, int tenantId);
 	
-	public ProjectInfoVO getProjectDetails(int projectId, String userId, int tenantId, String offset, String lang);
+	public ProjectInfoVO getProjectDetails(int projectId, String userId, int tenantId, String offset, String lang, String deptId);
 	
 	public void updateProject(ProjectInfoVO project, int tenantId);
 	

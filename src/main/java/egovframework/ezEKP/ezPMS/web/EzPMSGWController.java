@@ -360,7 +360,7 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang);
+			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang, info.getDeptId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
