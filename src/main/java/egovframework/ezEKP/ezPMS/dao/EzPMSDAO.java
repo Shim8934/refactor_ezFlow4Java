@@ -135,7 +135,7 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	}
 	
 	public ProjectInfoVO getProjectDetails(Map<String, Object> map) {
-		return (ProjectInfoVO) select("EzPMSDAO.getProjectDetails", map); 
+		return (ProjectInfoVO) select("EzPMSDAO.getProjectOverview", map); 
 	}
 	
 	@SuppressWarnings("unchecked")

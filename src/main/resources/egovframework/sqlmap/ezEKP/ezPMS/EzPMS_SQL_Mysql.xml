@@ -1001,7 +1001,7 @@
 		]]>
 	</select>
 	
-	<select id="EzPMSDAO.getProjectDetails" parameterClass="map" resultClass="projectInfoVO">
+	<select id="EzPMSDAO.getProjectOverview" parameterClass="map" resultClass="projectInfoVO">
 		<![CDATA[
 			SELECT	
 				PROJECT_ID,	TENANT_ID,	PROJECT_NAME,	PLAN_START_DATE,	PLAN_END_DATE,	
