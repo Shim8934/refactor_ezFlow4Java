@@ -906,8 +906,8 @@
 		</div>
 		
 		<c:if test="${mode != 'preview' }">
-			<div id="commentArea" style="border:1px solid #DDD; margin:15px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
-				<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none;">
+			<div id="commentArea" style="border:1px solid #DDD; margin:15px 0px 0px 0px; width:100%; min-width:800px; border-top: none; border-bottom: none;">
+				<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin: 0px 0px 0px 0px;">
 					<div class="sendComment_layout">
 						<div class="comment_input_layout" style="border: none; width: 86%;">
 							<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
