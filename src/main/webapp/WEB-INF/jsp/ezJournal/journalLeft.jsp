@@ -64,25 +64,25 @@
 						    <li listType='department' typeId='${type.journaltypeId }' onClick="goJournalList(this);" style="padding: 6px 5px 5px 20px;" ><span style="width:100%;display:inline-block;">
 		    				<c:choose>
 		    					<c:when test="${type.journaltypeId eq 'ezJournal.t05'}">
-		    						<img style="width:18px;height:18px;" class="icon" src="/images/ImgIcon/journal_icon01.png"/>
+		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon01.png"/>
 		    					</c:when>
 		    					<c:when test="${type.journaltypeId eq 'ezJournal.t06'}">
-		    						<img style="width:18px;height:18px;" class="icon" src="/images/ImgIcon/journal_icon02.png"/>
+		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon02.png"/>
 		    					</c:when>
 		    					<c:when test="${type.journaltypeId eq 'ezJournal.t07'}">
-		    						<img style="width:18px;height:18px;" class="icon" src="/images/ImgIcon/journal_icon03.png"/>
+		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon03.png"/>
 		    					</c:when>
 		    					<c:when test="${type.journaltypeId eq 'ezJournal.t08'}">
-		    						<img style="width:18px;height:18px;" class="icon" src="/images/ImgIcon/journal_icon04.png"/>
+		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon04.png"/>
 		    					</c:when>
 		    					<c:when test="${type.journaltypeId eq 'ezJournal.t09'}">
-		    						<img style="width:18px;height:18px;" class="icon" src="/images/ImgIcon/journal_icon05.png"/>
+		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon05.png"/>
 		    					</c:when>
 		    					<c:otherwise>
-		    						<img style="width:18px;height:18px;" class="icon" src="/images/ImgIcon/journal_icon06.png"/>
+		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon06.png"/>
 		    					</c:otherwise>
 		    				</c:choose>
-		    				&nbsp;<spring:message code="${type.journaltypeId}"/></span></li>
+		    				<span style="display:inline-block; margin-top: 3px;">&nbsp;<spring:message code="${type.journaltypeId}"/></span></span></li>
 		    			</c:forEach>
 		    		</c:when>
 		    	</c:choose>
@@ -92,28 +92,28 @@
 		    	<c:choose>
 		    		<c:when test="${not empty typeList }">
 		    			<c:forEach items="${typeList }" var="type">
-						    <li listType='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);" style="padding: 6px 5px 5px 20px;" ><span style="width:100%; display:inline-block;">
+						    <li listType='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);" ><span style="width:100%; display:inline-block;">
 						    <c:choose>
 		    					<c:when test="${type.journaltypeId eq 'ezJournal.t05'}">
-		    						<img style="width:18px;height:18px;" class="icon" src="/images/ImgIcon/journal_icon01.png"/>
+		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon01.png"/>
 		    					</c:when>
 		    					<c:when test="${type.journaltypeId eq 'ezJournal.t06'}">
-		    						<img style="width:18px;height:18px;" class="icon" src="/images/ImgIcon/journal_icon02.png"/>
+		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon02.png"/>
 		    					</c:when>
 		    					<c:when test="${type.journaltypeId eq 'ezJournal.t07'}">
-		    						<img style="width:18px;height:18px;" class="icon" src="/images/ImgIcon/journal_icon03.png"/>
+		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon03.png"/>
 		    					</c:when>
 		    					<c:when test="${type.journaltypeId eq 'ezJournal.t08'}">
-		    						<img style="width:18px;height:18px;" class="icon" src="/images/ImgIcon/journal_icon04.png"/>
+		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon04.png"/>
 		    					</c:when>
 		    					<c:when test="${type.journaltypeId eq 'ezJournal.t09'}">
-		    						<img style="width:18px;height:18px;" class="icon" src="/images/ImgIcon/journal_icon05.png"/>
+		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon05.png"/>
 		    					</c:when>
 		    					<c:otherwise>
-		    						<img style="width:18px;height:18px;" class="icon" src="/images/ImgIcon/journal_icon06.png"/>
+		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon06.png"/>
 		    					</c:otherwise>
 		    				</c:choose>
-						    &nbsp;<spring:message code="${type.journaltypeId}"/></span></li>
+						    <span style="display:inline-block; margin-top: 3px;">&nbsp;<spring:message code="${type.journaltypeId}"/></span></span></li>
 		    			</c:forEach>
 		    		</c:when>
 		    	</c:choose>
