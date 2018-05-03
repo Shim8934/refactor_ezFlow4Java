@@ -124,3 +124,7 @@
 .wfFogPanel {width:100%; height:100%; position:absolute; top:0px; left:0px; z-index:1000; background:none rgba(0,0,0,0.5);}
 .wfPopup {z-index:2000; position:absolute;}
 #pageArea {height:710px;}
+
+#left ol.on {padding : 0px 0px 0px 5px;}
+#left ol li {padding : 3px 0px 0px 5px;}
+.webfolderTree {width: 210px; min-height:200px; font-size: 20px; overflow-x: auto; padding-bottom:3px;} 

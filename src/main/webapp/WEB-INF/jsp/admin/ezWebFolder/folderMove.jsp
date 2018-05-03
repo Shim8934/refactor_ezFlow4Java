@@ -310,7 +310,7 @@
 			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="change();"> <span><spring:message code="ezWebFolder.t234"/></span>
 		</div>
 	</div>
-	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto;" id="folderTree"></div>
+	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto; padding: 5px 0px 0px 5px;" id="folderTree"></div>
 	
 	<div style="margin: 8px 0px; position:fixed; bottom: 0px; text-align: center; width: 100%;">
 		<a id="btnSave"  class="webfolderBttn" onClick="folderMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
