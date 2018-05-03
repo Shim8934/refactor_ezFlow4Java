@@ -359,8 +359,11 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			String mode = request.getParameter("mode");
+			int tenantId = info.getTenantId();
+			String deptId = info.getDeptId();
 			
-			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(), lang, info.getDeptId());
+			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, mode, lang, deptId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

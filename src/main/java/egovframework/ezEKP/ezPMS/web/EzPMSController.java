@@ -36,6 +36,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezJournal.vo.JournalPagination;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -237,18 +238,19 @@ public class EzPMSController {
 	/**
 	 * 프로젝트 상세 조회 화면 호출
 	 */
-	@RequestMapping(value = "/ezPMS/getProjectDetails.do/{projectId}")
-	public String getProjectDetails(@CookieValue("loginCookie") String loginCookie, @PathVariable int projectId, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	@RequestMapping(value = "/ezPMS/getProjectDetails.do")
+	public String getProjectDetails(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS getProjectDetails started");	
-		
-		model.addAttribute(projectId);
+		String projectId = request.getParameter("projectId");
+		System.out.println(projectId);
+		model.addAttribute("projectId", projectId);
 		
 		LOGGER.debug("ezPMS getProjectDetails ended");		
 		return "ezPMS/pmsProjectDetails";
 	}
 	
 	/**
-	 * 새프로젝트 등록 화면 호출
+	 * 프로젝트 등록/수정 화면 호출
 	 */
 	@RequestMapping(value = "/ezPMS/newProject.do")
 	public String newProject(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
@@ -256,21 +258,40 @@ public class EzPMSController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userName = userInfo.getDisplayName1();
+		String userId = userInfo.getId();
 		String offset = userInfo.getOffset();
-		String projectId = request.getParameter("taskID");
+		String mode = request.getParameter("mode");
 		
 		String planStartDate = "";
 		String planEndDate = "";
+		int projectId = 0;
 		
-		if (projectId == null) {
-			projectId = "";
-			
+		if (mode.equals("new")) {
 			String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 			planStartDate = nowDate.substring(0, 10);
 			
 			planEndDate = nowDate.substring(0, 10);
+		} else if (mode.equals("edit")) {
+			projectId = Integer.parseInt(request.getParameter("projectId"));
+			
+			String url = "/rest/ezPMS/projects/" + projectId + "/userId/" + userId; 
+
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("userId", userId);
+			param.put("mode", mode);
+			
+			JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+			String status = result.get("status").toString();
+			
+			if (status.equals("ok")) {
+				JSONObject project = (JSONObject) result.get("data");
+				
+				model.addAttribute("project", project);
+			}
+			
 		}
 		
+		model.addAttribute("mode", mode);
 		model.addAttribute("userName", userName);
 		model.addAttribute("planStartDate", planStartDate);
 		model.addAttribute("planEndDate", planEndDate);
@@ -444,11 +465,13 @@ public class EzPMSController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezPMS/getProjectOverview.do/{projectId}")
-	public String getProjectOverview(@CookieValue("loginCookie") String loginCookie, @PathVariable int projectId, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	@RequestMapping(value = "/ezPMS/getProjectOverview.do")
+	public String getProjectOverview(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS getProjectOverview started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
+		String projectId = request.getParameter("projectId");
+		
 		System.out.println(projectId);
 		String url = "/rest/ezPMS/projects/" + projectId + "/userId/" + userId;
 		
@@ -460,6 +483,8 @@ public class EzPMSController {
 		
 		if (status.equals("ok")) {
 			JSONObject project = (JSONObject) result.get("data");
+			System.out.println(project.get("projectMember"));
+			System.out.println(project.get("projectMember").getClass().getName());
 			
 			model.addAttribute("project", project);
 		}

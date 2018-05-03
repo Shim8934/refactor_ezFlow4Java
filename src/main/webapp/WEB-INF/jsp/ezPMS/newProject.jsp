@@ -27,9 +27,9 @@
 }
 </style>
 <script>
-var projectName = null;
+var projectName = "${project.projectName}";
 var writerName = "${userName}";
-var weightInput = null;
+var weightInput = "${project.weightInput}";
 var planStartDate = "${planStartDate}";
 var planEndDate = "${planEndDate}";
 var managerList = null;
@@ -38,6 +38,7 @@ var viewerList = null;
 var overview = null;
 var endAlamStatus = null;
 var headManagerId = null;
+var mode = "${mode}"
 
  $(function() {	
 	getDatePicker();
@@ -49,6 +50,11 @@ var headManagerId = null;
 			$("#write").css("display", "");
 		}
 	});
+	
+	if (mode == "edit") {
+		
+	}
+ 
  });
 
  function getDatePicker() {
