@@ -36,6 +36,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezJournal.vo.JournalPagination;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -482,6 +483,8 @@ public class EzPMSController {
 		
 		if (status.equals("ok")) {
 			JSONObject project = (JSONObject) result.get("data");
+			System.out.println(project.get("projectMember"));
+			System.out.println(project.get("projectMember").getClass().getName());
 			
 			model.addAttribute("project", project);
 		}
