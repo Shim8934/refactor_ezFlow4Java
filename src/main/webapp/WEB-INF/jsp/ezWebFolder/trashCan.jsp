@@ -530,12 +530,12 @@
 			<tr>
 				<th width="20px"><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
 				<th width="40px"><spring:message code='ezWebFolder.t188'/></th>
-				<th width="30%"><spring:message code='ezWebFolder.t156'/></th>
-				<th width="6%;"><spring:message code='ezWebFolder.t157'/></th>
-				<th width="7%;"><spring:message code='ezWebFolder.t189'/></th>
-				<th width="9%;"><spring:message code='ezWebFolder.t190'/></th>
-				<th width="9%;"><spring:message code='ezWebFolder.t288'/></th>
-				<th width="25%;"><spring:message code='ezWebFolder.t199'/></th>
+				<th width="160px"><spring:message code='ezWebFolder.t156'/></th>
+				<th width="60px"><spring:message code='ezWebFolder.t157'/></th>
+				<th width="120px"><spring:message code='ezWebFolder.t189'/></th>
+				<th width="80px"><spring:message code='ezWebFolder.t190'/></th>
+				<th width="80px"><spring:message code='ezWebFolder.t288'/></th>
+				<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
 			</tr>
 		</table>
 	</div>
