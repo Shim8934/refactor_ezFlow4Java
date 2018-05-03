@@ -450,7 +450,7 @@
 			
 			function leftPanelProcess() {
 				document.getElementById("folderTree").style.overflow = "hidden";
-				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+				window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "";
 			}
 			
 			function deleteFolder() {
@@ -504,7 +504,7 @@
 			
 			function closeAllPopup() {
 				document.getElementById("folderTree").style.overflow = "auto";
-				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
+				window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "none";
 				DivPopUpHidden();
 			}
 		</script>

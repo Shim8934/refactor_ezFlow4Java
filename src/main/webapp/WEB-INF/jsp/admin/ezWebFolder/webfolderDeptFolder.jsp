@@ -7,6 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/organ_tree.css"                     type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"          type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/popup.js"       ></script>
@@ -409,7 +410,7 @@
 			
 			function leftPanelProcess() {
 				document.getElementById("folderTree").style.overflow = "hidden";
-				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+				window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "";
 			}
 			
 			function moveFolder() {
@@ -499,7 +500,7 @@
 			}
 			
 			function closeAllPopup() {
-				window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
+				window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "none";
 				document.getElementById("folderTree").style.overflow = "auto";
 				DivPopUpHidden();
 			}

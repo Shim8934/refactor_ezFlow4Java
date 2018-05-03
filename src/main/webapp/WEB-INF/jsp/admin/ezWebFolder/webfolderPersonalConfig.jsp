@@ -7,6 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/organ_tree.css"                     type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"          type="text/css">
 		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css"         type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"     ></script>
@@ -44,7 +45,7 @@
 			function openSearchPanel() {
 				var searchPanel = document.getElementById("searchPanel");
 				if (searchPanel.style.display == "none") {
-					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+					window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "";
 					document.getElementById("mailPanel").style.display                              = "";
 					var position              = getPosition(502, 128);
 					searchPanel.style.top     = position[0] + "px";
@@ -53,7 +54,7 @@
 					fogPanel.focus();
 				}
 				else {
-					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
+					window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "none";
 					document.getElementById("mailPanel").style.display                              = "none";
 					searchPanel.style.display = "none";
 				}

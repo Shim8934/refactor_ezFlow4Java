@@ -200,7 +200,7 @@ function changeCompanyForDeptFile() {
 
 function openLeftPanel() {
 	var leftFrame = window.parent.frames["left"].document;
-	var blockLeft = leftFrame.getElementById("blockLeft");
+	var blockLeft = leftFrame.getElementById("bnkBlockLeft");
 	var height    = Math.max(leftFrame.documentElement.clientHeight, leftFrame.documentElement.scrollHeight);
 	leftFrame.body.style.overflow = "hidden";
 	blockLeft.style.height        = height + "px";
@@ -209,7 +209,7 @@ function openLeftPanel() {
 
 function closeLeftPanel() {
 	var leftFrame = window.parent.frames["left"].document;
-	var blockLeft = leftFrame.getElementById("blockLeft");
+	var blockLeft = leftFrame.getElementById("bnkBlockLeft");
 	leftFrame.body.style.overflow = "auto";
 	blockLeft.style.height        = "100%";
 	blockLeft.style.display       = "none";
