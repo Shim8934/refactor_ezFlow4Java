@@ -427,8 +427,8 @@
 				<th width="160px"><spring:message code='ezWebFolder.t156'/></th>
 				<th width="60px" ><spring:message code='ezWebFolder.t157'/></th>
 				<th width="120px"><spring:message code='ezWebFolder.t189'/></th>
-				<th width="80px" ><spring:message code='ezWebFolder.t288'/></th>
 				<th width="80px" ><spring:message code='ezWebFolder.t190'/></th>
+				<th width="80px" ><spring:message code='ezWebFolder.t288'/></th>
 				<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
 			</tr>
 		</table>
