@@ -5,7 +5,7 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>"   type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -68,19 +68,6 @@
 				})
 				
 				window.onresize();
-				
-				// datepicker setup
-				$(".datepicker").datepicker({
-					changeMonth: true,
-					changeYear: true,
-					autoSize: true,
-					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.gif",
-					buttonImageOnly: true
-				});
-		
-		        $(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $(".datepicker").datepicker('setDate', "");
 		     });
 			
 			function getFileList(pPage) {
@@ -88,15 +75,9 @@
 				
 				$.ajax({
 					type: "POST",
-					url: "/ezWebFolder/getSharedList.do",
+					url: "/ezWebFolder/getHiddenSharedList.do",
 					data: {
-						"pageNum"           : pPage,
-						"searchExt"         : searchRequirement.extension,
-						"searchFileName"    : searchRequirement.name,
-						"searchCreatorName" : searchRequirement.creatorName,
-						"searchFileType"    : searchContext.getFileType(),
-						"searchStartDate"   : searchRequirement.startDate,
-						"searchEndDate"     : searchRequirement.endDate
+						"pageNum" : pPage,
 					},
 					dataType: "JSON",
 					async: true,
@@ -267,59 +248,12 @@
 				}
 			}
 			
-			// 날짜 초기화 버튼
-		   	function clearDatepicker() {
-		        $(".datepicker").datepicker('setDate', "");
-		    }
-			
 			function goToPageByNum(Value) {
 		    	currentPage = Value;
 		        pStart = (blockSize * (currentPage)) - blockSize;
 		        pEnd = blockSize;
 		        getFileList(folderId);
 		    }
-		    
-		   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
-			function search(type) {
-				if (type == "basic") {
-					requirement = {
-						startDate: $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val(),
-						endDate: $('#Edatepicker').datepicker({ dateFormat: 'yy-mm-dd' }).val(),
-						name: $('#searchFileName').val(),
-						creatorName: $('#searchCreateName').val(),
-						extension: $('#searchExt').val()
-					};
-		        	
-					if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" && requirement.startDate == "") {
-						alert(messages.strLang20);
-						return;
-					}
-		
-					if (requirement.startDate != "" && requirement.endDate == "") {
-						alert(messages.strLang18);
-						return;
-					}
-		           
-					if (requirement.startDate == "" && requirement.endDate != "") {
-						alert(messages.strLang18);
-						return;
-					}
-		
-					if (new Date(requirement.startDate) > new Date(requirement.endDate)) {
-						alert(messages.strLang19);
-						return;
-					}
-	           
-					searchContext.search(requirement.startDate, requirement.endDate, requirement.name, requirement.creatorName, requirement.extension);
-				} else if (type == "quick") {
-					if (document.getElementById("txt_keyword").value == "") {
-						alert(messages.strLang20);
-						return;
-					}
-				}
-				
-				searchOptionHidden();
-			}
 			
 			function doLayerPopup(obj) {
 		        var searchRequirement = searchContext.getCurrentRequirement();
@@ -343,9 +277,6 @@
 	        	$("#srarchpopup").modal();
 		    }
 			
-			function searchOptionHidden() {
-		    	$.modal.close();
-		    }
 			
 			function optionView(obj){
 		   		 if (obj.getAttribute("mode") == "off") {
@@ -361,134 +292,9 @@
 		   	        optionHidden();
 		   	    }
 		   	}
-	   	   
-		 	function optionHidden() {
-		 	    document.getElementById("layer_Viewpopup").style.display = "none";
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
-		 	}
-		 	
-			function fileDownload() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-	    		
-	    		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + selected.files.toString() + "&folderList=" + selected.folders.toString();
-				
-				AttachDownFrame.location.href = downloadUrl;
-			}
-			
-			function endUpdate() {
-
-			}
-			
-			function fileUpload2() {
-				document.getElementById("file").click();
-//	     	   refreshView();
-//	     	   endUpdate();
-			}
 	       
 			function refreshView() {
 				getFileList(folderId);
-			}
-	       
-	       function fileDelete() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-				
-				if (selected.folders.length > 0) {
-					alert(messages.strLang1);
-					return;
-				}
-				
-				$.ajax({
-					type: "POST",
-					url: "/ezWebFolder/checkPermission.do",
-					data: {
-						"fileList" : selected.files.toString()
-					},
-					dataType: "JSON",
-					async: true,
-					success : function(data) {
-						var result = data.resultValue;
-						
-						if (result != "ok") {
-							alert(messages.strLang13);
-						} else {
-							openLeftPanel();
-							DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
-						}
-						
-						refreshView();
-					},
-					error : function(error) {
-						alert(messages.strLang7 + error);
-					}
-				});
-			}
-			
-			function fileRename() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-				
-				if (selected.folders.length > 0) {
-					alert(messages.strLang1);
-					return;
-				}
-				
-				if (selected.files.length > 1) {
-					alert(messages.strLang6);
-					return;
-				}
-				
-				var fileId = selected.files[0];
-				
-				$.ajax({
-					type: "POST",
-					url: "/ezWebFolder/checkPermission.do",
-					data: {
-						"fileId" : fileId
-					},
-					dataType: "JSON",
-					async: true,
-					success : function(data) {
-						var result = data.resultValue;
-						
-						if (result != "ok") {
-							alert(messages.strLang13);
-						} else {
-							openLeftPanel();
-							DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
-						}
-					},
-					error : function(error) {
-						alert(messages.strLang7 + error);
-					}
-				});
-			}
-			
-			function fileMove() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-				
-				if (selected.folders.length > 0) {
-					alert(messages.strLang1);
-					return;
-				}
-				
-				openLeftPanel();
-				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString());
 			}
 			
 			function getSelectedFoldersAndFiles() {
@@ -527,42 +333,8 @@
 				refreshView();
 			}
 	       
-			function onFileTypeChange(value) {
-				if (value == "all") {
-					value = "";
-				}
-				
-				currentPage = 1;
-				searchContext.setFileType(value);
-			}
-	       
-			function downloadFileByDbClick(event) {
-				event.stopPropagation();
-				event.preventDefault();
-				var trElmt       = event.currentTarget;
-				var fileFolderId = trElmt.getAttribute("targetId");
-				var filesList    = [];
-				filesList.push(fileFolderId);
-				
-				var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
-				AttachDownFrame.location.href = downloadUrl;
-			}
-			
-			function openLeftPanel() {
-				var leftFrame = window.parent.frames["left"].document;
-				var blockLeft = leftFrame.getElementById("bnkBlockLeft");
-				var height    = Math.max(leftFrame.documentElement.clientHeight, leftFrame.documentElement.scrollHeight);
-				leftFrame.body.style.overflow = "hidden";
-				blockLeft.style.height        = height + "px";
-				blockLeft.style.display       = "";
-			}
-
-			function closeLeftPanel() {
-				var leftFrame = window.parent.frames["left"].document;
-				var blockLeft = leftFrame.getElementById("bnkBlockLeft");
-				leftFrame.body.style.overflow = "auto";
-				blockLeft.style.height        = "100%";
-				blockLeft.style.display       = "none";
+			function showSharedList() {
+				location.href = "/ezWebFolder/webfolderSharedList.do";
 			}
 		</script>
 	</head>
@@ -578,27 +350,8 @@
 		
 		<div id="mainmenu">
 			<ul>
-				<li><a onClick="fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-				<li id="upload"><a onClick="fileUpload2()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-				<li><a onClick="fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t117'/></span></a></li>
-				<li><a onClick="fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t118'/></span></a></li>
-				<li><a onClick="fileMove()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>
-				<li><a onClick="shareContext.hideShare()" style="margin-top: 3px;"><span>공유숨김</span></a></li>
-				<li><a onClick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span>공유숨김목록</span></a></li>
-				<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
-				<li><a onClick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
-				<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
-				<li>
-					<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect" onchange="onFileTypeChange(this.value);">
-						<option value=""><spring:message code='ezWebFolder.t191'/></option>
-						<option value="document"><spring:message code='ezWebFolder.t192'/></option>
-						<option value="music"><spring:message code='ezWebFolder.t193'/></option>
-						<option value="video"><spring:message code='ezWebFolder.t194'/></option>
-						<option value="image"><spring:message code='ezWebFolder.t195'/></option>
-						<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
-						<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
-					</select>
-				</li>
+				<li id=""><a onClick="showSharedList()" style="margin-top: 3px;"><span>돌아가기</span></a></li>
+				<li id=""><a onClick="shareContext.showShare()" style="margin-top: 3px;"><span>숨김취소</span></a></li>
 				<li id="right" style="float:right;">
 					<label for="webfolderlistoptiondiv"><spring:message code='ezWebFolder.t215'/></label>
 					<img src ="/images/kr/cm/btn_arrow_down.gif" mode="off" id="webfolderlistoptiondiv" onclick="optionView(this);">
@@ -665,46 +418,6 @@
 		<div class="layerpopup" style="z-index:2000; position:absolute; display:none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		
-		<div id="srarchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
-			<div class="popupwrap4">
-				<table class="content" style="margin-top:10px;">  
-					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' /></th>
-					</tr>
-					<tr>
-			           <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
-			           <td>
-			               <input type="text" id="Sdatepicker" class="datepicker" style="width:80px;text-align:center" readonly="readonly">
-			                ~
-			               <input type="text" id="Edatepicker" class="datepicker" style="width:80px;text-align:center" readonly="readonly">
-			           </td>
-					</tr>
-			       
-			        <tr>
-			            <th style="text-align:center"><spring:message code='ezWebFolder.t152' /></th><!-- 확장자 -->
-			            <td><input type="text" id="searchExt" style="width:98%" value="" name="searchExt"></td>
-			        </tr>
-			        <tr>
-			            <th style="text-align:center"><spring:message code='ezWebFolder.t153' /></th><!-- 파일명 -->
-			            <td><input type="text" id="searchFileName" style="width:98%" value="" name="searchFileName"></td>
-			        </tr>  
-			         <tr>
-			            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 작성자 -->
-			            <td><input type="text" id="searchCreateName" style="width:98%" value="" name="searchCreateName"></td>
-			        </tr>    
-				</table>
-				<br/>
-				<table style="width:100%">
-					<tr>
-						<td style="text-align:center;">
-							<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142' /></span></a>
-							<a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>	
 		
 		<div id="tblPageRayer"></div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

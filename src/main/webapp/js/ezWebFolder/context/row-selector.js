@@ -93,11 +93,6 @@ var rowContext = (function() {
 		var targetType = rowElement.getAttribute("targetType");
 		var isFavorite = rowElement.hasAttribute("favorite");
 		
-		// favorite type mapping
-		if (targetType.length > 1) {
-			targetType = targetType === "folder" ? targetType = "D" : targetType = "F";
-		}
-		
 		return {
 			id: targetId,
 			type: targetType,

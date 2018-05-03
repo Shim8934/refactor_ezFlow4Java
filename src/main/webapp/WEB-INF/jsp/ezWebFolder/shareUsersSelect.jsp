@@ -7,6 +7,7 @@
 		<c:if test="${type eq 'NEW'}"><title>공유 추가</title></c:if>
 		<c:if test="${type ne 'NEW'}"><title>공유 수정</title></c:if>
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -14,6 +15,7 @@
 		<script type="text/javascript" src="/js/ezWebFolder/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/TreeView.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/organJson.js"></script>
 		<script type="text/javascript">
 			var type = "<c:out value='${type}'/>";
@@ -100,38 +102,21 @@
 					}
 				}
 				
-				$.ajax({
-					type: "POST",
-					url: "/ezWebFolder/addShare.do",
-					contentType: 'application/json',
-					data: JSON.stringify({
-						"folderFileId" : folderFileId,
-						"folderFileType" : folderFileType,
-						"userList" : requestArray
-					}),
-					dataType: "JSON",
-					async: false,
-					success : function(data) {
-						if (data.status == "ok") {
-							if (type == "NEW") {
-								alert("공유를 추가헸습니다.");
-							} else {
-								alert("공유를 수정헸습니다.");
-							}
-							
-							try {
-								window.opener.refreshView();
-							} catch(e) {}
-							
-			                window.close();
-						} else {
-							alert(strErrMsg + " code: " + data.code);
-						}
-					},
-					error : function(error) {
-						alert(strErrMsg);
-					}
-				});
+				shareContext.addShare(folderFileId, folderFileType, requestArray, false, addShareSuccess);
+			}
+			
+			function addShareSuccess() {
+				if (type == "NEW") {
+					alert("공유를 추가헸습니다.");
+				} else {
+					alert("공유를 수정헸습니다.");
+				}
+				
+				try {
+					window.opener.refreshView();
+				} catch(e) {}
+				
+                window.close();
 			}
 		</script>
 		<style>

@@ -17,6 +17,7 @@
 	<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
 	<!-- module -->
 	<script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
@@ -257,7 +258,7 @@
 
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
-					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'folder' : 'file');
+					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'D' : 'F');
 					trElmt.addEventListener("click", function(event) { rowContext.onRowClick(this); });
 					
 					if (result[i]["fileTypeName"] != 'folder') {
@@ -315,12 +316,16 @@
 // 					tdElmt10.textContent = result[i]["downloadCnt"];
 // 					tdElmt10.setAttribute("style","text-align: center;");
 					
-					if (result[i]["fileShareStatus"] == "1") {
+					if (result[i]["fileShareStatus"] == "Y") {
 						var spanElmt = document.createElement("span");
-						spanElmt.textContent = messages.strLang2;
-						spanElmt.addEventListener("mouseover", function() { this.setAttribute("style", "font-weight:bold;color:blue;"); });
-						spanElmt.addEventListener("mouseout", function() { this.setAttribute("style", ""); });
-						spanElmt.addEventListener("click", function() { alert("공유정보조회 준비중!"); });
+						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
+						spanElmt.addEventListener("click", function () {
+							shareContext.showShareInfo(this);
+						});
+						tdElmt10.appendChild(spanElmt);
+					} else if (result[i]["fileShareStatus"] == "S") {
+						var spanElmt = document.createElement("span");
+						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
 						tdElmt10.appendChild(spanElmt);
 					} else {
 						tdElmt10.textContent = "";
@@ -616,27 +621,6 @@
 			pagination.setPage(1);
 		}
        
-		function addShare() {
-			var selectedRows = rowContext.getSelectedRows();
-			var selectedLength = selectedRows.length;
-			
-			if (selectedLength == 0) {
-				alert("파일 또는 폴더를 선택하세요.");
-				return;
-			}
-			
-			if (selectedLength > 1) {
-				alert("하나만 선택하세요.");
-				return;
-			}
-			
-			var folderFileInfo = rowContext.getRowInfo(selectedRows[0]);
-			var folderFileId = folderFileInfo.id;
-			var folderFileType = folderFileInfo.type;
-            var openWindow = window.open("/ezWebFolder/addShareView.do?folderFileId=" + folderFileId + "&folderFileType=" + folderFileType, "addShareView", GetOpenWindowfeature(610, 685));
-            try { openWindow.focus(); } catch (e) { }
-		}
-		
 		function downloadFileByDbClick(event) {
 			event.stopPropagation();
 			event.preventDefault();
@@ -680,7 +664,7 @@
 				<li><span onClick="fileDelete()"><spring:message code='ezWebFolder.t274'/></span></li>
 				<li><span onClick="fileRename()"><spring:message code='ezWebFolder.t273'/></span></li>
 				<li><span onClick="fileMove()"><spring:message code='ezWebFolder.t275'/></span></li>
-				<li><span onClick="addShare()">공유</span></li>
+				<li><span onClick="shareContext.addShareView()">공유</span></li>
 				<li><img src="/images/i_bar.gif"></li>
 				<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 	<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
