@@ -1884,8 +1884,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
-		
+
 		myFavoriteVO.setBoardId(boardVO.getBoardId());
+		myFavoriteVO.setTenantID(userInfo.getTenantId());
 		myFavoriteVO.setUserId(userInfo.getId());
 		myFavoriteVO.setType(type);
 		myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
