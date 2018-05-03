@@ -1176,7 +1176,7 @@
 		            document.getElementById("docTR").style.display = "";
 		
 		            var TDRows;
-		            if (CrossYN()) {
+		            if (CrossYN() && pUrl.toLowerCase().indexOf(".hwp") <  0) {
 		                docContent.document.body.innerHTML = htmlData.replace(/(<p)/igm, '<div').replace(/<\/p>/igm, '</div>');
 		                docContent.document.body.getElementsByTagName("TABLE").item(0).align = "center";
 		                TDRows = docContent.document.getElementsByTagName("TD");
@@ -2377,9 +2377,9 @@
 	<script type="text/javascript">
 	    if ("${boardInfo.guBun}" == "2") {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-	    } else if("${docID}" != "") {
+	    } else if("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-	    } else {
+	    } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 	    }
 	</script>
