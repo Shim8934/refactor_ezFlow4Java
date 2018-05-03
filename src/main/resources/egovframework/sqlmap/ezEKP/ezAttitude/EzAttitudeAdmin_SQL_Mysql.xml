@@ -708,7 +708,7 @@
 				A.displayname AS username,
                 A.description AS deptname,
                 A.title AS usertitle,
-                #searchStartDate# as startdate
+                SUBSTR(DATE_ADD(#searchStartDate#, INTERVAL #offsetMin# minute), 1, 10) as startdate
 			FROM
 				TBL_USERMASTER A
 			LEFT JOIN

@@ -979,7 +979,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String companyId, int tenantId) throws Exception {
+	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String duplicated, String offset, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeAbsentList started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -1021,12 +1021,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			}
 		};
 		
-		LOGGER.debug("totalList size = " + totalList.size());
-		
-		HashSet<AdminAttitudeVO> listSet = new HashSet<AdminAttitudeVO>(totalList);
-		totalList = new ArrayList<AdminAttitudeVO>(listSet);
-		
-		LOGGER.debug("distinct totalList size = " + totalList.size());
+		if (duplicated.equals("distinct")) {
+			HashSet<AdminAttitudeVO> listSet = new HashSet<AdminAttitudeVO>(totalList);
+			totalList = new ArrayList<AdminAttitudeVO>(listSet);
+			LOGGER.debug("duplicate totalList size = " + totalList.size());
+		} else {
+			LOGGER.debug("distinct totalList size = " + totalList.size());
+		}
 		
 		LOGGER.debug("sorting started.");
 		
@@ -1059,6 +1060,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			
 			break;
 		default:
+			//startdate 역순
+			Collections.sort(totalList, new Comparator<AdminAttitudeVO>() {
+				@Override
+				public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
+					return o2.getStartDate().compareTo(o1.getStartDate());
+				}
+			});
+			
 			break;
 		}
 		

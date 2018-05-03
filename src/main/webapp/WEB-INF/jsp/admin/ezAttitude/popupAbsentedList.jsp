@@ -32,7 +32,6 @@
     	var orderOption = ""; // 정렬 형식(ASC, DESC)
 		
 		$(function() {
-			
 			$("#Sdatepicker").val("${searchStartDate}");
     		$("#Edatepicker").val("${searchEndDate}");
     		
@@ -134,7 +133,8 @@
    					startDate : searchStartDate,
    					endDate : searchEndDate,
    					orderCell : orderCell,
-   					orderOption : orderOption
+   					orderOption : orderOption,
+   					duplicated : "duplicated"
 				},
 				success : function(result) {
 					getAbsentedList_after(result.list);
@@ -155,7 +155,7 @@
     		});
     		
     		if (resultHtml == "") {
-    			resultHtml = "<tr><td colspan='3' style='text-align:center'>미입력자가 없습니다.</td></tr>";	
+    			resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'>미입력자가 없습니다.</td></tr>";	
     		}
     		
     		$("#contentlist table.mainlist tbody").append(resultHtml);
@@ -170,7 +170,7 @@
 			
 			//임시
 			var msgTo = "\"" + "이름1" + "\" <" + "hyojin0414@kaoni.com" + ">";
-			msgTo += ",\"" + "이름2" + "\" <" + "hyojin0414@naver.com" + ">";
+			msgTo += "\"" + "이름1" + "\" <" + "hyojin0414@kaoni.com" + ">";
 			
 			var pheight = window.screen.availHeight;
 		    var conHeight = pheight * 0.8;
@@ -219,6 +219,16 @@
 				}
 			}
 		}
+		
+		function exportExcel() {
+			if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
+				alert('출력할 내용이 없습니다');
+				return;
+			}
+			
+	    	exportExcelframe.location.href="/admin/ezAttitude/excelAbsentedListExport.do?companyId=" + companyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&orderCell=" + orderCell + "&orderOption=" + orderOption + "&duplicated=duplicated";
+	    	exportExcelframe.target="_blank";
+		}
 	</script>
 	
 	<body class="popup">
@@ -262,7 +272,9 @@
 		
 		<div class="btnposition">
 			<a class="imgbtn"><span onclick="return btnSendMail_onclick()">메일발송</span></a>
+			<a class="imgbtn"><span onclick="exportExcel();">엑셀저장</span></a>
 			<a class="imgbtn"><span onclick="return btnClose_onclick()">닫기</span></a>
 		</div>
+		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
 	</body>
 </html>

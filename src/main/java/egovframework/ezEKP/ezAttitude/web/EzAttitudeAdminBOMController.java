@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.gson.Gson;
@@ -1409,6 +1410,7 @@ public class EzAttitudeAdminBOMController {
 		String searchEndDate = request.getParameter("endDate");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
+		String duplicated = request.getParameter("duplicated");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/attitudes/absent";
@@ -1427,6 +1429,7 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("userId", userId)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
+				.queryParam("duplicated", duplicated)
 				.queryParam("offsetMin", offsetMin);
 		
 		RestTemplate rest = new RestTemplate();
@@ -1451,7 +1454,7 @@ public class EzAttitudeAdminBOMController {
 	/**
 	 * 근태조회 엑셀 출력
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/excelFileExport.do")
+	@RequestMapping(value = {"/admin/ezAttitude/excelAttitudeListExport.do", "/admin/ezAttitude/excelAbsentedListExport.do"})
 	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
 		LOGGER.debug("excelFileExport started."); 
 		
@@ -1468,6 +1471,8 @@ public class EzAttitudeAdminBOMController {
 		String listSize = request.getParameter("listSize");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
+		String duplicated = request.getParameter("duplicated");
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
@@ -1476,7 +1481,15 @@ public class EzAttitudeAdminBOMController {
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/bombom";
+		String url = "";
+		
+		if (requestURL.indexOf("excelAttitudeListExport.do") > -1) {
+//			근태조회엑셀
+			url = gwServerUrl + "/rest/ezattitude/attitudes/bombom";
+		} else if (requestURL.indexOf("excelAbsentedListExport.do") > -1) {
+//			미입력자엑셀
+			url = gwServerUrl + "/rest/ezattitude/attitudes/absent";
+		}
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1496,6 +1509,7 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("listSize", listSize)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
+				.queryParam("duplicated", duplicated)
 				.queryParam("offsetMin", offsetMin);
 		
 		RestTemplate rest = new RestTemplate();
@@ -1516,8 +1530,6 @@ public class EzAttitudeAdminBOMController {
 			
 			attitudeList = gson.fromJson(data.get("list").toString(), new TypeToken<List<AdminAttitudeVO>>(){}.getType()) ;
 		}
-		
-	///////    엑 셀        //////////////////////////////////////////////////////////
 		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
@@ -1542,69 +1554,107 @@ public class EzAttitudeAdminBOMController {
 		
 		Row row;
 		      
-		String pFileName = "";
-		String strDate = EgovDateUtil.getToday("-");
-		pFileName = strDate+"_Report.xls";
-		
 		sheet = workbook.createSheet("report");
 		row = sheet.createRow(0);
 		
-		//header
-		row.createCell(0).setCellValue("이름");
-		row.getCell(0).setCellStyle(headerStyle);
-		row.createCell(1).setCellValue("직급");
-		row.getCell(1).setCellStyle(headerStyle);
-		row.createCell(2).setCellValue("부서");
-		row.getCell(2).setCellStyle(headerStyle);
-		row.createCell(3).setCellValue("구분");
-		row.getCell(3).setCellStyle(headerStyle);
-		row.createCell(4).setCellValue("날짜");
-		row.getCell(4).setCellStyle(headerStyle);
-		row.createCell(5).setCellValue("시간");
-		row.getCell(5).setCellStyle(headerStyle);
+		String pFileName = "";
 		
-		//body
-		for (int i = 0 ; i < attitudeList.size(); i++) { 
-			AdminAttitudeVO vo = attitudeList.get(i);
-			row = sheet.createRow(i + 1);
+		if (requestURL.indexOf("excelAttitudeListExport.do") > -1) {
+//			근태조회엑셀
+			pFileName = EgovDateUtil.getToday("-") +"_attitudeReport.xls";
+			
+			//header
+			row.createCell(0).setCellValue("이름");
+			row.getCell(0).setCellStyle(headerStyle);
+			row.createCell(1).setCellValue("직급");
+			row.getCell(1).setCellStyle(headerStyle);
+			row.createCell(2).setCellValue("부서");
+			row.getCell(2).setCellStyle(headerStyle);
+			row.createCell(3).setCellValue("구분");
+			row.getCell(3).setCellStyle(headerStyle);
+			row.createCell(4).setCellValue("날짜");
+			row.getCell(4).setCellStyle(headerStyle);
+			row.createCell(5).setCellValue("시간");
+			row.getCell(5).setCellStyle(headerStyle);
+			
+			//body
+			for (int i = 0 ; i < attitudeList.size(); i++) { 
+				AdminAttitudeVO vo = attitudeList.get(i);
+				row = sheet.createRow(i + 1);
 
-			row.createCell(0).setCellValue(vo.getUserName());
-			
-			row.createCell(1).setCellValue(vo.getUserTitle());
-			row.createCell(2).setCellValue(vo.getDeptName());
-			row.createCell(3).setCellValue(vo.getTypeName());
-			
-			if (vo.getEndDate() != null && !vo.getEndDate().equals("")) {
-				row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
-			} else {
-				row.createCell(4).setCellValue(vo.getStartDate());
+				row.createCell(0).setCellValue(vo.getUserName());
+				
+				row.createCell(1).setCellValue(vo.getUserTitle());
+				row.createCell(2).setCellValue(vo.getDeptName());
+				row.createCell(3).setCellValue(vo.getTypeName());
+				
+				if (vo.getEndDate() != null && !vo.getEndDate().equals("")) {
+					row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
+				} else {
+					row.createCell(4).setCellValue(vo.getStartDate());
+				}
+				
+				if (vo.getEndTime() != null && !vo.getEndTime().equals("")) {
+					row.createCell(5).setCellValue(vo.getStartTime() + " ~ " + vo.getEndTime());
+				} else {
+					row.createCell(5).setCellValue(vo.getStartTime());
+				}
+				
+				row.getCell(0).setCellStyle(bodyStyle);
+				row.getCell(1).setCellStyle(bodyStyle);
+				row.getCell(2).setCellStyle(bodyStyle);
+				row.getCell(3).setCellStyle(bodyStyle);
+				row.getCell(4).setCellStyle(bodyStyle);
+				row.getCell(5).setCellStyle(bodyStyle);
 			}
 			
-			if (vo.getEndTime() != null && !vo.getEndTime().equals("")) {
-				row.createCell(5).setCellValue(vo.getStartTime() + " ~ " + vo.getEndTime());
-			} else {
-				row.createCell(5).setCellValue(vo.getStartTime());
+			//width 조정
+			sheet.autoSizeColumn(0);
+			sheet.autoSizeColumn(1);
+			sheet.autoSizeColumn(2);
+			sheet.autoSizeColumn(3);
+			sheet.autoSizeColumn(4);
+			sheet.autoSizeColumn(5);
+		} else if (requestURL.indexOf("excelAbsentedListExport.do") > -1){
+//			미입력자조회엑셀
+			pFileName = EgovDateUtil.getToday("-") +"_absentedReport.xls";
+			
+			//header
+			row.createCell(0).setCellValue("이름");
+			row.getCell(0).setCellStyle(headerStyle);
+			row.createCell(1).setCellValue("직급");
+			row.getCell(1).setCellStyle(headerStyle);
+			row.createCell(2).setCellValue("부서");
+			row.getCell(2).setCellStyle(headerStyle);
+			row.createCell(3).setCellValue("날짜");
+			row.getCell(3).setCellStyle(headerStyle);
+			
+			//body
+			for (int i = 0 ; i < attitudeList.size(); i++) { 
+				AdminAttitudeVO vo = attitudeList.get(i);
+				row = sheet.createRow(i + 1);
+
+				row.createCell(0).setCellValue(vo.getUserName());
+				row.createCell(1).setCellValue(vo.getUserTitle());
+				row.createCell(2).setCellValue(vo.getDeptName());
+				row.createCell(3).setCellValue(vo.getStartDate());
+				
+				row.getCell(0).setCellStyle(bodyStyle);
+				row.getCell(1).setCellStyle(bodyStyle);
+				row.getCell(2).setCellStyle(bodyStyle);
+				row.getCell(3).setCellStyle(bodyStyle);
 			}
 			
-			row.getCell(0).setCellStyle(bodyStyle);
-			row.getCell(1).setCellStyle(bodyStyle);
-			row.getCell(2).setCellStyle(bodyStyle);
-			row.getCell(3).setCellStyle(bodyStyle);
-			row.getCell(4).setCellStyle(bodyStyle);
-			row.getCell(5).setCellStyle(bodyStyle);
+			//width 조정
+			sheet.autoSizeColumn(0);
+			sheet.autoSizeColumn(1);
+			sheet.autoSizeColumn(2);
+			sheet.autoSizeColumn(3);
 		}
-		
-		//width 조정
-		sheet.autoSizeColumn(0);
-		sheet.autoSizeColumn(1);
-		sheet.autoSizeColumn(2);
-		sheet.autoSizeColumn(3);
-		sheet.autoSizeColumn(4);
-		sheet.autoSizeColumn(5);
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
-		  
+		
 		workbook.close();
 		
 		LOGGER.debug("excelFileExport ended.");
