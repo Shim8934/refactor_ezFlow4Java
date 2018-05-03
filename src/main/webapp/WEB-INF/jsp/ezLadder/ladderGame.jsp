@@ -326,8 +326,8 @@
 			$("#ladderLineBox").css("padding-bottom", "50px");
 			
 			ladderDrawInitSettingVar();
-			setDefaultLad();
 			setLadInfo();
+			setDefaultLad();
 			printLadLine();
 			setUserPath();
 		}

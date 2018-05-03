@@ -153,8 +153,8 @@
 					})
 					.on("blur", ".item input", function() {
 						if(ladderType == "1") {
-							getMoney();
-							$("#totalmoney span").text(totalmoney);
+							getMoney($(this));
+							$("#totalmoney span").text(totalmoneyStr);
 						}
 					});
 				
@@ -192,8 +192,8 @@
 					$tempItemList.css("display", "none");
 					
 					if(ladderType == "1") {
-						getMoney();
-						html += "<div id='totalmoney' style='float: right; line-height: 50px;'>$<span style='margin: 0px 5px 0px 15px;'>" + totalmoney + "</span>" + strLang24 + "</div>";
+						getMoney($("#itemList").find("input"));
+						html += "<div id='totalmoney' style='float: right; line-height: 50px;'>$<span style='margin: 0px 5px 0px 15px;'>" + totalmoneyStr + "</span>" + strLang24 + "</div>";
 					}
 				}
 				$("#ladderTypeOption").html(html);
@@ -210,19 +210,94 @@
 			}
 			
 			var totalmoney = 0;
+			var totalmoneyStr = "";
 			var regNumber = /^[0-9]*$/;
 			var regexp = /\B(?=(\d{3})+(?!\d))/g;
-			function getMoney() {
-				var len = $("#attendantList li").length;
+			var moneyArr = [];
+			function getMoney(itemobj) {
+				var moneyUnit = {"unitStr": [strLang25, strLang26, strLang27, strLang28], "unitWon": [10, 100, 1000, 10000]};
+				var moneyNum = {"numStr": [strLang29, strLang30, strLang31, strLang32, strLang33, strLang34, strLang35, strLang36, strLang37], "number": [1, 2, 3, 4, 5, 6, 7, 8, 9]};
 				var inputval = "";
-				totalmoney = 0;
-				for(var i = 0; i < len; i++) {
-					inputval = $(".item:eq(" + i + ") input").val().replace(",", "");
-					if(regNumber.test(inputval)) {
-						totalmoney += inputval * 1;
+				var objLen = itemobj.length;
+				
+				if(objLen != 1) {
+					moneyArr = [];
+					totalmoney = 0;
+				}
+				
+				for(var i = 0; i < objLen; i++) {
+					var obj = itemobj.eq(i);
+					
+					if(!!moneyArr[obj.attr("_itemindex")]) {
+						totalmoney -= moneyArr[obj.attr("_itemindex")];
+					}
+					
+					moneyArr[obj.attr("_itemindex")] = 0;
+					
+					inputval = obj.val().replace(",", "").replace(" ", "");
+					
+					if(!!inputval) {
+						if(regNumber.test(inputval) || inputval.slice(-1) == strLang24 && regNumber.test(inputval.slice(0, -1))) {
+							moneyArr[obj.attr("_itemindex")] = Number(inputval) || Number(inputval.slice(0, -1));
+						} else if(inputval.slice(-1) == strLang24) {
+							var tempMoneyArr = {"won": [], "unitidx": [], "wonStr": []};
+							var inputLastIdx = inputval.length - 2;
+							var tempTotalMoney = 0;
+							
+							for(var j = inputLastIdx; j >= 0; j--) {
+								var UnitFlag = moneyUnit["unitStr"].indexOf(inputval[j]);
+								
+								if(UnitFlag != -1) {
+									var tempArrLen = tempMoneyArr["won"].length;
+									var FrontNumFlag = moneyNum["numStr"].indexOf(inputval[j - 1]);
+									
+									if(FrontNumFlag != -1) {
+										tempMoneyArr["won"][tempArrLen] = moneyNum["number"][FrontNumFlag] * moneyUnit["unitWon"][UnitFlag];
+										tempMoneyArr["unitidx"][tempArrLen] = UnitFlag;
+										tempMoneyArr["wonStr"][tempArrLen] = moneyNum["numStr"][FrontNumFlag].concat(moneyUnit["unitStr"][UnitFlag]);
+										j--;
+									} else {
+										tempMoneyArr["won"][tempArrLen] = moneyUnit["unitWon"][UnitFlag];
+										tempMoneyArr["unitidx"][tempArrLen] = UnitFlag;
+										tempMoneyArr["wonStr"][tempArrLen] = moneyUnit["unitStr"][UnitFlag];
+									}
+								} else {
+									break;
+								}
+							}
+							
+							tempMoneyArr["won"].reverse();
+							tempMoneyArr["unitidx"].reverse();
+							tempMoneyArr["wonStr"].reverse();
+							
+							var tempArrLen = tempMoneyArr["won"].length;
+							for(var j = 0; j < tempArrLen; j++) {
+								if(tempMoneyArr["unitidx"][j + 1] != 3 && tempMoneyArr["unitidx"][j] < tempMoneyArr["unitidx"][j + 1]) {
+									tempTotalMoney = 0;
+									break;
+								}
+								
+								if(tempMoneyArr["unitidx"][j] == 3) {
+									if(tempMoneyArr["wonStr"][j].length == 2) {
+										tempTotalMoney += tempMoneyArr["won"][j] / moneyUnit["unitWon"][3];
+									} else if(tempTotalMoney == 0) {
+										tempTotalMoney = 1;
+									}
+									
+									tempTotalMoney *= moneyUnit["unitWon"][3];
+								} else {
+									tempTotalMoney += tempMoneyArr["won"][j];
+								}
+							}
+							
+							moneyArr[obj.attr("_itemindex")] = Number(tempTotalMoney);
+							
+							console.log(tempMoneyArr);
+						}
+						totalmoney += moneyArr[obj.attr("_itemindex")];
 					}
 				}
-				totalmoney = totalmoney.toString().replace(regexp, ',');
+				totalmoneyStr = totalmoney.toString().replace(regexp, ',') || "0";
 			}
 			
 			/** 재사용 사다리 정보 가져오기 */
@@ -301,15 +376,6 @@
 				}
 				
 				ladderSetInitView();
-				
-				/* var userdata = {"userId": [], "userName": [], "userName2": [], "pic": [], "item": []};
-				lineInfo.forEach(function(line, index) {
-					userdata["userId"][index] = line.userId;
-					userdata["userName"][index] = line.userName;
-					userdata["userName2"][index] = line.userName2;
-					userdata["pic"][index] = line.pic;
-					userdata["item"][index] = line.item;
-				}); */
 				
 				setAllUser_(lineInfo, "preladder");
 				
@@ -687,7 +753,7 @@
 							html += '<input type="text" class="input" name="userNames" style="line-height: 30px;" id="userNames' + i + '" maxlength="' + maxname + '" /></span></div>';
 							html += '<input type="text" name="userName2s" style="display: none;" />';
 							html += '<input type="text" name="userIds" style="display: none;" />';
-							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 22px; right: 10px; cursor: pointer;"></span></div></li>';
+							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 20px; right: 15px; cursor: pointer;"></span></div></li>';
 						} else {
 							if(attendants["pic"][i] !== "") {
 								picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
@@ -709,7 +775,7 @@
 						$(thisLi + " input[name='userName2s']").val(attendants["name2"][i]);
 						$(thisLi + " input[name='userIds']").val(attendants["id"][i]);
 						
-						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' id='items" + i + "' maxlength='" + maxitem + "' /></li>");
+						$("#itemList").append("<li class='item'><input type='text' class='input' name='items' id='items" + i + "' _itemindex='" + i + "' maxlength='" + maxitem + "' /></li>");
 						$("#tempItemList").append("<li><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' value='?' /></li>");
 						
 						$("#items" + i).val(items[i]);
