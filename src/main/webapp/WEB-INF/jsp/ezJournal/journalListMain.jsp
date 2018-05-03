@@ -89,7 +89,7 @@
 	background-color: rgb(233, 241, 255);
 }
 
-#lvBoardList #journalList tr<c:if test="${listType ne 'temp' }">.noView</c:if> td {
+#journalListBody #journalList tr<c:if test="${listType ne 'temp' }">.noView</c:if> td {
 	font-weight: bold;
 }
 </style>
