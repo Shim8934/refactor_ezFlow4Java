@@ -57,9 +57,9 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 				select_memorialDays(uselang);
-				
-				form_change();
 				setHoliday();
+				
+				
 			}
 			
 			window.onresize = function () {   	
@@ -223,9 +223,7 @@
 						$("#writerName").closest("tr").remove();
 						setDatePicker($("#periodblock").attr("datetype"));
 					    
-						if ($("#selectAtti").val() != "A07") {
-							checkHoliday($("#Sdatepicker").val());
-						}
+						checkHoliday($("#Sdatepicker").val());
 						if ($("input[name=region]").length != 0) {
 							$("input[name=region]").val(region);
 						}
@@ -314,7 +312,8 @@
 																		  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
 																		  result.holidayList[i].isRest == 1 ? true : false));
 							}
-						}					
+						}
+						form_change();
 					}
 				});
 			}
@@ -328,29 +327,35 @@
 				var todayMemorialDayList = memorialDayCheck(checkDate, todayLunar);
 				var todayYearMemorialDayList = yearmemorialDayCheck(checkDate, todayLunar);
 				
-				if (holidayAttReg == "0" && $("#Edatepicker").length == 0) {
-					//길이비교, 요일비교
-					if (todayMemorialDayList != 0 || todayYearMemorialDayList.length != 0 || closedDay[checkDate.getDay()] == "1") {
-						$("#selectAtti").val("A07");
-						$("#selectAtti option").not(":selected").css("display", "none");
-						$("#selectAtti option[value=A07]").css("display", "");
-						form_change($("#selectAtti"));
-						alert("휴일에는 휴근만 등록이 가능합니다. 다른 근태를 등록하시려면 날짜를 이동해주세요.");
-						//저 alert을 휴일에는 휴근만 등록이 가능하다고 하고, 휴근으로 돌려주지말고 아예 날짜를 선택을 못하게 막아버리는 건 또 어떻까 생각이 드네요.
-					} else if($("#selectAtti").val() == "A07") {
+				if (todayMemorialDayList != 0 || todayYearMemorialDayList.length != 0 || closedDay[checkDate.getDay()] == "1") {
+					$("#selectAtti option[value=A07]").css("display", "");
+				} else {
+					if ($('#selectAtti').val() == "A07") {
 						$("#selectAtti").val("A04");
-						$("#selectAtti option").css("display", "");
-						$("#selectAtti option[value=A07]").css("display", "none");
 						form_change($("#selectAtti"));
 					}
-				} else if (holidayAttReg == "1"){
-					//1인 경우에 휴근 열어주는 작업도 해야겟다.
-					if (todayMemorialDayList != 0 || todayYearMemorialDayList.length != 0 || closedDay[checkDate.getDay()] == "1") {
-						$("#selectAtti option[value=A07]").css("display", "");
-					} else {
-						$("#selectAtti option[value=A07]").css("display", "none");
-					}
+					$("#selectAtti option[value=A07]").css("display", "none");
 				}
+				
+// 				if (holidayAttReg == "0" && $("#Edatepicker").length == 0) {
+// 					//길이비교, 요일비교
+// 					if (todayMemorialDayList != 0 || todayYearMemorialDayList.length != 0 || closedDay[checkDate.getDay()] == "1") {
+// 						$("#selectAtti").val("A07");
+// 						$("#selectAtti option").not(":selected").css("display", "none");
+// 						$("#selectAtti option[value=A07]").css("display", "");
+// 						form_change($("#selectAtti"));
+// 						alert("휴일에는 휴근만 등록이 가능합니다. 다른 근태를 등록하시려면 날짜를 이동해주세요.");
+// 						//저 alert을 휴일에는 휴근만 등록이 가능하다고 하고, 휴근으로 돌려주지말고 아예 날짜를 선택을 못하게 막아버리는 건 또 어떻까 생각이 드네요.
+// 					} else if($("#selectAtti").val() == "A07") {
+// 						$("#selectAtti").val("A04");
+// 						$("#selectAtti option").css("display", "");
+// 						$("#selectAtti option[value=A07]").css("display", "none");
+// 						form_change($("#selectAtti"));
+// 					}
+// 				} else 
+// 				if ($("Edatepicker").length == 0){
+					//1인 경우에 휴근 열어주는 작업도 해야겟다.
+// 				}
 			}
 			
 			function attRegCheck() {
