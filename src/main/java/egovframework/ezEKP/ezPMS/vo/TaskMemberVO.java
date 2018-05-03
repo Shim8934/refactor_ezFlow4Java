@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezPMS.vo;
 
 public class TaskMemberVO {
 	
+	private long taskMemberId;
+
 	private int tenantId;
 
 	private long taskId;
@@ -19,6 +21,14 @@ public class TaskMemberVO {
 	private float pctinput;
 
 	
+	public long getTask_member_id() {
+		return taskMemberId;
+	}
+
+	public void setTask_member_id(long taskMemberId) {
+		this.taskMemberId = taskMemberId;
+	}
+
 	public int getTenantId() {
 		return tenantId;
 	}
