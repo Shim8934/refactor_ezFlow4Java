@@ -44,7 +44,7 @@ public interface EzPMSService {
 	
 	public void changeKanbanOrder(int projectId, String userId, String orderStatus, int tenantId);
 	
-	public void addFavoriteProject(int projectId, String userId, int tenantId);
+	public int addFavoriteProject(int projectId, String userId, int tenantId);
 	
 	public void deleteFavortieProject(int projectId, String userId, int tenantId);
 	
@@ -52,7 +52,7 @@ public interface EzPMSService {
 	
 	public List<TaskLogListVO> getTaskLogList(int taskId, int groupId, Map<String, Object> map, String offset, String lang, int tenantId);
 	
-	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId);
+	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang);
 	
 	public int getTaskListCount(String status, String mytask, int projectId, int tenantId);
 	

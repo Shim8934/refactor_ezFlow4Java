@@ -97,9 +97,10 @@
     </resultMap>
     
     <resultMap id="projectMemberVO" class="ProjectMemberVO">
-    	<result property="userId"							column="USER_ID"					columnIndex="5"/>
-    	<result property="userName"							column="USER_NAME"					columnIndex="6"/>
-    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="8"/>
+    	<result property="userId"							column="USER_ID"					columnIndex="1"/>
+    	<result property="userName"							column="USER_NAME"					columnIndex="2"/>
+    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="3"/>
+    	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="4"/>
     </resultMap>
     
     <resultMap id="projectTaskVO" class="ProjectTaskVO">
@@ -375,7 +376,8 @@
 		SELECT
 			USER_ID AS USER_ID,
 			USER_NAME$lang$ AS USER_NAME,
-			USER_DEPTNAME$lang$ AS USER_DEPTNAME
+			USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+			MEMBER_ROLE_ID AS MEMBER_ROLE_ID
 		FROM TBL_PMS_MEMBER
 		WHERE
 			PROJECT_ID = #project_Id#
@@ -394,10 +396,12 @@
 		SELECT 
 			CN AS USER_ID,
 			DISPLAYNAME$lang$ AS USER_NAME,
-			DESCRIPTION$lang$ AS USER_DEPTNAME
+			DESCRIPTION$lang$ AS USER_DEPTNAME,
+			C.MEMBER_ROLE_ID AS MEMBER_ROLE_ID
 		FROM TBL_USERMASTER D JOIN
-		(SELECT
-			DISTINCT B.CN AS DEPARTMENT
+		(SELECT DISTINCT 
+			B.CN AS DEPARTMENT,
+			A.MEMBER_ROLE_ID AS MEMBER_ROLE_ID
 		FROM
 			TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
 		ON
@@ -763,7 +767,7 @@
 	]]>
 	</update>
 	
-	<select id="EzPMSDAO.getProjectDetail" parameterClass="Map" resultMap="projectInfoVO">
+	<select id="EzPMSDAO.getProjectDetails" parameterClass="Map" resultMap="projectInfoVO">
 	<![CDATA[
 		SELECT DISTINCT
 			A.PROJECT_ID AS PROJECT_ID, 
@@ -804,9 +808,13 @@
 			OR 
 			  B.USER_ID = #deptId# 
 			)
-		AND  
-			A.STATUS = #status# 
 		AND 
+	]]>
+		<isNotNull property="status">
+			AND
+				B.STATUS LIKE CONCAT('%',#status#,'%')
+		</isNotNull>
+	<![CDATA[
 			A.TENANT_ID = #tenantId#
 		AND
 			A.PROJECT_ID = #projectId#
@@ -979,4 +987,36 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</delete>
+	
+	<select id="EzPMSDAO.getFavoriteProject" parameterClass="map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				PROJECT_ID
+			FROM	
+				tbl_pms_favorite	
+			WHERE	
+				USER_ID = #userId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzPMSDAO.getProjectDetails" parameterClass="map" resultClass="projectInfoVO">
+		<![CDATA[
+			SELECT	
+				PROJECT_ID,	TENANT_ID,	PROJECT_NAME,	PLAN_START_DATE,	PLAN_END_DATE,	
+				REAL_START_DATE,	REAL_END_DATE,	HEAD_MANAGER_ID,	HEAD_MANAGER_NAME, HEAD_MANAGER_NAME2,
+				HEAD_MANAGER_DEPTNAME, HEAD_MANAGER_DEPTNAME2, CREATOR_ID, CREATOR_NAME, CREATOR_NAME2,
+				CREATOR_DEPTNAME, CREATOR_DEPTNAME2,	
+				STATUS,	PROGRESS,	OVERVIEW, WEIGHT_INPUT, WORKINGDAY, REST_DUEDAY, ALAM_MAIL_STATUS
+			FROM
+				tbl_pms_project	
+			WHERE	
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				DEL_STATUS = 0
+		]]>
+	</select>
 </sqlMap>

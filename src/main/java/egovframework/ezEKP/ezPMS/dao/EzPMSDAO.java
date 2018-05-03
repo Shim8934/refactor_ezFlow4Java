@@ -143,7 +143,6 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (List<ProjectTaskVO>) list("EzPMSDAO.getTaskList", map); 
 	}
 	
-	
 
 	public int getProjectListCount(Map<String, Object> map) {
 		return (int) select("EzPMSDAO.getProjectListCount", map);
@@ -176,5 +175,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void deleteFavoriteProject(Map<String, Object> map) {
 		delete ("EzPMSDAO.deleteFavoriteProject", map);		
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public List<Integer> getFavoriteProject(Map<String, Object> map) {
+		return (List<Integer>) list("EzPMSDAO.getFavoriteProject", map);
+	}
 }

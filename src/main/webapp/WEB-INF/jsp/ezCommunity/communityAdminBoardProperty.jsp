@@ -400,6 +400,7 @@
 		function CheckType(nu) {
 			checkUse = check[nu].value;
 		}
+		
 		</script>
 	</head>
 	<body class="mainbody">
@@ -637,7 +638,8 @@
 			</tr>
 		</table>
 		
-		<br>
+		<!-- 18-04-27 김민성 - UI 수정 -->
+		<br><br><br>
 		
 		<div class="btnposition btnpositionNew">
 			<a class="imgbtn"  onClick="return Save()"><span><spring:message code = 'ezCommunity.t108' /></span></a>

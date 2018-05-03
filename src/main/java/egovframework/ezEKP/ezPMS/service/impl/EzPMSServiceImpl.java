@@ -243,15 +243,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public ProjectInfoVO getProjectDetails(int projectId, String userId, int tenantId, String offset, String lang) {
 		LOGGER.debug("getProjectDetail started");
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("project_Id", projectId);
-		param.put("lang", lang);
-		param.put("user_Id", userId);
-		param.put("tenant_Id", tenantId);
-		param.put("offset", offset);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("lang", lang);
+		map.put("tenantId", tenantId);
+		map.put("offset", offset);
+		
+		ProjectInfoVO project = ezPMSDAO.getProjectDetails(map);
 		
 		LOGGER.debug("getProjectDetail ended");
-		return null;
+		
+		return project;
 	}
 
 	@Override
@@ -295,14 +297,22 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void addFavoriteProject(int projectId, String userId, int tenantId) {
+	public int addFavoriteProject(int projectId, String userId, int tenantId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		
-		ezPMSDAO.addFavoriteProject(map);
+		List<Integer> favoriteProjectId = ezPMSDAO.getFavoriteProject(map);
 		
+		for (int i = 0; i < favoriteProjectId.size(); i++) {
+			if (projectId == favoriteProjectId.get(i)) {
+				return 1;
+			}
+		}
+		
+		ezPMSDAO.addFavoriteProject(map);
+		return 0;
 	}
 
 	@Override
@@ -329,9 +339,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId) {
+	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("status", project.getStatus());
+		map.put("searchByName", project.getProjectName());
+		map.put("lang", lang);
+		map.put("searchByStartDate", project.getPlanStartDate());
+		map.put("searchByEndDate", project.getPlanEndDate());
+		map.put("searchByOverview", project.getOverview());
+		map.put("searchByUser", project.getHeadManagerName());
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
 		map.put("deptId", deptId);

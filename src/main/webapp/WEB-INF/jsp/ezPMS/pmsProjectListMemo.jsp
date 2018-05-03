@@ -33,6 +33,7 @@ $(function(){
 	</c:forEach>
 	
 	for (var i = 0; i < projectList.length; i++) {
+		console.log(projectList[i].isFavorite);
 		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : projectList[i].progress,
 			fillBackGroundColor:"#9b59b6",
@@ -86,13 +87,21 @@ $(function(){
 			</c:when>
 			<c:otherwise>
 				<c:forEach items="${projectList }" var="project">
-			<table id="${project.projectId }" class="projectList" style="margin: 10px 20px; float: left; position: relative; border: solid 1px gray; clear: none; width: 360px; left: 2%;">
+			<table id="${project.projectId }" class="projectList" style="margin: 10px 20px; float: left; position: relative; border: solid 1px gray; clear: none; width: 360px; left: 2%; cursor:pointer;" ondblclick="goProjectDetails(this)">
 				<tr>
 					<th colspan="2" style="height: 30px; font-size: 15px;">
 						<input type="checkbox" onchange="checkedCheckboxMemo(this);" name="memoCheckbox" style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer; float: left">
 							<c:out value="${project.projectName }" />
-							<img class="star" style="cursor: pointer; float: right;" draggable="false" src="/images/ImgIcon/view-flag.gif"
-								onclick="addFavorite(${project.projectId })">
+							<c:choose>
+								<c:when test="${project.isFavorite eq 0}">
+									<img class="star" style="cursor: pointer; float: right;" draggable="false" src="/images/ImgIcon/view-flag.gif"
+									onclick="addFavoriteMemo(${project.projectId })">
+								</c:when>
+								<c:otherwise>
+									<img class="star" style="cursor: pointer; float: right;" draggable="false" src="/images/ImgIcon/icon-flag.gif"
+									onclick="deleteFavoriteMemo(${project.projectId })">
+								</c:otherwise>
+							</c:choose>
 					</th>
 				</tr>
 				<tr onclick="selectedMemoTR(this);">

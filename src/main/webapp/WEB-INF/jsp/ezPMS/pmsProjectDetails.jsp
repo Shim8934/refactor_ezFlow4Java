@@ -15,15 +15,15 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript">
 $(function() {
-	$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do");
+	$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do/"+"${projectId}");
 	$("#1tab0").addClass("tabon");
 	
 	$("#1tab0").click(function(){
 		var clickTabId = $(this).attr("id");
 		var nowTabAttr = $(".tabon").attr("id");
 		changeTab(clickTabId, nowTabAttr);
-		
-		$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do");
+		//개요
+		$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do/"+"${projectId}");
 		
 	});
 	
@@ -88,7 +88,7 @@ function changeTab(clickTabId, nowTabAttr) {
 </script>
 </head>
 <body class="mainbody" style="height: 95%; overflow: hidden" marginwidth="0" marginheight="0">
-	<h1>Project Details<span id="mailBoxInfo"> - total : 12</span></h1>
+	<h1>Project Details : ${projectId }<span id="mailBoxInfo"> - total : 12</span></h1>
 	<div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
 	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab">overview</span></p>
