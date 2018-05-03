@@ -67,6 +67,7 @@ public class EzPMSGWController2 {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
 			SearchVO search = new SearchVO();
 			search.setTenantId(info.getTenantId());
@@ -75,6 +76,10 @@ public class EzPMSGWController2 {
 			
 			
 			List<ProjectTaskVO> taskList = ezPMSService.getTaskList(search);
+			
+			for(int i = 0; i < taskList.size(); i++ ){
+				taskList.get(i).setTaskMember(ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);

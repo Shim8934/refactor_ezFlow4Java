@@ -107,5 +107,7 @@ public interface EzPMSService {
 	public Map<String, Object> getRemainingWeight(String projectId);
 
 	public int getUserProjectRole(String userId, int tenantId, int projectId, String deptId);
+	
+	public List<TaskMemberVO> getTaskMemberList(int tenantId, long taskId, String lang);
 
 }

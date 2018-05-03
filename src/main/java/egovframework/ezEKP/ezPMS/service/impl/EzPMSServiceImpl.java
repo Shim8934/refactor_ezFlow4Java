@@ -269,10 +269,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("getProjectMemberList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("project_Id", projectId);
-		param.put("role_Id", roleId);
+		param.put("projectId", projectId);
+		param.put("roleId", roleId);
 		param.put("lang", lang);
-		param.put("tenant_Id", tenantId);
+		param.put("tenantId", tenantId);
+		param.put("isGantt", 0);
 		
 		List<ProjectMemberVO> list = ezPMSDAO.getProjectMemberList(param);
 		
@@ -403,7 +404,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("planStartDate", search.getPlanStartDate());
 		param.put("planEndDate", search.getPlanEndDate());
 		param.put("lang", ""); //파라미터로 받아와야함.
-		param.put("status", "C");
+		param.put("status", search.getStatus());
 		param.put("tenantId", search.getTenantId());
 		
 		List<ProjectTaskVO> list = ezPMSDAO.getTaskList(param);
@@ -746,5 +747,18 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public Map<String, Object> getRemainingWeight(String projectId) {
 		return ezPMSDAO.getRemainingWeight(projectId);
+	}
+
+	@Override
+	public List<TaskMemberVO> getTaskMemberList(int tenantId, long taskId, String lang) {
+		LOGGER.debug("Service ezPMS getTaskMemberList Started");
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("taskId", taskId);
+		map.put("tenantId", tenantId);
+		map.put("lang", lang);
+		
+		List<TaskMemberVO> taskMemberList = ezPMSDAO.getTaskMemberList(map);
+		LOGGER.debug("Service ezPMS getTaskMemberList Ended");
+		return taskMemberList;
 	}
 }

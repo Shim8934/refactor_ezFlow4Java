@@ -35,23 +35,57 @@
 	   			projectDetails = ${projectDetail};
 	   			var pd = projectDetails;
 	   			
-	   			ganttData.tasks = {};
-	   			ganttData.tasks.id = projectId;
-	   			ganttData.tasks.name = pd.creatorName;
-	   			ganttData.tasks.code = "";
-	   			ganttData.tasks.level = 0;
-	   			ganttData.tasks.status = pd.status;
-	   			ganttData.tasks.start = pd.planStartDate;
-	   			ganttData.tasks.end = pd.planEndDate;
-	   			ganttData.tasks.duration = pd.workingday;
-	   			ganttData.tasks.startIsMilestone = "";
-	   			ganttData.tasks.endIsMilestone = "";
-	   			ganttData.tasks.assigs = {};
-	   			for(var assig in pd.projectMember){
-	   				ganttData.tasks.assigs;
-	   			}
-	   			ganttData.tasks.assign = pd.projectMember;
+	   			ganttData.tasks = [{}];
+	   			//프로젝트 데이터 가공부분.
+	   			ganttData.tasks[0].id = pd.projectId;
+	   			ganttData.tasks[0].name = pd.projectName;
+	   			ganttData.tasks[0].code = "";
+	   			ganttData.tasks[0].level = 0;
+	   			ganttData.tasks[0].status = pd.status;
+	   			ganttData.tasks[0].start = pd.planStartDate;
+	   			ganttData.tasks[0].end = pd.planEndDate;
+	   			ganttData.tasks[0].duration = pd.workingday;
+	   			ganttData.tasks[0].startIsMilestone = "";
+	   			ganttData.tasks[0].endIsMilestone = "";
+	   			ganttData.tasks[0].assigs = [{}];
 	   			
+	   			for(var i = 0; i < pd.projectMember.length; i++){
+	   				ganttData.tasks[0].assigs[i].resourceId = pd.projectMember[i].memberId;
+	   				ganttData.tasks[0].assigs[i].id = pd.projectMember[i].userId;
+	   				ganttData.tasks[0].assigs[i].roleId = pd.projectMember[i].memberRoleId;
+	   				ganttData.tasks[0].assigs[i].effort = "";
+	   			}
+	   			
+	   			ganttData.tasks[0].depends = "";
+	   			ganttData.tasks[0].description = pd.overview;
+	   			ganttData.tasks[0].progress = pd.progress;
+	   			
+	   			
+	   			//업무 리스트 가공부분.
+	   			for(var i = 0; i < tl.length; i++){
+		   			ganttData.tasks[i + 1].id = tl[i].projectId + "-" + tl[i].taskId;
+		   			ganttData.tasks[i + 1].name = tl[i].taskName;
+		   			ganttData.tasks[i + 1].code = "";
+		   			ganttData.tasks[i + 1].level = 1;
+		   			ganttData.tasks[i + 1].status = tl[i].status;
+		   			ganttData.tasks[i + 1].start = tl[i].planStartDate;
+		   			ganttData.tasks[i + 1].end = tl[i].planEndDate;
+		   			ganttData.tasks[i + 1].duration = tl[i].workingday;
+		   			ganttData.tasks[i + 1].startIsMilestone = "";
+		   			ganttData.tasks[i + 1].endIsMilestone = "";
+		   			ganttData.tasks[i + 1].assigs = [{}];
+		   			
+		   			for(var j = 0; j < tl.taskMember.length; i++){
+		   				ganttData.tasks[i + 1].assigs[j].resourceId = pd.projectMember[i + 1].memberId;
+		   				ganttData.tasks[i + 1].assigs[j].id = pd.projectMember[i + 1].userId;
+		   				ganttData.tasks[i + 1].assigs[j].roleId = pd.projectMember[i + 1].memberRoleId;
+		   				ganttData.tasks[i + 1].assigs[j].effort = "";
+		   			}
+		   			
+		   			ganttData.tasks[i + 1].depends = "";
+		   			ganttData.tasks[i + 1].description = pd.overview;
+		   			ganttData.tasks[i + 1].progress = pd.progress;
+	   			}
 	   			
 	   		}
 	   		

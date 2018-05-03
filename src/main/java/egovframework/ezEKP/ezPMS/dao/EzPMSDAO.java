@@ -180,4 +180,11 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<Integer> getFavoriteProject(Map<String, Object> map) {
 		return (List<Integer>) list("EzPMSDAO.getFavoriteProject", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TaskMemberVO> getTaskMemberList(Map<String, Object> map) {
+		System.out.println(map);
+		System.out.println(list("EzPMSDAO.getTaskMemberList", map));
+		return (List<TaskMemberVO>) list("EzPMSDAO.getTaskMemberList", map);
+	}
 }

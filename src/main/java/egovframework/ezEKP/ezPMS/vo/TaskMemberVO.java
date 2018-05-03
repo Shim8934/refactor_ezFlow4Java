@@ -21,11 +21,11 @@ public class TaskMemberVO {
 	private float pctinput;
 
 	
-	public long getTask_member_id() {
+	public long getTaskMemberId() {
 		return taskMemberId;
 	}
 
-	public void setTask_member_id(long taskMemberId) {
+	public void setTaskMemberId(long taskMemberId) {
 		this.taskMemberId = taskMemberId;
 	}
 

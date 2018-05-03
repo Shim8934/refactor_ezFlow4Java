@@ -1096,22 +1096,24 @@
 		]]>
 	</select>
 	
-	<select id="EzPMSDAO.getTaskMemberList" parameterClass="map" resultClass="ProjectTaskMemberVO">
+	<select id="EzPMSDAO.getTaskMemberList" parameterClass="map" resultMap="projectTaskMemberVO">
 		<![CDATA[
 			SELECT 
 				TASK_MEMBER_ID,
 				TENANT_ID,
 				TASK_ID,
 				USER_ID,
-				USER_NAME$lang$ AS USER_NAME,
-				USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				USER_NAME,
+				USER_NAME2,
+				USER_DEPTNAME,
+				USER_DEPTNAME2,
 				PCTINPUT
 			FROM	
 				tbl_pms_taskmember	
 			WHERE	
 				TENANT_ID = #tenantId#
 			AND
-				TAKS_ID = #taskId#
+				TASK_ID = #taskId#
 		]]>
 	</select>
 </sqlMap>
