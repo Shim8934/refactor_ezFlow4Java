@@ -103,13 +103,14 @@ var pagination = (function() {
 	}
 	
 	function previousBlock() {
-		var pageNum = ~~((currentPage - 1) / pageButtonSize) * pageButtonSize - 1;
+		var pageNum = ~~((currentPage - 1) / pageButtonSize - 1) * pageButtonSize + 1;
+		
 		setPage(pageNum);
 	}
 	
 	function nextBlock() {
-		var pageNum = ~~((currentPage + 1) / pageButtonSize) * pageButtonSize + 1;
-		setPage(pageNum);
+		var pageNum = ~~((currentPage - 1) / pageButtonSize + 1) * pageButtonSize + 1;
+		setPage(Math.min(pageNum, totalPage));
 	}
 	
 	function previous() {

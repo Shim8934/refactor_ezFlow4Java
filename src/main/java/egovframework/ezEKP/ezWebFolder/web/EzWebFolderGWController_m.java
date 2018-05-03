@@ -657,6 +657,15 @@ public class EzWebFolderGWController_m {
 				ezWebFolderService_y.insertEnv(userId, tenantId, listCount);
 			}
 			
+			Map<String, Long> favoriteCountMap = ezWebFolderService_m.getFavoritesCount(userId, primary, offset, tenantId, searchInfo);
+			long totalCount = favoriteCountMap.get("totalCount");
+			long folderCount = favoriteCountMap.get("folderCount");
+			long fileCount = favoriteCountMap.get("fileCount");
+			
+			if (startIndex >= totalCount) {
+				startIndex = (int) (totalCount - 1) / listCount * listCount;
+			}
+			
 			List<FavoriteVO> favoriteFiles = ezWebFolderService_m.getFavorites(userId, primary, offset, tenantId, searchInfo, startIndex, listCount);
 			String targetPath;
 			
@@ -675,12 +684,11 @@ public class EzWebFolderGWController_m {
 				favoriteFile.setTargetPath(targetPath);
 			}
 			
-			Map<String, Long> favoriteCountMap = ezWebFolderService_m.getFavoritesCount(userId, primary, offset, tenantId, searchInfo);
 			JSONObject data = new JSONObject();
 			
-			data.put("totalCount", favoriteCountMap.get("totalCount"));
-			data.put("folderCount", favoriteCountMap.get("folderCount"));
-			data.put("fileCount", favoriteCountMap.get("fileCount"));
+			data.put("totalCount", totalCount);
+			data.put("folderCount", folderCount);
+			data.put("fileCount", fileCount);
 			data.put("listCount", listCount);
 			
 			data.put("targetList", favoriteFiles);
