@@ -61,7 +61,7 @@
 		
 		window.onresize = function () {
 			var divList          = document.getElementById("dragDropArea");
-			var reheight         = document.documentElement.clientHeight - 220;
+			var reheight         = document.documentElement.clientHeight - 160;
 			divList.style.height = reheight + "px";
 		};
 		
@@ -174,6 +174,15 @@
 					var tdUpdateDate	= document.createElement("td");	
 					var tdAbsolutePath	= document.createElement("td");	
 					
+					setStyles([tdAbsolutePath], function(style) {
+						style.textOverflow = "ellipsis";
+						style.whiteSpace = "nowrap";
+					});
+					
+					setStyles([tdSize], function(style) {
+						style.textAlign = "center";
+					})
+					
 					trElement.setAttribute("class", "bnkWebFolder");
 					trElement.setAttribute("targetid", resultElement["trashCanId"]);
 					trElement.setAttribute("targetPath", resultElement["trashCanPath"]);
@@ -230,6 +239,14 @@
 					tableList.appendChild(trElement);
 				}
 			} 
+		}
+		
+		function setStyles(elements, excutor) {
+			var length = elements.length;
+			
+			for (var i = 0; i < length; i++) {
+				excutor(elements[i].style);
+			}
 		}
 		
 		function dbClickFunction(obj) {
@@ -603,14 +620,14 @@
 	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
-				<th width="20px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
-				<th width="40px" ><spring:message code='ezWebFolder.t188'/></th>
-				<th width="160px"><spring:message code='ezWebFolder.t156'/></th>
-				<th width="60px" ><spring:message code='ezWebFolder.t157'/></th>
-				<th width="120px"><spring:message code='ezWebFolder.t189'/></th>
-				<th width="80px" ><spring:message code='ezWebFolder.t288'/></th>
-				<th width="80px" ><spring:message code='ezWebFolder.t190'/></th>
-				<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
+				<th width="20px"><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
+				<th width="40px"><spring:message code='ezWebFolder.t188'/></th>
+				<th width="30%"><spring:message code='ezWebFolder.t156'/></th>
+				<th style= "width=6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th>
+				<th width="7%;"><spring:message code='ezWebFolder.t189'/></th>
+				<th width="9%;"><spring:message code='ezWebFolder.t288'/></th>
+				<th width="9%;"><spring:message code='ezWebFolder.t190'/></th>
+				<th width="25%;"><spring:message code='ezWebFolder.t199'/></th>
 			</tr>
 		</table>
 	</div>
