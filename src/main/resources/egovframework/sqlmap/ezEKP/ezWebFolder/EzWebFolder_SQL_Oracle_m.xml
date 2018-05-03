@@ -134,24 +134,22 @@
 	<sql id ="searchTrashCanFile">
 	<isNotEqual property="searchExt" compareValue="" prepend="AND">
 				<![CDATA[
-					UPPER(FILES.FILE_EXT) LIKE '%' || UPPER(#searchExt#) || '%'
-					OR
 					LOWER(FILES.FILE_EXT) LIKE '%' || LOWER(#searchExt#) || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 				<![CDATA[
-					FILES.FILE_NAME LIKE '%' || #searchFileName# || '%'
+					LOWER(FILES.FILE_NAME) LIKE '%' || LOWER(#searchFileName#) || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 				<![CDATA[
-					FILES.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
+					LOWER(FILES.CREATE_NAME1) LIKE '%' || LOWER(#searchCreateName#) || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 				<![CDATA[
-					FILE_TYPE.TYPE_NAME LIKE '%' || #searchFileType# || '%'
+					LOWER(FILE_TYPE.TYPE_NAME) LIKE '%' || LOWER(#searchFileType#) || '%'
 				]]>
 		</isNotEqual>
 		<isNotEqual property="endrollStartDate" compareValue="">
@@ -175,22 +173,22 @@
 	<sql id ="searchTrashCanFolder">
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
 			<![CDATA[
-				'folder' LIKE '%' || #searchExt# || '%'
+				'folder' LIKE '%' || LOWER(#searchExt#) || '%'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 			<![CDATA[
-				FOLDER.FOLDER_NAME1 LIKE '%' || #searchFileName# || '%'
+				LOWER(FOLDER.FOLDER_NAME1) LIKE '%' || LOWER(#searchFileName#) || '%'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 			<![CDATA[
-				FOLDER.CREATE_NAME1 LIKE '%' || #searchCreateName# || '%'
+				LOWER(FOLDER.CREATE_NAME1) LIKE '%' || LOWER(#searchCreateName#) || '%'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 			<![CDATA[
-				FILE_TYPE.TYPE_NAME LIKE '%' || #searchFileType# || '%'
+				LOWER(FILE_TYPE.TYPE_NAME) LIKE '%' || LOWER(#searchFileType#) || '%'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="endrollStartDate" compareValue="">
