@@ -838,6 +838,7 @@ public class EzWebFolderGWController_m {
 		String endrollEndDate 	= orElse(request.getParameter("enrollEndDate"), "");
 		String delStartDate 	= orElse(request.getParameter("delStartDate"), "");
 		String delEndDate 		= orElse(request.getParameter("delEndDate"), "");
+		String mode 		    = orElse(request.getParameter("mode"), "");
 		
 		// TODO primary 수정
 		String primary;
@@ -868,7 +869,7 @@ public class EzWebFolderGWController_m {
 		try {
 			List<TrashCanVO> trashCanList = null;
 			JSONObject resultList = ezWebFolderService_m.getTrashCanList(userId, offset, tenantId, currPage, listCount,
-										searchExt, searchFileName, searchCreateName, searchFileType, endrollStartDate, endrollEndDate, delStartDate, delEndDate);
+										searchExt, searchFileName, searchCreateName, searchFileType, endrollStartDate, endrollEndDate, delStartDate, delEndDate, mode);
 			int fileCnt = 0;
 			int folderCnt = 0;
 			int totalCount = 0;
@@ -990,7 +991,7 @@ public class EzWebFolderGWController_m {
 		
 			
 		
-		if (fileIDList.length == 0 & folderIDList.length == 0|| serverName.equals("") || userId.equals("")) {
+		if (fileIDList.length == 0 && folderIDList.length == 0|| serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");

@@ -569,7 +569,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	@Override
 	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int currPage, int pEnd, 
 			String searchExt, String searchFileName, String searchCreateName,String searchFileType, String endrollStartDate, String endrollEndDate,
-			String delStartDate, String delEndDate) throws Exception {
+			String delStartDate, String delEndDate, String mode) throws Exception {
 		int totalRows  =  0;
 		int totalPages = 0;
 		int pStart 	   = 0;
@@ -596,6 +596,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("endrollEndDate", endrollEndDate);
 		map.put("delStartDate", delStartDate);
 		map.put("delEndDate", delEndDate);
+		map.put("mode", mode);
 		
 		JSONObject result = new JSONObject();
 		
@@ -624,7 +625,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					if (folderPath != null) {
 						trashCan.setTrashCanPath(folderPath);
 					}
-				} 
+				}
 			}
 		}
 		

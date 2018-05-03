@@ -441,16 +441,17 @@ public class EzWebFolderController_m {
 		
 		param.put("tenantId", user.getTenantId());
 		param.put("offset", user.getOffset());
-		param.put("currPage", Integer.parseInt(orElse(request.getParameter("currPage"), "1")));                 
+		param.put("currPage", Integer.parseInt(orElse(request.getParameter("currPage"), "1")));
 		param.put("listCount", Integer.parseInt(orElse(request.getParameter("listCount"), "0")));
-		param.put("searchExt", orElse(request.getParameter("searchExt"), "" ));               
-		param.put("searchFileName", orElse(request.getParameter("searchFileName"), ""));               
-		param.put("searchCreateName", orElse(request.getParameter("searchCreateName"), ""));               
-		param.put("searchFileType", orElse(request.getParameter("searchFileType"), ""));               
-		param.put("endrollStartDate", orElse(request.getParameter("enrollStartDate"), ""));               
-		param.put("endrollEndDate", orElse(request.getParameter("enrollEndDate"), ""));               
-		param.put("delStartDate", orElse(request.getParameter("delStartDate"), ""));               
-		param.put("delEndDate", orElse(request.getParameter("delEndDate"), ""));   
+		param.put("searchExt", orElse(request.getParameter("searchExt"), "" ));
+		param.put("searchFileName", orElse(request.getParameter("searchFileName"), ""));
+		param.put("searchCreateName", orElse(request.getParameter("searchCreateName"), ""));
+		param.put("searchFileType", orElse(request.getParameter("searchFileType"), ""));
+		param.put("endrollStartDate", orElse(request.getParameter("enrollStartDate"), ""));
+		param.put("endrollEndDate", orElse(request.getParameter("enrollEndDate"), ""));
+		param.put("delStartDate", orElse(request.getParameter("delStartDate"), ""));
+		param.put("delEndDate", orElse(request.getParameter("delEndDate"), ""));
+		param.put("mode", orElse(request.getParameter("mode"), "" ));
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + user.getId() + "/getTrashCanList", param, request, "post", null);
 		
