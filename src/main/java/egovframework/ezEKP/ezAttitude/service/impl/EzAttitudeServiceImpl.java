@@ -789,7 +789,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				/*근태 수정신청이 삭제되고 원본 근태에 대해 수정신청 개수가 0개 일 때 원본 근태를 수정 가능한 상태로 변경.*/
 				modCnt = ezAttitudeDAO.getAttsModAttCount(map);
 				map.put("modCnt", modCnt);
-				LOGGER.debug("!#!@#!#!@#!@#!@#@# : " + modCnt);
 				if (modCnt == 0) {
 					ezAttitudeDAO.resetAttModApp(map);
 				}

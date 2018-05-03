@@ -1064,9 +1064,10 @@ public class EzAttitudeKMSController {
 	 * 부서근태현황 main
 	 */
 	@RequestMapping(value = "/ezAttitude/attitudeDeptMain.do")
-	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request,
+			@RequestParam(required=false)String deptid) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeUserMain started");
-		
+		LOGGER.debug("deptid : " + deptid);
 		String adminFlag = "false";
 		String isGAdmin = "";
 		
@@ -1117,9 +1118,14 @@ public class EzAttitudeKMSController {
 		if(status.equals("ok")){
 			deptList = (JSONArray) resultBody.get("data");
 		}
-
+		
 		model.addAttribute("deptList", deptList);
 		model.addAttribute("userInfo", userInfo);
+		if (deptid == null) {
+			model.addAttribute("selectedDeptID", userInfo.getDeptID());
+		} else {
+			model.addAttribute("selectedDeptID", deptid);
+		}
 		model.addAttribute("deptFlag", "true");
 		model.addAttribute("adminFlag", adminFlag);
 		
