@@ -460,6 +460,8 @@
     	   
     	   var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(420, 490));
            try { OpenWin.focus(); } catch (e) { }
+           
+           parent.frames["left"].drawVolume();
        }
     </script>
 </head>
