@@ -168,7 +168,7 @@
 		        }
 		        
 		        if ("${fn:length(memberList)}" == count) {
-		        	alert("<spring:message code='ezSchedule.t197' />");
+		        	alert("<spring:message code='ezSchedule.csj01' />");
 		        	return;
 		        }
 	
