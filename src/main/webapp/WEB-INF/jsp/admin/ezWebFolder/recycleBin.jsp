@@ -31,6 +31,7 @@
 		var strLang40 = "<spring:message code = 'ezWebFolder.t136'/>";
 		var strLang41 = "<spring:message code = 'ezWebFolder.t137'/>";
 		var strLang42 = "<spring:message code = 'ezWebFolder.t138'/>";
+		var strNoData = "<spring:message code='ezWebFolder.t144'/>";
 		
 		var currentPage      = "1";
 		var totalPages       = 0 ;

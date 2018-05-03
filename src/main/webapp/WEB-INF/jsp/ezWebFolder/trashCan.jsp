@@ -37,6 +37,7 @@
 		var strLang40 	= "<spring:message code = 'ezWebFolder.t136'/>";
 		var strLang41   = "<spring:message code = 'ezWebFolder.t137'/>";
 		var strLang42   = "<spring:message code = 'ezWebFolder.t138'/>";
+		var strNoData   = "<spring:message code='ezWebFolder.t144'/>";
 		
 		var currentPage = "1";
 		var totalPages = 0 ;
@@ -355,6 +356,8 @@
 			}
     	   
     	   showPanel(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+       
+	       parent.frames["left"].drawVolume();
        }
 
        function changeCount(value) {
@@ -502,7 +505,7 @@
                     <tr>
                         <th><spring:message code='ezBoard.t10021' /></th>
                         <td>
-                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="changeCount(this.value);">
+                            <select id="listcount" style="width: 40px; height: 20px;" onchange="changeCount(this.value);">
                                 <option value="10">10</option>
                                 <option value="20">20</option>
                                 <option value="30">30</option>
