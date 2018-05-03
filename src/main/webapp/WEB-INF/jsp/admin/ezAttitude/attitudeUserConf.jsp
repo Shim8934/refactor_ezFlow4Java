@@ -224,9 +224,9 @@
 			<tbody>
 				<tr>
 					<td style="width: 3%;">부서</td>
-					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;"></td>
+					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchUserConfList('search')"></td>
 					<td style="width: 3%;">이름</td>
-					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;"></td>
+					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchUserConfList('search')"></td>
 					<td style="width: 3%;">탄력근무</td>
 					<td style="width: 20%;">
 						<span style="width: 90%;">
@@ -238,7 +238,7 @@
 				</tr>
 				<tr>
 					<td style="width: 3%;">직위</td>
-					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50"></td>
+					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchUserConfList('search')"></td>
 					<td style="width: 3%;">근태시간</td>
 					<td>
 						<span id="topmenu"><input id="searchStartTime" type="text" style="width:50px; text-align:center;"/>&nbsp; ~ &nbsp;<input id="searchEndTime" type="text" style="width:50px; text-align:center;"/></span>

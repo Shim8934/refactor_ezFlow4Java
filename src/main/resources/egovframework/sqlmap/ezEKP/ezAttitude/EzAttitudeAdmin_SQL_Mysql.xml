@@ -75,9 +75,9 @@
 	</resultMap>
 	
 	<resultMap id="attitudeAuthorDept" class="authorVO">
-		<result property="deptName" 				column="dept_name" 				columnIndex="1"/>
-		<result property="deptId" 					column="dept_id" 				columnIndex="2"/>
-		<result property="mine" 					column="mine" 					columnIndex="3"/>
+		<result property="deptName" 				column="DEPT_NAME" 				columnIndex="1"/>
+		<result property="deptId" 					column="DEPT_ID" 				columnIndex="2"/>
+		<result property="mine" 					column="MINE" 					columnIndex="3"/>
 	</resultMap>
 	
 	<resultMap class="AttitudeStatisVO" id="userStatistics">
@@ -704,7 +704,7 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeAbsentList" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
 			SELECT
-				A.cn AS userid,
+				A.cn AS writerid,
 				A.displayname AS username,
                 A.description AS deptname,
                 A.title AS usertitle,
@@ -760,14 +760,9 @@
 			    A.AUTH_DEPT_ID,
 			    B.DISPLAYNAME AS USERNAME,
 			    B.TITLE AS USERTITLE,
-			    B.DESCRIPTION AS USERDAPTNAME
-			]]>
-			<isEmpty prepend="," property="isGAdmin">
+			    B.DESCRIPTION AS USERDAPTNAME,
 			    group_concat(C.DISPLAYNAME order by 1) AS AUTHDEPTNAME
-			</isEmpty>
-			<isNotEmpty prepend="," property="isGAdmin">
-			    C.DISPLAYNAME AS AUTHDEPTNAME
-			</isNotEmpty>
+
 			FROM 
 				TBL_ATTITUDE_AUTH A
 			INNER JOIN
@@ -786,15 +781,11 @@
 				A.COMPANY_ID = #companyId#
 			AND
 				A.TENANT_ID = #tenantId#
-			<isNotEmpty prepend="AND" property="isGAdmin">
-				A.USER_ID = #userId#
-			</isNotEmpty>
-			<isEmpty property="isGAdmin">
 			GROUP BY 
 				A.USER_ID
 			ORDER BY
 				USERNAME
-			</isEmpty>
+			]]>
 	</select>
 	
 	<delete id="ezAttitudeAdminDAO.deleteAttitudeAuth" parameterClass="Map">
@@ -905,41 +896,20 @@
 		]]>
 <!-- 		</iterate> -->
 	</select>
-<!-- 	
-	<select id="getUserAuthList" parameterClass="Map" resultMap="attitudeAuthor">
+	
+	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="authorVO">
 		<![CDATA[
-				SELECT 
-				A.USER_ID,
-			    A.TENANT_ID,
-			    A.COMPANY_ID,
-			    A.AUTH_DEPT_ID,
-			    B.DISPLAYNAME AS USERNAME,
-			    B.TITLE AS USERTITLE,
-			    B.DESCRIPTION AS USERDAPTNAME,
-			    C.DISPLAYNAME AS AUTHDEPTNAME
-			FROM 
-				TBL_ATTITUDE_AUTH A
-			INNER JOIN
-				TBL_USERMASTER B
-			ON
-				A.USER_ID = B.CN
-			AND
-				A.TENANT_ID = B.TENANT_ID
-			INNER JOIN
-				TBL_DEPTMASTER C 
-			ON
-				A.AUTH_DEPT_ID = C.CN
-			AND
-				A.TENANT_ID = C.TENANT_ID
-			WHERE
-				A.COMPANY_ID = #companyId#
-			AND
-				A.TENANT_ID = #tenantId#
-			AND
-				A.USER_ID = #userId#
-			ORDER BY
-				USERNAME
+			SELECT 
+				CN AS deptId,
+				DISPLAYNAME AS deptName
+			FROM
+				TBL_DEPTMASTER
+			WHERE 
+				TENANT_ID = #tenantId#
+			AND 
+				USEFLAG IS NOT NULL 
+			AND 
+				EXTENSIONATTRIBUTE1 = #companyId#
 		]]>
 	</select>
-	-->
 </sqlMap>

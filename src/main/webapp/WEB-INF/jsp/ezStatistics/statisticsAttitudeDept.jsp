@@ -25,6 +25,7 @@
     var xmlHttp = null;
     var Tab1_flag = true;
     var adminCompany = "${adminCompany}";
+    var typeId = "";
 	
 	document.onselectstart = function () {
         if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -51,7 +52,7 @@
         createNodeInsert(xmlpara, objNode, "DATA");
         createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptId}");
         createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyId}");
-        createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
         xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
         xmlHTTP.send(xmlpara);
         xmlTree = loadXMLString(xmlHTTP.responseText);
@@ -67,7 +68,7 @@
         treeView.DataBind("TreeView");
         
         //처음 select는 관리자로 되어있으니까 관리자 회사의 근태유형 출력.
-        company_typeList(adminCompany);
+        company_typeList(adminCompany, typeId);
     }
 
     //조직도 회사/부서 클릭시
@@ -82,13 +83,17 @@
         selDeptName = selnode.GetNodeData("value");
         
         //만약 회사 클릭시
-        if (selnode.GetNodeData("SETNODEICONBYNAME") != "") {
-        	company_typeList(selDeptID);
-        } else {
-        	company_typeList(selnode.GetNodeData("extensionattribute2"))
-        }
+//         if (selnode.GetNodeData("SETNODEICONBYNAME") != "") {
+//         	company_typeList(selDeptID, typeId);
+//         } else {
+        	company_typeList(selnode.GetNodeData("extensionattribute2"), typeId);
+//         }
         //통계
         getAttitudeStatistics();
+        
+        
+        
+//         alert(selnode.parentNode);
     }
 
     //[+] 버튼
@@ -173,7 +178,13 @@
     }
     
     //회사 클릭시마다 근태유형 selectbox 변경
-    function company_typeList(companyId) {
+    function company_typeList(companyId, typeId) {
+    	if (companyId == null || companyId == "") {
+    		return;
+    	}
+    	if (typeId == null || typeId == "") {
+    		typeId = 'A01';
+    	}
     	$.ajax({
         	type : "POST",
         	dataType : "json",
@@ -188,6 +199,9 @@
 	                }
         		}
         		$("#attitudeType").html(html);
+        		if(typeId != "" || typeId != null) {
+        			$("#attitudeType").val(typeId);
+        		}
         	},
         	error : function(error){
 //         		OpenAlertUI(linealt2 + error)
@@ -197,7 +211,10 @@
 
     //부서클릭시
     function getAttitudeStatistics() {
-//     	var typeId = $("#attitudeType").val();  	
+    	typeId = $("#attitudeType").val();
+    	if (typeId == null || typeId == "") {
+    		typeId = 'A01';
+    	}
     	$.ajax({
         	type : "POST",
         	dataType : "json",
@@ -345,7 +362,7 @@
         	dataType : "text",
         	url : "/ezOrgan/getSearchList.do",
         	async : false,
-        	data : {search : "displayname::" + deptkeyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
+        	data : {search : "displayname::" + deptkeyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9;extensionAttribute2", prop : "", type : "group"},
         	success : function(result){
         		xmlDom = loadXMLString(result);
                 adCount = xmlDom.getElementsByTagName("ROW").length;
@@ -364,9 +381,9 @@
             g_xmlHTTP = createXMLHttpRequest();
 
             if (CrossYN()) {
-                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
             } else {
-                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
             }
 
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
@@ -393,7 +410,7 @@
             if (rgParams["deptid"] != "") {
                 bSearch = true;
                 g_xmlHTTP = createXMLHttpRequest();
-                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
                 g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
                 g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
                 g_xmlHTTP.send(strQuery);
@@ -405,7 +422,7 @@
    	 if (deptid != "") {
             bSearch = true;
             g_xmlHTTP = createXMLHttpRequest();
-            var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+            var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
             g_xmlHTTP.send(strQuery);

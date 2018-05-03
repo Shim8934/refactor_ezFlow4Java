@@ -1,9 +1,11 @@
 package egovframework.ezEKP.ezAttitude.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -84,9 +86,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				
 				LOGGER.debug("isValue : " + isValue + "////////" + resultVO.getWorkStartTime());
 				//시간을 비교해서 근태설정 시간보다 늦으면 지각 처리
-				
 				SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
-				
+
 				Date userConfTime = f.parse(resultConfDate);
 				Date userInTime = f.parse(compareDate);
 				
@@ -883,7 +884,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void attSaveAppModify(String attitudeId, String companyId,
 			int tenantId, String userId, String writerName, String writerName2, String writerTitle
 			, String writerTitle2, String writerDeptId, String writerDeptName, String writerDeptName2
-			,String changeDate, String delFlag, String content,String offset) throws Exception {
+			,String changeDate, String delFlag, String content,String offset, String originDate) throws Exception {
 			
 		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 		
@@ -900,6 +901,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("writerDeptName", writerDeptName);
 		map.put("writerDeptName2", writerDeptName2);
 		map.put("changeDate", changeDate);
+		map.put("originDate", originDate);
 		map.put("delFlag", delFlag);
 		map.put("content", content);
 		map.put("apprStatus", "0");
@@ -1022,15 +1024,54 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		/**
 		 * 1. custom안먹어서 날짜별 리스트 조회는되는데 중복 어떠케 날릴지, 
 		 * 2. param boolean받아서 startdate 없이 db에서 꺼내고, 중복제거된걸로해서 날짜별말고 전체통합데이터 조회 및 메일발송할떄 아이디리스트로 쓸수잇게
-		 * 3. order는 밑에만든 class로 어떠케 해보고
+		 * 3. order는 하긴했는데 짼 이름정렬 왜 젤위에 튀어나오지
 		 */
 		LOGGER.debug("totalList size = " + totalList.size());
 		
+		HashSet<AdminAttitudeVO> listSet = new HashSet<AdminAttitudeVO>(totalList);
+		totalList = new ArrayList<AdminAttitudeVO>(listSet);
+		
 		LOGGER.debug("distinct totalList size = " + totalList.size());
 		
-		LOGGER.debug("sorting");
+		LOGGER.debug("sorting started.");
 		
-//		Collections.sort(totalList, );
+		switch (orderCell) {
+		case "displayname" :
+			Collections.sort(totalList, new Comparator<AdminAttitudeVO>() {
+				@Override
+				public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
+					return o1.getUserName().compareTo(o2.getUserName());
+				}
+			});
+				
+			break;
+		case "title" :
+			Collections.sort(totalList, new Comparator<AdminAttitudeVO>() {
+				@Override
+				public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
+					return o1.getUserTitle().compareTo(o2.getUserTitle());
+				}
+			});
+			
+			break;
+		case "description":
+			Collections.sort(totalList, new Comparator<AdminAttitudeVO>() {
+				@Override
+				public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
+					return o1.getDeptName().compareTo(o2.getDeptName());
+				}
+			});
+			
+			break;
+		default:
+			break;
+		}
+		
+		if (orderOption.equals("DESC")) {
+			Collections.reverse(totalList);
+		}
+		
+		LOGGER.debug("sorting ended.");
 		
 		LOGGER.debug("getAttitudeAbsentList ended. size = " + totalList.size());
 		
@@ -1039,26 +1080,66 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public void changeUsersModifyAtt(String companyId, int tenantId,
-			String[] ids, String changeStatus, String userId, String userName, String userName2) throws Exception {
+			String ids, String changeStatus, String userId, String userName, String userName2, String offSet) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String offsetMin = commonUtil.getMinuteUTC(offSet);
 		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("ids", ids);
+		map.put("ids", ids.split("_")[0]);
+		
+		if (ids.split("_").length > 1) {
+			map.put("applCnt", ids.split("_")[1]);
+		}
 		map.put("changeStatus", changeStatus);
+		map.put("offsetMin", offsetMin);
 		map.put("apprDate",commonUtil.getTodayUTCTime(""));
 		map.put("userId",userId);
 		map.put("displayName",userName);
 		map.put("displayName2",userName2);
-		LOGGER.debug("############################commonUtil.getTodayUTCTime: "  + commonUtil.getTodayUTCTime("") + userName + userName2);
+		
+		String typeId = "A01";
 		//승인, 반려 기록
 		ezAttitudeDAO.changeUsersModifyAtt(map);
 		
-		//사용자의 기존 지각 상태의 근태 수정
-		ezAttitudeDAO.changeUsersAtt(map);
-		
-		//수정이 완료 되면 히스토리 기록
-//		ezAttitudeDAO.addUsersModifyAttHistory(map);
+		//승인일 때 사용자의 기존 지각 상태의 근태 시간 상태 수정
+		if(changeStatus.equals("appr")){
+			ezAttitudeDAO.changeUsersAtt(map);
+
+			//사용자의 기존 지각 상태의 근태 유형 수정
+			AttitudeApplicationVO vo = ezAttitudeDAO.attDetail(map);
+			String startDate = vo.getOriginDate();
+			startDate = startDate.split(" ")[1];
+	
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			
+	//		boolean isDefaultAtti = false;
+			map1.put("writerId", vo.getWriterId());
+			map1.put("companyId", companyId);
+			map1.put("tenantId", tenantId);
+			
+			String isValue = ezAttitudeDAO.getIsAttitudeUserConf(map1);
+			map1.put("isValue", isValue);
+			
+			AttitudeUserConfigVO resultVO = ezAttitudeDAO.getAttitudeConfTime(map1);
+			String resultConfDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd") + " " + resultVO.getWorkStartTime() + ":00", offSet, false).substring(11);
+			
+			LOGGER.debug("startDate : " + startDate);
+			LOGGER.debug("resultConfDate : " + resultConfDate);
+			
+			SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
+			
+			Date userConfTime = f.parse(resultConfDate);
+			Date userInTime = f.parse(startDate);
+			
+			if (userInTime.after(userConfTime)) { //지각인 경우
+				typeId = "A02";
+			}
+			
+			map.put("typeId", typeId);
+			ezAttitudeDAO.changeUsersAttType(map);
+		}
 	}
 
 	@Override
@@ -1133,7 +1214,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
-		map.put("isGAdmin", isGAdmin);
 		
 		return ezAttitudeDAO.getAttitudeAuthDeptList(map);
 	}
@@ -1225,5 +1305,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
 			return o2.getDeptName().compareTo(o1.getDeptName());
 		}
+	}
+
+	@Override
+	public List<JournalAuthorVO> getCompanyDeptList(String userId,
+			String companyId, int tenantId) {
+		LOGGER.debug("getCompanyDeptList started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("getCompanyDeptList ended");
+		
+		return ezAttitudeDAO.getCompanyDeptList(map);
+		
 	}
 }

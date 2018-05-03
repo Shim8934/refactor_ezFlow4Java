@@ -200,8 +200,16 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		update("ezAttitudeDAO.changeUsersModifyAtt", map);
 	}
 	
+	public AttitudeApplicationVO attDetail(Map<String, Object> map) {		
+		return (AttitudeApplicationVO) select("ezAttitudeDAO.attDetail", map);
+	}
+	
 	public void changeUsersAtt(Map<String, Object> map) {		
 		update("ezAttitudeDAO.changeUsersAtt", map);
+	}
+	
+	public void changeUsersAttType(Map<String, Object> map) {		
+		update("ezAttitudeDAO.changeUsersAttType", map);
 	}
 	
 	public void addUsersModifyAttHistory(Map<String, Object> map) throws Exception {
@@ -246,5 +254,9 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public AttitudeStatisVO getAttitudeUserStatistics(
 			Map<String, Object> map) {
 		return (AttitudeStatisVO) select("ezAttitudeAdminDAO.getAttitudeUserStatistics", map);
+	}
+
+	public List<JournalAuthorVO> getCompanyDeptList(Map<String, Object> map) {
+		return (List<JournalAuthorVO>) list("ezAttitudeAdminDAO.getCompanyDeptList", map);
 	}
 }

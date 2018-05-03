@@ -21,6 +21,7 @@
 		<result property="writerName"		column="WRITER_NAME" 		columnIndex="6"/>
 		<result property="writerDeptName"	column="WRITER_DEPT_NAME" 	columnIndex="7"/>
 		<result property="applCnt"			column="APPL_CNT" 			columnIndex="8"/>
+		<result property="writerId"			column="WRITER_ID" 			columnIndex="9"/>
 	</resultMap>
 		
 	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
@@ -88,6 +89,12 @@
 		<result property="content"			column="CONTENT" 		columnIndex="9"/>
 		<result property="writerId"			column="WRITER_ID" 		columnIndex="10"/>
 	</resultMap>
+	
+	<resultMap id="simpleAtt" class="AttitudeApplicationVO">
+		<result property="originDate"		column="START_DATE" 	columnIndex="4"/> 		
+		<result property="writerId"			column="WRITER_ID" 		columnIndex="10"/>
+	</resultMap>
+	
 	
 	<resultMap id="attitudeApplicationHistoryVO" class="AttitudeApplicationVO">
 		<result property="attitudeId"		column="ATTITUDE_ID" 	columnIndex="1"/>
@@ -350,10 +357,10 @@
 				A.DELFLAG = 0
 		]]>
 		<isNotEmpty prepend="" property="order">
-				ORDER BY $order$
+				ORDER BY $order$, A.APPL_CNT DESC
 		</isNotEmpty>
 		<isEmpty prepend="" property="order">
-				ORDER BY B.START_DATE DESC
+				ORDER BY B.START_DATE DESC, A.APPL_CNT DESC
 		</isEmpty>
 		<isNotEmpty property="startPoint" prepend="limit">
 			<isNotEmpty property="endPoint">
@@ -370,11 +377,12 @@
 					a.attitude_id as ATTITUDE_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
 					a.appr_user_name as APPR_USER_NAME,
-					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
+					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.origin_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
 					a.appr_status as APPR_STATUS,
 					a.writer_name as WRITER_NAME,
 					a.writer_dept_name as WRITER_DEPT_NAME,
-					APPL_CNT
+					APPL_CNT,
+					a.writer_id as WRITER_ID
 			FROM 
 				jmocha.tbl_attitude_modappl a 
 			inner 
@@ -402,7 +410,9 @@
 					b.start_date as START_DATE,
 					a.appr_status as APPR_STATUS,
 					a.writer_name as WRITER_NAME,
-					a.writer_dept_name as WRITER_DEPT_NAME
+					a.writer_dept_name as WRITER_DEPT_NAME,
+					APPL_CNT,
+					a.writer_id as WRITER_ID
 			FROM 
 				jmocha.tbl_attitude_modappl a 
 			inner 
@@ -418,13 +428,29 @@
 		]]>
 	</select>
 	
+	<select id="ezAttitudeDAO.attDetail" parameterClass="Map" resultMap="simpleAtt">
+		<![CDATA[
+			SELECT
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(START_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offsetMin# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
+				WRITER_ID
+			FROM 
+				tbl_attitude 
+			where 
+				COMPANY_ID = #companyId#
+			and 
+				TENANT_ID = #tenantId#
+			and
+				ATTITUDE_ID = #ids#
+		]]>
+	</select>
+	
 	<select id="ezAttitudeDAO.attModAppDetail" parameterClass="Map" resultMap="attitudeApplicationDetailVO">
 		<![CDATA[
 			SELECT
 					a.attitude_id as ATTITUDE_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
 					a.appr_user_name as APPR_USER_NAME,
-					DATE_FORMAT(DATE_ADD(DATE_FORMAT(b.start_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
+					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.origin_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
 					a.appr_status as APPR_STATUS,
 					c.type_id as TYPE_ID,
 					c.type_name as TYPE_NAME,
@@ -593,6 +619,21 @@
         		COMPANY_ID = #companyId#
           	AND
           		ATTITUDE_ID = #attModId#
+          	AND
+          		APPL_CNT = (SELECT 
+          						* 
+          				    FROM
+          				    	(
+          				    	SELECT
+          							MAX(APPL_CNT)
+	          					FROM
+	          						TBL_ATTITUDE_MODAPPL
+	          					WHERE
+	          						TENANT_ID = #tenantId#
+					          	AND
+					        		COMPANY_ID = #companyId#
+					          	AND
+					          		ATTITUDE_ID = #attModId#)t)
 		]]>
 	</delete>
 	
@@ -711,6 +752,7 @@
 					WRITER_DEPT_NAME,
 					WRITER_DEPT_NAME2,
 					CHANGE_DATE,
+					ORIGIN_DATE,
 					DELFLAG,
 					APPR_STATUS,
 					CONTENT
@@ -740,6 +782,7 @@
 					#writerDeptName#,
 					#writerDeptName2#,
 					DATE_FORMAT(DATE_SUB(DATE_FORMAT(#changeDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S'),
+					DATE_FORMAT(DATE_SUB(DATE_FORMAT(#originDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S'),
 					#delFlag#,
 					#apprStatus#,
 					#content#
@@ -749,7 +792,8 @@
 	
 	<update id="ezAttitudeDAO.attModAppModify" parameterClass="map">
 		<![CDATA[
-			UPDATE TBL_ATTITUDE_MODAPPL
+			UPDATE 
+				TBL_ATTITUDE_MODAPPL
 			SET 
 				CONTENT = #content#,
 	            CHANGE_DATE = DATE_FORMAT(DATE_SUB(DATE_FORMAT(#changeDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S')
@@ -760,7 +804,19 @@
 	        AND
 	        	COMPANY_ID = #companyId#
 	        AND
-	        	WRITER_ID = #userId#	
+	        	WRITER_ID = #userId#
+	        AND
+	        	APPL_CNT = (SELECT *
+	        				FROM (SELECT 
+		        					MAX(APPL_CNT)
+		        				  FROM 
+		        					TBL_ATTITUDE_MODAPPL
+		        			      WHERE
+						        	TENANT_ID = #tenantId#
+								  AND	        	
+									ATTITUDE_ID = #attModId#
+								  AND
+						        	COMPANY_ID = #companyId#)a) 
 		]]>
 	</update>
 	
@@ -826,15 +882,29 @@
 			,APPR_USER_NAME2 = #displayName2#
 	        WHERE
 	        	TENANT_ID = #tenantId#
-		]]>	        	
-	        AND
-	        <iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
-				#ids[]# 
-			</iterate>
-		<![CDATA[			
-	        AND
+			AND	        	
+				ATTITUDE_ID = #ids#
+			AND
 	        	COMPANY_ID = #companyId#
 		]]>
+		<isNotEmpty property="applCnt">
+	        AND
+	        	APPL_CNT = #applCnt#
+	    </isNotEmpty>
+	    <isEmpty property="applCnt">
+	        AND
+	        	APPL_CNT = (SELECT *
+	        				FROM (SELECT 
+		        					MAX(APPL_CNT)
+		        				  FROM 
+		        					TBL_ATTITUDE_MODAPPL
+		        			      WHERE
+						        	TENANT_ID = #tenantId#
+								  AND	        	
+									ATTITUDE_ID = #ids#
+								  AND
+						        	COMPANY_ID = #companyId#)a)
+	    </isEmpty>
 	</update>
 	
 	<update id="ezAttitudeDAO.changeUsersAtt" parameterClass="map">
@@ -849,40 +919,53 @@
 				A.TENANT_ID = B.TENANT_ID
 			AND
 				A.COMPANY_ID = B.COMPANY_ID
-			INNER JOIN 
-				TBL_ATTITUDE_MODAPPL_HISTORY C 
-			ON 
-				A.ATTITUDE_ID = C.ATTITUDE_ID
-			AND 
-				A.TENANT_ID = C.TENANT_ID
-			AND
-				A.COMPANY_ID = C.COMPANY_ID				
-			SET 
-				A.TYPE_ID =
-		]]> 
+			SET
+			]]>
 			<isEqual property="changeStatus" compareValue="appr">
 				<![CDATA[
-					"A01"
-					, A.START_DATE = B.CHANGE_DATE
-				]]>
-			</isEqual>
-			<isEqual property="changeStatus" compareValue="ret">
-				<![CDATA[
-					"A02"
-					, A.START_DATE = C.CHANGE_DATE
+				A.START_DATE = B.CHANGE_DATE
 				]]>
 			</isEqual>
 		<![CDATA[
 	        WHERE
 	        	A.TENANT_ID = #tenantId#
-	        AND
-	        	C.MOD_CNT = 0
 		]]>	        	
-	        AND
-	        <iterate prepend="A.ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
-				#ids[]# 
-			</iterate>
+	        AND 
+	        	A.ATTITUDE_ID = #ids# 
 		<![CDATA[			
+	        AND
+	        	A.COMPANY_ID = #companyId#
+		]]>
+		<isNotEmpty property="applCnt">
+	        AND
+	        	B.APPL_CNT = #applCnt#
+	    </isNotEmpty>
+	    <isEmpty property="applCnt">
+	        AND
+	        	B.APPL_CNT = (SELECT *
+	        				FROM (SELECT 
+		        					MAX(APPL_CNT)
+		        				  FROM 
+		        					TBL_ATTITUDE_MODAPPL
+		        			      WHERE
+						        	TENANT_ID = #tenantId#
+								  AND	        	
+									ATTITUDE_ID = #ids#
+								  AND
+						        	COMPANY_ID = #companyId#)a)
+	    </isEmpty>
+	</update>
+	
+	<update id="ezAttitudeDAO.changeUsersAttType" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_ATTITUDE A 
+			SET
+				A.TYPE_ID = #typeId#
+	        WHERE
+	        	A.TENANT_ID = #tenantId#
+	        AND 
+	        	A.ATTITUDE_ID = #ids# 
 	        AND
 	        	A.COMPANY_ID = #companyId#
 		]]>
@@ -1059,15 +1142,13 @@
 					APPR_STATUS,
 					CONTENT
 			FROM 
-				jmocha.tbl_attitude_modappl_history 
+				jmocha.tbl_attitude_modappl 
 			WHERE 
 				COMPANY_ID = #companyId#
 			AND 
 				TENANT_ID = #tenantId#
 			AND
 				ATTITUDE_ID = #attModId#
-			AND 
-				MOD_CNT > 0
 		]]>
 	</select>
 </sqlMap>

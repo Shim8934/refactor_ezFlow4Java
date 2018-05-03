@@ -146,4 +146,23 @@ public class AdminAttitudeVO {
 	public void setUserTitle(String userTitle) {
 		this.userTitle = userTitle;
 	}
+	
+	/**
+	 *  HashSet 중복제거 Override
+	 */
+	@Override
+	public int hashCode() {
+		return this.writerId.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof AdminAttitudeVO) {
+			if (this.writerId.equals(((AdminAttitudeVO) obj).writerId)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
