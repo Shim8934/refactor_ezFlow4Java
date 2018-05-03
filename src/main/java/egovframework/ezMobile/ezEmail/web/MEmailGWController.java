@@ -710,6 +710,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				LOGGER.debug("tenantID=" + tenantID + ",userId=" + userId);
 				
+				folderPath = ezEmailUtil.getFolderIdFromDisplayName(folderPath, locale);
+				
 	    		Folder orgFolder = ia.getFolder(folderPath);
 	    		orgFolder.open(Folder.READ_ONLY);       
 	    		
