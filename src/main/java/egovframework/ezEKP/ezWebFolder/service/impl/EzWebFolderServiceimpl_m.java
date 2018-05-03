@@ -616,19 +616,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		currPage = totalPages == 0 ? 0 : currPage;
 		
-		if (trashCanList != null) {
-			for (TrashCanVO trashCan : trashCanList) {
-				if (!trashCan.getTrashCanExt().equals("folder")) {
-					map.put("folderId", trashCan.getFileFolderId());
-					String folderPath = ezWebFolderDAO.getFolderPath(map);
-					
-					if (folderPath != null) {
-						trashCan.setTrashCanPath(folderPath);
-					}
-				}
-			}
-		}
-		
 		result.put("fileCnt", fileCnt);
 		result.put("folderCnt", folderCnt);
 		result.put("trashCanList", trashCanList);
