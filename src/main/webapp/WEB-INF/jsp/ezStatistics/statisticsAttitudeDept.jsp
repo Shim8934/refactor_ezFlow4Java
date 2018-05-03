@@ -329,6 +329,12 @@
     
     
     function btnexportexcel_onclick() {
+    	//데이터가 없으면
+    	if ($("#viewdata").css("display") == "none") {
+    		alert("<spring:message code='ezStatistics.t1008' />");
+    		return;
+    	}
+    	
         document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
         document.getElementById("formAgent").target = "saveExcel";
         document.getElementById("formAgent").submit();
