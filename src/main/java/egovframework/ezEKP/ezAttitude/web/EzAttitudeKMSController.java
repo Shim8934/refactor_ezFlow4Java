@@ -818,6 +818,7 @@ public class EzAttitudeKMSController {
 	public String saveAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=false)String attId,
 			@RequestParam(required=false)String changeDate,
+			@RequestParam(required=false)String originDate,
 			@RequestParam(required=false)String content) throws Exception {
 		LOGGER.debug("modAttModApp started");
 		
@@ -846,6 +847,7 @@ public class EzAttitudeKMSController {
 				.queryParam("userId", userInfo.getId())
 				.queryParam("content", content)
 				.queryParam("changeDate", changeDate)
+				.queryParam("originDate", originDate)
 				.queryParam("offset", offsetMin);
 		
 		RestTemplate rest = new RestTemplate();

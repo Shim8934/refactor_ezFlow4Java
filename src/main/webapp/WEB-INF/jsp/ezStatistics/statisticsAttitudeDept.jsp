@@ -52,7 +52,7 @@
         createNodeInsert(xmlpara, objNode, "DATA");
         createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptId}");
         createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyId}");
-        createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
         xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
         xmlHTTP.send(xmlpara);
         xmlTree = loadXMLString(xmlHTTP.responseText);
@@ -83,11 +83,11 @@
         selDeptName = selnode.GetNodeData("value");
         
         //만약 회사 클릭시
-        if (selnode.GetNodeData("SETNODEICONBYNAME") != "") {
-        	company_typeList(selDeptID, typeId);
-        } else {
+//         if (selnode.GetNodeData("SETNODEICONBYNAME") != "") {
+//         	company_typeList(selDeptID, typeId);
+//         } else {
         	company_typeList(selnode.GetNodeData("extensionattribute2"), typeId);
-        }
+//         }
         //통계
         getAttitudeStatistics();
         
@@ -329,6 +329,12 @@
     
     
     function btnexportexcel_onclick() {
+    	//데이터가 없으면
+    	if ($("#viewdata").css("display") == "none") {
+    		alert("<spring:message code='ezStatistics.t1008' />");
+    		return;
+    	}
+    	
         document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
         document.getElementById("formAgent").target = "saveExcel";
         document.getElementById("formAgent").submit();
@@ -381,9 +387,9 @@
             g_xmlHTTP = createXMLHttpRequest();
 
             if (CrossYN()) {
-                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
             } else {
-                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
             }
 
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
@@ -410,7 +416,7 @@
             if (rgParams["deptid"] != "") {
                 bSearch = true;
                 g_xmlHTTP = createXMLHttpRequest();
-                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
                 g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
                 g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
                 g_xmlHTTP.send(strQuery);
@@ -422,7 +428,7 @@
    	 if (deptid != "") {
             bSearch = true;
             g_xmlHTTP = createXMLHttpRequest();
-            var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+            var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
             g_xmlHTTP.send(strQuery);

@@ -390,8 +390,8 @@
 	    		if (excel == true) {
 	    		} else {
 	    			htmlStr += '<td style="padding:0"> <input type="checkbox" class="checkAtt"' 
-	    	    	htmlStr += 'id="attCheck_' + attList[i].attitudeId + '"';
-	    	    	htmlStr += 'value="' + attList[i].attitudeId + '"';
+	    	    	htmlStr += 'id="attCheck_' + attList[i].attitudeId + '_' + attList[i].applCnt +'"';
+	    	    	htmlStr += 'value="' + attList[i].attitudeId + '_' + attList[i].applCnt +'"';
 	    	    	htmlStr += 'status="' + attList[i].apprStatus + '"';
 	    	    	htmlStr += ' onclick="event_listCheckboxclick(this)"/></td>';	
 	    		}
@@ -741,7 +741,8 @@
 	    	
 	    	for (var i = 0; i < attList.length; i++) {
 	    		if (attList[i].getAttribute("status") != "1") {
-	    			idList += attList[i].getAttribute("id").split("_")[1] + ",";	
+	    			idList += attList[i].getAttribute("id").split("_")[1] 
+	    			+ "_" + attList[i].getAttribute("id").split("_")[2] + ",";	
 	    		}
 	    	}
 	    	
@@ -901,7 +902,8 @@
 			var applCnt;
 			
 			modAttId = tds[0].getElementsByTagName("input").item(0).getAttribute("value");
-			
+			console.log(tds[0].getElementsByTagName("input").item(0));
+			console.log(modAttId);
 			applCnt = modAttId.split("\_")[1];
 			modAttId = modAttId.split("\_")[0];
 			

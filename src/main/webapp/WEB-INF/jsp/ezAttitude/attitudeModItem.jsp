@@ -152,6 +152,12 @@
 			    var cDay = cDate.split("-")[2];
 			    var chour, cminute;
 			    var ctime = $('#Ctimepicker').val()
+			    var oDate = $("#Odatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+			    var oYear = oDate.split("-")[0];
+			    var oMonth = oDate.split("-")[1];
+			    var oDay = oDate.split("-")[2];
+			    var ohour, ominute;
+			    var otime = $('#Otimepicker').val() 
 			    var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 				console.log("${data.startDate}");
 				console.log(cDate);
@@ -160,12 +166,13 @@
 			    	return;
 			    }
 			    
-			    if (!timeValid.test(ctime)) {
+			    if (!timeValid.test(ctime) || !timeValid.test(otime)) {
 			    	alert("올바른 시간을 지정해야 합니다.");
 			    	return;
 			    }
 			    
 		    	obj.attId = attid;
+		    	obj.originDate = oDate + " " + otime + ":00";
 		    	obj.changeDate = cDate + " " + ctime + ":00";
 		    	obj.content = message.GetEditorContent();
 		    	
