@@ -8,20 +8,20 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<!-- 18-04-27 김민성 - 카테고리별 커뮤니티 클릭시 bold 지정 -->
+		<style>
+			.category_select span {
+				color : rgb(4, 112, 228);
+			}
+			.category_select {
+				font-Weight : bold;
+			}
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<!-- 18-04-27 김민성 - 카테고리별 커뮤니티 클릭시 bold 지정 -->
-		<style>
-		.category_select span {
-			color : rgb(4, 112, 228);
-		}
-		.category_select {
-			font-Weight : bold;
-		}
-		</style>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 		<script type="text/javascript">
 	        var xmlhttp3 = null;
 	        var xmlhttp4 = null;
