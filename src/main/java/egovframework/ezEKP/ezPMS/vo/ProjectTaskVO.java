@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPMS.vo;
 
 import java.sql.Date;
+import java.util.List;
 
 //업무 관련 VO
 public class ProjectTaskVO {
@@ -105,6 +106,9 @@ public class ProjectTaskVO {
 
     // 삭제 상태 
     private int delStatus;
+    
+    // 업무 멤버
+    private List<TaskMemberVO> taskMember;
 
     public Long getTaskId() {
         return taskId;
@@ -376,6 +380,14 @@ public class ProjectTaskVO {
 
 	public void setPregroup(String pregroup) {
 		this.pregroup = pregroup;
+	}
+
+	public List<TaskMemberVO> getTaskMember() {
+		return taskMember;
+	}
+
+	public void setTaskMember(List<TaskMemberVO> taskMember) {
+		this.taskMember = taskMember;
 	}
     
 }
