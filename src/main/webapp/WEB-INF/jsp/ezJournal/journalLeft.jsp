@@ -92,7 +92,7 @@
 		    	<c:choose>
 		    		<c:when test="${not empty typeList }">
 		    			<c:forEach items="${typeList }" var="type">
-						    <li listType='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);" ><span style="width:100%; display:inline-block;">
+						    <li listType='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);" style="padding: 6px 5px 5px 20px;" ><span style="width:100%; display:inline-block;">
 						    <c:choose>
 		    					<c:when test="${type.journaltypeId eq 'ezJournal.t05'}">
 		    						<img style="width:18px;height:18px; vertical-align:top;" class="icon" src="/images/ImgIcon/journal_icon01.png"/>
