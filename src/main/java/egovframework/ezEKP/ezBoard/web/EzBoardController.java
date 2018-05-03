@@ -1886,6 +1886,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
 
 		myFavoriteVO.setBoardId(boardVO.getBoardId());
+		/* 2018-05-03 홍승비 - 썸네일게시판 표출 시 사용자 테넌트 id 설정 추가 */
 		myFavoriteVO.setTenantID(userInfo.getTenantId());
 		myFavoriteVO.setUserId(userInfo.getId());
 		myFavoriteVO.setType(type);
