@@ -96,17 +96,26 @@ public class EzAttitudeGWController {
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
 			String deptFlag = request.getParameter("deptFlag");
+			String selectedDeptID = request.getParameter("selectedDeptID");
 			
 			List<AttitudeVO> resultList;
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
+			/*
+			 * 선택된 부서가 없는 경우 사용자의 부서의 근태를 보여준다.
+			 * */
+			
+			if (selectedDeptID.equals("")) {
+				selectedDeptID = info.getDeptId();
+			}
+
 			String offset = info.getOffSet();
 			if (deptFlag.equals("false")) {
 				resultList = ezAttitudeService.getAttitudeList(userId, "", "", typeId, startDate, endDate, offset, info.getTenantId(), deptFlag);
 			} else {
 				// 관리하고 있는 전체 부서 목록을 받아서 dept in iterate를 돌린다.
-				resultList = ezAttitudeService.getAttitudeList("", info.getDeptId(), "", typeId, startDate, endDate, offset, info.getTenantId(), deptFlag);
+				resultList = ezAttitudeService.getAttitudeList("", selectedDeptID, "", typeId, startDate, endDate, offset, info.getTenantId(), deptFlag);
 			}
 			
 			//imgPath 셋팅
@@ -522,7 +531,13 @@ public class EzAttitudeGWController {
 			String offset = request.getParameter("offset");
 			String date = request.getParameter("date");
 			String deptFlag = request.getParameter("deptFlag");
+			String selectedDeptID = request.getParameter("selectedDeptID");
+			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			if (selectedDeptID.equals("")) {
+				selectedDeptID = info.getDeptId();
+			}
 			
 			Calendar cal = Calendar.getInstance();
 			cal.set(Integer.valueOf(date.substring(0, 4)), Integer.valueOf(date.substring(5)) - 1, 1);
@@ -535,7 +550,7 @@ public class EzAttitudeGWController {
 			if (deptFlag.equals("false")){
 				resultList = ezAttitudeService.getAttitudeStatisticsList(userId, "", offset, startDate, endDate, info.getTenantId(), deptFlag);
 			} else {
-				resultList = ezAttitudeService.getAttitudeStatisticsList("", info.getDeptId(),offset, startDate, endDate, info.getTenantId(), deptFlag);
+				resultList = ezAttitudeService.getAttitudeStatisticsList("", selectedDeptID,offset, startDate, endDate, info.getTenantId(), deptFlag);
 			}
 			
 			result.put("status", "ok");
