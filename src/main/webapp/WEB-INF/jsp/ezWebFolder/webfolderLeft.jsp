@@ -100,7 +100,6 @@
 							var folderId = "";
 							folderId = data.selected[0];
 							getFileList(folderId);
-							console.log("changed.jstree" + new Date());
 						});
 					},
 					error : function(error) {
@@ -230,30 +229,27 @@
 			<h2>
   				<span style="display:inline-block;width:100%;" onclick="folderList('C');"><spring:message code='ezWebFolder.t233' /></span>
   			</h2>  
-    		<ul class ="tree">
+    		<ul >
     			<li style="padding: 0px; background: none;">
-	    			<div id="tree" style="width:210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
+	    			<div id="tree" class="webfolderTree" ></div>
     			</li>
-<!-- 	  			<li id ="company"></li> -->
 		    </ul>  	
 		    <h2>
   				<span style="display:inline-block; width:100%;" onclick="folderList('D');"><spring:message code='ezWebFolder.t234' /></span>
   			</h2>  
-    		<ul class ="tree">
+    		<ul >
     			<li style="padding: 0px; background: none;">
-    				<div id ="treeDept" style="width: 210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
+    				<div id ="treeDept" class="webfolderTree"></div>
     			</li>
-<!-- 	  			<li id ="dept"></li> -->
 		    </ul>  
 		    	
 		   	<h2>
   				<span style="display:inline-block;width:100%;" onclick="folderList('U');"><spring:message code='ezWebFolder.t235' /></span>
   			</h2>  
-    		<ul class ="tree">
+    		<ul>
 	    		<li style="padding: 0px; background: none;">
-	    			<div id ="treePer" style="width: 210px; min-height:200px; font-size: 20px; overflow-x: auto;"></div>
+	    			<div id ="treePer" class="webfolderTree" ></div>
 	    		</li>
-<!-- 	  			<li id="person"></li> -->
 		    </ul>  
 		    
 		    <h2>

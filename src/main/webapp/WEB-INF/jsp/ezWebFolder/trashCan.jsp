@@ -28,17 +28,16 @@
 	<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/adminTable.js"></script>
 	<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
-   		var userInfo = {
-   			lang:		"${userInfo.lang}"
-    	};
-    	
+   		var lang = ${userInfo.lang};
 		var strErr		= "<spring:message code = 'ezWebFolder.t107'/>";
 		var strLang39	= "<spring:message code = 'ezWebFolder.t135'/>";
 		var strLang40 	= "<spring:message code = 'ezWebFolder.t136'/>";
 		var strLang41   = "<spring:message code = 'ezWebFolder.t137'/>";
 		var strLang42   = "<spring:message code = 'ezWebFolder.t138'/>";
+		var strNoData   = "<spring:message code='ezWebFolder.t144'/>";
 		
 		var currentPage = "1";
 		var totalPages = 0 ;
@@ -135,103 +134,13 @@
 		};
 		
 		function renderFileListElement(result) {
-			document.getElementById("_checkAll").checked = false;
-			var tableList = document.getElementById("tblFileList");
-			
-			while (tableList.rows.length > 1) {
-				tableList.deleteRow(1);
-			}
-			
-			if (result == null || result.length == 0) {
-				var trElmt = document.createElement("tr");
-				var tdElmt = document.createElement("td");
-				
-				tdElmt.setAttribute("colspan", "8");
-				tdElmt.setAttribute("align", "center");
-				tdElmt.setAttribute("bgcolor", "#FFFFFF");
-				tdElmt.innerHTML = "<spring:message code='ezWebFolder.t144' />";
-				tdElmt.setAttribute("id", "nodataRow");
-				
-				trElmt.appendChild(tdElmt);
-				tableList.appendChild(trElmt);
-			} else {
-				var len = result.length;
-				var resultElement;
-				
-				for (var i = 0; i < len; i++) {
-					resultElement = result[i];
-					
-					var trElement  = document.createElement("tr");
-					
-					var tdCheckbox		= document.createElement("td");
-					var tdFavoriteIcon	= document.createElement("td");
-					var tdFileIcon		= document.createElement("td");
-					var tdName			= document.createElement("td");
-					var tdSize			= document.createElement("td");
-					var tdCreator		= document.createElement("td");
-					var tdCreateDate	= document.createElement("td");	
-					var tdUpdateDate	= document.createElement("td");	
-					var tdAbsolutePath	= document.createElement("td");	
-					
-					setStyles([tdAbsolutePath], function(style) {
-						style.textOverflow = "ellipsis";
-						style.whiteSpace = "nowrap";
-					});
-					
-					setStyles([tdSize], function(style) {
-						style.textAlign = "center";
-					})
-					
-					trElement.setAttribute("class", "bnkWebFolder");
-					trElement.setAttribute("targetid", resultElement["trashCanId"]);
-					trElement.setAttribute("targetPath", resultElement["trashCanPath"]);
-					trElement.setAttribute("ext", resultElement["trashCanExt"]);
-					trElement.onclick = function(event) {clickRow(event);};
-					
-					var inputElmt = document.createElement("input");
-					inputElmt.setAttribute("type", "checkbox");
-					inputElmt.setAttribute("value", resultElement["trashCanId"]);
-					inputElmt.setAttribute("class", "checkBnk");			
-					inputElmt.onclick = function(e) {getChecked(e);};
-					
-					tdCheckbox.appendChild(inputElmt);
-					
-					var fileIconElmt = document.createElement("img");
-					fileIconElmt = document.createElement("img");
-					fileIconElmt.setAttribute("class", "webFolderImg");
-					fileIconElmt.src = resultElement["trashCanIconUrl"];
-					
-					tdFileIcon.appendChild(fileIconElmt);
-					
-					tdName.textContent = resultElement["trashCanName"];
-					if (resultElement["trashCanExt"] != 'folder') {
-						tdSize.textContent = getFileSize(resultElement["trashCanSize"]);
-					} else {
-						tdSize.textContent = "-";
-					}
-					
-					if (userInfo.lang == "1") {
-						tdCreator.textContent = resultElement["createName1"];
-					} else {
-						tdCreator.textContent = resultElement["createName2"];
-					}
-					
-					tdUpdateDate.textContent = resultElement["updateDate"].substring(0, 10);
-					tdCreateDate.textContent = resultElement["createDate"].substring(0, 10);
-					tdAbsolutePath.textContent = resultElement["trashCanPath"];
-					
-					trElement.appendChild(tdCheckbox);
-					trElement.appendChild(tdFileIcon);
-					trElement.appendChild(tdName);
-					trElement.appendChild(tdSize);
-					trElement.appendChild(tdCreator);
-					trElement.appendChild(tdCreateDate);
-					trElement.appendChild(tdUpdateDate);
-					trElement.appendChild(tdAbsolutePath);
-					
-					tableList.appendChild(trElement);
-				}
-			} 
+			var tableView = new TableView();
+			tableView.setTableId("tblFileList");
+			tableView.setTableType("deletedfile");
+			tableView.setSelectedClass("bnkWebFolder2");
+			tableView.setUnselectClass("bnkWebFolder");
+			tableView.setDataSource(result);
+			tableView.renderTable();
 		}
 		
 		function setStyles(elements, excutor) {
@@ -374,6 +283,7 @@
 		}
 	    
    	   function doLayerPopup(obj) {
+   			optionHidden();
 	   		 btn_PostDate_Clear();
 	         $('#enrollStartDate').val(enrollStartDate);
 	         $('#enrollEndDate').val(enrollEndDate) ;
@@ -412,6 +322,7 @@
    	        optionHidden();
    	    }
    	   }
+   	   
 	 	function optionHidden() {
 	 	    document.getElementById("layer_Viewpopup").style.display = "none";
 	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
@@ -445,6 +356,8 @@
 			}
     	   
     	   showPanel(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+       
+	       parent.frames["left"].drawVolume();
        }
 
        function changeCount(value) {
@@ -547,6 +460,8 @@
     	   
     	   var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(420, 490));
            try { OpenWin.focus(); } catch (e) { }
+           
+           parent.frames["left"].drawVolume();
        }
     </script>
 </head>
@@ -592,7 +507,7 @@
                     <tr>
                         <th><spring:message code='ezBoard.t10021' /></th>
                         <td>
-                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="changeCount(this.value);">
+                            <select id="listcount" style="width: 40px; height: 20px;" onchange="changeCount(this.value);">
                                 <option value="10">10</option>
                                 <option value="20">20</option>
                                 <option value="30">30</option>
@@ -615,12 +530,12 @@
 			<tr>
 				<th width="20px"><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
 				<th width="40px"><spring:message code='ezWebFolder.t188'/></th>
-				<th width="30%"><spring:message code='ezWebFolder.t156'/></th>
-				<th style= "width=6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th>
-				<th width="7%;"><spring:message code='ezWebFolder.t189'/></th>
-				<th width="9%;"><spring:message code='ezWebFolder.t288'/></th>
-				<th width="9%;"><spring:message code='ezWebFolder.t190'/></th>
-				<th width="25%;"><spring:message code='ezWebFolder.t199'/></th>
+				<th width="160px"><spring:message code='ezWebFolder.t156'/></th>
+				<th width="60px"><spring:message code='ezWebFolder.t157'/></th>
+				<th width="120px"><spring:message code='ezWebFolder.t189'/></th>
+				<th width="80px"><spring:message code='ezWebFolder.t190'/></th>
+				<th width="80px"><spring:message code='ezWebFolder.t288'/></th>
+				<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
 			</tr>
 		</table>
 	</div>

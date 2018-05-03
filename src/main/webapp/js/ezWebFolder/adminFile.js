@@ -106,7 +106,6 @@ function openSearchPanel() {
 		searchPanel.style.top     = position[0] + "px";
 		searchPanel.style.right   = position[1] + "px";
 		searchPanel.style.display = "";
-		fogPanel.focus();
 	}
 	else {
 		closeLeftPanel();
@@ -170,7 +169,6 @@ function startSearch() {
 	var fileNameVal = document.getElementById("fileNameVal").value;
 	var userNameVal = document.getElementById("fileCreatorVal").value;
 	var fileTypeIdx = document.getElementById("fileTypeVal").selectedIndex;
-	document.getElementById("fileTypeSelect").selectedIndex = fileTypeIdx;
 	
 	if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) { alert(strLang36); return;}
 	
@@ -183,6 +181,7 @@ function startSearch() {
 	fileExtStr   = fileExtVal;
 	fileNameStr  = fileNameVal;
 	userNameStr  = userNameVal;
+	document.getElementById("fileTypeSelect").selectedIndex = fileTypeIdx;
 	
 	openSearchPanel();
 	search_Set("1");
@@ -236,6 +235,7 @@ function fileDownload() {
 	
 	var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
 	AttachDownFrame.location.href = downloadUrl;
+	refreshView();
 }
 
 function fileUpload() {

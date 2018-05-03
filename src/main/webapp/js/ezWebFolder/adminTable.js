@@ -125,9 +125,10 @@ function TableView() {
 	// process table function
 	function renderTable() {
 		switch (_tableType) {
-			case 'filelist'   : setFileListTable(); break;
-			case 'filelog'    : setFileLogTable();  break;
-			case 'configTable': setConfigTable();   break;
+			case 'filelist'   : setFileListTable();    break;
+			case 'filelog'    : setFileLogTable();     break;
+			case 'configTable': setConfigTable();      break;
+			case 'deletedfile': setDeletedFileTable(); break;
 		}
 	}
 	
@@ -363,6 +364,90 @@ function TableView() {
 				trElmt.appendChild(tdElmt8);
 				trElmt.appendChild(tdElmt9);
 				tableList.appendChild(trElmt);
+			}
+		}
+	}
+	
+	function setDeletedFileTable() {
+		var tableList               = document.getElementById(_tableId);
+		var firstInputCheckBox      = tableList.rows[0].firstElementChild.firstElementChild;
+		firstInputCheckBox.checked  = false; //Clear first input check box
+		firstInputCheckBox.onclick  = function(e) {toggleAllRow(this.checked);};
+		
+		while (tableList.rows.length > 1) {
+			tableList.deleteRow(1);
+		}
+		
+		if (_dataSource == null || _dataSource.length == 0) {
+			var trElmt = document.createElement("tr");
+			var tdElmt = document.createElement("td");
+			
+			tdElmt.setAttribute("colspan", "8");
+			tdElmt.setAttribute("align", "center");
+			tdElmt.setAttribute("bgcolor", "#FFFFFF");
+			tdElmt.innerHTML = strNoData;
+			tdElmt.setAttribute("id", "nodataRow");
+			
+			trElmt.appendChild(tdElmt);
+			tableList.appendChild(trElmt);
+		}
+		else {
+			var len = _dataSource.length;
+			var resultElement;
+			
+			for (var i = 0; i < len; i++) {
+				resultElement = _dataSource[i];
+				
+				var trElement  = document.createElement("tr");
+				
+				var tdCheckbox		= document.createElement("td");
+				var tdFavoriteIcon	= document.createElement("td");
+				var tdFileIcon		= document.createElement("td");
+				var tdName			= document.createElement("td");
+				var tdSize			= document.createElement("td");
+				var tdCreator		= document.createElement("td");
+				var tdCreateDate	= document.createElement("td");	
+				var tdUpdateDate	= document.createElement("td");	
+				var tdAbsolutePath	= document.createElement("td");	
+				
+				trElement.setAttribute("class", "bnkWebFolder");
+				trElement.setAttribute("targetid", resultElement["trashCanId"]);
+				trElement.setAttribute("targetPath", resultElement["trashCanPath"]);
+				trElement.setAttribute("ext", resultElement["trashCanExt"]);
+				trElement.onclick = function(event) {clickRow(event);};
+				
+				var inputElmt = document.createElement("input");
+				inputElmt.setAttribute("type", "checkbox");
+				inputElmt.setAttribute("value", resultElement["trashCanId"]);
+				inputElmt.setAttribute("class", "checkBnk");			
+				inputElmt.onclick = function(e) {getChecked(e);};
+				
+				tdCheckbox.appendChild(inputElmt);
+				
+				var fileIconElmt = document.createElement("img");
+				fileIconElmt = document.createElement("img");
+				fileIconElmt.setAttribute("class", "webFolderImg");
+				fileIconElmt.src = resultElement["trashCanIconUrl"];
+				
+				tdFileIcon.appendChild(fileIconElmt);
+				
+				tdName.textContent         = resultElement["trashCanName"];
+				tdSize.textContent         = resultElement["trashCanExt"] != 'folder' ? getFileSize(resultElement["trashCanSize"]) : "-";
+				tdCreator.textContent      = lang == "1" ? resultElement["createName1"] : resultElement["createName2"];
+				tdUpdateDate.textContent   = resultElement["updateDate"].substring(0, 10);
+				tdCreateDate.textContent   = resultElement["createDate"].substring(0, 10);
+				tdAbsolutePath.textContent = resultElement["trashCanPath"];
+				
+				trElement.appendChild(tdCheckbox);
+				trElement.appendChild(tdFileIcon);
+				trElement.appendChild(tdName);
+				trElement.appendChild(tdSize);
+				trElement.appendChild(tdCreator);
+				trElement.appendChild(tdCreateDate);
+				trElement.appendChild(tdUpdateDate);
+				trElement.appendChild(tdAbsolutePath);
+				
+				tableList.appendChild(trElement);
 			}
 		}
 	}
