@@ -288,7 +288,6 @@
 	<body style="margin-left: 10px; margin-right: 10px;">
 		<br/>
     	<h2><spring:message code="ezBoard.t00010" /></h2>
-    	<span class="txt">▒ <spring:message code="ezBoard.t00014" /></span><br />
     	<span class="txt">▒ 
         	<img src="/images/ImgIcon/prev.gif" style="height: 16px; margin-top: -3px; vertical-align: middle; text-align: center;" />
         	<img src="/images/ImgIcon/next.gif" align="absmiddle" style="height: 16px; margin-top: -3px;" />

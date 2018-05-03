@@ -542,7 +542,7 @@
 			//체크박스 모두선택 함수. js파일에서 이 함수명이 HeaderAllCheckBox와 연결됨
  			function event_HeaderCheckBoxClick(obj) {
  			    var SelList = new ListView();
- 			    SelList.LoadFromID("BoardList");
+ 			    SelList.LoadFromID("BoardListDiv");
 
  			    if (obj.checked) {
  			        for (var i = 0; i < SelList.GetRowCount() ; i++) {
