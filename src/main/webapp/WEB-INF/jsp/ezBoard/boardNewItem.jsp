@@ -612,14 +612,14 @@
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ENDDATE", pEndDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ABSTRACT", document.getElementById("txtAbstract").value);
 		        
-		        if (CrossYN()) {
+		        if (CrossYN() && pUrl.toLowerCase().indexOf(".hwp") < 0 ) {
 		            if (attachxml != "") {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", attachxml);
 		            } else {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", "");
 		            }
 		        } else {
-	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", MakeXMLString(AttachFileList()));
+	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", MakeXMLString(AttachFileList2()));
 		        }
 
 		        if (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
@@ -690,8 +690,10 @@
 
 		        var strBody = message.GetEditorContent();
 		        
-		        if (pDocID != "") {
+		        if (pDocID != "" && pUrl.toLowerCase().indexOf(".mht") > -1) {
 		        	strBody = message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
+		        } else {
+		        	strBody = message.GetEditorContent() + "<br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
 		        }
 		        
 		        // 게시물 내용을 db에 넣기 위한 변수 2018-04-06 강민수92
@@ -712,9 +714,12 @@
 		        else {
 		            if (pDocID == "")
 		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>", "clean");
-		            else {
+		            else if (pUrl.toLowerCase().indexOf(".mht") > -1) {
 		                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
 		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
+		            } else {
+		            	 var tempstr = strBody + "<br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
 		            }
 		        }
 		        
@@ -1929,6 +1934,26 @@
 	        	
 	        	return retValue;
 	        }
+	        
+	        function AttachFileList2() {
+		    	var strRet = "";
+		    	var filepath = "";
+		    	
+		        if (getXmlString(pAttachListXml) == "") {
+		            return "";
+		        }
+		    	   var xmldomNodes = GetElementsByTagName(pAttachListXml, "DATA2");
+
+		           for (var i = 0; i < xmldomNodes.length; i++) {
+		               filepath = getNodeText(xmldomNodes[i]);
+		               if (filepath.indexOf(pBoardID) != -1) {
+		                   strRet += filepath + "|";
+		               } else {
+		            	   strRet += "tempUploadFile/" + getNodeText(xmldomNodes[i]) + "|"
+		               }
+		           }
+		    	return strRet;
+		    }
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
 	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">

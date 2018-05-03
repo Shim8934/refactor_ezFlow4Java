@@ -5624,15 +5624,31 @@
 <!-- 	</procedure> -->
 	<update id="EzCommunityDAO.adminLogoOkUpdate1"			parameterClass="Map">
 		<![CDATA[
-			UPDATE
-				TBL_C_CLUB
-			SET
-				c_logo = #v_LOGOFILENAME#,
-				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
-			WHERE
-				RTRIM(c_clubno) = #v_FILENAME#
-			AND
-				tenant_id = #tenantID#
+				UPDATE
+					TBL_C_CLUB
+		]]>
+			<dynamic prepend="SET">
+				<isNotEmpty property="v_LOGOFILENAME" prepend=",">
+					<![CDATA[
+						c_logo = #v_LOGOFILENAME#
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="v_LOGOFILENAME_THUMBNAIL" prepend=",">
+					<![CDATA[
+						c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
+					]]>
+				</isNotEmpty>	
+				<isNotEmpty property="v_COPTYPE" prepend=",">
+					<![CDATA[
+						c_type = #v_COPTYPE#
+					]]>
+				</isNotEmpty>	
+			</dynamic>
+		<![CDATA[
+				WHERE
+					RTRIM(c_clubno) = #v_FILENAME#
+				AND
+					tenant_id = #tenantID#
 		]]>
 	</update>
 	
