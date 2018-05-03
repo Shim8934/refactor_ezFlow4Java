@@ -7,6 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -18,6 +19,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 		
@@ -729,26 +731,31 @@
 		            //document.getElementById("txtWriterName").value = "";
 		
 		            if (obj.getAttribute("mode") == "off") {
-		                document.getElementById("layer_popup").style.left = "10px";
-		                document.getElementById("layer_popup").style.top = "100px";
-		                document.getElementById("layer_popup").style.display = "";
-		                obj.setAttribute("mode", "on");
-		            }
-		            else {
-		                BoardSearchOptionHidden();
-		            }
-		        }
+				    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%; height:100%;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+				    	var lfet = parent.frames["left"].document.body;
+				    	$(lfet).css("overflow","hidden");
+			        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			        	$("#srarchpopup").css("left", popupX);
+						$("#srarchpopup").modal();
+			            obj.setAttribute("mode", "on");
+			        }
+			        else {
+			            BoardSearchOptionHidden();
+			        }
+			    }
+			    function BoardSearchOptionHidden() {
+			    	var lfet = parent.frames["left"].document.body;
+			    	$(lfet).css("overflow","auto");
+			        document.getElementById("SearchOption").setAttribute("mode", "off");
+			        $.modal.close();
+			    }
 		        function btn_PostDate_Clear() {
 			        $("#Sdatepicker").datepicker('setDate', "");
 			        $("#Edatepicker").datepicker('setDate', "");
 		        }
-		        function BoardSearchOptionHidden() {
-		            document.getElementById("layer_popup").style.display = "none";
-		            document.getElementById("SearchOption").setAttribute("mode", "off");
-		        }
 			    function search(type) {
 			        if (type == "basic") {
-			        	if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
+			        	if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
 			        			&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 			                alert("<spring:message code='ezBoard.t192' />");
 			                return;
@@ -1013,9 +1020,8 @@
 	    </span>
 	
 	
-	    <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
-	    	<div class="popupwrap1">
-	            <div class="popupwrap2">
+	    <div class="jquery-modal blocker current" id="layer_popup" style="display:none;">
+			<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
 	        		<table class="content">
 				        <tr>
 				            <th style="text-align:center"><spring:message code='ezBoard.t208'/></th>
@@ -1047,7 +1053,5 @@
 			    	</table>
             	</div>
           	</div>
-        	<div class="shadow"></div>
-		</div>
 	</body>
 </html>
