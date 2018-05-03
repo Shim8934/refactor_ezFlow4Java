@@ -282,6 +282,7 @@
 		}
 	    
    	   function doLayerPopup(obj) {
+   			optionHidden();
 	   		 btn_PostDate_Clear();
 	         $('#enrollStartDate').val(enrollStartDate);
 	         $('#enrollEndDate').val(enrollEndDate) ;
@@ -320,6 +321,7 @@
    	        optionHidden();
    	    }
    	   }
+   	   
 	 	function optionHidden() {
 	 	    document.getElementById("layer_Viewpopup").style.display = "none";
 	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
@@ -524,7 +526,7 @@
 				<th width="20px"><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
 				<th width="40px"><spring:message code='ezWebFolder.t188'/></th>
 				<th width="30%"><spring:message code='ezWebFolder.t156'/></th>
-				<th style= "width=6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th>
+				<th width="6%;"><spring:message code='ezWebFolder.t157'/></th>
 				<th width="7%;"><spring:message code='ezWebFolder.t189'/></th>
 				<th width="9%;"><spring:message code='ezWebFolder.t190'/></th>
 				<th width="9%;"><spring:message code='ezWebFolder.t288'/></th>
