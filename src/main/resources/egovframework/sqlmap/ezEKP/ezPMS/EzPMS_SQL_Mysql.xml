@@ -100,6 +100,7 @@
     	<result property="userId"							column="USER_ID"					columnIndex="5"/>
     	<result property="userName"							column="USER_NAME"					columnIndex="6"/>
     	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="8"/>
+    	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="8"/>
     </resultMap>
     
     <resultMap id="projectTaskVO" class="ProjectTaskVO">
@@ -375,7 +376,8 @@
 		SELECT
 			USER_ID AS USER_ID,
 			USER_NAME$lang$ AS USER_NAME,
-			USER_DEPTNAME$lang$ AS USER_DEPTNAME
+			USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+			MEMBER_ROLE_ID AS MEMBER_ROLE_ID
 		FROM TBL_PMS_MEMBER
 		WHERE
 			PROJECT_ID = #project_Id#
