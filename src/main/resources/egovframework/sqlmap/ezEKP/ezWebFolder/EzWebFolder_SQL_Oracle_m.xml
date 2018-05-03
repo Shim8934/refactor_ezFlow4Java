@@ -1191,7 +1191,8 @@
 					FOLDER.CREATE_NAME1 AS CREATE_NAME1,
 		            FOLDER.CREATE_NAME2 AS CREATE_NAME2,
 		            '' AS FILE_FOLDER_ID,
-		            FOLDER.FOLDER_UPPER as FOLDER_UPPER 
+		            FOLDER.FOLDER_UPPER as FOLDER_UPPER,
+		            '0' AS SLEVEL
 				FROM
 					tbl_webfolder_folder FOLDER
 					LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
@@ -1199,11 +1200,16 @@
 					LEFT JOIN TBL_WEBFOLDER_FOLDER parent
 						ON FOLDER.FOLDER_UPPER = parent.FOLDER_ID AND FOLDER.TENANT_ID = parent.TENANT_ID
 				WHERE
-					parent.USE_STATUS = 'Y' AND
-					FOLDER.USE_STATUS = 'T' AND
-					FOLDER.DELETER_ID = #userId# AND
-					FOLDER.TENANT_ID = #tenantId#
+						parent.USE_STATUS = 'Y'
+					AND
+						FOLDER.USE_STATUS = 'T'
+					AND
+						FOLDER.TENANT_ID = #tenantId#
 		]]>
+		<isNotEqual property="mode" compareValue="admin" prepend="AND">
+			FOLDER.DELETER_ID = #userId#
+		</isNotEqual>
+		
 		<include refid="searchTrashCanFolder"/>
 				UNION
 		<![CDATA[	
@@ -1223,7 +1229,8 @@
 	            FILES.CREATE_NAME1 AS CREATE_NAME1,
 	            FILES.CREATE_NAME1 AS CREATE_NAME2,
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
-	            '' as FOLDER_UPPER
+	            '' as FOLDER_UPPER,
+	            '1' AS SLEVEL
 			FROM
 				tbl_webfolder_file FILES
 				LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
@@ -1231,16 +1238,21 @@
 				LEFT JOIN TBL_WEBFOLDER_FOLDER fd
 					ON FILES.FOLDER_ID = fd.FOLDER_ID AND FILES.TENANT_ID = fd.TENANT_ID
 			WHERE
-				fd.USE_STATUS    = 'Y' AND
-				FILES.USE_STATUS = 'T' AND
-				FILES.DELETER_ID = #userId# AND
-				FILES.TENANT_ID = #tenantId#
+					fd.USE_STATUS    = 'Y'
+				AND
+					FILES.USE_STATUS = 'T'
+				AND
+					FILES.TENANT_ID = #tenantId#
 		]]>
+		<isNotEqual property="mode" compareValue="admin" prepend="AND">
+			FILES.DELETER_ID = #userId#
+		</isNotEqual>
+		
 		<include refid="searchTrashCanFile"/>
 	 	<![CDATA[
 				) A
 			WHERE rownum <= #pStart# + #pEnd#
-			ORDER BY A.TRASHCAN_EXT,A.UPDATE_DATE DESC ) B
+			ORDER BY A.SLEVEL, A.TRASHCAN_EXT,A.UPDATE_DATE DESC ) B
 		WHERE B.rnum >= #pStart# + 1
 		]]> 
 	</select>
@@ -1389,8 +1401,8 @@
 			TENANT_ID = #tenantId#
 		AND
 			FOLDER_PATH LIKE #folderPath# || '%'
-		AND
-			DELETER_ID = #userId#
+<!-- 		AND
+			DELETER_ID = #userId# -->
 		AND
 			COMPANY_ID = #companyId#	
 	</update>
@@ -1766,10 +1778,14 @@
 			LEFT JOIN TBL_WEBFOLDER_FOLDER FOLDER
 				ON FILES.FOLDER_ID = FOLDER.FOLDER_ID AND FILES.TENANT_ID = FOLDER.TENANT_ID
 		WHERE
-			FOLDER.USE_STATUS    = 'Y' AND
-			FILES.USE_STATUS = 'T' AND
-			FILES.DELETER_ID = #userId# AND
-			FILES.TENANT_ID = #tenantId#
+				FOLDER.USE_STATUS = 'Y'
+			AND
+				FILES.USE_STATUS = 'T'
+			AND
+				FILES.TENANT_ID = #tenantId#
+			<isNotEqual property="mode" compareValue="admin" prepend="AND">
+				FILES.DELETER_ID = #userId#
+			</isNotEqual>
 		<include refid="searchTrashCanFile"/>
 	</select>
 	
@@ -1783,10 +1799,14 @@
 			LEFT JOIN TBL_WEBFOLDER_FOLDER parent
 				ON FOLDER.FOLDER_UPPER = parent.FOLDER_ID AND FOLDER.TENANT_ID = parent.TENANT_ID
 		WHERE
-			parent.USE_STATUS = 'Y' AND
-			FOLDER.USE_STATUS = 'T' AND
-			FOLDER.DELETER_ID = #userId# AND
-			FOLDER.TENANT_ID = #tenantId#
+				parent.USE_STATUS = 'Y'
+			AND
+				FOLDER.USE_STATUS = 'T'
+			AND
+				FOLDER.TENANT_ID = #tenantId#
+			<isNotEqual property="mode" compareValue="admin" prepend="AND">
+				FOLDER.DELETER_ID = #userId#
+			</isNotEqual>
 		<include refid="searchTrashCanFolder"/>
 	</select>
 	

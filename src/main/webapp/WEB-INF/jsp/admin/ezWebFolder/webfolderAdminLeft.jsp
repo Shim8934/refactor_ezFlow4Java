@@ -97,6 +97,11 @@
 				window.open("/admin/ezWebFolder/webfolderAdminFileHistory.do", "right");
 			}
 			
+			function getTrashCanList() {
+				clearToggle();
+				window.open("/admin/ezWebFolder/recycleBin.do", "right");
+			}
+			
 			function departmentFolder() {
 				clearToggle();
 				window.open("/admin/ezWebFolder/webfolderAdminDeptFolder.do", "right");
@@ -152,6 +157,11 @@
 				<span style="display:inline-block;width:100%;" onClick="fileTransactionHistory();"><spring:message code='ezWebFolder.t128'/></span>
 			</h2>
 			<ul>
+			</ul>
+			<h2>
+  				<span style="display:inline-block;width:100%;" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span>
+  			</h2>
+  			<ul>
 			</ul>
 		</div>
 		<div id="blockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;"></div>

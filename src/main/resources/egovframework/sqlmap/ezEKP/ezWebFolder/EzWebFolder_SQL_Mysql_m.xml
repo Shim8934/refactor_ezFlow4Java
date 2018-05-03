@@ -1137,11 +1137,16 @@
 					LEFT JOIN TBL_WEBFOLDER_FOLDER parent
 						ON FOLDER.FOLDER_UPPER = parent.FOLDER_ID AND FOLDER.TENANT_ID = parent.TENANT_ID
 				WHERE
-					parent.USE_STATUS = 'Y' AND
-					FOLDER.USE_STATUS = 'T' AND
-					FOLDER.DELETER_ID = #userId# AND
-					FOLDER.TENANT_ID = #tenantId#
+						parent.USE_STATUS = 'Y'
+					AND
+						FOLDER.USE_STATUS = 'T'
+					AND
+						FOLDER.TENANT_ID = #tenantId#
 		]]>
+		<isNotEqual property="mode" compareValue="admin" prepend="AND">
+			FOLDER.DELETER_ID = #userId#
+		</isNotEqual>
+		
 		<include refid="searchTrashCanFolder"/>
 				UNION
 		<![CDATA[	
@@ -1169,11 +1174,16 @@
 				LEFT JOIN TBL_WEBFOLDER_FOLDER FOLDER
 					ON FILES.FOLDER_ID = FOLDER.FOLDER_ID AND FILES.TENANT_ID = FOLDER.TENANT_ID
 			WHERE
-				FOLDER.USE_STATUS    = 'Y' AND
-				FILES.USE_STATUS = 'T' AND
-				FILES.DELETER_ID = #userId# AND
-				FILES.TENANT_ID = #tenantId#
+					FOLDER.USE_STATUS = 'Y'
+				AND
+					FILES.USE_STATUS = 'T'
+				AND
+					FILES.TENANT_ID = #tenantId#
 		]]>
+		<isNotEqual property="mode" compareValue="admin" prepend="AND">
+			FILES.DELETER_ID = #userId#
+		</isNotEqual>
+		
 		<include refid="searchTrashCanFile"/>
 	 	<![CDATA[
 				) R
@@ -1585,10 +1595,14 @@
 			LEFT JOIN TBL_WEBFOLDER_FOLDER FOLDER
 				ON FILES.FOLDER_ID = FOLDER.FOLDER_ID AND FILES.TENANT_ID = FOLDER.TENANT_ID
 		WHERE
-			FOLDER.USE_STATUS    = 'Y' AND
-			FILES.USE_STATUS = 'T' AND
-			FILES.DELETER_ID = #userId# AND
-			FILES.TENANT_ID = #tenantId#
+				FOLDER.USE_STATUS    = 'Y'
+			AND
+				FILES.USE_STATUS = 'T'
+			AND
+				FILES.TENANT_ID = #tenantId#
+			<isNotEqual property="mode" compareValue="admin" prepend="AND">
+				FILES.DELETER_ID = #userId#
+			</isNotEqual>	
 		<include refid="searchTrashCanFile"/>
 	</select>
 	
@@ -1602,10 +1616,14 @@
 			LEFT JOIN TBL_WEBFOLDER_FOLDER parent
 				ON FOLDER.FOLDER_UPPER = parent.FOLDER_ID AND FOLDER.TENANT_ID = parent.TENANT_ID
 		WHERE
-			parent.USE_STATUS = 'Y' AND
-			FOLDER.USE_STATUS = 'T' AND
-			FOLDER.DELETER_ID = #userId# AND
-			FOLDER.TENANT_ID = #tenantId#
+				parent.USE_STATUS = 'Y'
+			AND
+				FOLDER.USE_STATUS = 'T'
+			AND
+				FOLDER.TENANT_ID = #tenantId#
+			<isNotEqual property="mode" compareValue="admin" prepend="AND">
+				FOLDER.DELETER_ID = #userId#
+			</isNotEqual>
 		<include refid="searchTrashCanFolder"/>
 	</select>
 	

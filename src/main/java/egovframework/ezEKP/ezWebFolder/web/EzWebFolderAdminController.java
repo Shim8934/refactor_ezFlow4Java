@@ -99,7 +99,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		return "admin/ezWebFolder/folderDelete";
 	}
-
+	
+	@RequestMapping(value="/admin/ezWebFolder/recycleBin.do")
+	public String getRecycleBin(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model )throws Exception {
+		logger.debug("get RecycleBin is running.");
+		
+		//model.addAttribute("listCount", getUsrListCount(loginCookie, request));
+		model.addAttribute("lang", commonUtil.userInfoSimple(loginCookie).getLang());
+		
+		logger.debug("get RecycleBin finishes.");
+		return "admin/ezWebFolder/recycleBin";
+	}
+	
 	@RequestMapping(value="/admin/ezWebFolder/folderMoveConfirm.do")
 	public String folderMoveConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("Folder Move Confirm is running!");
