@@ -398,17 +398,17 @@
 						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
 						 
 						if (result[i].dateType == '4' || result[i].dateType == '5') { 
-						subDate = calDateRange(startDate, endDate); 
-						betweenDate = new Date(startDate); 
-						 
-						for (var j = 0; j<= subDate; j++) {
-							betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
-							var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
-							var resultRegion = result[i].region.length >= 12 ? result[i].region.substring(0,12) + ".." : result[i].region;
-							$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" + 
-									result[i].typeName + (resultRegion != "" ? " : " + resultRegion : "") + "</td></tr>"); 
-						} 
+							subDate = calDateRange(startDate, endDate); 
+							betweenDate = new Date(startDate); 
+							 
+							for (var j = 0; j<= subDate; j++) {
+								betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
+								var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
+								var resultRegion = result[i].region.length >= 12 ? result[i].region.substring(0,12) + ".." : result[i].region;
+								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
+										"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" + 
+										result[i].typeName + (resultRegion != "" ? " : " + resultRegion : "") + "</td></tr>"); 
+							} 
 						} else if (result[i].dateType == '3') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
