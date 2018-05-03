@@ -18,12 +18,6 @@
 	    	var adminCompany = "${adminCompany}";
 	    	var selectedUserId = "";
 	    	var selectedUserName = "";
-// 			document.onselectstart = function () {
-// 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
-// 	            return false;
-// 	        else
-// 	            return true;
-// 			};
 			
 	        $(document).ready(function() {
 		        if (document.getElementById("ListCompany").length == 0) {

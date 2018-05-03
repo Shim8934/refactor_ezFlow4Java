@@ -782,9 +782,8 @@ public class EzAttitudeGWController {
 			String typeId = request.getParameter("typeId");
 			String typeName = request.getParameter("typeName");
 			String typeName2 = request.getParameter("typeName2");
-			String imgPath = request.getParameter("imgPath");
 			
-			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, imgPath, info.getTenantId(), companyId);
+			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, info.getTenantId(), companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

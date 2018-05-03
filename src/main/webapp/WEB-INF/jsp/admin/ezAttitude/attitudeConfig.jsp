@@ -31,22 +31,16 @@
 		        }
 		        
 		        //timepicker
-        		$('#start_hr').timepicker({ 
+        		$('#startTime').timepicker({ 
         			timeFormat: 'H:i',
         			step: 30,
         			scrollbar: true
         		});
-        		$('#end_hr').timepicker({ 
+        		$('#endTime').timepicker({ 
         			timeFormat: 'H:i',
         			step: 30,
         			scrollbar: true
         		});
-//         		$('#start_min').timepicker({ 
-//         		    timeFormat: 'i',
-//         		    step: 5,
-//         		    maxTime: '00:59am',
-//         		    startTime: '00:00am'
-//         		});
 	        });
 	        
 	        function company_change() {
@@ -66,15 +60,8 @@
 	        
 	        function attitudeConfigSet(result) {
         		//근무시간
-//         		var startTime = result.workStartTime.split(':');
-//         		var endTime = result.workEndTime.split(':');
-//         		$('#start_hr').val(startTime[0]);
-//         		$('#start_min').val(startTime[1]);
-//         		$('#end_hr').val(endTime[0]);
-//         		$('#end_min').val(endTime[1]);
-				
-        		$('#start_hr').val(result.workStartTime);
-        		$('#end_hr').val(result.workEndTime);
+        		$('#startTime').val(result.workStartTime);
+        		$('#endTime').val(result.workEndTime);
         		//휴무요일
         		var closedDays = result.closedDay.split(',');
         		for (var i = 0; i < closedDays.length; i++) {
@@ -103,11 +90,11 @@
 	        
 	        function save_config() {
 	        	//시간
-// 	        	if($("#end_hr").val() > $("#start_hr").val()) {
-// 	        		alert('종료시간은 시작시간보다 늦어야 합니다.');
-// 	        		return;
-// 	        	}
-	        	
+	        	if( $("#endTime").val() < $("#startTime").val() ) {
+	        		alert('종료시간은 시작시간보다 늦어야 합니다.');
+	        		return;
+	        	}
+	        	//휴무요일
 	        	var closedDaysLength = $('#dayChkBox').find('input[type=checkbox]').length;
 	        	var closedDays = "";
 	        	for (var i = 0; i < closedDaysLength; i++) {
@@ -116,12 +103,14 @@
 	            $.ajax({
 	            	type : "POST",
 	            	url : "/admin/ezAttitude/updateAttitudeConfInfo.do",
-	            	data : {companyId : encodeURI($("#ListCompany").val()),
-	            			workStartTime : $("#start_hr").val(),
-	            			workEndTime : $("#end_hr").val(),
+	            	data : {
+	            			companyId : encodeURI($("#ListCompany").val()),
+	            			workStartTime : $("#startTime").val(),
+	            			workEndTime : $("#endTime").val(),
 	            			closedDay : closedDays.slice(0, -1),
 	            			attitudeModAppl : $('input[name=attitude_mod_appl]:checked').val(),
-	            			closedDateAttitude : $('input[name=close_date_attitude]:checked').val()},
+	            			closedDateAttitude : $('input[name=close_date_attitude]:checked').val()
+	            	},
 	            	success : function() {
 	            		alert('저장되었습니다.');
 	            		company_change();
@@ -169,8 +158,7 @@
 					<spring:message code='ezAttitude.t17' />
 	            </th>
 	            <td style="width: 500px; text-align:left; padding-left: 5px;">
-<%-- 	            	<input id="start_hr" type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' />&nbsp;<input id="start_min" type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' /> ~ <input id="end_hr" type="text" style="width:50px;"/><spring:message code='ezAttitude.t18' />&nbsp;<input id="end_min" type="text" style="width:50px;"/><spring:message code='ezAttitude.t19' /> --%>
-	            	<input id="start_hr" type="text" style="width:50px;"/> ~ <input id="end_hr" type="text" style="width:50px;"/>
+	            	<input id="startTime" type="text" style="width:50px;"/> ~ <input id="endTime" type="text" style="width:50px;"/>
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">

@@ -51,8 +51,6 @@ public interface EzAttitudeService {
 	public void updateAttitudeApplicationApproval(String attitudeId, String apprUserId, String apprUserName, String apprUserName2, String apprStatus, 
 			int tenantId) throws Exception;
 	
-	public void deptExcelDownload(String downMode, String pidList, int tenantId) throws Exception;
-	
 	public List<Map<String, String>> getDeptAttitudeList(String pidList, int tenantId) throws Exception;
 	
 	public AttitudeApplicationVO getAttitudeApplicationInfo(int tenantId, String companyId, String attitudeId) throws Exception;
@@ -69,9 +67,7 @@ public interface EzAttitudeService {
 	
 	public void updateAttitudeTypeConfig(String typeConfigList, String companyId, int tenantId) throws Exception;
 	
-	public void insertAttitudeType(String typeId, String typeName, String typeName2, String imgPath, int tenantId, String companyId) throws Exception;
-	
-	public void insertAttitudeTypeIcon(String typeId, String fileName, String realPath, int tenantId) throws Exception;
+	public void insertAttitudeType(String typeId, String typeName, String typeName2, int tenantId, String companyId) throws Exception;
 	
 	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId, String typeId) throws Exception;
 	
