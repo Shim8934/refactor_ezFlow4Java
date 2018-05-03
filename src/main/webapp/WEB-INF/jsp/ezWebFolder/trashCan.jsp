@@ -11,7 +11,6 @@
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
-<!-- 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script> -->
 	<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	<!-- date Picker -->
 	
@@ -631,9 +630,6 @@
 			</tr>
 		</table>
 	</div>
-	<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px; display:none" /> 
-	<input type="hidden" onclick="fileupload()"/>
-	<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
         <iframe style="border:none;" id="iFrameLayer"></iframe>
