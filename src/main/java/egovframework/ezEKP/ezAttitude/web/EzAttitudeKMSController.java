@@ -248,7 +248,7 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String apprUserName,
 			@RequestParam(required=false)String startDate,
 			@RequestParam(required=false)String endDate) throws Exception {
-		LOGGER.debug("adminAttModAppList started");
+		LOGGER.debug("adminGetAttModAppList started");
 		
 		int totalAtt = 0;
 		int currentPage = 1;
@@ -414,7 +414,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("adminFlag", adminFlag);
 		
-		LOGGER.debug("attModAppList ended");
+		LOGGER.debug("adminGetAttModAppList ended");
 		
 		return "/ezAttitude/attModAppList";
 	}
@@ -434,6 +434,8 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String orderOption,
 			@RequestParam(required=false)String adminFlag,
 			@RequestParam(required=false)String checkAdmin) throws Exception {
+		
+		LOGGER.debug("getAttModAppList started");
 		
 		int currentPage = 1;
 		int pageSize = 15;
@@ -604,12 +606,14 @@ public class EzAttitudeKMSController {
 		resultj.put("totalAtt", totalAtt);
 		resultj.put("totalPages", totalPages);
 		
+		LOGGER.debug("getAttModAppList ended");
+		
 		return resultj;
 	}
 	
 	@RequestMapping(value = "/ezAttitude/saticGetXlsAtt.do")
 	public void qstResultsaticGetXlsAtt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
-		LOGGER.debug("saticGetXlsAtt started");
+		LOGGER.debug("qstResultsaticGetXlsAtt started");
 		
 		String headerFLAG = "";
 		 
@@ -673,7 +677,7 @@ public class EzAttitudeKMSController {
 		  
 		workbook.close();
 		  
-		LOGGER.debug("saticGetXlsAtt ended");
+		LOGGER.debug("qstResultsaticGetXlsAtt ended");
 	}
 	
 	@RequestMapping(value="/ezAttitude/delAttModApp.do" , method= RequestMethod.POST)
@@ -681,7 +685,6 @@ public class EzAttitudeKMSController {
 	public String delAttModApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=false)String idList) throws Exception {
 		LOGGER.debug("delAttModApp started");
-		LOGGER.debug("idList : " + idList);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -820,7 +823,7 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String changeDate,
 			@RequestParam(required=false)String originDate,
 			@RequestParam(required=false)String content) throws Exception {
-		LOGGER.debug("modAttModApp started");
+		LOGGER.debug("saveAttModApp started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -860,7 +863,7 @@ public class EzAttitudeKMSController {
 		
 		String status = resultBody.get("status").toString();
 
-		LOGGER.debug("modAttModApp ended");
+		LOGGER.debug("saveAttModApp ended");
 		
 		return status;
 	}
@@ -1001,7 +1004,7 @@ public class EzAttitudeKMSController {
 	@RequestMapping(value="/ezAttitude/attModAppMod.do")
 	public String attModAppMod(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=false)String attModId) throws Exception {
-		LOGGER.debug("attModAppDetail started");
+		LOGGER.debug("attModAppMod started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -1055,7 +1058,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("userTimeSet", offset);
 		model.addAttribute("offsetMin", offsetMin);
 		
-		LOGGER.debug("attModAppDetail ended");
+		LOGGER.debug("attModAppMod ended");
 		
 		return "/ezAttitude/attModAppMod";
 	}
@@ -1066,8 +1069,8 @@ public class EzAttitudeKMSController {
 	@RequestMapping(value = "/ezAttitude/attitudeDeptMain.do")
 	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request,
 			@RequestParam(required=false)String deptid) throws Exception {
-		LOGGER.debug("/ezAttitude/attitudeUserMain started");
-		LOGGER.debug("deptid : " + deptid);
+		LOGGER.debug("attitudeUserMain started");
+		
 		String adminFlag = "false";
 		String isGAdmin = "";
 		
@@ -1129,7 +1132,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("deptFlag", "true");
 		model.addAttribute("adminFlag", adminFlag);
 		
-		LOGGER.debug("/ezAttitude/attitudeUserMain ended");
+		LOGGER.debug("attitudeUserMain ended");
 		return "/ezAttitude/attitudeUserMain";
 	}
 	
@@ -1137,7 +1140,9 @@ public class EzAttitudeKMSController {
 	@ResponseBody
 	public JSONArray getAttHistory(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
 		@RequestParam(required=true)String attModId) throws Exception {
-				
+		
+		LOGGER.debug("getAttHistory started");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
@@ -1178,7 +1183,7 @@ public class EzAttitudeKMSController {
 		if(status.equals("ok")){
 			data = (JSONArray) resultBody.get("data");
 		}
-		
+		LOGGER.debug("getAttHistory ended");
 		return data;
 	}
 }

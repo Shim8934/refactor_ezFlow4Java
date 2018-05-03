@@ -33,11 +33,11 @@
 			}
 			
 			#attiCalendar td[typeId=A02], #attiCalendar td[typeId=A08] {
-				color : red;
+/* 				color : red; */
 			}
 			
 			#attiCalendar td[modappl='1'][typeId=A02] {
-				color : orange;
+				color : black;
 			}
 			
 			#attiCalendar td[typeId=A01], #attiCalendar td[typeId=A03] {
@@ -66,8 +66,8 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid #d1ddec;
-			    background: #d1ddec;
+			    border: 1px solid #017ddf;
+			    background: #018bfa;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;
 			    padding: 0;
@@ -79,8 +79,8 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid #605e60;
-			    background: #605e60;
+			    border: 1px solid #ccc31f;
+			    background: #e9de13;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;
 			    padding: 0;
@@ -105,8 +105,7 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid orange;
-			    background: orange;
+			    border: 1px solid black;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;
 			    padding: 0;
@@ -413,7 +412,7 @@
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + "</td></tr>"); 
 						} else { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + (result[i].modAppl == '1' ? "  <i class='fas fa-pencil-alt'></i>" : "") + "</td></tr>"); 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + (result[i].modAppl  == '1' && result[i].typeId  == 'A01' ? "  <i class='fas fa-pencil-alt'></i>" : "") + "</td></tr>"); 
 						} 
 					}
 					setAttitudeSquare();
