@@ -45,9 +45,7 @@
 	</script>
 </head>
 <body class="popup"> 
-	<div id="menu">
-		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t246'/></div>
-	</div>
+	<h1 id ="topmenu"><spring:message code='ezWebFolder.t246'/></h1>
 	<div id="close">
 		<ul>
 			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110'/></span></li>

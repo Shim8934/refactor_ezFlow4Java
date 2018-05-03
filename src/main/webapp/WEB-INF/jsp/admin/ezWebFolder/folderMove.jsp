@@ -7,6 +7,7 @@
 	<title>Insert title here</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
+	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script src="/js/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -291,9 +292,7 @@
 	</script>
 </head>
 <body class="popup">
-	<div id="menu">
-		<div style="font-weight: bold; font-size: 16px; color: #fff; margin-top: 3px;"><spring:message code='ezWebFolder.t120'/></div>
-	</div>
+	<h1 id ="topmenu"><spring:message code='ezWebFolder.t120'/></h1>
 	<div id="close">
 		<ul>
 			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110'/></span></li>

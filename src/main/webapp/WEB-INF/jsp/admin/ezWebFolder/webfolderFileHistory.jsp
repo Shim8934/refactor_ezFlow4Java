@@ -75,7 +75,7 @@
 			function openSearchPanel() {
 				var searchPanel = document.getElementById("searchPanel");
 				if (searchPanel.style.display == "none") {
-					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "";
+					window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "";
 					document.getElementById("mailPanel").style.display                              = "";
 					var position              = getPosition(516, 247);
 					searchPanel.style.top     = position[0] + "px";
@@ -83,7 +83,7 @@
 					searchPanel.style.display = "";
 				}
 				else {
-					window.parent.frames["left"].document.getElementById("blockLeft").style.display = "none";
+					window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "none";
 					document.getElementById("mailPanel").style.display                              = "none";
 					searchPanel.style.display = "none";
 				}

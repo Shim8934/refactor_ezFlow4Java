@@ -164,7 +164,7 @@
   			<ul>
 			</ul>
 		</div>
-		<div id="blockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;"></div>
+		<div id="bnkBlockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;"></div>
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		</script>
