@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><spring:message code='ezEmail.t535' /></title>
+    <title>폴더관리</title>
 <!--     <meta name="CODE_LANGUAGE" content="C#"> -->
     <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
