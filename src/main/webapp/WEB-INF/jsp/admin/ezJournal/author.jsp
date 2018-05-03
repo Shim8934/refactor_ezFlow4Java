@@ -100,7 +100,7 @@
 			<script type="text/javascript">
 		   		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
-			<table class="mainlist" style="width:100%;">
+			<table class="mainlist" style="width:100%; margin-left:5px;">
 			    <tr>
 			        <th style="text-align: left; width:20%;"><spring:message code='ezJournal.t38' /></th>
 			        <th style="text-align: left; width:20%;"><spring:message code='ezJournal.t39' /></th>
