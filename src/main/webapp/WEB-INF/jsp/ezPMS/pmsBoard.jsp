@@ -13,7 +13,8 @@
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script>
-	var projectId = "1";
+/* 	var projectId = ${projectId}; */
+ 	var projectId = "1";
 	var containerId = "test";
 	
 	function goAddBoard() {

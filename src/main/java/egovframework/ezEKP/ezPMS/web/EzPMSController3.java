@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
@@ -33,12 +34,10 @@ public class EzPMSController3 {
 	@Autowired
 	private Properties config;
 	
-	@RequestMapping(value="/ezPMS/getProjectBoard.do")
-	public String getProjectBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+	@RequestMapping(value="/ezPMS/getProjectBoard.do/{projectId}")
+	public String getProjectBoard(HttpServletRequest request, Model model, @PathVariable int projectId, @CookieValue("loginCookie") String loginCookie) {
 		
 		LOGGER.debug("ezPMS getProjectBoard started");
-		
-		String projectId = request.getParameter("projectId");
 		
 		model.addAttribute("projectId", projectId);
 		
@@ -62,16 +61,13 @@ public class EzPMSController3 {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/weight/" + projectId, param, request, "get", null);
-		String status = resultBody.get("status").toString();
-		
-		if(status.equals("ok")) {
-			JSONObject data = (JSONObject) resultBody.get("data");
-			model.addAttribute("remainingWeight", data.get("remainingWeight"));
-			model.addAttribute("projectStartDate", data.get("projectStartDate"));
-			model.addAttribute("projectEndDate", data.get("projectEndDate"));
-			model.addAttribute("weightInput", data.get("weightInput"));
-		}
+//		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects" + projectId, param, request, "get", null);
+//		String status = resultBody.get("status").toString();
+//		
+//		if(status.equals("ok")) {
+//			JSONObject data = (JSONObject) resultBody.get("data");
+//			model.addAttribute("projectName", data.get("projectName"));
+//		}
 		
 		model.addAttribute("projectId", projectId);
 		model.addAttribute("writerId", writerId);

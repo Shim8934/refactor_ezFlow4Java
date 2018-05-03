@@ -15,22 +15,10 @@
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script>
 var projectId = "${projectId}";
-var projectName = null;
+var projectName = "${projectName}";
 var writerId = "${writerId}";
 var writerName = "${writerName}";
 var writerDeptName = "${writerDeptName}";
-var weight = null;
-var projectStartDate = "${projectStartDate}";
-var projectEndDate = "${projectEndDate}";
-var planStartDate = "${planStartDate}";
-var planEndDate = "${planEndDate}";
-var managerList = null;
-var overview = null;
-var headManagerId = null;
-var groupId = "";
-var groupName = "";
-var remainingWeight = "${remainingWeight}";
-var weightInput = "${weightInput}";
 </script>
 </head>
 <body class="popup">
@@ -38,47 +26,24 @@ var weightInput = "${weightInput}";
 	<div id="main_body">
 		<table class="content" style="width:100%;">
 			<tr>
-				<th>업무명</th>
-				<td colspan="3">
-					<input type="text" id="taskName" class="textInput">
-				</td>
+				<th>프로젝트명</th>
+				<td>${projectName}(${projectId})</td>
+				<th>게시종류</th>
+				<td></td>
 			</tr>
 			<tr>
+				<th>작업이름</th>
+				<td></td>
 				<th>등록자</th>
-				<td colspan="3">${writerName}(${writerDeptName})</td>
+				<td>${writerName}(${writerDeptName})</td>
 			</tr>
 			<tr>
-				<th>계획시작일</th>
-				<td style="width:50%"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"></td>
-				<th>계획종료일</th>
-				<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></td>
+				<th>제목</th>
+				<td colspan="3"><input type="text" class="textInput"/></td>
 			</tr>
 			<tr>
-				<th><a class="imgbtn" onclick="openMemberList()"><span>담당자</span></a></th>
-				<td colspan="3" style="height:70px" id="managers"></td>
-			</tr>
-			<tr>
-				<th><a class="imgbtn" onclick="openGroupTree()"><span>상위그룹</span></a></th>
-				<td colspan="3" style="height:70px;" id="upperGroup"></td>
-			</tr>
-			<tr>
-				<th>가중치</th>
-				<c:choose>
-      				<c:when test="${weightInput == 0}">
-						<td colspan="3">
-						가중치 자동 계산
-						</td>
-					</c:when>
-      				<c:when test="${weightInput == 1}">
-						<td colspan="3">
-						<input type="text" id="weight" value="0" style="width:40px;text-align:center"> %  &nbsp; 프로젝트 잔여 가중치 ${remainingWeight} % 
-						</td>
-					</c:when>
-   				</c:choose>
-			</tr>
-			<tr>
-				<th>업무개요</th>
-				<td colspan="3"><textarea id="overview" style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
+				<th>내용</th>
+				<td colspan="3"><textarea style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
 			</tr>
 		</table>
 		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
