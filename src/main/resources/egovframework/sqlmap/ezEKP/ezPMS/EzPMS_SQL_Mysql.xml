@@ -45,7 +45,6 @@
     	<result property="workingday"						column="WORKINGDAY"					columnIndex="23"/>
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="24"/>
     	<result property="alamMailStatus"					column="ALAM_MAIL_STATUS"			columnIndex="25"/>    	
-    	<result property="isFavorite"						column="ISFAVORITE"					columnIndex="26"/>
     </resultMap>
     
     <resultMap id="projectGroupVO" class="ProjectGroupVO">
@@ -570,8 +569,7 @@
 				A.CREATOR_DEPTNAME2 AS CREATOR_DEPTNAME2, 
 				A.WORKINGDAY AS WORKINGDAY, 
 				A.REST_DUEDAY AS REST_DUEDAY, 
-				A.ALAM_MAIL_STATUS AS ALAM_MAIL_STATUS, 
-				IFNULL(F.FAVORITE_ID, 0) AS ISFAVORITE
+				A.ALAM_MAIL_STATUS AS ALAM_MAIL_STATUS  
 			FROM 
 				tbl_pms_project A
 			JOIN 
@@ -581,36 +579,15 @@
 			AND
 				A.TENANT_ID = B.TENANT_ID 
 		]]> 
-		<isNotEqual property="listProjectStatus" compareValue="F">
-			LEFT JOIN 
-				tbl_pms_favorite F 
-			ON
-				A.PROJECT_ID = F.PROJECT_ID 
-			AND
-				A.TENANT_ID = F.TENANT_ID	
-		</isNotEqual>
 		<isEqual property="listProjectStatus" compareValue="F">
-			JOIN	
+			JOIN 
 				tbl_pms_favorite F 
 			ON
 				A.PROJECT_ID = F.PROJECT_ID 
 			AND
 				A.TENANT_ID = F.TENANT_ID	
-		</isEqual>	
-		<isNotEmpty property="searchByUser">
-			JOIN	
-				tbl_pms_member M
-			ON
-				A.PROJECT_ID = M.PROJECT_ID
-			AND A.TENANT_ID = M.TENANT_ID
-			
-			WHERE	
-				M.USER_NAME$lang$ LIKE CONCAT('%',#searchByUser#,'%')
-			AND
-		</isNotEmpty>
-		<isEmpty property="searchByUser">
-			WHERE
-		</isEmpty>
+		</isEqual> 
+			WHERE 
 				( B.USER_ID = #userId# 
 				OR 
 				  B.USER_ID = #deptId# 
@@ -625,34 +602,8 @@
 					A.STATUS = #listProjectStatus#
 			</isNotEqual> 
 		</isNotEqual> 
-		<isNotEmpty property="searchByName">
-			AND
-				A.PROJECT_NAME LIKE CONCAT('%',#searchByName#,'%')
-		</isNotEmpty>
-		<isNotEmpty property="searchByStartDate">
-			<![CDATA[
-			AND
-				A.PLAN_START_DATE >= STR_TO_DATE(#searchByStartDate#, '%Y-%m-%d')
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="searchByEndDate">
-			<![CDATA[
-			AND
-				A.PLAN_END_DATE <= STR_TO_DATE(#searchByEndDate#, '%Y-%m-%d')
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="searchByOverview">
-			AND
-				A.OVERVIEW LIKE CONCAT('%',#"searchByOverview"#,'%')
-		</isNotEmpty>
-		<isNotEqual property="orderWhat" compareValue="init">
-			ORDER BY	
-				$orderWhat$ $orderHow$
-		</isNotEqual>
-		<isEqual property="orderWhat" compareValue="init">
 			ORDER BY 
 				$projectSort$
-		</isEqual>
 		<isEqual property="viewType" compareValue="1">
 			limit 
 				#startCount#, #listNumber# 
@@ -764,54 +715,22 @@
 			AND
 				A.TENANT_ID = F.TENANT_ID	
 		</isEqual> 
-		<isNotEmpty property="searchByUser">
-			JOIN	
-				tbl_pms_member M
-			ON
-				A.PROJECT_ID = M.PROJECT_ID
-			AND A.TENANT_ID = M.TENANT_ID
-			
-			WHERE	
-				M.USER_NAME$lang$ LIKE CONCAT('%',#searchByUser#,'%')
-			AND
-		</isNotEmpty>
-		<isEmpty property="searchByUser">
-			WHERE
-		</isEmpty>
+			WHERE 
 				( B.USER_ID = #userId# 
 				OR 
 				  B.USER_ID = #deptId# 
 				)
 			AND 
-				A.TENANT_ID = #tenantId#
-			AND 
-				DEL_STATUS = 0
+				A.DEL_STATUS = 0 
 		<isNotEqual property="status" compareValue="F">
 			<isNotEqual property="status" compareValue="A">
 				AND  
 					A.STATUS = #status#
-			</isNotEqual> 
-		</isNotEqual> 
-		<isNotEmpty property="searchByName">
-			AND
-				A.PROJECT_NAME LIKE CONCAT('%',#searchByName#,'%')
-		</isNotEmpty>
-		<isNotEmpty property="searchByStartDate">
-			<![CDATA[
-			AND
-				A.PLAN_START_DATE >= STR_TO_DATE(#searchByStartDate#, '%Y-%m-%d')
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="searchByEndDate">
-			<![CDATA[
-			AND
-				A.PLAN_END_DATE <= STR_TO_DATE(#searchByEndDate#, '%Y-%m-%d')
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="searchByOverview">
-			AND
-				A.OVERVIEW LIKE CONCAT('%',#"searchByOverview"#,'%')
-		</isNotEmpty>
+			</isNotEqual>
+		</isNotEqual>
+			AND 
+				A.TENANT_ID = #tenantId#
+
 	</select>
 	
 	<insert id="EzPMSDAO.insertMainSetting" parameterClass="map">
@@ -844,7 +763,7 @@
 	]]>
 	</update>
 	
-	<select id="EzPMSDAO.getProjectDetail" parameterClass="Map" resultMap="projectInfoVO">
+	<select id="EzPMSDAO.getProjectDetails" parameterClass="Map" resultMap="projectInfoVO">
 	<![CDATA[
 		SELECT DISTINCT
 			A.PROJECT_ID AS PROJECT_ID, 
@@ -885,9 +804,13 @@
 			OR 
 			  B.USER_ID = #deptId# 
 			)
-		AND  
-			A.STATUS = #status# 
 		AND 
+	]]>
+		<isNotNull property="status">
+			AND
+				B.STATUS LIKE CONCAT('%',#status#,'%')
+		</isNotNull>
+	<![CDATA[
 			A.TENANT_ID = #tenantId#
 		AND
 			A.PROJECT_ID = #projectId#
@@ -1060,17 +983,4 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</delete>
-	
-	<select id="EzPMSDAO.getFavoriteProject" parameterClass="map" resultClass="Integer">
-		<![CDATA[
-			SELECT 
-				PROJECT_ID
-			FROM	
-				tbl_pms_favorite	
-			WHERE	
-				USER_ID = #userId#
-			AND
-				TENANT_ID = #tenantId#
-		]]>
-	</select>
 </sqlMap>

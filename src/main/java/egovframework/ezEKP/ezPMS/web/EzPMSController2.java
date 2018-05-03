@@ -346,7 +346,7 @@ public class EzPMSController2 {
 	}
 	
 	/**
-	 * 프로젝트관리 멤버리스트 페이지 호출함수
+	 * 프로젝트관리 간트차트 프로젝트, 업무 데이터 조회
 	 * @param request
 	 * @param model
 	 * @param loginCookie
@@ -363,20 +363,20 @@ public class EzPMSController2 {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
-		String status = resultBody.get("status").toString();
+		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi("/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBodyTask.get("status").toString();
 		
 		if(status.equals("ok")) {
-			JSONArray taskList = (JSONArray) resultBody.get("data");
+			JSONArray taskList = (JSONArray) resultBodyTask.get("data");
 			model.addAttribute("taskList", taskList);
 		}
 		
-		JSONObject resultBody2 = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
-		status = resultBody2.get("status").toString();
+		//나중에 이름 정리 해야함.
+		JSONObject resultBodyProject = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/users/" + userInfo.getId() + "/gantt", param, request, "get", null);
+		status = resultBodyProject.get("status").toString();
 		
 		if(status.equals("ok")) {
-			JSONArray projectDetail = (JSONArray) resultBody2.get("data");
-			model.addAttribute("projectDetail", projectDetail);
+			model.addAttribute("projectDetail", resultBodyProject.get("data"));
 		}
 		
 		model.addAttribute("projectId", projectId);
