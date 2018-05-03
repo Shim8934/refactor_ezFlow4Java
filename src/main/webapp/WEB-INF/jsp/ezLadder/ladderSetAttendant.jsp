@@ -196,32 +196,8 @@
 	                
 	                listview.AddDataRow(objTr, Resultxml);
 	            }
-	            
-	            /** boh */
-	            $("#ladderBmBtn").on("click", function() {
-	            	setBmGroup("add", 0);
-	            });
-	            
-	            $(window).on("click", function() {
-	            	$("[id^='editBmGroup_']").css("display", "none");
-	            });
-	            
-	            $(document)
-	            	.on("click", ".editBmIcon", function(e) {
-	            		e.stopPropagation();
-						$("#" + $(this).attr("name")).css("display", "block");
-					})
-					.on("click", "div[name='modify']", function() {
-						setBmGroup("modify", $(this).parents("tr").attr("id"));
-					})
-					.on("click", "div[name='delete']", function() {
-						setBmGroup("delete", $(this).parents("tr").attr("id"));
-					})
-					.on("mouseleave", "div[id^='editBmGroup_']", function() {
-						$("div[id^='editBmGroup_']").hide();
-					})
 	        }
-	
+	        
 	        var schedule_add_user_cross_dialogArguments = new Array();
 	        function Add_UserInfo_onclick() {
 	            var listView = new ListView();
@@ -1210,6 +1186,10 @@
 		    }
 		    
 		    /** 사다리 멤버 즐겨찾기 관련 */
+		    function editBM(flag) {
+				setBmGroup(flag, _RowObjectID);
+			}
+		    
 		    function setBmGroup(type, ladderBmId) {
 		    	save_userlist();
 		    	
@@ -1259,8 +1239,6 @@
 	    		var html = "";
 			    var bm_list = [];
 			    
-			    $("div[id^='editBmGroup_']").hide();
-	    		
 		    	$.ajax({
 					url : '/ezLadder/getLadderBM.do',
 					type : 'GET',
@@ -1275,16 +1253,13 @@
 							bm_list.forEach(function(group, index) {
 								html += "<tr id='" + group.ladderBmId + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>";
 								html += "<td style='width:5%'>" + (index + 1) + "</td>";
-								html += "<td style='width:37%'>" + group.bmName + "</td>";
-								html += "<td style='width:29%'>" + group.regdate + "</td>";
+								html += "<td style='width:39%'>" + group.bmName + "</td>";
+								html += "<td style='width:31%'>" + group.regdate + "</td>";
 								if(group.count === 0) {
-									html += "<td style='width:22%'>" + group.userName + "</td>";
+									html += "<td style='width:24%'>" + group.userName + "</td>";
 								} else {
-									html += "<td style='width:22%'>" + group.userName + " <spring:message code='ezLadder.t070' /> " + group.count + " <spring:message code='ezLadder.t105' /></td>";
+									html += "<td style='width:24%'>" + group.userName + " <spring:message code='ezLadder.t070' /> " + group.count + " <spring:message code='ezLadder.t105' /></td>";
 								}
-								html += "<td style='width:6%'><img class='editBmIcon' src='/images/option3.png' name='editBmGroup_" + index + "' height='25' width='25'>";
-								html += "<div id='editBmGroup_" + index + "' style='display: none; position: absolute; background: #f8f8f8; z-index: 10; border: 1px solid #cfcfcf; text-align: center;'><div name='modify' style='width: 150px; padding: 8px 10px; border-bottom: 1px solid #cfcfcf;'><spring:message code='ezLadder.t061' /> <spring:message code='ezLadder.t052' /></div>";
-								html += "<div name='delete' style='width: 150px; padding: 8px 10px;'><spring:message code='ezLadder.t061' /> <spring:message code='ezLadder.t053' /></div></div>";
 					    		html += "</td></tr>";
 							});
 				    	
@@ -1677,17 +1652,20 @@
 	                        	<table style="width:100%">
 	                                <tr>
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
-	                                        <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezLadder.t022' /></h2>
+	                                        <h2 class="h2_dot" style="padding-top: 2px; display: inline-block;"><spring:message code='ezLadder.t022' /></h2>
+											<div style="float: right;">
+												<a class="imgbtn" onclick="editBM('modify');" style="display: inline-block; margin-top: 1px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t052" /></span></a>
+												<a class="imgbtn" onclick="editBM('delete');" style="display: inline-block; margin-top: 1px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t053" /></span></a>
+											</div>
 	                                        <div class="border_gray">
 	                                            <div id="circularDept" style="Width: 100%; Height: 182px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table class="mainlist" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
 									                        	<th style="width: 5%;"><span><spring:message code='ezLadder.t023' /></span></th>
-									                            <th style="width: 37%;"><span><spring:message code='ezLadder.t024' /></span></th>
-									                            <th style="width: 29%;"><span><spring:message code='ezLadder.t025' /></span></th>
-									                            <th style="width: 22%;"><span><spring:message code='ezLadder.t026' /></span></th>
-									                            <th style="width: 6%;"></th>
+									                            <th style="width: 39%;"><span><spring:message code='ezLadder.t024' /></span></th>
+									                            <th style="width: 31%;"><span><spring:message code='ezLadder.t025' /></span></th>
+									                            <th style="width: 24%;"><span><spring:message code='ezLadder.t026' /></span></th>
 									                        </tr>
 								                        </thead>
 								                        <tbody id="List_TBODY">					                        
@@ -1724,13 +1702,13 @@
 	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver(ListViewMsgTo)"><br>
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 	                        </td>
-	                        <td style="vertical-align: top;">
+	                        <td style="vertical-align: top; position: relative;">
+								<a class="imgbtn" id="ladderBmBtn" onclick="setBmGroup('add', 0);" style="position:  absolute; top: 0; right:  0; margin-top: 5px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></span></a>
 	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:4px;">
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezLadder.t013'/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox" style="position: relative;">
 	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 484px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
-	                                <div id="ladderBmBtn"><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></div>
 	                            </div>
 	                        </td>
 	                    </tr>

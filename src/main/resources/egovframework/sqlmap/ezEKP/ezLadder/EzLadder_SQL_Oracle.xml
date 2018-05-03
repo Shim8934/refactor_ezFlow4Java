@@ -1116,53 +1116,63 @@
 	</select>
 	
 	<select id="EzLadderDAO.searchPreLadderList" parameterClass="map" resultClass="LadderVO">
-		<!-- SELECT 
-			IFNULL(O.LADDERID, L.LADDERID) ORIG_ID, O.CHANGELADDERID, L.LADDERID, L.TYPE, L.TITLE, L.WRITERID
-		FROM 
-			TBL_LADDER_ORDER O
-		RIGHT JOIN 
-			TBL_LADDER L
-		ON 
-			L.LADDERID = O.CHANGELADDERID
+		<![CDATA[
+		SELECT 
+			INB.*
+		FROM ( 
+			SELECT 
+				ROWNUM AS RNUM, INA.*
+			FROM (
+				SELECT 
+					NVL(O.LADDERID, L.LADDERID) ORIG_ID, O.CHANGELADDERID, L.LADDERID, L.TYPE, L.TITLE, L.WRITERID
+				FROM 
+					TBL_LADDER_ORDER O
+				RIGHT JOIN 
+					TBL_LADDER L
+				ON 
+					L.LADDERID = O.CHANGELADDERID
+				WHERE 
+					L.TENANT_ID = #tenantId#
+				AND 
+					L.WRITERID = #userId#
+				AND
+					L.DELETEFLAG = 0
+				AND
+					L.TITLE LIKE '%'||#searchInput#||'%'
+				ORDER BY 
+					ORIG_ID DESC
+				) INA
+			) INB
 		WHERE 
-			L.TENANT_ID = #tenantId#
-		AND 
-			L.WRITERID = #userId#
-		AND
-			L.TITLE LIKE CONCAT('%', #searchInput#, '%')
-		AND 
-			L.DELETEFLAG = 0
-		ORDER BY 
-			ORIG_ID DESC
-		LIMIT 
-			#startPoint#, #endPoint# -->
+			INB.RNUM > #startPoint# AND INB.RNUM <= #startPoint# + #endPoint#
+		]]>
 	</select>
 	
 	<select id="EzLadderDAO.selectChangePreList" parameterClass="LadderOrderVO" resultClass="LadderOrderVO">
-		<!-- SELECT 
+		SELECT 
 			LADDERID, CHANGELADDERID
 		FROM 
 			TBL_LADDER_ORDER
 		WHERE 
 			TENANT_ID = #tenant_id#
 		AND 
-			USERID = #userId# -->
+			USERID = #userId#
 	</select>
 	
 	<delete id="EzLadderDAO.deleteChangePreList" parameterClass="LadderOrderVO">
-		<!-- DELETE FROM 
+		DELETE FROM 
 			TBL_LADDER_ORDER
 		WHERE 
 			TENANT_ID = #tenant_id#
 		AND 
-			USERID = #userId# -->
+			USERID = #userId#
 	</delete>
 	
 	<insert id="EzLadderDAO.insertChangePreList" parameterClass="LadderOrderVO">
-		<!-- INSERT INTO 
-			TBL_LADDER_ORDER(TENANT_ID, LADDERID, CHANGELADDERID, USERID)
+		INSERT INTO 
+			TBL_LADDER_ORDER(TENANT_ID, ID, LADDERID, CHANGELADDERID, USERID)
 		VALUES
-			(#tenant_id#, #ladderId#, #changeLadderId#, #userId#) -->
+			(#tenant_id#, TBL_LADDER_ORDER_SEQ.NEXTVAL, #ladderId#, #changeLadderId#, #userId#)
 	</insert>
 	
 	<select id="EzLadderDAO.selectLadderCommentList" parameterClass="LadderCommentVO" resultClass="LadderCommentVO">

@@ -145,7 +145,7 @@
     z-index: -20;
 }
 
-#ladderBmBtn {
+/* #ladderBmBtn {
 	height: 32px;
     position: absolute;
     bottom: -33px;
@@ -157,7 +157,7 @@
     cursor: pointer;
     background: #FFF;
     border-top-color: #BBB;
-}
+} */
 
 /** 사다리 조회창 */
 .cmtInput_wrap {
