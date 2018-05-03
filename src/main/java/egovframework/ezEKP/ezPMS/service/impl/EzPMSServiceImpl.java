@@ -250,8 +250,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("mode", mode);
 		map.put("userId", userId);
 		map.put("deptId", deptId);
+		map.put("isGantt", 1);
 		
 		ProjectInfoVO project = ezPMSDAO.getProjectDetails(map);
+		
+		List<ProjectMemberVO> member = ezPMSDAO.getProjectMemberList(map);
+		
+		project.setProjectMember(member);
 		
 		LOGGER.debug("getProjectDetail ended");
 		
