@@ -18,7 +18,7 @@
 	<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
 	<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
 	<script type="text/javascript" src="/js/ezLadder/ladder.js"></script>
-	
+	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript">
 	
 		var _ladder;
@@ -480,7 +480,7 @@
 					if(flag == "add") { 
 						// add
 						var html = '<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="' + cmt["id"] + '">';
-						html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;"><img src="' + picsrc + '" style="height: 38px; width:38px;"></div></td>';
+						html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo(\'' +  cmt["userId"] + '\')"><img src="' + picsrc + '" style="height: 38px; width:38px;"></div></td>';
 						html += '<td><div class="userName">' + cmt["userName"] + '</div>';
 						html += '<div id="div2Cmt' + cmt["id"] + '" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >';
 						html += '<p id="cmtArea' + cmt["id"] + '" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;"></p></div>';
@@ -592,6 +592,10 @@
 			}
 		}
 		
+		function menuQst_DetailUserInfo(pUserID) {
+			var feature = GetOpenPosition(420, 438);
+		    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		}	
 	</script>
 	<style type="text/css">
 		ul {
@@ -698,7 +702,7 @@
 		<div class="fullwidth">
 			<div style="height:50px">
 				<div style="float:left;margin-top:3px;margin-bottom:10px">
-					<p class="pic" style="float:left;margin:5px 10px">
+					<p class="pic" style="float:left;margin:5px 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${vo.writerId}')" > 
 						<c:choose>
 							<c:when test="${empty vo.pic}">
 								<img src="/images/poll/default_pic_vote.gif" width="48px" height="48px" style="position: relative;">
@@ -917,7 +921,7 @@
 					<c:forEach var="_comt" items="${cmtlist}">
 						<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="<c:out value ="${_comt.id}" />">
 							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
-								<div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;">
+								<div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${_comt.userId}')" >
 								<c:choose>
 									<c:when test="${empty _comt.pic}">
 										<img src="/images/ezLadder/icon_defaultAttendant.png" style="height: 38px; width:38px;">
