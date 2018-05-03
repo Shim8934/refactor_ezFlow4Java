@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>			
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezLadder/ladderList.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		
 		<script type="text/javascript">
 			var currPage = ${currPage};
@@ -72,6 +73,7 @@
 					$("#searchInput").show();
 				} 
 			}
+		
 		</script>
 		<style type="text/css">
 			.effect {
@@ -145,7 +147,7 @@
 						<td><img class="effect" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" src ='/images/ezLadder/icon_game_thirty0${vo.type}.png' /></td>			
 						
 						<td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><c:out value ="${vo.title }" /></td>
-						<td>${vo.writerName }</td>
+						<td><a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${vo.writerId}', event)">${vo.writerName }</a></td>
 						<td>${vo.writeDate.substring(0,16) }</td>
 						
 						<c:choose>
