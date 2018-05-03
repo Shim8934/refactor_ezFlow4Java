@@ -2961,7 +2961,7 @@ public class EzEmailUtil {
     	sb.append("<div class=\"security_message\" style=\"background:#d0e1ff;min-width:770px;\">\n");
     	sb.append("    <div class=\"security_img\" style=\"max-width:780px;margin:0 auto;padding-left:40px;padding-bottom:20px\">\n");
     	sb.append("        <img src=\"cid:" + fileName + ".gif@12345678.87654321\">\n");
-    	sb.append("        <section class=\"security_txt\" style=\"margin:0px 0px 0px 300px;padding:54px 0px;font-family:" + egovMessageSource.getMessage("main.t0620", locale).replace(";", ",") + ";position:relative;left:-50px;margin-top:-250px\">\n");
+    	sb.append("        <section class=\"security_txt\" style=\"margin:0px 0px 0px 300px;padding:54px 0px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + ";position:relative;left:-50px;margin-top:-250px\">\n");
     	sb.append("            <h4 style=\"margin:0px;padding:3px 0px 0px 0px;font-size:22px;letter-spacing:-1px;color:#333;border-bottom:2px solid #727985;line-height:44px\">" + egovMessageSource.getMessage("ezEmail.lhm57", locale) + "</h4>\n");
     	sb.append("            <p style=\"margin:0px;padding:5px 0px 0px 0px;font-size:15px;color:#333;line-height:22px\">" + egovMessageSource.getMessage("ezEmail.lhm58", locale) + "</p>\n");
     	sb.append("        </section>\n");
@@ -2984,7 +2984,7 @@ public class EzEmailUtil {
     	sb.append("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
     	sb.append("        <title>SECURE MAIL</title>\n");
     	sb.append("        <style>\n");
-    	sb.append("            body{font-family:" + egovMessageSource.getMessage("main.t0620", locale).replace(";", ",") + "}\n");
+    	sb.append("            body{font-family:" + egovMessageSource.getMessage("main.t246", locale) + "}\n");
     	sb.append("            .security_layerpopup{width:100%; height:100%; background:#f1f1f1;}\n");
     	sb.append("            .security_layerpopup .popup_img{margin:0px; padding:84px 0px 0px 0px; text-align:center;}\n");
     	sb.append("            .security_layerpopup .popup_txt{margin:0px; padding:0px; text-align:center; font-size:24px; color:#333; font-weight:600;}\n");

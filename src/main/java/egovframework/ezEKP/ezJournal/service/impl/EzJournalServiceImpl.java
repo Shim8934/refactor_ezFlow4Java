@@ -856,8 +856,9 @@ public class EzJournalServiceImpl implements EzJournalService {
 			synchronized (thisElems) {
 				Iterator<Element> it = thisElems.iterator();
 				while (it.hasNext()) {
-					String elemText = it.next().html();
-					if (elemText.equals("&nbsp;")) {
+					String elemHtml = it.next().html().replaceAll("&nbsp;", "");
+					String elemText =Jsoup.parseBodyFragment(elemHtml).text().trim();
+					if (elemText.equals("")) {
 						it.remove();
 					} else {
 						break;
@@ -871,8 +872,9 @@ public class EzJournalServiceImpl implements EzJournalService {
 			synchronized (nextElems) {
 				Iterator<Element> it = nextElems.iterator();
 				while (it.hasNext()) {
-					String elemText = it.next().html();
-					if (elemText.equals("&nbsp;")) {
+					String elemHtml = it.next().html().replaceAll("&nbsp;", "");
+					String elemText =Jsoup.parseBodyFragment(elemHtml).text().trim();
+					if (elemText.equals("")) {
 						it.remove();
 					} else {
 						break;
