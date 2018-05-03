@@ -154,6 +154,8 @@
 
 	    //업무일지 아이디
 	    var journalId = "${journalId}";
+	    //근태관리
+	    var attitudeId = "${attitudeId}";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -906,6 +908,10 @@
 	            	getJournalToMail();
 	            	return;
 	            }
+	            else if (Org_cmd == "attitude") {
+	            	getAttitudeToMail();
+	            	return;
+	            }
 	            
 	            initFlag = true;
 	            pOrgAttachListXml = pAttachListXml;
@@ -989,6 +995,29 @@
 			            	dadiframe.fileupload2(pAttachListXml,"/ezEmail/mailInterUploadCopyXCKFromJournal.do");
 			            }
 			        }
+				}
+			});
+	    }
+	    
+	    function getAttitudeToMail() {
+	    	$.ajax ({
+				type : "POST",
+				async : false,
+				url : "/ezAttitude/getAttitudeItem.do",
+				data : {
+					attitudeId : attitudeId
+				},
+				success : function(result) {
+					$("#eSubject").val("[" + result.attitudeVO.typeName + "] " + result.attitudeVO.writerName);
+					
+					var objTable = $("<table></table>").addClass("content");
+					var objTr = $("<tr></tr>").append($("<th></th>").text("구분")).append($("<td></td>").text(result.attitudeVO.typeName));
+					
+					objTable.append(objTr);
+					objTable.append(result.formVO.formHtml);
+					
+					var content = result.formVO.formHtml;
+					message.SetEditorContent(objTable);
 				}
 			});
 	    }

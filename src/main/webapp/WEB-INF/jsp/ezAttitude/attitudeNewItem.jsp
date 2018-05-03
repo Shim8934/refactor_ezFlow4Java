@@ -266,7 +266,11 @@
 			function save_attitude() {
 				dateTypeCheck();
 				attRegCheck();
-				return;
+				if (attRegHolidayFlag) {
+					alert("근태일자에 휴무일이 포함되어 있습니다. 일자확인 후 등록해주세요.");
+					attRegHolidayFlag = false;
+					return;
+				}
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezAttitude/attitudeSave.do",
@@ -358,18 +362,37 @@
 // 				}
 			}
 			
+			var attRegHolidayFlag = false;
 			function attRegCheck() {
 				//만약에 날짜데로 나눠 줄꺼면 여기서 나눠서 들고가는게 맞는거 같은데.. 휴무일 다 나눌 수 있으니까
 				//안나눠주면 for문 돌려서 하나씩 체크하면 되구, 체크를 해서 돌린다음에 휴일이 잇으면 팅기게 하면 되구
 				//eDate가 ""면 파라미터 던질 때 sDate 던져버려
+				//근태를 등록할 수 잇는 경우, 할 수 없는 경우 두가지 나눠서
+				if (selectType == "A07") {
+					return;
+				}
+				var lunar = "";
+				var isMemorialDay = "";
+				var isYearMemorialDay = "";
 				var subDate = "";
 				if (endDate == "") {
-					
+					subDate = 0;
 				} else {
-					subDate = calDateRange(startDate, endDate);
+					subDate = calDateRange(startDate.split(" ")[0], endDate.split(" ")[0]);
 				}
 				
-				alert(subDate);
+				var betweenDate = new Date(startDate.split(" ")[0]);
+				for (var i = 0; i <= subDate; i++) {
+					betweenDate.setDate(betweenDate.getDate() + (i == 0 ? 0 : 1));
+					lunar = lunarCalc(betweenDate.getFullYear(), betweenDate.getMonth() + 1, betweenDate.getDate(), 1);
+					isMemorialDay = memorialDayCheck(betweenDate, lunar);
+					isYearMemorialDay = yearmemorialDayCheck(betweenDate, lunar);
+					
+					if (isMemorialDay.length != 0 || isYearMemorialDay != 0 || closedDay[betweenDate.getDay()] == "1") {
+						attRegHolidayFlag = true;
+						return;
+					}
+				}
 			}
 			
 			/**

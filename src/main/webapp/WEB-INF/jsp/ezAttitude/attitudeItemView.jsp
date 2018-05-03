@@ -116,7 +116,14 @@
 			}
 			
 			function sendMailAttitude() {
-				
+				var pheight = window.screen.availHeight;
+				var conHeight = pheight * 0.8;
+				var pwidth = window.screen.availwidth;
+				var pTop = (pheight - conHeight) / 2;
+				var pLeft = (pwidth - 890) / 2;
+				var szUrl = "/ezEmail/mailWrite.do?attitudeId=" + attitudeId + "&cmd=attitude";
+				window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
+				window.close();
 			}
 		</script>
 	</head>
