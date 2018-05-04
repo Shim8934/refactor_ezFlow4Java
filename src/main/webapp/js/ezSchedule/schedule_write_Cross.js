@@ -1076,7 +1076,7 @@ function config_repeat_resource() {
     schedule_repetition_cross_dialogArguments[0] = g_data;
     schedule_repetition_cross_dialogArguments[1] = config_repeat_resource_Complete;
 
-    DivPopUpShow(450, 540, "/ezResource/scheduleRepetition.do");
+    DivPopUpShow(450, 550, "/ezResource/scheduleRepetition.do");
 }
 
 function config_repeat_resource_Complete(rgParams) {
