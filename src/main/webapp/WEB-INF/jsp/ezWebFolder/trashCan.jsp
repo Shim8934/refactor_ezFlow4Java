@@ -422,9 +422,9 @@
 					"folderList" :  folderList.toString()
 				},
 				success : function (data) {
-					if (data.code == "1") {
+					if (data.code == 1) {
 						alert("<spring:message code = 'ezWebFolder.t289'/>");
-					} else if (data.code == "-1") {
+					} else if (data.code == 4) {
 						alert("<spring:message code = 'ezWebFolder.t290'/>");
 					}
 
