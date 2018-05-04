@@ -882,7 +882,7 @@
 	
 	<select id="EzPMSDAO.getProjectDetails" parameterClass="Map" resultMap="projectInfoVO">
 	<![CDATA[
-		SELECT
+		SELECT DISTINCT 
 			A.PROJECT_ID, 
 			A.TENANT_ID,
 			A.PROJECT_NAME, 
@@ -1168,5 +1168,18 @@
 			AND	
 				TENANT_ID = #tenantId#
 		]]>	
+	</update>
+	
+	<update id="EzPMS.updateProjectRealStartDate" parameterClass="map">
+		<![CDATA[
+			UPDATE	
+				tbl_pms_project	
+			SET
+				REAL_START_DATE = #realStartDate#
+			WHERE	
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
 	</update>
 </sqlMap>

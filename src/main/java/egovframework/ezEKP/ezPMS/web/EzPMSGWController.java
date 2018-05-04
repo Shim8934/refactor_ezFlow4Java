@@ -188,8 +188,18 @@ public class EzPMSGWController {
 			String roleCheck = "";
 			
 			for (int i = 0; i < projectIdList.length; i++) {
-				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, Integer.parseInt(projectIdList[i]), deptId);
+				List<Integer> userRoleList = ezPMSService.getUserProjectRole(userId, tenantId, Integer.parseInt(projectIdList[i]), deptId);
+				
+				int userRole = userRoleList.get(0);
+				
+				for (int j = 0; j < userRoleList.size(); j ++) {
+					if (userRole > userRoleList.get(j)) {
+						userRole = userRoleList.get(j);
+					}
+				}
+				
 				LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
+				
 				if (userRole != 1) {
 					roleCheck = "reject";
 				}
@@ -311,6 +321,7 @@ public class EzPMSGWController {
 			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 			String deptId = request.getParameter("deptId");
 			String nowStatus = request.getParameter("nowStatus");
+			String realStartDate = request.getParameter("realStartDate");
 			
 			LOGGER.debug("status : " + status + ", " + "userId : " + ", tenantId : " + tenantId + ", deptId : " + deptId);
 			
@@ -318,7 +329,16 @@ public class EzPMSGWController {
 			String roleCheck = "";
 			
 			for (int i = 0; i < projectIdList.length; i++) {
-				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, Integer.parseInt(projectIdList[i]), deptId);
+				List<Integer> userRoleList = ezPMSService.getUserProjectRole(userId, tenantId, Integer.parseInt(projectIdList[i]), deptId);
+				
+				int userRole = userRoleList.get(0);
+				
+				for (int j = 0; j < userRoleList.size(); j ++) {
+					if (userRole > userRoleList.get(j)) {
+						userRole = userRoleList.get(j);
+					}
+				}
+				
 				LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
 				if (userRole != 1) {
 					roleCheck = "reject";
@@ -327,10 +347,13 @@ public class EzPMSGWController {
 			
 			if (roleCheck.equals("")) {
 				for (int i = 0; i < projectIdList.length; i++) {
-					ezPMSService.updateProjectStatus(Integer.parseInt(projectIdList[i]), status, info.getTenantId());	
+					ProjectInfoVO project = ezPMSService.getProjectDetails(Integer.parseInt(projectIdList[i]), userId, info.getTenantId(), "new", info.getLang(), deptId);
+					String planEndDate = project.getPlanEndDate();
+					
+					ezPMSService.updateProjectStatus(Integer.parseInt(projectIdList[i]), status, info.getTenantId(), realStartDate, planEndDate);	
 					
 					if (nowStatus.equals("W") && status.equals("P")) {
-						ezPMSService.updateProjectRealStartDate(Integer.parseInt(projectIdList[i]), info.getTenantId());
+						ezPMSService.updateProjectRealStartDate(Integer.parseInt(projectIdList[i]), info.getTenantId(), realStartDate);
 					}
 					
 				}

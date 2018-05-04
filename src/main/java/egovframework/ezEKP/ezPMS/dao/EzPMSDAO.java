@@ -156,8 +156,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		update("EzPMSDAO.updateMainSetting", map);
 	}
 
-	public int getUserProjectRole(HashMap<String, Object> map) {
-		return (int) select("EzPMSDAO.getUserProjectRole", map);
+	@SuppressWarnings("unchecked")
+	public List<Integer> getUserProjectRole(HashMap<String, Object> map) {
+		return (List<Integer>) list("EzPMSDAO.getUserProjectRole", map);
 	}
 
 	public void updateProjectStatus(HashMap<String, Object> map) {
@@ -192,6 +193,11 @@ public class EzPMSDAO extends EgovAbstractDAO {
 
 	public void updateProjectInfo(Map<String, Object> map) {
 		update ("EzPMSDAO.updateProjectInfo", map);
+		
+	}
+
+	public void updateProjectRealStartDate(HashMap<String, Object> map) {
+		update ("EzPMS.updateProjectRealStartDate", map);
 		
 	}
 }

@@ -30,7 +30,7 @@ public interface EzPMSService {
 	
 	public void updateMainSetting(ProjectMainSettingVO project, int tenantId);
 	
-	public void updateProjectStatus(int projectId, String status, int tenantId);
+	public void updateProjectStatus(int projectId, String status, int tenantId, String realStartDate, String planEndDate);
 	
 	public ProjectInfoVO getProjectDetails(int projectId, String userId, int tenantId, String mode, String lang, String deptId);
 	
@@ -106,12 +106,12 @@ public interface EzPMSService {
 	
 	public Map<String, Object> getRemainingWeight(String projectId);
 
-	public int getUserProjectRole(String userId, int tenantId, int projectId, String deptId);
+	public List<Integer> getUserProjectRole(String userId, int tenantId, int projectId, String deptId);
 	
 	public List<TaskMemberVO> getTaskMemberList(int tenantId, long taskId, String lang);
 
 	public void deleteProjectMember(int projectId, int tenantId);
 
-	public void updateProjectRealStartDate(int parseInt, int tenantId);
+	public void updateProjectRealStartDate(int projectId, int tenantId, String realStartDate);
 
 }
