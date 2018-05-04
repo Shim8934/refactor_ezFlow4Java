@@ -209,7 +209,6 @@
 	    	}
 	    	
 	    	function checkPattern() {
-				/* var datePattern =  /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/; */
 				var timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 				
 				if ((timePattern.test($("#searchStartTime").val()) && timePattern.test($("#searchEndTime").val())) || ($("#searchStartTime").val() == "" && $("#searchEndTime").val() == "")) {

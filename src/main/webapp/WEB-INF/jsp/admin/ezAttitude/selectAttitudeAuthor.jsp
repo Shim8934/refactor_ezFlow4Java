@@ -36,13 +36,13 @@
 	   			window.close();
 	   		}
 	   		
-	   		$(document).ready(function(){
+	   		$(document).ready(function() {
 	   			treeContent = ${deptList};
 		   		setDeptList();
    			});
 	   		
 	   		//조직도 뿌리는 펑션
-	   		function setDeptList(){
+	   		function setDeptList() {
 				$('#treeview').on('changed.jstree', function (e, data) {
 			     	var id = data.instance.get_node(data.selected).id;
 			     	var deptName = $("#"+id+" a:first").text();
@@ -57,14 +57,8 @@
 			    });
 	   		}
 	   		
-// 	   		function goScroll(){
-// // 				var offset = $("#opensol").offset();
-// 				var offset = $(".jstree-clicked").offset();
-// 	   	        $('html, body').animate({scrollTop : offset.top}, 400);
-// 	   		}
-	   		
 	   		//사원 리스트 뿌리기
-	   		function setUserList(key,value,deptName){
+	   		function setUserList(key,value,deptName) {
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
@@ -82,7 +76,7 @@
 	   		}
 	   		
 	   		//선택된 사원의 권한 부서 보여주기
-	   		function setUserAuthorDept(elem){
+	   		function setUserAuthorDept(elem) {
 	   			selectedUser = $(elem).attr("id");
 	   			selectedUserName = $(elem).attr("name");
 	   			$("*").removeClass("selectTR");
@@ -120,10 +114,10 @@
 	   		}
 	   		
 	   		//검색
-	   		function search_click(){
+	   		function search_click() {
 	   			var key = $("#search_type").val();
 	   			var value = $("#keyword").val().trim();
-	   			if(value){
+	   			if(value) {
 		   			setUserList(key, value);
 	   			} else {
 	   				alert("검색어를 입력해주세요")
@@ -131,7 +125,7 @@
 	   		}
 	   		
 	   		//사원선택
-	   		function setAuthorViewUser(){
+	   		function setAuthorViewUser() {
 	   			var userId = selectedUser;
 				if (userId) {
 					opener.setSelectedUser(userId,selectedUserName);
