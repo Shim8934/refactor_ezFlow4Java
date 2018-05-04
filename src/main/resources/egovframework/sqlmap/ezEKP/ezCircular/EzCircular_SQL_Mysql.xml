@@ -1584,6 +1584,8 @@
 					B.memberid = #userID#
 				AND
 					A.tenantid = #tenantID#
+				AND
+					B.updatestatus IN (0, 1)	
 			]]>
 		</isEqual>
 		<isEqual property="listType" compareValue="circularComplete">
