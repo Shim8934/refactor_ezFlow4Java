@@ -44,7 +44,7 @@
 			folderType = obj;
 			$.ajax ({
 				type :"POST",
-				async: false,
+				async: true,
 				url  : "/ezWebFolder/folderList.do",
 				data : { 
 						 "folderId"   : folderId
@@ -116,7 +116,7 @@
         	
             $.ajax ({
             	type : "POST",
-            	async : false,
+            	async : true,
             	url : "/ezWebFolder/moveTrashCan.do",
             	dataType : "json",
             	data : {
