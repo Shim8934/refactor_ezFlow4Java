@@ -716,6 +716,14 @@
    					A.importance,
    					A.title,
    					A.readcount,
+					(SELECT 
+						COUNT(*)  
+					FROM 
+    					tbl_comm_onelinereply
+   					WHERE  
+   						TENANT_ID = A.TENANT_ID
+   					AND
+   						ITEMID = A.ItemID) ONELINECNT,
    					A.attachments,
    					A.itemlevel,
    					A.abstract,
