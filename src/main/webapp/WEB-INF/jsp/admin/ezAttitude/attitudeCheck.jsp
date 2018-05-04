@@ -275,6 +275,7 @@
 	    			$("#Sdatepicker").val("${searchStartDate}");
 	    			$("#Edatepicker").val("${searchEndDate}");
 	    			$("select[id='searchAttitudeType']").val('total');
+	    			$("#contentlist table.mainlist th").find("img").remove();
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";
@@ -282,6 +283,8 @@
 	    			searchStartDate = "${searchStartDate}";
 	    			searchEndDate = "${searchEndDate}";
 	    			searchAttitudeType = "total";
+	    			orderOption = "";
+	    			orderCell = "";
 	    		}
 	    		
 	    		pageNum = 1;
