@@ -266,7 +266,7 @@
 			function save_attitude() {
 				dateTypeCheck();
 				attRegCheck();
-				if (attRegHolidayFlag) {
+				if (attRegHolidayFlag && holidayAttReg == "0") {
 					alert("근태일자에 휴무일이 포함되어 있습니다. 일자확인 후 등록해주세요.");
 					attRegHolidayFlag = false;
 					return;
@@ -290,6 +290,7 @@
 		        	success : function (result) {
 		        		alert("근태가 저장되었습니다.");
 		        		window.opener.getAttitudeMainList();
+		        		window.opener.parent.frames["left"].getAttitudeList();
 		        		window.close();
 		        	}
 		        });

@@ -150,8 +150,8 @@
     			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center;">
     				<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:13px;">출근 : 00:00:00</p>
 					<p id="outAttiClock" style="margin:5px 0px 8px 8px;  font-size:13px;">퇴근 : 00:00:00</p>
-					<span id="inAttiBtn" type="A01" datetype="2" onclick="addAttitude(this)">출근</span>
-					<span id="outAttiBtn" type="A03" datetype="2" onclick="addAttitude(this)">퇴근</span>
+					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
+					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span>
     			</div>
    			</article>
    			<div class="blue_bar"></div>
@@ -181,6 +181,8 @@
 			
 		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/Holiday.js"></script>
+		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/scrollbox.js"></script>
@@ -901,6 +903,7 @@
 		    }
 			
 		    /** 배현상 근태관리메서드 추가 */
+		    var outComFlag = false;
 		    function getAttitudeList() {
 		    	$.ajax({
 		    		type : "POST",
@@ -909,6 +912,7 @@
 		    		url : "/ezAttitude/getAttitudeList.do",
 		    		data : {},
 		    		success : function(result) {
+		    			outComFlag = false;
 		    			for (var i = 0; i < result.length; i++) {
 		    				if (result[i].typeId == "A01") {
 		    					$("#inAttiClock").text("출근 : " + result[i].startDate.split(" ")[1]);
@@ -919,6 +923,8 @@
 		    				} else if (result[i].typeId == "A03") {
 		    					$("#outAttiClock").text("퇴근 : " + result[i].startDate.split(" ")[1]);
 		    					$("#outAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
+		    				} else if (result[i].typeId == "A08") {
+		    					outComFlag = true;
 		    				}
 		    			}
 		    		}
@@ -928,7 +934,13 @@
 		    function addAttitude(obj) {
 		    	var pTypeId = obj.getAttribute("type");
 		    	var pDateType = obj.getAttribute("datetype");
-		    	
+		    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
+		    		alert("출근 후 퇴근이 가능합니다.");
+		    		return;
+		    	} else if (outComFlag) {
+		    		alert("조퇴 후 퇴근은 불가능합니다.");
+		    		return;
+		    	}
 		    	$.ajax({
 		    		type : "POST",
 		    		async : true,
@@ -943,6 +955,49 @@
 		    		}
 		    	})
 		    }
+		    
+		    var checkClosedToday = false;
+		    function checkHoliday(obj) {
+				var now = new Date();
+				var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (parseInt(UserOffset.split(':')[0]) * 3600000) + (parseInt(UserOffset.split(':')[1]) * 60000);
+				now.setTime(tz);
+				$.ajax({
+					type:"POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getHolidayList.do",
+					data : {},
+					success : function(result) {
+						for (var i = 0; i < result.holidayList.length; i++) {
+							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+																  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+																		  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+																		  result.holidayList[i].isRest == 1 ? true : false));
+							}
+						}
+						
+						var todayLunar = lunarCalc(now.getFullYear(), now.getMonth() + 1, now.getDate(), 1);
+						var todayMemorialDayList = memorialDayCheck(now, todayLunar);
+						var todayYearMemorialDayList = yearmemorialDayCheck(now, todayLunar);
+						
+						if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) {
+							checkClosedToday = true;
+						}
+						
+						closedDay = result.attitudeConfigVO.closedDay.split(",");
+						if (closedDay[now.getDay()] == "1" || checkClosedToday) {
+				    		alert("휴일은 출/퇴근을 등록할 수 없습니다.");
+						} else {
+							addAttitude(obj);
+						}
+					}
+				});
+			}
 		    
 		    function setAttiBtnHover() {
 		    	$("#inAttiBtn, #outAttiBtn").hover(function(){

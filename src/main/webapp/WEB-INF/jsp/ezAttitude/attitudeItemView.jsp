@@ -94,6 +94,7 @@
 						success : function(result) {
 							alert("근태를 삭제하였습니다.");
 							window.opener.getAttitudeMainList();
+							window.opener.parent.frames["left"].getAttitudeList();
 							window.close();
 						}
 					})

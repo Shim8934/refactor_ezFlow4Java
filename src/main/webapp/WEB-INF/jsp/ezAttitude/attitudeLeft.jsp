@@ -91,6 +91,7 @@
 		var uselang = "${uselang}";
 		var closedDay = "";
 		var checkClosedToday = false;
+		var outComFlag = false;
 		
 		window.onload = function(){
 			setAttiBtnHover();
@@ -143,6 +144,7 @@
 	    		url : "/ezAttitude/getAttitudeList.do",
 	    		data : {},
 	    		success : function(result) {
+	    			outComFlag = false;
 	    			for (var i = 0; i < result.length; i++) {
 	    				if (result[i].typeId == "A01") {
 	    					$("#inAttiClock").text("출근 : " + result[i].startDate.split(" ")[1]);
@@ -153,6 +155,8 @@
 	    				} else if (result[i].typeId == "A03") {
 	    					$("#outAttiClock").text("퇴근 : " + result[i].startDate.split(" ")[1]);
 	    					$("#outAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
+	    				} else if (result[i].typeId == "A08") {
+	    					outComFlag = true;
 	    				}
 	    			}
 	    		}
@@ -206,6 +210,9 @@
 	    	var pDateType = obj.getAttribute("datetype");
 	    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
 	    		alert("출근 후 퇴근이 가능합니다.");
+	    		return;
+	    	} else if (outComFlag) {
+	    		alert("조퇴 후 퇴근은 불가능합니다.");
 	    		return;
 	    	}
 	    	$.ajax({
