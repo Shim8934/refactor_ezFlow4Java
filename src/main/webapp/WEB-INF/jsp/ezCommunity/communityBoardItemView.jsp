@@ -1161,28 +1161,7 @@
 		        	</tr>
 	        	</c:otherwise>
 	        </c:choose>
-
-			<c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
-		        <tr>
-		            <td style="height:20px">
-		                <table class="content">
-		                    <tr>
-		                        <th>&nbsp;<spring:message code='ezCommunity.t190'/>&nbsp;</th>
-                        		<td style="width:100%">
-		                        	<div style="word-break: break-all; cursor: pointer; MARGIN-TOP: 0px; OVERFLOW: auto; PADDING-TOP: 0px" onclick="OpenItem('${previousItemID}')"><c:out value='${previousTitle}' /></div>
-		                        </td>
-		                    </tr>
-		                    <tr>
-		                        <th>&nbsp;<spring:message code='ezCommunity.t192'/>&nbsp;</th>
-		                        <td>
-		                            <div style="word-break: break-all; cursor: pointer; MARGIN-TOP: 0px; OVERFLOW: auto; PADDING-TOP: 0px; BACKGROUND-COLOR: white" onclick="OpenItem('${nextItemID}')"><c:out value='${nextTitle}' /></div>
-		                        </td>
-		                    </tr>
-		                </table>
-		            </td>
-		        </tr>
-	        </c:if>
-	        
+			<!-- 2018-05-04 홍승비 - 일반/익명게시판 다음글, 이전글 테이블 삭제 -->		
 	    </table>
 	    
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
