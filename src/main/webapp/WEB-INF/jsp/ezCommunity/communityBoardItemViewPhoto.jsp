@@ -779,46 +779,7 @@
 		  			</tr>
 				</c:otherwise>
 			</c:choose>
-			
-			<c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
-				<tr>
-		    		<td style="height:20px; padding-top: 10px;">
-		    			<table class="content">
-		        			<tr>
-		          				<th><spring:message code = 'ezCommunity.t192' /></th>
-		          				
-		          				<c:choose>
-		          					<c:when test="${previoutItemID == '' }">
-		          						<td style="width:100%">
-		          					</c:when>
-		          					<c:otherwise>
-		          						<td style="cursor:pointer">
-		          					</c:otherwise>
-		          				</c:choose>
-		          				
-		          					<div align="left" style="MARGIN-TOP:0px;OVERFLOW:auto;PADDING-TOP:0px;HEIGHT:16px;BACKGROUND-COLOR:white" onClick="OpenItem('${previousItemID}')"><c:out value = '${previousTitle}' /></div>
-		          				</td>
-		        			</tr>
-		        			<tr>
-		          				<th><spring:message code = 'ezCommunity.t190' /></th>
-		          				
-		          				<c:choose>
-		          					<c:when test="${nextItemID == '' }">
-		          						<td>
-		          					</c:when>
-		          					
-		          					<c:otherwise>
-		          						<td style="cursor:pointer">
-		          					</c:otherwise>
-		          				</c:choose>
-		          				
-		          					<div align="left" style="MARGIN-TOP:0px;OVERFLOW:auto;PADDING-TOP:0px;HEIGHT:16px;BACKGROUND-COLOR:white" onClick="OpenItem('${nextItemID}')"><c:out value = '${nextTitle }' /></div>
-		          				</td>
-		        			</tr>
-		      			</table>
-		      		</td>
-		  		</tr>
-			</c:if>
+			<!-- 2018-05-04 홍승비 - 포토게시판 다음글, 이전글 테이블 삭제 -->			
 		</table>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

@@ -274,6 +274,7 @@
 				</tr>			
 			</table>
 		</form>
+		<div  style = "height:370px;">
 		<table id="tblList" class="cmhomelist" style="width:100%;margin-top:10px">
 			<tr> 
 				<th style="width:40px"><spring:message code = 'ezCommunity.t32' /></th>
@@ -285,7 +286,8 @@
 				<th style="width:60px"><spring:message code = 'ezCommunity.t727' /></th>
 			</tr>
 			${strXML}
-		</table>		
+		</table>
+		</div>		
 		<div id="tblPageRayer" style="margin-top:10px"></div>
 	</body>
 </html>
