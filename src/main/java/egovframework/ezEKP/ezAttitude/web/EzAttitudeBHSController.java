@@ -779,4 +779,66 @@ public class EzAttitudeBHSController {
 		
 		LOGGER.debug("/ezAttitude/modApplicationSave ended");
 	}
+	
+	/**
+	 * 근태 내용
+	 */
+	@RequestMapping(value = "/ezAttitude/getAttitudeItem.do")
+	@ResponseBody
+	public JSONObject getAttitudeItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/getAttitudeItem started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String attitudeId = request.getParameter("attitudeId");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/"  + attitudeId;; //근태상세보기 가져오기
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject returnValue = new JSONObject();
+		JSONObject attitudeVO = new JSONObject();
+		if (status.equals("ok")) {
+			attitudeVO = (JSONObject) resultBody.get("data");
+			returnValue.put("attitudeVO", attitudeVO);
+			LOGGER.debug("vovovovovovovovovovovovovo : " + attitudeVO.get("typeId"));
+			url = gwServerUrl + "/rest/ezattitude/attitudetypes/" + attitudeVO.get("typeId") + "/forms/form"; // form 가져와야됨
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userId);
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			LOGGER.debug("status : " + status);
+			
+			JSONObject formVO = new JSONObject();
+			if (status.equals("ok")) {
+				formVO = (JSONObject) resultBody.get("data");
+				returnValue.put("formVO", formVO);
+			}
+		}
+		LOGGER.debug("/ezAttitude/getAttitudeItem ended");
+		return returnValue;
+	}
 }

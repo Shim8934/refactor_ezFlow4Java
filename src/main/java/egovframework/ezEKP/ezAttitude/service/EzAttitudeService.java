@@ -51,8 +51,6 @@ public interface EzAttitudeService {
 	public void updateAttitudeApplicationApproval(String attitudeId, String apprUserId, String apprUserName, String apprUserName2, String apprStatus, 
 			int tenantId) throws Exception;
 	
-	public void deptExcelDownload(String downMode, String pidList, int tenantId) throws Exception;
-	
 	public List<Map<String, String>> getDeptAttitudeList(String pidList, int tenantId) throws Exception;
 	
 	public AttitudeApplicationVO getAttitudeApplicationInfo(int tenantId, String companyId, String attitudeId) throws Exception;
@@ -69,9 +67,7 @@ public interface EzAttitudeService {
 	
 	public void updateAttitudeTypeConfig(String typeConfigList, String companyId, int tenantId) throws Exception;
 	
-	public void insertAttitudeType(String typeId, String typeName, String typeName2, String imgPath, int tenantId, String companyId) throws Exception;
-	
-	public void insertAttitudeTypeIcon(String typeId, String fileName, String realPath, int tenantId) throws Exception;
+	public void insertAttitudeType(String typeId, String typeName, String typeName2, int tenantId, String companyId) throws Exception;
 	
 	public AttitudeTypeVO getAttitudeTypeInfo(int tenantId, String companyId, String typeId) throws Exception;
 	
@@ -121,7 +117,7 @@ public interface EzAttitudeService {
 	
 //	public String getAttitudeAbsentCount(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String offset, String companyId, int tenantId) throws Exception;
 	
-	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String companyId, int tenantId) throws Exception;
+	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String duplicated, String offset, String companyId, int tenantId) throws Exception;
 	
 	public void attSaveAppModify(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
 			String writerDeptId, String writerDeptName, String writerDeptName2 ,String changeDate, String delFlag, String content,String offset, String originDate) throws Exception;
