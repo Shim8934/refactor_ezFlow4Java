@@ -388,8 +388,7 @@
 							<li><span onClick="alertMessage();"><spring:message code='ezCommunity.t167' /></span></li>
 						</c:otherwise>
 					</c:choose>
-					
-					<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+
 					<li><span onClick="javascript:mo_onclick()"><spring:message code='ezCommunity.t6' /></span></li>
 					<li><span onClick="javascript:delete1()"><spring:message code='ezCommunity.t208' /></span></li>
 				</c:if>
