@@ -507,7 +507,7 @@
 						if(id == cmt["userId"]) {
 							modifyComt(cmt["id"]);
 						}
-						$("#cmtArea" + cmt["id"]).text(cmt["comment"]);
+// 						$("#cmtArea" + cmt["id"]).text(cmt["comment"]);
 					}
 				}
 			});
@@ -706,7 +706,7 @@
 								<img src="/images/poll/default_pic_vote.gif" width="48px" height="48px" style="position: relative;">
 							</c:when>
 							<c:otherwise>
-								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${vo.pic}" width="48px" height="48px" style="position: relative;">
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${vo.pic}" width="48px" height="48px" style="position: relative; border-radius: 25px;">
 							</c:otherwise>
 						</c:choose>
 					</p>
