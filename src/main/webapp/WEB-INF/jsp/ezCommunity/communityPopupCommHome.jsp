@@ -180,7 +180,8 @@
 			                                        var img = document.createElement("IMG");
 			                                        var imgUrl = itemVO.extensionAttribute5;
 			                                        
-			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + itemVO.boardID + "&fileName=" + imgUrl;
+			                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈화면 사진경로 수정 */
+			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + itemVO.boardID + "&fileName=" + imgUrl;
 			                                        img.style.width = "68px";
 			                                        img.style.height = "68px";
 
