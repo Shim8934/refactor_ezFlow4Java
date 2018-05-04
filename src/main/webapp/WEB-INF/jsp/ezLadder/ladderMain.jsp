@@ -94,6 +94,7 @@
 			}
 			
 			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}
+			#mainmenu .participantBtn{cursor: pointer;}
 			
 		</style>
 	</head>
@@ -109,8 +110,8 @@
 					  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>><spring:message code="ezLadder.t013"/></option>
 					</select>
 					
-					<a href="#"><img src="/images/ezLadder/btn_search.png" border="0" width='20px' height='20px' style="vertical-align:middle; float:right;" onclick="searchLadder()" ></a>
-					<input type="text" name="searchInput" id="searchInput" style="width:150px; height:20px; margin-left:10px; float:right;" value="<c:out value='${searchInput}'/>">
+					<a href="#"><img src="/images/sub/bsearch.gif" border="0" width='20px' height='20px' style="vertical-align:middle; float:right;" onclick="searchLadder()" ></a>
+					<input type="text" name="searchInput" id="searchInput" style="width:150px; height:20px; margin-left:10px; float:right; border-right: 0px;" value="<c:out value='${searchInput}'/>">
 					<select id="ladderType" style="height: 20px; width:150px; margin-left:10px; float:right;">
 					  <option value="0" <c:if test = "${searchInput eq '0' }" >selected="selected"</c:if>><spring:message code="ezLadder.t101"/></option>
 					  <option value="1" <c:if test = "${searchInput eq '1' }" >selected="selected"</c:if>><spring:message code="ezLadder.t102"/></option>
@@ -124,7 +125,7 @@
 		<div id="mainmenu">
 			<ul style="width:100%;">
 				<li id="btnInsert" onClick="newLad()" ><a><span><spring:message code="ezLadder.t018"/></span></a></li>
-				<li style="float:right; font-weight:normal; ">
+				<li style="float:right; font-weight:normal;">
 					<button type="button" class="participantBtn" id="all" onclick="participant(this.value)" value="all" style="float: right;"><spring:message code="ezLadder.t011"/></button>
 					<button type="button" class="participantBtn" id="part" onclick="participant(this.value)" value="part" style="position:relative;"><spring:message code="ezLadder.t012"/></button>
 				</li>
