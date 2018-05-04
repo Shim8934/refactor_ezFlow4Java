@@ -128,9 +128,10 @@
 		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
 		<result  property="writerName"			column="DISPLAYNAME"			columnIndex="18"/>
+		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="19"/>
 	</resultMap>
 	
-	<select id="ezAttitude.getAttitudeList" parameterClass="Map" resultMap="attitude">
+	<select id="ezAttitude.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
 		<![CDATA[
 			SELECT 
 				ATTITUDE_ID,
@@ -839,7 +840,8 @@
 			A.TYPE_ID,
 			B.TYPE_NAME,
 			B.IMG_PATH,
-		    C.DISPLAYNAME
+		    C.DISPLAYNAME,
+		    C.DESCRIPTION
 		FROM   
 			tbl_attitude A 
 		INNER JOIN
@@ -859,7 +861,7 @@
 		WHERE  
 			A.ATTITUDE_ID = #attitudeId# 
 		AND    
-			A.TENANT_ID = #tenantId#;
+			A.TENANT_ID = #tenantId#
 	</select>
 	
 	<update id="ezAttitudeDAO.changeUsersModifyAtt" parameterClass="map">

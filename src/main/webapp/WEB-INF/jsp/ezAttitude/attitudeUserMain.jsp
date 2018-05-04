@@ -273,13 +273,13 @@
 					var calendarHeight = $("#attiCalendar").css("height");
 					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1 - 2));
 					
-					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"34px", "background-color": "#edf4fd"}).text($("#calTitle").text())));
+// 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"34px", "background-color": "#edf4fd"}).text($("#calTitle").text())));
 					for (var i = 0; i < result.length; i++) {
 						
 						if (result[i].typeId == 'A01' || result[i].typeId == 'A03') {
 							continue;
 						}
-						objTr = $("<tr></tr>").append($("<th></th>").text(result[i].typeName));
+						objTr = $("<tr></tr>").append($("<th style='width:50%'></th>").text(result[i].typeName));
 						objTd = $("<td></td>").css({"width" : "80px", "cursor" : "pointer"})
 						.attr("id",result[i].typeId).text("0일")
 						.attr("parentId",result[i].parentId)
@@ -878,6 +878,10 @@
 						<option value="<c:out value='${selectedDeptID}'/>" selected><c:out value='${selectedDeptID}'/></option>
 					</select>
 				</c:if>
+				<li onClick="IDClick('P')" style="background:none;margin-left:7px"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;출퇴근</li>
+	            <li onClick="IDClick('D')" style="background:none;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;휴가</li>
+	            <li onClick="IDClick('C')" style="background:none;"><span style="display:inline-block; width:11px; height:11px; border:1px solid #e01662; background:#ff1c71; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;지각, 조퇴</li>
+                <li style="background:none;cursor:text"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
 			</ul>
 		</div>
 		
