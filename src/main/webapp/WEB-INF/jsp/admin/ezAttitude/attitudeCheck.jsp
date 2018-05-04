@@ -275,6 +275,7 @@
 	    			$("#Sdatepicker").val("${searchStartDate}");
 	    			$("#Edatepicker").val("${searchEndDate}");
 	    			$("select[id='searchAttitudeType']").val('total');
+	    			$("#contentlist table.mainlist th").find("img").remove();
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";
@@ -282,6 +283,8 @@
 	    			searchStartDate = "${searchStartDate}";
 	    			searchEndDate = "${searchEndDate}";
 	    			searchAttitudeType = "total";
+	    			orderOption = "";
+	    			orderCell = "";
 	    		}
 	    		
 	    		pageNum = 1;
@@ -313,7 +316,7 @@
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/admin/ezAttitude/excelFileExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&attitudeType=" + searchAttitudeType + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
+		    	exportExcelframe.location.href="/admin/ezAttitude/excelAttitudeListExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&attitudeType=" + searchAttitudeType + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
 		    	exportExcelframe.target="_blank";
 			}
 			

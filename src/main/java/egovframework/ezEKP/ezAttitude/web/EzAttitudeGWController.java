@@ -797,9 +797,8 @@ public class EzAttitudeGWController {
 			String typeId = request.getParameter("typeId");
 			String typeName = request.getParameter("typeName");
 			String typeName2 = request.getParameter("typeName2");
-			String imgPath = request.getParameter("imgPath");
 			
-			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, imgPath, info.getTenantId(), companyId);
+			ezAttitudeService.insertAttitudeType(typeId, typeName, typeName2, info.getTenantId(), companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1675,17 +1674,16 @@ public class EzAttitudeGWController {
 			String orderCell = request.getParameter("orderCell");
 			String orderOption = request.getParameter("orderOption");
 			String offsetMin = request.getParameter("offsetMin");
+			String duplicated = request.getParameter("duplicated");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();
 			
-//			String totalCount = ezAttitudeService.getAttitudeAbsentCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, offset, companyId, tenantID);
-			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, companyId, tenantID);
+			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, duplicated, offset, companyId, tenantID);
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
-//			data.put("totalCount", totalCount);
 			data.put("totalCount", list.size());
 			
 			result.put("status", "ok");
