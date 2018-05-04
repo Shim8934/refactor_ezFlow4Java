@@ -1902,6 +1902,7 @@ public class EzAttitudeAdminBOMController {
 	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthorDept.do")
 	public String selectAttitudeAuthorDept(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception{
 		LOGGER.debug("selectAttitudeAuthorDept started");
+		/*
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String companyId = request.getParameter("companyId");
@@ -1959,7 +1960,7 @@ public class EzAttitudeAdminBOMController {
 			}
 			model.addAttribute("deptList", deptList);
 		}
-		/*
+		 */
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -1996,7 +1997,6 @@ public class EzAttitudeAdminBOMController {
 			}
 			model.addAttribute("deptList", deptList);
 		}
-		 */
 		
 		LOGGER.debug("selectAttitudeAuthorDept ended");
 		
