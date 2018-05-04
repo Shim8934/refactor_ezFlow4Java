@@ -191,6 +191,29 @@
 		
 		$(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		$(".datepicker").datepicker('setDate', "");
+		
+		// listoption 다른 곳 클릭시 숨김 처리
+		var listOptionHidden = function(event) {
+			if (dom.listoptiondiv.getAttribute('mode') == "on" && !dom.layerViewpopup.contains(event.target)) {
+				optionHidden();
+			}
+		};
+		
+		document.body.addEventListener("click", listOptionHidden);
+		parent.frames["left"].document.body.addEventListener("click", listOptionHidden);
+		parent.parent.document.getElementById("topFrame").contentWindow.document.body.addEventListener("click", listOptionHidden);
+		
+		// listoption 클릭 이벤트
+		dom.listoptiondiv.addEventListener("click", function(event) {
+			event.stopPropagation();
+			optionView(event.target);
+		});
+		
+		dom.listSizeSelect.addEventListener("change", function(event) {
+			optionHidden();
+			pagination.setListSize(this.value);
+			context.refreshList();
+		});
 	});
 	
 	function initDomElement() {
@@ -204,14 +227,17 @@
 			pageArea: document.getElementById("pageArea"),
 			layerViewpopup: document.getElementById("layer_Viewpopup"),
 			allCheckBox: document.getElementById("checkAll"),
-			listTable: document.getElementById("tblFileList")
+			listTable: document.getElementById("tblFileList"),
+			layerViewpopup: document.getElementById("layer_Viewpopup"),
+			listoptiondiv: document.getElementById("webfolderlistoptiondiv"),
+			listSizeSelect: document.getElementById("listcount")
 		};
 	}
 
 	function loadListAsFavorite() {
 		$.ajax({
 			type: "post",
-			async: false,
+			async: true,
 			url: "/ezWebFolder/getFavorites.do",
 			dataType: "json",
 			
@@ -231,7 +257,7 @@
 				// TODO: 리펙토링
 				pagination.setListSize(result.listCount);
 				pagination.setAmount(result.totalCount);
-				pagination.build(true);
+				pagination.build();
 				
 				renderList(result.targetList, false);
 				
@@ -251,7 +277,7 @@
 		
 		$.ajax({
 			type: "POST",
-			async: false,
+			async: true,
 			url: "/ezWebFolder/fileList.do",
 			dataType: "json",
 			data: {
@@ -270,7 +296,7 @@
 				
 				pagination.setListSize(result.listCount);
 				pagination.setAmount(result.totalRows);
-				pagination.build(true);
+				pagination.build();
 				
 				var dragDropArea = dom.dragDropArea;
 				
@@ -605,7 +631,7 @@
 		document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
 		document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 	}
-
+	
 	function fileDownload() {
 		var selected = getSelectedFoldersAndFiles();
 		
@@ -879,8 +905,8 @@
 				<li id=""><img src="/images/i_bar.gif"></li>
 				<li id="SearchOption" favoritemenu mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123' /></span></li>
 				<li id=""><img src="/images/i_bar.gif"></li>
-				<li id="" onClick="pagination.build()" favoritemenu><span><spring:message code='ezWebFolder.t139' /></span></li>
-				<li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" onclick="optionView(this);"></li>
+				<li id="" onClick="context.refreshList()" favoritemenu><span><spring:message code='ezWebFolder.t139' /></span></li>
+				<li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 				<li id="right" favoritemenu style="float: right;"><select class="select" id="idSelect" onchange="idChange(this.value);" style="width: 100px; display: none;">
 						<option value="all" data-imagesrc="/images/webfolder/allTypes.png" selected><spring:message code='ezWebFolder.t191' /></option>
 						<!-- 전체 -->
@@ -920,7 +946,7 @@
 						</colgroup>
 						<tr>
 							<th><spring:message code='ezBoard.t10021' /></th>
-							<td><select id="listcount" style="width: 40px; height: 20px;" onchange="pagination.setListSize(this.value);pagination.build();">
+							<td><select id="listcount" style="width: 40px; height: 20px;">
 									<option value="10">10</option>
 									<option value="20">20</option>
 									<option value="30">30</option>

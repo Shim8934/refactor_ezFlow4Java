@@ -77,6 +77,30 @@
 	
 	        $(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $(".datepicker").datepicker('setDate', "");
+	        
+			// listoption 다른 곳 클릭시 숨김 처리
+			var listOptionHidden = function(event) {
+				if (document.getElementById("webfolderlistoptiondiv").getAttribute('mode') == "on"
+						&& !document.getElementById("layer_Viewpopup").contains(event.target)) {
+					optionHidden();
+				}
+			};
+			
+			document.body.addEventListener("click", listOptionHidden);
+			parent.frames["left"].document.body.addEventListener("click", listOptionHidden);
+			parent.parent.document.getElementById("topFrame").contentWindow.document.body.addEventListener("click", listOptionHidden);
+			
+			// listoption 클릭 이벤트
+			document.getElementById("webfolderlistoptiondiv").addEventListener("click", function(event) {
+				event.stopPropagation();
+				optionView(event.target);
+			});
+			
+			document.getElementById("listcount").addEventListener("change", function() {
+				optionHidden();
+				pagination.setListSize(this.value);
+				refreshView();
+			});
 	     });
 	    
 	    // 폴더관리
@@ -96,7 +120,7 @@
 	    	
 			$.ajax ({
 				type:"POST",
-				async: false,
+				async: true,
 				url : "/ezWebFolder/fileList.do",
 				data : { 
 					 "folderId"   		: folderId,
@@ -607,11 +631,6 @@
 				files : files
 			}
 		}
-		
-		function changeCount(value) {
-			pagination.setListSize(value);
-			refreshView();
-		}
        
 		function onFileTypeChange(value) {
 			if (value == "all") {
@@ -674,7 +693,7 @@
 				<li><img src="/images/i_bar.gif"></li>
 	<!-- 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li> -->
 				<li><span onClick="refreshView()"><spring:message code='ezWebFolder.t139'/></span></li>
-				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
+				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 				<li style="float:left;">
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value);" style="width:100px; ">
 						<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
@@ -708,7 +727,7 @@
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t10021' /></th>
 	                        <td>
-	                            <select id="listcount" style="width: 40px; height: 20px;" onchange="changeCount(this.value);">
+	                            <select id="listcount" style="width: 40px; height: 20px;">
 	                                <option value="10">10</option>
 	                                <option value="20">20</option>
 	                                <option value="30">30</option>

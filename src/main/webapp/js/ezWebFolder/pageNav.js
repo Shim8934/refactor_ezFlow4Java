@@ -27,7 +27,7 @@ var pagination = (function() {
 		itemAmount = amount;
 	}
 	
-	function build(isHandlerCancel) {
+	function build() {
 		startPosition = (listSize * (currentPage - 1));
 		
 		totalPage = Math.max(~~(itemAmount / listSize), 1);
@@ -41,10 +41,6 @@ var pagination = (function() {
 		}
 		
 		makePagination();
-		
-		if (!isHandlerCancel) {
-			eventHandler.pageChange(currentPage, listSize);
-		}
 	}
 	
 	function setPageChangeEventHandler(handler) {
