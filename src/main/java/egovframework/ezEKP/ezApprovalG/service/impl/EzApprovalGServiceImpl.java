@@ -21743,14 +21743,45 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang) throws Exception {
+	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang, String approvalFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANGTYPE", lang);
 		map.put("v_TENANTID", tenantId);
 		map.put("companyID", companyID);
 		map.put("v_DEPTID", deptID);
-		logger.debug("lang : "+lang+"/ tenantid : "+tenantId+"/ companyid : "+companyID +"deptdi : "+deptID );
+		map.put("approvalFlag", approvalFlag);
+		
+		logger.debug("lang : "+lang+"/ tenantid : "+tenantId+"/ companyid : "+companyID +"/ deptdi : "+deptID +"/ approvalFlag : "+approvalFlag);
+		
 		List<ApprGTaskVO> CodeContainerList = ezApprovalGDAO.getCodeContainer(map);
+		List<ApprGLeftVO> apprGetKeepTypeList = ezApprovalGDAO.getKeepType(map);
+		
+		/* 2018-05-03 천성준 - 분류코드 보존기간별로 CODELIST의 name값 매칭 & 세팅 */
+		for (int i = 0; i < CodeContainerList.size(); i++) {
+			switch (CodeContainerList.get(i).getKeepingPeriod()) {
+			case "1": // 1년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(0).getName().split(";")[1]);
+				break;
+			case "2": // 2년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(1).getName().split(";")[1]);
+				break;
+			case "3": // 3년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(2).getName().split(";")[1]);
+				break;
+			case "5": // 5년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(3).getName().split(";")[1]);
+				break;
+			case "10": // 10년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(4).getName().split(";")[1]);
+				break;
+			case "100": // 준영구
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(5).getName().split(";")[1]);
+				break;
+			case "1000": // 영구
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(6).getName().split(";")[1]);
+				break;
+			}
+		}
 		
 		return CodeContainerList;
 	}

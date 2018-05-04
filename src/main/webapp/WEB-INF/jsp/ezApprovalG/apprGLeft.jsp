@@ -1044,7 +1044,7 @@
 			<h2><span id="ITEMCONT" onclick="setPresentValue('<spring:message code='ezApproval.t844'/>');Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t844'/></span></h2>
 			<ul>
           	<c:forEach var="itemList" items="${itemList}" varStatus="status">
-          	    <li><span id = "itemList${status.count - 1}" style="width: 100%; display: inline-block;" onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod}<spring:message code='ezApprovalG.t456'/>)');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})')">${itemList.taskName}(${itemList.keepingPeriod}<spring:message code='ezApprovalG.t456'/>) </span></li>
+          	    <li><span id = "itemList${status.count - 1}" style="width: 100%; display: inline-block;" onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})')">${itemList.taskName}(${itemList.keepingPeriod}) </span></li>
           	</c:forEach>
         	</ul>
 
