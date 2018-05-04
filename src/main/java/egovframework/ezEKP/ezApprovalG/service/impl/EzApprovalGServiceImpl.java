@@ -9151,6 +9151,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             rtnXML.append("<WRITERNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent())) + "</WRITERNAME2>");
             rtnXML.append("<WRITERJOBTITLE2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent())) + "</WRITERJOBTITLE2>");
             rtnXML.append("<WRITERDEPTNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent())) + "</WRITERDEPTNAME2>");
+            rtnXML.append("<PUBLICITYYN>" + makeXMLString(makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent())) + "</PUBLICITYYN>");
 		} else {
 			for (int k = 0; k < selecteds.length; k++) {
 				if (!selecteds[k].trim().equals("")) {
@@ -16447,6 +16448,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
+		if (docXML.getElementsByTagName("PUBLICITYYN").item(0) != null) {
+			tempValue = docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent().trim();
+			
+			if (!tempValue.equals("")) {
+				if (firstFlag) {
+					map.put("v_PUBLICITYYN", tempValue);
+					map.put("v_FIRSTFLAG19", firstFlag);
+					firstFlag = false;
+				} else {
+					map.put("v_PUBLICITYYN", tempValue);
+					map.put("v_FIRSTFLAG19", firstFlag);
+				}
+			}
+		}
+		
 		if (docXML.getElementsByTagName("LIMITRANGE").item(0) != null) {
 			tempValue = docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim();
 			
@@ -21813,6 +21829,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_Status", makeListField(signXML2.getElementsByTagName("STATUS").item(0).getTextContent()).trim());
 			map.put("v_SpecialRecordCode", makeListField(signXML2.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()).trim());
 			map.put("v_PublicityCode", makeListField(signXML2.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent()).trim());
+			map.put("v_PublicityYN", makeListField(signXML2.getElementsByTagName("PUBLICITYYN").item(0).getTextContent()).trim());
 			map.put("v_LimitRange", makeListField(signXML2.getElementsByTagName("LIMITRANGE").item(0).getTextContent()).trim());
 			map.put("v_PageNum", makeListField(signXML2.getElementsByTagName("PAGENUM").item(0).getTextContent()).trim());
 			map.put("v_CabinetID", makeListField(signXML2.getElementsByTagName("CABINETID").item(0).getTextContent()).trim());

@@ -310,6 +310,7 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
+		<div  style = "height:370px;">
 		<table class="cmhomelist" id ="tblList" style="width:100%;margin-top:13px">
 			<tr>
 				<th style="padding:0;width:20px; text-align:center;"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
@@ -373,7 +374,8 @@
 					</c:otherwise>
 				</c:choose>
 			</tr>
-		</table>		
+		</table>	
+		</div>	
 		<div id="tblPageRayer" style="margin-top:10px"></div>
 		<div id="ListInfo" style="DISPLAY:none">${ListInfo}</div>
 	</body>

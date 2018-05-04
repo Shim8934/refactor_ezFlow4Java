@@ -830,7 +830,7 @@
 		            }
 		            
 		            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
-		            var folderPath = "<spring:message code='ezEmail.t99000027' />";
+		            var folderPath = "${drafts}";
 	        	    var scheme = document.location.protocol + "//" + document.location.hostname;
 	        	    
 	                if (document.location.port != "80") {

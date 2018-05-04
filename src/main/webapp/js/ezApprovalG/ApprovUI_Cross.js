@@ -1154,6 +1154,7 @@ function getDocInfo() {
             pSummery = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[35]);
             pSpecialRecordCode = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[26]);
             pPublicityCode = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[27]);
+            pPublicityYN = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[41]);
             pLimitRange = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[28]);
             pPageNum = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[29]);
             cabinetID = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[30]);
@@ -1553,6 +1554,7 @@ function SaveApproveInfo(pApproveFlag) {
     createNodeAndInsertText(xmlpara, objNode, "XDOCID", "");
     createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
     createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
+    createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", pPublicityYN);
     createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
     createNodeAndInsertText(xmlpara, objNode, "PAGENUM", pPageNum);
     createNodeAndInsertText(xmlpara, objNode, "CABINETID", cabinetID);
@@ -2115,6 +2117,7 @@ function SReAprLineSingMapping(ret) {
 }
 
 function ReAprLineSingMapping(ret) {
+	console.log("결재선 다시 ?")
     var xmlKuljea, chamjo, hapyuiCnt, SignCnt, referCnt, xmlReDraft;
     var OrderType = new Array();
     var OrderTypeName = new Array();
@@ -2364,9 +2367,9 @@ function ReAprLineSingMapping(ret) {
                     if (field) {
                     	setNodeText(field , OrderJobtitle[i]);
                         if (OrderSuggester[i] == "Y")
-                        	setNodeText(field , strLangS75 + getNodeText(field));
+                        	setNodeText(field , "★" + getNodeText(field));
                         if (OrderReporter[i] == "Y")
-                        	setNodeText(field , strLangS76 + getNodeText(field));
+                        	setNodeText(field , "⊙" + getNodeText(field));
                     }
 
                     fieldname = susinSN + "sign" + idx;
@@ -2398,9 +2401,9 @@ function ReAprLineSingMapping(ret) {
             if (field) {
             	setNodeText(field , OrderJobtitle[i]);
                 if (OrderSuggester[i] == "Y")
-                	setNodeText(field , strLangS75 + getNodeText(field));
+                	setNodeText(field , "★" + getNodeText(field));
                 if (OrderReporter[i] == "Y")
-                	setNodeText(field , strLangS76 + getNodeText(field));
+                	setNodeText(field , "⊙"  + getNodeText(field));
             }
 
             fieldname = susinSN + "sign" + idx;
@@ -2428,9 +2431,9 @@ function ReAprLineSingMapping(ret) {
             if (field) {
             	setNodeText(field , OrderJobtitle[i]);
                 if (OrderSuggester[i] == "Y")
-                	setNodeText(field , strLangS75 + getNodeText(field));
+                	setNodeText(field , "★" + getNodeText(field));
                 if (OrderReporter[i] == "Y")
-                	setNodeText(field , strLangS76 + getNodeText(field));
+                	setNodeText(field , "⊙" + getNodeText(field));
             }
             hidx = hidx + 1;
         }
@@ -3082,7 +3085,8 @@ function openDocExinfo() {
     parameter[5] = pLimitRange;
     parameter[6] = pPageNum;
     parameter[7] = tempSecurityDate;
-
+    parameter[8] = pPublicityYN;
+    
     var url = "../ezDocInfo/ezDocInfoG_Cross.aspx";
     var feature = "status:no;dialogWidth:420px;dialogHeight:605px;help:no;scroll:no;edge:sunken;";
     feature = feature + GetShowModalPosition(420, 605);
@@ -3097,7 +3101,51 @@ function openDocExinfo() {
     pPageNum = RtnVal[6];
     tempSecurityDate = RtnVal[7];
 
-    setPublicFlag();
+    /*2018-04-05 김은석 수정 건설공사 공개여부*/
+//  setPublicFlag();
+  setPublicFlag2();
+}
+/*2018-04-05 김은석 수정 건설공사 공개여부*/
+//function setPublicFlag() {
+//  var fields = message.GetFieldsList();
+//  var field = message.GetListItem(fields, "publication");
+//  if (!field) return;
+//
+//  var PublicType = pPublicityCode.substring(0, 1);
+//  var PublicLevel = pPublicityCode.substring(1, 9);
+//  var PublicText = "";
+//
+//  if (pLimitRange != "")
+//      PublicText = " (" + pLimitRange + ")";
+//
+//  if (PublicType == "1")
+//      PublicText = strLang82;
+//  else if (PublicType == "2")
+//      PublicText = strLang83 + getPublicLevel(PublicLevel);
+//  else if (PublicType == "3")
+//      PublicText = strLang84 + getPublicLevel(PublicLevel);
+//  else
+//      PublicText = " ";
+//
+//  field.innerHTML = PublicText;
+//}
+function setPublicFlag2() {
+	var fields = message.GetFieldsList();
+	var field = message.GetListItem(fields, "publication");
+	if (!field) return;
+	
+	var PublicType = pPublicityYN.substring(0, 1);
+	var PublicText = "";
+	
+	
+	if (PublicType == "Y")
+		PublicText = strLang82;
+	else if (PublicType == "N")
+		PublicText = strLang84
+	else
+		PublicText = " ";
+	
+	field.innerHTML = PublicText;
 }
 function setPublicFlag() {
     var fields = message.GetFieldsList();
