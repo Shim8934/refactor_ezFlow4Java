@@ -184,12 +184,12 @@
             	(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
             AND
             	A.status != 2
+           	AND
+				B.updatestatus IN (0, 1)
             AND
                 B.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
-            AND
-				B.updatestatus IN (0, 1)    
         ]]>
         
         <isNotEqual property="searchValue" compareValue="">
@@ -1580,6 +1580,8 @@
 					(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
 				AND
 					A.status != 2
+				AND
+					B.updatestatus IN (0, 1)
 				AND
 					B.memberid = #userID#
 				AND
