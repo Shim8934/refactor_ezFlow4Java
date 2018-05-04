@@ -27,6 +27,13 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
+						var reason = data.reason;
+						
+						if (reason) {
+							alert(reason);
+							return;
+						}
+						
 						var result = data.webfolderConfig;
 						
 						if (!result) {
@@ -78,12 +85,18 @@
 						"uLimitVal" : uploadLimitVal,
 						"companyId" : document.getElementById("companyList").value
 					},
-					dataType: "text",
+					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						alert("<spring:message code='ezWebFolder.t182'/>");
-						currPersonalLimit = personalLimitVal;
-						currUploadLimit   = uploadLimitVal;
+						var reason = data.reason;
+						if (reason) {
+							alert(reason);
+						}
+						else {
+							alert("<spring:message code='ezWebFolder.t182'/>");
+							currPersonalLimit = personalLimitVal;
+							currUploadLimit   = uploadLimitVal;
+						}
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);

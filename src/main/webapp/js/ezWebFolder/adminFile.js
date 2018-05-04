@@ -138,6 +138,12 @@ function search_Set(pPage) {
 		dataType: "JSON",
 		async: true,
 		success : function(data) {
+			var reason = data.reason;
+			if (reason) {
+				alert(reason);
+				return;
+			}
+			
 			var result  = data.fileList;
 			totalRows   = data.totalRows;
 			totalPages  = data.totalPages;
