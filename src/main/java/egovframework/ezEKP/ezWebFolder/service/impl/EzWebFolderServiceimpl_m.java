@@ -616,19 +616,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		currPage = totalPages == 0 ? 0 : currPage;
 		
-		if (trashCanList != null) {
-			for (TrashCanVO trashCan : trashCanList) {
-				if (!trashCan.getTrashCanExt().equals("folder")) {
-					map.put("folderId", trashCan.getFileFolderId());
-					String folderPath = ezWebFolderDAO.getFolderPath(map);
-					
-					if (folderPath != null) {
-						trashCan.setTrashCanPath(folderPath);
-					}
-				}
-			}
-		}
-		
 		result.put("fileCnt", fileCnt);
 		result.put("folderCnt", folderCnt);
 		result.put("trashCanList", trashCanList);
@@ -692,30 +679,26 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Override
 	public int realFileDelete(FileVO fileVO, String realPath, LoginVO userInfo, String userName1, String userName2) throws Exception {
+
+		String pDirPath = realPath.substring(0, realPath.length() -1) + fileVO.getFilePath();
 		
-		String pDirPath = getWebFolderDirPath(userInfo.getTenantId());
-		pDirPath = realPath + pDirPath;
-		
-		if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
-			pDirPath = pDirPath + commonUtil.separator;
-		}
-		
-		File file = new File(pDirPath + fileVO.getFileName());
+		File file = new File(pDirPath);
 		int isDeleted = -1;
+		
+		LOGGER.debug("pDirPath=" + pDirPath);
 		
 		if (file.exists()) {
 			if (file.delete()) {
 				isDeleted = 1;
 				ezWebFolderService.saveLog("P", userInfo.getCompanyID(), userInfo.getOffset(), userInfo.getId(), userName1, userName2, 
 						fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), userInfo.getTenantId());
+				
 				LOGGER.debug(fileVO.getFileName() + "delete is success");
 			} else {
-				isDeleted = 1;
 				LOGGER.debug(fileVO.getFileName() + "delete is fail");
 			}
 		} else {
-			isDeleted = 1;
-			LOGGER.error("File is Not Found:" + fileVO.getFileName());
+			LOGGER.error("File is Not Found : " + fileVO.getFileName());
 		}
 		
 		return isDeleted;

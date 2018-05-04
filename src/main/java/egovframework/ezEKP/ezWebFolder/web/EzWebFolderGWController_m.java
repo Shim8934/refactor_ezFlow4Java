@@ -890,16 +890,8 @@ public class EzWebFolderGWController_m {
 			if (trashCanList != null) {
 				for (TrashCanVO trashCan : trashCanList) {
 					trashCanPath = trashCan.getTrashCanPath().substring(1);
-					
 					trashCanPath = getFolderPath(trashCanPath.split("\\|"), offset, primary, tenantId);
-					
-					// is folder
-					if ("folder".equalsIgnoreCase(trashCan.getTrashCanExt())) {
-						trashCanPath = trashCanPath.substring(0, trashCanPath.length() - 1);
-					} else {
-						trashCanPath += trashCan.getTrashCanName();
-					}
-					
+					trashCanPath = trashCanPath.substring(0, trashCanPath.length() - 1);
 					trashCan.setTrashCanPath(trashCanPath);
 				}
 			}
