@@ -160,17 +160,19 @@
 					popAllUser();
 				})
 				.on("mouseenter", "[id^='drag']", function() {
-					var $this = $(this);
-					$this.find("span").css("border-color", "#2568b3");
-					if($this.find("span").hasClass("userPicWraper_d")) {
-						$this.find("img").attr("src", "/images/ezLadder/icon_defaultAttendant_hover.png");
+					/* var $this = $(this); */
+					var $span = $(this).find("span");
+					$span.css("border-color", "#2568b3");
+					if($span.hasClass("userPicWraper_d")) {
+						$span.find("img").attr("src", "/images/ezLadder/icon_defaultAttendant_hover.png");
 					}
 				})
 				.on("mouseleave", "[id^='drag']", function() {
-					var $this = $(this);
-					$this.find("span").css("border-color", "#ccc");
-					if($this.find("span").hasClass("userPicWraper_d")) {
-						$(this).find("img").attr("src", "/images/ezLadder/icon_defaultAttendant.png");
+					/* var $this = $(this); */
+					var $span = $(this).find("span");
+					$span.css("border-color", "#ccc");
+					if($span.hasClass("userPicWraper_d")) {
+						$span.find("img").attr("src", "/images/ezLadder/icon_defaultAttendant.png");
 					}
 				})
 				$("#toList").on("click", function() {
@@ -832,6 +834,9 @@
 														</c:otherwise>
 													</c:choose>
 													<div title="${line.userName}" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
+													<c:if test="${id eq vo.writerId }">
+														<img src="/images/ezLadder/icon_switchAttendant.png" style="width: 20px;height: 20px;position: absolute;top: 0;right: 15px;" />
+													</c:if>
 												</div>
 											</li>
 										</c:forEach>
@@ -863,7 +868,7 @@
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
 											<li>
-												<div id="drag${status.index}" style="cursor: pointer;">
+												<div id="drag${status.index}" style="cursor: pointer;position: relative;">
 														<c:choose>
 															<c:when test="${empty line.pic}">
 																<span class="userPicWraper_d">

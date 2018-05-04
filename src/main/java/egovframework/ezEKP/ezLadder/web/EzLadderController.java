@@ -496,6 +496,7 @@ public class EzLadderController {
 		JSONObject jsonBodys = new JSONObject();
 		jsonBodys.put("commentId", commentId);
 		jsonBodys.put("comment", comment);
+		jsonBodys.put("loginCookie", loginCookie);
 		
 		HttpEntity<?> entity = new HttpEntity<>(jsonBodys, headers);
 		

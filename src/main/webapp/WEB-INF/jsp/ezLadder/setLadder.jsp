@@ -104,7 +104,6 @@
 						imgs.removeClass("active");
 						imgs.eq(2).addClass("active").css("border", "2px solid #0470e4");
 						
-						setInputValue(false);
 						setLadderTypeDiv();
 					})
 					.on("mouseenter", function() {
@@ -151,10 +150,29 @@
 					.on("click", "#cutBomb", function() {
 						setBomb(false);
 					})
-					.on("blur", ".item input", function() {
-						if(ladderType == "1") {
-							getMoney($(this));
-							$("#totalmoney span").text(totalmoneyStr);
+					.on("blur", "[name='userNames']", function() {
+						if(!$(this).is("[readonly]")) {
+							var $userIdx = $("[name='userNames']").index(this);
+							var $userVal = $(this).val();
+							
+							if(attendants["name"][$userIdx] != $userVal) {
+								attendants["name"][$userIdx] = $userVal;
+								attendants["name2"][$userIdx] = $userVal;
+								$("[name='userName2s']").eq($userIdx).val($userVal);
+							}
+						}
+					})
+					.on("blur", "[name='items']", function() {
+						var $itemIdx = $("[name='items']").index(this);
+						var $itemVal = $(this).val();
+						
+						if(items[$itemIdx] != $itemVal) {
+							items[$itemIdx] = $itemVal;
+							
+							if(ladderType == "1" && regNumber.test($itemVal) || $itemVal.slice(-1) == strLang24) {
+								getMoney($(this));
+								$("#totalmoney span").text(totalmoneyStr);
+							}
 						}
 					});
 				
@@ -192,7 +210,10 @@
 					$tempItemList.css("display", "none");
 					
 					if(ladderType == "1") {
+						moneyArr = [];
+						totalmoney = 0;
 						getMoney($("#itemList").find("input"));
+						
 						html += "<div id='totalmoney' style='float: right; line-height: 50px;'>$<span style='margin: 0px 5px 0px 15px;'>" + totalmoneyStr + "</span>" + strLang24 + "</div>";
 					}
 				}
@@ -219,11 +240,6 @@
 				var moneyNum = {"numStr": [strLang29, strLang30, strLang31, strLang32, strLang33, strLang34, strLang35, strLang36, strLang37], "number": [1, 2, 3, 4, 5, 6, 7, 8, 9]};
 				var inputval = "";
 				var objLen = itemobj.length;
-				
-				if(objLen != 1) {
-					moneyArr = [];
-					totalmoney = 0;
-				}
 				
 				for(var i = 0; i < objLen; i++) {
 					var obj = itemobj.eq(i);
@@ -291,8 +307,6 @@
 							}
 							
 							moneyArr[obj.attr("_itemindex")] = Number(tempTotalMoney);
-							
-							console.log(tempMoneyArr);
 						}
 						totalmoney += moneyArr[obj.attr("_itemindex")];
 					}
@@ -382,31 +396,6 @@
 				$("#makeLad").removeAttr("disabled");
 			}
 			
-			/** 참여자, 아이템 배열을 현재 input box 정보로 셋팅 */
-			function setInputValue(allsetting) {
-				var userlen = 0;
-				var name = "";
-				var i = 0;
-				
-				if(attendants !== null) {
-					userlen = attendants["name"].length;
-				}
-				
-				for(; i < userlen; i++) {
-					if(allsetting) {
-						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
-							name = $(".attendant:eq(" + i + ") input").val();
-							attendants["name"][i] = name;
-							attendants["name2"][i] = name;
-						}
-					}
-					var $itemList = $("#itemList");
-					if($itemList.find("li").length != 0 && $itemList.css("display") == "block") {
-						items[i] = $itemList.find("input").eq(i).val();
-					}
-				}
-			}
-
 			function _manage_attendant() {
 				manage_attendant_after();
 			}
@@ -414,7 +403,6 @@
 			/** 조직도 호출 */
 			var ladder_select_attendant_dialogArguments = [];
 			function manage_attendant_after() {
-				setInputValue(true);
 				
 				ladder_select_attendant_dialogArguments[0] = attendants;
 				ladder_select_attendant_dialogArguments[1] = manage_attendant_complete;
@@ -448,21 +436,31 @@
 
 			/** 참여자 삭제 */
 			function attendant_remove(index) {
-				setInputValue(false);
 				
 				attendants["id"].splice(index, 1);
 				attendants["name"].splice(index, 1);
 				attendants["name2"].splice(index, 1);
 				attendants["pic"].splice(index, 1);
+				attendants["order"].splice(index, 1)
 				items.splice(index, 1);
 				
+				var idLen = attendants["id"].length;
 				$(".attendant:eq(" + index + ")").remove();
 				$(".item:eq(" + index + ")").remove();
 				$("#tempItemList li:eq(" + index + ")").remove();
-				add_user_change_ulsize(attendants["id"].length);
+				add_user_change_ulsize(idLen);
+				changeUser(idLen);
+				
+				var $userIds = $("[name='userIds']");
+				for(var i = index; i < idLen; i++) {
+					if(attendants["id"][i].substring(0, 14) == "anonyAttendant") {
+						attendants["id"][i] = "anonyAttendant_" + i;
+						$userIds.eq(i).val("anonyAttendant_" + i);
+					}
+					attendants["order"][i] = i;
+				}
 				
 				changeSliderValue();
-				changeUser(attendants["id"].length);
 				setLadderTypeDiv();
 			}
 			
@@ -485,7 +483,6 @@
 				}
 				
 				if(typeof data === "string") {
-					setInputValue(true);
 					
 					data = ReplaceText(data, ",", ";");
 					
@@ -828,29 +825,31 @@
 				$("input[name='type']").val(ladderType);
 				$("input[name='lineCnt']").val($("#amount").text());
 				
-				items.forEach(function(item, index) {
+				if($("#tempItemList").css("display") == "block") {
+					var $items = $("input[name='items']");
+					
 					if(ladderType == "0") {
-						items[index] = index < bombnum ? strLang18 : strLang19;
-					} else if(ladderType == "2") {
-						items[index] = index + 1;
+						items.forEach(function(item, i) {
+							items[i] = i < bombnum ? strLang18 : strLang19;;
+						});
+					} else {
+						items.forEach(function(item, i) {
+							items[i] = i + 1;
+						});
 					}
-				});
-				
-				var temp;
-				var randomIdx;
-				items.forEach(function(item, index) {
-					randomIdx = Math.floor(Math.random() * (items.length - 1));
-					temp = item;
-					items[index] = items[randomIdx]; 
-					items[randomIdx] = temp;
-				});
-				
-				items.forEach(function(item, index) {
-					$("[_itemindex='" + index + "']").val(item);
-				});
-				
-				setInputValue(true);
-				
+					
+					var temp;
+					items.forEach(function(item, i) {
+						var randomIdx = Math.floor(Math.random() * (items.length - 1));
+						temp = item;
+						items[i] = items[randomIdx]; 
+						items[randomIdx] = temp;
+					});
+					
+					$items.each(function(i, item) {
+						item.value = items[i];
+					});
+				}
 				$("#ladMakeForm").submit();
 			} 
 
