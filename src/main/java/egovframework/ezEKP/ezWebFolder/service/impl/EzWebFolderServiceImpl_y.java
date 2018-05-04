@@ -133,6 +133,16 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			folderTree.addAll(compFolderTree);
 		}
 		
+		if (folderType.equals("S") || folderType.equals("")) {
+			List<Map<String, String>> idList = ezWebFolderService_m.getPermissionIdList(userId, deptId, compId, tenantId);
+			
+			map.put("idList", idList);
+			map.put("compId", compId);
+			
+			List<Map<String, Object>> compFolderTree = ezWebFolderDAO_m.getShareFolderTree(map);
+			folderTree.addAll(compFolderTree);
+		}
+		
 		LOGGER.debug("folderTree size: " + folderTree.size());
 		return folderTree;
 	}

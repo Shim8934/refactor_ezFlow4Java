@@ -9,6 +9,7 @@
 	<typeAlias alias="FavoriteVO"		type="egovframework.ezEKP.ezWebFolder.vo.FavoriteVO"/>
 	<typeAlias alias="SimpleShareVO"    type="egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO"/>
 	<typeAlias alias="ShareSubVO"	    type="egovframework.ezEKP.ezWebFolder.vo.ShareSubVO"/>
+	<typeAlias alias="FolderTreeVO"     type="egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO"/>
 	
 	<!-- TrashFile resultMap -->
 	<resultMap id="trashCanVO" class="TrashCanVO">
@@ -101,6 +102,16 @@
 		<result property="count"                  column="COUNT"                  javaType="Long" />
 	</resultMap>
 	
+	<resultMap id="folderTreeVO" class="FolderTreeVO">
+		<result property="id"           column="ID"           />
+		<result property="text"         column="TEXT"         />
+		<result property="parent"       column="PARENT"       />
+		<result property="selected"     column="SELECTED"     />
+		<result property="createId"     column="CREATEID"     />
+		<result property="folderName1"  column="FOLDERNAME1"  />
+		<result property="folderName2"  column="FOLDERNAME2"  />
+	</resultMap>
+	
 	<sql id="searchTerm">
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 				<![CDATA[
@@ -109,23 +120,23 @@
 		</isNotEqual>
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
 				<![CDATA[
-					DF.FILE_EXT LIKE ('%' || #searchExt# || '%')
+					LOWER(DF.FILE_EXT) LIKE ('%' || LOWER(#searchExt#) || '%')
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 				<![CDATA[
-					DF.FILE_NAME1 LIKE ('%' || #searchFileName# || '%') OR DF.FILE_NAME2 LIKE ('%' || #searchFileName# || '%')
+					(LOWER(DF.FILE_NAME1) LIKE ('%' || LOWER(#searchFileName#) || '%') OR LOWER(DF.FILE_NAME2) LIKE ('%' || LOWER(#searchFileName#) || '%'))
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreatorName" compareValue="" prepend="AND">
 				<![CDATA[
-					DF.CREATE_NAME1 LIKE ('%' || #searchCreatorName# || '%') OR DF.CREATE_NAME2 LIKE ('%' || #searchCreatorName# || '%')
+					(LOWER(DF.CREATE_NAME1) LIKE ('%' || LOWER(#searchCreatorName#) || '%') OR LOWER(DF.CREATE_NAME2) LIKE ('%' || LOWER(#searchCreatorName#) || '%'))
 				]]>
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="">
 			<isNotEqual property="searchEndDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DF.CREATE_DATE >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND DF.CREATE_DATE <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
+					DF.CREATE_DATE >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND DF.CREATE_DATE <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS')
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -238,6 +249,49 @@
 			</isNotEqual>
 		</isNotEqual>
 	</sql>
+	
+	<select id="EzWebFolderDAO_m.getShareFolderTree" parameterClass="Map" resultMap="folderTreeVO">
+		SELECT
+			FOLDER_ID AS ID,
+		    CASE WHEN FP.FOLDER_PATH = D2.FOLDER_PATH
+		        THEN '##'
+		        ELSE FOLDER_UPPER
+		    END PARENT,
+		    CASE WHEN FP.FOLDER_PATH = D2.FOLDER_PATH
+		        THEN 1
+		        ELSE 0
+		    END SELECTED,
+		    CASE WHEN #primary# = '1'
+		        THEN FOLDER_NAME1
+		        ELSE FOLDER_NAME2
+		    END TEXT,
+		    CREATE_ID AS CREATEID,
+		    FOLDER_NAME1 AS FOLDERNAME1,
+		    FOLDER_NAME2 AS FOLDERNAME2 
+		FROM TBL_WEBFOLDER_FOLDER D2
+		JOIN (
+		    SELECT D.FOLDER_PATH
+		    FROM TBL_WEBFOLDER_FOLDER D
+		    JOIN (
+		        SELECT DISTINCT
+		            S.FOLDERFILE_ID,
+		            S.TENANT_ID
+		        FROM TBL_WEBFOLDER_SHARE S
+		        JOIN TBL_WEBFOLDER_SHARE_SUB SS
+		        ON S.SHARE_ID = SS.SHARE_ID
+		        AND S.TENANT_ID = SS.TENANT_ID
+		        WHERE SS.USER_ID IN 
+		        <iterate property="idList" open="(" close=")" conjunction=",">
+					#idList[].id#
+				</iterate>
+		        AND S. FOLDERFILE_TYPE = 'D' ) SD
+		    ON D.FOLDER_ID = SD.FOLDERFILE_ID
+		    AND D.TENANT_ID = SD.TENANT_ID
+		    WHERE D.TENANT_ID = #tenantId# ) FP
+		ON D2.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
+		AND D2.TENANT_ID = #tenantId#
+		WHERE D2.USE_STATUS = 'Y'
+	</select>
 	
 	<select id="EzWebFolderDAO_m.getSharingList" parameterClass="Map" resultMap="shareVO">
 		<![CDATA[
