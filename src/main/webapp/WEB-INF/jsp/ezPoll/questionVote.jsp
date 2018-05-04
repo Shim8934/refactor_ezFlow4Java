@@ -2970,6 +2970,11 @@
 	    				$("#Edatepicker").trigger("focus");
 	    				$("#Edatepicker").datepicker("show");
 	    				$("#ui-datepicker-div").show();
+	    				/* var uiDatepickerTop = $("#ui-datepicker-div").css("top");
+	    				uiDatepickerTop -= 5;
+	    				$("#ui-datepicker-div").css("top", uiDatepickerTop); */
+	    				$("#ui-datepicker-div").css("margin-top","5px")
+	    				
     				}
     				else{
 	    				$("#_dateTimePicker").css("display", "none");
@@ -3025,7 +3030,7 @@
 		  	
 		  	//종료일 변경 다이얼로그창 띄움.
 		  	function endDateModifyConfirm(idx){
-		  		$("#Edatepicker, #eTimePicker").css("color", "#0000FF");
+		  		$("#Edatepicker, #eTimePicker").css("color", "#0470e4");
 	  			window.setTimeout(
        				function(){
        					if(window.confirm("<spring:message code = 'ezPoll.hdp05'/>")){
@@ -3147,7 +3152,7 @@
 									<ul class="voteIcon_ul">
 										<li class="voteIconImg_li icon endDate">
 											<img id="endDate" src="/images/poll/endDateModify.png" class="voteIconImg nosecret" style="width:45px" title="<spring:message code = 'ezPoll.hdp04'/>" onmouseover="this.src = '/images/poll/endDateModify_hover.png'" onmouseout="this.src = '/images/poll/endDateModify.png'" />
-											<div id="_dateTimePicker" style="display: none; position: fixed; top: 130px; right: 10px; height: 221px; width: 223px; background: white; border-radius: 10px; padding-top: 20px; border:1px solid #ddd; z-index:10;">										
+											<div id="_dateTimePicker" style="display: none; position: fixed; top: 130px; right: 10px; height: 226px; width: 223px; background: white; border-radius: 10px; padding-top: 20px; border:1px solid #ddd; z-index:10;">										
 												<input type="text" id="Edatepicker" style="width:80px; height: 20px; text-align:center; margin-left: 18px; margin-right: 5px; float: left; z-index: 10;" readonly >
 												<select id="eTimePicker" style="float:left"></select>
 												<i id="dateConfirmBtn" class="fa fa-check-circle"></i>
