@@ -28,13 +28,6 @@
 		var checkedfileList = "${fileList}";
 		var checkedfolderList = "${folderList}";
 
-		document.onselectstart = function () {
-            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
-                return false;
-            else
-                return true;
-        };
-        
         window.onload = function () {
     		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
     		folderList(folderType);
@@ -134,7 +127,6 @@
             
             window.close();
             opener.refreshView();
-           
         }
     </script>
 </head>

@@ -172,12 +172,63 @@
 						+ fileCnt +" </span>"  + messages.strLang11 + "]";
 					$("#listcount").val(result.listCount).prop("selected", true);
 					parent.frames["left"].drawVolume();
+					successFile(data);
 				},
 				error : function(error) {
 					alert(messages.strLang7 + error);
 				}
-			})
-		};
+			});
+		}
+	    
+		function successFile(data) {
+			if (data.status == "error") {
+				if (data.code == 1) {
+					alert("파라메터가 부족합니다.");
+					return;
+				}else if (data.code == 2) {
+					alert("에러가 발생했습니다.");
+					return;
+				}else if (data.code == 3) {
+					alert("권한이 없습니다.");
+					return;
+				}
+			}
+			var result = data.data;
+			
+			var fileCnt = result.fileCnt;
+			var fldCnt = result.fldCnt;
+			
+			var folderPath = result.folderPath;
+			var originalPath = result.originalPath;
+			var folderUpp = result.folderUpp;
+			var dragDropAreaElmt = document.getElementById("dragDropArea");
+			filelist = result.fileList;
+			
+			pagination.setListSize(result.listCount);
+			pagination.setAmount(result.totalRows);
+			pagination.build(true);
+			
+			if (folderUpp != 'root') {
+				$('#upload').css('display','inline');
+				dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
+				dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
+				dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
+			} else {
+				dragDropAreaElmt.ondragenter = null;
+				dragDropAreaElmt.ondragover  = null;
+				dragDropAreaElmt.ondragover  = null;
+			}
+			
+			$('#tblFileList tr td').parent().remove();
+			renderData(filelist);
+			
+			namePath(folderPath, originalPath);
+			document.getElementById("mailBoxInfo").innerHTML = " - [" + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
+			 + messages.strLang11 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
+				+ fileCnt +" </span>"  + messages.strLang11 + "]";
+			$("#listcount").val(result.listCount).prop("selected", true);
+			parent.frames["left"].drawVolume();
+		} 
 		
 		// originalPath 는 한글 path
 		// folderPath 는 숫자 
@@ -221,7 +272,7 @@
 				
 				var imgElmt = document.createElement("img");
 				imgElmt.setAttribute("style", "height: 14px; width: 14px; display: inline-block; margin: 0px 6px;");
-				imgElmt.src = "/images/webfolder/arrow.png";
+				imgElmt.src = "/images/webfolder/arrow2.png";
 				
 				if (i != length - 1) {
 					nameTag.appendChild(imgElmt);

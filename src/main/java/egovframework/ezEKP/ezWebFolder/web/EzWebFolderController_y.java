@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -58,7 +59,7 @@ public class EzWebFolderController_y {
 	
 	// getFolderList /ezwebfolder/users/{userId}/folder-tree에 가는 메소드 
 	@RequestMapping(value = "/ezWebFolder/folderList.do")
-	public String getFolderList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+	public @ResponseBody String getFolderList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model ){
 		
 		// tenantID, companyId, userId, folderType, folderId
@@ -83,39 +84,31 @@ public class EzWebFolderController_y {
 //				.queryParam("admin", adminCheck)
 		
 						
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+//		
+//		JSONParser jp = new JSONParser();
+//		JSONObject resultBody = null;
+//		try {
+//			resultBody = (JSONObject)jp.parse(result.getBody());
+//		} catch (ParseException e) {
+//			LOGGER.debug("getFolderList status fail" );
+//			e.printStackTrace();
+//			model.addAttribute("status","error");
+//			model.addAttribute("code",1);
+//			model.addAttribute("data","");
+//		}
 		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = null;
-		try {
-			resultBody = (JSONObject)jp.parse(result.getBody());
-		} catch (ParseException e) {
-			LOGGER.debug("getFolderList status fail" );
-			e.printStackTrace();
-			model.addAttribute("status","error");
-			model.addAttribute("code",1);
-			model.addAttribute("data","");
-		}
-		
-		String status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			model.addAttribute("status","ok");
-			model.addAttribute("code",0);
-			model.addAttribute("data",resultBody.get("data"));
-		} else {
-			model.addAttribute("status","error");
-			model.addAttribute("code",1);
-			model.addAttribute("data","");
-		}
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+ 		
+		JSONObject resultBody = result.getBody();
 
-		return "json";
+		return resultBody.toString();
 		
 	}
 	
 	// 파일 리스트 가져오기 
 	@RequestMapping(value = "/ezWebFolder/fileList.do")
-	public String getFileList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+	public @ResponseBody String getFileList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		
 		LoginSimpleVO userInfo 	= commonUtil.userInfoSimple(loginCookie);
@@ -197,22 +190,9 @@ public class EzWebFolderController_y {
 		// 갔다 돌아옴
  		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
  		
- 		
 		JSONObject resultBody = result.getBody();
-		
-		String status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			model.addAttribute("status","ok");
-			model.addAttribute("code",0);
-			model.addAttribute("data",resultBody.get("data"));
-		}else {
-			model.addAttribute("status","error");
-			model.addAttribute("code",1);
-			model.addAttribute("data","");
-		}
-		
-		return "json";
+
+		return resultBody.toString();
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/treeTest.do")
@@ -245,7 +225,7 @@ public class EzWebFolderController_y {
 	}
 	
 	@RequestMapping( value ="/ezWebFolder/insertFolder.do") 
-	public String insertFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+	public @ResponseBody String insertFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderUppId = "";
@@ -292,25 +272,14 @@ public class EzWebFolderController_y {
 				
 		ResponseEntity<JSONObject> 	result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
 
-		
 		JSONObject resultBody = result.getBody();
 		LOGGER.debug("result: " + resultBody.get("status"));
 		
-		String status = resultBody.get("status").toString();
-		if (status.equals("ok")) {
-			LOGGER.debug("status : ok");
-			model.addAttribute("status","ok");
-			model.addAttribute("code",0);
-		}else {
-			LOGGER.debug("status : fail");
-			model.addAttribute("status","error");
-			model.addAttribute("code",1);
-		}
-		return "json";
+		return resultBody.toString();
 	}
 	
 	@RequestMapping( value ="/ezWebFolder/updateFolder.do") 
-	public String updateFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+	public @ResponseBody String updateFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderId = "";
@@ -357,9 +326,7 @@ public class EzWebFolderController_y {
 
 		
 		JSONObject resultBody = result.getBody();
-		LOGGER.debug("result: " + resultBody.get("status"));
-		
-		return "json";
+		return resultBody.toString();
 	}
 	
 	
@@ -372,7 +339,7 @@ public class EzWebFolderController_y {
 	}
 		
 	@RequestMapping( value ="/ezWebFolder/deleteFolder.do", method=RequestMethod.POST) 
-	public String deleteFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+	public @ResponseBody String deleteFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderId = "";
@@ -407,18 +374,7 @@ public class EzWebFolderController_y {
 		
 		
 		JSONObject resultBody = result.getBody();
-		LOGGER.debug("result: " + resultBody.get("status"));
-		String res = (String) resultBody.get("status");
-		if (res.equals("ok")) {
-			LOGGER.debug("deleteFolder status : ok");
-			model.addAttribute("status","ok");
-			model.addAttribute("code",0);
-		}else {
-			LOGGER.debug("deleteFolder status : error");
-			model.addAttribute("status","error");
-			model.addAttribute("code",1);
-		}
-		return "json";
+		return resultBody.toString();
 	}
 	
 	
@@ -431,7 +387,7 @@ public class EzWebFolderController_y {
 	}
 	
 	@RequestMapping( value ="/ezWebFolder/moveFolder.do", method=RequestMethod.POST) 
-	public String moveFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+	public @ResponseBody String moveFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderId = "";
@@ -475,22 +431,7 @@ public class EzWebFolderController_y {
 		ResponseEntity<JSONObject> 	result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
 		
 		JSONObject resultBody = result.getBody();
-		String status               = resultBody.get("status").toString();
-		String code                 = resultBody.get("code").toString();
-		
-		LOGGER.debug("moveFolder status " + status);
-		if (status.equals("ok")) {
-			LOGGER.debug("Move Folder finishes!");
-			model.addAttribute("status",status);
-			model.addAttribute("code",code);
-		}else {
-			LOGGER.debug("move Folder Fail");
-			model.addAttribute("status",status);
-			model.addAttribute("code",code);
-		}
-		
-		return "json";
+		return resultBody.toString();
 		
 	}
-	
 }

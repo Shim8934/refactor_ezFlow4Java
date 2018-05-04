@@ -171,6 +171,12 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
+						var reason = data.reason;
+						if (reason) {
+							alert(reason);
+							return;
+						}
+						
 						var result = data.folderUsers;
 						processUsersList(result, obj.getAttribute("fldName1"), obj.getAttribute("fldName2"));
 					},
@@ -347,6 +353,12 @@
 					dataType: "JSON",
 					async: false,
 					success: function(data) {
+						var reason = data.reason;
+						if (reason) {
+							alert(reason);
+							return;
+						}
+						
 						refreshView2();
 					},
 					error: function (xhr, status, e){
@@ -424,6 +436,12 @@
 					dataType: "JSON",
 					async: false,
 					success: function(data) {
+						var reason = data.reason;
+						if (reason) {
+							alert(reason);
+							return;
+						}
+						
 						alert("<spring:message code='ezWebFolder.t182'/>");
 						refreshView2();
 					},
@@ -486,15 +504,13 @@
 					dataType: "JSON",
 					async: false,
 					success: function(data) {
-						var result = data.result;
-						
-						if (result == "ok") {
-							refreshViewAfterUpdate();
-						}
-						else {
-							alert("<spring:message code='ezWebFolder.t225'/>");
+						var reason = data.reason;
+						if (reason) {
+							alert(reason);
+							return;
 						}
 						
+						refreshViewAfterUpdate();
 					},
 					error: function (xhr, status, e){
 						alert("<spring:message code='ezWebFolder.t134'/>");

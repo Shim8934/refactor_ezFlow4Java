@@ -133,6 +133,13 @@
                 alert("<spring:message code='ezWebFolder.t257'/>");
                 return;
             }
+            if (folderType == "C") {
+            	if ( parent =='#' ) {
+    	            alert("회사폴더 최상위에는 폴더를 추가할 수 없습니다.");
+    	            return;
+                }
+            }
+            
             var functionType = "insert"; 
             inputNameDlg_cross_dialogArguments[0] = folderId;
             inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;

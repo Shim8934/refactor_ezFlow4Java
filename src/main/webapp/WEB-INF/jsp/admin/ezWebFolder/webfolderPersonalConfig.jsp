@@ -76,6 +76,13 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
+						var reason  = data.reason;
+						
+						if (reason) {
+							alert(reason);
+							return;
+						}
+						
 						var result  = data.capacityList;
 						totalRows   = data.totalUsers;
 						totalPages  = data.totalPages;
@@ -259,9 +266,15 @@
 						"userListParam" : userIdList.toString(),
 						"companyId"     : document.getElementById("companyList").value
 					},
-					dataType: "text",
+					dataType: "JSON",
 					async: true,
 					success : function(data) {
+						var reason = data.reason;
+						if (reason) {
+							alert(reason);
+							return;
+						}
+						
 						alert("<spring:message code='ezWebFolder.t253'/>")
 						search_Set(currentPage);
 						checkedArr = [];

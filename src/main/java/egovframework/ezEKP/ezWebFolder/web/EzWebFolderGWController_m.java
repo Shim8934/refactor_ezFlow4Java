@@ -879,7 +879,7 @@ public class EzWebFolderGWController_m {
 		if (userId.equals("") || offset.equals("") || userId.equals("") || serverName.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 
@@ -925,9 +925,9 @@ public class EzWebFolderGWController_m {
 			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
+			result.put("code", 2);
 		}
 		
 		logger.debug("result=" + result);
@@ -953,10 +953,10 @@ public class EzWebFolderGWController_m {
 		String realPath = request.getServletContext().getRealPath("");
 		JSONObject result   = new JSONObject();
 		
-		if (fileIDList.length == 0 & folderIDList.length == 0|| serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("")) {
+		if (fileIDList.length == 0 && folderIDList.length == 0|| serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -968,8 +968,9 @@ public class EzWebFolderGWController_m {
 			result.put("code", "0");
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 2);
 		}
 		
 		logger.debug("filePermanetDelete ended");
@@ -1003,7 +1004,7 @@ public class EzWebFolderGWController_m {
 		if (fileIDList.length == 0 && folderIDList.length == 0|| serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -1017,16 +1018,17 @@ public class EzWebFolderGWController_m {
 					userId, offset, companyId, timeUTC, userInfo.getDisplayName1(), userInfo.getDisplayName2());
 			
 			if (failCount == 0) {
-				result.put("code", "1");
+				result.put("code", 0);
 			 } else {
-				 result.put("code", "-1");
+				 result.put("code", 4);
 			 }
 			
 			result.put("status", "ok");
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 2);
 		}
 		
 		logger.debug("result=" + result);
@@ -1070,11 +1072,12 @@ public class EzWebFolderGWController_m {
 			ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, folderId ,tenantId, userId, offset, user.getCompanyId(), user.getUserName(), user.getUserName2(), timeUTC);
 			
 			result.put("status", "ok");
-			result.put("code", "0");
+			result.put("code", 0);
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 2);
 		}
 		
 		logger.debug("moveTrashCan ended");
