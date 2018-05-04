@@ -3633,7 +3633,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else {
 				for(int i = 0; i< hlength; i ++){
 					resultXML.append("<CELL>");
-					resultXML.append("<VALUE>");
+					resultXML.append("<VALUE><![CDATA[");
 					FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase();
 					
 					if(FieldName.equals("APRMEMBERDEPTNAME")) {
@@ -3649,7 +3649,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					
 					resultXML.append(getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet));
-					resultXML.append("</VALUE>");
+					resultXML.append("]]></VALUE>");
 					
 					if (i == 0) {
 						resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent()) + "</DATA1>");
@@ -3657,8 +3657,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA3>");
 						resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("APRDEPTSN").item(k).getTextContent()) + "</DATA4>");
 						resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("APRDEPTMEMBERSN").item(k).getTextContent()) + "</DATA5>");
-						resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent()) + "</DATA10>");
-						resultXML.append("<DATA11>" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent()) + "</DATA11>");
+						resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent()) + "]]></DATA10>");
+						resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent()) + "]]></DATA11>");
 					}
 					
 					resultXML.append("</CELL>");
@@ -21743,14 +21743,45 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang) throws Exception {
+	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang, String approvalFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANGTYPE", lang);
 		map.put("v_TENANTID", tenantId);
 		map.put("companyID", companyID);
 		map.put("v_DEPTID", deptID);
-		logger.debug("lang : "+lang+"/ tenantid : "+tenantId+"/ companyid : "+companyID +"deptdi : "+deptID );
+		map.put("approvalFlag", approvalFlag);
+		
+		logger.debug("lang : "+lang+"/ tenantid : "+tenantId+"/ companyid : "+companyID +"/ deptdi : "+deptID +"/ approvalFlag : "+approvalFlag);
+		
 		List<ApprGTaskVO> CodeContainerList = ezApprovalGDAO.getCodeContainer(map);
+		List<ApprGLeftVO> apprGetKeepTypeList = ezApprovalGDAO.getKeepType(map);
+		
+		/* 2018-05-03 천성준 - 분류코드 보존기간별로 CODELIST의 name값 매칭 & 세팅 */
+		for (int i = 0; i < CodeContainerList.size(); i++) {
+			switch (CodeContainerList.get(i).getKeepingPeriod()) {
+			case "1": // 1년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(0).getName().split(";")[1]);
+				break;
+			case "2": // 2년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(1).getName().split(";")[1]);
+				break;
+			case "3": // 3년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(2).getName().split(";")[1]);
+				break;
+			case "5": // 5년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(3).getName().split(";")[1]);
+				break;
+			case "10": // 10년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(4).getName().split(";")[1]);
+				break;
+			case "100": // 준영구
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(5).getName().split(";")[1]);
+				break;
+			case "1000": // 영구
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(6).getName().split(";")[1]);
+				break;
+			}
+		}
 		
 		return CodeContainerList;
 	}

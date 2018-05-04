@@ -67,7 +67,7 @@ function strChk(str, speChar, strLen, kindMsg) {
 		
 		if (strLen !== undefined) {
 			if (strTrim.length >= strLen) {
-				msg = kindMsg + strLen.toString() + lengthMsg;
+				msg = kindMsg + " " + strLen + lengthMsg;      
 			} 
 		}
 	}else {
@@ -163,13 +163,11 @@ function addLetterList(jsonArr) {
 	if (listCount !== 0) {
 		for (i = 0; i < listCount; i++) {
 			var langDisplayName = strLang == 1 ? jsonArr[i].displayname : jsonArr[i].displayname2;
-			
 			letterListHtml += "<li id='lt" + jsonArr[i].letterNo + "' data-letterNo='" + jsonArr[i].letterNo + "' data-letterId='" + jsonArr[i].letterId + 
 			"' data-letterBoxNo='" + jsonArr[i].letterBoxNo + "'>"; 
-			letterListHtml += "<span style='float:left'>" + langDisplayName.replace(/</gi, "&lt;") + "</span>";
 			
 			if (pageType == 'letter_user') {
-				
+				letterListHtml += "<span style='float:left; width:100%'>" + langDisplayName.replace(/</gi, "&lt;") + "</span>";
 				if (searchMode) {
 					$(".lmLetterTitle").empty();
 					$(".lmLetterTitle").html("<span id='span1'>" + letterListMsg + "</span><b id='b1'>" + letterPathMsg + "</b>");
@@ -191,6 +189,7 @@ function addLetterList(jsonArr) {
 					letterListHtml += "<b title='" + boxName + "'>" + boxName + "</b>";
 				}
 			} else {
+				letterListHtml += "<span style='float:left;'>" + langDisplayName.replace(/</gi, "&lt;") + "</span>";
 				letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp(this)'>" + modifyMsg + "</button>";
 				letterListHtml += "<button class='lmLetterDeleteBtn'>" + deleteMsg + "</button>";
 			}
@@ -241,6 +240,13 @@ function letterListCss(pageType, searchMode) {
 	}
 }
 
+// 미리보기 onload
+function onloadPreview(ifr) {
+	var ifrHead = $(ifr).contents().find("head");
+	
+	$(ifrHead).html("<style>p {margin-top: 0; margin-bottom: 0;}</style>");
+}
+
 // 편지지 선택 (개별 조회 미리보기)
 $(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect)", function(){
 	var letterNo = $(this).attr("data-letterno");
@@ -263,3 +269,4 @@ $(document).on("mouseover", ".lmLetterListUl li:not('.lmLetterSelect')", functio
 $(document).on("mouseleave", ".lmLetterListUl li:not('.lmLetterSelect')",function(){
 	$(this).css("background","none");
 });
+

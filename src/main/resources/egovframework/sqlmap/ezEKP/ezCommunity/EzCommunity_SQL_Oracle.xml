@@ -4794,30 +4794,43 @@
 <!-- 		{CALL EZSP_COMM_MAKE_OK_SET1(#v_LOGOFILENAME#, #v_LOGOFILENAME_THUMBNAIL#, #v_FILENAME#, #v_FILESIZE#)} -->
 <!-- 	</procedure> -->
 	<update id="EzCommunityDAO.commMakeOkSet1Update"				parameterClass="Map">
-		<![CDATA[
+<![CDATA[
 			UPDATE
 				TBL_C_CLUB
-			SET
-				c_logo = #v_LOGOFILENAME#,
-				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
-			WHERE
-				c_clubno = #v_FILENAME#
+		]]>
+			<dynamic prepend="SET">
+				<isNotEmpty property="v_LOGOFILENAME" prepend=",">
+					<![CDATA[
+						c_logo = #v_LOGOFILENAME#
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="v_LOGOFILENAME_THUMBNAIL" prepend=",">
+					<![CDATA[
+						c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
+					]]>
+				</isNotEmpty>	
+				</dynamic>
+		<![CDATA[
+				WHERE
+				c_clubno = #v_CODE#
 			AND
 				tenant_id = #tenantID#
 		]]>
-	</update>
+</update>
 	<insert id="EzCommunityDAO.commMakeOkSet1Insert"				parameterClass="Map">
-		<![CDATA[
+<![CDATA[
 			INSERT INTO TBL_LOGO_SIZE
 				(c_clubno,
 				logo_size,
+				banner_size,
 				tenant_id)
 			VALUES
-				(#v_FILENAME#,
-				#v_FILESIZE#,
+				(#v_CODE#,
+				#v_LOGOFILESIZE#,
+				#v_THUMBFILESIZE#,
 				#tenantID#)
 		]]>
-	</insert>
+</insert>
 	
 <!-- 	<procedure id="EzCommunityDAO.commMAkeOkSet2"				parameterClass="Map"> -->
 <!-- 		{CALL EZSP_COMM_MAKE_OK_SET2(#v_BANNERFILENAME#, #v_FILENAME#, #v_FILESIZE#)} -->
@@ -5624,15 +5637,31 @@
 <!-- 	</procedure> -->
 	<update id="EzCommunityDAO.adminLogoOkUpdate1"			parameterClass="Map">
 		<![CDATA[
-			UPDATE
-				TBL_C_CLUB
-			SET
-				c_logo = #v_LOGOFILENAME#,
-				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
-			WHERE
-				RTRIM(c_clubno) = #v_FILENAME#
-			AND
-				tenant_id = #tenantID#
+				UPDATE
+					TBL_C_CLUB
+		]]>
+			<dynamic prepend="SET">
+				<isNotEmpty property="v_LOGOFILENAME" prepend=",">
+					<![CDATA[
+						c_logo = #v_LOGOFILENAME#
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="v_LOGOFILENAME_THUMBNAIL" prepend=",">
+					<![CDATA[
+						c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
+					]]>
+				</isNotEmpty>	
+				<isNotEmpty property="v_COPTYPE" prepend=",">
+					<![CDATA[
+						c_type = #v_COPTYPE#
+					]]>
+				</isNotEmpty>	
+			</dynamic>
+		<![CDATA[
+				WHERE
+					RTRIM(c_clubno) = #v_FILENAME#
+				AND
+					tenant_id = #tenantID#
 		]]>
 	</update>
 	

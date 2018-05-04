@@ -49,12 +49,13 @@
 		            if (xmldomNodes.length > 0) {
 		                g_DispFlag = SelectSingleNodeValue(xmldomNodes[0], "DISPFLAG");
 		                g_DispEndDate = SelectSingleNodeValue(xmldomNodes[0], "DISPENDDATE");
-		
-		                if (g_DispFlag == "1" && g_DispEndDate == "")
-		                {
-		                    OpenAlertUI("<spring:message code='ezApprovalG.t1014'/>" + "'" + "<spring:message code='ezApprovalG.t269'/>" + "'" + "<spring:message code='ezApprovalG.t1015'/>");
+
+						// 2018-05-04 강민수92 QC #12584 번 알러트창 안뜨게 수정 
+// 		                if (g_DispFlag == "1" && g_DispEndDate == "")
+// 		                {
+// 		                    OpenAlertUI("<spring:message code='ezApprovalG.t1014'/>" + "'" + "<spring:message code='ezApprovalG.t269'/>" + "'" + "<spring:message code='ezApprovalG.t1015'/>");
 // 		                    window.close();
-		                }
+// 		                }
 		                
 		                if("${userInfo.lang}" == "1")  { 
 		                	tdTitle.innerHTML = SelectSingleNodeValue(xmldomNodes[0], "TITLE");

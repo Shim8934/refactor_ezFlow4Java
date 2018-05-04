@@ -398,7 +398,7 @@
 									FROM 
 										VAPRDOINGDOCLIST 
 		               				WHERE 
-		               					APRMEMBERID IN ($v_USERIDS$) 
+		               					APRMEMBERID = #v_USERID#
 		               				AND 
 		               					APRTYPE = '015'
 		               				AND 
@@ -8899,8 +8899,26 @@
 	   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 	   	]]>
 	   	UNION ALL 
-	   	<!-- 공람 문서 -->
+	   	<!-- 공람 문서 --><!-- 2018-04-30 천성준 (#12468) 대리 결재자여도 회람(공람)문서는 제외 -->
 		<![CDATA[
+   			SELECT 
+   				COUNT(DOCID) 
+   			FROM 
+   				VAPRDOINGDOCLIST 
+   			WHERE 
+   				APRMEMBERID = #v_USERID# 
+   			AND 
+   				APRTYPE = '015' 
+   			AND 
+   			 	STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
+	   		AND 
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
+	   		AND	
+	   			TENANT_ID = #v_TENANTID#
+	   		AND
+	   			COMPANYID = #companyID#		
+	   	]]>
+		<!-- <![CDATA[
    			SELECT 
    				COUNT(DOCID) 
    			FROM 
@@ -8917,7 +8935,7 @@
 	   			TENANT_ID = #v_TENANTID#
 	   		AND
 	   			COMPANYID = #companyID#		
-	   	]]>
+	   	]]> -->
 	   	UNION ALL 
 	   	        <!-- 공람한 문서 -->
         <![CDATA[
@@ -9863,8 +9881,24 @@
 			AND
 				COMPANYID = #companyID#
 		</isEqual>
-		<!-- 공람할 문서 -->
+		<!-- 공람할 문서 --><!-- 2018-04-30 천성준 (#12468) 대리 결재자여도 회람(공람)문서는 제외 -->
 		<isEqual property="v_LISTTYPE" compareValue="99">
+		<![CDATA[
+			 SELECT 
+			 		COUNT(DOCID) 
+			 FROM 
+			 		VAPRDOINGDOCLIST  
+			 WHERE 
+			 		APRMEMBERID = #v_USERID#
+			 AND 
+			 		APRTYPE = '015'
+			 AND
+					TENANT_ID =#v_TENANTID# 
+		     AND
+					COMPANYID = #companyID# 
+		]]>
+		</isEqual>
+		<!-- <isEqual property="v_LISTTYPE" compareValue="99">
 		<![CDATA[
 			 SELECT 
 			 		COUNT(DOCID) 
@@ -9879,7 +9913,7 @@
 		     AND
 					COMPANYID = #companyID# 
 		]]>
-		</isEqual>
+		</isEqual> -->
 		<!-- 공람한 문서 -->
 		<isEqual property="v_LISTTYPE" compareValue="10">
 		<![CDATA[
@@ -19278,8 +19312,7 @@
 			SUMMARY , 
 			FormName2 , 
 			ItemName2, 
-			TENANT_ID,
-            PUBLICITYYN  
+			TENANT_ID
 		  FROM 
 		  	TBL_EXPAPRDOCINFO
 		  WHERE  
@@ -21467,7 +21500,7 @@
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_AprState#, 
-   			ProcessDate = #v_SYSDATE#
+   			ProcessDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS')
 		WHERE 
 			DocID = #v_DOCID# 
 		AND 

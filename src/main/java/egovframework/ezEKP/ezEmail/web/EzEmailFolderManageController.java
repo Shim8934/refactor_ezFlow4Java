@@ -71,8 +71,8 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezEmail/mailFolderManage.do")
 	public String mailFolderManage(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		String pDeleteBoxID = egovMessageSource.getMessage("ezEmail.t99000028", locale);
-		String pDeleteBoxName = egovMessageSource.getMessage("ezEmail.t99000028", locale);
+		String pDeleteBoxID = ezEmailUtil.getTrashFolderId(locale);
+		String pDeleteBoxName = ezEmailUtil.getTrashFolderId(locale);
 		
 		model.addAttribute("pDeleteBoxID", pDeleteBoxID);
 		model.addAttribute("pDeleteBoxName", pDeleteBoxName);
@@ -153,7 +153,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	        switch (cmd) {
 	            case "NEW": 
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userAccount, password, egovMessageSource, locale);
+	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	if (!name.equals("") && !url.equals("")) {
 	            		String folderPath = ia.getFolder(url).getFolder(name).getFullName();
 	            		int result = ia.createFolder(folderPath);
@@ -168,7 +168,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	                break;
 	            case "MODIFY":
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userAccount, password, egovMessageSource, locale);
+	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	
 	            	if (!name.equals("") && !url.equals("")) {
 	            		String oldFolderPath = url;
@@ -187,7 +187,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	                break;
 	            case "MOVE": //폴더 이동(폴더삭제기능 포함 : 지운편지함으로 이동)
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userAccount, password, egovMessageSource, locale);
+	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	
 	            	if (!destination.equals("") && !url.equals("")) {
 	            		String oldFolderPath = url;
@@ -206,7 +206,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	                break;
 	            case "COPY": //특정 편지함을 복사 - 하위폴더는 복사하지 않음(닷넷버전은 하위폴더도 복사)
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userAccount, password, egovMessageSource, locale, 120000, 20000);
+	            			userAccount, password, egovMessageSource, locale, 120000, 20000, ezEmailUtil);
 	            	
 	            	if (!destination.equals("") && !url.equals("")) {
 	            		Folder oldFolder = ia.getFolder(url);
@@ -232,7 +232,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	                break;
 	            case "DEL": //지운편지함 하위에 있는 폴더 영구삭제 - 하위폴더도 삭제됨(메일도 삭제됨)
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userAccount, password, egovMessageSource, locale);
+	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	
 	            	if (!url.equals("")) {
 	            		int result = ia.deleteFolder(url);
@@ -245,7 +245,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	                break;
 	            case "MAILREALDEL": //지운편지함에 있는 모든 메시지 영구삭제
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userAccount, password, egovMessageSource, locale);
+	            			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 	            	
 	            	if (!url.equals("")) {
 	            		Folder folder = ia.getFolder(url);
@@ -262,10 +262,10 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	                break;
 	            case "MAILDEL": //특정폴더의 모든 메시지 삭제(지운편지함으로 이동)
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userAccount, password, egovMessageSource, locale, 120000, 20000);
+	            			userAccount, password, egovMessageSource, locale, 120000, 20000, ezEmailUtil);
 	            	
 	            	if (!url.equals("")) {
-	            		String trashFolderName = egovMessageSource.getMessage("ezEmail.t99000028", locale);
+	            		String trashFolderName = ezEmailUtil.getTrashFolderId(locale);
             			Folder trashFolder = ia.getFolder(trashFolderName);
             			IMAPFolder folder = (IMAPFolder)ia.getFolder(url);
             			
@@ -362,7 +362,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-        			userAccount, password, egovMessageSource, locale);
+        			userAccount, password, egovMessageSource, locale, ezEmailUtil);
 			
 			Folder f = ia.getFolder(folderId);
 			

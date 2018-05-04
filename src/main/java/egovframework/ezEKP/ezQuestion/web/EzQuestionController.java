@@ -2986,8 +2986,10 @@ public class EzQuestionController extends EgovFileMngUtil {
 				}
 			}
 //		table
+			/* 18-05-02 김민성 - 전자설문 상세분석 > 분석결과저장 파일명 수정 */
 		}else if(hidRType2.equals("T")){
-			pFileName = strDate+"_Table.xls";
+			//pFileName = strDate+"_Table.xls";
+			pFileName = strDate+"_Table";
 			sheet = workbook.createSheet("table");
 			tableHeadNode = tableNode.getChildNodes().item(0);
 			tableBodyNode = tableNode.getChildNodes().item(1);
@@ -3011,7 +3013,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}
 //		graph
 		}else{
-			pFileName = strDate+"_Graph.xls";			
+			//pFileName = strDate+"_Graph.xls";	
+			pFileName = strDate+"_Graph";			
 			sheet = workbook.createSheet("graph");
 			tableBodyNode = tableNode.getChildNodes().item(0);
 			

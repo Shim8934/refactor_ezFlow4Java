@@ -1,4 +1,4 @@
-﻿/*###########################################################################################
+﻿﻿/*###########################################################################################
 
 
 
@@ -612,6 +612,11 @@ function ListView() {
             	colCount = 3;
             }
             
+            // 변경내역 > 첨부파일이력 > 데이터 없을시 쪽수 컬럼 빈칸 안뜨게 2018-04-26 강민수92
+            if(_thisID == "lvAttachList") {
+            	colCount = 5;
+            }
+            
             objTd.setAttribute("colSpan", colCount);
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
@@ -806,14 +811,22 @@ function ListView() {
                 
                 // 첨부파일리스트에 쪽수 컬럼 제거 2018-03-21 강민수92
                 if (_thisID == "attachList") {
-                	 if (j == 3) {
+                	if (j == 1) {
+                		objTd.title = strValue;
+                	}
+                	
+                	if (j == 3) {
                 		objTd.style.display = "none";
                 	}
                 }
                 
                 // 변경내역 > 첨부파일 이력 쪽수 컬럼 제거 2018-04-26 강민수92
                 if (_thisID == "lvAttachList") {
-                	 if (j == 5) {
+                	if (j == 1) {
+                		objTd.title = strValue;
+                	}
+                	
+                	if (j == 5) {
                  		objTd.style.display = "none";
                  	}
                 }
@@ -839,7 +852,10 @@ function ListView() {
         objTr.style.cursor = "pointer";
         objTr.onmouseover = new Function("tr_mouseover(this)");
         objTr.onmouseout = new Function("tr_mouseout(this)");
-
+        
+        //첨부파일일때 쪽수 컬럼 안보이기 위함 2018-04-26 강민수92
+        var objTrArr = objTr.id.split("_");
+        
         if (_rowonclick != null)
             objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\", " + _rowonclick + ");");
         else
@@ -865,7 +881,15 @@ function ListView() {
 
             var oText = document.createTextNode(strValue);
             var objTd = document.createElement("TD");
-
+            
+            if (objTrArr[0] == "attachList") {
+            	if (j == 1) {
+            		objTd.title = strValue;
+            	}
+            	if (j == 3) {
+            		objTd.style.display = "none";
+            	}
+            }
             objTd.style.whiteSpace = "nowrap";
             objTd.style.overflow = "hidden";
             objTd.style.textOverflow = "ellipsis";
