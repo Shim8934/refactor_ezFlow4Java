@@ -119,6 +119,8 @@ public interface EzAttitudeService {
 	
 	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String duplicated, String offset, String companyId, int tenantId) throws Exception;
 	
+	public void absentedListSendMail(List<AdminAttitudeVO> list, String fromName, String fromEmail) throws Exception;
+	
 	public void attSaveAppModify(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
 			String writerDeptId, String writerDeptName, String writerDeptName2 ,String changeDate, String delFlag, String content,String offset, String originDate) throws Exception;
 	
@@ -136,5 +138,4 @@ public interface EzAttitudeService {
 	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String deptId, String offset, String year,String typeId, int tenantId) throws Exception;
 
 	public List<JournalAuthorVO> getCompanyDeptList(String userId, String companyId, int tenantId);
-	
 }

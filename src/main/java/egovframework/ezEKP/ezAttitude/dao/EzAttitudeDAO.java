@@ -256,6 +256,7 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (AttitudeStatisVO) select("ezAttitudeAdminDAO.getAttitudeUserStatistics", map);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<JournalAuthorVO> getCompanyDeptList(Map<String, Object> map) {
 		return (List<JournalAuthorVO>) list("ezAttitudeAdminDAO.getCompanyDeptList", map);
 	}

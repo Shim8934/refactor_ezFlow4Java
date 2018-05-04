@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.List;
@@ -1696,6 +1695,52 @@ public class EzAttitudeGWController {
 		}
 		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/absent] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 근태관리 미입력자 메일발송
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/sendmail", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	 public JSONObject absentedListSendMail(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/sendmail] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String companyId = request.getParameter("companyId");
+			String searchUserName = request.getParameter("searchUserName");
+			String searchDeptName = request.getParameter("searchDeptName");
+			String searchTitle = request.getParameter("searchTitle");
+			String searchStartDate = request.getParameter("searchStartDate");
+			String searchEndDate = request.getParameter("searchEndDate");
+			String orderCell = request.getParameter("orderCell");
+			String orderOption = request.getParameter("orderOption");
+			String offsetMin = request.getParameter("offsetMin");
+			String duplicated = request.getParameter("duplicated");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantID = info.getTenantId();
+			String offset = info.getOffSet();
+			
+			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, duplicated, offset, companyId, tenantID);
+			
+			ezAttitudeService.absentedListSendMail(list, info.getUserName(), info.getEmail());
+			
+			JSONObject data = new JSONObject();
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "success");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "error");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/sendmail] ended.");
 		
 		return result;
 	}
