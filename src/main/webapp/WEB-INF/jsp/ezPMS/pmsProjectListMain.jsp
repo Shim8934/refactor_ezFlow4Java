@@ -370,7 +370,6 @@ function setProjectList() {
 		searchByOverview : searchByOverview
 	}
 	
-	console.log(currentPage);
 	$.ajax({
 		type : "post",
 		contentType : "application/json",
@@ -549,8 +548,8 @@ function addFavoriteMemo(projectId) {
 			success : function(result) {
 				if (result == "0") {
 					alert("프로젝트가 즐겨찾기 되었습니다.");
-					$("#"+projectId).attr("src", "/images/ImgIcon/icon-flag.gif");
-					$("#"+projectId).attr("onclick", "deleteFavoriteMemo(this)");
+					$("#"+projectId).find("img").attr("src", "/images/ImgIcon/icon-flag.gif");
+					$("#"+projectId).find("img").attr("onclick", "deleteFavoriteMemo(this)");
 				
 				} else {
 					alert("이미 추가된 프로젝트 입니다.");
@@ -564,11 +563,47 @@ function addFavoriteMemo(projectId) {
 	}
 }
 
-function addFavorite() {
-	var response = confirm("프로젝트를 즐겨찾기 하시겠습니까?");
+function deleteFavoriteMemo(projectId) {
+	var response = confirm("프로젝트 즐겨찾기를 해제하시겠습니까?");
 	if (response == true) {
-		getCheckedVal();
 		
+		data = {
+				status : "F",
+				projectList : projectId
+		}
+		
+		$.ajax({
+			type : "POST",
+			contentType: "application/json; charset=UTF-8",
+			url : "/ezPMS/deleteFavoriteProject.do",
+			data :JSON.stringify(data),
+			success : function(result) {
+				alert("즐겨찾기가 해제되었습니다.");
+				$("#"+projectId).find("img").attr("src", "/images/ImgIcon/view-flag.gif");
+				$("#"+projectId).find("img").attr("onclick", "addFavoriteMemo(this)");
+				
+				if (listProjectStatus == "F") {
+					setProjectList();
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+			}
+		});
+		
+	}
+}
+
+function addFavorite() {
+	var result = getCheckedVal();
+	var response;
+	
+	if (result == 1) {
+		response = confirm("프로젝트를 즐겨찾기 하시겠습니까?");
+	} else {
+		return;
+	}
+	
+	if (response == true) {
 		data = {
 				status : "F",
 				projectList : checkedVal
@@ -581,9 +616,9 @@ function addFavorite() {
 			data :JSON.stringify(data),
 			success : function() {
 				if (result == "0") {
-					alert("프로젝트가 즐겨찾기 되었습니다.");
 					checkedVal = "";
 					setProjectList(); 
+					alert("프로젝트가 즐겨찾기 되었습니다.");
 				} else {
 					alert("이미 추가된 프로젝트 입니다.");
 					return;
@@ -596,7 +631,15 @@ function addFavorite() {
 }
 
 function deleteFavorite() {
-	var response = confirm("프로젝트를 해제 하시겠습니까?");
+	var result = getCheckedVal();
+	var response;
+	
+	if (result == 1) {
+		response = confirm("프로젝트를 해제 하시겠습니까?");
+	} else {
+		return;
+	}
+	
 	if (response == true) {
 		getCheckedVal();
 		
@@ -650,10 +693,10 @@ function getCheckedVal() {
 	
 	if (checkedVal == "") {
 		alert("하나 이상의 프로젝트를 선택해 주세요.");
-		return;
+		return 0;
 	}
 	
-	
+	return 1;
 }
 
 function getSearchProject() {

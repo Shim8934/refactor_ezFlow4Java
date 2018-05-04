@@ -110,4 +110,6 @@ public interface EzPMSService {
 	
 	public List<TaskMemberVO> getTaskMemberList(int tenantId, long taskId, String lang);
 
+	public void deleteProjectMember(int projectId, int tenantId);
+
 }

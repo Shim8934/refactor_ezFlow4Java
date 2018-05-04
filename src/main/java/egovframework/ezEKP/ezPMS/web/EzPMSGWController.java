@@ -382,21 +382,54 @@ public class EzPMSGWController {
 	//프로젝트 수정
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject updateProject(@PathVariable int projectId, HttpServletRequest request) throws Exception {
+	public JSONObject updateProject(@RequestBody JSONObject json, @PathVariable int projectId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("creatorId"));
+			int tenantId = info.getTenantId();
 			
 			ProjectInfoVO project = new ProjectInfoVO();
-			ezPMSService.updateProject(project, info.getTenantId());
+			project.setProjectId(Integer.parseInt(request.getParameter("projectId")));
+			project.setProjectName(request.getParameter("projectName"));
+			project.setWeightInput(Integer.parseInt(request.getParameter("weightInput")));
+			project.setPlanEndDate(request.getParameter("planEndDate"));
+			project.setPlanStartDate(request.getParameter("planStartDate"));
+			project.setOverview(request.getParameter("overview"));
+			project.setAlamMailStatus(Integer.parseInt(request.getParameter("endAlamStatus")));
+			project.setHeadManagerId(request.getParameter("headManagerId"));			
+			project.setCreateDate(request.getParameter("createDate"));
+			
+			ezPMSService.updateProject(project, tenantId);
+			
+			//멤버 삭제 후 다시 넣기
+			ezPMSService.deleteProjectMember(projectId, tenantId);
+			
+			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json.get("managerList");
+			projectMemberList.addAll((List<Map<String, Object>>) json.get("participantList"));
+			projectMemberList.addAll((List<Map<String, Object>>) json.get("viewerList"));
+			System.out.println(projectMemberList.size());
+			for (int i = 0; i < projectMemberList.size(); i++) {
+				String userId = (String)projectMemberList.get(i).get("userId");
+				String nameType = (String)projectMemberList.get(i).get("userIdType");
+				
+				ProjectMemberVO member = ezPMSService.getUserInfo(userId, tenantId, nameType);
+				member.setMemberRoleId((int)projectMemberList.get(i).get("memberRoleId"));
+				member.setProjectId(projectId);
+				member.setUserIdType(nameType);
+				
+				ezPMSService.addProjectMember(member, Integer.parseInt(request.getParameter("tenantId")));
+			}
+			
+			JSONObject data = new JSONObject();
+			data.put("projectId", projectId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			

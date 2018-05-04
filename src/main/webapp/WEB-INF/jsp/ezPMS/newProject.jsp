@@ -30,15 +30,16 @@
 var projectName = "${project.projectName}";
 var writerName = "${userName}";
 var weightInput = "${project.weightInput}";
-var planStartDate = "${planStartDate}";
-var planEndDate = "${planEndDate}";
+var planStartDate = "${project.planStartDate}";
+var planEndDate = "${project.planEndDate}";
 var managerList = null;
 var participantList = null;
 var viewerList = null;
-var overview = null;
-var endAlamStatus = null;
-var headManagerId = null;
+var overview = "${project.overview}";
+var endAlamStatus = "${project.alamMailStatus}";
+var headManagerId = "${project.headManagerId}";
 var mode = "${mode}"
+var projectId = "${project.projectId}";
 
  $(function() {	
 	getDatePicker();
@@ -52,7 +53,51 @@ var mode = "${mode}"
 	});
 	
 	if (mode == "edit") {
+		//사이즈 재정의
+		$(".nameList").css("height", "58px");
+		$("#overview").css("height", "60px");
 		
+		//참여 멤버 넣기
+		var memberList = JSON.parse('${project.projectMember}');
+		managerList = [];
+		participantList = [];
+		viewerList = [];		
+		
+		for (var i = 0; i < memberList.length; i++) {
+			var member = memberList[i];
+			
+			if (member.memberRoleId == 1) {
+				managerList.push(member);
+			} else if (member.memberRoleId == 2) {
+				participantList.push(member);
+			} else {
+				viewerList.push(member);
+			}
+		}
+	
+		//newProject에 value넣어주기
+		$("#projectName").val(projectName);
+		$(":input:radio[name=weightInput]").val(weightInput).prop("checked", true);
+		$("#Sdatepicker").val(planStartDate);
+		$("#Edatepicker").val(planEndDate);
+		$("#overview").val(overview);
+		
+		if (endAlamStatus == -1) {
+			$("#endAlam").prop("checked", false);
+		} else {
+			$("#endAlam").prop("checked", true);
+			
+			if (endAlamStatus == 1 || endAlamStatus == 3 || endAlamStatus == 5 || endAlamStatus == 10) {
+				$("#daysBeforeAlam").val(endAlamStatus).attr("seleced", "selected");
+			} else {
+				$("#daysBeforeAlam").css("display", "none");
+				$("#write").css("display", "");
+				$("#write").val(endAlamStatus);
+			}
+				
+		}
+		console.log(managerList);
+		applyList();
 	}
  
  });
@@ -195,17 +240,10 @@ var mode = "${mode}"
 		  alert("시작날짜가 종료날짜보다 늦을 수 없습니다.");
 		  return;
 	  }
-	  
-	//2. 종료일 < 현재일일 떄, 지연프로젝트로 넘어갈 것이라는 confirm창 띄우기
-	 if (endDateComp.getTime() < todayComp.getTime()) {
-		 var confCheck = confirm("종료일이 현재일보다 빠르기 때문에 지연프로젝트로 넘어갑니다. 계속하시겠습니까?");
-		 
-		 if (confCheck != true) {
-			 return;
-		 }
-	 }
 	
 	var data = {
+			mode : mode,
+			projectId : projectId,
 			projectName : projectName,
 			weightInput : weightInput,
 			planStartDate : planStartDate,
@@ -226,9 +264,15 @@ var mode = "${mode}"
 		data :JSON.stringify(data),
 		success : function(result) {
 			try { 
-				sendNotiMail(result, projectName);
-				alert("새프로젝트가 추가되었습니다.");
-				parent.setProjectList(); 
+				if (mode == "edit") {
+					alert ("프로젝트가 수정되었습니다.");
+					parent.window.location.reload();
+					parent.projectId = projectId;
+				} else {
+					sendNotiMail(result, projectName);
+					alert("새프로젝트가 추가되었습니다.");
+					parent.setProjectList(); 
+				}
 				popupClose();
 			
 			} catch (e) {
@@ -251,22 +295,22 @@ var mode = "${mode}"
 		if(headManagerId == managerList[i].userId) {
 			managerNameList += "<b>"
 			managerNameList += managerList[i].userName;
-			managerNameList += "(" + managerList[i].userDept + ")</b>, ";
+			managerNameList += "(" + managerList[i].userDeptname + ")</b>, ";
 		} else {
 			managerNameList += managerList[i].userName;
-			managerNameList += "(" + managerList[i].userDept + "), ";
+			managerNameList += "(" + managerList[i].userDeptname + "), ";
 		}
 		
 	 }
 	 
 	 for (var i = 0; i < participantList.length; i++) {
 		participantNameList += participantList[i].userName;
-		participantNameList += "(" + participantList[i].userDept + "), ";
+		participantNameList += "(" + participantList[i].userDeptname + "), ";
 	}
 	 
 	 for (var i = 0; i < viewerList.length; i++) {
 		viewerNameList += viewerList[i].userName;
-		viewerNameList += "(" + viewerList[i].userDept + "), ";
+		viewerNameList += "(" + viewerList[i].userDeptname + "), ";
 	}
 	 
 	 managerNameList = managerNameList.substr(0, managerNameList.length - 2);
@@ -302,7 +346,16 @@ var mode = "${mode}"
 </script>
 </head>
 <body class="popup">
-	<h1>새 프로젝트 추가</h1>
+	<h1>
+		<c:choose>
+			<c:when test="${mode eq 'new' }">
+				새 프로젝트 추가
+			</c:when>
+			<c:otherwise>
+				프로젝트 수정
+			</c:otherwise>
+		</c:choose>
+	</h1>
 	<div id="main_body">
 		<table class="content" style="width:100%;">
 			<tr>
@@ -325,13 +378,13 @@ var mode = "${mode}"
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree(managers)"><span>담당자</span></a></th>
-				<td colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="managers"></div></td>
+				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="managers"></div></td>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree(participants)"><span>참여자</span></a></th>
-				<td colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="participants"></div></td>
+				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="participants"></div></td>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree(viewers)"><span>조회자</span></a></th>
-				<td colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="viewers"></div></td>
+				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; height:100%; width:100%" id="viewers"></div></td>
 			<tr>
 				<th>개요</th>
 				<td colspan="3"><textarea id="overview" style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>

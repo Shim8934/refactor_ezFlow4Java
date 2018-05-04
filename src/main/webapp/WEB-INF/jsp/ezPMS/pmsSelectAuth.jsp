@@ -176,12 +176,12 @@
 		   				userDept = str;
 		   				userName = str;
 		   				
-		   				nameType = "dept";
+		   				userIdType = "dept";
 		   			} else {
 		   				var receiverId = selUserId;
 			   			userName = selUserName;
 			   			userDept = selUserDept;
-			   			nameType = "user";
+			   			userIdType = "user";
 		   			}
 		   			
 		   			for(var i = 0; i < authList.length; i++) {
@@ -192,14 +192,14 @@
 		   			
 		   			if (chkFlag) {
 		   				if (authName == "manager") {
-		   					managerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept, "nameType" : nameType});
-		   					authList.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept});
+		   					managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 1, "userDeptname" : userDept, "userIdType" : userIdType});
+		   					authList.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 1, "userDeptname" : userDept});
 		   				} else if (authName == "participant") {
-		   					participantArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 2, "userDept" : userDept, "nameType" : nameType});
-		   					authList.push({"userName" : userName, "userId" : receiverId, "roleId" : 2, "userDept" : userDept});
+		   					participantArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 2, "userDeptname" : userDept, "userIdType" : userIdType});
+		   					authList.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 2, "userDeptname" : userDept});
 		   				} else {
-		   					viewerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 3, "userDept" : userDept, "nameType" : nameType});
-		   					authList.push({"userName" : userName, "userId" : receiverId, "roleId" : 3, "userDept" : userDept});
+		   					viewerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 3, "userDeptname" : userDept, "userIdType" : userIdType});
+		   					authList.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 3, "userDeptname" : userDept});
 		   				}
 		   			} else {
 		   				alert("이미 추가된 사용자 입니다.");
@@ -261,7 +261,7 @@
 			    		strHTML += "<td>";
 			    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
 			    		strHTML += managerArray[i].userName;
-			    		strHTML += "(" + managerArray[i].userDept + ")";
+			    		strHTML += "(" + managerArray[i].userDeptname + ")";
 			    		strHTML += "</td>";
 			    		strHTML += "</tr>";
 			    		strHTML += "</table>";
@@ -274,7 +274,7 @@
 			    		strHTML += "<td>";
 			    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
 			    		strHTML += participantArray[i].userName;
-			    		strHTML += "(" + participantArray[i].userDept + ")";
+			    		strHTML += "(" + participantArray[i].userDeptname + ")";
 			    		strHTML += "</td>";
 			    		strHTML += "</tr>";
 			    		strHTML += "</table>";
@@ -287,7 +287,7 @@
 			    		strHTML += "<td>";
 			    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
 			    		strHTML += viewerArray[i].userName;
-			    		strHTML += "(" + viewerArray[i].userDept + ")";
+			    		strHTML += "(" + viewerArray[i].userDeptname + ")";
 			    		strHTML += "</td>";
 			    		strHTML += "</tr>";
 			    		strHTML += "</table>";
@@ -331,8 +331,8 @@
 	   				drawReceiverList("participant");
 	   				drawReceiverList("viewer");
 	   			} else {
-		   			authList.push({"userName" : userName, "userId" : userId, "roleId" : 1, "userDept" : replaceString(userDept)});
-		   			managerArray.push({"userName" : userName, "userId" : userId, "roleId" : 1, "userDept" : replaceString(userDept), "nameType" : "user"});
+		   			authList.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept)});
+		   			managerArray.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept), "userIdType" : "user"});
 		   			drawReceiverList("manager");
 	   			}
 		   		

@@ -33,7 +33,6 @@ $(function(){
 	</c:forEach>
 	
 	for (var i = 0; i < projectList.length; i++) {
-		console.log(projectList[i].isFavorite);
 		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : projectList[i].progress,
 			fillBackGroundColor:"#9b59b6",

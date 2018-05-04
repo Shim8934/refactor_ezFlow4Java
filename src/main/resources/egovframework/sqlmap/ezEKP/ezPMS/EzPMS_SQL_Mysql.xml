@@ -100,8 +100,13 @@
     <resultMap id="projectMemberVO" class="ProjectMemberVO">
     	<result property="userId"							column="USER_ID"					columnIndex="1"/>
     	<result property="userName"							column="USER_NAME"					columnIndex="2"/>
-    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="3"/>
-    	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="4"/>
+    	<result property="userName2"						column="USER_NAME2"					columnIndex="3"/>
+    	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="4"/>
+    	<result property="userDeptname2"					column="USER_DEPTNAME2"				columnIndex="5"/>
+    	<result property="userPosition"						column="USER_POSITION"				columnIndex="6"/>
+    	<result property="userPosition2"					column="USER_POSITION2"				columnIndex="7"/>
+    	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="8"/>
+    	<result property="userIdType"						column="USER_ID_TYPE"				columnIndex="9"/>
     </resultMap>
     
     <resultMap id="projectTaskVO" class="ProjectTaskVO">
@@ -388,10 +393,16 @@
 	<select id="EzPMSDAO.getProjectMember" parameterClass="Map" resultMap="projectMemberVO" remapResults="true">
 		SELECT
 			USER_ID AS USER_ID,
-			USER_NAME$lang$ AS USER_NAME,
-			USER_DEPTNAME$lang$ AS USER_DEPTNAME,
-			MEMBER_ROLE_ID AS MEMBER_ROLE_ID
-		FROM TBL_PMS_MEMBER
+			USER_NAME,
+			USER_NAME2,
+			USER_DEPTNAME,
+			USER_DEPTNAME2,
+			USER_POSITION,
+			USER_POSITION2,
+			MEMBER_ROLE_ID,
+			USER_ID_TYPE
+		FROM 
+			TBL_PMS_MEMBER
 		WHERE
 			PROJECT_ID = #projectId#
 		AND
@@ -409,13 +420,19 @@
 		UNION
 			SELECT 
 				CN AS USER_ID,
-				DISPLAYNAME$lang$ AS USER_NAME,
-				DESCRIPTION$lang$ AS USER_DEPTNAME,
-				C.MEMBER_ROLE_ID AS MEMBER_ROLE_ID
+				DISPLAYNAME AS USER_NAME,
+				DISPLAYNAME2 AS USER_NAME2,
+				DESCRIPTION AS USER_DEPTNAME,
+				DESCRIPTION2 AS USER_DEPTNAME2,
+				TITLE AS USER_POSITION,
+				TITLE2 AS USER_POSITION2,
+				C.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
+				C.USER_ID_TYPE AS USER_ID_TYPE
 			FROM TBL_USERMASTER D JOIN
 			(SELECT DISTINCT 
 				B.CN AS DEPARTMENT,
-				A.MEMBER_ROLE_ID AS MEMBER_ROLE_ID
+				A.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
+				A.USER_ID_TYPE AS USER_ID_TYPE
 			FROM
 				TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
 			ON
@@ -1116,4 +1133,40 @@
 				TASK_ID = #taskId#
 		]]>
 	</select>
+	
+	<delete id="EzPMSDAO.deleteProjectMember" parameterClass="map">
+		<![CDATA[
+			DELETE	FROM
+				tbl_pms_member	
+			WHERE	
+				PROJECT_ID = #projectId# 
+			AND	
+				TENANT_ID = #tenantId#
+		]]>
+	</delete>
+	
+	<update id="EzPMSDAO.updateProjectInfo" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				tbl_pms_project	
+			SET	
+				PROJECT_NAME = #projectName#,
+				WEIGHT_INPUT = #weightInput#,
+				PLAN_START_DATE = #planStartDate#,
+				PLAN_END_DATE = #planEndDate#,
+				OVERVIEW = #overview#,
+				ALAM_MAIL_STATUS = #alamMailStatus#,
+				HEAD_MANAGER_ID = #headManagerId#,
+				WORKINGDAY = #workingday#,
+				REST_DUEDAY = #restDueday#,
+				HEAD_MANAGER_DEPTNAME = #headManagerDeptname#,
+				HEAD_MANAGER_DEPTNAME2 = #headManagerDeptname2#,
+				HEAD_MANAGER_NAME = #headManagerName#,
+				HEAD_MANAGER_NAME2 = #headManagerName2#
+			WHERE
+				PROJECT_ID = #projectId#
+			AND	
+				TENANT_ID = #tenantId#
+		]]>	
+	</update>
 </sqlMap>

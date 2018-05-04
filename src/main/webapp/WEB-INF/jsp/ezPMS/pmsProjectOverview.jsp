@@ -19,7 +19,7 @@
 <script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script type="text/javascript">
-var CurrentHeight = document.documentElement.clientHeight - 110;
+var CurrentHeight = document.documentElement.clientHeight - 100;
 var progress = "${project.progress}";
 var status = "${project.status}";
 var strHTML = "";
@@ -27,19 +27,20 @@ var projectId = "${project.projectId}";
 
 $(document).ready(function(){
 	$(window).resize(function() {
-		CurrentHeight = $(window).height()-110;
+		CurrentHeight = $(window).height()-100;
 		$(".overview").css("height", CurrentHeight + "px");
 		$(".kanban").css("height", CurrentHeight - 14 + "px");
 	});
 });
 
 $(function() {
-	CurrentHeight = $(window).height()-110;
+	CurrentHeight = $(window).height()-100;
 	$(".overview").css("height", CurrentHeight + "px");
-	$(".kanban").css("height", CurrentHeight - 10 + "px");
+	$(".kanban").css("height", CurrentHeight - 14 + "px");
 	
 	ableToChangeStatus();
 	initProgressBar();
+	
 });
 
 function initProgressBar() {
@@ -112,7 +113,7 @@ function ableToChangeStatus() {
 }
 
 function editProjectInfo() {
-	addProjectPopup(10, 20, 845, 555, "/ezPMS/newProject.do?mode=" + "edit" + "&projectId=" + projectId);
+	addProjectPopup(5, 20, 845, 480, "/ezPMS/newProject.do?mode=" + "edit" + "&projectId=" + projectId);
 }
 
 </script>
@@ -228,7 +229,7 @@ function editProjectInfo() {
 
 <div id="iconArea" class="rightPart">
 		<div id="printReport" class="icon">출력</div>
-		<div id="editProjectInfo" class="icon" onclick="editProjectInfo()"><img src="/images/ezLadder/icon_game03_no.png" style="width:40px; height:40px"></div>
+		<div id="editProjectInfo" class="icon" onclick="editProjectInfo()" style="cursor:pointer;"><img src="/images/ezLadder/icon_game03_no.png" style="width:40px; height:40px"></div>
 		<div id="setting" class="icon">환경설정</div>
 	</div>
 <div id="overviewArea" class="overview rightPart">

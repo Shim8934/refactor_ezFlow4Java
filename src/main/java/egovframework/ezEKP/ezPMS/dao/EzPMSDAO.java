@@ -183,8 +183,15 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<TaskMemberVO> getTaskMemberList(Map<String, Object> map) {
-		System.out.println(map);
-		System.out.println(list("EzPMSDAO.getTaskMemberList", map));
 		return (List<TaskMemberVO>) list("EzPMSDAO.getTaskMemberList", map);
+	}
+
+	public void deleteProjectMember(HashMap<String, Object> map) {
+		delete ("EzPMSDAO.deleteProjectMember", map);		
+	}
+
+	public void updateProjectInfo(Map<String, Object> map) {
+		update ("EzPMSDAO.updateProjectInfo", map);
+		
 	}
 }
