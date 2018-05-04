@@ -48,7 +48,8 @@
 	        		$("#taskStatus").attr("checked", true);
 	        	}
 	        	
-	        	if (completerate == '100') {
+	        	/* 18-05-03 김민성 - 완료율 0% 지연여부 체크 비활성화 */
+	        	if (completerate == '0' || completerate == '100') {
 	        		$("#taskStatus").attr("disabled", true);
 	        	}
 				
@@ -70,7 +71,7 @@
 	        		if ($("#taskStatus").is(":checked")) {
 	        			if ($("#completeRate").val() == "0") {
 							$("#taskStatus").attr("checked", false);
-// 							$("#taskStatus").attr("disabled", true);
+ 							$("#taskStatus").attr("disabled", true);
 	        				taskstatus = 1;
 						} else if ($("#completeRate").val() == "100") {
 							$("#taskStatus").attr("checked", false);
@@ -84,7 +85,7 @@
 	        			//지연안된거
 	        			if ($("#completeRate").val() == "0") {
 	        				$("#taskStatus").removeAttr("disabled");
-// 	        				$("#taskStatus").attr("disabled", true);
+ 	        				$("#taskStatus").attr("disabled", true);
 	        				taskstatus = 1;
 						} else if ($("#completeRate").val() == "100") {
 							$("#taskStatus").attr("disabled", true);
