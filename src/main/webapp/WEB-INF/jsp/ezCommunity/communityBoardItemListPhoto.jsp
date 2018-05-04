@@ -737,9 +737,10 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		
-	    <table id="tblList">
-	    </table>
+		<div style="height:460px;">
+	    	<table id="tblList">
+	    	</table>
+	    </div>
 	    <div style="width: 615px; padding-top: 10px" id="tblPageRayer"></div>
 	    <div id="ListInfo" style="DISPLAY: none">${listInfo}</div>
 	</body>
