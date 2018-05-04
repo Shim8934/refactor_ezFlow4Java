@@ -158,6 +158,11 @@
 		                                    if (itemVO.gubun != "3") {
 		                                    	span2.className = "txt";
 		                                        span2.innerHTML = itemVO.title;
+		                                        
+		                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈 메인화면 게시물 댓글수 표출 */
+		                                        if(itemVO.oneLineCnt > 0) {
+		                                        	span2.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
+		                                        }	                                      
 		                                        span2.setAttribute("itemid", itemVO.itemID);
 		                                        span2.setAttribute("boardid", itemVO.boardID);
 		                                        span2.setAttribute("gubun", itemVO.gubun);
