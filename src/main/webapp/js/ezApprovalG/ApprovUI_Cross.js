@@ -2114,6 +2114,7 @@ function SReAprLineSingMapping(ret) {
 }
 
 function ReAprLineSingMapping(ret) {
+	console.log("결재선 다시 ?")
     var xmlKuljea, chamjo, hapyuiCnt, SignCnt, referCnt, xmlReDraft;
     var OrderType = new Array();
     var OrderTypeName = new Array();
@@ -2363,9 +2364,9 @@ function ReAprLineSingMapping(ret) {
                     if (field) {
                     	setNodeText(field , OrderJobtitle[i]);
                         if (OrderSuggester[i] == "Y")
-                        	setNodeText(field , strLangS75 + getNodeText(field));
+                        	setNodeText(field , "★" + getNodeText(field));
                         if (OrderReporter[i] == "Y")
-                        	setNodeText(field , strLangS76 + getNodeText(field));
+                        	setNodeText(field , "⊙" + getNodeText(field));
                     }
 
                     fieldname = susinSN + "sign" + idx;
@@ -2397,9 +2398,9 @@ function ReAprLineSingMapping(ret) {
             if (field) {
             	setNodeText(field , OrderJobtitle[i]);
                 if (OrderSuggester[i] == "Y")
-                	setNodeText(field , strLangS75 + getNodeText(field));
+                	setNodeText(field , "★" + getNodeText(field));
                 if (OrderReporter[i] == "Y")
-                	setNodeText(field , strLangS76 + getNodeText(field));
+                	setNodeText(field , "⊙"  + getNodeText(field));
             }
 
             fieldname = susinSN + "sign" + idx;
@@ -2427,9 +2428,9 @@ function ReAprLineSingMapping(ret) {
             if (field) {
             	setNodeText(field , OrderJobtitle[i]);
                 if (OrderSuggester[i] == "Y")
-                	setNodeText(field , strLangS75 + getNodeText(field));
+                	setNodeText(field , "★" + getNodeText(field));
                 if (OrderReporter[i] == "Y")
-                	setNodeText(field , strLangS76 + getNodeText(field));
+                	setNodeText(field , "⊙" + getNodeText(field));
             }
             hidx = hidx + 1;
         }

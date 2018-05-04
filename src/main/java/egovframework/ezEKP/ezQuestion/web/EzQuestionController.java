@@ -2428,6 +2428,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 				title = " [" + egovMessageSource.getMessage("ezQuestion.t57", locale) + answer;
 				qPercent = "";
 				sort="Q";
+			} else {
+				title = "<![CDATA[" + title + "]]>";
 			}
 			if(answerObjecivity.equals("0")){
 				answerObjecivity ="0";
