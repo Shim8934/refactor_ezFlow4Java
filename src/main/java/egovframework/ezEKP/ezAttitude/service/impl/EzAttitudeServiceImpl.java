@@ -1058,6 +1058,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return totalList;
 	}
+	
+	public void absentedListSendMail(List<AdminAttitudeVO> list, String fromName, String fromEmail) throws Exception {
+		//메일발송
+	}
 
 	@Override
 	public void changeUsersModifyAtt(String companyId, int tenantId,

@@ -97,6 +97,11 @@
 	    	}
 	    	
 	    	function getUserConfList(){
+	    		if (!checkPattern()) {
+	    			alert("근무시간를 다시 지정해주세요.")
+	    			return;
+	    		}
+	    		
 	    		$.ajax({
 	    			data : "POST",
 	    			dataType : "json",
@@ -140,7 +145,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr><td colspan='5' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
+	    			resultHtml = "<tr><td colspan='5' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
@@ -202,6 +207,36 @@
 	    	function userDbClick() {
 	    		editUserConf($(this).attr('userid'));
 	    	}
+	    	
+	    	function checkPattern() {
+				var timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
+				
+				if ((timePattern.test($("#searchStartTime").val()) && timePattern.test($("#searchEndTime").val())) || ($("#searchStartTime").val() == "" && $("#searchEndTime").val() == "")) {
+					return true;
+				} else {
+					if (!timePattern.test($("#searchStartTime").val())&& !timePattern.test($("searchEndTime").val())) {
+						$("#searchStartTime").focus();
+						return false;
+					} else if (!timePattern.test($("#searchStartTime").val())) {
+						$("#searchStartTime").focus();
+						return false;
+					} else if (!timePattern.test($("#searchEndTime").val())) {
+						$("#searchEndTime").focus();
+						return false;
+					}
+				}
+			}
+	    	
+	    	function searchPress(evt) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		            	searchUserConfList('search');
+		            }
+		        } else {
+		            if (evt.which == 13)
+		            	searchUserConfList('search');
+		        }
+		    }
 	    </script>
 	</head>
 	
@@ -224,9 +259,9 @@
 			<tbody>
 				<tr>
 					<td style="width: 3%;">부서</td>
-					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchUserConfList('search')"></td>
+					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;">이름</td>
-					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchUserConfList('search')"></td>
+					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;">탄력근무</td>
 					<td style="width: 20%;">
 						<span style="width: 90%;">
@@ -238,7 +273,7 @@
 				</tr>
 				<tr>
 					<td style="width: 3%;">직위</td>
-					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchUserConfList('search')"></td>
+					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
 					<td style="width: 3%;">근태시간</td>
 					<td>
 						<span id="topmenu"><input id="searchStartTime" type="text" style="width:50px; text-align:center;"/>&nbsp; ~ &nbsp;<input id="searchEndTime" type="text" style="width:50px; text-align:center;"/></span>
