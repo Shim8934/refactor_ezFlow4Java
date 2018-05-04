@@ -37,9 +37,9 @@
 		var strLang40 	= "<spring:message code = 'ezWebFolder.t136'/>";
 		var strLang41   = "<spring:message code = 'ezWebFolder.t137'/>";
 		var strLang42   = "<spring:message code = 'ezWebFolder.t138'/>";
-		var strNoData   = "<spring:message code='ezWebFolder.t144'/>";
+		var strNoData   = "<spring:message code = 'ezWebFolder.t144'/>";
 		
-		var currentPage = "1";
+		var currentPage = 1;
 		var totalPages = 0 ;
 		var totalRows = 0 ;
 		var blockSize = ${listCount};
@@ -149,12 +149,6 @@
 			for (var i = 0; i < length; i++) {
 				excutor(elements[i].style);
 			}
-		}
-		
-		function dbClickFunction(obj) {
-			var folderId2 = obj.getAttribute("_fileId");
-			getFileList(folderId2);
-			
 		}
 		
 	   	$(function() {
