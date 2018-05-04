@@ -87,7 +87,7 @@
 	    function renderFileList() {
 			$.ajax ({
 				type: "POST",
-				async: false,
+				async: true,
 				url : "/ezWebFolder/getTrashCanList.do",
 				dataType: "json",
 				data : {
@@ -414,7 +414,7 @@
     	  
     		$.ajax ({
 				type: "POST",
-				async: false,
+				async: true,
 				url : "/ezWebFolder/restoreTrashCan.do",
 				dataType: "json",
 				data : {
