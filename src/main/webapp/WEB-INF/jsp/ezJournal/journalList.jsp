@@ -8,8 +8,7 @@
 </script>
 <div style="width: 100%;" id="divList">
 	<div id="journalListHeader">
-		<table id="journalListHead" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false"
-			width="100%" border="0" class="mainlist" style="overflow: hidden;">
+		<table id="journalListHead" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" class="mainlist">
 		<thead id="BoardList_THEAD">
 			<tr id="BoardList_TH">
 				<th id="BoardList_TH_0" style="text-align: left; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;" class="h4_center" bgcolor="#CCCCCC">

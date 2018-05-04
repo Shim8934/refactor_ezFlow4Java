@@ -188,6 +188,8 @@
                 B.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
+            AND
+				B.updatestatus IN (0, 1)    
         ]]>
         
         <isNotEqual property="searchValue" compareValue="">
