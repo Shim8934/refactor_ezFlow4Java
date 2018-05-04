@@ -489,10 +489,9 @@
 						html += '<div id="editCmtDiv' + cmt["id"] + '" style="display: none;"></div></td>';
 						html += '<td style="width: 145px; position:relative;">';
 						html += '<div style="position: absolute; top:10px; right:18px; color:#a3a3a3; white-space:nowrap;">' + cmt["writeDate"] + '</div></td></tr>';
-						cmt["comment"] = cmt["comment"].replace(/(?:\r\n|\r|\n)/g, '<br />');
 					
 						$("#commentArea table").prepend(html);
-						$("#cmtArea" + cmt["id"]).html(cmt["comment"]);
+						$("#cmtArea" + cmt["id"]).text(cmt["comment"]);
 						
 						if(id == cmt["userId"]) {
 							html = '<img src="/images/option3.png" style="margin:30px 10px 0px 0px; position:absolute;top:0;right:0; padding:0px; cursor: pointer;" height=25 width=25 vertical-align="middle" name="editComtButton" _comtIndex="editComt' + cmt["id"] + '" />';
@@ -510,8 +509,7 @@
 						if(id == cmt["userId"]) {
 							modifyComt(cmt["id"]);
 						}
-						cmt["comment"] = cmt["comment"].replace(/(?:\r\n|\r|\n)/g, '<br />');
-						$("#cmtArea" + cmt["id"]).html(cmt["comment"]);
+// 						$("#cmtArea" + cmt["id"]).text(cmt["comment"]);
 					}
 				}
 			});
@@ -710,7 +708,7 @@
 								<img src="/images/poll/default_pic_vote.gif" width="48px" height="48px" style="position: relative;">
 							</c:when>
 							<c:otherwise>
-								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${vo.pic}" width="48px" height="48px" style="position: relative;">
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${vo.pic}" width="48px" height="48px" style="position: relative; border-radius: 25px;">
 							</c:otherwise>
 						</c:choose>
 					</p>
@@ -939,8 +937,8 @@
 							</td>
 							<td>
 								<div class="userName">${_comt.userName}</div>
-								<div id="div2Cmt<c:out value ="${_comt.id}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" ><% pageContext.setAttribute("br", "\n"); %>
-									<p id="cmtArea<c:out value ="${_comt.id}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;">${fn:replace(_comt.comment, br, '<br/>')}</p>
+								<div id="div2Cmt<c:out value ="${_comt.id}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >
+									<p id="cmtArea<c:out value ="${_comt.id}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;">${_comt.comment}</p>
 								</div>
 								<div id="editCmtDiv<c:out value ="${_comt.id}" />" style="display: none;"></div>
 							</td>

@@ -864,6 +864,10 @@
 			.ui-widget-content {
 				border: 1px solid #dddddd;
 			}
+			
+			.ui-slider-handle {
+				background: #ffffff url(images/ui-bg_highlight-hard_100_f6f6f6_1x100.png) 50% 50% repeat-x;
+			}
 			.ladderType, .ladderSecret {
 				width: 50px;
 				height: 50px;
