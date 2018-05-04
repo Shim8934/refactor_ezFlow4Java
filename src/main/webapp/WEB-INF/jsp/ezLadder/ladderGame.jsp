@@ -110,6 +110,12 @@
 							changeListOrder();
 						},
 						
+					})
+					.on("mousedown", function() {
+						userSwitchFlag = !userSwitchFlag;
+					})
+					.on("mouseup", function() {
+						userSwitchFlag = !userSwitchFlag;
 					});
 				}
 			} else if(status == 1) {
@@ -175,14 +181,21 @@
 						$span.find("img").attr("src", "/images/ezLadder/icon_defaultAttendant.png");
 					}
 				})
-				$("#toList").on("click", function() {
+				
+			$("#toList").on("click", function() {
 					window.location.href = '/ezLadder/ladderMain.do?&mode=' + mode + '&currPage=' + currPage + '&searchSelect=' 
 							+ searchSelect + '&searchInput=' + searchInput + '&sort=' + sort + '&sortFlag=' + sortFlag;
 				});
-				
 			$("#usePreladder").on("click", function() {
 				window.location.href = "/ezLadder/setLadder.do?ladderId=" + ${vo.ladderId};
 			});
+			$("#ladderContents")
+				.on("mouseleave", function() {
+					if(!!moFlag) {
+						console.log("out");
+						scrollMouseUpEvent();
+					}
+				});
 		});
 		
 		function ladder_window_resize() {
@@ -203,7 +216,7 @@
 				$("#blackBox").css("width", (win_width + 50) + "px");
 			}
 			
-			$("#startButton")
+			$startButton
 				.css("left", $setTable.width() / 2 - $startButton.width() / 2)
 				.css("top", ($setTable.height() - $lineBox.height()) + ($lineBox.height() / 2 - $startButton.height() / 2));
 		}
@@ -509,7 +522,7 @@
 						if(id == cmt["userId"]) {
 							modifyComt(cmt["id"]);
 						}
-// 						$("#cmtArea" + cmt["id"]).text(cmt["comment"]);
+						$("#cmtArea" + cmt["id"]).text(cmt["comment"]);
 					}
 				}
 			});
@@ -594,8 +607,31 @@
 		
 		function menuQst_DetailUserInfo(pUserID) {
 			var feature = GetOpenPosition(420, 438);
-		    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		}	
+			window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		}
+		
+		var moFlag = false;
+		var userSwitchFlag = false;
+		var $linebox;
+		var moveX;
+		function scrollMouseDownEvent(obj, event) {
+			if(!moFlag && !userSwitchFlag) {
+				moveX = event.screenX;
+				$linebox = $("#ladderLineBox");
+				moFlag = !moFlag;
+			}
+		}
+		function scrollMouseDragEvent(obj, event) {
+			if(moFlag) {
+				$linebox.scrollLeft($linebox.scrollLeft() + (moveX - event.screenX));
+				moveX = event.screenX; 
+			}
+		}
+		function scrollMouseUpEvent(obj, event) {
+			if(moFlag) {
+				moFlag = !moFlag;
+			}
+		}
 	</script>
 	<style type="text/css">
 		ul {
@@ -760,42 +796,10 @@
 									</c:choose>
 								</div>
 							</h2>
-							<!-- <div class="ladderGame_view">
-								
-							</div> -->
 						</div>
-						
-						
-						<%-- <div style="overflow: hidden; margin-bottom: 20px; margin-top: 30px;">
-							<div style="float: left; height: 70px; width: 70%; line-height: 70px;">
-								<div style="display: inline-block; margin-right: 20px; padding-left: 20px;">${vo.title}</div>
-								<div style="float: right; padding-top: 12px; padding-right: 20px; border-right: 1px solid #dddddd; line-height: 0; height: 60px;">
-									<img src="/images/ezLadder/icon_game0${vo.type}.png" class="icon"/>
-									<img src="/images/ezLadder/icon_status0${vo.status}.png" class="icon"/>
-									<img src="/images/ezLadder/icon_secretflag0${vo.secretFlag}.png" class="icon"/>
-								</div>
-							</div>
-							<div style="float: left; width: 30%;">
-								<div style="float: left; padding-top: 3px;">
-									<div style="float: left; padding-left: 20px;"><img src="${vo.pic}" style="width: 60px; height: 60px; border: 1px solid #ddd; border-radius: 35px; display: inline-block;"/></div>
-									<div class="voteTextTest" style="float: left; margin-left: 10px">
-										<span class="questionFont">${vo.writerName}</span>
-										<span style="padding-top: 5px;">${vo.deptName}</span>
-										<span class="questionFontS">${vo.writeDate}</span>
-									</div>
-								</div>
-								<div style="float: right; padding-top: 12px; padding-right: 20px;">
-									<img src="/images/ezLadder/icon_reuse.png" id="usePreladder" class="icon" style="cursor: pointer;"/>
-									<c:choose>
-										<c:when test="${vo.writerId == id}"><img src="/images/ezLadder/icon_posDelete.png" class="icon" onclick="deleteLadder(${vo.ladderId})" style="cursor: pointer;"/></c:when>
-										<c:when test="${vo.writerId != id}"><img src="/images/ezLadder/icon_imposDelete.png" class="icon"/></c:when>
-									</c:choose>
-								</div>
-							</div>
-						</div> --%>
 					</td>
 				</tr>
-				<tr>
+				<tr id="ladderContents" onmousedown="scrollMouseDownEvent(this, event);" onmousemove="scrollMouseDragEvent(this, event);" onmouseup="scrollMouseUpEvent(this, event);" onselectstart="return false;">
 					<td>
 						<c:if test="${vo.status eq 0}">
 							<div id="startButton" style="position: absolute; z-index: 100; top: 0; left: 0;">

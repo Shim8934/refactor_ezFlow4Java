@@ -380,6 +380,8 @@
 				secretFlag = ladderInfo["secretFlag"];
 				ladderType = ladderInfo["type"];
 				lineCnt = ladderInfo["lineCnt"];
+				setAllUser_(lineInfo, "preladder");
+				
 				if(ladderType == "0") {
 					bombnum = 0;
 					lineInfo.forEach(function(line, index) {
@@ -388,8 +390,6 @@
 						}
 					});
 				}
-				
-				setAllUser_(lineInfo, "preladder");
 				ladderSetInitView();
 				
 				$("#makeLad").removeAttr("disabled");
