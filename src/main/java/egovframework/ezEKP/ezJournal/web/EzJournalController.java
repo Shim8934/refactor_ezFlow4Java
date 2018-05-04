@@ -231,19 +231,24 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		param.put("companyId", userInfo.getCompanyID());
 		param.put("userId", userInfo.getId());
+		String url = "";
 		switch (listType) {
 		case "department":
+			url = "/ezJournal/journalListDept";
 			break;
 		case "mine":
+			url = "/ezJournal/journalListMine";
 			param.remove("deptId");
 			param.put("journalWriter", userInfo.getId());
 			break;
 		case "recv":
+			url = "/ezJournal/journalListRecv";
 			param.remove("typeId");
 			param.remove("deptId");
 			param.put("recvUser", userInfo.getId());
 			break;
 		case "temp":
+			url = "/ezJournal/journalListTemp";
 			param.put("journalWriter", userInfo.getId());
 			param.remove("typeId");
 			param.remove("deptId");
@@ -299,7 +304,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		model.addAttribute("listType",listType);
 		logger.debug("journalList ended");
 		
-		return "/ezJournal/journalList";
+		return url;
 	}
 	
 	/**

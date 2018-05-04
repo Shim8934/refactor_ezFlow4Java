@@ -277,6 +277,9 @@
 	    
 	    	// 양식내용을 에디터에 넣어주는 작업 
 		    function Editor_Complete() {
+		    	<c:if test="${mode eq 'sum' }">
+		    	$("#iFramePanel").after("<div id='loading'><img id='loading-image' src='/images/ProgressBar.gif' alt='Loading...' /></div>");
+			    </c:if>
 				getFormList($("#optType"));
 	    		
 	    		switch (mode) {
@@ -678,9 +681,9 @@
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
-	    <c:if test="${mode eq 'sum' }">
-	    <div id="loading"><img id="loading-image" src="/images/ProgressBar.gif" alt="Loading..." /></div>
-	    </c:if>
+<%-- 	    <c:if test="${mode eq 'sum' }"> --%>
+<!-- 	    <div id="loading"><img id="loading-image" src="/images/ProgressBar.gif" alt="Loading..." /></div> -->
+<%-- 	    </c:if> --%>
 
 		<script>
 		// 다른일지 가져오기 리스트

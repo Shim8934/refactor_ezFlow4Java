@@ -14,59 +14,28 @@
 				<th id="BoardList_TH_0" style="text-align: left; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;" class="h4_center" bgcolor="#CCCCCC">
 					<input type="checkbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 				</th>
-				<c:if test="${listType eq 'recv' }">
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:25px; text-align: left;" class="h5_center">
-						<img style="cursor:pointer; vertical-align: middle;" src="/images/ImgIcon/view-document.gif ">
-					</th>
-				</c:if>
-				<c:if test="${listType eq 'mine' }">
-					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="4" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: left; width:25px;" class="h5_center">
-						<img src="/images/lock_icon.png" style="vertical-align: middle;">
-					</th>
-				</c:if>
 				<!-- 취합여부아이콘 -->
-					<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; cursor: pointer; width:35px; text-align: left; padding: 0px 3px;" class="h5_center">
-						<img src="/images/ImgIcon/addon.png" style="vertical-align: middle;">
-					</th>
-					<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px; text-align: left;" class="h5_center">
-						<img src="/images/newAttach.gif" style="vertical-align: middle;">
-					</th>
-				<c:if test="${listType eq 'recv' or listType eq 'temp' }">
-					<th id="BoardList_TH_1" onclick="setListOrder(this)" order="8" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: left; width:80px;" class="h5_center">
-						<spring:message code='ezJournal.t12'/>
-					</th>
-				</c:if>
-				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:80%;" class="h5_center">
+				<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; cursor: pointer; width:35px; text-align: left; padding: 0px 3px;" class="h5_center">
+					<img src="/images/ImgIcon/addon.png" style="vertical-align: middle;">
+				</th>
+				<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px; text-align: left;" class="h5_center">
+					<img src="/images/newAttach.gif" style="vertical-align: middle;">
+				</th>
+				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:50%;" class="h5_center">
 					<spring:message code='ezJournal.t56'/>
 				</th>
-				<c:if test="${listType eq 'recv' }">
-					<th id="BoardList_TH_4" onclick="setListOrder(this)" order="6" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:80px;" class="h5_center">
-						<spring:message code='ezJournal.t40'/>
-					</th>
-				</c:if>
-				<c:if test="${listType eq 'department' or listType eq 'recv' }">
-					<th id="BoardList_TH_5" onclick="setListOrder(this)" order="5" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:70px;" class="h5_center">
-						<spring:message code='ezJournal.t34'/>
-					</th>
-				</c:if>
-				<th id="BoardList_TH_6" onclick="setListOrder(this)" order="3" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:110px;" class="h5_center">
+				<th id="BoardList_TH_5" onclick="setListOrder(this)" order="5" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:17%;" class="h5_center">
+					<spring:message code='ezJournal.t34'/>
+				</th>
+				<th id="BoardList_TH_6" onclick="setListOrder(this)" order="3" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:17%;" class="h5_center">
 					<spring:message code='ezJournal.t35'/>
 				</th>
-				<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine' }">
-					<th id="BoardList_TH_8" onclick="setListOrder(this)" order="7" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20%;" class="h5_center">
-						<spring:message code='ezJournal.t22'/>
-					</th>
-				</c:if>
-				<c:if test="${listType eq 'mine' }">
-					<th id="BoardList_TH_9" onclick="setListOrder(this)" order="12" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:45px;" class="h5_center">
-						<spring:message code='ezJournal.t110'/>
-					</th>
-				</c:if>
-				<c:if test="${listType eq 'department' or listType eq 'mine' }">
-					<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: center; width:35px;" class="h5_center">
-						<spring:message code='ezJournal.t65'/>
-					</th>
-				</c:if>
+				<th id="BoardList_TH_8" onclick="setListOrder(this)" order="7" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:17%;" class="h5_center">
+					<spring:message code='ezJournal.t22'/>
+				</th>
+				<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: center; width:35px;" class="h5_center">
+					<spring:message code='ezJournal.t65'/>
+				</th>
 			</tr>
 		</thead>
 		</table>
@@ -78,30 +47,8 @@
 		<c:choose>
 			<c:when test="${fn:length(journalList) ne 0}">
 				<c:forEach items="${journalList}" var="journal" varStatus="status">
-				<tr <c:if test="${listType ne 'temp' }">class="${journal.isView }"</c:if> id="${journal.journalId }" mine="${journal.mine }" formStatus="${journal.formStatus }" typeId="${journal.typeId}" formId="${journal.formId}" ondblclick="goJournalDetail(this);" style="cursor: pointer;">
+				<tr id="${journal.journalId }" mine="${journal.mine }" formStatus="${journal.formStatus }" typeId="${journal.typeId}" formId="${journal.formId}" ondblclick="goJournalDetail(this);" style="cursor: pointer;">
 					<td class="cbTD" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20px;"><input onchange="checkedCheckbox(this);" type="checkbox" name="journalCheckbox" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>
-					<c:if test="${listType eq 'recv' }">
-						<c:choose>
-							<c:when test="${journal.isView == 'noView'}">
-								<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:25px;">
-									<img style="cursor:pointer; vertical-align: middle;" src="/images/ImgIcon/view-document.gif">
-								</td>
-							</c:when>
-							<c:otherwise>
-								<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:25px;">
-									<img style="cursor:pointer; vertical-align: middle;" draggable="false" src="/images/ImgIcon/icon-msg-read.gif">
-								</td>
-							</c:otherwise>
-						</c:choose>
-					</c:if>
-					<c:if test="${listType eq 'mine' }">
-						<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:25px;">
-							<c:if test="${journal.deptShare eq 'N' }">
-								<img src="/images/lock_icon.png">
-								<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> --> 
-							</c:if>
-						</td>
-					</c:if>
 					<!-- 취합여부아이콘 -->
 					<c:choose>
 						<c:when test="${journal.isSum eq 'Y'}">
@@ -125,12 +72,7 @@
 							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:20px;"></td>
 						</c:otherwise>
 					</c:choose>
-					<c:if test="${listType eq 'recv' or listType eq 'temp' }">
-						<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:80px;">
-							<spring:message code='${journal.typeId}'/>
-						</td>
-					</c:if>
-					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:80%;">
+					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:50%;">
 					<jsp:useBean id="toDay" class="java.util.Date" />
 					<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
 					<fmt:parseDate value="${journal.journalDate}" pattern="yyyy-MM-dd"  var="jDay"/>
@@ -144,47 +86,24 @@
 							<a onclick=""><span style="color: #c64200">[<c:out value='${journal.replyCount }'/>]</span></a>
 						</c:if>
 					</td>
-					<c:if test="${listType eq 'recv' }">
-						<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:80px;">
-							<c:out value='${journal.deptName}'/>
-						</td>
-					</c:if>
-					<c:if test="${listType eq 'department' or listType eq 'recv' }">
-						<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:70px;">
-							<c:out value='${journal.writerName}'/>
-						</td>
-					</c:if>
-					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:110px;">
+					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:17%;">
+						<c:out value='${journal.writerName}'/>
+					</td>
+					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:17%;">
 						<c:out value='${journal.journalDate}'/>
 					</td>
-					<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine' }">
-						<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20%;">
-							<c:out value='${journal.formName}'/>
-						</td>
-					</c:if>
-					<c:if test="${listType eq 'mine' }">
-						<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:45px;">
-							<c:choose>
-								<c:when test="${journal.totalRecv ne 0}">
-									<c:out value='${journal.checkRecv}'/> / <c:out value='${journal.totalRecv}'/>
-								</c:when>
-								<c:otherwise>
-									<span>-</span>
-								</c:otherwise>
-							</c:choose>
-						</td>
-					</c:if>
-					<c:if test="${listType eq 'department' or listType eq 'mine' }">
-						<td	onclick="selectedTR(this);" class="viewCount" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:35px;">
-							<c:out value='${journal.viewCount}'/>
-						</td>
-					</c:if>
+					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:17%;">
+						<c:out value='${journal.formName}'/>
+					</td>
+					<td	onclick="selectedTR(this);" class="viewCount" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:35px;">
+						<c:out value='${journal.viewCount}'/>
+					</td>
 				</tr>
 				</c:forEach>
 			</c:when>
 			<c:otherwise>
 				<tr selected="false" class="" style="background-color: rgb(255, 255, 255);">
-					<td	style="text-align: center; font-weight: normal; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colspan="<c:choose><c:when test="${listType eq 'mine'}">9</c:when><c:when test="${listType eq 'recv' }">10</c:when><c:when test="${listType eq 'department' }">8</c:when><c:otherwise>6</c:otherwise></c:choose>">
+					<td	style="text-align: center; font-weight: normal; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colspan="8">
 						<spring:message code='ezJournal.t125'/>
 					</td>
 				</tr>
