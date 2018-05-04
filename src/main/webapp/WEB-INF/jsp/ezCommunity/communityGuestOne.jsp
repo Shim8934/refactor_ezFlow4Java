@@ -374,7 +374,7 @@
 		    }
 		</script>
 	</head>
-	<body class="cmhome_body">
+	<body class="cmhome_body" style = "margin-bottom:0px;">
 		<h1 class="type1_h1"><spring:message code='ezCommunity.t570' /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu" >
 			<ul>

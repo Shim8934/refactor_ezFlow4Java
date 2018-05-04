@@ -741,7 +741,7 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<div>
+		<div style = "height:370px;">
 			<table  id="tblList" class="cmhomelist" style="width:100%">
 				<form name="frmOutbox" action="/ezCommunity/boardItemList.do" method="post">
 					<tr>
