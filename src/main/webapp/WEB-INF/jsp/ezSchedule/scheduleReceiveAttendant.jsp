@@ -143,8 +143,8 @@
 	                    	<c:if test="${item.status == '0'}"><spring:message code='ezSchedule.t166' /></c:if>
 	                    	<c:if test="${item.status != '0'}"><spring:message code='ezSchedule.t169' /></c:if>
 	                    </td> 
-	                    <td>${item.location }</td> 
-	                    <td title="<spring:message code='ezSchedule.t342' />" style="word-break:break-all;cursor:pointer;text-overflow:ellipsis;overflow:hidden" onClick="parentwin.open_schedule('${item.scheduleId}')">${item.title}</td> 
+	                    <td><c:out value="${item.location }" /></td> 
+	                    <td title="<spring:message code='ezSchedule.t342' />" style="word-break:break-all;cursor:pointer;text-overflow:ellipsis;overflow:hidden" onClick="parentwin.open_schedule('${item.scheduleId}')"><c:out value="${item.title}" /></td> 
 	                    <td style="white-space:nowrap">
 	                    	<c:if test="${item.dateType == '1'}">
 	                    		${fn:substring(item.startDate,0,16)} ~ ${fn:substring(item.endDate,0,16)}	
