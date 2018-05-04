@@ -7,7 +7,33 @@
 	<head>
 	    <title><spring:message code='ezBoard.t1002'/></title>
 	    <style type="text/css">
-	         .preView { width: 150px; height: 150px; text-align: center; border:1px solid silver; }
+	         .preView { 
+	         	width: 150px; 
+	         	height: 150px; 
+	         	text-align: center; 
+	         	border:1px solid silver; 
+	         }
+	         #btnUl {
+	         	display:table;
+	         	margin:0px auto 0px auto;
+	         }
+	         #btnUl  li {
+	         	display: inline-block;
+				margin:0px;
+				cursor:pointer;
+	         }
+	         #btnUl li span {
+	         	display:inline-block; 
+	         	background:white; 
+	         	border:1px solid rgba(188, 211, 224, 1); 
+	         	height:25px;
+	         	padding:0px 8px 0px 8px;
+	         	border-radius:3px; 
+	         	line-height:25px;
+	         	font-weight: normal;
+	         	color:#333;
+	         	vertical-align:middle;
+	         }  
 	    </style>
         <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -376,7 +402,6 @@
 	                <div id="menu">
 	                    <ul>
 	                        <li ID='btn_Modify'><span onClick="btn_ImgOnclick()"><spring:message code='ezBoard.t316'/></span></li>
-	                        <li ID='Li1'><span onClick="btn_PhotoChange()"><spring:message code='ezBoard.t1002'/></span></li>
 	                    </ul>
 	                </div>
 	                <div id="close">
@@ -388,11 +413,13 @@
 	        </tr>
 	        <tr id="mainimage" style="display:none">
 	            <td>
-	                <input type="checkbox" id="mainFG" /><spring:message code='ezBoard.t00003'/>
+	                <input type="checkbox" id="mainFG" /><span><spring:message code='ezBoard.t00003'/></span>
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="height:28px; line-height:28px; border-bottom:0 none; background:#fff;"><spring:message code='ezBoard.t1012'/></th>
+	            <th style="height:28px; line-height:28px; border-bottom:0 none; background:#fff;">
+	    	        <ul id = "btnUl"><li><span onClick="btn_PhotoChange()"><spring:message code='ezBoard.t1002'/></span></li></ul>
+	            </th>
 	        </tr>
 	        <tr>
 	            <td style="width:100%; height:250px; border:1px solid #ddd; padding:5px;background:#e5e5e5;" >
@@ -436,7 +463,7 @@
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	
 	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm">
-	    <input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onChange="imgtemp_onclick()" accept="image/*"/>
+	    <input type="file" name="file1" id="file1"  style="display: none;" onChange="imgtemp_onclick()" accept="image/*"/>
 	    <input type="hidden" name="mode" id="mode" />
 	    </form>
 	</body>
