@@ -414,6 +414,13 @@
 // 				xhr.open("POST","/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=reuse");
 				window.location.href = "/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=reuse";
 			}
+			
+			// 18-05-02 김민성 - 작성자 이름 클릭 시 사원정보보기 팝업
+			function OpenUserInfo() {
+	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+	            feature = feature + GetOpenPosition(420, 438);
+	            window.open("/ezCommon/showPersonInfo.do?id=" + circularUserID, "", feature);
+	        }
 		</script>
 	</head>
 	<style>
@@ -470,7 +477,7 @@
                     	</tr>
                     	<tr>
 							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>
-	       					<td style="padding-left: 4px;"><div id="writer" >${result.memberName }</div></td>
+	       					<td style="padding-left: 4px;" ><div id="writer"  onclick="OpenUserInfo()" style="vertical-align: middle; cursor: pointer;"> ${result.memberName }</div></td>
 							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t33' /></th> 
  							<td style="padding-left: 6px;"><div id="printStatus">${result.regDate }</div></td>
 						</tr>
