@@ -35,7 +35,7 @@ $(function() {
 		changeTab(clickTabId, nowTabAttr);
 		
 		//간트차트로 가는 부분 url 수정하기
-		$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectForGantt.do?projectId=1");
+		$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectForGantt.do?projectId=1" + projectId);
 	});
 	
 	$("#1tab2").click(function(){
@@ -44,7 +44,7 @@ $(function() {
 		changeTab(clickTabId, nowTabAttr);
 		
 		//업무리스트로 가는 부분 url 수정하기
-		$("#FBoard_ifrm").attr("src", "/ezPMS/taskListMain.do");
+		$("#FBoard_ifrm").attr("src", "/ezPMS/taskListMain.do?projectId=" + projectId);
 	});
 	
 	$("#1tab3").click(function(){
