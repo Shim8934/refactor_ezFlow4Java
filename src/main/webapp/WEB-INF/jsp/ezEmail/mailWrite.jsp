@@ -1008,16 +1008,48 @@
 					attitudeId : attitudeId
 				},
 				success : function(result) {
-					$("#eSubject").val("[" + result.attitudeVO.typeName + "] " + result.attitudeVO.writerName);
-					
-					var objTable = $("<table></table>").addClass("content");
+					var titleDate = "";
+					var objDiv = $("<div></div>");
+					var objTable = $("<table></table>").css({"clear":"both", "margin":"0px", "border-collapse":"collapse", "empty-cells":"show", "width":"830px"});
 					var objTr = $("<tr></tr>").append($("<th></th>").text("구분")).append($("<td></td>").text(result.attitudeVO.typeName));
 					
 					objTable.append(objTr);
 					objTable.append(result.formVO.formHtml);
+					objTable.find("input").remove();
+					objTable.find("th").css({"border" : "1px solid #d2d2d2", "padding" : "0px", "width" : "100px", "height" : "29px", "background-color" : "#f8f8fa"});
+					objTable.find("td").css({"border" : "1px solid #d2d2d2", "padding" : "0px", "width" : "730px", "padding-left":"10px"});
 					
-					var content = result.formVO.formHtml;
-					message.SetEditorContent(objTable);
+					//objTable.append($("<tr></tr>").append($("<td></td>").attr("colspan", 2).css({"border":"0px", "height":"10px"})));
+					objTable.append($("<tr></tr>").append($("<td></td>").attr({"colspan" : 2, "id" : "content"}).css({"border" : "1px solid #ddd", "padding" : "10px", "width" : "100px", "height" : "300px", "vertical-align" : "top"})));
+					objDiv.append(objTable);
+					
+					var dateType = result.attitudeVO.dateType;
+					if (dateType == 5) {
+						objTable.find("#periodblock").text(result.attitudeVO.startDate + " ~ " + result.attitudeVO.endDate)
+						titleDate = result.attitudeVO.startDate.split(" ")[0] + (result.attitudeVO.startDate.split(" ") == result.attitudeVO.endDate.split(" ")[0] ? "" : result.attitudeVO.endDate.split(" ")[0]);
+					} else if (dateType == 4) {
+						objTable.find("#periodblock").text(result.attitudeVO.startDate.split(" ")[0] + " ~ " + result.attitudeVO.endDate.split(" ")[0])
+						titleDate = result.attitudeVO.startDate.split(" ")[0] + (result.attitudeVO.startDate.split(" ") == result.attitudeVO.endDate.split(" ")[0] ? "" : result.attitudeVO.endDate.split(" ")[0]);
+					} else if (dateType == 3) {
+						objTable.find("#periodblock").text(result.attitudeVO.startDate.substring(0,16) + " ~ " + result.attitudeVO.endDate.substring(11,16));
+						titleDate = result.attitudeVO.startDate.split(" ")[0];
+					} else if (dateType == 2) {
+						objTable.find("#periodblock").text(result.attitudeVO.startDate.substring(0,16));
+						titleDate = result.attitudeVO.startDate.split(" ")[0];
+					} else {
+						objTable.find("#periodblock").text(result.attitudeVO.startDate.split(" ")[0]);
+						titleDate = result.attitudeVO.startDate.split(" ")[0];
+					}
+					
+					$("#eSubject").val("[근태보고] " + result.attitudeVO.typeName + "/ " + result.attitudeVO.writerDeptName + " " + result.attitudeVO.writerName + "/ " + titleDate + (result.attitudeVO.region != "" ? "/ " + result.attitudeVO.region : ""));
+					
+					objTable.find("#periodblock");
+					objTable.find("#writerName").text(result.attitudeVO.writerName);
+					objTable.find("#mobile").text(result.attitudeVO.mobile);
+					objTable.find("#bizsub").text(result.attitudeVO.bizSub);
+					objTable.find("#region").length == 0 ? "" : objTable.find("#region").text(result.attitudeVO.region);
+					objTable.find("#content").html(result.attitudeVO.content);
+					message.SetEditorContent("<p></p><p></p><hr>" + objDiv.html());
 				}
 			});
 	    }
