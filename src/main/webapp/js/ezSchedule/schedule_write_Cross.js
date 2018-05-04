@@ -1512,6 +1512,7 @@ function setAttachFileInfo(strXML) {
                 var objTd2 = document.createElement("TD");
 
                 objTd2.innerHTML = fileinfo.split("/")[1];
+                objTd2.innerText = fileinfo.split("/")[1];
                 objTr.appendChild(objTd2);
 
                 var fileSize = parseInt(fileinfo.split("/")[2]);
