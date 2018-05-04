@@ -88,7 +88,7 @@ public interface EzPMSService {
 	
 	public String getUserRole(String userId, int projectId, int tenantId);
 	
-	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId, String nameType);
+	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId, String userIdType);
 	
 	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId, String onlyGroup);
 
@@ -102,7 +102,7 @@ public interface EzPMSService {
 
 	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId);
 
-	public ProjectMemberVO getUserInfo(String userId, int tenantId, String nameType) throws Exception;
+	public ProjectMemberVO getUserInfo(String userId, int tenantId, String userIdType) throws Exception;
 	
 	public Map<String, Object> getRemainingWeight(String projectId);
 
@@ -111,5 +111,7 @@ public interface EzPMSService {
 	public List<TaskMemberVO> getTaskMemberList(int tenantId, long taskId, String lang);
 
 	public void deleteProjectMember(int projectId, int tenantId);
+
+	public void updateProjectRealStartDate(int parseInt, int tenantId);
 
 }

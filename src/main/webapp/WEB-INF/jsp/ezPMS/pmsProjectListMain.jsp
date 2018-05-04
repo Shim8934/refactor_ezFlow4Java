@@ -441,9 +441,13 @@ function checkedCheckboxMemo(elem) {
 }
 
 function changeProjectStatus() {
-	getCheckedVal();
+	var result = getCheckedVal();
 	
-	addProjectPopup(36, 38, 400, 162, "/ezPMS/changeProjectStatus.do");
+	if (result == 1) {
+		addProjectPopup(36, 38, 400, 162, "/ezPMS/changeProjectStatus.do");
+	} else {
+		return;	
+	}
 }
 
 function viewListByStatus(status) {

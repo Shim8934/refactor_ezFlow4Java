@@ -98,7 +98,7 @@ public class EzPMSController {
 		
 		Map<String, Object> param = new HashMap<String, Object>();		
 		param.put("deptId", deptId);
-		param.put("nameType", "user");
+		param.put("userIdType", "user");
 		param.put("tenantId", tenantId);
 		
 		JSONObject settingResult = commonUtil.getJsonFromRestApi(settingUrl, param, request, "get", null);
@@ -142,7 +142,7 @@ public class EzPMSController {
 		String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
 		
 		param.put("deptId", deptId);
-		param.put("nameType", "user");
+		param.put("userIdType", "user");
 		param.put("tenantId", tenantId);
 		param.put("projectSort", projectSort);
 		param.put("viewType", viewType);
@@ -330,8 +330,7 @@ public class EzPMSController {
 			
 			if (param.get("mode").equals("new")) {
 				result = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
-				Map<String, Object> data = (Map<String, Object>) result.get("data");
-				projectId = Integer.parseInt(data.get("projectId").toString());
+				projectId = Integer.parseInt(result.get("data").toString());
 				
 			} else if (param.get("mode").equals("edit")) {
 				projectId = Integer.parseInt(param.get("projectId").toString());
@@ -824,8 +823,14 @@ public class EzPMSController {
 		
 		try{
 			getToArrMailList(managerList, param, request, projectName, projectId, "관리자", loginCookie);
-			getToArrMailList(participantList, param, request, projectName, projectId, "참여자", loginCookie);
-			getToArrMailList(viewerList, param, request, projectName, projectId, "조회자", loginCookie);
+			
+			if (participantList.size() != 0) {
+				getToArrMailList(participantList, param, request, projectName, projectId, "참여자", loginCookie);
+			}
+			
+			if (viewerList.size() != 0) {
+				getToArrMailList(viewerList, param, request, projectName, projectId, "조회자", loginCookie);
+			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -842,7 +847,7 @@ public class EzPMSController {
 			for (int i = 0; i < nameList.size(); i++) {
 				String userId = (String)nameList.get(i).get("userId");
 				
-				param.put("nameType", (String)nameList.get(i).get("nameType"));
+				param.put("userIdType", (String)nameList.get(i).get("userIdType"));
 				
 				JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/users/"+userId+"/setting", param, request, "get", null);
 				String status = resultBody.get("status").toString();

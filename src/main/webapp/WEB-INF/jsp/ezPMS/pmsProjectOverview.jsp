@@ -236,7 +236,11 @@ function editProjectInfo() {
 	<div class="circle progress_graph" style="width:95%; top:15px;">
 		<strong style="top:30px;"></strong>
 	</div>
-	<div style="text-align:center; font-size:30px; font-weight:bold;">D - ${project.restDueday }</div>
+	<div style="text-align:center; font-size:30px; font-weight:bold;">D 
+		<c:choose>
+				<c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }" /></c:when> <c:otherwise>+ <c:out value="${-project.restDueday }" /></c:otherwise>
+		</c:choose>
+	</div>
 	<div style="text-align:center;">${project.planStartDate } ~ ${project.planEndDate }</div>
 	<div id="changeStatus" style="text-align:center;"></div>
 	<div id="overview" style="width:95%; padding:5px; border:1px solid gray; margin:5px 0">${project.overview }</div>

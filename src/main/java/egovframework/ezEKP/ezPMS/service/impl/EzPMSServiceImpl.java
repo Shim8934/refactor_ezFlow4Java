@@ -199,7 +199,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", project.getUserId());
 		param.put("tenantId", tenantId);
-		param.put("nameType", "user");
+		param.put("userIdType", "user");
 		
 		ProjectMainSettingVO projectSetting = ezPMSDAO.getProjectMainSetting(param);
 		
@@ -605,17 +605,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId, String nameType) {
+	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId, String userIdType) {
 		LOGGER.debug("getProjectMainSetting started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
-		map.put("nameType", nameType);
+		map.put("userIdType", userIdType);
 		
 		ProjectMainSettingVO mainSetting = new ProjectMainSettingVO();
 		
-		LOGGER.debug("[Parameter] userId : " + userId + ", tenantId : " + tenantId + ", nameType : " + nameType);
+		LOGGER.debug("[Parameter] userId : " + userId + ", tenantId : " + tenantId + ", userIdType : " + userIdType);
 		try{
 			mainSetting = ezPMSDAO.getProjectMainSetting(map);
 		} catch (Exception e) {
@@ -732,14 +732,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	
 	//유저 정보 불러오기
 	@Override
-	public ProjectMemberVO getUserInfo(String userId, int tenantId, String nameType) throws Exception {
+	public ProjectMemberVO getUserInfo(String userId, int tenantId, String userIdType) throws Exception {
 		LOGGER.debug("Service getUserInfo Started");
 		ProjectMemberVO userInfo = new ProjectMemberVO();
 		
 		HashMap<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
-		param.put("nameType", nameType);
+		param.put("userIdType", userIdType);
 		
 		userInfo = ezPMSDAO.getUserInfo(param);
 		
@@ -822,6 +822,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("tenantId", tenantId);
 		
 		ezPMSDAO.deleteProjectMember(map);
+		
+		LOGGER.debug("Service deleteProjectMember Ended");
+	}
+
+	@Override
+	public void updateProjectRealStartDate(int parseInt, int tenantId) {
+		LOGGER.debug("Service updateProjectRealStartDate Started");
 		
 		LOGGER.debug("Service deleteProjectMember Ended");
 	}

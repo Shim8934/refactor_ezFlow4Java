@@ -62,6 +62,7 @@ function changeStatus() {
 	var status = $("input[name='status']:checked").val();
 	
 	data = {
+		nowStatus : nowStatus,
 		status : status,
 		projectList : projectList
 	}

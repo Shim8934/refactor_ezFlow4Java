@@ -460,7 +460,7 @@
 	</select>
 	
 	<select id="EzPMSDAO.getUserInfo" parameterClass="Map" resultMap="projectUserInfoVO">
-		<isEqual property="nameType" compareValue="user">
+		<isEqual property="userIdType" compareValue="user">
 			<![CDATA[
 			SELECT 
 				A.CN AS userId, 
@@ -484,7 +484,7 @@
 				A.CN = #userId#
 			]]>
 		</isEqual>
-		<isNotEqual property="nameType" compareValue="user">
+		<isNotEqual property="userIdType" compareValue="user">
 		<![CDATA[
 			SELECT 
 				CN AS userId,
@@ -549,7 +549,7 @@
 				u.displayname as USER_NAME,
 				u.displayname2 as USER_NAME2
 		]]>
-		<isEqual property="nameType" compareValue="user">
+		<isEqual property="userIdType" compareValue="user">
 			FROM 
 				tbl_usermaster u
 			LEFT JOIN 
@@ -560,7 +560,7 @@
 				u.tenant_id = p.tenant_id
 			)
 		</isEqual>
-		<isNotEqual property="nameType" compareValue="user">
+		<isNotEqual property="userIdType" compareValue="user">
 			FROM 
 				tbl_deptmaster u
 			LEFT JOIN 

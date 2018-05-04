@@ -141,23 +141,21 @@ public class EzPMSGWController {
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("viewerList"));
 			
 			for (int i = 0; i < projectMemberList.size(); i++) {
-				String userId = (String)projectMemberList.get(i).get("userId");
+				String userId = projectMemberList.get(i).get("userId").toString();
 				int tenantId = Integer.parseInt(request.getParameter("tenantId"));
-				String nameType = (String)projectMemberList.get(i).get("nameType");
+				String userIdType = projectMemberList.get(i).get("userIdType").toString();
 				
-				ProjectMemberVO member = ezPMSService.getUserInfo(userId, tenantId, nameType);
-				member.setMemberRoleId((int)projectMemberList.get(i).get("roleId"));
+				ProjectMemberVO member = ezPMSService.getUserInfo(userId, tenantId, userIdType);
+				member.setMemberRoleId((int)projectMemberList.get(i).get("memberRoleId"));
 				member.setProjectId(projectId);
-				member.setUserIdType(nameType);
+				member.setUserIdType(userIdType);
+				
 				ezPMSService.addProjectMember(member, Integer.parseInt(request.getParameter("tenantId")));
 			}
 			
-			JSONObject data = new JSONObject();
-			data.put("projectId", projectId);
-			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", data);
+			result.put("data", projectId);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -230,10 +228,10 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			String nameType = request.getParameter("nameType");
+			String userIdType = request.getParameter("userIdType");
 			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 			
-			ProjectMainSettingVO projectSetting = ezPMSService.getProjectMainSetting(userId, tenantId, nameType);
+			ProjectMainSettingVO projectSetting = ezPMSService.getProjectMainSetting(userId, tenantId, userIdType);
 			
 			//test용
 			projectSetting.setListProjectStatus("W");
@@ -312,6 +310,7 @@ public class EzPMSGWController {
 			String userId = request.getParameter("userId");
 			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 			String deptId = request.getParameter("deptId");
+			String nowStatus = request.getParameter("nowStatus");
 			
 			LOGGER.debug("status : " + status + ", " + "userId : " + ", tenantId : " + tenantId + ", deptId : " + deptId);
 			
@@ -329,6 +328,11 @@ public class EzPMSGWController {
 			if (roleCheck.equals("")) {
 				for (int i = 0; i < projectIdList.length; i++) {
 					ezPMSService.updateProjectStatus(Integer.parseInt(projectIdList[i]), status, info.getTenantId());	
+					
+					if (nowStatus.equals("W") && status.equals("P")) {
+						ezPMSService.updateProjectRealStartDate(Integer.parseInt(projectIdList[i]), info.getTenantId());
+					}
+					
 				}
 				roleCheck = "permitted";
 			}
@@ -414,12 +418,12 @@ public class EzPMSGWController {
 			System.out.println(projectMemberList.size());
 			for (int i = 0; i < projectMemberList.size(); i++) {
 				String userId = (String)projectMemberList.get(i).get("userId");
-				String nameType = (String)projectMemberList.get(i).get("userIdType");
+				String userIdType = (String)projectMemberList.get(i).get("userIdType");
 				
-				ProjectMemberVO member = ezPMSService.getUserInfo(userId, tenantId, nameType);
+				ProjectMemberVO member = ezPMSService.getUserInfo(userId, tenantId, userIdType);
 				member.setMemberRoleId((int)projectMemberList.get(i).get("memberRoleId"));
 				member.setProjectId(projectId);
-				member.setUserIdType(nameType);
+				member.setUserIdType(userIdType);
 				
 				ezPMSService.addProjectMember(member, Integer.parseInt(request.getParameter("tenantId")));
 			}
