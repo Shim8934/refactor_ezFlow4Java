@@ -389,9 +389,8 @@
 					});
 				}
 				
-				ladderSetInitView();
-				
 				setAllUser_(lineInfo, "preladder");
+				ladderSetInitView();
 				
 				$("#makeLad").removeAttr("disabled");
 			}
