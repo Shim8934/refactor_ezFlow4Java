@@ -249,23 +249,26 @@
 		            case "MailEnv_div1":
 		                if ("${boardInfo.guBun}" == "2")
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		                else if ("${docID}" != "")
+		                else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-		                else
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                else if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
+		        	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		            case "MailEnv_div3":
 		                {
 		                    if (pUseBackGround == "TRUE") {
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
-		                        if ("${docID}" != "")
+		                        if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                    }
-		                    else
+		                    else {
+		                    	if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    }
 		                    break;
 		                }
 		            default:
+		            	if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		        }
@@ -1254,6 +1257,35 @@
 		                    strRet += "tempUploadFile/" + filepath + "|";
 		                }
 		                attachxml = strRet;
+		            } else {
+		            	    var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
+			                    var temppath = pUrl;
+			                    temppath = temppath.substring(34, temppath.length);
+			                    var orgfile = temppath.split("/");
+			                    orgfile = orgfile[orgfile.length - 1];
+			                    xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
+			                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
+			                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
+			                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
+			                        xmlstring += "<TYPE>APPROVAL</TYPE>";
+			                    else
+			                        xmlstring += "<TYPE>APPROVALG</TYPE>";
+			                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
+			               
+			                xmlstring += "</ROWS></DATA>";
+			                xmldom2 = loadXMLString(xmlstring);
+			                xmlHTTP.open("POST", "/ezBoard/uploadApprovFile.do", false);
+			                xmlHTTP.send(xmldom2);
+			                returnvalue(xmlHTTP.responseText);
+			
+			                var xml = loadXMLString(xmlHTTP.responseText);
+			                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
+			                var strRet = "";
+			                for (i = 0; i < nodes.length; i++) {
+			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+			                    strRet += "tempUploadFile/" + filepath + "|";
+			                }
+			                attachxml = strRet;
 		            }
 		        }
 		    }
@@ -1490,9 +1522,9 @@
 		                document.getElementById("tab02").style.display = "none";
 		                if ("${boardInfo.guBun}" == "2")
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		                else if ("${docID}" != "")
+		                else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-		                else
+		                else if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		            case "MailEnv_div3":
@@ -1500,7 +1532,7 @@
 		                document.getElementById("tab02").style.display = "";
 		                if (pUseBackGround == "TRUE") {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 330 + "PX";
-		                    if ("${docID}" != "")
+		                    if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                }
 		                else{
