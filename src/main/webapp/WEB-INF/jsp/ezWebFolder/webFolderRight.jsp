@@ -86,9 +86,9 @@
 				}
 			};
 			
-			document.body.addEventListener("click", listOptionHidden);
-			parent.frames["left"].document.body.addEventListener("click", listOptionHidden);
-			parent.parent.document.getElementById("topFrame").contentWindow.document.body.addEventListener("click", listOptionHidden);
+			document.addEventListener("click", listOptionHidden);
+			parent.frames["left"].document.addEventListener("click", listOptionHidden);
+			parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("click", listOptionHidden);
 			
 			// listoption 클릭 이벤트
 			document.getElementById("webfolderlistoptiondiv").addEventListener("click", function(event) {
@@ -150,7 +150,7 @@
 					
 					pagination.setListSize(result.listCount);
 					pagination.setAmount(result.totalRows);
-					pagination.build(true);
+					pagination.build();
 					
 					if (folderUpp != 'root') {
 						$('#upload').css('display','inline');

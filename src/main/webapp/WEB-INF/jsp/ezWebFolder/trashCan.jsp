@@ -67,11 +67,48 @@
 			return false;
 		}
 		
-		window.onload = function () {
+		$(function() {
 			document.getElementById("listcount").value = blockSize;
 			renderFileList();
 			window.onresize();
-	    };
+			
+			// listoption 다른 곳 클릭시 숨김 처리
+			var listOptionHidden = function(event) {
+				if (document.getElementById("webfolderlistoptiondiv").getAttribute('mode') == "on"
+						&& !document.getElementById("layer_Viewpopup").contains(event.target)) {
+					optionHidden();
+				}
+			};
+			
+			document.addEventListener("click", listOptionHidden);
+			parent.frames["left"].document.addEventListener("click", listOptionHidden);
+			parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("click", listOptionHidden);
+			
+			// listoption 클릭 이벤트
+			document.getElementById("webfolderlistoptiondiv").addEventListener("click", function(event) {
+				event.stopPropagation();
+				optionView(event.target);
+			});
+			
+			document.getElementById("listcount").addEventListener("change", function(event) {
+				optionHidden();
+				blockSize = this.value;
+				currentPage = 1;
+				renderFileList();
+			});
+	        
+	        $(".datepicker").datepicker({
+	            changeMonth: true,
+	            changeYear: true,
+	            autoSize: true,
+	            showOn: "both",
+	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImageOnly: true
+	        });
+	
+	        $(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $(".datepicker").datepicker('setDate', "");
+		});
 	    
 	    function changeValue(value) {
 	    	   searchFileType = value;
@@ -157,32 +194,6 @@
 			
 		}
 		
-	   	$(function() {
-	        $(".Sdatepicker").datepicker({
-	            changeMonth: true,
-	            changeYear: true,
-	            autoSize: true,
-	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.gif",
-	            buttonImageOnly: true
-	        });
-	        
-	        $(".Edatepicker").datepicker({
-	            changeMonth: true,
-	            changeYear: true,
-	            autoSize: true,
-	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.gif",
-	            buttonImageOnly: true
-	        });
-	
-	        $(".Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	        $(".Sdatepicker").datepicker('setDate', "");
-	
-	        $(".Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	        $(".Edatepicker").datepicker('setDate', "");
-	     });
-	   	
 	   	function btn_PostDate_Clear() {
 	        $(".Sdatepicker").datepicker('setDate', "");
 	        $(".Edatepicker").datepicker('setDate', "");
@@ -473,7 +484,7 @@
 			<li id=""><a onClick="moveTraschCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t282'/></span></a></li>
 			<li id=""><a onClick="filePermanentDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t19'/></span></a></li>
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
-			<li id="right" style="float:right;"><spring:message code='ezWebFolder.t215'/><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"  onclick="optionView(this);"></li>
+			<li id="right" style="float:right;"><spring:message code='ezWebFolder.t215'/><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 			<li id="right" style="float:left;">
 				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="height: 29px; border-radius: 3px; padding: 0px; width: 85px">
 					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option>
@@ -507,7 +518,7 @@
                     <tr>
                         <th><spring:message code='ezBoard.t10021' /></th>
                         <td>
-                            <select id="listcount" style="width: 40px; height: 20px;" onchange="changeCount(this.value);">
+                            <select id="listcount" style="width: 40px; height: 20px;">
                                 <option value="10">10</option>
                                 <option value="20">20</option>
                                 <option value="30">30</option>
@@ -552,9 +563,9 @@
 				<tr>
 		           <th style="text-align:center"><spring:message code='ezWebFolder.t190' /></th>
 		           <td>
-		               <input type="text" class="Sdatepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
+		               <input type="text" class="Sdatepicker datepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
 		                ~
-		               <input type="text" class="Edatepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
+		               <input type="text" class="Edatepicker datepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
 		           </td>
 				</tr>
 				<tr>

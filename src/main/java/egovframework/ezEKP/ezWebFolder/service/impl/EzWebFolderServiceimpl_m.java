@@ -940,11 +940,23 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		boolean hasSearchKeyword = Arrays.stream(searchTargets).anyMatch(str -> !str.toString().isEmpty());
 		
 		if (hasSearchKeyword) {
-			LOGGER.debug("insi: isContainsSubLit!!!!!!!!!!!!!!!!!");
 			parameterMap.put("isContainsSubList", "test");
 		}
 		
-		return ezWebFolderDAO.getFavorites(parameterMap);
+		List<FavoriteVO> result = ezWebFolderDAO.getFavorites(parameterMap);
+		String targetPath;
+		
+		for (FavoriteVO favoriteVO : result) {
+			targetPath = ezWebFolderService.getFolderPath(favoriteVO.getTargetPath().split("\\|"), primary, tenantId);
+			
+			if (favoriteVO.getTargetType().startsWith("D")) {
+				favoriteVO.setTargetPath(targetPath.substring(0, targetPath.length() - 1));
+			} else {
+				favoriteVO.setTargetPath(targetPath + favoriteVO.getTargetName());
+			}
+		}
+		
+		return result;
 	}
 
 	@Override

@@ -65,16 +65,16 @@
 			return currentFolderType;
 		};
 		
-		var setListAsFavorite = function() {
+		var setListAsFavorite = function(isAsync) {
+			loadListAsFavorite(isAsync);
+			
 			if (!isFavoriteMode) {
 				isFavoriteMode = true;
 				onListTypeChangeEvent(true);
 			}
-			
-			loadListAsFavorite();
 		};
 		
-		var setList = function(folderId, folderType) {
+		var setList = function(folderId, folderType, isAsync) {
 			currentFolderId = folderId;
 			
 			if (isFavoriteMode) {
@@ -82,16 +82,20 @@
 			}
 			
 			isFavoriteMode = false;
+			loadList(currentFolderId, currentFolderType, isAsync);
+
 			onListTypeChangeEvent(false);
-			
-			loadList(currentFolderId, currentFolderType);
 		};
 		
-		var refreshList = function() {
+		var refreshList = function(isAsync) {
+			if (isAsync === undefined) {
+				isAsync = false;
+			}
+			
 			if (isFavoriteMode) {
-				setListAsFavorite();
+				setListAsFavorite(isAsync);
 			} else {
-				setList(currentFolderId);
+				setList(currentFolderId, undefined, isAsync);
 			}
 		};
 		
@@ -176,7 +180,7 @@
 		});
 		
 		// load favorite list
-		context.setListAsFavorite();
+		context.setListAsFavorite(true);
 		window.onresize();
 		
 		// datepicker setup
@@ -199,9 +203,9 @@
 			}
 		};
 		
-		document.body.addEventListener("click", listOptionHidden);
-		parent.frames["left"].document.body.addEventListener("click", listOptionHidden);
-		parent.parent.document.getElementById("topFrame").contentWindow.document.body.addEventListener("click", listOptionHidden);
+		document.addEventListener("click", listOptionHidden);
+		parent.frames["left"].document.addEventListener("click", listOptionHidden);
+		parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("click", listOptionHidden);
 		
 		// listoption 클릭 이벤트
 		dom.listoptiondiv.addEventListener("click", function(event) {
@@ -212,7 +216,7 @@
 		dom.listSizeSelect.addEventListener("change", function(event) {
 			optionHidden();
 			pagination.setListSize(this.value);
-			context.refreshList();
+			context.refreshList(true);
 		});
 	});
 	
@@ -234,10 +238,10 @@
 		};
 	}
 
-	function loadListAsFavorite() {
+	function loadListAsFavorite(isAsync) {
 		$.ajax({
 			type: "post",
-			async: true,
+			async: isAsync,
 			url: "/ezWebFolder/getFavorites.do",
 			dataType: "json",
 			
@@ -270,14 +274,14 @@
 		})
 	}
 
-	function loadList(folderId, folderType) {
+	function loadList(folderId, folderType, isAsync) {
 		if (folderId === undefined || folderId == "") {
 			return;
 		}
 		
 		$.ajax({
 			type: "POST",
-			async: true,
+			async: isAsync,
 			url: "/ezWebFolder/fileList.do",
 			dataType: "json",
 			data: {
@@ -549,7 +553,7 @@
 			forderType = context.getFolderType();
 		}
 		
-		context.setList(folderId, folderType);
+		context.setList(folderId, folderType, false);
 	}
 
 	// 날짜 초기화 버튼
@@ -589,7 +593,7 @@
 		}
 		
 		searchOptionHidden();
-		context.refreshList();
+		context.refreshList(true);
 	}
 
 	function doLayerPopup(obj) {
@@ -781,7 +785,7 @@
 
 	// adapter function
 	function refreshView() {
-		context.refreshList();
+		context.refreshList(true);
 	}
 
 	// fileupload 함수 가로채기
@@ -829,7 +833,7 @@
 				if (reason) {
 					alert(reason);
 				} else {
-					context.refreshList();
+					context.refreshList(true);
 				}
 			},
 			error: function(error) {
@@ -884,7 +888,7 @@
 </script>
 </head>
 <body class="mainbody">
-	<h1 onclick='context.setListAsFavorite();' style="cursor: pointer; display: inline-block;">
+	<h1 onclick='context.setListAsFavorite(false);' style="cursor: pointer; display: inline-block;">
 		즐겨찾기<span id="mailBoxInfo"></span>
 	</h1>
 	<div id="pageArea">
@@ -905,7 +909,7 @@
 				<li id=""><img src="/images/i_bar.gif"></li>
 				<li id="SearchOption" favoritemenu mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123' /></span></li>
 				<li id=""><img src="/images/i_bar.gif"></li>
-				<li id="" onClick="context.refreshList()" favoritemenu><span><spring:message code='ezWebFolder.t139' /></span></li>
+				<li id="" onClick="context.refreshList(true)" favoritemenu><span><spring:message code='ezWebFolder.t139' /></span></li>
 				<li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 				<li id="right" favoritemenu style="float: right;"><select class="select" id="idSelect" onchange="idChange(this.value);" style="width: 100px; display: none;">
 						<option value="all" data-imagesrc="/images/webfolder/allTypes.png" selected><spring:message code='ezWebFolder.t191' /></option>
