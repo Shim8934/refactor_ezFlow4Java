@@ -94,6 +94,7 @@
 			}
 			
 			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}
+			#mainmenu .participantBtn{cursor: pointer;}
 			
 		</style>
 	</head>
@@ -125,8 +126,8 @@
 			<ul style="width:100%;">
 				<li id="btnInsert" onClick="newLad()" ><a><span><spring:message code="ezLadder.t018"/></span></a></li>
 				<li style="float:right; font-weight:normal;">
-					<button type="button" class="participantBtn" id="all" onclick="participant(this.value)" value="all" style="float: right; cursor: pointer;"><spring:message code="ezLadder.t011"/></button>
-					<button type="button" class="participantBtn" id="part" onclick="participant(this.value)" value="part" style="position:relative; cursor: pointer;"><spring:message code="ezLadder.t012"/></button>
+					<button type="button" class="participantBtn" id="all" onclick="participant(this.value)" value="all" style="float: right;"><spring:message code="ezLadder.t011"/></button>
+					<button type="button" class="participantBtn" id="part" onclick="participant(this.value)" value="part" style="position:relative;"><spring:message code="ezLadder.t012"/></button>
 				</li>
 			</ul>
 		</div>
