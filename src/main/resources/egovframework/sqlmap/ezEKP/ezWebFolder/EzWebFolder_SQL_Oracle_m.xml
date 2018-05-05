@@ -280,11 +280,16 @@
 		        JOIN TBL_WEBFOLDER_SHARE_SUB SS
 		        ON S.SHARE_ID = SS.SHARE_ID
 		        AND S.TENANT_ID = SS.TENANT_ID
+		        LEFT JOIN TBL_WEBFOLDER_SHARE_HIDE SH
+		        ON S.SHARE_ID = SH.SHARE_ID
+		        AND S.TENANT_ID = SH.TENANT_ID
+		        AND SH.USER_ID = #userId#
 		        WHERE SS.USER_ID IN 
 		        <iterate property="idList" open="(" close=")" conjunction=",">
 					#idList[].id#
 				</iterate>
-		        AND S. FOLDERFILE_TYPE = 'D' ) SD
+		        AND S. FOLDERFILE_TYPE = 'D'
+		        AND SH.USER_ID IS NULL ) SD
 		    ON D.FOLDER_ID = SD.FOLDERFILE_ID
 		    AND D.TENANT_ID = SD.TENANT_ID
 		    WHERE D.TENANT_ID = #tenantId# ) FP

@@ -136,6 +136,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		if (folderType.equals("S") || folderType.equals("")) {
 			List<Map<String, String>> idList = ezWebFolderService_m.getPermissionIdList(userId, deptId, compId, tenantId);
 			
+			map.put("userId", userId);
 			map.put("idList", idList);
 			map.put("compId", compId);
 			
