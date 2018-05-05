@@ -69,7 +69,7 @@
 				parent.folderList(folderType);
 				parent.DivPopUpHidden();
 				window.close();
-			}else if(code == '2') {
+			}else if(code == '4') {
 				alert("하위 파일 또는 폴더를 이동 또는 복사할 권한이 없습니다.");
 				window.close();
 			}else {

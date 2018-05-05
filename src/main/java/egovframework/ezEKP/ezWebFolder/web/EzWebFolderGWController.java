@@ -51,6 +51,7 @@ import egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import net.sf.cglib.core.Local;
 
 @SuppressWarnings("unchecked")
 @RestController
@@ -243,7 +244,7 @@ public class EzWebFolderGWController {
 	}
 
 	@RequestMapping(value="/rest/ezwebfolderadmin/storagereset/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject putResetPersonalStorage(@RequestParam("userList") List<String> userList, HttpServletRequest request) {
+	public JSONObject putResetPersonalStorage(@RequestParam("userList") List<String> userList, HttpServletRequest request, Locale locale) {
 		String serverName  = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String companyId   = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		String totalAmount = "";
@@ -254,6 +255,7 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -276,6 +278,7 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
@@ -326,7 +329,7 @@ public class EzWebFolderGWController {
 	}
 
 	@RequestMapping(value="/rest/ezwebfolderadmin/filehistorylist", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getFileHistory(HttpServletRequest request) {
+	public JSONObject getFileHistory(HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
 		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
 		String offset     = request.getParameter("offset")      != null ? request.getParameter("offset")                        : "";
@@ -354,6 +357,7 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -403,6 +407,7 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
@@ -856,7 +861,7 @@ public class EzWebFolderGWController {
 	}*/
 
 	@RequestMapping(value="/rest/ezwebfolderadmin/folders/comp", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject postCompanyFolderInsert(@RequestBody JSONObject jsonObject, HttpServletRequest request) throws ParseException {
+	public JSONObject postCompanyFolderInsert(@RequestBody JSONObject jsonObject, HttpServletRequest request, Locale locale) throws ParseException {
 		JSONParser parser  = new JSONParser();
 		jsonObject         = (JSONObject) parser.parse(jsonObject.toJSONString());
 		String serverName  = request.getHeader("host-name") != null ? request.getHeader("host-name")       : "";
@@ -873,6 +878,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -890,13 +896,14 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
 	}
 
 	@RequestMapping(value="/rest/ezwebfolderadmin/folders/{folderid}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject putCompanyFolderUpdate(@RequestBody JSONObject jsonObject, @PathVariable(value="folderid") String folderId, HttpServletRequest request) throws ParseException {
+	public JSONObject putCompanyFolderUpdate(@RequestBody JSONObject jsonObject, @PathVariable(value="folderid") String folderId, HttpServletRequest request, Locale locale) throws ParseException {
 		JSONParser parser      = new JSONParser();
 		jsonObject             = (JSONObject) parser.parse(jsonObject.toJSONString());
 		String serverName      = request.getHeader("host-name") != null ? request.getHeader("host-name")    : "";
@@ -911,6 +918,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -928,6 +936,7 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
@@ -1296,7 +1305,7 @@ public class EzWebFolderGWController {
 	}
 
 	@RequestMapping(value="/rest/ezwebfolderadmin/folder-users/{folderid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getFolderUsers(@PathVariable(value="folderid") String folderId, HttpServletRequest request) {
+	public JSONObject getFolderUsers(@PathVariable(value="folderid") String folderId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
 		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset") : "";
 		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")   : "";
@@ -1308,6 +1317,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -1336,13 +1346,14 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
 	}
 
 	@RequestMapping(value="/rest/ezwebfolderadmin/folders/{folderid}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public JSONObject delCompanyFolder(@PathVariable(value="folderid") String folderId, HttpServletRequest request) throws Exception {
+	public JSONObject delCompanyFolder(@PathVariable(value="folderid") String folderId, HttpServletRequest request, Locale locale) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String offset     = request.getParameter("offset") != null ? request.getParameter("offset") : "";
 		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
@@ -1353,6 +1364,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -1370,6 +1382,7 @@ public class EzWebFolderGWController {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
@@ -1389,8 +1402,8 @@ public class EzWebFolderGWController {
 		if (folderId.equals("") || serverName.equals("") || destFolderId.equals("") || mode.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			result.put("code", "1");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -1426,13 +1439,14 @@ public class EzWebFolderGWController {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
 	}
 
 	@RequestMapping(value="/rest/ezwebfolderadmin/folders/{folderid}/file-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getFileList(@PathVariable(value="folderid") String folderId, HttpServletRequest request) {
+	public JSONObject getFileList(@PathVariable(value="folderid") String folderId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")    : "";
 		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")    : "";
 		String offset     = request.getParameter("offset")      != null ? request.getParameter("offset")    : "";
@@ -1456,6 +1470,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -1556,13 +1571,14 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
 	}
 	
 	@RequestMapping(value="/rest/ezwebfolderadmin/company-id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getCompanyId(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+	public JSONObject getCompanyId(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
 		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset") : "";
 		String lang       = request.getParameter("lang")     != null ? request.getParameter("lang")   : "";
@@ -1574,6 +1590,7 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -1589,13 +1606,14 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
 	}
 	
 	@RequestMapping(value="/rest/ezwebfolderadmin/company-list/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getCompanyList(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+	public JSONObject getCompanyList(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name") : "";
 		String offset     = request.getParameter("offset")   != null ? request.getParameter("offset") : "";
 		String lang       = request.getParameter("lang")     != null ? request.getParameter("lang")   : "";
@@ -1608,6 +1626,7 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -1635,6 +1654,7 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
@@ -1756,7 +1776,7 @@ public class EzWebFolderGWController {
 	}
 	
 	@RequestMapping(value="/rest/ezwebfolderadmin/company-folder/{companyid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject postMakeCompanyFolder(@PathVariable(value="companyid") String companyId, HttpServletRequest request) throws Exception {
+	public JSONObject postMakeCompanyFolder(@PathVariable(value="companyid") String companyId, HttpServletRequest request, Locale locale) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String offset     = request.getParameter("offset") != null ? request.getParameter("offset") : "";
 		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
@@ -1769,6 +1789,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -1811,13 +1832,14 @@ public class EzWebFolderGWController {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
 	}
 	
 	@RequestMapping(value="/rest/ezwebfolderadmin/dept-folder/{companyid}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject postMakeDepartmentFolder(@PathVariable(value="companyid") String companyId, HttpServletRequest request) throws Exception {
+	public JSONObject postMakeDepartmentFolder(@PathVariable(value="companyid") String companyId, HttpServletRequest request, Locale locale) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String offset     = request.getParameter("offset") != null ? request.getParameter("offset") : "";
 		String lang       = request.getParameter("lang")   != null ? request.getParameter("lang")   : "";
@@ -1830,6 +1852,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -1844,6 +1867,7 @@ public class EzWebFolderGWController {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
@@ -2224,6 +2248,7 @@ public class EzWebFolderGWController {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -2247,13 +2272,14 @@ public class EzWebFolderGWController {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;
 	}
 	
 	@RequestMapping(value="/rest/ezwebfolder/check-wfadmin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject checkWfAdmin(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+	public JSONObject checkWfAdmin(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
 		
@@ -2264,6 +2290,7 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			return result;
 		}
 		
@@ -2276,6 +2303,7 @@ public class EzWebFolderGWController {
 			}
 			else {
 				result.put("data", "0");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t28", locale));
 			}
 			
 			result.put("status", "ok");
@@ -2286,6 +2314,7 @@ public class EzWebFolderGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 		}
 		
 		return result;

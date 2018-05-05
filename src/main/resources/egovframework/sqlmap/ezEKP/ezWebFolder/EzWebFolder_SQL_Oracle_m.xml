@@ -228,17 +228,17 @@
 		</isNotEqual>
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
 			<![CDATA[
-				RESULT.TARGET_EXT LIKE '%' || #searchExt# || '%'
+				LOWER(RESULT.TARGET_EXT) LIKE '%' || LOWER(#searchExt#) || '%'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 			<![CDATA[
-				(RESULT.TARGET_NAME_1 LIKE '%' || #searchFileName# || '%' OR RESULT.TARGET_NAME_2 LIKE '%' || #searchFileName# || '%')
+				(LOWER(RESULT.TARGET_NAME_1) LIKE '%' || LOWER(#searchFileName#) || '%' OR LOWER(RESULT.TARGET_NAME_2) LIKE '%' || LOWER(#searchFileName#) || '%')
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchCreatorName" compareValue="" prepend="AND">
 			<![CDATA[
-				(RESULT.CREATE_NAME1 LIKE '%' || #searchCreatorName# || '%' OR RESULT.CREATE_NAME2 LIKE '%' || #searchCreatorName# || '%')
+				(LOWER(RESULT.CREATE_NAME1) LIKE '%' || LOWER(#searchCreatorName#) || '%' OR LOWER(RESULT.CREATE_NAME2) LIKE '%' || LOWER(#searchCreatorName#) || '%')
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="">

@@ -716,5 +716,44 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		ezWebFolderDAO_y.insertEnv(map);
 		LOGGER.debug("insertEnv End");
 	}
+
+	@Override
+	public String checkPermission(String userId, String deptId, String comId,
+			String folderFileId, String folderFileType, int tenantId) throws Exception {
+		LOGGER.debug("checkPermission Start");
+		String status ="fail";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("deptId", deptId);
+		map.put("comId", comId);
+		map.put("tenantId", tenantId);
+		
+		// "F"이면 파일 id를 가지고 folder 정보를 가져온다.
+		FolderVO foldervo = new FolderVO();
+		if (folderFileId.equals("F")) {
+			map.put("fileId", folderFileId);
+			foldervo = ezWebFolderDAO_y.getFolderDetailByFileId(map);
+		} else {
+			// "D"이면 폴더 detail 정보 가져온다.
+			map.put("folderId", folderFileId);
+			foldervo = ezWebFolderDAO_y.getFolderDetail(map);
+		}
+		List<Map<String, String>> idList = ezWebFolderService_m.getPermissionIdList(userId, deptId, comId, tenantId);
+		map.put("idList", idList);
+		
+		String ownerId = foldervo.getOwnerId(); 
+		for (int i = 0; i < idList.size(); i++) {
+			String check = idList.get(i).get("id");
+			if(ownerId.equals(check)) {
+				status = "ok";
+				return status;
+			}
+		}
+		
+		LOGGER.debug("this folder is not permission");
+		LOGGER.debug("checkPermission End");
+		return status;
+	}
+	
 	
 }

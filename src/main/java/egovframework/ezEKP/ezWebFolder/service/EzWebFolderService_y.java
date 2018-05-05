@@ -66,4 +66,7 @@ public interface EzWebFolderService_y {
 
 	// listCount 수정시 insert
 	void insertEnv(String userId, int tenantId, int listCount);
+	
+	// folderFileId : targetId, folderFileType : 'D','F'
+	String checkPermission(String userId, String deptId, String comId, String folderFileId, String folderFileType, int tenantId ) throws Exception;
 }

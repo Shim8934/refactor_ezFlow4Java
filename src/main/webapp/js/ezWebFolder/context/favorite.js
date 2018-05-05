@@ -20,18 +20,39 @@ var favoriteContext = (function() {
 		}
 		
 		var requestAjax = hasNoFavorite ? addFavorite : deleteFavorite;
-		var rowElement, imageElement, successHandle, rowInfo;
+		var files = [], folders = [], toggleTargetRows = [];
+		var rowInfo;
 		
+		var successHandle = function() {
+			var length = toggleTargetRows.length;
+			var rowElement, imageElement, i;
+			
+			for (i = 0; i < length; i++) {
+				rowElement = toggleTargetRows[i];
+				imageElement = rowElement.querySelector("img:first-child");
+				
+				toggleImage(rowElement, imageElement);
+			}
+		};
+
 		for (i = 0; i < selectedLength; i++) {
 			rowElement = selectedRows[i];
-			imageElement = rowElement.querySelector("img:first-child");
-			successHandle = function() {
-				toggleImage(rowElement, imageElement);
-			};
 			
-			rowInfo = rowContext.getRowInfo(selectedRows[i]);
-			requestAjax(rowInfo.id, rowInfo.type, false, successHandle);
+			if (hasNoFavorite && rowElement.hasAttribute("favorite")) {
+				continue;
+			}
+			
+			toggleTargetRows.push(rowElement);
+			rowInfo = rowContext.getRowInfo(rowElement);
+			
+			if (rowInfo.type === "F") {
+				files.push(rowInfo.id);
+			} else {
+				folders.push(rowInfo.id);
+			}
 		}
+
+		requestAjax(files.toString(), folders.toString(), false, successHandle);
 	}
 	
 	function onImageClick(element) {
@@ -47,25 +68,33 @@ var favoriteContext = (function() {
 	
 	function toggleFavorite(rowElement, isAsync, addHandler, deleteHandler) {
 		var rowInfo = rowContext.getRowInfo(rowElement);
+		var targetId = rowInfo.id;
+		var files = "", folders = "";
+		
+		if (rowInfo.type === "F") {
+			files = targetId;
+		} else {
+			folders = targetId
+		}
 		
 		if (rowInfo.isFavorite) {
-			deleteFavorite(rowInfo.id, rowInfo.type, isAsync, deleteHandler);
+			deleteFavorite(files, folders, isAsync, deleteHandler);
 		} else {
-			addFavorite(rowInfo.id, rowInfo.type, isAsync, addHandler);
+			addFavorite(files, folders, isAsync, addHandler);
 		}
 	}
 	
-	function addFavorite(targetId, targetType, isAsync, successHandler) {
+	function addFavorite(fileList, folderList, isAsync, successHandler) {
 		requestFavoriteAjax("/ezWebFolder/addFavorite.do", isAsync, {
-			targetId: targetId,
-			targetType: targetType
+			fileList: fileList,
+			folderList: folderList
 		}, successHandler);
 	}
 	
-	function deleteFavorite(targetId, targetType, isAsync, successHandler) {
+	function deleteFavorite(fileList, folderList, isAsync, successHandler) {
 		requestFavoriteAjax("/ezWebFolder/deleteFavorite.do", isAsync, {
-			targetId: targetId,
-			targetType: targetType
+			fileList: fileList,
+			folderList: folderList
 		}, successHandler);
 	}
 	

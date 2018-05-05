@@ -586,8 +586,8 @@ public class EzWebFolderController_m {
 		
 		Map<String, Object> param = new HashMap<>();
 		// target info
-		param.put("targetId", orElse(request.getParameter("targetId"), ""));
-		param.put("targetType", orElse(request.getParameter("targetType"), ""));
+		param.put("fileList", orElse(request.getParameter("fileList"), ""));
+		param.put("folderList", orElse(request.getParameter("folderList"), ""));
 		
 		JSONObject result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + user.getId() + "/favorite", param, request, "post", null);
 		
@@ -602,8 +602,8 @@ public class EzWebFolderController_m {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		Map<String, Object> jsonParam = new HashMap<>();
-		jsonParam.put("targetId", orElse(request.getParameter("targetId"), ""));
-		jsonParam.put("targetType", orElse(request.getParameter("targetType"), ""));
+		jsonParam.put("fileList", orElse(request.getParameter("fileList"), ""));
+		jsonParam.put("folderList", orElse(request.getParameter("folderList"), ""));
 		
 		JSONObject result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + user.getId() + "/favorite", null, request, "delete", new JSONObject(jsonParam));
 		

@@ -34,6 +34,12 @@
 				dataType: "JSON",
 				async: false,
 				success: function(data) {
+					var reason = data.reason;
+					if (reason) {
+						alert(reason);
+						return;
+					}
+					
 					afterDeleteSuccess();
 				},
 				error: function (xhr, status, e){

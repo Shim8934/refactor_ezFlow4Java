@@ -90,7 +90,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/webfolderLeft.do")
 	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie,ModelMap modelMap, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo    = commonUtil.userInfoSimple(loginCookie);
-		String useBottomFrameOnly = ezCommonService.getTenantConfig("useBottomFrameOnly", userInfo.getTenantId());
 		
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/check-wfadmin/" + userInfo.getId();
@@ -113,7 +112,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("isWfAdmin", checkResult);
 		}
 		
-		model.addAttribute("useBottomFrameOnly", useBottomFrameOnly);
 		return "ezWebFolder/webfolderLeft";
 	}
 

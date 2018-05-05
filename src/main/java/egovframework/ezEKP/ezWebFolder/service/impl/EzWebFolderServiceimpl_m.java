@@ -679,30 +679,26 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Override
 	public int realFileDelete(FileVO fileVO, String realPath, LoginVO userInfo, String userName1, String userName2) throws Exception {
+
+		String pDirPath = realPath.substring(0, realPath.length() -1) + fileVO.getFilePath();
 		
-		String pDirPath = getWebFolderDirPath(userInfo.getTenantId());
-		pDirPath = realPath + pDirPath;
-		
-		if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
-			pDirPath = pDirPath + commonUtil.separator;
-		}
-		
-		File file = new File(pDirPath + fileVO.getFileName());
+		File file = new File(pDirPath);
 		int isDeleted = -1;
+		
+		LOGGER.debug("pDirPath=" + pDirPath);
 		
 		if (file.exists()) {
 			if (file.delete()) {
 				isDeleted = 1;
 				ezWebFolderService.saveLog("P", userInfo.getCompanyID(), userInfo.getOffset(), userInfo.getId(), userName1, userName2, 
 						fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), userInfo.getTenantId());
+				
 				LOGGER.debug(fileVO.getFileName() + "delete is success");
 			} else {
-				isDeleted = 1;
 				LOGGER.debug(fileVO.getFileName() + "delete is fail");
 			}
 		} else {
-			isDeleted = 1;
-			LOGGER.error("File is Not Found:" + fileVO.getFileName());
+			LOGGER.error("File is Not Found : " + fileVO.getFileName());
 		}
 		
 		return isDeleted;
@@ -944,11 +940,23 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		boolean hasSearchKeyword = Arrays.stream(searchTargets).anyMatch(str -> !str.toString().isEmpty());
 		
 		if (hasSearchKeyword) {
-			LOGGER.debug("insi: isContainsSubLit!!!!!!!!!!!!!!!!!");
 			parameterMap.put("isContainsSubList", "test");
 		}
 		
-		return ezWebFolderDAO.getFavorites(parameterMap);
+		List<FavoriteVO> result = ezWebFolderDAO.getFavorites(parameterMap);
+		String targetPath;
+		
+		for (FavoriteVO favoriteVO : result) {
+			targetPath = ezWebFolderService.getFolderPath(favoriteVO.getTargetPath().split("\\|"), primary, tenantId);
+			
+			if (favoriteVO.getTargetType().startsWith("D")) {
+				favoriteVO.setTargetPath(targetPath.substring(0, targetPath.length() - 1));
+			} else {
+				favoriteVO.setTargetPath(targetPath + favoriteVO.getTargetName());
+			}
+		}
+		
+		return result;
 	}
 
 	@Override

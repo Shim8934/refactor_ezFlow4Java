@@ -667,22 +667,6 @@ public class EzWebFolderGWController_m {
 			}
 			
 			List<FavoriteVO> favoriteFiles = ezWebFolderService_m.getFavorites(userId, primary, offset, tenantId, searchInfo, startIndex, listCount);
-			String targetPath;
-			
-			for (FavoriteVO favoriteFile : favoriteFiles) {
-				targetPath = favoriteFile.getTargetPath().substring(1);
-				targetPath = getFolderPath(targetPath.split("\\|"), offset, primary, tenantId);
-				
-				// is folder
-				if (favoriteFile.getTargetType().startsWith("D")) {
-					// cut end slash
-					targetPath = targetPath.substring(0, targetPath.length() - 1);
-				} else {
-					targetPath += favoriteFile.getTargetName();
-				}
-				
-				favoriteFile.setTargetPath(targetPath);
-			}
 			
 			JSONObject data = new JSONObject();
 			
@@ -725,12 +709,11 @@ public class EzWebFolderGWController_m {
 		logger.debug("G/W WEBFOLDER [POST /rest/ezwebfolder/users/{userId}/favorite] started.");
 		
 		String serverName = request.getHeader("x-user-host");
-		String targetId = request.getParameter("targetId");
-		String targetType = request.getParameter("targetType");
+		String fileListStr = orElse(request.getParameter("fileList"), "");
+		String folderListStr = orElse(request.getParameter("folderList"), "");
 		
 		JSONObject result = new JSONObject();
 
-		
 		if (containsNull(serverName, userId)) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -740,6 +723,9 @@ public class EzWebFolderGWController_m {
 		}
 
 		try {
+			String[] fileList = fileListStr.split(",");
+			String[] folderList = folderListStr.split(",");
+			
 			MCommonVO userInfo = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = userInfo.getTenantId();
 			String offset = userInfo.getOffSet();
@@ -747,18 +733,32 @@ public class EzWebFolderGWController_m {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String createDate = commonUtil.getDateStringInUTC(format.format(new Date()), offset, true);
 			
-			if(ezWebFolderService_m.isExistsFavorite(userId, targetId, targetType, tenantId)) {
-				result.put("status", "error");
-				result.put("code", 2);
-			} else {
-				ezWebFolderService_m.addFavorite(userId, targetId, targetType, createDate, tenantId);
-				result.put("status", "ok");
-				result.put("code", 0);
+			for (String fileId : fileList) {
+				if (fileId.isEmpty()) {
+					continue;
+				}
+				
+				if(!ezWebFolderService_m.isExistsFavorite(userId, fileId, "F", tenantId)) {
+					ezWebFolderService_m.addFavorite(userId, fileId, "F", createDate, tenantId);
+				}
 			}
+			
+			for (String folderId : folderList) {
+				if (folderId.isEmpty()) {
+					continue;
+				}
+				
+				if(!ezWebFolderService_m.isExistsFavorite(userId, folderId, "D", tenantId)) {
+					ezWebFolderService_m.addFavorite(userId, folderId, "D", createDate, tenantId);
+				}
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);
+			result.put("code", 2);
 		}
 
 		logger.debug(String.format("result: %s", result.toJSONString()));
@@ -784,8 +784,8 @@ public class EzWebFolderGWController_m {
 		logger.debug("G/W WEBFOLDER [DELETE /rest/ezwebfolder/users/{userId}/favorite] started.");
 
 		String serverName = request.getHeader("x-user-host");
-		String targetId = (String) jsonObject.get("targetId");
-		String targetType = (String) jsonObject.get("targetType");
+		String fileListStr = orElse((String) jsonObject.get("fileList"), "");
+		String folderListStr = orElse((String) jsonObject.get("folderList"), "");
 
 		JSONObject result = new JSONObject();
 
@@ -798,21 +798,38 @@ public class EzWebFolderGWController_m {
 		}
 		
 		try {
+			String[] fileList = fileListStr.split(",");
+			String[] folderList = folderListStr.split(",");
+			
 			MCommonVO userInfo = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = userInfo.getTenantId();
 			
-			if(ezWebFolderService_m.isExistsFavorite(userId, targetId, targetType, tenantId)) {
-				ezWebFolderService_m.deleteFavorite(userId, targetId, targetType, tenantId);
-				result.put("status", "ok");
-				result.put("code", 0);
-			} else {
-				result.put("status", "error");
-				result.put("code", 2);
+			for (String fileId : fileList) {
+				if (fileId.isEmpty()) {
+					continue;
+				}
+				
+				if(ezWebFolderService_m.isExistsFavorite(userId, fileId, "F", tenantId)) {
+					ezWebFolderService_m.deleteFavorite(userId, fileId, "F", tenantId);
+				}
 			}
+			
+			for (String folderId : folderList) {
+				if (folderId.isEmpty()) {
+					continue;
+				}
+				
+				if(ezWebFolderService_m.isExistsFavorite(userId, folderId, "D", tenantId)) {
+					ezWebFolderService_m.deleteFavorite(userId, folderId, "D", tenantId);
+				}
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);
+			result.put("code", 2);
 		}
 
 		logger.debug(String.format("result: %s", result.toJSONString()));
@@ -862,7 +879,7 @@ public class EzWebFolderGWController_m {
 		if (userId.equals("") || offset.equals("") || userId.equals("") || serverName.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 
@@ -908,9 +925,9 @@ public class EzWebFolderGWController_m {
 			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
+			result.put("code", 2);
 		}
 		
 		logger.debug("result=" + result);
@@ -936,10 +953,10 @@ public class EzWebFolderGWController_m {
 		String realPath = request.getServletContext().getRealPath("");
 		JSONObject result   = new JSONObject();
 		
-		if (fileIDList.length == 0 & folderIDList.length == 0|| serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("")) {
+		if (fileIDList.length == 0 && folderIDList.length == 0|| serverName.equals("") || offset.equals("") || userId.equals("") || lang.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -951,8 +968,9 @@ public class EzWebFolderGWController_m {
 			result.put("code", "0");
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 2);
 		}
 		
 		logger.debug("filePermanetDelete ended");
@@ -986,7 +1004,7 @@ public class EzWebFolderGWController_m {
 		if (fileIDList.length == 0 && folderIDList.length == 0|| serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 1);
 			return result;
 		}
 		
@@ -1000,16 +1018,17 @@ public class EzWebFolderGWController_m {
 					userId, offset, companyId, timeUTC, userInfo.getDisplayName1(), userInfo.getDisplayName2());
 			
 			if (failCount == 0) {
-				result.put("code", "1");
+				result.put("code", 0);
 			 } else {
-				 result.put("code", "-1");
+				 result.put("code", 4);
 			 }
 			
 			result.put("status", "ok");
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 2);
 		}
 		
 		logger.debug("result=" + result);
@@ -1053,11 +1072,12 @@ public class EzWebFolderGWController_m {
 			ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, folderId ,tenantId, userId, offset, user.getCompanyId(), user.getUserName(), user.getUserName2(), timeUTC);
 			
 			result.put("status", "ok");
-			result.put("code", "0");
+			result.put("code", 0);
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			result.put("status", "error");
-			result.put("code", "1");
+			result.put("code", 2);
 		}
 		
 		logger.debug("moveTrashCan ended");

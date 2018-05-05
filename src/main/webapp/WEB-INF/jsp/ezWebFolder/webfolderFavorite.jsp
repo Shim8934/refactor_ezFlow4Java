@@ -65,16 +65,16 @@
 			return currentFolderType;
 		};
 		
-		var setListAsFavorite = function() {
+		var setListAsFavorite = function(isAsync) {
+			loadListAsFavorite(isAsync);
+			
 			if (!isFavoriteMode) {
 				isFavoriteMode = true;
 				onListTypeChangeEvent(true);
 			}
-			
-			loadListAsFavorite();
 		};
 		
-		var setList = function(folderId, folderType) {
+		var setList = function(folderId, folderType, isAsync) {
 			currentFolderId = folderId;
 			
 			if (isFavoriteMode) {
@@ -82,16 +82,20 @@
 			}
 			
 			isFavoriteMode = false;
+			loadList(currentFolderId, currentFolderType, isAsync);
+
 			onListTypeChangeEvent(false);
-			
-			loadList(currentFolderId, currentFolderType);
 		};
 		
-		var refreshList = function() {
+		var refreshList = function(isAsync) {
+			if (isAsync === undefined) {
+				isAsync = false;
+			}
+			
 			if (isFavoriteMode) {
-				setListAsFavorite();
+				setListAsFavorite(isAsync);
 			} else {
-				setList(currentFolderId);
+				setList(currentFolderId, undefined, isAsync);
 			}
 		};
 		
@@ -176,7 +180,7 @@
 		});
 		
 		// load favorite list
-		context.setListAsFavorite();
+		context.setListAsFavorite(true);
 		window.onresize();
 		
 		// datepicker setup
@@ -191,6 +195,29 @@
 		
 		$(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		$(".datepicker").datepicker('setDate', "");
+		
+		// listoption 다른 곳 클릭시 숨김 처리
+		var listOptionHidden = function(event) {
+			if (dom.listoptiondiv.getAttribute('mode') == "on" && !dom.layerViewpopup.contains(event.target)) {
+				optionHidden();
+			}
+		};
+		
+		document.addEventListener("click", listOptionHidden);
+		parent.frames["left"].document.addEventListener("click", listOptionHidden);
+		parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("click", listOptionHidden);
+		
+		// listoption 클릭 이벤트
+		dom.listoptiondiv.addEventListener("click", function(event) {
+			event.stopPropagation();
+			optionView(event.target);
+		});
+		
+		dom.listSizeSelect.addEventListener("change", function(event) {
+			optionHidden();
+			pagination.setListSize(this.value);
+			context.refreshList(true);
+		});
 	});
 	
 	function initDomElement() {
@@ -204,14 +231,17 @@
 			pageArea: document.getElementById("pageArea"),
 			layerViewpopup: document.getElementById("layer_Viewpopup"),
 			allCheckBox: document.getElementById("checkAll"),
-			listTable: document.getElementById("tblFileList")
+			listTable: document.getElementById("tblFileList"),
+			layerViewpopup: document.getElementById("layer_Viewpopup"),
+			listoptiondiv: document.getElementById("webfolderlistoptiondiv"),
+			listSizeSelect: document.getElementById("listcount")
 		};
 	}
 
-	function loadListAsFavorite() {
+	function loadListAsFavorite(isAsync) {
 		$.ajax({
 			type: "post",
-			async: false,
+			async: isAsync,
 			url: "/ezWebFolder/getFavorites.do",
 			dataType: "json",
 			
@@ -231,7 +261,7 @@
 				// TODO: 리펙토링
 				pagination.setListSize(result.listCount);
 				pagination.setAmount(result.totalCount);
-				pagination.build(true);
+				pagination.build();
 				
 				renderList(result.targetList, false);
 				
@@ -244,14 +274,14 @@
 		})
 	}
 
-	function loadList(folderId, folderType) {
+	function loadList(folderId, folderType, isAsync) {
 		if (folderId === undefined || folderId == "") {
 			return;
 		}
 		
 		$.ajax({
 			type: "POST",
-			async: false,
+			async: isAsync,
 			url: "/ezWebFolder/fileList.do",
 			dataType: "json",
 			data: {
@@ -270,7 +300,7 @@
 				
 				pagination.setListSize(result.listCount);
 				pagination.setAmount(result.totalRows);
-				pagination.build(true);
+				pagination.build();
 				
 				var dragDropArea = dom.dragDropArea;
 				
@@ -523,7 +553,7 @@
 			forderType = context.getFolderType();
 		}
 		
-		context.setList(folderId, folderType);
+		context.setList(folderId, folderType, false);
 	}
 
 	// 날짜 초기화 버튼
@@ -563,7 +593,7 @@
 		}
 		
 		searchOptionHidden();
-		context.refreshList();
+		context.refreshList(true);
 	}
 
 	function doLayerPopup(obj) {
@@ -605,7 +635,7 @@
 		document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
 		document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 	}
-
+	
 	function fileDownload() {
 		var selected = getSelectedFoldersAndFiles();
 		
@@ -755,7 +785,7 @@
 
 	// adapter function
 	function refreshView() {
-		context.refreshList();
+		context.refreshList(true);
 	}
 
 	// fileupload 함수 가로채기
@@ -803,7 +833,7 @@
 				if (reason) {
 					alert(reason);
 				} else {
-					context.refreshList();
+					context.refreshList(true);
 				}
 			},
 			error: function(error) {
@@ -858,7 +888,7 @@
 </script>
 </head>
 <body class="mainbody">
-	<h1 onclick='context.setListAsFavorite();' style="cursor: pointer; display: inline-block;">
+	<h1 onclick='context.setListAsFavorite(false);' style="cursor: pointer; display: inline-block;">
 		즐겨찾기<span id="mailBoxInfo"></span>
 	</h1>
 	<div id="pageArea">
@@ -879,8 +909,8 @@
 				<li id=""><img src="/images/i_bar.gif"></li>
 				<li id="SearchOption" favoritemenu mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123' /></span></li>
 				<li id=""><img src="/images/i_bar.gif"></li>
-				<li id="" onClick="pagination.build()" favoritemenu><span><spring:message code='ezWebFolder.t139' /></span></li>
-				<li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" onclick="optionView(this);"></li>
+				<li id="" onClick="context.refreshList(true)" favoritemenu><span><spring:message code='ezWebFolder.t139' /></span></li>
+				<li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 				<li id="right" favoritemenu style="float: right;"><select class="select" id="idSelect" onchange="idChange(this.value);" style="width: 100px; display: none;">
 						<option value="all" data-imagesrc="/images/webfolder/allTypes.png" selected><spring:message code='ezWebFolder.t191' /></option>
 						<!-- 전체 -->
@@ -920,7 +950,7 @@
 						</colgroup>
 						<tr>
 							<th><spring:message code='ezBoard.t10021' /></th>
-							<td><select id="listcount" style="width: 40px; height: 20px;" onchange="pagination.setListSize(this.value);pagination.build();">
+							<td><select id="listcount" style="width: 40px; height: 20px;">
 									<option value="10">10</option>
 									<option value="20">20</option>
 									<option value="30">30</option>
