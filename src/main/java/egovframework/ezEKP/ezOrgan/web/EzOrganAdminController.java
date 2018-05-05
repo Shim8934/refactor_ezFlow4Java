@@ -1361,7 +1361,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo, oriPass);
 							
+							String useStandardFolderId = config.getProperty("config.useStandardFolderId");
 							
+							if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {							
+								createDefaultFolders(loginCookie, mailAddr, locale);
+							}
 							
 							result = "OK";
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
@@ -2764,4 +2768,23 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		ezEmailService.setInitInboxRule(vo.getTenantId(), vo.getCn());
 		logger.debug("InitInboxRule set.");
 	}
+	
+	private void createDefaultFolders(String loginCookie, String userEmail, Locale locale) throws Exception {
+		String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);		
+		IMAPAccess ia = null;
+		
+        try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+						
+			// 기본 폴더들이 없을 때 생성한다.
+			ia.getTopLevelFolders(true, false);			
+		} finally {
+			if (ia != null) {
+				ia.close();
+				ia = null;
+			}
+		}		
+	}
+	
 }
