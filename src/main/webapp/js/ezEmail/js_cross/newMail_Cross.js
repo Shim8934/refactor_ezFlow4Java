@@ -824,7 +824,9 @@ function checkMailStatusAndSave(savemode) {
         setTimeout(function() {
             checkMailStatusAndSave(savemode);
         }, 1000);
-    }               
+    }     
+    
+    dadiframe.updateItemUid();
 }
 
 function Save_onClick(savemode) {
@@ -1255,19 +1257,8 @@ function GetMailAddresses(name) {
 
     if (EmaaddrFormatExt(name).indexOf("@") == -1) {
         createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "displayname::" + EmaaddrFormatExt(name));
-        createNodeAndInsertText(xmlDOM, objNode, "DLGSEARCH", "displayname::" + name);
-        createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayName");
-        createNodeAndInsertText(xmlDOM, objNode, "ORGPROP", "company;description;title;mail;extensionAttribute3");
-        createNodeAndInsertText(xmlDOM, objNode, "DLPROP", "mail");
-        createNodeAndInsertText(xmlDOM, objNode, "ORGTYPE", "all");
-        createNodeAndInsertText(xmlDOM, objNode, "DLTYPE", "group");
-        createNodeAndInsertText(xmlDOM, objNode, "FIELD", "AddressID,SNAME,SEMAIL,STYPE");
-        createNodeAndInsertText(xmlDOM, objNode, "ADDFILTER", name);
-        xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do", false);
-        xmlHTTP.send(xmlDOM);
     }
     else {
-        //createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "mail::" + EmaaddrFormatExt(name));
     	/* 2018-04-26 이소담 - 메일쓰기에서 받는사람에 메일 주소를 직접 입력하였을때 도메인이 내부도메인일 경우 계정이 존재하는지 확인 후 존재하지않으면 입력되지않도록 개선*/
         $.ajax({
         	type	: "GET",
@@ -1292,7 +1283,18 @@ function GetMailAddresses(name) {
         		console.log(error);
         	}
         })
+        createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "mail::" + EmaaddrFormatExt(name));
     }
+    createNodeAndInsertText(xmlDOM, objNode, "DLGSEARCH", "displayname::" + name);
+    createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayName");
+    createNodeAndInsertText(xmlDOM, objNode, "ORGPROP", "company;description;title;mail;extensionAttribute3;displayName2");
+    createNodeAndInsertText(xmlDOM, objNode, "DLPROP", "mail");
+    createNodeAndInsertText(xmlDOM, objNode, "ORGTYPE", "all");
+    createNodeAndInsertText(xmlDOM, objNode, "DLTYPE", "group");
+    createNodeAndInsertText(xmlDOM, objNode, "FIELD", "AddressID,SNAME,SEMAIL,STYPE");
+    createNodeAndInsertText(xmlDOM, objNode, "ADDFILTER", name);
+    xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do", false);
+    xmlHTTP.send(xmlDOM);
 
 
     xmlDOM = loadXMLString(xmlHTTP.responseText);

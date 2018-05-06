@@ -1213,7 +1213,9 @@
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205' /></span></li>
 		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188' /></span></li>
 		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051' /></span></li>
-		        <li><span onClick="ReservationItem_onclick()"><spring:message code='ezBoard.t276' /></span></li> 
+		        <c:if test="${boardInfo.guBun ne '2'}">
+		        	<li><span onClick="ReservationItem_onclick()"><spring:message code='ezBoard.t276' /></span></li> 
+		        </c:if>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052' /></span></li> 
 		        <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">

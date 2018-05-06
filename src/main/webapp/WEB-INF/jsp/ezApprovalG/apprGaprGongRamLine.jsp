@@ -1029,7 +1029,7 @@
 	    <div class="portlet_tabpart02">
 	        <div class="portlet_tabpart02_top" id="tab1">
 	            <p id="showAprLine">
-	            	<span divname="Lineinfo" id="1tab1" style="background-color: rgb(0, 72, 148);color:white">
+	            	<span divname="Lineinfo" id="1tab1" style="background-color: rgb(4, 112, 227); border: 1px solid rgb(4, 112, 227); color:white">
 	            		<c:if test="${approvalFlag == 'G'}">
 		            		<spring:message code='ezApprovalG.t1214'/>
 				    	</c:if>
@@ -1130,7 +1130,7 @@
 	                </h2>
 	                <div class="listview" style="margin-top: 7px; margin-left: 1px">
 	                <c:if test="${approvalFlag == 'S'}">
-	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 710px; height: 550px; background-color: #ffffff;"></div>
+	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 730px; height: 550px; background-color: #ffffff;"></div>
 	                </c:if>
 	                <c:if test="${approvalFlag == 'G'}">
 	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 750px; height: 550px; background-color: #ffffff;"></div>

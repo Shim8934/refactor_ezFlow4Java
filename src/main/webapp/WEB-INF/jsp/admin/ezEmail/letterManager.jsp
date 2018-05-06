@@ -53,7 +53,7 @@
 			<div class="lmright">
 				<div class="lmPreview">
 					<div class="lmPreViewTxt"style='text-align:center; position:relative; top:50%; tansform:translateY(-50%);'><spring:message code='ezBoard.t431'/></div>
-					<iframe src="" class="lmPreViewIframe lmPre" id="lmPreViewIframe" name="lmPreViewIframe" style="display:none; border:none; width:100%; height:100%;"></iframe>
+					<iframe src="" class="lmPreViewIframe lmPre" id="lmPreViewIframe" onload="onloadPreview(this)" name="lmPreViewIframe" style="display:none; border:none; width:100%; height:100%;"></iframe>
 				</div>
 			</div>			
 		</div>
@@ -273,6 +273,7 @@
 			$(document).on("mouseleave", ".lmPreview", function(){
 				$(".lmPreview .preViewLetterName").remove();
 			});
+			
 		</script>
 	</body>
 </html>

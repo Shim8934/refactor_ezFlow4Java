@@ -445,6 +445,18 @@
     "image_upload_error": "이미지 업로드의 문제가 발생되었습니다. \n다시 시도하여 주세요.",
     "tooltip_status_image_default_size": "값을 변경하려면 이미지 원본크기 유지 항목을 해제하여 주세요."
   },
+  "horizontalDialog": {
+    "insert_title": "수평선 삽입",
+    "modify_title": "수평선 수정",
+    "horizontal_width" : "너비",
+    "horizontal_height" : "높이",
+    "horizontal_background_color" : "배경색",
+    "horizontal_align" : "정렬",
+    "horizontal_align_default" : "기본값",
+    "horizontal_align_left" : "왼쪽",
+    "horizontal_align_center" : "가운데",
+    "horizontal_align_right" : "오른쪽"
+  },
   "videoDialog": {
     "insert_title": "동영상 삽입",
     "modify_title": "동영상 수정",
@@ -691,7 +703,8 @@
       }
     },
     "borderLine": "선색",
-    "cellBorderStyleNoneName": "테두리 없음"
+    "cellBorderStyleNoneName": "테두리 없음",
+    "editorResize" : "에디터 크기 조절"
   },
   "alertMessage": {
     "textModeChangeConfirmMessage": "TEXT 편집시 스타일, 이미지, 테이블 등의 입력 내용이 사라집니다. \n계속 진행 하시겠습니까?",

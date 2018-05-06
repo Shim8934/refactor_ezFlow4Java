@@ -114,7 +114,7 @@ public class EzEmailMailSearchController {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
 			String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", userInfo.getTenantId());
 			boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
@@ -199,7 +199,7 @@ public class EzEmailMailSearchController {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, 150*1000, 20*1000);
+					userEmail, password, egovMessageSource, locale, 150*1000, 20*1000, ezEmailUtil);
 							
 			StringBuilder sb = new StringBuilder();
 			sb.append("<DATA><ROWS>");
@@ -369,7 +369,7 @@ public class EzEmailMailSearchController {
 					sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 					sb.append(String.format("<DATERECEIVED><![CDATA[%s]]></DATERECEIVED>", sdf.format(receivedDate)));
 					
-					String folderPathName = folderPath.replaceFirst("INBOX", egovMessageSource.getMessage("ezEmail.t99000025", locale));
+					String folderPathName = ezEmailUtil.getDisplayNameFromFolderId(folderPath, locale);
 					folderPathName = folderPathName.replaceAll("\\.", "/");
 					sb.append(String.format("<PARENTNAME><![CDATA[/%s]]></PARENTNAME>", folderPathName));
 					
@@ -475,7 +475,7 @@ public class EzEmailMailSearchController {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
 			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
 				String folderAndMsgId = folderAndMsgIdArray[i];
@@ -542,7 +542,7 @@ public class EzEmailMailSearchController {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
 			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
 						
