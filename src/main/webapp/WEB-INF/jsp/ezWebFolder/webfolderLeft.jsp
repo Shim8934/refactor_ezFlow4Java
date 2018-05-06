@@ -173,9 +173,7 @@
 		    function getFileList(folderId) {
 		    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do?folderId="+folderId+"&folderType="+folderType;
 		   	}
-		    function treeTest() {
-		    	window.parent.frames["right"].location.href = "/ezWebFolder/treeTest.do";
-		    }
+		    
 		    function getSharedList() {
 				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderSharedList.do";
 			}

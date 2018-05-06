@@ -4,7 +4,7 @@ var pagination = (function() {
 	var pageButtonSize = 10;
 	
 	var currentPage = 1;
-	var totalPage = 0;
+	var totalPage = 1;
 	var listSize = 0;
 	
 	var startPosition = 0;
