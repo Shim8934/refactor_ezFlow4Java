@@ -21,11 +21,9 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 		<!-- time picker-->
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<style>
 			#layer_Viewpopup { 
 				z-index:1000; 
@@ -897,29 +895,24 @@
 	            //document.getElementById("txtWriterName").value = "";
 	
 	            if (obj.getAttribute("mode") == "off") {
-			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%; height:100%;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
-			    	var lfet = parent.frames["left"].document.body;
-			    	$(lfet).css("overflow","hidden");
-		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-		        	$("#srarchpopup").css("left", popupX);
-					$("#srarchpopup").modal();
-		            obj.setAttribute("mode", "on");
-		        }
-		        else {
-		            BoardSearchOptionHidden();
-		        }
-		    }
-		    function BoardSearchOptionHidden() {
-		    	var lfet = parent.frames["left"].document.body;
-		    	$(lfet).css("overflow","auto");
-		        document.getElementById("SearchOption").setAttribute("mode", "off");
-		        $.modal.close();
-		    }
+	                document.getElementById("layer_popup").style.left = "10px";
+	                document.getElementById("layer_popup").style.top = "100px";
+	                document.getElementById("layer_popup").style.display = "";
+	                obj.setAttribute("mode", "on");
+	            }
+	            else {
+	                BoardSearchOptionHidden();
+	            }
+	        }
 	        function btn_PostDate_Clear() {
 	            /* document.getElementById("idDatepicker").value = "";
 	            document.getElementById("_D2").value = ""; */
 	        	$("#Sdatepicker").datepicker('setDate', "");
 		        $("#Edatepicker").datepicker('setDate', "");
+	        }
+	        function BoardSearchOptionHidden() {
+	            document.getElementById("layer_popup").style.display = "none";
+	            document.getElementById("SearchOption").setAttribute("mode", "off");
 	        }
 	        function search(type) {
 	            if (type == "basic") {
@@ -1187,8 +1180,9 @@
 	    </span>
 	
 	
-	    <div class="jquery-modal blocker current" id="layer_popup" style="display:none;">
-		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
+	    <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+	          <div class="popupwrap1">
+	            <div class="popupwrap2">
 	        <table class="content">
 	        <tr>
 	            <th style="text-align:center"><spring:message code='ezBoard.t208'/></th>
@@ -1235,5 +1229,8 @@
 	    </table>
 	            </div>
 	          </div>
+		        <div class="shadow">
+	            </div>
+		</div>
 	</body>
 </html>

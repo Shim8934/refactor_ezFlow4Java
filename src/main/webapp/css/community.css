@@ -1412,7 +1412,7 @@ _list li {
 	font-size:12px;
 	color:#333;
 	font-weight:bold;
-	background:url(../images/kr/community/type1/icon_arrow02.gif) no-repeat 0px 8px;
+	/* background:url(../images/kr/community/type1/icon_arrow02.gif) no-repeat 0px 8px; */
 		
 }
 .btype_photo .title .more {

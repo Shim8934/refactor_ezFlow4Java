@@ -135,6 +135,7 @@
 			} */
 		    
 		    $(document).ready(function() {	
+		    	console.log("담당자 " + personid + ", 조회자 " + userid);
 		    	preStepForRepeatTask();
 		    	
 				load_bodyhtml();
@@ -703,9 +704,10 @@
 			            document.getElementById("taskDescription").style.display = "";			            
 			            
 			            
-			            if (creatorid == userid) {
+			            // if (creatorid == userid) {
+			            /* if (personid == userid) {
 			            	document.getElementById("editTaskInfo").style.display = "";
-			            }
+			            }  */
 /* 			            else{
 			            	document.getElementById("editTaskInfo").style.display = "none";
 			            } */
@@ -726,7 +728,7 @@
 			            
 			            if (creatorid == userid) {				        	
 				        	document.getElementById("editTaskChisi").style.display = "";	
-				        	document.getElementById("editTaskInfo").style.display = "none";
+				        	//document.getElementById("editTaskInfo").style.display = "none";
 				        } else {
 				        	document.getElementById("editTaskChisi").style.display = "none";				        	
 				        }
@@ -752,7 +754,7 @@
 			            
 			            if (personid == userid) {			            	
 			            	if (tasktype == "1" || tasktype == "4") {	
-			            		document.getElementById("editTaskInfo").style.display = "none";
+			            		//document.getElementById("editTaskInfo").style.display = "none";
 		            			document.getElementById("editTaskWork").style.display = "none";
 		            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
 		            			document.getElementById("editTaskChisi").style.display = "";			            					            			
@@ -774,7 +776,7 @@
 			            	}
 			            	else {
 			            		document.getElementById("editTaskWork").style.display = "none";
-			            		document.getElementById("editTaskInfo").style.display = "none";
+			            		//document.getElementById("editTaskInfo").style.display = "none";
 			            	}				        	
 				        }
 			            
@@ -787,9 +789,9 @@
 			            document.getElementById("tablecomment").style.display = "";
 			            document.getElementById("taskRep").style.display = "none";
 			            document.getElementById("taskDescription").style.display = "none";
-			            if (creatorid == userid) {
+			            /* if (creatorid == userid) {
 			            	document.getElementById("editTaskInfo").style.display = "none";
-			            }
+			            } */
 			        	//document.getElementById("editTaskInfo").style.display = "none";
 			        	document.getElementById("editTaskWork").style.display = "none";
 			        	document.getElementById("editTaskChisi").style.display = "none";
@@ -821,9 +823,9 @@
 			            document.getElementById("taskRep").style.display = "";
 			            document.getElementById("taskDescription").style.display = "none";
 			            
-			            if (creatorid == userid) {
+			           /*  if (creatorid == userid) {
 			            	document.getElementById("editTaskInfo").style.display = "none";
-			            }
+			            } */
 			        	//document.getElementById("editTaskInfo").style.display = "none";
 			        	document.getElementById("editTaskWork").style.display = "none";	
 			        	document.getElementById("editTaskChisi").style.display = "none";
@@ -999,7 +1001,7 @@
 			        if (document.getElementById("taskstatus").checked || document.getElementById("taskstatus3").checked)
 			            document.getElementById("taskstatus2").checked = true;
 			}
-			
+			 /* 18-05-04 김민성 - 담당자만 업무 정보 수정 가능 하도록 수정 (editTaskInfo 주석) */
 			function beforeprint() {
 				$(".popup").css('background-image', 'none');
 				
@@ -1187,9 +1189,9 @@
 		            document.getElementById("taskDescription").style.display = "";			            
 		            
 		            
-		            if (creatorid == userid) {
+		            /* if (creatorid == userid) {
 		            	document.getElementById("editTaskInfo").style.display = "";
-		            }
+		            } */
 		        	
 		        	document.getElementById("editTaskWork").style.display = "none";
 		        	document.getElementById("editTaskChisi").style.display = "none";
@@ -1204,7 +1206,7 @@
 		            
 		            if (creatorid == userid) {				        	
 			        	document.getElementById("editTaskChisi").style.display = "";	
-			        	document.getElementById("editTaskInfo").style.display = "none";
+			        	//document.getElementById("editTaskInfo").style.display = "none";
 			        } else {
 			        	document.getElementById("editTaskChisi").style.display = "none";				        	
 			        }
@@ -1227,7 +1229,7 @@
 		            
 		            if (personid == userid) {			            	
 		            	if (tasktype == "1" || tasktype == "4") {	
-		            		document.getElementById("editTaskInfo").style.display = "none";
+		            		//document.getElementById("editTaskInfo").style.display = "none";
 	            			document.getElementById("editTaskWork").style.display = "none";
 	            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
 	            			document.getElementById("editTaskChisi").style.display = "";			            					            			
@@ -1249,7 +1251,7 @@
 		            	}
 		            	else {
 		            		document.getElementById("editTaskWork").style.display = "none";
-		            		document.getElementById("editTaskInfo").style.display = "none";
+		            		//document.getElementById("editTaskInfo").style.display = "none";
 		            	}				        	
 			        }
 			    } else if (selecttab == "3") {
@@ -1259,9 +1261,9 @@
 		            document.getElementById("tablecomment").style.display = "";
 		            document.getElementById("taskRep").style.display = "none";
 		            document.getElementById("taskDescription").style.display = "none";
-		            if (creatorid == userid) {
+		            /* if (creatorid == userid) {
 		            	document.getElementById("editTaskInfo").style.display = "none";
-		            }
+		            } */
 		        	
 		        	document.getElementById("editTaskWork").style.display = "none";
 		        	document.getElementById("editTaskChisi").style.display = "none";
@@ -1274,9 +1276,9 @@
 		            document.getElementById("taskRep").style.display = "";
 		            document.getElementById("taskDescription").style.display = "none";
 		            
-		            if (creatorid == userid) {
+		            /* if (creatorid == userid) {
 		            	document.getElementById("editTaskInfo").style.display = "none";
-		            }
+		            } */
 		        	
 		        	document.getElementById("editTaskWork").style.display = "none";	
 		        	document.getElementById("editTaskChisi").style.display = "none";
@@ -1648,7 +1650,10 @@
 							<li><span class="txt_title"><spring:message code='ezTask.t9002' /></span><span class="txt_content"><c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' /></span></li>
 						</c:if>
 					</ul>
-					<p><a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a></p>
+					<!-- 18-05-04 김민성 - 담당자만 업무 정보 수정 가능 하도록 수정 -->
+					<c:if test="${taskInfoVO.personID eq userInfo.id}">
+						<p><a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a></p>
+					</c:if>
 				</div>
 				<div id="Sdatepicker" style="float:right;"></div>
 			</div>
@@ -1669,7 +1674,8 @@
 				</c:if>
 				<!-- 지시사항 수정, 진행사항 수정 레이어팝업호출-->
 				<div style="float: right; margin-top: 3px;">
-					<c:if test="${taskInfoVO.creatorID == userInfo.id}">
+				<!-- 18-05-04 김민성 - 담당자만 업무 정보 수정 가능 하도록 수정 -->
+					<c:if test="${taskInfoVO.personID eq userInfo.id}">
 						<a id="editTaskInfo" class="imgbtn"><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
 					</c:if>					
 					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()"><spring:message code='ezTask.t1511' /></span></a>

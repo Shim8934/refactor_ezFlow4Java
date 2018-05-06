@@ -95,6 +95,11 @@
 			    <th style="width:60px;"><spring:message code='ezCommunity.t675' /></th>
 			    <th style="width:80px;"><spring:message code='ezCommunity.t676' /></th>
 			</tr>
+				<c:if test="${strXML eq ''}" >
+					<tr>
+						<td align="center" colspan="5"><spring:message code='ezQuestion.t312'/></td>
+					</tr>
+				</c:if>
 		</table>
 	</body>
 </html>

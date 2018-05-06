@@ -6283,6 +6283,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				sb.append("<ItemLevel>" + boardList.getItemLevel() + "</ItemLevel>");
 				sb.append("<ReadFlag>" + boardList.getReadFlag() + "</ReadFlag>");
 				sb.append("<Abstract>" + commonUtil.cleanValue(boardList.getAbsTract()) + "</Abstract>");
+				/* 2018-05-04 홍승비 - 커뮤니티 게시판 리스트에서 댓글 수 표시하기 */
+				sb.append("<OneLineCnt>" + boardList.getOneLineCnt() + "</OneLineCnt>");	
 				sb.append("</NODE>");
 			}
 		}

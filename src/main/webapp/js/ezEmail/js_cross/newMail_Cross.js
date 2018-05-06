@@ -824,7 +824,9 @@ function checkMailStatusAndSave(savemode) {
         setTimeout(function() {
             checkMailStatusAndSave(savemode);
         }, 1000);
-    }               
+    }     
+    
+    dadiframe.updateItemUid();
 }
 
 function Save_onClick(savemode) {
