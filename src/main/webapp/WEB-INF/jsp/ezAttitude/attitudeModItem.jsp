@@ -186,9 +186,9 @@
 				    },
 				    success : function(json){
 						alert("저장되었습니다.");
+						window.opener.getAttitudeMainList();
 						window.close();
 			            try {
-			                window.opener.location.reload();
 			            } catch (e) { }
 				    }
 			    });
