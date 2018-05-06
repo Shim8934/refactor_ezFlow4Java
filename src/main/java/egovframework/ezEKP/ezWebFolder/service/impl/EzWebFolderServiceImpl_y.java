@@ -640,7 +640,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	// 폴더 delete
 	
 	@Override
-	public void deleteSubFldAFile(String folderId, int tenantId, String comId , String userId, String timeUTC) throws Exception {
+	public int deleteSubFldAFile(String folderId, int tenantId, String comId , String userId, String timeUTC) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
  		map.put("folderId", folderId);
@@ -659,7 +659,9 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			LOGGER.debug("deleteSubFldAFile is success");
 		}else{
 			LOGGER.debug("deleteSubFldAFile is fail");
+			result = 2;
 		}
+		return result ;
 	}
 
 	@Override
@@ -688,7 +690,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		if (resultFile == 1 && resultFld == 1) {
 			result = 1;
 		} else {
-			result =0;
+			result = 0;
 		}
 		return result;
 	}

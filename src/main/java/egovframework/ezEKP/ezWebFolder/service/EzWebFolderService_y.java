@@ -55,7 +55,7 @@ public interface EzWebFolderService_y {
 	void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2 , String timeUTC);
 	
 	// 폴더 삭제
-	void deleteSubFldAFile(String folderId, int tenantId, String comId , String userId , String timeUTC) throws Exception ;
+	int deleteSubFldAFile(String folderId, int tenantId, String comId , String userId , String timeUTC) throws Exception ;
 	
 	// 하위폴더가 모두 자신이 만든 폴더인지 확인하는 메서드
 	// 모두 자신이 만든 폴더이면 true , 아니라서 삭제가 불가능하면  false 
