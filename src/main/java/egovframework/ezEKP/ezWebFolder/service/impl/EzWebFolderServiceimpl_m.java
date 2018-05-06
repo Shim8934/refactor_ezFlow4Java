@@ -174,6 +174,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		countInfo.put("folderCount", folderCount);
 		countInfo.put("totalCount", totalCount);
 		countInfo.put("totalPage", totalPage);
+		countInfo.put("pageSize", (long) pageSize);
 		
 		LOGGER.debug("countInfo: " + countInfo);
 		return countInfo;
@@ -228,6 +229,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		countInfo.put("folderCount", folderCount);
 		countInfo.put("totalCount", totalCount);
 		countInfo.put("totalPage", totalPage);
+		countInfo.put("pageSize", (long) pageSize);
 		
 		LOGGER.debug("countInfo: " + countInfo);
 		return countInfo;
@@ -496,6 +498,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		countInfo.put("folderCount", folderCount);
 		countInfo.put("totalCount", totalCount);
 		countInfo.put("totalPage", totalPage);
+		countInfo.put("pageSize", (long) pageSize);
 		
 		LOGGER.debug("countInfo: " + countInfo);
 		return countInfo;
