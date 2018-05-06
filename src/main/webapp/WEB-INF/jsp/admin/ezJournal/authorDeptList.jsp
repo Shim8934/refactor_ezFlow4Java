@@ -8,17 +8,17 @@
 				<c:choose>
 					<c:when test="${dept.mine eq 'yes'}">
 						<tr targetId="${dept.deptId }" mine="Y" style="display:none; cursor: pointer;" class="hover">
-							<td align="left" style="width:250px;">${dept.deptName }</td>
+							<td align="left" style="width:250px;"><c:out value='${dept.deptName }'/></td>
 						</tr>
 					</c:when>
 					<c:when test="${dept.mine eq 'add'}">
 						<tr targetId="${dept.deptId }" mine="A" style="display:none; cursor: pointer;" class="hover">
-							<td align="left" style="width:250px;">${dept.deptName }</td>
+							<td align="left" style="width:250px;"><c:out value='${dept.deptName }'/></td>
 						</tr>
 					</c:when>
 					<c:otherwise>
 						<tr targetId="${dept.deptId }" style="cursor: pointer;" class="hover">
-							<td align="left" style="width:250px;">${dept.deptName }</td>
+							<td align="left" style="width:250px;"><c:out value='${dept.deptName }'/></td>
 						</tr>
 					</c:otherwise>
 				</c:choose>

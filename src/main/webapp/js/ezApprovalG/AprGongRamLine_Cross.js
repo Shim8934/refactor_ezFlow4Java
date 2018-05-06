@@ -674,7 +674,7 @@ function UpdateLineHistory(_DOCID) {
  * */
 function btn_addDepartment() {
 	// 포함할 경우 하위부서 정보를 전부 가져와서 처리
-	if (confirm(strLangPJG02)) {
+	 	/*if (confirm(strLangPJG02)) {
 		var treeView = new TreeView();
 		treeView.LoadFromID("FromTreeView");
 		var selnode = treeView.GetSelectNode();
@@ -697,17 +697,19 @@ function btn_addDepartment() {
 				}
 			}
 		});
-	} else {
+	} else {*/
 		var listView = new ListView();
 		listView.LoadFromID("DivUserList");
-	
 		var listObj = listView.GetDataRows();
 		
-		for (var i = listObj.length-1; i >= 0; i --) {
-			APRLINEATTENDADDFunction(listObj[i], "PERSON");
+		if (listObj) {
+			if (listObj[0].id.indexOf("noItems") == -1) {
+				for (var i = listObj.length-1; i >= 0; i --) {
+					APRLINEATTENDADDFunction(listObj[i], "PERSON");
+				}
+			}
 		}
-	}
-
+	//}
 }
 // 부서원 정보를 가져온다.
 function getUserInDept(dept) {

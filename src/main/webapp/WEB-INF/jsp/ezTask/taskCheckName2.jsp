@@ -8,14 +8,26 @@
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">		
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type = "text/javascript" src ="/js/ezTask/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type ="text/javascript">
 		    var ReturnFunction;
+		    /* 2018-04-26 김민성 - RetValue, openerFlag 추가 */
+		    var RetValue;
+		    var openerFlag = false;
 
-			window.onload = function() {				
+			window.onload = function() {		
 			    try {
+			    	RetValue = parent.checkname2_cross_dialogArguments[0];
 			        ReturnFunction = parent.checkname2_cross_dialogArguments[1];
 			    }
 			    catch (e) {
+			    	try {
+		            	RetValue = opener.checkname2_cross_dialogArguments[0];
+	    	            ReturnFunction = opener.checkname2_cross_dialogArguments[1];
+		                openerFlag = true;
+		            } catch (e) {
+		                openerFlag = false;
+		            }
 			    }
 
 			    initializeReceiverList();		
@@ -27,19 +39,15 @@
 		        var listView = new ListView();
 		        listView.SetID("DocList");
 				listView.DataSource(xmlpara);
-				listView.DataBind("lvtDoclist");
-				listView = null;
+				listView.DataBind("lvtDoclist"); 
 				
 				SetDataSource();
 			}
 			
 			function SetDataSource() {
 			    var tempXML;
-			    if (ReturnFunction != null) {
-			        tempXML = SelectSingleNodeNew(parent.checkname2_cross_dialogArguments[0]["addrBook"], "LISTVIEWDATA/ROWS");
-			    } else {
-			        tempXML = SelectSingleNodeNew(dialogArguments["addrBook"], "LISTVIEWDATA/ROWS");
-			    }
+			    
+			    tempXML = SelectSingleNodeNew(RetValue["addrBook"], "LISTVIEWDATA/ROWS");
 
 			    if (tempXML == null) {
 			        return;
@@ -47,7 +55,7 @@
 
 				var DocList = new ListView();                          
 			    DocList.LoadFromID("DocList"); 
-			    DocList.SetRowOnDblClick("selectuser");			
+			    DocList.SetRowOnDblClick("change_onClick");			
 			    var tempRow;
 			    var currentRowNumber = 0;
 
@@ -62,7 +70,7 @@
 			    DocList = null;	
 		        }    
 		        
-			function selectuser(){
+			/* function selectuser(){
 			    var SelList = new ListView();
 		        SelList.LoadFromID("DocList");
 		        var tr = SelList.GetSelectedRows();
@@ -83,7 +91,7 @@
 				    dialogArguments["deptid"] = GetAttribute(selRow,"DATA2");
 				    window.close();
 				}
-			}
+			} */
 
 			function change_onClick() {
 				var count1;
@@ -106,24 +114,32 @@
 
 			    if (ReturnFunction != null) {
 			        ReturnFunction(GetAttribute(selRow[0],"DATA2"));
+			        /* 18-04-26 김민성 - 부서 선택 후 창 닫기 */
+			        if (openerFlag){
+			            window.close();
+			        }
 			    } else {
 			        dialogArguments["deptid"] = GetAttribute(selRow[0],"DATA2");
 			        window.close();
 			    }
 			}
 
-			function delete_onClick() {
+			/* function delete_onClick() {
 			    if (ReturnFunction != null) {
 				    ReturnFunction("delete");
 				} else {
 				    dialogArguments["recipientTDData"] = "delete";
 				    window.close();
 				}
-			}
+			} */
 
 			function cancel_onClick() {
 			    if (ReturnFunction != null) {
 				    ReturnFunction("dontprocess");
+				    /* 18-04-26 김민성 - 부서 선택 취소시 창 닫기 */
+				    if (openerFlag){
+			            window.close();
+			        }
 				} else {
 				    dialogArguments["recipientTDData"] = "dontprocess";
 				    window.close();
