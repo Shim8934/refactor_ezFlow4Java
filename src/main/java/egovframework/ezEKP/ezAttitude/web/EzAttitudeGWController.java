@@ -1670,6 +1670,8 @@ public class EzAttitudeGWController {
 			String searchTitle = request.getParameter("searchTitle");
 			String searchStartDate = request.getParameter("searchStartDate");
 			String searchEndDate = request.getParameter("searchEndDate");
+			String pageNum = request.getParameter("pageNum");
+			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
 			String orderOption = request.getParameter("orderOption");
 			String offsetMin = request.getParameter("offsetMin");
@@ -1679,11 +1681,7 @@ public class EzAttitudeGWController {
 			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();
 			
-			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, duplicated, offset, companyId, tenantID);
-			
-			JSONObject data = new JSONObject();
-			data.put("list", list);
-			data.put("totalCount", list.size());
+			JSONObject data = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, pageNum, listSize, orderCell, orderOption, duplicated, offset, companyId, tenantID);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1725,9 +1723,9 @@ public class EzAttitudeGWController {
 			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();
 			
-			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, duplicated, offset, companyId, tenantID);
+//			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, duplicated, offset, companyId, tenantID);
 			
-			ezAttitudeService.absentedListSendMail(list, info.getUserName(), info.getEmail());
+//			ezAttitudeService.absentedListSendMail(list, info.getUserName(), info.getEmail());
 			
 			JSONObject data = new JSONObject();
 			

@@ -302,8 +302,7 @@
 			</table>
 		</div>
 		
-		<div id="runtime" style="color: #666; padding-top: 10px"></div>
-		<div id="tblPageRayer">
-		</div>
+		<div style="color: #666; padding-top: 10px"></div>
+		<div id="tblPageRayer"></div>
 	</body>
 </html>

@@ -115,9 +115,7 @@ public interface EzAttitudeService {
 
 	public String getAttitudeCount2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String offset, String companyId, int tenantId) throws Exception;
 	
-//	public String getAttitudeAbsentCount(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String offset, String companyId, int tenantId) throws Exception;
-	
-	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String duplicated, String offset, String companyId, int tenantId) throws Exception;
+	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String offset, String companyId, int tenantId) throws Exception;
 	
 	public void absentedListSendMail(List<AdminAttitudeVO> list, String fromName, String fromEmail) throws Exception;
 	
