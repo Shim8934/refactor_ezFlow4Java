@@ -40,7 +40,6 @@
 	    	var searchUserName = ""; // 검색조건 (사원명)
 	    	var searchDeptName = ""; // 검색조건 (부서명)
 	    	var searchTitle = ""; // 검색조건 (직위)
-	    	var searchAttitudeType = "total"; // 검색조건(구분)
 	    	//검색조건 (근무시간) Hr,Min 묶음으로
 	    	var searchStartDate = "${searchStartDate}";
 	    	var searchEndDate = "${searchEndDate}";
@@ -207,111 +206,19 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'>미입력자가 없습니다.</td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='4' style='text-align:center'>미입력자가 없습니다.</td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
 			
-			
-	    	
-	    	/* function getAttitudeCheckList(){
-	    		//구분
-	    		var typeId = $('#attitudeType').val();
-	    		
-	    		if (typeId == "total") {
-	    			typeId = "";
-	    		}
-	    		
-    			searchStartDate = $("#Sdatepicker").val();
-    			searchEndDate = $("#Edatepicker").val();
-	    		
-	    		if (searchStartDate > searchEndDate) {
-					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
-		            return;
-				}
-	    		
-	    		$.ajax({
-	    			data : "GET",
-	    			dataType : "json",
-	    			async : false,
-	    			url : "/admin/ezAttitude/attitudeCheckList.do",
-	    			data : {
-	    				companyId : pCompanyId,
-	   					userName : searchUserName,
-	   					deptName : searchDeptName,
-	   					title : searchTitle,
-	   					startDate : searchStartDate,
-	   					endDate : searchEndDate,
-	   					attitudeType : searchAttitudeType,
-	   					pageNum : pageNum,
-	   					listSize : listSize,
-	   					orderCell : orderCell,
-	   					orderOption : orderOption
-    				},
-	    			success : function(result){
-	    				totalCount = result.totalCount;
-	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
-	    				getAttitudeCheckList_after(result.list);
-	    				//구분 리스트
-	    				getAttitudeTypeList(result.typeList, result.typeId);
-	    			},
-	    			error : function() {
-	    				alert('리스트를 가져오는중 오류 발생');
-	    			}
-	    		});
-	    	}
-	    	
-	    	//검색 > 구분selectBox
-	    	function getAttitudeTypeList(typeList, typeId) {
-	    		var html = "<option value='total'>전체</option>";
-	    		
-	    		for (var i = 0; i < typeList.length; i ++) {
-	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
-	    		}
-	    		
-	    		$('#searchAttitudeType').html(html);
-	    		
-	    		if (typeId != "") {
-	    			$('#searchAttitudeType').val(typeId);
-	    		}
-	    	}
-	    	
-	    	function getAttitudeCheckList_after(result){
-	    		var resultHtml = "";
-	    		
-	    		$("#contentlist table.mainlist tbody").html("");
-	    		
-	    		for (var i = 0; i < result.length; i ++) {
-	    			resultHtml += "<tr userid='" + result[i].writerId + "'>"
-	    			   			+ "<td>" + result[i].userName + "</td>"
-	    			   			+ "<td>" + result[i].userTitle + "</td>"
-	    			   			+ "<td>" + result[i].deptName + "</td>"
-	    						+ "<td>" + result[i].typeName + "</td>";
-	    						
-	    			if (result[i].endDate == null || result[i].endDate == "") {
-	    				resultHtml += "<td>" + result[i].startDate + "</td></tr>";
-	    			} else {
-	    				resultHtml += "<td>" + result[i].startDate + " ~ " + result[i].endDate + "</td></tr>";
-	    			}
-	    			
-	    		}
-	    		
-	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
-	    		}
-	    		
-	    		$("#contentlist table.mainlist tbody").append(resultHtml);
-	    		makePageSelPageAtti();
-	    	} */
-	    	
 	    	//페이지 이동 함수
 	    	function goToPageByNum(pCurPage){
 	    		if (pCurPage == 0 || totalPage < pCurPage) {
 	    			return;
 	    		} else {
-		    		pageNum = pCurPage;    			
+		    		pageNum = pCurPage;
 	    		}
 	    		
 	    		getAttitudeAbsentedList();
