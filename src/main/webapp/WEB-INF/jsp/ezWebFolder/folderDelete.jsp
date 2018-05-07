@@ -71,14 +71,14 @@
 	</script>
 </head>
 <body class="popup"> 
-	<h1 id ="topMenu">폴더삭제</h1>
+	<h1 id ="topMenu"><spring:message code='ezWebFolder.t246'/></h1>
 	<div id="close">
 		<ul>
 			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110'/></span></li>
 		</ul>
 	</div>
 	
-	<div style="margin: 10px;">삭제하시겠습니까? <br> 삭제하시면 하위의 모든 파일과 폴더가 삭제됩니다.</div>
+	<div style="margin: 10px;"><spring:message code='ezWebFolder.t307'/></div>
 	
 	<div style="margin-top: 15px;"><hr size="0" style="color:#fff; background-color:#fff; margin: 0px 10px; border-top: 1px solid #304D7F;"></div>
 	

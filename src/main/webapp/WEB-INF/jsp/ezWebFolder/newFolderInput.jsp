@@ -33,15 +33,15 @@
 	                CancelFunction = parent.inputNameDlg_cross_dialogArguments[2];
 	                functionType   = parent.inputNameDlg_cross_dialogArguments[3];
 	                if (functionType == "insert") {
-		            	$('#title').text('폴더 생성');
-		            	$('.txt').text('<spring:message code='ezWebFolder.t265' />');
+		            	$('#title').text("<spring:message code='ezWebFolder.t302' />");
+		            	$('.txt').text("<spring:message code='ezWebFolder.t265' />");
 		            }else if(functionType == "update") {
 		                folderName1    = parent.inputNameDlg_cross_dialogArguments[4];
 		                folderName2    = parent.inputNameDlg_cross_dialogArguments[5];
 		                $('#txt_FolderName1').val(folderName1);
 		                $('#txt_FolderName2').val(folderName2);
-		            	$('#title').text('폴더 수정');
-		            	$('.txt').text('수정할 폴더명을 입력하세요.');
+		            	$('#title').text("<spring:message code='ezWebFolder.t303' />");
+		            	$('.txt').text("<spring:message code='ezWebFolder.t304' />");
 		            }
 	            } catch (e) {
 	            	
