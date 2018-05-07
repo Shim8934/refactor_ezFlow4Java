@@ -28,7 +28,7 @@
 .webfolderBttn3 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 10px; height:30px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:30px; text-align: center;}
 
 .webfolderImg {width: 18px; height: 18px;}
-.spanName {height: 22px; line-height: 21px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
+.spanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
 
 .webfolderMinus {width: 18px; height: 18px; cursor: pointer;}
 .webfolderPlus {width: 18px; height: 18px; cursor: pointer;}
@@ -104,6 +104,7 @@ body[favoritemode] #paginationCorrector {height: 40px;}
 body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #mainmenu2 > ul > li[hidden] {display:none;}
 #mainmenu2 > ul > li >a {margin-top:3px;}
+#mainmenu .select {height: 28px; border-radius: 3px; padding: 1px 0px 0px 4px; width: 80px; color: #666;}
 
 #fileTypeSelect {height:29px; border-radius:3px; width:85px;}
 #companySelect {margin: 10px 0px;}
