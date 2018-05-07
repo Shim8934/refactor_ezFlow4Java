@@ -589,7 +589,7 @@
 				<li><a onClick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 				<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 				<li>
-					<select style="height: 27px; border-radius: 3px;" id="fileTypeSelect" onchange="onFileTypeChange(this.value);">
+					<select id="fileTypeSelect" onchange="onFileTypeChange(this.value);" style="height: 28px; border-radius: 3px; padding: 0px; padding-left: 4px; width: 80px; color: #666;">
 						<option value=""><spring:message code='ezWebFolder.t191'/></option>
 						<option value="document"><spring:message code='ezWebFolder.t192'/></option>
 						<option value="music"><spring:message code='ezWebFolder.t193'/></option>
