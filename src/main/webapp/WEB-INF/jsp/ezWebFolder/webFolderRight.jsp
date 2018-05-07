@@ -246,9 +246,10 @@
 		}
 		
 		function nameFileList(param) {
+			folderId = param;
 			searchContext.clearRequirement();
-			$("#idSelect").val("all");
-			getFileList(param);
+			$("#idSelect").val("");
+			onFileTypeChange("");
 		}
 		
 		function renderData(result) {
@@ -711,7 +712,7 @@
 				<li><span onClick="refreshView()"><spring:message code='ezWebFolder.t139'/></span></li>
 				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 				<li style="float:left;">
-					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value);" style="height: 28px; border-radius: 3px; padding: 0px; padding-left: 4px; width: 80px; color: #666;">
+					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value)" style="height: 28px; border-radius: 3px; padding: 0px; padding-left: 4px; width: 80px; color: #666;">
 						<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
 						<option value="document" data-imagesrc="/images/webfolder/msWord.png"       ><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
 						<option value="music" data-imagesrc="/images/webfolder/mp3.png"      ><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
