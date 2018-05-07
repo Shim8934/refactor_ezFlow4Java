@@ -19,6 +19,8 @@ public class AttitudeTypeVO {
 	private String parentId;
 	/** 작성양식아이디*/
 	private int formId;
+	/** 타입 유형여부(기본/추가)*/
+	private String isAdd;
 	
 	public String getTypeId() {
 		return typeId;
@@ -73,6 +75,12 @@ public class AttitudeTypeVO {
 	}
 	public void setFormId(int formId) {
 		this.formId = formId;
+	}
+	public String getIsAdd() {
+		return isAdd;
+	}
+	public void setIsAdd(String isAdd) {
+		this.isAdd = isAdd;
 	}
 	
 }

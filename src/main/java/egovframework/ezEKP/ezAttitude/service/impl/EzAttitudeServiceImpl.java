@@ -331,9 +331,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 //	}
 	
 	@Override
-	public void saveAttitudeUserConfig(String selectUserId, String workStartTime, String workEndTime, String offSet, int tenantId) throws Exception {
-		LOGGER.debug("saveAttitudeUserConfig started");
-		LOGGER.debug("selectUserId = " + selectUserId + " || workStartTime = " + workStartTime + " || workEndTime = " + workEndTime);
+	public void editAttitudeUserConfig(String selectedUserIdList, String workStartTime, String workEndTime, String gubun, String offSet, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("editAttitudeUserConfig started");
+		LOGGER.debug("selectedUserIdList = " + selectedUserIdList + " || workStartTime = " + workStartTime + " || workEndTime = " + workEndTime + " || gubun = " + gubun);
 		
 		String today =  commonUtil.getTodayUTCTime("yyyy-MM-dd");
 		String startDate = commonUtil.getDateStringInUTC(today + " " + workStartTime, offSet, true);
@@ -341,11 +341,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
-		map.put("userId", selectUserId);
+		map.put("companyId", companyId);
 		map.put("workStartTime", startDate.substring(11));
 		map.put("workEndTime", endDate.substring(11));
 		
-		ezAttitudeDAO.saveAttitudeUserConfig(map);
+		if (gubun.equals("0")) {
+			map.put("selectedUserIdList", selectedUserIdList);
+			
+			ezAttitudeDAO.deleteAttitudeUserConfig(map);
+		} else {
+			for (String selectedUserId : selectedUserIdList.split(", ")) {
+				map.put("selectedUserId", selectedUserId);
+				
+				ezAttitudeDAO.saveAttitudeUserConfig(map);
+			}
+		}
 		
 		LOGGER.debug("saveAttitudeUserConfig ended");
 	}
@@ -509,7 +519,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId,
 			String searchUserName, String searchDeptName, String searchTitle, String searchStartTime,
-			String searchEndTime, String searchCompareValue, String pageNum, String listSize,
+			String searchEndTime, String searchGubun, String pageNum, String listSize,
 			String orderCell, String orderOption, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigList started");
 		
@@ -523,7 +533,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchTitle", searchTitle);
 		map.put("searchStartTime", searchStartTime);
 		map.put("searchEndTime", searchEndTime);
-		map.put("searchCompareValue", searchCompareValue);
+		map.put("searchGubun", searchGubun);
 		map.put("limit", limit);
 		map.put("listSize", listSize);
 		map.put("orderCell", orderCell);
@@ -538,12 +548,22 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public AttitudeUserConfigVO getAttitudeUserConfigInfo(String selectUserId, String offsetMin, int tenantId) throws Exception {
+	public AttitudeUserConfigVO getAttitudeUserConfigInfo(String selectedUserIdList, String offsetMin, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigInfo started");
 		
+		String userType = "";
+		
+		if (selectedUserIdList.split(", ").length == 1) {
+			userType = "user";
+		} else {
+			userType = "list";
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("selectUserId", selectUserId);
+		map.put("selectedUserId", selectedUserIdList);
+		map.put("userType", userType);
 		map.put("offsetMin", offsetMin);
+		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
 		AttitudeUserConfigVO vo = ezAttitudeDAO.getAttitudeUserConfigInfo(map);
@@ -576,7 +596,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName,
-			String searchTitle, String searchStartTime, String searchEndTime, String searchCompareValue, String offsetMin) throws Exception {
+			String searchTitle, String searchStartTime, String searchEndTime, String searchGubun, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigListCount started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -587,7 +607,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchTitle", searchTitle);
 		map.put("searchStartTime", searchStartTime);
 		map.put("searchEndTime", searchEndTime);
-		map.put("searchCompareValue", searchCompareValue);
+		map.put("searchGubun", searchGubun);
 		map.put("offsetMin", offsetMin);
 		
 		String totalCount = ezAttitudeDAO.getAttitudeUserConfigCount(map);
@@ -600,7 +620,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId,
 			String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String sysLang, 
-			String offset,String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin) throws Exception {
+			String offset,String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin, String[] deptIdList) throws Exception {
 		LOGGER.debug("getUsersModiyAtt started");
 		
 		if (adminFlag == null) {
@@ -616,11 +636,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		if (!adminFlag.trim().equals("true")){
+			//신청현황에서는 본인의 ID로만 쿼리를 한다.
 			map.put("userId", userId);
 		} else if (checkAdmin.equals("false")) {
-			String[] deptIdList = {"approval"};
+			//사용자 - 신청관리현황
 			map.put("deptIdList", deptIdList);
 		}
+		//userId와 deptIdList 둘다 map에 없는 경우는 회사 전체의 근태를 출력.
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("apprUserName", apprUserName);
@@ -694,8 +716,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("userId", userId);
 		} else if (checkAdmin.equals("false")) {
 			LOGGER.debug("#############################################false true####################################");
-			String[] deptIdList = {"approval"};
-			map.put("deptIdList", deptIdList);
+//			String[] deptIdList = {"approval"};
+//			map.put("deptIdList", deptIdList);
 		}
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
@@ -795,29 +817,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	    return deptList;
 	}
 
-	@Override
-	public void deleteAttitudeUserConfig(int tenantId, String selecUserList)
-			throws Exception {
-		LOGGER.debug("deleteAttitudeUserConfig started");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("tenantId", tenantId);
-		
-		String[] userIdList = selecUserList.split(",");
-		
-		for (int i = 0; i < userIdList.length; i++) {
-			
-			LOGGER.debug("userId = " + userIdList[i]);
-			
-			map.put("userId", userIdList[i]);
-			
-			ezAttitudeDAO.deleteAttitudeUserConfig(map);
-		}
-		
-		LOGGER.debug("deleteAttitudeUserConfig ended");
-	}
-	
 	@Override
 	public AttitudeApplicationVO attModAppDetail(String companyId,
 			int tenantId, String userId, String attModId, String offset, String applCnt) throws Exception {
@@ -1226,14 +1225,23 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId,
-			String userId, String isGAdmin) throws Exception {
+	public List<JournalAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId,
+			String userId, String isAllDept) throws Exception {
+		List<JournalAuthorVO> list = new ArrayList<JournalAuthorVO>();
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
 		
-		return ezAttitudeDAO.getAttitudeAuthDeptList(map);
+		if (!isAllDept.equals("Y")) {
+			list = ezAttitudeDAO.getAttitudeAuthDeptList(map);
+		} else {
+			list = ezAttitudeDAO.getCompanyDeptList(map);
+		}
+		
+		return list;
 	}
 
 	@Override

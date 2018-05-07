@@ -14,15 +14,16 @@
 	</head>
 	
 	<script type="text/javascript">
-		var compareTime = "${vo.compareTime}"; //회사규율과 같으면 0 다르면 1
+		var gubun = "${vo.gubun}"; //회사규율:0 개인규율:1
+		var companyId = "${companyId}";
 		var companyStartTime = "${companyStartTime}";
 		var companyEndTime = "${companyEndTime}";
 		var workStartTime = "${vo.workStartTime}";
 		var workEndTime = "${vo.workEndTime}";
 		
 		$(function() {
-			$("#checkCompareValue").on('change', function() {
-				if($("#checkCompareValue").is(":checked") == true) {
+			$("#gubun").on('change', function() {
+				if($("#gubun").is(":checked") == true) {
 					$("#workStartTime").val(companyStartTime);
 					$("#workEndTime").val(companyEndTime);
 					$("#workStartTime").prop('readonly', true);
@@ -61,15 +62,27 @@
     			return;
     		}
 			
+			if($("#gubun").is(":checked") == true) {
+				workStartTime = companyStartTime;
+				workEndTime = companyEndTime;
+				gubun = "0";
+			} else {
+				workStartTime = $("#workStartTime").val();
+				workEndTime = $("#workEndTime").val();
+				gubun = "1";
+			}
+			
 			$.ajax({
    				type:"post",
    				dataType:"text",
    				async : false,
-   				url:"/admin/ezAttitude/saveAttitudeUserConfig.do",
+   				url:"/admin/ezAttitude/editAttitudeUserConfig.do",
    				data:{
-   					selectUserId : "${vo.userId}",
-   					workStartTime : $("#workStartTime").val(),
-   					workEndTime : $("#workEndTime").val()
+   					companyId : companyId,
+   					selectedUserIdList : "${selectedUserIdList}",
+   					workStartTime : workStartTime,
+   					workEndTime : workEndTime,
+   					gubun : gubun
    				},
    				success: function(result){
 					if (result == "ok") {
@@ -93,11 +106,11 @@
 		<table class="content"> 
 			<tr>
 				<th>기본값 지정</th>
-				<td><input type="checkbox" id="checkCompareValue" name="checkCompareValue" <c:if test="${vo.compareTime == '0'}">checked="checked"</c:if> />설정된 회사 근무시간을 따름</td>
+				<td><input type="checkbox" id="gubun" name="gubun" <c:if test="${vo.gubun == '0'}">checked="checked"</c:if> />설정된 회사 근무시간을 따름</td>
 			</tr>
 			<tr>
 				<th>근무시간</th>
-				<td><span><input id="workStartTime" type="text" style="width:50px;" <c:if test="${vo.compareTime == '0'}">readonly="true"</c:if> value="${vo.workStartTime }"/>&nbsp; ~ &nbsp;<input id="workEndTime" type="text" style="width:50px;" <c:if test="${vo.compareTime == '0'}">readonly="true"</c:if> value="${vo.workEndTime }"/></span></td>
+				<td><span><input id="workStartTime" type="text" style="width:50px;" <c:if test="${vo.gubun == '0'}">readonly="true"</c:if> value="${vo.workStartTime }"/>&nbsp; ~ &nbsp;<input id="workEndTime" type="text" style="width:50px;" <c:if test="${vo.gubun == '0'}">readonly="true"</c:if> value="${vo.workEndTime }"/></span></td>
 			</tr>
 		</table> 
 		

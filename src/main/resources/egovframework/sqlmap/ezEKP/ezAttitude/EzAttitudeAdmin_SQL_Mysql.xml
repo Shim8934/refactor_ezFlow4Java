@@ -35,6 +35,7 @@
 		<result property="imgPath"					column="IMG_PATH"				columnIndex="7"/>
 		<result property="parentId"					column="PARENT_ID"				columnIndex="8"/>
 		<result property="formId"					column="FORM_ID"				columnIndex="9"/>
+		<result property="isAdd"					column="ISADD"					columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap id="attitudeForm" class="AttitudeFormVO">
@@ -164,7 +165,7 @@
 				TBL_USERMASTER.title AS usertitle,
 				TBL_USERMASTER.displayname AS userName,
 				TBL_USERMASTER.description AS deptName,
-				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') AS compareTime
+				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') AS gubun
 			FROM
 				TBL_USERMASTER
 			LEFT JOIN
@@ -209,8 +210,8 @@
 				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) <= #searchEndTime#
 			]]>
 		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchCompareValue">
-			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') = #searchCompareValue#
+		<isNotEmpty prepend="AND" property="searchGubun">
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') = #searchGubun#
 		</isNotEmpty>
 		
 		<isNotEmpty property="orderCell">
@@ -274,8 +275,8 @@
 				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) <= #searchEndTime#
 			]]>
 		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchCompareValue">
-			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') = #searchCompareValue#
+		<isNotEmpty prepend="AND" property="searchGubun">
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') = #searchGubun#
 		</isNotEmpty>
 	</select>
 	
@@ -290,7 +291,8 @@
 				ISUSE,
 				IFNULL(IMG_PATH,'') AS IMG_PATH,
 				IFNULL(PARENT_ID,'') AS PARENT_ID,
-				FORM_ID
+				FORM_ID,
+				ISADD
 			FROM
 				TBL_ATTITUDE_TYPE
 			WHERE
@@ -340,7 +342,8 @@
 				ISUSE,
 				IFNULL(IMG_PATH,'') AS IMG_PATH,
 				IFNULL(PARENT_ID,'') AS PARENT_ID,
-				FORM_ID
+				FORM_ID,
+				ISADD
 			FROM
 				TBL_ATTITUDE_TYPE
 			WHERE
@@ -399,52 +402,67 @@
 	<insert id="ezAttitudeAdminDAO.insertAttitudeType" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_ATTITUDE_TYPE
-				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, PARENT_ID, FORM_ID)
+				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, PARENT_ID, ISADD, FORM_ID)
 			VALUES
-				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, 'A05', (SELECT 
-																						A.FORM_ID
-																					FROM 
-																						TBL_ATTITUDE_TYPE A
-																					WHERE 
-																						A.TENANT_ID = #tenantId#
-																					AND 
-																						A.COMPANY_ID = #companyId#
-																					AND 
-																						A.TYPE_ID = 'A11'))
+				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, 'A05', '1', (SELECT 
+																							  A.FORM_ID
+																						  FROM 
+																							  TBL_ATTITUDE_TYPE A
+																						  WHERE 
+																							  A.TENANT_ID = #tenantId#
+																						  AND 
+																							  A.COMPANY_ID = #companyId#
+																						  AND 
+																							  A.TYPE_ID = 'A11'))
 		]]>
 	</insert>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigInfo" parameterClass="Map" resultClass="AttitudeUserConfigVO">
-		<![CDATA[
-			SELECT
-				TBL_USERMASTER.cn AS userid,
-				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) AS workstarttime,
-				IFNULL(SUBSTR(date_add(concat((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) AS workendtime,
-				TBL_USERMASTER.title AS usertitle,
-				TBL_USERMASTER.displayname AS userName,
-				TBL_USERMASTER.description AS deptName,
-				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') AS compareTime
-			FROM
-				TBL_USERMASTER
-			LEFT JOIN
-				TBL_ATTITUDE_USER_CONF
-			ON 
-				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_USER_CONF.tenant_id
-			AND
-				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_USER_CONF.company_id
-			AND
-				TBL_USERMASTER.cn = TBL_ATTITUDE_USER_CONF.user_id
-			LEFT JOIN
-				TBL_ATTITUDE_CONF
-			ON
-				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_CONF.tenant_id
-			AND
-				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_CONF.company_id
-			WHERE
-				TBL_USERMASTER.tenant_id = #tenantId#
-			AND
-				TBL_USERMASTER.cn = #selectUserId#
-		]]>
+		<isEqual property="userType" compareValue="user">
+			<![CDATA[
+				SELECT
+					IFNULL(SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(NOW(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) AS workstarttime,
+					IFNULL(SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(NOW(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) AS workendtime,
+					IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') AS gubun
+				FROM
+					TBL_USERMASTER
+				LEFT JOIN
+					TBL_ATTITUDE_USER_CONF
+				ON 
+					TBL_USERMASTER.tenant_id = TBL_ATTITUDE_USER_CONF.tenant_id
+				AND
+					TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_USER_CONF.company_id
+				AND
+					TBL_USERMASTER.cn = TBL_ATTITUDE_USER_CONF.user_id
+				LEFT JOIN
+					TBL_ATTITUDE_CONF
+				ON
+					TBL_USERMASTER.tenant_id = TBL_ATTITUDE_CONF.tenant_id
+				AND
+					TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_CONF.company_id
+				WHERE
+					TBL_USERMASTER.tenant_id = #tenantId#
+				AND
+					TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+				AND
+					TBL_USERMASTER.cn = #selectedUserId#
+			]]>
+		</isEqual>
+		
+		<isEqual property="userType" compareValue="list">
+			<![CDATA[
+				SELECT
+					SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', work_starttime), INTERVAL #offsetMin# minute), 12, 5) AS workstarttime,
+					SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', work_endtime), INTERVAL #offsetMin# minute), 12, 5) AS workendtime,
+					'0' AS gubun
+				FROM
+					TBL_ATTITUDE_CONF
+				WHERE
+					tenant_id = #tenantId#
+				AND
+					company_id = #companyId#
+			]]>
+		</isEqual>
 	</select>
 	<!-- 조직도 부서별 사원 리스트 -->
 	<select id="ezAttitudeAdminDAO.getDeptUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
@@ -480,7 +498,7 @@
 			INSERT INTO TBL_ATTITUDE_USER_CONF
 				(user_id, tenant_id, work_starttime, work_endtime, company_id, dept_id)
 			SELECT
-				#userId# AS user_id,
+				#selectedUserId# AS user_id,
 				#tenantId# AS tenant_id,
 				#workStartTime# AS work_starttime,
 				#workEndTime# AS work_endtime,
@@ -489,7 +507,7 @@
 			FROM
 				TBL_USERMASTER
 			WHERE
-				cn = #userId#
+				cn = #selectedUserId#
 			AND
 				tenant_id = #tenantId#
 			ON DUPLICATE KEY UPDATE
@@ -559,10 +577,13 @@
 			DELETE FROM 
 				TBL_ATTITUDE_USER_CONF
           	WHERE
-          		TENANT_ID = #tenantId#
+          		tenant_id = #tenantId#
           	AND
-        		USER_ID = #userId#
+          		company_id = #companyId#
 		]]>
+		<iterate prepend="AND user_id IN" property="selectedUserIdList" open="(" close=")" conjunction=",">
+			#selectedUserIdList[]#
+		</iterate>
    </delete>
    
    	<select id="ezAttitudeAdminDAO.getAttitudeList2" parameterClass="Map" resultClass="AdminAttitudeVO">

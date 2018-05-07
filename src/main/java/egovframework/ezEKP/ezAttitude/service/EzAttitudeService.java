@@ -73,21 +73,21 @@ public interface EzAttitudeService {
 	
 	public void updateAttitudeType(String typeId, String typeName, String typeName2, String imgPath, int tenantId, String companyId) throws Exception;
 	
-	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId, String searchUserName, String searchDeptName, String searchTitle, String searchStartTime, String searchEndTime, String searchCompareValue, String pageNum, String listSize, String orderCell, String orderOption, String offsetMin) throws Exception;
+	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId, String searchUserName, String searchDeptName, String searchTitle, String searchStartTime, String searchEndTime, String searchGubun, String pageNum, String listSize, String orderCell, String orderOption, String offsetMin) throws Exception;
 	
-	public AttitudeUserConfigVO getAttitudeUserConfigInfo(String userIdList, String offsetMin, int tenantId) throws Exception;
+	public AttitudeUserConfigVO getAttitudeUserConfigInfo(String selectedUserIdList, String offsetMin, String companyId, int tenantId) throws Exception;
 	
 //	public void updateAttitudeUserConfig(int tenantId, String userId, String workStartTime, String workEndTime) throws Exception;
 	
 //	public void insertAttitudeUserConfig(int tenantId, String companyId, String userId, String workStartTime, String workEndTime) throws Exception;
 	
-	public void saveAttitudeUserConfig(String selectUserId, String workStartTime, String workEndTime, String offSet, int tenantId) throws Exception;
+	public void editAttitudeUserConfig(String selectUserId, String workStartTime, String workEndTime, String gubun, String offSet, String companyId, int tenantId) throws Exception;
 	
 	public List<AttitudeDeptVO> getCompanyList(String lang, int tenantId, String userId) throws Exception;
 	
-	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName, String searchTitle, String searchStartTime, String searchEndTime, String searchCompareValue, String offsetMin) throws Exception;
+	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName, String searchTitle, String searchStartTime, String searchEndTime, String searchGubun, String offsetMin) throws Exception;
 	
-	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String sysLang, String offSet, String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin) throws Exception;
+	public List<AttitudeApplicationVO> getUsersModiyAtt(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String sysLang, String offSet, String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin, String[] deptIdList) throws Exception;
 
 	public String getAttitudeTypeMaxTypeId(String companyId, int tenantId) throws Exception;
 
@@ -103,8 +103,6 @@ public interface EzAttitudeService {
 
 	public List<DeptViewVO> getDeptViewList(String userId, String companyId, String tenantId) throws Exception;
 
-	public void deleteAttitudeUserConfig(int tenantId, String selecUserList) throws Exception;
-	
 	public List<AdminAttitudeVO> getAttitudeList2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId) throws Exception;
 	
 	public AttitudeApplicationVO attModAppDetail(String companyId, int tenantId, String userId, String attModId, String offset, String applCnt) throws Exception;
@@ -130,9 +128,8 @@ public interface EzAttitudeService {
 
 	public void saveAttitudeAuthDept(int tenantId, String companyId, String selectedUser, String deptIds) throws Exception;
 
-	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId,	String userId, String isGAdmin) throws Exception;
+	public List<JournalAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId, String userId, String isAllDept) throws Exception;
 	
-//	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String offset, String startDate, String endDate, int tenantId) throws Exception;
 	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String deptId, String offset, String year,String typeId, int tenantId) throws Exception;
 
 	public List<JournalAuthorVO> getCompanyDeptList(String userId, String companyId, int tenantId);
