@@ -88,9 +88,9 @@
 				dom.listSizeSelect.addEventListener("change", function(event) {
 					optionHidden();
 					pagination.setListSize(this.value);
-					context.refreshList(true);
+					getFileList(folderId);
 				});
-		     });
+		    });
 			
 			function initDomElement() {
 				dom = {
