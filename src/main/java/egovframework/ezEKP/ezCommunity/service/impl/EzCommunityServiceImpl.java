@@ -975,6 +975,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 	}
 	
+	// 커뮤니티 설문조사 메인의 설문리스트 XML 문자열 리턴
 	@Override
 	public String pollMain(LoginVO userInfo, String code) throws Exception {
 		logger.debug("pollMain started.");
@@ -1016,6 +1017,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map.put("v_MANAGERID", item.getManagerID());
 			map.put("tenantID", userInfo.getTenantId());
 			
+			// 사실상 ManagerID = QuestionID이다.
 			String strQuestionID = ezCommunityDAO.pollMainGet3(map);
 			
 			logger.debug("pollMainGet3 ended.");
@@ -1025,12 +1027,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map.put("v_STRQUESTIONID", strQuestionID);
 			map.put("tenantID", userInfo.getTenantId());
 			
+			// 설문에 대답한 응답자 수
 			int strResponseCnt = ezCommunityDAO.pollMainGet4(map);
 			
 			logger.debug("pollMainGet4 ended.");
 
 			sb.append("<tr>");
-			/*sb.append("<td align=\"center\">" + item.getPollGroupNo() + "</td>");*/			
+			/* 2018-05-07 홍승비 - 커뮤니티 설문조사 체크박스 사용 (삭제를 위한 해당설문ID, 커뮤니티ID) */
+			sb.append("<td><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" clubNo=\"" + item.getC_clubNo() + "\"/></td>");			
 			sb.append("<td style=\"text-overflow:ellipsis;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
 			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
@@ -1038,6 +1042,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<td>" + pollState + "</td>");
 			sb.append("<td>");
 			
+			//관리자는 모든 설문의 날짜를 변경할 수 있어야 하는가??
 			if (item.getPollRegUser().equals(userInfo.getId())) {
 				if (pollManager.equals(egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale()))) {
 					sb.append("<a class=\"imgbtn\" onclick=poll_edit(\"" + code + "\",\"" + item.getManagerID() + "\")><span>" + pollManager + "</span></a>");
@@ -1358,69 +1363,82 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		response.getWriter().flush();
 	}
 
+	// 사용하는 변수 : tenantID, managerID, clubNo(code), questionID(=managerID/질문번호=설문번호/테이블 간 외래 키로 쓰고있음), answerID
 	@Override
 	public void pollDelete(LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String code = request.getParameter("code");
-		String managerID = request.getParameter("managerID");
+		String managerID[] = request.getParameter("managerID").split(";");
 		int tenantID = userInfo.getTenantId();
 		
 		logger.debug("pollDelete started.");
 		logger.debug("pollDeleteGet1 started.");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_MANAGERID", managerID);
-		map.put("tenantID", tenantID);
-		
-		String strRegUser = ezCommunityDAO.pollDeleteGet1(map).trim();
-		
-		logger.debug("pollDeleteGet1 ended. strRegUser=" + strRegUser);
-		
-		if (strRegUser != null) {
-			logger.debug("pollDeleteGet3 started.");
+		for(int i=0; i<managerID.length; i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_MANAGERID", managerID[i]);
+			map.put("tenantID", tenantID);
 			
-			Map<String, Object> map1 = new HashMap<String, Object>();
-			map1.put("v_CODE", code);
-			map1.put("tenantID", tenantID);
+			// 해당 설문을 등록한 사람을 찾는다.(ID)
+			String strRegUser = ezCommunityDAO.pollDeleteGet1(map).trim();
 			
-			String sysopID = ezCommunityDAO.pollDeleteGet3(map1).trim();
+			logger.debug("pollDeleteGet1 ended. strRegUser=" + strRegUser);
 			
-			logger.debug("pollDeleteGet3 ended. sysopID=" + sysopID);
-			
-			if (strRegUser.equals(userInfo.getId()) || sysopID.equals(userInfo.getId())) {
-				logger.debug("pollDeleteGet2 started.");
+			if (strRegUser != null) {
+				logger.debug("pollDeleteGet3 started.");
 				
-				List<CommunityCPollQuestionVO> questionList = ezCommunityDAO.pollDeleteGet2(map);
+				Map<String, Object> map1 = new HashMap<String, Object>();
+				map1.put("v_CODE", code);
+				map1.put("tenantID", tenantID);
+				// 커뮤니티 관리자를 찾는다.(ID)
+				String sysopID = ezCommunityDAO.pollDeleteGet3(map1).trim();
 				
-				logger.debug("pollDeleteGet2 ended. size=" + questionList.size());
-
-				for (CommunityCPollQuestionVO question : questionList) {
-					logger.debug("pollDeleteGet4 start. " + question.getQuestionID());
+				logger.debug("pollDeleteGet3 ended. sysopID=" + sysopID);
+				
+				if (strRegUser.equals(userInfo.getId()) || sysopID.equals(userInfo.getId())) {
+					logger.debug("pollDeleteGet2 started.");
+					//설문 등록자가 등록한 설문의 고유 ID를 포함한 VO들을 찾는다.
+					List<CommunityCPollQuestionVO> questionList = ezCommunityDAO.pollDeleteGet2(map);
 					
-					Map<String, Object> map2 = new HashMap<String, Object>();
-					map2.put("v_QUESTIONID", question.getQuestionID());
-					map2.put("tenantID", tenantID);
+					logger.debug("pollDeleteGet2 ended. size=" + questionList.size());
+	
+					for (CommunityCPollQuestionVO question : questionList) {
+						logger.debug("pollDeleteGet4 start. " + question.getQuestionID());
+						
+						Map<String, Object> map2 = new HashMap<String, Object>();
+						map2.put("v_QUESTIONID", question.getQuestionID());
+						map2.put("tenantID", tenantID);
+						//삭제할 설문의 대답 리스트를 가져온다.
+						List<CommunityCPollAnswerVO> answerList= ezCommunityDAO.pollDeleteGet4(map2);
+						
+						logger.debug("pollDeleteGet4 ended. size=" + answerList.size());
+						
+						for(CommunityCPollAnswerVO answer : answerList) {
+							logger.debug("getQuestionID="+ question.getQuestionID() + " || getAnswerID=" + answer.getAnswerID());
+							pollDeleteDel1(question.getQuestionID(), answer.getAnswerID(), tenantID);
+						} // TBL_C_POLLRESPONSE 테이블로부터 등록된 답을 지운다.
+						
+						pollDeleteDel2(question.getQuestionID(), tenantID);
+					} // TBL_C_POLLANSWER 테이블로부터 설문이 가진 전체 답 목록을 지운다.
 					
-					List<CommunityCPollAnswerVO> answerList= ezCommunityDAO.pollDeleteGet4(map2);
-					
-					logger.debug("pollDeleteGet4 ended. size=" + answerList.size());
-					
-					for(CommunityCPollAnswerVO answer : answerList) {
-						logger.debug("getQuestionID="+ question.getQuestionID() + " || getAnswerID=" + answer.getAnswerID());
-						pollDeleteDel1(question.getQuestionID(), answer.getAnswerID(), tenantID);
-					}
-					
-					pollDeleteDel2(question.getQuestionID(), tenantID);
+					pollDeleteDel3(managerID[i], tenantID);
+				} // TBL_C_POLLQUESTION, TBL_C_POLLMANAGER 테이블로부터 등록된 설문을 지운다.
+				else {
+					response.setCharacterEncoding("UTF-8");
+					response.setContentType("text/html; charset=UTF-8");
+					response.getWriter().write("<script language='javascript'>\n");
+					response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezQuestion.t278", userInfo.getLocale()) + "\');\n");
+					response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
+					response.getWriter().write("</script>");
+					response.getWriter().flush();
+					return;
 				}
-				
-				pollDeleteDel3(managerID, tenantID);
 			}
 		}
 		
 		logger.debug("pollDelete ended.");
 		
 		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html; charset=UTF-8");
-		
+		response.setContentType("text/html; charset=UTF-8");		
 		response.getWriter().write("<script language='javascript'>\n");
 		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
 		response.getWriter().write("</script>");
