@@ -54,8 +54,9 @@
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
 				}).on('ready.jstree', function(e, data) {
-					var offset = $(".jstree-clicked").offset();
-		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+					var offset = $(".jstree-wholerow-clicked").offset();
+		   	    	var jstree = document.getElementById("treeview");
+		   	        $('#treeview').animate({scrollTop : offset.top - jstree.offsetHeight / 2}, 40);
 			    });
 	   		}
 	   		
@@ -501,13 +502,13 @@
 	                            </table>
 	                        </td>
 	                        <td style="width: 30px; text-align: center;">                            
-	                            <img src="/images/arr_rr.gif" id="dblarrow" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; display: none;" onclick="applyFavorite()"><br>
-	                            <img src="/images/arr_r.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver()"><br>
-	                            <img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver()">
+	                            <img src="/images/arr_rright.gif" id="dblarrow" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; display: none;" onclick="applyFavorite()"><br>
+	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver()"><br>
+	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver()">
 	                        </td>
 	                        <td style="vertical-align: top;">
 	                        	<div style="display: inline-flex; display: -ms-inline-flexbox; border-bottom: 1px solid #565b66; width: 100%;">
-		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
+		                            <h2 class="receiver_tltype01" style="margin-top:4px; border-bottom:none;">
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
 									</h2>
 								 	<a class="imgbtn" style="margin-top: 5px; margin-left: 65px;">
