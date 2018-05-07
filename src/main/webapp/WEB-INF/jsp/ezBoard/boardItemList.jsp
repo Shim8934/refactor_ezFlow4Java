@@ -493,7 +493,7 @@
 		        	if (document.getElementById("txtContent").value != "") {		// DocContent
            			    TYPE += "CONTENT;";
           		        DATA += "<CONTENT>" + MakeXMLString(document.getElementById("txtContent").value.replace("'", "''")) + "</CONTENT>";
-		
+		        	}
 		            if (document.getElementById("txtWriterName").value != "")		// DrafterName
 		            {
 		                TYPE += "WRITERNAME;";
