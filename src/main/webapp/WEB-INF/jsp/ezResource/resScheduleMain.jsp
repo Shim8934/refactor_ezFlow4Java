@@ -236,12 +236,16 @@
 	            if (GetAttribute(srcEl,"dispTime") != null) {
 
 	                selsd = GetAttribute(srcEl,"dispTime");
-	                seled = selsd.replace(":00:", ":30:");
+	                
+	                if (selsd != null) { 
+	                	seled = selsd.replace(":00:", ":30:");
+	                }
 	            }
 	        } else {
-	            selsd = GetAttribute(srcEl,"dispDate");
-            	seled = GetAttribute(srcEl,"dispDate");
+	            selsd = GetAttribute(srcEl, "dispDate");
+            	seled = GetAttribute(srcEl, "dispDate");
 	        }
+	       
 	        var feature = GetOpenPosition(820, 700);
 	        if (CrossYN() || pNoneActiveX == "YES") {
 	        	window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}&brdName=" + encodeURIComponent("${brdNm}"), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);

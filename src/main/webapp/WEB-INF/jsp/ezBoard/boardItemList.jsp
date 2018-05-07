@@ -487,19 +487,23 @@
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
 		            {
 		                TYPE += "TITLE;";
-		                DATA += "<TITLE>" + document.getElementById("txtTitle").value + "</TITLE>";
+		                DATA += "<TITLE>" + MakeXMLString(document.getElementById("txtTitle").value.replace("'", "''")) + "</TITLE>";
 		            }
+		            
+		        	if (document.getElementById("txtContent").value != "") {		// DocContent
+           			    TYPE += "CONTENT;";
+          		        DATA += "<CONTENT>" + MakeXMLString(document.getElementById("txtContent").value.replace("'", "''")) + "</CONTENT>";
 		
 		            if (document.getElementById("txtWriterName").value != "")		// DrafterName
 		            {
 		                TYPE += "WRITERNAME;";
-		                DATA += "<WRITERNAME>" + document.getElementById("txtWriterName").value + "</WRITERNAME>";
+		                DATA += "<WRITERNAME>" + MakeXMLString(document.getElementById("txtWriterName").value.replace("'", "''")) + "</WRITERNAME>";
 		            }
 		
 		            if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
 		            {
 		                TYPE += "ABSTRACT;";
-		                DATA += "<ABSTRACT>" + document.getElementById("txtAbstract").value + "</ABSTRACT>";
+		                DATA += "<ABSTRACT>" + MakeXMLString(document.getElementById("txtAbstract").value.replace("'", "''")) + "</ABSTRACT>";
 		            }
 		
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
@@ -514,7 +518,8 @@
 		                DATA += "<ENDDATE>" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</ENDDATE>";
 		            }
 		        }
-		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+		       		SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+		    	}
 		    }
 		    function btn_PostDate_Clear() {
 		        $("#Sdatepicker").datepicker('setDate', "");
@@ -1026,6 +1031,7 @@
 		        btn_PostDate_Clear();
 		        document.getElementById("chkSearchSub").checked = false;
 		        document.getElementById("txtTitle").value = "";
+		        document.getElementById("txtContent").value = "";
 		        document.getElementById("txtWriterName").value = "";
 		        document.getElementById("txtAbstract").value = "";
 		    
@@ -1048,7 +1054,7 @@
 		    }
 		    function search(type) {
 		        if (type == "basic") {
-		            if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
+		            if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("txtContent").value == ""
 		            		&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 		                alert("<spring:message code='ezBoard.t192' />");
 		                return;
@@ -1207,7 +1213,9 @@
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205' /></span></li>
 		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188' /></span></li>
 		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051' /></span></li>
-		        <li><span onClick="ReservationItem_onclick()"><spring:message code='ezBoard.t276' /></span></li> 
+		        <c:if test="${boardInfo.guBun ne '2'}">
+		        	<li><span onClick="ReservationItem_onclick()"><spring:message code='ezBoard.t276' /></span></li> 
+		        </c:if>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052' /></span></li> 
 		        <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
@@ -1347,6 +1355,10 @@
 		            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
 		            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
 		        </tr>  
+		        <tr>
+		            <th style="text-align:center"><spring:message code='ezBoard.garm01' /></th>
+		            <td><input type="text" id="txtContent" style="width:98%" value=""></td>
+		        </tr> 
 		         <tr>
 		            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
 		            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>

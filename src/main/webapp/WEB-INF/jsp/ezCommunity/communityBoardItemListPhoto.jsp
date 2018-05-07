@@ -78,7 +78,6 @@
 	        $(function () {
     			var xmldoc = loadXMLString('${strXML}');
     			var listXML = '';
-    			
     			var cnt = SelectNodes(xmldoc, "NODES/NODE").length;
     			var rows = cnt / 4;
     			
@@ -102,20 +101,25 @@
     						listXML += "<tr>";
     						var fileName = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "EXTENSIONATTRIBUTE4").trim();
     						var imgUrl = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "EXTENSIONATTRIBUTE5").trim();
-                            listXML += "<td width='146' height='116' align='center' background='/images/photo_bg.gif'><img style='cursor:pointer;width:100px;height:100px;' src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + pBoardID + "&imgUrl=" + imgUrl + "&fileName=" + fileName + "' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'></td>";
-                            
+                            listXML += "<td width='146' height='116' align='center' background='/images/photo_bg.gif'><img style='cursor:pointer;width:100px;height:100px;' src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + pBoardID + "&imgUrl=" + imgUrl + "&fileName=" + fileName + "' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'></td>";                       
                             listXML += "</tr></table>";
                             listXML += "<table width='146' border='0' cellpadding='1' cellspacing='1' style='margin-top:5px'>";
                             listXML += "<tr><td class='photo_tit' style='cursor:pointer;'  onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'>";
                             listXML += "<img src='/images/photo_tit.gif' width='17' height='16' align='absbottom'>";
                             
                             var title = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "Title").trim();
-                            
+                            var oneLineCnt = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ONELINECNT");
+
                             if (title.length > 8) {
                                 title = title.substring(0, 8) + "...";
+                            }                            
+                            listXML += title;
+                            
+                            /* 2018-05-07 홍승비 - 커뮤니티 포토게시판 리스트에서 댓글 표시하기 */ 
+                            if (oneLineCnt > 0) {
+                            	listXML+="<SPAN style='color:#c64200'> [" + oneLineCnt + "]</SPAN>";
                             }
                             
-                            listXML += title;
                             listXML += "</td>";
                             listXML += "<tr><td style='padding-left:5px'><span class='photo_name' style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width:146px; display: inline-block;'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterName").trim() + " / " + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriteDate").split(' ')[0] + "</span>"
                             listXML += "</td></tr></table>";
@@ -738,9 +742,10 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		
-	    <table id="tblList">
-	    </table>
+		<div style="height:460px;">
+	    	<table id="tblList">
+	    	</table>
+	    </div>
 	    <div style="width: 615px; padding-top: 10px" id="tblPageRayer"></div>
 	    <div id="ListInfo" style="DISPLAY: none">${listInfo}</div>
 	</body>

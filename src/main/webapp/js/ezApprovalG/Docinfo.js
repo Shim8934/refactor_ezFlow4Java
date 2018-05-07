@@ -254,3 +254,23 @@ function AprSecurity_onClick() {
     }
 }
 
+function getPublicFlag2() {
+    var strrtn = "";
+    if (document.getElementsByName("rdoSecType2")[0].checked)
+        strrtn = strrtn + "Y";
+    else 
+        strrtn = strrtn + "N";
+    return strrtn;
+}
+
+function setPublicFlag2(vPublicFlag2) {
+    switch (vPublicFlag2.substring(0, 1)) {
+        case "Y":
+            document.getElementsByName("rdoSecType2")[0].checked = true;
+            break;
+        case "N":
+            document.getElementsByName("rdoSecType2")[1].checked = true;
+            break;
+       
+    }
+}

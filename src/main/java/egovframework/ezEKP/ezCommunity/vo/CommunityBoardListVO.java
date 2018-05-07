@@ -52,6 +52,8 @@ public class CommunityBoardListVO {
 	String boardName;
 	/** 만료일자*/
 	String endDate;
+	/** 댓글갯수  //2018-05-04 홍승비 댓글갯수 표출 */
+	int oneLineCnt;
 
 	public String getC_ClubGubun() {
 		return c_ClubGubun;
@@ -243,6 +245,14 @@ public class CommunityBoardListVO {
 
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
+	}
+
+	public int getOneLineCnt() {
+		return oneLineCnt;
+	}
+
+	public void setOneLineCnt(int oneLineCnt) {
+		this.oneLineCnt = oneLineCnt;
 	}
 	
 }

@@ -137,9 +137,9 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
-			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+			Folder folder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
 			folder.open(Folder.READ_ONLY);
 			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
 			
@@ -333,7 +333,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		long uid = Long.parseLong(uidStr);
 		
 		//넘어온 folderPath가 보낸편지함이 아닐경우
-		if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+		if (!folderPath.equals(ezEmailUtil.getSentFolderId(locale))) {
 			logger.debug(egovMessageSource.getMessage("ezEmail.lhm22", locale));
 			logger.debug("mailCancelSend ended.");
 			return egovMessageSource.getMessage("ezEmail.lhm22", locale);
@@ -349,9 +349,9 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, password, egovMessageSource, locale);
+					userAccount, password, egovMessageSource, locale, ezEmailUtil);
 			
-			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+			Folder folder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
 			folder.open(Folder.READ_ONLY);
 			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
 			

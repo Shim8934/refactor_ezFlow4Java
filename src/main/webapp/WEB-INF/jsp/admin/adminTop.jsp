@@ -80,6 +80,10 @@
 	                case "menu18":
 	                    parent.frames["bottom"].location.href = "/admin/ezSystem/systemMain.do";
 	                    break;
+// 	                   업무일지
+	                case "menu19":
+	                    parent.frames["bottom"].location.href = "/admin/ezJournal/journalMain.do";
+	                    break;
 				    case "menu20":
 				        parent.frames["bottom"].location.href = "/myoffice/ezStatistics/ezLog/index_Log.aspx";
 				        break;
@@ -152,6 +156,8 @@
 		      			<c:if test="${use_ezDMS == 'YES'}">
 		      				<li><span id="menu15" onClick="menu_change(920, event);"><spring:message code="main.t52" /></span></li>
 		      			</c:if>
+<!-- 		      			업무일지 -->
+		      			<li><span id="menu19" onClick="menu_change(690, event)"><spring:message code="ezJournal.t1" /></span></li>
                     </c:if>
                     <li class='btn_logout' style='float:right;'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'><spring:message code='ezPortal.t990043' /></span></li>
 		    	</ul>

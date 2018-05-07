@@ -1242,7 +1242,7 @@
 	                lastRowIdx = 1;
 	            }
 	
-	            for (var cnt = 0; cnt < listnodes.length; cnt++) {
+	            for (var cnt = listnodes.length - 1; cnt >= 0; cnt--) {
 	
 	                var chkDuplflag = false;
 	                for (var i = 0; i < objRows.length; i++) {

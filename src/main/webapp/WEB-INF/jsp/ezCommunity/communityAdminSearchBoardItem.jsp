@@ -264,13 +264,13 @@
 				    if (gubun == "3") {
 				        window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=1&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 				    } else {
-				    	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code), "", 750, 800);
+				    	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code), "", 750, 721);
 				    }
 				} else {
 			        if (gubun == "3") {
 			            window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=1&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 			        } else {
-			        	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code), "", 750, 800);
+			        	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code), "", 750, 721);
 			        }
 				}
 			}
@@ -910,13 +910,13 @@
 				    
 				    <c:choose>
 				    	<c:when test="${pSortBy == 'A.Attachments' }">
-				    		<th style="cursor:pointer;width:20px;" onClick="SortPage('A.Attachments desc')"><img src="/images/file.gif" width="13" height="12"><img src="/images/view-sortup.gif" width="9" height="9"></th>
+				    		<th style="cursor:pointer;width:20px;" onClick="SortPage('A.Attachments desc')"><img src="/images/file.gif"><img src="/images/view-sortup.gif" width="9" height="9"></th>
 				    	</c:when>
 				    	<c:when test="${pSortBy == 'A.Attachments desc' }">
-				    		<th style="cursor:pointer;width:20px;" onClick="SortPage('A.Attachments')"><img src="/images/file.gif" width="13" height="12"><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+				    		<th style="cursor:pointer;width:20px;" onClick="SortPage('A.Attachments')"><img src="/images/file.gif"><img src="/images/view-sortdown.gif" width="9" height="9"></th>
 				    	</c:when>
 				    	<c:otherwise>
-				    		<th style="cursor:pointer;width:20px;" onClick="SortPage('A.Attachments')"><img src="/images/file.gif" width="13" height="12"></th>
+				    		<th style="cursor:pointer;width:20px;" onClick="SortPage('A.Attachments')"><img src="/images/file.gif"></th>
 				    	</c:otherwise>
 				    </c:choose>
 				    

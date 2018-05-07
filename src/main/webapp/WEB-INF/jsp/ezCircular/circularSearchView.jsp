@@ -301,6 +301,11 @@
 				
                 strListInfo = "";
                 
+                /* 2018-04-25 홍승비 - 회람판 검색메뉴 디폴트 로우 삭제 */
+                if(document.getElementById("BoardList_TR_noItems") != null) {
+                	document.getElementById("BoardList_TR_noItems").outerHTML = "";
+                }
+                
                 var tempno = 0;
                 tempno = tempno + "";
                 

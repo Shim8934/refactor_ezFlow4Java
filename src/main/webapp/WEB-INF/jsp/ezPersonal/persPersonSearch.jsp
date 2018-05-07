@@ -852,7 +852,7 @@
                             			<option value="mobile" usedefault="0"><spring:message code='ezPersonal.t178'/></option>
                             			<option value="HomePhone" usedefault="0"><spring:message code='ezPersonal.t70'/></option>
                             			<option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezPersonal.t179'/></option>
-                            			<option value="mail" usedefault="0"><spring:message code='ezPersonal.t176'/></option>
+                            			<option value="mail" usedefault="0"><spring:message code='ezPersonal.t75'/></option>
                             			<option value="streetAddress" usedefault="0"><spring:message code='ezPersonal.t180'/></option>
                             		</select>
                             		<input id="keyword" value="" onKeyPress="search_press(event)" onmousedown="keyword_Clear();" style="width:130px;margin:0px;">

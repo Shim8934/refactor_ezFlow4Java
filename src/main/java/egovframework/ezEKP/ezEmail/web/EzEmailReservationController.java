@@ -256,8 +256,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 
 					//임시보관함에 저장
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userEmail, password, egovMessageSource, locale);
-					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+							userEmail, password, egovMessageSource, locale, ezEmailUtil);
+					Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 					
 					if (folder.exists()) {
 						folder.open(Folder.READ_WRITE);
@@ -402,7 +402,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		}
 		
 		// retrieve the Drafts folder name
-    	String draftsFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
+    	String draftsFolderName = ezEmailUtil.getDraftsFolderId(locale);
     	
 		if (message != null) {
 			if (message.getFrom() != null && message.getFrom()[0] != null) {

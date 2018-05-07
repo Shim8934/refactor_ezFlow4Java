@@ -145,11 +145,15 @@
 
 	                	setweek_onload("WEEK");
 	            	} else {
-		                document.getElementById("ToDaybtn").style.display = "none";
-	                	document.getElementById("Weekbtn").style.display = "none";
-	                	document.getElementById("TR_Line2").style.display = "none";
+	            		/* 2018-04-26 홍승비 - 자원 관리자의 자원등록, 자원관리 표시 수정 */
+	                	if(CheckAdmin()) {
+	                		document.getElementById("mainmenu").onload = function(){};
+	    	               	document.getElementById("noResListSpan").style.display = "none";
+	    	               	document.getElementById("tbar2").style.display = "none";
+	                	} else {
+	                		document.getElementById("mainmenu").style.display = "none";
+	                	} 
 	                	document.getElementById("tdDateCalendarViewer").innerHTML = document.getElementById("EmptyMsg").innerHTML;
-	                	document.getElementById("mainmenu").style.display = "none";
 	                	document.getElementById("weeklyline").style.display = "none";
 	            	}
 	        	}
@@ -324,10 +328,12 @@
     				<li><span onClick="btnView_Resource();"><spring:message code="ezResource.t17" /></span></li>
     				<li id="tbar2" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
     			</c:if>
+    			<span id = "noResListSpan">
     			<li id="ToDaybtn"><span onClick="setweek_onload('TODAY');"><spring:message code="ezResource.t251" /></span></li>
     			<li id="Weekbtn"><span onClick="setweek_onload('WEEK');"><spring:message code="ezResource.t253" /></span></li>
       			<li style="background:none;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
 				<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li>
+  				</span>
   			</ul>
 		</div>
 		

@@ -510,7 +510,7 @@
 	                                    		<c:if test="${item.fileType == 'ecm'}">
 	                                    			<c:set var="imagePath" value="/images/ecm.png" />
 	                                    		</c:if>	                                    		
-	                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
+	                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}"><c:out value="${item.fileName}"/> (${item.fileTranSize})</a>	                                    		
 	                                    	</div>
 	                                    </c:forEach>
 	                                </div>
