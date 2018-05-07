@@ -43,9 +43,9 @@
 	            catch (e)
 	            { }
 	    	if( moveCopyType == "move") {
-	    		$('#topMenu').text("폴더 이동");
+	    		$('#topMenu').text("<spring:message code='ezWebFolder.t296'/>");
 	    	}else  {
-	    		$('#topMenu').text("폴더 복사");
+	    		$('#topMenu').text("<spring:message code='ezWebFolder.t297'/>");
 	    	}
 	    	
 	    	
@@ -61,21 +61,21 @@
 		function afterSuccess(code,obj) {
 			if (code == 0) {
 				if(obj == "move") {
-					alert("폴더이동에 성공하셨습니다.");
+					alert("<spring:message code='ezWebFolder.t298'/>");
 				}else if(obj == "copy") {
-					alert("폴더복사에 성공하셨습니다.");
+					alert("<spring:message code='ezWebFolder.t299'/>");
 				}
 				parent.returnFunction(folderType);
 				parent.folderList(folderType);
 				parent.DivPopUpHidden();
 				window.close();
 			}else if (code == 2) {
-				alert("접근 권한이 없습니다.");
+				alert("<spring:message code='ezWebFolder.t300'/>");
 			}else if(code == 4) {
-				alert("하위 파일 또는 폴더를 이동 또는 복사할 권한이 없습니다.");
+				alert("<spring:message code='ezWebFolder.t301'/>");
 				window.close();
 			}else {
-				alert("복사 또는 이동에 문제가 생김");
+				alert("<spring:message code='ezWebFolder.t302'/>");
 				window.close();
 				return;
 			}

@@ -148,13 +148,13 @@
 		function successFile(data) {
 			if (data.status == "error") {
 				if (data.code == 1) {
-					alert("파라메터가 부족합니다.");
+					console.log("<spring:message code='ezWebFolder.t306' />");
 					return;
 				}else if (data.code == 2) {
-					alert("에러가 발생했습니다.");
+					alert("<spring:message code='ezWebFolder.t305' />");
 					return;
 				}else if (data.code == 3) {
-					alert("접근 권한이 없습니다.");
+					alert("<spring:message code='ezWebFolder.t300' />");
 					return;
 				}
 			}
@@ -700,7 +700,7 @@
 				<li><span onClick="fileDelete()"><spring:message code='ezWebFolder.t274'/></span></li>
 				<li><span onClick="fileRename()"><spring:message code='ezWebFolder.t273'/></span></li>
 				<li><span onClick="fileMove()"><spring:message code='ezWebFolder.t275'/></span></li>
-				<li><span onClick="shareContext.addShareView()">공유</span></li>
+				<li><span onClick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254'/></span></li>			
 				<li><img src="/images/i_bar.gif"></li>
 				<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 	<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
