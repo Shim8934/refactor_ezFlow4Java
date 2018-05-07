@@ -248,12 +248,12 @@ body{
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .i_numbered_list { background-position: -60px -30px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .i_bullet_list { background-position: -90px -30px;}
 
-.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker { display: none; top:25px; left:-3px; position: absolute; z-index: 100; width: 180px; margin: 0; padding: 0; background-color: #fff; border: 1px solid #b9b9b9; box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.3); }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker { display: none; top:25px; left:-3px; position: absolute; z-index: 100; min-width: 190px; width:auto; margin: 0; padding: 0; background-color: #fff; border: 1px solid #b9b9b9; box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.3); }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm { display: block; margin: 0; background-color: #fff; overflow: hidden; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item { height: 25px; clear: both; line-height: 25px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item:hover { cursor: pointer; background: #eee; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item .list_title{ float: left; height: 25px; width: 30px; text-align: center; background-color: #d8f5ff;}
-.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item .list_name{ float: left; width: 130px; text-align: left; padding-left: 5px;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_listpicker .ui_listpicker .listForm .list_type_item .list_name{ float: left; min-width: 130px; text-align: left; padding-left: 5px;}
 
 
 
@@ -960,7 +960,43 @@ body{
 
 
 
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal { width: 400px; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents { background-color: #ffffff;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper { padding:10px;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field { }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table { width: 100%; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_label{height: 27px; text-align: center; user-select: none;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input{height: 27px; text-align: left;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input .kk_horizontal_dialog_width,
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input .kk_horizontal_dialog_height{width: 75px; border: solid 1px #a9a9a9; height: 15px; text-align: center; padding-right: 5px;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input .kk_horizontal_dialog_color_picker{width: 20px; height: 20px; background-color: #000000; cursor: pointer; position: relative; border: 1px solid #cecece;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_common_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input .kk_horizontal_dialog_align_select{width: 92px; height: 20px;}
 
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_template_field { margin-top: 10px; border-top: 1px solid #dddddd;padding-top:10px;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_template_field .kk_horizontal_dialog_table { width: 100%; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_template_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_label{height: 27px; text-align: left; user-select: none;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_template_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input{height: 40px; text-align: left; border: 1px solid #ededed; cursor: pointer;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_template_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input:hover {background-color: #eeeeee;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_template_field .kk_horizontal_dialog_table .kk_horizontal_dialog_table_td_input.kk_horizontal_dialog_template_on {background-color: #eadcdc !important;}
+
+
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker { width: 20px; height: 20px; background-color: #ffffff; cursor: pointer; position:relative;border: 1px solid #cecece;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker { display: none; position: absolute; top: 20px; left: 0px; width: 193px; background-color: #fff; margin: 0; padding: 0; border: 1px solid #b9b9b9; box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.3); z-index: 100; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker ul { display: block; padding: 0; list-style-type: none; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker ul:after { content: " "; display: block; clear: both; height: 0; visibility: hidden; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker ul li { display: block; float: left; padding: 0; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker ul li:hover,
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker ul li[selected] { border: 1px solid #ff0000; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker ul li[selected]::before { content: '✓'; color: #efefef; margin-top: -2px; margin-left: 2px; text-shadow: 0px 1px #000000; display: block;}
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_sub_default_color li { position: relative; float: none; display: block; height: 25px; line-height: 25px; margin: 6px; padding: 0 0 0 30px; color: #2e2e2e; text-decoration: none; border: 1px solid #b9b9b9; font-size: 13px; text-align: left; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_sub_default_color span.ui_default_color { position: absolute; top: 50%; left: 6px; margin-top: -7px; display: block; width: 12px; height: 12px; border: 1px solid #b9b9b9; background-color: #000; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_default_color_palette { margin: 10px 5px 5px 5px; padding: 0; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_default_color_palette > li { margin: 0 2px 0 2px; border: 1px solid #b9b9b9; width: 12px; height: 12px; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_color_palette { margin: 0px 5px 5px 5px; padding: 0; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_color_palette > li { margin: 0 2px 0 2px; border: 1px solid #fff; width: 12px; height: 12px; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_standard_color_palette {  margin: 10px 5px 5px 5px; padding: 0; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_standard_color_palette > li { margin: 0 2px 0 2px; border: 1px solid #b9b9b9;  width: 12px; height: 12px; }
+.kk_editor .kk_editor_dialog .kk_dialog_horizontal .kk_dialog_contents .kk_horizontal_dialog_wrapper .kk_horizontal_dialog_color_picker .ui_colorpicker .ui_standard_color_text { display: block; margin: 0; padding: 2px 10px; background-color: #ededed; height: 20px; line-height: 20px; font-size: 12px; font-weight: normal; text-align: left; }
 
 
 
@@ -1510,9 +1546,9 @@ body{
   height: 8px;
   z-index: 29;
   border-radius: 6px;
-  background: #2570ba !important;
-  background: -moz-linear-gradient( top, #92b9ea, #2570ba) !important;
-  background: -webkit-gradient(linear, 0 0, 0 100%, from(#92b9ea), to(#2570ba)) !important;
+  background: #2570ba;
+  background: -moz-linear-gradient( top, #92b9ea, #2570ba);
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#92b9ea), to(#2570ba));
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff92b9ea', endColorstr='#ff2570ba', GradientType=0) !important;
   border: 1px solid #fff;
   box-shadow: 1px 1px 2px rgba(0,0,0,.2);
@@ -1526,7 +1562,11 @@ body{
 .kk_editor .resizable-sw,
 .kk_editor .resizable-ne,
 .kk_editor .resizable-nw {
-  height: 7px;width: 7px;margin-left: -5px; margin-top: -5px;
+  height: 6px;width: 6px;margin-left: -4px; margin-top: -4px; border: 1px solid #000000; box-shadow: none;
+  background: #ffffff;
+  background: -moz-linear-gradient( top, #ffffff, #ffffff);
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#ffffff));
+  border-radius: 0px;
 }
 
 .kk_editor .resizable-n {cursor: n-resize; }
@@ -1539,6 +1579,21 @@ body{
 .kk_editor .resizable-nw{cursor: nw-resize;}
 
 
+.kk_table_move_line {
+  cursor: move;
+  background: rgba(0,0,0,0.2);
+  display: block;
+  position: absolute;
+  z-index: 28;
+}
+
+.kk_table_move_line.movable-top,
+.kk_table_move_line.movable-bottom {height: 7px;}
+
+.kk_table_move_line.movable-left,
+.kk_table_move_line.movable-right {width: 7px;}
+
+.kk_table_drag_on { position:absolute; background-image: url(../images/drag_table.png); background-repeat: no-repeat; background-size: 40px 40px; width: 40px; height: 40px; background-color : transparent; display: none;}
 
 
 
@@ -1681,6 +1736,9 @@ body{
 .cxdialog.black .cxdialog_btns a:hover{background:#c2c2c2;}
 .cxdialog.black + .cxdialog_overlay{background:rgba(0,0,0,0.4);opacity:1;}
 
+
+.kk_editor .kk-processing { display:table; position: absolute; width: 100%; height: 100%; color: #5400f7; font-size: 40px; font-weight: bold; top: 0px; left: 0px; background-color: rgba(200,200,200, 0.5); z-index: 10000; cursor: progress; text-align: center; }
+.kk_editor .kk-processing .kk-processing-message { display: table-cell; vertical-align: middle; }
 
 /*.kk_editor .kk_editView .kk_contentView .kk_contents .kk_page_break::before {*/
   /*background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAAMCAYAAAA3bX6lAAADZElEQVRIS9XWWehVVRQG8J82WWog9BJWVNj8b7B6iEZowMoSiXooCYUIpSAsmqiIRqkHs6SoSCMsMjEboCgaIIoGmmxCIqwwLCLLBgNtMvn+rAPHwz1/n91wuPfuvc7e61vr+759R+kfp+AHHF6f77VCJ2A0fmnNHYwzce8Ie2ZpLB7FRfivE7sLLsVD+LezNgNv4Puan4gn8BO+xo34H3dhBT5I3CgESBLLhv9gdzyAE/EFDsJ3eKc2vgF31vf7MbcSPQTTcDem49mK+RhH1/fz8AKex7kDAI7BGpyP9VXEvJrcHsG1lcd+2AeTKue/8RVW42Hc0wa4N86pgJ1xWFUwCXzZAXgCllTCm/ByFeNptAHugHFIRz7CydXtdCzPMyMATPzr+LPTwUswFR/isgKY5hxXjPi1wF2N5xDG/ZYOZmTiJozHWbgZM/FZB+B9Beqlem9yVeu0ims62OS2Jz7BAfijJkPR5T0As/YNLsS6io8UNmMxLq/OJO/5yLlpQnLO83YVPAXIPkMNwKWYV4kcjzNwROlvqEXRtH9R0/5ajw4CNFTuAsx8KHpsdbLRYB/ArF+MfQfoODR9HGuLLWlK2Jb500uDp+LJLkWz1zLcgQORqkeDc/AuYh6NBhOXLjZ6TGdyUIyoCzDFi0ZTzbeQw5NMXwcTHyq3zWUjdsKORe3QPsYXU4mR7Fo+cUUxIvpOs7bSYADGucLtJBlqRAODKHoBTkI2zLiuDo/ptDWYtWjmKhyDF0sTkcFuPRSNXmcjoPI9gBfiQayq35kP5V+rwsdZAzo0/bZiosn4RH4PbxIXXNChRPgd/eVpdzDVfx9vlqZm4Uj82AF4Ja5vrQXUK0XTa6rrg1w0acSBU5A4ethxK1YOoGxYc2jFZTmdzju3V3GHr7UAjLHEPUONPH/V56AO5p0kezbilK+WnWe+3cFcC9FK7qhm5IxQKvv3uWjyiQzCqN/LNdOx5u5r49yrNNmcESPKk/v1KHzaABxQnOGpxrH279yDffFdivbFhQW5I+N63Ys+AJ8qGv6MDVX8UDMF+rzY0xT0FuSJRtsjjp37dLiDfWOPouGUqmDccKSRSzd/Dh7bRlwu82g3VErFuyMaytndEYDpZuw/Ix3Mn4ouuKxFs7fln81IALeR5/axvAVwY+gXrcCSKwAAAABJRU5ErkJggg==);*/

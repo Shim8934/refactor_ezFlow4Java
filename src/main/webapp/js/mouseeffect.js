@@ -169,7 +169,7 @@ function toggleList() {
     if (level2El.item(this.listNum).className == "on"  && (itemId != undefined &&
 	    (itemId == "btn_Manager" || itemId == "Del_Cache" || itemId == "btn_MemberIn" || itemId == "btn_MemberOut"
 	    || GetAttribute(level2El.item(this.listNum).previousSibling, 'name') == "BoardAdminLeftOn"
-	    || itemId == "searchBoard" || itemId == "btn_MemberJoinIng" || itemId == "MYCONT" || itemId == "btn_MemberInfo"
+	    || itemId == "searchBoard" || itemId == "btn_MemberJoinIng" || itemId == "btn_MemberInfo"
         || itemId == "m01" || itemId == "m02" || itemId == "m03" || itemId == "m04" || itemId == "m05" || itemId == "m06" || itemId == "m07" || itemId == "m08" || itemId == "m09"))) {
         level1El.item(this.listNum).className = null;
         level2El.item(this.listNum).className = "off";
@@ -181,14 +181,14 @@ function toggleList() {
         //하위 게시판트리가 보이지 않고, 리스트페이지도 변경되지 안는것 패치.
         //if(level1El.item(this.listNum).children(0) != undefined)
         //2011.01.25 cop 관리자메뉴 두번 호출되는 오류 처리
-        if (level1El.item(this.listNum).children.length > 0 && level1El.item(this.listNum).children[0].id != undefined && level1El.item(this.listNum).children[0].id != "") {
-            //window.event.srcElement.id = level1El.item(this.listNum).children[0].id;
-            if (!CrossYN()){
-                //level1El.item(this.listNum).children[0].onclick();
-            }else{
-                //level1El.item(this.listNum).children[0].onclick;
-            }
-        }
+//        if (level1El.item(this.listNum).children.length > 0 && level1El.item(this.listNum).children[0].id != undefined && level1El.item(this.listNum).children[0].id != "") {
+//            //window.event.srcElement.id = level1El.item(this.listNum).children[0].id;
+//            if (!CrossYN()){
+//                //level1El.item(this.listNum).children[0].onclick();
+//            }else{
+//                //level1El.item(this.listNum).children[0].onclick;
+//            }
+//        }
         level2El.item(this.listNum).className = "on";
     }
 

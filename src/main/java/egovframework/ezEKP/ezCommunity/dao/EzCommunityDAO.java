@@ -923,6 +923,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.pollEditOkUpdateQuestion", map);
 	}
 	
+	/* 2018-04-30 홍승비 - 로고, 썸네일, 타입 통합하여 사용 */
 	public void adminLogoOkUpdate1(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.adminLogoOkUpdate1", map);
 	}
@@ -1153,7 +1154,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.getWriterID", map);
 	}
 
-	//2018-04-10 홍승비 - 커뮤니티 logo와 thumbnail분리	
+	//2018-04-10 홍승비 - 커뮤니티 생성 시 logo와 thumbnail분리	
 	public void commMakeOkSet3Update(Map<String, Object> map) {
 		update("EzCommunityDAO.commMakeOkSet3Update", map);
 	}

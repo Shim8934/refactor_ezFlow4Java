@@ -26,28 +26,48 @@ function btnSetTaskCode_onclick_Complete(rtn) {
     TaskCode_Save();
 }
 
-function setPublicFlag() {
-    var fields = message.GetFieldsList();
-    var field = message.GetListItem(fields, "publication");
-    if (!field) return;
-
-    var PublicType = pPublicityCode.substring(0, 1);
-    var PublicLevel = pPublicityCode.substring(1, 9);
-    var PublicText = "";
-
-    if (pLimitRange != "")
-        PublicText = " (" + pLimitRange + ")";
-
-    if (PublicType == "1")
-        PublicText = strLang82;
-    else if (PublicType == "2")
-        PublicText = strLang83 + getPublicLevel(PublicLevel);
-    else if (PublicType == "3")
-        PublicText = strLang84 + getPublicLevel(PublicLevel);
-    else
-        PublicText = " ";
-
-    field.innerHTML = PublicText;
+/*2018-04-05 김은석 수정 건설공사 공개여부*/
+//function setPublicFlag() {
+//  var fields = message.GetFieldsList();
+//  var field = message.GetListItem(fields, "publication");
+//  if (!field) return;
+//
+//  var PublicType = pPublicityCode.substring(0, 1);
+//  var PublicLevel = pPublicityCode.substring(1, 9);
+//  var PublicText = "";
+//
+//  if (pLimitRange != "")
+//      PublicText = " (" + pLimitRange + ")";
+//
+//  if (PublicType == "1")
+//      PublicText = strLang82;
+//  else if (PublicType == "2")
+//      PublicText = strLang83 + getPublicLevel(PublicLevel);
+//  else if (PublicType == "3")
+//      PublicText = strLang84 + getPublicLevel(PublicLevel);
+//  else
+//      PublicText = " ";
+//
+//  field.innerHTML = PublicText;
+//}
+/*2018-04-05 김은석 수정 건설공사 공개여부*/
+function setPublicFlag2() {
+	var fields = message.GetFieldsList();
+	var field = message.GetListItem(fields, "publication");
+	if (!field) return;
+	
+	var PublicType = pPublicityYN.substring(0, 1);
+	var PublicText = "";
+	
+	
+	if (PublicType == "Y")
+		PublicText = strLang82;
+	else if (PublicType == "N")
+		PublicText = strLang84
+	else
+		PublicText = " ";
+	
+	field.innerHTML = PublicText;
 }
 
 function GetDraftAprLineInfo(ret) {
@@ -1682,6 +1702,7 @@ function SaveDraftDocInfo_susin() {
         createNodeAndInsertText(xmlpara, objNode, "XDOCID", "");
         createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
         createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
+        createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", pPublicityYN);
         createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
         createNodeAndInsertText(xmlpara, objNode, "PAGENUM", pPageNum);
         createNodeAndInsertText(xmlpara, objNode, "CABINETID", cabinetID);
@@ -2103,7 +2124,8 @@ function getDocInfo() {
         pPublicityCode = getNodeText(objNodes[27]);
         pLimitRange = getNodeText(objNodes[28]);
         pPageNum = getNodeText(objNodes[29]);
-
+        pPublicityYN = getNodeText(objNodes[41]);
+        
         if (approvalFlag == "G") {
         	cabinetID = "";
         	TaskCode = "";

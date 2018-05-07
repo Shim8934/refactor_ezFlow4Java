@@ -498,7 +498,7 @@
 		            SetTreeviewUnSelect("");
 		        }	    
 		    }
-
+			
 		    function toggleQuestionList() {
 		    	if( prevSelMenu != null )
 		    		prevSelMenu.className = "off";
@@ -645,7 +645,7 @@
 		    </c:if>
 		    <div class="pollDiv" onclick="Poll_Open(1)" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
 	        	<h2><span><spring:message code="ezBoard.t371" /></span></h2>
-	        </div>	
+	        </div>
 	        <ul>
 	            <%-- <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
 	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li> --%>	            

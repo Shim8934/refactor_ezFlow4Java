@@ -91,12 +91,14 @@ function weekonload(s_Year, s_Month, s_Date)
     
     if (DefaultView == 0) { //일요일시작
         if (sz_DayOfWeek == 0)
-            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 7);
+            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek));
+        	//weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 7);
         else
             weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) + 0);
 
         if (sz_DayOfWeek == 0)
-            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek)-1);
+            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek) + 6);
+	        //weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek)-1);
         else
             weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek));
     } else { //월요일시작
@@ -668,18 +670,25 @@ function tableListControl_Week()
                 }
                 else if (s_weekDateSet < weekdatename[0] && e_weekDateSet <= weekdatename[6]) {
                     var endCnt = getNodeText(xmldom.getElementsByTagName("deDaytype")[j]);
-                    for (var i = endCnt; 0 <= i; i--) {
-                        makeTable(xmldom, j, i);
+                    if (DefaultView == 0) { //일요일 시작
+                    	for (var i = endCnt; 0 <= i; i--) {
+                    		makeTable(xmldom, j, i);
+                    	}
+                    } else { // 월요일 시작
+	                    for (var i = endCnt; 0 < i; i--) {
+	                    	makeTable(xmldom, j, i);
+	                    }
                     }
                 }
                 else if (weekdatename[0] <= s_weekDateSet && weekdatename[6] < e_weekDateSet) {
                     var startCnt = getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]);
                     for (var i = startCnt; i < 8; i++) {
-                        if (i == 7) {
-                        	//makeTable(xmldom, j, 0); // 천성준 2018-03-09 자원관리 > 금토일 자원예약시 폴더 주보기에서 자원예약이 잘못표시되는 버그수정
+                        if (i == 7 || i == 0) {
+                        	if (DefaultView == 1) { // 월요일 시작
+                        		makeTable(xmldom, j, 0);
+                        	}
                         	break;
-                        }
-                        else{
+                        } else {
                         	makeTable(xmldom, j, i);
                         }
                     }

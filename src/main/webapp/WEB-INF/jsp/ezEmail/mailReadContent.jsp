@@ -164,9 +164,9 @@
 			    	$frm.attr('method', 'post');
 			    	$frm.appendTo('body');
 
-			    	params = $('<input type="hidden" value="' + decodeURIComponent(params) + '" name="params" />');
-			    	folderPath = $('<input type="hidden" value="' + decodeURIComponent(folderPath) + '" name="folderPath" />');
-			    	uid = $('<input type="hidden" value="' + decodeURIComponent(uid) + '" name="uid" />');
+			    	params = $('<input type="hidden" value="' + params + '" name="params" />');
+			    	folderPath = $('<input type="hidden" value="' + encodeURIComponent(folderPath) + '" name="folderPath" />');
+			    	uid = $('<input type="hidden" value="' + encodeURIComponent(uid) + '" name="uid" />');
 			    	
 			    	$frm.append(params).append(folderPath).append(uid);
 			    	$frm.submit();
@@ -298,6 +298,30 @@
 		        
 		        function Schedule_btn(pGubun) {
 		            parent.mtg_onClick(pGubun);
+		        }
+		        
+		        function journalMailLink(journalId,mine){
+		        	$.ajax({
+		        		type : "post",
+		        		data : {
+		        			"journalId" : journalId
+		        		},
+		        		url : "/ezJournal/checkToMailJournal.do",
+		        		success: function(result){
+		        			if (result.isLive!="N" ) {
+		        				if (result.checkSusin != "N" || mine==1) {
+		        					var feature = GetOpenPosition(820, 850);
+		        					window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "journalDetail",
+		        							"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
+		        							+ feature);
+		        				} else {
+		        					alert("<spring:message code='ezJournal.t172'/>");
+		        				}
+		        			} else {
+		        				alert("<spring:message code='ezJournal.t171'/>");
+		        			}
+		        		}
+		        	});
 		        }
 		        
 			</script> 

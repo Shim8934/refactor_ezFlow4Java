@@ -1,4 +1,4 @@
-﻿var beforeJob = "0";
+﻿﻿var beforeJob = "0";
 var pDocTypeValue = "000";
 var pageSize = "10";
 var CallPage = "Right";
@@ -202,6 +202,22 @@ function getReceivedDocList(p_FormCd) {
         manager = "admin";
     else
         manager = pSusinManagerFlag;
+    
+    // 2018-05-02 강민수92 대리수신자일때 부서수신함 표출
+    if (pListTypeValue == "4") {
+        $.ajax({
+        	type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezOrgan/isProxyUser.do",
+    		success: function(xml){
+    			if (xml == 1) {
+    				manager = "admin";
+    			}
+    		}
+    	});
+    }
+
 
     if (beforeJob != pListTypeValue || SelYearFlag) {
         beforeJob = pListTypeValue;
@@ -1664,10 +1680,6 @@ function makePageSelPage() {
     else {
         MaxNum = totalPage;
     }
-    
-    if(totalPage == "0") {
-    	MaxNum = 1;
-    }
     for (i = startNum; i <= MaxNum; i++) {
         if (i == pageNum) {
             strtext = "<span class='on'>" + i + "</span>";
@@ -1677,6 +1689,10 @@ function makePageSelPage() {
             strtext = "<span onclick = 'goToPageByNum(" + i + ")'>" + i + "</span>";
             PagingHTML += strtext;
         }
+    }
+    if (i == 1) {
+    	strtext = "<span class='on'>" + i + "</span>";
+        PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {

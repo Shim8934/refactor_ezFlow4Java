@@ -2909,7 +2909,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			
 			boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
-			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
 			
 			if (doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().equals("")) {
 				boardListVO.setExtensionAttribute1("0");
@@ -3361,7 +3360,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			destItemID = "{" + UUID.randomUUID() + "}";
 			
 			BoardListVO boardListVO = getCopyItem(orgItemID, orgBoardID, userInfo.getTenantId());
-			
+			System.out.println("뽝 : " + boardListVO.getContent());
 			//MHT 파일위치 변경
 			boardListVO.setContentLocation(boardListVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
 			boardListVO.setStartDate("");
@@ -3435,6 +3434,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
 	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
 	        sb.append("<GUBUN>M</GUBUN>");
+	        sb.append("<DOCCONTENT>" + commonUtil.cleanValue(boardListVO.getContent()) + "</DOCCONTENT>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -3507,6 +3507,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
 		boardListVO.setRealPath(realPath);
 		boardListVO.setTenantID(userInfo.getTenantId());
+		
+		if (doc.getElementsByTagName("DOCCONTENT").item(0) != null) {
+			boardListVO.setContent(commonUtil.htmlUnescape(doc.getElementsByTagName("DOCCONTENT").item(0).getTextContent()));
+		}		
 		
 		if (pMode.equals("copy")) {
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
@@ -3755,6 +3759,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        sb.append("<EXTENSIONATTRIBUTE32>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute32()) + "</EXTENSIONATTRIBUTE32>");
 	        sb.append("<EXTENSIONATTRIBUTE4>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute4()) + "</EXTENSIONATTRIBUTE4>");
 	        sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
+	        sb.append("<DOCCONTENT>" + commonUtil.cleanValue(boardLisitVO.getContent()) + "</DOCCONTENT>");
 	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
 	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
 	        sb.append("<GUBUN>C</GUBUN>");

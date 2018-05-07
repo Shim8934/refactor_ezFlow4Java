@@ -303,6 +303,11 @@
 		                PagingHTML += strtext;
 		            }
 		        }
+		        
+		        if (MaxNum == 0) {
+		        	PagingHTML += "<span class='on'>" + 1 + "</span>";
+		        }
+		        
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
@@ -413,7 +418,7 @@
 		        var pLeft = (pwidth - 765) / 2;
 		
 		        if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=764,top=" + pTop + ",left=" + pLeft, "");
 		            }           
 		            else {
 	                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
@@ -537,7 +542,7 @@
 			//체크박스 모두선택 함수. js파일에서 이 함수명이 HeaderAllCheckBox와 연결됨
  			function event_HeaderCheckBoxClick(obj) {
  			    var SelList = new ListView();
- 			    SelList.LoadFromID("BoardList");
+ 			    SelList.LoadFromID("BoardListDiv");
 
  			    if (obj.checked) {
  			        for (var i = 0; i < SelList.GetRowCount() ; i++) {
@@ -652,7 +657,7 @@
 		</c:if>
 		<c:if test="${boardInfo.buttonHidden == 'N'}">
 			<script type="text/javascript">
-			    parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t00010'/>" + " " + "${boardName}" + "<span id='mailBoxInfo'></span>";
+			    parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" + "<span id='mailBoxInfo'></span>";
 			</script>
 			<br />
 			<div id="mainmenu">
@@ -675,7 +680,7 @@
 		</c:if>	
 		<c:if test="${boardInfo.buttonHidden != N}">
 		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t00010'/>" + " " + "${boardName}" + "<span id='mailBoxInfo'></span>";
+		        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" + "<span id='mailBoxInfo'></span>";
 		    </script>
 		</c:if>
 		    <div id="layer_Viewpopup" style="width: 150px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
