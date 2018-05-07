@@ -91,12 +91,14 @@ function weekonload(s_Year, s_Month, s_Date)
     
     if (DefaultView == 0) { //일요일시작
         if (sz_DayOfWeek == 0)
-            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 7);
+            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek));
+        	//weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 7);
         else
             weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) + 0);
 
         if (sz_DayOfWeek == 0)
-            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek)-1);
+            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek) + 6);
+	        //weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek)-1);
         else
             weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek));
     } else { //월요일시작
