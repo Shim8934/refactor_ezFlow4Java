@@ -331,9 +331,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 //	}
 	
 	@Override
-	public void saveAttitudeUserConfig(String selectUserId, String workStartTime, String workEndTime, String offSet, int tenantId) throws Exception {
+	public void editAttitudeUserConfig(String selectedUserIdList, String workStartTime, String workEndTime, String gubun, String offSet, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("saveAttitudeUserConfig started");
-		LOGGER.debug("selectUserId = " + selectUserId + " || workStartTime = " + workStartTime + " || workEndTime = " + workEndTime);
+		LOGGER.debug("selectedUserIdList = " + selectedUserIdList + " || workStartTime = " + workStartTime + " || workEndTime = " + workEndTime + " || gubun = " + gubun);
 		
 		String today =  commonUtil.getTodayUTCTime("yyyy-MM-dd");
 		String startDate = commonUtil.getDateStringInUTC(today + " " + workStartTime, offSet, true);
@@ -341,11 +341,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
-		map.put("userId", selectUserId);
+		map.put("companyId", companyId);
+		map.put("userIdList", selectedUserIdList.split(", "));
 		map.put("workStartTime", startDate.substring(11));
 		map.put("workEndTime", endDate.substring(11));
 		
-		ezAttitudeDAO.saveAttitudeUserConfig(map);
+		if (gubun.equals("0")) {
+			ezAttitudeDAO.deleteAttitudeUserConfig(map);
+		} else {
+			ezAttitudeDAO.saveAttitudeUserConfig(map);
+		}
+		
 		
 		LOGGER.debug("saveAttitudeUserConfig ended");
 	}
@@ -538,12 +544,22 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public AttitudeUserConfigVO getAttitudeUserConfigInfo(String selectUserId, String offsetMin, int tenantId) throws Exception {
+	public AttitudeUserConfigVO getAttitudeUserConfigInfo(String selectedUserIdList, String offsetMin, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigInfo started");
 		
+		String userType = "";
+		
+		if (selectedUserIdList.split(", ").length == 1) {
+			userType = "user";
+		} else {
+			userType = "list";
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("selectUserId", selectUserId);
+		map.put("selectedUserId", selectedUserIdList);
+		map.put("userType", userType);
 		map.put("offsetMin", offsetMin);
+		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
 		AttitudeUserConfigVO vo = ezAttitudeDAO.getAttitudeUserConfigInfo(map);
@@ -795,29 +811,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	    return deptList;
 	}
 
-	@Override
-	public void deleteAttitudeUserConfig(int tenantId, String selecUserList)
-			throws Exception {
-		LOGGER.debug("deleteAttitudeUserConfig started");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("tenantId", tenantId);
-		
-		String[] userIdList = selecUserList.split(",");
-		
-		for (int i = 0; i < userIdList.length; i++) {
-			
-			LOGGER.debug("userId = " + userIdList[i]);
-			
-			map.put("userId", userIdList[i]);
-			
-			ezAttitudeDAO.deleteAttitudeUserConfig(map);
-		}
-		
-		LOGGER.debug("deleteAttitudeUserConfig ended");
-	}
-	
 	@Override
 	public AttitudeApplicationVO attModAppDetail(String companyId,
 			int tenantId, String userId, String attModId, String offset, String applCnt) throws Exception {
