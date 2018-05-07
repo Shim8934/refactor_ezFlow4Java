@@ -225,22 +225,27 @@
 				};
 
 				detailName.textContent = path[i] ;
-				detailName.setAttribute("style", "font-size:18px; ");
+				/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
+				detailName.setAttribute("style", "font-size:15px; ");
 				nameTag.appendChild(detailName);
 				
 				if(length == 1) {
 					detailName = document.createElement("span");
-					detailName.textContent =  " " + messages.strLang17 + " "; // 모든파일
-					detailName.setAttribute("style", "font-size:12px;");
+					/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 및 꺽새 추가 */
+					detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+					detailName.setAttribute("style", "font-size:15px;");
 					nameTag.appendChild(detailName);
 				}
 				
-				var imgElmt = document.createElement("img");
+				/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
+				/* var imgElmt = document.createElement("img");
 				imgElmt.setAttribute("style", "height: 14px; width: 14px; display: inline-block; margin: 0px 6px;");
-				imgElmt.src = "/images/webfolder/arrow2.png";
+				imgElmt.src = "/images/webfolder/arrow2.png"; */
 				
 				if (i != length - 1) {
-					nameTag.appendChild(imgElmt);
+					detailName = document.createElement("span");
+					detailName.textContent = " > ";
+					nameTag.appendChild(detailName);
 				}	
 			}
 		}
@@ -550,7 +555,7 @@
 						alert(messages.strLang13);
 					} else {
 						openLeftPanel();
-						DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
+						DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
 					}
 					
 					refreshView();
@@ -689,7 +694,7 @@
     </script>
 </head>
 <body class="mainbody" style="padding-bottom:10px;">
-    <h1>웹폴더<span id="mailBoxInfo"></span></h1>
+    <h1><spring:message code='ezWebFolder.t10'/><span id="mailBoxInfo"></span></h1>
     <div id="pageArea">
 		<div style="height:40px;">
 			<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;" id ="originalPath" ></span>
@@ -705,11 +710,12 @@
 				<li><img src="/images/i_bar.gif"></li>
 				<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 	<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
-				<li><img src="/images/i_bar.gif"></li>
+				<!-- <li><img src="/images/i_bar.gif"></li> -->
 				<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
-				<li><img src="/images/i_bar.gif"></li>
+				<!-- <li><img src="/images/i_bar.gif"></li> -->
 	<!-- 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li> -->
 				<li><span onClick="refreshView()"><spring:message code='ezWebFolder.t139'/></span></li>
+				<li><img src="/images/i_bar.gif"></li>
 				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 				<li style="float:left;">
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value)" style="height: 28px; border-radius: 3px; padding: 0px; padding-left: 4px; width: 80px; color: #666;">

@@ -196,8 +196,6 @@
 		
 	   	function btn_PostDate_Clear() {
 	        $(".datepicker").datepicker('setDate', "");
-	        $(".datepicker").datepicker('setDate', "");
-	
 	    }
 	    
 	    function goToPageByNum(Value){
@@ -209,7 +207,6 @@
 	    
    		function search(type) {
 	        if (type == "basic") {
-	
 	           if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" 
 	        	    && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == ""  
 	        	    && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {

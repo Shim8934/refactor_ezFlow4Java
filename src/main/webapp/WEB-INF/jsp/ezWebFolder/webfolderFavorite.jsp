@@ -23,23 +23,6 @@
 <script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
 <script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
 <script type="text/javascript">
-	/* pagination variable: 리팩토링, 함수도 포함 대상임.	*/
-
-	var searchInfo = (function() {
-		var fileType = "";
-		
-		var clear = function() {
-			fileType = "";
-		};
-		
-		return {
-			fileType: fileType,
-			clear: clear
-		};
-	}());
-	
-	/*********************************************/
-	
 	var context = (function() {
 		var isFavoriteMode = false;
 		
@@ -171,6 +154,10 @@
 			}
 		});
 		
+		searchContext.setSearchStartEventHandler(function() {
+			context.refreshList(true);
+		});
+		
 		pagination.setPageChangeEventHandler(function() {
 			context.refreshList();
 		});
@@ -234,23 +221,23 @@
 	}
 
 	function loadListAsFavorite(isAsync) {
+		var searchRequirement = searchContext.getCurrentRequirement();
+		
 		$.ajax({
 			type: "post",
 			async: isAsync,
 			url: "/ezWebFolder/getFavorites.do",
 			dataType: "json",
-			
 			data: {
-				searchFileType: searchInfo.fileType,
-				searchExt: $('#searchExt').val(),
-				searchFileName: $('#searchFileName').val(),
-				searchCreatorName: $('#searchCreateName').val(),
-				searchStartDate: $('#Sdatepicker').val(),
-				searchEndDate: $('#Edatepicker').val(),
+				searchFileType: searchContext.getFileType(),
+				searchExt: searchRequirement.extension,
+				searchFileName: searchRequirement.name,
+				searchCreatorName: searchRequirement.creatorName,
+				searchStartDate: searchRequirement.startDate,
+				searchEndDate: searchRequirement.endDate,
 				startIndex: pagination.startPosition(),
 				listCount: pagination.listSize()
 			},
-			
 			success: function(result) {
 				result = result.data;
 				// TODO: 리펙토링
@@ -274,6 +261,8 @@
 			return;
 		}
 		
+		var searchRequirement = searchContext.getCurrentRequirement();
+		
 		$.ajax({
 			type: "POST",
 			async: isAsync,
@@ -285,10 +274,12 @@
 				"currPage": pagination.currentPage(),
 				"listCount": pagination.listSize(),
 				"pStart": pagination.startPosition(),
-				"searchExt": $('#searchExt').val(),
-				"searchFileName": $('#searchFileName').val(),
-				"searchCreateName": $('#searchCreateName').val(),
-				searchFileType: searchInfo.fileType
+				"searchExt": searchRequirement.extension,
+				"searchFileName": searchRequirement.name,
+				"searchCreateName": searchRequirement.creatorName,
+				"searchFileType": searchContext.getFileType(),
+				"searchStartDate": searchRequirement.startDate,
+				"searchEndDate": searchRequirement.endDate
 			},
 			success: function(result) {
 				result = result.data;
@@ -354,7 +345,10 @@
 			detailName.className = "aName";
 			detailName.id = originPath[i];
 			detailName.onclick = function() {
-				context.setList(this.id)
+				searchContext.clearRequirement();
+				searchContext.setFileType("");
+				$("#idSelect").val("");
+				context.setList(this.id);
 			};
 			detailName.textContent = path[i];
 			detailName.setAttribute("style", "font-size:22px; ");
@@ -559,36 +553,47 @@
 	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
 	function search(type) {
 		if (type == "basic") {
-			var startDate = $("#Sdatepicker").datepicker({
-				dateFormat: 'yy-mm-dd'
-			}).val();
-			var endDate = $("#Edatepicker").datepicker({
-				dateFormat: 'yy-mm-dd'
-			}).val();
+			requirement = {
+				startDate: $("#Sdatepicker").datepicker({
+					dateFormat: 'yy-mm-dd'
+				}).val(),
+				endDate: $('#Edatepicker').datepicker({
+					dateFormat: 'yy-mm-dd'
+				}).val(),
+				name: $('#searchFileName').val(),
+				creatorName: $('#searchCreateName').val(),
+				extension: $('#searchExt').val()
+			};
 			
-			if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && startDate == "") {
-				alert("<spring:message code='ezBoard.t192' />");// 검색조건을 입력하세요
+			if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" && requirement.startDate == "") {
+				alert(messages.strLang20);// 검색조건을 입력하세요 
 				return;
 			}
 			
-			if (startDate != "" && endDate == "") {
-				alert("<spring:message code='ezBoard.t189' />");
+			if (requirement.startDate != "" && requirement.endDate == "") {
+				alert(messages.strLang18);
 				return;
 			}
 			
-			if (new Date(startDate) > new Date(endDate)) {
-				alert("<spring:message code='ezBoard.t191' />");
+			if (requirement.startDate == "" && requirement.endDate != "") {
+				alert(messages.strLang18);
 				return;
 			}
+			
+			if (new Date(requirement.startDate) > new Date(requirement.endDate)) {
+				alert(messages.strLang19);
+				return;
+			}
+			
+			searchContext.search(requirement.startDate, requirement.endDate, requirement.name, requirement.creatorName, requirement.extension);
 		} else if (type == "quick") {
 			if (document.getElementById("txt_keyword").value == "") {
-				alert("<spring:message code='ezBoard.t192' />");
+				alert("<spring:message code='ezWebFolder.t163'/>");
 				return;
 			}
 		}
 		
 		searchOptionHidden();
-		context.refreshList(true);
 	}
 
 	function doLayerPopup(obj) {
@@ -630,7 +635,7 @@
 		document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
 		document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 	}
-	
+
 	function fileDownload() {
 		var selected = getSelectedFoldersAndFiles();
 		
@@ -842,13 +847,11 @@
 	};
 	
 	function onFileTypeChange(value) {
-		searchInfo.fileType = value;
-		
 		if (value == "all") {
-			searchInfo.fileType = "";
+			value = "";
 		}
 		
-		searchInfo.clear();
+		searchContext.setFileType(value);
 		pagination.setPage(1);
 	}
 
