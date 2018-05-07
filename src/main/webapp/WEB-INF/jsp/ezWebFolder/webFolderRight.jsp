@@ -120,7 +120,7 @@
 	    	
 			$.ajax ({
 				type:"POST",
-				async: true,
+				async: false,
 				url : "/ezWebFolder/fileList.do",
 				data : { 
 					 "folderId"   		: folderId,
@@ -137,41 +137,6 @@
 					},
 				dataType: "JSON",
 				success : function (data) {
-					var result = data.data;
-					
-					var fileCnt = result.fileCnt;
-					var fldCnt = result.fldCnt;
-					
-					var folderPath = result.folderPath;
-					var originalPath = result.originalPath;
-					var folderUpp = result.folderUpp;
-					var dragDropAreaElmt = document.getElementById("dragDropArea");
-					filelist = result.fileList;
-					
-					pagination.setListSize(result.listCount);
-					pagination.setAmount(result.totalRows);
-					pagination.build();
-					
-					if (folderUpp != 'root') {
-						$('#upload').css('display','inline');
-						dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
-						dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
-						dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
-					} else {
-						dragDropAreaElmt.ondragenter = null;
-						dragDropAreaElmt.ondragover  = null;
-						dragDropAreaElmt.ondragover  = null;
-					}
-					
-					$('#tblFileList tr td').parent().remove();
-					renderData(filelist);
-					
-					namePath(folderPath, originalPath);
-					document.getElementById("mailBoxInfo").innerHTML = " - [" + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
-					 + messages.strLang11 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
-						+ fileCnt +" </span>"  + messages.strLang11 + "]";
-					$("#listcount").val(result.listCount).prop("selected", true);
-					parent.frames["left"].drawVolume();
 					successFile(data);
 				},
 				error : function(error) {
@@ -206,7 +171,7 @@
 			
 			pagination.setListSize(result.listCount);
 			pagination.setAmount(result.totalRows);
-			pagination.build(true);
+			pagination.build();
 			
 			if (folderUpp != 'root') {
 				$('#upload').css('display','inline');

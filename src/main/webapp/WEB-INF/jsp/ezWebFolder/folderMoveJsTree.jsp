@@ -59,7 +59,7 @@
 			
 		}
 		function afterSuccess(code,obj) {
-			if (code == '0') {
+			if (code == 0) {
 				if(obj == "move") {
 					alert("폴더이동에 성공하셨습니다.");
 				}else if(obj == "copy") {
@@ -69,7 +69,9 @@
 				parent.folderList(folderType);
 				parent.DivPopUpHidden();
 				window.close();
-			}else if(code == '4') {
+			}else if (code == 2) {
+				alert("접근 권한이 없습니다.");
+			}else if(code == 4) {
 				alert("하위 파일 또는 폴더를 이동 또는 복사할 권한이 없습니다.");
 				window.close();
 			}else {
@@ -116,7 +118,7 @@
 						},
 						"types" : {
 							"default": {
-								"icon" :"/images/OrganTree_cross/fldr.gif" 
+								"icon" :"/images/webfolder/fldr.png"
 							}
 						},
 						"grid": {
@@ -136,7 +138,6 @@
 			$('#folderTree').on('changed.jstree', function (e, data) {
 				var folderId = "";
 				uppFolderId = data.selected[0]; 
-// 				alert(uppFolderId);
 			});
 	    }
 	    var obj = "";
