@@ -22,8 +22,8 @@
 		var workEndTime = "${vo.workEndTime}";
 		
 		$(function() {
-			$("#checkCompareValue").on('change', function() {
-				if($("#checkCompareValue").is(":checked") == true) {
+			$("#gubun").on('change', function() {
+				if($("#gubun").is(":checked") == true) {
 					$("#workStartTime").val(companyStartTime);
 					$("#workEndTime").val(companyEndTime);
 					$("#workStartTime").prop('readonly', true);
@@ -62,6 +62,16 @@
     			return;
     		}
 			
+			if($("#gubun").is(":checked") == true) {
+				workStartTime = companyStartTime;
+				workEndTime = companyEndTime;
+				gubun = "0";
+			} else {
+				workStartTime = $("#workStartTime").val();
+				workEndTime = $("#workEndTime").val();
+				gubun = "1";
+			}
+			
 			$.ajax({
    				type:"post",
    				dataType:"text",
@@ -70,8 +80,9 @@
    				data:{
    					companyId : companyId,
    					selectedUserIdList : "${selectedUserIdList}",
-   					workStartTime : $("#workStartTime").val(),
-   					workEndTime : $("#workEndTime").val()
+   					workStartTime : workStartTime,
+   					workEndTime : workEndTime,
+   					gubun : gubun
    				},
    				success: function(result){
 					if (result == "ok") {
@@ -95,7 +106,7 @@
 		<table class="content"> 
 			<tr>
 				<th>기본값 지정</th>
-				<td><input type="checkbox" id="checkCompareValue" name="checkCompareValue" <c:if test="${vo.gubun == '0'}">checked="checked"</c:if> />설정된 회사 근무시간을 따름</td>
+				<td><input type="checkbox" id="gubun" name="gubun" <c:if test="${vo.gubun == '0'}">checked="checked"</c:if> />설정된 회사 근무시간을 따름</td>
 			</tr>
 			<tr>
 				<th>근무시간</th>
