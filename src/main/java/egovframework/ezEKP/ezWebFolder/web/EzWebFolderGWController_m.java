@@ -68,6 +68,8 @@ public class EzWebFolderGWController_m {
 		String serverName 	= orElse(request.getHeader("x-user-host"), "");
 		String pageNum 		= orElse(request.getParameter("pageNum"), "1");
 		String pageSize 	= orElse(request.getParameter("pageSize"), "0");
+		String folderId = orElse(request.getParameter("folderId"), "");
+		String subSearchFlag = orElse(request.getParameter("subSearchFlag"), "N");
 		
 		SearchVO searchInfo = new SearchVO();
 		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
@@ -110,8 +112,8 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getSharingList(userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-			Map<String, Long> countInfo = ezWebFolderService_m.getSharingCount(userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			List<ShareVO> list = ezWebFolderService_m.getSharingList(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+			Map<String, Long> countInfo = ezWebFolderService_m.getSharingCount(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
 			data.put("list", list);
 			data.putAll(countInfo);
