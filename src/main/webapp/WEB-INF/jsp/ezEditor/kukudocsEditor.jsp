@@ -94,7 +94,7 @@
 			
 			// 메일 부재중설정, 커뮤니티 포토게시판일 경우 이미지 업로드 아이콘 제거
 			if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
-				customAlignMenu[0].splice(customAlignMenu[0].indexOf('image'), 1);
+				customAlignMenu.splice(customAlignMenu.indexOf('image'), 1);
 	        }
 			
 			// 이미지 업로드 URL 설정
