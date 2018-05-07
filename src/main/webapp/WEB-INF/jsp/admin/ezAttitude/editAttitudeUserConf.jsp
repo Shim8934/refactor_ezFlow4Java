@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>사용자별 근무시간 수정</title>
+		<title>근무시간 수정</title>
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -27,7 +27,6 @@
 					$("#workEndTime").val(companyEndTime);
 					$("#workStartTime").prop('readonly', true);
 					$("#workEndTime").prop('readonly', true);
-					
 				} else {
 					$("#workStartTime").val(workStartTime);
 					$("#workEndTime").val(workEndTime);
@@ -37,7 +36,31 @@
 			});
 		});
 		
+		function checkPattern() {
+			var timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
+			
+			if ((timePattern.test($("#workStartTime").val()) && timePattern.test($("#workEndTime").val())) || ($("#workStartTime").val() == "" && $("#workEndTime").val() == "")) {
+				return true;
+			} else {
+				if (!timePattern.test($("#workStartTime").val())&& !timePattern.test($("workEndTime").val())) {
+					$("#workStartTime").focus();
+					return false;
+				} else if (!timePattern.test($("#workStartTime").val())) {
+					$("#workStartTime").focus();
+					return false;
+				} else if (!timePattern.test($("#workEndTime").val())) {
+					$("#workEndTime").focus();
+					return false;
+				}
+			}
+		}
+		
 		function btnOk_onclick() {
+			if (!checkPattern()) {
+    			alert("근무시간를 다시 지정해주세요.")
+    			return;
+    		}
+			
 			$.ajax({
    				type:"post",
    				dataType:"text",
@@ -53,7 +76,7 @@
 						opener.getUserConfList();
 	   					window.close();
 					} else {
-						alert("실패햇다");
+						alert("근무시간 수정 중 오류가 발생했습니다.");
 	   					window.close();
 					}
    				}
@@ -66,11 +89,11 @@
 	</script>
 	
 	<body class="popup">
-		<h1>사용자별 근무시간 수정</h1>
+		<h1>근무시간 수정</h1>
 		<table class="content"> 
 			<tr>
 				<th>기본값 지정</th>
-				<td><input type="checkbox" id="checkCompareValue" name="checkCompareValue" <c:if test="${vo.compareTime == '0'}">checked="checked"</c:if> />설정된 회사 근무시간을 따른다.</td>
+				<td><input type="checkbox" id="checkCompareValue" name="checkCompareValue" <c:if test="${vo.compareTime == '0'}">checked="checked"</c:if> />설정된 회사 근무시간을 따름</td>
 			</tr>
 			<tr>
 				<th>근무시간</th>
