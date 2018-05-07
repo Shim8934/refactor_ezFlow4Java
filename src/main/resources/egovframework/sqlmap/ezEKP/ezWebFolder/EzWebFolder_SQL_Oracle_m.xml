@@ -223,7 +223,7 @@
 	<sql id="searchFavorite">
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 			<![CDATA[
-				RESULT.TYPE_NAME = #searchFileType#
+				FILETYPE.TYPE_NAME = #searchFileType#
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchExt" compareValue="" prepend="AND">
