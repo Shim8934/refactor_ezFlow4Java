@@ -194,7 +194,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			Folder f = ia.getFolder(folderPath);
 			
 			if (f == null || !f.exists()) {
@@ -431,11 +431,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						isSecureMail = true;
 					}
 					
-					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+					if (message.getFolder().getFullName().equals(ezEmailUtil.getSentFolderId(locale))) {
 						isSentItems = true;
 					}
 					
-					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000028", locale))) {
+					if (message.getFolder().getFullName().equals(ezEmailUtil.getTrashFolderId(locale))) {
 						isDelete = "BDELETE";
 					}
 					
@@ -519,7 +519,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         do {		
     		try {
     			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-    					userEmail, password, egovMessageSource, locale);
+    					userEmail, password, egovMessageSource, locale, ezEmailUtil);
     			
                 if (retryFlag) {
                     retryFlag = false;
@@ -545,7 +545,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     					String strSize = ezEmailUtil.getSizeWithUnit(size);
     					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
     					
-    					if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+    					if (!folderPath.equals(ezEmailUtil.getSentFolderId(locale))) {
     					    String[] messageIds = message.getHeader("Message-ID");
     					    
     					    if (messageIds != null) {
@@ -648,7 +648,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			Folder f = ia.getFolder(folderPath);
 			
 			if (f == null || !f.exists()) {
@@ -717,7 +717,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			String tmpStr[] = param[i].split("=");
 			
 			if (i % 2 == 0) {
-				filename[j] = tmpStr[1];
+				filename[j] = URLDecoder.decode(tmpStr[1], "utf-8");
 				j++;
 			} else {
 				strIndex[k] = tmpStr[1];
@@ -763,7 +763,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
 			File tempFile = new File(pDirTempPath + ".zip");
 			
@@ -917,7 +917,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 	
 			Folder f = ia.getFolder(folderPath);
 			
@@ -1082,7 +1082,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 	
 			Folder f = ia.getFolder(folderPath);
 			if (f == null || !f.exists()) {
@@ -1177,7 +1177,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, Locale.getDefault());
+					userEmail, password, egovMessageSource, Locale.getDefault(), ezEmailUtil);
 	
 			Folder f = ia.getFolder(folderPath);
 			if (f == null || !f.exists()) {
@@ -1291,7 +1291,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			Folder f = ia.getFolder(folderPath);
 			
 			if (f == null || !f.exists()) {
@@ -1539,7 +1539,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         do {
     		try {
     			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-    					userEmail, password, egovMessageSource, locale);
+    					userEmail, password, egovMessageSource, locale, ezEmailUtil);
     			
     			if (retryFlag) {
     			    retryFlag = false;
@@ -1564,7 +1564,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     					String strSize = ezEmailUtil.getSizeWithUnit(size);
     					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
     	
-    					if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+    					if (!folderPath.equals(ezEmailUtil.getSentFolderId(locale))) {
                             String[] messageIds = message.getHeader("Message-ID");
                             
                             if (messageIds != null) {
@@ -1671,7 +1671,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
 			Folder f = ia.getFolder(folderPath);
 			if (f == null || !f.exists()) {
@@ -1782,7 +1782,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						isAttach = "OK";
 					}
 					
-					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+					if (message.getFolder().getFullName().equals(ezEmailUtil.getSentFolderId(locale))) {
 						isSentItems = true;
 					}
 					
@@ -1858,7 +1858,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
 			Folder f = ia.getFolder(folderPath);
 			
@@ -1952,7 +1952,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, password, egovMessageSource, locale);
+					userAccount, password, egovMessageSource, locale, ezEmailUtil);
 			
 			Folder f = ia.getFolder(folderPath);
 			
@@ -2123,7 +2123,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, password, egovMessageSource, locale);
+					userAccount, password, egovMessageSource, locale, ezEmailUtil);
 			
 			Folder f = ia.getFolder(folderPath);
 			
@@ -2389,7 +2389,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			logger.debug("tenantId=" + tenantId + ",lang=" + lang);
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, jspw, egovMessageSource, locale);
+					userAccount, jspw, egovMessageSource, locale, ezEmailUtil);
 			Folder f = ia.getFolder(folderPath);
 			
 			if (f == null || !f.exists()) {
@@ -2709,7 +2709,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				logger.debug("tenantId=" + tenantId + ",lang=" + lang);
 				
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userAccount, jspw, egovMessageSource, locale);
+						userAccount, jspw, egovMessageSource, locale, ezEmailUtil);
 		
 				Folder f = ia.getFolder(folderPath);
 				
@@ -2864,7 +2864,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				logger.debug("tenantId=" + tenantId + ",lang=" + lang);
 				
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userAccount, jspw, egovMessageSource, locale);
+						userAccount, jspw, egovMessageSource, locale, ezEmailUtil);
 		
 				Folder f = ia.getFolder(folderPath);
 				if (f == null || !f.exists()) {
@@ -3015,7 +3015,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				logger.debug("tenantId=" + tenantId + ",lang=" + lang);
 				
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userAccount, jspw, egovMessageSource, locale);
+						userAccount, jspw, egovMessageSource, locale, ezEmailUtil);
 				Folder f = ia.getFolder(folderPath);
 				
 				if (f == null || !f.exists()) {
@@ -3268,7 +3268,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		
 		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userAccount, password, egovMessageSource, locale);
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userAccount, 
+								password, egovMessageSource, locale, ezEmailUtil);
 			
 			IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderId);
 			sourceFolder.open(Folder.READ_WRITE);

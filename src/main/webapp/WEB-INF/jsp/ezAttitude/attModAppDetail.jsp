@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>근태관리</title>
+		<title>수정신청 상세조회</title>
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Tab.css" type="text/css" />
         <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >

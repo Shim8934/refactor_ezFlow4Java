@@ -832,7 +832,7 @@
 		            }
 		            
 		            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
-		            var folderPath = "<spring:message code='ezEmail.t99000027' />";
+		            var folderPath = "${drafts}";
 	        	    var scheme = document.location.protocol + "//" + document.location.hostname;
 	        	    
 	                if (document.location.port != "80") {
@@ -1025,11 +1025,11 @@
 					
 					var dateType = result.attitudeVO.dateType;
 					if (dateType == 5) {
-						objTable.find("#periodblock").text(result.attitudeVO.startDate + " ~ " + result.attitudeVO.endDate)
-						titleDate = result.attitudeVO.startDate.split(" ")[0] + (result.attitudeVO.startDate.split(" ") == result.attitudeVO.endDate.split(" ")[0] ? "" : result.attitudeVO.endDate.split(" ")[0]);
+						objTable.find("#periodblock").text(result.attitudeVO.startDate.substring(0,16) + " ~ " + result.attitudeVO.endDate.substring(0,16));
+						titleDate = result.attitudeVO.startDate.split(" ")[0] + (result.attitudeVO.startDate.split(" ") == result.attitudeVO.endDate.split(" ")[0] ? "" : " ~ " + result.attitudeVO.endDate.split(" ")[0]);
 					} else if (dateType == 4) {
-						objTable.find("#periodblock").text(result.attitudeVO.startDate.split(" ")[0] + " ~ " + result.attitudeVO.endDate.split(" ")[0])
-						titleDate = result.attitudeVO.startDate.split(" ")[0] + (result.attitudeVO.startDate.split(" ") == result.attitudeVO.endDate.split(" ")[0] ? "" : result.attitudeVO.endDate.split(" ")[0]);
+						objTable.find("#periodblock").text(result.attitudeVO.startDate.split(" ")[0] + " ~ " + result.attitudeVO.endDate.split(" ")[0]);
+						titleDate = result.attitudeVO.startDate.split(" ")[0] + (result.attitudeVO.startDate.split(" ") == result.attitudeVO.endDate.split(" ")[0] ? "" : " ~ " + result.attitudeVO.endDate.split(" ")[0]);
 					} else if (dateType == 3) {
 						objTable.find("#periodblock").text(result.attitudeVO.startDate.substring(0,16) + " ~ " + result.attitudeVO.endDate.substring(11,16));
 						titleDate = result.attitudeVO.startDate.split(" ")[0];

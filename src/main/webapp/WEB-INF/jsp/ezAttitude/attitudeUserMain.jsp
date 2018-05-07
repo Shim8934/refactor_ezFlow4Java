@@ -438,7 +438,7 @@
 										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
 							} else if (result[i].dateType == '1') {
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + + result[i].writerName + "</td></tr>");
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
 							} else {
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
 										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
@@ -476,12 +476,12 @@
 				var date = $(obj).attr("dispdate");
 				
 				if (CrossYN()) {
-                    var OpenWin = window.open("/ezAttitude/attitudeNewItem.do?date=" + date + "&mode=new", "attitudeNewItem", GetOpenWindowfeature(810, 790));
+                    var OpenWin = window.open("/ezAttitude/attitudeNewItem.do?date=" + date + "&mode=new", "attitudeNewItem", GetOpenWindowfeature(672, 640));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
                 	rtnValue = window.showModalDialog("/ezAttitude/attitudeNewItem.do?date=" + date + "&mode=new", "",
-                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
@@ -504,12 +504,12 @@
 				
 				if (CrossYN()) {
                     var OpenWin = window.open("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "attitudeNewItem",
-                    		"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                    		"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
                 	rtnValue = window.showModalDialog("/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId, "",
-                			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	                
 	                if (typeof (rtnValue) != "undefined") {
 	                    company_change();
@@ -521,12 +521,12 @@
 				var pAttitudeId = $(obj).attr("attitudeId"); 
 				var pTypeId = $(obj).attr("typeId");
 				if (CrossYN()) {
-					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(810, 790));
+					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
 					
 					try { OpenWin.focus(); } catch (e) { }
 				} else {
 					rtnValue = window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
-					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 				}
 			}
 			
@@ -791,10 +791,10 @@
 				
 				if (adminFlag == "true") {
 					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId +"&adminFlag=" + adminFlag, "",
-				 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 				} else {
 					window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId, "",
-				 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
+				 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 				}
 		    }
 			

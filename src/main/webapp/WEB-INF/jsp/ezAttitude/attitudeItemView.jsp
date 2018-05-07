@@ -53,6 +53,8 @@
 				doc.write('${attitudeInfo.content}');
 				doc.close();
 				
+				region == "" ? $("#message").css("height","405px") : $("#message").css("height", "380px"); 
+				
 				var fontFamily = font.split("|")[0];
 				var fontSize = font.split("|")[1];
 				$("#message").contents().find("p").each(function(){
@@ -94,6 +96,7 @@
 						success : function(result) {
 							alert("근태를 삭제하였습니다.");
 							window.opener.getAttitudeMainList();
+							window.opener.parent.frames["left"].getAttitudeList();
 							window.close();
 						}
 					})
@@ -103,12 +106,12 @@
 			function modifyAttitude() {
 				var openWin = null;
 				if (CrossYN()) {
-                    openWin = window.open("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(810, 790));
+                    openWin = window.open("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(672, 640));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
                 	openWin = window.showModalDialog("/ezAttitude/attitudeNewItem.do?attitudeId=" + attitudeId + "&mode=mod", "",
-                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
                 	 try { OpenWin.focus(); } catch (e) { }
 	            }
 				openWin.opener = window.opener;
@@ -160,7 +163,7 @@
 	                </tr>
 	                <tr>
 		                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-		                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 600px; background-color: white"></iframe>	                    
+		                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 387px; background-color: white"></iframe>	                    
 		                </td>
 	            	</tr>
 	            </table>

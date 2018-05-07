@@ -83,7 +83,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			String password = jspw;
 
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
@@ -247,7 +247,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 		String password = jspw;
 
 		ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				userEmail, password, egovMessageSource, locale);
+				userEmail, password, egovMessageSource, locale, ezEmailUtil);
 				
 		Folder folder = ia.getFolder(folderId);	
 		return folder.getUnreadMessageCount();
@@ -276,7 +276,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			String password = jspw;
 
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
 			List<Folder> subMailFolder = null;
 			

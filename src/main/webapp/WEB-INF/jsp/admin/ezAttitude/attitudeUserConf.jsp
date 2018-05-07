@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>근태시간관리</title>
+		<title>근무시간관리</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -69,24 +69,26 @@
 	    		
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '#contentlist table.mainlist th', function(){
-    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
-    					src = "";
-    					orderOption = "";
-    					orderCell = $(this).attr("colname");
-    				}
-    			
-	    			if (orderOption == "" || orderOption == "DESC") {
-	    				src = '/images/etc/view-sortup.gif';
-	    				orderOption = "ASC";
-	    			} else {
-	    				src = '/images/etc/view-sortdown.gif';
-	    				orderOption = "DESC";
+	    			if (!$(this).find("input[type=checkbox]").length) { // checkbox는 sort에서 제외
+	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+	    					src = "";
+	    					orderOption = "";
+	    					orderCell = $(this).attr("colname");
+	    				}
+	    			
+		    			if (orderOption == "" || orderOption == "DESC") {
+		    				src = '/images/etc/view-sortup.gif';
+		    				orderOption = "ASC";
+		    			} else {
+		    				src = '/images/etc/view-sortdown.gif';
+		    				orderOption = "DESC";
+		    			}
+		    			
+		    			$("#contentlist table.mainlist th").find("img").remove();
+		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+		    			
+		    			getUserConfList();
 	    			}
-	    			
-	    			$("#contentlist table.mainlist th").find("img").remove();
-	    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
-	    			
-	    			getUserConfList();
 	    		});
 	    	});
 	    	
@@ -127,6 +129,8 @@
 	    				getUserConfList_after(result.list);
 	    				//더블클릭 이벤트
 	    				addTrDblclickEvent(userDbClick);
+	    				
+	    				$("#HeaderAllCheckBox").prop("checked",false);
 	    			}
 	    		});
 	    	}
@@ -136,12 +140,12 @@
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
 	    		result.forEach(function(vo, index) {
-	    			resultHtml += "<tr userid='" + vo.userId + "'>";
+	    			resultHtml += "<tr userid='" + vo.userId + "'><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
 	    			resultHtml += "<td>" + vo.workStartTime + " ~ " + vo.workEndTime + "</td>";
-	    			resultHtml += "<td>" + (vo.compareTime == '0' ? '미사용' : '사용') + "</td></tr>";
+	    			resultHtml += "<td>" + (vo.compareTime == '0' ? '회사' : '개인') + "</td></tr>";
 	    		});
 	    		
 	    		if (resultHtml == "") {
@@ -241,7 +245,7 @@
 	</head>
 	
 	<body class="mainbody">
-	    <h1>근태시간관리<span id="mailBoxInfo"></span></h1>
+	    <h1>근무시간관리<span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
 	        	<li style="background: none;"><span style="border: none;"><b>회사선택</b></span></li>
@@ -262,19 +266,19 @@
 					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;">이름</td>
 					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
-					<td style="width: 3%;">탄력근무</td>
+					<td style="width: 3%;">구분</td>
 					<td style="width: 20%;">
 						<span style="width: 90%;">
 							<input type="radio" name="searchCompareValue" id="searchCompareValueAll" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/>&nbsp;모두
-							<input type="radio" name="searchCompareValue" id="searchCompareValue0" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;미사용
-							<input type="radio" name="searchCompareValue" id="searchCompareValue1" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;사용
+							<input type="radio" name="searchCompareValue" id="searchCompareValue0" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;회사
+							<input type="radio" name="searchCompareValue" id="searchCompareValue1" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;개인
 						</span>
 					</td>
 				</tr>
 				<tr>
 					<td style="width: 3%;">직위</td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
-					<td style="width: 3%;">근태시간</td>
+					<td style="width: 3%;">근무시간</td>
 					<td>
 						<span id="topmenu"><input id="searchStartTime" type="text" style="width:50px; text-align:center;"/>&nbsp; ~ &nbsp;<input id="searchEndTime" type="text" style="width:50px; text-align:center;"/></span>
 					</td>
@@ -290,11 +294,12 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
-						<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
-						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
-						<th style="width:25%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
-						<th style="width:25%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="workstarttime">근무시간</th>
-						<th style="width:5%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="compareTime">탄력근무</th>
+						<th style="width:20px;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="workstarttime">근무시간</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="compareTime">구분</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -302,8 +307,7 @@
 			</table>
 		</div>
 		
-		<div id="runtime" style="color: #666; padding-top: 10px"></div>
-		<div id="tblPageRayer">
-		</div>
+		<div style="color: #666; padding-top: 10px"></div>
+		<div id="tblPageRayer"></div>
 	</body>
 </html>

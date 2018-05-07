@@ -240,38 +240,7 @@
 					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
     			</td>
   			</tr>
-  			<tr>
-				<td style="height:20px;vertical-align:top;" class="pad1">
-    				<table class="content">
-						<tr>
-							<th><spring:message code='ezCommunity.t190' /></th>
-							<c:choose>
-								<c:when test="${previousItemID == '' }">
-									<td>
-								</c:when>
-								<c:otherwise>
-									<td style="cursor:pointer" >
-								</c:otherwise>
-							</c:choose>
-								<div style="word-break:break-all;margin-top:0px;padding-top:0px;OVERFLOW: auto; HEIGHT: 16px; background-color:white" onclick="OpenItem('<c:out value="${previousItemID}"/>')"><c:out value='${previousTitle}'/></div>
-						 	</td>
-						</tr>
-						<tr>
-							<th><spring:message code='ezCommunity.t192' /></th>
-							<c:choose>
-								<c:when test="${nextItemID == '' }">
-									<td>
-								</c:when>
-								<c:otherwise>
-									<td style="cursor:pointer">
-								</c:otherwise>
-							</c:choose>
-								<div style="word-break:break-all;margin-top:0px;padding-top:0px;OVERFLOW: auto; HEIGHT: 16px; background-color:white" onclick="OpenItem('<c:out value='${nextItemID}'/>')"><c:out value='${nextTitle}'/></div>
-				 			</td>
-						</tr>
-     				</table>
-     			</td>
-  			</tr>
+  			<!-- 2018-05-04 홍승비 - 그룹게시판 다음글, 이전글 테이블 삭제 -->			
 		</table>
                 
 		<form style="display:none" name="re" method="post" action="/ezCommunity/board/bbsEditNew.do?mode=write&bName=<c:out value='${bName}'/>">

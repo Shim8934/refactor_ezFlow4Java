@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.InternetAddress;
+
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -956,8 +958,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public List<AdminAttitudeVO> getAttitudeAbsentList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String duplicated, String offset, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getAttitudeAbsentList started.");
+	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String offset, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getAttitudeAbsentedList started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
@@ -1036,6 +1038,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			});
 			
 			break;
+		case "startdate":
+			Collections.sort(totalList, new Comparator<AdminAttitudeVO>() {
+				@Override
+				public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
+					return o1.getStartDate().compareTo(o2.getStartDate());
+				}
+			});
 		default:
 			//startdate 역순
 			Collections.sort(totalList, new Comparator<AdminAttitudeVO>() {
@@ -1054,13 +1063,37 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("sorting ended.");
 		
-		LOGGER.debug("getAttitudeAbsentList ended. size = " + totalList.size());
+		JSONObject data = new JSONObject();
+		data.put("totalCount", totalList.size());
 		
-		return totalList;
+		LOGGER.debug("paging started.");
+		
+		int size = Integer.valueOf(listSize);
+		int limit = (Integer.valueOf(pageNum) - 1) * size;
+		
+		if (totalList.size() < limit + size) {
+			LOGGER.debug("1page param = " + limit + ", " + totalList.size());
+			totalList = totalList.subList(limit, totalList.size());
+		} else {
+			LOGGER.debug("2page param = " + limit + ", " + (limit + size));
+			totalList = totalList.subList(limit, limit + size);
+		}
+		
+		LOGGER.debug("paging ended. pageSize = " + totalList.size());
+		
+		data.put("list", totalList);
+		
+		LOGGER.debug("getAttitudeAbsentedList ended.");
+		
+		return data;
 	}
 	
 	public void absentedListSendMail(List<AdminAttitudeVO> list, String fromName, String fromEmail) throws Exception {
 		//메일발송
+		
+		//title, body(미입력자 리스트 html로) 만들어서 전송
+		
+//		ezEmailService.sendMail(loginCookie, from, to.toArray(new InternetAddress[to.size()]), null, null, subject, memo, false);
 	}
 
 	@Override

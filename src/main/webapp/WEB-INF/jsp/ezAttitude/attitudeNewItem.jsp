@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>근태작성</title>
+		<title>근태 작성</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -63,7 +63,7 @@
 			}
 			
 			window.onresize = function () {   	
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 250 + "PX";
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210 + "PX";
 		    }
 			
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
@@ -266,7 +266,7 @@
 			function save_attitude() {
 				dateTypeCheck();
 				attRegCheck();
-				if (attRegHolidayFlag) {
+				if (attRegHolidayFlag && holidayAttReg == "0") {
 					alert("근태일자에 휴무일이 포함되어 있습니다. 일자확인 후 등록해주세요.");
 					attRegHolidayFlag = false;
 					return;
@@ -290,6 +290,7 @@
 		        	success : function (result) {
 		        		alert("근태가 저장되었습니다.");
 		        		window.opener.getAttitudeMainList();
+		        		window.opener.parent.frames["left"].getAttitudeList();
 		        		window.close();
 		        	}
 		        });
@@ -469,7 +470,7 @@
 	            </table>
 	        </div>
 	        <script type="text/javascript">
-		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 250 + "PX";
+		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210+ "PX";
 		    </script>
 	    </form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

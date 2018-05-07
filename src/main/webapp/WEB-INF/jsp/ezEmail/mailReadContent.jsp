@@ -164,9 +164,9 @@
 			    	$frm.attr('method', 'post');
 			    	$frm.appendTo('body');
 
-			    	params = $('<input type="hidden" value="' + decodeURIComponent(params) + '" name="params" />');
-			    	folderPath = $('<input type="hidden" value="' + decodeURIComponent(folderPath) + '" name="folderPath" />');
-			    	uid = $('<input type="hidden" value="' + decodeURIComponent(uid) + '" name="uid" />');
+			    	params = $('<input type="hidden" value="' + params + '" name="params" />');
+			    	folderPath = $('<input type="hidden" value="' + encodeURIComponent(folderPath) + '" name="folderPath" />');
+			    	uid = $('<input type="hidden" value="' + encodeURIComponent(uid) + '" name="uid" />');
 			    	
 			    	$frm.append(params).append(folderPath).append(uid);
 			    	$frm.submit();

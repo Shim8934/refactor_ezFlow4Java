@@ -8,11 +8,20 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<!-- 18-04-27 김민성 - 카테고리별 커뮤니티 클릭시 bold 지정 -->
+		<style>
+			.category_select span {
+				color : rgb(4, 112, 228);
+			}
+			.category_select {
+				font-Weight : bold;
+			}
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 		<script type="text/javascript">
 	        var xmlhttp3 = null;
 	        var xmlhttp4 = null;
@@ -576,7 +585,8 @@
 					}
 				});
 	        }
-	        
+
+            /* 18-04-27 김민성 - 카테고리별 커뮤니티 클릭시 bold 지정 */
 	        function event_get_categoryCommunity(list) {
                 document.getElementById("categorytab").innerHTML = "";
 
@@ -590,7 +600,11 @@
                     a.style.cursor = "pointer";
                     a.setAttribute("type", categoryVO.cate);
                     a.setAttribute("cnt", categoryVO.cnt);
-                    a.onclick = function () { select_category(this); };
+                    a.onclick = function () { 
+                    	$(".category_select").removeClass("category_select");
+                    	$(this).addClass("category_select"); 
+                    	select_category(this); 
+                    };
                     
                     if (index == 0) {
                         a.onclick();
@@ -1123,9 +1137,9 @@
 	                }
 	            } else {
 	                if (CrossYN()) {
-	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 800);
+	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
 	                } else {
-	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 800);
+	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
 	                }
 	            }
 	        }
@@ -1254,11 +1268,11 @@
 		    }
 	
 		    function Tab1_MouserOut(obj) {
-		        if(Tab1_SelectID != obj.id)
+		        if(Tab1_SelectID != obj.id) 
 		            obj.className = "";
 		    }
 	
-		    function Tab1_MouseClick(obj) {		    	
+		    function Tab1_MouseClick(obj) {		
 		        obj.className = "tabon";
 		        if (obj.id != Tab1_SelectID) {
 		            if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)

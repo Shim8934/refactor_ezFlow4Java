@@ -76,7 +76,9 @@
 			<ul>
 				<li><span onclick="goPage(1)"><spring:message code='ezCommunity.t168' /></span></li>
 				<li><span onclick="javascript:sendit()"><spring:message code='ezCommunity.t20' /></span></li>
-				<li><span onclick="javascript:webpds.reset();"><spring:message code='ezCommunity.t109' /></span></li>				
+				<%-- 18-04-30 방명록 작성/수정 중 취소 수정
+				<li><span onclick="javascript:webpds.reset();"><spring:message code='ezCommunity.t109' /></span></li>		 --%>		
+				<li><span onclick="javascript:history.go(-1)"><spring:message code='ezCommunity.t109' /></span></li>		
 			</ul>
 		</div>
 		
@@ -93,14 +95,16 @@
 			<table class="content" style="margin-top:12px">
 	        	<tr>
 					<th><spring:message code='ezCommunity.t138' /></th>
-					<c:choose>
+					<!-- 18-04-30 김민성 - 작성자 안나오는 오류 수정 -->
+					<td><c:out value = '${userInfo.displayName}'/></td>
+					<%-- <c:choose>
 						<c:when test="${userInfo.lang!='2' }">
 							<td><c:out value='${item.userName}' /></td>
 						</c:when>
 						<c:otherwise>
 							<td><c:out value='${item.userName2}' /></td>
 						</c:otherwise>
-					</c:choose>
+					</c:choose> --%>
 				</tr>
 				<tr>
 	          		<td colspan="2" style="padding:3px"><textarea id="memo" style="width:98%;height:200px" maxlength="3000"><c:out value='${item.content}' /></textarea></td>

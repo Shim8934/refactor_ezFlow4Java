@@ -717,7 +717,19 @@
 			    <option value="${folderName}">
 					<c:choose>
 						<c:when test="${folderName eq 'INBOX'}">
-							<spring:message code="ezEmail.t99000025" />
+							<spring:message code="ezEmail.t644" />
+						</c:when>
+						<c:when test="${folderName eq 'Sent'}">
+							<spring:message code="ezEmail.t645" />
+						</c:when>
+						<c:when test="${folderName eq 'Drafts'}">
+							<spring:message code="ezEmail.t646" />
+						</c:when>
+						<c:when test="${folderName eq 'Trash'}">
+							<spring:message code="ezEmail.t647" />
+						</c:when>
+						<c:when test="${folderName eq 'Personal folder'}">
+							<spring:message code="ezEmail.t648" />
 						</c:when>
 						<c:otherwise>
 							${folderName}

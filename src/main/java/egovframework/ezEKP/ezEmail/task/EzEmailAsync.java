@@ -24,6 +24,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 
 @Component
 public class EzEmailAsync {
@@ -41,6 +42,9 @@ public class EzEmailAsync {
 	@Autowired
 	private Properties config;
 
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
+	
 	@Resource(name = "jspw")
 	private String jspw;
 
@@ -96,7 +100,7 @@ public class EzEmailAsync {
 				
 				try {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"),
-							config.getProperty("config.IMAPPort"), address, password, egovMessageSource, locale);
+							config.getProperty("config.IMAPPort"), address, password, egovMessageSource, locale, ezEmailUtil);
 					
 					List<String> folderNameList = ia.getAllTopLevelFolderNames();
 										

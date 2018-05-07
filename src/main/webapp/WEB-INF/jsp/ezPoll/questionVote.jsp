@@ -196,6 +196,13 @@
 					}					
 				}
 				
+				var voteInfoDiv = $("#voteInfoDiv");
+				voteInfoDiv.on("mouseover", function(){
+					voteInfoDiv.find("ul").show();
+				}).on("mouseout", function(){
+					voteInfoDiv.find("ul").hide();
+				});
+				
 				emoticonPanelClose();
 				optImgSearch();
 				addThumbnailEvent();
@@ -1985,7 +1992,7 @@
  			        var value = element.scrollHeight;
 			        element.style.height = (element.scrollHeight - 32) + "px";			        
 			        document.getElementById("sendComment").style.height = value + 18 + "px";
-			        window.scrollTo(0, document.body.scrollHeight);
+// 			        window.scrollTo(0, document.body.scrollHeight);
 				}
 		    }
 		    
@@ -2306,9 +2313,11 @@
                 }                
                                                         
                 objTr.appendChild(objTd3);             
-                oTable.appendChild(objTr);
+//                 oTable.appendChild(objTr);
+				//투표 댓글 위로 쌓이는 형태로 수정.
+				$(oTable).prepend(objTr);
                 
-                window.scrollTo(0, document.body.scrollHeight);
+//                 window.scrollTo(0, document.body.scrollHeight);
 		    }
 		    
 		    function updateCurrentCmt(cmdId, attachFilePath, fileType, fileName, filePath, txtContent) {	    			    	
@@ -2907,15 +2916,18 @@
 		  	}
 		  	
 		  	function dateTimePickerSetting(){
-				$("#Edatepicker").datepicker({
+		  		$.datepicker._checkExternalClick = "";
+		  		$.datepicker._hideOriginDatepicker = $.datepicker._hideDatepicker;
+		  		$.datepicker._hideDatepicker = function(){return false;};
+		  		$("#Edatepicker").datepicker({
 			        changeMonth: true,
 		    	    changeYear: true,
 		        	autoSize: true,
-		        	showOn: "both",
+		        	showOn: "focus",
 		        	format: 'yyyy-mm-dd',
-		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
-		        	buttonImageOnly: true,
-		        	onSelect: endDateModifyConfirm
+		        	onSelect:function(dateText, inst){
+		        		selDateTimePicker(inst);
+		        	}
 		    	});		
 		
 				var _endD = "<c:out value='${question.endDate}'/>";
@@ -2943,20 +2955,43 @@
 	        	
 	        	$("#eTimePicker").html(selection);   	
 	        	
-	        	$("#eTimePicker").val(eHourMinute).change();
-	        	
 	        	//Set time
-    			setDateTimeValue();	
+    			setDateTimeValue();
+    			var defaultOpt = $("#eTimePicker").find("[value='" + eHourMinute + "']")[0];
+    			var defaultIdx = "";
+    			if(defaultOpt){
+	    			defaultOpt.selected = true;
+	    			defaultIdx = defaultOpt.index;
+    			}
     			
     			$("#endDate").click(function() {
     				if($("#_dateTimePicker").css("display") == "none"){
 	    				$("#_dateTimePicker").css("display", "inline-block");
-	    				$(".ui-datepicker-trigger").click();
+	    				$("#Edatepicker").trigger("focus");
+	    				$("#Edatepicker").datepicker("show");
+	    				$("#ui-datepicker-div").show();
+	    				$("#ui-datepicker-div").css("margin-top","5px")
+	    				
     				}
     				else{
 	    				$("#_dateTimePicker").css("display", "none");
-	    				$("#Edatepicker").datepicker('setDate', EDate);
+	    				$("#Edatepicker").datepicker("setDate", EDate);
+	    				document.getElementById("eTimePicker").selectedIndex = defaultIdx;
+	    				$("#ui-datepicker-div").hide();
+	    				$("#Edatepicker").datepicker("hideOrigin");
     				}
+    			});
+    			
+    			$(window).resize(function() {
+    				$("#_dateTimePicker").css("display", "none");
+    				$("#Edatepicker").datepicker("setDate", EDate);
+    				document.getElementById("eTimePicker").selectedIndex = defaultIdx;
+    				$("#ui-datepicker-div").hide();
+    				$("#Edatepicker").datepicker("hideOrigin");
+    			})
+    			
+    			$("#dateConfirmBtn").click(function(){
+    				endDateModifyConfirm(defaultIdx);
     			});
 		  	}
 		  	
@@ -2977,7 +3012,7 @@
 	        	    selection += "<option value='"+ j +"30'>"+ j + ":30" + "</option>";
 	        	} 
 	        	
-	        	$("#eTimePicker").html(selection); 
+	        	$("#eTimePicker").html(selection);
 			}	
 		  	
 		  	function zeroFill( number, width ) {
@@ -2991,31 +3026,42 @@
 			}
 		  	
 		  	//종료일 변경 다이얼로그창 띄움.
-		  	function endDateModifyConfirm(){
-  				$("#Edatepicker, #eTimePicker").css("color", "#0000FF");
+		  	function endDateModifyConfirm(idx){
+		  		$("#Edatepicker, #eTimePicker").css("color", "#0470e4");
 	  			window.setTimeout(
        				function(){
-		        		if(window.confirm("<spring:message code = 'ezPoll.hdp05'/>")){
+       					if(window.confirm("<spring:message code = 'ezPoll.hdp05'/>")){
 		        			updateEndDate();
 		        		}
 		        		else{
-		        			$("#Edatepicker").datepicker('setDate', EDate);	
-	  						$("#Edatepicker, #eTimePicker").css("color", "#000000");
+		        			$("#Edatepicker").datepicker('setDate', EDate);
+		        			document.getElementById("eTimePicker").selectedIndex = idx;
 		        		}
-		        		
-		        		$("#_dateTimePicker").toggle();
-		        		
+  						$("#Edatepicker, #eTimePicker").css("color", "#000000");
         			}, 500);
+		  	}
+		  	
+		  	//datepicker에서 날짜 선택시 효과
+		  	function selDateTimePicker(inst){
+		  		var selectedObj = $("#" + inst.dpDiv.attr("id") + " a.ui-state-default").eq(inst.selectedDay - 1);
+		  		selectedObj.addClass("ui-state-highlight");
+		  		setTimeout(function(){
+			  		selectedObj.removeClass("ui-state-highlight");
+		  		}, 300);
 		  	}
 		  	
 		  	//웹소켓이 끊길 경우 처리.
 		  	function stompDisConnProcess(){
 		  		var qstId = "${question.qstId}";
+		  		var brdId =	"${brdId}";
+		  		var rightFrames = window.parent.frames["right"];
 		  		setInterval(function(){
-		  			if(stompClient.connected === false){
-		  				window.parent.frames["right"].location.href = "/ezPoll/pollVote.do?qstId=" + qstId;
+		  			if(stompClient.connected === false && rightFrames != null){
+		  				rightFrames.location.href = "/ezPoll/pollVote.do?qstId=" + qstId + "&brdId=" + brdId;
+		  			}else if(stompClient.connected === false && rightFrames == null){
+		  				window.location.reload();
 		  			}
-		  		}, 1000)
+		  		}, 1000);
 		  	}
 		  	
 		  	//목록 버튼 눌렀을 때 리스트로 이동.
@@ -3035,6 +3081,22 @@
 		  		else {
 			  		window.location.href = "/ezPoll/pollList.do?qstId=" + qstId + "&gotoList=" + gotoList + "&params=" + params;
 		  		}
+		  	}
+		  	
+		  	function voteDelete(){
+		    	var currentUser = "${curentUser}";
+		    	var creator = "${question.creator}";
+		    	var adminPrivilege = "${adminPrivilege}";
+		    	var brdId = "${brdId}";
+		  		if (currentUser !== creator && adminPrivilege != 1) {
+		            alert('<spring:message code="ezPoll.t141"/>');
+		            return;
+		    	}	
+		    	
+	    		var feature = GetOpenPosition(420, 438);
+		    	
+		        var w = window.open("/ezPoll/confirmDeleteQuestion.do?brdID=" + brdId + "&listQst=" + qstId, "", "height=310px,width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		        w.focus();
 		  	}
 		  	
 		</script>
@@ -3062,73 +3124,82 @@
 							</div>
 					  </div>
 					  <div class="voteIconDiv">
-					  		<ul class="voteIcon_ul">
-								<c:choose>
-									<c:when test="${question.secretVote == 0}">
-										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seen_vote_user.png" class="voteIconImg nosecret" title="<spring:message code = 'ezPoll.t112'/>" onclick="menuDetailSeenUserInfo('${question.qstId}')" onmouseover="this.src = '/images/poll/seen_vote_user_hover.png'" onmouseout="this.src = '/images/poll/seen_vote_user.png'" >
-										</li>
-										<li class="img_description">
-											<div><span id="seenPeople">${seenUsers}</span></div>
-										</li>
-									</c:when>
-									<c:otherwise>
-										<li class="voteIconImg_li icon">
-											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t112'/>" >
-										</li>
-										<li class="img_description">
-											<div><span id="seenPeople">${seenUsers}</span></div>
-										</li>
-									</c:otherwise>
-								</c:choose>
-							</ul>
-							<ul class="voteIcon_ul">
-								<c:choose>
-									<c:when test="${question.secretVote == 0}">
-										<li class="voteIconImg_li icon" >
-											<img src="/images/poll/unvoted_user.png" class="voteIconImg nosecret" title="<spring:message code = 'ezPoll.t123'/>" onclick="javascript:displayDetail('${question.qstId}')" onmouseover="this.src = '/images/poll/unvoted_user_hover.png'" onmouseout="this.src = '/images/poll/unvoted_user.png'" >
-										</li>
-										<li class="img_description">
-											<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
-										</li>
-									</c:when>
-									<c:otherwise>
-										<li class="voteIconImg_li icon">
-											<img src="/images/poll/unvoted_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t123'/>" >
-										</li>
-										<li class="img_description">
-											<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
-										</li>
-									</c:otherwise>
-								</c:choose>
-							</ul>
-							<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2)}">
-								<ul class="voteIcon_ul">
-									<li class="voteIconImg_li icon">
-										<img src="/images/poll/editVote.png" class="voteIconImg nosecret" onclick="voteEdit()" title="<spring:message code = 'ezEmail.t149'/>" onmouseover="this.src = '/images/poll/editVote_hover.png'" onmouseout="this.src = '/images/poll/editVote.png'" />
-									</li>
-								</ul>
-							</c:if>
 							<ul class="voteIcon_ul">
 								<li class="voteIconImg_li icon">
-									<img src="/images/poll/reuseVote.png" class="voteIconImg nosecret" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
+									<img src="/images/poll/icon_list.png" class="voteIconImg nosecret" onclick="gotoList()"  style="width:45px; border: 1px solid #ddd; border-radius: 15px;" title="<spring:message code = 'ezCommunity.t168'/>" onmouseover="this.src = '/images/poll/icon_list_hover.png'" onmouseout="this.src = '/images/poll/icon_list.png'" />
 								</li>
 							</ul>
-							<c:if test="${(curentUser eq question.creator || adminPrivilege == 1)}">
+							<ul class="voteIcon_ul">
+								<li class="voteIconImg_li icon">
+									<img id="reuseVoteImg" src="/images/poll/reuseVote.png" class="voteIconImg nosecret" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
+								</li>
+							</ul>
+							<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
 								<ul class="voteIcon_ul">
 									<li class="voteIconImg_li icon">
-										<img id="endDate" src="/images/poll/endDateModify.png" class="voteIconImg nosecret" style="width:45px" title="<spring:message code = 'ezPoll.hdp04'/>" onmouseover="this.src = '/images/poll/endDateModify_hover.png'" onmouseout="this.src = '/images/poll/endDateModify.png'" />
+										<img src="/images/poll/icon_voteDelete.png" class="voteIconImg nosecret" onclick="voteDelete()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code="ezPoll.t202"/>" onmouseover="this.src = '/images/poll/icon_voteDelete_hover.png'" onmouseout="this.src = '/images/poll/icon_voteDelete.png'" />
 									</li>
 								</ul>
-								<div id="_dateTimePicker" style="display: none; position: absolute; top: 125px; right: 10px; height: 221px; width: 223px; background: white; border-radius: 10px; padding-top: 20px; border:1px solid #ddd;">										
-									<input type="text" id="Edatepicker" style="width:80px; height: 20px; text-align:center; margin-left: 18px; margin-right: 5px; float: left;" readonly >
-									<select id="eTimePicker" style="float:left"></select>						
-									<!-- <div style="height: 40px;width: 100%;position: relative;margin-top: 70px;">
-										<img src="/images/ImgIcon/mtg-accept.png" style="width: 30px;margin-left: 50px;">
-										<img src="/images/ImgIcon/mtg-decline.png" style="width: 30px; margin-left: 50px;">
-									</div> -->			
-								</div>
 							</c:if>
+							<c:choose>
+								<c:when test="${(curentUser == question.creator || adminPrivilege == 1) && (question.status == 1 || question.status == 2) && totalVotes == 0}">
+									<ul class="voteIcon_ul">
+										<li class="voteIconImg_li icon">
+											<img id="editVoteImg" src="/images/poll/editVote.png" class="voteIconImg nosecret" onclick="voteEdit()" title="<spring:message code = 'ezEmail.t149'/>" onmouseover="this.src = '/images/poll/editVote_hover.png'" onmouseout="this.src = '/images/poll/editVote.png'" />
+										</li>
+									</ul>
+								</c:when>
+								<c:when test="${(curentUser eq question.creator || adminPrivilege == 1)}">
+									<ul class="voteIcon_ul">
+										<li class="voteIconImg_li icon endDate">
+											<img id="endDate" src="/images/poll/endDateModify.png" class="voteIconImg nosecret" style="width:45px" title="<spring:message code = 'ezPoll.hdp04'/>" onmouseover="this.src = '/images/poll/endDateModify_hover.png'" onmouseout="this.src = '/images/poll/endDateModify.png'" />
+											<div id="_dateTimePicker" style="display: none; position: fixed; top: 130px; right: 10px; height: 226px; width: 223px; background: white; border-radius: 10px; padding-top: 20px; border:1px solid #ddd; z-index:10;">										
+												<input type="text" id="Edatepicker" style="width:80px; height: 20px; text-align:center; margin-left: 18px; margin-right: 5px; float: left; z-index: 10;" readonly >
+												<select id="eTimePicker" style="float:left"></select>
+												<i id="dateConfirmBtn" class="fa fa-check-circle"></i>
+												<!-- <div style="height: 40px;width: 100%;position: relative;margin-top: 70px;">
+													<img src="/images/ImgIcon/mtg-accept.png" style="width: 30px;margin-left: 50px;">
+													<img src="/images/ImgIcon/mtg-decline.png" style="width: 30px; margin-left: 50px;">
+												</div> -->			
+											</div>
+										</li>
+									</ul>
+								</c:when>
+							</c:choose>
+					  </div>
+					  <div class="voteFuncIconDiv">
+					  		<ul class="voteIcon_ul">
+								<li class="voteIconImg_li icon">
+									<c:choose>
+										<c:when test="${question.secretVote == 0}">
+											<img id="seenVoteUserImg" src="/images/poll/seen_vote_user.png" class="voteIconImg nosecret" title="<spring:message code = 'ezPoll.t112'/>" onclick="menuDetailSeenUserInfo('${question.qstId}')" onmouseover="this.src = '/images/poll/seen_vote_user_hover.png'" onmouseout="this.src = '/images/poll/seen_vote_user.png'" >
+										</c:when>
+										<c:otherwise>
+											<img src="/images/poll/seen_vote_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t112'/>" >
+										</c:otherwise>
+									</c:choose>
+								</li>
+								<li class="img_description">
+									<div><span id="seenPeople">${seenUsers}</span></div>
+								</li>
+							</ul>
+							<ul class="voteIcon_ul">
+								<li class="voteIconImg_li icon" >
+									<div class="voteIconImg_li_innerDiv">
+										<c:choose>
+											<c:when test="${question.secretVote == 0}">
+												<img id="unvotedUserImg" src="/images/poll/unvoted_user.png" class="voteIconImg nosecret" title="<spring:message code = 'ezPoll.t123'/>" onclick="javascript:displayDetail('${question.qstId}')" onmouseover="this.src = '/images/poll/unvoted_user_hover.png'" onmouseout="this.src = '/images/poll/unvoted_user.png'" >
+											</c:when>
+											<c:otherwise>
+												<img src="/images/poll/unvoted_user.png" class="voteIconImg" title="<spring:message code = 'ezPoll.t123'/>" >
+											</c:otherwise>
+										</c:choose>
+									</div>
+								</li>
+								<li class="img_description">
+									<div><span id="_unVotedNumber">${numberOfUnvotedUsers}</span></div>
+								</li>
+							</ul>
 					  </div>
 					  
 				</div>
@@ -3154,56 +3225,67 @@
 								</span> 			
 							</c:if>
 						</div>			
-				  		<ul style="float:right; padding:0px; margin:9px 9px 0px 10px;">
-				  			<c:choose>
-								<c:when test="${question.multiSelect == 0}">
-									<li class="voteIconImg_li_info icon">
-										<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : <spring:message code = 'ezEmail.lhm67'/>" >
-									</li>
-								</c:when>
-								<c:otherwise>
-									<li class="voteIconImg_li_info icon">
-										<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : ${question.multiSelect}" >
-									</li>
-								</c:otherwise>
-							</c:choose>
-							<c:choose>
-								<c:when test="${question.resultFirst == 1}">
-									<li class="voteIconImg_li_info icon">
-										<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t258'/>" >
-									</li>
-								</c:when>
-								<c:otherwise>
-									<li class="voteIconImg_li_info icon">
-										<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t256'/>" >
-									</li>
-								</c:otherwise>
-							</c:choose>
-							<c:choose>
-								<c:when test="${question.secretVote == 1}">
-									<li class="voteIconImg_li_info icon">
-										<img src="/images/poll/anonymousVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t253'/>" >
-									</li>
-								</c:when>
-								<c:otherwise>
-									<li class="voteIconImg_li_info icon">
-										<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
-									</li>
-								</c:otherwise>
-							</c:choose>
-							<c:choose>
-								<c:when test="${question.isSelOnlyOnce == 1}">
-									<li class="voteIconImg_li_info icon">
-										<img src="/images/poll/selOnlyOnce_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.hdp01'/>" >
-									</li>
-								</c:when>
-								<c:otherwise>
-									<li class="voteIconImg_li_info icon">
-										<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.hdp02'/>" >
-									</li>
-								</c:otherwise>
-							</c:choose>
-				  		</ul>
+						<div id="voteInfoDiv" class="voteInfoDiv">
+					  		<img class="voteInfoImg" src="/images/poll/voteInfo.png" title="<spring:message code = 'ezPoll.t103'/><spring:message code = 'ezApprovalG.t54'/>">
+					  		<ul>
+					  			<c:choose>
+									<c:when test="${question.multiSelect == 0}">
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : <spring:message code = 'ezEmail.lhm67'/>" >
+											<span><spring:message code = 'ezPoll.t257'/> : <spring:message code = 'ezEmail.lhm67'/></span>
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/numberOfSelect_${question.multiSelect}.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t257'/> : ${question.multiSelect}" >
+											<span><spring:message code = 'ezPoll.t257'/> : ${question.multiSelect}</span>
+										</li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="${question.resultFirst == 1}">
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t258'/>" >
+											<span><spring:message code = 'ezPoll.t258'/></span>
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/seeResultBeforeVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t256'/>" >
+											<span><spring:message code = 'ezPoll.t256'/></span>
+										</li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="${question.secretVote == 1}">
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t253'/>" >
+											<span><spring:message code = 'ezPoll.t253'/></span>
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
+											<span><spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/></span>
+										</li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="${question.isSelOnlyOnce == 1}">
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/selOnlyOnce_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.hdp01'/>" >
+											<span><spring:message code = 'ezPoll.hdp01'/></span>
+										</li>
+									</c:when>
+									<c:otherwise>
+										<li class="voteIconImg_li_info icon">
+											<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.hdp02'/>" >
+											<span><spring:message code = 'ezPoll.hdp02'/></span>
+										</li>
+									</c:otherwise>
+								</c:choose>
+					  		</ul>
+						</div>
 					</div>
 					
 					
@@ -3241,7 +3323,7 @@
 						</div>  
 				</div>
 		        </c:if>	
-				<table class="content" style="width:100%; min-width:800px; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD;" id="_content1">
+				<table class="content" style="width:100%; min-width:800px; table-layout:fixed; height:32px; line-height:30px; border:1px solid #DDD; margin-bottom:20px" id="_content1">
 	                <c:forEach var="optList" items="${listOptions}" varStatus="loop">
 	                	<c:if test="${optList.filePath ne null }">
 		               	 	<c:set var="fileFlag" value="true" />
@@ -3326,9 +3408,6 @@
 	                                    <div style="display:block; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
 	                                </div> 
 	                            </c:if>
-	                            <div id="_gotoList" class="voteBtnFooterInner" onclick="gotoList();">
-                                    <div style="display:block; cursor: pointer;"><spring:message code = 'ezCommunity.t168'/></div>
-                                </div>
 	                    	</div>        
 						</td>					
 					</tr>
@@ -3339,7 +3418,75 @@
 						<div style="float:left; display:block; padding-top: 14px;padding-left: 14px; cursor: pointer;"><spring:message code = 'ezPoll.t124'/></div>
 					</div> 
 				</c:if>-->
-				<div id="commentArea" style="border:1px solid #DDD; margin:20px 0px 0px 0px; width:100%; min-width:800px; border-bottom: none;">
+				<c:if test="${!(hasVotePrivilege != 1 && question.status != 0) || adminPrivilege == 1 || curentUser == question.creator}">
+					<div id="sendComment" class="voteComment">
+		            	<div class="sendComment_layout">
+						<div class="send_attach">
+							<img id="_addFile" class="cmtAddFile" src="/images/poll/add_vote.png" onclick="addFileComment();">
+						</div>
+						<div id ="_stickerArea">					
+							<div id="emoticonPanel" class="emoticonPanel" style="display:none">
+								<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #ddd;">
+									<div style="float:left; display:block;">
+										<img id="previousEmoticon" src="/images/previous1.png" height=40 width=30 style="padding-top: 3px; ">
+									</div>
+									<div id="_ePresentors" style="float:left; display:block; ">
+										<div id="_group1" style="background-color: #d9d9d9; float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/girl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<!-- <div id="_group2" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group3" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group4" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group5" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group6" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group7" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group8" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div> -->
+								   <!-- <div id="_group9" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
+										<div id="_group10" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>  -->
+									</div>
+									<div style="float: right; display:block;">
+										<img id="nextEmoticon" src="/images/next1.png" height=40 width=30 style="padding-top: 3px; ">
+									</div>
+								</div>						
+								<div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
+									<div id="_listG1" style="height:310px; overflow-y: auto; overflow-x: hidden; display: block;">
+										<table id="_listG1Table">
+											<tr style="width:100%; height:45px;">
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set001.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set002.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set003.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set004.png);" onclick="displaySticker(this);"></div></td>
+											</tr>
+											<tr style="width:100%; height:45px;">
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set005.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set006.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set007.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set008.png);" onclick="displaySticker(this);"></div></td>
+											</tr>
+											<tr style="width:100%; height:45px;">
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set009.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set010.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set011.png);" onclick="displaySticker(this);"></div></td>
+												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set012.png);" onclick="displaySticker(this);"></div></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>					
+							<img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker()">
+						</div >				
+						<div class="comment_input_layout">
+							<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
+						</div>
+						<div class="commentBtn">
+							<div id="uploadedFile" class="uploadedFile" style="display:none;">
+								<img id="cancelImg" class="cancelImg" src="/images/close.png"  onclick="cancelShowingCmtFile(this);">
+								<img id="previewImage" class="previewImage">
+							</div>	
+							<button id="sendBttn" class="sendBttn" onclick="sendComment(); return false;"><spring:message code="ezPoll.t144"/></button>						
+						</div>
+						</div>
+					</div>
+				</c:if>
+				<div id="commentArea" class="commentAreaDiv">
 					<table style="width: 100%;" id="commentListView">
 						<c:forEach var="_comt" items="${listComments}">
 							<tr>
@@ -3395,74 +3542,7 @@
 						</c:forEach>					
 					</table>
 				</div>
-				<c:if test="${!(hasVotePrivilege != 1 && question.status != 0) || adminPrivilege == 1 || curentUser == question.creator}">
-					<div id="sendComment" class="voteComment">
-		            	<div class="sendComment_layout">
-						<div class="send_attach">
-							<img id="_addFile" class="cmtAddFile" src="/images/poll/add_vote.png" onclick="addFileComment();">
-						</div>
-						<div id ="_stickerArea">					
-							<div id="emoticonPanel" style="display: none; width:400px; height:356.5px; margin-top: -362px;margin-left: -39px; background-color: #fff; border:1px solid #ddd; position: absolute;">
-								<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #ddd;">
-									<div style="float:left; display:block;">
-										<img id="previousEmoticon" src="/images/previous1.png" height=40 width=30 style="padding-top: 3px; ">
-									</div>
-									<div id="_ePresentors" style="float:left; display:block; ">
-										<div id="_group1" style="background-color: #d9d9d9; float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/girl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-										<!-- <div id="_group2" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-										<div id="_group3" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-										<div id="_group4" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-										<div id="_group5" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-										<div id="_group6" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-										<div id="_group7" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/catEmoticon.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-										<div id="_group8" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/student.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div> -->
-								   <!-- <div id="_group9" style="float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/hackerGirl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
-										<div id="_group10" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>  -->
-									</div>
-									<div style="float: right; display:block;">
-										<img id="nextEmoticon" src="/images/next1.png" height=40 width=30 style="padding-top: 3px; ">
-									</div>
-								</div>						
-								<div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
-									<div id="_listG1" style="height:310px; overflow-y: auto; overflow-x: hidden; display: block;">
-										<table id="_listG1Table">
-											<tr style="width:100%; height:45px;">
-												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set001.png);" onclick="displaySticker(this);"></div></td>
-												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set002.png);" onclick="displaySticker(this);"></div></td>
-												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set003.png);" onclick="displaySticker(this);"></div></td>
-												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set004.png);" onclick="displaySticker(this);"></div></td>
-											</tr>
-											<tr style="width:100%; height:45px;">
-												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set005.png);" onclick="displaySticker(this);"></div></td>
-												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set006.png);" onclick="displaySticker(this);"></div></td>
-												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set007.png);" onclick="displaySticker(this);"></div></td>
-												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set008.png);" onclick="displaySticker(this);"></div></td>
-											</tr>
-											<tr style="width:100%; height:45px;">
-												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set009.png);" onclick="displaySticker(this);"></div></td>
-												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set010.png);" onclick="displaySticker(this);"></div></td>
-												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set011.png);" onclick="displaySticker(this);"></div></td>
-												<td><div class="emoticon" style="background-image: url(/images/emoticon/girl/1set012.png);" onclick="displaySticker(this);"></div></td>
-											</tr>
-										</table>
-									</div>
-								</div>
-							</div>					
-							<img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker()">
-						</div >				
-						<div class="comment_input_layout">
-							<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
-						</div>
-						<div class="commentBtn">
-							<div id="uploadedFile" style="display:none; border:1px solid #ddd; width: 100px; height:100px; float:right;margin-right: -35px; margin-top: -100px; background-color: #4B4B4B; z-index: 1000; position: absolute">
-								<img id="cancelImg" src="/images/close.png"  style="float:right; display: block; cursor: pointer; z-index: 2000;" height=20 width=20 onclick="cancelShowingCmtFile(this);">
-								<img id="previewImage" style="display: block; padding-left: 20px; padding-right: 20px;" height=60 width=60>
-							</div>	
-							<button id="sendBttn" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;" onclick="sendComment(); return false;"><spring:message code="ezPoll.t144"/></button>						
-						</div>
-						</div>
-					</div>
-				</c:if>
+				
 				<input id="fileInput" type="file" onchange="uploadFileCmt();" class="voteFileInput" />
 			</div>	
 		</form>

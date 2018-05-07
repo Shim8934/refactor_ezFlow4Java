@@ -394,8 +394,9 @@
 
 	            var i = 0;
 	            var pos = 0;
-	            var filename = "";
 	            var filepath = "";
+	            var filenameOrg = "";
+		        var filenameView = "";
 	            var strAttach = "";
 	            var fileImage = "";
 
@@ -404,7 +405,9 @@
 
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	                filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-	                filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
+	                /* 2018-04-30 홍승비 - 커뮤니티 게시판 첨부파일명 특문처리 수정 */
+	                filenameOrg = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
+		            filenameView = ReplaceText(ReplaceText(ReplaceText(filenameOrg, ">", "&gt;"), "<", "&lt;"), "&", "&amp;");		           
 	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 	                var strTarget = "target='_blank'";
 	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
@@ -440,9 +443,9 @@
 	                var protocol = window.location.protocol;
 	                var serverName = window.location.hostname;
 
-	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filename) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
-	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filename) + "&filePath=" + encodeURIComponent(filepath) + ">";
-	                strAttach = strAttach + filename + "&nbsp;(" + filesize + ")</a><br>";
+	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
+	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath) + ">";
+	                strAttach = strAttach + filenameView + "&nbsp;(" + filesize + ")</a><br>";
 	            }
 	            document.getElementById('lstAttachLink').innerHTML = strAttach;
 	        }
@@ -1158,28 +1161,7 @@
 		        	</tr>
 	        	</c:otherwise>
 	        </c:choose>
-
-			<c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
-		        <tr>
-		            <td style="height:20px">
-		                <table class="content">
-		                    <tr>
-		                        <th>&nbsp;<spring:message code='ezCommunity.t190'/>&nbsp;</th>
-                        		<td style="width:100%">
-		                        	<div style="word-break: break-all; cursor: pointer; MARGIN-TOP: 0px; OVERFLOW: auto; PADDING-TOP: 0px" onclick="OpenItem('${previousItemID}')"><c:out value='${previousTitle}' /></div>
-		                        </td>
-		                    </tr>
-		                    <tr>
-		                        <th>&nbsp;<spring:message code='ezCommunity.t192'/>&nbsp;</th>
-		                        <td>
-		                            <div style="word-break: break-all; cursor: pointer; MARGIN-TOP: 0px; OVERFLOW: auto; PADDING-TOP: 0px; BACKGROUND-COLOR: white" onclick="OpenItem('${nextItemID}')"><c:out value='${nextTitle}' /></div>
-		                        </td>
-		                    </tr>
-		                </table>
-		            </td>
-		        </tr>
-	        </c:if>
-	        
+			<!-- 2018-05-04 홍승비 - 일반/익명게시판 다음글, 이전글 테이블 삭제 -->		
 	    </table>
 	    
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>

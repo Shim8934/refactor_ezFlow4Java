@@ -690,6 +690,7 @@ public class EzPollController extends EgovFileMngUtil {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
+		String brdId = request.getParameter("brdId") != null ? request.getParameter("brdId") : "";
 		int totalUsers = 0;		
 		int totalVotes = 0;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -896,7 +897,8 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Sort list of comments by comment id
 		Collections.sort(listComments, (PollCommentVO cmt1, PollCommentVO cmt2) -> {
-	        return Integer.valueOf(cmt1.getCmtId()).compareTo(cmt2.getCmtId());
+//	        return Integer.valueOf(cmt1.getCmtId()).compareTo(cmt2.getCmtId());
+	        return Integer.valueOf(cmt2.getCmtId()).compareTo(cmt1.getCmtId());
 		});
 		
 		//Set image for each commented user
@@ -923,7 +925,8 @@ public class EzPollController extends EgovFileMngUtil {
 			numberOfCmt = 0;
 		}
 		else {
-			numberOfCmt = listComments.get((listComments.size() - 1)).getCmtId();
+//			numberOfCmt = listComments.get((listComments.size() - 1)).getCmtId();
+			numberOfCmt = listComments.get(0).getCmtId();
 		}		
 		
 		//User image
@@ -954,6 +957,10 @@ public class EzPollController extends EgovFileMngUtil {
 			model.addAttribute("creatorDept", pollCreator.getDeptName2());
 		}
 		
+		if(brdId != ""){
+			model.addAttribute("brdId", Integer.parseInt(brdId));
+		}
+		
 		model.addAttribute("listComments", listComments);
 		model.addAttribute("numberOfCmt", numberOfCmt);
 		model.addAttribute("listSelectedOptions", om.writeValueAsString(listSelectedOptionsOfUser));
@@ -976,6 +983,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("params", params);
 		model.addAttribute("searchStr", searchStr);
 		model.addAttribute("searchN", searchN);		
+		
 		
 		logger.debug("Question vote finishes!");		
 		return "/ezPoll/questionVote";

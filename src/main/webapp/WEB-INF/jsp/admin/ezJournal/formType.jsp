@@ -60,7 +60,7 @@
 	            		<c:if test="${company.selected eq 'selected' }">
 	            			selected
 	            		</c:if>
-		            	>${company.companyName }</option>
+		            	><c:out value='${company.companyName }'/></option>
 	            	</c:forEach>
 	            </select>
 	            <br>
@@ -77,18 +77,18 @@
 			    	<c:choose>
 				    	<c:when test="${type.journalUse eq 'use'}">
 					    	<td style="text-align: center;">
-					    	<input type="radio" name="${type.journaltypeId }" value="use" checked/>
+					    		<input type="radio" name="${type.journaltypeId }" value="use" checked/>
 					    	</td>
 					    	<td style="text-align: center;">
-					    	<input type="radio" name="${type.journaltypeId }" value="no"/>
+					    		<input type="radio" name="${type.journaltypeId }" value="no"/>
 					    	</td>
 				    	</c:when>
 				    	<c:otherwise>
 					    	<td style="text-align: center;">
-					    	<input type="radio" name="${type.journaltypeId }" value="use" />
+					    		<input type="radio" name="${type.journaltypeId }" value="use" />
 					    	</td>
 					    	<td style="text-align: center;">
-					    	<input type="radio" name="${type.journaltypeId }" value="no" checked/>
+					    		<input type="radio" name="${type.journaltypeId }" value="no" checked/>
 					    	</td>
 				    	</c:otherwise>
 			    	</c:choose>
