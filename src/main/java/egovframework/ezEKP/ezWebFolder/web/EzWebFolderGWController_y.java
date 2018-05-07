@@ -511,10 +511,6 @@ public class EzWebFolderGWController_y {
 				Set<String> testbnk = new HashSet<String>();
 				
 				for (FileVO file : fileList) {
-					file.setFileShareStatus(ezWebFolderService_m.checkShared(file.getFileId(), (file.getTypeId().equals("folder") ? "D" : "F"), file.getFolderPath(), tenantId));
-				}
-				
-				for (FileVO file : fileList) {
 					String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
 					String[] fldPathArr = fldPath.split("\\|");
 					testbnk.addAll(Arrays.asList(fldPathArr));

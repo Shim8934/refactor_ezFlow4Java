@@ -369,10 +369,6 @@
 							shareContext.showShareInfo(this);
 						});
 						tdElmt10.appendChild(spanElmt);
-					} else if (result[i]["fileShareStatus"] == "S") {
-						var spanElmt = document.createElement("span");
-						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
-						tdElmt10.appendChild(spanElmt);
 					} else {
 						tdElmt10.textContent = "";
 					}
