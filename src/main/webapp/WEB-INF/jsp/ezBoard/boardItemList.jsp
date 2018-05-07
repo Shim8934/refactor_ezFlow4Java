@@ -518,8 +518,7 @@
 		                DATA += "<ENDDATE>" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "</ENDDATE>";
 		            }
 		        }
-		       		SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
-		    	}
+		       	SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
 		    function btn_PostDate_Clear() {
 		        $("#Sdatepicker").datepicker('setDate', "");
