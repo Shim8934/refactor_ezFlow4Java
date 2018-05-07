@@ -617,14 +617,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String offset,String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin, String[] deptIdList) throws Exception {
 		LOGGER.debug("getUsersModiyAtt started");
 		
-		if (adminFlag == null) {
-			adminFlag = "false";
-		}
-		
-		if (checkAdmin == null) {
-			checkAdmin = "false";
-		}
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
@@ -1104,6 +1096,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		String typeId = "A01";
 		//승인, 반려 기록
+		
+		AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+		
+		if (aav.getApprStatus().equals("0")) {
+			return;
+		}
+		
 		ezAttitudeDAO.changeUsersModifyAtt(map);
 		
 		//승인일 때 사용자의 기존 지각 상태의 근태 시간 상태 수정
@@ -1117,7 +1116,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 			Map<String, Object> map1 = new HashMap<String, Object>();
 			
-	//		boolean isDefaultAtti = false;
+			//boolean isDefaultAtti = false;
 			map1.put("writerId", vo.getWriterId());
 			map1.put("companyId", companyId);
 			map1.put("tenantId", tenantId);
@@ -1127,10 +1126,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			
 			AttitudeUserConfigVO resultVO = ezAttitudeDAO.getAttitudeConfTime(map1);
 			String resultConfDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd") + " " + resultVO.getWorkStartTime() + ":00", offSet, false).substring(11);
-			
-			LOGGER.debug("startDate : " + startDate);
-			LOGGER.debug("resultConfDate : " + resultConfDate);
-			
+
 			SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
 			
 			Date userConfTime = f.parse(resultConfDate);

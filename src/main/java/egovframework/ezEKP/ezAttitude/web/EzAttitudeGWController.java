@@ -1134,24 +1134,31 @@ public class EzAttitudeGWController {
 			@RequestParam(value="orderCell", required=false) String orderCell,
 			@RequestParam(value="orderOption", required=false) String orderOption,
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
-			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
-			@RequestParam(value="deptList", required=false) JSONArray deptList) {
+			@RequestParam(value="checkAdmin", required=false) String checkAdmin) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
-		String deptIdList[];
-		if (deptList == null) {
-			deptList = new JSONArray();
-			deptIdList = new String[0];
-		} else {
-			deptIdList = new String[deptList.size()];
-		}
-		
+		String[] deptIdList;
+
 		try{
 			
 			String order = orderCell + " " + orderOption;
+			String isAllDept = "";
+			
+
+			if (adminFlag == null) {
+				adminFlag = "false";
+			}
+			
+			if (checkAdmin == null) {
+				checkAdmin = "false";
+			}
+			
+			if (adminFlag.equals("true") || checkAdmin.equals("true")){
+				isAllDept = "Y";
+			}
 			
 			if (orderCell == null || orderOption == null) {
 				order = null;
@@ -1163,9 +1170,12 @@ public class EzAttitudeGWController {
 				}
 			}
 			
-			for (int i = 0 ; i < deptList.size(); i++ ){
-				JSONObject dept = (JSONObject)deptList.get(i);	
-				deptIdList[i] = (String) dept.get("deptId");
+			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
+
+			deptIdList = new String[authDeptlist.size()];
+			
+			for (int i = 0; i < authDeptlist.size(); i++) {
+				deptIdList[i] = authDeptlist.get(i).getDeptId();
 			}
 			
 			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, startPoint, endPoint, type, order, adminFlag, checkAdmin, deptIdList);
@@ -1237,8 +1247,7 @@ public class EzAttitudeGWController {
 			deptIdList = new String[authDeptlist.size()];
 			
 			for (int i = 0; i < authDeptlist.size(); i++) {
-				LOGGER.debug("authDeptlist.get(i).getClass() : " + authDeptlist.get(i).getClass());
-//				deptIdList[i] = authDeptlist.get(i).getDeptId();
+				deptIdList[i] = authDeptlist.get(i).getDeptId();
 			}
 			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, deptIdList, adminFlag, checkAdmin);
 
@@ -1540,6 +1549,7 @@ public class EzAttitudeGWController {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
 			for (int i = 0; i < ids.length; i++) {
 				ezAttitudeService.changeUsersModifyAtt(companyId, tenantId, ids[i], changeStatus, userId, info.getUserName(), info.getUserName2(), info.getOffSet());
 			}

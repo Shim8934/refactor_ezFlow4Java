@@ -12,7 +12,7 @@
 	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>
 	<typeAlias alias="AttitudeAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO"/>
 	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
-	<typeAlias alias="JournalAuthorVO" type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
+	<typeAlias alias="JournalAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO" />
 	
 	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
 		<result property="companyId"				column="COMPANY_ID"				columnIndex="1"/>

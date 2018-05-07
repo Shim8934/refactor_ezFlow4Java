@@ -296,7 +296,6 @@
 	    	var obj = new Object();
 	    	
 		    obj.apprUserName = $('#appr_search').val();
-		    console.log("adminFlag : " + adminFlag);
 		    if (adminFlag == 'true') {
 		    	if (checkAdmin == 'true') {
 		    		obj.writerDeptName = writerDept_search.value;
@@ -347,14 +346,28 @@
 	            }
 	        }
 	    	var obj = new Object();
-	    	
-		    obj.apprUserName = $('#appr_search').val();
-		    obj.startDate = startDate;
-		    obj.type = type;
-		    obj.endDate = endDate;
-		    obj.excelReq = "true";
-		    obj.adminFlag = adminFlag;
 			
+		    obj.apprUserName = $('#appr_search').val();
+		    if (adminFlag == 'true') {
+		    	if (checkAdmin == 'true') {
+		    		obj.writerDeptName = writerDept_search.value;
+		    	} else {
+		    		obj.writerDeptId = writerDept_search.value;
+			    	obj.writerDeptName = $("#writerDept_search option:selected").text();	
+		    	}
+		    	obj.writerName = $('#writer_search').val();
+		    }
+		    obj.startDate = startDate;
+		    obj.endDate = endDate;
+			obj.totalPages = totalPages;
+			obj.totalAtt = totalAtt;
+			obj.type = type;
+			obj.orderCell = orderCell;
+			obj.orderOption = orderOption;
+			obj.excelReq = "true";
+			obj.adminFlag = adminFlag;
+			obj.checkAdmin = checkAdmin;
+		    
 		    $.ajax({
 				type : 'get',
 			    url : '/ezAttitude/getAttModAppList.do',
@@ -769,7 +782,7 @@
 	    	var idList = "";
 	    	
 	    	for (var i = 0; i < attList.length; i++) {
-	    		if (attList[i].getAttribute("status") != "1") {
+	    		if (attList[i].getAttribute("status") == "0") {
 	    			idList += attList[i].getAttribute("id").split("_")[1] 
 	    			+ "_" + attList[i].getAttribute("id").split("_")[2] + ",";	
 	    		}
@@ -779,7 +792,7 @@
     			if (attList.length == 0) {
     				alert("승인할 수정신청을 선택해주세요");	
     			} else {
-    				alert("이미 승인된 항목입니다.");
+    				alert("이미 처리된 항목입니다.");
     			}
 	    		get_att_list(currentPage);
 	    		HiddenAttProgress();
@@ -818,7 +831,7 @@
 	    	var idList = "";
 	    	
 	    	for (var i = 0; i < attList.length; i++) {
-	    		if (attList[i].getAttribute("status") != "2") {
+	    		if (attList[i].getAttribute("status") == "0") {
 	    			idList += attList[i].getAttribute("id").split("_")[1] + ",";	
 	    		}
 	    	}
@@ -827,7 +840,7 @@
     			if (attList.length == 0) {
     				alert("반려할 수정신청을 선택해주세요");	
     			} else {
-    				alert("이미 반려된 항목입니다.");
+    				alert("이미 처리된 항목입니다.");
     			}
 	    		get_att_list(currentPage);
 	    		HiddenAttProgress();
