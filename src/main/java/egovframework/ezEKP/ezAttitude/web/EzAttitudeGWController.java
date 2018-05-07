@@ -916,7 +916,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 사용자별 근태설정 리스트 조회
+	 * G/W 근태관리 [GET] 근무시간 리스트 조회
 	 */
 	@RequestMapping(value = "/rest/ezattitude/user-attitude-confs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject userAttitudeConfList(HttpServletRequest request) {
@@ -964,7 +964,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 사용자별 근태설정 정보 조회
+	 * G/W 근태관리 [GET] 근무시간 정보 조회
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/users-attitude-confs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject userAttitudeConfInfo(HttpServletRequest request) {
@@ -974,12 +974,12 @@ public class EzAttitudeGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			String userId = request.getParameter("userId");
-			String selectUserId = request.getParameter("selectUserId");
+			String companyId = request.getParameter("companyId");
+			String selectedUserIdList = request.getParameter("selectedUserIdList");
 
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
-			AttitudeUserConfigVO vo = ezAttitudeService.getAttitudeUserConfigInfo(selectUserId, commonUtil.getMinuteUTC(info.getOffSet()), info.getTenantId());
+			AttitudeUserConfigVO vo = ezAttitudeService.getAttitudeUserConfigInfo(selectedUserIdList, commonUtil.getMinuteUTC(info.getOffSet()), companyId, info.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -996,7 +996,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [POST] 사용자별 근태설정 등록/수정
+	 * G/W 근태관리 [POST] 근무시간 수정
 	 */
 	@RequestMapping(value = "/rest/users/ezattitude/user-attitude-confs", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertUserAttitudeConf(HttpServletRequest request) {
@@ -1006,15 +1006,16 @@ public class EzAttitudeGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			String userId = request.getParameter("userId");
-			String selectUserId = request.getParameter("selectUserId");
+			String companyId = request.getParameter("companyId");
+			String selectedUserIdList = request.getParameter("selectedUserIdList");
 			String workStartTime = request.getParameter("workStartTime");
 			String workEndTime = request.getParameter("workEndTime");
+			String gubun = request.getParameter("gubun");
 			
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			// insert on duplicate
-			ezAttitudeService.saveAttitudeUserConfig(selectUserId, workStartTime, workEndTime, info.getOffSet(), info.getTenantId());
+			ezAttitudeService.editAttitudeUserConfig(selectedUserIdList, workStartTime, workEndTime, gubun, info.getOffSet(), companyId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1025,36 +1026,6 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users-attitude-confs] ended.");
-		return result;
-	}
-	
-	/**
-	 * G/W 근태관리 [DELETE] 사용자별 근태설정 삭제
-	 */
-	@RequestMapping(value = "/rest/users/ezattitude/user-attitude-confs", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject deletetUserAttitudeConf(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users-attitude-confs] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try{
-			String serverName = request.getHeader("x-user-host");
-			String userId = request.getParameter("userId");
-			String selecUserList = request.getParameter("selecUserList");
-			
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
-			ezAttitudeService.deleteAttitudeUserConfig(info.getTenantId(), selecUserList);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", "");
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users-attitude-confs] ended.");
 		return result;
 	}
 	
@@ -1700,9 +1671,9 @@ public class EzAttitudeGWController {
 	/**
 	 * 근태관리 미입력자 메일발송
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudes/sendmail", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/attitudes/mail", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject absentedListSendMail(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/sendmail] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/mail] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1723,7 +1694,7 @@ public class EzAttitudeGWController {
 			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();
 			
-//			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, duplicated, offset, companyId, tenantID);
+//			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, pageNum, listSize, orderCell, orderOption, duplicated, offset, companyId, tenantID);
 			
 //			ezAttitudeService.absentedListSendMail(list, info.getUserName(), info.getEmail());
 			
@@ -1738,7 +1709,7 @@ public class EzAttitudeGWController {
 			result.put("data", "error");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/sendmail] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/mail] ended.");
 		
 		return result;
 	}

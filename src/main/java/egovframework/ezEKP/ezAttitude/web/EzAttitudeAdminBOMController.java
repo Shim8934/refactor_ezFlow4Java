@@ -843,7 +843,7 @@ public class EzAttitudeAdminBOMController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/selectUserInfo.do")
+	/*@RequestMapping(value = "/admin/ezAttitude/selectUserInfo.do")
 	@ResponseBody
 	public JSONArray selectUserInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LOGGER.debug("selectUserInfo started");
@@ -887,7 +887,7 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("selectUserInfo ended");
 		return jArray;
-	}
+	}*/
 	/**
 	 * 사용자 근태설정 추가/변경
 	 * @param request
@@ -1084,7 +1084,7 @@ public class EzAttitudeAdminBOMController {
 		return jObject;
 	}
 	/**
-	 * 사용자별 근무시간 수정화면 조회
+	 * 근무시간 수정화면 조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/editAttitudeUserConf.do")
 	public String saveAttitudeUserConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
@@ -1093,10 +1093,10 @@ public class EzAttitudeAdminBOMController {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		String selectUserId = request.getParameter("selectUserId");
+		String selectedUserIdList = request.getParameter("selectedUserIdList");
 		String companyId = request.getParameter("companyId");
 		
-		LOGGER.debug("selectUserId = " + selectUserId);
+		LOGGER.debug("selectedUserIdList = " + selectedUserIdList);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudereg";
@@ -1108,8 +1108,8 @@ public class EzAttitudeAdminBOMController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("selectUserId", selectUserId)
-				.queryParam("companyId", companyId);
+				.queryParam("companyId", companyId)
+				.queryParam("selectedUserIdList", selectedUserIdList);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -1143,7 +1143,8 @@ public class EzAttitudeAdminBOMController {
 		entity = new HttpEntity<>(headers);
 		builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("selectUserId", selectUserId);
+				.queryParam("companyId", companyId)
+				.queryParam("selectedUserIdList", selectedUserIdList);
 		
 		rest = new RestTemplate();
 		
@@ -1171,21 +1172,24 @@ public class EzAttitudeAdminBOMController {
 			model.addAttribute("vo", jObject);
 		}
 		
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("selectedUserIdList", selectedUserIdList);
+		
 		LOGGER.debug("/admin/ezAttitude/editAttitudeUserConf ended");
 		
 		return "admin/ezAttitude/editAttitudeUserConf";
 	}
 	
 	/**
-	 * 사용자별 근무시간 수정
+	 * 근무시간관리 근무시간 수정
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeUserConfig.do")
+	@RequestMapping(value = "/admin/ezAttitude/editAttitudeUserConfig.do")
 	@ResponseBody
-	public String saveAttitudeUserConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("saveAttitudeUserConfig started");
+	public String editAttitudeUserConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LOGGER.debug("editAttitudeUserConfig started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String selectUserId = request.getParameter("selectUserId");
+		String selectedUserId = request.getParameter("selectedUserId");
 		String workStartTime = request.getParameter("workStartTime");
 		String workEndTime = request.getParameter("workEndTime");
 		
@@ -1199,7 +1203,7 @@ public class EzAttitudeAdminBOMController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("selectUserId", selectUserId)
+				.queryParam("selectedUserId", selectedUserId)
 				.queryParam("workStartTime", workStartTime)
 				.queryParam("workEndTime", workEndTime);
 		
@@ -1212,7 +1216,7 @@ public class EzAttitudeAdminBOMController {
 		
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
-		LOGGER.debug("saveAttitudeUserConfig ended");
+		LOGGER.debug("editAttitudeUserConfig ended");
 		
 		return status;
 	}
@@ -1434,9 +1438,9 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 근태조회 미입력자목록 팝업화면 호출
+	 * 근태조회 미입력자목록 팝업화면 호출, 안씀 지금
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/popupAbsentedList.do")
+	/*@RequestMapping(value = "/admin/ezAttitude/popupAbsentedList.do")
 	public String popupAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("popupAbsentedList started.");
 		
@@ -1457,7 +1461,7 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("popupAbsentedList ended.");
 		
 		return "/admin/ezAttitude/popupAbsentedList";
-	}
+	}*/
 	
 	/**
 	 * 근태조회 미입력자목록 조회
@@ -1527,7 +1531,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 근태조회 엑셀 출력
+	 * 근태입력조회, 근태미입력조회 엑셀 출력
 	 */
 	@RequestMapping(value = {"/admin/ezAttitude/excelAttitudeListExport.do", "/admin/ezAttitude/excelAbsentedListExport.do"})
 	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
@@ -1751,12 +1755,14 @@ public class EzAttitudeAdminBOMController {
 		String searchDeptName = request.getParameter("deptName");
 		String searchStartDate = request.getParameter("startDate");
 		String searchEndDate = request.getParameter("endDate");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String duplicated = request.getParameter("duplicated");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/sendmail";
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/mail";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1770,6 +1776,8 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("searchStartDate", searchStartDate)
 				.queryParam("searchEndDate", searchEndDate)
 				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
 				.queryParam("duplicated", duplicated)

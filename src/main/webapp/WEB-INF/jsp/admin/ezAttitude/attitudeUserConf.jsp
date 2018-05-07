@@ -196,8 +196,22 @@
 	    		getUserConfList();
 	    	}
 	    	
-	    	function editUserConf(selectUserId) {
-    			var url = "/admin/ezAttitude/editAttitudeUserConf.do?selectUserId=" + selectUserId + "&companyId=" + pCompanyId;
+	    	function editUserConfList() {
+	    		selectedUserIdList = "";
+	    		var trIdx = $('#contentlist .mainlist tbody').find('tr').length;
+	   			for (var i = 0; i < trIdx; i++) {
+	   				if ($('#contentlist .mainlist tbody tr').eq(i).find("input[type='checkbox']").is(":checked")) {
+	   					selectedUserIdList += $('#contentlist .mainlist tbody tr').eq(i).attr('userid') + ", ";
+	   				}
+	   			}
+	   			
+	   			selectedUserIdList = selectedUserIdList.slice(0, -2);
+	   			
+	   			editUserConf(selectedUserIdList)
+	    	}
+	    	
+	    	function editUserConf(selectedUserIdList) {
+    			var url = "/admin/ezAttitude/editAttitudeUserConf.do?selectedUserIdList=" + selectedUserIdList + "&companyId=" + pCompanyId;
 	    		
 	    		if (CrossYN()) {
 	    			OpenWin = GetOpenWindow(url, "", "340", "180");
@@ -285,6 +299,7 @@
 					<td style=" width:*;" colspan=2>
 						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchUserConfList('refresh');">새로고침</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="editUserConfList();">근무시간수정</span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
