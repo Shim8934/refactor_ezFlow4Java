@@ -262,7 +262,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("timeUTC",    timeUTC);
 		
 		//saveLog
-		List<FileVO> listFiles = getAllFilesInFolder(folder.getFolderId(), "", "0", "", "", "", "", "", "1", 0, 0, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
+		List<FileVO> listFiles = getAllFilesInFolder("", "", folder.getFolderId(), "", "0", "", "", "", "", "", "1", 0, 0, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
 		
 		for (FileVO file : listFiles) {
 			saveLog("R", userInfo.getCompanyID(), userInfo.getOffset(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), file.getFileName(), file.getFileSize(), file.getFileExt(), file.getFileTypeName(), userInfo.getTenantId());
@@ -280,8 +280,10 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public List<FileVO> getAllFilesInFolder(String folderId, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
+	public List<FileVO> getAllFilesInFolder(String realColmn, String order, String folderId, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("realColmn",    realColmn);
+		map.put("order",        order);
 		map.put("folderId",     folderId);
 		map.put("originalPath", originalPath);
 		map.put("fileType",     fileType);
@@ -300,8 +302,10 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public List<FileVO> getAllFiles(String folderPath, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName,	String userName, String fileType, int startPoint, int pageSize,	String primary, String offset, int tenantId) throws Exception {
+	public List<FileVO> getAllFiles(String realColmn, String order, String folderPath, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName,	String userName, String fileType, int startPoint, int pageSize,	String primary, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("realColmn",    realColmn);
+		map.put("order",        order);
 		map.put("folderPath",   folderPath);
 		map.put("originalPath", originalPath);
 		map.put("fileType",     fileType);
@@ -910,7 +914,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		HashSet<String> inernameList    = new HashSet<>();
 		FolderVO folder                 = getFolderByFolderId(folderId, offset, tenantId);
 		List<FolderVO> listSubFolder    = getAllSubFolders(folderId, offset, tenantId);
-		List<FileVO> filesInFolder      = getAllFilesInFolder(folderId, "", "0", "", "", "", "", "", "1", 0, 0, primary, offset, tenantId);
+		List<FileVO> filesInFolder      = getAllFilesInFolder("", "", folderId, "", "0", "", "", "", "", "", "1", 0, 0, primary, offset, tenantId);
 		String folderName               = primary.equals("1") ? folder.getFolderName1() : folder.getFolderName2();
 		String newPath                  = path + folderName + commonUtil.separator;
 		

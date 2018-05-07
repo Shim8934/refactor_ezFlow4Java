@@ -453,6 +453,8 @@ public class EzWebFolderController_m {
 		param.put("endrollEndDate", orElse(request.getParameter("enrollEndDate"), ""));
 		param.put("delStartDate", orElse(request.getParameter("delStartDate"), ""));
 		param.put("delEndDate", orElse(request.getParameter("delEndDate"), ""));
+		param.put("column", orElse(request.getParameter("column"), ""));
+		param.put("order", orElse(request.getParameter("order"), ""));
 		param.put("mode", orElse(request.getParameter("mode"), "" ));
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + user.getId() + "/getTrashCanList", param, request, "post", null);

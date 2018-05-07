@@ -1192,9 +1192,27 @@
 		
 		<include refid="searchTrashCanFile"/>
 	 	<![CDATA[
-				) R
-			GROUP BY R.TRASHCAN_ID
-			ORDER BY R.SLEVEL, R.TRASHCAN_EXT,R.UPDATE_DATE DESC
+				) A
+			GROUP BY A.TRASHCAN_ID
+		]]>
+		
+		<isNotEqual property="realColmn" compareValue="">
+			ORDER BY
+				<isEqual property="realColmn" compareValue="TRASHCAN_SIZE">
+					TO_NUMBER($realColmn$) $order$,
+				</isEqual>
+				<isNotEqual property="realColmn" compareValue="TRASHCAN_SIZE">
+					$realColmn$ $order$,
+				</isNotEqual>
+				SLEVEL, TRASHCAN_EXT, UPDATE_DATE DESC
+		</isNotEqual>
+		<isEqual property="realColmn" compareValue="">
+			<![CDATA[
+				ORDER BY SLEVEL, TRASHCAN_EXT, UPDATE_DATE DESC
+			]]>
+		</isEqual>
+		
+		<![CDATA[
 			LIMIT #pStart#, #pEnd#
 		]]> 
 	</select>

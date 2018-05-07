@@ -73,8 +73,10 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	@Override
-	public List<UserCapacityVO> getListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception {
+	public List<UserCapacityVO> getListUserCapacity(String realColmn, String order, String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("realColmn",  realColmn);
+		map.put("order",      order);
 		map.put("companyId",  companyId);
 		map.put("searchStr",  searchStr);
 		map.put("searchOpt",  searchOpt);
@@ -112,8 +114,10 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	@Override
-	public List<FileLogVO> getListFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
+	public List<FileLogVO> getListFileLogs(String realColmn, String order, String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("realColmn",  realColmn);
+		map.put("order",      order);
 		map.put("companyId",  companyId);
 		map.put("searchChk",  searchChk);
 		map.put("startDate",  startDate);
@@ -626,7 +630,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	private void copyFile(String folderId, String newId, String timeUTC, LoginVO userInfo) throws Exception {
-		List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder(folderId, "", "0", "", "", "", "", "", "1", 0, 0, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
+		List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder("", "", folderId, "", "0", "", "", "", "", "", "1", 0, 0, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
 		
 		if (fileList != null && fileList.size() > 0) {
 			for (FileVO file : fileList) {
