@@ -951,10 +951,10 @@
 			
 			if (adminFlag == "true") {
 				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag, "",
-			 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			} else {
 				window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt, "",
-			 			"height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
+			 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);	
 			}
 	    }
 	    
