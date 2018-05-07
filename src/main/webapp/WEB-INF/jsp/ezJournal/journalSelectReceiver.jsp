@@ -11,6 +11,11 @@
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
+		<style>
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;
+	    	}
+	    </style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -401,14 +406,14 @@
 					<table id="TreeViewTD">
 					 	<tr>
 			                <div class="portlet_tabpart01">
-			                	<div class="portlet_tabpart01_top" id="tab1">
+			                	<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
 					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t89' /></span></p>
 									<p><span id="1tab2" tdname="journalFavorite" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t90' /></span></p>
 					        	</div>
 					        </div>
 				        	<td id="journalOrgan_content" style="display: none;">
-				        		<div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px; padding:0px; border-top: none;">
-				                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+				        		<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px; padding:0px; border-top: none;">
+				                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
 				                        <table style="margin-top: 3px; width: 100%;">
 				                            <tr>
 				                                <td>
@@ -507,7 +512,7 @@
 	                        </td>
 	                        <td style="vertical-align: top;">
 	                        	<div style="display: inline-flex; display: -ms-inline-flexbox; border-bottom: 1px solid #565b66; width: 100%;">
-		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
+		                            <h2 class="receiver_tltype01" style="margin-top:4px;border-bottom: 0px;">
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
 									</h2>
 								 	<a class="imgbtn" style="margin-top: 5px; margin-left: 65px;">
