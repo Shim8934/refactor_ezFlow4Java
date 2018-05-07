@@ -53,6 +53,10 @@
 	            { }
 	            	
 	        }
+	        function isValid(str){
+				var regex = /[*:"\\|<>\/?]/g;
+				return regex.test(str);
+			}
 	        function btn_ok_onclick() {
 	        	
 	            var szInput1="";
@@ -79,6 +83,15 @@
 // 	                alert("<spring:message code='ezEmail.t351' />");
 // 	                return;
 // 	            }
+
+				if (isValid(szCheckPermit1) == true) {
+					alert('<spring:message code='ezWebFolder.t211'/>');
+					return;
+				}
+				if (isValid(szCheckPermit2) == true) {
+					alert('<spring:message code='ezWebFolder.t211'/>');
+					return;
+				}
 				if (functionType == "insert") {
 		            $.ajax ({
 						type :"POST",
