@@ -102,7 +102,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		}
 		
-		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId",	         userId);
@@ -283,7 +283,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		}
 		
-		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId",	userId);
@@ -394,7 +394,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public List<Map<String, String>> getPermissionIdList(String userId, String deptId, String compId, int tenantId) throws Exception {
+	public List<Map<String, String>> getPermissionIdMapList(String userId, String deptId, String compId, int tenantId) throws Exception {
 		List<Map<String, String>> idList = new ArrayList<Map<String, String>>();
 		
 		List<String> addjobList = ezWebFolderService_y.getAddJobList(tenantId, userId);
@@ -428,6 +428,31 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			
 			idList.add(idMap);
 		}
+		
+		LOGGER.debug("idMapList: " + idList);
+		return idList;
+	}
+	
+	@Override
+	public List<String> getPermissionIdList(String userId, String deptId, String compId, int tenantId) throws Exception {
+		List<String> idList = new ArrayList<String>();
+		
+		List<String> addjobList = ezWebFolderService_y.getAddJobList(tenantId, userId);
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",	userId);
+		map.put("tenantId",	tenantId);
+		
+		List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map);
+		
+		Set<String> idSet = new HashSet<String>();
+		idSet.add(userId);
+		idSet.add(deptId);
+		idSet.add(compId);
+		idSet.addAll(addjobList);
+		idSet.addAll(folderUserIdList);
+		
+		idList.addAll(idSet);
 		
 		LOGGER.debug("idList: " + idList);
 		return idList;
@@ -536,7 +561,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception {
-		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId",	         userId);
@@ -559,7 +584,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Override
 	public Map<String, Long> getHiddenSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception {
-		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId",	userId);
@@ -604,7 +629,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		Date date            = new Date();
 		String shareDate     = commonUtil.getDateStringInUTC(sdf.format(date), offset, true);
 		
-		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderFileId", folderFileId);
@@ -629,7 +654,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public void showShare(String folderFileId, String folderFileType, String userId, String deptId, String compId, String offset, int tenantId) throws Exception {
-		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderFileId", folderFileId);

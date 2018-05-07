@@ -93,7 +93,7 @@ public class EzWebFolderGWController_y {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
-			List<Map<String, String>> permossionIdList = ezWebFolderService_m.getPermissionIdList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), tenantId);
+			List<Map<String, String>> permossionIdList = ezWebFolderService_m.getPermissionIdMapList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), tenantId);
 			service.insertIfNotExistRootForder(userId, userInfo.getDisplayName1(), userInfo.getDisplayName2(), userInfo.getCompanyID(), permossionIdList, offset, tenantId);
 			
 			result.put("status", "ok");

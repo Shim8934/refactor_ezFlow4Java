@@ -1383,5 +1383,23 @@
 		]]>
 	</select>
 	
+	<select id="EzWebFolderDAO_y.checkCompanyFolderPermission" parameterClass="Map" resultClass="Integer">
+		SELECT COUNT(*) 
+		FROM TBL_WEBFOLDER_FOLDERUSER FU
+		JOIN TBL_WEBFOLDER_FOLDER F
+		ON FU.FOLDER_ID = F.FOLDER_ID
+		AND FU.TENANT_ID = F.TENANT_ID
+		WHERE F.FOLDER_TYPE = 'C'
+		AND FU.USER_ID IN
+		<iterate property="permissionIdList" open="(" close=")" conjunction=",">
+			#permissionIdList[]#
+		</iterate>
+		AND FU.FOLDER_ID IN
+		<iterate property="folderIdList" open="(" close=")" conjunction=",">
+			#folderIdList[]#
+		</iterate>
+		AND FU.TENANT_ID = #tenantId#
+	</select>
+	
 </sqlMap>
 

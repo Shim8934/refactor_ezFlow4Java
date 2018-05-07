@@ -30,7 +30,9 @@ public interface EzWebFolderService_m {
 	
 	List<SimpleShareVO> getShareInfo(String sharerId, String folderFileId, String folderFileType, String primary, String offset, int tenantId) throws Exception;
 	
-	List<Map<String, String>> getPermissionIdList(String userId, String deptId, String compId, int tenantId) throws Exception;
+	List<Map<String, String>> getPermissionIdMapList(String userId, String deptId, String compId, int tenantId) throws Exception;
+	
+	List<String> getPermissionIdList(String userId, String deptId, String compId, int tenantId) throws Exception;
 	
 	String checkShared(String folderFileId, String folderFileType, String folderPath, int tenantId) throws Exception;
 	

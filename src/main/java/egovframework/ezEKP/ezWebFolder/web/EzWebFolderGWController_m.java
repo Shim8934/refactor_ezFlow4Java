@@ -118,8 +118,18 @@ public class EzWebFolderGWController_m {
 			if (folderId.equals("")) {
 				list = ezWebFolderService_m.getSharingList(subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
 				countInfo = ezWebFolderService_m.getSharingCount(subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
-				
 			} else {
+				String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, "D", tenantId);
+				
+				if (!PermissionResult.equals("ok")) {
+					result.put("status", "error");
+					result.put("code", 3);
+					
+					logger.debug("checkPermission fail.");
+					logger.debug("getSharingList ended.");
+					return result;
+				}
+				
 				list = ezWebFolderService_m.getFolderFileList(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
 				countInfo = ezWebFolderService_m.getFolderFileCount(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 				
@@ -312,6 +322,17 @@ public class EzWebFolderGWController_m {
 				list = ezWebFolderService_m.getSharedList(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
 				countInfo = ezWebFolderService_m.getSharedCount(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			} else {
+				String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, "D", tenantId);
+				
+				if (!PermissionResult.equals("ok")) {
+					result.put("status", "error");
+					result.put("code", 3);
+					
+					logger.debug("checkPermission fail.");
+					logger.debug("getSharedList ended.");
+					return result;
+				}
+				
 				list = ezWebFolderService_m.getFolderFileList(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
 				countInfo = ezWebFolderService_m.getFolderFileCount(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 				
