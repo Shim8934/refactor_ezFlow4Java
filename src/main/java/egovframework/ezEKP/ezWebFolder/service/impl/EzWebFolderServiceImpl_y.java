@@ -732,7 +732,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		// "F"이면 파일 id를 가지고 folder 정보를 가져온다.
 		FolderVO foldervo = new FolderVO();
-		if (folderFileId.equals("F")) {
+		if (folderFileType.equals("F")) {
 			map.put("fileId", folderFileId);
 			foldervo = ezWebFolderDAO_y.getFolderDetailByFileId(map);
 		} else {

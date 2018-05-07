@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
@@ -54,9 +53,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	
 	@Autowired
 	private Properties config;
-	
-	@Autowired
-    private EzCommonService ezCommonService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController.class);
 

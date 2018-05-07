@@ -457,7 +457,7 @@
 								f.CREATE_NAME1                                                                                                                                                   AS CREATE_NAME1,
 								f.CREATE_NAME2                                                                                                                                                   AS CREATE_NAME2,
 								(f.CREATE_DATE + #offset#/(24*60))                                                                                                                               AS CREATE_DATE,
-								UPDATE_ID                                                                                                                                                        AS UPDATE_ID,
+								f.UPDATE_ID                                                                                                                                                      AS UPDATE_ID,
 								(f.UPDATE_DATE + #offset#/(24*60))                                                                                                                               AS UPDATE_DATE,
 								t.TYPE_ID                                                                                                                                                        AS FILETYPE_ID,
 								CASE WHEN t.TYPE_NAME IS NOT NULL THEN t.TYPE_NAME ELSE (SELECT TYPE_NAME FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_NAME,
@@ -475,12 +475,25 @@
 								AND
 								 f.FOLDER_ID = #folderId#
 							]]>
-							<![CDATA[
+							<isNotEqual property="realColmn" compareValue="">
+								ORDER BY
+									<isEqual property="realColmn" compareValue="FILE_SIZE">
+										TO_NUMBER($realColmn$) $order$,
+									</isEqual>
+									<isNotEqual property="realColmn" compareValue="FILE_SIZE">
+										$realColmn$ $order$,
+									</isNotEqual>
+									f.UPDATE_DATE DESC,
+									TO_NUMBER(f.FILE_ID) DESC
+							</isNotEqual>
+							<isEqual property="realColmn" compareValue="">
+								<![CDATA[
 								ORDER BY
 									f.UPDATE_DATE DESC,
 									TO_NUMBER(f.FILE_ID) DESC
+								]]>
+							</isEqual>
 						) k
-			]]>
 		<isGreaterThan property="pageSize" compareValue="0">
 			<![CDATA[
 					WHERE
@@ -546,10 +559,25 @@
 							AND
 								u.FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
 						]]>
-						<![CDATA[
+						<isNotEqual property="realColmn" compareValue="">
+							ORDER BY
+								<isEqual property="realColmn" compareValue="FILE_SIZE">
+									TO_NUMBER($realColmn$) $order$,
+								</isEqual>
+								<isNotEqual property="realColmn" compareValue="FILE_SIZE">
+									$realColmn$ $order$,
+								</isNotEqual>
+								f.UPDATE_DATE DESC,
+								TO_NUMBER(f.FILE_ID) DESC
+						</isNotEqual>
+						<isEqual property="realColmn" compareValue="">
+							<![CDATA[
 							ORDER BY
 								f.UPDATE_DATE DESC,
 								TO_NUMBER(f.FILE_ID) DESC
+							]]>
+						</isEqual>
+						<![CDATA[
 						) k
 					WHERE
 						ROWNUM <= #startPoint# + #pageSize#

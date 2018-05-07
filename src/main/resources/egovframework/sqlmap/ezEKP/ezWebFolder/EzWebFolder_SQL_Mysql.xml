@@ -464,11 +464,25 @@
 			AND
 			 f.FOLDER_ID = #folderId#
 		]]>
-		<![CDATA[
+		
+		<isNotEqual property="realColmn" compareValue="">
+			ORDER BY
+				<isEqual property="realColmn" compareValue="FILE_SIZE">
+					CAST($realColmn$ AS INT) $order$,
+				</isEqual>
+				<isNotEqual property="realColmn" compareValue="FILE_SIZE">
+					$realColmn$ $order$,
+				</isNotEqual>
+				f.UPDATE_DATE DESC,
+				CAST(f.FILE_ID AS INT) DESC
+		</isNotEqual>
+		<isEqual property="realColmn" compareValue="">
+			<![CDATA[
 			ORDER BY
 				f.UPDATE_DATE DESC,
 				CAST(f.FILE_ID AS INT) DESC
-		]]>
+			]]>
+		</isEqual>
 		<isGreaterThan property="pageSize" compareValue="0">
 			<![CDATA[
 				LIMIT
@@ -518,13 +532,26 @@
 			AND
 				u.FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
 		]]>
-		<![CDATA[
+		<isNotEqual property="realColmn" compareValue="">
+			ORDER BY
+				<isEqual property="realColmn" compareValue="FILE_SIZE">
+					CAST($realColmn$ AS INT) $order$,
+				</isEqual>
+				<isNotEqual property="realColmn" compareValue="FILE_SIZE">
+					$realColmn$ $order$,
+				</isNotEqual>
+				f.UPDATE_DATE DESC,
+				CAST(f.FILE_ID AS INT) DESC
+		</isNotEqual>
+		<isEqual property="realColmn" compareValue="">
+			<![CDATA[
 			ORDER BY
 				f.UPDATE_DATE DESC,
 				CAST(f.FILE_ID AS INT) DESC
-			LIMIT
-				#startPoint#, #pageSize#
-		]]>
+			]]>
+		</isEqual>
+		LIMIT
+			#startPoint#, #pageSize#
 	</select>
 	
 	<select id="EzWebFolderDAO.getTotalFileCnt1" resultClass="Integer">

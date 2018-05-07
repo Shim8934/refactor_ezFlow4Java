@@ -189,7 +189,7 @@
 					alert("에러가 발생했습니다.");
 					return;
 				}else if (data.code == 3) {
-					alert("권한이 없습니다.");
+					alert("접근 권한이 없습니다.");
 					return;
 				}
 			}

@@ -725,7 +725,7 @@ public class EzWebFolderGWController_m {
 		
 		JSONObject result = new JSONObject();
 
-		if (containsNull(serverName, userId)) {
+		if (containsNull(serverName, userId) || (containsNull(fileListStr) && containsNull(folderListStr))) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -800,7 +800,7 @@ public class EzWebFolderGWController_m {
 
 		JSONObject result = new JSONObject();
 
-		if (containsNull(serverName, userId)) {
+		if (containsNull(serverName, userId) || (containsNull(fileListStr) && containsNull(folderListStr))) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -866,7 +866,10 @@ public class EzWebFolderGWController_m {
 		String endrollEndDate 	= orElse(request.getParameter("enrollEndDate"), "");
 		String delStartDate 	= orElse(request.getParameter("delStartDate"), "");
 		String delEndDate 		= orElse(request.getParameter("delEndDate"), "");
+		String column           = orElse(request.getParameter("column"), "");
+		String order            = orElse(request.getParameter("order"), "");
 		String mode 		    = orElse(request.getParameter("mode"), "");
+		String realColmn        = "";
 		
 		// TODO primary 수정
 		String primary;
@@ -893,10 +896,24 @@ public class EzWebFolderGWController_m {
 			result.put("code", 1);
 			return result;
 		}
-
+		
+		if (!column.equals("") && !order.equals("")) {
+			switch(column) {
+				case "ft": realColmn = "TRASHCAN_EXT"                                         ; break;
+				case "fn": realColmn = "TRASHCAN_NAME"                                        ; break;
+				case "fs": realColmn = "TRASHCAN_SIZE"                                        ; break;
+				case "un": realColmn = primary.equals("1") ? "CREATE_NAME1" : "CREATE_NAME2"  ; break;
+				case "cd": realColmn = "CREATE_DATE"                                          ; break;
+				case "dd": realColmn = "UPDATE_DATE"                                          ; break;
+				default  : realColmn = "TRASHCAN_NAME"                                        ; break;
+			}
+		}
+		
+		logger.debug("Column: " + realColmn + " || order: " + order);
+		
 		try {
 			List<TrashCanVO> trashCanList = null;
-			JSONObject resultList = ezWebFolderService_m.getTrashCanList(userId, offset, tenantId, currPage, listCount,
+			JSONObject resultList = ezWebFolderService_m.getTrashCanList(realColmn, order.toUpperCase(), userId, offset, tenantId, currPage, listCount,
 										searchExt, searchFileName, searchCreateName, searchFileType, endrollStartDate, endrollEndDate, delStartDate, delEndDate, mode);
 			int fileCnt = 0;
 			int folderCnt = 0;
@@ -1143,6 +1160,11 @@ public class EzWebFolderGWController_m {
 		return false;
 	}
 	
+	/**
+	 * 삭제 예정, 대체될 API는 아래 see also를 참고하십시오.
+	 * @see EzWebFolderService#getFolderPath
+	 * **/
+	@Deprecated
 	private String getFolderPath(String[] paths, String offset, String primaryLang, int tenantId) throws Exception {
 		StringBuilder result = new StringBuilder();
 		String folderName;
