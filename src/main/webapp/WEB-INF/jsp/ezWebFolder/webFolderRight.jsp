@@ -120,7 +120,7 @@
 	    	
 			$.ajax ({
 				type:"POST",
-				async: true,
+				async: false,
 				url : "/ezWebFolder/fileList.do",
 				data : { 
 					 "folderId"   		: folderId,
@@ -137,41 +137,6 @@
 					},
 				dataType: "JSON",
 				success : function (data) {
-					var result = data.data;
-					
-					var fileCnt = result.fileCnt;
-					var fldCnt = result.fldCnt;
-					
-					var folderPath = result.folderPath;
-					var originalPath = result.originalPath;
-					var folderUpp = result.folderUpp;
-					var dragDropAreaElmt = document.getElementById("dragDropArea");
-					filelist = result.fileList;
-					
-					pagination.setListSize(result.listCount);
-					pagination.setAmount(result.totalRows);
-					pagination.build();
-					
-					if (folderUpp != 'root') {
-						$('#upload').css('display','inline');
-						dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
-						dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
-						dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
-					} else {
-						dragDropAreaElmt.ondragenter = null;
-						dragDropAreaElmt.ondragover  = null;
-						dragDropAreaElmt.ondragover  = null;
-					}
-					
-					$('#tblFileList tr td').parent().remove();
-					renderData(filelist);
-					
-					namePath(folderPath, originalPath);
-					document.getElementById("mailBoxInfo").innerHTML = " - [" + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
-					 + messages.strLang11 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
-						+ fileCnt +" </span>"  + messages.strLang11 + "]";
-					$("#listcount").val(result.listCount).prop("selected", true);
-					parent.frames["left"].drawVolume();
 					successFile(data);
 				},
 				error : function(error) {
@@ -183,13 +148,13 @@
 		function successFile(data) {
 			if (data.status == "error") {
 				if (data.code == 1) {
-					alert("파라메터가 부족합니다.");
+					console.log("<spring:message code='ezWebFolder.t306' />");
 					return;
 				}else if (data.code == 2) {
-					alert("에러가 발생했습니다.");
+					alert("<spring:message code='ezWebFolder.t305' />");
 					return;
 				}else if (data.code == 3) {
-					alert("접근 권한이 없습니다.");
+					alert("<spring:message code='ezWebFolder.t300' />");
 					return;
 				}
 			}
@@ -206,7 +171,7 @@
 			
 			pagination.setListSize(result.listCount);
 			pagination.setAmount(result.totalRows);
-			pagination.build(true);
+			pagination.build();
 			
 			if (folderUpp != 'root') {
 				$('#upload').css('display','inline');
@@ -260,30 +225,36 @@
 				};
 
 				detailName.textContent = path[i] ;
-				detailName.setAttribute("style", "font-size:18px; ");
+				/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
+				detailName.setAttribute("style", "font-size:15px; ");
 				nameTag.appendChild(detailName);
 				
 				if(length == 1) {
 					detailName = document.createElement("span");
-					detailName.textContent =  " " + messages.strLang17 + " "; // 모든파일
-					detailName.setAttribute("style", "font-size:12px;");
+					/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 및 꺽새 추가 */
+					detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+					detailName.setAttribute("style", "font-size:15px;");
 					nameTag.appendChild(detailName);
 				}
 				
-				var imgElmt = document.createElement("img");
+				/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
+				/* var imgElmt = document.createElement("img");
 				imgElmt.setAttribute("style", "height: 14px; width: 14px; display: inline-block; margin: 0px 6px;");
-				imgElmt.src = "/images/webfolder/arrow2.png";
+				imgElmt.src = "/images/webfolder/arrow2.png"; */
 				
 				if (i != length - 1) {
-					nameTag.appendChild(imgElmt);
+					detailName = document.createElement("span");
+					detailName.textContent = " > ";
+					nameTag.appendChild(detailName);
 				}	
 			}
 		}
 		
 		function nameFileList(param) {
+			folderId = param;
 			searchContext.clearRequirement();
-			$("#idSelect").val("all");
-			getFileList(param);
+			$("#idSelect").val("");
+			onFileTypeChange("");
 		}
 		
 		function renderData(result) {
@@ -458,12 +429,12 @@
 				}
 	
 				if (requirement.startDate != "" && requirement.endDate == "") {
-					alert(messages.strLang18);
+					alert(messages.strLang21);
 					return;
 				}
 	           
 				if (requirement.startDate == "" && requirement.endDate != "") {
-					alert(messages.strLang18);
+					alert(messages.strLang22);
 					return;
 				}
 	
@@ -584,7 +555,7 @@
 						alert(messages.strLang13);
 					} else {
 						openLeftPanel();
-						DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
+						DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
 					}
 					
 					refreshView();
@@ -629,7 +600,7 @@
 						alert(messages.strLang13);
 					} else {
 						openLeftPanel();
-						DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
+						DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 					}
 				},
 				error : function(error) {
@@ -723,7 +694,7 @@
     </script>
 </head>
 <body class="mainbody" style="padding-bottom:10px;">
-    <h1>웹폴더<span id="mailBoxInfo"></span></h1>
+    <h1><spring:message code='ezWebFolder.t10'/><span id="mailBoxInfo"></span></h1>
     <div id="pageArea">
 		<div style="height:40px;">
 			<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;" id ="originalPath" ></span>
@@ -735,18 +706,19 @@
 				<li><span onClick="fileDelete()"><spring:message code='ezWebFolder.t274'/></span></li>
 				<li><span onClick="fileRename()"><spring:message code='ezWebFolder.t273'/></span></li>
 				<li><span onClick="fileMove()"><spring:message code='ezWebFolder.t275'/></span></li>
-				<li><span onClick="shareContext.addShareView()">공유</span></li>
+				<li><span onClick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254'/></span></li>			
 				<li><img src="/images/i_bar.gif"></li>
 				<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 	<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
-				<li><img src="/images/i_bar.gif"></li>
+				<!-- <li><img src="/images/i_bar.gif"></li> -->
 				<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
-				<li><img src="/images/i_bar.gif"></li>
+				<!-- <li><img src="/images/i_bar.gif"></li> -->
 	<!-- 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li> -->
 				<li><span onClick="refreshView()"><spring:message code='ezWebFolder.t139'/></span></li>
+				<li><img src="/images/i_bar.gif"></li>
 				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 				<li style="float:left;">
-					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value);" style="height: 28px; border-radius: 3px; padding: 0px; padding-left: 4px; width: 80px; color: #666;">
+					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value)">
 						<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
 						<option value="document" data-imagesrc="/images/webfolder/msWord.png"       ><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
 						<option value="music" data-imagesrc="/images/webfolder/mp3.png"      ><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
@@ -809,7 +781,7 @@
 					<th style="width: 9%;"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
 					<th style="width: 9%;"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
 					<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-					<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
+					<th style="width: 35px; text-align: center;"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
 				</tr>
 			</table>
 		</div>

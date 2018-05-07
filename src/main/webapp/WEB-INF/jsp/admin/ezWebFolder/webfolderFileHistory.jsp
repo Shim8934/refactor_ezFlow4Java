@@ -162,8 +162,13 @@
 					return;
 				}
 				
-				if ((!sDateVal && eDateVal) || (sDateVal && !eDateVal)) {
-					alert("<spring:message code='ezWebFolder.t184'/>");
+				if ( sDateVal != "" && eDateVal == "") {
+	                alert("<spring:message code='ezWebFolder.t308' />");
+					return;
+				}
+				
+				if ( eDateVal != "" && sDateVal == "") {
+	                alert("<spring:message code='ezWebFolder.t309' />");
 					return;
 				}
 				

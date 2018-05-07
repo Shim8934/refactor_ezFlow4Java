@@ -118,10 +118,16 @@
             		"folderId" : folderId
             	},
             	success : function (data) {
-            		alert("<spring:message code='ezWebFolder.t284'/>");
+            		if (data.code == 0) {
+	            		alert("<spring:message code='ezWebFolder.t284'/>");
+            		}
             	},
             	error : function(error) {
-            		alert("<spring:message code='ezWebFolder.t285'/>");
+            		if (data.code == 3) {
+						alert("<spring:message code = 'ezWebFolder.t28'/>");
+					} else if (data.code == 2) {
+	            		alert("<spring:message code='ezWebFolder.t285'/>");
+					}
             	}
             })
             
