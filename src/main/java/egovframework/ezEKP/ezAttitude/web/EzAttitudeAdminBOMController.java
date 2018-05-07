@@ -2214,9 +2214,12 @@ public class EzAttitudeAdminBOMController {
 	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthorDeptList.do")
+	@ResponseBody
 	public String attitudeAuthorDeptList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception{
 		LOGGER.debug("attitudeAuthorDeptList started");
 		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String isAllDept = "";
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -2228,7 +2231,11 @@ public class EzAttitudeAdminBOMController {
 		headers.set("x-user-host", request.getServerName());
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("isAllDept", isAllDept)
+				.queryParam("userId", userId);
+		
 		
 		RestTemplate rest = new RestTemplate();
 		
