@@ -33,9 +33,12 @@
 						url = "/admin/ezAttitude/attitudeCheck.do";
 						break;
 					case 5:
-						url = "/admin/ezAttitude/manageAttModAppList.do";
+						url = "/admin/ezAttitude/attitudeAbsented.do";
 						break;
 					case 6:
+						url = "/admin/ezAttitude/manageAttModAppList.do";
+						break;
+					case 7:
 						url = "/admin/ezAttitude/attitudeAuthorManage.do";
 						break;
 				}
@@ -48,10 +51,11 @@
 			<div class="left_admin" title="attitude"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='ezAttitude.t1'/></div>
 			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(1)"><spring:message code = 'ezAttitude.t10' /></span><ul></ul></h2>
 			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(2)"><spring:message code = 'ezAttitude.t12' /></span><ul></ul></h2>
-			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(3)"><spring:message code = 'ezAttitude.t11' /></span><ul></ul></h2>
-			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(4)"><spring:message code = 'ezAttitude.t13' /></span><ul></ul></h2>
-			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(5)"><spring:message code = 'ezAttitude.t14' /></span><ul></ul></h2>
-			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(6)"><spring:message code = 'ezAttitude.t46' /></span><ul></ul></h2>
+			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(3)">근무시간관리</span><ul></ul></h2>
+			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(4)">근태입력조회</span><ul></ul></h2>
+			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(5)">근태미입력조회</span><ul></ul></h2>
+			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(6)"><spring:message code = 'ezAttitude.t14' /></span><ul></ul></h2>
+			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(7)"><spring:message code = 'ezAttitude.t46' /></span><ul></ul></h2>
 		</div>
 		
 		<script type="text/javascript">

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -18,7 +17,6 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -845,7 +843,7 @@ public class EzAttitudeAdminBOMController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/selectUserInfo.do")
+	/*@RequestMapping(value = "/admin/ezAttitude/selectUserInfo.do")
 	@ResponseBody
 	public JSONArray selectUserInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LOGGER.debug("selectUserInfo started");
@@ -889,7 +887,7 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("selectUserInfo ended");
 		return jArray;
-	}
+	}*/
 	/**
 	 * 사용자 근태설정 추가/변경
 	 * @param request
@@ -1086,7 +1084,7 @@ public class EzAttitudeAdminBOMController {
 		return jObject;
 	}
 	/**
-	 * 사용자별 근무시간 수정화면 조회
+	 * 근무시간 수정화면 조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/editAttitudeUserConf.do")
 	public String saveAttitudeUserConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
@@ -1095,10 +1093,10 @@ public class EzAttitudeAdminBOMController {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		String selectUserId = request.getParameter("selectUserId");
+		String selectedUserIdList = request.getParameter("selectedUserIdList");
 		String companyId = request.getParameter("companyId");
 		
-		LOGGER.debug("selectUserId = " + selectUserId);
+		LOGGER.debug("selectedUserIdList = " + selectedUserIdList);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudereg";
@@ -1110,8 +1108,8 @@ public class EzAttitudeAdminBOMController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("selectUserId", selectUserId)
-				.queryParam("companyId", companyId);
+				.queryParam("companyId", companyId)
+				.queryParam("selectedUserIdList", selectedUserIdList);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -1145,7 +1143,8 @@ public class EzAttitudeAdminBOMController {
 		entity = new HttpEntity<>(headers);
 		builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("selectUserId", selectUserId);
+				.queryParam("companyId", companyId)
+				.queryParam("selectedUserIdList", selectedUserIdList);
 		
 		rest = new RestTemplate();
 		
@@ -1173,21 +1172,24 @@ public class EzAttitudeAdminBOMController {
 			model.addAttribute("vo", jObject);
 		}
 		
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("selectedUserIdList", selectedUserIdList);
+		
 		LOGGER.debug("/admin/ezAttitude/editAttitudeUserConf ended");
 		
 		return "admin/ezAttitude/editAttitudeUserConf";
 	}
 	
 	/**
-	 * 사용자별 근무시간 수정
+	 * 근무시간관리 근무시간 수정
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeUserConfig.do")
+	@RequestMapping(value = "/admin/ezAttitude/editAttitudeUserConfig.do")
 	@ResponseBody
-	public String saveAttitudeUserConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("saveAttitudeUserConfig started");
+	public String editAttitudeUserConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LOGGER.debug("editAttitudeUserConfig started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String selectUserId = request.getParameter("selectUserId");
+		String selectedUserId = request.getParameter("selectedUserId");
 		String workStartTime = request.getParameter("workStartTime");
 		String workEndTime = request.getParameter("workEndTime");
 		
@@ -1201,7 +1203,7 @@ public class EzAttitudeAdminBOMController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("selectUserId", selectUserId)
+				.queryParam("selectedUserId", selectedUserId)
 				.queryParam("workStartTime", workStartTime)
 				.queryParam("workEndTime", workEndTime);
 		
@@ -1214,7 +1216,7 @@ public class EzAttitudeAdminBOMController {
 		
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
-		LOGGER.debug("saveAttitudeUserConfig ended");
+		LOGGER.debug("editAttitudeUserConfig ended");
 		
 		return status;
 	}
@@ -1364,9 +1366,81 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 근태조회 미입력자목록 팝업화면 호출
+	 * 근태조회 미입력자조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/popupAbsentedList.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeAbsented.do")
+	public String attitudeAbsented(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/admin/ezAttitude/attitudeAbsented.do");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
+		String adminCompany = "";
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		
+		String searchStartDate = localDate + " 00:00:00";
+		String searchEndDate = localDate + " 23:59:59";
+		
+		Date startDate = sdf.parse(searchStartDate);
+		
+		cal = Calendar.getInstance();
+		cal.setTime(startDate);
+		cal.add(Calendar.DAY_OF_MONTH, -7);
+		
+		searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONArray list = new JSONArray();
+		JSONObject data = new JSONObject();
+		
+		if (status.equals("ok")) {
+			data = (JSONObject) resultBody.get("data");
+			list = (JSONArray) data.get("list");
+			adminCompany = (String) data.get("adminCompany");
+			
+			model.addAttribute("list", list);
+			model.addAttribute("adminCompany", adminCompany);
+			model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
+			model.addAttribute("searchEndDate", searchEndDate.substring(0, 10));
+		}
+		
+		LOGGER.debug("/admin/ezAttitude/attitudeAbsented.do");
+		
+		return "/admin/ezAttitude/attitudeAbsented";
+	}
+	
+	/**
+	 * 근태조회 미입력자목록 팝업화면 호출, 안씀 지금
+	 */
+	/*@RequestMapping(value = "/admin/ezAttitude/popupAbsentedList.do")
 	public String popupAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("popupAbsentedList started.");
 		
@@ -1387,15 +1461,15 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("popupAbsentedList ended.");
 		
 		return "/admin/ezAttitude/popupAbsentedList";
-	}
+	}*/
 	
 	/**
 	 * 근태조회 미입력자목록 조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/getAbsentedList.do")
+	@RequestMapping(value = "/admin/ezAttitude/getAttitudeAbsentedList.do")
 	@ResponseBody
-	public JSONObject getAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("getAbsentedList started.");
+	public JSONObject getAttitudeAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("getAttitudeAbsentedList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1404,8 +1478,11 @@ public class EzAttitudeAdminBOMController {
 		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("userName");
 		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
 		String searchStartDate = request.getParameter("startDate");
 		String searchEndDate = request.getParameter("endDate");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String duplicated = request.getParameter("duplicated");
@@ -1422,9 +1499,12 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("companyId", companyId)
 				.queryParam("searchUserName", searchUserName)
 				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchTitle", searchTitle)
 				.queryParam("searchStartDate", searchStartDate)
 				.queryParam("searchEndDate", searchEndDate)
 				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
 				.queryParam("duplicated", duplicated)
@@ -1445,12 +1525,13 @@ public class EzAttitudeAdminBOMController {
 			jObject = (JSONObject) resultBody.get("data");
 		}
 		
-		LOGGER.debug("getAbsentedList ended.");
+		LOGGER.debug("getAttitudeAbsentedList ended.");
+		
 		return jObject;
 	}
 	
 	/**
-	 * 근태조회 엑셀 출력
+	 * 근태입력조회, 근태미입력조회 엑셀 출력
 	 */
 	@RequestMapping(value = {"/admin/ezAttitude/excelAttitudeListExport.do", "/admin/ezAttitude/excelAbsentedListExport.do"})
 	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
@@ -1656,6 +1737,70 @@ public class EzAttitudeAdminBOMController {
 		workbook.close();
 		
 		LOGGER.debug("excelFileExport ended.");
+	}
+	
+	/**
+	 * 미입력자 메일발송
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/absentedListSendMail.do")
+	public JSONObject absentedListSendMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("absentedListSendMail started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		String companyId = request.getParameter("companyId");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String searchStartDate = request.getParameter("startDate");
+		String searchEndDate = request.getParameter("endDate");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String duplicated = request.getParameter("duplicated");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/mail";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchStartDate", searchStartDate)
+				.queryParam("searchEndDate", searchEndDate)
+				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption)
+				.queryParam("duplicated", duplicated)
+				.queryParam("offsetMin", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject jObject = new JSONObject();
+		if(status.equals("ok")){
+			jObject = (JSONObject) resultBody.get("data");
+		}
+		
+		LOGGER.debug("absentedListSendMail ended.");
+		
+		return jObject;
 	}
 	
 	/**
@@ -1902,6 +2047,7 @@ public class EzAttitudeAdminBOMController {
 	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthorDept.do")
 	public String selectAttitudeAuthorDept(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception{
 		LOGGER.debug("selectAttitudeAuthorDept started");
+		/*
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String companyId = request.getParameter("companyId");
@@ -1959,7 +2105,7 @@ public class EzAttitudeAdminBOMController {
 			}
 			model.addAttribute("deptList", deptList);
 		}
-		/*
+		 */
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -1996,7 +2142,6 @@ public class EzAttitudeAdminBOMController {
 			}
 			model.addAttribute("deptList", deptList);
 		}
-		 */
 		
 		LOGGER.debug("selectAttitudeAuthorDept ended");
 		

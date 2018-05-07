@@ -879,7 +879,7 @@ public class EzEmailAdminController {
 				String email = userId + "@" + domain;
 				logger.debug("email=" + email);
 				
-				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale);
+				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
 	
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 	
@@ -964,7 +964,7 @@ public class EzEmailAdminController {
 			try {
 				String email = userId + "@" + domain;
 				
-				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale);
+				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
 
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 	

@@ -424,12 +424,12 @@
 	            <tr>
 	                <th><spring:message code='ezCommunity.t600' /></th>
 	                <td>
-	                    <select id="selType" name="selType" onchange="return selType_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 20px;cursor: pointer;">
+	                    <select id="selType" name="selType" onchange="return selType_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 24px;cursor: pointer;">
 	                        <option value="1"><spring:message code='ezCommunity.t601' />
 	                        <%-- <option value="2"><spring:message code='ezCommunity.t602' /> --%>
 	                        <option value="3"><spring:message code='ezCommunity.t603' />
 	                    </select>
-	                    <select id="selRes1" name="selRes1" onchange="return selRes1_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 20px;cursor: pointer;">
+	                    <select id="selRes1" name="selRes1" onchange="return selRes1_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 24px;cursor: pointer;">
 	                    	<option value="0"><spring:message code='ezCommunity.t604' />
 	                        <option value="1"><spring:message code='ezCommunity.t605' />
 	                        <option value="2"><spring:message code='ezCommunity.t606' />

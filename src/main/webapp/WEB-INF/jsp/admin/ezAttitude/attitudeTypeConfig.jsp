@@ -47,7 +47,7 @@
 	        
 	        function listSet(result) {
                 var html = "";
-                if (result.length != null && result.lenth != 0) {
+                if (result.length != null && result.length != 0) {
 	                for (var i = 0; i < result.length; i++) {
 	                    html += "<tr id='" + result[i].typeId + "' ondblclick='dbclick(this);' style='cursor: pointer;'>";
 	                    html += "<td style='width:50%;color:gray;padding-left:15px;'>" + result[i].typeName + "</td>";

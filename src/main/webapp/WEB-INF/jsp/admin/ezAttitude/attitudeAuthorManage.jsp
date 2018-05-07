@@ -146,31 +146,25 @@
 		        <li><span onClick="author_delete()">권한삭제</span></li>
 		    </ul>
 		</div>
-<!-- 	    <table style="width: 700px; height: 396px;" > -->
-<!--             <tr> -->
-<!--                 <td> -->
-                    <div style="width: 100%; height: 100%;">
-                        <table class="mainlist" style="width: 100%;">
-                            <tr>
-                                <th style="width: 20%;"><span>이름</span></th>
-                                <th style="width: 20%;"><span>직위</span></th>
-                                <th style="width: 20%;"><span>부서</span></th>
-                                <th style="width: 40%;"><span>권한부서</span></th>
-                            </tr>
-                        </table>
-                        <div id="contentlist" name="contentlist" style="height: 360px; overflow-y: auto;">
-                            <table class="mainlist" style="width: 100%;">
-                                <tr>
-                                    <td style="text-align: center;">
-                                        <img src="/images/email/progress_img.gif" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-<!--                 </td> -->
-<!--             </tr> -->
-<!--         </table> -->
+	        <div style="width: 100%; height: 100%;">
+	            <table class="mainlist" style="width: 100%;">
+	                <tr>
+	                    <th style="width: 20%;"><span>이름</span></th>
+	                    <th style="width: 20%;"><span>직위</span></th>
+	                    <th style="width: 20%;"><span>부서</span></th>
+	                    <th style="width: 40%;"><span>권한부서</span></th>
+	                </tr>
+	            </table>
+	            <div id="contentlist" name="contentlist" style="height: 360px; overflow-y: auto;">
+	                <table class="mainlist" style="width: 100%;">
+	                    <tr>
+	                        <td style="text-align: center;">
+	                            <img src="/images/email/progress_img.gif" />
+	                        </td>
+	                    </tr>
+	                </table>
+	            </div>
+	        </div>
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>

@@ -79,13 +79,22 @@
 					
 					SelectSingleNodeValue(nodes[i], 'OPTION').replace("\r\n","<br>");
 					tableXml += "</tr>";
-					if("${pTotalCnt}" ==0){
+					/* if("${pTotalCnt}" ==0){
 						tableXml += "<tr>";
 						tableXml += "<td style='height:30px;text-align:center' colspan='5'>";
 						tableXml += "<spring:message code='ezQuestion.t413' />";
 						tableXml += "</td>";
 						tableXml += "</tr>";
-					}
+					} */
+				}
+				
+				/* 18-05-02 김민성 - 답변보기 리스트 응답결과 없을 때 UI 수정 */
+				if(totalCount ==0){
+					tableXml += "<tr>";
+					tableXml += "<td style='height:30px;text-align:center' colspan='5'>";
+					tableXml += "<spring:message code='ezQuestion.t413' />";
+					tableXml += "</td>";
+					tableXml += "</tr>";
 				}
 				
 				//document.getElementById("xmlTable").innerHTML = document.getElementById("xmlTable").innerHTML + tableXml;
@@ -251,6 +260,13 @@
 			            PagingHTML += strtext;
 			        }
 			    }
+			    
+			    /* 18-05-02 김민성 - 답변보기 리스트 응답결과 없을 때 UI 수정 */
+			    if (pTotalPage == 0) {
+		            strtext = "<span class='on'>1</span>";
+		            PagingHTML += strtext;
+		        }
+			    
 			    if (pTotalPage > BlockSize) {
 			        if (pTotalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 			            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";

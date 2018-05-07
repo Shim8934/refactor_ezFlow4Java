@@ -122,8 +122,116 @@ public class EzEmailUtil {
 	@Autowired
 	private CommonUtil commonUtil;
 	
+	public String getInboxFolderId() {
+		return "INBOX";
+	}
+
+	public String getSentFolderId(Locale locale) {
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {
+			return "Sent";
+		} else {
+			return egovMessageSource.getMessage("ezEmail.t645", locale);
+		}
+	}
+
+	public String getDraftsFolderId(Locale locale) {
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {		
+			return "Drafts";
+		} else {
+			return egovMessageSource.getMessage("ezEmail.t646", locale);
+		}
+	}
+
+	public String getTrashFolderId(Locale locale) {
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {				
+			return "Trash";
+		} else {
+			return egovMessageSource.getMessage("ezEmail.t647", locale);
+		}
+	}
+
+	public String getPersonalFolderId(Locale locale) {
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {								
+			return "Personal folder";
+		} else {
+			return egovMessageSource.getMessage("ezEmail.t648", locale);
+		}
+	}
 	
+	public String getJunkFolderId(Locale locale) {
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {						
+			return "Junk E-Mail";
+		} else {
+			return egovMessageSource.getMessage("ezEmail.t99000029", locale);
+		}
+	}
     
+	public String getDisplayNameFromFolderId(String folderId, Locale locale) {
+		String displayName = folderId;
+		
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {								
+			if (folderId.equals("INBOX") || folderId.startsWith("INBOX.")) {
+				displayName = folderId.replaceFirst("INBOX", egovMessageSource.getMessage("ezEmail.t644", locale));
+			} else if (folderId.equals("Sent") || folderId.startsWith("Sent.")) {
+				displayName = folderId.replaceFirst("Sent", egovMessageSource.getMessage("ezEmail.t645", locale));
+			} else if (folderId.equals("Drafts") || folderId.startsWith("Drafts.")) {
+				displayName = folderId.replaceFirst("Drafts", egovMessageSource.getMessage("ezEmail.t646", locale));
+			} else if (folderId.equals("Trash") || folderId.startsWith("Trash.")) {
+				displayName = folderId.replaceFirst("Trash", egovMessageSource.getMessage("ezEmail.t647", locale));
+			} else if (folderId.equals("Personal folder") || folderId.startsWith("Personal folder.")) {
+				displayName = folderId.replaceFirst("Personal folder", egovMessageSource.getMessage("ezEmail.t648", locale));
+			} else if (folderId.equals("Junk E-Mail") || folderId.startsWith("Junk E-Mail.")) {
+				displayName = folderId.replaceFirst("Junk E-Mail", egovMessageSource.getMessage("ezEmail.t99000029", locale));
+			}
+		} else {
+			if (folderId.equals("INBOX") || folderId.startsWith("INBOX.")) {
+				displayName = folderId.replaceFirst("INBOX", egovMessageSource.getMessage("ezEmail.t644", locale));
+			}			
+		}
+		
+		return displayName;
+	}	
+	
+	public String getFolderIdFromDisplayName(String displayName, Locale locale) {
+		String folderId = displayName;
+		
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {	
+			if (displayName.equals(egovMessageSource.getMessage("ezEmail.t644", locale))) {
+				folderId = "INBOX";
+			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t645", locale))) {
+				folderId = "Sent";
+			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t646", locale))) {
+				folderId = "Drafts";
+			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t647", locale))) {
+				folderId = "Trash";
+			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t648", locale))) {
+				folderId = "Personal folder";
+			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t99000029", locale))) {
+				folderId = "Junk E-Mail";
+			}
+		} else {
+			if (displayName.equals(egovMessageSource.getMessage("ezEmail.t644", locale))) {
+				folderId = "INBOX";
+			}			
+		}
+		
+		return folderId;
+	}
+	
 	/**
 	 * returns a string containing size with a size unit(MB or KB or B) 
 	 */
@@ -1018,7 +1126,8 @@ public class EzEmailUtil {
 				
 				// text/html 파트가 나오거나 multipart/alternative 파트가 나올 수도 있다.
 				if (!p.isMimeType("text/plain") && !(p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
-					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+					// 코린도에서 수신된 메일 중 multipart/related 안에 첨부파일이 있는 경우가 있어 패러메터값을 -1 대신 i로 변경함
+					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1668,22 +1777,23 @@ public class EzEmailUtil {
 			Multipart mp = (Multipart)src.getContent();
 			int count = mp.getCount();
 			boolean isAdded = false;
+			
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
 				if (p instanceof MimePart) {
-					if (((MimePart)p).getContentID() != null) {
-						dest.addBodyPart(p);	
-						isAdded = true;
-					}
+					// 코린도에서 수신한 메일 중 multipart/related 안에 첨부 파일이 있는 경우가 있어
+					// Content ID 유무를 체크하는 코드를 제거함
+					dest.addBodyPart(p);	
+					isAdded = true;
 				}				
 			}
 			
 			return isAdded;
-		} 
-		else if (src.isMimeType("multipart/*")) {
+		} else if (src.isMimeType("multipart/*")) {
 			Multipart mp = (Multipart)src.getContent();
 			int count = mp.getCount();
+			
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
@@ -1857,7 +1967,11 @@ public class EzEmailUtil {
 	public Part getAttachPart(Part part, int index) throws MessagingException, IOException {
 		logger.debug("getAttachPart started.");
 		
-		if (part.isMimeType("multipart/mixed") || part.isMimeType("multipart/report")){
+		// multipart/related 안에 첨부파일이 들어 있는 메일이 코린도에서 수신되어
+		// multipart/related를 추가함
+		if (part.isMimeType("multipart/mixed") 
+				|| part.isMimeType("multipart/report")
+				|| part.isMimeType("multipart/related")) {
 			Part p = ((Multipart)part.getContent()).getBodyPart(index);
 			
 			logger.debug("getAttachPart ended.");
@@ -2853,7 +2967,7 @@ public class EzEmailUtil {
     	sb.append("<div class=\"security_message\" style=\"background:#d0e1ff;min-width:770px;\">\n");
     	sb.append("    <div class=\"security_img\" style=\"max-width:780px;margin:0 auto;padding-left:40px;padding-bottom:20px\">\n");
     	sb.append("        <img src=\"cid:" + fileName + ".gif@12345678.87654321\">\n");
-    	sb.append("        <section class=\"security_txt\" style=\"margin:0px 0px 0px 300px;padding:54px 0px;font-family:" + egovMessageSource.getMessage("main.t0620", locale).replace(";", ",") + ";position:relative;left:-50px;margin-top:-250px\">\n");
+    	sb.append("        <section class=\"security_txt\" style=\"margin:0px 0px 0px 300px;padding:54px 0px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + ";position:relative;left:-50px;margin-top:-250px\">\n");
     	sb.append("            <h4 style=\"margin:0px;padding:3px 0px 0px 0px;font-size:22px;letter-spacing:-1px;color:#333;border-bottom:2px solid #727985;line-height:44px\">" + egovMessageSource.getMessage("ezEmail.lhm57", locale) + "</h4>\n");
     	sb.append("            <p style=\"margin:0px;padding:5px 0px 0px 0px;font-size:15px;color:#333;line-height:22px\">" + egovMessageSource.getMessage("ezEmail.lhm58", locale) + "</p>\n");
     	sb.append("        </section>\n");
@@ -2876,7 +2990,7 @@ public class EzEmailUtil {
     	sb.append("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
     	sb.append("        <title>SECURE MAIL</title>\n");
     	sb.append("        <style>\n");
-    	sb.append("            body{font-family:" + egovMessageSource.getMessage("main.t0620", locale).replace(";", ",") + "}\n");
+    	sb.append("            body{font-family:" + egovMessageSource.getMessage("main.t246", locale) + "}\n");
     	sb.append("            .security_layerpopup{width:100%; height:100%; background:#f1f1f1;}\n");
     	sb.append("            .security_layerpopup .popup_img{margin:0px; padding:84px 0px 0px 0px; text-align:center;}\n");
     	sb.append("            .security_layerpopup .popup_txt{margin:0px; padding:0px; text-align:center; font-size:24px; color:#333; font-weight:600;}\n");

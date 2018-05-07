@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>근태조회</title>
+		<title>근태입력조회</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -40,7 +40,7 @@
 	    	var searchUserName = ""; // 검색조건 (사원명)
 	    	var searchDeptName = ""; // 검색조건 (부서명)
 	    	var searchTitle = ""; // 검색조건 (직위)
-	    	var searchAttitudeType = "total"; // 검색조건(구분)
+	    	var searchAttitudeType = "total"; // 검색조건(근태유형)
 	    	//검색조건 (근무시간) Hr,Min 묶음으로
 	    	var searchStartDate = "${searchStartDate}";
 	    	var searchEndDate = "${searchEndDate}";
@@ -149,7 +149,6 @@
 	    	}
 	    	
 	    	function getAttitudeCheckList(){
-	    		//구분
 	    		var typeId = $('#attitudeType').val();
 	    		
 	    		if (typeId == "total") {
@@ -186,7 +185,7 @@
 	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
 	    				getAttitudeCheckList_after(result.list);
-	    				//구분 리스트
+	    				//근태유형 리스트
 	    				getAttitudeTypeList(result.typeList, result.typeId);
 	    			},
 	    			error : function() {
@@ -195,7 +194,7 @@
 	    		});
 	    	}
 	    	
-	    	//검색 > 구분selectBox
+	    	//검색 > 근태유형selectBox
 	    	function getAttitudeTypeList(typeList, typeId) {
 	    		var html = "<option value='total'>전체</option>";
 	    		
@@ -219,8 +218,7 @@
 	    			resultHtml += "<tr userid='" + result[i].writerId + "'>"
 	    			   			+ "<td>" + result[i].userName + "</td>"
 	    			   			+ "<td>" + result[i].userTitle + "</td>"
-	    			   			+ "<td>" + result[i].deptName + "</td>"
-	    						+ "<td>" + result[i].typeName + "</td>";
+	    			   			+ "<td>" + result[i].deptName + "</td>";
 	    						
 	    			if (result[i].endDate == null || result[i].endDate == "") {
 	    				resultHtml += "<td>" + result[i].startDate + "</td>";
@@ -229,10 +227,12 @@
 	    			}
 	    			
 	    			if (result[i].endTime == null || result[i].endTime == "") {
-	    				resultHtml += "<td>" + result[i].startTime + "</td></tr>";
+	    				resultHtml += "<td>" + result[i].startTime + "</td>";
 	    			} else {
-	    				resultHtml += "<td>" + result[i].startTime + " ~ " + result[i].endTime + "</td></tr>";
+	    				resultHtml += "<td>" + result[i].startTime + " ~ " + result[i].endTime + "</td>";
 	    			}
+	    			
+	    			resultHtml += "<td>" + result[i].typeName + "</td></tr>";
 	    		}
 	    		
 	    		if (resultHtml == "") {
@@ -248,7 +248,7 @@
 	    		if (pCurPage == 0 || totalPage < pCurPage) {
 	    			return;
 	    		} else {
-		    		pageNum = pCurPage;    			
+		    		pageNum = pCurPage;
 	    		}
 	    		
 	    		getAttitudeCheckList();
@@ -289,24 +289,6 @@
 	    		
 	    		pageNum = 1;
     			getAttitudeCheckList();
-	    	}
-			
-			function popupAbsentList() {
-				searchUserName = $("#searchUserName").val();
-    			searchDeptName = $("#searchDeptName").val();
-    			searchTitle = $("#searchTitle").val();
-    			searchStartDate = $("#Sdatepicker").val();
-    			searchEndDate = $("#Edatepicker").val();
-    			
-    			var url = "/admin/ezAttitude/popupAbsentedList.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate;
-	    		
-	    		if (CrossYN()) {
-	    			OpenWin = GetOpenWindow(url, "", "600", "700");
-	    			
-	    			try { OpenWin.focus();} catch (e) { }
-	    		} else {
-	    			showModalDialog(url, null, "dialogWidth:600px; dialogHeight:700px; status:no; help:no; scroll:no; edge:sunken");
-	    		}
 	    	}
 			
 			//엑셀 다운로드
@@ -353,7 +335,7 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-	    <h1>근태조회<span id="mailBoxInfo"></span></h1>
+	    <h1>근태입력조회<span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
 	        	<li style="background: none;"><span style="border: none;"><b>회사선택</b></span></li>
@@ -373,23 +355,22 @@
 					<td style="width: 3%;">부서</td>
 					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;">이름</td>
-					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
-					<td style="width: 3%">구분</td>
-					<td style="width: 20%;"><select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:40px;"></select></td>
+					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
+					<td style="width: 3%;">검색기간</td>
+					<td style="width: 20%;">
+						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
+						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
+					</td>
 				</tr>
 				<tr>
 					<td style="width: 3%;">직위</td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
-					<td style="width: 3%;">검색기간</td>
-					<td>
-						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
-						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
-					</td>
-					<td style=" width:*;" colspan=2>
-						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');">검색</span></a>&nbsp;
+					<td style="width: 3%">근태유형</td>
+					<td style="width: *;" colspan=3>
+						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select>
+						<a class="imgbtn" style="margin-left:10px;"><span onclick="searchAttitudeCheckList('search');">검색</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');">새로고침</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="exportExcel();">엑셀저장</span></a>&nbsp;
-						<a class="imgbtn"><span onclick="popupAbsentList();">미입력자 목록</span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
@@ -399,21 +380,21 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
-						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
-						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
-						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
-						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">구분</th>
-						<th style="width:20%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
-						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime">시간</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime">시간</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">근태유형</th>
 					</tr>
 				</thead>
 				<tbody>
 				</tbody>
 			</table>
 	  	</div>
-		<div id="runtime" style="color: #666; padding-top: 10px"></div>
-		<div id="tblPageRayer">
-		</div>
+	  	
+	  	<div style="color: #666; padding-top: 10px"></div>
+		<div id="tblPageRayer"></div>
 		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
 	</body>
 </html>

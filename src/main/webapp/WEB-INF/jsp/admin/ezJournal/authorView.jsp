@@ -51,9 +51,12 @@
 	    		if (pdeptIds && pdeptNames) {
 					deptIds = eval(pdeptIds);
 					deptNames = eval(pdeptNames);
+					console.log("***" + deptNames);
 				}
 				var deptString;
 	    		for (var i = 0; i < deptNames.length; i++) {
+	    			deptNames[i] = deptNames[i].replace(/&amp;/gi, "&");
+	    			console.log(deptNames[i]);
 	    			if(i!=0){
 			    		deptString += ", "+deptNames[i];
 	    			} else {
