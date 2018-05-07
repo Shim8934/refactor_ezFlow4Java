@@ -191,28 +191,27 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <ul id="menuTable">
+	                        <h1>근태수정신청조회</h1>
+	                        </div>
+	                        <div id="close">
+	                            <ul>
 	                            	<c:if test="${adminFlag == 'true' && data.apprStatus == 0}">
-	                            	<li><span onclick="modApprove()">승인</span></li>
-	                                <li><span onclick="modReturn()">반려</span></li>
+		                            	<li><span onclick="modApprove()">승인</span></li>
+		                                <li><span onclick="modReturn()">반려</span></li>
 	                            	</c:if>
 <%-- 	                            	<c:if test="${adminFlag == 'true' && userId == data.writerId}"> --%>
 <!-- 	                            	<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 <%-- 	                            	</c:if> --%>
 <!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
 	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0}">
-	                            	<li><span onclick="modify()">수정</span></li>
+	                            		<li><span onclick="modify()">수정</span></li>
 	                            	</c:if>
 	                            	<c:if test="${userId == data.writerId && data.apprStatus != 0}">
-	                            	<li><span onclick="reMod()">재신청</span></li>
+	                            		<li><span onclick="reMod()">재신청</span></li>
 	                            	</c:if>
-	                            	<c:if test="${(adminFlag == 'true' || userId == data.writerId) && data.apprStatus == 0}">
-	                            	<li><span onclick="del()">삭제</span></li>
+	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0}">
+	                            		<li><span onclick="del()">삭제</span></li>
 	                            	</c:if>
-	                            </ul>
-	                        </div>
-	                        <div id="close">
-	                            <ul>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>
 	                        </div>

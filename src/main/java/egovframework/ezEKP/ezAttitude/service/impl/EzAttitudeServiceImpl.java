@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.internet.InternetAddress;
-
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -690,18 +688,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public int getUsersModiyAttCount(String companyId, int tenantId,
 			String userId, String startDate, String endDate,
-			String apprUserName, String writerName , String writerDeptName,String sysLang, String offset, String type, String adminFlag, String checkAdmin)
+			String apprUserName, String writerName , String writerDeptName,String sysLang, String offset, String type, String[] deptIdList,String adminFlag, String checkAdmin)
 			throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		if (adminFlag == null) {
-			adminFlag = "false";
-		}
-		
-		if (checkAdmin == null) {
-			checkAdmin = "false";
-		}
 		
 		LOGGER.debug("checkAdmin : " + checkAdmin);
 		LOGGER.debug("adminFlag : " + adminFlag);
@@ -713,7 +703,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		} else if (checkAdmin.equals("false")) {
 			LOGGER.debug("#############################################false true####################################");
 //			String[] deptIdList = {"approval"};
-//			map.put("deptIdList", deptIdList);
+			map.put("deptIdList", deptIdList);
 		}
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);

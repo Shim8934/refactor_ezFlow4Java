@@ -1172,15 +1172,37 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
-
+		String[] deptIdList;
 		try{
+			
+			if (adminFlag == null) {
+				adminFlag = "false";
+			}
+			
+			if (checkAdmin == null) {
+				checkAdmin = "false";
+			}
+			
 			if (type != null) {
 				if (type.equals("all")) {
 					type = null;
 				}
 			}
+			String isAllDept = "";
 			
-			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, adminFlag, checkAdmin);
+			if (adminFlag.equals("true") || checkAdmin.equals("true")){
+				isAllDept = "Y";
+			}
+			
+			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
+			
+			deptIdList = new String[authDeptlist.size()];
+			
+			for (int i = 0; i < authDeptlist.size(); i++) {
+				LOGGER.debug("authDeptlist.get(i).getClass() : " + authDeptlist.get(i).getClass());
+//				deptIdList[i] = authDeptlist.get(i).getDeptId();
+			}
+			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, deptIdList, adminFlag, checkAdmin);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1873,7 +1895,7 @@ public class EzAttitudeGWController {
 			String companyId = request.getParameter("companyId");
 			String isAllDept = request.getParameter("isAllDept");////////////////
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
+		
 			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept);
 			
 			result.put("status", "ok");

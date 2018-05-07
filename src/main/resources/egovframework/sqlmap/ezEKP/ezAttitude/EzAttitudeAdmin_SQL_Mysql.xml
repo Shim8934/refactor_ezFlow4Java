@@ -7,7 +7,6 @@
 	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
 	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
 	<typeAlias alias="AttitudeFormVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO"/>
-	<typeAlias alias="authorVO" type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
 	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO" />
 	<typeAlias alias="AttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
 	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>

@@ -296,9 +296,16 @@
 	    	var obj = new Object();
 	    	
 		    obj.apprUserName = $('#appr_search').val();
-		    obj.writerName = $('#writer_search').val();
-		    obj.writerDeptId = writerDept_search.value;
-		    obj.writerDeptName = $("#writerDept_search option:selected").text();
+		    console.log("adminFlag : " + adminFlag);
+		    if (adminFlag == 'true') {
+		    	if (checkAdmin == 'true') {
+		    		obj.writerDeptName = writerDept_search.value;
+		    	} else {
+		    		obj.writerDeptId = writerDept_search.value;
+			    	obj.writerDeptName = $("#writerDept_search option:selected").text();	
+		    	}
+		    	obj.writerName = $('#writer_search').val();
+		    }
 		    obj.startDate = startDate;
 		    obj.endDate = endDate;
 			obj.pageNum = pageNum;
@@ -1094,7 +1101,7 @@
 						<tr>
 							<th nowrap>신청부서명</th>
 							<td style="width:100%;">
-								<select id="writerDept_search" style="width:100px; margin-top:5px;">
+								<select id="writerDept_search" style="width:100%; heght:90%;">
 									<c:if test="${selectedDeptID  == null}">
 										<option value=null selected></option>
 									</c:if>
@@ -1233,7 +1240,7 @@
 				    	<tr>
 				  			<th style="width:220px;height:30px">승인일시</th>
 				  			<th style="height:30px">승인자</th>
-				  			<th style="height:30px">승인 상태</th>
+				  			<th style="height:30px">승인상태</th>
 						</tr>
 				    </tbody>
 				</table>
