@@ -211,7 +211,8 @@
 	        if (type == "basic") {
 	
 	           if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" 
-	        		   && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	        	    && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == ""  
+	        	    && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 	                alert("<spring:message code='ezWebFolder.t163' />");// 검색조건을 입력하세요 
 	                return;
 	            }
@@ -219,7 +220,7 @@
 	                alert("<spring:message code='ezWebFolder.t308' />");
 	                return;
 	            }
-	            if ($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
+	            if ($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 	                alert("<spring:message code='ezWebFolder.t309' />");
 	                return;
 	            }
@@ -227,7 +228,7 @@
 	                alert("<spring:message code='ezWebFolder.t308' />");
 	                return;
 	            }
-	            if ($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
+	            if ($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 	                alert("<spring:message code='ezWebFolder.t309' />");
 	                return;
 	            }

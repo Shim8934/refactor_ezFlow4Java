@@ -19,4 +19,6 @@ var messages = {
 	strLang18 : "게시일 조건이 올바르지 않습니다.", 			// ezBoard.t189
 	strLang19 : "검색 시작일을 종료일보다 빠르게 지정해 주십시오.",	// ezBoard.t191
 	strLang20 : "검색 조건이 없습니다.", 					// ezBoard.t192
+	strLang21 : "검색기간의 종료일을 지정해 주세요.", 			//ezWebFolder.t308
+	strLang22 : "검색기간의 시작일을 지정해 주세요.", 			//ezWebFolder.t309
 }
