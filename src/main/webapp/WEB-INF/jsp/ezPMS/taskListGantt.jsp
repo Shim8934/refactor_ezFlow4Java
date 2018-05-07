@@ -50,34 +50,50 @@
 	   		// 사용자 아이디
 	   		var userId = "";
 	   		var ganttData = {};
-	   		var ge = new GanttMaster();
+	   		var ge;
 	   		
 	   		function initValues(){
 	   			taskList = ${taskList};
 	   			var tl = taskList;
 	   			projectDetails = ${projectDetail};
 	   			var pd = projectDetails;
+	   			const roleName = ["참여자", "관리자", "조회자", "없음"];
 	   			
 	   			ganttData.tasks = [{}];
+	   			ganttData.resources = [];
+	   			ganttData.roles = [];
+	   			
 	   			//프로젝트 데이터 가공부분.
 	   			ganttData.tasks[0].id = pd.projectId;
 	   			ganttData.tasks[0].name = pd.projectName;
 	   			ganttData.tasks[0].code = "";
 	   			ganttData.tasks[0].level = 0;
 	   			ganttData.tasks[0].status = pd.status;
-	   			ganttData.tasks[0].start = pd.planStartDate;
-	   			ganttData.tasks[0].end = pd.planEndDate;
+	   			ganttData.tasks[0].start = new Date(pd.planStartDate).getTime();
+	   			ganttData.tasks[0].end = new Date(pd.planEndDate).getTime();
 	   			ganttData.tasks[0].duration = pd.workingday;
 	   			ganttData.tasks[0].startIsMilestone = "";
 	   			ganttData.tasks[0].endIsMilestone = "";
-	   			ganttData.tasks[0].assigs = [{}];
+	   			ganttData.tasks[0].assigs = [];
 	   			
 	   			for(var i = 0; i < pd.projectMember.length; i++){
-	   				ganttData.tasks[0].assigs[i] = {};
-	   				ganttData.tasks[0].assigs[i].resourceId = pd.projectMember[i].memberId;
-	   				ganttData.tasks[0].assigs[i].id = pd.projectMember[i].userId;
-	   				ganttData.tasks[0].assigs[i].roleId = pd.projectMember[i].memberRoleId;
-	   				ganttData.tasks[0].assigs[i].effort = "";
+	   				var assig = {};
+		   			var resource = {};
+		   			var role = {};
+		   			
+	   				assig.resourceId = pd.projectMember[i].userId;
+	   				assig.id = pd.projectMember[i].userId;
+	   				assig.roleId = pd.projectMember[i].memberRoleId;
+	   				assig.effort = "";
+	   				ganttData.tasks[0].assigs.push(assig);
+	   				
+	   				//인력, 역할 부분
+	   				resource.id = pd.projectMember[i].userId;
+	   				role.id = pd.projectMember[i].userId;
+	   				resource.name = pd.projectMember[i].userName;
+	   				role.name = roleName[pd.projectMember[i].memberRoleId];
+	   				ganttData.resources.push(resource);
+	   				ganttData.roles.push(role);
 	   			}
 	   			
 	   			ganttData.tasks[0].depends = "";
@@ -93,19 +109,31 @@
 		   			ganttData.tasks[i + 1].code = "";
 		   			ganttData.tasks[i + 1].level = 1;
 		   			ganttData.tasks[i + 1].status = tl[i].status;
-		   			ganttData.tasks[i + 1].start = tl[i].planStartDate;
-		   			ganttData.tasks[i + 1].end = tl[i].planEndDate;
+		   			ganttData.tasks[i + 1].start = new Date(tl[i].planStartDate).getTime();
+		   			ganttData.tasks[i + 1].end = new Date(tl[i].planEndDate).getTime();
 		   			ganttData.tasks[i + 1].duration = tl[i].workingday;
 		   			ganttData.tasks[i + 1].startIsMilestone = "";
 		   			ganttData.tasks[i + 1].endIsMilestone = "";
-		   			ganttData.tasks[i + 1].assigs = [{}];
+		   			ganttData.tasks[i + 1].assigs = [];
 		   			
 		   			for(var j = 0; j < tl[i].taskMember.length; j++){
-		   				ganttData.tasks[i + 1].assigs[j] = {};
-		   				ganttData.tasks[i + 1].assigs[j].resourceId = tl[i].taskMember[j].taskMemberId;
-		   				ganttData.tasks[i + 1].assigs[j].id = tl[i].taskMember[j].userId;
-		   				ganttData.tasks[i + 1].assigs[j].roleId = 1;
-		   				ganttData.tasks[i + 1].assigs[j].effort = "";
+		   				var assig = {};
+			   			var resource = {};
+			   			var role = {};
+			   			
+		   				assig.resourceId = tl[i].taskMember[j].userId;
+		   				assig.id = tl[i].taskMember[j].userId;
+		   				assig.roleId = 1;
+		   				assig.effort = "";
+		   				ganttData.tasks[i + 1].assigs.push(assig);
+		   				
+		   				//인력, 역할 부분
+		   			 	resource.id = tl[i].taskMember[j].userId;
+		   				role.id = tl[i].taskMember[j].userId;
+		   				resource.name = tl[i].taskMember[j].userName;
+		   				role.name = 1;
+		   				ganttData.resources.push(resource);
+		   				ganttData.roles.push(role);
 		   			}
 		   			
 		   			ganttData.tasks[i + 1].depends = "";
@@ -113,11 +141,20 @@
 		   			ganttData.tasks[i + 1].progress = tl[i].realProgress;
 	   			}
 	   			
+	   			//프로젝트 인력 가공
+	   			
+	   			
+	   			ganttData.canWrite = true;
+	   			ganttData.canWriteOnParent = true;
+	   			ganttData.selectedRow = 0;
+	   			ganttData.deletedTaskIds = [];
+	   			
 	   		}
 	   		
 	   		(function(){
 		   		initValues();
-		   		ge.init($("#workSpace"));
+// 		   		ge = new GanttMaster();
+// 		   		ge.init($("#workSpace"));
 	   		})();
 	   		
 
@@ -156,32 +193,8 @@
 			
 			
 			
-			function getDemoProject(){
-			  //console.debug("getDemoProject")
-			ret= {"tasks":    [
-			      {"id": -1, "name": "Gantt editor", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 0, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 20, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},
-			      {"id": -2, "name": "coding", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 10, "end": 1398203999999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},
-			      {"id": -3, "name": "gantt part", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 2, "end": 1397167199999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false},
-			      {"id": -4, "name": "editor part", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "3", "canWrite": true, "start": 1397167200000, "duration": 4, "end": 1397685599999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false},
-			      {"id": -5, "name": "testing", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_SUSPENDED", "depends": "2:5", "canWrite": true, "start": 1398981600000, "duration": 5, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},
-			      {"id": -6, "name": "test on safari", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "", "canWrite": true, "start": 1398981600000, "duration": 2, "end": 1399327199999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false},
-			      {"id": -7, "name": "test on ie", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "6", "canWrite": true, "start": 1399327200000, "duration": 3, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false},
-			      {"id": -8, "name": "test on chrome", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "6", "canWrite": true, "start": 1399327200000, "duration": 2, "end": 1399499999999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false}
-			    ], "selectedRow": 2, "deletedTaskIds": [],
-			      "resources": [
-			      {"id": "tmp_1", "name": "Resource 1"},
-			      {"id": "tmp_2", "name": "Resource 2"},
-			      {"id": "tmp_3", "name": "Resource 3"},
-			      {"id": "tmp_4", "name": "Resource 4"}
-			    ],
-			      "roles":       [
-			      {"id": "tmp_1", "name": "Project Manager"},
-			      {"id": "tmp_2", "name": "Worker"},
-			      {"id": "tmp_3", "name": "Stakeholder"},
-			      {"id": "tmp_4", "name": "Customer"}
-			    ], "canWrite":    true, "canDelete":true, "canWriteOnParent": true, canAdd:true}
-			
-			
+			function getGanttProject(){
+				ret = ganttData;	
 			    //actualize data
 			    var offset=new Date().getTime()-ret.tasks[0].start;
 			    for (var i=0;i<ret.tasks.length;i++) {
@@ -305,7 +318,7 @@
 			
 			  //if not found create a new example task
 			  if (!ret || !ret.tasks || ret.tasks.length == 0){
-			    ret=getDemoProject();
+			    ret=getGanttProject();
 			  }
 			  return ret;
 			}
