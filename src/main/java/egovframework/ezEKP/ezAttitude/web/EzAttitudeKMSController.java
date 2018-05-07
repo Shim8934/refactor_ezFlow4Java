@@ -454,12 +454,7 @@ public class EzAttitudeKMSController {
 			deptList = (JSONArray) resultBody.get("data");
 		}
 		
-		if (deptid == null) {
-			model.addAttribute("selectedDeptID", userInfo.getDeptID());
-		} else {
-			model.addAttribute("selectedDeptID", deptid);
-		}
-		
+		model.addAttribute("selectedDeptID", deptid);
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userTimeSet", offset);
 		model.addAttribute("offsetMin", offsetMin);
@@ -491,7 +486,7 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String checkAdmin) throws Exception {
 		
 		LOGGER.debug("getAttModAppList started");
-		
+		LOGGER.debug("writerDeptName : " + writerDeptName);
 		int currentPage = 1;
 		int pageSize = 15;
 		int startPoint = 0;
