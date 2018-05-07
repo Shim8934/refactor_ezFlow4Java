@@ -424,12 +424,12 @@
 				}
 	
 				if (requirement.startDate != "" && requirement.endDate == "") {
-					alert(messages.strLang18);
+					alert(messages.strLang21);
 					return;
 				}
 	           
 				if (requirement.startDate == "" && requirement.endDate != "") {
-					alert(messages.strLang18);
+					alert(messages.strLang22);
 					return;
 				}
 	
