@@ -54,7 +54,7 @@ function TableView() {
 		var currentStyle = tableList.getAttribute("style");
 		tableList.setAttribute("style", "-webkit-touch-callout: none;-webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; " + currentStyle);
 		
-		var headerRow    = tableList.rows[0];
+		/*var headerRow    = tableList.rows[0];
 		var len          = headerRow.cells.length;
 		var firstTd      = headerRow.cells[0];
 		var firstTdChild = firstTd.firstElementChild;
@@ -66,7 +66,7 @@ function TableView() {
 		for (var i = 1; i < len; i++) {
 			var cell     = headerRow.cells[i];
 			cell.onclick = function() {sortByHeader(this);};
-		}
+		}*/
 	}
 	
 	function setDataSource(dataSource)       {_dataSource = dataSource;}

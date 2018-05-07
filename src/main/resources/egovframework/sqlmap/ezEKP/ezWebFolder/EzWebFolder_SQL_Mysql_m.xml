@@ -1199,7 +1199,7 @@
 		<isNotEqual property="realColmn" compareValue="">
 			ORDER BY
 				<isEqual property="realColmn" compareValue="TRASHCAN_SIZE">
-					TO_NUMBER($realColmn$) $order$,
+					CAST($realColmn$ AS INT) $order$,
 				</isEqual>
 				<isNotEqual property="realColmn" compareValue="TRASHCAN_SIZE">
 					$realColmn$ $order$,
