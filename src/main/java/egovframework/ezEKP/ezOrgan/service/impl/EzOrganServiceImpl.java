@@ -1696,6 +1696,27 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return jArr.toString();
 	}
 
+	public String isProxyUser(int tenantId, String userId, String nowDateTime) throws Exception {
+		logger.debug("isProxyUser started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_CN",userId);
+		map.put("nowDate",nowDateTime);
+		
+		String result = ezOrganDAO.getPropertyValue_S2(map);
+		
+		if (result == null) {
+			result = "0";
+		}
+		
+		logger.debug("result : " + result);
+		
+		logger.debug("isProxyUser ended");
+		
+		return result;
+	}
+	
 	@Override
 	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, String companyId, int tenantID) throws Exception {
 		logger.debug("getSearchList started");

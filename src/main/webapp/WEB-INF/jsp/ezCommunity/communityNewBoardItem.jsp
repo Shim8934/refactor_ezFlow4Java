@@ -288,8 +288,9 @@
 			
 	            for(i=0;i<xmldomNodes.length;i++) {
 	                str += "<ROW><CELL>";	
-	                str += "<VALUE>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "</VALUE>";
-	                str += "<DATA1>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "</DATA1>";
+	                /* 2018-04-30 홍승비 - 커뮤니티 게시판 첨부파일명 특문처리 수정 */
+	                str += "<VALUE><![CDATA[" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "]]></VALUE>";
+	                str += "<DATA1><![CDATA[" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "]]></DATA1>";
 	                str += "<DATA2>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FilePath")) + "</DATA2>";
 	                str += "<DATA3></DATA3>";
 	                str += "<DATA4></DATA4>";
@@ -602,15 +603,16 @@
 		        return str;
 		    }
 		    
+		    /* 2018-04-30 홍승비 - 커뮤니티 게시물 수정, 답변 시 특수문자 처리 */
 		    function ConvMakeXMLString(str) {
-                str = ReplaceText(str, "&amp;", "&");
-                str = ReplaceText(str, "&lt;", "<");
-                str = ReplaceText(str, "&gt;", ">");
-                str = ReplaceText(str, "&quot;", "\"");
-                str = ReplaceText(str, "&#034;", "\"");
-                str = ReplaceText(str, "&#039;", "\'");
-                return str;
-            }
+		        str = ReplaceText(str, "&lt;", "<");
+		        str = ReplaceText(str, "&gt;", ">");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\"");
+		  	    str = ReplaceText(str, "&amp;", "&");	    
+		  		str = ReplaceText(str, "&#92;", "\\");
+		        return str;
+		    }
 	
 		    function btn_PostDate_Clear() {
 	        	settime = strStartDate;

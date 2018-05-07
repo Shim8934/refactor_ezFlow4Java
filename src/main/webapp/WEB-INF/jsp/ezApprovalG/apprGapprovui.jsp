@@ -115,7 +115,7 @@
 		    var junKyulInfo = "${optJunKyulInfo}";
 		    var FirstHtml = "";
 		    var beforeHtml;
-		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pLimitRange = "", pPageNum = "";
+		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "";
 		    var cabinetID = "";
 		    var TaskCode = "";
 		    var DocNumCode = "";
@@ -1301,6 +1301,7 @@
 		        parameter[38] = tempSecurityDate;
 		        parameter[39] = SummaryFlag;
 		        parameter[40] = "";
+		        parameter[45] = pPublicityYN;
 		        
 		        if (approvalFlag == "S") {
 		        	parameter[13] = pOrgAprUserID;
@@ -1425,7 +1426,8 @@
 		                tempUrgent = ret[8];                  // 긴급 결재 여부
 		                pSummery = ret[9];                    // 요약 내용 관련
 		                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
-		                pPublicityCode = ret[11];             // 공개여부 및 공개등급 관련 
+		                pPublicityCode = ret[11];             // 대민공개여부 및 공개등급 관련 
+		                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련  
 		                
 		                //tempPublic 추가
 		                if (ret[11].substring(0,1) == '1') {
@@ -1439,7 +1441,8 @@
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
 			                //문서 공개 범위 설정
-			                setPublicFlag();
+			                //setPublicFlag();
+			                setPublicFlag2();
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

@@ -152,11 +152,11 @@
 				var _multi_select = "<c:out value='${question.multiSelect}'/>";
 				if (_multi_select == 1) {
 					$('#multipleCheck').attr('checked', false);
-					$('#numberOfMultiSelect').hide();
+					$('#numberOfMultiSelect').css("display","none");
 				}
 				else {
 					$('#multipleCheck').attr('checked', true);
-					$('#numberOfMultiSelect').show();
+					$('#numberOfMultiSelect').css("display","inline-block");
 					
 					if (_multi_select == 0) {
 						$("#numberOfMultiSelect select").val("1");
@@ -335,10 +335,10 @@
 			
 			$('#multipleCheck').click(function() {
 				if (this.checked) {
-					$('#numberOfMultiSelect').show();
+					$('#numberOfMultiSelect').css("display","inline-block");
 				}
 				else {
-					$('#numberOfMultiSelect').hide();
+					$('#numberOfMultiSelect').css("display","none");
 				}
 			});	
 			
@@ -569,6 +569,9 @@
 				var pollType = paramArray[4];
     			
     			var szUrl = "/ezPoll/pollList.do?brdID=6" + "&see=" + checkSeeAll + "&currPage=" + currentPage + "&mode=" + radioBttn + "&search=" + searchStr + "&mode1=" + mode1 + "&searchN=" + searchN + "&pollType=" + pollType;
+    			if(params == ""){
+    				szUrl = "/ezPoll/pollList.do?brdID=6";
+    			}
     		} 
     		else {
     			var szUrl = "/ezPoll/pollList.do?brdID=6";
@@ -711,11 +714,14 @@
     		} 
     		
 	        if ($('#multipleCheck').is(':checked')) {
-	    		if ($("#myList option:selected").text() == "<spring:message code='ezPoll.t156'/>") {
+	        	var myListSelected = document.getElementById("myList").selectedIndex;
+	        	
+	    		if (myListSelected == 0) {
 	    			$('#multiSelectNumber').val('0');
 	    		}
 	    		else {
-	    			$('#multiSelectNumber').val($("#myList option:selected").text());
+	    			myListSelected = (myListSelected + 1) + "";
+	    			$('#multiSelectNumber').val(myListSelected);
 	    		}
 	        }    
 	        else {
@@ -799,13 +805,23 @@
     			var optionId = "#option" + i;
     			var pLastChild = $(optionId).parent()[0].lastChild;
     			var pLastChildNodeName = pLastChild.nodeName.toLowerCase();
+    			var optVal = $(optionId).val().replace(/ /g,'');
     			
-    			if ($(optionId).val().replace(/ /g,'') != "") {    				
+    			if (optVal != "") {    				
     				count ++;
     			}
-    			else if (pLastChildNodeName === "img" && pLastChild.hasAttribute("_fileinfo")) {
-    				count ++;
-    				$(optionId).val(pLastChild.getAttribute("_fileinfo"));
+    			else if (pLastChildNodeName === "img" && pLastChild.hasAttribute("_fileinfo") && optVal == "") {
+    				var targetOpt = document.getElementById("option" + i);
+    				targetOpt.focus();
+    				targetOpt.value = "<spring:message code='ezPoll.t152'/>";
+    				targetOpt.style.backgroundColor = "#dcdcdc";
+    				setTimeout(
+   						function(){
+   							targetOpt.style.backgroundColor = "";
+   							targetOpt.value = "";
+  						}
+ 					, 800);
+    				return -i;
     			}
     			else {
     				$(optionId).val("");
@@ -841,11 +857,16 @@
 	            
 	        }
 	       /*  && mode != "modify" */
-	        if (checkOption() <= 0) {	        	
+	        var chkFlags = checkOption();
+	        if (chkFlags == 0) {	        	
 	        	alert('<spring:message code="ezPoll.t148"/>');
 	        	document.getElementById("option1").focus();
 	        	return false;
-	        }	   
+	        }
+	        else if(chkFlags < 0){
+	        	alert('<spring:message code="ezPoll.t152"/>');
+	        	return false;
+	        }
 	        
 	        L_StartDate = L_StartDate.substring(0, 10);
 	        L_EndDate 	= L_EndDate.substring(0, 10);
@@ -1200,11 +1221,11 @@
 				<tr>    <!------------Question setting---------------->
 					<td>
 					<div class="qstSetting">
-						<input id="multipleCheck" type="checkbox" checked> <span><spring:message code="ezPoll.t154"/></span>
-						<div id="numberOfMultiSelect" style="display: inline-block; margin-left: 5px;">
+						<input id="multipleCheck" type="checkbox"> <span><spring:message code="ezPoll.t154"/></span>
+						<div id="numberOfMultiSelect" style="display: none; margin-left: 5px;">
 							<%-- <span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span> --%>
 							<select id="myList">
-								<option value="1"><spring:message code="ezPoll.t156"/></option>
+								<option value="1"><spring:message code = 'ezEmail.lhm67'/></option>
 								<option value="2">2</option>
 								<option value="3">3</option>
 								<option value="4">4</option>

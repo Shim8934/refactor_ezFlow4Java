@@ -315,11 +315,6 @@
 </head>
 <body class="popup">
 	<h1 id ="topMenu" ><spring:message code='ezWebFolder.t120'/></h1>
-	<div id="close">
-		<ul>
-			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110' /></span></li>
-		</ul>
-	</div>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<c:if test="${mode != 'normal'}">
 			<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="getData();">
@@ -329,18 +324,19 @@
 			</select>
 		</c:if>
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;" onclick="getData();"> <span><spring:message code="ezWebFolder.t233"/></span>
-			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;" onclick="getData();"> <span><spring:message code="ezWebFolder.t234"/></span>
+			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"> <span><spring:message code="ezWebFolder.t233"/></span>
+			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"> <span><spring:message code="ezWebFolder.t234"/></span>
 			<c:if test="${mode == 'normal'}">
-				<input name="treeType" id="radio3" type="radio" value="user"     style="margin:0px;padding:0px;width:13px;height:13px;" onclick="getData();"> <span><spring:message code="ezWebFolder.t235"/></span>
+				<input name="treeType" id="radio3" type="radio" value="user"     style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"> <span><spring:message code="ezWebFolder.t235"/></span>
 			</c:if>
 		</div>
 	</div>
-	<div style="margin: 5px 10px 10px 10px; border: 1px solid #666666; min-height: 350px; height: 350px; overflow: auto; padding: 5px 0px 0px 5px;" id="folderTree"></div>
+	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding: 5px 0px 0px 5px;" id="folderTree"></div>
 	
-	<div style="margin: 8px 0px; position:fixed; bottom: 0px; text-align: center; width: 100%;">
+	<div style="margin: 0px 0px 15px; position:fixed; bottom: 0px; text-align: center; width: 100%;">
 		<a id="btnSave"   class="webfolderBttn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
 		<a id="btnCancel" class="webfolderBttn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
+		<a id="btnClose"  class="webfolderBttn" onClick="wClose();"><span><spring:message code='ezWebFolder.t112'/></span></a>
 	</div>
 	
 </body>

@@ -227,7 +227,8 @@
 				}
 			});
 	    }
-
+	
+	    var rgParams = new Array();
 	    var checkname2_cross_dialogArguments = new Array();
 	    function deptsearch_click() {
 	        if (document.getElementById("keyword").value == "") {
@@ -284,7 +285,7 @@
 				}
 			});
 
-	        if (adCount == 0) {
+			if (adCount == 0) {
 	            alert("<spring:message code='ezTask.t192' />");
 	            return;
 	        }
@@ -299,7 +300,6 @@
 	            g_xmlHTTP.send(strQuery);
 	        }
 	        else {
-	            var rgParams = new Array();
 	            rgParams["addrBook"] = xmlDom;
 	            rgParams["deptid"] = "";
 
@@ -307,7 +307,10 @@
 	            checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
 
 	            if (CrossYN()) {
-	                DivPopUpShow(595, 310, "/ezTask/taskCheckName2.do");
+	            	/* 2018-04-26 김민성 - 중복 부서 검색시 팝업창 뜨도록 수정  */
+	                //DivPopUpShow(595, 310, "/ezTask/taskCheckName2.do");
+	                var OpenWin = window.open("/ezTask/taskCheckName2.do", "checkname2_cross", GetOpenWindowfeature(600, 320));
+	             	 OpenWin.focus();
 	            }
 	            else {
 	                var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
@@ -411,12 +414,12 @@
 	            rtn["deptname2"][i] = GetAttribute(listview.GetDataRows()[i],"DATA4");
 	            rtn["email"][i] = GetAttribute(listview.GetDataRows()[i],"DATA6");
 	        }
-
+	     
 	        if (ReturnFunction != null) {
 	        	ReturnFunction(rtn);
 	        } else {
-	            window.returnValue = rtn;
-	        }
+	        	window.returnValue = rtn;
+	        } 
 	    }
 
 	    function DisplayUserImageList() {
@@ -436,7 +439,7 @@
 	        
 	        var UserListHTML = "";
 	        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-	            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang43 + "</span>]";
+	            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang43 + "</span>]";
 	            SelectDeptNM.setAttribute("countinfo", "1")
 	        }
 	        
@@ -447,7 +450,7 @@
 	            document.getElementById("Search_txtlist_table").style.display = "none";
 	            
 	            if (pSeach) {
-	                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang44 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang43 + "</span>]";
+	                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang44 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang43 + "</span>]";
 	                SelectDeptNM.setAttribute("countinfo", "1");
 	            }
 	        } else {
@@ -460,7 +463,7 @@
                 } else {
                     document.getElementById("Search_txtlist_table").style.display = "";
                     document.getElementById("txtlist_table").style.display = "none";
-                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang44 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang43 + "</span>]";
+                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang44 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang43 + "</span>]";
                     SelectDeptNM.setAttribute("countinfo", "1")
                 }
             }

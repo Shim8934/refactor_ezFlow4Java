@@ -228,7 +228,13 @@
 	            }
 	
 	            if (type == "DEL") {
-	                selCell.removeAttribute("id");
+	            	// 일지 양식작성에서 사용하는 부분
+	            	if ("${type}" == "JOURNAL") {
+	            		selCell.removeAttribute("id");
+	            		selCell.innerHTML = "";
+	            	} else {
+		                selCell.removeAttribute("id");
+	            	}
 	
 	                if (selCell.classList != null) {
 	                    if (selCell.classList.contains("FIELD"))
@@ -284,7 +290,13 @@
 	                }
 	            }
 	            else {
-	                selCell.setAttribute("id", id);
+	            	// 일지 양식작성에서 사용하는 부분
+	            	if ("${type}" == "JOURNAL") {
+	            		selCell.setAttribute("id", id);
+	            		selCell.innerHTML = "@" + id;
+	            	} else {
+		                selCell.setAttribute("id", id);
+	            	}
 	
 	                if (selCell.classList != null) {
 	                    if (!selCell.classList.contains("FIELD"))

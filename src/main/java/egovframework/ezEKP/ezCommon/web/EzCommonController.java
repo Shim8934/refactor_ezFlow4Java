@@ -445,6 +445,10 @@ public class EzCommonController extends EgovFileMngUtil{
 		} else {
 			fileName = filePath.substring(filePath.lastIndexOf(commonUtil.separator) + 1); 
 		}
+		/* 2018-05-04 홍승비 - 포탈 홈 화면에서 커뮤니티 디폴트 썸네일 표출하기 */
+		if(fileName.equals("default_logo_empty.png")) {
+			filePath = "/images/ezCommunity/logo/default_logo_empty.png";			
+		}
 		
 		downFile(request, response, realPath + filePath, fileName);
 //		ezCommonService.responseAttach(filePath, fileName, true, request, response);

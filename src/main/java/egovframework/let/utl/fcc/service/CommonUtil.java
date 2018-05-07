@@ -997,8 +997,7 @@ public class CommonUtil {
 	 */
 	public String getTenantConfigRest(String property, String userId, HttpServletRequest request) throws Exception {
 
-	//	String gwServerUrl = config.getProperty("config.journalGWServerURL");
-		String gwServerUrl = "http://localhost:8080";
+		String gwServerUrl = config.getProperty("config.journalGWServerURL");
 		String url = gwServerUrl + "/rest/ezcommon/configs";
 				
 		HttpHeaders headers = new HttpHeaders();
@@ -1028,6 +1027,111 @@ public class CommonUtil {
         
         return propertyValue;
     }
+	//html entity unescape 메서드 2018-04-06 강민수92
+	public String htmlUnescape(String html) throws Exception {
+		html = html.replace("&quot;", "\"");
+		html = html.replace("&#39;", "'");
+		html = html.replace("&lt;", "<");
+		html = html.replace("&gt;", ">");
+		html = html.replace("&iexcl;", "¡");
+		html = html.replace("&curren;", "¤");
+		html = html.replace("&sect;", "§");
+		html = html.replace("&ordf;", "ª");
+		html = html.replace("&deg;", "°");
+		html = html.replace("&plusmn;", "±");
+		html = html.replace("&sup2;", "²");
+		html = html.replace("&sup3;", "³");
+		html = html.replace("&acute;", "´");
+		html = html.replace("&mu;", "μ");
+		html = html.replace("&pa;", "¶");
+		html = html.replace("&middot;", "·");
+		html = html.replace("&cedil;", "¸");
+		html = html.replace("&sup1;", "¹");
+		html = html.replace("&ordm;", "º");
+		html = html.replace("&frac14;", "¼");
+		html = html.replace("&frac12;", "½");
+		html = html.replace("&frac34;", "¾");
+		html = html.replace("&iquest;", "¿");
+		html = html.replace("&AElig;", "Æ");
+		html = html.replace("&ETH;", "Ð");
+		html = html.replace("&times;", "×");
+		html = html.replace("&Oslash;", "Ø");
+		html = html.replace("&THORN;", "Þ");
+		html = html.replace("&szlig;", "ß");
+		html = html.replace("&aelig;", "æ");
+		html = html.replace("&eth;", "ð");
+		html = html.replace("&divide;", "÷");
+		html = html.replace("&oslash;", "ø");
+		html = html.replace("&thorn;", "þ");
+		html = html.replace("&amp;", "&");
+		
+		String result = html;
+		
+		logger.debug("html result : " + result); 
+		return result;
+		
+	}
+	
+	/**
+	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
+	 * @param resteUrl
+	 * @param param
+	 * @param request
+	 * @return
+	 */
+	public JSONObject getJsonFromRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
+		logger.debug("getJsonFromRestApi started");
+		String gwServerUrl = config.getProperty("config.journalGWServerURL");
+		String url = gwServerUrl + restUrl ;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		if (param != null) {
+			for(String key : param.keySet()){
+				builder.queryParam(key, param.get(key));
+			}
+		}
+		
+		RestTemplate rest = new RestTemplate();
+		
+		HttpMethod method = null;
+		switch (methodType) {
+		case "get":
+			method = HttpMethod.GET;
+			break;
+		case "put":
+			method = HttpMethod.PUT;
+			break;
+		case "post":
+			method = HttpMethod.POST;
+			break;
+		case "delete":
+			method = HttpMethod.DELETE;
+			break;
+		default:
+			method = HttpMethod.GET;
+			break;
+		}
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = null;
+		
+		try {
+			resultBody = (JSONObject) jp.parse(result.getBody());
+		} catch (org.json.simple.parser.ParseException e) {
+			e.printStackTrace();
+		}
+		logger.debug("getJsonFromRestApi ended");
+		return resultBody;
+	}
 	
 	/**
 	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드

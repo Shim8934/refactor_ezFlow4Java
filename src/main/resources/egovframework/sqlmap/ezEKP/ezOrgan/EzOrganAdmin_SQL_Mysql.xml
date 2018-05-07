@@ -65,6 +65,9 @@
 					<isEqual property="search_keycode" compareValue="2">
 						DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
+					<isEqual property="search_keycode" compareValue="3">
+						CN LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 	</sql>
