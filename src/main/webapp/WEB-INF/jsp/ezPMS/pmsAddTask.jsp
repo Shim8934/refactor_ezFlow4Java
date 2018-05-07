@@ -145,10 +145,10 @@ function openGroupTree() {
 		if(headManagerId == managerList[i].userId) {
 			managerNameList += "<b>"
 			managerNameList += managerList[i].userName;
-			managerNameList += "(" + managerList[i].userDept + ")</b>, ";
+			managerNameList += "(" + managerList[i].userDeptname + ")</b>, ";
 		} else {
 			managerNameList += managerList[i].userName;
-			managerNameList += "(" + managerList[i].userDept + "), ";
+			managerNameList += "(" + managerList[i].userDeptname + "), ";
 		}
 		
 	 }

@@ -200,4 +200,12 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		update ("EzPMS.updateProjectRealStartDate", map);
 		
 	}
+	
+	public String getKanbanOrder(Map<String, Object> map) {
+		return (String) select("EzPMSDAO.getKanbanOrder", map);
+	}
+	
+	public void addTaskGroup(Map<String, Object> map) {
+		insert ("EzPMSDAO.addTaskGroup", map);
+	}
 }

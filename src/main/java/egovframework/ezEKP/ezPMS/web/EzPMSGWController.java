@@ -118,27 +118,38 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			ProjectInfoVO newProject = new ProjectInfoVO();
-			newProject.setProjectName(request.getParameter("projectName"));
-			newProject.setWeightInput(Integer.parseInt(request.getParameter("weightInput")));
-			newProject.setPlanStartDate(request.getParameter("planStartDate"));
-			newProject.setPlanEndDate(request.getParameter("planEndDate"));
-			newProject.setOverview(request.getParameter("overview"));
-			newProject.setAlamMailStatus(Integer.parseInt(request.getParameter("endAlamStatus")));
-			newProject.setHeadManagerId(request.getParameter("headManagerId"));
-			newProject.setCreatorName(request.getParameter("writerName"));
-			newProject.setCreatorId(request.getParameter("creatorId"));
-			newProject.setCreateDate(request.getParameter("createDate"));
-			newProject.setCreatorName(request.getParameter("creatorName"));
-			newProject.setCreatorName2(request.getParameter("creatorName2"));
-			newProject.setCreatorDeptname(request.getParameter("creatorDeptname"));
-			newProject.setCreatorDeptname2(request.getParameter("creatorDeptname2"));
+			Map<String, Object> project = new HashMap<String, Object>();
+			project.put("projectName", request.getParameter("projectName"));
+			project.put("weightInput", request.getParameter("weightInput"));
+			project.put("planStartDate", request.getParameter("planStartDate"));
+			project.put("planEndDate", request.getParameter("planEndDate"));
+			project.put("overview", request.getParameter("overview"));
+			project.put("endAlamStatus", request.getParameter("endAlamStatus"));
+			project.put("headManagerId", request.getParameter("headManagerId"));
+			project.put("writerName", request.getParameter("writerName"));
+			project.put("creatorId", request.getParameter("userId"));
+			project.put("creatorName", request.getParameter("creatorName"));
+			project.put("creatorName2", request.getParameter("creatorName2"));
+			project.put("creatorDeptname", request.getParameter("creatorDeptname"));
+			project.put("creatorDeptname2", request.getParameter("creatorDeptname2"));
+			project.put("createDate", request.getParameter("createDate"));
+			project.put("tenantId", info.getTenantId());
+			project.put("treeDepth", 0);
+			project.put("ancestorGroup", "0");
+			project.put("sortOrder", 1);
+			project.put("status", "W");
+			project.put("upperGroupId", 0);
 			
-			int projectId = ezPMSService.addNewProject(newProject, request.getParameter("tenantId"));
+			int projectId = ezPMSService.addNewProject(project);
 			
 			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json.get("managerList");
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("participantList"));
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("viewerList"));
+			
+			project.put("projectId", projectId);
+			project.put("groupName", request.getParameter("projectName"));
+			project.put("memberCount", projectMemberList.size());
+			ezPMSService.addGroup(project);
 			
 			for (int i = 0; i < projectMemberList.size(); i++) {
 				String userId = projectMemberList.get(i).get("userId").toString();
@@ -391,10 +402,15 @@ public class EzPMSGWController {
 			String deptId = info.getDeptId();
 			
 			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, mode, lang, deptId);
+			String kanbanOrder = ezPMSService.getKanbanOrder(projectId, userId, tenantId);
+			
+			JSONObject data = new JSONObject();
+			data.put("project", project);
+			data.put("kanbanOrder", kanbanOrder);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", project);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			

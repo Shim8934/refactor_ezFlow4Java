@@ -280,7 +280,8 @@ public class EzPMSController {
 			String status = result.get("status").toString();
 			
 			if (status.equals("ok")) {
-				JSONObject project = (JSONObject) result.get("data");
+				JSONObject resultJson = (JSONObject) result.get("data");
+				JSONObject project = (JSONObject) resultJson.get("project");
 				
 				model.addAttribute("project", project);
 			}
@@ -313,13 +314,13 @@ public class EzPMSController {
 			String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 			
 			param.put("writerName", writerName);
-			param.put("creatorId", userInfo.getId());
 			param.put("tenantId", userInfo.getTenantId());
 			param.put("createDate", today);
 			param.put("creatorName", userInfo.getDisplayName1());
 			param.put("creatorName2", userInfo.getDisplayName2());
 			param.put("creatorDeptname", userInfo.getDeptName1());
 			param.put("creatorDeptname2", userInfo.getDeptName2());
+			param.put("userId", userInfo.getId());
 			
 			JSONObject jsonList = new JSONObject();
 			jsonList.put("managerList", param.get("managerList"));
@@ -486,8 +487,13 @@ public class EzPMSController {
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
-			JSONObject project = (JSONObject) result.get("data");
+			JSONObject resultJson = (JSONObject) result.get("data");
+			JSONObject project = (JSONObject) resultJson.get("project");
+			
+			String kanbanOrder = resultJson.get("kanbanOrder").toString();
+			
 			model.addAttribute("project", project);
+			model.addAttribute("kanbanOrder", kanbanOrder);
 		}
 		
 		LOGGER.debug("ezPMS getProjectOverview ended");		
@@ -552,6 +558,17 @@ public class EzPMSController {
 		
 		LOGGER.debug("ezPMS getTaskList ended");			
 		return null;
+	}
+	
+	/**
+	 * 칸반 환경설정 화면 호출
+	 */
+	@RequestMapping(value = "/ezPMS/kanbanSetting.do")
+	public String kanbanSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model mode) throws Exception {
+		LOGGER.debug("ezPMS kanbanSetting started");	
+		
+		LOGGER.debug("ezPMS kanbanSetting ended");
+		return "ezPMS/pmsKanbanSetting";
 	}
 	
 	/**

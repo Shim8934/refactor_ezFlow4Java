@@ -351,7 +351,7 @@
     			#headManagerId#,		#headManagerName#,		#headManagerName2#,			#headManagerDeptname#,	#headManagerDeptname2#,	
     			#status#,				#progress#,				#overview#,					#weightInput#,			#creatorId#, 
     			#creatorName#,			#creatorName2#,			#creatorDeptname#,			#creatorDeptname2#,		#workingDay#,
-    			#restDueday#,			#alamMailStatus#,       #createDate#
+    			#restDueday#,			#endAlamStatus#,        #createDate#
     		)
     	]]>
     	<selectKey keyProperty="id" resultClass="Integer">
@@ -764,7 +764,7 @@
 	
 	<select id="EzPMSDAO.getSortOrder" parameterClass="String" resultClass="int">
 		SELECT
-			MAX(a.sort_order) + 1
+			IFNULL(MAX(a.sort_order) + 1, 0)
 		FROM
 			(SELECT
 				sort_order
@@ -1182,4 +1182,42 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</update>
+	
+	<select id="EzPMSDAO.getKanbanOrder" parameterClass="map" resultClass="String">
+		<![CDATA[
+			SELECT	
+				KANBAN_ORDER	
+			FROM 
+				TBL_PMS_MAINLIST	
+			WHERE 
+				USER_ID = #userId#
+			AND
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<insert id="EzPMSDAO.addTaskGroup" parameterClass="map">
+		<![CDATA[
+			INSERT INTO	TBL_PMS_GROUP (
+				TENANT_ID,			PROJECT_ID,			GROUP_NAME,				UPPER_GROUP_ID,	
+				PLAN_START_DATE,	PLAN_END_DATE,		CREATE_DATE,			CREATOR_NAME,
+				CREATOR_NAME2,		CREATOR_ID,			CREATOR_DEPTNAME,		CREATOR_DEPTNAME2,
+				REAL_PROGRESS,		OVERVIEW,			MEMBER_COUNT,			HEAD_MANAGER_ID,
+				HEAD_MANAGER_NAME,	HEAD_MANAGER_NAME2,	HEAD_MANAGER_DEPTNAME,	HEAD_MANAGER_DEPTNAME2,	
+				TREE_DEPTH,			ANCESTER_GROUP,		SORT_ORDER,				DEL_STATUS,			
+				WORKINGDAY,			REST_DUEDAY
+			)
+			VALUES	(
+				#tenantId#,			#projectId#,		#groupName#,			#upperGroupId#,
+				#planStartDate#,	#planEndDate#,		#createDate#,			#creatorName#,
+				#creatorName2#,		#creatorId#,		#creatorDeptname#,		#creatorDeptname2#,
+				#progress#,			#overview#,			#memberCount#,			#headManagerId#,
+				#headManagerName#,	#headManagerName2#,	#headManagerDeptname#,	#headManagerDeptname2#,
+				#treeDepth#,		#ancestorGroup#,	#sortOrder#,			#delStatus#,
+				#workingDay#,		#restDueday#
+			)
+		]]>
+	</insert>
 </sqlMap>

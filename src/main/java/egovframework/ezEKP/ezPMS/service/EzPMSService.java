@@ -24,7 +24,7 @@ public interface EzPMSService {
 
 	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status, Map<String, Object> search, String offset, String lang);
 	
-	public int addNewProject(ProjectInfoVO newProject, String tenantId);
+	public int addNewProject(Map<String, Object> map);
 	
 	public void deleteProject(int tenantId, int projectId);
 	
@@ -78,7 +78,7 @@ public interface EzPMSService {
 	
 	public int deleteTask(int taskId);
 	
-	public int addGroup(ProjectGroupVO group);
+	public void addGroup(Map<String, Object> map);
 	
 	public ProjectGroupVO getGroupDetails(int groupId);
 	

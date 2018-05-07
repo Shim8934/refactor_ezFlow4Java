@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.swing.SortOrder;
 
 import org.apache.tools.ant.Project;
 import org.json.simple.JSONObject;
@@ -54,7 +55,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status,
 			Map<String, Object> search, String offset, String lang) {
-		LOGGER.debug("Service getProjectList started.");
+		LOGGER.debug("[SERVICE] getProjectList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
@@ -111,36 +112,21 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
 		
-		LOGGER.debug("Service getProjectList ended.");
+		LOGGER.debug("[SERVICE] getProjectList ended.");
 		return projectList;
 	}
 
 	@Override
-	public int addNewProject(ProjectInfoVO newProject, String tenantId) {
-		LOGGER.debug("Service addNewProject started.");
+	public int addNewProject(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] addNewProject started.");
 		
-		Map<String, Object> map = new HashMap<>();
-		map.put("projectName", newProject.getProjectName());
-		map.put("weightInput", newProject.getWeightInput());
-		map.put("planStartDate", newProject.getPlanStartDate());
-		map.put("planEndDate", newProject.getPlanEndDate());
-		map.put("overview", newProject.getOverview());
-		map.put("alamMailStatus", newProject.getAlamMailStatus());
-		map.put("headManagerId", newProject.getHeadManagerId());
-		map.put("tenantId", tenantId);
-		map.put("createDate", newProject.getCreateDate());
-		map.put("creatorName", newProject.getCreatorName());
-		map.put("creatorName2", newProject.getCreatorName2());
-		map.put("creatorDeptname", newProject.getCreatorDeptname());
-		map.put("creatorDeptname2", newProject.getCreatorDeptname2());
-		map.put("creatorId", newProject.getCreatorId());
 		map.put("progress", 0);
 		
 		try {
 			//날짜 차이 계산
-			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getPlanStartDate());
-			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getPlanEndDate());
-			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(newProject.getCreateDate());
+			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planStartDate").toString());
+			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planEndDate").toString());
+			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("createDate").toString());
 			
 			int createAndStartDateComp = createDate.compareTo(startDate);
 			int workingDays = 0;
@@ -150,32 +136,24 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			} else {
 				workingDays = getWorkinDays(createDate, endDate);
 			}
-			
-			int createAndEndDateComp = createDate.compareTo(endDate);
-			
-			if(createAndEndDateComp > 0) {
-				map.put("status", "L");
-			} else {
-				map.put("status", "W");
-			}
 						
-			//map.put("workingDay", workingDays);
-			map.put("workingDay", 0);
+			map.put("workingDay", workingDays);
+			//map.put("workingDay", 0);
 			map.put("restDueday", workingDays);
 			
 			//프로젝트 총괄담당자 정보 불러오기
-			ProjectMemberVO headManagerInfo = getUserInfo(newProject.getHeadManagerId(), Integer.parseInt(tenantId), "user");
+			ProjectMemberVO headManagerInfo = getUserInfo(map.get("headManagerId").toString(), Integer.parseInt(map.get("tenantId").toString()), "user");
 			map.put("headManagerDeptname", headManagerInfo.getUserDeptname());
 			map.put("headManagerDeptname2", headManagerInfo.getUserDeptname2());
 			map.put("headManagerName", headManagerInfo.getUserName());
 			map.put("headManagerName2", headManagerInfo.getUserName2());
 			
 		} catch (Exception e) {
-			LOGGER.debug("Error : " + e.getMessage());
+			LOGGER.debug("Error : " + e.getMessage() + " " + e.getStackTrace());
 		}
 		
 		int projectId = ezPMSDAO.addNewProject(map);
-		LOGGER.debug("Service addNewProject ended.");
+		LOGGER.debug("[SERVICE] addNewProject ended.");
 		return projectId;
 	}
 
@@ -449,8 +427,22 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public String getKanbanOrder(int projectId, String userId, int tenantId) {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.debug("[SERVICE] getKanbanOrder started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		
+		String kanbanOrder = ezPMSDAO.getKanbanOrder(map);
+		
+		if (kanbanOrder == null || kanbanOrder.equals("")) {
+			//default : 나의 전체업무, 전체 진행중인업무, 전체 완료된업무, 게시판
+			kanbanOrder = "MA,P,C,B";
+		}
+		
+		LOGGER.debug("[SERVICE] getKanbanOrder ended.");
+		return kanbanOrder;
 	}
 
 	@Override
@@ -461,7 +453,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectTaskVO> getTaskList(SearchVO search) {
-		LOGGER.debug("getTaskList started");
+		LOGGER.debug("[SERVICE] getTaskList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", "juhongsun");
@@ -478,7 +470,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		List<ProjectTaskVO> list = ezPMSDAO.getTaskList(param);
 		
-		LOGGER.debug("getTaskList ended");
+		LOGGER.debug("[SERVICE] getTaskList ended");
 		return list;
 	}
 
@@ -490,7 +482,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList) {
-		LOGGER.debug("Service addTask started.");
+		LOGGER.debug("[SERVICE] addTask started.");
 		Long taskId = (long) 0;
 		
 		try {
@@ -565,7 +557,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("Service addTask ended.");
+		LOGGER.debug("[SERVICE] addTask ended.");
 		
 		return taskId.intValue();
 	}
@@ -595,9 +587,38 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int addGroup(ProjectGroupVO group) {
-		// TODO Auto-generated method stub
-		return 0;
+	public void addGroup(Map<String, Object> map) {
+		map.put("delStatus", 0);
+		
+		try{
+			//날짜 차이 계산
+			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planStartDate").toString());
+			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planEndDate").toString());
+			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("createDate").toString());
+			
+			int createAndStartDateComp = createDate.compareTo(startDate);
+			int workingDays = 0;
+			
+			if (createAndStartDateComp <= 0) {
+				workingDays = getWorkinDays(startDate, endDate);
+			} else {
+				workingDays = getWorkinDays(createDate, endDate);
+			}
+						
+			map.put("workingDay", workingDays);
+			map.put("restDueday", workingDays);
+			
+			//프로젝트 총괄담당자 정보 불러오기
+			ProjectMemberVO headManagerInfo = getUserInfo(map.get("headManagerId").toString(), Integer.parseInt(map.get("tenantId").toString()), "user");
+			map.put("headManagerDeptname", headManagerInfo.getUserDeptname());
+			map.put("headManagerDeptname2", headManagerInfo.getUserDeptname2());
+			map.put("headManagerName", headManagerInfo.getUserName());
+			map.put("headManagerName2", headManagerInfo.getUserName2());
+		} catch (Exception e) {
+			LOGGER.debug("ERROR : " + e.getMessage() + " " + e.getStackTrace());
+		}
+		ezPMSDAO.addTaskGroup(map);
+		
 	}
 
 	@Override
@@ -626,7 +647,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId, String userIdType) {
-		LOGGER.debug("getProjectMainSetting started.");
+		LOGGER.debug("[SERVICE] getProjectMainSetting started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -644,7 +665,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		
 		LOGGER.debug("[mainSetting] userMail : " + mainSetting.getUserMail());
-		LOGGER.debug("getProjectMainSetting ended.");
+		LOGGER.debug("[SERVICE] getProjectMainSetting ended.");
 		return mainSetting;
 	}
 
@@ -770,7 +791,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	//유저의 프로젝트 role 확인
 	@Override
 	public List<Integer> getUserProjectRole (String userId, int tenantId, int projectId, String deptId) {
-		LOGGER.debug("DAO getUserProjectRole started");
+		LOGGER.debug("[SERVICE] getUserProjectRole started");
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
@@ -778,7 +799,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("deptId", deptId);
 		
 		List<Integer> projectRole = ezPMSDAO.getUserProjectRole(param);
-		LOGGER.debug("DAO getUserProjectRole ended");
+		LOGGER.debug("[SERVICE] getUserProjectRole ended");
 		return projectRole;
 	}
 	
@@ -790,7 +811,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId) {		
-		LOGGER.debug("Service ezPMS addProjectMember Started");
+		LOGGER.debug("[SERVICE] ezPMS addProjectMember Started");
 		HashMap<String, Object> map = new HashMap<>();
 		
 		try {
@@ -813,7 +834,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			LOGGER.debug("ERROR : " + e.getMessage());
 		}
 		
-		LOGGER.debug("Service ezPMS addProjectMember Ended");
+		LOGGER.debug("[SERVICE] ezPMS addProjectMember Ended");
 	}
 
 	@Override
@@ -823,38 +844,38 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<TaskMemberVO> getTaskMemberList(int tenantId, long taskId, String lang) {
-		LOGGER.debug("Service ezPMS getTaskMemberList Started");
+		LOGGER.debug("[SERVICE] ezPMS getTaskMemberList Started");
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("taskId", taskId);
 		map.put("tenantId", tenantId);
 		map.put("lang", lang);
 		
 		List<TaskMemberVO> taskMemberList = ezPMSDAO.getTaskMemberList(map);
-		LOGGER.debug("Service ezPMS getTaskMemberList Ended");
+		LOGGER.debug("[SERVICE] ezPMS getTaskMemberList Ended");
 		return taskMemberList;
 	}
 
 	@Override
 	public void deleteProjectMember(int projectId, int tenantId) {
-		LOGGER.debug("Service deleteProjectMember Started");
+		LOGGER.debug("[SERVICE] deleteProjectMember Started");
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		
 		ezPMSDAO.deleteProjectMember(map);
 		
-		LOGGER.debug("Service deleteProjectMember Ended");
+		LOGGER.debug("[SERVICE] deleteProjectMember Ended");
 	}
 
 	@Override
 	public void updateProjectRealStartDate(int projectId, int tenantId, String realStartDate) {
-		LOGGER.debug("Service updateProjectRealStartDate Started");
+		LOGGER.debug("[SERVICE] updateProjectRealStartDate Started");
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		map.put("realStartDate", realStartDate);
 		
 		ezPMSDAO.updateProjectRealStartDate(map);
-		LOGGER.debug("Service updateProjectRealStartDate Ended");
+		LOGGER.debug("[SERVICE] updateProjectRealStartDate Ended");
 	}
 }

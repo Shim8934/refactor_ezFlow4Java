@@ -24,6 +24,7 @@ var progress = "${project.progress}";
 var status = "${project.status}";
 var strHTML = "";
 var projectId = "${project.projectId}";
+var kanbanOrder = "${kanbanOrder}";
 
 $(document).ready(function(){
 	$(window).resize(function() {
@@ -38,6 +39,7 @@ $(function() {
 	$(".overview").css("height", CurrentHeight + "px");
 	$(".kanban").css("height", CurrentHeight - 14 + "px");
 	
+	setKanbanList();
 	ableToChangeStatus();
 	initProgressBar();
 	
@@ -116,6 +118,48 @@ function editProjectInfo() {
 	addProjectPopup(5, 20, 845, 480, "/ezPMS/newProject.do?mode=" + "edit" + "&projectId=" + projectId);
 }
 
+function kanbanSetting() {
+	addProjectPopup(18, 29, 500, 350, "/ezPMS/kanbanSetting.do?projectId=" + projectId);
+}
+
+function setKanbanList() {
+	var kanbanOrderArr = kanbanOrder.split(",");
+	
+	for (var i = 0; i < kanbanOrderArr.length; i++) {
+		var title = "";
+		
+		if (kanbanOrderArr[i].indexOf("M") != -1) {
+			title += "나의 ";
+		}
+		
+		switch (kanbanOrderArr[i].slice(-1)) {
+		case "A" : 
+			title += "전체 업무";
+			break;
+		case "W" :
+			title += "대기 중인 업무";
+			break;
+		case "P" :
+			title += "진행 중인 업무";
+			break;
+		case "C" :
+			title += "완료된 업무"
+			break;
+		case "S" :
+			title += "보류된 업무";
+			break;
+		case "L" :
+			title += "기한이 지난 업무";
+			break;
+		case "B" :
+			title += "게시판";
+			break;
+		}
+		
+		$("#kanban" + (i + 1)).find("h1").text(title);
+	}
+}
+
 </script>
 <style type="text/css">
 #kanbanArea {
@@ -173,7 +217,7 @@ function editProjectInfo() {
 </head>
 <body>
 <div id="kanbanArea" class="overview">
-	<div id="firstKanban" class="kanban">
+	<div id="kanban1" class="kanban">
 		<h1>나의 업무</h1>
 		<div class="card">hello
 		</div>  
@@ -186,7 +230,7 @@ function editProjectInfo() {
 		<div class="card">hello
 		</div>  
 	</div>
-	<div id="secondKanban" class="kanban">
+	<div id="kanban2" class="kanban">
 		<h1>전체 업무</h1>
 		<div class="card">hello
 		</div>  
@@ -199,7 +243,7 @@ function editProjectInfo() {
 		<div class="card">hello
 		</div>  
 	</div>
-	<div id="thirdKanban" class="kanban">
+	<div id="kanban3" class="kanban">
 		<h1>완료된 업무</h1>
 		<div class="card">hello
 		</div>  
@@ -212,7 +256,7 @@ function editProjectInfo() {
 		<div class="card">hello
 		</div>  
 	</div>
-	<div id="forthKanban" class="kanban">
+	<div id="kanban4" class="kanban">
 		<h1>게시판</h1>
 		<div class="card">hello
 		</div>  
@@ -230,7 +274,7 @@ function editProjectInfo() {
 <div id="iconArea" class="rightPart">
 		<div id="printReport" class="icon">출력</div>
 		<div id="editProjectInfo" class="icon" onclick="editProjectInfo()" style="cursor:pointer;"><img src="/images/ezLadder/icon_game03_no.png" style="width:40px; height:40px"></div>
-		<div id="setting" class="icon">환경설정</div>
+		<div id="setting" class="icon" style="cursor:pointer;" onclick="kanbanSetting()">환경설정</div>
 	</div>
 <div id="overviewArea" class="overview rightPart">
 	<div class="circle progress_graph" style="width:95%; top:15px;">

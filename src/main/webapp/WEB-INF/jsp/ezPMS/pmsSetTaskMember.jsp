@@ -104,7 +104,7 @@
 		   			}
 		   			
 		   			if (chkFlag) {
-		   				managerArray.push({"userName" : userName, "userId" : receiverId, "roleId" : 1, "userDept" : userDept, "pctinput" : 100, "nameType" : "user"});
+		   				managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 1, "userDeptname" : userDept, "pctinput" : 100, "userIdType" : "user"});
 		   				authList.push({"userName" : userName, "userId" : receiverId});
 		   			} else {
 		   				alert("이미 추가된 사용자 입니다.");
@@ -145,7 +145,7 @@
 			    		strHTML += "<td style='width: 75%;'>";
 			    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
 			    		strHTML += managerArray[i].userName;
-			    		strHTML += "(" + managerArray[i].userDept + ")";
+			    		strHTML += "(" + managerArray[i].userDeptname + ")";
 			    		strHTML += "</td>";
 			    		strHTML += "<td>";
 			    		strHTML += "<input type='text' name='" + managerArray[i].userId + "' value='100' style='width:40px;text-align:center'> %";

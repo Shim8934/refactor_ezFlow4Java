@@ -308,12 +308,12 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			Gson gson = new Gson();
-			ProjectGroupVO vo = new ProjectGroupVO();
-			vo = gson.fromJson(jsonParam.toJSONString(), ProjectGroupVO.class);
-			vo.setTenantId(info.getTenantId());
-			
-			ezPMSService.addGroup(vo);
+//			Gson gson = new Gson();
+//			ProjectGroupVO vo = new ProjectGroupVO();
+//			vo = gson.fromJson(jsonParam.toJSONString(), ProjectGroupVO.class);
+//			vo.setTenantId(info.getTenantId());
+//			
+//			ezPMSService.addGroup(vo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -436,7 +436,7 @@ public class EzPMSGWController2 {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
+		
 			List<ProjectTaskTreeVO> list = ezPMSService.getProjectTaskTree(Integer.parseInt(projectId), request.getParameter("onlyGroup"));
 			
 			LOGGER.debug(list.get(0).getText());
