@@ -120,7 +120,7 @@
 	    	
 			$.ajax ({
 				type:"POST",
-				async: true,
+				async: false,
 				url : "/ezWebFolder/fileList.do",
 				data : { 
 					 "folderId"   		: folderId,
@@ -137,41 +137,6 @@
 					},
 				dataType: "JSON",
 				success : function (data) {
-					var result = data.data;
-					
-					var fileCnt = result.fileCnt;
-					var fldCnt = result.fldCnt;
-					
-					var folderPath = result.folderPath;
-					var originalPath = result.originalPath;
-					var folderUpp = result.folderUpp;
-					var dragDropAreaElmt = document.getElementById("dragDropArea");
-					filelist = result.fileList;
-					
-					pagination.setListSize(result.listCount);
-					pagination.setAmount(result.totalRows);
-					pagination.build();
-					
-					if (folderUpp != 'root') {
-						$('#upload').css('display','inline');
-						dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
-						dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
-						dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
-					} else {
-						dragDropAreaElmt.ondragenter = null;
-						dragDropAreaElmt.ondragover  = null;
-						dragDropAreaElmt.ondragover  = null;
-					}
-					
-					$('#tblFileList tr td').parent().remove();
-					renderData(filelist);
-					
-					namePath(folderPath, originalPath);
-					document.getElementById("mailBoxInfo").innerHTML = " - [" + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
-					 + messages.strLang11 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
-						+ fileCnt +" </span>"  + messages.strLang11 + "]";
-					$("#listcount").val(result.listCount).prop("selected", true);
-					parent.frames["left"].drawVolume();
 					successFile(data);
 				},
 				error : function(error) {
@@ -206,7 +171,7 @@
 			
 			pagination.setListSize(result.listCount);
 			pagination.setAmount(result.totalRows);
-			pagination.build(true);
+			pagination.build();
 			
 			if (folderUpp != 'root') {
 				$('#upload').css('display','inline');
@@ -393,7 +358,7 @@
 					
 					if (result[i]["fileShareStatus"] == "Y") {
 						var spanElmt = document.createElement("span");
-						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
+						spanElmt.innerHTML = "<img src='/images/webfolder/sharing2.png' class='webFolderImg' />";
 						spanElmt.addEventListener("click", function () {
 							shareContext.showShareInfo(this);
 						});
@@ -746,7 +711,7 @@
 				<li><span onClick="refreshView()"><spring:message code='ezWebFolder.t139'/></span></li>
 				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 				<li style="float:left;">
-					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value);" style="width:100px; ">
+					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value);" style="height: 28px; border-radius: 3px; padding: 0px; padding-left: 4px; width: 80px; color: #666;">
 						<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
 						<option value="document" data-imagesrc="/images/webfolder/msWord.png"       ><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
 						<option value="music" data-imagesrc="/images/webfolder/mp3.png"      ><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
