@@ -172,6 +172,7 @@
 	    			$("#searchStartTime").val("");
 	    			$("#searchEndTime").val("");
 	    			$("[type='radio']:checked").val("");
+	    			$("#contentlist table.mainlist th").find("img").remove();
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";
@@ -179,6 +180,8 @@
 	    			searchStartTime = "";
 	    			searchEndTime = "";
 	    			searchGubun = "";
+	    			orderOption = "";
+	    			orderCell = "";
 	    		}
 	    		
 	    		pageNum = 1;
@@ -207,7 +210,11 @@
 	   			
 	   			selectedUserIdList = selectedUserIdList.slice(0, -2);
 	   			
-	   			editUserConf(selectedUserIdList)
+	   			if (selectedUserIdList == "") {
+	   				alert("수정할 사원을 선택해주세요.");
+	   			} else {
+		   			editUserConf(selectedUserIdList);
+	   			}
 	    	}
 	    	
 	    	function editUserConf(selectedUserIdList) {
