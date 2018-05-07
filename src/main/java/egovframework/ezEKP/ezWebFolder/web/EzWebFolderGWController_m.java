@@ -714,7 +714,7 @@ public class EzWebFolderGWController_m {
 		
 		JSONObject result = new JSONObject();
 
-		if (containsNull(serverName, userId)) {
+		if (containsNull(serverName, userId) || (containsNull(fileListStr) && containsNull(folderListStr))) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -789,7 +789,7 @@ public class EzWebFolderGWController_m {
 
 		JSONObject result = new JSONObject();
 
-		if (containsNull(serverName, userId)) {
+		if (containsNull(serverName, userId) || (containsNull(fileListStr) && containsNull(folderListStr))) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -1132,6 +1132,11 @@ public class EzWebFolderGWController_m {
 		return false;
 	}
 	
+	/**
+	 * 삭제 예정, 대체될 API는 아래 see also를 참고하십시오.
+	 * @see EzWebFolderService#getFolderPath
+	 * **/
+	@Deprecated
 	private String getFolderPath(String[] paths, String offset, String primaryLang, int tenantId) throws Exception {
 		StringBuilder result = new StringBuilder();
 		String folderName;

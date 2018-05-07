@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -583,11 +585,19 @@ public class EzWebFolderController_m {
 		logger.debug("getFavorites started.");
 		
 		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
+		String fileList = orElse(request.getParameter("fileList"), "");
+		String folderList = orElse(request.getParameter("folderList"), "");
 		
 		Map<String, Object> param = new HashMap<>();
 		// target info
-		param.put("fileList", orElse(request.getParameter("fileList"), ""));
-		param.put("folderList", orElse(request.getParameter("folderList"), ""));
+		param.put("fileList", fileList);
+		param.put("folderList", folderList);
+		
+		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
+		
+		if ("error".equals(permissionResult.get("status"))) {
+			return permissionResult.toString();
+		}
 		
 		JSONObject result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + user.getId() + "/favorite", param, request, "post", null);
 		
@@ -659,6 +669,43 @@ public class EzWebFolderController_m {
 		logger.debug("status=" + status);
 		logger.debug("moveTrashCan ended");
 		return "json";		
+	}
+	
+	private JSONObject checkPermission(HttpServletRequest request, String userId, String fileList, String folderList) {
+		Map<String, Object> checkPermission = new HashMap<>();
+		List<Map<String, Object>> checkList = new ArrayList<>();
+		Map<String, Object> map;
+		
+		String[] fileArray = fileList.split(",");
+		String[] folderArray = folderList.split(",");
+		
+		for (String fileId : fileArray) {
+			if (fileId.isEmpty()) {
+				continue;
+			}
+			
+			map = new HashMap<>();
+			map.put("checkId", fileId);
+			map.put("checkType", "F");
+			
+			checkList.add(map);
+		}
+		
+		for (String folderId : folderArray) {
+			if (folderId.isEmpty()) {
+				continue;
+			}
+			
+			map = new HashMap<>();
+			map.put("checkId", folderId);
+			map.put("checkType", "D");
+			
+			checkList.add(map);
+		}
+		
+		checkPermission.put("checkList"	, checkList);
+		
+		return commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userId + "/checkpermission", null, request, "post", new JSONObject(checkPermission));
 	}
 	
 	private <T> T orElse(T value, T other) {
