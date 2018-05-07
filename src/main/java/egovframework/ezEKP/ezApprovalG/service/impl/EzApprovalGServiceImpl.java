@@ -18606,7 +18606,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_temp3", 0);
 		map.put("v_temp4", 0);
-		
+		map.put("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", tenantID));
+
 		if (checkMode.equals("VIE")) {
 			v_temp  = ezApprovalGDAO.countVieTempDocID(map);
 			map.put("v_temp", v_temp);

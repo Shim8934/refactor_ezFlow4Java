@@ -1014,7 +1014,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 사용자별 근태설정 리스트 출력
+	 * 근무시간관리 리스트 출력
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConfList.do")
 	@ResponseBody
@@ -1029,7 +1029,7 @@ public class EzAttitudeAdminBOMController {
 		String searchTitle = request.getParameter("title");
 		String searchStartTime = request.getParameter("startTime");
 		String searchEndTime = request.getParameter("endTime");
-		String searchCompareValue = request.getParameter("compareValue");
+		String searchGubun = request.getParameter("gubun");
 		String pageNum = request.getParameter("pageNum");
 		String listSize = request.getParameter("listSize");
 		String orderCell = request.getParameter("orderCell");
@@ -1037,7 +1037,7 @@ public class EzAttitudeAdminBOMController {
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		LOGGER.debug("userName : " + searchUserName + " || deptName : " + searchDeptName + " + || searchTitle = " + searchTitle + " || searchStartTime = " + searchStartTime + " || searchEndTime = " + searchEndTime + " || searchCompareValue = " + searchCompareValue + " || pageNum : " + pageNum + " || listSize : " + listSize + " || orderCell : " + orderCell + " || orderOption : " + orderOption);
+		LOGGER.debug("userName : " + searchUserName + " || deptName : " + searchDeptName + " + || searchTitle = " + searchTitle + " || searchStartTime = " + searchStartTime + " || searchEndTime = " + searchEndTime + " || searchGubun = " + searchGubun + " || pageNum : " + pageNum + " || listSize : " + listSize + " || orderCell : " + orderCell + " || orderOption : " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/user-attitude-confs";
@@ -1054,7 +1054,7 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("searchTitle", searchTitle)
 				.queryParam("searchStartTime", searchStartTime)
 				.queryParam("searchEndTime", searchEndTime)
-				.queryParam("searchCompareValue", searchCompareValue)
+				.queryParam("searchGubun", searchGubun)
 				.queryParam("userId", userId)
 				.queryParam("pageNum", pageNum)
 				.queryParam("listSize", listSize)
@@ -1189,9 +1189,11 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("editAttitudeUserConfig started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String selectedUserId = request.getParameter("selectedUserId");
+		String companyId = request.getParameter("companyId");
+		String selectedUserIdList = request.getParameter("selectedUserIdList");
 		String workStartTime = request.getParameter("workStartTime");
 		String workEndTime = request.getParameter("workEndTime");
+		String gubun = request.getParameter("gubun");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/users/ezattitude/user-attitude-confs";
@@ -1202,10 +1204,12 @@ public class EzAttitudeAdminBOMController {
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("selectedUserId", selectedUserId)
+				.queryParam("selectedUserIdList", selectedUserIdList)
 				.queryParam("workStartTime", workStartTime)
-				.queryParam("workEndTime", workEndTime);
+				.queryParam("workEndTime", workEndTime)
+				.queryParam("gubun", gubun);
 		
 		RestTemplate rest = new RestTemplate();
 		

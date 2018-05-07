@@ -5574,6 +5574,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	            sb.append("<EXTENSIONATTRIBUTE4>" + commonUtil.cleanValue(item.getExtensionAttribute4()) + "</EXTENSIONATTRIBUTE4>");
 	            // 수정(200700228) : 포토게시판 기능 추가 관련 ExtensionAttribute5(Small 이미지 경로) 값 가져오도록 수정함.
 	            sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(item.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
+	            /* 2018-05-07 홍승비 - 커뮤니티 포토게시판 댓글 표시 */
+	            sb.append("<ONELINECNT>" + item.getOneLineCnt() + "</ONELINECNT>");
 				sb.append("</NODE>");
 			}
 		}
