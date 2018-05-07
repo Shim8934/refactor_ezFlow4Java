@@ -154,33 +154,21 @@
 		}
 		
 		$(function() {
-			$(".Sdatepicker").datepicker({
-				changeMonth: true,
-				changeYear: true,
-				autoSize: true,
-				showOn: "both",
-				buttonImage: "/images/ImgIcon/calendar-month.gif",
-				buttonImageOnly: true
-			});
-			
-			$(".Edatepicker").datepicker({
-				changeMonth: true,
-				changeYear: true,
-				autoSize: true,
-				showOn: "both",
-				buttonImage: "/images/ImgIcon/calendar-month.gif",
-				buttonImageOnly: true
-			});
-			
-			$(".Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-			$(".Sdatepicker").datepicker('setDate', "");
-			$(".Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-			$(".Edatepicker").datepicker('setDate', "");
+		  $(".datepicker").datepicker({
+	            changeMonth: true,
+	            changeYear: true,
+	            autoSize: true,
+	            showOn: "both",
+	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImageOnly: true
+	        });
+		
+		    $(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $(".datepicker").datepicker('setDate', "");
 		});
 		
 		function btn_PostDate_Clear() {
-			$(".Sdatepicker").datepicker('setDate', "");
-			$(".Edatepicker").datepicker('setDate', "");
+			$(".datepicker").datepicker('setDate', "");
 		}
 		
 		function goToPageByNum(Value){
@@ -192,45 +180,40 @@
 		
 		function search(type) {
 			if (type == "basic") {
-				if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" 
-					&& $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-						alert("<spring:message code='ezBoard.t192' />");// 검색조건을 입력하세요 
-					return;
-				}
-				
-				if ($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-					alert("<spring:message code='ezBoard.t189' />");
-					return;
-				}
-				
-				if ($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-					alert("<spring:message code='ezBoard.t189' />");
-					return;
-				}
-				
-				if ($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-					alert("<spring:message code='ezBoard.t189' />");
-					return;
-				}
-				
-				if ($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-					alert("<spring:message code='ezBoard.t189' />");
-					return;
-				}
-				
-				if (new Date($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-					alert("<spring:message code='ezBoard.t191' />");
-					return;
-				}
-				
-				if (new Date($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-					alert("<spring:message code='ezBoard.t191' />");
-					return;
-				}
+	           if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" 
+	        	    && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == ""  
+	        	    && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	                alert("<spring:message code='ezWebFolder.t163' />");// 검색조건을 입력하세요 
+	                return;
+	            }
+	            if ($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	                alert("<spring:message code='ezWebFolder.t308' />");
+	                return;
+	            }
+	            if ($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	                alert("<spring:message code='ezWebFolder.t309' />");
+	                return;
+	            }
+	            if ($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	                alert("<spring:message code='ezWebFolder.t308' />");
+	                return;
+	            }
+	            if ($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	                alert("<spring:message code='ezWebFolder.t309' />");
+	                return;
+	            }
+	            if (new Date($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+	                alert("<spring:message code='ezWebFolder.t164' />");
+	                return;
+	            }
+	            if (new Date($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+	                alert("<spring:message code='ezWebFolder.t164' />");
+	                return;
+	            }
 			}
 			else if (type == "quick") {
 				if (document.getElementById("txt_keyword").value == "") {
-					alert("<spring:message code='ezBoard.t192' />");
+					alert("<spring:message code='ezWebFolder.t163' />");
 					return;
 				}
 			}
@@ -244,7 +227,7 @@
 		
 		function openLeftPanel() {
 			var leftFrame = window.parent.frames["left"].document;
-			var blockLeft = leftFrame.getElementById("blockLeft");
+			var blockLeft = leftFrame.getElementById("bnkBlockLeft");
 			var height    = Math.max(leftFrame.documentElement.clientHeight, leftFrame.documentElement.scrollHeight);
 			leftFrame.body.style.overflow = "hidden";
 			blockLeft.style.height        = height + "px";
@@ -279,7 +262,7 @@
 		
 		function closeLeftPanel() {
 			var leftFrame = window.parent.frames["left"].document;
-			var blockLeft = leftFrame.getElementById("blockLeft");
+			var blockLeft = leftFrame.getElementById("bnkBlockLeft");
 			leftFrame.body.style.overflow = "auto";
 			blockLeft.style.height        = "100%";
 			blockLeft.style.display       = "none";
@@ -451,17 +434,17 @@
 				<tr>
 					<th style="text-align:center"><spring:message code='ezWebFolder.t190' /></th>
 					<td>
-						<input type="text" class="Sdatepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
+						<input type="text" class="datepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
 						~
-						<input type="text" class="Edatepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
+						<input type="text" class="datepicker" id="enrollEndDate" style="width:80px;text-align:center" readonly="readonly">
 					</td>
 				</tr>
 				<tr>
 					<th style="text-align:center"><spring:message code='ezWebFolder.t288' /></th>
 					<td>
-						<input type="text" class="Sdatepicker" id="delStartDate" style="width:80px;text-align:center" readonly="readonly">
+						<input type="text" class="datepicker" id="delStartDate" style="width:80px;text-align:center" readonly="readonly">
 						~
-						<input type="text" class="Edatepicker" id="delEndDate" style="width:80px;text-align:center" readonly="readonly">
+						<input type="text" class="datepicker" id="delEndDate" style="width:80px;text-align:center" readonly="readonly">
 					</td>
 				</tr>
 				<tr>

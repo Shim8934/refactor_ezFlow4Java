@@ -489,10 +489,6 @@ public class EzWebFolderController_m {
 		
 		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
 		
-		Map<String, Object> param = new HashMap<>();
-		// target info
-		param.put("fileList", fileList);
-		param.put("folderList", folderList);
 		
 		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
 		
@@ -500,8 +496,10 @@ public class EzWebFolderController_m {
 			return permissionResult.toString();
 		}
 		
-		model.addAttribute("fileList", fileList);
-		model.addAttribute("folderList", folderList);
+		Map<String, Object> param = new HashMap<>();
+		// target info
+		param.put("fileList", fileList);
+		param.put("folderList", folderList);
 		
 		logger.debug("permanentDeleteConfirm ended.");
 		return "ezWebFolder/filePermanentDelete";
@@ -517,6 +515,13 @@ public class EzWebFolderController_m {
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
 		
+		
+		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
+		
+		if ("error".equals(permissionResult.get("status"))) {
+			return permissionResult.toString();
+		}
+		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("tenantId", user.getTenantId());
@@ -525,12 +530,6 @@ public class EzWebFolderController_m {
 		param.put("lang", user.getLang());
 		param.put("fileList", fileList);               
 		param.put("folderList", folderList);     
-		
-		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
-		
-		if ("error".equals(permissionResult.get("status"))) {
-			return permissionResult.toString();
-		}
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/file-permanent-delete", param, request, "delete", null);
 		
@@ -674,11 +673,6 @@ public class EzWebFolderController_m {
 	
 	 LoginVO user = commonUtil.userInfo(loginCookie);
 
-	 Map<String, Object> param = new HashMap<String, Object>();
-		
-	 param.put("fileList", fileList);               
-	 param.put("folderList", folderList);               
-	 model.addAttribute("folderType", folderType);
 	
 	JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
 	
@@ -686,6 +680,12 @@ public class EzWebFolderController_m {
 		return permissionResult.toString();
 	}
 		
+	Map<String, Object> param = new HashMap<String, Object>();
+	
+	param.put("fileList", fileList);               
+	param.put("folderList", folderList);               
+	model.addAttribute("folderType", folderType);
+	
 	 logger.debug("fileList", fileList);
 	 logger.debug("folderList", folderList);
 	
@@ -703,7 +703,6 @@ public class EzWebFolderController_m {
 		String folderList = orElse(request.getParameter("folderList"), "");
 	
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-
 	
 		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
 	
