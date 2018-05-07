@@ -32,8 +32,8 @@
 	        var m_tabDialogState = { "org": "select", "contact": "normal", "dl": "normal" };
 	        var m_receiverTitleList;
 	        var m_receiverWindowList;
-	        var m_titleNoneSelectedColor = "#F6F6F6";
-	        var m_titleSelectedColor = "#fffff4";
+	        var m_titleNoneSelectedColor = "white";
+	        var m_titleSelectedColor = "#f4faff";
 	        var m_selectedWindow = null;
 	        var m_selectedTree = null;
 	        var g_fnaddReceiver;
@@ -1287,7 +1287,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + nodeIdx.GetNodeData("VALUE");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;margin-right:3px\" >" + nodeIdx.GetNodeData("VALUE");
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -3238,8 +3238,8 @@
 	                <table id="TreeViewTD">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px;">
+	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
 	                                            <td>
@@ -3255,7 +3255,7 @@
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezEmail.t99000048' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+	                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px; height:21px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezEmail.t37' /></span></a>
 	
 	                                                </div>
@@ -3279,8 +3279,8 @@
 	                                    <td class="listview" style="width: 432px" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
-	                                                <th style="white-space:normal">
-	                                                    <span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
+	                                                    <span id="SelectDeptNM" style="font-weight: normal;margin-top:2px; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 	                                                    <span style="float:right; position: relative;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');">
 	                                                            <img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
@@ -3293,9 +3293,9 @@
 	                                        <div style="vertical-align: top; height: 410px; overflow: auto; width: 446px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
+	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t31' /></td>
+	                                                    <td style="width: 130px;color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t28' /></td>
+	                                                    <td style="color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t99000045' /></td>
 	                                                </tr>
 	                                            </table>
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
@@ -3321,8 +3321,8 @@
 	                            <table style="width: 100%;">
 	                                <tr>
 	                                    <td id="AddrSearch">
-	                                        <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-	                                            <div class="portlet_tabpart03_top" id="Div1" style="border: 1px solid #d3d2d2;">
+	                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px;">
+	                                            <div class="portlet_tabpart03_top" id="Div1" style="border: 1px solid #eaeaea;">
 	                                                <table style="margin-top: 3px; width: 100%;">
 	                                                    <tr>
 	                                                        <td>
@@ -3335,7 +3335,7 @@
 	                                                                    <option value="S_EMAIL">
 	                                                                        <spring:message code='ezEmail.t713' /></option>
 	                                                                </select>
-	                                                                <input id="search_text" value="" onkeyup="AddrSearch_press()" style="width: 150px; margin: 0px;" name="Input">
+	                                                                <input id="search_text" value="" onkeyup="AddrSearch_press()" style="width: 150px; margin: 0px; height:21px" name="Input">
 	                                                                <a href="#" class="imgbtn">
 	                                                                    <span onclick="AddrSearch_click()"><spring:message code='ezEmail.t37' /></span>
 	                                                                </a>
@@ -3364,10 +3364,10 @@
 	                        <td style="vertical-align: top;">
 	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 20px; padding-top: 5px; padding-left: 5px;">
 	                                <img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer" />
-	                                <span id="addressFolderName" style="font-weight: bold;"></span>
+	                                <span id="addressFolderName" style="font-weight: normal;"></span>
 	                                -[<span id="addressFolderCnt" style="color: #017BEC; font-weight: bold;"></span>]
 	                            </div>
-	                            <div style="width: 441px; height: 417px; overflow: auto; background-color: #ffffff; border-bottom:0px" id="AddressListView" class="border_gray">
+	                            <div style="width: 441px; height: 417px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea" id="AddressListView" class="border_gray">
 	                            </div>
 	                            <div id="tblPageRayer" style="left: 445px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; height: 30px;"></div>
 	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 445px; border: 1px solid #ddd; border-top: 0px; height: 27px;">
@@ -3389,8 +3389,8 @@
 	                <table id="ListViewDLTD" style="display: none">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-	                                <div class="portlet_tabpart03_top" id="Div2" style="border: 1px solid #d3d2d2;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px;">
+	                                <div class="portlet_tabpart03_top" id="Div2" style="border: 1px solid #eaeaea;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
 	                                            <td id="dlmember" style="display: none">
@@ -3490,7 +3490,7 @@
 	    </table>
 	    <table style="width: 100%; text-align: center;">
 	        <tr>
-	            <td class="btnposition btnpositionNew" style="text-align: center;">
+	            <td class="btnposition btnpositionNew" style="text-align: center;background-color: white;border-top:0px">
 	                <a class="imgbtn" onclick="confirm_onClick()" id="cmd_ok"><span><spring:message code='ezEmail.t599' /></span></a>
 	                <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezEmail.t600' /></span></a>
 	            </td>
