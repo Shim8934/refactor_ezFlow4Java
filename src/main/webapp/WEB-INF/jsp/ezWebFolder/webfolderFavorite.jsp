@@ -146,13 +146,11 @@
 	
 	// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 	window.onresize = function() {
-		var divList = dom.dragDropArea;
 		var reheight = document.documentElement.clientHeight - 200;
-		divList.style.height = reheight + "px";
+		dom.dragDropArea.style.height = reheight + "px";
 		
-		var divList = dom.pageArea;
-		var reheightPage = document.documentElement.clientHeight - 120;
-		divList.style.height = reheightPage + "px";
+		reheight = document.documentElement.clientHeight - 100;
+		dom.pageArea.style.height = reheight + "px";
 	};
 	
 	document.onselectstart = function() {
@@ -167,11 +165,9 @@
 		context.setOnListTypeChangeEventListener(function(isFavoriteMode) {
 			// TODO: 즐겨찾기 메뉴 보이기/숨기기 html, js 소스 정리
 			if (isFavoriteMode) {
-				dom.originalPathWrapper.style.display = "none";
-				dom.mainmenu.setAttribute("favoritemode", "");
+				document.body.setAttribute("favoritemode", "");
 			} else {
-				dom.originalPathWrapper.style.display = "";
-				dom.mainmenu.removeAttribute("favoritemode");
+				document.body.removeAttribute("favoritemode");
 			}
 		});
 		
@@ -226,7 +222,6 @@
 			mainmenu: document.getElementById("mainmenu"),
 			upload: document.getElementById("upload"),
 			originalPath: document.getElementById("originalPath"),
-			originalPathWrapper: document.getElementById("originalPathWrapper"),
 			dragDropArea: document.getElementById("dragDropArea"),
 			pageArea: document.getElementById("pageArea"),
 			layerViewpopup: document.getElementById("layer_Viewpopup"),
@@ -887,16 +882,15 @@
 	}
 </script>
 </head>
-<body class="mainbody">
+<body class="mainbody" favoritemode>
 	<h1 onclick='context.setListAsFavorite(false);' style="cursor: pointer; display: inline-block;">
 		즐겨찾기<span id="mailBoxInfo"></span>
 	</h1>
 	<div id="pageArea">
-		<!-- pagenation이 namePath로 움직이지 않도록 설정 -->
-		<div id="originalPathWrapper" style="height: 40px; display: none;">
-			<span style="font-size: 24px; font-weight: bold; font-weight: bold; display: block; float: left;" id="originalPath"></span>
+		<div id="originalPathWrapper" style="height:40px;">
+			<span id="originalPath" style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;"></span>
 		</div>
-		<div id="mainmenu" favoritemode>
+		<div id="mainmenu">
 			<ul>
 				<li id="" favoritemenu onClick="fileDownload()"><span><spring:message code='ezWebFolder.t186' /></span></li>
 				<li id="upload" onClick="fileUpload()"><span><spring:message code='ezWebFolder.t187' /></span></li>
@@ -911,7 +905,7 @@
 				<li id=""><img src="/images/i_bar.gif"></li>
 				<li id="" onClick="context.refreshList(true)" favoritemenu><span><spring:message code='ezWebFolder.t139' /></span></li>
 				<li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
-				<li id="right" favoritemenu style="float: right;"><select class="select" id="idSelect" onchange="idChange(this.value);" style="width: 100px; display: none;">
+				<li id="right" favoritemenu style="float: left;"><select class="select" id="idSelect" onchange="onFileTypeChange(this.value);" style="height: 28px; border-radius: 3px; padding: 0px; padding-left: 4px; width: 80px; color: #666;">
 						<option value="all" data-imagesrc="/images/webfolder/allTypes.png" selected><spring:message code='ezWebFolder.t191' /></option>
 						<!-- 전체 -->
 						<option value="document" data-imagesrc="/images/webfolder/msWord.png"><spring:message code='ezWebFolder.t192' /></option>
@@ -989,6 +983,8 @@
 		<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
 		</div>
+		<div id="paginationCorrector"></div>
+		<div id="tblPageRayer"></div>
 	</div>
 
 	<div id="searchpopup" class="popupwrap3" style="display: none; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px">
@@ -1026,8 +1022,7 @@
 			</table>
 		</div>
 	</div>
-
-	<div id="tblPageRayer"></div>
+	
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
 		<iframe src="" style="border: none;" id="iFrameLayer"></iframe>

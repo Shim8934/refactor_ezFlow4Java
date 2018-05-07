@@ -66,8 +66,8 @@ public class EzWebFolderGWController_m {
 		logger.debug("getSharingList started.");
 		
 		String serverName 	= orElse(request.getHeader("x-user-host"), "");
-		String pageNum 		= orElse(request.getHeader("pageNum"), "1");
-		String pageSize 	= orElse(request.getHeader("pageSize"), "0");
+		String pageNum 		= orElse(request.getParameter("pageNum"), "1");
+		String pageSize 	= orElse(request.getParameter("pageSize"), "0");
 		
 		SearchVO searchInfo = new SearchVO();
 		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
@@ -240,9 +240,11 @@ public class EzWebFolderGWController_m {
 	public JSONObject getSharedList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("getSharedList started.");
 		
-		String serverName 	= orElse(request.getHeader("x-user-host"), "");
-		String pageNum 		= orElse(request.getHeader("pageNum"), "1");
-		String pageSize 	= orElse(request.getHeader("pageSize"), "0");
+		String serverName = orElse(request.getHeader("x-user-host"), "");
+		String pageNum = orElse(request.getParameter("pageNum"), "1");
+		String pageSize = orElse(request.getParameter("pageSize"), "0");
+		String folderId = orElse(request.getParameter("folderId"), "");
+		String subSearchFlag = orElse(request.getParameter("subSearchFlag"), "N");
 		
 		SearchVO searchInfo = new SearchVO();
 		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
@@ -252,7 +254,7 @@ public class EzWebFolderGWController_m {
 		searchInfo.setSearchStartDate(orElse(request.getParameter("searchStartDate"), ""));
 		searchInfo.setSearchEndDate(orElse(request.getParameter("searchEndDate"), ""));
 		
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || pageNum: " + pageNum + " || pageSize: " + pageSize);
+		logger.debug("serverName: " + serverName + " || userId: " + userId + " || pageNum: " + pageNum + " || pageSize: " + pageSize + " || subSearchFlag: " + subSearchFlag);
 		logger.debug("searchInfo: " + searchInfo);
 		
 		JSONObject result = new JSONObject();
@@ -285,8 +287,17 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getSharedList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-			Map<String, Long> countInfo = ezWebFolderService_m.getSharedCount(userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			List<ShareVO> list = ezWebFolderService_m.getSharedList(folderId, subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+			Map<String, Long> countInfo = ezWebFolderService_m.getSharedCount(folderId, subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			
+			if (!folderId.equals("")) {
+				FolderVO folderInfo = ezWebFolderService_y.getFolderDetail(folderId, userId, tenantId, userInfo.getCompanyID());
+				String folderPath = folderInfo.getFolderPath();
+				String folderPath2 = ezWebFolderService.getFolderPath(folderPath.split("\\|"), userInfo.getPrimary(), tenantId);
+				
+				data.put("folderPath", folderPath);
+				data.put("folderPath2", folderPath2);
+			}
 			
 			data.put("list", list);
 			data.putAll(countInfo);
@@ -450,8 +461,8 @@ public class EzWebFolderGWController_m {
 		logger.debug("getHiddenSharedList started.");
 		
 		String serverName = orElse(request.getHeader("x-user-host"), "");
-		String pageNum 		= orElse(request.getHeader("pageNum"), "1");
-		String pageSize 	= orElse(request.getHeader("pageSize"), "0");
+		String pageNum 		= orElse(request.getParameter("pageNum"), "1");
+		String pageSize 	= orElse(request.getParameter("pageSize"), "0");
 		logger.debug("serverName: " + serverName + " || userId: " + userId + " || pageNum: " + pageNum + " || pageSize: " + pageSize);
 		
 		JSONObject result = new JSONObject();
@@ -855,7 +866,10 @@ public class EzWebFolderGWController_m {
 		String endrollEndDate 	= orElse(request.getParameter("enrollEndDate"), "");
 		String delStartDate 	= orElse(request.getParameter("delStartDate"), "");
 		String delEndDate 		= orElse(request.getParameter("delEndDate"), "");
+		String column           = orElse(request.getParameter("column"), "");
+		String order            = orElse(request.getParameter("order"), "");
 		String mode 		    = orElse(request.getParameter("mode"), "");
+		String realColmn        = "";
 		
 		// TODO primary 수정
 		String primary;
@@ -882,10 +896,24 @@ public class EzWebFolderGWController_m {
 			result.put("code", 1);
 			return result;
 		}
-
+		
+		if (!column.equals("") && !order.equals("")) {
+			switch(column) {
+				case "ft": realColmn = "TRASHCAN_EXT"                                         ; break;
+				case "fn": realColmn = "TRASHCAN_NAME"                                        ; break;
+				case "fs": realColmn = "TRASHCAN_SIZE"                                        ; break;
+				case "un": realColmn = primary.equals("1") ? "CREATE_NAME1" : "CREATE_NAME2"  ; break;
+				case "cd": realColmn = "CREATE_DATE"                                          ; break;
+				case "dd": realColmn = "UPDATE_DATE"                                          ; break;
+				default  : realColmn = "TRASHCAN_NAME"                                        ; break;
+			}
+		}
+		
+		logger.debug("Column: " + realColmn + " || order: " + order);
+		
 		try {
 			List<TrashCanVO> trashCanList = null;
-			JSONObject resultList = ezWebFolderService_m.getTrashCanList(userId, offset, tenantId, currPage, listCount,
+			JSONObject resultList = ezWebFolderService_m.getTrashCanList(realColmn, order.toUpperCase(), userId, offset, tenantId, currPage, listCount,
 										searchExt, searchFileName, searchCreateName, searchFileType, endrollStartDate, endrollEndDate, delStartDate, delEndDate, mode);
 			int fileCnt = 0;
 			int folderCnt = 0;

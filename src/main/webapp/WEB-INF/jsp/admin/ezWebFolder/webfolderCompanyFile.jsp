@@ -14,8 +14,8 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"      ></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"              ></script>
-		<script type="text/javascript" src="/js/ezWebFolder/adminFile.js"                   ></script>
 		<script type="text/javascript" src="/js/ezWebFolder/adminTable.js"                  ></script>
+		<script type="text/javascript" src="/js/ezWebFolder/adminFile.js"                   ></script>
 		<script type="text/javascript" src="/js/jquery-ui/jquery-ui.js"                     ></script>
 		<script type="text/javascript">
 			var strLang39  = "<spring:message code='ezWebFolder.t135'/>";
@@ -125,14 +125,14 @@
 			<table class="mainlist wftablefile" id="tblFileList">
 				<tr>
 					<th width="10px" ><input type="checkbox"></th>
-					<th width="40px" ><spring:message code='ezWebFolder.t188'/></th>
-					<th width="160px"><spring:message code='ezWebFolder.t156'/></th>
-					<th width="60px" ><spring:message code='ezWebFolder.t157'/></th>
-					<th width="120px"><spring:message code='ezWebFolder.t189'/></th>
-					<th width="80px" ><spring:message code='ezWebFolder.t190'/></th>
-					<th width="80px" ><spring:message code='ezWebFolder.t198'/></th>
-					<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
-					<th width="60px" ><spring:message code='ezWebFolder.t200'/></th>
+					<th headers="ft" width="40px" ><spring:message code='ezWebFolder.t188'/></th>
+					<th headers="fn" width="160px"><spring:message code='ezWebFolder.t156'/></th>
+					<th headers="fs" width="60px" ><spring:message code='ezWebFolder.t157'/></th>
+					<th headers="un" width="120px"><spring:message code='ezWebFolder.t189'/></th>
+					<th headers="cd" width="80px" ><spring:message code='ezWebFolder.t190'/></th>
+					<th headers="ud" width="80px" ><spring:message code='ezWebFolder.t198'/></th>
+					<th              width="160px"><spring:message code='ezWebFolder.t199'/></th>
+					<th headers="dt" width="70px" ><spring:message code='ezWebFolder.t200'/></th>
 				</tr>
 				
 			</table>

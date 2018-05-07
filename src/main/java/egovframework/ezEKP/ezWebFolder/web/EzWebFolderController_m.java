@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -90,6 +89,8 @@ public class EzWebFolderController_m {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("pageNum", orElse(request.getParameter("pageNum"), "1"));
 		param.put("pageSize", orElse(request.getParameter("pageSize"), "0"));
+		param.put("folderId", orElse(request.getParameter("folderId"), ""));
+		param.put("subSearchFlag", orElse(request.getParameter("subSearchFlag"), "N"));
 		param.put("searchFileType", orElse(request.getParameter("searchFileType"), ""));
 		param.put("searchExt", orElse(request.getParameter("searchExt"), ""));
 		param.put("searchFileName", orElse(request.getParameter("searchFileName"), ""));
@@ -453,6 +454,8 @@ public class EzWebFolderController_m {
 		param.put("endrollEndDate", orElse(request.getParameter("enrollEndDate"), ""));
 		param.put("delStartDate", orElse(request.getParameter("delStartDate"), ""));
 		param.put("delEndDate", orElse(request.getParameter("delEndDate"), ""));
+		param.put("column", orElse(request.getParameter("column"), ""));
+		param.put("order", orElse(request.getParameter("order"), ""));
 		param.put("mode", orElse(request.getParameter("mode"), "" ));
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + user.getId() + "/getTrashCanList", param, request, "post", null);
@@ -483,6 +486,19 @@ public class EzWebFolderController_m {
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
 		
+		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
+		
+		Map<String, Object> param = new HashMap<>();
+		// target info
+		param.put("fileList", fileList);
+		param.put("folderList", folderList);
+		
+		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
+		
+		if ("error".equals(permissionResult.get("status"))) {
+			return permissionResult.toString();
+		}
+		
 		model.addAttribute("fileList", fileList);
 		model.addAttribute("folderList", folderList);
 		
@@ -497,14 +513,23 @@ public class EzWebFolderController_m {
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
+		String fileList = orElse(request.getParameter("fileList"), "");
+		String folderList = orElse(request.getParameter("folderList"), "");
+		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("tenantId", user.getTenantId());
 		param.put("offset", user.getOffset());
 		param.put("userId", user.getId());                 
 		param.put("lang", user.getLang());
-		param.put("fileList", orElse(request.getParameter("fileList"), ""));               
-		param.put("folderList", orElse(request.getParameter("folderList"), ""));               
+		param.put("fileList", fileList);               
+		param.put("folderList", folderList);     
+		
+		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
+		
+		if ("error".equals(permissionResult.get("status"))) {
+			return permissionResult.toString();
+		}
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/file-permanent-delete", param, request, "delete", null);
 		
@@ -526,14 +551,23 @@ public class EzWebFolderController_m {
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		
+		String fileList = orElse(request.getParameter("fileList"), "");
+		String folderList = orElse(request.getParameter("folderList"), "");
+		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("tenantId", user.getTenantId());
 		param.put("offset", user.getOffset());
 		param.put("userId", user.getId());                 
 		param.put("companyId", user.getCompanyID());
-		param.put("fileList", orElse(request.getParameter("fileList"), ""));               
-		param.put("folderList", orElse(request.getParameter("folderList"), ""));               
+		param.put("fileList", fileList);               
+		param.put("folderList", folderList);               
+		
+		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
+		
+		if ("error".equals(permissionResult.get("status"))) {
+			return permissionResult.toString();
+		}
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/restore-trashCan", param, request, "post", null);
 
@@ -624,13 +658,23 @@ public class EzWebFolderController_m {
 	@RequestMapping(value="/ezWebFolder/moveTrashCanManage.do")
 	public String moveTrashCanManage (@CookieValue ("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 	 String folderType = request.getParameter("folderType");
-	 String fileList = request.getParameter("fileList");
-	 String folderList = request.getParameter("folderList");
-	 
+	 String fileList = orElse(request.getParameter("fileList"), "");
+	 String folderList = orElse(request.getParameter("folderList"), "");
+	
+	 LoginVO user = commonUtil.userInfo(loginCookie);
+
+	 Map<String, Object> param = new HashMap<String, Object>();
+		
+	 param.put("fileList", fileList);               
+	 param.put("folderList", folderList);               
 	 model.addAttribute("folderType", folderType);
-	 model.addAttribute("fileList", fileList);
-	 model.addAttribute("folderList", folderList);
-	 
+	
+	JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
+	
+	if ("error".equals(permissionResult.get("status"))) {
+		return permissionResult.toString();
+	}
+		
 	 logger.debug("fileList", fileList);
 	 logger.debug("folderList", folderList);
 	
@@ -644,8 +688,18 @@ public class EzWebFolderController_m {
 		logger.debug("moveTrashCan Started.");
 		logger.debug("request.getParameter(fileList)=" + request.getParameter("fileList"));
 		
+		String fileList = orElse(request.getParameter("fileList"), "");
+		String folderList = orElse(request.getParameter("folderList"), "");
+	
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		
+
+	
+		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
+	
+		if ("error".equals(permissionResult.get("status"))) {
+			return permissionResult.toString();
+		}
+	
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("tenantId", user.getTenantId());
@@ -653,8 +707,8 @@ public class EzWebFolderController_m {
 		param.put("userId", user.getId());                 
 		param.put("lang", user.getLang());
 		param.put("folderId", orElse(request.getParameter("folderId"), ""));               
-		param.put("fileList", orElse(request.getParameter("fileList"), ""));               
-		param.put("folderList", orElse(request.getParameter("folderList"), ""));               
+		param.put("fileList", fileList);               
+		param.put("folderList", folderList);               
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/move-TrashCan", param, request, "post", null);
 		

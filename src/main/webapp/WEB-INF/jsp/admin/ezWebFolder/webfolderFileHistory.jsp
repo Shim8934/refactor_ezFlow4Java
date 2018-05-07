@@ -36,8 +36,15 @@
 			var fileExtStr   = "";
 			var fileNameStr  = "";
 			var userNameStr  = "";
+			var tableView    = new TableView();
 			
 			window.onload = function () {
+				tableView.setTableId("tblFileHistory");
+				tableView.setTableType("filelog");
+				tableView.setSelectedClass("bnkWebFolder2");
+				tableView.setUnselectClass("bnkWebFolder");
+				tableView.setCallBack(refreshView);
+				
 				$("#Sdatepicker").datepicker({
 					changeMonth: true,
 					changeYear: true,
@@ -97,6 +104,7 @@
 			}
 			
 			function search_Set(pPage) {
+				var orderInf = tableView.getOrderInfo();
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/getFileLogs.do",
@@ -107,6 +115,8 @@
 						"fileExt"     : fileExtStr,
 						"fileName"    : fileNameStr,
 						"userName"    : userNameStr,
+						"column"      : orderInf.col ? orderInf.col : "",
+						"order"       : orderInf.ord ? orderInf.ord : "",
 						"fileType"    : document.getElementById("fileTypeSelect").value,
 						"companyId"   : document.getElementById("companyList").value
 					},
@@ -134,11 +144,6 @@
 			}
 			
 			function renderData(result) {
-				var tableView = new TableView();
-				tableView.setTableId("tblFileHistory");
-				tableView.setTableType("filelog");
-				tableView.setSelectedClass("bnkWebFolder2");
-				tableView.setUnselectClass("bnkWebFolder");
 				tableView.setDataSource(result);
 				tableView.renderTable();
 			}
@@ -180,6 +185,7 @@
 			}
 			
 			function change() {
+				tableView.clearHeaders();
 				startDateStr = "";
 				endDateStr   = "";
 				fileExtStr   = "";
@@ -308,12 +314,12 @@
 		<div id="mainSetting" style="margin: 10px 0px; height:500px; overflow: auto;">
 				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileHistory">
 				<tr>
-					<th width="40px"  ><spring:message code='ezWebFolder.t155'/></th>
-					<th width="220px" ><spring:message code='ezWebFolder.t156'/></th>
-					<th width="60px"  ><spring:message code='ezWebFolder.t157'/></th>
-					<th width="80px" ><spring:message code='ezWebFolder.t154'/></th>
-					<th width="60px"  ><spring:message code='ezWebFolder.t158'/></th>
-					<th width="120px" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
+					<th headers="ft" width="40px"  ><spring:message code='ezWebFolder.t155'/></th>
+					<th headers="fn" width="220px" ><spring:message code='ezWebFolder.t156'/></th>
+					<th headers="fs" width="60px"  ><spring:message code='ezWebFolder.t157'/></th>
+					<th headers="un" width="80px" ><spring:message code='ezWebFolder.t154'/></th>
+					<th headers="at" width="60px"  ><spring:message code='ezWebFolder.t158'/></th>
+					<th headers="ad" width="120px" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
 				</tr>
 			</table>
 		</div>

@@ -8,6 +8,9 @@ function TableView() {
 	this.setDataSource    = setDataSource;
 	this.setTableType     = setTableType;
 	this.renderTable      = renderTable;
+	this.setCallBack      = setCallBack;
+	this.getOrderInfo     = getOrderInfo;
+	this.clearHeaders     = clearHeaders;
 	
 	//private variables
 	var _tableId         = null;
@@ -16,13 +19,54 @@ function TableView() {
 	var _lastSelectedRow = null;
 	var _dataSource      = "";
 	var _tableType       = "";
+	var _selectedCell    = null;
+	var _cellInfo        = {};
+	var _callBackSearch  = null;
 	
-	//public functions
+	//privileged functions
+	function setCallBack(callBackName) {_callBackSearch = callBackName;}
+	
+	function getOrderInfo() {return _cellInfo;}
+	
+	function clearHeaders() {
+		_cellInfo     = {};
+		_selectedCell = null;
+		
+		var spanUpList   = document.getElementsByClassName("spanUp");
+		var spanDownList = document.getElementsByClassName("spanDown");
+		var len1         = spanUpList.length;
+		var len2         = spanDownList.length;
+		
+		for (var i = len1 - 1; i >= 0; i--) {
+			var parentElmt = spanUpList[i].parentElement;
+			parentElmt.removeChild(spanUpList[i]);
+		}
+		
+		for (var j = len2 - 1; j >= 0; j--) {
+			var parentElmt = spanDownList[j].parentElement;
+			parentElmt.removeChild(spanDownList[j]);
+		}
+	}
+	
 	function setTableId(tableId) {
 		_tableId         = tableId;
 		var tableList    = document.getElementById(_tableId);
 		var currentStyle = tableList.getAttribute("style");
 		tableList.setAttribute("style", "-webkit-touch-callout: none;-webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; " + currentStyle);
+		
+		/*var headerRow    = tableList.rows[0];
+		var len          = headerRow.cells.length;
+		var firstTd      = headerRow.cells[0];
+		var firstTdChild = firstTd.firstElementChild;
+		
+		if (!firstTdChild || (firstTdChild.tagName).toLowerCase() != "input") {
+			firstTd.onclick = function() {sortByHeader(this);};
+		}
+		
+		for (var i = 1; i < len; i++) {
+			var cell     = headerRow.cells[i];
+			cell.onclick = function() {sortByHeader(this);};
+		}*/
 	}
 	
 	function setDataSource(dataSource)       {_dataSource = dataSource;}
@@ -120,7 +164,41 @@ function TableView() {
 		var currentRow       = checkboxElmt.parentElement.parentElement;
 		_lastSelectedRow     = currentRow;
 		currentRow.className = checkboxElmt.checked ? _selectedClass : _unselectClass;
-	} 
+	}
+	
+	function sortByHeader(cell) {
+		var _tableElmt = document.getElementById(_tableId);
+		var column     = cell.getAttribute("headers");
+		
+		if (!column) {return;}
+		
+		if (_selectedCell != null) {
+			var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
+			cell.setAttribute("orderoption", orderOption);
+			
+			if (cell.cellIndex != _selectedCell) {
+				var lastSelectedCell = _tableElmt.rows[0].cells[_selectedCell];
+				lastSelectedCell.removeChild(lastSelectedCell.firstElementChild);
+				var spanElmt = document.createElement("span");
+				cell.appendChild(spanElmt);
+			}
+			
+			var spanElmt       = cell.firstElementChild;
+			spanElmt.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+		}
+		else {
+			cell.setAttribute("orderoption", "DESC");
+			var spanElmt       = document.createElement("span");
+			spanElmt.className = "spanDown";
+			cell.appendChild(spanElmt);
+		}
+		
+		_selectedCell = cell.cellIndex;
+		var order     = cell.getAttribute("orderoption");
+		_cellInfo.col = column;
+		_cellInfo.ord = order;
+		_callBackSearch();
+	}
 	
 	// process table function
 	function renderTable() {
@@ -433,10 +511,12 @@ function TableView() {
 				
 				tdName.textContent         = resultElement["trashCanName"];
 				tdSize.textContent         = resultElement["trashCanExt"] != 'folder' ? getFileSize(resultElement["trashCanSize"]) : "-";
+				tdName.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
 				tdCreator.textContent      = lang == "1" ? resultElement["createName1"] : resultElement["createName2"];
-				tdUpdateDate.textContent   = resultElement["updateDate"].substring(0, 10);
-				tdCreateDate.textContent   = resultElement["createDate"].substring(0, 10);
+				tdUpdateDate.textContent   = resultElement["createDate"].substring(0, 10);
+				tdCreateDate.textContent   = resultElement["updateDate"].substring(0, 10);
 				tdAbsolutePath.textContent = resultElement["trashCanPath"];
+				tdAbsolutePath.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
 				
 				trElement.appendChild(tdCheckbox);
 				trElement.appendChild(tdFileIcon);

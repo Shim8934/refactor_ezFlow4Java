@@ -11,6 +11,7 @@ var fileExtStr   = "";
 var fileNameStr  = "";
 var userNameStr  = "";
 var rootFolder   = "";
+var tableView    = new TableView();
 
 function setParameter(fldId, lang, fldType, rootFld) {
 	folderId   = fldId;
@@ -24,12 +25,18 @@ function init(mode) {
 		return false;
 	}
 	
-	search_Set("1");
 	preProcessing();
 	setButtons(mode);
+	search_Set("1");
 }
 
 function setButtons(mode) {
+	tableView.setTableId("tblFileList");
+	tableView.setTableType("filelist");
+	tableView.setSelectedClass("bnkWebFolder2");
+	tableView.setUnselectClass("bnkWebFolder");
+	tableView.setCallBack(refreshView);
+	
 	$("#Sdatepicker").datepicker({
 		changeMonth: true,
 		changeYear: true,
@@ -122,6 +129,7 @@ function openSearchPanel() {
 }
 
 function search_Set(pPage) {
+	var orderInf = tableView.getOrderInfo();
 	$.ajax({
 		type: "POST",
 		url: "/admin/ezWebFolder/getFileList.do",
@@ -133,6 +141,8 @@ function search_Set(pPage) {
 			"fileName"    : fileNameStr,
 			"userName"    : userNameStr,
 			"fileType"    : document.getElementById("fileTypeSelect").value,
+			"column"      : orderInf.col ? orderInf.col : "",
+			"order"       : orderInf.ord ? orderInf.ord : "",
 			"folderId"    : folderId
 		},
 		dataType: "JSON",
@@ -159,11 +169,6 @@ function search_Set(pPage) {
 }
 
 function renderData(result) {
-	var tableView = new TableView();
-	tableView.setTableId("tblFileList");
-	tableView.setTableType("filelist");
-	tableView.setSelectedClass("bnkWebFolder2");
-	tableView.setUnselectClass("bnkWebFolder");
 	tableView.setDataSource(result);
 	tableView.renderTable();
 }
@@ -278,6 +283,9 @@ function fileMove() {
 }
 
 function refresh() {
+	//Clear tableHeader
+	tableView.clearHeaders();
+	
 	startDateStr = "";
 	endDateStr   = "";
 	fileExtStr   = "";

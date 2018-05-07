@@ -50,6 +50,7 @@
 		var searchExt        = "";
 		var searchFileName   = "";
 		var searchCreateName = "";
+		var tableView        = new TableView();
 		
 		window.onresize = function () {
 			var divList          = document.getElementById("dragDropArea");
@@ -62,9 +63,14 @@
 		}
 		
 		window.onload = function () {
+			tableView.setTableId("tblFileList");
+			tableView.setTableType("deletedfile");
+			tableView.setSelectedClass("bnkWebFolder2");
+			tableView.setUnselectClass("bnkWebFolder");
+			tableView.setCallBack(refreshView);
+			
 			renderFileList();
 			window.onresize();
-			
 		}
 		
 		function keyPressPanel(e) {
@@ -90,6 +96,7 @@
 		}
 		
 		function renderFileList() {
+			var orderInf = tableView.getOrderInfo();
 			$.ajax ({
 				type: "POST",
 				async: false,
@@ -106,6 +113,8 @@
 					"delEndDate"       : $('#delEndDate').val(),
 					"searchFileType"   : searchFileType,
 					"listCount"        : blockSize,
+					"column"           : orderInf.col ? orderInf.col : "",
+					"order"            : orderInf.ord ? orderInf.ord : "",
 					"mode"             : "admin"
 				},
 				success : function (data) {
@@ -140,11 +149,6 @@
 		};
 		
 		function renderFileListElement(result) {
-			var tableView = new TableView();
-			tableView.setTableId("tblFileList");
-			tableView.setTableType("deletedfile");
-			tableView.setSelectedClass("bnkWebFolder2");
-			tableView.setUnselectClass("bnkWebFolder");
 			tableView.setDataSource(result);
 			tableView.renderTable();
 		}
@@ -423,14 +427,14 @@
 	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
-				<th width="20px" ><input type="checkbox" onchange="getCheckAll(this);" id="_checkAll"></th>
-				<th width="40px" ><spring:message code='ezWebFolder.t188'/></th>
-				<th width="160px"><spring:message code='ezWebFolder.t156'/></th>
-				<th width="60px" ><spring:message code='ezWebFolder.t157'/></th>
-				<th width="120px"><spring:message code='ezWebFolder.t189'/></th>
-				<th width="80px" ><spring:message code='ezWebFolder.t190'/></th>
-				<th width="80px" ><spring:message code='ezWebFolder.t288'/></th>
-				<th width="160px"><spring:message code='ezWebFolder.t199'/></th>
+				<th width="20px" ><input type="checkbox"></th>
+				<th headers="ft" width="40px" ><spring:message code='ezWebFolder.t188'/></th>
+				<th headers="fn" width="160px"><spring:message code='ezWebFolder.t156'/></th>
+				<th headers="fs" width="60px" ><spring:message code='ezWebFolder.t157'/></th>
+				<th headers="un" width="120px"><spring:message code='ezWebFolder.t189'/></th>
+				<th headers="cd" width="80px" ><spring:message code='ezWebFolder.t190'/></th>
+				<th headers="dd" width="80px" ><spring:message code='ezWebFolder.t288'/></th>
+				<th              width="160px"><spring:message code='ezWebFolder.t199'/></th>
 			</tr>
 		</table>
 	</div>
