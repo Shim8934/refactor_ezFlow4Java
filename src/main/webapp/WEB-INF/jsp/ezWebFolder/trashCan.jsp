@@ -437,15 +437,15 @@
 </head>
 <body class="mainbody">
     <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span></h1>
-	<div id="mainmenu2">
+	<div id="mainmenu">
 		<ul>
-			<li id=""><a onClick="restoreTrashCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t287'/></span></a></li>
-			<li id=""><a onClick="moveTraschCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t282'/></span></a></li>
-			<li id=""><a onClick="filePermanentDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t19'/></span></a></li>
-			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
+			<li><span onClick="restoreTrashCan()"><spring:message code='ezWebFolder.t287'/></span></li>
+			<li><span onClick="moveTraschCan()"><spring:message code='ezWebFolder.t282'/></span></li>
+			<li><span onClick="filePermanentDelete()"><spring:message code='ezWebFolder.t19'/></span></li>
+			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 			<li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 			<li id="right" style="float:left;">
-				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="height: 28px; border-radius: 3px; padding: 0px; padding-left: 4px; width: 80px; color: #666;">
+				<select class="select" id="idSelect" onchange="changeValue(this.value);">
 					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option>
 					<option value="document"><spring:message code='ezWebFolder.t192'/></option>
 					<option value="music"><spring:message code='ezWebFolder.t193'/></option>
@@ -459,7 +459,7 @@
 	</div>
 	
 	<script type="text/javascript">
-		selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
+		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	</script>
  	
     <div id="progress-wrp" style="display: none;">

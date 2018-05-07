@@ -714,7 +714,7 @@
 					<li><a onClick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 					<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 					<li>
-						<select id="fileTypeSelect" onchange="onFileTypeChange(this.value);" style="height: 28px; border-radius: 3px; padding: 0px; padding-left: 4px; width: 80px; color: #666;">
+						<select id="fileTypeSelect" class="select" onchange="onFileTypeChange(this.value);">
 							<option value=""><spring:message code='ezWebFolder.t191'/></option>
 							<option value="document"><spring:message code='ezWebFolder.t192'/></option>
 							<option value="music"><spring:message code='ezWebFolder.t193'/></option>
@@ -776,7 +776,7 @@
 						<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
 						<th id="dateInfoHeader" style="width: 9%;">등록일</th><!-- 등록일 -->
 						<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-						<th id="shareInfoHeader" style="width: 6%; text-align: center;">공유상태</th><!-- 공유상태 -->
+						<th id="shareInfoHeader" style="width: 35px; text-align: center;"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
 					</tr>
 				</table>
 			</div>
