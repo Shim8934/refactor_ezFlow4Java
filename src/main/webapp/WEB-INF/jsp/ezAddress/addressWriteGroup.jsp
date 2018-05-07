@@ -1925,7 +1925,7 @@
 	                                <td id ="OrganListView" class="listview" style="overflow-y: auto; overflow-x: auto;">
 	                                    <table style="width: 100%; margin-top: -1px; back" class="popup_mainlist">
 	                                        <tr>
-	                                            <th style="white-space:normal; background-color: white;">
+	                                            <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
 	                                                <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 	                                                <span style="float: right; position: relative;">
 	                                                    <span onclick="ChangeListView_onClick('TXT');">
