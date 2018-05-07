@@ -261,7 +261,7 @@
 	                </tr>
 	                <tr>
 		                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-		                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 600px; background-color: white"></iframe>	                    
+		                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 390px; background-color: white"></iframe>	                    
 		                </td>
 	            	</tr>
 	            </table>
