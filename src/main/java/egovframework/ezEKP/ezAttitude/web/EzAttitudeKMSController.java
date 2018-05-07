@@ -247,7 +247,8 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String pageNum,
 			@RequestParam(required=false)String apprUserName,
 			@RequestParam(required=false)String startDate,
-			@RequestParam(required=false)String endDate) throws Exception {
+			@RequestParam(required=false)String endDate,
+			@RequestParam(required=false)String deptid) throws Exception {
 		LOGGER.debug("adminGetAttModAppList started");
 		
 		int totalAtt = 0;
@@ -257,13 +258,17 @@ public class EzAttitudeKMSController {
 		int startPoint = 0;
 		int endPoint = 15;
 		String adminFlag = "true";
+		String url = "";
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String isGAdmin = "";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
-
-		if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
-			return "cmm/error/adminDenied";
-		}
+		
+//		if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
+//			return "cmm/error/adminDenied";
+//		}
+		//근태 관리자가 아니라도 관리자를 볼 수 있다.
         
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
@@ -272,14 +277,13 @@ public class EzAttitudeKMSController {
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
+		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
 									
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
+		HttpEntity entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", userInfo.getCompanyID())
@@ -290,7 +294,8 @@ public class EzAttitudeKMSController {
 				.queryParam("sysLang", sysLang)
 				.queryParam("offset", offsetMin)
 				.queryParam("pageNum", pageNum)
-				.queryParam("adminFlag", adminFlag);
+				.queryParam("adminFlag", adminFlag)
+				.queryParam("deptid", deptid);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -321,7 +326,8 @@ public class EzAttitudeKMSController {
 				.queryParam("sysLang", sysLang)
 				.queryParam("offset", offsetMin)
 				.queryParam("pageNum", pageNum)
-				.queryParam("adminFlag", adminFlag);
+				.queryParam("adminFlag", adminFlag)
+				.queryParam("deptid", deptid);
 		
 		if (totalPages == 0 || totalPages == 1) {
 			
@@ -367,7 +373,8 @@ public class EzAttitudeKMSController {
 					.queryParam("pageNum", pageNum)
 					.queryParam("startPoint", startPoint)
 					.queryParam("endPoint", endPoint)
-					.queryParam("adminFlag", adminFlag);
+					.queryParam("adminFlag", adminFlag)
+					.queryParam("deptid", deptid);
 			
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 			
@@ -406,6 +413,53 @@ public class EzAttitudeKMSController {
 			model.addAttribute("list", list);
 		}
 		
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+			adminFlag = "true";
+			//권한부서 리스트
+			//c , k , wa -> 회사의 모든부서
+			url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/depts";
+			
+		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+			adminFlag = "true";
+			isGAdmin = "Y";////////////////////////////////////////////없애도 될듯하다
+			// g -> 자신의 부서 + auth TB 확인해볼것.
+			url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		}
+		
+		
+		headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		entity = new HttpEntity<>(headers);
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("isGAdmin", isGAdmin);
+		
+		rest = new RestTemplate();
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		JSONArray deptList = new JSONArray();
+		
+		if(status.equals("ok")){
+			deptList = (JSONArray) resultBody.get("data");
+		}
+		
+		if (deptid == null) {
+			model.addAttribute("selectedDeptID", userInfo.getDeptID());
+		} else {
+			model.addAttribute("selectedDeptID", deptid);
+		}
+		
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userTimeSet", offset);
 		model.addAttribute("offsetMin", offsetMin);
@@ -413,6 +467,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("adminFlag", adminFlag);
+		model.addAttribute("deptList", deptList);
 		
 		LOGGER.debug("adminGetAttModAppList ended");
 		

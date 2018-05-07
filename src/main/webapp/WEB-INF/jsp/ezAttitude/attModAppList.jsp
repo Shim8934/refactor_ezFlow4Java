@@ -1047,8 +1047,18 @@
 						</tr>
 						<tr>
 							<th nowrap>신청부서명</th>
-							<td style="width:100%;"> 
-								<input id="writerDept_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
+							<td style="width:100%;">
+								<select id="writerDept_search" style="width:100px; margin-top:5px;">
+									<c:forEach var="item" items="${deptList}">
+									<c:if test="${selectedDeptID == item.deptId}">
+									<option value="<c:out value='${item.deptId}'/>" selected><c:out value='${item.deptName}'/></option>
+									</c:if>
+									<c:if test="${selectedDeptID != item.deptId}">
+									<option value="<c:out value='${item.deptId}'/>"><c:out value='${item.deptName}'/></option>
+									</c:if>
+									</c:forEach>
+								</select> 
+<!-- 								<input id="writerDept_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/> -->
 							</td>
 						</tr>
 	              	</c:if>
