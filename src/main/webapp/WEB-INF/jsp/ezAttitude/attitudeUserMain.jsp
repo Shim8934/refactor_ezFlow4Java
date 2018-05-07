@@ -274,6 +274,7 @@
 					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1 - 2));
 					
 // 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"34px", "background-color": "#edf4fd"}).text($("#calTitle").text())));
+					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"34px", "background-color": "#edf4fd"}).text("근태 통계")));
 					for (var i = 0; i < result.length; i++) {
 						
 						if (result[i].typeId == 'A01' || result[i].typeId == 'A03') {
