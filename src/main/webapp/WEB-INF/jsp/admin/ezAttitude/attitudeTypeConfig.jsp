@@ -164,7 +164,11 @@
 	        
 	        //수정버튼
 	        function mod_type() {
-	        	dbclick(selectTypeId);
+	        	if (selectTypeId == null || selectTypeId == "") {
+	        		alert("유형을 먼저 선택해 주세요");
+	        		return;
+	        	}
+	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + selectTypeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=525px, height=170px', GetOpenWindowfeature(800, 520));
 	        }
 	        
 	        function listClick(elem) {
