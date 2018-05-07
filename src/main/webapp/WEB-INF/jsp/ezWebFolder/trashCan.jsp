@@ -195,8 +195,8 @@
 		}
 		
 	   	function btn_PostDate_Clear() {
-	        $(".Sdatepicker").datepicker('setDate', "");
-	        $(".Edatepicker").datepicker('setDate', "");
+	        $(".datepicker").datepicker('setDate', "");
+	        $(".datepicker").datepicker('setDate', "");
 	
 	    }
 	    
@@ -211,39 +211,39 @@
 	        if (type == "basic") {
 	
 	           if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" 
-	        		   && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezBoard.t192' />");// 검색조건을 입력하세요 
+	        	    && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == ""  
+	        	    && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	                alert("<spring:message code='ezWebFolder.t163' />");// 검색조건을 입력하세요 
 	                return;
 	            }
-	
-	            if ($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezBoard.t189' />");
+	            if ($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	                alert("<spring:message code='ezWebFolder.t308' />");
 	                return;
 	            }
-	            if ($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-	                alert("<spring:message code='ezBoard.t189' />");
+	            if ($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	                alert("<spring:message code='ezWebFolder.t309' />");
 	                return;
 	            }
-	            if ($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezBoard.t189' />");
+	            if ($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	                alert("<spring:message code='ezWebFolder.t308' />");
 	                return;
 	            }
-	            if ($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-	                alert("<spring:message code='ezBoard.t189' />");
+	            if ($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	                alert("<spring:message code='ezWebFolder.t309' />");
 	                return;
 	            }
 	            if (new Date($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-	                alert("<spring:message code='ezBoard.t191' />");
+	                alert("<spring:message code='ezWebFolder.t164' />");
 	                return;
 	            }
 	            if (new Date($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-	                alert("<spring:message code='ezBoard.t191' />");
+	                alert("<spring:message code='ezWebFolder.t164' />");
 	                return;
 	            }
 	        }
 	        else if (type == "quick") {
 	            if (document.getElementById("txt_keyword").value == "") {
-	                alert("<spring:message code='ezBoard.t192' />");
+	                alert("<spring:message code='ezWebFolder.t163' />");
 	                return;
 	            }
 	        }
@@ -253,7 +253,7 @@
 	    
    	   function doLayerPopup(obj) {
    			optionHidden();
-	   		 btn_PostDate_Clear();
+   			btn_PostDate_Clear();
 	         $('#enrollStartDate').val(enrollStartDate);
 	         $('#enrollEndDate').val(enrollEndDate) ;
 	         $('#delStartDate').val(delStartDate);
@@ -391,7 +391,7 @@
 					"folderList" :  folderList.toString()
 				},
 				success : function (data) {
-					if (data.code == 1) {
+					if (data.code == 0) {
 						alert("<spring:message code = 'ezWebFolder.t289'/>");
 					} else if (data.code == 4) {
 						alert("<spring:message code = 'ezWebFolder.t290'/>");
@@ -400,7 +400,11 @@
 					refreshView();
 				},
 				error : function(error) {
+					if (data.code == 3) {
+						alert("<spring:message code = 'ezWebFolder.t28'/>");
+					} else if (data.code == 2) {
 						alert("<spring:message code = 'ezWebFolder.t292'/>");
+					}
 				}
 			})
        }
@@ -444,7 +448,7 @@
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
 			<li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 			<li id="right" style="float:left;">
-				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="height: 29px; border-radius: 3px; padding: 0px; width: 85px">
+				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="height: 28px; border-radius: 3px; padding: 0px; padding-left: 4px; width: 80px; color: #666;">
 					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option>
 					<option value="document"><spring:message code='ezWebFolder.t192'/></option>
 					<option value="music"><spring:message code='ezWebFolder.t193'/></option>
@@ -521,17 +525,17 @@
 				<tr>
 		           <th style="text-align:center"><spring:message code='ezWebFolder.t190' /></th>
 		           <td>
-		               <input type="text" class="Sdatepicker datepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
+		               <input type="text" class="datepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
 		                ~
-		               <input type="text" class="Edatepicker datepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
+		               <input type="text" class="datepicker" id="enrollEndDate" style="width:80px;text-align:center" readonly="readonly">
 		           </td>
 				</tr>
 				<tr>
 		           <th style="text-align:center"><spring:message code='ezWebFolder.t288' /></th>
 		           <td>
-		               <input type="text" class="Sdatepicker" id="delStartDate" style="width:80px;text-align:center" readonly="readonly">
+		               <input type="text" class="datepicker" id="delStartDate" style="width:80px;text-align:center" readonly="readonly">
 		                ~
-		               <input type="text" class="Edatepicker" id="delEndDate" style="width:80px;text-align:center" readonly="readonly">
+		               <input type="text" class="datepicker" id="delEndDate" style="width:80px;text-align:center" readonly="readonly">
 		           </td>
 				</tr>
 		        <tr>
@@ -551,8 +555,8 @@
 			<table style="width:100%">
 				<tr>
 					<td style="text-align:center;">
-						<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142' /></span></a>
-						<a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+						<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezWebFolder.t123' /></span></a>
+						<a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezWebFolder.t112' /></span></a>
 					</td>
 				</tr>
 			</table>

@@ -566,23 +566,28 @@
 				dateFormat: 'yy-mm-dd'
 			}).val();
 			
-			if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && startDate == "") {
-				alert("<spring:message code='ezBoard.t192' />");// 검색조건을 입력하세요
+			if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && startDate == "" && endDate == "") {
+				alert("<spring:message code='ezWebFolder.t163'/>");// 검색조건을 입력하세요
 				return;
 			}
 			
 			if (startDate != "" && endDate == "") {
-				alert("<spring:message code='ezBoard.t189' />");
+				alert("<spring:message code='ezWebFolder.t308'/>");
+				return;
+			}
+			
+			if (startDate == "" && endDate != "") {
+				alert("<spring:message code='ezWebFolder.t309'/>");
 				return;
 			}
 			
 			if (new Date(startDate) > new Date(endDate)) {
-				alert("<spring:message code='ezBoard.t191' />");
+				alert("<spring:message code='ezWebFolder.t164'/>");
 				return;
 			}
 		} else if (type == "quick") {
 			if (document.getElementById("txt_keyword").value == "") {
-				alert("<spring:message code='ezBoard.t192' />");
+				alert("<spring:message code='ezWebFolder.t163'/>");
 				return;
 			}
 		}
@@ -905,7 +910,7 @@
 				<li id=""><img src="/images/i_bar.gif"></li>
 				<li id="" onClick="context.refreshList(true)" favoritemenu><span><spring:message code='ezWebFolder.t139' /></span></li>
 				<li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
-				<li id="right" favoritemenu style="float: right;"><select class="select" id="idSelect" onchange="idChange(this.value);" style="width: 100px; display: none;">
+				<li id="right" favoritemenu style="float: left;"><select class="select" id="idSelect" onchange="onFileTypeChange(this.value);" style="height: 28px; border-radius: 3px; padding: 0px; padding-left: 4px; width: 80px; color: #666;">
 						<option value="all" data-imagesrc="/images/webfolder/allTypes.png" selected><spring:message code='ezWebFolder.t191' /></option>
 						<!-- 전체 -->
 						<option value="document" data-imagesrc="/images/webfolder/msWord.png"><spring:message code='ezWebFolder.t192' /></option>
