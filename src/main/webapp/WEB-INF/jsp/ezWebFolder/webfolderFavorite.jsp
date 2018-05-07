@@ -566,23 +566,28 @@
 				dateFormat: 'yy-mm-dd'
 			}).val();
 			
-			if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && startDate == "") {
-				alert("<spring:message code='ezBoard.t192' />");// 검색조건을 입력하세요
+			if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && startDate == "" && endDate == "") {
+				alert("<spring:message code='ezWebFolder.t163'/>");// 검색조건을 입력하세요
 				return;
 			}
 			
 			if (startDate != "" && endDate == "") {
-				alert("<spring:message code='ezBoard.t189' />");
+				alert("<spring:message code='ezWebFolder.t308'/>");
+				return;
+			}
+			
+			if (startDate == "" && endDate != "") {
+				alert("<spring:message code='ezWebFolder.t309'/>");
 				return;
 			}
 			
 			if (new Date(startDate) > new Date(endDate)) {
-				alert("<spring:message code='ezBoard.t191' />");
+				alert("<spring:message code='ezWebFolder.t164'/>");
 				return;
 			}
 		} else if (type == "quick") {
 			if (document.getElementById("txt_keyword").value == "") {
-				alert("<spring:message code='ezBoard.t192' />");
+				alert("<spring:message code='ezWebFolder.t163'/>");
 				return;
 			}
 		}
