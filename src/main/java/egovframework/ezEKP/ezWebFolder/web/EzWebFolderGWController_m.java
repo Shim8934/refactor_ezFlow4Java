@@ -112,10 +112,17 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getSharingList(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-			Map<String, Long> countInfo = ezWebFolderService_m.getSharingCount(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			List<ShareVO> list = null;
+			Map<String, Long> countInfo = null;
 			
-			if (!folderId.equals("")) {
+			if (folderId.equals("")) {
+				list = ezWebFolderService_m.getSharingList(subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+				countInfo = ezWebFolderService_m.getSharingCount(subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+				
+			} else {
+				list = ezWebFolderService_m.getFolderFileList(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+				countInfo = ezWebFolderService_m.getFolderFileCount(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+				
 				FolderVO folderInfo = ezWebFolderService_y.getFolderDetail(folderId, userId, tenantId, userInfo.getCompanyID());
 				String folderPath = folderInfo.getFolderPath();
 				String folderPath2 = ezWebFolderService.getFolderPath(folderPath.split("\\|"), userInfo.getPrimary(), tenantId);
@@ -298,10 +305,16 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getSharedList(folderId, subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-			Map<String, Long> countInfo = ezWebFolderService_m.getSharedCount(folderId, subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			List<ShareVO> list = null;
+			Map<String, Long> countInfo = null;
 			
-			if (!folderId.equals("")) {
+			if (folderId.equals("")) {
+				list = ezWebFolderService_m.getSharedList(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+				countInfo = ezWebFolderService_m.getSharedCount(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			} else {
+				list = ezWebFolderService_m.getFolderFileList(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+				countInfo = ezWebFolderService_m.getFolderFileCount(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+				
 				FolderVO folderInfo = ezWebFolderService_y.getFolderDetail(folderId, userId, tenantId, userInfo.getCompanyID());
 				String folderPath = folderInfo.getFolderPath();
 				String folderPath2 = ezWebFolderService.getFolderPath(folderPath.split("\\|"), userInfo.getPrimary(), tenantId);
