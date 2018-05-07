@@ -1193,14 +1193,23 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId,
-			String userId, String isGAdmin) throws Exception {
+	public List<JournalAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId,
+			String userId, String isAllDept) throws Exception {
+		List<JournalAuthorVO> list = new ArrayList<JournalAuthorVO>();
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
 		
-		return ezAttitudeDAO.getAttitudeAuthDeptList(map);
+		if (!isAllDept.equals("Y")) {
+			list = ezAttitudeDAO.getAttitudeAuthDeptList(map);
+		} else {
+			list = ezAttitudeDAO.getCompanyDeptList(map);
+		}
+		
+		return list;
 	}
 
 	@Override

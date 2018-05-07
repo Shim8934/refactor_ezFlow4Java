@@ -132,9 +132,8 @@ public interface EzAttitudeService {
 
 	public void saveAttitudeAuthDept(int tenantId, String companyId, String selectedUser, String deptIds) throws Exception;
 
-	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId,	String userId, String isGAdmin) throws Exception;
+	public List<JournalAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId, String userId, String isAllDept) throws Exception;
 	
-//	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String offset, String startDate, String endDate, int tenantId) throws Exception;
 	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String deptId, String offset, String year,String typeId, int tenantId) throws Exception;
 
 	public List<JournalAuthorVO> getCompanyDeptList(String userId, String companyId, int tenantId);
