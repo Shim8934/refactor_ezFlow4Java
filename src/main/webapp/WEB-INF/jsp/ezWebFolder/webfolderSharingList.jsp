@@ -161,11 +161,17 @@
 			// originalPath 는 한글 path
 			// folderPath 는 숫자 
 			function setNamePath(folderPath, originalPath) {
+				var orginalPathElmt = document.getElementById("originalPath");
 				var nameTag = document.createElement("span");
-				var detailName = [];
+				var originPath;
+				
+				// for statement using
+				var detailName;
+				var imgElmt;
+				var length;
 				
 				$('#originalPath').empty();
-				dom.originalPath.appendChild(nameTag);
+				orginalPathElmt.appendChild(nameTag);
 				
 				if (folderPath == null) {
 					detailName = document.createElement("span");
@@ -180,34 +186,43 @@
 					return;
 				}
 				
-				var path = [];
-				var imgElmt;
-				
 				folderPath = folderPath.substring(1, folderPath.length - 1);
 				originPath = folderPath.split("|");
 				path = originalPath.split("/");
-				originPath = folderPath.split("|");
+				length = path.length - 1;
 				
-				for (var i = 1; i < path.length - 1; i++) {
+				for (var i = 0; i < length; i++) {
 					detailName = document.createElement("span");
 					
 					detailName.className = "aName";
 					detailName.id = originPath[i];
 					detailName.onclick = function() {
-						getFileList(this.id);
+						nameFileList(this.id);
 					};
-					detailName.textContent = path[i];
+
+					detailName.textContent = path[i] ;
+					/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
 					detailName.setAttribute("style", "font-size:15px; ");
-					
 					nameTag.appendChild(detailName);
 					
-					imgElmt = document.createElement("img");
-					imgElmt.setAttribute("style", "height: 18px; width: 18px; display: inline-block;");
-					imgElmt.src = "/images/webfolder/arrow.png";
-					
-					if (i != path.length - 2) {
-						nameTag.appendChild(imgElmt);
+					if(length == 1) {
+						detailName = document.createElement("span");
+						/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 및 꺽새 추가 */
+						detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+						detailName.setAttribute("style", "font-size:15px;");
+						nameTag.appendChild(detailName);
 					}
+					
+					/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
+					/* var imgElmt = document.createElement("img");
+					imgElmt.setAttribute("style", "height: 14px; width: 14px; display: inline-block; margin: 0px 6px;");
+					imgElmt.src = "/images/webfolder/arrow2.png"; */
+					
+					if (i != length - 1) {
+						detailName = document.createElement("span");
+						detailName.textContent = " > ";
+						nameTag.appendChild(detailName);
+					}	
 				}
 			}
 			
