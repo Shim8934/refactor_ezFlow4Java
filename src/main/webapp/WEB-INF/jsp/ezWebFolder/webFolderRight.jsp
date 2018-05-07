@@ -429,12 +429,12 @@
 				}
 	
 				if (requirement.startDate != "" && requirement.endDate == "") {
-					alert(messages.strLang18);
+					alert(messages.strLang21);
 					return;
 				}
 	           
 				if (requirement.startDate == "" && requirement.endDate != "") {
-					alert(messages.strLang18);
+					alert(messages.strLang22);
 					return;
 				}
 	
@@ -600,7 +600,7 @@
 						alert(messages.strLang13);
 					} else {
 						openLeftPanel();
-						DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
+						DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 					}
 				},
 				error : function(error) {
