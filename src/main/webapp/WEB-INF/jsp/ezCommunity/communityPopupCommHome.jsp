@@ -117,9 +117,9 @@
 	                            p.className = "title";
 	                            
 	                            if (primary == "1") {
-	                                p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='padding-right:5px;vertical-align:middle' />" + length_check(infoVO.boardName);
+	                                p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='width:16px; height:16px; padding-right:5px; vertical-align:middle' />" + length_check(infoVO.boardName);
 	                            } else {
-	                            	p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='padding-right:5px;vertical-align:middle' />" + length_check(infoVO.boardName2);
+	                            	p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='width:16px; height:16px; padding-right:5px;vertical-align:middle' />" + length_check(infoVO.boardName2);
 	                            }
 	                            
 	                            var span = document.createElement("span");
