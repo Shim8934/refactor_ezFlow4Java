@@ -706,6 +706,14 @@
   				A.importance,
   				A.title,
   				A.readcount,
+  				(SELECT 
+                	COUNT(*)  
+    			FROM 
+    				tbl_comm_onelinereply
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) ONELINECNT,
   				A.attachments,
   				A.itemlevel,
   				A.abstract,
@@ -4677,11 +4685,22 @@
 		<![CDATA[
 			UPDATE
 				TBL_C_CLUB
-			SET
-				c_logo = #v_LOGOFILENAME#,
-				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
-			WHERE
-				c_clubno = #v_FILENAME#
+		]]>
+			<dynamic prepend="SET">
+				<isNotEmpty property="v_LOGOFILENAME" prepend=",">
+					<![CDATA[
+						c_logo = #v_LOGOFILENAME#
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="v_LOGOFILENAME_THUMBNAIL" prepend=",">
+					<![CDATA[
+						c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
+					]]>
+				</isNotEmpty>	
+				</dynamic>
+		<![CDATA[
+				WHERE
+				c_clubno = #v_CODE#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -4691,10 +4710,12 @@
 			INSERT INTO TBL_LOGO_SIZE
 				(c_clubno,
 				logo_size,
+				banner_size,
 				tenant_id)
 			VALUES
-				(#v_FILENAME#,
-				#v_FILESIZE#,
+				(#v_CODE#,
+				#v_LOGOFILESIZE#,
+				#v_THUMBFILESIZE#,
 				#tenantID#)
 		]]>
 	</insert>
@@ -5497,9 +5518,25 @@
 		<![CDATA[
 			UPDATE
 				TBL_C_CLUB
-			SET
-				c_logo = #v_LOGOFILENAME#,
-				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
+		]]>
+		<dynamic prepend="SET">
+			<isNotEmpty property="v_LOGOFILENAME" prepend=",">
+				<![CDATA[
+					c_logo = #v_LOGOFILENAME#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="v_LOGOFILENAME_THUMBNAIL" prepend=",">
+				<![CDATA[
+					c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
+				]]>
+			</isNotEmpty>	
+			<isNotEmpty property="v_COPTYPE" prepend=",">
+				<![CDATA[
+					c_type = #v_COPTYPE#
+				]]>
+			</isNotEmpty>	
+		</dynamic>
+		<![CDATA[
 			WHERE
 				RTRIM(c_clubno) = #v_FILENAME#
 			AND
@@ -5550,6 +5587,7 @@
 				tenant_id = #tenantID#
 		]]>
 	</update>
+	
 	
 <!-- 	<procedure id="EzCommunityDAO.adminHomeBoardSet"			parameterClass="Map"> -->
 <!-- 		{CALL EZSP_ADMIN_HOMEBOARD_SET(#v_CLEAR#, #v_POSITION#, #v_SN#, #v_CN#, #v_BOARDID#)} -->

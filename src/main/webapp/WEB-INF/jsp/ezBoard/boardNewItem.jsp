@@ -249,23 +249,26 @@
 		            case "MailEnv_div1":
 		                if ("${boardInfo.guBun}" == "2")
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		                else if ("${docID}" != "")
+		                else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-		                else
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                else if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
+		        	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		            case "MailEnv_div3":
 		                {
 		                    if (pUseBackGround == "TRUE") {
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
-		                        if ("${docID}" != "")
+		                        if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                    }
-		                    else
+		                    else {
+		                    	if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    }
 		                    break;
 		                }
 		            default:
+		            	if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		        }
@@ -612,14 +615,14 @@
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ENDDATE", pEndDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ABSTRACT", document.getElementById("txtAbstract").value);
 		        
-		        if (CrossYN()) {
+		        if (CrossYN() && pUrl.toLowerCase().indexOf(".hwp") < 0 ) {
 		            if (attachxml != "") {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", attachxml);
 		            } else {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", "");
 		            }
 		        } else {
-	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", MakeXMLString(AttachFileList()));
+	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", MakeXMLString(AttachFileList2()));
 		        }
 
 		        if (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
@@ -690,8 +693,10 @@
 
 		        var strBody = message.GetEditorContent();
 		        
-		        if (pDocID != "") {
+		        if (pDocID != "" && pUrl.toLowerCase().indexOf(".mht") > -1) {
 		        	strBody = message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
+		        } else {
+		        	strBody = message.GetEditorContent() + "<br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
 		        }
 		        
 		        // 게시물 내용을 db에 넣기 위한 변수 2018-04-06 강민수92
@@ -712,9 +717,12 @@
 		        else {
 		            if (pDocID == "")
 		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>", "clean");
-		            else {
+		            else if (pUrl.toLowerCase().indexOf(".mht") > -1) {
 		                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
 		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
+		            } else {
+		            	 var tempstr = strBody + "<br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
 		            }
 		        }
 		        
@@ -1171,7 +1179,7 @@
 		            document.getElementById("docTR").style.display = "";
 		
 		            var TDRows;
-		            if (CrossYN()) {
+		            if (CrossYN() && pUrl.toLowerCase().indexOf(".hwp") <  0) {
 		                docContent.document.body.innerHTML = htmlData.replace(/(<p)/igm, '<div').replace(/<\/p>/igm, '</div>');
 		                docContent.document.body.getElementsByTagName("TABLE").item(0).align = "center";
 		                TDRows = docContent.document.getElementsByTagName("TD");
@@ -1249,6 +1257,35 @@
 		                    strRet += "tempUploadFile/" + filepath + "|";
 		                }
 		                attachxml = strRet;
+		            } else {
+		            	    var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
+			                    var temppath = pUrl;
+			                    temppath = temppath.substring(34, temppath.length);
+			                    var orgfile = temppath.split("/");
+			                    orgfile = orgfile[orgfile.length - 1];
+			                    xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
+			                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
+			                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
+			                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
+			                        xmlstring += "<TYPE>APPROVAL</TYPE>";
+			                    else
+			                        xmlstring += "<TYPE>APPROVALG</TYPE>";
+			                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
+			               
+			                xmlstring += "</ROWS></DATA>";
+			                xmldom2 = loadXMLString(xmlstring);
+			                xmlHTTP.open("POST", "/ezBoard/uploadApprovFile.do", false);
+			                xmlHTTP.send(xmldom2);
+			                returnvalue(xmlHTTP.responseText);
+			
+			                var xml = loadXMLString(xmlHTTP.responseText);
+			                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
+			                var strRet = "";
+			                for (i = 0; i < nodes.length; i++) {
+			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+			                    strRet += "tempUploadFile/" + filepath + "|";
+			                }
+			                attachxml = strRet;
 		            }
 		        }
 		    }
@@ -1288,15 +1325,14 @@
 		                return;
 		        }
 		    }
+		    /* 2018-04-30 홍승비 - 게시물 수정, 답변 시 특수문자 처리 */
 		    function ConvMakeXMLString(str) {
-		        str = ReplaceText(str, "&amp;", "&");
 		        str = ReplaceText(str, "&lt;", "<");
 		        str = ReplaceText(str, "&gt;", ">");
-		        str = ReplaceText(str, "&quot;", "\"");
-		        str = ReplaceText(str, "&#39;", "'");
 		        str = ReplaceText(str, "&#039;", "'");
-		        str = ReplaceText(str, "&#034;", "\'");
-		        str = ReplaceText(str, "&#92;", "\\");
+		        str = ReplaceText(str, "&#034;", "\"");
+		  	    str = ReplaceText(str, "&amp;", "&");	    
+		  		str = ReplaceText(str, "&#92;", "\\");
 		        return str;
 		    }
 		    function GetSmallUrl() {
@@ -1486,9 +1522,9 @@
 		                document.getElementById("tab02").style.display = "none";
 		                if ("${boardInfo.guBun}" == "2")
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		                else if ("${docID}" != "")
+		                else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-		                else
+		                else if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                break;
 		            case "MailEnv_div3":
@@ -1496,7 +1532,7 @@
 		                document.getElementById("tab02").style.display = "";
 		                if (pUseBackGround == "TRUE") {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 330 + "PX";
-		                    if ("${docID}" != "")
+		                    if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                }
 		                else{
@@ -1930,6 +1966,26 @@
 	        	
 	        	return retValue;
 	        }
+	        
+	        function AttachFileList2() {
+		    	var strRet = "";
+		    	var filepath = "";
+		    	
+		        if (getXmlString(pAttachListXml) == "") {
+		            return "";
+		        }
+		    	   var xmldomNodes = GetElementsByTagName(pAttachListXml, "DATA2");
+
+		           for (var i = 0; i < xmldomNodes.length; i++) {
+		               filepath = getNodeText(xmldomNodes[i]);
+		               if (filepath.indexOf(pBoardID) != -1) {
+		                   strRet += filepath + "|";
+		               } else {
+		            	   strRet += "tempUploadFile/" + getNodeText(xmldomNodes[i]) + "|"
+		               }
+		           }
+		    	return strRet;
+		    }
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
 	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
@@ -2353,9 +2409,9 @@
 	<script type="text/javascript">
 	    if ("${boardInfo.guBun}" == "2") {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-	    } else if("${docID}" != "") {
+	    } else if("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-	    } else {
+	    } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 	    }
 	</script>

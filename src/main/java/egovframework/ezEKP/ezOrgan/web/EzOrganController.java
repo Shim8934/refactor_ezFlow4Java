@@ -389,4 +389,20 @@ public class EzOrganController {
 		logger.debug("getAllDeptID ended.");
 		return result;
 	}
+	
+	@RequestMapping(value = "/ezOrgan/isProxyUser.do", produces = "text/xml;charsert=utf-8")
+	@ResponseBody
+	public String isProxyUser(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("isProxyUser started.");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String nowDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true);
+		String result ="0";
+		
+		if (ezOrganService.isProxyUser(userInfo.getTenantId(), userInfo.getId(), nowDateTime).equals("1")) {
+			result = "1";
+		}
+		
+		logger.debug("isProxyUser ended.");
+		return result;
+	}
 }

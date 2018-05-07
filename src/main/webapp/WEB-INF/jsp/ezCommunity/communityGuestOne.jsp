@@ -39,11 +39,11 @@
 		        var html = "";
 
 		        for(var i = 0; i < SelectNodes(xmlDoc, "DATA/ROW").length; i++) {
-		        	html += "<table class=\"content\" style=\"margin-top:10px;margin-bottom:12px;border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
-		        	html += "<tr style=\"border-left:1px solid #dddddd;border-right:1px solid #dddddd;\" >";
-		        	html += "<th style=\"height:25px; border-left:1px solid #dddddd;border-right:0px; width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
+		        	html += "<table class=\"content\" style=\"margin-top:10px;margin-bottom:12px;border-left:1px solid #dfdfdf;border-right:1px solid #dfdfdf;\">";
+		        	html += "<tr style=\"border:1px solid #dfdfdf;\" >";
+		        	html += "<th style=\"height:25px; border:1px solid #dfdfdf; width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
 		        	/* html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:50px;\" nowrap>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "</th>"; */
-		        	html += "<th style=\"width:100%; text-align:left;border-left:1px solid #ddd;border-right:1px solid #dddddd; font-weight:normal\" >";
+		        	html += "<th style=\"width:100%; text-align:left;border:1px solid #dfdfdf; font-weight:normal\" >";
 		        	
 		        	if(SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NEW") == 'NEW') {
 		        		html += "<img src=\"/images/i_new.gif\" border=\"0\" hspace=\"5\" align=\"absmiddle\">";
@@ -54,17 +54,17 @@
 					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "WRITEDAY");
 					html += " " + "<spring:message code='ezCommunity.t588' /></th>";
 					html += "</tr>";
-					html += "<tr style=\"border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
-					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border-left:1px solid #dddddd;border-right:1px solid #dddddd;\">";
+					html += "<tr style=\"border-left:1px solid #dfdfdf;border-right:1px solid #dfdfdf;\">";
+					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border:1px solid #dfdfdf;\">";
 					html += "<textarea style=\"padding:7px;height:100px;width:98%; border:0; overflow-y:auto;\" readonly=\"readonly\" id=textarea1 name=textarea1>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "CONTENT").replace(/<br>/gi, "\n").replace(/&dquot;/gi, "\"").replace(/&quot;/gi, "\'") + "</textarea></td>";
 					html += "</tr>";
 					html += "</table>";
 		        }
 		        
 		        if (SelectNodes(xmlDoc, "DATA/ROW").length == 0) {
-		        	var strstr = "<spring:message code='ezCommunity.t926' />";
-		        	html += "<table class=\"content\" style=\"margin-top:10px;border-left:1px solid #dddddd;border-right:1px solid #dddddd;width:100%;height:130px;text-align:center\">";
-		        	html += "<tr style=\"border-left:1px solid #dddddd;border-right:1px solid #dddddd;\" ><td style='color:#777;background-color:#fafafa;border:1px solid #ddd !important'>" + strstr +"</td></tr></table>";
+		        	var strstr = "<img src='/images/kr/main/nodata_plan.png'><br/><span style='color:#d0d0d0;font-weight:bold'><spring:message code='ezCommunity.t926' /></span>";
+		        	html += "<table class=\"content\" style=\"margin-top:10px;margin-bottom:10px;border-left:1px solid #eaeaea;border-right:1px solid #eaeaea;width:100%;height:180px;text-align:center\">";
+		        	html += "<tr style=\"border-left:1px solid #eaeaea;border-right:1px solid #eaeaea;\" ><td style='color:#777;background-color:#fafafa;border:1px solid #dfdfdf !important'>" + strstr +"</td></tr></table>";
 		        }
 		        
 		        document.getElementById("formDel").innerHTML = document.getElementById("formDel").innerHTML + html; 
@@ -374,7 +374,7 @@
 		    }
 		</script>
 	</head>
-	<body class="cmhome_body">
+	<body class="cmhome_body" style = "margin-bottom:0px;">
 		<h1 class="type1_h1"><spring:message code='ezCommunity.t570' /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu" >
 			<ul>
@@ -388,8 +388,7 @@
 							<li><span onClick="alertMessage();"><spring:message code='ezCommunity.t167' /></span></li>
 						</c:otherwise>
 					</c:choose>
-					
-					<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+
 					<li><span onClick="javascript:mo_onclick()"><spring:message code='ezCommunity.t6' /></span></li>
 					<li><span onClick="javascript:delete1()"><spring:message code='ezCommunity.t208' /></span></li>
 				</c:if>
@@ -403,15 +402,17 @@
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 
-		<table class="content" style="margin-bottom:15px;">
+		<table class="content" style="width:100%;border:0px;border-top:1px solid #ddd">
 			<tr>
-	  			<td style="background-color: #f8f8fa;border:1px solid #ddd">
-					<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 20px;margin-left:2px;margin-top:1px">
-						<option selected value="titleContent" ><spring:message code='ezCommunity.t585' /></option>
-						<option value="writer"><spring:message code='ezCommunity.t445' /></option>
-					</select>
-					<input class="inputText" type="text" name="keyword" id ="keyword" onKeyDown="return keyword_onkeydown(event)" style="vertical-align: middle; width:200px">
-					<a class="imgbtn"><span onClick="search();"><spring:message code='ezCommunity.t31' /></span></a>
+	  			<td style="border:0px">
+	  				<div style="margin-top:8px;">
+						<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 25px;margin-top:1px">
+							<option selected value="titleContent" ><spring:message code='ezCommunity.t585' /></option>
+							<option value="writer"><spring:message code='ezCommunity.t445' /></option>
+						</select>
+						<input class="inputText" type="text" name="keyword" id ="keyword" onKeyDown="return keyword_onkeydown(event)" style="vertical-align: middle; width:200px">
+						<a class="imgbtn" style="vertical-align: middle;height:22px;margin:0px"><span onClick="search();" style="height:22px;line-height:22px"><spring:message code='ezCommunity.t31' /></span></a>
+					</div>	
 	  			</td>
 			</tr>
 		</table>

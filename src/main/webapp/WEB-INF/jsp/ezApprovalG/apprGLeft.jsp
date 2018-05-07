@@ -15,6 +15,11 @@
 	        .instance.sbHolder{
 	            width: 100%;
 	        }
+	        /* 2018-04-30 천성준 - (#12523)선택메뉴 bold체로 표시안됨 */
+	        #left ul li.on, #TopBoards ul li.on{
+				font-weight:bold;
+				color:black;
+			}
 	    </style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.7.2.min.js"></script>
@@ -1044,7 +1049,7 @@
 			<h2><span id="ITEMCONT" onclick="setPresentValue('<spring:message code='ezApproval.t844'/>');Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t844'/></span></h2>
 			<ul>
           	<c:forEach var="itemList" items="${itemList}" varStatus="status">
-          	    <li><span id = "itemList${status.count - 1}" style="width: 100%; display: inline-block;" onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})')">${itemList.taskName}(${itemList.keepingPeriod}<spring:message code='ezApprovalG.t456'/>) </span></li>
+          	    <li><span id = "itemList${status.count - 1}" style="width: 100%; display: inline-block;" onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})')">${itemList.taskName}(${itemList.keepingPeriod}) </span></li>
           	</c:forEach>
         	</ul>
 

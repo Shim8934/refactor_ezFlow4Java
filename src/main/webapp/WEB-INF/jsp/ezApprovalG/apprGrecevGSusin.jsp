@@ -90,7 +90,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
-		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pLimitRange = "", pPageNum = "1";
+		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
 		    var TaskCode = "";
 		    var DocNumCode = "";
@@ -1274,6 +1274,7 @@
 		        parameter[37] = pPageNum;
 		        parameter[38] = tempSecurityDate;
 		        parameter[39] = SummaryFlag;
+		        parameter[45] = pPublicityYN;
 		        
 		        if (approvalFlag == "S") {
 		            parameter[19] = "ING";
@@ -1364,13 +1365,16 @@
 		                pSummery = ret[9];
 		                pPublicityCode = ret[11];
 		                tempSecurityDate = ret[14];
+		                pPublicityYN = ret[21]; 
 		                
 		                if (approvalFlag == "G") {
 			                pSpecialRecordCode = ret[10];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
 			                
-			                setPublicFlag();
+			                /*2018-04-05 김은석 수정 건설공사 공개여부*/
+// 			                setPublicFlag();
+			                setPublicFlag2()
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];

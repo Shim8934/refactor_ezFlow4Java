@@ -1910,6 +1910,7 @@ function openFormUI_Complete(ret) {
             pSummery = "";
             pSpecialRecordCode = "";
             pPublicityCode = "";
+            pPublicityYN = "";
             pLimitRange = "";
             pPageNum = "1";
             cabinetID = "";
@@ -1942,6 +1943,7 @@ function openFormUI_Complete(ret) {
             pSummery = "";
             pSpecialRecordCode = "";
             pPublicityCode = "";
+            pPublicityYN = "";
             pLimitRange = "";
             pPageNum = "1";
             cabinetID = "";
@@ -2595,6 +2597,7 @@ function SaveDraftDocInfo_ilban(pState) {
 
         createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
         createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
+        createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", pPublicityYN);
         createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
         createNodeAndInsertText(xmlpara, objNode, "PAGENUM", pPageNum);
         createNodeAndInsertText(xmlpara, objNode, "CABINETID", cabinetID);
@@ -3054,6 +3057,7 @@ function getDocInfo() {
         pSummery = SelectSingleNodeValueNew(result, "DATA/SUMMARY");
         pSpecialRecordCode = SelectSingleNodeValueNew(result, "DATA/SPECIALRECORDCODE");
         pPublicityCode = SelectSingleNodeValueNew(result, "DATA/PUBLICITYCODE");
+        pPublicityYN = SelectSingleNodeValueNew(result, "DATA/PUBLICITYYN");
         pLimitRange = SelectSingleNodeValueNew(result, "DATA/LIMITRANGE");
         pPageNum = SelectSingleNodeValueNew(result, "DATA/PAGENUM");
         cabinetID = SelectSingleNodeValueNew(result, "DATA/CABINETID");
@@ -3853,6 +3857,7 @@ function SaveTMPDocInfo(AutoSave) {
         createNodeAndInsertText(xmlpara, objNode, "XDOCID", "");
         createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
         createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
+        createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", pPublicityYN);
         createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
         createNodeAndInsertText(xmlpara, objNode, "PAGENUM", pPageNum);
         createNodeAndInsertText(xmlpara, objNode, "CABINETID", cabinetID);

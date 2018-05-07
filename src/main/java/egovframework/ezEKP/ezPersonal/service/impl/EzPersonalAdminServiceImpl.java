@@ -352,7 +352,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("v_pCompanyID", companyID.toUpperCase());
+		map.put("v_pCompanyID", companyID);
 		map.put("v_pTotal", totalCount);
 		map.put("v_pCount", pageSize);
 		map.put("v_pStart", start);

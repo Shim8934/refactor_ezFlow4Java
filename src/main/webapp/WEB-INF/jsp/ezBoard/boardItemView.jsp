@@ -449,7 +449,6 @@
 		        window.resizeTo(785, 780);
 		    }
 		    function btn_Modify_Onclick() {
-		    	console.log("modify");
 		        if (Write_FG != "true" && gubun != "2") {
 		            alert("<spring:message code='ezBoard.t304' />");
 		            return;
@@ -578,7 +577,8 @@
 
 		        var i = 0;
 		        var pos = 0;
-		        var filename = "";
+		        var filenameOrg = "";
+		        var filenameView = "";
 		        var filepath = "";
 		        var strAttach = "";
 		        var fileImage = "";
@@ -586,8 +586,11 @@
 		        var regData = GetbrowserLanguage();
 		        for (var i = 0; i < xmldomNodes.length; i++) {
 		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-		            filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
+		            /* 2018-04-27 홍승비 - 화면에 표시되는 파일명 특문처리 수정 */
+		            filenameOrg = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
+		            filenameView = ReplaceText(ReplaceText(ReplaceText(filenameOrg, ">", "&gt;"), "<", "&lt;"), "&", "&amp;");
 		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
+		            
 		            var strTarget = "target=''";
 		            var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
 		            if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
@@ -619,9 +622,9 @@
 		            var protocol = window.location.protocol;
 		            var serverName = window.location.hostname;
 		            
-		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filename + "' >";
-		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filename) + "'\">";
-		            strAttach += filename + "&nbsp;(" + filesize + ")</a><br>";
+		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filenameView + "' >";
+		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
+		            strAttach += filenameView + "&nbsp;(" + filesize + ")</a><br>";
 		        }
 		        document.getElementById('lstAttachLink').innerHTML = strAttach;
 		    }

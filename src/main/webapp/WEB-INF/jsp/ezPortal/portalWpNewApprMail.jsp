@@ -413,15 +413,24 @@
 		        pArgument[7] = "";
 	
 		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
-					if (CrossYN()) {
-		                openLocation = "/ezApprovalG/draftui.do?formURL=";
-		            } else {
-		            	openLocation = "/ezApprovalG/draftui.do?formURL=";
-		            }
+		        	if (pDocState == "011" && pFunctionType == "004" && pDraftFlag == "REDRAFT") {
+						if (CrossYN()) {
+			                openLocation = "/ezApprovalG/recevGSusin.do?docID=";
+			            } else {
+			            	openLocation = "/ezApprovalG/recevGSusin.do?docID=";
+			            }
+						openLocation = openLocation + pDocID + "&uOrgID=" + "&isReDraft=Y" + "&draftFlag=" + pDraftFlag;
+		        	} else {
+						if (CrossYN()) {
+			                openLocation = "/ezApprovalG/draftui.do?formURL=";
+			            } else {
+			            	openLocation = "/ezApprovalG/draftui.do?formURL=";
+			            }
+			            openLocation = openLocation + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+			            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1&aprState=" + escape(pArgument[6]);
+			            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
+		        	}
 	
-		            openLocation = openLocation + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-		            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1&aprState=" + escape(pArgument[6]);
-		            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
 		        }
 	
 		        openwindow(openLocation, "", 890, 560);

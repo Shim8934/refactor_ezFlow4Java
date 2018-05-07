@@ -117,9 +117,9 @@
 	                            p.className = "title";
 	                            
 	                            if (primary == "1") {
-	                                p.innerHTML=length_check(infoVO.boardName);
+	                                p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='padding-right:5px;vertical-align:middle' />" + length_check(infoVO.boardName);
 	                            } else {
-	                            	p.innerHTML=length_check(infoVO.boardName2);
+	                            	p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='padding-right:5px;vertical-align:middle' />" + length_check(infoVO.boardName2);
 	                            }
 	                            
 	                            var span = document.createElement("span");
@@ -180,7 +180,8 @@
 			                                        var img = document.createElement("IMG");
 			                                        var imgUrl = itemVO.extensionAttribute5;
 			                                        
-			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + itemVO.boardID + "&fileName=" + imgUrl;
+			                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈화면 사진경로 수정 */
+			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + itemVO.boardID + "&fileName=" + imgUrl;
 			                                        img.style.width = "68px";
 			                                        img.style.height = "68px";
 
@@ -721,7 +722,7 @@
 		        if (gubun == "3") {
 		        	GetOpenWindow("/ezCommunity/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 800);
 		        } else {
-		        	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 800);
+		        	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
 		        }
 		    }
 

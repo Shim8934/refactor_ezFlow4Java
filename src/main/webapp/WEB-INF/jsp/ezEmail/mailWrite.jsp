@@ -830,7 +830,7 @@
 		            }
 		            
 		            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
-		            var folderPath = "<spring:message code='ezEmail.t99000027' />";
+		            var folderPath = "${drafts}";
 	        	    var scheme = document.location.protocol + "//" + document.location.hostname;
 	        	    
 	                if (document.location.port != "80") {
@@ -848,16 +848,16 @@
 		                if (big_yn == "Y") {
 		                	// 대용량 첨부시 
 		                	bigtrue = bigtrue + 1;
-		                	aitem = scheme + "/ezEmail/downloadAttachCommon.do?"
+		                	aitem = scheme  + "/ezEmail/downloadAttachCommon.do?"
 		                					+ "fileid=" + encodeURIComponent(path)
-		                					+ "&filedate=" + encodeURIComponent(attid.split('/')[0]);
+		                					+ "&filedate=" + encodeURIComponent(attid.split('/')[0])
+		                					+ "&tid=" + tid;
 		                } else {
 		                	// 일반파일 첨부시
 			                aitem = "/ezEmail/downloadAttach.do?" 
 			                				+ "mode=Attach"
 			                				+ "&folderPath=" + encodeURIComponent(folderPath)
 			                				+ "&filename=" + encodeURIComponent(filename)
-			                				+ "&tid=" + tid;
 		                }
 		                
 		                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");

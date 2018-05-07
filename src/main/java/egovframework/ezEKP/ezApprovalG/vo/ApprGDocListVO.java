@@ -96,8 +96,10 @@ public class ApprGDocListVO {
 	private String status;
 	/** 특수기록물코드*/
 	private String specialRecordCode;
-	/** 공개구분*/
+	/** 대민공개구분*/
 	private String publicityCode;
+	/** 공개구분*/
+	private String publicityYN;
 	/** 공개제한부분표시*/
 	private String limitRange;
 	/** 쪽수*/
@@ -453,6 +455,12 @@ public class ApprGDocListVO {
 	}
 	public void setPublicityCode(String publicityCode) {
 		this.publicityCode = publicityCode;
+	}
+	public String getPublicityYN() {
+		return publicityYN;
+	}
+	public void setPublicityYN(String publicityYN) {
+		this.publicityYN = publicityYN;
 	}
 	public String getLimitRange() {
 		return limitRange;
