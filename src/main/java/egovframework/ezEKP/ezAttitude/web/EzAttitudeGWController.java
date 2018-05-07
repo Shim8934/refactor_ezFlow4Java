@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -1095,13 +1096,21 @@ public class EzAttitudeGWController {
 			@RequestParam(value="orderCell", required=false) String orderCell,
 			@RequestParam(value="orderOption", required=false) String orderOption,
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
-			@RequestParam(value="checkAdmin", required=false) String checkAdmin) {
+			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
+			@RequestParam(value="deptList", required=false) JSONArray deptList) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
-
+		String deptIdList[];
+		if (deptList == null) {
+			deptList = new JSONArray();
+			deptIdList = new String[0];
+		} else {
+			deptIdList = new String[deptList.size()];
+		}
+		
 		try{
 			
 			String order = orderCell + " " + orderOption;
@@ -1116,7 +1125,12 @@ public class EzAttitudeGWController {
 				}
 			}
 			
-			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, startPoint, endPoint, type, order, adminFlag, checkAdmin);
+			for (int i = 0 ; i < deptList.size(); i++ ){
+				JSONObject dept = (JSONObject)deptList.get(i);	
+				deptIdList[i] = (String) dept.get("deptId");
+			}
+			
+			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, startPoint, endPoint, type, order, adminFlag, checkAdmin, deptIdList);
 			for (int i = 0 ; i < attList.size(); i++ ) {
 				LOGGER.debug(attList.get(i).toString());
 			}
@@ -1151,7 +1165,8 @@ public class EzAttitudeGWController {
 			@RequestParam(value="offset", required=false) String offset,
 			@RequestParam(value="type", required=false) String type,
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
-			@RequestParam(value="checkAdmin", required=false) String checkAdmin) {
+			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
+			@RequestParam(value="deptid", required=false) String deptid) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] started.");
 
 		JSONObject result = new JSONObject();
@@ -1855,10 +1870,11 @@ public class EzAttitudeGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			String isGAdmin = request.getParameter("isGAdmin");////////////////얘는 없어도 될듯한?
+			String companyId = request.getParameter("companyId");
+			String isAllDept = request.getParameter("isAllDept");////////////////
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), userId, isGAdmin);
+			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

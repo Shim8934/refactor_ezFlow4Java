@@ -35,6 +35,7 @@
 		<result property="imgPath"					column="IMG_PATH"				columnIndex="7"/>
 		<result property="parentId"					column="PARENT_ID"				columnIndex="8"/>
 		<result property="formId"					column="FORM_ID"				columnIndex="9"/>
+		<result property="isAdd"					column="ISADD"					columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap id="attitudeForm" class="AttitudeFormVO">
@@ -290,7 +291,8 @@
 				ISUSE,
 				IFNULL(IMG_PATH,'') AS IMG_PATH,
 				IFNULL(PARENT_ID,'') AS PARENT_ID,
-				FORM_ID
+				FORM_ID,
+				ISADD
 			FROM
 				TBL_ATTITUDE_TYPE
 			WHERE
@@ -340,7 +342,8 @@
 				ISUSE,
 				IFNULL(IMG_PATH,'') AS IMG_PATH,
 				IFNULL(PARENT_ID,'') AS PARENT_ID,
-				FORM_ID
+				FORM_ID,
+				ISADD
 			FROM
 				TBL_ATTITUDE_TYPE
 			WHERE
@@ -399,18 +402,18 @@
 	<insert id="ezAttitudeAdminDAO.insertAttitudeType" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_ATTITUDE_TYPE
-				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, PARENT_ID, FORM_ID)
+				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, PARENT_ID, ISADD, FORM_ID)
 			VALUES
-				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, 'A05', (SELECT 
-																						A.FORM_ID
-																					FROM 
-																						TBL_ATTITUDE_TYPE A
-																					WHERE 
-																						A.TENANT_ID = #tenantId#
-																					AND 
-																						A.COMPANY_ID = #companyId#
-																					AND 
-																						A.TYPE_ID = 'A11'))
+				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, 'A05', '1', (SELECT 
+																							  A.FORM_ID
+																						  FROM 
+																							  TBL_ATTITUDE_TYPE A
+																						  WHERE 
+																							  A.TENANT_ID = #tenantId#
+																						  AND 
+																							  A.COMPANY_ID = #companyId#
+																						  AND 
+																							  A.TYPE_ID = 'A11'))
 		]]>
 	</insert>
 	

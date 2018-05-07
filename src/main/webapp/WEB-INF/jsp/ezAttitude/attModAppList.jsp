@@ -22,6 +22,23 @@
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<!-- modal -->
 		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+		<style>
+		#contentlist table.mainlist td {
+	    		overflow : hidden;
+	    		white-space : nowrap;
+	    		text-overflow : ellipsis;
+	    		cursor : pointer;
+	    }
+    	tr.hover:hover {background:#eee; color:#fff;}
+		.selectTR {background-color: rgb(233, 241, 255);}
+		#searchTable {
+			border-top: 1px solid #e8e8e8;
+			border-left: 1px solid #e8e8e8;
+			border-right: 1px solid #e8e8e8;
+			background-color: #fcfcfc;
+		}
+		#searchTable td {padding: 8px 5px;}
+		</style>
 		<script type="text/javascript">
 		var totalAtt 		  = ${totalAtt};
 		var startDate		  = "<c:out value='${startDate}'/>";
@@ -280,7 +297,8 @@
 	    	
 		    obj.apprUserName = $('#appr_search').val();
 		    obj.writerName = $('#writer_search').val();
-		    obj.writerDeptName = $('#writerDept_search').val();
+		    obj.writerDeptId = writerDept_search.value;
+		    obj.writerDeptName = $("#writerDept_search option:selected").text();
 		    obj.startDate = startDate;
 		    obj.endDate = endDate;
 			obj.pageNum = pageNum;
@@ -539,6 +557,10 @@
 	    function type_change(){
 	    	type = $("input:radio[name=searchCheck]:checked").val();
 	    	get_att_list();
+	    }
+	    
+	    function type_set(){
+	    	type = $("input:radio[name=searchCheck]:checked").val();
 	    }
 	    
 	    var PressShiftKey = false;
@@ -941,18 +963,25 @@
 			    	
 			    	for(var i = 0; i < json.length; i++) {
 			    		
-			    		if (json[i].apprStatus == 1) {
-			    			json[i].apprStatus = "승인";
+						if (json.length == 1 && json[i].apprStatus == 0) {
+							var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
+				    		
+				    		$("#addpopup_list tbody").append(objTr);
 			    		} else {
-			    			json[i].apprStatus = "반려";
+			    			if (json[i].apprStatus == 1) {
+				    			json[i].apprStatus = "승인";
+				    		} else if (json[i].apprStatus == 2){
+				    			json[i].apprStatus = "반려";
+				    		} else {
+				    			json[i].apprStatus = "신청";
+				    		}
+				    		
+				    		var objTr = $("<tr></tr>").append($("<td style='width:50%'></td>").text("\u00a0" + json[i].apprDate));
+				    		objTr.append($("<td style='width:25%'></td>").text("\u00a0" + json[i].apprUserName));
+				    		objTr.append($("<td style='width:25%'></td>").text("\u00a0" + json[i].apprStatus));
+				    		
+				    		$("#addpopup_list tbody").append(objTr);	
 			    		}
-
-			    		var objTr = $("<tr></tr>").append($("<td style='width:50%'></td>").text("\u00a0" + json[i].apprDate));
-			    		
-			    		objTr.append($("<td style='width:25%'></td>").text("\u00a0" + json[i].apprUserName));
-			    		objTr.append($("<td style='width:25%'></td>").text("\u00a0" + json[i].apprStatus));
-			    		
-			    		$("#addpopup_list tbody").append(objTr);
 			    	}
 			    },
 			    complete : function() {
@@ -984,10 +1013,13 @@
 		</script>
 </head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
-	<c:if test="${adminFlag == 'true'}">
+	<c:if test="${adminFlag == 'true' && checkAdmin == 'true'}">
+		<h1>근태수정관리 - <span id="mailBoxInfo"></span></h1>
+	</c:if>
+	<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
 		<h1>근태수정관리 - 신청관리현황<span id="mailBoxInfo"></span></h1>
 	</c:if>
-	<c:if test="${adminFlag == 'false'}">
+	<c:if test="${adminFlag == 'false' && checkAdmin != 'true'}">
 		<h1>근태수정관리 - 신청현황<span id="mailBoxInfo"></span></h1>
 	</c:if>
         <div id="mainmenu">
@@ -998,15 +1030,24 @@
 						<td style="width: 3%;">신청자명</td>
 						<td style="width: 12%;"><input type="text" id="writer_search" style="width: 90%;" onkeyup="search_keypress(event);"></td>
 						<td style="width: 3%;">신청부서</td>
-						<td style="width: 11%;"><input type="text" id="writerDept_search" style="width: 100%;" onkeyup="search_keypress(event);"></td>
+						<td style="width: 11%;"><input type="text" id="writerDept_search" style="width: 90%;" onkeyup="search_keypress(event);"></td>
+						<td style="width: 3%;">구분</td>
+						<td style="width: 11%;">
+							<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio1">&nbsp;전체</label>
+							<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio2">&nbsp;신청</label>
+							<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio3">&nbsp;승인</label>
+							<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio4">&nbsp;반려</label>
+						</td>
 					</tr>
 					<tr>
 						<td style="width: 3%;">승인자</td>
 						<td style="width: 12%;"><input type="text" id="appr_search" style="width: 90%;" maxlength="50" onkeyup="search_keypress(event);"></td>
 						<td style="width: 3%;">검색기간</td>
 						<td style="width: 9%;">
-							<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()" style="float:left; margin-left:0px;"><label for="usepostdate" style="float:left; margin:3px;">검색기간 사용</label>
+<!-- 							<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()" style="float:left; margin-left:0px;"><label for="usepostdate" style="float:left; margin:3px;">검색기간 사용</label> -->
 	                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
+						</td>
+						<td colspan="2">
 							<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="float:right; margin-top:3px;"><span>새로고침</span></a>
 							<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="float:right; margin-top:3px;"><span>검색</span></a>
 						</td>
@@ -1019,22 +1060,27 @@
 			<li id="reply"><span onClick="modApprove()">승인</span></li>
         	<li id="search"><span onClick="modReturn()">반려</span></li>
 		</c:if>
-	        <li><span onClick="attList_del()">삭제</span></li>
+		<c:if test="${adminFlag != 'true' && checkAdmin != 'true'}">
+			<li><span onClick="attList_del()">삭제</span></li>
+		</c:if>
 	        <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
         <c:if test="${checkAdmin != 'true'}">
         	<li id="search"><span onClick="search_popup()">검색</span></li>
 		</c:if>
-		  <li id="right">
-			  <span style="float:right;font-weight:normal;color:black;border: none;">
-		          <input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
-		          <input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;신청</label>
-		          <input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;승인</label>
-		          <input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;반려</label>
-		  </li> 
+		<c:if test="${adminFlag != 'true' || checkAdmin != 'true'}">
+			<li id="right">
+				<span style="float:right;font-weight:normal;color:black;border: none;">
+					<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
+					<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;신청</label>
+					<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;승인</label>
+					<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;반려</label>
+				</span>
+			</li> 
+		</c:if>
         </ul>
         </div>
         <c:if test="${checkAdmin != 'true'}">
-	        <div id="layer_popup" style="width:460px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+	        <div id="layer_popup" style="width:460px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none; z-index:1;">
 	          <div class="popupwrap1" style="background-color:#ffffff; position: relative;">
 	            <div class="popupwrap2" style="width:100%;">
 	              <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="content">
@@ -1047,8 +1093,21 @@
 						</tr>
 						<tr>
 							<th nowrap>신청부서명</th>
-							<td style="width:100%;"> 
-								<input id="writerDept_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
+							<td style="width:100%;">
+								<select id="writerDept_search" style="width:100px; margin-top:5px;">
+									<c:if test="${selectedDeptID  == null}">
+										<option value=null selected></option>
+									</c:if>
+									<c:forEach var="item" items="${deptList}">
+										<c:if test="${selectedDeptID == item.deptId}">
+											<option value="<c:out value='${item.deptId}'/>" selected><c:out value='${item.deptName}'/></option>
+										</c:if>
+										<c:if test="${selectedDeptID != item.deptId}">
+											<option value="<c:out value='${item.deptId}'/>"><c:out value='${item.deptName}'/></option>
+										</c:if>
+									</c:forEach>
+								</select> 
+<!-- 								<input id="writerDept_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/> -->
 							</td>
 						</tr>
 	              	</c:if>
@@ -1086,9 +1145,9 @@
 						<th style="cursor:pointer" colname="START_DATE">일자</th>
 						<c:if test="${adminFlag == true}">
 							<th style="cursor:pointer" colname="WRITER_NAME">신청자</th>
-							<th style="cursor:pointer" colname="WRITER_DEPT_NAME">신청 부서</th>
+							<th style="cursor:pointer" colname="WRITER_DEPT_NAME">신청부서</th>
 						</c:if>
-						<th width="250px" style="cursor:pointer" colname="NO">시각</th>
+						<th width="250px" style="cursor:pointer" colname="NO">신청시각</th>
 						<th width="80px" style="cursor:pointer" colname="APPR_STATUS" >승인상태</th>
 						<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th>
 						<th width="150px" style="cursor:pointer" colname="NO">내역확인</th> 
@@ -1150,9 +1209,9 @@
 				<th>일자</th>
 				<c:if test="${adminFlag == true}">
 					<th>신청자</th>
-					<th>신청 부서</th>
+					<th>신청부서</th>
 				</c:if>
-				<th>시각</th>
+				<th>신청시각</th>
 				<th>승인상태</th>
 				<th>승인자</th>				
 			</tr>
@@ -1165,7 +1224,7 @@
 				    <thead>
 				    	<tr>
 						<th class="layerHeader" colspan="4" style="width:440px;">
-							<img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>
+							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
 							&nbsp;근태내역확인
 						</th>
 						</tr>
@@ -1180,10 +1239,6 @@
 				</table>
 				<!-- /내용 -->
 				<br />
-				<div style="text-align:center;">
-					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
-					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
-			    </div>
 			</div>
 			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
 		</div>
