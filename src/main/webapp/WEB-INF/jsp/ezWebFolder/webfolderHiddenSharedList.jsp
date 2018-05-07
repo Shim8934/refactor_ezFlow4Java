@@ -385,7 +385,7 @@
 			<!-- pagenation이 namePath로 움직이지 않도록 설정 -->
 			<div id="originalPathWrapper" style="height: 40px;">
 				<span style="font-size: 24px; font-weight: bold; font-weight: bold; display: block; float: left;" id="originalPath">
-					<span class="aName" style="font-size:18px;" onClick="getFileList();">공유받은 목록</span>
+					<span class="aName" style="font-size:18px;" onClick="getFileList();">공유숨김목록</span>
 				</span>
 			</div>
 			
