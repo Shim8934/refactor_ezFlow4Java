@@ -44,12 +44,20 @@
 						afterDeleteSuccess();
 					}
 					else {
-						alert("<spring:message code='ezWebFolder.t113'/>");
-						afterDeleteSuccess();
+						if (data.code == 1) {
+							alert("<spring:message code='ezWebFolder.t113'/>");
+							afterDeleteSuccess();
+						}
 					}
 				},
 				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t114'/>" + error);
+					
+					if (data.code == 2) {
+						alert("<spring:message code='ezWebFolder.t114'/>" + error);
+					} else if (data.code == 3) {
+						alert("<spring:message code='ezWebFolder.t28'/>" + error);
+					}
+					
 					wClose();
 				}
 			});

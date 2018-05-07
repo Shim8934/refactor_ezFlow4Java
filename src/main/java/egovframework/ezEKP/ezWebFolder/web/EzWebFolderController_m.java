@@ -459,14 +459,15 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + user.getId() + "/getTrashCanList", param, request, "post", null);
 		
 		String status = resultBody.get("status").toString();
-		
+		String code = resultBody.get("code").toString();
+
 		if (status.equals("ok")) {
 			model.addAttribute("status","ok");
-			model.addAttribute("code",0);
+			model.addAttribute("code", code);
 			model.addAttribute("data",resultBody.get("data"));
 		}else {
 			model.addAttribute("status","error");
-			model.addAttribute("code",1);
+			model.addAttribute("code", code);
 			model.addAttribute("data","");
 		}
 		
@@ -532,10 +533,15 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/file-permanent-delete", param, request, "delete", null);
 		
 		String status = resultBody.get("status").toString();
+		String code = resultBody.get("code").toString();
 		
-		if (!status.equals("ok")) {
-			String reason = resultBody.get("reason").toString();
-			model.addAttribute("reason", reason);
+		if (status.equals("ok")) {
+			model.addAttribute("status","ok");
+			model.addAttribute("code", code);
+		}else {
+			model.addAttribute("reason", resultBody.get("reason").toString());
+			model.addAttribute("status","error");
+			model.addAttribute("code", code);
 		}
 		
 		logger.debug("status=" + status);
@@ -570,10 +576,15 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/restore-trashCan", param, request, "post", null);
 
 		String status = resultBody.get("status").toString();
+		String code = resultBody.get("code").toString();
 		
 		if (status.equals("ok")) {
-			String code = resultBody.get("code").toString();
-			model.addAttribute("code", code);
+			model.addAttribute("status","ok");
+			model.addAttribute("code",code);
+		}else {
+			model.addAttribute("reason", resultBody.get("reason").toString());
+			model.addAttribute("status","error");
+			model.addAttribute("code",code);
 		}
 		
 		logger.debug("status=" + status);
@@ -711,13 +722,19 @@ public class EzWebFolderController_m {
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/move-TrashCan", param, request, "post", null);
 		
 		String status = resultBody.get("status").toString();
+		String code = resultBody.get("code").toString();
+		
 		model.addAttribute("status", status);
 		
-		if (!status.equals("ok")) {
-			String reason = resultBody.get("reason").toString();
-			model.addAttribute("reason", reason);
+		if (status.equals("ok")) {
+			model.addAttribute("status","ok");
+			model.addAttribute("code", code);
+		}else {
+			model.addAttribute("reason", resultBody.get("reason").toString());
+			model.addAttribute("status","error");
+			model.addAttribute("code", code);
 		}
-		
+			
 		logger.debug("status=" + status);
 		logger.debug("moveTrashCan ended");
 		return "json";		

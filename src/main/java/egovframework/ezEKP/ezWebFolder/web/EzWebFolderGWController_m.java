@@ -982,7 +982,7 @@ public class EzWebFolderGWController_m {
 			ezWebFolderService_m.permanetDeleteSelectedFiles(fileIDList, folderIDList, userInfo, realPath);
 			
 			result.put("status", "ok");
-			result.put("code", "0");
+			result.put("code", 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 			
