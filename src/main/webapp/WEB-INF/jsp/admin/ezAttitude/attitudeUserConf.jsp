@@ -172,6 +172,7 @@
 	    			$("#searchStartTime").val("");
 	    			$("#searchEndTime").val("");
 	    			$("[type='radio']:checked").val("");
+	    			$("#contentlist table.mainlist th").find("img").remove();
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";
@@ -179,6 +180,8 @@
 	    			searchStartTime = "";
 	    			searchEndTime = "";
 	    			searchGubun = "";
+	    			orderOption = "";
+	    			orderCell = "";
 	    		}
 	    		
 	    		pageNum = 1;
