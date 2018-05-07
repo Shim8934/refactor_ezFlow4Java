@@ -393,7 +393,7 @@
 					
 					if (result[i]["fileShareStatus"] == "Y") {
 						var spanElmt = document.createElement("span");
-						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
+						spanElmt.innerHTML = "<img src='/images/webfolder/sharing2.png' class='webFolderImg' />";
 						spanElmt.addEventListener("click", function () {
 							shareContext.showShareInfo(this);
 						});
