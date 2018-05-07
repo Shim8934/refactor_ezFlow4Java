@@ -40,22 +40,6 @@
 					</isEqual>
 				</isEqual>
 			</isNotNull>
-		
-			<isEqual property="primary" compareValue="1" >
-				<![CDATA[
-					ORDER BY
-						U.DESCRIPTION ASC,
-						U.DISPLAYNAME ASC
-				]]>
-			</isEqual>
-			
-			<isEqual property="primary" compareValue="2">
-				<![CDATA[
-					ORDER BY
-						U.DESCRIPTION2 ASC,
-						U.DISPLAYNAME2 ASC
-				]]>
-			</isEqual>
 	</sql>
 	
 	<sql id="fileHistoryCondition">
@@ -302,7 +286,21 @@
 												LEFT JOIN TBL_WEBFOLDER_CONFIG C ON U.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID AND U.TENANT_ID = C.TENANT_ID
 						]]>
 					<include refid="userCapacityCondition"/>
-		<![CDATA[
+					
+					<isNotEqual property="realColmn" compareValue="">
+						ORDER BY
+							$realColmn$ $order$,
+							DEPARTMENT_NAME ASC,
+							DISPLAY_NAME ASC
+					</isNotEqual>
+					<isEqual property="realColmn" compareValue="">
+						<![CDATA[
+						ORDER BY
+							DEPARTMENT_NAME ASC,
+							DISPLAY_NAME ASC
+						]]>
+					</isEqual>
+					<![CDATA[
 						) k
 					WHERE
 						ROWNUM <= #startPoint# + #pageSize#
@@ -395,10 +393,27 @@
 								TBL_WEBFOLDER_LOG l LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON l.FILE_EXT = t.FILE_EXT AND l.TENANT_ID = t.TENANT_ID
 						]]>
 						<include refid="fileHistoryCondition"/>
-						<![CDATA[
+						
+						<isNotEqual property="realColmn" compareValue="">
+							ORDER BY
+								<isEqual property="realColmn" compareValue="FILE_SIZE">
+									TO_NUMBER($realColmn$) $order$,
+								</isEqual>
+								<isNotEqual property="realColmn" compareValue="FILE_SIZE">
+									$realColmn$ $order$,
+								</isNotEqual>
+								l.CREATE_DATE DESC,
+								TO_NUMBER(l.LOG_ID) DESC
+						</isNotEqual>
+						<isEqual property="realColmn" compareValue="">
+							<![CDATA[
 							ORDER BY
 								l.CREATE_DATE DESC,
 								TO_NUMBER(l.LOG_ID) DESC
+							]]>
+						</isEqual>
+						
+						<![CDATA[
 						) k
 					WHERE
 						ROWNUM <= #startPoint# + #pageSize#

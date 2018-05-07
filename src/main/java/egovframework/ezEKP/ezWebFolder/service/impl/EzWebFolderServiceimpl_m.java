@@ -567,10 +567,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getTrashCanList(String userId, String offset, int tenantId, int currPage, int pEnd, 
+	public JSONObject getTrashCanList(String realColmn, String order, String userId, String offset, int tenantId, int currPage, int pEnd, 
 			String searchExt, String searchFileName, String searchCreateName,String searchFileType, String endrollStartDate, String endrollEndDate,
 			String delStartDate, String delEndDate, String mode) throws Exception {
-		int totalRows  =  0;
+		int totalRows  = 0;
 		int totalPages = 0;
 		int pStart 	   = 0;
 		
@@ -596,6 +596,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("endrollEndDate", endrollEndDate);
 		map.put("delStartDate", delStartDate);
 		map.put("delEndDate", delEndDate);
+		map.put("realColmn", realColmn);
+		map.put("order", order);
 		map.put("mode", mode);
 		
 		JSONObject result = new JSONObject();
