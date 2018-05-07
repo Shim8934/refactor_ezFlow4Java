@@ -215,21 +215,20 @@
 	                alert("<spring:message code='ezWebFolder.t163' />");// 검색조건을 입력하세요 
 	                return;
 	            }
-	
-	            if ($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezBoard.t189' />");
+	            if ($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+	                alert("<spring:message code='ezWebFolder.t308' />");
 	                return;
 	            }
 	            if ($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-	                alert("<spring:message code='ezBoard.t189' />");
+	                alert("<spring:message code='ezWebFolder.t309' />");
 	                return;
 	            }
 	            if ($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezBoard.t189' />");
+	                alert("<spring:message code='ezWebFolder.t308' />");
 	                return;
 	            }
 	            if ($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-	                alert("<spring:message code='ezBoard.t189' />");
+	                alert("<spring:message code='ezWebFolder.t309' />");
 	                return;
 	            }
 	            if (new Date($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
