@@ -501,6 +501,13 @@ public class EzAttitudeAdminBOMController {
 		return "/admin/ezAttitude/attitudeTypeIconUpload";
 	}
 	
+	/**
+	 * 근태유형 등록 or 수정
+	 * @param loginCookie
+	 * @param request
+	 * @param model
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeType.do")
 	public void saveAttutideType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		
@@ -550,6 +557,56 @@ public class EzAttitudeAdminBOMController {
 		
 		LOGGER.debug("saveAttutideType ended.");
 		
+	}
+	/**
+	 * 근태유형 삭제
+	 * @param loginCookie
+	 * @param request
+	 * @param model
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/deleteAttitudeType.do")
+	@ResponseBody
+	public String deleteAttutideType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		
+		LOGGER.debug("saveAttutideType started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		String typeId = request.getParameter("typeId");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");	
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudetypes/" + typeId;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("typeId", typeId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		String isUse = "";
+		if (status.equals("ok")) {			
+			isUse = (String) resultBody.get("data");
+		}
+		
+		LOGGER.debug("saveAttutideType ended.");
+		
+		return isUse;
 	}
 	
 	/**

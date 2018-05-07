@@ -388,8 +388,7 @@
 			UPDATE TBL_ATTITUDE_TYPE
 			SET
 				TYPE_NAME = #typeName#,
-				TYPE_NAME2 = #typeName2#,
-				IMG_PATH = #imgPath#
+				TYPE_NAME2 = #typeName2#
 			WHERE
 				COMPANY_ID = #companyId#
 			AND
@@ -933,4 +932,33 @@
 				EXTENSIONATTRIBUTE1 = #companyId#
 		]]>
 	</select>
+	
+	<select id="ezAttitudeAdminDAO.checkUseAttitudeType" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(ATTITUDE_ID)
+			FROM 
+				TBL_ATTITUDE
+			WHERE 
+				TYPE_ID = #typeId#
+			AND 
+				TENANT_ID = #tenantId#
+			AND 
+				COMPANY_ID = #companyId#
+		]]>
+	</select>
+	
+	<delete id="ezAttitudeAdminDAO.deleteAttitudeType" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_ATTITUDE_TYPE
+			WHERE 
+				TYPE_ID = #typeId#
+			AND 
+				TENANT_ID = #tenantId#
+			AND 
+				COMPANY_ID = #companyId#
+		]]>
+	</delete>
+	
 </sqlMap>

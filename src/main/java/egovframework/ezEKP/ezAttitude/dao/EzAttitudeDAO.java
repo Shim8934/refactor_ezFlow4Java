@@ -251,6 +251,7 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		insert("ezAttitudeAdminDAO.insertAttitudeAuth", map);
 	}
 
+	@SuppressWarnings("unchecked")
 	public AttitudeStatisVO getAttitudeUserStatistics(
 			Map<String, Object> map) {
 		return (AttitudeStatisVO) select("ezAttitudeAdminDAO.getAttitudeUserStatistics", map);
@@ -259,5 +260,14 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<JournalAuthorVO> getCompanyDeptList(Map<String, Object> map) {
 		return (List<JournalAuthorVO>) list("ezAttitudeAdminDAO.getCompanyDeptList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public int checkUseAttitudeType(Map<String, Object> map) {
+		return (int) select("ezAttitudeAdminDAO.checkUseAttitudeType", map);
+	}
+
+	public void deleteAttitudeType(Map<String, Object> map) {
+		delete("ezAttitudeAdminDAO.deleteAttitudeType", map);
 	}
 }
