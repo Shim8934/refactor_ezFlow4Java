@@ -31,6 +31,8 @@
 	   		var updateUserId;
 	   		//선택된 유저의부서
 	   		var userDeptId;
+	   		//회사 id
+	   		var companyId = "${companyId}";
 	   	
 	   		function close_Click(){
 	   			window.close();
@@ -81,36 +83,26 @@
 	   			selectedUserName = $(elem).attr("name");
 	   			$("*").removeClass("selectTR");
 	   			$(elem).addClass("selectTR");
+	   		
 	   			$.ajax({
 	   				type:"post",
-	   				dataType:"html",
+	   				dataType:"json",
 	   				url:"/admin/ezAttitude/attitudeAuthorDeptList.do",
-	   				data:{"userId":$(elem).attr("id")},
+	   				data:{"userId":$(elem).attr("id"), companyId : companyId},
 	   				success: function(result) {
 	   					lpDepts = [];
 	   					lpDeptNames = [];
-	   					$("#authorDeptList").html(result);
-	   					var deptList = $("#authorDeptList tr");
-	   					if (deptList.length == 1) {
-	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;">해당하는 부서가 없습니다.</td></tr>');
-	   						
-	   						$("#authorDeptList tr").each(function(){
-		   						if ($(this).attr("mine") == "Y") {
-		   							userDeptId = $(this).attr("targetId");
-		   						}
-	   						})
-	   					} else {
-		   					$("#authorDeptList tr").each(function(){
-		   						if ($(this).attr("mine") == "Y") {
-		   							userDeptId = $(this).attr("targetId");
-		   						} else {
-			   						lpDepts.push($(this).attr("targetId"));
-			   						lpDeptNames.push($(this).find("td").text());
-		   						}
-		   					})
-	   					}
+	   					$.each(result, function(idx, deptInfo){
+	   						if (deptInfo.mine == "yes") {
+	   							userDeptId = deptInfo.deptId;
+	   						} else {
+		   						lpDepts.push(deptInfo.deptId);
+		   						lpDeptNames.push(deptInfo.deptName);
+	   						}
+	   					})
 	   				}
 	   			});
+	   		
 	   		}
 	   		
 	   		//검색
@@ -147,7 +139,7 @@
 		</style>
 	</head>
 	<body class="popup"> 
-        <h1>권한등록</h1>
+        <h1>권한자 지정</h1>
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="setAuthorViewUser()">확인</span></li>
@@ -196,23 +188,6 @@
 			                </td>    
 			            </tr>
 			        </table>
-				</td>
-				<td style="vertical-align:top; padding-top:4px; padding-left:3px;">
-	                <table>
-						<tbody>
-							<tr>
-								<td>
-									<h2 class="receiver_tltype01" >
-										<span style="min-width: 45px;" id="PermissionStr">권한부여부서 </span>
-									</h2>
-									<div class="receiver_borderbox">
-										<div id="authorDeptList" style="width: 250px; Height: 465px; overflow-x: auto; overflow-y: auto;">
-										</div>
-									</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
 				</td>
 			</tr>
         </table>

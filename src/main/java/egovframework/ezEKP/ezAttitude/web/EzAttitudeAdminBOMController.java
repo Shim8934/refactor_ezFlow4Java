@@ -2215,7 +2215,7 @@ public class EzAttitudeAdminBOMController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthorDeptList.do")
 	@ResponseBody
-	public String attitudeAuthorDeptList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception{
+	public JSONArray attitudeAuthorDeptList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception{
 		LOGGER.debug("attitudeAuthorDeptList started");
 		String userId = request.getParameter("userId");
 		String companyId = request.getParameter("companyId");
@@ -2245,14 +2245,17 @@ public class EzAttitudeAdminBOMController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
+		
+		JSONArray authorDeptList = new JSONArray();
 		if (status.equals("ok")) {		
-			JSONArray authorDeptList = (JSONArray) resultBody.get("data");
+			authorDeptList = (JSONArray) resultBody.get("data");
 			
-			model.addAttribute("authorDeptList", authorDeptList);
+//			model.addAttribute("authorDeptList", authorDeptList);
 		}
 		
 		LOGGER.debug("attitudeAuthorDeptList ended");
-		return "admin/ezAttitude/attitudeAuthorDeptList";
+//		return "admin/ezAttitude/attitudeAuthorDeptList";
+		return authorDeptList;
 	}
 	
 	/**
