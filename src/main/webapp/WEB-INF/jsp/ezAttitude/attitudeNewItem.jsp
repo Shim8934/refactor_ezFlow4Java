@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>근태작성</title>
+		<title>근태 작성</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -63,7 +63,7 @@
 			}
 			
 			window.onresize = function () {   	
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 250 + "PX";
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210 + "PX";
 		    }
 			
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
@@ -470,7 +470,7 @@
 	            </table>
 	        </div>
 	        <script type="text/javascript">
-		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 250 + "PX";
+		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210+ "PX";
 		    </script>
 	    </form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

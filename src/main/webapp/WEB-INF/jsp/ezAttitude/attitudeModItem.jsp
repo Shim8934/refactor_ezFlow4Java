@@ -51,7 +51,7 @@
 		    }
 		    
 		    window.onresize = function () {   	
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 185 + "PX";
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 150 + "PX";
 		    }
 
 		    $(function () {
@@ -203,12 +203,11 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <ul id="menuTable">	
-	                                <li><span onclick="save()">저장 후 닫기</span></li>
-	                            </ul>
+	                        	<h1 style="padding:0px; margin-top:-5px;">지각수정신청하기</h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
+	                                <li><span onclick="save()">수정신청</span></li>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>
 	                        </div>
@@ -265,7 +264,7 @@
 	            </table>
 	        </div>
 	        <script type="text/javascript">
-		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210 + "PX";
+		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 150 + "PX";
 		    </script>
 	    </form>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
