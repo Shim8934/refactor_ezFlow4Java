@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	   	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">	        
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -166,7 +166,7 @@
 			
 		 	// 폴더관리
 		    function folder_Manage() {
-	        	var OpenWin = window.open("/ezWebFolder/folderManage.do?folderType="+folderType, "", GetOpenWindowfeature(600, 550));
+	        	var OpenWin = window.open("/ezWebFolder/folderManage.do?folderType="+folderType, "", GetOpenWindowfeature(600, 500));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }	
 		    
@@ -254,8 +254,8 @@
 				<span style="display:inline-block;width:100%;" onclick="getSharedList();"><spring:message code='ezWebFolder.t266' /></span>
 			</h2>
 			<ul>
-				<li><span style="width: 100%; display: inline-block;" onclick="getSharedList();">공유받은 목록</span></li>
-				<li><span style="width: 100%; display: inline-block;" onclick="getSharingList();">공유한 목록</span></li>
+				<li><span style="width: 100%; display: inline-block;" onclick="getSharedList();">공유받은목록</span></li>
+				<li><span style="width: 100%; display: inline-block;" onclick="getSharingList();">공유한목록</span></li>
 			</ul>
 		    
 		    <h2>
@@ -267,23 +267,29 @@
   				<span style="display:inline-block;width:100%;" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span>
   			</h2>
     		<ul>
-			</ul>
-			<h3>
+			</ul>			
+			<div style="border:1px solid #ddd;border-radius:3px;margin:10px 10px 2px;background-color: white">
+			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
+			    <div style="width:80%">
+			    	<div id='myBar'></div>
+			    </div>	
+			    <div style='text-align:center; margin-top:10px;margin-bottom:5px;font-weight: bold;font-family: dotum;' class="volumes"></div>
+		    </div>		    
+			<h3 style="border-top:0px">
 		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span><!-- 폴더관리 -->
 		    </h3>
-			<h3>
+			<h3 style="border-top:0px">
 				<span onclick="wfConfig();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t236" /></span><!-- 환경설정 -->
 			</h3>
 			<c:if test="${isWfAdmin == '1'}">
-				<h3>
+				<h3 style="border-top:0px">
 					<span onclick="wfAdministrator();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t25" /></span><!-- 웹폴더 관리자 -->
 				</h3>
 			</c:if>
-
-			<div id='myProgress' style='margin-left:20px;'>
+			<!-- <div id='myProgress' style='margin-left:20px;'>
 				<div id='myBar'></div>
-			</div>
-			<div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div>
+			</div> -->
+			<!-- <div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div> -->
    		    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderLeftPanel">&nbsp;</div>
 	    </div>
 	    <div id="bnkBlockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;"></div>
