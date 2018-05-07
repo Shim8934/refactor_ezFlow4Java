@@ -346,7 +346,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("workEndTime", endDate.substring(11));
 		
 		if (gubun.equals("0")) {
-			map.put("selectedUserIdList", selectedUserIdList);
+			map.put("selectedUserIdList", selectedUserIdList.split(", "));
 			
 			ezAttitudeDAO.deleteAttitudeUserConfig(map);
 		} else {

@@ -510,6 +510,8 @@
 				cn = #selectedUserId#
 			AND
 				tenant_id = #tenantId#
+			AND
+				physicaldeliveryofficename  = #companyId#
 			ON DUPLICATE KEY UPDATE
 				work_starttime = #workStartTime#,
 				work_endtime = #workEndTime#

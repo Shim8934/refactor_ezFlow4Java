@@ -1189,6 +1189,7 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("editAttitudeUserConfig started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String companyId = request.getParameter("companyId");
 		String selectedUserIdList = request.getParameter("selectedUserIdList");
 		String workStartTime = request.getParameter("workStartTime");
 		String workEndTime = request.getParameter("workEndTime");
@@ -1203,6 +1204,7 @@ public class EzAttitudeAdminBOMController {
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
 				.queryParam("userId", userInfo.getId())
 				.queryParam("selectedUserIdList", selectedUserIdList)
 				.queryParam("workStartTime", workStartTime)
