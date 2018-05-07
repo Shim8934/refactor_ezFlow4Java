@@ -240,6 +240,20 @@
 			},
 			success: function(result) {
 				result = result.data;
+				
+				if (result.status == "error") {
+					if (result.code == 1) {
+						console.log("<spring:message code='ezWebFolder.t306'/>");
+						return;
+					}else if (result.code == 2) {
+						alert("<spring:message code='ezWebFolder.t305'/>");
+						return;
+					}else if (result.code == 3) {
+						alert("<spring:message code='ezWebFolder.t300'/>");
+						return;
+					}
+				}
+				
 				// TODO: 리펙토링
 				pagination.setListSize(result.listCount);
 				pagination.setAmount(result.totalCount);
@@ -284,6 +298,19 @@
 			success: function(result) {
 				result = result.data;
 				
+				if (result.status == "error") {
+					if (result.code == 1) {
+						console.log("<spring:message code='ezWebFolder.t306'/>");
+						return;
+					}else if (result.code == 2) {
+						alert("<spring:message code='ezWebFolder.t305'/>");
+						return;
+					}else if (result.code == 3) {
+						alert("<spring:message code='ezWebFolder.t300'/>");
+						return;
+					}
+				}
+				
 				pagination.setListSize(result.listCount);
 				pagination.setAmount(result.totalRows);
 				pagination.build();
@@ -313,7 +340,7 @@
 				setMailBoxInfo(result.fldCnt, result.fileCnt);
 			},
 			error: function(error) {
-				alert("<spring:message code='ezWebFolder.t134' />" + error);
+				alert("<spring:message code='ezWebFolder.t134'/>" + error);
 			}
 		});
 	}
