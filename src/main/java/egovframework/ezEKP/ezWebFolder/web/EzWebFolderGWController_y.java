@@ -86,7 +86,6 @@ public class EzWebFolderGWController_y {
 		}
 		
 		try {
-			// TODO: commonInfoWeb 안타도록 수정
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
@@ -164,21 +163,20 @@ public class EzWebFolderGWController_y {
 	public JSONObject folderInsert (HttpServletRequest request,@RequestBody JSONObject jsonObject) throws Exception {
 		LOGGER.debug("folderInsert started");
 		JSONObject jsonObj = new JSONObject();
-		// tenantId, upperId, upperId_path, upper_step, upper_level, 
-		String serverName 		= request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host") : "";
-		String userId 			= (String) jsonObject.get("userId");
+		String serverName 			= request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host") : "";
+		String userId 				= (String) jsonObject.get("userId");
 		
-		MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
-		String folderUppId = (String) jsonObject.get("folderUppId");
-		String newFolderName1 = (String) jsonObject.get("newFolderName1");
-		String newFolderName2 = (String) jsonObject.get("newFolderName2");
-		int tenantId = common.getTenantId();
-		String comId = common.getCompanyId();
-		String deptId = common.getDeptId();
-		String offset = common.getOffSet();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date                  = new Date();
-		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		MCommonVO common 			= mOptionService.commonInfoWeb(serverName, userId);
+		String folderUppId 			= (String) jsonObject.get("folderUppId");
+		String newFolderName1 		= (String) jsonObject.get("newFolderName1");
+		String newFolderName2 		= (String) jsonObject.get("newFolderName2");
+		int tenantId 				= common.getTenantId();
+		String comId 				= common.getCompanyId();
+		String deptId 				= common.getDeptId();
+		String offset 				= common.getOffSet();
+		SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  	= new Date();
+		String timeUTC             	= commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 		LOGGER.debug("timeUTC"+ timeUTC);
 		// foldervo 가지고 와서 상위의 폴더의 vo를 추린다. 
 		FolderVO foldervo= service.getFolderDetail(folderUppId, userId ,tenantId,comId);
@@ -277,7 +275,6 @@ public class EzWebFolderGWController_y {
 			//Check copy/move conditions
 			if (folder.getFolderUpper().equals(uppId)) {
 				result.put("status", "error");
-				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t224", locale));
 				result.put("code", 2);
 				return result;
 			}
@@ -286,7 +283,6 @@ public class EzWebFolderGWController_y {
 		
 			if (pos != -1) {
 				result.put("status", "error");
-				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t245", locale));
 				result.put("code", 2);
 				return result;
 			}
@@ -302,7 +298,7 @@ public class EzWebFolderGWController_y {
 		}catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 1);
+			result.put("code", 2);
 		}
 		LOGGER.debug("folderCopy ended");
 		return result;
@@ -312,11 +308,11 @@ public class EzWebFolderGWController_y {
 	@RequestMapping (value="/rest/ezwebfolder/folders2/{folderId}/folder-move", method = RequestMethod.PUT , produces = "application/json;charset=utf-8" )
 	public JSONObject folderMove (@PathVariable String folderId, HttpServletRequest request,@RequestBody JSONObject jsonObject ,Locale locale  )  {
 		LOGGER.debug("folderMove started");
-		JSONObject jsonObj = new JSONObject();
-		String serverName = request.getHeader("x-user-host")    != null ? request.getHeader("x-user-host") 			: "";
-		String lang  = (String) jsonObject.get("lang")   		!= null ? (String) jsonObject.get("lang") 		 	: "";
-		String userId	= (String) jsonObject.get("id") 		!= null ? (String) jsonObject.get("id")				: "";
-		String uppId	= (String) jsonObject.get("uppFolderId")!= null ? (String) jsonObject.get("uppFolderId") 	: "";
+		JSONObject jsonObj 	= new JSONObject();
+		String serverName 	= request.getHeader("x-user-host")    != null ? request.getHeader("x-user-host") 			: "";
+		String lang 		= (String) jsonObject.get("lang")   		!= null ? (String) jsonObject.get("lang") 		 	: "";
+		String userId		= (String) jsonObject.get("id") 		!= null ? (String) jsonObject.get("id")				: "";
+		String uppId		= (String) jsonObject.get("uppFolderId")!= null ? (String) jsonObject.get("uppFolderId") 	: "";
 		JSONObject result   = new JSONObject();
 		MCommonVO common;
 		try {
@@ -361,8 +357,8 @@ public class EzWebFolderGWController_y {
 				ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, userInfo);
 				
 			result.put("status", "ok");
-			result.put("data", "");
 			result.put("code", 0);
+			result.put("data", "");
 		
 			}else{
 				LOGGER.debug("subFolder or SubFile is not mine!");
@@ -425,7 +421,7 @@ public class EzWebFolderGWController_y {
 	public JSONObject fileList (@PathVariable String folderId, HttpServletRequest request)  {
 		LOGGER.debug("fileList method start ");
 		JSONObject jsonObj = new JSONObject();
-		String serverName = request.getHeader("x-user-host")      			!= null ? request.getHeader("x-user-host") 			: "";
+		String serverName = request.getHeader("x-user-host")      			!= null ? request.getHeader("x-user-host") 			: "" ;
 		String userId = request.getParameter("userId");
 		String folderType = request.getParameter("folderType") 				!= null ? request.getParameter("folderType") 		: "" ;
 		String searchExt = request.getParameter("searchExt")			 	!= null ? request.getParameter("searchExt") 		: "" ;
@@ -449,17 +445,6 @@ public class EzWebFolderGWController_y {
 			String offset = common.getOffSet();
 			String primary = common.getPrimary();
 			String comId = common.getCompanyId();
-			
-//			String result = service.checkPermission(userId, deptId, comId, folderId, "D", tenantId);
-//			LOGGER.debug(result);
-//			if (result == "fail") {
-//				LOGGER.debug("this folder contack is not permission ");
-//				jsonObj.put("status", "error");
-//				jsonObj.put("code", 3);
-//				jsonObj.put("data", "");
-//				LOGGER.debug("fileList method Ended ");
-//				return jsonObj;
-//			}
 			
 			// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
 			int usrListCnt = service.getUsrListCount(tenantId, userId);
@@ -500,8 +485,6 @@ public class EzWebFolderGWController_y {
 			}
 			if ( currPage > totalpages & totalCount != 0) {
 				currPage = totalpages;
-			}else {
-				currPage = currPage;
 			}
 			pStart = (listCount*currPage )-listCount;
 			pEnd = listCount;
@@ -628,7 +611,7 @@ public class EzWebFolderGWController_y {
 			String checkResult 	= "";
 			for (int i = 0; i < checkList.size(); i++) {
 				checkId	 	= (String) checkList.get(i).get("checkId");
-				checkType	= (String) checkList.get(i).get("chkType");
+				checkType	= (String) checkList.get(i).get("checkType");
 				checkResult = service.checkPermission(userId, deptId, comId, checkId, checkType, tenantId);
 				
 				if (checkResult == "fail") {
