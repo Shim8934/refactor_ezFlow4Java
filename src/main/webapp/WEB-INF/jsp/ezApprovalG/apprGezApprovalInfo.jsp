@@ -227,7 +227,6 @@
 	                document.getElementById("orgbtnArea").style.display = "none";
 	                document.getElementById("btnArea").style.display = "inline";
 	            }
-	
 	            GetDocInfo(); 
 	            AprTypeXML = loadXMLString(tempAprTypeXML);
 	            ChangeTab(document.getElementById("1tab1"));
@@ -372,7 +371,6 @@
 	            psecuritylevel = RetValue[31]; 
 	            pPublicFlag = RetValue[35];
 	            g_SelCabID = RetValue[30];
-	
 	            //문서정보 추가
 	            vSecurity = RetValue[31];
 	            vAprUrgency = RetValue[32];
@@ -385,7 +383,6 @@
 	            vAprSecurity = RetValue[38];
 	            SummaryFlag = RetValue[39];
 	            vPublicFlag2 = RetValue[45];
-	
 	            if (pSuSinFlag == "N") {
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
 	            }
@@ -783,7 +780,7 @@
 		                if (line == false) {
 		                    return;
 		                }
-		                
+
 		                if (approvalFlag == "G") {
 			                if (pIniGubun != 5 && pIniGubun != 7 && pIniGubun != 10 && pIniGubun != 12) {
 			                    var rtnVal = CheckSignCellValueLast();
@@ -842,6 +839,7 @@
 			                ret[1] = SaveAprLineList(); //결재선 저장 XML
 		                } else {
 		                    var lineArea = CheckLineArea();
+
 		                    if (!lineArea)
 		                        return;
 
@@ -849,7 +847,7 @@
 		                    if (lineuser == false) {
 		                        return;
 		                    }
-		                    
+
 		                    //회람
 		                    var lineUserCC = CheckAprlineCC();
 		                    
@@ -1205,7 +1203,7 @@
 		        var rtnVal = new Array();
 		        initdatepicker();
 		        document.getElementById("taSummery").value = "";
-		
+
 		        if (vSecurity.trim() == "")
 		            document.getElementById("selSecLevel").options[0].selected = true;
 		        else
@@ -1216,17 +1214,17 @@
 		        else
 		            document.getElementById("AprUrgency").checked = false;
 		        if (vSummery.trim() != "") document.getElementById("taSummery").value = vSummery;
-		
+
 		        if (vdocdisplay.trim() != "")
 		            setdocdisplay(vdocdisplay);
 		        if (vPublicFlag.trim() != "")
 		            setPublicFlag(vPublicFlag);
 		        else
 		            rdoSecType_onclick("1");
-		        
+
 		        if (vPublicFlag2.trim() != "") 
 		            setPublicFlag2(vPublicFlag2);
-		        
+
 		        if (vAprSecurity.trim() != "") {
 		            document.getElementById("AprSecurity").checked = true;
 		            
@@ -1237,6 +1235,7 @@
 		            document.getElementById("AprSecurity").checked = false;
 		            AprSecurity_onClick();
 		        }
+
 		        document.getElementById("txtLimitRange").value = vtreatment;
 		        document.getElementById("txtPageNum").value = vPageNum;
 		        rtnVal[0] = document.getElementById("selSecLevel").value;
@@ -1244,9 +1243,11 @@
 		            rtnVal[1] = "Y";
 		        else
 		            rtnVal[1] = "N";
+
 		        rtnVal[2] = document.getElementById("taSummery").value;
 		        rtnVal[3] = getdocdisplay();
 		        rtnVal[4] = getPublicFlag();
+
 		        rtnVal[5] = document.getElementById("txtLimitRange").value;
 		        rtnVal[6] = document.getElementById("txtPageNum").value;
 		        if (document.getElementById("AprSecurity").checked)

@@ -114,7 +114,7 @@
 	        var FirstHtml = "";
 	        var beforeHtml;
 	        var beforeHwp = "";
-	        var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pLimitRange = "", pPageNum = "";
+		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "";
 	        var cabinetID = "";
 	        var TaskCode = "";
 	        var DocNumCode = "";
@@ -1083,7 +1083,9 @@
 			        parameter[37] = pPageNum;
 			        parameter[38] = tempSecurityDate;
 			        parameter[39] = SummaryFlag;
-			
+			        parameter[40] = "";
+			        parameter[45] = pPublicityYN;
+			        
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
 			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "hwp";
@@ -1148,6 +1150,20 @@
 			                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 			                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 			                }
+			                
+			                tempSecurity = ret[7];                // 보안등급 관련
+			                tempUrgent = ret[8];                  // 긴급 결재 여부
+			                pSummery = ret[9];                    // 요약 내용 관련
+			                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
+			                pPublicityCode = ret[11];             // 대민공개여부 및 공개등급 관련 
+			                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련 
+			                pSpecialRecordCode = ret[10];
+			                pLimitRange = ret[12];
+			                pPageNum = ret[13];
+			                //문서 공개 범위 설정
+// 			                setPublicFlag();
+			                setPublicFlag2();
+			                
 			                SummaryFlag = true;
 			                savexmlhttp = null;
 			                HwpCtrl.ChangeMode(3);
