@@ -29,7 +29,7 @@
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
-	   		//선택된 유저으,ㅣ부서
+	   		//선택된 유저의 부서
 	   		var userDeptId;
 	   		//회사 아이디
 	   		var companyId;
@@ -49,8 +49,9 @@
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
 				}).on('ready.jstree', function(e, data) {
-					var offset = $(".jstree-clicked").offset();
-		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+					var offset = $(".jstree-wholerow-clicked").offset();
+		   	    	var jstree = document.getElementById("treeview");
+		   	        $('#treeview').animate({scrollTop : offset.top - jstree.offsetHeight / 2}, 40);
 			    });
 	   		}
 	   		
@@ -68,7 +69,7 @@
 	   				data:{"key":key, "value":value, "deptName":deptName, "companyId":companyId},
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
-	   					if(picList.length==0 && key!="DEPARTMENT"){
+	   					if(picList.length == 0 && key != "DEPARTMENT"){
 	   						alert("<spring:message code='ezCommunity.t1379'/>");
 	   					} else {
 		   					$("#orglistView").html(result);
@@ -88,25 +89,25 @@
 	   				url:"/admin/ezJournal/authorDeptList.do",
 	   				data:{"userId":$(elem).attr("id")},
 	   				success: function(result){
-	   					lpDepts=[];
+	   					lpDepts = [];
 	   					lpDeptNames = [];
 	   					$("#authorDeptList").html(result);
 	   					var deptList = $("#authorDeptList tr");
-	   					if(deptList.length==1){
+	   					if(deptList.length == 1){
 	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezApprovalG.t431"/></td></tr>');
 		   					$("#authorDeptList tr").each(function(){
-		   						if($(this).attr("mine")=='Y'){
-		   							userDeptId=$(this).attr("targetId");
+		   						if($(this).attr("mine") == 'Y'){
+		   							userDeptId = $(this).attr("targetId");
 		   						} 
-		   						if($(this).attr("mine")=='A'){
+		   						if($(this).attr("mine") == 'A'){
 		   							userAddIds.push($(this).attr("targetId"));
 		   						} 
 		   					})
 	   					} else {
 		   					$("#authorDeptList tr").each(function(){
-		   						if($(this).attr("mine")=='Y'){
+		   						if($(this).attr("mine") == 'Y'){
 		   							userDeptId=$(this).attr("targetId");
-		   						} else if($(this).attr("mine")=='A'){
+		   						} else if($(this).attr("mine") == 'A'){
 		   							userAddIds.push($(this).attr("targetId"));
 		   						} else {
 			   						lpDepts.push($(this).attr("targetId"));
