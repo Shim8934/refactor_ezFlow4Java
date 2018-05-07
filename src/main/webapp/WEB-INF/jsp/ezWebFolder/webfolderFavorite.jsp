@@ -240,6 +240,20 @@
 			},
 			success: function(result) {
 				result = result.data;
+				
+				if (result.status == "error") {
+					if (result.code == 1) {
+						console.log("<spring:message code='ezWebFolder.t306'/>");
+						return;
+					}else if (result.code == 2) {
+						alert("<spring:message code='ezWebFolder.t305'/>");
+						return;
+					}else if (result.code == 3) {
+						alert("<spring:message code='ezWebFolder.t300'/>");
+						return;
+					}
+				}
+				
 				// TODO: 리펙토링
 				pagination.setListSize(result.listCount);
 				pagination.setAmount(result.totalCount);
@@ -284,6 +298,19 @@
 			success: function(result) {
 				result = result.data;
 				
+				if (result.status == "error") {
+					if (result.code == 1) {
+						console.log("<spring:message code='ezWebFolder.t306'/>");
+						return;
+					}else if (result.code == 2) {
+						alert("<spring:message code='ezWebFolder.t305'/>");
+						return;
+					}else if (result.code == 3) {
+						alert("<spring:message code='ezWebFolder.t300'/>");
+						return;
+					}
+				}
+				
 				pagination.setListSize(result.listCount);
 				pagination.setAmount(result.totalRows);
 				pagination.build();
@@ -313,7 +340,7 @@
 				setMailBoxInfo(result.fldCnt, result.fileCnt);
 			},
 			error: function(error) {
-				alert("<spring:message code='ezWebFolder.t134' />" + error);
+				alert("<spring:message code='ezWebFolder.t134'/>" + error);
 			}
 		});
 	}
@@ -900,13 +927,14 @@
 				<li id="" onClick="fileDelete()" favoritemenu><span><spring:message code='ezWebFolder.t274' /></span></li>
 				<li id="" onClick="fileRename()" favoritemenu><span><spring:message code='ezWebFolder.t273' /></span></li>
 				<li id="" onClick="fileMove()"><span><spring:message code='ezWebFolder.t275' /></span></li>
-				<li id=""><img src="/images/i_bar.gif"></li>
+				<li id="" favoritemenu><img src="/images/i_bar.gif"></li>
 				<li id="" favoritemenu onClick="favoriteContext.toggleAll()"><span><spring:message code='ezWebFolder.t281' /></span></li>
 				<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
 				<li id=""><img src="/images/i_bar.gif"></li>
 				<li id="SearchOption" favoritemenu mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123' /></span></li>
 				<li id=""><img src="/images/i_bar.gif"></li>
 				<li id="" onClick="context.refreshList(true)" favoritemenu><span><spring:message code='ezWebFolder.t139' /></span></li>
+				<li id="" favoritemenu><img src="/images/i_bar.gif"></li>
 				<li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 				<li id="right" favoritemenu style="float: left;"><select class="select" id="idSelect" onchange="onFileTypeChange(this.value);">
 						<option value="all" data-imagesrc="/images/webfolder/allTypes.png" selected><spring:message code='ezWebFolder.t191' /></option>
@@ -994,7 +1022,10 @@
 		<div class="popupwrap4">
 			<table class="content" style="margin-top: 10px;">
 				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle; padding-bottom: 1px" /> &nbsp; <spring:message code='ezWebFolder.t10' /></th>
+					<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" width="16px" style="vertical-align: middle; padding-bottom: 1px" /> &nbsp;<spring:message code='ezWebFolder.t10' />&nbsp;<spring:message code='ezWebFolder.t123' /></th>
+				</tr>
+				<tr>
+					<td style="border-left-color:white;border-right-color:white;height:10px" colspan="2"></td>
 				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>
@@ -1004,17 +1035,17 @@
 				<tr>
 					<th style="text-align: center"><spring:message code='ezWebFolder.t152' /></th>
 					<!-- 확장자 -->
-					<td><input type="text" id="searchExt" style="width: 98%" value="" name="searchExt"></td>
+					<td><input type="text" id="searchExt" style="width: 99%" value="" name="searchExt"></td>
 				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezWebFolder.t153' /></th>
 					<!-- 파일명 -->
-					<td><input type="text" id="searchFileName" style="width: 98%" value="" name="searchFileName"></td>
+					<td><input type="text" id="searchFileName" style="width: 99%" value="" name="searchFileName"></td>
 				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezWebFolder.t154' /></th>
 					<!-- 작성자 -->
-					<td><input type="text" id="searchCreateName" style="width: 98%" value="" name="searchCreateName"></td>
+					<td><input type="text" id="searchCreateName" style="width: 99%" value="" name="searchCreateName"></td>
 				</tr>
 			</table>
 			<br />
