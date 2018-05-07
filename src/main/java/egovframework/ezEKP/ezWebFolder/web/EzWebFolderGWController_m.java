@@ -115,6 +115,15 @@ public class EzWebFolderGWController_m {
 			List<ShareVO> list = ezWebFolderService_m.getSharingList(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
 			Map<String, Long> countInfo = ezWebFolderService_m.getSharingCount(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
 			
+			if (!folderId.equals("")) {
+				FolderVO folderInfo = ezWebFolderService_y.getFolderDetail(folderId, userId, tenantId, userInfo.getCompanyID());
+				String folderPath = folderInfo.getFolderPath();
+				String folderPath2 = ezWebFolderService.getFolderPath(folderPath.split("\\|"), userInfo.getPrimary(), tenantId);
+				
+				data.put("folderPath", folderPath);
+				data.put("folderPath2", folderPath2);
+			}
+			
 			data.put("list", list);
 			data.putAll(countInfo);
 			

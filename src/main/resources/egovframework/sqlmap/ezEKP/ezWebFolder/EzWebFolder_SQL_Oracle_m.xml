@@ -380,8 +380,14 @@
 					AND DF.TENANT_ID = FV.TENANT_ID
 					AND FV.USER_ID = #userId#
 					JOIN TBL_WEBFOLDER_SHARE S
-					ON S.FOLDERFILE_ID = DF.FILE_ID
-				    AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
+		]]>
+				<isEqual property="subSearchFlag" compareValue="Y">
+					ON ((S.FOLDERFILE_ID = DF.FILE_ID AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE) OR (DF.FOLDER_PATH LIKE ('%|' || S.FOLDERFILE_ID ||'|%') AND S.FOLDERFILE_TYPE = 'D'))
+				</isEqual>
+				<isNotEqual property="subSearchFlag" compareValue="Y">
+					ON S.FOLDERFILE_ID = DF.FILE_ID AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
+				</isNotEqual>
+		<![CDATA[
 				    AND SHARER_ID = #userId#
 					AND S.TENANT_ID = DF.TENANT_ID
 					WHERE DF.USE_STATUS = 'Y'
@@ -389,7 +395,7 @@
 					<include refid="searchTerm"/>
 		<![CDATA[
 					AND DF.TENANT_ID = #tenantId#
-				    ORDER BY FOLDERFILE_TYPE, FILE_NAME ) X
+				    ORDER BY DF.FOLDERFILE_TYPE, S.SHARE_DATE DESC ) X
 				WHERE ROWNUM <= #startPoint# + #pageSize# ) XX
 			WHERE XX.RNUM >= #startPoint# + 1
 		]]>
@@ -619,7 +625,7 @@
 						<include refid="searchTerm"/>
 			<![CDATA[
 						AND DF.TENANT_ID = #tenantId#
-						ORDER BY DF.FOLDERFILE_TYPE, FILE_NAME ) X
+						ORDER BY DF.FOLDERFILE_TYPE, DF.CREATE_DATE DESC ) X
 				WHERE ROWNUM <= #startPoint# + #pageSize# ) XX
 			WHERE XX.RNUM >= #startPoint# + 1
 		]]>
@@ -706,8 +712,14 @@
 				AND DF.TENANT_ID = FV.TENANT_ID
 				AND FV.USER_ID = #userId#
 				JOIN TBL_WEBFOLDER_SHARE S
-				ON S.FOLDERFILE_ID = DF.FILE_ID
-			    AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
+		]]>
+			<isEqual property="subSearchFlag" compareValue="Y">
+				ON ((S.FOLDERFILE_ID = DF.FILE_ID AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE) OR (DF.FOLDER_PATH LIKE ('%|' || S.FOLDERFILE_ID ||'|%') AND S.FOLDERFILE_TYPE = 'D'))
+			</isEqual>
+			<isNotEqual property="subSearchFlag" compareValue="Y">
+				ON S.FOLDERFILE_ID = DF.FILE_ID AND S.FOLDERFILE_TYPE = DF.FOLDERFILE_TYPE
+			</isNotEqual>
+		<![CDATA[
 			    AND SHARER_ID = #userId#
 				AND S.TENANT_ID = DF.TENANT_ID
 				WHERE DF.USE_STATUS = 'Y'
