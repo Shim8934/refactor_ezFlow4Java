@@ -454,6 +454,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String searchStr     = request.getParameter("searchStr");
 		String searchOpt     = request.getParameter("searchOpt");
 		String companyId     = request.getParameter("companyId");
+		String column      = request.getParameter("column");
+		String order       = request.getParameter("order");
+		
 		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/basicstorage/id/" + companyId + "/person";
 		
@@ -467,6 +470,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("userId", user.getId())
 										.queryParam("searchStr", searchStr)
 										.queryParam("searchOpt", searchOpt)
+										.queryParam("column", column)
+										.queryParam("order", order)
 										.queryParam("currentPage", currPage);
 		
 		RestTemplate rest             = new RestTemplate();
@@ -577,12 +582,14 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		String currPage      = request.getParameter("currentPage");
 		String companyId     = request.getParameter("companyId");
+		String column        = request.getParameter("column");
+		String order         = request.getParameter("order");
 		String startDate     = request.getParameter("startDate") != null ? request.getParameter("startDate") : "";
 		String endDate       = request.getParameter("endDate")   != null ? request.getParameter("endDate")   : "";
 		String fileExt       = request.getParameter("fileExt")   != null ? request.getParameter("fileExt")   : "";
 		String fileName      = request.getParameter("fileName")  != null ? request.getParameter("fileName")  : "";
 		String userName      = request.getParameter("userName")  != null ? request.getParameter("userName")  : "";
-		String fileType      = request.getParameter("fileType")  != null ? request.getParameter("fileType")  : "";;
+		String fileType      = request.getParameter("fileType")  != null ? request.getParameter("fileType")  : "";
 		String gwServerUrl   = config.getProperty("config.webfolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/filehistorylist";
 		
@@ -602,6 +609,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("fileType", fileType)
 										.queryParam("userName", userName)
 										.queryParam("currentPage", currPage)
+										.queryParam("column", column)
+										.queryParam("order", order)
 										.queryParam("endDate", endDate);
 		
 		RestTemplate rest             = new RestTemplate();
@@ -971,6 +980,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String userName    = request.getParameter("userName");
 		String fileType    = request.getParameter("fileType");
 		String folderId    = request.getParameter("folderId");
+		String column      = request.getParameter("column");
+		String order       = request.getParameter("order");
 		
 		String gwServerUrl = config.getProperty("config.webfolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolderadmin/folders/" + folderId + "/file-list";
@@ -990,6 +1001,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("userName", userName)
 										.queryParam("fileType", fileType)
 										.queryParam("currentPage", currPage)
+										.queryParam("column", column)
+										.queryParam("order", order)
 										.queryParam("endDate", endDate);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);

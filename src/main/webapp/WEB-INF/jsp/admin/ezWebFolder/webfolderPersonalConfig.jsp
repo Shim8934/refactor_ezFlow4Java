@@ -26,8 +26,14 @@
 			var strLang41   = "<spring:message code='ezWebFolder.t137'/>";
 			var strLang42   = "<spring:message code='ezWebFolder.t138'/>";
 			var strNoData   = "<spring:message code='ezWebFolder.t144'/>";
+			var tableView   = new TableView();
 			
 			window.onload = function() {
+				tableView.setTableId("tblFileStorage");
+				tableView.setTableType("configTable");
+				tableView.setSelectedClass("bnkWebFolder2");
+				tableView.setUnselectClass("bnkWebFolder");
+				tableView.setCallBack(refreshView);
 				search_Set("1");
 				preProcessing();
 			}
@@ -64,6 +70,7 @@
 			}
 			
 			function search_Set(pPage) {
+				var orderInf = tableView.getOrderInfo();
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/getCapacities.do",
@@ -71,6 +78,8 @@
 						"currentPage" : pPage,
 						"searchStr"   : searchStr,
 						"searchOpt"   : searchOpt,
+						"column"      : orderInf.col ? orderInf.col : "",
+						"order"       : orderInf.ord ? orderInf.ord : "",
 						"companyId"   : document.getElementById("companyList").value
 					},
 					dataType: "JSON",
@@ -99,11 +108,6 @@
 			}
 			
 			function renderData(result) {
-				var tableView = new TableView();
-				tableView.setTableId("tblFileStorage");
-				tableView.setTableType("configTable");
-				tableView.setSelectedClass("bnkWebFolder2");
-				tableView.setUnselectClass("bnkWebFolder");
 				tableView.setDataSource(result);
 				tableView.renderTable();
 			}
@@ -151,6 +155,7 @@
 			}
 			
 			function change() {
+				tableView.clearHeaders();
 				searchStr = "";
 				searchOpt = "";
 				search_Set("1");
@@ -377,13 +382,13 @@
 			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileStorage">
 				<tr>
 					<th width="10px"><input type="checkbox"></th>
-					<th width="120px"  style=""><spring:message code='ezWebFolder.t146'/></th>
-					<th width="120px"  style=""><spring:message code='ezWebFolder.t142'/></th>
-					<th width="120px" style=""><spring:message code='ezWebFolder.t143'/></th>
-					<th width="40px"  style=""><spring:message code='ezWebFolder.t147'/></th>
-					<th width="80px"  style="text-align: center;"><spring:message code='ezWebFolder.t148'/></th>
-					<th width="80px"  style="text-align: center;"><spring:message code='ezWebFolder.t149'/></th>
-					<th width="60px"  style="text-align: center;"><spring:message code='ezWebFolder.t150'/></th>
+					<th headers="cn" width="120px" style=""                   ><spring:message code='ezWebFolder.t146'/></th>
+					<th headers="dn" width="120px" style=""                   ><spring:message code='ezWebFolder.t142'/></th>
+					<th headers="un" width="120px" style=""                   ><spring:message code='ezWebFolder.t143'/></th>
+					<th headers="ut" width="40px"  style=""                   ><spring:message code='ezWebFolder.t147'/></th>
+					<th              width="80px"  style="text-align: center;"><spring:message code='ezWebFolder.t148'/></th>
+					<th headers="tc" width="80px"  style="text-align: center;"><spring:message code='ezWebFolder.t149'/></th>
+					<th              width="60px"  style="text-align: center;"><spring:message code='ezWebFolder.t150'/></th>
 				</tr>
 			</table>
 		</div>

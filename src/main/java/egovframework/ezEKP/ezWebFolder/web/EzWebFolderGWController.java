@@ -154,11 +154,14 @@ public class EzWebFolderGWController {
 		String searchOpt  = request.getParameter("searchOpt")   != null ? request.getParameter("searchOpt")                     : "";
 		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
 		String lang       = request.getParameter("lang")        != null ? request.getParameter("lang")                          : "";
+		String column     = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
+		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
 		JSONObject result = new JSONObject();
 		int totalUsers    = 0;
 		int totalPages    = 0;
 		int pageSize      = 10;
 		int startPoint    = (currPage - 1) * pageSize;
+		String realColmn  = "";
 		
 		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName);
 		
@@ -174,7 +177,21 @@ public class EzWebFolderGWController {
 			LoginVO userInfo                      = commonUtil.getUserForGw(userId, serverName, lang, "");
 			int tenantId                          = userInfo.getTenantId();
 			String primary                        = userInfo.getPrimary();
-			List<UserCapacityVO> listUserCapacity = ezWebFolderAdminService.getListUserCapacity(companyId, searchStr, searchOpt, startPoint, pageSize, tenantId, primary);
+			
+			if (!column.equals("") && !order.equals("")) {
+				switch(column) {
+					case "cn": realColmn = "COMPANY_NAME"    ; break;
+					case "dn": realColmn = "DEPARTMENT_NAME" ; break;
+					case "un": realColmn = "DISPLAY_NAME"    ; break;
+					case "ut": realColmn = "JOB_TITLE"       ; break;
+					case "tc": realColmn = "TOTAL_CAPACITY"  ; break;
+					default  : realColmn = "COMPANY_NAME"    ; break;
+				}
+			}
+			
+			logger.debug("Column: " + realColmn + " || order: " + order);
+			
+			List<UserCapacityVO> listUserCapacity = ezWebFolderAdminService.getListUserCapacity(realColmn, order, companyId, searchStr, searchOpt, startPoint, pageSize, tenantId, primary);
 			totalUsers                            = ezWebFolderAdminService.getTotalListUserCapacity(companyId, searchStr, searchOpt, startPoint, pageSize, tenantId, primary);
 			totalPages                            = (totalUsers + pageSize - 1)/pageSize;
 			
@@ -340,12 +357,16 @@ public class EzWebFolderGWController {
 		String fileName   = request.getParameter("fileName")    != null ? request.getParameter("fileName")                      : "";
 		String userName   = request.getParameter("userName")    != null ? request.getParameter("userName")                      : "";
 		String fileType   = request.getParameter("fileType")    != null ? request.getParameter("fileType")                      : "";
+		String column     = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
+		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
+		
 		String searchChk  = "1";
 		int currPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) :  1;
 		int totalRows     = 0;
 		int totalPages    = 0;
 		int pageSize      = 10;
 		int startPoint    = (currPage - 1) * pageSize;
+		String realColmn  = "";
 		
 		logger.debug("StartDate: " + startDate + " || EndDate: " + endDate + " || FileExt: " + fileExt + " || FileName: " + fileName + " || File Type: " + fileType + " || Username: " + userName);
 		
@@ -364,6 +385,20 @@ public class EzWebFolderGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, "");
 			int tenantId     = userInfo.getTenantId();
 			String primary   = userInfo.getPrimary();
+			
+			if (!column.equals("") && !order.equals("")) {
+				switch(column) {
+					case "ft": realColmn = "FILE_TYPE"                                          ; break;
+					case "fn": realColmn = "FILE_NAME"                                          ; break;
+					case "fs": realColmn = "FILE_SIZE"                                          ; break;
+					case "un": realColmn = primary.equals("1") ? "CREATE_NAME1" : "CREATE_NAME2"; break;
+					case "at": realColmn = "LOG_TYPE"                                           ; break;
+					case "ad": realColmn = "CREATE_DATE"                                        ; break;
+					default  : realColmn = "FILE_NAME"                                          ; break;
+				}
+			}
+			
+			logger.debug("Column: " + realColmn + " || order: " + order);
 			
 			if (startDate.equals("") && endDate.equals("") && fileExt.equals("") && fileName.equals("") && userName.equals("")) {
 				searchChk = "0";
@@ -391,7 +426,7 @@ public class EzWebFolderGWController {
 			
 			logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
 			
-			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
+			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(realColmn, order.toUpperCase(), companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
 			totalRows                    = ezWebFolderAdminService.getTotalFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, primary, tenantId);
 			totalPages                   = (totalRows + pageSize - 1)/pageSize;
 			
@@ -1456,12 +1491,15 @@ public class EzWebFolderGWController {
 		String fileName   = request.getParameter("fileName")    != null ? request.getParameter("fileName")  : "";
 		String userName   = request.getParameter("userName")    != null ? request.getParameter("userName")  : "";
 		String fileType   = request.getParameter("fileType")    != null ? request.getParameter("fileType")  : "";
+		String column     = request.getParameter("column")      != null ? request.getParameter("column")    : "";
+		String order      = request.getParameter("order")       != null ? request.getParameter("order")     : "";
 		String searchChk  = "1";
 		int currPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) :  1;
 		int totalRows     = 0;
 		int totalPages    = 0;
 		int pageSize      = 10;
 		int startPoint    = 0;
+		String realColmn  = "";
 		
 		JSONObject result = new JSONObject();
 		
@@ -1479,6 +1517,21 @@ public class EzWebFolderGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			int tenantId     = userInfo.getTenantId();
 			String primary   = userInfo.getPrimary();
+			
+			if (!column.equals("") && !order.equals("")) {
+				switch(column) {
+					case "ft": realColmn = "FILETYPE_ICON"                                      ; break;
+					case "fn": realColmn = "FILE_NAME"                                          ; break;
+					case "fs": realColmn = "FILE_SIZE"                                          ; break;
+					case "un": realColmn = primary.equals("1") ? "CREATE_NAME1" : "CREATE_NAME2"; break;
+					case "cd": realColmn = "CREATE_DATE"                                        ; break;
+					case "ud": realColmn = "UPDATE_DATE"                                        ; break;
+					case "dt": realColmn = "DOWN_COUNT"                                         ; break;
+					default  : realColmn = "FILE_NAME"                                          ; break;
+				}
+			}
+			
+			logger.debug("Column: " + realColmn + " || order: " + order);
 					
 			if (startDate.equals("") && endDate.equals("") && fileExt.equals("") && fileName.equals("") && userName.equals("")) {
 				searchChk = "0";
@@ -1519,7 +1572,7 @@ public class EzWebFolderGWController {
 				currPage                        = currPage > totalPages ? totalPages : currPage;
 				currPage                        = currPage == 0         ? 1          : currPage;
 				startPoint                      = (currPage - 1) * pageSize;
-				fileList                        = ezWebFolderService.getAllFiles(folder.getFolderPath(), originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
+				fileList                        = ezWebFolderService.getAllFiles(realColmn, order.toUpperCase(), folder.getFolderPath(), originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
 				
 				//New way 30-50% faster
 				if (fileList.size() > 0) {
@@ -1556,7 +1609,7 @@ public class EzWebFolderGWController {
 				currPage   = currPage > totalPages ? totalPages : currPage;
 				currPage   = currPage == 0         ? 1          : currPage;
 				startPoint = (currPage - 1) * pageSize;
-				fileList   = ezWebFolderService.getAllFilesInFolder(folderId, originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
+				fileList   = ezWebFolderService.getAllFilesInFolder(realColmn, order.toUpperCase(), folderId, originalPath, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, startPoint, pageSize, primary, offset, tenantId);
 			}
 			
 			result.put("data", fileList);

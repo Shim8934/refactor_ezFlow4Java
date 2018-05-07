@@ -1305,9 +1305,25 @@
 			]]>
 		
 			<include refid="searchTrashCanFile"/>
-	 		<![CDATA[
-					) A
-					ORDER BY A.SLEVEL, A.TRASHCAN_EXT,A.UPDATE_DATE DESC
+				) A
+				
+				<isNotEqual property="realColmn" compareValue="">
+					ORDER BY
+						<isEqual property="realColmn" compareValue="TRASHCAN_SIZE">
+							TO_NUMBER($realColmn$) $order$,
+						</isEqual>
+						<isNotEqual property="realColmn" compareValue="TRASHCAN_SIZE">
+							$realColmn$ $order$,
+						</isNotEqual>
+						SLEVEL, TRASHCAN_EXT, UPDATE_DATE DESC
+				</isNotEqual>
+				<isEqual property="realColmn" compareValue="">
+					<![CDATA[
+						ORDER BY SLEVEL, TRASHCAN_EXT, UPDATE_DATE DESC
+					]]>
+				</isEqual>
+				
+				<![CDATA[
 				) C
 				WHERE rownum <= #pStart# + #pEnd#
 			) B
