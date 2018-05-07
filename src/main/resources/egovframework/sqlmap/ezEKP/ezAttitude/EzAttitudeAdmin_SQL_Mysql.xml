@@ -12,6 +12,7 @@
 	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>
 	<typeAlias alias="AttitudeAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO"/>
 	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
+	<typeAlias alias="JournalAuthorVO" type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
 	
 	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
 		<result property="companyId"				column="COMPANY_ID"				columnIndex="1"/>
@@ -45,7 +46,7 @@
 		<result property="formHtml"					column="FORM_HTML"				columnIndex="5"/>
 	</resultMap>
 	
-	<resultMap class="authorVO" id="userMap">
+	<resultMap class="JournalAuthorVO" id="userMap">
 		<result property="userName" 				column="USER_NAME" 				columnIndex="1"/>
 		<result property="userId" 					column="USER_ID" 				columnIndex="2"/>
 		<result property="jikwi" 					column="JIKWI" 					columnIndex="3"/>
@@ -74,7 +75,7 @@
 		<result  property="authDeptName" 			column="AUTHDEPTNAME"			columnIndex="8"/>
 	</resultMap>
 	
-	<resultMap id="attitudeAuthorDept" class="authorVO">
+	<resultMap id="attitudeAuthorDept" class="JournalAuthorVO">
 		<result property="deptName" 				column="DEPT_NAME" 				columnIndex="1"/>
 		<result property="deptId" 					column="DEPT_ID" 				columnIndex="2"/>
 		<result property="mine" 					column="MINE" 					columnIndex="3"/>
@@ -918,7 +919,7 @@
 <!-- 		</iterate> -->
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="authorVO">
+	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="JournalAuthorVO">
 		<![CDATA[
 			SELECT 
 				CN AS deptId,
