@@ -475,7 +475,7 @@
 		        var leftBody = parent.frames["left"].document.body;
 		        leftBody.style.overflow = "hidden";
 	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].searchOptionHidden();document.body.style.overflow=\"auto\";'></div>").appendTo(leftBody);        	
-	        	var popupX = parent.document.body.clientWidth / 2 - (500 / 2) - 220;
+	        	var popupX = (parent.document.body.clientWidth) / 2 - (500 / 2) - 220;
 	        	
 	        	$("#srarchpopup").css("left", popupX);
 	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
