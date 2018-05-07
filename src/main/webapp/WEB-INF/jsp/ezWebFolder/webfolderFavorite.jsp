@@ -908,7 +908,7 @@
 				<li id=""><img src="/images/i_bar.gif"></li>
 				<li id="" onClick="context.refreshList(true)" favoritemenu><span><spring:message code='ezWebFolder.t139' /></span></li>
 				<li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
-				<li id="right" favoritemenu style="float: left;"><select class="select" id="idSelect" onchange="onFileTypeChange(this.value);" style="height: 28px; border-radius: 3px; padding: 0px; padding-left: 4px; width: 80px; color: #666;">
+				<li id="right" favoritemenu style="float: left;"><select class="select" id="idSelect" onchange="onFileTypeChange(this.value);">
 						<option value="all" data-imagesrc="/images/webfolder/allTypes.png" selected><spring:message code='ezWebFolder.t191' /></option>
 						<!-- 전체 -->
 						<option value="document" data-imagesrc="/images/webfolder/msWord.png"><spring:message code='ezWebFolder.t192' /></option>
@@ -975,7 +975,7 @@
 					<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157' /></th>
 					<th style="width: 7%;"><spring:message code='ezWebFolder.t189' /></th>
 					<th style="width: 10%;"><spring:message code='ezWebFolder.t190' /></th>
-					<th style="width: 25%;"><spring:message code='ezWebFolder.t199' /></th>
+					<th style="width: 25%; overflow: hidden;"><spring:message code='ezWebFolder.t199' /></th>
 				</tr>
 			</table>
 		</div>
