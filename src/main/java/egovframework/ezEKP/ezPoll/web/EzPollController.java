@@ -690,7 +690,7 @@ public class EzPollController extends EgovFileMngUtil {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
-		int brdId =	Integer.parseInt(request.getParameter("brdId"));
+		String brdId = request.getParameter("brdId") != null ? request.getParameter("brdId") : "";
 		int totalUsers = 0;		
 		int totalVotes = 0;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -957,6 +957,10 @@ public class EzPollController extends EgovFileMngUtil {
 			model.addAttribute("creatorDept", pollCreator.getDeptName2());
 		}
 		
+		if(brdId != ""){
+			model.addAttribute("brdId", Integer.parseInt(brdId));
+		}
+		
 		model.addAttribute("listComments", listComments);
 		model.addAttribute("numberOfCmt", numberOfCmt);
 		model.addAttribute("listSelectedOptions", om.writeValueAsString(listSelectedOptionsOfUser));
@@ -979,7 +983,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("params", params);
 		model.addAttribute("searchStr", searchStr);
 		model.addAttribute("searchN", searchN);		
-		model.addAttribute("brdId", brdId);		
+		
 		
 		logger.debug("Question vote finishes!");		
 		return "/ezPoll/questionVote";

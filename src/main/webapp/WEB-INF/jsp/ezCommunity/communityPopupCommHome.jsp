@@ -117,9 +117,9 @@
 	                            p.className = "title";
 	                            
 	                            if (primary == "1") {
-	                                p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='padding-right:5px;vertical-align:middle' />" + length_check(infoVO.boardName);
+	                                p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='width:16px; height:16px; padding-right:5px; vertical-align:middle' />" + length_check(infoVO.boardName);
 	                            } else {
-	                            	p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='padding-right:5px;vertical-align:middle' />" + length_check(infoVO.boardName2);
+	                            	p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='width:16px; height:16px; padding-right:5px;vertical-align:middle' />" + length_check(infoVO.boardName2);
 	                            }
 	                            
 	                            var span = document.createElement("span");
@@ -157,7 +157,12 @@
 		                                    
 		                                    if (itemVO.gubun != "3") {
 		                                    	span2.className = "txt";
-		                                        span2.innerHTML = itemVO.title;
+		                                        span2.innerHTML = itemVO.title;		                                       
+		                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈 메인화면 일반/그룹/익명게시물 댓글수 표출 */
+		                                        if (itemVO.oneLineCnt > 0) {
+		                                        	span2.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
+		                                        }
+		                                        
 		                                        span2.setAttribute("itemid", itemVO.itemID);
 		                                        span2.setAttribute("boardid", itemVO.boardID);
 		                                        span2.setAttribute("gubun", itemVO.gubun);
@@ -168,7 +173,7 @@
 		                                        span3.className = "date";
 		                                        span3.innerHTML = itemVO.writeDate.substring(0, 10);
 		                                    } else {
-		                                    	if(imageCnt < 4) {
+		                                    	if (imageCnt < 4) {
 		                                    		span2.className = "photo";
 			                                        span2.setAttribute("itemid", itemVO.itemID);
 			                                        span2.setAttribute("boardid", itemVO.boardID);
@@ -188,6 +193,11 @@
 			                                        span2.appendChild(img);
 			                                        span3.className = "ptxt";
 			                                        span3.innerHTML = itemVO.title;
+			                                        /* 2018-05-07 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물 댓글수 표출 */
+			                                        if (itemVO.oneLineCnt > 0) {
+			                                        	span3.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
+			                                        }
+			                                        
 			                                        span3.setAttribute("itemid", itemVO.itemID);
 			                                        span3.setAttribute("boardid", itemVO.boardID);
 			                                        span3.setAttribute("gubun", itemVO.gubun);
