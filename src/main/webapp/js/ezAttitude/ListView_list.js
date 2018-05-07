@@ -19,10 +19,10 @@ $(document).on('click', '#HeaderAllCheckBox', function() {
 })
 
 //tr클릭 시 - 휴가유형관리, 근태권한 관리
-$(document).on('click', '#contentlist table.mainlist tr', function(e) {
+$(document).on('click', '#contentlist tr', function(e) {
 	if(e.type == "click") {
-		$('#contentlist table.mainlist tr').not(this).attr("class","");
-		$('#contentlist table.mainlist tr').not(this).css("background-color", m_strColorDefault);
+		$('#contentlist tr').not(this).attr("class","");
+		$('#contentlist tr').not(this).css("background-color", m_strColorDefault);
 		$(this).css("background-color", m_strColorSelect);
 		$(this).attr("class","selectTR");
 	} else {
@@ -31,7 +31,7 @@ $(document).on('click', '#contentlist table.mainlist tr', function(e) {
 })
 
 //tr hover시 배경색 변경 - 휴가유형관리, 근태권한 관리
-$(document).on('mouseover mouseleave', '#contentlist table.mainlist tr', function(e) {
+$(document).on('mouseover mouseleave', '#contentlist tr', function(e) {
 	if($(this).attr("class") == "selectTR") {
 		return;
 	}

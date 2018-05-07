@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezAttitude.web;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -29,20 +28,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
