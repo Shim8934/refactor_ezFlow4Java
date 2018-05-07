@@ -7,7 +7,6 @@
 	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
 	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
 	<typeAlias alias="AttitudeFormVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO"/>
-	<typeAlias alias="authorVO" type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
 	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO" />
 	<typeAlias alias="AttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
 	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>
@@ -165,7 +164,7 @@
 				TBL_USERMASTER.title AS usertitle,
 				TBL_USERMASTER.displayname AS userName,
 				TBL_USERMASTER.description AS deptName,
-				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') AS gubun
+				IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') AS gubun
 			FROM
 				TBL_USERMASTER
 			LEFT JOIN
@@ -210,8 +209,8 @@
 				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) <= #searchEndTime#
 			]]>
 		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchCompareValue">
-			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') = #searchCompareValue#
+		<isNotEmpty prepend="AND" property="searchGubun">
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') = #searchGubun#
 		</isNotEmpty>
 		
 		<isNotEmpty property="orderCell">
@@ -275,8 +274,8 @@
 				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) <= #searchEndTime#
 			]]>
 		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchCompareValue">
-			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') = #searchCompareValue#
+		<isNotEmpty prepend="AND" property="searchGubun">
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') = #searchGubun#
 		</isNotEmpty>
 	</select>
 	
@@ -497,7 +496,7 @@
 			INSERT INTO TBL_ATTITUDE_USER_CONF
 				(user_id, tenant_id, work_starttime, work_endtime, company_id, dept_id)
 			SELECT
-				#userId# AS user_id,
+				#selectedUserId# AS user_id,
 				#tenantId# AS tenant_id,
 				#workStartTime# AS work_starttime,
 				#workEndTime# AS work_endtime,
@@ -506,9 +505,11 @@
 			FROM
 				TBL_USERMASTER
 			WHERE
-				cn = #userId#
+				cn = #selectedUserId#
 			AND
 				tenant_id = #tenantId#
+			AND
+				physicaldeliveryofficename  = #companyId#
 			ON DUPLICATE KEY UPDATE
 				work_starttime = #workStartTime#,
 				work_endtime = #workEndTime#
@@ -580,8 +581,8 @@
           	AND
           		company_id = #companyId#
 		]]>
-		<iterate prepend="AND user_id IN" property="userIdList" open="(" close=")" conjunction=",">
-			#userIdList[]#
+		<iterate prepend="AND user_id IN" property="selectedUserIdList" open="(" close=")" conjunction=",">
+			#selectedUserIdList[]#
 		</iterate>
    </delete>
    

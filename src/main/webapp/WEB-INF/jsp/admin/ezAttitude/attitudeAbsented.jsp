@@ -297,6 +297,12 @@
 					}
 				}
 			}
+			
+			function sendMail() {
+// 				ajax
+// 				post
+				
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -334,6 +340,7 @@
 						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('search');">검색</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('refresh');">새로고침</span></a>&nbsp;
 						<a class="imgbtn"><span onclick="exportExcel();">엑셀저장</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="sendMail();">메일발송</span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>

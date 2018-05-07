@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.internet.InternetAddress;
-
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -332,7 +330,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Override
 	public void editAttitudeUserConfig(String selectedUserIdList, String workStartTime, String workEndTime, String gubun, String offSet, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("saveAttitudeUserConfig started");
+		LOGGER.debug("editAttitudeUserConfig started");
 		LOGGER.debug("selectedUserIdList = " + selectedUserIdList + " || workStartTime = " + workStartTime + " || workEndTime = " + workEndTime + " || gubun = " + gubun);
 		
 		String today =  commonUtil.getTodayUTCTime("yyyy-MM-dd");
@@ -342,16 +340,20 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("userIdList", selectedUserIdList.split(", "));
 		map.put("workStartTime", startDate.substring(11));
 		map.put("workEndTime", endDate.substring(11));
 		
 		if (gubun.equals("0")) {
+			map.put("selectedUserIdList", selectedUserIdList.split(", "));
+			
 			ezAttitudeDAO.deleteAttitudeUserConfig(map);
 		} else {
-			ezAttitudeDAO.saveAttitudeUserConfig(map);
+			for (String selectedUserId : selectedUserIdList.split(", ")) {
+				map.put("selectedUserId", selectedUserId);
+				
+				ezAttitudeDAO.saveAttitudeUserConfig(map);
+			}
 		}
-		
 		
 		LOGGER.debug("saveAttitudeUserConfig ended");
 	}
@@ -511,7 +513,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public List<AttitudeUserConfigVO> getAttitudeUserConfigList(int tenantId, String companyId,
 			String searchUserName, String searchDeptName, String searchTitle, String searchStartTime,
-			String searchEndTime, String searchCompareValue, String pageNum, String listSize,
+			String searchEndTime, String searchGubun, String pageNum, String listSize,
 			String orderCell, String orderOption, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigList started");
 		
@@ -525,7 +527,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchTitle", searchTitle);
 		map.put("searchStartTime", searchStartTime);
 		map.put("searchEndTime", searchEndTime);
-		map.put("searchCompareValue", searchCompareValue);
+		map.put("searchGubun", searchGubun);
 		map.put("limit", limit);
 		map.put("listSize", listSize);
 		map.put("orderCell", orderCell);
@@ -588,7 +590,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public String getAttitudeUserConfigCount(int tenantId, String companyId, String searchUserName, String searchDeptName,
-			String searchTitle, String searchStartTime, String searchEndTime, String searchCompareValue, String offsetMin) throws Exception {
+			String searchTitle, String searchStartTime, String searchEndTime, String searchGubun, String offsetMin) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigListCount started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -599,7 +601,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchTitle", searchTitle);
 		map.put("searchStartTime", searchStartTime);
 		map.put("searchEndTime", searchEndTime);
-		map.put("searchCompareValue", searchCompareValue);
+		map.put("searchGubun", searchGubun);
 		map.put("offsetMin", offsetMin);
 		
 		String totalCount = ezAttitudeDAO.getAttitudeUserConfigCount(map);
@@ -686,18 +688,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public int getUsersModiyAttCount(String companyId, int tenantId,
 			String userId, String startDate, String endDate,
-			String apprUserName, String writerName , String writerDeptName,String sysLang, String offset, String type, String adminFlag, String checkAdmin)
+			String apprUserName, String writerName , String writerDeptName,String sysLang, String offset, String type, String[] deptIdList,String adminFlag, String checkAdmin)
 			throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		if (adminFlag == null) {
-			adminFlag = "false";
-		}
-		
-		if (checkAdmin == null) {
-			checkAdmin = "false";
-		}
 		
 		LOGGER.debug("checkAdmin : " + checkAdmin);
 		LOGGER.debug("adminFlag : " + adminFlag);
@@ -709,7 +703,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		} else if (checkAdmin.equals("false")) {
 			LOGGER.debug("#############################################false true####################################");
 //			String[] deptIdList = {"approval"};
-//			map.put("deptIdList", deptIdList);
+			map.put("deptIdList", deptIdList);
 		}
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);

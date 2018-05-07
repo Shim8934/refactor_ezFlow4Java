@@ -971,7 +971,7 @@ public class EzAttitudeGWController {
 			String searchTitle = request.getParameter("searchTitle");
 			String searchStartTime = request.getParameter("searchStartTime");
 			String searchEndTime = request.getParameter("searchEndTime");
-			String searchCompareValue = request.getParameter("searchCompareValue");
+			String searchGubun = request.getParameter("searchGubun");
 			String pageNum = request.getParameter("pageNum");
 			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
@@ -981,8 +981,8 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
 			
-			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchCompareValue, offsetMin);
-			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchCompareValue, pageNum, listSize, orderCell, orderOption, offsetMin);
+			String totalCount = ezAttitudeService.getAttitudeUserConfigCount(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchGubun, offsetMin);
+			List<AttitudeUserConfigVO> list = ezAttitudeService.getAttitudeUserConfigList(tenantId, companyId, searchUserName, searchDeptName, searchTitle, searchStartTime, searchEndTime, searchGubun, pageNum, listSize, orderCell, orderOption, offsetMin);
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
@@ -1210,15 +1210,37 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
-
+		String[] deptIdList;
 		try{
+			
+			if (adminFlag == null) {
+				adminFlag = "false";
+			}
+			
+			if (checkAdmin == null) {
+				checkAdmin = "false";
+			}
+			
 			if (type != null) {
 				if (type.equals("all")) {
 					type = null;
 				}
 			}
+			String isAllDept = "";
 			
-			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, adminFlag, checkAdmin);
+			if (adminFlag.equals("true") || checkAdmin.equals("true")){
+				isAllDept = "Y";
+			}
+			
+			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
+			
+			deptIdList = new String[authDeptlist.size()];
+			
+			for (int i = 0; i < authDeptlist.size(); i++) {
+				LOGGER.debug("authDeptlist.get(i).getClass() : " + authDeptlist.get(i).getClass());
+//				deptIdList[i] = authDeptlist.get(i).getDeptId();
+			}
+			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, deptIdList, adminFlag, checkAdmin);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1747,7 +1769,7 @@ public class EzAttitudeGWController {
 			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();
 			
-//			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, pageNum, listSize, orderCell, orderOption, duplicated, offset, companyId, tenantID);
+//			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, pageNum, listSize, orderCell, orderOption, duplicated, offset, companyId, tenantID);
 			
 //			ezAttitudeService.absentedListSendMail(list, info.getUserName(), info.getEmail());
 			
@@ -1911,7 +1933,7 @@ public class EzAttitudeGWController {
 			String companyId = request.getParameter("companyId");
 			String isAllDept = request.getParameter("isAllDept");////////////////
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
+		
 			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept);
 			
 			result.put("status", "ok");

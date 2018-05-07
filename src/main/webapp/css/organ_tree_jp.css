@@ -1,11 +1,10 @@
 ﻿.node_normal
 {
-    height: 21px;
-    line-height:21px;
-    /* height: 18px; */
-    /* line-height:18px; */
+    /* height: 21px;
+    line-height:21px; */
+    height: 18px;
+    line-height:18px;
     color: #666666;    
-    padding-left:3px;
     font-size: 12px;
     vertical-align: top;
     cursor: pointer;
@@ -18,12 +17,11 @@
 }
 .node_selected
 {
-    height: 21px;
-    line-height:21px;
-    /* height: 18px; */
-    /* line-height:18px; */
-    color: #333;
-    padding-left:3px;
+    /* height: 21px;
+    line-height:21px; */
+    height: 18px;
+    line-height:18px;
+    color: #004a87;    
     font-size: 12px;
     font-weight: bold;
     vertical-align: top;
@@ -37,12 +35,11 @@
 }
 .node_hover
 {
-    height: 21px;    
-    line-height:21px;
-    /* height: 18px; */
-    /* line-height:18px; */
-    color: #333;
-    padding-left:3px;   
+    /* height: 21px;    
+    line-height:21px; */
+    height: 18px;
+    line-height:18px;
+    color: #004a87;    
     font-size: 12px;
     font-weight: bold;
     vertical-align: top;

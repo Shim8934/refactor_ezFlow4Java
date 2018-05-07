@@ -2064,7 +2064,15 @@
 				A.abstract,
 				CASE WHEN D.totalcount IS NULL THEN 0 ELSE 1 END READFLAG,
 				A.extensionattribute4,
-				A.extensionattribute5
+				A.extensionattribute5,
+				(SELECT 
+                	COUNT(*)  
+				FROM 
+    				tbl_comm_onelinereply
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) ONELINECNT
 			FROM
 				TBL_COMM_ITEM A
 			LEFT OUTER JOIN
@@ -2573,21 +2581,29 @@
 		<![CDATA[
 			SELECT
        			c_clubno,
-                   boardname,
-                   boardname2,
-                   itemid,
-                   gubun,
-                   writerid,
-                   writername,
-                   writername2,
-                   writerdeptname,
-                   DATE_ADD(DATE_FORMAT(writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
-                   title,
-                   itemcnt,
-                   c_membercnt,
-                   c_clubname,
-                   c_clubname2,
-                   a.boardid
+                boardname,
+                boardname2,
+                itemid,
+                gubun,
+                writerid,
+                writername,
+                writername2,
+                writerdeptname,
+                DATE_ADD(DATE_FORMAT(writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
+                title,
+                itemcnt,
+                c_membercnt,
+                c_clubname,
+                c_clubname2,
+                a.boardid,
+                (SELECT 
+                	COUNT(*)  
+				FROM 
+    				tbl_comm_onelinereply
+   				WHERE  
+   					TENANT_ID = B.TENANT_ID
+   				AND
+   					ITEMID = B.ItemID) ONELINECNT
 			FROM
 				TBL_COMM_BOARDINFO A
                JOIN

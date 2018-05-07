@@ -38,7 +38,7 @@
 	    	var searchUserName = ""; // 검색조건 (사원명)
 	    	var searchDeptName = ""; // 검색조건 (부서명)
 	    	var searchTitle = ""; // 검색조건 (직위)
-	    	var searchCompareValue = ""; // 검색조건(구분)
+	    	var searchGubun = ""; // 검색조건(구분)
 	    	//검색조건 (근무시간) Hr,Min 묶음으로
 	    	var searchStartTime = "";
 	    	var searchEndTime = "";
@@ -116,7 +116,7 @@
 	   					title : searchTitle,
 	   					startTime : searchStartTime,
 	   					endTime : searchEndTime,
-	   					compareValue : searchCompareValue,
+	   					gubun : searchGubun,
 	   					pageNum : pageNum,
 	   					listSize : listSize,
 	   					orderCell : orderCell,
@@ -145,7 +145,7 @@
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
 	    			resultHtml += "<td>" + vo.workStartTime + " ~ " + vo.workEndTime + "</td>";
-	    			resultHtml += "<td>" + (vo.compareTime == '0' ? '회사' : '개인') + "</td></tr>";
+	    			resultHtml += "<td>" + (vo.gubun == '0' ? '회사' : '개인') + "</td></tr>";
 	    		});
 	    		
 	    		if (resultHtml == "") {
@@ -163,7 +163,7 @@
 	    			searchTitle = $("#searchTitle").val();
 	    			searchStartTime = $("#searchStartTime").val();
 	    			searchEndTime = $("#searchEndTime").val();
-	    			searchCompareValue = $("[type='radio']:checked").val();
+	    			searchGubun = $("[type='radio']:checked").val();
 	    		} else {
 	    			//새로고침
 	    			$("#searchUserName").val("");
@@ -178,7 +178,7 @@
 	    			searchTitle = "";
 	    			searchStartTime = "";
 	    			searchEndTime = "";
-	    			searchCompareValue = "";
+	    			searchGubun = "";
 	    		}
 	    		
 	    		pageNum = 1;
@@ -283,9 +283,9 @@
 					<td style="width: 3%;">구분</td>
 					<td style="width: 20%;">
 						<span style="width: 90%;">
-							<input type="radio" name="searchCompareValue" id="searchCompareValueAll" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/>&nbsp;모두
-							<input type="radio" name="searchCompareValue" id="searchCompareValue0" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;회사
-							<input type="radio" name="searchCompareValue" id="searchCompareValue1" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;개인
+							<input type="radio" name="searchGubun" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/>&nbsp;모두
+							<input type="radio" name="searchGubun" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;회사
+							<input type="radio" name="searchGubun" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;개인
 						</span>
 					</td>
 				</tr>
@@ -314,7 +314,7 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="workstarttime">근무시간</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="compareTime">구분</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="gubun">구분</th>
 					</tr>
 				</thead>
 				<tbody>
