@@ -35,6 +35,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzAttitudeService")
@@ -43,6 +44,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
 	
 	@Autowired
 	private EzAttitudeDAO ezAttitudeDAO;
@@ -1067,15 +1071,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("paging started.");
 		
-		int size = Integer.valueOf(listSize);
-		int limit = (Integer.valueOf(pageNum) - 1) * size;
-		
-		if (totalList.size() < limit + size) {
-			LOGGER.debug("1page param = " + limit + ", " + totalList.size());
-			totalList = totalList.subList(limit, totalList.size());
-		} else {
-			LOGGER.debug("2page param = " + limit + ", " + (limit + size));
-			totalList = totalList.subList(limit, limit + size);
+		if (listSize != "") {
+			int size = Integer.valueOf(listSize);
+			int limit = (Integer.valueOf(pageNum) - 1) * size;
+			
+			if (totalList.size() < limit + size) {
+				LOGGER.debug("1page param = " + limit + ", " + totalList.size());
+				totalList = totalList.subList(limit, totalList.size());
+			} else {
+				LOGGER.debug("2page param = " + limit + ", " + (limit + size));
+				totalList = totalList.subList(limit, limit + size);
+			}
 		}
 		
 		LOGGER.debug("paging ended. pageSize = " + totalList.size());
@@ -1087,12 +1093,38 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		return data;
 	}
 	
-	public void absentedListSendMail(List<AdminAttitudeVO> list, String fromName, String fromEmail) throws Exception {
+	public void absentedListSendMail(List<AdminAttitudeVO> list, String loginCookie, String startDate, String endDate, String fromName, String fromEmail) throws Exception {
 		//메일발송
 		
 		//title, body(미입력자 리스트 html로) 만들어서 전송
+		String subject = "[공지]근태미입력자 공지";
+		String memo = "<p>해당 메일을 받은 사원은 " + startDate + " ~ " + endDate + " 중 근태를 미입력한 사원입니다.</p><p>확인 후 근태를 등록해주시기 바랍니다.</p>";
 		
-//		ezEmailService.sendMail(loginCookie, from, to.toArray(new InternetAddress[to.size()]), null, null, subject, memo, false);
+		String table = "<table style='border-collapse:collapse; width:800px;'>"
+				+ "<thead><tr>"
+				+ "<th style='text-align:left; border:1px solid #666'>이름</th>"
+				+ "<th style='text-align:left; border:1px solid #666'>직위</th>"
+				+ "<th style='text-align:left; border:1px solid #666'>부서</th>"
+				+ "<th style='text-align:left; border:1px solid #666'>날짜</th>" 
+				+ "</thead><tbody>";
+		
+		InternetAddress from = new InternetAddress(fromEmail, fromName);
+		InternetAddress[] to = new InternetAddress[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			InternetAddress temp = new InternetAddress(list.get(i).getWriterId() + "@" + fromEmail.split("@")[1], list.get(i).getUserName());			
+			
+			to[i] = temp;
+			
+			table += "<tr><td style='border:1px solid #666'>" + list.get(i).getUserName()+ " </td>"
+					+ "<td style='border:1px solid #666'>" + list.get(i).getUserTitle() + "</td>"
+					+ "<td style='border:1px solid #666'>" + list.get(i).getDeptName() + "</td>"
+					+ "<td style='border:1px solid #666'>" + list.get(i).getStartDate() + "</td></tr>";
+			
+		}
+		table += "</tbody></table>";
+		memo += table;
+		
+		ezEmailService.sendMail(loginCookie, from, to, null, null, subject, memo, false);
 	}
 
 	@Override

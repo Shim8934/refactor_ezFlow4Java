@@ -169,7 +169,7 @@
 	    		
 	    		$.ajax({
 					type : "post",
-					dastaType : "json",
+					dataType : "json",
 					async : false,
 					url : "/admin/ezAttitude/getAttitudeAbsentedList.do",
 					data : {
@@ -299,9 +299,23 @@
 			}
 			
 			function sendMail() {
-// 				ajax
-// 				post
-				
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/admin/ezAttitude/absentedListSendMail.do",
+					data : {
+						companyId : pCompanyId,
+	   					userName : searchUserName,
+	   					deptName : searchDeptName,
+	   					title : searchTitle,
+	   					startDate : searchStartDate,
+	   					endDate : searchEndDate
+					},
+					success : function() {
+						alert("메일이 발송되었습니다.");
+					}
+				})
 			}
 	    </script>
 	</head>
