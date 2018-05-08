@@ -122,36 +122,38 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code='ezWebFolder.t102'/></h1>
-		<div id="companySelect" style="margin: 10px 0px;">
-			<span style="font-size: 12px; display:inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
-			<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="change();">
-				<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-			</select>
-		</div>
-		
-		<div id="mainSetting" style="margin: 10px 0px;">
-			<table class="content">
-				<tr style="height: 40px;">
-					<th><spring:message code='ezWebFolder.t130'/></th>
-					<th>
-						<input id="uploadLimit" type="text" style="height: 30px; padding: 0px 5px;" value="<c:out value='${upLimit}'/>" />
-						<span><spring:message code='ezWebFolder.t132' /></span>
-					</th>
-				</tr>
-				<tr style="height: 40px;">
-					<th><spring:message code='ezWebFolder.t131'/></th>
-					<th>
-						<input id="personalLimit" type="text" style="height: 30px; padding: 0px 5px;" value="<c:out value='${persLimit}'/>" />
-						<span><spring:message code='ezWebFolder.t132' /></span>
-					</th>
-				</tr>
-			</table>
-		</div>
-		<div style="margin: 10px 90px;">
-			<a class="webfolderBttn"><span onclick="save();"  ><spring:message code='ezWebFolder.t133'/></span></a>
-			<a class="webfolderBttn"><span onclick="cancel();"><spring:message code='ezWebFolder.t112'/></span></a>
-		</div>
+		<div style="margin-left:5px">
+			<div id="companySelect" style="margin: 10px 0px;">
+				<span style="font-size: 12px; display:inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
+				<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="change();">
+					<c:forEach var="item" items="${list}">
+						<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+					</c:forEach>
+				</select>
+			</div>
+			
+			<div id="mainSetting" style="margin: 10px 0px;">
+				<table class="content" style="width:400px">
+					<tr style="height: 40px;">
+						<th style="width:25%"><spring:message code='ezWebFolder.t130'/></th>
+						<th>
+							<input id="uploadLimit" type="text" style="height: 30px; padding: 0px 5px;" value="<c:out value='${upLimit}'/>" />
+							<span><spring:message code='ezWebFolder.t132' /></span>
+						</th>
+					</tr>
+					<tr style="height: 40px;">
+						<th><spring:message code='ezWebFolder.t131'/></th>
+						<th>
+							<input id="personalLimit" type="text" style="height: 30px; padding: 0px 5px;" value="<c:out value='${persLimit}'/>" />
+							<span><spring:message code='ezWebFolder.t132' /></span>
+						</th>
+					</tr>
+				</table>
+			</div>
+			<div style="width:400px;text-align: center">
+				<a class="imgbtn"><span onclick="save();" ><spring:message code='ezWebFolder.t133'/></span></a>
+				<a class="imgbtn"><span onclick="cancel();"><spring:message code='ezWebFolder.t112'/></span></a>
+			</div>
+		</div>	
 	</body>
 </html>
