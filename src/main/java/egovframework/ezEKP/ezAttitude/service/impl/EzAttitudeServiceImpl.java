@@ -9,12 +9,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.InternetAddress;
+
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ibm.icu.text.DecimalFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
@@ -33,7 +36,9 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 
 @Service("EzAttitudeService")
 public class EzAttitudeServiceImpl implements EzAttitudeService{
@@ -41,6 +46,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
 	
 	@Autowired
 	private EzAttitudeDAO ezAttitudeDAO;
@@ -954,7 +962,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String offset, String companyId, int tenantId) throws Exception {
+	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeAbsentedList started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -999,6 +1007,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				break;
 			}
 		};
+		
+		////
+		/*for (String tempDate : checkHoliday(searchStartDate, searchEndDate, userLang, companyId, tenantId)) {
+			LOGGER.debug("tempDateTime = " + tempDate);
+			
+			map.put("searchStartDate", commonUtil.getDateStringInUTC(tempDate + " 00:00:00", offset, true));
+			map.put("searchEndDate", commonUtil.getDateStringInUTC(tempDate + " 23:59:59", offset, true));
+			
+			List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeAbsentList(map);
+			totalList.addAll(resultList);
+			
+			LOGGER.debug("resultList size = " + resultList.size());
+		}*/
 		
 		if (duplicated.equals("distinct")) {
 			HashSet<AdminAttitudeVO> listSet = new HashSet<AdminAttitudeVO>(totalList);
@@ -1068,15 +1089,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("paging started.");
 		
-		int size = Integer.valueOf(listSize);
-		int limit = (Integer.valueOf(pageNum) - 1) * size;
-		
-		if (totalList.size() < limit + size) {
-			LOGGER.debug("1page param = " + limit + ", " + totalList.size());
-			totalList = totalList.subList(limit, totalList.size());
-		} else {
-			LOGGER.debug("2page param = " + limit + ", " + (limit + size));
-			totalList = totalList.subList(limit, limit + size);
+		if (listSize != "") {
+			int size = Integer.valueOf(listSize);
+			int limit = (Integer.valueOf(pageNum) - 1) * size;
+			
+			if (totalList.size() < limit + size) {
+				LOGGER.debug("1page param = " + limit + ", " + totalList.size());
+				totalList = totalList.subList(limit, totalList.size());
+			} else {
+				LOGGER.debug("2page param = " + limit + ", " + (limit + size));
+				totalList = totalList.subList(limit, limit + size);
+			}
 		}
 		
 		LOGGER.debug("paging ended. pageSize = " + totalList.size());
@@ -1088,12 +1111,219 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		return data;
 	}
 	
-	public void absentedListSendMail(List<AdminAttitudeVO> list, String fromName, String fromEmail) throws Exception {
+	/**
+	 * YYYY-MM-dd
+	 * 
+	 * @param checkStartDate 시작일
+	 * @param checkEndDate 종료일
+	 * @param userLang userInfo.lang
+	 * @param companyId
+	 * @param tenantId
+	 * @return 국가,회사,근태 휴무일을 제외한 날짜 dateString arrary
+	 * @throws Exception
+	 */
+	public List<String> checkHoliday(String checkStartDate, String checkEndDate, String userLang, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("checkHoliday started.");
+		LOGGER.debug("startDate = " + checkStartDate + " || endDate = " + checkEndDate + " || userLang = " + userLang);
+		
+		/*2018-05-08 이효진 holidayList 생성*/
+		//회사 기념일
+		//isrepeat 이면 반복이니 year짜르고 해당연도 붙임
+		//isSolar 0:음력 1:양력
+		List<HolidayVO> holidayList = getHolidayList(companyId, tenantId);
+		//근태휴무일
+//		CLOSED_DAY 일 ~ 토
+//		while문에 날짜별 요일 체크해서 1이면 휴무일처리 closedday 1이면 휴일 0이면 평일
+		AttitudeConfigVO attitudeConfig = getAttitudeConfig(tenantId, companyId);
+		String checkDay[] = attitudeConfig.getClosedDay().split(".");
+		//국가공휴일
+//		KoreanLunarCalendear 안에 상수 선언
+//		userlang 1:한국어 3:일본어
+		KoreanLunarCalendar koreaCalendar = KoreanLunarCalendar.getInstance();
+		
+		String nationHoliday[] = null;
+		
+		if (userLang.equals("1")) {
+			nationHoliday = koreaCalendar.HOLIDAY_KOREA;
+		} else if (userLang.equals("3")) {
+			nationHoliday = koreaCalendar.HOLIDAY_JAPAN;
+		} else {
+			nationHoliday = koreaCalendar.HOLIDAY_KOREA;
+		}
+		
+		HolidayVO vo = new HolidayVO();
+		
+		for (String holiday : nationHoliday) {
+			String temp[] = holiday.split(", ");
+			vo.setHolidayDate(checkStartDate.substring(0,4) + "-" + temp[2] + "-" + temp[3] + " 00:00:00");
+			vo.setHolidayName(temp[0]);
+			vo.setHolidayName2(temp[1]);
+			vo.setIsRepeat(1);
+			vo.setIsRest(1);
+			vo.setIsSolar(temp[4].equals("1") ? 0 : 1);
+			vo.setIsUse(1);
+			vo.setUseCompany(companyId);
+			
+			holidayList.add(vo);
+		}
+		
+		//음력 -> 양력변환
+		DecimalFormat df = new DecimalFormat("00");
+				
+		for (HolidayVO vo1 : holidayList) {
+			if (vo1.getIsSolar() == 0) {
+				String lunarDate = vo1.getHolidayDate();
+				
+				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.split("-")[0]), Integer.parseInt(lunarDate.split("-")[1]), Integer.parseInt(lunarDate.split("-")[2]), true);
+				vo1.setHolidayDate(koreaCalendar.getSolarYear() + "-" + df.format(koreaCalendar.getSolarMonth()) + "-" + df.format(koreaCalendar.getSolarDay()) + " 00:00:00");
+			}
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		
+		Date startDate = sdf.parse(checkStartDate);
+		cal.setTime(startDate);
+		
+		String tempDate = "";
+			
+		List<String> result = new ArrayList<String>();
+		
+		while (true) {
+			tempDate = sdf.format(cal.getTime());
+			
+			switch (cal.get(Calendar.DAY_OF_WEEK)) {
+			case 0:
+				if (checkDay[0].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			case 1:
+				if (checkDay[1].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			case 2:
+				if (checkDay[2].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			case 3:
+				if (checkDay[3].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			case 4:
+				if (checkDay[4].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			case 5:
+				if (checkDay[5].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			case 6:
+				if (checkDay[6].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			}
+			
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			
+			if (tempDate.equals(checkEndDate)) {
+				break;
+			}
+		};
+		
+		LOGGER.debug("checkHoliday ended.");
+		
+		return result;
+	}
+	
+	@Override
+	public void absentedListSendMail(List<AdminAttitudeVO> list, String loginCookie, String startDate, String endDate, String fromName, String fromEmail) throws Exception {
 		//메일발송
 		
 		//title, body(미입력자 리스트 html로) 만들어서 전송
+		String subject = "[공지]근태미입력자 공지";
+		String memo = "<p>해당 메일을 받은 사원은 " + startDate + " ~ " + endDate + " 중 근태를 미입력한 사원입니다.</p><p>확인 후 근태를 등록해주시기 바랍니다.</p>";
 		
-//		ezEmailService.sendMail(loginCookie, from, to.toArray(new InternetAddress[to.size()]), null, null, subject, memo, false);
+		String table = "<table style='border-collapse:collapse; width:800px;'>"
+				+ "<thead><tr>"
+				+ "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>이름</th>"
+				+ "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>직위</th>"
+				+ "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>부서</th>"
+				+ "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>날짜</th>" 
+				+ "</thead><tbody>";
+		
+		InternetAddress from = new InternetAddress(fromEmail, fromName);
+		InternetAddress[] to = new InternetAddress[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			InternetAddress temp = new InternetAddress(list.get(i).getWriterId() + "@" + fromEmail.split("@")[1], list.get(i).getUserName());			
+			
+			to[i] = temp;
+			
+			table += "<tr><td style='border:1px solid #666'>" + list.get(i).getUserName()+ " </td>"
+					+ "<td style='border:1px solid #666'>" + list.get(i).getUserTitle() + "</td>"
+					+ "<td style='border:1px solid #666'>" + list.get(i).getDeptName() + "</td>"
+					+ "<td style='border:1px solid #666'>" + list.get(i).getStartDate() + "</td></tr>";
+			
+		}
+		table += "</tbody></table>";
+		memo += table;
+		
+		ezEmailService.sendMail(loginCookie, from, to, null, null, subject, memo, false);
 	}
 
 	@Override
