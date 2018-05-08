@@ -1181,6 +1181,47 @@ public class EzWebFolderGWController_m {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezwebfolder/check-admin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject checkWfAdmin(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
+		String serverName = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || userId: " + userId);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, "", "");
+			boolean check = checkWfAdmin(userInfo);
+			
+			if (check == true) {
+				result.put("data", "1");
+			}
+			else {
+				result.put("data", "0");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t28", locale));
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
+		}
+		
+		return result;
+	}
 	
 	private <T> T orElse(T value, T other) {
 		if (other == null) {
@@ -1204,6 +1245,16 @@ public class EzWebFolderGWController_m {
 		
 		return false;
 	}
+	
+	private boolean checkWfAdmin(LoginVO user) {
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1 && user.getRollInfo().indexOf("wf=1") == -1){
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+		
 	
 	/**
 	 * 삭제 예정, 대체될 API는 아래 see also를 참고하십시오.
