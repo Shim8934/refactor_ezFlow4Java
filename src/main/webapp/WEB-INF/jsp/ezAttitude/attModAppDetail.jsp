@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>수정신청 상세조회</title>
+		<title>수정신청 상세보기</title>
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Tab.css" type="text/css" />
         <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -191,7 +191,7 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                        <h1>근태수정신청조회</h1>
+	                        	<h1 style="padding:0px; margin-top:-5px;">수정신청상세보기</h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>

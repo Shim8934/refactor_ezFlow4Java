@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>근태신청 수정</title>
+		<title>지각신청 수정</title>
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Tab.css" type="text/css" />
         <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -223,13 +223,13 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <ul id="menuTable">	
-	                                <li><span onclick="modify()">저장 후 닫기</span></li>
-	                                <li><span onclick="del()">삭제</span></li>
-	                            </ul>
+	                            <h1 style="padding:0px; margin-top:-5px;">지각신청수정하기</h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
+	                                <li><span onclick="modify()">수정</span></li>
+	                                <li><span onclick="del()" style="display:none;">삭제</span></li>
+	                                <li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>
 	                        </div>

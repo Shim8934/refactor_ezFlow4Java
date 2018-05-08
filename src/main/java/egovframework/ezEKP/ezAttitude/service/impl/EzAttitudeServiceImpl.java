@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.InternetAddress;
+
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1084,10 +1086,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		String table = "<table style='border-collapse:collapse; width:800px;'>"
 				+ "<thead><tr>"
-				+ "<th style='text-align:left; border:1px solid #666'>이름</th>"
-				+ "<th style='text-align:left; border:1px solid #666'>직위</th>"
-				+ "<th style='text-align:left; border:1px solid #666'>부서</th>"
-				+ "<th style='text-align:left; border:1px solid #666'>날짜</th>" 
+				+ "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>이름</th>"
+				+ "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>직위</th>"
+				+ "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>부서</th>"
+				+ "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>날짜</th>" 
 				+ "</thead><tbody>";
 		
 		InternetAddress from = new InternetAddress(fromEmail, fromName);
