@@ -716,6 +716,14 @@
    					A.importance,
    					A.title,
    					A.readcount,
+					(SELECT 
+						COUNT(*)  
+					FROM 
+    					tbl_comm_onelinereply
+   					WHERE  
+   						TENANT_ID = A.TENANT_ID
+   					AND
+   						ITEMID = A.ItemID) ONELINECNT,
    					A.attachments,
    					A.itemlevel,
    					A.abstract,
@@ -2128,7 +2136,15 @@
 					A.abstract,
 					CASE WHEN D.totalcount IS NULL THEN 0 ELSE 1 END READFLAG,
 					A.extensionattribute4,
-					A.extensionattribute5
+					A.extensionattribute5,
+					(SELECT 
+                		COUNT(*)  
+					FROM 
+    					tbl_comm_onelinereply
+   					WHERE  
+   						TENANT_ID = A.TENANT_ID
+   					AND
+   						ITEMID = A.ItemID) ONELINECNT
 				FROM
 					TBL_COMM_ITEM A
 				LEFT OUTER JOIN
@@ -2389,21 +2405,29 @@
 			FROM
 				(SELECT 
              		TBL_COMM_BOARDINFO.boardid,
-					itemid,
-					title,
-					writedate,
+					A.itemid,
+					A.title,
+					A.writedate,
 					gubun,
-					extensionattribute5 
+					A.extensionattribute5,
+					(SELECT 
+						COUNT(*)  
+					FROM 
+    					tbl_comm_onelinereply
+   					WHERE  
+   						TENANT_ID = A.TENANT_ID
+   					AND
+   						ITEMID = A.ItemID) ONELINECNT
 				FROM
 					TBL_COMM_BOARDINFO
 				JOIN
-					TBL_COMM_ITEM
+					TBL_COMM_ITEM A
 				ON
-					TBL_COMM_BOARDINFO.boardid = TBL_COMM_ITEM.boardid
+					TBL_COMM_BOARDINFO.boardid = A.boardid
 				AND
-					TBL_COMM_BOARDINFO.tenant_id = TBL_COMM_ITEM.tenant_id
+					TBL_COMM_BOARDINFO.tenant_id = A.tenant_id
 				WHERE
-					TBL_COMM_ITEM.boardid = #v_pBoardID#
+					A.boardid = #v_pBoardID#
 				AND
 					TBL_COMM_BOARDINFO.tenant_id = #tenantID#
 				AND
@@ -2659,7 +2683,15 @@
                     c_membercnt,
                     c_clubname,
                     c_clubname2,
-                    a.boardid
+                    a.boardid,
+                    (SELECT 
+                		COUNT(*)  
+					FROM 
+    					tbl_comm_onelinereply
+   					WHERE  
+   						TENANT_ID = B.TENANT_ID
+   					AND
+   						ITEMID = B.ItemID) ONELINECNT
 				FROM
 					TBL_COMM_BOARDINFO A
                 JOIN

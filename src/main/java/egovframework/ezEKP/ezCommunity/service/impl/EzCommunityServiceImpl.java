@@ -1030,8 +1030,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			logger.debug("pollMainGet4 ended.");
 
 			sb.append("<tr>");
-			/*sb.append("<td align=\"center\">" + item.getPollGroupNo() + "</td>");*/			
-			sb.append("<td style=\"text-overflow:ellipsis;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
+			/* 2018-05-07 홍승비 - 커뮤니티 설문조사 체크박스 사용 (삭제를 위한 해당설문ID, 커뮤니티ID) */
+			sb.append("<td><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" clubNo=\"" + item.getC_clubNo() + "\"/></td>");			
+			sb.append("<td style=\"text-overflow:ellipsis;overflow:hidden;white-space:nowrap;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
 			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
 			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", userInfo.getLocale()) + "</td>");
@@ -1361,58 +1362,72 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public void pollDelete(LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String code = request.getParameter("code");
-		String managerID = request.getParameter("managerID");
+		/* 2018-05-08 홍승비 - 설문 여러개 삭제를 위해 managerID 배열변경*/
+		String managerID[] = request.getParameter("managerID").split(";");
 		int tenantID = userInfo.getTenantId();
 		
 		logger.debug("pollDelete started.");
 		logger.debug("pollDeleteGet1 started.");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_MANAGERID", managerID);
-		map.put("tenantID", tenantID);
-		
-		String strRegUser = ezCommunityDAO.pollDeleteGet1(map).trim();
-		
-		logger.debug("pollDeleteGet1 ended. strRegUser=" + strRegUser);
-		
-		if (strRegUser != null) {
-			logger.debug("pollDeleteGet3 started.");
+		for(int i=0; i<managerID.length; i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_MANAGERID", managerID[i]);
+			map.put("tenantID", tenantID);			
 			
-			Map<String, Object> map1 = new HashMap<String, Object>();
-			map1.put("v_CODE", code);
-			map1.put("tenantID", tenantID);
+			String strRegUser = ezCommunityDAO.pollDeleteGet1(map).trim();
 			
-			String sysopID = ezCommunityDAO.pollDeleteGet3(map1).trim();
+			logger.debug("pollDeleteGet1 ended. strRegUser=" + strRegUser);
 			
-			logger.debug("pollDeleteGet3 ended. sysopID=" + sysopID);
-			
-			if (strRegUser.equals(userInfo.getId()) || sysopID.equals(userInfo.getId())) {
-				logger.debug("pollDeleteGet2 started.");
+			if (strRegUser != null) {
+				logger.debug("pollDeleteGet3 started.");
 				
-				List<CommunityCPollQuestionVO> questionList = ezCommunityDAO.pollDeleteGet2(map);
+				Map<String, Object> map1 = new HashMap<String, Object>();
+				map1.put("v_CODE", code);
+				map1.put("tenantID", tenantID);
 				
-				logger.debug("pollDeleteGet2 ended. size=" + questionList.size());
+				String sysopID = ezCommunityDAO.pollDeleteGet3(map1).trim();
+				
+				logger.debug("pollDeleteGet3 ended. sysopID=" + sysopID);
+				
+				if (strRegUser.equals(userInfo.getId()) || sysopID.equals(userInfo.getId())) {
+					logger.debug("pollDeleteGet2 started.");
 
-				for (CommunityCPollQuestionVO question : questionList) {
-					logger.debug("pollDeleteGet4 start. " + question.getQuestionID());
+					List<CommunityCPollQuestionVO> questionList = ezCommunityDAO.pollDeleteGet2(map);
 					
-					Map<String, Object> map2 = new HashMap<String, Object>();
-					map2.put("v_QUESTIONID", question.getQuestionID());
-					map2.put("tenantID", tenantID);
-					
-					List<CommunityCPollAnswerVO> answerList= ezCommunityDAO.pollDeleteGet4(map2);
-					
-					logger.debug("pollDeleteGet4 ended. size=" + answerList.size());
-					
-					for(CommunityCPollAnswerVO answer : answerList) {
-						logger.debug("getQuestionID="+ question.getQuestionID() + " || getAnswerID=" + answer.getAnswerID());
-						pollDeleteDel1(question.getQuestionID(), answer.getAnswerID(), tenantID);
+					logger.debug("pollDeleteGet2 ended. size=" + questionList.size());
+	
+					for (CommunityCPollQuestionVO question : questionList) {
+						logger.debug("pollDeleteGet4 start. " + question.getQuestionID());
+						
+						Map<String, Object> map2 = new HashMap<String, Object>();
+						map2.put("v_QUESTIONID", question.getQuestionID());
+						map2.put("tenantID", tenantID);
+						
+						List<CommunityCPollAnswerVO> answerList= ezCommunityDAO.pollDeleteGet4(map2);
+						
+						logger.debug("pollDeleteGet4 ended. size=" + answerList.size());
+						
+						for(CommunityCPollAnswerVO answer : answerList) {
+							logger.debug("getQuestionID="+ question.getQuestionID() + " || getAnswerID=" + answer.getAnswerID());
+							pollDeleteDel1(question.getQuestionID(), answer.getAnswerID(), tenantID);
+						}
+						
+						pollDeleteDel2(question.getQuestionID(), tenantID);
 					}
 					
-					pollDeleteDel2(question.getQuestionID(), tenantID);
+					pollDeleteDel3(managerID[i], tenantID);
 				}
-				
-				pollDeleteDel3(managerID, tenantID);
+				else {
+					/* 2018-05-07 홍승비 - 커뮤니티 설문조사 삭제권한 없는 경우의 경고창 */
+					response.setCharacterEncoding("UTF-8");
+					response.setContentType("text/html; charset=UTF-8");
+					response.getWriter().write("<script language='javascript'>\n");
+					response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezQuestion.t278", userInfo.getLocale()) + "\');\n");
+					response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
+					response.getWriter().write("</script>");
+					response.getWriter().flush();
+					return;
+				}
 			}
 		}
 		
@@ -1420,7 +1435,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
-		
 		response.getWriter().write("<script language='javascript'>\n");
 		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
 		response.getWriter().write("</script>");
@@ -5574,6 +5588,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	            sb.append("<EXTENSIONATTRIBUTE4>" + commonUtil.cleanValue(item.getExtensionAttribute4()) + "</EXTENSIONATTRIBUTE4>");
 	            // 수정(200700228) : 포토게시판 기능 추가 관련 ExtensionAttribute5(Small 이미지 경로) 값 가져오도록 수정함.
 	            sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(item.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
+	            /* 2018-05-07 홍승비 - 커뮤니티 포토게시판 댓글 표시 */
+	            sb.append("<ONELINECNT>" + item.getOneLineCnt() + "</ONELINECNT>");
 				sb.append("</NODE>");
 			}
 		}
@@ -6283,6 +6299,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				sb.append("<ItemLevel>" + boardList.getItemLevel() + "</ItemLevel>");
 				sb.append("<ReadFlag>" + boardList.getReadFlag() + "</ReadFlag>");
 				sb.append("<Abstract>" + commonUtil.cleanValue(boardList.getAbsTract()) + "</Abstract>");
+				/* 2018-05-04 홍승비 - 커뮤니티 게시판 리스트에서 댓글 수 표시하기 */
+				sb.append("<OneLineCnt>" + boardList.getOneLineCnt() + "</OneLineCnt>");	
 				sb.append("</NODE>");
 			}
 		}

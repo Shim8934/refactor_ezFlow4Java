@@ -1126,7 +1126,8 @@ public class EzEmailUtil {
 				
 				// text/html 파트가 나오거나 multipart/alternative 파트가 나올 수도 있다.
 				if (!p.isMimeType("text/plain") && !(p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
-					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+					// 코린도에서 수신된 메일 중 multipart/related 안에 첨부파일이 있는 경우가 있어 패러메터값을 -1 대신 i로 변경함
+					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1776,22 +1777,23 @@ public class EzEmailUtil {
 			Multipart mp = (Multipart)src.getContent();
 			int count = mp.getCount();
 			boolean isAdded = false;
+			
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
 				if (p instanceof MimePart) {
-					if (((MimePart)p).getContentID() != null) {
-						dest.addBodyPart(p);	
-						isAdded = true;
-					}
+					// 코린도에서 수신한 메일 중 multipart/related 안에 첨부 파일이 있는 경우가 있어
+					// Content ID 유무를 체크하는 코드를 제거함
+					dest.addBodyPart(p);	
+					isAdded = true;
 				}				
 			}
 			
 			return isAdded;
-		} 
-		else if (src.isMimeType("multipart/*")) {
+		} else if (src.isMimeType("multipart/*")) {
 			Multipart mp = (Multipart)src.getContent();
 			int count = mp.getCount();
+			
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
@@ -1965,7 +1967,11 @@ public class EzEmailUtil {
 	public Part getAttachPart(Part part, int index) throws MessagingException, IOException {
 		logger.debug("getAttachPart started.");
 		
-		if (part.isMimeType("multipart/mixed") || part.isMimeType("multipart/report")){
+		// multipart/related 안에 첨부파일이 들어 있는 메일이 코린도에서 수신되어
+		// multipart/related를 추가함
+		if (part.isMimeType("multipart/mixed") 
+				|| part.isMimeType("multipart/report")
+				|| part.isMimeType("multipart/related")) {
 			Part p = ((Multipart)part.getContent()).getBodyPart(index);
 			
 			logger.debug("getAttachPart ended.");
