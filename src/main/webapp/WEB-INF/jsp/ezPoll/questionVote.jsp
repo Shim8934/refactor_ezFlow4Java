@@ -2970,9 +2970,6 @@
 	    				$("#Edatepicker").trigger("focus");
 	    				$("#Edatepicker").datepicker("show");
 	    				$("#ui-datepicker-div").show();
-	    				/* var uiDatepickerTop = $("#ui-datepicker-div").css("top");
-	    				uiDatepickerTop -= 5;
-	    				$("#ui-datepicker-div").css("top", uiDatepickerTop); */
 	    				$("#ui-datepicker-div").css("margin-top","5px")
 	    				
     				}
@@ -3056,11 +3053,12 @@
 		  	//웹소켓이 끊길 경우 처리.
 		  	function stompDisConnProcess(){
 		  		var qstId = "${question.qstId}";
+		  		var brdId =	"${brdId}";
 		  		setInterval(function(){
 		  			if(stompClient.connected === false){
-		  				window.parent.frames["right"].location.href = "/ezPoll/pollVote.do?qstId=" + qstId;
+		  				window.parent.frames["right"].location.href = "/ezPoll/pollVote.do?qstId=" + qstId + "&brdId=" + brdId;
 		  			}
-		  		}, 1000)
+		  		}, 1000);
 		  	}
 		  	
 		  	//목록 버튼 눌렀을 때 리스트로 이동.
