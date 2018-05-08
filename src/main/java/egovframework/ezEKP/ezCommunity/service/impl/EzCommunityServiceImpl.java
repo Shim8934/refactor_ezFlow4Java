@@ -1032,7 +1032,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<tr>");
 			/* 2018-05-07 홍승비 - 커뮤니티 설문조사 체크박스 사용 (삭제를 위한 해당설문ID, 커뮤니티ID) */
 			sb.append("<td><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" clubNo=\"" + item.getC_clubNo() + "\"/></td>");			
-			sb.append("<td style=\"text-overflow:ellipsis;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
+			sb.append("<td style=\"text-overflow:ellipsis;overflow:hidden;white-space:nowrap;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
 			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
 			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", userInfo.getLocale()) + "</td>");
@@ -1362,7 +1362,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public void pollDelete(LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String code = request.getParameter("code");
-		/* 2018-05-08 홍승비 - 설문 여러개 삭제를 위해 managerID 배열로 변경*/
+		/* 2018-05-08 홍승비 - 설문 여러개 삭제를 위해 managerID 배열변경*/
 		String managerID[] = request.getParameter("managerID").split(";");
 		int tenantID = userInfo.getTenantId();
 		
