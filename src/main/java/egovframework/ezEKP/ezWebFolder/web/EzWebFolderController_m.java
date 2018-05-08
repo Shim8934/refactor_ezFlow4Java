@@ -506,11 +506,15 @@ public class EzWebFolderController_m {
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
 		
+		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-wfadmin/" + user.getId(), null, request, "get", null);
 		
-		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
-		
-		if ("error".equals(permissionResult.get("status"))) {
-			return permissionResult.toString();
+		if (!adminCheckResult.get("status").toString().equals("ok")) {
+			
+			JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
+			
+			if ("error".equals(permissionResult.get("status"))) {
+				return permissionResult.toString();
+			}
 		}
 		
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -559,12 +563,17 @@ public class EzWebFolderController_m {
 		param.put("userId", user.getId());                 
 		param.put("companyId", user.getCompanyID());
 		param.put("fileList", fileList);               
-		param.put("folderList", folderList);               
+		param.put("folderList", folderList);
 		
-		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
+		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-wfadmin/" + user.getId(), null, request, "get", null);
 		
-		if ("error".equals(permissionResult.get("status"))) {
-			return permissionResult.toString();
+		if (!adminCheckResult.get("status").toString().equals("ok")) {
+			
+			JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
+			
+			if ("error".equals(permissionResult.get("status"))) {
+				return permissionResult.toString();
+			}
 		}
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/restore-trashCan", param, request, "post", null);
@@ -685,12 +694,17 @@ public class EzWebFolderController_m {
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 	
-		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
-	
-		if ("error".equals(permissionResult.get("status"))) {
-			return permissionResult.toString();
+		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-wfadmin/" + user.getId(), null, request, "get", null);
+		
+		if (!adminCheckResult.get("status").toString().equals("ok")) {
+			
+			JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
+			
+			if ("error".equals(permissionResult.get("status"))) {
+				return permissionResult.toString();
+			}
 		}
-	
+		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("tenantId", user.getTenantId());
