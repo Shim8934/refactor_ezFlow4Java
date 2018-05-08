@@ -71,18 +71,14 @@
 	</script>
 </head>
 <body class="popup"> 
-	<h1 id ="topMenu"><spring:message code='ezWebFolder.t246'/></h1>
+	<h1 id ="topMenu" style="margin:0px;margin-bottom:3px"><spring:message code='ezWebFolder.t246'/></h1>
 	<div id="close">
 		<ul>
 			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110'/></span></li>
 		</ul>
 	</div>
-	
-	<div style="margin: 10px;"><spring:message code='ezWebFolder.t307'/></div>
-	
-	<div style="margin-top: 15px;"><hr size="0" style="color:#fff; background-color:#fff; margin: 0px 10px; border-top: 1px solid #304D7F;"></div>
-	
-	<div style="margin: 6px 0px 6px 140px; position:fixed; bottom: 0px;">
+	<div style="height:100px; border:1px solid #ddd; font-size:12px;padding:10px"><spring:message code='ezWebFolder.t307'/></div>		
+	<div style="margin: 6px 0px 0px; text-align: center;">
 		<a id="btnSave"  class="webfolderBttn" onClick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
 		<a id="btnCancel"class="webfolderBttn" onClick="wClose();"  ><span><spring:message code='ezWebFolder.t112'/></span></a>
 	</div>
