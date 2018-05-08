@@ -144,6 +144,7 @@
 	            }
 	        }
 	        function MakeListInfoHTML(pGubun) {
+	            document.getElementById("HeaderAllCheckBox").checked = false;
 	            var GetListInfo_ContentObject = document.getElementById("MailList");
 	            while (GetListInfo_ContentObject.childNodes.length > 0) {
 	                GetListInfo_ContentObject.removeChild(GetListInfo_ContentObject.childNodes.item(0));
