@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>권한추가</title>
+		<title>권한등록</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />    
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -50,10 +50,10 @@
 	    	} 
 	    	
 	    	//사원선택
-	    	function select_person(){
+	    	function select_person(){ //705-575
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthor.do";
 				url+="?companyId="+companyId;
-				window.open(url, "author", GetOpenWindowfeature(950, 600));
+				window.open(url, "author", GetOpenWindowfeature(705, 575));
 	    	}
 	    	
 	    	//부서선택
@@ -123,7 +123,7 @@
 		</script>
 	</head>
 	<body class="popup">
-	    <h1>권한추가</h1>
+	    <h1>권한등록</h1>
 	    <table class="content">
 	        <tr>
 	            <th style="width:200px; text-align:center">권한자</th>

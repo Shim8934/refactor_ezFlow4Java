@@ -867,13 +867,51 @@ public class EzAttitudeGWController {
 			String typeId = request.getParameter("typeId");
 			String typeName = request.getParameter("typeName");
 			String typeName2 = request.getParameter("typeName2");
-			String imgPath = request.getParameter("imgPath");
 			
-			ezAttitudeService.updateAttitudeType(typeId, typeName, typeName2, imgPath, info.getTenantId(), companyId);
+			ezAttitudeService.updateAttitudeType(typeId, typeName, typeName2, info.getTenantId(), companyId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/{companyId}/attitudetypes/" + attitudetypeId+ "] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [PUT] 근태유형 삭제
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteAttitudeType(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
+		
+		JSONObject result = new JSONObject();
+		String isUse = "";
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			String typeId = request.getParameter("typeId");
+			
+			//사용하고 있는지 확인
+			int useCount = ezAttitudeService.checkUseAttitudeType(typeId, info.getTenantId(), companyId);
+			//삭제
+			if (useCount == 0) {
+				isUse = "true";
+				ezAttitudeService.deleteAttitudeType(typeId, info.getTenantId(), companyId);
+			} else {
+				isUse = "false";
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", isUse);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1096,24 +1134,31 @@ public class EzAttitudeGWController {
 			@RequestParam(value="orderCell", required=false) String orderCell,
 			@RequestParam(value="orderOption", required=false) String orderOption,
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
-			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
-			@RequestParam(value="deptList", required=false) JSONArray deptList) {
+			@RequestParam(value="checkAdmin", required=false) String checkAdmin) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
-		String deptIdList[];
-		if (deptList == null) {
-			deptList = new JSONArray();
-			deptIdList = new String[0];
-		} else {
-			deptIdList = new String[deptList.size()];
-		}
-		
+		String[] deptIdList;
+
 		try{
 			
 			String order = orderCell + " " + orderOption;
+			String isAllDept = "";
+			
+
+			if (adminFlag == null) {
+				adminFlag = "false";
+			}
+			
+			if (checkAdmin == null) {
+				checkAdmin = "false";
+			}
+			
+			if (adminFlag.equals("true") || checkAdmin.equals("true")){
+				isAllDept = "Y";
+			}
 			
 			if (orderCell == null || orderOption == null) {
 				order = null;
@@ -1125,9 +1170,12 @@ public class EzAttitudeGWController {
 				}
 			}
 			
-			for (int i = 0 ; i < deptList.size(); i++ ){
-				JSONObject dept = (JSONObject)deptList.get(i);	
-				deptIdList[i] = (String) dept.get("deptId");
+			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
+
+			deptIdList = new String[authDeptlist.size()];
+			
+			for (int i = 0; i < authDeptlist.size(); i++) {
+				deptIdList[i] = authDeptlist.get(i).getDeptId();
 			}
 			
 			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, startPoint, endPoint, type, order, adminFlag, checkAdmin, deptIdList);
@@ -1172,15 +1220,36 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONObject attJson = new JSONObject();
-
+		String[] deptIdList;
 		try{
+			
+			if (adminFlag == null) {
+				adminFlag = "false";
+			}
+			
+			if (checkAdmin == null) {
+				checkAdmin = "false";
+			}
+			
 			if (type != null) {
 				if (type.equals("all")) {
 					type = null;
 				}
 			}
+			String isAllDept = "";
 			
-			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, adminFlag, checkAdmin);
+			if (adminFlag.equals("true") || checkAdmin.equals("true")){
+				isAllDept = "Y";
+			}
+			
+			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
+			
+			deptIdList = new String[authDeptlist.size()];
+			
+			for (int i = 0; i < authDeptlist.size(); i++) {
+				deptIdList[i] = authDeptlist.get(i).getDeptId();
+			}
+			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, deptIdList, adminFlag, checkAdmin);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1480,6 +1549,7 @@ public class EzAttitudeGWController {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
 			for (int i = 0; i < ids.length; i++) {
 				ezAttitudeService.changeUsersModifyAtt(companyId, tenantId, ids[i], changeStatus, userId, info.getUserName(), info.getUserName2(), info.getOffSet());
 			}
@@ -1872,7 +1942,7 @@ public class EzAttitudeGWController {
 			String companyId = request.getParameter("companyId");
 			String isAllDept = request.getParameter("isAllDept");////////////////
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
+		
 			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept);
 			
 			result.put("status", "ok");

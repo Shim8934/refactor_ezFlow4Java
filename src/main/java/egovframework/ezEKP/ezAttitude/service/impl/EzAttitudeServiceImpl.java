@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.internet.InternetAddress;
-
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -350,7 +348,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("workEndTime", endDate.substring(11));
 		
 		if (gubun.equals("0")) {
-			map.put("selectedUserIdList", selectedUserIdList);
+			map.put("selectedUserIdList", selectedUserIdList.split(", "));
 			
 			ezAttitudeDAO.deleteAttitudeUserConfig(map);
 		} else {
@@ -500,18 +498,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public void updateAttitudeType(String typeId, String typeName, String typeName2,
-			String imgPath, int tenantId, String companyId) throws Exception {
+			int tenantId, String companyId) throws Exception {
 		LOGGER.debug("updateAttitudeType started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		int idx = imgPath.lastIndexOf("/");
-		imgPath = imgPath.substring(idx+1);
-		
 		map.put("typeId", typeId);
 		map.put("typeName", typeName);
 		map.put("typeName2", typeName2);
-		map.put("imgPath", imgPath);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
@@ -627,14 +621,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String offset,String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin, String[] deptIdList) throws Exception {
 		LOGGER.debug("getUsersModiyAtt started");
 		
-		if (adminFlag == null) {
-			adminFlag = "false";
-		}
-		
-		if (checkAdmin == null) {
-			checkAdmin = "false";
-		}
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
@@ -698,18 +684,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public int getUsersModiyAttCount(String companyId, int tenantId,
 			String userId, String startDate, String endDate,
-			String apprUserName, String writerName , String writerDeptName,String sysLang, String offset, String type, String adminFlag, String checkAdmin)
+			String apprUserName, String writerName , String writerDeptName,String sysLang, String offset, String type, String[] deptIdList,String adminFlag, String checkAdmin)
 			throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		if (adminFlag == null) {
-			adminFlag = "false";
-		}
-		
-		if (checkAdmin == null) {
-			checkAdmin = "false";
-		}
 		
 		LOGGER.debug("checkAdmin : " + checkAdmin);
 		LOGGER.debug("adminFlag : " + adminFlag);
@@ -721,7 +699,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		} else if (checkAdmin.equals("false")) {
 			LOGGER.debug("#############################################false true####################################");
 //			String[] deptIdList = {"approval"};
-//			map.put("deptIdList", deptIdList);
+			map.put("deptIdList", deptIdList);
 		}
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
@@ -988,6 +966,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		while (true) {
 			tempDateTime = sdf.format(cal.getTime());
 			
+			//day_of_week 1 일 2 월 3 화 ...
+			//여기 어떠케해서 휴일때 list조회안하고 add안하게 바꿔야함
+			LOGGER.debug("tempDateTime = " + tempDateTime + " || day = " + cal.get(Calendar.DAY_OF_WEEK));
+			
 			map.put("searchStartDate", commonUtil.getDateStringInUTC(tempDateTime + " 00:00:00", offset, true));
 			map.put("searchEndDate", commonUtil.getDateStringInUTC(tempDateTime + " 23:59:59", offset, true));
 			
@@ -1150,6 +1132,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		String typeId = "A01";
 		//승인, 반려 기록
+		
+		AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+		
+		if (aav.getApprStatus().equals("0")) {
+			return;
+		}
+		
 		ezAttitudeDAO.changeUsersModifyAtt(map);
 		
 		//승인일 때 사용자의 기존 지각 상태의 근태 시간 상태 수정
@@ -1163,7 +1152,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 			Map<String, Object> map1 = new HashMap<String, Object>();
 			
-	//		boolean isDefaultAtti = false;
+			//boolean isDefaultAtti = false;
 			map1.put("writerId", vo.getWriterId());
 			map1.put("companyId", companyId);
 			map1.put("tenantId", tenantId);
@@ -1173,10 +1162,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			
 			AttitudeUserConfigVO resultVO = ezAttitudeDAO.getAttitudeConfTime(map1);
 			String resultConfDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd") + " " + resultVO.getWorkStartTime() + ":00", offSet, false).substring(11);
-			
-			LOGGER.debug("startDate : " + startDate);
-			LOGGER.debug("resultConfDate : " + resultConfDate);
-			
+
 			SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
 			
 			Date userConfTime = f.parse(resultConfDate);
@@ -1379,5 +1365,28 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return ezAttitudeDAO.getCompanyDeptList(map);
 		
+	}
+
+	@Override
+	public int checkUseAttitudeType(String typeId, int tenantId,
+			String companyId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("typeId", typeId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		return ezAttitudeDAO.checkUseAttitudeType(map);
+	}
+
+	@Override
+	public void deleteAttitudeType(String typeId, int tenantId, String companyId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("typeId", typeId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezAttitudeDAO.deleteAttitudeType(map);
 	}
 }

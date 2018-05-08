@@ -7,12 +7,12 @@
 	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
 	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
 	<typeAlias alias="AttitudeFormVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO"/>
-	<typeAlias alias="authorVO" type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
 	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO" />
 	<typeAlias alias="AttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
 	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>
 	<typeAlias alias="AttitudeAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO"/>
 	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
+	<typeAlias alias="JournalAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO" />
 	
 	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
 		<result property="companyId"				column="COMPANY_ID"				columnIndex="1"/>
@@ -46,7 +46,7 @@
 		<result property="formHtml"					column="FORM_HTML"				columnIndex="5"/>
 	</resultMap>
 	
-	<resultMap class="authorVO" id="userMap">
+	<resultMap class="JournalAuthorVO" id="userMap">
 		<result property="userName" 				column="USER_NAME" 				columnIndex="1"/>
 		<result property="userId" 					column="USER_ID" 				columnIndex="2"/>
 		<result property="jikwi" 					column="JIKWI" 					columnIndex="3"/>
@@ -75,7 +75,7 @@
 		<result  property="authDeptName" 			column="AUTHDEPTNAME"			columnIndex="8"/>
 	</resultMap>
 	
-	<resultMap id="attitudeAuthorDept" class="authorVO">
+	<resultMap id="attitudeAuthorDept" class="JournalAuthorVO">
 		<result property="deptName" 				column="DEPT_NAME" 				columnIndex="1"/>
 		<result property="deptId" 					column="DEPT_ID" 				columnIndex="2"/>
 		<result property="mine" 					column="MINE" 					columnIndex="3"/>
@@ -388,8 +388,7 @@
 			UPDATE TBL_ATTITUDE_TYPE
 			SET
 				TYPE_NAME = #typeName#,
-				TYPE_NAME2 = #typeName2#,
-				IMG_PATH = #imgPath#
+				TYPE_NAME2 = #typeName2#
 			WHERE
 				COMPANY_ID = #companyId#
 			AND
@@ -510,6 +509,8 @@
 				cn = #selectedUserId#
 			AND
 				tenant_id = #tenantId#
+			AND
+				physicaldeliveryofficename  = #companyId#
 			ON DUPLICATE KEY UPDATE
 				work_starttime = #workStartTime#,
 				work_endtime = #workEndTime#
@@ -918,7 +919,7 @@
 <!-- 		</iterate> -->
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="authorVO">
+	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="JournalAuthorVO">
 		<![CDATA[
 			SELECT 
 				CN AS deptId,
@@ -933,4 +934,33 @@
 				EXTENSIONATTRIBUTE1 = #companyId#
 		]]>
 	</select>
+	
+	<select id="ezAttitudeAdminDAO.checkUseAttitudeType" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(ATTITUDE_ID)
+			FROM 
+				TBL_ATTITUDE
+			WHERE 
+				TYPE_ID = #typeId#
+			AND 
+				TENANT_ID = #tenantId#
+			AND 
+				COMPANY_ID = #companyId#
+		]]>
+	</select>
+	
+	<delete id="ezAttitudeAdminDAO.deleteAttitudeType" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_ATTITUDE_TYPE
+			WHERE 
+				TYPE_ID = #typeId#
+			AND 
+				TENANT_ID = #tenantId#
+			AND 
+				COMPANY_ID = #companyId#
+		]]>
+	</delete>
+	
 </sqlMap>
