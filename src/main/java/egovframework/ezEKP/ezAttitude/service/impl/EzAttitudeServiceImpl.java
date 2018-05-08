@@ -837,7 +837,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public void attSaveAppModify(String attitudeId, String companyId,
+	public String attSaveAppModify(String attitudeId, String companyId,
 			int tenantId, String userId, String writerName, String writerName2, String writerTitle
 			, String writerTitle2, String writerDeptId, String writerDeptName, String writerDeptName2
 			,String changeDate, String delFlag, String content,String offset, String originDate) throws Exception {
@@ -864,10 +864,29 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offset", offset);
 		map.put("modappl", "1");
 		
+		/*이미 신청된 항목이 있는지, 
+		 * 이미 신청된 항목의 상태가 
+		 * 승인, 반려 상태인지 확인
+		 * */
+		
+		int modAppl = ezAttitudeDAO.getAttModApp(map);
+		
+		//신청된 항목이 존재 할 때
+		if (modAppl != 0) {
+			map.put("attModId", attitudeId);
+			AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+			//신청된 항목의 상태가 신청 상태 일 때는 추가 신청을 받지 않는다
+			if (aav.getApprStatus().equals("0")) {
+				return "fail";
+			}
+		}
+		
 		/*근태수정신청 저장*/
 		ezAttitudeDAO.attSaveAppModify(map);
 		/*근태수정신청이 된 항목 달력에 노란색 표시*/
 		ezAttitudeDAO.setAttModApp(map);
+		
+		return "success";
 	}
 
 	@Override
@@ -1087,12 +1106,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("ids", ids.split("_")[0]);
+		map.put("attModId", ids.split("_")[0]);
 		
 		if (ids.split("_").length > 1) {
 			map.put("applCnt", ids.split("_")[1]);
 		}
 		map.put("changeStatus", changeStatus);
 		map.put("offsetMin", offsetMin);
+		map.put("offset", offsetMin);
 		map.put("apprDate",commonUtil.getTodayUTCTime(""));
 		map.put("userId",userId);
 		map.put("displayName",userName);
@@ -1103,7 +1124,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
 		
-		if (aav.getApprStatus().equals("0")) {
+		if (!aav.getApprStatus().equals("0")) {
 			return;
 		}
 		

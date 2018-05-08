@@ -331,7 +331,7 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] started.");
 		
 		JSONObject result = new JSONObject();
-		
+		String status = "exception";
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
@@ -345,18 +345,18 @@ public class EzAttitudeGWController {
 			LOGGER.debug("originDate : " + originDate);
 			LOGGER.debug("attitudeId : " + attitudeId);
 			
-			ezAttitudeService.attSaveAppModify(attitudeId, companyId, tenantId, userId, info.getUserName(), 
+			status = ezAttitudeService.attSaveAppModify(attitudeId, companyId, tenantId, userId, info.getUserName(), 
 					info.getUserName2(), info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), 
 					info.getDeptName2(), changeDate, "0", content, offset, originDate);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", "");
+			result.put("data", status);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
-			result.put("data", "");
+			result.put("data", status);
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] ended.");
 		return result;

@@ -1481,7 +1481,7 @@ public class EzAttitudeAdminBOMController {
 		
 		JSONArray list = new JSONArray();
 		JSONObject data = new JSONObject();
-		
+
 		if (status.equals("ok")) {
 			data = (JSONObject) resultBody.get("data");
 			list = (JSONArray) data.get("list");

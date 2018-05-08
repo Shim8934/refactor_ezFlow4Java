@@ -168,16 +168,32 @@
 		    }
 		  	
 		  	function reMod() {
-		  		/**
-				* 근태수정신청
-				*/
 				var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 760) / 2;
 		        var pLeft = (pwidth - 790) / 2;
 				var feature = GetOpenPosition(790, 760);
-				
+				var obj = new Object();
 				var attitudeId = attid; 
+				
+				obj.attModId  = attitudeId;
+				
+				$.ajax({
+					type : 'get',
+				    url : '/ezAttitude/attModAppDet.do',
+				    data : obj,
+				    dataType : "json",
+				    error: function(xhr, status, error){
+				    	ajaxRunning = false;
+				    	alert("재신청 중 오류 발생");
+				    },
+				    success : function(json){
+				    	if (json.apprStatus == 0) {
+				    		alert("이미 신청중인 근태수정이 있습니다.");
+				    		return;
+				    	}
+				    }
+				});
 				
 				window.location.href = "/ezAttitude/attitudeModItem.do?attitudeId=" + attitudeId;
 		  	}

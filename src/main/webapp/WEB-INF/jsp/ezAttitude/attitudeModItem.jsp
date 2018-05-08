@@ -16,7 +16,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script>
+	    <script type="text/javascript" src="/js/ezSchedule/schedule_wri수정신청te_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/Calendar/TabMenu.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<!-- data picker-->		
@@ -185,11 +185,17 @@
 				    	alert("저장 중 오류 발생")
 				    },
 				    success : function(json){
-						alert("저장되었습니다.");
-						window.opener.getAttitudeMainList();
-						window.close();
+				    	if(json == "success") {
+				    		alert("저장되었습니다.");	
+				    	} else {
+				    		alert("저장 중 오류 발생");
+				    	}
 			            try {
-			            } catch (e) { }
+			            	window.opener.getAttitudeMainList();
+			            } catch (e) { 
+			            	window.opener.att_refresh();
+			            }
+			            window.close();
 				    }
 			    });
 		    }
