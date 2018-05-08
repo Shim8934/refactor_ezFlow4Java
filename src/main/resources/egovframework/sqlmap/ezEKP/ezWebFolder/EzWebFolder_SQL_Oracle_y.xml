@@ -626,7 +626,7 @@
 					<![CDATA[
 					) t 
 					
-					where folder_path like (#folderPath#||'%') 
+					where folder_path like (#folderPath#||'%') and folder_path <> #folderPath#
 					]]>
 					<include refid="searchAll"/>
 					<![CDATA[
@@ -684,6 +684,7 @@
 						tbl_webfolder_folder 
 					where 
 							folder_path like (#folderPath# || '%') 
+						and folder_path <> #folderPath#
 						and tenant_id = #tenantId# 
 						and folder_type = #folderType# and use_status = 'Y'
 					) folder on f.folder_id = folder.folder_id
@@ -725,7 +726,7 @@
 			]]>
 			<isEqual property = "flag" compareValue="1" prepend="AND">
 				<![CDATA[
-					folder.folder_path like ('%'||#folderPath#||'%')
+					folder.folder_path like ('%'||#folderPath#||'%') and folder_path <> #folderPath#
 				]]>
 			</isEqual>
 			<isEqual property= "flag" compareValue="0" prepend="AND">

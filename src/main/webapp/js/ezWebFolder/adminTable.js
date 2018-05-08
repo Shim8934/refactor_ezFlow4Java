@@ -513,6 +513,7 @@ function TableView() {
 				
 				tdName.textContent         = resultElement["trashCanName"];
 				tdSize.textContent         = resultElement["trashCanExt"] != 'folder' ? getFileSize(resultElement["trashCanSize"]) : "-";
+				tdSize.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center;");
 				tdName.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
 				tdCreator.textContent      = lang == "1" ? resultElement["createName1"] : resultElement["createName2"];
 				tdUpdateDate.textContent   = resultElement["createDate"].substring(0, 10);

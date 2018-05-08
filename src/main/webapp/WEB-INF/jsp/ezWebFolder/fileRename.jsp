@@ -34,7 +34,7 @@
 			var newName = document.getElementById("nameInput").value;
 			
 			if (isValid(newName) == true) {
-				alert("<spring:message code='ezWebFolder.t211'/>");
+				alert('<spring:message code='ezWebFolder.t211'/>');
 				return;
 			}
 			

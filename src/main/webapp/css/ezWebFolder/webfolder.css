@@ -20,7 +20,7 @@
 
 .webfolderBttn {white-space:nowrap; display:inline-block; cursor: pointer; height:30px; vertical-align:top; padding: 0px;}
 .webfolderBttn span {display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding: 6px 10px 5px 10px; font:12px gulim; letter-spacing:-1; vertical-align:top; text-align: center;}
-.webfolderBttn span:hover, .webfolderBttn2 span:hover {color:rgb(4, 112, 227); border-color:rgb(4, 112, 227);}
+.webfolderBttn span:hover, .webfolderBttn2 span:hover, #mainmenu2 > ul > li > a > span:hover {color:rgb(4, 112, 227); border-color:rgb(4, 112, 227);}
 
 .webfolderBttn2{cursor: pointer; line-height: 30px;}
 .webfolderBttn2 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 4px; height:27px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:30px; text-align: center;}
@@ -106,7 +106,7 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #mainmenu2 > ul > li[hidden] {display:none;}
 #mainmenu2 > ul > li >a {margin-top:3px;}
 #mainmenu2 > ul #right {float: right;}
-#mainmenu .select {height: 28px; border-radius: 3px; padding: 1px 0px 0px 4px; width: 80px; color: #666;}
+#mainmenu .select {height: 28px; border-radius: 3px; padding: 1px 0px 0px 4px; width: 80px; color: #666;} 
 
 #fileTypeSelect {height:29px; border-radius:3px; width:85px;}
 #companySelect {margin: 10px 0px;}

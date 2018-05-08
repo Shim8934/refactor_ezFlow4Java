@@ -501,7 +501,7 @@
 				<th width="20px" ><input type="checkbox"></th>
 				<th headers="ft" width="40px" ><spring:message code='ezWebFolder.t188'/></th>
 				<th headers="fn" width="160px"><spring:message code='ezWebFolder.t156'/></th>
-				<th headers="fs" width="60px" ><spring:message code='ezWebFolder.t157'/></th>
+				<th headers="fs"  style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center; width :60px;" ><spring:message code='ezWebFolder.t157'/></th>
 				<th headers="un" width="120px"><spring:message code='ezWebFolder.t189'/></th>
 				<th headers="cd" width="80px" ><spring:message code='ezWebFolder.t190'/></th>
 				<th headers="dd" width="80px" ><spring:message code='ezWebFolder.t288'/></th>
