@@ -9,6 +9,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />	    
+	    <style>
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;
+	    	}
+	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -196,7 +201,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right: 3px;\" >" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;");
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -1043,8 +1048,9 @@
 		        var nodeIdx = treeView.GetSelectNode();
 		        var chk_Sub = "N";
 		        
-		        if (document.getElementById('chk_subTree').checked)
-		            chk_Sub = "Y";
+		        <%-- 2018-05-07 천성준 - 하위부서포함 체크박스 주석처리 (하위부서 쿼리 에러 관련 주석처리) --%>
+		        /* if (document.getElementById('chk_subTree').checked)
+		            chk_Sub = "Y"; */ 
 		        
 		        $.ajax({
 					url : '/ezSchedule/getDeptUserList.do',
@@ -1280,7 +1286,7 @@
 		                    <tr>
 		                        <td>
 		                        	<div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-		                            	<div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+		                            	<div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
 		                                    <table style="margin-top: 3px; width: 100%;">
 		                                        <tr>
 		                                            <td>
@@ -1302,7 +1308,8 @@
 		                                            </td>
 		                                            <td>
 		                                                <div style="float: right; margin-right: 5px;">
-		                                                    <input type="checkbox" id="chk_subTree" /><span style="vertical-align:top; padding-top:3px;display:inline-block"><spring:message code='ezSchedule.t39' /></span>
+		                                                    <%-- 2018-05-07 천성준 - 하위부서포함 체크박스 주석처리 (하위부서 쿼리 에러 관련 주석처리) --%>
+		                                                    <%-- <input type="checkbox" id="chk_subTree" /><span style="vertical-align:top; padding-top:3px;display:inline-block"><spring:message code='ezSchedule.t39' /></span> --%>
 		                                                    <a href="#" class="imgbtn"><span onclick="Add_Dept()"><spring:message code='ezSchedule.t00004' /></span></a>
 		                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezSchedule.t1052' /></span></a>
 		                                                </div>
@@ -1314,14 +1321,14 @@
 		                            <table style="margin-top: 3px;">
 		                                <tr>
 		                                    <td class="box" style="border-right:0px;">		                                    			                                    	
-		                                        <div style="width: 220px; height: 465px; margin-top:5px;overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+		                                        <div style="width: 220px; height: 460px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 		                                    </td>
 		                                    <td></td>
 		                                    <td class="listview" style="width: 426px" id="orglistView">
 		                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 		                                            <tr>
-		                                                <th style="white-space:normal">
-		                                                    <span id="SelectDeptNM" style="font-weight: bold; width: 300px;height:30px;text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+		                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
+		                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 		                                                    <span style="float:right;">
 		                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 		                                                        <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
@@ -1332,9 +1339,9 @@
 		                                        <div style="vertical-align: top; height: 408px; overflow: auto; width: 440px;" id="txtlist_Layer">
 		                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 		                                                <tr>
-		                                                    <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
-		                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
-		                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezSchedule.t1050' /></td>
+		                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
+		                                                    <td style="width: 130px;color:#333;background-color: #f8f8fa"><spring:message code='ezSchedule.t14' /></td>
+		                                                    <td style="color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t1050' /></td>
 		                                                </tr>
 		                                            </table>
 		                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
@@ -1347,7 +1354,7 @@
 		                                            </table>
 		                                        </div>
 		                                        <div style="vertical-align: top; text-align: center; height: 408px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-		                                        <div id="tblPageRayer" style="text-align:center;border-top:1px solid #ddd;height:32px"></div>
+		                                        <div id="tblPageRayer" style="text-align:center;border-top:1px; height:32px"></div>
 		                                    </td>
 		                                </tr>
 		                            </table>
@@ -1361,7 +1368,7 @@
 		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezSchedule.t00001' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox">
-		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 267px; Height: 484px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 267px; Height: 479px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 		                            </div>
 		                        </td>
 		                    </tr>

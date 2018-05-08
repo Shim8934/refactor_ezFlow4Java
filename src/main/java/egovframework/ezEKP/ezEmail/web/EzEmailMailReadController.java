@@ -717,7 +717,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			String tmpStr[] = param[i].split("=");
 			
 			if (i % 2 == 0) {
-				filename[j] = tmpStr[1];
+				filename[j] = URLDecoder.decode(tmpStr[1], "utf-8");
 				j++;
 			} else {
 				strIndex[k] = tmpStr[1];
