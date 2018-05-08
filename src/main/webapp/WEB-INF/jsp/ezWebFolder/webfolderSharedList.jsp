@@ -13,7 +13,12 @@
 		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
+		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css"/>
+		<!-- datepicker -->
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<!-- module -->
 		<script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
@@ -51,7 +56,11 @@
 				
 				searchContext.setFileTypeChangeEventHandler(function() {
 					getFileList();
-				})
+				});
+				
+				pagination.setPageChangeEventHandler(function() {
+					getFileList();
+				});
 				
 				window.onresize();
 				
@@ -856,10 +865,5 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-	
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 	</body>
 </html>
