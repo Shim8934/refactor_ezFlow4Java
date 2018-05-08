@@ -8,6 +8,7 @@
 	    <title><spring:message code='ezEmail.t572' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
@@ -448,6 +449,7 @@
 		        } catch (e) { alert(e.description); }
 		    }
 		    function orgTabButton_onClick() {
+		    	methodForTabAction(1);
 		        selTab = "orglistView";
 		        m_tabDialogState["org"] = "select";
 		        m_tabDialogState["contact"] = "normal";
@@ -463,6 +465,7 @@
 		    }
 		    var g_bContactLoaded = false;
 		    function contactTabButton_onClick() {
+		    	methodForTabAction(2);
 		        selTab = "AddressListView";
 		        if (g_bContactLoaded == false) {
 		            g_bContactLoaded = true;
@@ -481,6 +484,7 @@
 		        AddrSearch.style.display = "block";
 		    }
 		    function dlTabButton_onClick() {
+		    	methodForTabAction(3);
 		        m_tabDialogState["org"] = "normal";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "select";
@@ -532,6 +536,7 @@
 	        }
 	        var g_binputLoaded = false;
 	        function inputTabButton_onClick() {
+	        	methodForTabAction(4);
 	            gubunpage = "direct";
 	            if (g_binputLoaded == false) {
 	                g_binputLoaded = true;
@@ -3156,6 +3161,33 @@
                         displayUserList();
                 }
             }
+            function methodForTabAction(target) {
+            	var tab1 = document.getElementById("orgTabButton").children[0];
+            	var tab2 = document.getElementById("contactTabButton").children[0];
+            	var tab3 = document.getElementById("dlTabButton").children[0];
+            	var tab4 = document.getElementById("inputTabButton").children[0];
+            	if (target == 1) {
+            		tab1.className = "tabon";
+            		tab2.className = "";
+            		tab3.className = "";
+            		tab4.className = "";
+            	} else if (target == 2) {
+            		tab1.className = "";
+            		tab2.className = "tabon";
+            		tab3.className = "";
+            		tab4.className = "";
+            	} else if (target == 3) {
+            		tab1.className = "";
+            		tab2.className = "";
+            		tab3.className = "tabon";
+            		tab4.className = "";
+            	} else if (target == 4) {
+            		tab1.className = "";
+            		tab2.className = "";
+            		tab3.className = "";
+            		tab4.className = "tabon";
+            	}
+            }
 	    </script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -3227,7 +3259,23 @@
 	    <table style="width:100%;">
 	        <tr>
 	            <td style="vertical-align: top;">
-	                <div id="tabnav" style="float: left; width: 100%;">
+	            	<div class="portlet_tabpart01" style="margin:0px;">
+	            		<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
+	            			<p id="orgTabButton">
+	            				<span onclick="orgTabButton_onClick()"><spring:message code='ezEmail.t591' /></span>
+	            			</p>
+	            			<p id="contactTabButton">
+	            				<span onclick="contactTabButton_onClick()"><spring:message code='ezEmail.t592' /></span>
+	            			</p>
+	            			<p id="dlTabButton">
+	            				<span onclick="dlTabButton_onClick()"><spring:message code='ezEmail.t593' /></span>
+	            			</p>
+	            			<p id="inputTabButton" style="display: none;">
+	            				<span onclick="inputTabButton_onClick()"><spring:message code='ezEmail.t244' /></span>
+	            			</p>
+	            		</div>
+	            	</div>
+	                <%-- <div id="tabnav" style="float: left; width: 100%;">
 	                    <ul>
 	                        <li id="orgTabButton"><span onclick="orgTabButton_onClick()">
 	                            <spring:message code='ezEmail.t591' /></span></li>
@@ -3240,12 +3288,12 @@
 	                </div>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
-	                </script>
+	                </script> --%>
 	                <table id="TreeViewTD">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px;">
-	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px;">
+	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 0px solid #eaeaea;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
 	                                            <td>
@@ -3327,8 +3375,8 @@
 	                            <table style="width: 100%;">
 	                                <tr>
 	                                    <td id="AddrSearch">
-	                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px;">
-	                                            <div class="portlet_tabpart03_top" id="Div1" style="border: 1px solid #eaeaea;">
+	                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px;">
+	                                            <div class="portlet_tabpart03_top" id="Div1" style="border: 0px solid #eaeaea;">
 	                                                <table style="margin-top: 3px; width: 100%;">
 	                                                    <tr>
 	                                                        <td>
@@ -3395,8 +3443,8 @@
 	                <table id="ListViewDLTD" style="display: none">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px;">
-	                                <div class="portlet_tabpart03_top" id="Div2" style="border: 1px solid #eaeaea;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px;">
+	                                <div class="portlet_tabpart03_top" id="Div2" style="border: 0px solid #eaeaea;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
 	                                            <td id="dlmember" style="display: none">
@@ -3486,7 +3534,7 @@
 	                                <span style="min-width: 45px;"><spring:message code='ezEmail.t562' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgBCC" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 140px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(BCCTitle,this)" ondblclick="DeleteReceiver(ListViewMsgBCC)"></div>
+	                                <div id="ListViewMsgBCC" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 145px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(BCCTitle,this)" ondblclick="DeleteReceiver(ListViewMsgBCC)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
