@@ -330,7 +330,7 @@ public class EzPMSGWController {
 			String status = request.getParameter("status");
 			String userId = request.getParameter("userId");
 			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
-			String deptId = request.getParameter("deptId");
+			String deptId = info.getDeptId();
 			String nowStatus = request.getParameter("nowStatus");
 			String realStartDate = request.getParameter("realStartDate");
 			
@@ -357,6 +357,8 @@ public class EzPMSGWController {
 			}
 			
 			if (roleCheck.equals("")) {
+				roleCheck = "permitted";
+				
 				for (int i = 0; i < projectIdList.length; i++) {
 					ProjectInfoVO project = ezPMSService.getProjectDetails(Integer.parseInt(projectIdList[i]), userId, info.getTenantId(), "new", info.getLang(), deptId);
 					String planEndDate = project.getPlanEndDate();
@@ -366,15 +368,14 @@ public class EzPMSGWController {
 					if (nowStatus.equals("W") && status.equals("P")) {
 						ezPMSService.updateProjectRealStartDate(Integer.parseInt(projectIdList[i]), info.getTenantId(), realStartDate);
 					}
-					
 				}
-				roleCheck = "permitted";
 			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", roleCheck);
 		} catch (Exception e) {
+			LOGGER.debug("ERROR : " + e.getMessage());
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", e.getMessage());
@@ -404,6 +405,11 @@ public class EzPMSGWController {
 			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, mode, lang, deptId);
 			String kanbanOrder = ezPMSService.getKanbanOrder(projectId, userId, tenantId);
 			
+			if (kanbanOrder == null || kanbanOrder.equals("")) {
+				//default : 나의 전체업무, 전체 진행중인업무, 전체 완료된업무, 게시판
+				kanbanOrder = "MA,P,C,B";
+			}
+			
 			JSONObject data = new JSONObject();
 			data.put("project", project);
 			data.put("kanbanOrder", kanbanOrder);
@@ -432,7 +438,7 @@ public class EzPMSGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("creatorId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
 			
 			ProjectInfoVO project = new ProjectInfoVO();
@@ -529,20 +535,23 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String orderStatus = request.getParameter("orderStatus");
 			
-			ezPMSService.changeKanbanOrder(projectId, userId, orderStatus, info.getTenantId());
+			String kanbanOrder = ezPMSService.getKanbanOrder(projectId, userId, info.getTenantId());
 			
+			if (kanbanOrder == null || kanbanOrder.equals("")) {
+				ezPMSService.addKanbanOrder(projectId, userId, orderStatus, info.getTenantId());
+			} else if (!kanbanOrder.equals(orderStatus)) {
+				ezPMSService.changeKanbanOrder(projectId, userId, orderStatus, info.getTenantId());
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
 		}
 		
-		
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "] ended.");
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "/order] ended.");
 		return result;
 	}
 	
@@ -600,7 +609,7 @@ public class EzPMSGWController {
 			String[] projectIdList = projectId.split("_");
 			
 			for (int i = 0; i < projectIdList.length; i++) {
-				ezPMSService.deleteFavortieProject(Integer.parseInt(projectIdList[i]), userId, info.getTenantId());
+				ezPMSService.deleteFavoriteProject(Integer.parseInt(projectIdList[i]), userId, info.getTenantId());
 			}
 			
 			result.put("status", "ok");

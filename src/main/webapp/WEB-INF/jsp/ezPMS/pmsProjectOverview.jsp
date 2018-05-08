@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
 <script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
@@ -25,6 +26,7 @@ var status = "${project.status}";
 var strHTML = "";
 var projectId = "${project.projectId}";
 var kanbanOrder = "${kanbanOrder}";
+var projectName = "${project.projectName}";
 
 $(document).ready(function(){
 	$(window).resize(function() {
@@ -35,14 +37,44 @@ $(document).ready(function(){
 });
 
 $(function() {
-	CurrentHeight = $(window).height()-100;
-	$(".overview").css("height", CurrentHeight + "px");
-	$(".kanban").css("height", CurrentHeight - 14 + "px");
-	
 	setKanbanList();
 	ableToChangeStatus();
 	initProgressBar();
 	
+	CurrentHeight = $(window).height()-100;
+	$(".overview").css("height", CurrentHeight + "px");
+	$(".kanban").css("height", CurrentHeight - 14 + "px");
+	
+	
+	$("#kanbanArea").sortable({
+		update : function(event, ui) {
+			var kanban = $(".kanban");
+			var orderStatus = "";
+			
+			for (var i = 0; i < kanban.length; i++) {
+				orderStatus += kanban.eq(i).attr("name") + ",";
+			}
+			
+			orderStatus = orderStatus.slice(0,-1);
+			
+			 var data = {
+				projectId : projectId,
+				orderStatus : orderStatus
+			}
+			
+			 $.ajax({
+				type : "POST",
+				url : "/ezPMS/changeKanbanOrder.do",
+				contentType: "application/json; charset=UTF-8",
+				data :JSON.stringify(data),
+				success : function(result) {},
+				error : function(jqXHR, textStatus, errorThrown) {
+					alert("error : " + textStatus);
+				}
+			});  
+		}
+	});
+	$("#kanbanArea").disableSelection();
 });
 
 function initProgressBar() {
@@ -124,8 +156,24 @@ function kanbanSetting() {
 
 function setKanbanList() {
 	var kanbanOrderArr = kanbanOrder.split(",");
+	var strHTML = "";
+
+	for (var i = 0; i < kanbanOrderArr.length; i++) {
+		strHTML += "<div id='kanban"+ (i + 1) +"' class='kanban'>";
+		strHTML += "<h1></h1>";
+		strHTML += "<div class='card'>";
+		strHTML += "Hello";
+		strHTML += "</div>";
+		strHTML += "</div>";
+	}
+	console.log(strHTML);
+	$("#kanbanArea").html(strHTML);
+	
+	CurrentHeight = $(window).height()-100;
+	$(".kanban").css("height", CurrentHeight - 14 + "px");
 	
 	for (var i = 0; i < kanbanOrderArr.length; i++) {
+		$("#kanban" + (i + 1)).attr("name", kanbanOrderArr[i]);
 		var title = "";
 		
 		if (kanbanOrderArr[i].indexOf("M") != -1) {
@@ -160,6 +208,25 @@ function setKanbanList() {
 	}
 }
 
+function moveToPage(target) {
+	if (target == "comment") {
+		var clickTabId = "1tab5";
+		var nowTabAttr = "1tab0";
+		changeTab(clickTabId, nowTabAttr);
+		$("#FBoard_ifrm", parent.document).attr("src", "/ezPMS/getComment.do");
+	} else if (target == "taskLog") {
+		var clickTabId = "1tab4";
+		var nowTabAttr = "1tab0";
+		changeTab(clickTabId, nowTabAttr);
+		
+		$("#FBoard_ifrm", parent.document).attr("src", "/ezPMS/getTaskLogList.do");
+	}
+}
+
+function changeTab(clickTabId, nowTabAttr) {
+	$("#"+nowTabAttr, parent.document).attr("class", "tab");
+	$("#"+clickTabId, parent.document).attr("class", "tabon");
+}
 </script>
 <style type="text/css">
 #kanbanArea {
@@ -185,6 +252,7 @@ function setKanbanList() {
 	width : 22%;
 	overflow : auto;
 	float : left;
+	background-color : rgb(240, 240, 240);
 }
 
 .card {
@@ -195,6 +263,7 @@ function setKanbanList() {
 	height : 100px;
 	color : block;
 	border : 1px solid black;
+	background-color : rgb(255, 255, 255);
 }
 
 .kanban > h1 {
@@ -217,58 +286,7 @@ function setKanbanList() {
 </head>
 <body>
 <div id="kanbanArea" class="overview">
-	<div id="kanban1" class="kanban">
-		<h1>나의 업무</h1>
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-	</div>
-	<div id="kanban2" class="kanban">
-		<h1>전체 업무</h1>
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-	</div>
-	<div id="kanban3" class="kanban">
-		<h1>완료된 업무</h1>
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-	</div>
-	<div id="kanban4" class="kanban">
-		<h1>게시판</h1>
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-	</div>
+	
 </div>
 
 <div id="iconArea" class="rightPart">
@@ -300,11 +318,11 @@ function setKanbanList() {
 	</table>
 	<br>
 	<div id="commentDiv">
-		의견<span style="float:right; font-size:20px; padding-right:15px">+</span>
+		의견<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('taskLog')">+</span>
 		<hr style="text-align:center;margin-left:0px;border-bottom:0px; width:95%">
 	</div>
 	<div id="logDiv">
-		작업이력<span style="float:right; font-size:20px; padding-right:15px">+</span>
+		작업이력<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('comment')">+</span>
 		<hr style="text-align:center;margin-left:0px;border-bottom:0px; width:95%">
 	</div>
 </div>

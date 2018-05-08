@@ -74,10 +74,17 @@ var projectId = "${project.projectId}";
 				viewerList.push(member);
 			}
 		}
-	
+		
+		var calcType = "";
+		if (weightInput == 0) {
+			calcType = "autoCalc";
+		} else {
+			calcType = "writeCalc";
+		}
+		
 		//newProject에 value넣어주기
 		$("#projectName").val(projectName);
-		$(":input:radio[name=weightInput]").val(weightInput).prop("checked", true);
+		$("input[name=weightInput][value="+calcType+"]").prop("checked", true);
 		$("#Sdatepicker").val(planStartDate);
 		$("#Edatepicker").val(planEndDate);
 		$("#overview").val(overview);
@@ -96,7 +103,6 @@ var projectId = "${project.projectId}";
 			}
 				
 		}
-		console.log(managerList);
 		applyList();
 	}
  
@@ -184,7 +190,7 @@ var projectId = "${project.projectId}";
  
  function addNewProject() {
 	 projectName = $("#projectName").val().trim();
-	 var calcType = $(":input:radio[name=weightInput]:checked").val();
+	 var calcType = $("input[name=weightInput]:checked").val();
 	 planStartDate = $("#Sdatepicker").val();
 	 planEndDate = $("#Edatepicker").val();
 	 overview = convertString($("#overview").val().trim());
@@ -219,10 +225,10 @@ var projectId = "${project.projectId}";
 		 }
 	 }
 	 
-	 if (calcType == "autoCalc") {
-		 weightInput = 0;
-	 } else {
+	 if (calcType == "writeCalc") {
 		 weightInput = 1;
+	 } else {
+		 weightInput = 0;
 	 }
 	 
 	 //날짜 제한

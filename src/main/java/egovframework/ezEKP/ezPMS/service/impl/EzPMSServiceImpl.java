@@ -253,8 +253,23 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		ProjectInfoVO project = ezPMSDAO.getProjectDetails(map);
 		
-		List<ProjectMemberVO> member = ezPMSDAO.getProjectMemberList(map);
-		project.setProjectMember(member);
+		try {
+			if (!project.getStatus().equals("C")) {
+				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
+				Date today = new Date();
+				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
+				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday); 
+				
+				int restDueday = getWorkinDays(now, endDate);
+				project.setRestDueday(restDueday);
+				
+				//프로젝트 멤버 불러오기
+				List<ProjectMemberVO> member = ezPMSDAO.getProjectMemberList(map);
+				project.setProjectMember(member);
+			}
+		} catch (Exception e) {
+			LOGGER.debug("ERROR : " + e.getMessage());
+		}
 		
 		LOGGER.debug("getProjectDetail ended");
 		
@@ -342,10 +357,31 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void changeKanbanOrder(int projectId, String userId, String orderStatus, int tenantId) {
-		// TODO Auto-generated method stub
+		LOGGER.debug("[SERVICE] changeKanbanOrder started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("userId", userId);
+		map.put("orderStatus", orderStatus);
+		map.put("tenantId", tenantId);
 		
+		ezPMSDAO.changeKanbanOrder(map);
+		
+		LOGGER.debug("[SERVICE] changeKanbanOrder ended.");
 	}
-
+	
+	@Override
+	public void addKanbanOrder(int projectId, String userId, String orderStatus, int tenantId) {
+		LOGGER.debug("[SERVICE] addKanbanOrder started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("userId", userId);
+		map.put("orderStatus", orderStatus);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.addKanbanOrder(map);
+		LOGGER.debug("[SERVICE] changeKanbanOrder ended.");
+	}
+	
 	@Override
 	public int addFavoriteProject(int projectId, String userId, int tenantId) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -366,7 +402,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void deleteFavortieProject(int projectId, String userId, int tenantId) {
+	public void deleteFavoriteProject(int projectId, String userId, int tenantId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("userId", userId);
@@ -434,12 +470,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		
-		String kanbanOrder = ezPMSDAO.getKanbanOrder(map);
-		
-		if (kanbanOrder == null || kanbanOrder.equals("")) {
-			//default : 나의 전체업무, 전체 진행중인업무, 전체 완료된업무, 게시판
-			kanbanOrder = "MA,P,C,B";
-		}
+		String kanbanOrder = "";
+		kanbanOrder = ezPMSDAO.getKanbanOrder(map);
 		
 		LOGGER.debug("[SERVICE] getKanbanOrder ended.");
 		return kanbanOrder;

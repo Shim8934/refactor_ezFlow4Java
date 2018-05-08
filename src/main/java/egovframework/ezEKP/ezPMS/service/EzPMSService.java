@@ -46,7 +46,7 @@ public interface EzPMSService {
 	
 	public int addFavoriteProject(int projectId, String userId, int tenantId);
 	
-	public void deleteFavortieProject(int projectId, String userId, int tenantId);
+	public void deleteFavoriteProject(int projectId, String userId, int tenantId);
 	
 	public void addTaskLog(TaskLogListVO taskLog, int tenantId, String userId);
 	
@@ -113,5 +113,7 @@ public interface EzPMSService {
 	public void deleteProjectMember(int projectId, int tenantId);
 
 	public void updateProjectRealStartDate(int projectId, int tenantId, String realStartDate);
+
+	public void addKanbanOrder(int projectId, String userId, String orderStatus, int tenantId);
 
 }

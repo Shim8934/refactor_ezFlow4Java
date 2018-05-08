@@ -1040,8 +1040,9 @@
 			TBL_PMS_MEMBER 
 		WHERE  
 			(
-			 USER_Id = #userId#
-			 OR USER_ID = #deptId# 
+			 USER_ID = #userId#
+			 OR 
+			 USER_ID = #deptId# 
 			 ) 
 		AND 
 			PROJECT_ID = #projectId# 
@@ -1220,4 +1221,30 @@
 			)
 		]]>
 	</insert>
+	
+	<insert id="EzPMSDAO.addKanbanOrder" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_PMS_MAINLIST (
+				TENANT_ID,	USER_ID,	PROJECT_ID,		KANBAN_ORDER
+			)
+			VALUES (
+				#tenantId#,	#userId#,	#projectId#,	#orderStatus#
+			)
+		]]>
+	</insert>
+	
+	<update id="EzPMSDAO.changeKanbanOrder" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_PMS_MAINLIST	
+			SET	
+				KANBAN_ORDER = #orderStatus#
+			WHERE
+				USER_ID = #userId#
+			AND
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
 </sqlMap>

@@ -208,4 +208,13 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void addTaskGroup(Map<String, Object> map) {
 		insert ("EzPMSDAO.addTaskGroup", map);
 	}
+
+	public void addKanbanOrder(Map<String, Object> map) {
+		insert ("EzPMSDAO.addKanbanOrder", map);
+	}
+	
+	public void changeKanbanOrder(Map<String, Object> map) {
+		update ("EzPMSDAO.changeKanbanOrder", map);
+		
+	}
 }

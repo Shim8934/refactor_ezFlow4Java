@@ -226,7 +226,6 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/pmsSetting.do")
 	public String pmsSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS Setting started");
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		LOGGER.debug("ezPMS Setting started");
 		return "ezPMS/pmsSetting";
@@ -238,8 +237,20 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getProjectDetails.do")
 	public String getProjectDetails(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS getProjectDetails started");	
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
-		model.addAttribute("projectId", projectId);
+		String userId = userInfo.getId();
+		
+		String url = "/rest/ezPMS/projects/" + projectId + "/userId/" + userId;
+		JSONObject result = commonUtil.getJsonFromRestApi(url, null, request, "get", null);
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject json = (JSONObject) result.get("data");
+			JSONObject project = (JSONObject) json.get("project");
+			
+			model.addAttribute("project", project);
+		}
 		
 		LOGGER.debug("ezPMS getProjectDetails ended");		
 		return "ezPMS/pmsProjectDetails";
@@ -456,7 +467,12 @@ public class EzPMSController {
 		param.put("realStartDate", realStartDate);
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
-		String data = result.get("data").toString();		
+		String status = result.get("status").toString();
+		String data = "";
+		
+		if (status.equals("ok")) {
+			data = result.get("data").toString();
+		}			
 		
 		LOGGER.debug("ezPMS updateProjectStatus ended");
 		return data;
@@ -498,6 +514,16 @@ public class EzPMSController {
 		
 		LOGGER.debug("ezPMS getProjectOverview ended");		
 		return "ezPMS/pmsProjectOverview";
+	}
+	
+	/**
+	 * 프로젝트 의견 화면 호출
+	 */
+	@RequestMapping(value = "/ezPMS/getComment.do")
+	public String getComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		LOGGER.debug("ezPMS getComment started");
+		LOGGER.debug("ezPMS getComment ended");		
+		return "ezPMS/pmsComments";
 	}
 	
 	/**
@@ -581,14 +607,17 @@ public class EzPMSController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezPMS/changeKanbanOrder.do")
-	public String changeKanbanOrder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	@ResponseBody
+	public String changeKanbanOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS changeKanbanOrder started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String projectId = request.getParameter("projectId");
+		String projectId = param.get("projectId").toString();
 		String userId = userInfo.getId();
 		
-		String url = "/rest/ezPMS/projects" + projectId + "/userId/" + userId + "/order";
+		String url = "/rest/ezPMS/projects/" + projectId + "/userId/" + userId + "/order";
 		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
+		String status = result.get("status").toString();
 		
 		LOGGER.debug("ezPMS changeKanbanOrder ended");		
 		return null;
