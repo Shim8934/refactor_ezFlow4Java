@@ -406,9 +406,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map);
 		
 		Set<String> idSet = new HashSet<String>();
-		idSet.add(userId);
 		idSet.add(deptId);
-		idSet.add(compId);
 		idSet.addAll(addjobList);
 		idSet.addAll(folderUserIdList);
 		
@@ -417,17 +415,22 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		for (String id : idSet) {
 			idMap = new HashMap<String, String>();
 			idMap.put("id", id);
-			
-			if (id.equals(userId)) {
-				idMap.put("type", "U");
-			} else if (id.equals(compId)) {
-				idMap.put("type", "C");
-			} else {
-				idMap.put("type", "D");
-			}
+			idMap.put("type", "D");
 			
 			idList.add(idMap);
 		}
+		
+		idMap = new HashMap<String, String>();
+		idMap.put("id", userId);
+		idMap.put("type", "U");
+		
+		idList.add(idMap);
+		
+		idMap = new HashMap<String, String>();
+		idMap.put("id", compId);
+		idMap.put("type", "C");
+		
+		idList.add(idMap);
 		
 		LOGGER.debug("idMapList: " + idList);
 		return idList;
