@@ -312,8 +312,12 @@
 	   					startDate : searchStartDate,
 	   					endDate : searchEndDate
 					},
-					success : function() {
-						alert("메일이 발송되었습니다.");
+					success : function(result) {
+						if (result.status == "ok") {
+							alert("메일이 발송되었습니다.");
+						} else {
+							alert("메일 발송에 실패하였습니다.");
+						}
 					}
 				})
 			}

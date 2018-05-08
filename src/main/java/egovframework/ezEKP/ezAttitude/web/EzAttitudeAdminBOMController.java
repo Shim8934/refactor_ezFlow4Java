@@ -1804,6 +1804,7 @@ public class EzAttitudeAdminBOMController {
 	 * 미입력자 메일발송
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/absentedListSendMail.do")
+	@ResponseBody
 	public JSONObject absentedListSendMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("absentedListSendMail started.");
 		
@@ -1848,6 +1849,7 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("status : " + status);
 		
 		JSONObject jObject = new JSONObject();
+		jObject.put("status", status);
 		if(status.equals("ok")){
 			
 		}
