@@ -17,6 +17,11 @@
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 <script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
 <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+<!-- date Picker -->
+<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 <!-- module -->
 <script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
 <script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
@@ -1061,11 +1066,5 @@
 	<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
 		<iframe src="" style="border: none;" id="iFrameLayer"></iframe>
 	</div>
-
-	<!-- date Picker -->
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-	<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 </body>
 </html>
