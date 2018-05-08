@@ -456,7 +456,7 @@
 						            </tr>
 						        </table>
 		                  	</td>   
-		                  	<td id="journalFavorite_content" style="display:none; width:806px;">
+		                  	<td id="journalFavorite_content" style="display:none; width:700px;">
 	                        	<table style="width:100%">
 	                                <tr>
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
@@ -467,7 +467,7 @@
 		                                        <a class="imgbtn"><span onclick="deleteFavorite()"><spring:message code='ezJournal.t97'/></span></a>
 		                                    </div>
 	                                        <div class="border_gray">
-	                                            <div id="journalFavorite" style="Width: 100%; Height: 174px; OVERFLOW: AUTO; padding-top: 0px;">
+	                                            <div id="journalFavorite" style="Width: 100%; Height: 176px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table class="mainlist" id="favoriteList" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
@@ -521,7 +521,7 @@
 								 	</a>
 								</div>
 								<div class="receiver_borderbox">
-									<div id="receiverList" style="width: 250px; Height: 478px; overflow-x: auto; overflow-y: auto;">
+									<div id="receiverList" style="width: 250px; Height: 479px; overflow-x: auto; overflow-y: auto;">
 									</div>
 								</div>
 	                        </td>
