@@ -1248,6 +1248,6 @@ public class EzWebFolderGWController_m {
 	
 	private boolean checkWfAdmin(LoginVO user) {
 		String rollInfo = user.getRollInfo();
-		return rollInfo.contains("c=1") || !rollInfo.contains("k=1") || !rollInfo.contains("wf=1");
+		return rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("wf=1");
 	}
 }
