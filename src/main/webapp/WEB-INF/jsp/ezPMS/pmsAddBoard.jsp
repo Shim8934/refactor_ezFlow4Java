@@ -15,10 +15,26 @@
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script>
 var projectId = "${projectId}";
-var projectName = "${projectName}";
-var writerId = "${writerId}";
-var writerName = "${writerName}";
-var writerDeptName = "${writerDeptName}";
+var projectName = "${project.projectName}";
+
+function addBoard() {
+	var emergency = false;
+	var notice = false;
+	if($("#emergency").is("checked")) {
+		emergency = true;
+	}
+	if($("#notice").is("checked")) {
+		notice = true;
+	}
+	var title = $("#title").val().trim();
+	var content = $("#content").val().trim();
+	
+	data = {
+			
+	}
+	
+	
+}
 </script>
 </head>
 <body class="popup">
@@ -27,28 +43,28 @@ var writerDeptName = "${writerDeptName}";
 		<table class="content" style="width:100%;">
 			<tr>
 				<th>프로젝트명</th>
-				<td>${projectName}(${projectId})</td>
+				<td>${project.projectName}(${projectId})</td>
 				<th>게시종류</th>
-				<td></td>
+				<td><input type="checkbox" id="emergency"/> 긴급게시 <input type="checkbox" id="notice"/> 공지사항</td>
 			</tr>
 			<tr>
 				<th>작업이름</th>
-				<td></td>
+				<td>${taskName}</td>
 				<th>등록자</th>
 				<td>${writerName}(${writerDeptName})</td>
 			</tr>
 			<tr>
 				<th>제목</th>
-				<td colspan="3"><input type="text" class="textInput"/></td>
+				<td colspan="3"><input type="text" id="title" style="width: 100%;"/></td>
 			</tr>
 			<tr>
 				<th>내용</th>
-				<td colspan="3"><textarea style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
+				<td colspan="3"><textarea id="content" style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
 			</tr>
 		</table>
 		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="addTask()"><span>등록</span></a></td>
+				<td><a class="imgbtn" id="submit" onclick="addBoard()"><span>등록</span></a></td>
 				<td></td>
 				<td><a class="imgbtn" id="cancel" onclick="popupClose()"><span>취소</span></a></td>
 			</tr>

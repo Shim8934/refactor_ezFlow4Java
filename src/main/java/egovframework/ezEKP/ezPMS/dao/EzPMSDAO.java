@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
@@ -207,5 +208,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	
 	public void addTaskGroup(Map<String, Object> map) {
 		insert ("EzPMSDAO.addTaskGroup", map);
+	}
+	
+//	By mslim
+	public void addBoard(ProjectBoardVO vo) {
+		insert ("EzPMSDAO.addBoard", vo);
 	}
 }

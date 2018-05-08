@@ -13,12 +13,13 @@
 <script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script>
-/* 	var projectId = ${projectId}; */
- 	var projectId = "1";
+ 	var projectId = ${projectId};
 	var containerId = "test";
 	
 	function goAddBoard() {
-		DivPopUpShow(845, 555, "/ezPMS/goAddBoard.do?projectId="+projectId);
+		var taskName = $("a.jstree-clicked").text();
+		
+		DivPopUpShow(845, 555, "/ezPMS/goAddBoard.do?projectId="+projectId + "&taskName=" + taskName);
 	}
 	
 	$(document).ready(function() {

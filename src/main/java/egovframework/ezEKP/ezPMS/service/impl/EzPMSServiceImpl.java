@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezPMS.dao.EzPMSDAO;
 import egovframework.ezEKP.ezPMS.service.EzPMSAdminService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
@@ -877,5 +878,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		ezPMSDAO.updateProjectRealStartDate(map);
 		LOGGER.debug("[SERVICE] updateProjectRealStartDate Ended");
+	}
+
+//	by mslim
+	@Override
+	public void addBoard(ProjectBoardVO vo) {
+		LOGGER.debug("[SERVICE] addBoard Started");
+		ezPMSDAO.addBoard(vo);
+		LOGGER.debug("[SERVICE] addBoard Started");
 	}
 }
