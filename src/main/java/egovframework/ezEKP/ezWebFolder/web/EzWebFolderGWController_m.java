@@ -1247,31 +1247,7 @@ public class EzWebFolderGWController_m {
 	}
 	
 	private boolean checkWfAdmin(LoginVO user) {
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1 && user.getRollInfo().indexOf("wf=1") == -1){
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
-		
-	
-	/**
-	 * 삭제 예정, 대체될 API는 아래 see also를 참고하십시오.
-	 * @see EzWebFolderService#getFolderPath
-	 * **/
-	@Deprecated
-	private String getFolderPath(String[] paths, String offset, String primaryLang, int tenantId) throws Exception {
-		StringBuilder result = new StringBuilder();
-		String folderName;
-		
-		for (String path : paths) {
-			FolderVO parentFolder = ezWebFolderService.getFolderByFolderId(path, offset, tenantId);
-			folderName = primaryLang.equals("2") ? parentFolder.getFolderName2() : parentFolder.getFolderName1();
-			
-			result.append(folderName).append("/");
-		}
-
-		return result.toString();
+		String rollInfo = user.getRollInfo();
+		return rollInfo.contains("c=1") || !rollInfo.contains("k=1") || !rollInfo.contains("wf=1");
 	}
 }
