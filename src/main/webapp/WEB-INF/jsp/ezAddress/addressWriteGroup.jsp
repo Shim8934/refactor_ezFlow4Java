@@ -13,6 +13,9 @@
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
 	    	}
+	    	.mainlist thead tr th:first-child{
+	    		padding-left:15px;
+	    	}
 	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezAddress.e1' />"></script>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
@@ -636,7 +639,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px\" >" + nodeIdx.GetNodeData("VALUE");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right:3px\" >" + nodeIdx.GetNodeData("VALUE");
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -1043,7 +1046,7 @@
 	                document.getElementById("txtlist_table").style.display = "none";
 	                document.getElementById("Search_txtlist_table").style.display = "none";
 	                if (pSeach) {
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang_1 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang_2 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right:3px;\" >" + strLang_1 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang_2 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1058,7 +1061,7 @@
 	                else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang_1 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang_2 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right:3px;\" >" + strLang_1 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang_2 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1873,8 +1876,8 @@
 	                </td>
 	            </tr>
 	            <tr>
-	                <td style="width: 670px; height: 375px; vertical-align: top;">
-	                    <div id="ManualView" style="DISPLAY: none; height: 484px; width: 644px; padding: 10px; border-right: 1px solid #ddd" class="box">
+	                <td style="width: 665px; height: 375px; vertical-align: top;">
+	                    <div id="ManualView" style="DISPLAY: none; height: 488px; width: 648px; padding: 10px; border-right: 1px solid #ddd" class="box">
 	                        <table class="content">
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t124' /></th>
@@ -1946,24 +1949,24 @@
 	                                        </table>
 	                                        <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                            <tr>
-	                                                <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t54' /></td>
-	                                                <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t358' /></td>
-	                                                <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t359' /></td>
-	                                                <td class="td_gray" style="font-weight: bold;"><spring:message code='ezAddress.t192' /></td>
+	                                                <td style="width: 110px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t54' /></td>
+	                                                <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t358' /></td>
+	                                                <td style="width: 80px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t359' /></td>
+	                                                <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezAddress.t192' /></td>
 	                                            </tr>
 	                                        </table>
 	                                    </div>
-                                        <div style="vertical-align: top; text-align: center; height: 433px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>                                     
+                                        <div style="vertical-align: top; text-align: center; height: 410px; overflow: auto; display: none; width: 446px;" id="DeptUserImgList"></div>                                     
 	                                    <div id="tblPageRayer2" style="text-align:center;"></div>	                                    
 	                                </td>
 	                            </tr>
 	                        </table>
 	                    </div>
-	                    <div id="IDListView" style="OVERFLOW: hidden;margin-top:3px">
+	                    <div id="IDListView" style="OVERFLOW: hidden;">
 	                        <table>
 	                            <tr>
 	                                <td>
-	                                    <div class="box" style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 220px; HEIGHT: 495px; BACKGROUND-COLOR: #FFFFFF;padding-top:5px;border-right:0px" id="AddressTreeView"></div>
+	                                    <div class="box" style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 220px; HEIGHT: 502px; BACKGROUND-COLOR: #FFFFFF;padding-top:5px;border-right:0px" id="AddressTreeView"></div>
 	                                </td>	                                
 	                                <td>
 	                                    <div style="vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 20px; padding-top: 5px; padding-left: 5px;">
@@ -1971,8 +1974,8 @@
 	                                    	<span id="addressFolderName" style= "BACKGROUND-COLOR: #f8f8fa;"></span>
 	                                    	-[<span id="addressFolderCnt" style="color: #017BEC;"></span>]
 	                            		</div>
-	                                    <div id="AddressListView" style="BORDER: #ddd 1px solid; OVERFLOW: auto; WIDTH: 442px; HEIGHT: 440px; BACKGROUND-COLOR: white; border-bottom:0px;border-top:0px" class="listview"></div>
-	                                    <div id="tblPageRayer"  style="width:442px;border:#ddd 1px solid;height:35px;border-top:0px;"></div>
+	                                    <div id="AddressListView" style="BORDER: #ddd 1px solid; OVERFLOW: auto; WIDTH: 446px; HEIGHT: 448px; BACKGROUND-COLOR: white; border-bottom:0px;border-top:0px" class="listview"></div>
+	                                    <div id="tblPageRayer"  style="border:#ddd 1px solid;height:32px;border-top:0px;padding-top:3px;"></div>
 	                                </td>
 	                            </tr>
 	                        </table>
