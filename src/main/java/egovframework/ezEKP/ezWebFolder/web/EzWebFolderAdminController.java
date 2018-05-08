@@ -1420,4 +1420,16 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		return resultObj;
 	}
+	
+	/**
+	 * 웹폴더관리자 상단 Top Frame - 2018-05-08 장진혁
+	 */
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminTop.do")
+	public String webfolderAdminTop() throws Exception {
+		logger.debug("webfolderAdminTop started");		
+		
+		logger.debug("webfolderAdminTop ended");
+		
+		return "admin/ezWebFolder/webfolderAdminTop";		
+	}
 }

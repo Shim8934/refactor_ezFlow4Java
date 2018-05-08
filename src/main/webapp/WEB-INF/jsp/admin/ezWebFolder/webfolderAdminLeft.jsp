@@ -120,7 +120,7 @@
 	<body class="leftbody" style="overflow: auto; height:100%">
 		<div id="left" style="overflow: auto">
 			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10'/>">
-				<span><spring:message code="main.t29"/></span>
+				<span><spring:message code="ezWebFolder.t10"/></span>
 			</div>
 			
 			<h2>
