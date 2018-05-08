@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ibm.icu.text.DecimalFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
@@ -960,7 +961,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		List<AdminAttitudeVO> totalList = new ArrayList<AdminAttitudeVO>();
 		
 		/* 2018-05-01 이효진 추후개선 미입력자이거말고 어떠케뽑는지 모르겟어서 */
-		//checkHoliday() 만들어 쓰면 휴무일때 true로
 		while (true) {
 			tempDateTime = sdf.format(cal.getTime());
 			
@@ -982,6 +982,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				break;
 			}
 		};
+		
+		////
+		/*for (String tempDate : checkHoliday(searchStartDate, searchEndDate, userLang, companyId, tenantId)) {
+			LOGGER.debug("tempDateTime = " + tempDate);
+			
+			map.put("searchStartDate", commonUtil.getDateStringInUTC(tempDate + " 00:00:00", offset, true));
+			map.put("searchEndDate", commonUtil.getDateStringInUTC(tempDate + " 23:59:59", offset, true));
+			
+			List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeAbsentList(map);
+			totalList.addAll(resultList);
+			
+			LOGGER.debug("resultList size = " + resultList.size());
+		}*/
 		
 		if (duplicated.equals("distinct")) {
 			HashSet<AdminAttitudeVO> listSet = new HashSet<AdminAttitudeVO>(totalList);
@@ -1071,7 +1084,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		return data;
 	}
 	
-	public boolean checkHoliday(String checkDate, String userLang, String companyId, int tenantId) throws Exception {
+	/**
+	 * YYYY-MM-dd
+	 * 
+	 * @param checkStartDate 시작일
+	 * @param checkEndDate 종료일
+	 * @param userLang userInfo.lang
+	 * @param companyId
+	 * @param tenantId
+	 * @return 국가,회사,근태 휴무일을 제외한 날짜 dateString arrary
+	 * @throws Exception
+	 */
+	public List<String> checkHoliday(String checkStartDate, String checkEndDate, String userLang, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("checkHoliday started.");
+		LOGGER.debug("startDate = " + checkStartDate + " || endDate = " + checkEndDate + " || userLang = " + userLang);
+		
 		/*2018-05-08 이효진 holidayList 생성*/
 		//회사 기념일
 		//isrepeat 이면 반복이니 year짜르고 해당연도 붙임
@@ -1097,7 +1124,144 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			nationHoliday = koreaCalendar.HOLIDAY_KOREA;
 		}
 		
-		return true;
+		HolidayVO vo = new HolidayVO();
+		
+		for (String holiday : nationHoliday) {
+			String temp[] = holiday.split(", ");
+			vo.setHolidayDate(checkStartDate.substring(0,4) + "-" + temp[2] + "-" + temp[3] + " 00:00:00");
+			vo.setHolidayName(temp[0]);
+			vo.setHolidayName2(temp[1]);
+			vo.setIsRepeat(1);
+			vo.setIsRest(1);
+			vo.setIsSolar(temp[4].equals("1") ? 0 : 1);
+			vo.setIsUse(1);
+			vo.setUseCompany(companyId);
+			
+			holidayList.add(vo);
+		}
+		
+		//음력 -> 양력변환
+		DecimalFormat df = new DecimalFormat("00");
+				
+		for (HolidayVO vo1 : holidayList) {
+			if (vo1.getIsSolar() == 0) {
+				String lunarDate = vo1.getHolidayDate();
+				
+				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.split("-")[0]), Integer.parseInt(lunarDate.split("-")[1]), Integer.parseInt(lunarDate.split("-")[2]), true);
+				vo1.setHolidayDate(koreaCalendar.getSolarYear() + "-" + df.format(koreaCalendar.getSolarMonth()) + "-" + df.format(koreaCalendar.getSolarDay()) + " 00:00:00");
+			}
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		
+		Date startDate = sdf.parse(checkStartDate);
+		cal.setTime(startDate);
+		
+		String tempDate = "";
+			
+		List<String> result = new ArrayList<String>();
+		
+		while (true) {
+			tempDate = sdf.format(cal.getTime());
+			
+			switch (cal.get(Calendar.DAY_OF_WEEK)) {
+			case 0:
+				if (checkDay[0].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			case 1:
+				if (checkDay[1].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			case 2:
+				if (checkDay[2].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			case 3:
+				if (checkDay[3].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			case 4:
+				if (checkDay[4].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			case 5:
+				if (checkDay[5].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			case 6:
+				if (checkDay[6].equals("1")) {
+					result.add(tempDate);
+					break;
+				} else {
+					for (HolidayVO vo1 : holidayList) {
+						if (vo1.getHolidayDate().equals(tempDate)) {
+							result.add(tempDate);
+							break;
+						}
+					}
+				}
+			}
+			
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			
+			if (tempDate.equals(checkEndDate)) {
+				break;
+			}
+		};
+		
+		LOGGER.debug("checkHoliday ended.");
+		
+		return result;
 	}
 	
 	public void absentedListSendMail(List<AdminAttitudeVO> list, String fromName, String fromEmail) throws Exception {

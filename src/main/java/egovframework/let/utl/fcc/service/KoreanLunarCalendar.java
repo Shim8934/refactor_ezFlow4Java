@@ -122,7 +122,7 @@ public class KoreanLunarCalendar {
             0x83003b6a, 0xc2c6096d, 0x8300b4af, 0x82c404ae, 0x82c40a4d, 0xc3016d0d, 0x82c40d25, 0x82c40d52, 0x83005dd4, 0xc2c60b6a, 
             0x82c6096d, 0x8300255b, 0x82c4049b, 0xc3007a57, 0x82c40a4b, 0x82c40b25, 0x83015b25, 0xc2c406d4, 0x82c60ada, 0x830138b6, };
     
-    public static String[] HOLIDAY_KOREA = {
+    public String[] HOLIDAY_KOREA = {
     		"신정, New Year's Day, 1, 1, 1",
 	        ", , 0, 0, 0",
 	        ", , 12, 30, 2",
@@ -141,7 +141,7 @@ public class KoreanLunarCalendar {
 	        "한글날, Hangul Proclamation Day, 10, 9, 1",
     };
     
-    public static String[] HOLIDAY_JAPAN = {
+    public String[] HOLIDAY_JAPAN = {
     		"元旦, 元旦, 1, 1, 1",
 	        "元旦, 元旦, 1, 1, 2",
 	        "建国記念の日, 建国記念の日, 2, 11, 1",
