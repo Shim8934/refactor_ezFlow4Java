@@ -783,8 +783,20 @@
 		                }
 		            }
 		            else {
-		                swidth = 380;
-		                sheight = 380;
+		            	var agent = navigator.userAgent.toLowerCase();
+		            	
+		            	if ((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1) {
+		            		if (gubun != 4) {
+		            			swidth = 440;
+			               		sheight = 460;
+		            		} else {
+			            		swidth = 440;
+				                sheight = 480;
+		            		}
+		            	} else {
+		               		swidth = 460;
+		                	sheight = 380;
+		            	}
 		                
 			            pleft = (pwidth - swidth) / 2;
 			            ptop = (pheight - sheight) / 2;
