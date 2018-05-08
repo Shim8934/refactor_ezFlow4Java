@@ -731,6 +731,9 @@
 			color: #aaa9a9;
 			padding-top: 6px;
 		}
+		a, a:hover {
+			color: transparent;
+		}
 	</style>
 </head>
 	<body class="mainbody">
