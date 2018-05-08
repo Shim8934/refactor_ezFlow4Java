@@ -13,7 +13,6 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 		<script type="text/javascript" src="/js/ezLadder/ladderList.js"></script>
-		<script type="text/javascript" src="/js/ezLadder/ladderSetting.js"></script>
 		
 		<script type="text/javascript">
 			var currPage = ${currPage};
@@ -141,7 +140,12 @@
 					previewObj = previewObj.document;
 				}
 				
-				var finalH = previewObj.documentElement.offsetHeight;
+				var finalH;
+				if(navigator.userAgent.toLowerCase().indexOf("msie") != -1) {
+					finalH = previewObj.body.offsetHeight + 10;
+				} else {
+					finalH = previewObj.documentElement.offsetHeight;
+				}
 				
 				obj.style.height = finalH + "px";
 				$("#ladderPreviewLayer").css("height", (finalH - 30) + "px")
