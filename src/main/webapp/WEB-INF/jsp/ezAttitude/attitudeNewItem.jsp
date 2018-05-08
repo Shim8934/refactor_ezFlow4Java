@@ -271,6 +271,14 @@
 					attRegHolidayFlag = false;
 					return;
 				}
+				
+				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
+
+				if (!timeValid.test($('#Stimepicker').val()) || !timeValid.test($('#Etimepicker').val())) {
+					alert("올바른 시간을 지정해야 합니다.");
+					return;
+				}
+				
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezAttitude/attitudeSave.do",

@@ -159,8 +159,7 @@
 			    var ohour, ominute;
 			    var otime = $('#Otimepicker').val() 
 			    var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
-				console.log("${data.startDate}");
-				console.log(cDate);
+
 			    if ("${data.startDate}".substring(0,10) != cDate && "${data.typeId}" == "A02") {
 			    	alert("날짜는 수정하실 수 없습니다.");
 			    	return;
