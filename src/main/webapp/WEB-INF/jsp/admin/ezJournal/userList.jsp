@@ -32,8 +32,8 @@
 		<table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 			<tbody>
 				<tr>
-			    	<th style="white-space:normal">
-			    		<span id="selectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;"><c:out value='${keyword }'/>-[<span style="color:#017BEC;"><c:out value='${userCount }'/><spring:message code='main.t20000'/></span>]</span>
+			    	<th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
+			    		<span id="selectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;padding-right: 3px;"><c:out value='${keyword }'/>-[<span style="color:#017BEC;"><c:out value='${userCount }'/><spring:message code='main.t20000'/></span>]</span>
 			    		<span style="float:right;">
                            <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_onlist.gif" class="icon_btn" id="txtlist"></span>
                            <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
@@ -45,9 +45,9 @@
 		<div style="vertical-align: top; height: 440px; overflow: auto; width: 100%;" id="txtlist_Layer">
 			<table style="width:100%; border: 1px solid #B6B6B6;" class="mainlist">
 				<tr>
-					<td style="width: 30%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-					<td style="width: 20%; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-					<td style="width: 50%; font-weight: bold;" class="td_gray"><spring:message code='main.t78'/></td>
+					<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
+					<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
+					<td style="width: 50%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='main.t78'/></td>
 		        </tr>
 		        <c:forEach items="${userList}" var="user">
 			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">

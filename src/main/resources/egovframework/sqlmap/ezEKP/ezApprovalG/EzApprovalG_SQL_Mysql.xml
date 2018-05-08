@@ -2285,7 +2285,6 @@
 		<isEqual property="v_PMODE" compareValue="REC">
 			<isGreaterEqual property="v_temp" compareValue="1">
 			<isGreaterEqual property="v_temp2" compareValue="1">
-			<![CDATA[
 				SELECT 
 						DOCID ,
 	                    PROCESSORID ,
@@ -2294,13 +2293,14 @@
 	            		TBL_APRRECEIPTPROCESSINFO 
                 WHERE  
                 		DOCID = #v_PDOCID#
+				<isEqual property="approvalFlag" compareValue="G">
                 AND 
                 		PROCESSORID = #v_PAPRUSERID#
+				</isEqual>                
                 AND
 						TENANT_ID = #v_TENANTID#
 				AND
 						COMPANYID = #companyID#   
-						]]>
 			</isGreaterEqual>
 			<isLessThan property="v_temp2" compareValue="1">
 			<![CDATA[
@@ -2443,20 +2443,20 @@
 	</select>
 		
 	<select id ="EzApprovalG.countRecTempDocID2" parameterClass="Map" resultClass="int">
-	<![CDATA[
 		SELECT 
 			COUNT(DOCID)  
         FROM 
           	TBL_APRRECEIPTPROCESSINFO 
         WHERE  
           	DOCID = #v_PDOCID#
+		<isEqual compareValue="G" property="approvalFlag">
         AND 
           	PROCESSORID = #v_PAPRUSERID#
+		</isEqual>         
         AND
 			TENANT_ID = #v_TENANTID#
 	    AND
 			COMPANYID = #companyID#	
-	]]>
 	</select>
 			
 	<select id ="EzApprovalG.countRecTempDocID3" parameterClass="Map" resultClass="ApprGAprLineVO">

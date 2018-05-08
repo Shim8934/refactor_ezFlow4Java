@@ -126,9 +126,31 @@
 						} else {
 							imgs.eq(1).addClass("active");
 						}
+						
+						
 					});
 				$("#ladderSecret").on("click", function() {
 					$("#ladderSecret img").toggleClass("active");
+					var temp = $("#ladderSecret .active").attr("_flag");
+					if(temp == 0) {
+						$(this).children("img").attr("src", "/images/ezLadder/icon_public_hover.png");
+					} else {
+						$(this).children("img").attr("src", "/images/ezLadder/icon_private_hover.png");
+					}
+				}).on("mouseenter", function(event) {
+					var temp = $("#ladderSecret .active").attr("_flag");
+					if(temp == 0) {
+						$(this).children("img").attr("src", "/images/ezLadder/icon_public_hover.png");
+					} else {
+						$(this).children("img").attr("src", "/images/ezLadder/icon_private_hover.png");
+					}
+				}).on("mouseleave", function(event) {
+					var temp = $("#ladderSecret .active").attr("_flag");
+					if(temp == 0) {
+						$(this).children("img").attr("src", "/images/ezLadder/icon_public.png");
+					} else {
+						$(this).children("img").attr("src", "/images/ezLadder/icon_private.png");
+					}
 				});
 				// 목록으로 버튼
 				$("#backToList").on("click", function() {

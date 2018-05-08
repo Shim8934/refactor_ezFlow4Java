@@ -3054,9 +3054,12 @@
 		  	function stompDisConnProcess(){
 		  		var qstId = "${question.qstId}";
 		  		var brdId =	"${brdId}";
+		  		var rightFrames = window.parent.frames["right"];
 		  		setInterval(function(){
-		  			if(stompClient.connected === false){
-		  				window.parent.frames["right"].location.href = "/ezPoll/pollVote.do?qstId=" + qstId + "&brdId=" + brdId;
+		  			if(stompClient.connected === false && rightFrames != null){
+		  				rightFrames.location.href = "/ezPoll/pollVote.do?qstId=" + qstId + "&brdId=" + brdId;
+		  			}else if(stompClient.connected === false && rightFrames == null){
+		  				window.location.reload();
 		  			}
 		  		}, 1000);
 		  	}
