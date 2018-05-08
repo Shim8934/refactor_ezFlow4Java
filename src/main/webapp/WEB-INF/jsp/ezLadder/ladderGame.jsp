@@ -194,7 +194,6 @@
 			$("#ladderContents")
 				.on("mouseleave", function() {
 					if(!!moFlag) {
-						console.log("out");
 						scrollMouseUpEvent();
 					}
 				});
@@ -213,7 +212,7 @@
 			$(".ladderGame_title").css("width", title_width);
 			
 			if(line_width > win_width) {
-				$("#blackBox").css("width", (line_width + 100) + "px");
+				$("#blackBox").css("width", (line_width + 50) + "px");
 			} else {
 				$("#blackBox").css("width", (win_width + 50) + "px");
 			}
