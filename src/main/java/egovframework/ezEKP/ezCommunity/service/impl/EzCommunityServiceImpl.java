@@ -535,6 +535,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		CommunityClubVO clubVO = aspCommInfoGet1(code, userInfo.getTenantId());
 		
+		// 18-05-08 김민성 - 커뮤니티 회원수 수정
+		clubVO.setC_MemberCnt(commViewMemberGet2(clubVO.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		String temp = commonUtil.getQueryResult(clubVO);
@@ -2059,7 +2062,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			logger.debug("myCommunityList.size() : " + myCommunityList.size());
 			
+			// 18-05-08 김민성 - 커뮤니티 회원수 수정
 			for(CommunityMyCommunityVO myCommunity : myCommunityList) {
+				int cnt = commViewMemberGet2(clubNo.trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId());
+				myCommunity.setC_memberCnt(String.valueOf(cnt));
 				rtnVal.append(commonUtil.getQueryResult(myCommunity));
 			}
 		}
@@ -2083,6 +2089,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		rtnVal.append("<DATA>");
 		
+		// 18-05-08 김민성 - 커뮤니티 회원수 수정
 		if (mode.equals("BEST")) {
 			logger.debug("mainPageGet5 started.");
 			
@@ -2091,6 +2098,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			logger.debug("mainPageGet5 ended.");
 			
 			for (CommunityMyCommunityVO vo : list) {
+				int cnt = commViewMemberGet2(vo.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId());
+				vo.setC_memberCnt(String.valueOf(cnt));
 				rtnVal.append(commonUtil.getQueryResult(vo));
 			}
 			
@@ -2104,6 +2113,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			logger.debug("mainPageGet6 ended.");
 			
 			for (CommunityMyCommunityVO vo : list) {
+				int cnt = commViewMemberGet2(vo.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId());
+				vo.setC_memberCnt(String.valueOf(cnt));
 				rtnVal.append(commonUtil.getQueryResult(vo));
 			}
 		}
