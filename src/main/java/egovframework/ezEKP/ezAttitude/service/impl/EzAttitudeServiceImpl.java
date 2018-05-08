@@ -34,6 +34,7 @@ import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 
 @Service("EzAttitudeService")
 public class EzAttitudeServiceImpl implements EzAttitudeService{
@@ -935,7 +936,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String offset, String companyId, int tenantId) throws Exception {
+	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeAbsentedList started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -959,6 +960,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		List<AdminAttitudeVO> totalList = new ArrayList<AdminAttitudeVO>();
 		
 		/* 2018-05-01 이효진 추후개선 미입력자이거말고 어떠케뽑는지 모르겟어서 */
+		//checkHoliday() 만들어 쓰면 휴무일때 true로
 		while (true) {
 			tempDateTime = sdf.format(cal.getTime());
 			
@@ -1067,6 +1069,35 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeAbsentedList ended.");
 		
 		return data;
+	}
+	
+	public boolean checkHoliday(String checkDate, String userLang, String companyId, int tenantId) throws Exception {
+		/*2018-05-08 이효진 holidayList 생성*/
+		//회사 기념일
+		//isrepeat 이면 반복이니 year짜르고 해당연도 붙임
+		//isSolar 0:음력 1:양력
+		List<HolidayVO> holidayList = getHolidayList(companyId, tenantId);
+		//근태휴무일
+//		CLOSED_DAY 일 ~ 토
+//		while문에 날짜별 요일 체크해서 1이면 휴무일처리 closedday 1이면 휴일 0이면 평일
+		AttitudeConfigVO attitudeConfig = getAttitudeConfig(tenantId, companyId);
+		String checkDay[] = attitudeConfig.getClosedDay().split(".");
+		//국가공휴일
+//		KoreanLunarCalendear 안에 상수 선언
+//		userlang 1:한국어 3:일본어
+		KoreanLunarCalendar koreaCalendar = KoreanLunarCalendar.getInstance();
+		
+		String nationHoliday[] = null;
+		
+		if (userLang.equals("1")) {
+			nationHoliday = koreaCalendar.HOLIDAY_KOREA;
+		} else if (userLang.equals("3")) {
+			nationHoliday = koreaCalendar.HOLIDAY_JAPAN;
+		} else {
+			nationHoliday = koreaCalendar.HOLIDAY_KOREA;
+		}
+		
+		return true;
 	}
 	
 	public void absentedListSendMail(List<AdminAttitudeVO> list, String fromName, String fromEmail) throws Exception {
