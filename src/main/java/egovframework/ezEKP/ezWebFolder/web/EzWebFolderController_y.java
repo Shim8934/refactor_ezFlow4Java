@@ -304,7 +304,28 @@ public class EzWebFolderController_y {
 			return jsonObj.toString();
 		}
 		
+		// checkPermisson 
+		// userId, List<map<String, Object>> checkList ( checkId, checkType ) 
+		
 		JSONObject resultBody = null;
+		JSONObject checkPermission = new JSONObject();
+		List<Map<String, Object>> checkList = new ArrayList<Map<String,Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("checkId"	, folderId);
+		map.put("checkType"	, "D");
+		
+		checkList.add(map);
+		checkPermission.put("checkList"	, checkList);
+		
+		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/"+userInfo.getId()+"/checkpermission", 
+				null, request, "post", checkPermission);
+
+		if (resultBody.get("status").equals("error")) {
+			return resultBody.toString();
+		} else {
+			resultBody = null;
+		}
+		
 		jsonObj.put("userId", userInfo.getId());
 		
 		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folders/"+folderId, 
