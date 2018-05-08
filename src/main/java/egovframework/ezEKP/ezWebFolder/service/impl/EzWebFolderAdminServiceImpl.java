@@ -114,7 +114,8 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	@Override
-	public List<FileLogVO> getListFileLogs(String realColmn, String order, String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
+	public List<FileLogVO> getListFileLogs(String realColmn, String order, String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String actionType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
+		logger.debug("Action Type: " + actionType);
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("realColmn",  realColmn);
 		map.put("order",      order);
@@ -126,6 +127,7 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("fileName",   fileName);
 		map.put("fileType",   fileType);
 		map.put("userName",   userName);
+		map.put("actionType", actionType);
 		map.put("startPoint", startPoint);
 		map.put("pageSize",   pageSize);
 		map.put("offset",     commonUtil.getMinuteUTC(offset));
@@ -135,14 +137,16 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	}
 
 	@Override
-	public int getTotalFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, int tenantId) throws Exception {
+	public int getTotalFileLogs(String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String actionType, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyId",  companyId);
 		map.put("searchChk",  searchChk);
 		map.put("startDate",  startDate);
+		map.put("actionType", actionType);
 		map.put("endDate",    endDate);
 		map.put("fileExt",    fileExt);
 		map.put("fileName",   fileName);
+		map.put("fileType",   fileType);
 		map.put("userName",   userName);
 		map.put("primary",    primary);
 		map.put("tenantId",   tenantId);

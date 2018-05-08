@@ -76,9 +76,11 @@
 		<isEqual property="searchChk" compareValue="1">
 			<isNotEqual property="fileExt" compareValue="" prepend="AND">
 				<![CDATA[
-						UPPER(l.FILE_EXT) LIKE CONCAT(CONCAT('%', UPPER(#fileExt#)), '%')
-					OR
-						LOWER(l.FILE_EXT) LIKE CONCAT(CONCAT('%', LOWER(#fileExt#)), '%')
+					(
+							UPPER(l.FILE_EXT) LIKE CONCAT(CONCAT('%', UPPER(#fileExt#)), '%')
+						OR
+							LOWER(l.FILE_EXT) LIKE CONCAT(CONCAT('%', LOWER(#fileExt#)), '%')
+					)
 				]]>
 			</isNotEqual>
 			
@@ -106,6 +108,10 @@
 					(l.CREATE_DATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND l.CREATE_DATE <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				]]>
 			</isNotEqual>
+			
+			<![CDATA[
+				AND l.LOG_TYPE = #actionType#
+			]]>
 		</isEqual>
 	</sql>
 	
