@@ -155,7 +155,6 @@
 				var fileNameVal = document.getElementById("fileNameVal").value;
 				var userNameVal = document.getElementById("fileCreatorVal").value;
 				var fileTypeIdx = document.getElementById("fileTypeVal").selectedIndex;
-				document.getElementById("fileTypeSelect").selectedIndex = fileTypeIdx;
 				
 				if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) {
 					alert("<spring:message code='ezWebFolder.t163'/>");
@@ -163,12 +162,12 @@
 				}
 				
 				if ( sDateVal != "" && eDateVal == "") {
-	                alert("<spring:message code='ezWebFolder.t308' />");
+					alert("<spring:message code='ezWebFolder.t308' />");
 					return;
 				}
 				
 				if ( eDateVal != "" && sDateVal == "") {
-	                alert("<spring:message code='ezWebFolder.t309' />");
+					alert("<spring:message code='ezWebFolder.t309' />");
 					return;
 				}
 				
@@ -178,6 +177,8 @@
 						return;
 					}
 				}
+				
+				document.getElementById("fileTypeSelect").selectedIndex = fileTypeIdx;
 				
 				startDateStr = sDateVal;
 				endDateStr   = eDateVal;
