@@ -7,12 +7,13 @@
 	<head>
 		<title>gantt Chart</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
 		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezPMS/gantt/platform.css" type="text/css">
 		<link rel="stylesheet" href="/js/ezPMS/gantt/libs/jquery/dateField/jquery.dateField.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezPMS/gantt/gantt.css" type="text/css">
-		<link rel="stylesheet" href="/css/ezPMS/gantt/ganttPrint.css" type="text/css">
+		<link rel="stylesheet" href="/css/ezPMS/gantt/ganttPrint.css" type="text/css" media="print">
 		
 		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -31,26 +32,27 @@
 		<script type="text/javascript" src="/js/ezPMS/gantt/libs/jquery/dateField/jquery.dateField.js"></script>
 		<script type="text/javascript" src="/js/ezPMS/gantt/libs/jquery/JST/jquery.JST.js"></script>
 		 
+		<script type="text/javascript" src="/js/ezPMS/gantt/libs/jquery/svg/jquery.svg.min.js"></script>
+  		<script type="text/javascript" src="/js/ezPMS/gantt/libs/jquery/svg/jquery.svgdom.1.8.js"></script>
+
 		<script type="text/javascript" src="/js/ezPMS/gantt/ganttUtilities.js"></script>
 		<script type="text/javascript" src="/js/ezPMS/gantt/ganttTask.js"></script>
 		<script type="text/javascript" src="/js/ezPMS/gantt/ganttDrawerSVG.js"></script>
 		<script type="text/javascript" src="/js/ezPMS/gantt/ganttZoom.js"></script>
 		<script type="text/javascript" src="/js/ezPMS/gantt/ganttGridEditor.js"></script>
 		<script type="text/javascript" src="/js/ezPMS/gantt/ganttMaster.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/libs/jquery/svg/jquery.svg.min.js"></script>
-  		<script type="text/javascript" src="/js/ezPMS/gantt/libs/jquery/svg/jquery.svgdom.1.8.js"></script>
-
+		
 	   	<script type="text/javascript">
 	   		// 프로젝트 아이디
-	   		var projectId = "${projectId}";
-	   		// 업무 목록
-	   		var taskList;
-	   		// 프로젝트 세부정보
-	   		var projectDetails;
-	   		// 사용자 아이디
-	   		var userId = "";
-	   		var ganttData = {};
-	   		var ge;
+	   		var projectId = "${projectId}",
+	   			// 업무 목록
+	   			taskList = {},
+	   			// 프로젝트 세부정보
+	   			projectDetails = {},
+	   			// 사용자 아이디
+	   	 		userId = "",
+	   			ganttData = {},
+	   			ge = "";
 	   		
 	   		function initValues(){
 	   			taskList = ${taskList};
@@ -77,9 +79,7 @@
 	   			ganttData.tasks[0].assigs = [];
 	   			
 	   			for(var i = 0; i < pd.projectMember.length; i++){
-	   				var assig = {};
-		   			var resource = {};
-		   			var role = {};
+	   				var assig = {}, resource = {}, role = {};
 		   			
 	   				assig.resourceId = pd.projectMember[i].userId;
 	   				assig.id = pd.projectMember[i].userId;
@@ -99,6 +99,7 @@
 	   			ganttData.tasks[0].depends = "";
 	   			ganttData.tasks[0].description = pd.overview;
 	   			ganttData.tasks[0].progress = pd.progress;
+	   			ganttData.tasks[0].hasChild = "";
 	   			
 	   			
 	   			//업무 리스트 가공부분.
@@ -117,9 +118,7 @@
 		   			ganttData.tasks[i + 1].assigs = [];
 		   			
 		   			for(var j = 0; j < tl[i].taskMember.length; j++){
-		   				var assig = {};
-			   			var resource = {};
-			   			var role = {};
+		   				var assig = {}, resource = {}, role = {};
 			   			
 		   				assig.resourceId = tl[i].taskMember[j].userId;
 		   				assig.id = tl[i].taskMember[j].userId;
@@ -139,6 +138,7 @@
 		   			ganttData.tasks[i + 1].depends = "";
 		   			ganttData.tasks[i + 1].description = tl[i].overview;
 		   			ganttData.tasks[i + 1].progress = tl[i].realProgress;
+		   			ganttData.tasks[i + 1].hasChild = "";
 	   			}
 	   			
 	   			//프로젝트 인력 가공
@@ -163,8 +163,39 @@
 		<style>
 		</style>
 	</head>
-	<body>
-		<div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden; border:1px solid #e5e5e5; position:relative; margin:0 5px; width:1024px; height:800px;"></div>
+	<body style="background-color: #fff;">
+		<div id="ndo" style="position:absolute;right:5px;top:5px;width:378px;padding:5px;background-color: #FFF5E6; border:1px solid #F9A22F; font-size:12px" class="noprint">
+		  This Gantt editor is free thanks to <a href="http://twproject.com" target="_blank">Twproject</a> where it can be used on a complete and flexible project management solution.<br> Get your projects done! Give <a href="http://twproject.com" target="_blank">Twproject a try now</a>.
+		</div>
+		<div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden; border:1px solid #e5e5e5; position:relative; margin:0 5px;"></div>
+		
+		<style>
+		  .resEdit {
+		    padding: 15px;
+		  }
+		
+		  .resLine {
+		    width: 95%;
+		    padding: 3px;
+		    margin: 5px;
+		    border: 1px solid #d0d0d0;
+		  }
+		
+		  body {
+		    overflow: hidden;
+		  }
+		
+		  .ganttButtonBar h1{
+		    color: #000000;
+		    font-weight: bold;
+		    font-size: 28px;
+		    margin-left: 10px;
+		  }
+		
+		</style>
+		
+		<form id="gimmeBack" style="display:none;" action="../gimmeBack.jsp" method="post" target="_blank"><input type="hidden" name="prj" id="gimBaPrj"></form>
+		
 		<script type="text/javascript">
 			var ge;
 			$(function() {
@@ -173,7 +204,6 @@
 			  // here starts gantt initialization
 			  ge = new GanttMaster();
 			  ge.set100OnClose=true;
-			
 			  ge.shrinkParent=true;
 			
 			  ge.init($("#workSpace"));
@@ -517,7 +547,7 @@
 			<div class="__template__" type="GANTBUTTONS"><!--
 			  <div class="ganttButtonBar noprint">
 			    <div class="buttons">
-			      <a href="https://gantt.twproject.com/"><img src="res/twGanttLogo.png" alt="Twproject" align="absmiddle" style="max-width: 136px; padding-right: 15px"></a>
+			      <a href="https://gantt.twproject.com/"><img src="/images/ezPMS/res/twGanttLogo.png" alt="Twproject" align="absmiddle" style="max-width: 136px; padding-right: 15px"></a>
 			
 			      <button onclick="$('#workSpace').trigger('undo.gantt');return false;" class="button textual icon requireCanWrite" title="undo"><span class="teamworkIcon">&#39;</span></button>
 			      <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite" title="redo"><span class="teamworkIcon">&middot;</span></button>
