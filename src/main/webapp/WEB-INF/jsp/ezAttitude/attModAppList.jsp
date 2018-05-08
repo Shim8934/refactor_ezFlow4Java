@@ -1025,9 +1025,9 @@
 			    				json[i].apprUserName = "";
 			    			}
 			    			
-				    		var objTr = $("<tr></tr>").append($("<td style='width:55%'></td>").text("\u00a0" + json[i].originDate.substring(0,16) + " -> " + json[i].changeDate.substring(11,16)));
+				    		var objTr = $("<tr></tr>").append($("<td style='width:35%'></td>").text("\u00a0" + json[i].apprDate));
 				    		objTr.append($("<td style='width:5%'></td>").text("\u00a0" + json[i].apprUserName));
-				    		objTr.append($("<td style='width:35%'></td>").text("\u00a0" + json[i].apprDate));
+				    		objTr.append($("<td style='width:55%'></td>").text("\u00a0" + json[i].originDate.substring(0,16) + " -> " + json[i].changeDate.substring(11,16)));
 				    		objTr.append($("<td style='width:5%'></td>").text("\u00a0" + json[i].apprStatus));
 				    		
 				    		$("#addpopup_list tbody").append(objTr);	
@@ -1281,9 +1281,9 @@
 				    </thead>
 				    <tbody style="max-height:500px; width:440px; display:block; overflow-y:auto;">
 				    	<tr>
-				    		<th style="width:120px;height:30px">신청일시</th>
+				    		<th style="width:120px;height:30px">승인일시</th>
 				  			<th style="height:30px">승인자</th>
-				  			<th style="width:120px;height:30px">승인일시</th>
+				  			<th style="width:120px;height:30px">신청일시</th>
 				  			<th style="height:30px">승인상태</th>
 						</tr>
 				    </tbody>
