@@ -112,10 +112,14 @@
 						
 					})
 					.on("mousedown", function() {
-						userSwitchFlag = !userSwitchFlag;
+						userSwitchFlag = true;
 					})
 					.on("mouseup", function() {
-						userSwitchFlag = !userSwitchFlag;
+						userSwitchFlag = false;
+					});
+				} else {
+					$(".ladderDrag").on("dragstart", function() {
+						return false;
 					});
 				}
 			} else if(status == 1) {
@@ -166,7 +170,6 @@
 					popAllUser();
 				})
 				.on("mouseenter", "[id^='drag']", function() {
-					/* var $this = $(this); */
 					var $span = $(this).find("span");
 					$span.css("border-color", "#2568b3");
 					if($span.hasClass("userPicWraper_d")) {
@@ -174,7 +177,6 @@
 					}
 				})
 				.on("mouseleave", "[id^='drag']", function() {
-					/* var $this = $(this); */
 					var $span = $(this).find("span");
 					$span.css("border-color", "#ccc");
 					if($span.hasClass("userPicWraper_d")) {
@@ -350,12 +352,14 @@
 		function clickUserLadderAnimation() {
 			$(document)
 			.on("click", "[id^=drag]", function() {
-				clickUserOrder = Number($(this).attr("id").slice(4));
-				
-				if(userStatus[clickUserOrder] == 0) {
-					aniOneUser();
-				} else {
-					popOneUser();
+				if(userClickFlag) {
+					clickUserOrder = Number($(this).attr("id").slice(4));
+					
+					if(userStatus[clickUserOrder] == 0) {
+						aniOneUser();
+					} else {
+						popOneUser();
+					}
 				}
 			});
 		}
@@ -452,13 +456,13 @@
 					var html = '';
 					_ladderLine.forEach(function(line, index) {
 						var picsrc = !line.pic ? "/images/ezLadder/icon_defaultAttendant.png" : "/admin/ezOrgan/getPersonalInfo.do?fileName=" + line.pic;
-						html += '<li><div id="drag' + index + '" style="cursor: pointer;">';
+						html += '<li><div id="drag' + index + '" class="userInfo" ondragstart="return false;" style="cursor: pointer;">';
 						if(!line.pic) {
-							html += '<span class="userPicWraper_d"><img src="/images/ezLadder/icon_defaultAttendant.png" width="48px" height="48px" style="display: block;" /></span>';
+							html += '<span class="userPicWraper_d"><img src="/images/ezLadder/icon_defaultAttendant.png" class="userInfo" width="48px" height="48px" style="display: block;" /></span>';
 						} else {
-							html += '<span class="userPicWraper"><img src="' + picsrc + '" width="48px" height="48px" /></span>';
+							html += '<span class="userPicWraper"><img src="' + picsrc + '" class="userInfo" width="48px" height="48px" /></span>';
 						}
-						html += '<div title="' + line.userName + '" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap">' + line.userName + '</span></div></div></li>';
+						html += '<div title="' + line.userName + '" class="userInfo" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap">' + line.userName + '</span></div></div></li>';
 					});
 					$("#attendantList").html(html);
 					canvasSetting();
@@ -612,19 +616,26 @@
 		
 		var moFlag = false;
 		var userSwitchFlag = false;
+		var userClickFlag = false;
 		var $linebox;
 		var moveX;
+		var scrollSpeedX;
 		function scrollMouseDownEvent(obj, event) {
+			userClickFlag = event.target.classList.contains("userInfo");
+			
 			if(!moFlag && !userSwitchFlag) {
-				moveX = event.screenX;
 				$linebox = $("#ladderLineBox");
+				moveX = event.screenX;
 				moFlag = !moFlag;
 			}
 		}
 		function scrollMouseDragEvent(obj, event) {
 			if(moFlag) {
-				$linebox.scrollLeft($linebox.scrollLeft() + (moveX - event.screenX));
+				var movementX = moveX - event.screenX;
+				$linebox.scrollLeft($linebox.scrollLeft() + movementX);
+				scrollSpeedX = movementX;
 				moveX = event.screenX; 
+				userClickFlag = false;
 			}
 		}
 		function scrollMouseUpEvent(obj, event) {
@@ -873,20 +884,20 @@
 									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
 										<c:forEach var="line" items="${list}" varStatus="status">
 											<li>
-												<div id="drag${status.index}" style="cursor: pointer;position: relative;">
+												<div id="drag${status.index}" class="userInfo" ondragstart="return false;" style="cursor: pointer;position: relative;">
 														<c:choose>
 															<c:when test="${empty line.pic}">
 																<span class="userPicWraper_d">
-																	<img src="/images/ezLadder/icon_defaultAttendant.png" width="48px" height="48px" style="display: block;" />
+																	<img src="/images/ezLadder/icon_defaultAttendant.png" width="48px" height="48px" style="display: block;" class="userInfo" />
 																</span>
 															</c:when>
 															<c:otherwise>
 																<span class="userPicWraper">
-																	<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${line.pic}" width="48px" height="48px" />
+																	<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${line.pic}" width="48px" height="48px" class="userInfo" />
 																</span>
 															</c:otherwise>
 														</c:choose>
-													<div title="${line.userName}" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
+													<div title="${line.userName}" class="userInfo" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
 												</div>
 											</li>
 										</c:forEach>
