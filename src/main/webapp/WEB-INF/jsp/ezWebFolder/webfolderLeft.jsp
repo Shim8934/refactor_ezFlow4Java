@@ -275,14 +275,14 @@
 			    </div>	
 			    <div style='text-align:center; margin-top:10px;margin-bottom:5px;font-weight: bold;font-family: dotum;' class="volumes"></div>
 		    </div>		    
-			<h3 style="border-top:0px">
+			<h3 style="border-top:0px;">
 		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span><!-- 폴더관리 -->
 		    </h3>
-			<h3 style="border-top:0px">
+			<h3 style="border-top:0px;margin-top:-4px">
 				<span onclick="wfConfig();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t236" /></span><!-- 환경설정 -->
 			</h3>
 			<c:if test="${isWfAdmin == '1'}">
-				<h3 style="border-top:0px">
+				<h3 style="border-top:0px;margin-top:-4px">
 					<span onclick="wfAdministrator();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t25" /></span><!-- 웹폴더 관리자 -->
 				</h3>
 			</c:if>

@@ -57,7 +57,7 @@
 <body style="margin-left: 10px; margin-right: 10px;">
 	<br/>
 	<h2><spring:message code="ezWebFolder.t238" /></h2>
-	<span class="txt">▒<spring:message code="ezWebFolder.t240"/></span>
+	<span class="txt">▒&nbsp;<spring:message code="ezWebFolder.t240"/></span>
 	<br />
 	<table class="content" style="width: 623px;margin-top:5px">
 		<tr>
@@ -77,8 +77,8 @@
 	</table>
  	<br />
 	<div style="width:623px;text-align:center;">      
-		<a class="webfolderBttn" onclick="Change_Click()"><span><spring:message code="ezWebFolder.t133" /></span></a>
-		<a class="webfolderBttn" onclick="Cancel_Click()"><span><spring:message code="ezWebFolder.t112" /></span></a>
+		<a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezWebFolder.t133" /></span></a>
+		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezWebFolder.t112" /></span></a>
 	</div>
 </body>
 </html>
