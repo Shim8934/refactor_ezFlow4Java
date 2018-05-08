@@ -996,6 +996,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String dateStr = commonUtil.getTodayUTCTime("").substring(0, 10);
 		logger.debug("userCurrentTime=" + dateStr);
 		
+		/* 2018-05-08 홍승비 - 커뮤니티 관리자의 설문조사 테이블 > 관리TD의 모든 버튼 활성 */
+		String sysopID = ezCommunityDAO.adminMemberListGet2(map);
+		logger.debug("sysopID=" + sysopID);
+		
 		for (CommunityCPollManagerVO item : list) {
 			if (dateStr.compareTo(item.getPollStartDate().substring(0, 10)) < 0) {
 				pollState = egovMessageSource.getMessage("ezCommunity.t677", userInfo.getLocale());
@@ -1039,7 +1043,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<td>" + pollState + "</td>");
 			sb.append("<td>");
 			
-			if (item.getPollRegUser().equals(userInfo.getId())) {
+			if (item.getPollRegUser().equals(userInfo.getId()) || sysopID.equals(userInfo.getId())) {
 				if (pollManager.equals(egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale()))) {
 					sb.append("<a class=\"imgbtn\" onclick=poll_edit(\"" + code + "\",\"" + item.getManagerID() + "\")><span>" + pollManager + "</span></a>");
 				} else if (pollManager.equals(egovMessageSource.getMessage("ezCommunity.t208", userInfo.getLocale()))) {
