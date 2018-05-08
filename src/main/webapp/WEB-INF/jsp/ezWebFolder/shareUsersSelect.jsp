@@ -78,31 +78,21 @@
 					return;
 				}
 				
-				var requestArray = [];
+				var users = [], depts = [];
 				
 				if (deptList.rows.length > 1) {
 					for (var i = 1; i < deptList.rows.length; i++) {
-						var obj = {
-							"id" : deptList.rows[i].getAttribute("nodeId"),
-							"type" : "D",
-						};
-						
-						requestArray.push(obj);
+						depts.push(deptList.rows[i].getAttribute("nodeId"));
 					}
 				}
 				
 				if (userList.rows.length > 1) {
 					for (var i = 1; i < userList.rows.length; i++) {
-						var obj = {
-							"id" : userList.rows[i].getAttribute("nodeId"),
-							"type" : "U",
-						};
-						
-						requestArray.push(obj);
+						users.push(userList.rows[i].getAttribute("nodeId"));
 					}
 				}
 				
-				shareContext.addShare(folderFileId, folderFileType, requestArray, false, addShareSuccess);
+				shareContext.addShare(folderFileId, folderFileType, depts, users, false, addShareSuccess);
 			}
 			
 			function addShareSuccess() {

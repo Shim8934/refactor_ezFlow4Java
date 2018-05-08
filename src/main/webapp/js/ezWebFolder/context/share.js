@@ -32,11 +32,12 @@ var shareContext = (function() {
 		location.href = "/ezWebFolder/webfolderHiddenSharedList.do";
 	}
 	
-	function addShare(folderFileId, folderFileType, userListInfo, isAsync, successHandle) {
+	function addShare(folderFileId, folderFileType, depts, users, isAsync, successHandle) {
 		requestShareAjax("/ezWebFolder/addShare.do", isAsync, {
 			folderFileId: folderFileId,
 			folderFileType: folderFileType,
-			userList: userListInfo
+			deptList: depts.toString(),
+			userList: users.toString()
 		}, successHandle);
 	}
 	
@@ -49,18 +50,23 @@ var shareContext = (function() {
 			return;
 		}
 		
-		var targetInfos = [];
+		var files = [], folders = [];
 		var rowInfo;
 		
 		for (i = 0; i < selectedLength; i++) {
 			rowInfo = rowContext.getRowInfo(selectedRows[i]);
-			targetInfos.push({
-				folderFileId: rowInfo.id,
-				folderFileType: rowInfo.type
-			});
+			
+			if (rowInfo.type === "F") {
+				files.push(rowInfo.id);
+			} else {
+				folders.push(rowInfo.id);
+			}
 		}
 		
-		requestShareAjax("/ezWebFolder/deleteShare.do", false, targetInfos, refreshView);
+		requestShareAjax("/ezWebFolder/deleteShare.do", false, {
+			fileList: files.toString(),
+			folderList: folders.toString()
+		}, refreshView);
 	}
 	
 	function hideShare() {
@@ -72,18 +78,23 @@ var shareContext = (function() {
 			return;
 		}
 		
-		var targetInfos = [];
+		var files = [], folders = [];
 		var rowInfo;
 		
 		for (i = 0; i < selectedLength; i++) {
 			rowInfo = rowContext.getRowInfo(selectedRows[i]);
-			targetInfos.push({
-				folderFileId: rowInfo.id,
-				folderFileType: rowInfo.type
-			});
+			
+			if (rowInfo.type === "F") {
+				files.push(rowInfo.id);
+			} else {
+				folders.push(rowInfo.id);
+			}
 		}
 		
-		requestShareAjax("/ezWebFolder/hideShare.do", false, targetInfos, refreshView);
+		requestShareAjax("/ezWebFolder/hideShare.do", false, {
+			fileList: files.toString(),
+			folderList: folders.toString()
+		}, refreshView);
 	}
 	
 	function showShare() {
@@ -95,18 +106,23 @@ var shareContext = (function() {
 			return;
 		}
 		
-		var targetInfos = [];
+		var files = [], folders = [];
 		var rowInfo;
 		
 		for (i = 0; i < selectedLength; i++) {
 			rowInfo = rowContext.getRowInfo(selectedRows[i]);
-			targetInfos.push({
-				folderFileId: rowInfo.id,
-				folderFileType: rowInfo.type
-			});
+			
+			if (rowInfo.type === "F") {
+				files.push(rowInfo.id);
+			} else {
+				folders.push(rowInfo.id);
+			}
 		}
 		
-		requestShareAjax("/ezWebFolder/showShare.do", false, targetInfos, refreshView);
+		requestShareAjax("/ezWebFolder/showShare.do", false, {
+			fileList: files.toString(),
+			folderList: folders.toString()
+		}, refreshView);
 	}
 	
 //	function toggleAll() {
@@ -181,9 +197,8 @@ var shareContext = (function() {
 			type: "POST",
 			url: url,
 			async: isAsync,
-			contentType : "application/json; charset=UTF-8",
 			dataType: "json",
-			data: JSON.stringify(data),
+			data: data,
 			success: function(result) {
 				if (result.status === "error") {
 					alert(messages.strLang7 + " code:" + result.code);

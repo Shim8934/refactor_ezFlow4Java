@@ -36,9 +36,9 @@ public interface EzWebFolderService_m {
 	
 	String checkShared(String folderFileId, String folderFileType, String folderPath, int tenantId) throws Exception;
 	
-	void insertShare(String sharerId, String folderFileId, String folderFileType, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
+	void insertShare(String sharerId, String folderFileId, String folderFileType, String deptListStr, String userListStr, String offset, int tenantId) throws Exception;
 	
-	void updateShare(String folderFileId, String folderFileType, String sharerId, List<Map<String, String>> userList, String offset, int tenantId) throws Exception;
+	void updateShare(String folderFileId, String folderFileType, String sharerId, String deptListStr, String userListStr, String offset, int tenantId) throws Exception;
 	
 	void deleteShare(String folderFileId, String folderFileType, String sharerId, int tenantId) throws Exception;
 	
