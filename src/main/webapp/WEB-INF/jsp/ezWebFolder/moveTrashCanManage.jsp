@@ -120,14 +120,14 @@
             	success : function (data) {
             		if (data.code == 0) {
 	            		alert("<spring:message code='ezWebFolder.t284'/>");
-            		}
+            		} else if (error.code == 2) {
+	            		alert("<spring:message code='ezWebFolder.t285'/>");
+					}else if (error.code == 3) {
+						alert("<spring:message code = 'ezWebFolder.t28'/>");
+					} 
             	},
             	error : function(error) {
-            		if (data.code == 3) {
-						alert("<spring:message code = 'ezWebFolder.t28'/>");
-					} else if (data.code == 2) {
-	            		alert("<spring:message code='ezWebFolder.t285'/>");
-					}
+            		alert(messages.strLang7 + error);
             	}
             })
             
@@ -152,7 +152,7 @@
       	<a class="imgbtn" onclick="move_onclick()"><span><spring:message code="ezWebFolder.t121"/></span></a>
 	</div>
 	<div style="margin: 0px 0px 10px 200px; position:fixed;">
-		<a class="imgbtn" onclick="window.close();"><span onclick=""><spring:message code='ezWebFolder.t110'/></span></a>
+		<a class="imgbtn" onclick="window.close();"><spring:message code='ezWebFolder.t110'/></a>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
