@@ -1568,11 +1568,13 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        var szFromName = "";
 	       
 	        for (count1 = 1; count1 < mailArr.length; count1++) {
-	            szFromName += mailArr[count1];
-	            
-	            if (count1 != mailArr.length - 1) {
-	            	szFromName += ";";
-	            }
+	        	if (count1 - 1 != i) {
+		            szFromName += mailArr[count1 - 1];
+		            
+		            if (count1 != mailArr.length - 1) {
+		            	szFromName += ";";
+		            }
+	        	}
 	        }
 	        
 	        formName.value = szFromName;
@@ -1602,6 +1604,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        checkname_cross_dialogArguments[4] = iType;
 	        checkname_cross_dialogArguments[5] = validDIV;
 	        checkname_cross_dialogArguments[6] = formName;
+	        checkname_cross_dialogArguments[7] = i; //tndk
 	        
 	        if (!CrossYN()) {
 	            EzHTTPTrans.style.display = "none";
@@ -1646,7 +1649,7 @@ function CompleteEmailAddress_Complete(rgParams) {
                     rgParams["returnedRecipientEmail"][count1], rgParams["returnedRecipientHref"][count1]);
 
                 var IsInsert = CheckMailReceiver(newElem);
-
+                                                                                     
                 if (!IsInsert) {
                     checkname_cross_dialogArguments[5].appendChild(newElem);
                 }
@@ -1654,8 +1657,12 @@ function CompleteEmailAddress_Complete(rgParams) {
         }
         var szFromName = "";
         for (count1 = 1; count1 < checkname_cross_dialogArguments[3].length; count1++) {
-            szFromName += checkname_cross_dialogArguments[3][count1];
-            if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";
+        	if (count1 - 1 != checkname_cross_dialogArguments[7]) {
+        		szFromName += checkname_cross_dialogArguments[3][count1-1];
+                if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";
+        	}
+        	/*szFromName += checkname_cross_dialogArguments[3][count1];
+            if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";*/
         }
         checkname_cross_dialogArguments[6].value = szFromName;
     }
