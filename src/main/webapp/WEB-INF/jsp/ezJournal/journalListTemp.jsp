@@ -22,7 +22,7 @@
 					<img src="/images/newAttach.gif" style="vertical-align: middle;">
 				</th>
 				<th id="BoardList_TH_1" onclick="setListOrder(this)" order="8" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: left; width:20%;" class="h5_center">
-					<spring:message code='ezJournal.t12'/>
+					<spring:message code='ezJournal.t176'/>
 				</th>
 				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:60%;" class="h5_center">
 					<spring:message code='ezJournal.t56'/>
