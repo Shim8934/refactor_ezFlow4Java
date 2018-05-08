@@ -11,10 +11,10 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<style>
-		#lstAttachLink {
-		height: 117px;
-		border: 1px solid #3C2F2E;
-		}
+			#lstAttachLink {
+				height: 117px;
+				border: 1px solid #3C2F2E;
+			}
 		</style>
 		<script type="text/javascript">
 		    var lstAttachLink = document.getElementById("lstAttachLink");
@@ -26,6 +26,7 @@
 		        evt.stopPropagation();
 		        evt.preventDefault();
 		    }
+		    
 		    function onDragOver(evt) {
 		        evt.dataTransfer.dropEffect = "copy";
 		        evt.stopPropagation();
@@ -41,17 +42,21 @@
 		    var isfileup = false;
 		    var isbigyn = "N";
 			var alertCnt = 1;
+			var currUid = 0;
 		    
 		    function onDrop(evt) {
-		        if (evt != undefined) {
+		       
+		    	if (evt != undefined) {
 		            evt.stopPropagation();
 		            evt.preventDefault();
 				
 					if (evt.dataTransfer.items == undefined || evt.dataTransfer.items == null) {
+						
 						if (evt.dataTransfer.files.length == 0) {
 							alert(strLangKMS08);
 							return;
 						}
+						
 					} else {
 						var length = evt.dataTransfer.items.length;
 						
@@ -74,14 +79,12 @@
 		
 		        if (evt == undefined) {
 		            filelist = document.getElementById("file").files;
-		        }
-		        else {
+		        } else {
 		            filelist = evt.dataTransfer.files;
 		        }
 				
 		        var tempfilesize = 0;
 		        var tempbigfilesize = 0;
-		
 		        var filecnt = file.length;
 		        var bigFileCheck = false;
 		        
@@ -91,7 +94,8 @@
 		        }
 		        
 		        for (var i = 0; i < filelist.length; i++) {
-		            if (filelist[i].size / 1024 / 1024 > window.parent.BigSizeAttachMBSize || isbigyn == "Y") {
+		            
+		        	if (filelist[i].size / 1024 / 1024 > window.parent.BigSizeAttachMBSize || isbigyn == "Y") {
 		                bigFileCheck = true;
 		                bigfile[filecnt + i] = filelist[i];
 		                tempbigfilesize += filelist[i].size;
@@ -105,12 +109,14 @@
 		            bigFileCheck = true;
 		        }
 		
-		        if(bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0 ) {
-		        	if("${ userInfo.lang }" == "2")
+		        if (bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0) {
+		        	
+		        	if ("${ userInfo.lang }" == "2") {
 		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + strLang76);
-		            else
+		        	} else {
 		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
-		
+		        	}
+		        	
 		            file.splice(file.length - filelist.length, filelist.length);
 		            return;
 		        }
@@ -141,26 +147,27 @@
 		            */
 		            
 		            status = 1;
-		            
 		            return status;
 		        }
 
 		        if ((bigfilesize + tempbigfilesize) / 1024 / 1024 > window.parent.totBigSizeAttachMBSize) {
-		        	if ("${ userInfo.lang }" == "2")
+		        	
+		        	if ("${ userInfo.lang }" == "2") {
 		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + strLang169);
-		            else
+		        	} else {
 		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + "MB" + strLang169);
-		            
+		        	}
+		        	
 		        	file.splice(file.length - filelist.length, filelist.length);
 		            return;
 		        }
 		
 		        filesize += tempfilesize;
 		        bigfilesize += tempbigfilesize;
-
 		        checkMailStatusAndFileUpload();
 		        
 		        if (CrossYN()) {
+		        	
 		        	if (navigator.userAgent.search('Trident') != -1) { //IE 11
 		        		document.getElementById("file").type = "text";
 		                document.getElementById("file").type = "file";
@@ -168,8 +175,7 @@
 		            	document.getElementById("file").value = "";
 		        	}
 		            
-		        }
-		        else {
+		        } else {
 		            document.getElementById("file").type = "text";
 		            document.getElementById("file").type = "file";
 		        }
@@ -189,22 +195,24 @@
 		    }
 		    
 		    function uploadProgress(evt) {
-		        if (evt.lengthComputable) {
+		        
+		    	if (evt.lengthComputable) {
 		            var percentComplete = Math.round(evt.loaded * 100 / evt.total);
 		            var ua = navigator.userAgent;
 		            document.getElementById('prog_bar').style.width = percentComplete + "%";
 		            document.getElementById('prog_num').innerHTML = percentComplete;
-		        }
-		        else {
+		        } else {
 		            document.getElementById('prog').innerHTML = 'unable to compute';
 		        }
 		    }
 		
 		    window.onload = function () {
 		        var ua = navigator.userAgent;
+		        
 		        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
 		            document.getElementById("file").multiple = false;
 		        }
+		        
 		        var oTable = document.createElement("TABLE");
 		        oTable.style.width = "100%";
 		        oTable.id = "filelist";
@@ -212,15 +220,21 @@
 		
 		        var objTr = document.createElement("TR");
 		        var objTh = document.createElement("TH");
+		        
 		        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
 		            objTh.style.width = "24px";
-		        }
-		        else
+		        } else {
 		            objTh.style.width = "15px";
+		        }
+		        
 		        var input = document.createElement("input");
 		        input.type = "checkbox";
 		        input.id = "checkboxall";
-		        input.onclick = function () { checkall(); };
+		        
+		        input.onclick = function () { 
+		        	checkall(); 
+		        };
+		        
 		        objTh.appendChild(input);
 		        objTr.appendChild(objTh);
 		
@@ -238,10 +252,12 @@
 		        document.getElementById("lstAttachLink").appendChild(oTable);
 		        parent.DragObjectComplet();
 		        
-		        if(window.parent.totBigSizeAttachMBSize == 0) {
-				$("body div:first span:first a:nth-child(2)").css("display","none");
+		        if (window.parent.totBigSizeAttachMBSize == 0) {
+					$("body div:first span:first a:nth-child(2)").css("display","none");
 		        }
+		        
 		    }
+		    
 		    var AttatchReturnValue;
 		    function uploadComplete(evt) {
 		        document.getElementById('prog_bar').style.width = "0%";
@@ -250,14 +266,13 @@
 		        
 		        if (xhr.responseText == "OVERFLOW") {
 		            alert(strLang167);
-		        }
-		        else if (xhr.responseText == "NODATA") {
+		        } else if (xhr.responseText == "NODATA") {
 		            alert(strLang223);
-		        }
-		        else {
+		        } else {
 		            var tempxmldom = loadXMLString(xhr.responseText);
 		            var filecnt = document.getElementById("filelist").childNodes.length;
 		            var j = 0;
+		            
 		            for (var i = 0; i < filecnt - 1; i++) {
 		                var filelistnode = document.getElementById("filelist").childNodes[i + 1];
 		
@@ -268,15 +283,15 @@
 		                    j++;
 		                }
 		            }
+		            
 		            AttatchReturnValue = null;
 		            AttatchReturnValue = window.parent.FileUpdateAfter(xhr.responseText);
-		            
 		            FileUpdataAfterComplete();
 		        }
 		        
 		        isfileup = false;
 		    }
-			
+		
 		    function uploadComplete2(evt) {
 		        document.getElementById('prog_bar').style.width = "0%";
 		        document.getElementById('prog_num').innerHTML = "0";
@@ -284,21 +299,21 @@
 		
 		        if (xhr2.responseText == "OVERFLOW") {
 		            alert(strLang167);
-		        }
-				else if (xhr2.responseText == "OVERSIZE") {
-					if ("${ userInfo.lang }" == "2") {
+		        } else if (xhr2.responseText == "OVERSIZE") {
+					
+		        	if ("${ userInfo.lang }" == "2") {
 		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + strLang169);
 					} else {
 		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + "MB" + strLang169);
 					}
-		        }
-		        else if (xhr2.responseText == "NODATA") {
+		        
+		        } else if (xhr2.responseText == "NODATA") {
 		            alert(strLang223);
-		        }
-		        else {
+		        } else {
 		            var tempxmldom = loadXMLString(xhr2.responseText);
 		            var filecnt = document.getElementById("filelist").childNodes.length;
 		            var j = 0;
+		          
 		            for (var i = 0; i < filecnt - 1; i++) {
 		                var filelistnode = document.getElementById("filelist").childNodes[i + 1];
 		
@@ -309,6 +324,7 @@
 		                    j++;
 		                }
 		            }
+		            
 		            AttatchReturnValue = null;
 		            AttatchReturnValue = window.parent.FileUpdateAfter(xhr2.responseText);
 		            FileUpdataAfterComplete();
@@ -316,34 +332,93 @@
 		        
 		        isfileup = false;
 		    }
-		
+		    
 		    function FileUpdataAfterComplete() {
 		        var filelist = SelectNodes(AttatchReturnValue, "DATA/ROW");
+		        
 		        for (var i = 0; i < filelist.length; i++) {
 		            var FilePath = SelectSingleNodeValue(filelist[i], "FILEPATH");
 		            var FileURL = SelectSingleNodeValue(filelist[i], "URL");
 		            var FileBIG = SelectSingleNodeValue(filelist[i], "BIG");
 		            var FileITEMID = SelectSingleNodeValue(filelist[i], "ITEMID");
-		            SetAttachItemLink(FilePath, FileURL, FileBIG, FileITEMID);
+		            var g_url = SelectSingleNodeValue(filelist[i], "UID");
+		            
+		            SetAttachItemLink(FilePath, FileURL, FileBIG, FileITEMID, g_url);
 		        }
+		        
 		        AttatchReturnValue = null;
 		    }
-		    function SetAttachItemLink(filepath, url,big,itemid) {
+
+		    /* 2018-04-25 김유진 - 첨부 파일 업로드 시 필요한 prop를 set해주는 메서드 수정 */
+		    function SetAttachItemLink(filepath, url, big, itemid, g_url) {
 		        var TRRows = document.getElementById("lstAttachLink").getElementsByTagName("TR");
+		        
 		        for (var i = 0; i < TRRows.length; i++) {
-		            if (GetAttribute(TRRows.item(i), "value") != null && GetAttribute(TRRows.item(i), "value") != "") {
-		                if (GetAttribute(TRRows.item(i), "value") == filepath) {
+		            
+		        	if (GetAttribute(TRRows.item(i), "value") != null && GetAttribute(TRRows.item(i), "value") != "") {
+		               
+		        		if (GetAttribute(TRRows.item(i), "value") == filepath) {
+		                	var index = parseInt(TRRows.item(i).getAttribute("_fileindex"));
+		                	
+		                    currUid = g_url;
 		                    TRRows.item(i).childNodes.item(1).setAttribute("_href", url);
+		                    TRRows.item(i).setAttribute("_uid", g_url);
 		                    TRRows.item(i).setAttribute("_big", big);
 		                    TRRows.item(i).setAttribute("_itemid", itemid);
-		                    TRRows.item(i).childNodes.item(1).ondblclick = function () { FileDownload(this); };
+		                    TRRows.item(i).childNodes.item(1).setAttribute("style", "cursor:pointer");
+		                    TRRows.item(i).childNodes.item(1).onclick = function () { 
+			                    var fileIndex = $(this).closest('tr').attr('_fileindex');
+		                    	var fileUid = $(this).closest('tr').attr('_uid');
+		                    	
+		                    	FileDownload(this, fileIndex, parseInt(fileUid)); 
+		                    };
 		                }
+		        		
+		        		if (GetAttribute(TRRows.item(i), "_uid") < g_url) {
+		        			TRRows.item(i).setAttribute("_uid", g_url);
+		        		}
 		            }
 		        }
 		    }
-		    function FileDownload(obj) {
-		    	window.parent.DownloadAttach(GetAttribute(obj, "_href"));
+		 	
+		    /* 2018-04-25 김유진 - 첨부 파일삭제시 file 업로드 임시보관함 uid 업데이트 메서드 */
+		    function updateItemUid() {
+		    	var TRRows = document.getElementById("lstAttachLink").getElementsByTagName("TR");
+		    	var nextUid = parseInt(currUid) + 1;
+		    	
+		    	for (var i = 0; i < TRRows.length; i++) {
+		    		
+		    		if (GetAttribute(TRRows.item(i), "value") != null && GetAttribute(TRRows.item(i), "value") != "") {
+			    		
+		    			if (GetAttribute(TRRows.item(i), "_uid") == currUid) {
+		        			TRRows.item(i).setAttribute("_uid", nextUid);
+		        		} 
+		    		}
+		    	}
+
+		    	currUid = nextUid;
 		    }
+		    
+		    /* 2018-04-25 김유진 - 일반첨부시 해당 index와 uid를 받아서 download href를 넘겨주는 메서드 */
+		    function FileDownload(obj, fileIndex, fileUid) {
+				var emptyStr = "";
+				
+		    	if (typeof (fileIndex) == "undefined" || fileIndex == null) {
+		    		fileIndex = emptyStr;
+		    	} else if (typeof (fileUid) == "undefiend" || fileUid == null) {
+		    		fileUid = emptyStr;
+		    	}
+		    	
+		    	if (fileIndex != emptyStr && fileUid != emptyStr) {
+		    		var href = GetAttribute(obj, "_href");
+		    		href = href + "&index=" + fileIndex + "&uid=" + fileUid;
+		    		window.parent.DownloadAttach(href);
+		    	} else {
+			    	window.parent.DownloadAttach(GetAttribute(obj, "_href"));
+		    	}
+		    	
+		    }
+		    
 		    function uploadFailed(evt) {
 		        isfileup = false;
 		        alert(strLangKMS06);
@@ -381,8 +456,10 @@
 		
 		    function btnfiledel() {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
+		        
 		        for (var i = 1; i < filecnt; i++) {
-		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
+		            
+		        	if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
 		            	var pAttachDelSN;
 		                var pAttachDelFileName;
 		                var is_newfile;
@@ -393,6 +470,7 @@
 		                window.parent.DelAttachFileAtList(document.getElementById("filelist").childNodes[i]);
 		                
 		                var delfilesize = GetAttribute(document.getElementById("filelist").childNodes[i], "_filesize");
+		               
 		                if (delfilesize == "") {
 		                    delfilesize = 0;
 		                }
@@ -403,11 +481,16 @@
 		                } else {
 		                    filesize -= delfilesize;
 		                    file.splice(i - 1, 1);
-		                    for (var j = 0; j <length; j++) {
-			                	if (i <= j && $('#filelist tr:eq(' + j + ')').is('[_fileindex]'))  {
+		                    
+		                    for (var j = 0; j < length; j++) {
+			                	
+		                    	if (i <= j && $('#filelist tr:eq(' + j + ')').is('[_fileindex]'))  {
 				                	$('#filelist tr:eq(' + j + ')').attr("_fileindex",$('#filelist tr:eq(' + j + ')').attr("_fileindex") - 1);
 			                	}
 			                }
+		                    
+		                 	// 2018-04-25 김유진 - 첨부 파일에 클릭하면 다운로드 하는 기능 수정
+			                updateItemUid();
 		                }                
 		                
 		                document.getElementById("filelist").removeChild(document.getElementById("filelist").childNodes[i]);
@@ -421,10 +504,10 @@
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		
 		        for (var i = 1; i < filecnt; i++) {
-		            if (document.getElementById("checkboxall").checked == true) {
+		            
+		        	if (document.getElementById("checkboxall").checked == true) {
 		                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = true;
-		            }
-		            else {
+		            } else {
 		                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = false;
 		            }
 		        }
@@ -466,7 +549,7 @@
 		    }
 		
 		    var xhr2 = new XMLHttpRequest();
-		    function fileupload2(fileXml) {
+		    function fileupload2(fileXml,purl) {
 		    	isfileup = true;
 				
 		        if (!filesizecheck(fileXml)) {
@@ -483,7 +566,13 @@
 		        createNodeAndInsertText(fileXml, objNode, "TXTNAME", window.parent.filedate);
 		        createNodeAndInsertText(fileXml, objNode, "ENDDAY", window.parent.BigSizeMailAttachDelDay);
 		        
-		        xhr2.open("POST", "/ezEmail/mailInterUploadCopyXCK.do?STATUS=" + window.parent.filedate + "&isbigyn=" + isbigyn, false);
+		        var targetUrl_sb="";
+		        if (purl) {
+		        	targetUrl_sb=purl;
+				} else {
+					targetUrl_sb = "/ezEmail/mailInterUploadCopyXCK.do";
+				}
+		        xhr2.open("POST", targetUrl_sb+"?STATUS=" + window.parent.filedate + "&isbigyn=" + isbigyn, false);
 		        xhr2.send(fileXml);
 		        
 		        if (xhr2.status >= 200 && xhr2.status < 300) {
@@ -495,20 +584,17 @@
 		    
 		    function filesizecheck(fileXml) {
 				var attachFileXml = fileXml;
-		        
 		        var tempfilesize = 0;
 		        var tempbigfilesize = 0;
-
 		        var bigFileCheck = false;
 
-		        for (var i = 0; i < attachFileXml.getElementsByTagName("ROW").length ; i++) {
+		        for (var i = 0; i < attachFileXml.getElementsByTagName("ROW").length; i++) {
 		            var filelistsize = Number(getNodeText(attachFileXml.getElementsByTagName("DATA6").item(i)));
 
 		            if (filelistsize / 1024 / 1024 > window.parent.BigSizeAttachMBSize) {
 		                bigFileCheck = true;
 		                tempbigfilesize += filelistsize;
-		            }
-		            else {
+		            } else {
 		                tempfilesize += filelistsize;
 		            }
 		        }
@@ -517,36 +603,48 @@
 		            bigFileCheck = true;
 		        }
 		        
-		        if(bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0 ) {
-		        	if("${ userInfo.lang }" == "2")
+		        if (bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0) {
+		        	
+		        	if("${ userInfo.lang }" == "2") {
 		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + strLang76);
-		            else
+		        	} else {
 		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
-		            return false;
+		        	}
+		        	
+		        	return false;
 		        }
 
-		        if (bigFileCheck)
+		        if (bigFileCheck) {
 		            alert(window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
-
+		        }
+		        
 		        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize) {
-		        	if(window.parent.FtotBigSizeAttachSize == 0){
-		        		if("${ userInfo.lang }" == "2")
+		        	
+		        	if (window.parent.FtotBigSizeAttachSize == 0) {
+		        		
+		        		if ("${ userInfo.lang }" == "2") {
 			                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + strLang76);
-			            else
+		        		} else {
 			                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
-		        	}
-		        	else if ("${ userInfo.lang }" == "2")
+		        		}
+		        	
+		        	} else if ("${ userInfo.lang }" == "2") {
 		                alert(strLang75 + window.parent.totSizeAttachMBSize + strLang76);
-		            else
+		        	} else {
 		                alert(strLang75 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
-		            return false;
+		        	}
+
+		        	return false;
 		        }
 
 		        if ((bigfilesize + tempbigfilesize) / 1024 / 1024 > window.parent.totBigSizeAttachMBSize) {
-		            if ("${ userInfo.lang }" == "2")
+		        	
+		            if ("${ userInfo.lang }" == "2") {
 		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + strLang169);
-		            else
+		            } else {
 		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + "MB" + strLang169);
+		            }
+
 		            return false;
 		        }
 
@@ -554,7 +652,6 @@
 		        bigfilesize += tempbigfilesize;
 
 		        return true;
-
 		    }
 		    
 		</script>

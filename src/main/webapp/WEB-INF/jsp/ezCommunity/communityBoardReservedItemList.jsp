@@ -310,6 +310,7 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
+		<div  style = "height:370px;">
 		<table class="cmhomelist" id ="tblList" style="width:100%;margin-top:13px">
 			<tr>
 				<th style="padding:0;width:20px; text-align:center;"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
@@ -363,17 +364,18 @@
 					
 				<c:choose>
 					<c:when test="${pSortBy == 'A.Attachments'}">
-						<th style="cursor:pointer"  width="20" onClick="SortPage('A.Attachments desc')"><img src="/images/file.gif" width="13" height="12"><img src="/images/view-sortup.gif" width="9" height="9"></th>
+						<th style="cursor:pointer"  width="20" onClick="SortPage('A.Attachments desc')"><img src="/images/file.gif"><img src="/images/view-sortup.gif" width="9" height="9"></th>
 					</c:when>
 					<c:when test="${pSortBy == 'A.Attachments desc'}">
-						<th style="cursor:pointer"  width="20" onClick="SortPage('A.Attachments')"><img src="/images/file.gif" width="13" height="12"><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+						<th style="cursor:pointer"  width="20" onClick="SortPage('A.Attachments')"><img src="/images/file.gif"><img src="/images/view-sortdown.gif" width="9" height="9"></th>
 					</c:when>
 					<c:otherwise>
-						<th style="cursor:pointer"  width="20" onClick="SortPage('A.Attachments')"><img src="/images/file.gif" width="13" height="12"></th>
+						<th style="cursor:pointer"  width="20" onClick="SortPage('A.Attachments')"><img src="/images/file.gif"></th>
 					</c:otherwise>
 				</c:choose>
 			</tr>
-		</table>		
+		</table>	
+		</div>	
 		<div id="tblPageRayer" style="margin-top:10px"></div>
 		<div id="ListInfo" style="DISPLAY:none">${ListInfo}</div>
 	</body>

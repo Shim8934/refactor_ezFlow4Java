@@ -369,10 +369,6 @@
 							shareContext.showShareInfo(this);
 						});
 						tdElmt10.appendChild(spanElmt);
-					} else if (result[i]["fileShareStatus"] == "S") {
-						var spanElmt = document.createElement("span");
-						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
-						tdElmt10.appendChild(spanElmt);
 					} else {
 						tdElmt10.textContent = "";
 					}
@@ -797,10 +793,13 @@
     </div>
 	<div id="searchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
 		<div class="popupwrap4">
-			<table class="content" style="margin-top:10px;">  
+			<table class="content" style="margin-top:10px;">
 				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' /></th>
+					<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" width="16px" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' />&nbsp;<spring:message code='ezWebFolder.t123' /></th>
 				</tr>
+				<tr>
+					<td style="border-left-color:white;border-right-color:white;height:10px" colspan="2"></td>
+				</tr> 
 				<tr>
 		           <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
 		           <td>
@@ -812,15 +811,15 @@
 		       
 		        <tr>
 		            <th style="text-align:center"><spring:message code='ezWebFolder.t152' /></th><!-- 확장자 -->
-		            <td><input type="text" id="searchExt" style="width:98%" value="" name="searchExt"></td>
+		            <td><input type="text" id="searchExt" style="width:99%" value="" name="searchExt"></td>
 		        </tr>
 		        <tr>
 		            <th style="text-align:center"><spring:message code='ezWebFolder.t153' /></th><!-- 파일명 -->
-		            <td><input type="text" id="searchFileName" style="width:98%" value="" name="searchFileName"></td>
+		            <td><input type="text" id="searchFileName" style="width:99%" value="" name="searchFileName"></td>
 		        </tr>  
 		         <tr>
 		            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 작성자 -->
-		            <td><input type="text" id="searchCreateName" style="width:98%" value="" name="searchCreateName"></td>
+		            <td><input type="text" id="searchCreateName" style="width:99%" value="" name="searchCreateName"></td>
 		        </tr>    
 			</table>
 			<br/>

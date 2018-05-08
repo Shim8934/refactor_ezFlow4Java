@@ -444,6 +444,7 @@
 			<li><span onClick="filePermanentDelete()"><spring:message code='ezWebFolder.t19'/></span></li>
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 			<li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
+			<li><img src="/images/i_bar.gif"></li>
 			<li id="right" style="float:left;">
 				<select class="select" id="idSelect" onchange="changeValue(this.value);">
 					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option>
@@ -517,7 +518,10 @@
 		<div class="popupwrap4">
 			<table class="content" style="margin-top:10px;">  
 				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' /></th>
+					<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" width="16px" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' />&nbsp;<spring:message code='ezWebFolder.t123' /></th>
+				</tr>
+				<tr>
+					<td style="border-left-color:white;border-right-color:white;height:10px" colspan="2"></td>
 				</tr>
 				<tr>
 		           <th style="text-align:center"><spring:message code='ezWebFolder.t190' /></th>
@@ -537,15 +541,15 @@
 				</tr>
 		        <tr>
 		            <th style="text-align:center"><spring:message code='ezWebFolder.t152' /></th><!-- 확장자 -->
-		            <td><input type="text" id="searchExt" style="width:98%" value="" name="searchExt"></td>
+		            <td><input type="text" id="searchExt" style="width:99%" value="" name="searchExt"></td>
 		        </tr>
 		        <tr>
 		            <th style="text-align:center"><spring:message code='ezWebFolder.t153' /></th><!-- 파일명 -->
-		            <td><input type="text" id="searchFileName" style="width:98%" value="" name="searchFileName"></td>
+		            <td><input type="text" id="searchFileName" style="width:99%" value="" name="searchFileName"></td>
 		        </tr>  
 		         <tr>
 		            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 작성자 -->
-		            <td><input type="text" id="searchCreateName" style="width:98%" value="" name="searchCreateName"></td>
+		            <td><input type="text" id="searchCreateName" style="width:99%" value="" name="searchCreateName"></td>
 		        </tr>    
 			</table>
 			<br/>

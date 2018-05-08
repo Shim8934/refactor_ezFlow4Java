@@ -34,14 +34,14 @@
 	                functionType   = parent.inputNameDlg_cross_dialogArguments[3];
 	                if (functionType == "insert") {
 		            	$('#title').text("<spring:message code='ezWebFolder.t302' />");
-		            	$('.txt').text("<spring:message code='ezWebFolder.t265' />");
+		            	/* $('.txt').text("<spring:message code='ezWebFolder.t265' />"); */
 		            }else if(functionType == "update") {
 		                folderName1    = parent.inputNameDlg_cross_dialogArguments[4];
 		                folderName2    = parent.inputNameDlg_cross_dialogArguments[5];
 		                $('#txt_FolderName1').val(folderName1);
 		                $('#txt_FolderName2').val(folderName2);
 		            	$('#title').text("<spring:message code='ezWebFolder.t303' />");
-		            	$('.txt').text("<spring:message code='ezWebFolder.t304' />");
+		            	/* $('.txt').text("<spring:message code='ezWebFolder.t304' />"); */
 		            }
 	            } catch (e) {
 	            	
@@ -139,13 +139,13 @@
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
 	    <h1 id ="title"></h1>
-	    <div class="txt"><span></span></div>
+	    <!-- <div class="txt"><span></span></div> -->
 	    <div class="nobox">
 	    	<span id = "ko_lang"><spring:message code='ezWebFolder.t226' /></span>
-	        <input id="txt_FolderName1" type="text" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:2px" >
+	        <input id="txt_FolderName1" type="text" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:3px;height:25px" >
 	        <br>
 	    	<span id = "ko_lang"><spring:message code='ezWebFolder.t227' /></span>
-	        <input id="txt_FolderName2" type="text" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:2px" >
+	        <input id="txt_FolderName2" type="text" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:3px;height:25px" >
 	    </div>
 	    <div class="btnposition btnpositionNew">
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezWebFolder.t116' /></span></a>

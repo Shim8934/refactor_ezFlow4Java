@@ -995,7 +995,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	logger.debug("getBoardList started");
     	logger.debug("boardID : " + boardVO.getBoardId());
     	logger.debug("boardType : " + boardVO.getBoardType());
-
+    	
     	userInfo = commonUtil.userInfo(loginCookie);
     	
     	String boardID = boardVO.getBoardId();
@@ -1026,7 +1026,6 @@ public class EzBoardController extends EgovFileMngUtil{
     		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
     			boardVO.setBoardType("N");
     			resultXML = getNewItemList(boardVO, userInfo);
-    			System.out.println(resultXML);
     		} else {
     			resultXML = getBoardListItem(boardVO, userInfo, type);
     		}
@@ -1885,8 +1884,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
-		
+
 		myFavoriteVO.setBoardId(boardVO.getBoardId());
+		/* 2018-05-03 홍승비 - 썸네일게시판 표출 시 사용자 테넌트 id 설정 추가 */
+		myFavoriteVO.setTenantID(userInfo.getTenantId());
 		myFavoriteVO.setUserId(userInfo.getId());
 		myFavoriteVO.setType(type);
 		myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
@@ -2022,7 +2023,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardInfo = getBoardInfo(boardVO.getBoardId(), userInfo);
 		
 		boardVO.setSubFlag("N");
-		boardVO.setSearchQuery(boardVO.getSearchQuery().replace("&lt;", "<").replace("&gt;", ">"));
+		//boardVO.setSearchQuery(boardVO.getSearchQuery().replace("&lt;", "<").replace("&gt;", ">"));
 		
 		Document searchQueryDoc = commonUtil.convertStringToDocument(boardVO.getSearchQuery());
 		
@@ -2033,6 +2034,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getSearchQuery().indexOf("TITLE;") != -1) {
 			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent());
 			returnQuery += " AND TITLE like '%" + boardVO.getTitle() + "%' ";
+		}
+		
+		if (boardVO.getSearchQuery().indexOf("CONTENT;") != -1) {
+				boardVO.setContent(searchQueryDoc.getElementsByTagName("CONTENT").item(0).getTextContent());
+				returnQuery += " AND CONTENT like '%" + boardVO.getContent() + "%' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("WRITERNAME;") != -1) {
@@ -2734,13 +2740,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardMyFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
 		
 		int boardCount = ezBoardService.getBrdTotalItemCount(boardMyFavoriteVO);
-		
 		int startRow = 1;
 		int endRow = 0;
 		
 		BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
 		
 		int personalCount = boardConfigVO.getListCount();
+
 		String previewtype = boardConfigVO.getPreview();
 		String fieldName = "";
 		String fieldValue = "";
@@ -3548,7 +3554,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardListVO.getTitle() != null && !boardListVO.getTitle().equals("")) {
 			boardListVO.setTitle(boardListVO.getTitle().replace("\\", "&#92;"));
 		}
-		
+		/* 2018-04-27 홍승비 - 게시요약의 \문자 변환 */ 
+		if (boardListVO.getABSTRACT() != null && !boardListVO.getABSTRACT().equals("")) {
+			boardListVO.setABSTRACT(boardListVO.getABSTRACT().replace("\\", "&#92;"));
+		}
+
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -3578,7 +3588,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
-
+		
+		logger.debug("boardListVO.getTitle()    ::    "+boardListVO.getTitle());
+		logger.debug("boardListVO.getAbstract()    ::    "+boardListVO.getABSTRACT());
+		logger.debug("boardListVO.getContent()    ::    "+boardListVO.getContent());
+		logger.debug("requestURL    ::    "+requestURL);
+		
 		logger.debug("newBoardItem ended");
 		return requestURL;
 	}
@@ -3754,7 +3769,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 			
 			strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
-			strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
+			/* 2018-04-27 홍승비 - 화면에 표시되는 파일명 특문처리 수정 */
+			strXML.append("<PFILENAME><![CDATA[" + commonUtil.cleanValue(pFileName[i]) + "]]></PFILENAME>");
 			strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
 			strXML.append("<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>");
 			strXML.append("</NODE>");
@@ -4959,7 +4975,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287", userInfo.getLocale()));
 		}
 		
-		if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
+		if (adjacentItemsEnableFlag != null && showAdjacent != null && adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
 			if (boardItem.getUpperItemIDTree() == null || boardItem.getUpperItemIDTree().equals("")) {
 				boardItem.setUpperItemIDTree(itemID);
 			}
@@ -5431,7 +5447,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		doc.getElementsByTagName("ENDDATE").item(0).setTextContent(doc.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 10) + " 23:59:59");
-		doc.getElementsByTagName("CONTENT").item(0).setTextContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace(System.lineSeparator(), "<br>"));
+		doc.getElementsByTagName("CONTENT").item(0).setTextContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
 		
 		if (!mode.equals("temp")) {
 			mode = "New";
@@ -5735,7 +5751,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			String itemID = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
 			String title = doc.getElementsByTagName("TITLE").item(0).getTextContent();
 			boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
-			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace(System.lineSeparator(), "<br>");;
+			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent();
 			
 			ezBoardService.photoListAlbumEdit(boardID, itemID, title, content, userInfo.getTenantId());
 			
@@ -5744,7 +5760,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			String itemID = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
 			String title = doc.getElementsByTagName("TITLE").item(0).getTextContent();
 			boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
-			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace(System.lineSeparator(), "<br>");;
+			content = doc.getElementsByTagName("CONTENT").item(0).getTextContent();
 			
 			ezBoardService.photoListAlbumEditTemp(boardID, itemID, title, content, userInfo.getTenantId());
 			
@@ -6126,7 +6142,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@ResponseBody
 	public String setBoardConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("setBoardConfig started");
-
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userID = request.getParameter("pUserID");

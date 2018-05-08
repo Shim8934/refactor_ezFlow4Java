@@ -94,7 +94,7 @@
 			
 			// 메일 부재중설정, 커뮤니티 포토게시판일 경우 이미지 업로드 아이콘 제거
 			if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
-				customAlignMenu[0].splice(customAlignMenu[0].indexOf('image'), 1);
+				customAlignMenu.splice(customAlignMenu.indexOf('image'), 1);
 	        }
 			
 			// 이미지 업로드 URL 설정
@@ -128,9 +128,15 @@
 				{name:'22px', value:'22px'},
 				{name:'24px', value:'24px'},
 				{name:'26px', value:'26px'},
+				{name:'36px', value:'30px'},
 				{name:'36px', value:'36px'},
+				{name:'36px', value:'42px'},
+				{name:'36px', value:'48px'},
 				{name:'54px', value:'54px'},
-				{name:'72px', value:'72px'}
+				{name:'54px', value:'72px'},
+				{name:'54px', value:'80px'},
+				{name:'72px', value:'88px'},
+				{name:'72px', value:'100px'}
 			];
 			
 			// 폰트 리스트 설정
@@ -157,12 +163,14 @@
 	            maxHeight : 0,
 	            width : '100%',
 	            height : '100%',
-	            lang : lang,
+	            defaultLanguage : lang,
 	            languagePathURL : '/js/ezEditor/kukudocsEditor/lang/',
 	            defaultFontFamily : defaultFontFamily,
 	            defaultFontSize : defaultFontSize,
 	            fontSize : fontSize,
 	            fontFamily : fontFamily,
+	            defaultTableWidth : 700,
+	            customMagicLineStyle : 'background-color:#888;',
 	            customAlignMenu : customAlignMenu,
 	            useMenuBar : false,
 	            useHTMLMode : useHTMLMode,

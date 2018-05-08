@@ -151,6 +151,9 @@
 	    var secureReadCount = "0";
 	    var secureReadDate = "";
 	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
+
+	    //업무일지 아이디
+	    var journalId = "${journalId}";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -774,22 +777,27 @@
 	        }
 	        AttachFileInfo(strXML);
 	    }
-	
+		
 	    function FileUpdateAfter(strXML) {
-	        tempXML = strXML;
+	        
+	    	tempXML = strXML;
 	        pAttachXml = loadXMLString(strXML);
+	        
 	        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
 	        var xmlDoc = createXmlDom();
 	        var objNode;
 	        var objRow;
 	        var objRows;
 	        var objRowRow;
+	        
 	        objNode = createNodeInsert(xmlDoc, objNode, "DATA");
 	        createNodeAndInsertText(xmlDoc, objNode, "CMD", "ADD");
 	        createNodeAndInsertText(xmlDoc, objNode, "URL", g_url);
 	        objRow = createNodeAndAppandNode(xmlDoc, objNode, objRow, "FILELIST");
+	        
 	        for (var i = 0; i < nodes.length; i++) {
-	            if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
+	            
+	        	if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
 	                objRows = createNodeAndAppandNode(xmlDoc, objRow, objRows, "FILE");
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "NAME", getNodeText(GetChildNodes(nodes[i])[2]));
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "PATH", getNodeText(GetChildNodes(nodes[i])[4]));
@@ -807,45 +815,65 @@
 	        var objRow;
 	        var objRows;
 	        objNode = createNodeInsert(xmlReturnValue, objNode, "DATA");
+	        
 	        if (xmlhttp.status == "200") {
+	        	
 	        	if (xmlhttp.responseText.indexOf("NO APPEND failed.") > -1) {
 	        		alert(strLang241);
-	        	}
-		       	else {
+	        	} else {
 		        	xmlDoc = loadXMLString(xmlhttp.responseText);
 		
-		            if (CrossYN())
+		            if (CrossYN()) {
 		                g_url = xmlDoc.getElementsByTagName("URL").item(0).textContent;
-		            else
+		            } else {
 		                g_url = xmlDoc.getElementsByTagName("URL").item(0).text;
+		            }
+		            
 		            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
+		            var folderPath = "${drafts}";
+	        	    var scheme = document.location.protocol + "//" + document.location.hostname;
+	        	    
+	                if (document.location.port != "80") {
+	                	scheme += ":" + document.location.port;
+	                }
+		            
+		            /* 2018-04-25 김유진 - 파일 첨부시 href에 넣어줄 aitem 수정 */
 		            for (var i = 0; i < filelist.length; i++) {
 		                filename = SelectSingleNodeValue(filelist[i], "NAME");
 		                path = SelectSingleNodeValue(filelist[i], "PATH");
 		                big_yn = SelectSingleNodeValue(filelist[i], "BIG");
 		                size = SelectSingleNodeValue(filelist[i], "SIZE");
 		                attid = SelectSingleNodeValue(filelist[i], "ITEMID");
-		                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
+		                
 		                if (big_yn == "Y") {
-		                    bigtrue = bigtrue + 1;
-		                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURIComponent(path) + "&filedate=" + encodeURIComponent(attid.split('/')[0]);
+		                	// 대용량 첨부시 
+		                	bigtrue = bigtrue + 1;
+		                	aitem = scheme  + "/ezEmail/downloadAttachCommon.do?"
+		                					+ "fileid=" + encodeURIComponent(path)
+		                					+ "&filedate=" + encodeURIComponent(attid.split('/')[0])
+		                					+ "&tid=" + tid;
+		                } else {
+		                	// 일반파일 첨부시
+			                aitem = "/ezEmail/downloadAttach.do?" 
+			                				+ "mode=Attach"
+			                				+ "&folderPath=" + encodeURIComponent(folderPath)
+			                				+ "&filename=" + encodeURIComponent(filename)
 		                }
-		                else {
-		                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
-		                }
+		                
 		                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "FILEPATH", path);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "URL", aitem);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "BIG", big_yn);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "ITEMID", attid);
+		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "UID", g_url);
 		            }
-		            
 		            returnvalue(strXML);
 	        	}
-	        }
-	        else {
+	        	
+	        } else {
 	            alert(xmlhttp.status + " : " + strLang241);
 	        }
+	        
 	        return xmlReturnValue;
 	    }
 	
@@ -872,7 +900,12 @@
 	            }
 	            else if (Org_cmd == "CommunityDotNet") {
 	                GetBoardItemInfo_New3_DotNet("${boardID}", "${itemID}");
-	            }	            
+	            }	
+	            //업무일지면...
+	            else if (Org_cmd == "journal") {
+	            	getJournalToMail();
+	            	return;
+	            }
 	            
 	            initFlag = true;
 	            pOrgAttachListXml = pAttachListXml;
@@ -885,6 +918,81 @@
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
 	    }
 	
+	    function getJournalToMail(){
+	    	var journal;
+	    	$.ajax ({
+				type : "POST",
+				async : false,
+				url : "/ezJournal/journalDetailJSON.do",
+				data : {
+					"journalId" : journalId
+				},
+				success : function(result) {
+					$("#eSubject").val("<spring:message code='ezJournal.t1' /><spring:message code='ezEmail.t674' /> : "+result.journalTitle);
+					var journalContent = "<p></p><p></p><hr>" + (result.journalContent).replace(/&#39;/gi, "\'");
+					message.SetEditorContent(journalContent);
+					var fileList = result.fileList;
+					
+					var pstrXML = "";
+
+					//첨부파일이 있을 경우
+			        if (fileList.length > 0) {
+			            pstrXML += "<LISTVIEWDATA><HEADERS>";
+			            pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+			            pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+			            pstrXML += "</HEADERS><ROWS>";
+			        }
+			        for (var i = 0; i < fileList.length; i++) {
+			            var filepath = fileList[i].filePath;
+			            var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
+			            var filename = fileList[i].fileName;
+			            var filesize = fileList[i].fileSize;
+
+			            pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+			            pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+			            pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+			            pstrXML += "<DATA3></DATA3>";
+			            pstrXML += "<DATA4>BOARD</DATA4>";
+			            pstrXML += "<DATA5>N</DATA5>";
+			            pstrXML += "<DATA6>" + filesize + "</DATA6>";
+			            if(filesize > BigSizeAttachSize )
+			                pstrXML += "<DATA7>Y</DATA7>";
+			            else
+			                pstrXML += "<DATA7>N</DATA7>";
+			            pstrXML += "</CELL><CELL>";
+			            pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
+			            pstrXML += "</CELL></ROW>";
+			        }
+			        if (pstrXML != "") {
+			            pstrXML += "</ROWS></LISTVIEWDATA>";
+			            objXML = loadXMLString(pstrXML);
+			            if (pAttachListXml == "") {
+			                pAttachListXml = objXML;
+			            }
+			            else {
+			                if (typeof (pAttachListXml) == "string")
+			                    Rtnxml = loadXMLString(pAttachListXml);
+			                else
+			                    Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+
+			                for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+			                    var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
+//			                    if (CrossYN())
+//			                        var Node = Rtnxml.importNode(objNewAttachNodes, true);
+//			                    else
+			                        GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
+			                }
+			                pAttachListXml = Rtnxml;
+			            }
+			            if (DragDropAttachObjetLoading) {
+//			            	AppendFileAttachInfo(pAttachListXml);
+			            	dadiframe.fileupload2(pAttachListXml,"/ezEmail/mailInterUploadCopyXCKFromJournal.do");
+			            }
+			        }
+				}
+			});
+	    }
+	    
 	    function btn_AttachSelect_onclick() {
 	        document.getElementById('mode').value = "ATT";
 	        document.form.file1.click();

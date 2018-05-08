@@ -58,7 +58,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	private CommonUtil commonUtil;
 	
 	@Override
-	public List<ShareVO> getSharingList(String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+	public List<ShareVO> getSharingList(String subSearchFlag, String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
 		
@@ -80,9 +80,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("searchFileType",    searchInfo.getSearchFileType());
 		map.put("searchStartDate",   searchStartDate);
 		map.put("searchEndDate",     searchEndDate);
+		map.put("subSearchFlag",     subSearchFlag);
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getSharingList(map);
-		
+			
 		for (ShareVO vo : list) {
 			// set folderPath
 			vo.setFolderPath(ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId));
@@ -92,7 +93,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public List<ShareVO> getSharedList(String folderId, String subSearchFlag, String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+	public List<ShareVO> getSharedList(String subSearchFlag, String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
 		
@@ -101,7 +102,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		}
 		
-		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId",	         userId);
@@ -117,36 +118,110 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("searchFileType",    searchInfo.getSearchFileType());
 		map.put("searchStartDate",   searchStartDate);
 		map.put("searchEndDate",     searchEndDate);
-		map.put("folderId",          folderId);
 		map.put("subSearchFlag",     subSearchFlag);
 		
-		List<ShareVO> list = null;
+		List<ShareVO> list = ezWebFolderDAO_m.getSharedList(map);
 		
-		if (folderId.equals("")) {
-			list = ezWebFolderDAO_m.getSharedList(map);
-			
-			for (ShareVO vo : list) {
-				// set folderPath
-				vo.setFolderPath(ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId));
-				
-			}
-		} else {
-			list = ezWebFolderDAO_m.getFolderFileList(map);
-			
-			for (ShareVO vo : list) {
-				vo.setShareStatus(checkShared(vo.getFileId(), vo.getFolderFileType(), vo.getFolderPath(), tenantId));
-				
-				// set folderPath
-				vo.setFolderPath(ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId));
-				
-			}
+		for (ShareVO vo : list) {
+			// set folderPath
+			vo.setFolderPath(ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId));
 		}
 		
 		return list;
 	}
 	
 	@Override
-	public Map<String, Long> getSharingCount(String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+	public List<ShareVO> getFolderFileList(String folderId, String subSearchFlag, String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+		String searchStartDate = searchInfo.getSearchStartDate();
+		String searchEndDate = searchInfo.getSearchEndDate();
+		
+		if (!searchStartDate.equals("") && !searchEndDate.equals("")) {
+			searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("primary", primary);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("startPoint", startPoint);
+		map.put("pageSize", pageSize);
+		map.put("tenantId", tenantId);
+		map.put("searchExt", searchInfo.getSearchExt());
+		map.put("searchFileName", searchInfo.getSearchFileName());
+		map.put("searchCreatorName", searchInfo.getSearchCreateName());
+		map.put("searchFileType", searchInfo.getSearchFileType());
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("folderId", folderId);
+		map.put("subSearchFlag", subSearchFlag);
+		
+		List<ShareVO> list = ezWebFolderDAO_m.getFolderFileList(map);
+		
+		for (ShareVO vo : list) {
+			// set folderPath
+			vo.setFolderPath(ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId));
+		}
+		
+		return list;
+	}
+	
+	@Override
+	public Map<String, Long> getFolderFileCount(String folderId, String subSearchFlag, String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+		String searchStartDate = searchInfo.getSearchStartDate();
+		String searchEndDate = searchInfo.getSearchEndDate();
+		
+		if (!searchStartDate.equals("") && !searchEndDate.equals("")) {
+			searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("primary", primary);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("tenantId", tenantId);
+		map.put("searchExt", searchInfo.getSearchExt());
+		map.put("searchFileName", searchInfo.getSearchFileName());
+		map.put("searchCreatorName", searchInfo.getSearchCreateName());
+		map.put("searchFileType", searchInfo.getSearchFileType());
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("folderId", folderId);
+		map.put("subSearchFlag", subSearchFlag);
+		
+		List<Map<String, Object>> list = ezWebFolderDAO_m.getFolderFileCount(map);
+		
+		long fileCount	 = 0;
+		long folderCount = 0;
+		long totalCount	 = 0;
+		long totalPage	 = 0;
+		
+		for (Map<String, Object> info : list) {
+			String folderFileType = (String) info.get("folderfileType");
+			if (folderFileType.equals("D")) {
+				folderCount = (Long) info.get("count");
+			} else if (folderFileType.equals("F")) {
+				fileCount = (Long) info.get("count");
+			}
+		}
+		
+		totalCount	= fileCount + folderCount;
+		totalPage	= (totalCount + pageSize - 1) / pageSize;
+		
+		Map<String, Long> countInfo = new HashMap<String, Long>();
+		countInfo.put("fileCount", fileCount);
+		countInfo.put("folderCount", folderCount);
+		countInfo.put("totalCount", totalCount);
+		countInfo.put("totalPage", totalPage);
+		countInfo.put("pageSize", (long) pageSize);
+		
+		LOGGER.debug("countInfo: " + countInfo);
+		return countInfo;
+	}
+	
+	@Override
+	public Map<String, Long> getSharingCount(String subSearchFlag, String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
 		
@@ -166,6 +241,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("searchFileType",    searchInfo.getSearchFileType());
 		map.put("searchStartDate",   searchStartDate);
 		map.put("searchEndDate",     searchEndDate);
+		map.put("subSearchFlag",     subSearchFlag);
 		
 		List<Map<String, Object>> list = ezWebFolderDAO_m.getSharingCount(map);
 		
@@ -198,7 +274,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public Map<String, Long> getSharedCount(String folderId, String subSearchFlag, String userId, String deptId, String compId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+	public Map<String, Long> getSharedCount(String subSearchFlag, String userId, String deptId, String compId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
 		
@@ -207,7 +283,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		}
 		
-		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId",	userId);
@@ -221,16 +297,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("searchFileType",    searchInfo.getSearchFileType());
 		map.put("searchStartDate",   searchStartDate);
 		map.put("searchEndDate",     searchEndDate);
-		map.put("folderId",          folderId);
 		map.put("subSearchFlag",     subSearchFlag);
 		
-		List<Map<String, Object>> list = null;
-		
-		if (folderId.equals("")) {
-			list = ezWebFolderDAO_m.getSharedCount(map);
-		} else {
-			list = ezWebFolderDAO_m.getFolderFileCount(map);
-		}
+		List<Map<String, Object>> list = ezWebFolderDAO_m.getSharedCount(map);
 		
 		long fileCount	 = 0;
 		long folderCount = 0;
@@ -325,7 +394,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public List<Map<String, String>> getPermissionIdList(String userId, String deptId, String compId, int tenantId) throws Exception {
+	public List<Map<String, String>> getPermissionIdMapList(String userId, String deptId, String compId, int tenantId) throws Exception {
 		List<Map<String, String>> idList = new ArrayList<Map<String, String>>();
 		
 		List<String> addjobList = ezWebFolderService_y.getAddJobList(tenantId, userId);
@@ -359,6 +428,31 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			
 			idList.add(idMap);
 		}
+		
+		LOGGER.debug("idMapList: " + idList);
+		return idList;
+	}
+	
+	@Override
+	public List<String> getPermissionIdList(String userId, String deptId, String compId, int tenantId) throws Exception {
+		List<String> idList = new ArrayList<String>();
+		
+		List<String> addjobList = ezWebFolderService_y.getAddJobList(tenantId, userId);
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",	userId);
+		map.put("tenantId",	tenantId);
+		
+		List<String> folderUserIdList = ezWebFolderDAO_m.getFolderUserIdList_D(map);
+		
+		Set<String> idSet = new HashSet<String>();
+		idSet.add(userId);
+		idSet.add(deptId);
+		idSet.add(compId);
+		idSet.addAll(addjobList);
+		idSet.addAll(folderUserIdList);
+		
+		idList.addAll(idSet);
 		
 		LOGGER.debug("idList: " + idList);
 		return idList;
@@ -467,7 +561,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception {
-		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId",	         userId);
@@ -490,7 +584,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Override
 	public Map<String, Long> getHiddenSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception {
-		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId",	userId);
@@ -535,7 +629,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		Date date            = new Date();
 		String shareDate     = commonUtil.getDateStringInUTC(sdf.format(date), offset, true);
 		
-		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderFileId", folderFileId);
@@ -560,7 +654,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public void showShare(String folderFileId, String folderFileType, String userId, String deptId, String compId, String offset, int tenantId) throws Exception {
-		List<Map<String, String>> idList = getPermissionIdList(userId, deptId, compId, tenantId);
+		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderFileId", folderFileId);

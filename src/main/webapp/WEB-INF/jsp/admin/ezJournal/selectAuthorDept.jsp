@@ -1,0 +1,197 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><spring:message code='ezJournal.t165'/></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
+		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
+		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
+		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
+	   	<script type="text/javascript">
+	   		//트리조직도 JSON
+	   		var treeContent;
+	   		//선택된 사원
+	   		var selectedUser;
+	   		var selectedUserName;
+	   		//레이어팝업의 부서 정보
+	   		var lpDeptId;
+	   		var lpDeptName;
+	   		//레이어팝업의 오른쪽의 부서정보
+	   		var lpDepts=[];
+	   		var lpDeptNames=[];
+	   		//오른쪽에서 없앨 부서
+	   		var targetDept;
+	   		//현재 레이어팝업에 선택된 유저
+	   		var updateUserId;
+	   		
+	   		function setLpDeptId(elem){
+	   			lpDeptId = $(elem).attr("targetId");
+	   			lpDeptName = $("#treeview").jstree().get_node(lpDeptId).text;
+	   		}
+	   	
+	   		function close_Click(){
+	   			window.close();
+	   		}
+	   		//조직도 뿌리는 펑션
+	   		function setDeptList(){
+				$('#treeview').on('changed.jstree', function (e, data) {
+					lpDeptId = data.instance.get_node(data.selected).id;
+					lpDeptName = data.instance.get_node(data.selected).text;
+				  }).on('dblclick.jstree', function (e, data) {
+						addDeptInLP();
+				}).jstree({ 
+					'core' : {'data' : treeContent, 'multiple' : false},
+					'plugins': ["wholerow"],
+					'themes' : {'responsive' : true}
+				}).on('ready.jstree', function(e, data) {
+					var offset = $(".jstree-wholerow-clicked").offset();
+		   	    	var jstree = document.getElementById("treeview");
+		   	        $('#treeview').animate({scrollTop : offset.top - jstree.offsetHeight / 2}, 40);
+			    });
+	   		}
+	   		
+	   		var currentNode;
+	   		//부서 리스트 오른쪽에 이동!
+	   		function addDeptInLP(){
+	   			if($("#withChild").is(":checked")){
+	   				$('#treeview').jstree('open_all');
+	   				$("#"+lpDeptId).find("a").each(function(){
+	   					var childrenId = $(this).parent("li").attr("id");
+	   					var childrenName = $("#treeview").jstree().get_node(childrenId).text;
+			   			var flag = true;
+			   			for (var i = 0; i < lpDepts.length ; i++) {
+							if(lpDepts[i] == childrenId){
+								flag = false;
+							}
+						}
+			   			if (flag) {
+				   			if (childrenId!=opener.userDeptId && opener.userAddIds.indexOf(childrenId) == -1) {
+					   			$("#lplistView .mainlist_free").append("<tr targetId=" + childrenId + " style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>" + childrenName + "</td></tr>");
+					   			lpDepts.push(childrenId);
+					   			lpDeptNames.push(childrenName);
+							} 
+			   			}
+	   				});
+	   			} else {
+		   			var flag = true;
+		   			for (var i = 0; i < lpDepts.length ; i++) {
+						if(lpDepts[i] == lpDeptId){
+			   				alert("<spring:message code='ezJournal.t127'/>");
+							flag = false;
+						}
+					}
+		   			if (flag) {
+			   			if (lpDeptId != opener.userDeptId && opener.userAddIds.indexOf(lpDeptId) == -1) {
+				   			$("#lplistView .mainlist_free").append("<tr targetId=" + lpDeptId + " style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>" + lpDeptName + "</td></tr>");
+				   			lpDepts.push(lpDeptId);
+				   			lpDeptNames.push(lpDeptName);
+						} else {
+			   				alert("<spring:message code='ezApprovalG.t2000'/>");
+						}
+		   			}
+	   			}
+	   		}
+	   		
+	   		//사원 리스트 뿌리기
+	   		function setUserList(key,value){
+	   			$.ajax({
+	   				type:"post",
+	   				dataType:"html",
+	   				url:"/admin/ezJournal/userList.do",
+	   				data:{"key":key, "value":value},
+	   				success: function(result){
+	   					$("#orglistView").html(result);
+	   				}
+	   			});
+	   		}
+	   		
+	   		//레이어팝업의 오른쪽에 선택된 부서를 삭제
+	   		function delTargetDept(){
+	   			var targetDeptId = $(".selectTR").attr("targetId");
+	   			if(targetDeptId){
+		   		//	var targetDeptName = $(".selectTR").attr("targetName");
+		   			var targetDeptName = $("#treeview").jstree().get_node(targetDeptId).text;
+		   			console.log("targetDeptName:" + targetDeptName);
+	   				lpDepts.splice(lpDepts.indexOf(targetDeptId), 1);
+	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName), 1);
+	   				$(".selectTR").remove();
+	   			} else {
+	   				alert("<spring:message code='ezOrgan.t249'/>");
+	   			}
+	   		}
+	   		
+	   		//오프너의 부서 이름과 아이디 세팅
+	   		function setAuthorViewDept(){
+	   			opener.setDeptName(JSON.stringify(lpDepts),JSON.stringify(lpDeptNames));
+	   			window.close();
+	   		}
+	   		
+	   		$(document).ready(function(){
+	   			treeContent = ${deptList};
+		   		setDeptList();
+		    	
+	   			$(function () {
+		   			$(document).on({
+		   				"dblclick":function(){delTargetDept();},
+		   				"click":function(){targetDept = this;
+			   				$("*").removeClass("selectTR");
+				   			$(this).addClass("selectTR");
+		   				}
+	   				},"#lplistView tr");
+	   			});
+	   			for (var i = 0; i < opener.deptIds.length; i++) {
+	   				lpDeptId = opener.deptIds[i];
+	   				lpDeptName = opener.deptNames[i];
+	   				addDeptInLP();
+				}
+   			});
+		</script>
+		
+		<style>
+			tr.hover:hover{background:#eee; color:#fff;}
+			
+			.selectTR{
+				background-color: rgb(233, 241, 255);
+			}
+		</style>
+	</head>
+	
+	<body class="popup"> 
+        <h1><spring:message code='ezJournal.t165'/></h1>
+	    <div id="close">
+	        <ul>
+	            <li><span onclick="setAuthorViewDept()"><spring:message code='main.t4008'/></span></li>
+	            <li><span onclick="close_Click()"><spring:message code='ezOrgan.t143'/></span></li>
+	        </ul>
+	    </div>
+       	<table>
+            <tr>
+                <td class="box" style="width: 250px; height: 465px;">
+                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+                </td>
+                <td style="width: 30px; text-align: center;" rowspan="2">                            
+                      <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
+                      <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept()">
+           		</td>
+                <td class="listview" style="width: 200px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
+                	<div style="width: 200px; height: 494px; overflow: auto;">
+	                	<table class="mainlist_free">
+						</table>
+					</div>
+                </td>    
+            </tr>
+            <tr>
+            	<td class="box" style="width: 250px;">
+            		<div><input type="checkbox" id="withChild" name="withChild" /><label for="withChild"><spring:message code='ezSchedule.t39' /></label></div>
+            	</td>
+            </tr>
+        </table>
+	</body>
+</html>
+

@@ -202,7 +202,10 @@
 					<td colspan="2" style="padding:3px"><textarea name="c_ClubDesc" maxlength="2000" style="height:120px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none"><c:out value = '${club.c_ClubDesc}' /></textarea></td>
 				</tr>
 			</table>
-		  
+		
+		<!-- 18-04-27 김민성 - UI 수정 -->
+		<br><br><br>
+				  
 			<div class="btnposition btnpositionNew">
 				<a class="imgbtn"	name="Submit"	onclick="javascript:check();"><span><spring:message code ='ezCommunity.t20' /></span></a>
 				<a class="imgbtn"	name="Submit2"	onclick="window.location.reload(false)" ><span><spring:message code ='ezCommunity.t109' /></span></a>

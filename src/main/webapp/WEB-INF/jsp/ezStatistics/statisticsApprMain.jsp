@@ -169,7 +169,7 @@
                             _Table.appendChild(_Tr3);
                         j = 0;
                         var _Td = document.createElement("TD");
-                        _Td.innerHTML = document.getElementById("SCompID")[document.getElementById("SCompID").selectedIndex].getAttribute("value2");
+                        _Td.innerHTML = document.getElementById("SCompID")[document.getElementById("SCompID").selectedIndex].text;
                         _Tr3 = document.createElement("TR");
                         _Tr3.id = "datarow";
                         _Tr3.appendChild(_Td);

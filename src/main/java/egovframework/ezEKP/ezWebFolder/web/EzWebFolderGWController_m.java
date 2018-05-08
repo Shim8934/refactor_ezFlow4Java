@@ -68,6 +68,8 @@ public class EzWebFolderGWController_m {
 		String serverName 	= orElse(request.getHeader("x-user-host"), "");
 		String pageNum 		= orElse(request.getParameter("pageNum"), "1");
 		String pageSize 	= orElse(request.getParameter("pageSize"), "0");
+		String folderId = orElse(request.getParameter("folderId"), "");
+		String subSearchFlag = orElse(request.getParameter("subSearchFlag"), "N");
 		
 		SearchVO searchInfo = new SearchVO();
 		searchInfo.setSearchExt(orElse(request.getParameter("searchExt"), ""));
@@ -110,8 +112,34 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getSharingList(userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-			Map<String, Long> countInfo = ezWebFolderService_m.getSharingCount(userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			List<ShareVO> list = null;
+			Map<String, Long> countInfo = null;
+			
+			if (folderId.equals("")) {
+				list = ezWebFolderService_m.getSharingList(subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+				countInfo = ezWebFolderService_m.getSharingCount(subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			} else {
+				String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, "D", tenantId);
+				
+				if (!PermissionResult.equals("ok")) {
+					result.put("status", "error");
+					result.put("code", 3);
+					
+					logger.debug("checkPermission fail.");
+					logger.debug("getSharingList ended.");
+					return result;
+				}
+				
+				list = ezWebFolderService_m.getFolderFileList(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+				countInfo = ezWebFolderService_m.getFolderFileCount(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+				
+				FolderVO folderInfo = ezWebFolderService_y.getFolderDetail(folderId, userId, tenantId, userInfo.getCompanyID());
+				String folderPath = folderInfo.getFolderPath();
+				String folderPath2 = ezWebFolderService.getFolderPath(folderPath.split("\\|"), userInfo.getPrimary(), tenantId);
+				
+				data.put("folderPath", folderPath);
+				data.put("folderPath2", folderPath2);
+			}
 			
 			data.put("list", list);
 			data.putAll(countInfo);
@@ -287,10 +315,27 @@ public class EzWebFolderGWController_m {
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
-			List<ShareVO> list = ezWebFolderService_m.getSharedList(folderId, subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
-			Map<String, Long> countInfo = ezWebFolderService_m.getSharedCount(folderId, subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			List<ShareVO> list = null;
+			Map<String, Long> countInfo = null;
 			
-			if (!folderId.equals("")) {
+			if (folderId.equals("")) {
+				list = ezWebFolderService_m.getSharedList(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+				countInfo = ezWebFolderService_m.getSharedCount(subSearchFlag, userId, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+			} else {
+				String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, "D", tenantId);
+				
+				if (!PermissionResult.equals("ok")) {
+					result.put("status", "error");
+					result.put("code", 3);
+					
+					logger.debug("checkPermission fail.");
+					logger.debug("getSharedList ended.");
+					return result;
+				}
+				
+				list = ezWebFolderService_m.getFolderFileList(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, startPoint, pageSizeInt, searchInfo, tenantId);
+				countInfo = ezWebFolderService_m.getFolderFileCount(folderId, subSearchFlag, userId, userInfo.getPrimary(), offset, pageSizeInt, searchInfo, tenantId);
+				
 				FolderVO folderInfo = ezWebFolderService_y.getFolderDetail(folderId, userId, tenantId, userInfo.getCompanyID());
 				String folderPath = folderInfo.getFolderPath();
 				String folderPath2 = ezWebFolderService.getFolderPath(folderPath.split("\\|"), userInfo.getPrimary(), tenantId);

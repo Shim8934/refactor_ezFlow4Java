@@ -58,25 +58,16 @@
 	</script>
 </head>
 <body class="popup"> 
-	<h1 id ="topMenu"><spring:message code='ezWebFolder.t118'/></h1>
-	<div id="close">
-		<ul>
-			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110'/></span></li>
-		</ul>
-	</div>
-	
-	<div style="margin: 10px;">
-		<div style="text-align: center;"><spring:message code='ezWebFolder.t119'/></div>
-		<div style="height: 40px; line-height: 40px; margin-top: 5px;">
-			<input id="nameInput" type="text" placeholder="<spring:message code='ezWebFolder.t212'/>" style="margin-left: 15px; margin-right: 15px; width: 380px; height: 35px; line-height: 35px; font-size: 14px; padding: 0px 10px; border-radius: 5px; border: 1px solid #666666;">
+	<h1 id ="topMenu" style="margin:2px;"><spring:message code='ezWebFolder.t118'/></h1>
+	<div style="margin: 0px; height:112px; border:1px solid #ddd; padding:15px; margin-bottom:10px">
+		<div style="text-align:left; font-size:12px"><spring:message code='ezWebFolder.t119'/></div>
+		<div style="height: 40px; line-height: 40px; margin-top: 10px;">
+			<input id="nameInput" type="text" placeholder="<spring:message code='ezWebFolder.t212'/>" style="width: 380px; height: 35px; line-height: 35px; font-size: 12px; padding: 0px 10px; border-radius: 5px; border: 1px solid #666;">
 		</div>
-	</div>
-	
-	<div style="margin-top: 15px;"><hr size="0" style="color:#fff; background-color:#fff; margin: 0px 10px; border-top: 1px solid #304D7F;"></div>
-	
-	<div style="margin: 6px 0px 10px 140px; position:fixed; bottom: 0px;">
+	</div>	
+	<div style="margin: 6px 0px 0px; bottom: 0px; text-align: center">
 		<a id="btnSave"   class="webfolderBttn" onClick="ok_Click();"><span><spring:message code='ezWebFolder.t116'/></span></a>
-		<a id="btnCancel" class="webfolderBttn" onClick="wClose();"  ><span><spring:message code='ezWebFolder.t112'/></span></a>
+		<a id="btnCancel" class="webfolderBttn" onClick="wClose();"><span><spring:message code='ezWebFolder.t112'/></span></a>
 	</div>
 	
 </body>

@@ -151,6 +151,8 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		update("EzWebFolderDAO_y.envInsert", map);
 	}
 	
-
+	public int checkCompanyFolderPermission(Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.checkCompanyFolderPermission", map);
+	}
 	
 }

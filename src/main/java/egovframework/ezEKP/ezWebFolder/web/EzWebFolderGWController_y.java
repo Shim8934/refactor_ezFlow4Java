@@ -93,7 +93,7 @@ public class EzWebFolderGWController_y {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
-			List<Map<String, String>> permossionIdList = ezWebFolderService_m.getPermissionIdList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), tenantId);
+			List<Map<String, String>> permossionIdList = ezWebFolderService_m.getPermissionIdMapList(userId, userInfo.getDeptID(), userInfo.getCompanyID(), tenantId);
 			service.insertIfNotExistRootForder(userId, userInfo.getDisplayName1(), userInfo.getDisplayName2(), userInfo.getCompanyID(), permossionIdList, offset, tenantId);
 			
 			result.put("status", "ok");
@@ -509,10 +509,6 @@ public class EzWebFolderGWController_y {
 			if (fileList.size() > 0) {
 				String [] rootPath  = folderPath.split("\\|");
 				Set<String> testbnk = new HashSet<String>();
-				
-				for (FileVO file : fileList) {
-					file.setFileShareStatus(ezWebFolderService_m.checkShared(file.getFileId(), (file.getTypeId().equals("folder") ? "D" : "F"), file.getFolderPath(), tenantId));
-				}
 				
 				for (FileVO file : fileList) {
 					String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);

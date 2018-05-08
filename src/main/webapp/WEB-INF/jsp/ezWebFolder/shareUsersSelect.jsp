@@ -129,7 +129,7 @@
 		<table> 
 			<tr> 
 				<td width="195" valign="top">
-					<h2><spring:message code='ezWebFolder.t177' /></h2>
+					<h2><spring:message code='ezWebFolder.t205' /></h2>
 					<div style="overflow:auto; width:280px; height:270px; background-color:#ffffff; white-space: nowrap; padding:0;" id="TreeView" class="box"></div>
 				</td>
 				<td width="30" align="center" valign="middle"> 
@@ -137,7 +137,7 @@
 					<div><img src="/images/arr_left.gif" width="16" height="16" vspace="3" onclick="unselect_dept();" style="cursor:pointer"></div>
 				</td>
 				<td valign="top">
-					<h2><spring:message code='ezWebFolder.t178' /></h2>
+					<h2><spring:message code='ezSchedule.t1004' /></h2>
 					<div class="listview" style="margin-bottom:5px">
 						<div id="DeptListView" style="overflow:auto;width:280px;height:270px;border:0">
 							<table id="DListView" class="mainlist" style="width:100%;">
@@ -152,6 +152,10 @@
 			<tr>
 				<td valign="top">
 					<h2 style="display: inline-block;"><spring:message code='ezWebFolder.t179' /></h2>
+					<span style="float:right;padding-top:3px">
+						<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="width:120px;height:20px">
+						<a class="imgbtn btnSearch" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top"><span><spring:message code='ezTask.t183' /></span></a>
+					</span>	
 					<div class="listview" style="margin-top:3px;margin-bottom:5px">
 						<div id="OrganListView" style="overflow:auto; width:280px; height:240px;border:0">
 							<table id="Organ" class="mainlist" style="width: 100%;">
@@ -169,8 +173,8 @@
 					<div><img src="/images/arr_left.gif"  width="16" height="16" vspace="3" onclick="unselect_member();" style="cursor:pointer"></div>
 				</td> 
 				<td valign="top">
-					<h2><spring:message code='ezWebFolder.t180' /></h2>
-					<div class="listview" style="margin-top:5px;margin-bottom:5px">
+					<h2><spring:message code='ezTask.t137' /></h2>
+					<div class="listview" style="margin-top:5px;margin-bottom:0px">
 						<div id="MemberListView" style="overflow:auto; width:280px; height:240px;border:0">
 							<table id="MListView" class="mainlist" style="width:100%;">
 								<tr>
@@ -181,14 +185,9 @@
 					</div>
 				</td> 
 			</tr>
-			<tr style="height:35px;">
-				<td>
-					<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="width:120px;">
-					<a class="imgbtn btnSearch" id="cnkeybtn" onclick="cnsearch_click()"><span>검색</span></a>
-				</td>
-				<td></td>
-				<td>
-					<div class="btnposition" style="margin-top:0px;padding-top:0px">
+			<tr style="height:35px;">				
+				<td colspan="3">
+					<div class="btnposition" style="margin-top:5px;padding-top:0px">
 						<a class="imgbtn btnSave"   name="Submit"  onClick="addShare();"><span><spring:message code='ezWebFolder.t116' /></span></a>
 						<a class="imgbtn btnCancel" name="Submit2" onClick="close_onclick();"><span><spring:message code='ezWebFolder.t112' /></span></a>
 					</div>

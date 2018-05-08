@@ -50,7 +50,9 @@ public class BoardVO {
 	private int tenantID;
 	/** 현재시간*/
 	private String nowDate;
-
+	/** 게시글 내용*/
+	private String content;
+	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
 	}
@@ -194,6 +196,12 @@ public class BoardVO {
 	}
 	public void setNowDate(String nowDate) {
 		this.nowDate = nowDate;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
 	}
 	
 }

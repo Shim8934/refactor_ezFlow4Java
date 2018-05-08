@@ -24,7 +24,7 @@
 		<script type="text/javascript">
 			var file 		 = new Array();
 			var filelist = [];
-			var folderId = "${folderId}";
+			var currentFolderId = "";
 			var originalPath = "";
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
@@ -143,6 +143,7 @@
 							pagination.build();
 							
 							renderList(data.list);
+							
 							checkedArr = [];
 							
 							setNamePath(data.folderPath, data.folderPath2);
@@ -161,17 +162,23 @@
 			// originalPath 는 한글 path
 			// folderPath 는 숫자 
 			function setNamePath(folderPath, originalPath) {
+				var orginalPathElmt = document.getElementById("originalPath");
 				var nameTag = document.createElement("span");
-				var detailName = [];
+				var originPath;
+				
+				// for statement using
+				var detailName;
+				var imgElmt;
+				var length;
 				
 				$('#originalPath').empty();
-				dom.originalPath.appendChild(nameTag);
+				orginalPathElmt.appendChild(nameTag);
 				
 				if (folderPath == null) {
 					detailName = document.createElement("span");
 					detailName.className = "aName";
-					detailName.textContent = "공유받은 목록";
-					detailName.setAttribute("style", "font-size:18px; ");
+					detailName.textContent = "공유받은목록";
+					detailName.setAttribute("style", "font-size:15px; ");
 					detailName.onclick = function() {
 						getFileList();
 					};
@@ -180,15 +187,12 @@
 					return;
 				}
 				
-				var path = [];
-				var imgElmt;
-				
 				folderPath = folderPath.substring(1, folderPath.length - 1);
 				originPath = folderPath.split("|");
 				path = originalPath.split("/");
-				originPath = folderPath.split("|");
+				length = path.length - 1;
 				
-				for (var i = 1; i < path.length - 1; i++) {
+				for (var i = 0; i < length; i++) {
 					detailName = document.createElement("span");
 					
 					detailName.className = "aName";
@@ -196,18 +200,30 @@
 					detailName.onclick = function() {
 						getFileList(this.id);
 					};
-					detailName.textContent = path[i];
-					detailName.setAttribute("style", "font-size:18px; ");
-					
+
+					detailName.textContent = path[i] ;
+					/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
+					detailName.setAttribute("style", "font-size:15px; ");
 					nameTag.appendChild(detailName);
 					
-					imgElmt = document.createElement("img");
-					imgElmt.setAttribute("style", "height: 18px; width: 18px; display: inline-block;");
-					imgElmt.src = "/images/webfolder/arrow.png";
-					
-					if (i != path.length - 2) {
-						nameTag.appendChild(imgElmt);
+					if(length == 1) {
+						detailName = document.createElement("span");
+						/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 및 꺽새 추가 */
+						detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+						detailName.setAttribute("style", "font-size:15px;");
+						nameTag.appendChild(detailName);
 					}
+					
+					/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
+					/* var imgElmt = document.createElement("img");
+					imgElmt.setAttribute("style", "height: 14px; width: 14px; display: inline-block; margin: 0px 6px;");
+					imgElmt.src = "/images/webfolder/arrow2.png"; */
+					
+					if (i != length - 1) {
+						detailName = document.createElement("span");
+						detailName.textContent = " > ";
+						nameTag.appendChild(detailName);
+					}	
 				}
 			}
 			
@@ -689,14 +705,14 @@
 	</head>
 	<body class="mainbody">
 		<h1>
-			공유폴더
+			<spring:message code='ezWebFolder.t266'/>
 			<span id="mailBoxInfo"></span>
 		</h1>
 		<div id="pageArea">
 			<!-- pagenation이 namePath로 움직이지 않도록 설정 -->
 			<div id="originalPathWrapper" style="height: 40px;">
 				<span style="font-size: 24px; font-weight: bold; font-weight: bold; display: block; float: left;" id="originalPath">
-					<span class="aName" style="font-size:18px;" onClick="getFileList();">공유받은 목록</span>
+					<span class="aName" style="font-size:15px;" onClick="getFileList();">공유받은목록</span>
 				</span>
 			</div>
 			
@@ -707,11 +723,14 @@
 					<li><a onClick="fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t117'/></span></a></li>
 					<li><a onClick="fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t118'/></span></a></li>
 					<li><a onClick="fileMove()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>
+					<li><img src="/images/i_bar.gif"></li>
 					<li><a onClick="shareContext.hideShare()" style="margin-top: 3px;"><span>공유숨김</span></a></li>
 					<li><a onClick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span>공유숨김목록</span></a></li>
+					<li><img src="/images/i_bar.gif"></li>
 					<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 					<li><a onClick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 					<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
+					<li><img src="/images/i_bar.gif"></li>
 					<li>
 						<select id="fileTypeSelect" class="select" onchange="onFileTypeChange(this.value);">
 							<option value=""><spring:message code='ezWebFolder.t191'/></option>
@@ -792,7 +811,10 @@
 			<div class="popupwrap4">
 				<table class="content" style="margin-top:10px;">  
 					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' /></th>
+						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" width="16px" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' />&nbsp;<spring:message code='ezWebFolder.t123' /></th>
+					</tr>
+					<tr>
+						<td style="border-left-color:white;border-right-color:white;height:10px" colspan="2"></td>
 					</tr>
 					<tr>
 			           <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
@@ -806,15 +828,15 @@
 			       
 			        <tr>
 			            <th style="text-align:center"><spring:message code='ezWebFolder.t152' /></th><!-- 확장자 -->
-			            <td><input type="text" id="searchExt" style="width:98%" value="" name="searchExt"></td>
+			            <td><input type="text" id="searchExt" style="width:99%" value="" name="searchExt"></td>
 			        </tr>
 			        <tr>
 			            <th style="text-align:center"><spring:message code='ezWebFolder.t153' /></th><!-- 파일명 -->
-			            <td><input type="text" id="searchFileName" style="width:98%" value="" name="searchFileName"></td>
+			            <td><input type="text" id="searchFileName" style="width:99%" value="" name="searchFileName"></td>
 			        </tr>  
 			         <tr>
 			            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 작성자 -->
-			            <td><input type="text" id="searchCreateName" style="width:98%" value="" name="searchCreateName"></td>
+			            <td><input type="text" id="searchCreateName" style="width:99%" value="" name="searchCreateName"></td>
 			        </tr>    
 				</table>
 				<br/>
