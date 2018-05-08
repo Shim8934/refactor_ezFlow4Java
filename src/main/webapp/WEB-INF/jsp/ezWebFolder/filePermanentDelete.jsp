@@ -35,7 +35,7 @@
 					"folderList" : folderList
 				},
 				dataType: "JSON",
-				async: true,
+				async: false,
 				success : function(data) {
 					var reason = data.reason;
 					
@@ -46,21 +46,18 @@
 					else {
 						if (data.code == 1) {
 							alert("<spring:message code='ezWebFolder.t113'/>");
-							afterDeleteSuccess();
+						} else if (data.code == 2) {
+							alert("<spring:message code='ezWebFolder.t114'/>" + error);
+						} else if (data.code == 3) {
+							alert("<spring:message code='ezWebFolder.t28'/>" + error);
 						}
 					}
 				},
 				error : function(error) {
-					
-					if (data.code == 2) {
-						alert("<spring:message code='ezWebFolder.t114'/>" + error);
-					} else if (data.code == 3) {
-						alert("<spring:message code='ezWebFolder.t28'/>" + error);
-					}
-					
-					wClose();
+            		alert(messages.strLang7 + error);
 				}
 			});
+			afterDeleteSuccess();
 		}
 	</script>
 </head>

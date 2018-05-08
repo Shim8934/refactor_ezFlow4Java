@@ -380,7 +380,7 @@
     	  
     		$.ajax ({
 				type: "POST",
-				async: true,
+				async: false,
 				url : "/ezWebFolder/restoreTrashCan.do",
 				dataType: "json",
 				data : {
@@ -390,20 +390,19 @@
 				success : function (data) {
 					if (data.code == 0) {
 						alert("<spring:message code = 'ezWebFolder.t289'/>");
+					} else if (data.code == 2) {
+					   alert("<spring:message code = 'ezWebFolder.t292'/>");
+					} else if (data.code == 3) {
+						alert("<spring:message code = 'ezWebFolder.t28'/>");
 					} else if (data.code == 4) {
 						alert("<spring:message code = 'ezWebFolder.t290'/>");
 					}
-
-					refreshView();
 				},
 				error : function(error) {
-					if (data.code == 3) {
-						alert("<spring:message code = 'ezWebFolder.t28'/>");
-					} else if (data.code == 2) {
-						alert("<spring:message code = 'ezWebFolder.t292'/>");
-					}
+					alert(messages.strLang7 + error);
 				}
 			})
+				refreshView();
        }
        
        function moveTraschCan() {

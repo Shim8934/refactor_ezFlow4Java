@@ -109,20 +109,20 @@
         	
             $.ajax ({
             	type : "POST",
-            	async : true,
+            	async : false,
             	url : "/ezWebFolder/moveTrashCan.do",
             	dataType : "json",
             	data : {
-            		"fileList" : checkedfileList,
-            		"folderList" : checkedfolderList,
+            		"fileList" : checkedfileList.toString(),
+            		"folderList" : checkedfolderList.toString(),
             		"folderId" : folderId
             	},
             	success : function (data) {
             		if (data.code == 0) {
 	            		alert("<spring:message code='ezWebFolder.t284'/>");
-            		} else if (error.code == 2) {
+            		} else if (data.code == 2) {
 	            		alert("<spring:message code='ezWebFolder.t285'/>");
-					}else if (error.code == 3) {
+					}else if (data.code == 3) {
 						alert("<spring:message code = 'ezWebFolder.t28'/>");
 					} 
             	},

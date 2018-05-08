@@ -486,22 +486,9 @@ public class EzWebFolderController_m {
 	public String permanentDeleteConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse response, Model model) throws Exception {
 		logger.debug("permanentDeleteConfirm Started.");
-		String fileList = orElse(request.getParameter("fileList"), "");
-		String folderList = orElse(request.getParameter("folderList"), "");
 		
-		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
-		
-		
-		JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
-		
-		if ("error".equals(permissionResult.get("status"))) {
-			return permissionResult.toString();
-		}
-		
-		Map<String, Object> param = new HashMap<>();
-		// target info
-		param.put("fileList", fileList);
-		param.put("folderList", folderList);
+		model.addAttribute("fileList", orElse(request.getParameter("fileList"), ""));
+		model.addAttribute("folderList", orElse(request.getParameter("folderList"), ""));
 		
 		logger.debug("permanentDeleteConfirm ended.");
 		return "ezWebFolder/filePermanentDelete";
@@ -669,40 +656,31 @@ public class EzWebFolderController_m {
 	
 	@RequestMapping(value="/ezWebFolder/moveTrashCanManage.do")
 	public String moveTrashCanManage (@CookieValue ("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	logger.debug("moveTrashCanManage Started.");
+	
 	 String folderType = request.getParameter("folderType");
 	 String fileList = orElse(request.getParameter("fileList"), "");
 	 String folderList = orElse(request.getParameter("folderList"), "");
-	
-	 LoginVO user = commonUtil.userInfo(loginCookie);
-
-	
-	JSONObject permissionResult = checkPermission(request, user.getId(), fileList, folderList);
-	
-	if ("error".equals(permissionResult.get("status"))) {
-		return permissionResult.toString();
-	}
 		
-	Map<String, Object> param = new HashMap<String, Object>();
+	 model.addAttribute("fileList", fileList);               
+	 model.addAttribute("folderList", folderList);               
+	 model.addAttribute("folderType", folderType);
 	
-	param.put("fileList", fileList);               
-	param.put("folderList", folderList);               
-	model.addAttribute("folderType", folderType);
-	
-	 logger.debug("fileList", fileList);
-	 logger.debug("folderList", folderList);
-	
-	 logger.debug("folderType=" + folderType);
+	 logger.debug("fileList=" + fileList + "&folderList=" + folderList + "&folderType=" + folderType);
+	 logger.debug("moveTrashCanManage Ended.");
 	 return "ezWebFolder/moveTrashCanManage";
 	}
 	
 	@RequestMapping(value="/ezWebFolder/moveTrashCan.do", method=RequestMethod.POST)
 	public String moveTrashCan (@CookieValue ("loginCookie")String loginCookie, HttpServletRequest request,
 			HttpServletResponse response, Model model) throws Exception {
-		logger.debug("moveTrashCan Started.");
-		logger.debug("request.getParameter(fileList)=" + request.getParameter("fileList"));
-		
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
+		
+		logger.debug("moveTrashCan Started.");
+		logger.debug("fileList=" + fileList);
+		logger.debug("fileList=" + folderList);
+		
 	
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 	
