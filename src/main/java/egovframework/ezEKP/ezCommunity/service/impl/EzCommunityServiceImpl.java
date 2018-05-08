@@ -1362,6 +1362,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public void pollDelete(LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String code = request.getParameter("code");
+		/* 2018-05-08 홍승비 - 설문 여러개 삭제를 위해 managerID 배열로 변경*/
 		String managerID[] = request.getParameter("managerID").split(";");
 		int tenantID = userInfo.getTenantId();
 		
@@ -1371,9 +1372,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		for(int i=0; i<managerID.length; i++) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_MANAGERID", managerID[i]);
-			map.put("tenantID", tenantID);
-			
-			logger.debug("managerID    ::    "+managerID[i]);
+			map.put("tenantID", tenantID);			
 			
 			String strRegUser = ezCommunityDAO.pollDeleteGet1(map).trim();
 			
