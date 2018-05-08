@@ -97,6 +97,7 @@
 		
 		function renderFileList() {
 			var orderInf = tableView.getOrderInfo();
+			var listCnt  = document.getElementById("listCount").value;
 			$.ajax ({
 				type: "POST",
 				async: false,
@@ -115,6 +116,7 @@
 					"listCount"        : blockSize,
 					"column"           : orderInf.col ? orderInf.col : "",
 					"order"            : orderInf.ord ? orderInf.ord : "",
+					"listCount"        : listCnt,
 					"mode"             : "admin"
 				},
 				success : function (data) {
@@ -373,6 +375,13 @@
 			var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(420, 490));
 			try { OpenWin.focus(); } catch (e) { }
 		}
+		
+		function closeAllPopups() {
+			closeLeftPanel();
+			document.getElementById("mailPanel").style.display   = "none";
+			document.getElementById("searchPanel").style.display = "none";
+			document.getElementById("iFramePanel").style.display = "none";
+		}
 	</script>
 </head>
 <body class="mainbody" onkeydown="keyPressPanel(event);">
@@ -383,7 +392,7 @@
 			<li id=""><a onClick="moveTraschCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t282'/></span></a></li>
 			<li id=""><a onClick="filePermanentDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t19'/></span></a></li>
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
-			<li id="right" style="float:left;">
+			<li style="float:left;">
 				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="height: 29px; border-radius: 3px; padding: 0px; width: 85px;">
 					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option>
 					<option value="document"><spring:message code='ezWebFolder.t192'/></option>
@@ -392,6 +401,16 @@
 					<option value="image"><spring:message code='ezWebFolder.t195'/></option>
 					<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
 					<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
+				</select>
+			</li>
+			<li id="right">
+				<span><spring:message code='ezWebFolder.t29'/></span>
+				<select id="listCount" style="height: 29px;" onchange="renderFileList();">
+					<option selected="selected">10</option>
+					<option>20</option>
+					<option>30</option>
+					<option>40</option>
+					<option>50</option>
 				</select>
 			</li>
 		</ul>
@@ -473,7 +492,7 @@
 		<span class="wfCloseBttn" onClick="doLayerPopup();"></span>
 	</div>	
 	<div id="tblPageRayer"></div>
-	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel" onclick="closeAllPopups();">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
 	</div>

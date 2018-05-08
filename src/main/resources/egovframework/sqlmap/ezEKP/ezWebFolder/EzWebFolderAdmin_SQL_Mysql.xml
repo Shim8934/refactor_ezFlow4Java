@@ -104,6 +104,9 @@
 					(l.CREATE_DATE >= #startDate# AND l.CREATE_DATE <= #endDate#)
 				]]>
 			</isNotEqual>
+			<![CDATA[
+				AND l.LOG_TYPE = #actionType#
+			]]>
 		</isEqual>
 	</sql>
 	

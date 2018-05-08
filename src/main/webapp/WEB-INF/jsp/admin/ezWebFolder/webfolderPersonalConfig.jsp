@@ -57,7 +57,6 @@
 					searchPanel.style.top     = position[0] + "px";
 					searchPanel.style.right   = position[1] + "px";
 					searchPanel.style.display = "";
-					fogPanel.focus();
 				}
 				else {
 					window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "none";
@@ -67,6 +66,12 @@
 				
 				document.getElementById("inputSearch").value                = "";
 				document.getElementById("searchOption").options[0].selected = 'selected';
+			}
+			
+			function closeAllPopups() {
+				window.parent.frames["left"].document.getElementById("bnkBlockLeft").style.display = "none";
+				document.getElementById("mailPanel").style.display                                 = "none";
+				document.getElementById("searchPanel").style.display                               = "none";
 			}
 			
 			function search_Set(pPage) {
@@ -397,10 +402,9 @@
 					</tr>
 				</table>
 			</div>
-			
 			<div id="tblPageRayer"></div>
-			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel" tabindex="0">&nbsp;</div>
+			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel" onclick="closeAllPopups();">&nbsp;</div>
 			<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
-		</div>	
+		</div>
 	</body>
 </html>

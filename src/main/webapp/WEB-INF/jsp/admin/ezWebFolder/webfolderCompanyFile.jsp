@@ -65,6 +65,16 @@
 						<option value="6"         ><spring:message code='ezWebFolder.t196'/></option>
 					</select>
 				</li>
+				<li id="right">
+					<span><spring:message code='ezWebFolder.t29'/></span>
+					<select id="listCount" style="height: 29px;">
+						<option selected="selected">10</option>
+						<option>20</option>
+						<option>30</option>
+						<option>40</option>
+						<option>50</option>
+					</select>
+				</li>
 			</ul>
 		</div>
 		
@@ -125,14 +135,14 @@
 			<table class="mainlist wftablefile" id="tblFileList">
 				<tr>
 					<th width="10px" ><input type="checkbox"></th>
-					<th headers="ft" width="40px" ><spring:message code='ezWebFolder.t188'/></th>
-					<th headers="fn" width="160px"><spring:message code='ezWebFolder.t156'/></th>
-					<th headers="fs" width="60px" ><spring:message code='ezWebFolder.t157'/></th>
-					<th headers="un" width="120px"><spring:message code='ezWebFolder.t189'/></th>
+					<th headers="ft" width="40px" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
+					<th headers="fn" width="200px"><spring:message code='ezWebFolder.t156'/></th>
+					<th headers="fs" width="60px" style="text-align: center;" ><spring:message code='ezWebFolder.t157'/></th>
+					<th headers="un" width="80px"><spring:message code='ezWebFolder.t189'/></th>
 					<th headers="cd" width="80px" ><spring:message code='ezWebFolder.t190'/></th>
 					<th headers="ud" width="80px" ><spring:message code='ezWebFolder.t198'/></th>
 					<th              width="160px"><spring:message code='ezWebFolder.t199'/></th>
-					<th headers="dt" width="70px" ><spring:message code='ezWebFolder.t200'/></th>
+					<th headers="dt" width="70px" style="text-align: center;"><spring:message code='ezWebFolder.t200'/></th>
 				</tr>
 				
 			</table>

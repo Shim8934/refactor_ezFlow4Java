@@ -419,10 +419,12 @@ function TableView() {
 				fileIconElmt.setAttribute("class", "webFolderImg");
 				fileIconElmt.src = _dataSource[i]["fileIconUrl"];
 				tdElmt2.appendChild(fileIconElmt);
+				tdElmt2.setAttribute("style", "text-align: center;");
 				tdElmt3.textContent = _dataSource[i]["fileName"];
 				tdElmt3.setAttribute("title", _dataSource[i]["fileName"]);
 				tdElmt3.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
 				tdElmt4.textContent = getFileSize(_dataSource[i]["fileSize"]);
+				tdElmt4.setAttribute("style", "text-align: center;");
 				tdElmt5.textContent = primary == "1" ? _dataSource[i]["createName1"] : _dataSource[i]["createName2"];
 				tdElmt6.textContent = _dataSource[i]["createDate"].substring(0, 10);
 				tdElmt7.textContent = _dataSource[i]["updateDate"].substring(0, 10);
