@@ -493,8 +493,8 @@ public class EzWebFolderGWController {
 			
 			if (folder.getFolderType().equals("U")) {
 				WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(userInfo.getCompanyID(), userInfo.getTenantId());
-				long limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Long.parseLong(webfolderConfig.getUploadLimit());
-				long totalUploadSize              = 0;
+				double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
+				double totalUploadSize              = 0;
 				
 				for (int i = 0; i < multiFileLists.size(); i++) {
 					totalUploadSize += multiFileLists.get(i).getSize();
