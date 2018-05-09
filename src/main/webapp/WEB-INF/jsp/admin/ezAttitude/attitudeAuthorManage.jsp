@@ -92,7 +92,7 @@
 				url+="?companyId="+companyId;
 				if (userId) {
 					url+="&userId="+userId+"&userName="+selectedUserName;
-					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 400));
+					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 420));
 				} else {
 					alert("권한설정할 대상을 선택해 주십시오.");
 				}
@@ -128,7 +128,7 @@
 	        	var url = "/admin/ezAttitude/saveAttitudeAuth.do";
 				var companyId = $("#ListCompany").val();
 				url+="?companyId="+companyId;
-				window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 400));
+				window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 420));
 	        }
 	        
 	        //권한부서 정보 hover로
@@ -152,7 +152,7 @@
 			    var html = "";
 			    html += "<table name='tooltip' class='calendar_layer' cellpadding='0' cellspacing='0' border='0' width='100%'>";
 				html += "<tr class='selectTR' style='background-color: rgb(237, 244, 253);'>";
-				html += "<th scope='col'>권한부서</th>";
+				html += "<th scope='col'>권한부서정보</th>";
 				html += "</tr>";
 				html += "<tr class='' style='background-color: rgb(255, 255, 255);'>";
 				html += "<td class='text'>";

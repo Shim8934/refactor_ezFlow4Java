@@ -154,6 +154,7 @@
 				}
 			}
 		    
+	     	//숫자만 입력 가능하게끔 -------------특수문자(shift+숫자)는 안먹힌다 -> 해결할것.
 			function filterNumber(event) {
 				var code = event.keyCode;
 				
@@ -204,9 +205,11 @@
 					<spring:message code='ezAttitude.t12' />
 	            </th>
 	            <td style="width: 500px; text-align:left; padding-left: 5px;">
-	            	<input id="startTime" type="text" style="width:50px; ime-mode: disabled;" onkeydown="filterNumber(event);"/> 
+	            	<input id="startTime" type="text" style="width:50px; ime-mode:disabled;"/> 
+<!-- 	            	<input id="startTime" type="text" style="width:50px; ime-mode:disabled;" onkeydown="filterNumber(event);"/>  -->
 	            	~
-	            	<input id="endTime" type="text" style="width:50px; ime-mode: disabled;" onkeydown="filterNumber(event);"/>
+	            	<input id="endTime" type="text" style="width:50px; ime-mode:disabled;"/>
+<!-- 	            	<input id="endTime" type="text" style="width:50px; ime-mode:disabled;" onkeydown="filterNumber(event);"/> -->
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">

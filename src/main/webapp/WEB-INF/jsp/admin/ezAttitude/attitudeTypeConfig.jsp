@@ -55,15 +55,15 @@
 	                for (var i = 0; i < result.length; i++) {
 	                    var gubun = "";
 	                    if (result[i].isAdd == "0") {
-	                    	gubun = "기본";
+	                    	gubun = "( 기본 )";
 	                    } else {
-	                    	gubun = "추가";
+	                    	gubun = "( 추가 )";
 	                    }
 	                    html += "<tr id='" + result[i].typeId + "' onclick='listClick(this);' ondblclick='dbclick(this);' style='cursor: pointer;' isAdd='" + result[i].isAdd + "'>";
-	                    html += "<td style='width:35%;color:gray;padding-left:15px;'>" + result[i].typeName + "</td>";
-	                    html += "<td style='width:25%;color:gray;'>" + gubun + "</td>";
-	                    html += "<td style='width:20%;color:gray;text-align: center;'><input type='radio' name='useRadio"+ i +"' value='1' /></td>";
-	                    html += "<td style='width:20%;color:gray;text-align: center;'><input type='radio' name='useRadio"+ i +"' value='0' /></td>";
+	                    html += "<td style='width:110px;color:gray;padding-left:15px;'>" + result[i].typeName + "</td>";
+	                    html += "<td style='width:110px;color:gray;text-align: center;'>" + gubun + "</td>";
+	                    html += "<td style='width:90px;color:gray;text-align: center;'><input type='radio' name='useRadio"+ i +"' value='1' /></td>";
+	                    html += "<td style='color:gray;text-align: center;'><input type='radio' name='useRadio"+ i +"' value='0' /></td>";
 	                    html += "</tr>";
 	                }
                 } else {
@@ -206,9 +206,9 @@
 	      	</ul>
 	      	<ul>
 <%-- 	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.t33' /></span></li> --%>
-	      		<li><span onclick="add_type()">추가</span></li>
-	      		<li><span onclick="mod_type()">수정</span></li>
-	      		<li><span onclick="del_type()">삭제</span></li>
+	      		<li><span onclick="add_type()">유형추가</span></li>
+	      		<li><span onclick="mod_type()">유형수정</span></li>
+	      		<li><span onclick="del_type()">유형삭제</span></li>
 	      		<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 	      		<li><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></li>
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
@@ -220,10 +220,10 @@
                     <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 100%;">
                         <table class="mainlist" style="width: 100%;">
                             <tr>
-                                <th style="width: 25%;padding-left:15px;"><span><spring:message code='ezAttitude.t35' /></span></th>
-                                <th style="width: 35%;text-align: center;"><span>구분</span></th>
-                                <th style="width: 20%;text-align: center;"><span><spring:message code='ezAttitude.t36' /></span></th>
-                                <th style="width: 20%;text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
+                                <th style="width: 110px;padding-left:15px;"><span><spring:message code='ezAttitude.t35' /></span></th>
+                                <th style="width: 110px;text-align: center;"><span>유형구분</span></th>
+                                <th style="width: 90px;text-align: center;"><span><spring:message code='ezAttitude.t36' /></span></th>
+                                <th style="text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
                             </tr>
                         </table>
                         <div id="contentlist" name="contentlist" style="height: 350px; overflow-y: auto;">

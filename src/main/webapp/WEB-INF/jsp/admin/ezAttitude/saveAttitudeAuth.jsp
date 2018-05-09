@@ -211,17 +211,14 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
-	        <a class="imgbtn"><span onclick="saveAuthDept();" >저장</span></a>
-	        <a class="imgbtn"><span onclick="window.close();">취소</span></a>      
-	    </div>
+	    <br/>
 	    <!-- 리스트 -->
 		<div style="width: 100%; height: 100%;">
             <table class="mainlist" style="width: 100%;">
                 <tr>
                     <th style="width: 50%; padding-left:15px;"><span>부서</span></th>
-                    <th style="width: 25%;"><span>열람</span></th>
-                    <th style="width: 25%;"><span>관리</span></th>
+                    <th style="width: 25%; text-align: center;"><span>열람</span></th>
+                    <th style="width: 25%; text-align: center;"><span>관리</span></th>
                 </tr>
             </table>
             <div id="contentlist" name="contentlist" style="height: 160px; overflow-y: auto;">
@@ -234,6 +231,10 @@
                 </table>
             </div>
         </div>
+        <div class="btnposition">
+	        <a class="imgbtn"><span onclick="saveAuthDept();" >저장</span></a>
+	        <a class="imgbtn"><span onclick="window.close();">취소</span></a>      
+	    </div>
 	</body>
 </html>
 
