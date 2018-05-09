@@ -8,9 +8,16 @@
 	    <title><spring:message code='ezEmail.t572' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
+	    	}
+	    	.mainlist_free tbody tr td:first-child{
+	    		padding-left:15px;
+	    	}
+	    	.mainlist_free thead tr th:first-child{
+	    		padding-left:15px;
 	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
@@ -32,8 +39,8 @@
 	        var m_tabDialogState = { "org": "select", "contact": "normal", "dl": "normal" };
 	        var m_receiverTitleList;
 	        var m_receiverWindowList;
-	        var m_titleNoneSelectedColor = "#F6F6F6";
-	        var m_titleSelectedColor = "#fffff4";
+	        var m_titleNoneSelectedColor = "white";
+	        var m_titleSelectedColor = "#f4faff";
 	        var m_selectedWindow = null;
 	        var m_selectedTree = null;
 	        var g_fnaddReceiver;
@@ -442,6 +449,7 @@
 		        } catch (e) { alert(e.description); }
 		    }
 		    function orgTabButton_onClick() {
+		    	methodForTabAction(1);
 		        selTab = "orglistView";
 		        m_tabDialogState["org"] = "select";
 		        m_tabDialogState["contact"] = "normal";
@@ -457,6 +465,7 @@
 		    }
 		    var g_bContactLoaded = false;
 		    function contactTabButton_onClick() {
+		    	methodForTabAction(2);
 		        selTab = "AddressListView";
 		        if (g_bContactLoaded == false) {
 		            g_bContactLoaded = true;
@@ -475,6 +484,7 @@
 		        AddrSearch.style.display = "block";
 		    }
 		    function dlTabButton_onClick() {
+		    	methodForTabAction(3);
 		        m_tabDialogState["org"] = "normal";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "select";
@@ -526,6 +536,7 @@
 	        }
 	        var g_binputLoaded = false;
 	        function inputTabButton_onClick() {
+	        	methodForTabAction(4);
 	            gubunpage = "direct";
 	            if (g_binputLoaded == false) {
 	                g_binputLoaded = true;
@@ -1287,7 +1298,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + nodeIdx.GetNodeData("VALUE");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;margin-right:3px\" >" + nodeIdx.GetNodeData("VALUE");
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -1514,7 +1525,7 @@
 		            document.getElementById("txtlist_table").style.display = "none";
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
@@ -1529,7 +1540,7 @@
 		            else {
 		                document.getElementById("Search_txtlist_table").style.display = "";
 		                document.getElementById("txtlist_table").style.display = "none";
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
@@ -3150,6 +3161,33 @@
                         displayUserList();
                 }
             }
+            function methodForTabAction(target) {
+            	var tab1 = document.getElementById("orgTabButton").children[0];
+            	var tab2 = document.getElementById("contactTabButton").children[0];
+            	var tab3 = document.getElementById("dlTabButton").children[0];
+            	var tab4 = document.getElementById("inputTabButton").children[0];
+            	if (target == 1) {
+            		tab1.className = "tabon";
+            		tab2.className = "";
+            		tab3.className = "";
+            		tab4.className = "";
+            	} else if (target == 2) {
+            		tab1.className = "";
+            		tab2.className = "tabon";
+            		tab3.className = "";
+            		tab4.className = "";
+            	} else if (target == 3) {
+            		tab1.className = "";
+            		tab2.className = "";
+            		tab3.className = "tabon";
+            		tab4.className = "";
+            	} else if (target == 4) {
+            		tab1.className = "";
+            		tab2.className = "";
+            		tab3.className = "";
+            		tab4.className = "tabon";
+            	}
+            }
 	    </script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -3221,7 +3259,23 @@
 	    <table style="width:100%;">
 	        <tr>
 	            <td style="vertical-align: top;">
-	                <div id="tabnav" style="float: left; width: 100%;">
+	            	<div class="portlet_tabpart01" style="margin:0px;">
+	            		<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
+	            			<p id="orgTabButton">
+	            				<span onclick="orgTabButton_onClick()"><spring:message code='ezEmail.t591' /></span>
+	            			</p>
+	            			<p id="contactTabButton">
+	            				<span onclick="contactTabButton_onClick()"><spring:message code='ezEmail.t592' /></span>
+	            			</p>
+	            			<p id="dlTabButton">
+	            				<span onclick="dlTabButton_onClick()"><spring:message code='ezEmail.t593' /></span>
+	            			</p>
+	            			<p id="inputTabButton" style="display: none;">
+	            				<span onclick="inputTabButton_onClick()"><spring:message code='ezEmail.t244' /></span>
+	            			</p>
+	            		</div>
+	            	</div>
+	                <%-- <div id="tabnav" style="float: left; width: 100%;">
 	                    <ul>
 	                        <li id="orgTabButton"><span onclick="orgTabButton_onClick()">
 	                            <spring:message code='ezEmail.t591' /></span></li>
@@ -3234,12 +3288,12 @@
 	                </div>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
-	                </script>
+	                </script> --%>
 	                <table id="TreeViewTD">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px;">
+	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 0px solid #eaeaea;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
 	                                            <td>
@@ -3255,7 +3309,7 @@
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezEmail.t99000048' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+	                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px; height:21px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezEmail.t37' /></span></a>
 	
 	                                                </div>
@@ -3279,8 +3333,8 @@
 	                                    <td class="listview" style="width: 432px" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
-	                                                <th style="white-space:normal">
-	                                                    <span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
+	                                                    <span id="SelectDeptNM" style="font-weight: normal;margin-top:2px; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 	                                                    <span style="float:right; position: relative;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');">
 	                                                            <img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
@@ -3293,17 +3347,17 @@
 	                                        <div style="vertical-align: top; height: 410px; overflow: auto; width: 446px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
+	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t31' /></td>
+	                                                    <td style="width: 130px;color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t28' /></td>
+	                                                    <td style="color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t99000045' /></td>
 	                                                </tr>
 	                                            </table>
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t26' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-	                                                    <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
+	                                                    <td style="width: 110px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezEmail.t26' /></td>
+	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezEmail.t31' /></td>
+	                                                    <td style="width: 80px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezEmail.t28' /></td>
+	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t99000045' /></td>
 	                                                </tr>
 	                                            </table>
 	                                        </div>
@@ -3321,13 +3375,13 @@
 	                            <table style="width: 100%;">
 	                                <tr>
 	                                    <td id="AddrSearch">
-	                                        <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-	                                            <div class="portlet_tabpart03_top" id="Div1" style="border: 1px solid #d3d2d2;">
+	                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px;">
+	                                            <div class="portlet_tabpart03_top" id="Div1" style="border: 0px solid #eaeaea;">
 	                                                <table style="margin-top: 3px; width: 100%;">
 	                                                    <tr>
 	                                                        <td>
 	                                                            <div style="margin-left: 5px;">
-	                                                                <select name="search_case" id="search_case">
+	                                                                <select name="search_case" id="search_case" style="padding-right:28px;">
 	                                                                    <option value="S_NAME">
 	                                                                        <spring:message code='ezEmail.t31' /></option>
 	                                                                    <option value="S_COMPANY">
@@ -3335,7 +3389,7 @@
 	                                                                    <option value="S_EMAIL">
 	                                                                        <spring:message code='ezEmail.t713' /></option>
 	                                                                </select>
-	                                                                <input id="search_text" value="" onkeyup="AddrSearch_press()" style="width: 150px; margin: 0px;" name="Input">
+	                                                                <input id="search_text" value="" onkeyup="AddrSearch_press()" style="width: 130px; margin: 0px; height:21px" name="Input">
 	                                                                <a href="#" class="imgbtn">
 	                                                                    <span onclick="AddrSearch_click()"><spring:message code='ezEmail.t37' /></span>
 	                                                                </a>
@@ -3358,19 +3412,19 @@
 	                    </tr>
 	                    <tr>
 	                        <td>
-	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; height: 468px; width: 220px; border: 1px solid #ddd; background-color: #FFFFFF; margin-top: 3px;padding-top:5px"></div>
+	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; height: 468px; width: 221px; border: 1px solid #ddd; background-color: #FFFFFF; margin-top: 3px;padding-top:5px;border-right:0px;"></div>
 	                        </td>
-	                        <td style="width: 5px;"></td>
+	                        <td></td>
 	                        <td style="vertical-align: top;">
-	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 20px; padding-top: 5px; padding-left: 5px;">
-	                                <img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer" />
-	                                <span id="addressFolderName" style="font-weight: bold;"></span>
-	                                -[<span id="addressFolderCnt" style="color: #017BEC; font-weight: bold;"></span>]
+	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 23px; padding-top: 7px; padding-left: 5px;">
+	                                <img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
+	                                <span id="addressFolderName" style="font-weight: normal;"></span>
+	                                -[<span id="addressFolderCnt" style="color: #017BEC;"></span>]
 	                            </div>
-	                            <div style="width: 441px; height: 417px; overflow: auto; background-color: #ffffff; border-bottom:0px" id="AddressListView" class="border_gray">
+	                            <div style="width: 446px; height: 410px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea" id="AddressListView" class="border_gray">
 	                            </div>
-	                            <div id="tblPageRayer" style="left: 445px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; height: 30px;"></div>
-	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 445px; border: 1px solid #ddd; border-top: 0px; height: 27px;">
+	                            <div id="tblPageRayer" style="left: 446px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; height: 32px;"></div>
+	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 446px; border: 1px solid #ddd; border-top: 0px; height: 27px;">
 	                                <spring:message code='ezEmail.t588' /><span style="color: #017BEC; font-weight: bold;" id="totalcount"></span>
 	                                <spring:message code='ezEmail.t589' /><span id="td_Previous" onclick="pagemove(-1)"><img src="/images/kr/cm/btn_prev.gif"
 	                                    width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer"></span><spring:message code='ezEmail.t590' /><span
@@ -3389,8 +3443,8 @@
 	                <table id="ListViewDLTD" style="display: none">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-	                                <div class="portlet_tabpart03_top" id="Div2" style="border: 1px solid #d3d2d2;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px;">
+	                                <div class="portlet_tabpart03_top" id="Div2" style="border: 0px solid #eaeaea;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
 	                                            <td id="dlmember" style="display: none">
@@ -3401,7 +3455,7 @@
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 668px; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
+	                            <div style="width: 668px; height: 473px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -3480,7 +3534,7 @@
 	                                <span style="min-width: 45px;"><spring:message code='ezEmail.t562' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgBCC" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 140px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(BCCTitle,this)" ondblclick="DeleteReceiver(ListViewMsgBCC)"></div>
+	                                <div id="ListViewMsgBCC" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 145px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(BCCTitle,this)" ondblclick="DeleteReceiver(ListViewMsgBCC)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -3490,7 +3544,7 @@
 	    </table>
 	    <table style="width: 100%; text-align: center;">
 	        <tr>
-	            <td class="btnposition btnpositionNew" style="text-align: center;">
+	            <td class="btnposition btnpositionNew" style="text-align: center;background-color: white;border-top:0px">
 	                <a class="imgbtn" onclick="confirm_onClick()" id="cmd_ok"><span><spring:message code='ezEmail.t599' /></span></a>
 	                <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezEmail.t600' /></span></a>
 	            </td>
