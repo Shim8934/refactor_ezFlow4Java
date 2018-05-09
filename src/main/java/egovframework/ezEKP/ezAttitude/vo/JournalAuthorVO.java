@@ -10,6 +10,7 @@ public class JournalAuthorVO {
 	   private String mail;
 	   private String mine;
 	   private String userImg;
+	   private String authType;
 	   
 	   public String getUserImg() {
 	      return userImg;
@@ -65,4 +66,10 @@ public class JournalAuthorVO {
 	   public void setDeptName(String deptName) {
 	      this.deptName = deptName;
 	   }
+	public String getAuthType() {
+		return authType;
+	}
+	public void setAuthType(String authType) {
+		this.authType = authType;
+	}
 }
