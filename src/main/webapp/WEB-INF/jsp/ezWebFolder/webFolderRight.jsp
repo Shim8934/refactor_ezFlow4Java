@@ -653,10 +653,6 @@
 		}
        
 		function onFileTypeChange(value) {
-			if (value == "all") {
-				value = "";
-			}
-			
 			searchContext.setFileType(value);
 			pagination.setPage(1);
 		}
@@ -715,15 +711,15 @@
 				<li><span onClick="refreshView()"><spring:message code='ezWebFolder.t139'/></span></li>
 				<li><img src="/images/i_bar.gif"></li>
 				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
-				<li style="float:left;">
+				<li style="float:left; height: 28px;">
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value)">
-						<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
-						<option value="document" data-imagesrc="/images/webfolder/msWord.png"       ><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
-						<option value="music" data-imagesrc="/images/webfolder/mp3.png"      ><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
-						<option value="video" data-imagesrc="/images/webfolder/mp4.png"      ><spring:message code='ezWebFolder.t194'/></option><!-- 영상 -->
-						<option value="image" data-imagesrc="/images/webfolder/jpg.png"      ><spring:message code='ezWebFolder.t195'/></option><!-- 그림 -->
-						<option value="folder" data-imagesrc="/images/webfolder/fldr.png"    ><spring:message code='ezWebFolder.t213'/></option><!-- 폴더 -->
-						<option value="zip" data-imagesrc="/images/webfolder/zip.png"        ><spring:message code='ezWebFolder.t196'/></option><!-- 압축파일 -->
+						<option value=""><spring:message code='ezWebFolder.t191'/></option>
+						<option value="document"><spring:message code='ezWebFolder.t192'/></option>
+						<option value="music"><spring:message code='ezWebFolder.t193'/></option>
+						<option value="video"><spring:message code='ezWebFolder.t194'/></option>
+						<option value="image"><spring:message code='ezWebFolder.t195'/></option>
+						<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
+						<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
 					</select>
 				</li>
 			</ul>

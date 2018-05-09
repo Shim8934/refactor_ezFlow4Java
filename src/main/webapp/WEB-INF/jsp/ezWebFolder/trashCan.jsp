@@ -120,11 +120,6 @@
 	    
 	    function changeValue(value) {
 	    	   searchFileType = value;
-	    	   
-	    	   if( value == "all" ) {
-	    		   searchFileType = "";
-	    	   }
-	    	   
 	    	   currentPage = 1;
 	    	   refreshView();
 	    }
@@ -444,9 +439,9 @@
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 			<li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 			<li><img src="/images/i_bar.gif"></li>
-			<li id="right" style="float:left;">
+			<li id="right" style="float:left; height: 28px;">
 				<select class="select" id="idSelect" onchange="changeValue(this.value);">
-					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option>
+					<option value=""><spring:message code='ezWebFolder.t191'/></option>
 					<option value="document"><spring:message code='ezWebFolder.t192'/></option>
 					<option value="music"><spring:message code='ezWebFolder.t193'/></option>
 					<option value="video"><spring:message code='ezWebFolder.t194'/></option>
