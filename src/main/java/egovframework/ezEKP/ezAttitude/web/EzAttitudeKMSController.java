@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -36,6 +37,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -482,7 +486,7 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String checkAdmin) throws Exception {
 		
 		LOGGER.debug("getAttModAppList started");
-		LOGGER.debug("writerDeptName : " + writerDeptName);
+
 		int currentPage = 1;
 		int pageSize = 15;
 		int startPoint = 0;
@@ -907,11 +911,11 @@ public class EzAttitudeKMSController {
 		
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
-		String status = resultBody.get("status").toString();
+		String data = resultBody.get("data").toString();
 
 		LOGGER.debug("saveAttModApp ended");
 		
-		return status;
+		return data;
 	}
 	
 	/**
@@ -1042,6 +1046,66 @@ public class EzAttitudeKMSController {
 		LOGGER.debug("attModAppDetail ended");
 		
 		return "/ezAttitude/attModAppDetail";
+	}
+	
+	/**
+	 * 근태 수정 신청 상세
+	 */
+	@RequestMapping(value="/ezAttitude/attModAppDet.do", method=RequestMethod.GET, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject attModAppDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=true)String attModId,
+			@RequestParam(required=false)String applCnt) throws Exception {
+		LOGGER.debug("attModAppDetail started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+		
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/modifyattitude/" + attModId;
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("sysLang", sysLang)
+				.queryParam("applCnt", applCnt)
+				.queryParam("offset", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = new JSONObject();
+		
+		if(status.equals("ok")){
+			data = (JSONObject) resultBody.get("data");
+			LOGGER.debug("!@##$!@#%$$#%!%" + data.toJSONString());
+		}
+		
+		LOGGER.debug("attModAppDetail ended");
+		
+		return data;
 	}
 	
 	/**

@@ -271,6 +271,12 @@
 					attRegHolidayFlag = false;
 					return;
 				}
+				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
+
+				if (!timeValid.test($('#Stimepicker').val()) || !timeValid.test($('#Etimepicker').val())) {
+					alert("올바른 시간을 지정해야 합니다.");
+					return;
+				}
 				if (!check_time()) {
 					alert("시작시간은 종료시간보다 빨라야합니다.");
 					return;

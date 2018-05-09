@@ -166,6 +166,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		update("ezAttitudeDAO.setAttModApp", map);
 	}
 	
+	public int getAttModApp(Map<String, Object> map) throws Exception {
+		return (int) select("ezAttitudeDAO.getAttModApp", map);
+	}
+	
 	public void resetAttModApp(Map<String, Object> map) throws Exception {
 		update("ezAttitudeDAO.resetAttModApp", map);
 	}

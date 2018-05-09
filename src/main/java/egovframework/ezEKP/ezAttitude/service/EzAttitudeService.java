@@ -95,7 +95,7 @@ public interface EzAttitudeService {
 
 	public int getUsersModiyAttCount(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName ,String writerDeptName,String sysLang, String offSet, String type, String[] deptIdList, String admin, String checkAdmin) throws Exception;
 	
-	public List<HolidayVO> getHolidayList(String companyId, int tenantId) throws Exception;
+	public List<HolidayVO> getHolidayList(String isRest, String companyId, int tenantId) throws Exception;
 
 	public List<JournalAuthorVO> getDeptUserList(String tenantId, String key,	String value) throws Exception;
 
@@ -117,7 +117,7 @@ public interface EzAttitudeService {
 	
 	public void absentedListSendMail(List<AdminAttitudeVO> list, String loginCookie, String startDate, String endDate, String fromName, String fromEmail) throws Exception;
 	
-	public void attSaveAppModify(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
+	public String attSaveAppModify(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
 			String writerDeptId, String writerDeptName, String writerDeptName2 ,String changeDate, String delFlag, String content,String offset, String originDate) throws Exception;
 	
 	public void changeUsersModifyAtt(String companyId, int tenantId, String ids, String changeStatus, String userId, String userName, String userName2, String offSet) throws Exception;
@@ -126,7 +126,7 @@ public interface EzAttitudeService {
 
 	public void deleteAttitudeAuth(String selectUserId, int tenantId, String companyId) throws Exception;
 
-	public void saveAttitudeAuthDept(int tenantId, String companyId, String selectedUser, String deptIds) throws Exception;
+	public void saveAttitudeAuthDept(int tenantId, String companyId, String selectedUser, String deptIds, String authTypes) throws Exception;
 
 	public List<JournalAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId, String userId, String isAllDept) throws Exception;
 	

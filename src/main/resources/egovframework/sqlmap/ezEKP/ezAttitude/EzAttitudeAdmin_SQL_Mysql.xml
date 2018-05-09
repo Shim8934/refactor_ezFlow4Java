@@ -64,23 +64,6 @@
       <result property="myDept"          			column="MYDEPT" 				columnIndex="6"/>
    </resultMap>
    
-	<resultMap id="attitudeAuthor" class="AttitudeAuthorVO">
-		<result  property="userId" 					column="USER_ID"				columnIndex="1"/>
-		<result  property="tenantId" 				column="TENANT_ID"				columnIndex="2"/>
-		<result  property="companyId" 				column="COMPANY_ID"				columnIndex="3"/>
-		<result  property="authDeptId" 				column="AUTH_DEPT_ID"			columnIndex="4"/>
-		<result  property="userName" 				column="USERNAME"				columnIndex="5"/>
-		<result  property="userTitle" 				column="USERTITLE"				columnIndex="6"/>
-		<result  property="userDeptName" 			column="USERDAPTNAME"			columnIndex="7"/>
-		<result  property="authDeptName" 			column="AUTHDEPTNAME"			columnIndex="8"/>
-	</resultMap>
-	
-	<resultMap id="attitudeAuthorDept" class="JournalAuthorVO">
-		<result property="deptName" 				column="DEPT_NAME" 				columnIndex="1"/>
-		<result property="deptId" 					column="DEPT_ID" 				columnIndex="2"/>
-		<result property="mine" 					column="MINE" 					columnIndex="3"/>
-	</resultMap>
-	
 	<resultMap class="AttitudeStatisVO" id="userStatistics">
 		<result property="count" 					column="COUNT" 					columnIndex="1"/>
 		<result property="typeId" 					column="TYPE_ID" 				columnIndex="2"/>
@@ -772,18 +755,19 @@
 			A.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 	</select>
-	
-	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultMap="attitudeAuthor">
+
+	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultClass="AttitudeAuthorVO">
 		<![CDATA[
 			SELECT 
-				A.USER_ID,
-			    A.TENANT_ID,
-			    A.COMPANY_ID,
-			    A.AUTH_DEPT_ID,
-			    B.DISPLAYNAME AS USERNAME,
-			    B.TITLE AS USERTITLE,
-			    B.DESCRIPTION AS USERDAPTNAME,
-			    group_concat(C.DISPLAYNAME order by 1) AS AUTHDEPTNAME
+				A.USER_ID AS userId,
+			    A.TENANT_ID AS tenantId,
+			    A.COMPANY_ID AS companyId,
+			    B.DISPLAYNAME AS userName,
+			    B.TITLE AS userTitle,
+			    B.DESCRIPTION AS userDeptName,
+			    group_concat(A.AUTH_DEPT_ID order by C.DISPLAYNAME) AS authDeptId,
+			    group_concat(C.DISPLAYNAME order by C.DISPLAYNAME) AS authDeptName,
+    			group_concat(A.AUTH_TYPE order by C.DISPLAYNAME) AS authDeptType
 
 			FROM 
 				TBL_ATTITUDE_AUTH A
@@ -807,7 +791,7 @@
 				A.USER_ID
 			ORDER BY
 				USERNAME
-			]]>
+		]]>
 	</select>
 	
 	<delete id="ezAttitudeAdminDAO.deleteAttitudeAuth" parameterClass="Map">
@@ -820,13 +804,14 @@
         		USER_ID = #selectUserId#
 		]]>
 	</delete>
-	
-	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map" resultMap="attitudeAuthorDept">
+		
+	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map" resultClass="JournalAuthorVO">
 		<![CDATA[
 			SELECT
-				D.DISPLAYNAME AS DEPT_NAME,
-				D.CN AS DEPT_ID,
-				'no' AS MINE
+				D.DISPLAYNAME AS deptName,
+				D.CN AS deptId,
+				'no' AS mine,
+				A.AUTH_TYPE AS authType
 			FROM 
 				TBL_DEPTMASTER D
 			INNER JOIN 
@@ -838,12 +823,13 @@
 			WHERE 
 				A.USER_ID = #userId#
 			AND 
-				A.TENANT_ID = 1
+				A.TENANT_ID = #tenantId#
 			UNION
 			SELECT
-				D.DISPLAYNAME AS DEPT_NAME,
-				D.CN AS DEPT_ID,
-				'yes' AS MINE
+				D.DISPLAYNAME AS deptName,
+				D.CN AS deptId,
+				'yes' AS mine,
+				'' AS authType
 			FROM 
 				TBL_DEPTMASTER D
 			LEFT JOIN 
@@ -857,14 +843,14 @@
 			AND 
 				U.TENANT_ID = #tenantId#
 			ORDER BY 
-				DEPT_NAME
+				deptName
 		]]>
 	</select>
 	
 	<insert id="ezAttitudeAdminDAO.insertAttitudeAuth" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO TBL_ATTITUDE_AUTH (USER_ID, TENANT_ID, COMPANY_ID, AUTH_DEPT_ID)
-			VALUES (#selectUserId#, #tenantId#, #companyId#, #deptId#)
+			INSERT INTO TBL_ATTITUDE_AUTH (USER_ID, TENANT_ID, COMPANY_ID, AUTH_DEPT_ID, AUTH_TYPE)
+			VALUES (#selectUserId#, #tenantId#, #companyId#, #deptId#, #deptAuth#)
 		]]>
 	</insert>
 	

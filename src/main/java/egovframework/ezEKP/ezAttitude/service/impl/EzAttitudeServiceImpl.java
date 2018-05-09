@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ibm.icu.text.DecimalFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
@@ -719,12 +720,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<HolidayVO> getHolidayList(String companyId, int tenantId)
-			throws Exception {
+	public List<HolidayVO> getHolidayList(String isRest, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getHolidayList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("isRest", isRest);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
@@ -844,7 +845,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public void attSaveAppModify(String attitudeId, String companyId,
+	public String attSaveAppModify(String attitudeId, String companyId,
 			int tenantId, String userId, String writerName, String writerName2, String writerTitle
 			, String writerTitle2, String writerDeptId, String writerDeptName, String writerDeptName2
 			,String changeDate, String delFlag, String content,String offset, String originDate) throws Exception {
@@ -871,10 +872,29 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offset", offset);
 		map.put("modappl", "1");
 		
+		/*이미 신청된 항목이 있는지, 
+		 * 이미 신청된 항목의 상태가 
+		 * 승인, 반려 상태인지 확인
+		 * */
+		
+		int modAppl = ezAttitudeDAO.getAttModApp(map);
+		
+		//신청된 항목이 존재 할 때
+		if (modAppl != 0) {
+			map.put("attModId", attitudeId);
+			AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+			//신청된 항목의 상태가 신청 상태 일 때는 추가 신청을 받지 않는다
+			if (aav.getApprStatus().equals("0")) {
+				return "fail";
+			}
+		}
+		
 		/*근태수정신청 저장*/
 		ezAttitudeDAO.attSaveAppModify(map);
 		/*근태수정신청이 된 항목 달력에 노란색 표시*/
 		ezAttitudeDAO.setAttModApp(map);
+		
+		return "success";
 	}
 
 	@Override
@@ -966,8 +986,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		List<AdminAttitudeVO> totalList = new ArrayList<AdminAttitudeVO>();
 		
 		/* 2018-05-01 이효진 추후개선 미입력자이거말고 어떠케뽑는지 모르겟어서 */
-		//checkHoliday() 만들어 쓰면 휴무일때 true로
-		while (true) {
+		/*while (true) {
 			tempDateTime = sdf.format(cal.getTime());
 			
 			//day_of_week 1 일 2 월 3 화 ...
@@ -987,7 +1006,20 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if (tempDateTime.equals(searchEndDate)) {
 				break;
 			}
-		};
+		};*/
+		
+		////
+		for (String tempDate : checkHoliday(searchStartDate, searchEndDate, userLang, companyId, tenantId)) {
+			LOGGER.debug("tempDateTime = " + tempDate);
+			
+			map.put("searchStartDate", commonUtil.getDateStringInUTC(tempDate + " 00:00:00", offset, true));
+			map.put("searchEndDate", commonUtil.getDateStringInUTC(tempDate + " 23:59:59", offset, true));
+			
+			List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeAbsentList(map);
+			totalList.addAll(resultList);
+			
+			LOGGER.debug("resultList size = " + resultList.size());
+		}
 		
 		if (duplicated.equals("distinct")) {
 			HashSet<AdminAttitudeVO> listSet = new HashSet<AdminAttitudeVO>(totalList);
@@ -1079,20 +1111,28 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		return data;
 	}
 	
-	public boolean checkHoliday(String checkDate, String userLang, String companyId, int tenantId) throws Exception {
+	/**
+	 * YYYY-MM-dd
+	 * 
+	 * @param checkStartDate 시작일
+	 * @param checkEndDate 종료일
+	 * @param userLang userInfo.lang
+	 * @param companyId
+	 * @param tenantId
+	 * @return 국가,회사,근태 휴무일을 제외한 날짜 dateString arrary
+	 * @throws Exception
+	 */
+	public List<String> checkHoliday(String checkStartDate, String checkEndDate, String userLang, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("checkHoliday started.");
+		LOGGER.debug("startDate = " + checkStartDate + " || endDate = " + checkEndDate + " || userLang = " + userLang);
+		
 		/*2018-05-08 이효진 holidayList 생성*/
 		//회사 기념일
-		//isrepeat 이면 반복이니 year짜르고 해당연도 붙임
-		//isSolar 0:음력 1:양력
-		List<HolidayVO> holidayList = getHolidayList(companyId, tenantId);
+		List<HolidayVO> holidayList = getHolidayList("rest", companyId, tenantId);
 		//근태휴무일
-//		CLOSED_DAY 일 ~ 토
-//		while문에 날짜별 요일 체크해서 1이면 휴무일처리 closedday 1이면 휴일 0이면 평일
 		AttitudeConfigVO attitudeConfig = getAttitudeConfig(tenantId, companyId);
-		String checkDay[] = attitudeConfig.getClosedDay().split(".");
+		String checkDay[] = attitudeConfig.getClosedDay().split(",");
 		//국가공휴일
-//		KoreanLunarCalendear 안에 상수 선언
-//		userlang 1:한국어 3:일본어
 		KoreanLunarCalendar koreaCalendar = KoreanLunarCalendar.getInstance();
 		
 		String nationHoliday[] = null;
@@ -1105,7 +1145,220 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			nationHoliday = koreaCalendar.HOLIDAY_KOREA;
 		}
 		
-		return true;
+		for (String holiday : nationHoliday) {
+			String temp[] = holiday.split(", ");
+			
+			HolidayVO vo = new HolidayVO();
+			vo.setHolidayDate(checkStartDate.substring(0,4) + "-" + temp[2] + "-" + temp[3]);
+			vo.setHolidayName(temp[0]);
+			vo.setHolidayName2(temp[1]);
+			vo.setIsRepeat(1);
+			vo.setIsSolar(temp[4].equals("1") ? 1 : 0);
+			vo.setUseCompany(companyId);
+			
+			holidayList.add(vo);
+		}
+		
+		//음력 -> 양력변환
+		DecimalFormat df = new DecimalFormat("00");
+		String startYear = checkStartDate.substring(0, 4);
+		String endYear = checkEndDate.substring(0, 4);
+		
+		for (HolidayVO vo1 : holidayList) {
+			if (vo1.getIsSolar() == 0) {
+				String lunarDate = vo1.getHolidayDate();
+				
+				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.substring(0, 4)), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), true);
+				vo1.setHolidayDate(koreaCalendar.getSolarYear() + "-" + df.format(koreaCalendar.getSolarMonth()) + "-" + df.format(koreaCalendar.getSolarDay()));
+			}
+			
+			String voYear = vo1.getHolidayDate().substring(0, 4);
+			
+			if (vo1.getIsRepeat() == 1) {
+				if (startYear.equals(endYear)) {
+					if (!startYear.equals(voYear)) {
+						vo1.setHolidayDate(vo1.getHolidayDate().replace(voYear, startYear));
+					}
+				} else {
+					if (!startYear.equals(voYear)) {
+						vo1.setHolidayDate(vo1.getHolidayDate().replace(voYear, startYear));
+					}
+					
+					if (!endYear.equals(voYear)) {
+						HolidayVO vo2 = new HolidayVO();
+						vo2.setHolidayDate(vo1.getHolidayDate().replace(startYear, endYear));
+						
+						holidayList.add(vo2);
+					}
+				}
+				
+			}
+			
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		
+		Date startDate = sdf.parse(checkStartDate);
+		cal.setTime(startDate);
+		
+		String tempDate = "";
+		boolean isContained = true;
+		
+		List<String> result = new ArrayList<String>();
+		
+		while (true) {
+			isContained = true;
+			tempDate = sdf.format(cal.getTime());
+			
+			if (!result.contains(tempDate)) {
+				switch (cal.get(Calendar.DAY_OF_WEEK)) {
+				case 1:
+					if (checkDay[0].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
+						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
+					}
+				case 2:
+					if (checkDay[1].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
+						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
+					}
+				case 3:
+					if (checkDay[2].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
+						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
+					}
+				case 4:
+					if (checkDay[3].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
+						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
+					}
+				case 5:
+					if (checkDay[4].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
+						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
+					}
+				case 6:
+					if (checkDay[5].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
+						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
+					}
+				case 7:
+					if (checkDay[6].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
+						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
+					}
+				}
+			}
+			
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			
+			if (tempDate.equals(checkEndDate)) {
+				break;
+			}
+		};
+		
+		LOGGER.debug("checkHoliday ended.");
+		
+		return result;
 	}
 	
 	@Override
@@ -1153,12 +1406,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("ids", ids.split("_")[0]);
+		map.put("attModId", ids.split("_")[0]);
 		
 		if (ids.split("_").length > 1) {
 			map.put("applCnt", ids.split("_")[1]);
 		}
 		map.put("changeStatus", changeStatus);
 		map.put("offsetMin", offsetMin);
+		map.put("offset", offsetMin);
 		map.put("apprDate",commonUtil.getTodayUTCTime(""));
 		map.put("userId",userId);
 		map.put("displayName",userName);
@@ -1169,7 +1424,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
 		
-		if (aav.getApprStatus().equals("0")) {
+		if (!aav.getApprStatus().equals("0")) {
 			return;
 		}
 		
@@ -1255,7 +1510,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Override
 	public void saveAttitudeAuthDept(int tenantId, String companyId,
-			String selectedUser, String deptIds) throws Exception {
+			String selectedUser, String deptIds, String authTypes) throws Exception {
 		LOGGER.debug("saveAttitudeAuthDept started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1265,10 +1520,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 		ezAttitudeDAO.deleteAttitudeAuth(map);
 
-		String[] deptList = deptIds.split(",");
+		String[] deptIdList = deptIds.split(",");
+		String[] deptAuthList = authTypes.split(",");
 
-		for (int i = 0; i < deptList.length; i++) {
-			map.put("deptId", deptList[i]);
+		for (int i = 0; i < deptIdList.length; i++) {
+			map.put("deptId", deptIdList[i]);
+			map.put("deptAuth", deptAuthList[i]);
 
 			ezAttitudeDAO.insertAttitudeAuth(map);
 		}

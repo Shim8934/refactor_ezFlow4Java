@@ -10,6 +10,7 @@
 <!-- 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />		 -->
 <%-- 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	     --%>
 	    <link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
+	    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
@@ -56,7 +57,7 @@
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userName + "</td>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userTitle + "</td>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userDeptName + "</td>";
-	                    html += "<td style='width:40%;color:gray;'>" + result[i].authDeptName + "</td>";
+	                    html += "<td style='width:40%;color:gray;'>" + result[i].authDeptName2 + " <i class='fas fa-info-circle' style='margin-left: 5px; font-size: 14px;'></i></td>";
 	                    html += "</tr>";
 	                }
                 } else {
@@ -84,7 +85,7 @@
 				url+="?companyId="+companyId;
 				if (userId) {
 					url+="&userId="+userId+"&userName="+selectedUserName;
-					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 200));
+					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 400));
 				} else {
 					alert("권한설정할 대상을 선택해 주십시오.");
 				}
@@ -120,13 +121,18 @@
 	        	var url = "/admin/ezAttitude/saveAttitudeAuth.do";
 				var companyId = $("#ListCompany").val();
 				url+="?companyId="+companyId;
-				window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 200));
+				window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 400));
 	        }
+	        
+	        //권한부서 정보 hover로
+	        $(document).on('mouseover', '#contentlist table.mainlist i', function(e) {
+				alert($(this).closest('tr').attr('id'));
+			})
 	        
 		</script>
 	</head>
 	<body class="mainbody">
-	    <h1>근태권한관리</h1>
+	    <h1><spring:message code = 'ezAttitude.t8' /></h1>
 	    <div id="mainmenu">
 			<ul>
 	        	<li style="background: none;">
@@ -146,25 +152,25 @@
 		        <li><span onClick="author_delete()">권한삭제</span></li>
 		    </ul>
 		</div>
-	        <div style="width: 100%; height: 100%;">
-	            <table class="mainlist" style="width: 100%;">
-	                <tr>
-	                    <th style="width: 20%;"><span>이름</span></th>
-	                    <th style="width: 20%;"><span>직위</span></th>
-	                    <th style="width: 20%;"><span>부서</span></th>
-	                    <th style="width: 40%;"><span>권한부서</span></th>
-	                </tr>
-	            </table>
-	            <div id="contentlist" name="contentlist" style="height: 360px; overflow-y: auto;">
-	                <table class="mainlist" style="width: 100%;">
-	                    <tr>
-	                        <td style="text-align: center;">
-	                            <img src="/images/email/progress_img.gif" />
-	                        </td>
-	                    </tr>
-	                </table>
-	            </div>
-	        </div>
+        <div style="width: 100%; height: 100%;">
+            <table class="mainlist" style="width: 100%;">
+                <tr>
+                    <th style="width: 20%;"><span>이름</span></th>
+                    <th style="width: 20%;"><span>직위</span></th>
+                    <th style="width: 20%;"><span>부서</span></th>
+                    <th style="width: 40%;"><span>권한부서</span></th>
+                </tr>
+            </table>
+            <div id="contentlist" name="contentlist" style="height: 160px; overflow-y: auto;">
+                <table class="mainlist" style="width: 100%;">
+                    <tr>
+                        <td style="text-align: center;">
+                            <img src="/images/email/progress_img.gif" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>

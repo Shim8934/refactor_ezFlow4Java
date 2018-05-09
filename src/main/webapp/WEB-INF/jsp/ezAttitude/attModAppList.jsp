@@ -57,6 +57,7 @@
 		var m_strColorDefault = "#ffffff";
 		var adminFlag = "${adminFlag}";
 		var checkAdmin = "${checkAdmin}";
+		var usepostDate = false;
 		
 		$(function(){
 			$(document).on('click', '#AttList th', function(){
@@ -104,6 +105,12 @@
 	        $("#Sdatepicker").datepicker('setDate', NowDate);
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker('setDate', NowDate);
+	        console.log("${startDate}");
+	        console.log("${endDate}");
+			if (checkAdmin == 'true') {
+				$("#Sdatepicker").val("${startDate}");
+	    		$("#Edatepicker").val("${endDate}");	
+			}
 	    });
 	    
 	    $(function () {
@@ -152,9 +159,12 @@
 				   "top" : obj.top + $("#search").height(),
 				   "left" : obj.left
 				});
-			
-			$("#Sdatepicker").datepicker('disable');
-	        $("#Edatepicker").datepicker('disable');
+			if (checkAdmin != "true") {
+				$("#Sdatepicker").datepicker('disable');
+		        $("#Edatepicker").datepicker('disable');	
+			} else {
+				usepostDate = true;
+			}
 		}
 		function makePageSelPage(){
 	        var strtext;
@@ -415,13 +425,16 @@
 		    	$('#AttList tbody').children( 'tr:not(:first)' ).remove();
 	    	}
 	    	
-	    	if (attList.length == 0) {
-	    		if (adminFlag != "true") {
-	    			$('#AttList tbody').append('<tr><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
-	    		} else {
-	    			$('#AttList tbody').append('<tr><td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');	
-	    		}
+	    	if (excel != true) {
+		    	if (attList.length == 0) {
+		    		if (adminFlag != "true") {
+		    			$('#AttList tbody').append('<tr><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
+		    		} else {
+		    			$('#AttList tbody').append('<tr><td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');	
+		    		}
+		    	}
 	    	}
+	    	
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
 	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" draggable="true" style="cursor:pointer;">';
@@ -494,6 +507,15 @@
 	        $("#Sdatepicker").datepicker('setDate', NowDate);
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker('setDate', NowDate);
+	        
+	        if(!usepostDate){
+	            $("#Sdatepicker").datepicker('disable');
+	            $("#Edatepicker").datepicker('disable');
+	        }
+	        else {
+	            $("#Sdatepicker").datepicker('enable');
+	            $("#Edatepicker").datepicker('enable');
+	        }
 	    }
 	    
 	    function search_keypress(evt)
@@ -552,8 +574,6 @@
 	        else
 	            return;
 	    }
-	    
-	    var usepostDate = false;
 	    
 	    function DateSearch_Click() {
 	        if(usepostDate){
@@ -976,18 +996,19 @@
 			    	$('#addpopup_list tbody').children('tr').not(":first").remove();
 			    	
 			    	if (json.length == 0) {
-			    		var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
+			    		var objTr = $("<tr></tr>").append($("<td colspan='4' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
 			    		
 			    		$("#addpopup_list tbody").append(objTr);
 			    	}
 			    	
 			    	for(var i = 0; i < json.length; i++) {
-			    		
 						if (json.length == 1 && json[i].apprStatus == 0) {
 							var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
 				    		
 				    		$("#addpopup_list tbody").append(objTr);
 			    		} else {
+			    			var name = json[i].apprUserName;
+			    			
 			    			if (json[i].apprStatus == 1) {
 				    			json[i].apprStatus = "승인";
 				    		} else if (json[i].apprStatus == 2){
@@ -996,9 +1017,31 @@
 				    			json[i].apprStatus = "신청";
 				    		}
 				    		
-				    		var objTr = $("<tr></tr>").append($("<td style='width:50%'></td>").text("\u00a0" + json[i].apprDate));
-				    		objTr.append($("<td style='width:25%'></td>").text("\u00a0" + json[i].apprUserName));
-				    		objTr.append($("<td style='width:25%'></td>").text("\u00a0" + json[i].apprStatus));
+			    			if (json[i].apprDate != null) {
+			    				json[i].apprDate = json[i].apprDate.substring(0,16);
+			    			}
+			    			
+			    			if (json[i].apprDate == null) {
+			    				json[i].apprDate = "";
+			    			}
+			    			
+			    			if (json[i].apprUserName != null) {
+			    				if (json[i].apprUserName.length > 3) {
+				    				name = json[i].apprUserName.substring(0,2) + "...";
+				    			}	
+			    			}
+			    			
+			    			if (json[i].apprUserName == null) {
+			    				json[i].description = "";
+			    				json[i].apprUserName = "";
+			    				json[i].title = "";
+			    				name = "";
+			    			}
+			    			
+				    		var objTr = $("<tr></tr>").append($("<td style='width:35%'></td>").text("\u00a0" + json[i].apprDate));
+				    		objTr.append($("<td style='width:5%' title='" + json[i].description + " " + json[i].apprUserName + " " + json[i].title + "'></td>").text("\u00a0" + name));
+				    		objTr.append($("<td style='width:55%'></td>").text("\u00a0" + json[i].originDate.substring(0,16) + " -> " + json[i].changeDate.substring(11,16)));
+				    		objTr.append($("<td style='width:5%'></td>").text("\u00a0" + json[i].apprStatus));
 				    		
 				    		$("#addpopup_list tbody").append(objTr);	
 			    		}
@@ -1034,13 +1077,13 @@
 </head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
 	<c:if test="${adminFlag == 'true' && checkAdmin == 'true'}">
-		<h1>근태수정관리 - <span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code = 'ezAttitude.t7' /> - <span id="mailBoxInfo"></span></h1>
 	</c:if>
 	<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
-		<h1>근태수정관리 - 신청관리현황<span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code = 'ezAttitude.t7' /> - 신청관리현황<span id="mailBoxInfo"></span></h1>
 	</c:if>
 	<c:if test="${adminFlag == 'false' && checkAdmin != 'true'}">
-		<h1>근태수정관리 - 신청현황<span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code = 'ezAttitude.t7' /> - 신청현황<span id="mailBoxInfo"></span></h1>
 	</c:if>
         <div id="mainmenu">
         <c:if test="${checkAdmin == 'true'}">
@@ -1068,8 +1111,8 @@
 	                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
 						</td>
 						<td colspan="2">
-							<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="float:right; margin-top:3px;"><span>새로고침</span></a>
-							<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="float:right; margin-top:3px;"><span>검색</span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="margin-top:3px;"><span>새로고침</span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="margin-top:3px;"><span>검색</span></a>
 						</td>
 					</tr>
 				</tbody>
@@ -1251,8 +1294,9 @@
 				    </thead>
 				    <tbody style="max-height:500px; width:440px; display:block; overflow-y:auto;">
 				    	<tr>
-				  			<th style="width:220px;height:30px">승인일시</th>
+				    		<th style="width:120px;height:30px">승인일시</th>
 				  			<th style="height:30px">승인자</th>
+				  			<th style="width:120px;height:30px">수정신청일시</th>
 				  			<th style="height:30px">승인상태</th>
 						</tr>
 				    </tbody>

@@ -3840,7 +3840,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			num = (dayOfYear % rtnVal) + 1;
 		}
 		
+		// 18-05-08 김민성 - 커뮤니티 회원수 수정
 		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getTenantId());
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 		
 		if (club != null) {
 			if (!club.getC_Cate_A().equals("0")){
@@ -3927,7 +3929,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		List<CommunityClubVO> clubList = ezCommunityService.categoryListGet(type, mode, startRow, endRow, mariaStart, mariaEnd, userInfo.getTenantId());
 		
+		// 18-05-08 김민성 - 커뮤니티 회원수 수정
 		for (CommunityClubVO club : clubList) {
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
@@ -3973,6 +3977,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 				clubList.get(0).setCopCnt(clubCopCnt.get(0).getCopCnt());
 			}
 			
+			// 18-05-08 김민성 - 커뮤니티 회원수 수정
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
