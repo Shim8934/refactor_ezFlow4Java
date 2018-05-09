@@ -315,7 +315,7 @@
 				}
 			}
     	   
-    	   showPanel(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+    	   showPanel(450, 250, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
        
 	       parent.frames["left"].drawVolume();
        }
@@ -421,7 +421,7 @@
 				}
 			}
     	   
-    	   var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(450, 470));
+    	   var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(450, 490));
            try { OpenWin.focus(); } catch (e) { }
            
            parent.frames["left"].drawVolume();
