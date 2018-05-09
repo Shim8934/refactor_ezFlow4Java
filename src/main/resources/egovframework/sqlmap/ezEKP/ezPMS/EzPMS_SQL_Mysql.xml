@@ -18,6 +18,7 @@
 	<typeAlias 	alias="ProjectCompanyVO" 							type="egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO" />
 	<typeAlias 	alias="ProjectUserInfoVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectMemberVO"/>
 	<typeAlias 	alias="ProjectTaskMemberVO" 									type="egovframework.ezEKP.ezPMS.vo.TaskMemberVO"/>
+	<typeAlias 	alias="ProjectBoardVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectBoardVO"/>
 	
     <resultMap id="projectInfoVO" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
@@ -1234,6 +1235,23 @@
 		]]>
 	</insert>
 	
+	<insert id="EzPMSDAO.addBoard" parameterClass="ProjectBoardVO">
+		<![CDATA[
+			INSERT INTO tbl_pms_item_list (
+				tenant_id,			writer_id,			title,				write_overview,			write_type,
+				write_content,		write_date,			write_update_date,	read_count,				task_id,
+				group_id,			writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
+				writer_position,	writer_position2
+			)
+			VALUES (
+				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
+				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#taskId#,
+				#groupId#,			#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
+				#writerPosition#,	#writerPosition2#
+			)
+		]]>
+	</insert>
+
 	<insert id="EzPMSDAO.addKanbanOrder" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_PMS_MAINLIST (

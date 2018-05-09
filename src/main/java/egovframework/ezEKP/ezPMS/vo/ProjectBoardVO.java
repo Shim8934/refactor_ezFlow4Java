@@ -9,7 +9,7 @@ public class ProjectBoardVO {
 	private int tenantId;
 	
 	// 게시자 아이디
-	private Long writerId;
+	private String writerId;
 	
 	// 제목
 	private String title;
@@ -72,11 +72,11 @@ public class ProjectBoardVO {
 		this.tenantId = tenantId;
 	}
 
-	public Long getWriterId() {
+	public String getWriterId() {
 		return writerId;
 	}
 
-	public void setWriterId(Long writerId) {
+	public void setWriterId(String writerId) {
 		this.writerId = writerId;
 	}
 

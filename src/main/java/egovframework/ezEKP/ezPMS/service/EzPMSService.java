@@ -6,6 +6,7 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
@@ -118,4 +119,5 @@ public interface EzPMSService {
 
 	public void completeAllTasks(long projectId, int tenantId, String realEndDate);
 
+	public void addBoard(ProjectBoardVO vo);
 }

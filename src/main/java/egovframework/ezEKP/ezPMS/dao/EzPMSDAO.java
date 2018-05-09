@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
@@ -207,14 +208,18 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void addTaskGroup(Map<String, Object> map) {
 		insert ("EzPMSDAO.addTaskGroup", map);
 	}
-
+	
+	public Long addBoard(ProjectBoardVO vo) {
+		return (Long) insert ("EzPMSDAO.addBoard", vo);
+	}
+	
 	public void addKanbanOrder(Map<String, Object> map) {
 		insert ("EzPMSDAO.addKanbanOrder", map);
 	}
 	
 	public void changeKanbanOrder(Map<String, Object> map) {
 		update ("EzPMSDAO.changeKanbanOrder", map);
-		
+	
 	}
 
 	public void completeAllTasks(HashMap<String, Object> map) {

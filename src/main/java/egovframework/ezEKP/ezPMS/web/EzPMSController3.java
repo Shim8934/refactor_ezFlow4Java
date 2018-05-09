@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezPMS.web;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
@@ -34,10 +34,11 @@ public class EzPMSController3 {
 	@Autowired
 	private Properties config;
 	
-	@RequestMapping(value="/ezPMS/getProjectBoard.do/{projectId}")
-	public String getProjectBoard(HttpServletRequest request, Model model, @PathVariable int projectId, @CookieValue("loginCookie") String loginCookie) {
+	@RequestMapping(value="/ezPMS/getProjectBoard.do")
+	public String getProjectBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		
-		LOGGER.debug("ezPMS getProjectBoard started");
+		LOGGER.debug("ezPMS getProjectBoard started");		
+		String projectId = request.getParameter("projectId");
 		
 		model.addAttribute("projectId", projectId);
 		
@@ -47,7 +48,7 @@ public class EzPMSController3 {
 	}
 	
 	@RequestMapping(value="/ezPMS/goAddBoard.do")
-	public String goAddBoard(HttpServletRequest request, Model model, ProjectBoardVO vo ,@CookieValue("loginCookie") String loginCookie) {
+	public String goAddBoard(HttpServletRequest request, Model model, ProjectBoardVO vo , @CookieValue("loginCookie") String loginCookie) {
 		
 		LOGGER.debug("ezPMS goAddBoard started");
 		
@@ -58,24 +59,52 @@ public class EzPMSController3 {
 		String writerDeptName = userInfo.getDeptName();
 		
 		String projectId = request.getParameter("projectId");
-		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		
-//		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects" + projectId, param, request, "get", null);
-//		String status = resultBody.get("status").toString();
-//		
-//		if(status.equals("ok")) {
-//			JSONObject data = (JSONObject) resultBody.get("data");
-//			model.addAttribute("projectName", data.get("projectName"));
-//		}
+		String projectName = request.getParameter("projectName");
+		String taskName = request.getParameter("taskName");
+		String groupId = request.getParameter("groupId");
+		String taskId = request.getParameter("taskId");
 		
 		model.addAttribute("projectId", projectId);
+		model.addAttribute("projectName", projectName);
 		model.addAttribute("writerId", writerId);
 		model.addAttribute("writerName", writerName);
 		model.addAttribute("writerDeptName", writerDeptName);
+		model.addAttribute("taskName", taskName);
+		model.addAttribute("groupId", groupId);
+		model.addAttribute("taskId", taskId);
 		
 		LOGGER.debug("ezPMS goAddBoard ended");
 		
 		return "/ezPMS/pmsAddBoard";
+	}
+	
+	@RequestMapping(value="/ezPMS/addBoard.do")
+	public String addBoard(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		
+		LOGGER.debug("ezPMS addBoard started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		
+		param.put("tenantId", userInfo.getTenantId());
+		param.put("writerId", userInfo.getId());
+		param.put("writeDate", today);
+		param.put("writerName", userInfo.getDisplayName1());
+		param.put("writerName2", userInfo.getDisplayName2());
+		param.put("writerDeptname", userInfo.getDeptName1());
+		param.put("writerDeptname2", userInfo.getDeptName2());
+		param.put("writerPosition", userInfo.getTitle1());
+		param.put("writerPosition2", userInfo.getTitle2());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards", param, request, "post", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			model.addAttribute("data", "test");
+		}
+		
+		LOGGER.debug("ezPMS addBoard ended");
+		
+		return "json";
 	}
 }
