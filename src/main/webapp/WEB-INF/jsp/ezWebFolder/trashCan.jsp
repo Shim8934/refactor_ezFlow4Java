@@ -88,9 +88,9 @@
 				}
 			};
 			
-			document.addEventListener("click", listOptionHidden);
-			parent.frames["left"].document.addEventListener("click", listOptionHidden);
-			parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("click", listOptionHidden);
+			document.addEventListener("click", listOptionHidden, true);
+			parent.frames["left"].document.addEventListener("click", listOptionHidden, true);
+			parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("click", listOptionHidden, true);
 			
 			// listoption 클릭 이벤트
 			document.getElementById("webfolderlistoptiondiv").addEventListener("click", function(event) {
