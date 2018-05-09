@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
 <script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
@@ -25,6 +26,7 @@ var status = "${project.status}";
 var strHTML = "";
 var projectId = "${project.projectId}";
 var kanbanOrder = "${kanbanOrder}";
+var projectName = "${project.projectName}";
 
 $(document).ready(function(){
 	$(window).resize(function() {
@@ -35,14 +37,44 @@ $(document).ready(function(){
 });
 
 $(function() {
-	CurrentHeight = $(window).height()-100;
-	$(".overview").css("height", CurrentHeight + "px");
-	$(".kanban").css("height", CurrentHeight - 14 + "px");
-	
 	setKanbanList();
 	ableToChangeStatus();
 	initProgressBar();
 	
+	CurrentHeight = $(window).height()-100;
+	$(".overview").css("height", CurrentHeight + "px");
+	$(".kanban").css("height", CurrentHeight - 14 + "px");
+	
+	
+	$("#kanbanArea").sortable({
+		update : function(event, ui) {
+			var kanban = $(".kanban");
+			var orderStatus = "";
+			
+			for (var i = 0; i < kanban.length; i++) {
+				orderStatus += kanban.eq(i).attr("name") + ",";
+			}
+			
+			orderStatus = orderStatus.slice(0,-1);
+			
+			 var data = {
+				projectId : projectId,
+				orderStatus : orderStatus
+			}
+			
+			 $.ajax({
+				type : "POST",
+				url : "/ezPMS/changeKanbanOrder.do",
+				contentType: "application/json; charset=UTF-8",
+				data :JSON.stringify(data),
+				success : function(result) {},
+				error : function(jqXHR, textStatus, errorThrown) {
+					alert("error : " + textStatus);
+				}
+			});  
+		}
+	});
+	$("#kanbanArea").disableSelection();
 });
 
 function initProgressBar() {
@@ -79,26 +111,26 @@ function ableToChangeStatus() {
 	switch(status){
 		case "L" :
 		case "P" :
-			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span onclick='changeStatus(C)'>";
+			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='C' onclick='changeStatus(this)'>";
 			strHTML += "프로젝트 완료";
 			strHTML += "</span></a> ";
-			strHTML += "<a class='imgbtn'><span onclick='changeStatus(S)'>";
+			strHTML += "<a class='imgbtn'><span id='S' onclick='changeStatus(this)'>";
 			strHTML += "프로젝트 보류";
 			strHTML += "</span></a>";
 			break;
 		case "W" :
-			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span onclick='changeStatus(P)'>";
+			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='P' onclick='changeStatus(this)'>";
 			strHTML += "프로젝트 진행";
 			strHTML += "</span></a> ";
-			strHTML += "<a class='imgbtn'><span onclick='changeStatus(S)'>";
+			strHTML += "<a class='imgbtn'><span id='S' onclick='changeStatus(this)'>";
 			strHTML += "프로젝트 보류";
 			strHTML += "</span></a>";
 			break;
 		case "S" :
-			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span onclick='changeStatus(P)'>";
+			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='P' onclick='changeStatus(this)'>";
 			strHTML += "프로젝트 진행";
 			strHTML += "</span></a> ";	
-			strHTML += "<a class='imgbtn'><span onclick='changeStatus(C)'>";
+			strHTML += "<a class='imgbtn'><span id='C' onclick='changeStatus(this)'>";
 			strHTML += "프로젝트 완료";
 			strHTML += "</span></a>";
 			break;
@@ -124,8 +156,24 @@ function kanbanSetting() {
 
 function setKanbanList() {
 	var kanbanOrderArr = kanbanOrder.split(",");
+	var strHTML = "";
+
+	for (var i = 0; i < kanbanOrderArr.length; i++) {
+		strHTML += "<div id='kanban"+ (i + 1) +"' class='kanban'>";
+		strHTML += "<h1></h1>";
+		strHTML += "<div class='card'>";
+		strHTML += "Hello";
+		strHTML += "</div>";
+		strHTML += "</div>";
+	}
+	
+	$("#kanbanArea").html(strHTML);
+	
+	CurrentHeight = $(window).height()-100;
+	$(".kanban").css("height", CurrentHeight - 14 + "px");
 	
 	for (var i = 0; i < kanbanOrderArr.length; i++) {
+		$("#kanban" + (i + 1)).attr("name", kanbanOrderArr[i]);
 		var title = "";
 		
 		if (kanbanOrderArr[i].indexOf("M") != -1) {
@@ -160,6 +208,71 @@ function setKanbanList() {
 	}
 }
 
+function moveToPage(target) {
+	if (target == "comment") {
+		var clickTabId = "1tab5";
+		var nowTabAttr = "1tab0";
+		changeTab(clickTabId, nowTabAttr);
+		$("#FBoard_ifrm", parent.document).attr("src", "/ezPMS/getComment.do");
+	} else if (target == "taskLog") {
+		var clickTabId = "1tab4";
+		var nowTabAttr = "1tab0";
+		changeTab(clickTabId, nowTabAttr);
+		
+		$("#FBoard_ifrm", parent.document).attr("src", "/ezPMS/getTaskLogList.do");
+	}
+}
+
+function changeTab(clickTabId, nowTabAttr) {
+	$("#"+nowTabAttr, parent.document).attr("class", "tab");
+	$("#"+clickTabId, parent.document).attr("class", "tabon");
+}
+
+function changeStatus(status) {
+	console.log($(status).attr("id"));
+	var changeStatus = $(status).attr("id");
+	var nowStatus = status;
+	var response;
+	
+	if (changeStatus == "C") {
+		response = confirm("프로젝트를 완료하면 하위 작업이 모두 완료됩니다. \n 진행하시곘습니까?");
+	} else {
+		response = confirm("프로젝트의 상태를 변경하시겠습니까?");
+	}
+	
+	if (response == true) {
+		data = {
+				nowStatus : nowStatus,
+				status : changeStatus,
+				projectList : projectId
+			}
+			
+			$.ajax({
+				type : "POST",
+				dataType: "text",
+				contentType: "application/json; charset=UTF-8",
+				url : "/ezPMS/updateProjectStatus.do",
+				data :JSON.stringify(data),
+				success : function(result) {
+					if (result == "permitted") {
+						if (changeStatus == "P") {
+							alert("상태가 변경되었습니다. \n현재일보다 마감일이 빠른 프로젝트는 지연 프로젝트 상태로 변경됩니다.");
+						} else {
+							alert("상태가 변경되었습니다.");
+						}
+						
+						window.location.reload();
+					} else {
+						alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
+						return;
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+				}
+			});
+	}
+}
+
 </script>
 <style type="text/css">
 #kanbanArea {
@@ -185,6 +298,7 @@ function setKanbanList() {
 	width : 22%;
 	overflow : auto;
 	float : left;
+	background-color : rgb(240, 240, 240);
 }
 
 .card {
@@ -195,6 +309,7 @@ function setKanbanList() {
 	height : 100px;
 	color : block;
 	border : 1px solid black;
+	background-color : rgb(255, 255, 255);
 }
 
 .kanban > h1 {
@@ -217,58 +332,7 @@ function setKanbanList() {
 </head>
 <body>
 <div id="kanbanArea" class="overview">
-	<div id="kanban1" class="kanban">
-		<h1>나의 업무</h1>
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-	</div>
-	<div id="kanban2" class="kanban">
-		<h1>전체 업무</h1>
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-	</div>
-	<div id="kanban3" class="kanban">
-		<h1>완료된 업무</h1>
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-	</div>
-	<div id="kanban4" class="kanban">
-		<h1>게시판</h1>
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-		<div class="card">hello
-		</div>  
-	</div>
+	
 </div>
 
 <div id="iconArea" class="rightPart">
@@ -300,11 +364,11 @@ function setKanbanList() {
 	</table>
 	<br>
 	<div id="commentDiv">
-		의견<span style="float:right; font-size:20px; padding-right:15px">+</span>
+		의견<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('taskLog')">+</span>
 		<hr style="text-align:center;margin-left:0px;border-bottom:0px; width:95%">
 	</div>
 	<div id="logDiv">
-		작업이력<span style="float:right; font-size:20px; padding-right:15px">+</span>
+		작업이력<span style="float:right; font-size:20px; padding-right:15px; cursor:pointer;" onclick="moveToPage('comment')">+</span>
 		<hr style="text-align:center;margin-left:0px;border-bottom:0px; width:95%">
 	</div>
 </div>

@@ -71,7 +71,7 @@ public class EzPMSGWController2 {
 			
 			SearchVO search = new SearchVO();
 			search.setTenantId(info.getTenantId());
-			search.setProjectId(Integer.parseInt(projectId));
+			search.setProjectId(Long.parseLong(projectId));
 			search.setMemberId(request.getParameter("headManagerName"));
 			
 			
@@ -181,7 +181,7 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ProjectTaskVO taskVO = ezPMSService.getTaskDetails(Integer.parseInt(taskId));
+			ProjectTaskVO taskVO = ezPMSService.getTaskDetails(Long.parseLong(taskId));
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -244,7 +244,7 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ezPMSService.deleteTask(Integer.parseInt(taskId));
+			ezPMSService.deleteTask(Long.parseLong(taskId));
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -276,7 +276,7 @@ public class EzPMSGWController2 {
 			
 			SearchVO search = new SearchVO();
 			search.setTenantId(info.getTenantId());
-			search.setProjectId(Integer.parseInt(projectId));
+			search.setProjectId(Long.parseLong(projectId));
 			
 			List<ProjectGroupVO> taskList = ezPMSService.getGroupList(search);
 			
@@ -342,7 +342,7 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ProjectGroupVO groupVO = ezPMSService.getGroupDetails(Integer.parseInt(groupId));
+			ProjectGroupVO groupVO = ezPMSService.getGroupDetails(Long.parseLong(groupId));
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -407,7 +407,7 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ezPMSService.deleteGroup(Integer.parseInt(groupId));
+			ezPMSService.deleteGroup(Long.parseLong(groupId));
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -437,7 +437,7 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 		
-			List<ProjectTaskTreeVO> list = ezPMSService.getProjectTaskTree(Integer.parseInt(projectId), request.getParameter("onlyGroup"));
+			List<ProjectTaskTreeVO> list = ezPMSService.getProjectTaskTree(Long.parseLong(projectId), request.getParameter("onlyGroup"));
 			
 			LOGGER.debug(list.get(0).getText());
 			
@@ -459,7 +459,7 @@ public class EzPMSGWController2 {
 	//프로젝트 역할별 멤버 보기
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/member-list/{projectId}/roles/{roleId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getProjectMemberList(@PathVariable int projectId, @PathVariable int roleId, HttpServletRequest request) throws Exception {
+	public JSONObject getProjectMemberList(@PathVariable Long projectId, @PathVariable int roleId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -523,7 +523,7 @@ public class EzPMSGWController2 {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/users/{userId}/gantt", method = RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getProjectDetailsforGantt(@PathVariable int projectId, @PathVariable String userId,HttpServletRequest request) throws Exception {
+	public JSONObject getProjectDetailsforGantt(@PathVariable Long projectId, @PathVariable String userId,HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/users/" + userId + "/gantt] started.");
 		
 		JSONObject result = new JSONObject();

@@ -14,7 +14,7 @@
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript">
-var projectId = "${projectId}";
+var projectId = "${project.projectId}";
 
 $(function() {
 	$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do?projectId="+projectId);
@@ -70,7 +70,7 @@ $(function() {
 		changeTab(clickTabId, nowTabAttr);
 		
 		//의견으로 가는 부분 url 수정하기
-		$("#FBoard_ifrm").attr("src", "/ezPMS/getProjectOverview.do");
+		$("#FBoard_ifrm").attr("src", "/ezPMS/getComment.do");
 	});
 	$(".tab").hover(function(){
 		$(this).addClass("tabover");
@@ -85,11 +85,75 @@ function changeTab(clickTabId, nowTabAttr) {
 	$("#"+clickTabId).attr("class", "tabon");
 }
 
+function addFavorite(projectId) {
+	var response = confirm("프로젝트를 즐겨찾기 하시겠습니까?");
+	if (response == true) {
+		data = {
+				status : "F",
+				projectList : projectId
+		}
+		
+		$.ajax({
+			type : "POST",
+			contentType: "application/json; charset=UTF-8",
+			url : "/ezPMS/addFavoriteProject.do",
+			data :JSON.stringify(data),
+			success : function(result) {
+				if (result == "0") {
+					alert("프로젝트가 즐겨찾기 되었습니다.");
+					$("#projectName").find("img").attr("src", "/images/ImgIcon/icon-flag.gif");
+					$("#projectName").find("img").attr("onclick", "deleteFavorite(" + projectId + ")");
+				
+				} else {
+					alert("이미 추가된 프로젝트 입니다.");
+					return;
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+			}
+		});
+	}
+}
 
+function deleteFavorite(projectId) {
+	var response = confirm("프로젝트를 즐겨찾기 해제하시겠습니까?");
+	if (response == true) {
+		data = {
+				status : "F",
+				projectList : projectId
+		}
+		
+		$.ajax({
+			type : "POST",
+			contentType: "application/json; charset=UTF-8",
+			url : "/ezPMS/deleteFavoriteProject.do",
+			data :JSON.stringify(data),
+			success : function(result) {
+				alert("즐겨찾기가 해제되었습니다.");
+				$("#projectName").find("img").attr("src", "/images/ImgIcon/view-flag.gif");
+				$("#projectName").find("img").attr("onclick", "addFavorite(" + projectId + ")");
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+			}
+		});
+	}	
+}
 </script>
 </head>
 <body class="mainbody" style="height: 95%; overflow: hidden" marginwidth="0" marginheight="0">
-	<h1>Project Details : ${projectId }<span id="mailBoxInfo"> - total : 12</span></h1>
+	<h1 id="projectName">
+		<c:out value="${project.projectName }" />
+		<c:choose>
+			<c:when test="${project.isFavorite eq 0}">
+				<img class="star" style="cursor: pointer; width:17px; vertical-align:text-top;" draggable="false" src="/images/ImgIcon/view-flag.gif"
+					onclick="addFavorite(${project.projectId })">
+			</c:when>
+			<c:otherwise>
+				<img class="star" style="cursor: pointer; width:17px; vertical-align:text-top;" draggable="false" src="/images/ImgIcon/icon-flag.gif"
+					onclick="deleteFavorite(${project.projectId })">
+			</c:otherwise>
+		</c:choose>
+	</h1>
 	<div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
 	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab">overview</span></p>

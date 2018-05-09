@@ -1041,8 +1041,9 @@
 			TBL_PMS_MEMBER 
 		WHERE  
 			(
-			 USER_Id = #userId#
-			 OR USER_ID = #deptId# 
+			 USER_ID = #userId#
+			 OR 
+			 USER_ID = #deptId# 
 			 ) 
 		AND 
 			PROJECT_ID = #projectId# 
@@ -1171,17 +1172,28 @@
 		]]>	
 	</update>
 	
-	<update id="EzPMS.updateProjectRealStartDate" parameterClass="map">
-		<![CDATA[
+	<update id="EzPMS.updateProjectRealDate" parameterClass="map">
 			UPDATE	
 				tbl_pms_project	
 			SET
-				REAL_START_DATE = #realStartDate#
+		<isEqual property="status" compareValue="P">
+			<![CDATA[
+				REAL_START_DATE = #changeDate#
+			]]>
+		</isEqual>
+		<isNotEqual property="status" compareValue="P">
+		<isEqual property="status" compareValue="C">
+			<![CDATA[
+				REAL_END_DATE = #changeDate#
+			]]>
+		</isEqual>
+		</isNotEqual>
+			<![CDATA[
 			WHERE	
 				PROJECT_ID = #projectId#
 			AND
 				TENANT_ID = #tenantId#
-		]]>
+			]]>
 	</update>
 	
 	<select id="EzPMSDAO.getKanbanOrder" parameterClass="map" resultClass="String">
@@ -1222,6 +1234,7 @@
 		]]>
 	</insert>
 	
+<<<<<<< HEAD
 	
 	
 	<!-- 추가 by mslim -->
@@ -1241,4 +1254,31 @@
 			)
 		]]>
 	</insert>
+=======
+	<insert id="EzPMSDAO.addKanbanOrder" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_PMS_MAINLIST (
+				TENANT_ID,	USER_ID,	PROJECT_ID,		KANBAN_ORDER
+			)
+			VALUES (
+				#tenantId#,	#userId#,	#projectId#,	#orderStatus#
+			)
+		]]>
+	</insert>
+	
+	<update id="EzPMSDAO.changeKanbanOrder" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_PMS_MAINLIST	
+			SET	
+				KANBAN_ORDER = #orderStatus#
+			WHERE
+				USER_ID = #userId#
+			AND
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+>>>>>>> 3909689e92f97026126f65b9ca87d23e2f780c91
 </sqlMap>

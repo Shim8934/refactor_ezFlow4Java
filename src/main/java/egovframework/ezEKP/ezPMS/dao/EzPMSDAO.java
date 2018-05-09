@@ -81,8 +81,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (List<ProjectMemberVO>) list("EzPMSDAO.getProjectMember", map);
 	}
 
-	public int addNewProject(Map<String, Object> map) {
-		return (int) insert("EzPMSDAO.addNewProject", map);
+	public Long addNewProject(Map<String, Object> map) {
+		return (Long) insert("EzPMSDAO.addNewProject", map);
 	}
 	
 	public ProjectMemberVO getUserInfo(HashMap<String, Object> map) {
@@ -179,8 +179,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Integer> getFavoriteProject(Map<String, Object> map) {
-		return (List<Integer>) list("EzPMSDAO.getFavoriteProject", map);
+	public List<Long> getFavoriteProject(Map<String, Object> map) {
+		return (List<Long>) list("EzPMSDAO.getFavoriteProject", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -197,8 +197,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		
 	}
 
-	public void updateProjectRealStartDate(HashMap<String, Object> map) {
-		update ("EzPMS.updateProjectRealStartDate", map);
+	public void updateProjectRealDate(HashMap<String, Object> map) {
+		update ("EzPMS.updateProjectRealDate", map);
 		
 	}
 	
@@ -208,6 +208,15 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	
 	public void addTaskGroup(Map<String, Object> map) {
 		insert ("EzPMSDAO.addTaskGroup", map);
+	}
+	
+	public void addKanbanOrder(Map<String, Object> map) {
+		insert ("EzPMSDAO.addKanbanOrder", map);
+	}
+	
+	public void changeKanbanOrder(Map<String, Object> map) {
+		update ("EzPMSDAO.changeKanbanOrder", map);
+	
 	}
 	
 //	By mslim

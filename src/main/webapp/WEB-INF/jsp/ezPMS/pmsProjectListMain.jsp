@@ -474,14 +474,21 @@ function viewListByStatus(status) {
 }
 
 function deleteProject() {
-	getCheckedVal();
+	var result = getCheckedVal();
+	var response;
 	
 	if (listProjectStatus != "D") {
-		var response = confirm("프로젝트를 삭제하시겠습니까? \n 프로젝트는 삭제프로젝트로 상태가 변경됩니다.");
+		if (result == 1) {
+			 response = confirm("프로젝트를 삭제하시겠습니까? \n 프로젝트는 삭제프로젝트로 상태가 변경됩니다.");
+		} else {
+			return;
+		}
+		
 		if (response == true) {
 			data = {
 				status : "D",
-				projectList : checkedVal
+				projectList : checkedVal,
+				nowStatus : listProjectStatus
 			}
 			
 			$.ajax({
@@ -506,11 +513,17 @@ function deleteProject() {
 		}
 		
 	} else {
-		var response = confirm("프로젝트를 영구 삭제하시겠습니까?");
+		if (result == 1) {
+			response = confirm("프로젝트를 영구 삭제하시겠습니까?");
+		} else {
+			return;
+		}
+		
 		if (response == true) {
 			data = {
 					status : "D",
-					projectList : checkedVal
+					projectList : checkedVal,
+					nowStatus : listProjectStatus
 				}
 			
 			$.ajax({
@@ -538,7 +551,6 @@ function deleteProject() {
 function addFavoriteMemo(projectId) {
 	var response = confirm("프로젝트를 즐겨찾기 하시겠습니까?");
 	if (response == true) {
-		
 		data = {
 				status : "F",
 				projectList : projectId

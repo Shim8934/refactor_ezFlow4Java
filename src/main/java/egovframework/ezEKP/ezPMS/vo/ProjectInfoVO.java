@@ -7,7 +7,7 @@ import java.util.List;
 public class ProjectInfoVO {
 	
 	    // 프로젝트 아이디 
-	    private int projectId;
+	    private Long projectId;
 
 	    // 테넌트 아이디 
 	    private int tenantId;
@@ -87,11 +87,11 @@ public class ProjectInfoVO {
 	    // 프로젝트 즐겨찾기 여부
 	    private int isFavorite;
 	    
-	    public int getProjectId() {
+	    public Long getProjectId() {
 	        return projectId;
 	    }
 
-	    public void setProjectId(int projectId) {
+	    public void setProjectId(Long projectId) {
 	        this.projectId = projectId;
 	    }
 

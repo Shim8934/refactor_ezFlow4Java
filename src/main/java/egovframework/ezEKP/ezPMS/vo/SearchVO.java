@@ -7,7 +7,7 @@ public class SearchVO {
 	private int tenantId;
 	
 	//프로젝트 아이디
-	private int projectId;
+	private Long projectId;
 	
 	//프로젝트 이름
 	private String projectName;
@@ -16,19 +16,19 @@ public class SearchVO {
 	private String status;
 	
 	//업무 아이디
-	private int taskId;
+	private Long taskId;
 	
 	//업무 명
 	private String taskName;
 	
 	//그룹 아이디
-	private int groupId;
+	private Long groupId;
 	
 	//그룹 명
 	private String GroupName;
 	
 	//상위그룹 아이디
-	private int upperGroupId;
+	private Long upperGroupId;
 	
 	//상위그룹 명
 	private String upperGroupName;
@@ -58,11 +58,11 @@ public class SearchVO {
 		this.tenantId = tenantId;
 	}
 	
-	public int getProjectId() {
+	public Long getProjectId() {
 		return projectId;
 	}
 
-	public void setProjectId(int projectId) {
+	public void setProjectId(Long projectId) {
 		this.projectId = projectId;
 	}
 
@@ -82,11 +82,11 @@ public class SearchVO {
 		this.status = status;
 	}
 
-	public int getTaskId() {
+	public Long getTaskId() {
 		return taskId;
 	}
 
-	public void setTaskId(int taskId) {
+	public void setTaskId(Long taskId) {
 		this.taskId = taskId;
 	}
 
@@ -98,11 +98,11 @@ public class SearchVO {
 		this.taskName = taskName;
 	}
 
-	public int getGroupId() {
+	public Long getGroupId() {
 		return groupId;
 	}
 
-	public void setGroupId(int groupId) {
+	public void setGroupId(Long groupId) {
 		this.groupId = groupId;
 	}
 
@@ -114,11 +114,11 @@ public class SearchVO {
 		GroupName = groupName;
 	}
 
-	public int getUpperGroupId() {
+	public Long getUpperGroupId() {
 		return upperGroupId;
 	}
 
-	public void setUpperGroupId(int upperGroupId) {
+	public void setUpperGroupId(Long upperGroupId) {
 		this.upperGroupId = upperGroupId;
 	}
 

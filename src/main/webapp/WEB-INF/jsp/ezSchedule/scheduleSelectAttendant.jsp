@@ -735,7 +735,7 @@
 		            
 		            if (pSeach) {
 		                //document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -749,7 +749,7 @@
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
 	                    //document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1369,10 +1369,10 @@
 	                                            </table>
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t12' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezSchedule.t1050' /></td>
+	                                                    <td style="width: 130px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t12' /></td>
+	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
+	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
+	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezSchedule.t1050' /></td>
 	                                                </tr>
 	                                            </table>
 	                                        </div>
@@ -1391,7 +1391,7 @@
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezSchedule.t152' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 510px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 511px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>

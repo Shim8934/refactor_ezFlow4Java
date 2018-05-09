@@ -86,6 +86,11 @@ function popupClose() {
  }
  
  function selectHeadManager() {
+	 if (selMainListUserId == null) {
+		 alert("1명의 총괄담당자를 지정해야 합니다.");
+		 return;
+	 }
+	 
 	 if(parent.document.title == "담당자 지정") {
 		 parent.parent.headManagerId = selMainListUserId;
 		 parent.parent.managerList = managerList;

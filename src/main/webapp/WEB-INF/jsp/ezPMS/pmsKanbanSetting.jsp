@@ -10,7 +10,9 @@
 <title>Kanban Setting</title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />"
 	type="text/css">
+<link rel="stylesheet" href="/js/jquery-ui/jquery-ui.min.css" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/dist/jstree.js"></script>
@@ -21,23 +23,23 @@ var projectId = parent.projectId;
 var selOne = "";
 
 $(function(){
+	console.log("setting : " + kanbanOrder);
 	var kanbanOrderArr = kanbanOrder.split(",");
 	var strHTML = "";
-	strHTML += "<table class='.kanbanStatus'>";
+	strHTML += "<table class='.kanbanStatus'><tbody id='kanbanOrder'>";
 	selStatus = kanbanOrderArr;
 	
 	for (var i = 0; i < kanbanOrderArr.length; i++) {
-		if (kanbanOrderArr[i] == "MA") {
-			strHTML += "<tr class='white hover' style='border: 1px solid #ddd; cursor:pointer;' id='selMA' ondblclick='selectStatus(" + "MA" + ")' onclick='selectOneStatus(" + "MA" + ")'>";
-			strHTML += "<td style='border-right:none;max-width: 250px;width: 221px;height: 36px;background-color : white;'>";
+		if (kanbanOrderArr[i].indexOf("MA") != -1) {
+			strHTML += "<tr class='white hover statusOrder' style='border: 1px solid #ddd; cursor:pointer;' id='selMA'>";
+			strHTML += "<td style='border-right:none;max-width: 250px;width: 221px;height: 36px;background-color : white;' >";
 			strHTML += $("#MA").val();
 			strHTML += "</td></tr>";
-			
+
 			$("#MA").prop("checked", true);
 		} else {
 			$("#" + kanbanOrderArr[i].slice(-1)).prop("checked", true);	
-			strHTML += "<tr class='white hover' style='border: 1px solid #ddd; cursor:pointer;' id='sel" + kanbanOrderArr[i].slice(-1) + "'";
-			strHTML += "ondblclick='selectStatus(" + kanbanOrderArr[i].slice(-1) + ")' onclick='selectOneStatus(" + kanbanOrderArr[i].slice(-1) + ")'>";
+			strHTML += "<tr class='white hover statusOrder' style='border: 1px solid #ddd; cursor:pointer;' id='sel" + kanbanOrderArr[i].slice(-1) + "'>";
 			strHTML += "<td style='border-right:none;max-width: 250px;width: 221px;height: 36px;background-color : white;'>";
 			strHTML += $("#" + kanbanOrderArr[i].slice(-1)).val();
 			strHTML += "</td></tr>";
@@ -46,44 +48,55 @@ $(function(){
 		}
 	}
 
-	strHTML += "</table>";
+	strHTML += "</tbody></table>";
 	$("#kanbanList").html(strHTML);
+	
+	for (var i = 0; i < kanbanOrderArr.length; i++) {
+		if (kanbanOrderArr[i].indexOf("MA") != -1) {
+			$("#selMA").attr("onclick", "selectOneStatus('MA')");
+			$("#selMA").attr("ondblclick", "selectStatus('MA')");
+		} else {
+			$("#sel" + kanbanOrderArr[i].slice(-1)).attr("onclick", "selectOneStatus('" + kanbanOrderArr[i].slice(-1) + "')");
+			$("#sel" + kanbanOrderArr[i].slice(-1)).attr("ondblclick", "selectStatus('" + kanbanOrderArr[i].slice(-1) + "')");
+		}
+	}
+	
+	 getDragAndSwap();
 });
+
+function getDragAndSwap() {
+	$("#kanbanOrder").sortable();
+	$("#kanbanOrder").disableSelection();
+}
 
 function selectStatus(status) {
 	if ($("#" + status).prop("checked") == true) {
-		for (var i = 0; i < selStatus; i++) {
-			if (selStatus[i] != selOne) {
-				return;
-			}
-		}
-		
 		selStatus.splice(selStatus.indexOf(status), 1);
 		$("#" + status).prop("checked", false);
 		$("#sel"+status).remove();
 	} else {
-		for (var i = 0; i < selStatus; i++) {
-			if (selStatus[i] == selOne) {
-				return;
-			}
-		}
-		
 		if (selStatus.length >= 4) {
 			alert("4개 까지만 선택 가능합니다.");
 			return;
 		} else {
 			$("#" + status).prop("checked", true);
 			selStatus.push(status);
+			var selectStatus = status + "";
 			
 			var strHTML = "";
-			strHTML += "<tr class='white hover' style='border: 1px solid #ddd; cursor:pointer;' id='sel" + kanbanOrderArr[i].slice(-1) + "' ondblclick='selectStatus(" + kanbanOrderArr[i].slice(-1) + ")' onclick='selectOneStatus(" + kanbanOrderArr[i].slice(-1) + ")'>";
+			strHTML += "<tr class='white hover statusOrder' style='border: 1px solid #ddd; cursor:pointer;' id='sel" + selectStatus + "'>";
 			strHTML += "<td style='border-right:none;max-width: 250px;width: 221px;height: 36px;background-color : white; vertical-align:middle'>";
-			strHTML += $("#" + status).val();
+			strHTML += $("#" + selectStatus).val();
 			strHTML += "</td></tr>";
 			
-			$("#kanbanList").append(strHTML);
+			$("#kanbanOrder").append(strHTML);
+			
+			$("#sel" + selectStatus).attr("onclick", "selectOneStatus('" + selectStatus + "')");
+			$("#sel" + selectStatus).attr("ondblclick", "selectStatus('" + selectStatus + "')");
 		}
 	}
+	
+	getDragAndSwap();
 }
 
 function popupClose() {
@@ -92,48 +105,35 @@ function popupClose() {
  
 function updateKanbanStatus() {
 	kanbanOrder = "";
+	var statusOrder = $(".statusOrder");
 	
-	for (var i = 0; i < selStatus.length; i++) {
-		kanbanOrder += selStatus[i] + ",";
+	for (var i = 0; i < statusOrder.length; i++) {
+		kanbanOrder += statusOrder.eq(i).attr("id").substring(3) + ",";
 	}
 	
-	var data = {
+	kanbanOrder = kanbanOrder.slice(0,-1);
+	
+	 var data = {
 		projectId : projectId,
-		kanbanOrder : kanbanOrder
+		orderStatus : kanbanOrder
 	}
 	
-	$.ajax({
+	 $.ajax({
 		type : "POST",
-		url : "/ezPMS/updateKanbanOrder.do",
-		dataType : "json",
+		url : "/ezPMS/changeKanbanOrder.do",
 		contentType: "application/json; charset=UTF-8",
 		data :JSON.stringify(data),
 		success : function(result) {
-			try { 
-				if (mode == "edit") {
-					alert ("프로젝트가 수정되었습니다.");
-					parent.window.location.reload();
-					parent.projectId = projectId;
-				} else {
-					sendNotiMail(result, projectName);
-					alert("새프로젝트가 추가되었습니다.");
-					parent.setProjectList(); 
-				}
-				popupClose();
-			
-			} catch (e) {
-				alert("error 발생");
-				return;
-			}
+			alert("프로젝트 개요 화면 설정을 완료하였습니다.");
+			parent.kanbanOrder = kanbanOrder;
+			parent.setKanbanList();
+			popupClose(); 
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
-			alert("error");
+			alert("error : " + textStatus);
 		}
-	});
+	});  
 	
-	parent.kanbanOrder = kanbanOrder;
-	parent.setKanbanStatus();
-	popupClose();
 }
 
 function selectOneStatus(status) {
@@ -141,7 +141,7 @@ function selectOneStatus(status) {
 }
 
 function addStatus() {
-	for (var i = 0; i < selStatus; i++) {
+	for (var i = 0; i < selStatus.length; i++) {
 		if (selStatus[i] == selOne) {
 			return;
 		}
@@ -155,26 +155,26 @@ function addStatus() {
 		selStatus.push(selOne);
 		
 		var strHTML = "";
-		strHTML += "<tr class='white hover' style='border: 1px solid #ddd; cursor:pointer;' id='sel" + kanbanOrderArr[i].slice(-1) + "' ondblclick='selectStatus(" + kanbanOrderArr[i].slice(-1) + ")' onclick='selectOneStatus(" + kanbanOrderArr[i].slice(-1) + ")'>";
+		strHTML += "<tr class='white hover statusOrder' style='border: 1px solid #ddd; cursor:pointer;' id='sel" + selOne + "'>";
 		strHTML += "<td style='border-right:none;max-width: 250px;width: 221px;height: 36px;background-color : white; vertical-align:middle'>";
 		strHTML += $("#" + selOne).val();
 		strHTML += "</td></tr>";
 		
-		$("#kanbanList").append(strHTML);
+		$("#kanbanOrder").append(strHTML);
+		
+		$("#sel" + selOne).attr("onclick", "selectOneStatus('" + selOne + "')");
+		$("#sel" + selOne).attr("ondblclick", "selectStatus('" + selOne + "')");
+		
+		getDragAndSwap();
 	}
 }
 
 function deleteStatus() {
-	for (var i = 0; i < selStatus; i++) {
-		if (selStatus[i] != selOne) {
-			return;
-		}
-	}
-	
 	selStatus.splice(selStatus.indexOf(selOne), 1);
 	$("#" + selOne).prop("checked", false);
 	$("#sel"+selOne).remove();
 }
+
 </script>
 <style type="text/css">
 tr.hover:not (.selectTR ):hover {
@@ -206,6 +206,10 @@ tr.hover:not (.selectTR ):hover {
 	font-size : 13px;
 	margin-bottom : 15px;
 }
+
+body {
+	overflow : hidden;
+}
 </style>
 </head>
 <body class="popup" id="mainbody">
@@ -216,7 +220,7 @@ tr.hover:not (.selectTR ):hover {
 			    </div>					
 		</div>
 		<div id = "instruction" >
-			프로젝트 개요 화면에 표시할 업무 상태를 선택하세요.(최대 4개) 
+			프로젝트 개요 화면에 표시할 업무 종류와 순서를 선택하세요.(최대 4개) 
 		</div>
 			<table id="kanbanSetting">
 				<tr>
@@ -249,8 +253,8 @@ tr.hover:not (.selectTR ):hover {
 	                    </div>
 	                </td>
 	                
-	                <td id="kanbanList" style="vertical-align: top; background-color: rgb(246, 246, 246); border:1px solid rgb(200, 200, 200);">
-							
+	                <td id="kanbanList" style="width:46%; vertical-align: top; background-color: rgb(246, 246, 246); border:1px solid rgb(200, 200, 200);">
+						
 	                </td>
 	           </tr>
 	         </table>
