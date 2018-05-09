@@ -314,7 +314,10 @@
 	</script>
 </head>
 <body class="popup">
-	<h1 id ="topMenu" ><spring:message code='ezWebFolder.t120'/></h1>
+	<h1 id="topMenu" >
+		<c:if test="${type eq 'copy'}">파일 복사</c:if>
+		<c:if test="${type ne 'copy'}"><spring:message code='ezWebFolder.t120'/></c:if>
+	</h1>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<c:if test="${mode != 'normal'}">
 			<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="getData();">
@@ -334,7 +337,9 @@
 	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding: 5px 0px 0px 5px;" id="folderTree"></div>
 	
 	<div style="margin: 0px 0px 15px; position:fixed; bottom: 0px; text-align: center; width: 100%;">
-		<a id="btnSave"   class="webfolderBttn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
+		<c:if test="${type ne 'copy'}">
+			<a id="btnSave" class="webfolderBttn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
+		</c:if>
 		<a id="btnCancel" class="webfolderBttn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
 		<a id="btnClose"  class="webfolderBttn" onClick="wClose();"><span><spring:message code='ezWebFolder.t112'/></span></a>
 	</div>

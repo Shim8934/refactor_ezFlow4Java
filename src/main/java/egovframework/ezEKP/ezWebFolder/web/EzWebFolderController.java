@@ -408,6 +408,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String fileIdList  = request.getParameter("fileList")   != null ? request.getParameter("fileList") : "";
 		String mode        = request.getParameter("mode")       != null ? request.getParameter("mode")     : "normal";
+		String type        = request.getParameter("type")       != null ? request.getParameter("type")     : "";
 		
 		if (fileIdList.equals("")) {
 			logger.debug("File Move Confirm illegal arguments!");
@@ -443,6 +444,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		model.addAttribute("fileIdList", fileIdList);
 		model.addAttribute("primary", user.getLang());
 		model.addAttribute("mode", mode);
+		model.addAttribute("type", type);
 		logger.debug("File Move Confirm finishes!");
 		
 		return "/ezWebFolder/fileMove";
