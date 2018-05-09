@@ -1068,7 +1068,7 @@
 		</iterate>
 			AND S.FOLDERFILE_TYPE = 'D' )
 		<isEqual property="folderFileType" compareValue="F">
-		OR (S. FOLDERFILE_ID = #fileId# AND S.FOLDERFILE_TYPE = 'F')
+		OR (S. FOLDERFILE_ID = #folderFileId# AND S.FOLDERFILE_TYPE = 'F')
 		</isEqual>
 		AND SS.USER_ID IN
 		<iterate property="permissionIdList" open="(" close=")" conjunction=",">
