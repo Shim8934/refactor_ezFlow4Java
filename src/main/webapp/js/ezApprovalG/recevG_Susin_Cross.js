@@ -50,24 +50,20 @@ function btnSetTaskCode_onclick_Complete(rtn) {
 //
 //  field.innerHTML = PublicText;
 //}
-/*2018-04-05 김은석 수정 건설공사 공개여부*/
+/*기존의 공개여부 함수 2018-04-04 김은석 수정*/
 function setPublicFlag2() {
-	var fields = message.GetFieldsList();
-	var field = message.GetListItem(fields, "publication");
-	if (!field) return;
-	
-	var PublicType = pPublicityYN.substring(0, 1);
-	var PublicText = "";
-	
-	
-	if (PublicType == "Y")
-		PublicText = strLang82;
-	else if (PublicType == "N")
-		PublicText = strLang84
-	else
-		PublicText = " ";
-	
-	field.innerHTML = PublicText;
+    if (!HwpCtrl.CheckFieldExist("publication")) return;
+    var PublicType = pPublicityYN.substring(0, 1);
+
+    var PublicText = "";
+    if (PublicType == "Y")
+        PublicText = "<spring:message code='ezApprovalG.t47'/>";
+    else if (PublicType == "N")
+        PublicText = "<spring:message code='ezApprovalG.t46'/>";
+    else
+        PublicText = " ";
+    
+    HwpCtrl.SetFieldText("publication", PublicText);
 }
 
 function GetDraftAprLineInfo(ret) {

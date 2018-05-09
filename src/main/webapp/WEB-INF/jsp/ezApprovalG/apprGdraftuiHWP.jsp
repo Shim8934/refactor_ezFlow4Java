@@ -113,7 +113,7 @@
 	        var sihangURL = "${sihangURL}";
 	        var CurAprType = "";
 	        var NextAprType = "";
-	        var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "";
+		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "";
 	        var pLimitRange = "", pPageNum = "1";
 	        var cabinetID = "";
 	        var TaskCode = "";
@@ -891,6 +891,7 @@
 			    }
 			}
 			
+			/*PublicType, PublicLevel 기존의 공개여부 2018-04-04 김은석 수정*/
 			function setPublicFlag() {
 			    try {
 			        if (!HwpCtrl.CheckFieldExist("publication"))
@@ -898,6 +899,7 @@
 			
 			        var PublicType = pPublicityCode.substring(0, 1);
 			        var PublicLevel = pPublicityCode.substring(1, 9);
+			        var PublicType2 = pPublicityCode2;
 			        var PublicText = "";
 			
 			        if (pLimitRange != "")
@@ -911,7 +913,12 @@
 					    PublicText = "<spring:message code='ezApprovalG.t46'/>" + getPublicLevel(PublicLevel);
 					else
 					    PublicText = " ";
-				
+			        if (PublicType2 == "1")
+			            PublicText = "<spring:message code='ezApprovalG.t47'/>";
+			        else if (PublicType2 == "2")
+			            PublicText = "<spring:message code='ezApprovalG.t150'/>";
+			        else
+			            PublicText = " ";
 				    HwpCtrl.SetFieldText("publication", PublicText);
 			
 				} catch (e) {
@@ -919,6 +926,21 @@
 				}
 			}
 	
+		    /*기존의 공개여부 함수 2018-04-04 김은석 수정*/
+		    function setPublicFlag2() {
+		        if (!HwpCtrl.CheckFieldExist("publication")) return;
+		        var PublicType = pPublicityYN.substring(0, 1);
+
+		        var PublicText = "";
+		        if (PublicType == "Y")
+		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
+		        else if (PublicType == "N")
+		            PublicText = "<spring:message code='ezApprovalG.t46'/>";
+		        else
+		            PublicText = " ";
+		        
+		        HwpCtrl.SetFieldText("publication", PublicText);
+		    }
 			function getPublicLevel(PublicLevel) {
 			    try {
 			        var strRtn = "";
@@ -1057,7 +1079,10 @@
 			        parameter[38] = tempSecurityDate;
 			        parameter[39] = SummaryFlag;
 			        parameter[40] = SummaryOuterReceiverList;
-			
+			        parameter[41] = tempItemName;
+			        parameter[42] = tempItemName2;
+			        parameter[45] = pPublicityYN;
+			        
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
 			
@@ -1122,7 +1147,10 @@
 			            pLimitRange = ret[12];
 			            pPageNum = ret[13];
 			            tempSecurityDate = ret[14];
-			            setPublicFlag();
+			            if (ret[21].substring(0,1) == "N") {
+		                	tempPublic = "N";
+		                }
+			            setPublicFlag2();
 			            SummaryFlag = true;
 			        }
 			    } catch (e) {

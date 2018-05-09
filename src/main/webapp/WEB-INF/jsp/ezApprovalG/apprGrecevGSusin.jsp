@@ -1374,7 +1374,7 @@
 			                
 			                /*2018-04-05 김은석 수정 건설공사 공개여부*/
 // 			                setPublicFlag();
-			                setPublicFlag2()
+			                setPublicFlag2();
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
