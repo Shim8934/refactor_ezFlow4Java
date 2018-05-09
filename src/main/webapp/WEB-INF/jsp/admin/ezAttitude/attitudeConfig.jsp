@@ -205,9 +205,11 @@
 					<spring:message code='ezAttitude.t12' />
 	            </th>
 	            <td style="width: 500px; text-align:left; padding-left: 5px;">
-	            	<input id="startTime" type="text" style="width:50px; ime-mode:disabled;" onkeydown="filterNumber(event);"/> 
+	            	<input id="startTime" type="text" style="width:50px; ime-mode:disabled;"/> 
+<!-- 	            	<input id="startTime" type="text" style="width:50px; ime-mode:disabled;" onkeydown="filterNumber(event);"/>  -->
 	            	~
-	            	<input id="endTime" type="text" style="width:50px; ime-mode:disabled;" onkeydown="filterNumber(event);"/>
+	            	<input id="endTime" type="text" style="width:50px; ime-mode:disabled;"/>
+<!-- 	            	<input id="endTime" type="text" style="width:50px; ime-mode:disabled;" onkeydown="filterNumber(event);"/> -->
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
