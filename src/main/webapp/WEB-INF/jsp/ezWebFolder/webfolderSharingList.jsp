@@ -310,18 +310,13 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", resultJson["folderFileType"]);
-					row.addEventListener("click", function(event) {
-						rowContext.onRowClick(this);
-					});
+					row.addEventListener("click", rowContext.onRowClick);
 					
 					inputElement = document.createElement("input");
 					inputElement.setAttribute("type", "checkbox");
 					inputElement.setAttribute("value", resultJson["fileId"]);
 					inputElement.setAttribute("class", "checkBnk");
-					inputElement.addEventListener("change", function(event) {
-						event.stopPropagation();
-						rowContext.onCheckboxChange(this);
-					});
+					inputElement.addEventListener("change", rowContext.onCheckboxChange);
 					inputElement.addEventListener("click", function(event) {
 						event.stopPropagation();
 					});
@@ -333,9 +328,7 @@
 					
 					fileIconElement = document.createElement("img");
 					fileIconElement.setAttribute("class", "none-drag");
-					fileIconElement.addEventListener("click", function() {
-						favoriteContext.onImageClick(this);
-					});
+					fileIconElement.addEventListener("click", favoriteContext.onImageClick);
 					fileIconElement.addEventListener("dblclick", function(event) {
 						event.stopPropagation();
 					});

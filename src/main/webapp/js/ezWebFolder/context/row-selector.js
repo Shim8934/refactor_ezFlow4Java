@@ -6,25 +6,17 @@ var rowContext = (function() {
 	
 	var selectedClassNameRegExp = new RegExp("\\b" + className.selected + "\\b");
 	
-	var ctrlKey = false;
-	var shiftKey = false;
-	
 	var rowWrapElement;
 	var firstSelected;
 	
 	window.addEventListener("load", function() {
-		var keyEvent = function(event) {
-			shiftKey = event.shiftKey;
-			ctrlKey = event.ctrlKey;
-		}
-
-		document.addEventListener("keydown", keyEvent);
-		document.addEventListener("keyup", keyEvent);
-		
 		rowWrapElement = document.getElementById("tblFileList");
 	});
 	
-	function onRowClick(rowElement) {
+	function onRowClick(event) {
+		event.stopPropagation();
+		var rowElement = event.target;
+		
 		if (isFirstSelected()) {
 			firstSelected = rowElement;
 			setSelectState(rowElement, true);
@@ -32,7 +24,7 @@ var rowContext = (function() {
 			return;
 		}
 		
-		if (shiftKey) {
+		if (event.shiftKey) {
 			var rows = Array.prototype.slice.call(rowWrapElement.children);
 			var startIndex = rows.indexOf(firstSelected);
 			var endIndex = rows.indexOf(rowElement);
@@ -56,7 +48,7 @@ var rowContext = (function() {
 		var selectedLength = getSelectedRows().length;
 		var isDuplicateFocus = (selectedLength === 1 && firstSelected === rowElement);
 		
-		if (ctrlKey || isDuplicateFocus) {
+		if (event.ctrlKey || isDuplicateFocus) {
 			setSelectState(rowElement, !isSelected(rowElement));
 		} else {
 			clearFocus();
@@ -66,7 +58,10 @@ var rowContext = (function() {
 		}
 	}
 	
-	function onCheckboxChange(element) {
+	function onCheckboxChange(event) {
+		event.stopPropagation();
+		
+		var element = event.target;
 		var rowElement = element.parentElement.parentElement;
 		
 		if (isFirstSelected()) {

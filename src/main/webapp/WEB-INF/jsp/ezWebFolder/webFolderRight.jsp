@@ -308,7 +308,7 @@
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
 					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'D' : 'F');
-					trElmt.addEventListener("click", function(event) { rowContext.onRowClick(this); });
+					trElmt.addEventListener("click", rowContext.onRowClick);
 					
 					if (result[i]["fileTypeName"] != 'folder') {
 						trElmt.addEventListener("dblclick", function(event) {
@@ -321,7 +321,7 @@
 					inputElmt.setAttribute("type", "checkbox");
 					inputElmt.setAttribute("value", result[i]["fileId"]);
 					inputElmt.setAttribute("class", "checkBnk");
-					inputElmt.addEventListener("change", function(event) { event.stopPropagation(); rowContext.onCheckboxChange(this); });
+					inputElmt.addEventListener("change", rowContext.onCheckboxChange);
 					inputElmt.addEventListener("click", function(event) { event.stopPropagation(); });
 					inputElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 					
@@ -329,7 +329,7 @@
 					
 					var faImgElmt = document.createElement("img");
 					faImgElmt.setAttribute("class", "none-drag");
-					faImgElmt.addEventListener("click", function() { favoriteContext.onImageClick(this); });
+					faImgElmt.addEventListener("click", favoriteContext.onImageClick);
 					faImgElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 					
 					if (result[i]["favouriteStatus"] == "0") {
