@@ -1283,6 +1283,7 @@
 	        }
 	
 	        function orgTabButton_onClick() {
+	        	methodForTabAction(1);
 	            m_tabDialogState["org"] = "select";
 	            m_tabDialogState["contact"] = "normal";
 	            m_tabDialogState["dl"] = "normal";
@@ -1369,6 +1370,7 @@
 	        }
 	        var loadaddresstree = false;
 	        function contactTabButton_onClick() {
+	        	methodForTabAction(2);
 	            m_selectedTree = AddressListView;
 	            gubunpage = "basic";
 	            document.getElementById("IDListView").style.display = "";
@@ -1381,8 +1383,8 @@
 	        }
 	
 	        function dlTabButton_onClick() {
+	        	methodForTabAction(3);
 	            gubunpage = "direct";
-	
 	            document.getElementById("IDListView").style.display = "none";
 	            document.getElementById("ManualView").style.display = "";
 	            document.getElementById("TreeViewPane").style.display = "none";
@@ -1748,7 +1750,24 @@
 		
 		        return copyStr;
 		    }
-		    
+		    function methodForTabAction(target) {
+            	var tab1 = document.getElementById("orgTabButton").children[0];
+            	var tab2 = document.getElementById("contactTabButton").children[0];
+            	var tab3 = document.getElementById("dlTabButton").children[0];
+            	if (target == 1) {
+            		tab1.className = "tabon";
+            		tab2.className = "";
+            		tab3.className = "";
+            	} else if (target == 2) {
+            		tab1.className = "";
+            		tab2.className = "tabon";
+            		tab3.className = "";
+            	} else if (target == 3) {
+            		tab1.className = "";
+            		tab2.className = "";
+            		tab3.className = "tabon";
+            	}
+            }
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">
@@ -1851,7 +1870,20 @@
 	                        <tr>
 	                            <td style="height: 35px;">
 	                                <h2 id="subtitle" style="display: none"><spring:message code='ezAddress.t231' /></h2>
-	                                <div id="tabnav" style="float: left; width: 100%;">
+	                                <div class="portlet_tabpart01" style="margin:0px;">
+					            		<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
+					            			<p id="orgTabButton">
+					            				<span onclick="orgTabButton_onClick()"><spring:message code='ezAddress.t351' /></span>
+					            			</p>
+					            			<p id="contactTabButton">
+					            				<span onclick="contactTabButton_onClick()"><spring:message code='ezAddress.t231' /></span>
+					            			</p>
+					            			<p id="dlTabButton">
+					            				<span onclick="dlTabButton_onClick()"><spring:message code='ezAddress.t361' /></span>
+					            			</p>
+					            		</div>
+					            	</div>
+	                                <%-- <div id="tabnav" style="float: left; width: 100%;">
 	                                    <ul style="margin:0;">
 	                                        <li id="orgTabButton"><span onclick="orgTabButton_onClick()">
 	                                            <spring:message code='ezAddress.t351' /></span></li>
@@ -1861,9 +1893,9 @@
 	                                            <spring:message code='ezAddress.t361' /></span></li>
 	                                    </ul>
 	                                </div>
-	                            <script type="text/javascript">
-	                                selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
-	                            </script>
+		                            <script type="text/javascript">
+		                                selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+		                            </script> --%>
 	                            </td>
 	                        </tr>
 	                    </table>
