@@ -425,13 +425,16 @@
 		    	$('#AttList tbody').children( 'tr:not(:first)' ).remove();
 	    	}
 	    	
-	    	if (attList.length == 0) {
-	    		if (adminFlag != "true") {
-	    			$('#AttList tbody').append('<tr><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
-	    		} else {
-	    			$('#AttList tbody').append('<tr><td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');	
-	    		}
+	    	if (excel != true) {
+		    	if (attList.length == 0) {
+		    		if (adminFlag != "true") {
+		    			$('#AttList tbody').append('<tr><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
+		    		} else {
+		    			$('#AttList tbody').append('<tr><td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');	
+		    		}
+		    	}
 	    	}
+	    	
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
 	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" draggable="true" style="cursor:pointer;">';
