@@ -2,39 +2,43 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
+
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/dist/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
+
+
 <script>
-var projectId = "${projectId}";
-var projectName = "${project.projectName}";
 var writerId = "${writerId}";
 var writerName = "${writerName}";
 var writerDeptName = "${writerDeptName}";
 var writeType = null;
+var groupId = "${groupId}";
+var taskId = "${taskId}";
 
 function addBoard() {
 
 	var title = $("#title").val().trim();
 	var writeContent = $("#writeContent").val().trim();
+	var writeOverview = $("#writeOverview").val().trim();
 	
 	// 긴급 게시 / 공지 사항 여부
-	if($("#emergency").is("checked")) {
-		if($("#notice").is("checked")) {
+	if($("#emergency").is(":checked") == true) {
+		if($("#notice").is(":checked") == true) {
 			writeType = 1;
 		} else {
 			writeType = 2;
 		}
 	} else {
-		if($("#notice").is("checked")) {
+		if($("#notice").is(":checked") == true) {
 			writeType = 3;
 		} else {
 			writeType = 4;
@@ -52,24 +56,26 @@ function addBoard() {
 	}
 	
 	data = {
-		projectId : projectId,
-		projectName : projectName,
 		writerId : writerId,
 		writerName : writerName,
 		writerDeptName : writerDeptName,
 		title : title,
 		writeContent : writeContent,
-		writeType : writeType
+		writeType : writeType,
+		groupId : groupId,
+		taskId : taskId,
+		writeOverview : writeOverview
 	}
 	
-	console.log(projectId);
-	console.log(projectName);
 	console.log(writerId);
 	console.log(writerName);
 	console.log(writerDeptName);
 	console.log(title);
 	console.log(writeContent);
 	console.log(writeType);
+	console.log(groupId);
+	console.log(taskId);
+	console.log(writeOverview);
 	
 	$.ajax({
 		type : "POST",
@@ -95,7 +101,7 @@ function addBoard() {
 		<table class="content" style="width:100%;">
 			<tr>
 				<th>프로젝트명</th>
-				<td>${project.projectName}(${projectId})</td>
+				<td>${projectName}(${projectId})</td>
 				<th>게시종류</th>
 				<td><input type="checkbox" id="emergency"/> 긴급게시 <input type="checkbox" id="notice"/> 공지사항</td>
 			</tr>
@@ -108,6 +114,10 @@ function addBoard() {
 			<tr>
 				<th>제목</th>
 				<td colspan="3"><input type="text" id="title" style="width: 100%;"/></td>
+			</tr>
+			<tr>
+				<th>게시 개요</th>
+				<td colspan="3"><input type="text" id="writeOverview" style="width: 100%;"/></td>
 			</tr>
 			<tr>
 				<th>내용</th>

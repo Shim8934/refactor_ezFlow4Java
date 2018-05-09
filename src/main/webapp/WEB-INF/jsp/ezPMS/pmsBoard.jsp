@@ -16,10 +16,27 @@
  	var projectId = ${projectId};
 	var containerId = "test";
 	
+	
 	function goAddBoard() {
-		var taskName = $("a.jstree-clicked").text();
+		var chosenTask = $("a.jstree-clicked");
 		
-		DivPopUpShow(845, 555, "/ezPMS/goAddBoard.do?projectId="+projectId + "&taskName=" + taskName);
+		if(!chosenTask.length) {
+			alert("트리에서 업무를 선택해주세요");
+			return;
+		}
+		var taskName = chosenTask.text();
+		var project = $("li[role='treeitem'][aria-level='1']");
+		var projectName = project.children("a").text();
+		var groupId = project.attr("id");
+		var taskId = -1;
+		
+		if(chosenTask.parent().attr("aria-level") != '1') {
+			taskId = chosenTask.parent().attr("id").substr(1);
+		} 
+		
+		console.log(projectName);
+		DivPopUpShow(845, 555, "/ezPMS/goAddBoard.do?projectId=" + projectId + "&projectName=" + projectName + "&taskName=" 
+																 + taskName + "&groupId=" + groupId + "&taskId=" + taskId);
 	}
 	
 	$(document).ready(function() {

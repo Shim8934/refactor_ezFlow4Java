@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezPMS.web;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -38,8 +37,7 @@ public class EzPMSController3 {
 	@RequestMapping(value="/ezPMS/getProjectBoard.do")
 	public String getProjectBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		
-		LOGGER.debug("ezPMS getProjectBoard started");
-		
+		LOGGER.debug("ezPMS getProjectBoard started");		
 		String projectId = request.getParameter("projectId");
 		
 		model.addAttribute("projectId", projectId);
@@ -61,23 +59,19 @@ public class EzPMSController3 {
 		String writerDeptName = userInfo.getDeptName();
 		
 		String projectId = request.getParameter("projectId");
+		String projectName = request.getParameter("projectName");
 		String taskName = request.getParameter("taskName");
-		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/userId/" + writerId, param, request, "get", null);
-		String status = resultBody.get("status").toString();
-		
-		if(status.equals("ok")) {
-			JSONObject data = (JSONObject) resultBody.get("data");
-			model.addAttribute("project", data.get("project"));
-		}
+		String groupId = request.getParameter("groupId");
+		String taskId = request.getParameter("taskId");
 		
 		model.addAttribute("projectId", projectId);
+		model.addAttribute("projectName", projectName);
 		model.addAttribute("writerId", writerId);
 		model.addAttribute("writerName", writerName);
 		model.addAttribute("writerDeptName", writerDeptName);
 		model.addAttribute("taskName", taskName);
+		model.addAttribute("groupId", groupId);
+		model.addAttribute("taskId", taskId);
 		
 		LOGGER.debug("ezPMS goAddBoard ended");
 		
@@ -99,6 +93,8 @@ public class EzPMSController3 {
 		param.put("writerName2", userInfo.getDisplayName2());
 		param.put("writerDeptname", userInfo.getDeptName1());
 		param.put("writerDeptname2", userInfo.getDeptName2());
+		param.put("writerPosition", userInfo.getTitle1());
+		param.put("writerPosition2", userInfo.getTitle2());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards", param, request, "post", null);
 		String status = resultBody.get("status").toString();

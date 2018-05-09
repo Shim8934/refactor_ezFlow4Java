@@ -55,6 +55,13 @@ public class EzPMSGWController3 {
 			projectBoardVO.setWriteContent(request.getParameter("writeContent"));
 			projectBoardVO.setWriteType(Integer.parseInt(request.getParameter("writeType")));
 			projectBoardVO.setReadCount(0);
+			projectBoardVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
+			if(Long.parseLong(request.getParameter("taskId")) != -1) {
+				projectBoardVO.setTaskId(Long.parseLong(request.getParameter("taskId")));
+			}
+			projectBoardVO.setWriterPosition(request.getParameter("writerPosition"));
+			projectBoardVO.setWriterPosition2(request.getParameter("writerPosition2"));
+			projectBoardVO.setWriteOverview(request.getParameter("writeOverview"));
 			
 			ezPMSService.addBoard(projectBoardVO);
 			
