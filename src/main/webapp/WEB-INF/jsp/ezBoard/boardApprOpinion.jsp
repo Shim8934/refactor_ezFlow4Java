@@ -11,6 +11,7 @@
     <script type="text/javascript">
         var pMod = "${mode}";
         var ItemList = "${itemList}";
+        
         function btn_OK() {
             if (trim_Cross(txt_OpinionContent.value) == "") {
                 alert("<spring:message code='ezBoard.t999067'/>");
@@ -42,6 +43,21 @@
                 } catch (e) {
 
                 }
+                
+		        var applyCount = "0";
+		        
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getApplyCount.do",
+					success: function(text){
+						applyCount = text;
+					}     			
+				});
+		        
+		       	$(window.opener.parent.frames['left'].document.getElementById("applyCount")).text("(" + applyCount + ")");
+                
             }
         }
         function btn_close() {
