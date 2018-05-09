@@ -140,20 +140,6 @@
 				</article>
 	      		<!-- /calender -->   
 			</div>
-    		<div class="blue_bar"></div>
-    		<article class="time">
-    			<p class="title"><spring:message code='main.t00023' /></p>
-<!--     			<div id="clock_id" style="width: 120px; height: 120px; background: url(/images/WebPartSliderCI/analogu.png) no-repeat ; "></div>     -->
-    			<div style=" margin-left:3px ;width:104px; height:67px; border:2px solid grey; border-radius:27px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px; background-color:rgb(255,255,255);">
-    				<p id="timeinput" style="margin:21px 0px 0px 2px;"></p>
-    			</div>
-    			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center;">
-    				<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:13px;">출근 : 00:00:00</p>
-					<p id="outAttiClock" style="margin:5px 0px 8px 8px;  font-size:13px;">퇴근 : 00:00:00</p>
-					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
-					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span>
-    			</div>
-   			</article>
    			<div class="blue_bar"></div>
 			<div class="bannerlink_area">
     			<article class="writebanner">
@@ -177,9 +163,25 @@
         			<%--<span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner01.gif" width="58" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner02.gif" width="56" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner03.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner04.gif" width="58" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner05.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner06.gif" width="56" height="85"></span>--%>
     			</article>
     		</div>
+    		<div class="blue_bar"></div>
+    		<article class="time">
+    			<div id="clock" class="light">
+					<div class="display">
+						<p class="title" style="margin-left:-9px; padding-top:3px;"><spring:message code='main.t00023'/></p>
+						<div class="digits" style="padding-top:18px;"></div>
+					</div>
+				</div>
+    			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center;">
+    				<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:13px;">출근 : 00:00:00</p>
+					<p id="outAttiClock" style="margin:5px 0px 8px 8px;  font-size:13px;">퇴근 : 00:00:00</p>
+					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
+					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span>
+    			</div>
+   			</article>
 		</section>
 			
 		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
+		<link rel="stylesheet" href="/css/ezAttitude/clockTemp1.css" type="text/css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>
 		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
@@ -187,6 +189,7 @@
 		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/scrollbox.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.0.0/moment.min.js"></script>
 		<script type="text/javascript">
 		 	var UserOffset = "${userOffset}";
 		</script>
@@ -247,7 +250,7 @@
 // 			    draw_clock();
 				setAttiBtnHover();
 				getAttitudeList();
-			    yourClock();
+			    //yourClock();
 
 			    CalendarMiniDataSource();
 
@@ -273,7 +276,7 @@
 		        });
 
 // 		        draw_clock();
-		        yourClock();
+// 		        yourClock();
 
 		        try { top.onresize() } catch (e) { }
 		        
@@ -1006,6 +1009,73 @@
 		    		$(this).removeClass("btn_hover");
 		    	})
 		    }
+		    
+		    $(function(){
+		    	var clock = $('#clock');
+		    	
+		    	var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');
+
+		    	// This object will hold the digit elements
+		    	var digits = {};
+
+		    	// Positions for the hours, minutes, and seconds
+		    	//'h1', 'h2', ':', 'm1', 'm2', ':', 's1', 's2'
+		    	var positions = [
+		    		'h1', 'h2', ':', 'm1', 'm2'
+		    	];
+
+		    	// Generate the digits with the needed markup,
+		    	// and add them to the clock
+
+		    	var digit_holder = clock.find('.digits');
+
+		    	$.each(positions, function(){
+
+		    		if(this == ':'){
+		    			digit_holder.append('<div class="dots">');
+		    		}
+		    		else{
+
+		    			var pos = $('<div>');
+
+		    			for(var i=1; i<8; i++){
+		    				pos.append('<span class="d' + i + '">');
+		    			}
+
+		    			// Set the digits as key:value pairs in the digits object
+		    			digits[this] = pos;
+
+		    			// Add the digit elements to the page
+		    			digit_holder.append(pos);
+		    		}
+
+		    	});
+
+		    	(function update_time(){
+		    		var now = format();
+
+		    		digits.h1.attr('class', digit_to_name[now[0]]);
+		    		digits.h2.attr('class', digit_to_name[now[1]]);
+		    		digits.m1.attr('class', digit_to_name[now[2]]);
+		    		digits.m2.attr('class', digit_to_name[now[3]]);
+
+		    		// Mark the active day of the week
+		    		setTimeout(update_time, 1000);
+
+		    	})();
+
+		    	function format(type){
+		 	        var now = new Date();
+			        var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (parseInt(UserOffset.split(':')[0]) * 3600000) + (parseInt(UserOffset.split(':')[1]) * 60000);
+			        now.setTime(tz);
+			        var s =
+			          leadingZeros(now.getHours(), 2)+
+			          leadingZeros(now.getMinutes(), 2)+
+			          leadingZeros(now.getSeconds(), 2);
+			        return s;
+		    	}
+
+		    });
 		    
 		    window_onload_total();
 		</script>

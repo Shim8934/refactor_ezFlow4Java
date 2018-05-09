@@ -267,8 +267,12 @@
 				dateTypeCheck();
 				attRegCheck();
 				if (attRegHolidayFlag && holidayAttReg == "0") {
-					alert("근태일자에 휴무일이 포함되어 있습니다. 일자확인 후 등록해주세요.");
+					alert("근태일자에 휴무일이 포함되어 있습니다. 일자를 확인한 후 등록해주세요.");
 					attRegHolidayFlag = false;
+					return;
+				}
+				if (!check_time()) {
+					alert("시작시간은 종료시간보다 빨라야합니다.");
 					return;
 				}
 				$.ajax({
@@ -326,8 +330,6 @@
 			function checkHoliday(pDate){
 				var checkDate = new Date(pDate);
 				//휴무일근태등록이 0인 경우만 생각햇다, 1인 경우도 생각해야된다.
-				
-				//공휴일부터 체크
 				var todayLunar = lunarCalc(checkDate.getFullYear(), checkDate.getMonth() + 1, checkDate.getDate(), 1);
 				var todayMemorialDayList = memorialDayCheck(checkDate, todayLunar);
 				var todayYearMemorialDayList = yearmemorialDayCheck(checkDate, todayLunar);
@@ -341,34 +343,10 @@
 					}
 					$("#selectAtti option[value=A07]").css("display", "none");
 				}
-				
-// 				if (holidayAttReg == "0" && $("#Edatepicker").length == 0) {
-// 					//길이비교, 요일비교
-// 					if (todayMemorialDayList != 0 || todayYearMemorialDayList.length != 0 || closedDay[checkDate.getDay()] == "1") {
-// 						$("#selectAtti").val("A07");
-// 						$("#selectAtti option").not(":selected").css("display", "none");
-// 						$("#selectAtti option[value=A07]").css("display", "");
-// 						form_change($("#selectAtti"));
-// 						alert("휴일에는 휴근만 등록이 가능합니다. 다른 근태를 등록하시려면 날짜를 이동해주세요.");
-// 						//저 alert을 휴일에는 휴근만 등록이 가능하다고 하고, 휴근으로 돌려주지말고 아예 날짜를 선택을 못하게 막아버리는 건 또 어떻까 생각이 드네요.
-// 					} else if($("#selectAtti").val() == "A07") {
-// 						$("#selectAtti").val("A04");
-// 						$("#selectAtti option").css("display", "");
-// 						$("#selectAtti option[value=A07]").css("display", "none");
-// 						form_change($("#selectAtti"));
-// 					}
-// 				} else 
-// 				if ($("Edatepicker").length == 0){
-					//1인 경우에 휴근 열어주는 작업도 해야겟다.
-// 				}
 			}
 			
 			var attRegHolidayFlag = false;
 			function attRegCheck() {
-				//만약에 날짜데로 나눠 줄꺼면 여기서 나눠서 들고가는게 맞는거 같은데.. 휴무일 다 나눌 수 있으니까
-				//안나눠주면 for문 돌려서 하나씩 체크하면 되구, 체크를 해서 돌린다음에 휴일이 잇으면 팅기게 하면 되구
-				//eDate가 ""면 파라미터 던질 때 sDate 던져버려
-				//근태를 등록할 수 잇는 경우, 할 수 없는 경우 두가지 나눠서
 				if (selectType == "A07") {
 					return;
 				}
@@ -417,6 +395,45 @@
 
 		        return (to_dt.getTime() - from_dt.getTime()) / 1000 / 60 / 60 / 24;
 		    }
+			
+			function check_time() {
+				var checkStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+			    var checkEndDate = $("#Edatepicker").length == 0 ? checkStartDate : $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+			    
+			    var startYear = checkStartDate.split("-")[0];
+			    var startMonth = checkStartDate.split("-")[1];
+			    var startDay = checkStartDate.split("-")[2];
+			    var endYear = checkEndDate.split("-")[0];
+			    var endMonth = checkEndDate.split("-")[1];
+			    var endDay = checkEndDate.split("-")[2];
+			    
+			    
+			    if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) > parseInt(endDay))) {
+			        return false;
+			    }
+			    else if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) == parseInt(endDay))) {
+			        if ($("#periodblock").attr("datetype") != "1" && $("#periodblock").attr("datetype") != "2" && $("#periodblock").attr("datetype") != "4") {
+			        	var stime = $('#Stimepicker').val();
+					    var etime = $('#Etimepicker').val();
+					    
+					    var shour, sminute;
+					    var ehour, eminute;
+					    
+					    shour = stime.split(':')[0];
+					    sminute = stime.split(':')[1];
+					    ehour = etime.split(':')[0];
+					    eminute = etime.split(':')[1];
+			            if (shour > ehour || (shour == ehour && sminute >= eminute)) {
+			                return false;
+			            }
+			            else
+			                return true;
+			        }
+			        return true;
+			    }
+			    
+			    return true;
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">

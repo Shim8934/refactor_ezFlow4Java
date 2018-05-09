@@ -169,38 +169,5 @@
 	            </table>
 	        </div>
 	    </form>
-<!-- 		<div id="menu"> -->
-<!-- 			<ul> -->
-<!-- 				<li><span onClick="sendMailAttitude()">메일로 발송</span></li> -->
-<!-- 			</ul> -->
-<!-- 			<ul> -->
-<!-- 				<li><span onClick="modifyAttitude()">수정</span></li> -->
-<!-- 			</ul> -->
-<!-- 			<ul> -->
-<!-- 				<li><span onClick="deleteAttitude()">삭제</span></li> -->
-<!-- 			</ul> -->
-<!-- 		</div> -->
-<!-- 		<div id="close"> -->
-<!-- 			<ul> -->
-<!-- 				<li><span onClick="window.close()">닫기</span></li> -->
-<!-- 			</ul> -->
-<!-- 		</div> -->
-<!-- 		<div id="contentDiv"> -->
-<!-- 			<table id="attiInfoView" class="content"> -->
-<!-- 				<tbody> -->
-<!-- 					<tr> -->
-<!-- 		    			<th>구분</th>  -->
-<!-- 		    			<td id="typeName"></td>  -->
-<!-- 		  			</tr> -->
-<!-- 	  			</tbody> -->
-<!-- 			</table> -->
-<!-- 			<table class="content" style="width:100%; margin-top: 10px;"> -->
-<!-- 				<tr> -->
-<!-- 				  	<td style="height: 300px; margin:0px; padding:0px;"> -->
-<!-- 	  					<textarea name="content" class="textarea" style="width:100%; height:300px; box-sizing:border-box;-moz-box-sizing:border-box; resize:none; border:none;" readonly></textarea> -->
-<!-- 	  				</td> -->
-<!-- 	  			</tr>   -->
-<!-- 			</table> -->
-<!-- 		</div> -->
 	</body>
 </html>
