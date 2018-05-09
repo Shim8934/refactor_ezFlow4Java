@@ -262,7 +262,6 @@
 	     	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 	     	
 	     	$("#srarchpopup").modal();
-	     	
 	    }
    	   
 	    function searchOptionHidden() {
