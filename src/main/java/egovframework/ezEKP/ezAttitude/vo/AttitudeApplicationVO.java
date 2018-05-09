@@ -51,6 +51,10 @@ public class AttitudeApplicationVO {
 	private String typeName2;
 	/** 재신청 횟수 */
 	private String applCnt;
+	/** 부서 이름 */
+	private String description;
+	/** 직위 */
+	private String title;
 	
 	
 	public String getAttitudeId() {
@@ -220,5 +224,17 @@ public class AttitudeApplicationVO {
 	}
 	public void setApplCnt(String applCnt) {
 		this.applCnt = applCnt;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }
