@@ -155,7 +155,7 @@
 		<table class="content" style="width:500px">
 			<tr style="height:30px;">
 	        	<th style="width: 70px; text-align:center">
-					<spring:message code='ezAttitude.t17' />
+					<spring:message code='ezAttitude.t12' />
 	            </th>
 	            <td style="width: 500px; text-align:left; padding-left: 5px;">
 	            	<input id="startTime" type="text" style="width:50px;"/> ~ <input id="endTime" type="text" style="width:50px;"/>
