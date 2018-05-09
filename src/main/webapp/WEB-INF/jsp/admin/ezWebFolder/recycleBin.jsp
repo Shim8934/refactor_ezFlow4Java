@@ -333,6 +333,8 @@
 			
 			openLeftPanel();
 			DivPopUpShow(450, 250, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+		
+			refreshView();
 		}
 		
 		function hiddenPanel () {
@@ -376,13 +378,13 @@
 					} else if (data.code == "4") {
 						alert("<spring:message code = 'ezWebFolder.t290'/>");
 					}
-					
-					refreshView();
 				},
 				error : function(error) {
 						alert("<spring:message code = 'ezWebFolder.t292'/>");
 				}
 			})
+			
+			refreshView();
 		}
 		
 		function moveTraschCan() {
@@ -409,6 +411,8 @@
 			
 			var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(420, 490));
 			try { OpenWin.focus(); } catch (e) { }
+			
+			refreshView();
 		}
 		
 		function closeAllPopups() {
