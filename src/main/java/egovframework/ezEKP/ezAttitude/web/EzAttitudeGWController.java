@@ -1726,7 +1726,7 @@ public class EzAttitudeGWController {
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			JSONObject data = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, pageNum, listSize, orderCell, orderOption, duplicated, info.getLang(), info.getOffSet(), companyId, info.getTenantId());
+			JSONObject data = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, "", pageNum, listSize, orderCell, orderOption, duplicated, info.getLang(), info.getOffSet(), companyId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1759,6 +1759,7 @@ public class EzAttitudeGWController {
 			String searchTitle = request.getParameter("searchTitle");
 			String searchStartDate = request.getParameter("searchStartDate");
 			String searchEndDate = request.getParameter("searchEndDate");
+			String deptId = request.getParameter("deptId");
 			String loginCookie = request.getParameter("loginCookie");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
@@ -1766,7 +1767,7 @@ public class EzAttitudeGWController {
 			String userLang = info.getLang();
 			String offset = info.getOffSet();
 			
-			JSONObject absentedData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, "", "", "", "", "", userLang, offset, companyId, tenantID);
+			JSONObject absentedData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, deptId, "", "", "", "", "", userLang, offset, companyId, tenantID);
 			List<AdminAttitudeVO> list = (List<AdminAttitudeVO>) absentedData.get("list");
 			
 			ezAttitudeService.absentedListSendMail(list, loginCookie, searchStartDate, searchEndDate,info.getUserName(), info.getEmail());

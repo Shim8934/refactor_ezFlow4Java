@@ -310,7 +310,8 @@
 	   					deptName : searchDeptName,
 	   					title : searchTitle,
 	   					startDate : searchStartDate,
-	   					endDate : searchEndDate
+	   					endDate : searchEndDate,
+	   					deptId : ''
 					},
 					success : function(result) {
 						if (result.status == "ok") {

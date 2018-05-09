@@ -618,7 +618,28 @@
 	        }
 			
 			function sendMail() {
-	
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/absentedListSendMail.do",
+					data : {
+						companyId : '${userInfo.companyID}',
+	   					userName : '',
+	   					deptName : '',
+	   					title : '',
+	   					startDate : '',
+	   					endDate : '',
+	   					deptId : encodeURIComponent(authDeptList.value)
+					},
+					success : function(result) {
+						if (result.status == "ok") {
+							alert("메일이 발송되었습니다.");
+						} else {
+							alert("메일 발송에 실패하였습니다.");
+						}
+					}
+				});
 			}
 	
 			function searchByTypeId(t) {

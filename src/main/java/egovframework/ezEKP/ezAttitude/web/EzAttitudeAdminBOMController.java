@@ -1317,7 +1317,7 @@ public class EzAttitudeAdminBOMController {
 			//header
 			row.createCell(0).setCellValue("이름");
 			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("직급");
+			row.createCell(1).setCellValue("직위");
 			row.getCell(1).setCellStyle(headerStyle);
 			row.createCell(2).setCellValue("부서");
 			row.getCell(2).setCellStyle(headerStyle);
@@ -1373,7 +1373,7 @@ public class EzAttitudeAdminBOMController {
 			//header
 			row.createCell(0).setCellValue("이름");
 			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("직급");
+			row.createCell(1).setCellValue("직위");
 			row.getCell(1).setCellStyle(headerStyle);
 			row.createCell(2).setCellValue("부서");
 			row.getCell(2).setCellStyle(headerStyle);
@@ -1414,7 +1414,7 @@ public class EzAttitudeAdminBOMController {
 	/**
 	 * 미입력자 메일발송
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/absentedListSendMail.do")
+	@RequestMapping(value = {"/admin/ezAttitude/absentedListSendMail.do", "/ezAttitude/absentedListSendMail.do"})
 	@ResponseBody
 	public JSONObject absentedListSendMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("absentedListSendMail started.");
@@ -1429,6 +1429,20 @@ public class EzAttitudeAdminBOMController {
 		String searchTitle = request.getParameter("title");
 		String searchStartDate = request.getParameter("startDate");
 		String searchEndDate = request.getParameter("endDate");
+		String deptId = request.getParameter("deptId");
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		
+		if (requestURL.indexOf("admin") == -1) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar cal = Calendar.getInstance();
+			
+			String tempDate = commonUtil.getTodayUTCTime("");
+			Date firstDayofMonth = sdf.parse(tempDate);
+			
+			cal.setTime(firstDayofMonth);
+			searchStartDate = tempDate.substring(0, 8) + "01";
+			searchEndDate = tempDate.substring(0, 8) + Integer.toString(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/attitudes/mail";
@@ -1445,6 +1459,7 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("searchTitle", searchTitle)
 				.queryParam("searchStartDate", searchStartDate)
 				.queryParam("searchEndDate", searchEndDate)
+				.queryParam("deptId", deptId)
 				.queryParam("userId", userId)
 				.queryParam("offsetMin", offsetMin)
 				.queryParam("loginCookie", loginCookie);
