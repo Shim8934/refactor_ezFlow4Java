@@ -121,8 +121,8 @@
              			<p id="Psch" class="left_on" onclick="scheduleChangeTab(this)"><spring:message code="main.t00021" /></p>
              			<p id="Allsch" class="right" onclick="scheduleChangeTab(this)"><spring:message code="main.t00022" /></p>
              		</div>
-          			<div class="scrollbox-play-light" style="position:relative; width:260px;height:105px;  "> 
-						<div class="scrollbox" id="best-scrbox" style="width:260px; height:105px;overflow:hidden;"> 
+          			<div class="scrollbox-play-light" style="position:relative; width:260px;height:126px;  "> 
+						<div class="scrollbox" id="best-scrbox" style="width:260px; height:126px;overflow:hidden;"> 
     						<div class="content"> 
   								<div id="ScheduleList"></div>
 					    	</div>					    
@@ -338,9 +338,9 @@
 			        if (count > 0)
 			            document.getElementById("ScheduleList").innerHTML = listHTML;			        	
 			        else {
-			            var nodata = "<div class='nodata_schedule '>";
-			            nodata += "<p><img src='/images/" + strLang1_total + "/main/nodata_plan.png' width='92' height='84' style='margin-top:0px;margin-bottom:5px;'></p>";
-			            nodata += "<p>" + strLang2_total + "</p></div>";
+			            var nodata = "<div class='nodata_schedule'>";
+			            nodata += "<p style='margin-left:10px'><img src='/images/" + strLang1_total + "/main/nodata_plan.png' width='92' height='84' style='margin:5px 0px'></p>";
+			            nodata += "<p style='margin-left:10px'>" + strLang2_total + "</p></div>";
 
 			            var scrollbox = {};
 			            scrollbox.content1 = new Scrollbox();
