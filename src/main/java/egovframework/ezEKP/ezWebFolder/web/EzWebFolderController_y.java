@@ -88,9 +88,8 @@ public class EzWebFolderController_y {
 		LoginSimpleVO userInfo 	= commonUtil.userInfoSimple(loginCookie);
 		JSONObject jsonObj 	= new JSONObject();
 		String folderId 		= request.getParameter("folderId");
-		String folderType		= request.getParameter("folderType");
 		
-		if ( folderId == null || folderType == null ) {
+		if (folderId == null) {
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
 			LOGGER.debug("getFileList ended");
@@ -120,7 +119,6 @@ public class EzWebFolderController_y {
 		}
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("folderType"	, folderType);
 		param.put("userId"		, userInfo.getId());
 		
 		param.put("totalCount"	, orElse(request.getParameter("totalCount")		, 0));
@@ -137,7 +135,7 @@ public class EzWebFolderController_y {
 		param.put("searchFileType"	, orElse(request.getParameter("searchFileType")		, ""));
 		param.put("searchPageCount"	, orElse(request.getParameter("searchPageCount")	, ""));
 		
-		LOGGER.debug("folderType : " + folderType + " folderId : " + folderId);
+		LOGGER.debug("folderId : " + folderId);
 		LOGGER.debug(	"listCount : " + request.getParameter("listCount") 
 					+ 	" currPage : " + request.getParameter("currPage")
 					+ 	" totalPages"+ request.getParameter("totalpages")  );
