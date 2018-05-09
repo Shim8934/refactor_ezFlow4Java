@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>근무시간관리</title>
+		<title><spring:message code = 'ezAttitude.t4' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -266,7 +266,7 @@
 	</head>
 	
 	<body class="mainbody">
-	    <h1>근무시간관리<span id="mailBoxInfo"></span></h1>
+	    <h1><spring:message code = 'ezAttitude.t4' /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
 	        	<li style="background: none;"><span style="border: none;"><b>회사선택</b></span></li>

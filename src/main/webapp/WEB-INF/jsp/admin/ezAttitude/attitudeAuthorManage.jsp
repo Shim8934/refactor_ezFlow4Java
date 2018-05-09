@@ -57,7 +57,7 @@
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userName + "</td>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userTitle + "</td>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userDeptName + "</td>";
-	                    html += "<td style='width:40%;color:gray;'>" + result[i].authDeptName + " <i class='fas fa-info-circle' style='margin-left: 5px; font-size: 14px;'></i></td>";
+	                    html += "<td style='width:40%;color:gray;'>" + result[i].authDeptName2 + " <i class='fas fa-info-circle' style='margin-left: 5px; font-size: 14px;'></i></td>";
 	                    html += "</tr>";
 	                }
                 } else {
@@ -132,7 +132,7 @@
 		</script>
 	</head>
 	<body class="mainbody">
-	    <h1>근태권한관리</h1>
+	    <h1><spring:message code = 'ezAttitude.t8' /></h1>
 	    <div id="mainmenu">
 			<ul>
 	        	<li style="background: none;">

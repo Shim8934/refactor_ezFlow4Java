@@ -1077,13 +1077,13 @@
 </head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
 	<c:if test="${adminFlag == 'true' && checkAdmin == 'true'}">
-		<h1>근태수정관리 - <span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code = 'ezAttitude.t7' /> - <span id="mailBoxInfo"></span></h1>
 	</c:if>
 	<c:if test="${adminFlag == 'true' && checkAdmin != 'true'}">
-		<h1>근태수정관리 - 신청관리현황<span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code = 'ezAttitude.t7' /> - 신청관리현황<span id="mailBoxInfo"></span></h1>
 	</c:if>
 	<c:if test="${adminFlag == 'false' && checkAdmin != 'true'}">
-		<h1>근태수정관리 - 신청현황<span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code = 'ezAttitude.t7' /> - 신청현황<span id="mailBoxInfo"></span></h1>
 	</c:if>
         <div id="mainmenu">
         <c:if test="${checkAdmin == 'true'}">

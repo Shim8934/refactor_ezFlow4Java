@@ -10,6 +10,7 @@ public class AttitudeAuthorVO {
 	private String userDeptId;
 	private String userDeptName;
 	private String companyId;
+	private String authDeptType;
 	
 	public String getUserId() {
 		return userId;
@@ -64,5 +65,11 @@ public class AttitudeAuthorVO {
 	}
 	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
+	}
+	public String getAuthDeptType() {
+		return authDeptType;
+	}
+	public void setAuthDeptType(String authDeptType) {
+		this.authDeptType = authDeptType;
 	}
 }

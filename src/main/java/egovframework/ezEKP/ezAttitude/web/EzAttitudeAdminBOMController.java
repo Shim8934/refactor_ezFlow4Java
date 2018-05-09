@@ -1966,6 +1966,7 @@ public class EzAttitudeAdminBOMController {
 				if (authDeptArr.length > 1) {
 					jo.replace("authDeptName", authDeptArr[0] + " 외 " + (authDeptArr.length - 1));
 				}
+				jo.put("authDeptName2", authDeptArr);
 			}
 		}
 		
@@ -2116,6 +2117,7 @@ public class EzAttitudeAdminBOMController {
 					dept.put("state", state);
 				}
 			}
+			
 			model.addAttribute("deptList", deptList);
 			model.addAttribute("companyId",request.getParameter("companyId"));
 		}
@@ -2193,15 +2195,15 @@ public class EzAttitudeAdminBOMController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		String userId =null;
-		if (request.getParameter("userId")!=null) {
+		String userId = null;
+		if (request.getParameter("userId") != null) {
 			userId = request.getParameter("userId");
-			model.addAttribute("selectedUser",userId.trim());
-		}else{
+			model.addAttribute("selectedUser", userId.trim());
+		} else {
 			userId = userInfo.getId();
 		}
 		
-		param.put("userId",userId);
+		param.put("userId", userId);
 		param.put("companyId", request.getParameter("companyId"));
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request,"get",null);
@@ -2214,11 +2216,12 @@ public class EzAttitudeAdminBOMController {
 				JSONObject dept =  (JSONObject) deptList.get(i);
 				if (dept.get("isComp").equals("comp")) {
 					dept.put("icon", "icon-company");
-				} else{
+				} else {
 					dept.put("icon", "icon-dept");
 				}
 				if (dept.get("myDept").equals("yes")) {
 					JSONObject state = new JSONObject();
+					
 					state.put("opened", "true");
 					state.put("selected", "true");
 					dept.put("state", state);
