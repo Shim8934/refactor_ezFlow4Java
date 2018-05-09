@@ -352,12 +352,12 @@
 		<div id="mainSetting" style="margin: 10px 0px; height:500px; overflow: auto;">
 				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileHistory">
 				<tr>
-					<th headers="ft" width="40px"  ><spring:message code='ezWebFolder.t155'/></th>
-					<th headers="fn" width="220px" ><spring:message code='ezWebFolder.t156'/></th>
-					<th headers="fs" width="60px"  ><spring:message code='ezWebFolder.t157'/></th>
-					<th headers="un" width="80px"  ><spring:message code='ezWebFolder.t154'/></th>
-					<th headers="at" width="60px"  ><spring:message code='ezWebFolder.t158'/></th>
-					<th headers="ad" width="120px" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
+					<th headers="ft" style="width: 5%;"><spring:message code='ezWebFolder.t155'/></th>
+					<th headers="fn" style="width: 40%;"><spring:message code='ezWebFolder.t156'/></th>
+					<th headers="fs" style="width: 6%;"><spring:message code='ezWebFolder.t157'/></th>
+					<th headers="un" style="width: 8%;"><spring:message code='ezWebFolder.t154'/></th>
+					<th headers="at" style="width: 6%;"><spring:message code='ezWebFolder.t158'/></th>
+					<th headers="ad" style="text-align: center; width: 20%;"><spring:message code='ezWebFolder.t159'/></th>
 				</tr>
 			</table>
 		</div>
