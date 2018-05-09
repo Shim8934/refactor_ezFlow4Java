@@ -421,8 +421,8 @@
 				<td>
 					<table id="TreeViewTD">
 					 	<tr>
-			                <div class="portlet_tabpart01">
-			                	<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
+			                <div class="portlet_tabpart01" style="width:678px;">
+			                	<div class="portlet_tabpart01_top" id="tab1" style="margin-top:25px;margin-bottom: 1px;">
 					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t89' /></span></p>
 									<p><span id="1tab2" tdname="journalFavorite" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t90' /></span></p>
 					        	</div>
@@ -430,7 +430,7 @@
 				        	<td id="journalOrgan_content" style="display: none;">
 				        		<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 1px; padding:0px; border-top: none;">
 				                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
-				                        <table style="margin-top: 3px; width: 100%;">
+				                        <table style="margin-top: 5px; width: 100%;">
 				                            <tr>
 				                                <td>
 				                                    <div style="float: left; margin-left: 5px;">
@@ -501,7 +501,7 @@
 	                                <tr>
 	                                    <td style="vertical-align: top;">
 	                                        <div class="border_gray">
-	                                            <div id="journalFavList" style="Width: 100%; Height: 300px; OVERFLOW: AUTO; padding-top: 0px;">
+	                                            <div id="journalFavList" style="Width: 100%; Height: 297px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table id="List" class="mainlist" style="width:100%">
 														<thead id="List_THEAD2">
 															<tr>
@@ -527,7 +527,7 @@
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver()">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                        	<div style="display: inline-flex; display: -ms-inline-flexbox; border-bottom: 1px solid #565b66; width: 100%;">
+	                        	<div style="display: inline-flex; display: -ms-inline-flexbox; border-bottom: 1px solid #565b66; width: 252px; position: absolute;top: 55px;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px; border-bottom:none;">
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
 									</h2>
@@ -535,8 +535,8 @@
 								 		<span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span>
 								 	</a>
 								</div>
-								<div class="receiver_borderbox">
-									<div id="receiverList" style="width: 250px; Height: 479px; overflow-x: auto; overflow-y: auto;">
+								<div class="receiver_borderbox" style="border-top: 1px solid #ddd;">
+									<div id="receiverList" style="width: 250px; Height: 508px; overflow-x: auto; overflow-y: auto;">
 									</div>
 								</div>
 	                        </td>
