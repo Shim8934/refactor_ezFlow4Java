@@ -334,7 +334,9 @@
 	    	function selectReceiver(){			
 				var url = "/ezJournal/selectReceiver.do";
 			//	url += "?companyId=" + companyId;
-				GetOpenWindow(url, "selectReceiver", 980, 610);
+				var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
+	    		try { OpenWin.focus(); } catch (e) { }
+			//	GetOpenWindow(url, "selectReceiver", 980, 650);
 			}
 	    	
 			// 선택된 수신자 화면에 뿌리기

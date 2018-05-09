@@ -7,6 +7,7 @@
 	    <title>${pageTitle}</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <style>
 	        .IMG_BTN {
 	            behavior: url("/css/include/ImgBtn.htc");
@@ -1043,7 +1044,8 @@
 	}
 	var g_tagSelect = "";
 	var nSelTab = "";
-	function MM_swapImage(nSel, szSuffix) {
+	function MM_swapImage(nSel, szSuffix, obj) {
+		methodForTabAction(obj);
 	    nSelTab = nSel;
 	    var curTag = szSuffix + nSel.toString();
 	    if (curTag != g_tagSelect) {
@@ -1199,6 +1201,14 @@
 	            document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
 			}
 			
+		}
+		function methodForTabAction(target) {
+			//var tabObjs = target.parentElement.parentElement.children;
+			var tabObjs = document.getElementById("tabs").children;
+			for (var i = 0; i < tabObjs.length; i++){
+				tabObjs[i].children[0].className = "";
+			}
+			target.className = "tabon";
 		}
 	    </script>
 	</head>
@@ -1388,7 +1398,7 @@
 	            </td>
 	        </tr>
 	    </table>
-    	<c:choose>
+    	<%-- <c:choose>
 	    		<c:when test="${initFlag == '0'}">
 				    <div id="tabnav" style="width: 100%">
 				        <ul>
@@ -1429,6 +1439,51 @@
 				            <li id="tab02"><span onclick="MM_swapImage(2, 'disuse');btnDelTargetRecList_onclick();"><spring:message code='ezApprovalG.t558'/></span></li>
 				        </ul>
 				    </div>
+	    		</c:when>
+	    		<c:when test="${initFlag == '4'}">
+	    		</c:when>
+	    	</c:choose> --%>
+    		<c:choose>
+	    		<c:when test="${initFlag == '0'}">
+		    		<div class="portlet_tabpart01" style="margin:0px;">
+						<div class="portlet_tabpart01_top" id="tabs" style="border-bottom:0px;">
+							<p id="tab01"><span onclick="MM_swapImage(1, 'confirm', this);btnConfirmTargetCab_onclick();"class="tabon"><spring:message code='ezApprovalG.t549'/></span></p>
+							<p id="tab02"><span onclick="MM_swapImage(2, 'confirm', this);btnNotArrangedCab_onclick();"><spring:message code='ezApprovalG.t550'/></span></p>
+						</div>
+					</div>
+	    		</c:when>
+	    		<c:when test="${initFlag == '1'}">
+	    			<div class="portlet_tabpart01" style="margin:0px;">
+						<div class="portlet_tabpart01_top" id="tabs" style="border-bottom:0px;">
+							<p id="tab08"><span onclick="MM_swapImage(8, 'd');btnProdReportCabList_onclick();"class="tabon"><spring:message code='ezApprovalG.t551'/></span></p>
+							<p id="tab07"><span onclick="MM_swapImage(7, 'd');btnProdReportRecList_onclick();"><spring:message code='ezApprovalG.t552'/></span></p>
+							<p id="tab13"><span onclick="MM_swapImage(13, 'd');GetCabHistList();"><spring:message code='ezApprovalG.t553'/></span></p>
+							<p id="tab14"><span onclick="MM_swapImage(14, 'd');GetRecHistList();"><spring:message code='ezApprovalG.t554'/></span></p>
+							<p id="tab15"><span onclick="MM_swapImage(15, 'd');GetSCList();"><spring:message code='ezApprovalG.t94'/></span></p>
+							<p id="tab16"><span onclick="MM_swapImage(16, 'd');GetAttachList();"><spring:message code='ezApprovalG.t555'/></span></p>
+							<p id="trTabDist" style="display: none"><span id="tab17" onclick="MM_swapImage(17, 'd');GetDistList();"><spring:message code='ezApprovalG.t556'/></span></p>
+						</div>
+					</div>
+	    		</c:when>
+	    		<c:when test="${initFlag == '2'}">
+	    			<div class="portlet_tabpart01" style="margin:0px;">
+						<div class="portlet_tabpart01_top" id="tabs" style="border-bottom:0px;">
+							<p id="tab08"><span onclick="MM_swapImage(8, 'd');btnProdReportCabList_onclick();"class="tabon"><spring:message code='ezApprovalG.t551'/></span></p>
+							<p id="tab07"><span onclick="MM_swapImage(7, 'd');btnProdReportRecList_onclick();"><spring:message code='ezApprovalG.t552'/></span></p>
+							<p id="tab13"><span onclick="MM_swapImage(13, 'd');GetCabHistList();"><spring:message code='ezApprovalG.t553'/></span></p>
+							<p id="tab14"><span onclick="MM_swapImage(14, 'd');GetRecHistList();"><spring:message code='ezApprovalG.t554'/></span></p>
+							<p id="tab15"><span onclick="MM_swapImage(15, 'd');GetSCList();"><spring:message code='ezApprovalG.t94'/></span></p>
+							<p id="tab16"><span onclick="MM_swapImage(16, 'd');GetAttachList();"><spring:message code='ezApprovalG.t555'/></span></p>
+						</div>
+					</div>
+	    		</c:when>
+	    		<c:when test="${initFlag == '3'}">
+	    			<div class="portlet_tabpart01" style="margin:0px;">
+						<div class="portlet_tabpart01_top" id="tabs" style="border-bottom:0px;">
+							<p id="tab01"><span onclick="MM_swapImage(1, 'disuse');btnDelTargetCabList_onclick();"class="tabon"><spring:message code='ezApprovalG.t557'/></span></p>
+							<p id="tab02"><span onclick="MM_swapImage(2, 'disuse');btnDelTargetRecList_onclick();"><spring:message code='ezApprovalG.t558'/></span></p>
+						</div>
+					</div>
 	    		</c:when>
 	    		<c:when test="${initFlag == '4'}">
 	    		</c:when>
