@@ -754,6 +754,9 @@
 		<isNotEmpty prepend="AND" property="searchTitle">
 			A.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="deptId">
+			A.department = #deptId#
+		</isNotEmpty>
 	</select>
 
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultClass="AttitudeAuthorVO">

@@ -310,10 +310,11 @@
 	   					deptName : searchDeptName,
 	   					title : searchTitle,
 	   					startDate : searchStartDate,
-	   					endDate : searchEndDate
+	   					endDate : searchEndDate,
+	   					deptId : ''
 					},
 					success : function(result) {
-						if (result.status == "ok") {
+						if (result == "ok") {
 							alert("메일이 발송되었습니다.");
 						} else {
 							alert("메일 발송에 실패하였습니다.");

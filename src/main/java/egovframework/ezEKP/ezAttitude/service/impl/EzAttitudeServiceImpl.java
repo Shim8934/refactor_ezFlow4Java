@@ -279,7 +279,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		// TODO Auto-generated method stub
 		LOGGER.debug("insertAttitudeApplication started");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
+//		Map<String, Object> map = new HashMap<String, Object>();
 		
 //		map.put("", );
 //		map.put("", );
@@ -963,7 +963,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId) throws Exception {
+	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String deptId, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeAbsentedList started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -972,6 +972,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchTitle", searchTitle);
+		map.put("deptId", deptId);
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1166,9 +1167,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 						holidayList.add(vo2);
 					}
 				}
-				
 			}
-			
 		}
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -1568,53 +1567,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		return list;
-	}
-	
-	
-	
-	
-	
-	/** 2018-05-02 미입력자 정렬*/
-	class ascName implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o1.getUserName().compareTo(o2.getUserName());
-		}
-	}
-	
-	class descName implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o2.getUserName().compareTo(o1.getUserName());
-		}
-	}
-	
-	class ascTitle implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o1.getUserTitle().compareTo(o2.getUserTitle());
-		}
-	}
-	
-	class descTitle implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o2.getUserTitle().compareTo(o1.getUserTitle());
-		}
-	}
-	
-	class ascDeptName implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o1.getDeptName().compareTo(o2.getDeptName());
-		}
-	}
-	
-	class descDeptName implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o2.getDeptName().compareTo(o1.getDeptName());
-		}
 	}
 
 	@Override
