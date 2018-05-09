@@ -31,6 +31,7 @@
 			var filelist = [];
 			var currentFolderId = "";
 			var originalPath = "";
+			var isShareMode = true;
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
@@ -47,7 +48,6 @@
 				// dom elements setup
 				initDomElement();
 				
-				$('#upload').css('display','none');
 				getFileList();
 				
 				searchContext.setSearchStartEventHandler(function() {
@@ -105,7 +105,6 @@
 				dom = {
 					mailBoxInfo: document.getElementById("mailBoxInfo"),
 					mainmenu: document.getElementById("mainmenu"),
-					upload: document.getElementById("upload"),
 					originalPath: document.getElementById("originalPath"),
 					originalPathWrapper: document.getElementById("originalPathWrapper"),
 					dragDropArea: document.getElementById("dragDropArea"),
@@ -120,7 +119,7 @@
 			}
 			
 			function getFileList(folderId) {
-				if (typeof(folderId) == "undefined") {
+				if (isShareMode) {
 					folderId = "";
 				}
 				
@@ -142,10 +141,12 @@
 						"subSearchFlag"     : $('#checkSubSearch').is(':checked') ? "Y" : "N"
 					},
 					dataType: "JSON",
-					async: true,
+					async: false,
 					success : function(result) {
 						if (result.status == "ok") {
 							var data = result.data;
+							
+							setButtons();
 							
 							pagination.setListSize(data.pageSize);
 							pagination.setAmount(data.totalCount);
@@ -166,6 +167,28 @@
 						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
+			}
+			
+			function setButtons() {
+				if (isShareMode) {
+					$('#uploadBtn').css('display','none');
+					$('#fileDeleteBtn').css('display','none');
+					$('#fileRenameBtn').css('display','none');
+					$('#fileMoveCopyBtn').css('display','none');
+					
+					$('#fileCopyBtn').css('display','');
+					$('#hideShareBtn').css('display','');
+					$('#hiddenShareListBtn').css('display','');
+				} else {
+					$('#fileCopyBtn').css('display','none');
+					$('#hideShareBtn').css('display','none');
+					$('#hiddenShareListBtn').css('display','none');
+					
+					$('#uploadBtn').css('display','');
+					$('#fileDeleteBtn').css('display','');
+					$('#fileRenameBtn').css('display','');
+					$('#fileMoveCopyBtn').css('display','');
+				}
 			}
 			
 			// originalPath 는 한글 path
@@ -247,11 +270,27 @@
 				
 				dom.allCheckBox.checked = false;
 				
+				if (isShareMode) {
+					$('#updateDateHeader').css('display','none');
+					$('#sharerHeader').css('display','');
+					$('#shareDateHeader').css('display','');
+				} else {
+					$('#sharerHeader').css('display','none');
+					$('#shareDateHeader').css('display','none');
+					$('#updateDateHeader').css('display','');
+				}
+				
+				
 				if (result == null || result.length == 0) {
 					var row = document.createElement("tr");
 					var column = document.createElement("td");
 					
-					column.setAttribute("colspan", "9");
+					if (isShareMode) {
+						column.setAttribute("colspan", "10");
+					} else {
+						column.setAttribute("colspan", "9");
+					}
+					
 					column.setAttribute("align", "center");
 					column.setAttribute("bgcolor", "#FFFFFF");
 					column.innerHTML = messages.strLang12;
@@ -268,11 +307,12 @@
 				var isFolder;
 				
 				var row;
-				var checkboxColumn, favoriteIconColumn, fileIconColumn, nameColumn, sizeColumn, creatorColumn, createDateColumn, absolutePathColumn, shareStatusColumn;
+				var checkboxColumn, favoriteIconColumn, fileIconColumn, nameColumn, sizeColumn, 
+					creatorColumn, createDateColumn, updateDateColumn, sharerColumn, shareDateColumn, 
+					absolutePathColumn, shareStatusColumn;
 				
 				var inputElement;
 				var fileIconElement;
-				
 				
 				for (var i = 0; i < len; i++) {
 					resultJson = result[i];
@@ -292,10 +332,13 @@
 					sizeColumn = document.createElement("td");
 					creatorColumn = document.createElement("td");
 					createDateColumn = document.createElement("td");
+					updateDateColumn = document.createElement("td");
+					sharerColumn = document.createElement("td");
+					shareDateColumn = document.createElement("td");
 					absolutePathColumn = document.createElement("td");
 					shareStatusColumn = document.createElement("td");
 					
-					setStyles([ nameColumn, sizeColumn, creatorColumn, createDateColumn, absolutePathColumn ], function(style) {
+					setStyles([ nameColumn, sizeColumn, creatorColumn, createDateColumn, updateDateColumn, sharerColumn, shareDateColumn, absolutePathColumn ], function(style) {
 						style.overflow = "hidden";
 						style.textOverflow = "ellipsis";
 						style.whiteSpace = "nowrap";
@@ -356,7 +399,13 @@
 					nameColumn.textContent = resultJson["fileName"];
 					creatorColumn.textContent = resultJson["createName"];
 					createDateColumn.textContent = resultJson["createDate"].substring(0, 10);
-// 					shareDateColumn.textContent = resultJson["shareDate"].substring(0, 10);
+					updateDateColumn.textContent = resultJson["updateDate"].substring(0, 10);
+					
+					if (isShareMode) {
+						sharerColumn.textContent = resultJson["sharerName"];
+						shareDateColumn.textContent = resultJson["shareDate"].substring(0, 10);
+					}
+					
 					absolutePathColumn.textContent = resultJson["folderPath"];
 					
 					if (resultJson["shareStatus"] == "Y") {
@@ -396,6 +445,14 @@
 					row.appendChild(sizeColumn);
 					row.appendChild(creatorColumn);
 					row.appendChild(createDateColumn);
+					
+					if (isShareMode) {
+						row.appendChild(sharerColumn);
+						row.appendChild(shareDateColumn);
+					} else {
+						row.appendChild(updateDateColumn);
+					}
+					
 					row.appendChild(absolutePathColumn);
 					row.appendChild(shareStatusColumn);
 					
@@ -412,6 +469,7 @@
 			}
 			
 			function onFolderDoubleClick(obj) {
+				isShareMode = false;
 				var folderId = obj.getAttribute("targetId");
 				getFileList(folderId);
 			}
@@ -621,7 +679,7 @@
 				});
 			}
 			
-			function fileMove() {
+			function fileMoveCopy() {
 				var selected = getSelectedFoldersAndFiles();
 				
 				if (selected === undefined) {
@@ -635,6 +693,22 @@
 				
 				openLeftPanel();
 				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString());
+			}
+			
+			function fileCopy() {
+				var selected = getSelectedFoldersAndFiles();
+				
+				if (selected === undefined) {
+					return;
+				}
+				
+				if (selected.folders.length > 0) {
+					alert(messages.strLang1);
+					return;
+				}
+				
+				openLeftPanel();
+				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString() + "&type=copy");
 			}
 			
 			function getSelectedFoldersAndFiles() {
@@ -728,13 +802,15 @@
 			<div id="mainmenu">
 				<ul>
 					<li><a onClick="fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-					<li id="upload"><a onClick="fileUpload2()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-					<li><a onClick="fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t117'/></span></a></li>
-					<li><a onClick="fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t118'/></span></a></li>
-					<li><a onClick="fileMove()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>
+					<li id="uploadBtn" style="display:none;"><a onClick="fileUpload2()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+					<li id="fileDeleteBtn" style="display:none;"><a onClick="fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t117'/></span></a></li>
+					<li id="fileRenameBtn" style="display:none;"><a onClick="fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t118'/></span></a></li>
+					<li id="fileMoveCopyBtn" style="display:none;"><a onClick="fileMoveCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>
+					<li id="fileCopyBtn"><a onClick="fileCopy()" style="margin-top: 3px;"><span>파일복사</span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
-					<li><a onClick="shareContext.hideShare()" style="margin-top: 3px;"><span>공유숨김</span></a></li>
-					<li><a onClick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span>공유숨김목록</span></a></li>
+					<li><a onClick="shareContext.addShareView()" style="margin-top: 3px;"><span>공유</span></a></li>
+					<li id="hideShareBtn"><a onClick="shareContext.hideShare()" style="margin-top: 3px;"><span>공유숨김</span></a></li>
+					<li id="hiddenShareListBtn"><a onClick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span>공유숨김목록</span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
 					<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 					<li><a onClick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
@@ -801,9 +877,12 @@
 						<th style="width: 29%;"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 						<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
 						<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-						<th id="dateInfoHeader" style="width: 9%;">등록일</th><!-- 등록일 -->
+						<th style="width: 9%;">등록일</th><!-- 등록일 -->
+						<th id="updateDateHeader" style="display:none;width: 9%;">갱신일</th><!-- 갱신일 -->
+						<th id="sharerHeader" style="width: 7%;">공유자</th><!-- 공유자 -->
+						<th id="shareDateHeader" style="width: 9%;">공유받은날짜</th><!-- 공유받은날짜 -->
 						<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-						<th id="shareInfoHeader" style="width: 35px; text-align: center;"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
+						<th style="width: 35px; text-align: center;">공유</th><!-- 공유 -->
 					</tr>
 				</table>
 			</div>
