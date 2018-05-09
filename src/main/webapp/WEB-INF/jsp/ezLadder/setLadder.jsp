@@ -28,10 +28,11 @@
 			var maxitem = 50;
 		
 			function ladder_window_resize() {
-				var win_width = $(window).width();
+				var win_width = document.body.clientWidth;
+				var $linebox = $("#ladderLineBox");
 				
-				$(".setTable").css("width", win_width - 20 + "px");
-				$("#ladderLineBox").css("width", win_width - 70 + "px");
+				$(".setTable").css("width", win_width + "px");
+				$linebox.css("width", (win_width - $linebox.css("padding-left").replace("px", "")) + "px");
 			}
 			$(function() {
 				$(window).resize(function (){
@@ -184,20 +185,32 @@
 							}
 						}
 					})
-					.on("blur", "[name='items']", function() {
+					.on("blur", "[name='items']", function(event) {
 						var $itemIdx = $("[name='items']").index(this);
 						var $itemVal = $(this).val();
 						
 						if(items[$itemIdx] != $itemVal) {
 							items[$itemIdx] = $itemVal;
 							
-							if(ladderType == "1"/*  && regNumber.test($itemVal.replace(/,/g, "")) || $itemVal.slice(-1) == strLang24 */) {
+							if(ladderType == "1") {
 								getMoney($(this));
 								$("#totalmoney span").text(totalmoneyStr);
 							}
 						}
-					});
-				
+					})
+					.on("keyup", "[name='items']", function() {
+						var $itemIdx = $("[name='items']").index(this);
+						var $itemVal = $(this).val();
+						
+						if($itemVal == "") {
+							items[$itemIdx] = $itemVal;
+							
+							if(ladderType == "1") {
+								getMoney($(this));
+								$("#totalmoney span").text(totalmoneyStr);
+							}
+						}
+					})
 			});
 			
 			function add_user_change_ulsize(usernum) {
@@ -236,7 +249,7 @@
 						totalmoney = 0;
 						getMoney($("#itemList").find("input"));
 						
-						html += "<div id='totalmoney' style='float: right; line-height: 50px;'>$<span style='margin: 0px 5px 0px 15px;'>" + totalmoneyStr + "</span>" + strLang24 + "</div>";
+						html += "<div id='totalmoney' style='float: right; line-height: 50px;'><spring:message code='ezLadder.t107' /><span style='margin: 0px 5px 0px 15px;'>" + totalmoneyStr + "</span>" + strLang24 + "</div>";
 					}
 				}
 				$("#ladderTypeOption").html(html);
@@ -262,25 +275,30 @@
 				var moneyNum = {"numStr": [strLang29, strLang30, strLang31, strLang32, strLang33, strLang34, strLang35, strLang36, strLang37], "number": [1, 2, 3, 4, 5, 6, 7, 8, 9]};
 				var inputval = "";
 				var objLen = itemobj.length;
+				var i = objLen > 1 ? 0 : itemobj.attr("_itemindex");
 				
 				for(var i = 0; i < objLen; i++) {
 					var obj = itemobj.eq(i);
+					var itemindex = objLen == 1 ? obj.attr("_itemindex") : i;
 					
-					if(!!moneyArr[obj.attr("_itemindex")]) {
-						totalmoney -= moneyArr[obj.attr("_itemindex")];
+					if(!!moneyArr[itemindex]) {
+						totalmoney -= moneyArr[itemindex];
 					}
 					
-					var itemidx = objLen > 1 ? i : obj.attr("_itemindex");
-					moneyArr[itemidx] = 0;
+					moneyArr[itemindex] = 0;
 					
 					inputval = obj.val().replace(/,/g, "").replace(/ /g, "");
 					
 					if(!!inputval) {
-						if(regNumber.test(inputval) || inputval.slice(-1) == strLang24 && regNumber.test(inputval.slice(0, -1))) {
-							moneyArr[itemidx] = Number(inputval) || Number(inputval.slice(0, -1));
-						} else if(inputval.slice(-1) == strLang24) {
+						if(inputval.slice(-1) == strLang24) {
+							inputval = inputval.slice(0, -1);
+						}
+						
+						if(regNumber.test(inputval)) {
+							moneyArr[itemindex] = Number(inputval);
+						} else{
 							var tempMoneyArr = {"won": [], "unitidx": [], "wonStr": []};
-							var inputLastIdx = inputval.length - 2;
+							var inputLastIdx = inputval.length - 1;
 							var tempTotalMoney = 0;
 							
 							for(var j = inputLastIdx; j >= 0; j--) {
@@ -288,12 +306,16 @@
 								
 								if(UnitFlag != -1) {
 									var tempArrLen = tempMoneyArr["won"].length;
-									var FrontNumFlag = moneyNum["numStr"].indexOf(inputval[j - 1]);
+									var FrontNumFlag = function() {
+										var chkIdx1 = moneyNum["numStr"].indexOf(inputval[j - 1]);
+										var chkIdx2 = moneyNum["number"].indexOf(Number(inputval[j - 1]));
+										return chkIdx1 > chkIdx2 ? chkIdx1 : chkIdx1 < chkIdx2 ? chkIdx2 : -1;
+									}
 									
-									if(FrontNumFlag != -1) {
-										tempMoneyArr["won"][tempArrLen] = moneyNum["number"][FrontNumFlag] * moneyUnit["unitWon"][UnitFlag];
+									if(FrontNumFlag() != -1) {
+										tempMoneyArr["won"][tempArrLen] = moneyNum["number"][FrontNumFlag()] * moneyUnit["unitWon"][UnitFlag];
 										tempMoneyArr["unitidx"][tempArrLen] = UnitFlag;
-										tempMoneyArr["wonStr"][tempArrLen] = moneyNum["numStr"][FrontNumFlag].concat(moneyUnit["unitStr"][UnitFlag]);
+										tempMoneyArr["wonStr"][tempArrLen] = moneyNum["numStr"][FrontNumFlag()].concat(moneyUnit["unitStr"][UnitFlag]);
 										j--;
 									} else {
 										tempMoneyArr["won"][tempArrLen] = moneyUnit["unitWon"][UnitFlag];
@@ -329,9 +351,12 @@
 								}
 							}
 							
-							moneyArr[itemidx] = Number(tempTotalMoney);
+							moneyArr[itemindex] = tempTotalMoney;
 						}
-						totalmoney += moneyArr[itemidx];
+						if(moneyArr[itemindex] != 0) {
+							obj.val(moneyArr[itemindex].toString().replace(regexp, ','));
+						}
+						totalmoney += moneyArr[itemindex];
 					}
 				}
 				totalmoneyStr = totalmoney.toString().replace(regexp, ',') || "0";
@@ -869,7 +894,7 @@
 			}
 			
 			.ui-slider-handle {
-				background: #ffffff url(images/ui-bg_highlight-hard_100_f6f6f6_1x100.png) 50% 50% repeat-x;
+				background: #ffffff repeat-x;
 			}
 			.ladderType, .ladderSecret {
 				width: 50px;
