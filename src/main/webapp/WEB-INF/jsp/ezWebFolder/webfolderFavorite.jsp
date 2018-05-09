@@ -160,6 +160,9 @@
 		});
 		
 		searchContext.setSearchStartEventHandler(function() {
+			pagination.setPage(1, true);
+			$("#idSelect").val("");
+			searchContext.setFileType("");
 			context.refreshList(true);
 		});
 		
@@ -250,10 +253,10 @@
 					if (result.code == 1) {
 						console.log("<spring:message code='ezWebFolder.t306'/>");
 						return;
-					}else if (result.code == 2) {
+					} else if (result.code == 2) {
 						alert("<spring:message code='ezWebFolder.t305'/>");
 						return;
-					}else if (result.code == 3) {
+					} else if (result.code == 3) {
 						alert("<spring:message code='ezWebFolder.t300'/>");
 						return;
 					}
@@ -307,10 +310,10 @@
 					if (result.code == 1) {
 						console.log("<spring:message code='ezWebFolder.t306'/>");
 						return;
-					}else if (result.code == 2) {
+					} else if (result.code == 2) {
 						alert("<spring:message code='ezWebFolder.t305'/>");
 						return;
-					}else if (result.code == 3) {
+					} else if (result.code == 3) {
 						alert("<spring:message code='ezWebFolder.t300'/>");
 						return;
 					}

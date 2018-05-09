@@ -51,7 +51,8 @@
 				getFileList();
 				
 				searchContext.setSearchStartEventHandler(function() {
-					getFileList();
+					$("#fileTypeSelect").val("");
+					searchContext.setFileType("");
 				});
 				
 				searchContext.setFileTypeChangeEventHandler(function() {
@@ -188,7 +189,9 @@
 					detailName.textContent = "공유한목록";
 					detailName.setAttribute("style", "font-size:15px; ");
 					detailName.onclick = function() {
-						getFileList();
+						pagination.setPage(1, true);
+						$("#fileTypeSelect").val("");
+						searchContext.setFileType("");
 					};
 					
 					nameTag.appendChild(detailName);

@@ -34,9 +34,11 @@
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
-				var divList          = document.getElementById("dragDropArea");
-				var reheight         = document.documentElement.clientHeight - 220;
-				divList.style.height = reheight + "px";
+				var reheight = document.documentElement.clientHeight - 200;
+				document.getElementById("dragDropArea").style.height = reheight + "px";
+				
+				reheight = document.documentElement.clientHeight - 100;
+				document.getElementById("pageArea").style.height = reheight + "px";
 			};
 			
 			document.onselectstart = function() {
@@ -51,7 +53,8 @@
 				getFileList();
 				
 				searchContext.setSearchStartEventHandler(function() {
-					getFileList();
+					$("#fileTypeSelect").val("");
+					searchContext.setFileType("");
 				});
 				
 				searchContext.setFileTypeChangeEventHandler(function() {
@@ -189,7 +192,9 @@
 					detailName.textContent = "공유받은목록";
 					detailName.setAttribute("style", "font-size:15px; ");
 					detailName.onclick = function() {
-						getFileList();
+						pagination.setPage(1, true);
+						$("#fileTypeSelect").val("");
+						searchContext.setFileType("");
 					};
 					
 					nameTag.appendChild(detailName);

@@ -42,26 +42,24 @@
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
-			var divList          = document.getElementById("dragDropArea");
-			var reheight         = document.documentElement.clientHeight - 200;
-			divList.style.height = reheight + "px";
+			var reheight = document.documentElement.clientHeight - 200;
+			document.getElementById("dragDropArea").style.height = reheight + "px";
 			
-			var divList          = document.getElementById("pageArea");
-			var reheightPage     = document.documentElement.clientHeight - 100;
-			divList.style.height = reheightPage + "px";
-			
+			reheight = document.documentElement.clientHeight - 100;
+			document.getElementById("pageArea").style.height = reheight + "px";
 		};
 		
 		document.onselectstart = function(){
 			return false;
-		}
+		};
 		
 		$(function () {
 			$('#upload').css('display','none');
 			getFileList(folderId);
 			
 			searchContext.setSearchStartEventHandler(function() {
-				getFileList(folderId);
+				$("#idSelect").val("");
+				onFileTypeChange("");
 			});
 			
 			pagination.setPageChangeEventHandler(function() {
@@ -460,11 +458,10 @@
 	        var searchRequirement = searchContext.getCurrentRequirement();
 	        clearDatepicker();
 	        
-	        $('#searchExt').val(searchRequirement.extension);               
-            $('#searchFileName').val(searchRequirement.name);
-            $('#searchCreateName').val(searchRequirement.creatorName);
-            $('#Sdatepicker').val(searchRequirement.startDate);
-            $('#Edatepicker').val(searchRequirement.endDate);
+	        $('#searchExt').val("");               
+            $('#searchFileName').val("");
+            $('#searchCreateName').val("");
+            $('.datepicker').val("");
 	    
 	        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 	        var leftBody = parent.frames["left"].document.body;
