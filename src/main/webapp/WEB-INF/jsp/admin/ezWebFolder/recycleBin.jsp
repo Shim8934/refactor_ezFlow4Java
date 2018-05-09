@@ -429,10 +429,10 @@
 	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
-				<th width="20px" ><input type="checkbox"></th>
-				<th headers="ft" width="40px" ><spring:message code='ezWebFolder.t188'/></th>
+				<th width="12px" ><input type="checkbox"></th>
+				<th headers="ft" width="30px" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
 				<th headers="fn" width="160px"><spring:message code='ezWebFolder.t156'/></th>
-				<th headers="fs" width="60px" ><spring:message code='ezWebFolder.t157'/></th>
+				<th headers="fs" width="60px" style="text-align: center;"><spring:message code='ezWebFolder.t157'/></th>
 				<th headers="un" width="120px"><spring:message code='ezWebFolder.t189'/></th>
 				<th headers="cd" width="80px" ><spring:message code='ezWebFolder.t190'/></th>
 				<th headers="dd" width="80px" ><spring:message code='ezWebFolder.t288'/></th>
