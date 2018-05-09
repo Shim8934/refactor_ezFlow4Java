@@ -1126,7 +1126,7 @@
 		    }
 		    function SaveMyBoard() {
 		        if (CrossYN()) {
-		            OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 457, 418);
+		            OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 460, 418);
 		            try { OpenWin.focus(); } catch (e) { }
 		
 		        }
