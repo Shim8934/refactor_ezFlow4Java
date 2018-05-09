@@ -57,9 +57,9 @@
 			// 윈도우 창 조절
 			function ladder_main_resize() {
 				var win_height = $(window).height() - 220;
-				if(win_height>220){
+				
 					$(".div_scroll").css("height", win_height + "px");
-				}
+				
 			}
 			// 사다리 종류 드롭박스
 			function checkSearchOption() {
@@ -98,8 +98,7 @@
 			
 		</style>
 	</head>
-	<body class="mainbody" style="min-width: 750px;">
-		
+	<body class="mainbody" style="overflow: hidden;">
 			<h1><spring:message code="ezLadder.t001"/>
 				<span id="mailBoxInfo"></span>
 				<span style="float: right; font-weight:normal;color:black;">
@@ -131,50 +130,52 @@
 				</li>
 			</ul>
 		</div>
-		
-		<div class="div_scroll" style="width:100%; overflow: auto" id="divList">
-			 <table class="mainlist" style="width:100%; overflow: auto"> 
-			    <tr class="header" style="height=20px;"> 
-					<th onClick="listSort(0)" width="80px"><spring:message code="ezLadder.t002"/> <span id="sort_0" ></span></th> 
+		<div style="width:100%; overflow: hidden;">
+ 		 <table class="mainlist" style="width:100%;">
+			    <tr class="header" style="height=20px;">
+					<th onClick="listSort(0)" width="50px"><spring:message code="ezLadder.t002"/> <span id="sort_0" ></span></th> 
 					<th onClick="listSort(1)"><spring:message code="ezLadder.t003"/> <span id="sort_1" ></span></th> 
-					<th onClick="listSort(2)" width="140px"><spring:message code="ezLadder.t004"/> <span id="sort_2" ></span></th>
+					<th onClick="listSort(2)" width="100px"><spring:message code="ezLadder.t004"/> <span id="sort_2" ></span></th>
 					<th onClick="listSort(3)" width="140px"><spring:message code="ezLadder.t025"/> <span id="sort_3" ></span></th> 
-					<th onClick="listSort(4)" width="80px"><spring:message code="ezLadder.t006"/> <span id="sort_4" ></span></th> 
-					<th onClick="listSort(5)" width="80px"><spring:message code="ezLadder.t007"/> <span id="sort_5" ></span></th>
-					<th onClick="listSort(6)" width="80px"><spring:message code="ezLadder.t008"/> <span id="sort_6" ></span></th>
+					<th onClick="listSort(4)" width="50px"><spring:message code="ezLadder.t006"/> <span id="sort_4" ></span></th> 
+					<th onClick="listSort(5)" width="50px"><spring:message code="ezLadder.t106"/> <span id="sort_5" ></span></th>
+					<th onClick="listSort(6)" width="50px"><spring:message code="ezLadder.t008"/> <span id="sort_6" ></span></th>
 			    </tr>
-				 <c:forEach items="${list }" var="vo">
+			</table>
+		</div> 
+		<div class="div_scroll" style="width:100%; overflow: auto" id="divList">
+			<table class="mainlist" style="width:100%; overflow: auto"> 
+		 		<c:forEach items="${list }" var="vo">
 					<tr class="black" style="height=30px;" onClick="getLadderGame(${vo.ladderId})">
-						<td><img class="effect" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" src ='/images/ezLadder/icon_game_thirty0${vo.type}.png' /></td>			
-						
+						<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" src ='/images/ezLadder/icon_game_thirty0${vo.type}.png' /></td>
 						<td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><c:out value ="${vo.title }" /></td>
-						<td><a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${vo.writerId}', event)">${vo.writerName }</a></td>
-						<td>${vo.writeDate.substring(0,16) }</td>
+						<td style="text-align: left;" width="100px"><a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${vo.writerId}', event)">${vo.writerName }</a></td>
+						<td style="text-align: left;" width="140px">${vo.writeDate.substring(0,16) }</td>
 						
 						<c:choose>
 							<c:when test="${vo.status eq 0 }">
-								<td><img class="effect" title="<spring:message code='ezLadder.t074'/>" src ='/images/ezLadder/icon_wait_thirty.png' /></td>
+								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t074'/>" src ='/images/ezLadder/icon_wait_thirty.png' /></td>
 							</c:when>
 							<c:otherwise>
-								<td><img class="effect" title="<spring:message code='ezLadder.t075'/>" src ='/images/ezLadder/icon_complete_thirty.png' /></td>
+								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t075'/>" src ='/images/ezLadder/icon_complete_thirty.png' /></td>
 							</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
 							<c:when test="${vo.secretFlag eq 0 }">
-								<td><img class="effect" title="<spring:message code='ezLadder.t007'/>" src ='/images/ezLadder/icon_public_thirty.png' /></td>
+								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t007'/>" src ='/images/ezLadder/icon_public_thirty.png' /></td>
 							</c:when>
 							<c:otherwise>
-								<td><img class="effect" title="<spring:message code='ezLadder.t076'/>" src ='/images/ezLadder/icon_private_thirty.png' /></td>
+								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t076'/>" src ='/images/ezLadder/icon_private_thirty.png' /></td>
 							</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
 							<c:when test="${id eq vo.writerId}">
-								<td><img class="effect" title="<spring:message code='ezLadder.t077'/>" src ='/images/ezLadder/icon_posDelete_thirty.png' onclick="deleteLadder(${vo.ladderId}, event);" /></td>
+								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t077'/>" src ='/images/ezLadder/icon_posDelete_thirty.png' onclick="deleteLadder(${vo.ladderId}, event);" /></td>
 							</c:when>
 							<c:otherwise>
-								<td><img class="effect" title="<spring:message code='ezLadder.t078'/>" src ='/images/ezLadder/icon_imposDelete_thirty.png' /></td>
+								<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t078'/>" src ='/images/ezLadder/icon_imposDelete_thirty.png' /></td>
 							</c:otherwise>
 						</c:choose>
 					</tr>
