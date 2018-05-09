@@ -540,40 +540,42 @@
 			<table style="border-collapse: collapse; width: 100%;">
 				<tr>
 					<td style="width: 350px; min-width: 350px;">
-						<div id="folderTree" style="width: 350px; height: 450px; border: 1px solid #666666; overflow: auto; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
+						<div id="folderTree" style="width: 350px; height: 450px; border: 1px solid #ddd; overflow: auto; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
 					</td>
 					<td>
-						<div style="width: 500px; height: 450px; border: 1px solid #cccccc; margin-left: 10px;">
+						<div style="width: 500px; height: 450px; border: 1px solid #ddd; margin-left: 10px;padding:3px">
 							<table style="width: 100%;">
 								<tr>
 									<td>
-										<div style="margin: 80px 20px 5px 20px;">
+										<div style="margin: 20px 20px 5px 20px;">
+											<img src="/images/kr/left/left_dot02.gif" />
 											<span><spring:message code='ezWebFolder.t226'/></span>
-											<input id="fldName" type="text" style="height: 25px; border-radius: 3px; border: 1px solid #666; width: 200px; margin-left: 2px; padding-left: 5px;">
+											<input id="fldName" type="text" style="height: 25px; border-radius: 3px; border: 1px solid #ddd; width: 200px; margin-left: 2px; padding-left: 5px;">
 										</div>
 									</td>
 								</tr>
 								<tr>
 									<td>
 										<div style="margin: 5px 20px 10px 20px;">
+											<img src="/images/kr/left/left_dot02.gif" />
 											<span><spring:message code='ezWebFolder.t227'/></span>
-											<input id="fldName2" type="text" style="height: 25px; border-radius: 3px; border: 1px solid #666; width: 200px; margin-left: 2px; padding-left: 5px;">
+											<input id="fldName2" type="text" style="height: 25px; border-radius: 3px; border: 1px solid #ddd; width: 200px; margin-left: 2px; padding-left: 5px;">
+										</div>
+									</td>
+								</tr>								
+								<tr>
+									<td>
+										<div style="margin: 20px 20px 5px; min-height: 36px;">
+											<img src="/images/kr/left/left_dot02.gif" />
+											<span id="displayUsers"><spring:message code='ezWebFolder.t204'/></span>&nbsp;
+											<a class="webfolderBttn2"><span onclick="getUsersPage();" id="usersSelect"><spring:message code='ezWebFolder.t205'/></span></a>											
 										</div>
 									</td>
 								</tr>
-								
 								<tr>
 									<td>
-										<div style="margin: 10px 20px; min-height: 36px;">
-											<span id="displayUsers"><spring:message code='ezWebFolder.t204'/></span>
+										<div style="margin: 0px 20px 40px; min-height: 200px; border:1px solid #ddd; padding:10px; border-radius:3px" >
 											<span id="newTargetDiv"></span>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<div style="margin: 20px 20px 100px 20px; min-height: 80px;" >
-											<a class="webfolderBttn2"><span onclick="getUsersPage();" id="usersSelect"><spring:message code='ezWebFolder.t205'/></span></a>
 										</div>
 									</td>
 								</tr>
