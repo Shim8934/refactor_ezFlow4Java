@@ -308,7 +308,7 @@
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
 					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'D' : 'F');
-					trElmt.addEventListener("click", rowContext.onRowClick);
+					trElmt.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					if (result[i]["fileTypeName"] != 'folder') {
 						trElmt.addEventListener("dblclick", function(event) {

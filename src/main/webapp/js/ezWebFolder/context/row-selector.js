@@ -13,9 +13,8 @@ var rowContext = (function() {
 		rowWrapElement = document.getElementById("tblFileList");
 	});
 	
-	function onRowClick(event) {
+	function onRowClick(event, rowElement) {
 		event.stopPropagation();
-		var rowElement = event.target;
 		
 		if (isFirstSelected()) {
 			firstSelected = rowElement;

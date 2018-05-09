@@ -232,8 +232,7 @@
 	                alert("<spring:message code='ezWebFolder.t164' />");
 	                return;
 	            }
-	        }
-	        else if (type == "quick") {
+	        } else if (type == "quick") {
 	            if (document.getElementById("txt_keyword").value == "") {
 	                alert("<spring:message code='ezWebFolder.t163' />");
 	                return;

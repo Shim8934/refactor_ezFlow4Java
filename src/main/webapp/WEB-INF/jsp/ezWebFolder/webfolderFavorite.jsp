@@ -485,7 +485,7 @@
 			row.setAttribute("class", "bnkWebFolder");
 			row.setAttribute("targetId", resultJson[columnMap.id]);
 			row.setAttribute("targetPath", resultJson[columnMap.path]);
-			row.addEventListener("click", rowContext.onRowClick);
+			row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 			
 			if (!isFromFolder && isFolder) {
 				row.setAttribute("folderType", targetType.charAt(2));

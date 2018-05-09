@@ -310,7 +310,7 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", resultJson["folderFileType"]);
-					row.addEventListener("click", rowContext.onRowClick);
+					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");
 					inputElement.setAttribute("type", "checkbox");
