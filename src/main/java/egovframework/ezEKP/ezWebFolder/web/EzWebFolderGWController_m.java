@@ -1293,7 +1293,7 @@ public class EzWebFolderGWController_m {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezwebfolder/check-admin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/trashcan-check-admin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkWfAdmin(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host") : "";
 		JSONObject result = new JSONObject();
