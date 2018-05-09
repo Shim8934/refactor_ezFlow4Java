@@ -102,6 +102,7 @@
 				dom = {
 					mailBoxInfo: document.getElementById("mailBoxInfo"),
 					mainmenu: document.getElementById("mainmenu"),
+					upload: document.getElementById("uploadBtn"),
 					originalPath: document.getElementById("originalPath"),
 					originalPathWrapper: document.getElementById("originalPathWrapper"),
 					dragDropArea: document.getElementById("dragDropArea"),
@@ -117,49 +118,139 @@
 			
 			function getFileList(folderId) {
 				if (isShareMode) {
-					folderId = "";
+					getSharedList();
+				} else {
+					getFileList2(folderId);
 				}
-				
+			}
+			
+			function getSharedList() {
 				searchRequirement = searchContext.getCurrentRequirement();
 				
 				$.ajax({
 					type: "POST",
 					url: "/ezWebFolder/getSharedList.do",
 					data: {
-						"folderId"          : folderId,
-						"pageNum"           : pagination.currentPage(),
-						"pageSize"          : pagination.listSize(),
-						"searchExt"         : searchRequirement.extension,
-						"searchFileName"    : searchRequirement.name,
+						"pageNum" : pagination.currentPage(),
+						"pageSize" : pagination.listSize(),
+						"searchExt" : searchRequirement.extension,
+						"searchFileName" : searchRequirement.name,
 						"searchCreatorName" : searchRequirement.creatorName,
-						"searchFileType"    : searchContext.getFileType(),
-						"searchStartDate"   : searchRequirement.startDate,
-						"searchEndDate"     : searchRequirement.endDate,
-						"subSearchFlag"     : $('#checkSubSearch').is(':checked') ? "Y" : "N"
+						"searchFileType" : searchContext.getFileType(),
+						"searchStartDate" : searchRequirement.startDate,
+						"searchEndDate" : searchRequirement.endDate,
+						"subSearchFlag" : "N"
 					},
 					dataType: "JSON",
 					async: false,
 					success : function(result) {
-						if (result.status == "ok") {
-							var data = result.data;
+						if (result.status != "ok") {
+							if (result.code == 1) {
+								alert("<spring:message code='ezWebFolder.t306'/>");
+							} else if (result.code == 2) {
+								alert("<spring:message code='ezWebFolder.t305'/>");
+							} else if (result.code == 3) {
+								alert("<spring:message code='ezWebFolder.t300'/>");
+							} else {
+								alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
+							}
 							
-							setButtons();
-							
-							pagination.setListSize(data.pageSize);
-							pagination.setAmount(data.totalCount);
-							pagination.build();
-							
-							renderList(data.list);
-							
-							checkedArr = [];
-							
-							setNamePath(data.folderPath, data.folderPath2);
-							setMailBoxInfo(data.folderCount, data.fileCount);
-							
-							currentFolderId = folderId;
-						} else {
-							alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
+							return;
 						}
+						
+						var data = result.data;
+						
+						setButtons();
+						
+						pagination.setListSize(data.pageSize);
+						pagination.setAmount(data.totalCount);
+						pagination.build();
+						
+						var dragDropArea = dom.dragDropArea;
+						dragDropArea.ondragenter = null;
+						dragDropArea.ondragover = null;
+						dragDropArea.ondragover = null;
+						
+						renderList(data.list);
+						setNamePath(data.folderPath, data.folderPath2);
+						setMailBoxInfo(data.folderCount, data.fileCount);
+						
+						currentFolderId = "";
+					},
+					error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134'/>");
+					}
+				});
+			}
+			
+			function getFileList2(folderId) {
+				searchRequirement = searchContext.getCurrentRequirement();
+				
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/fileList.do",
+					data: {
+						"folderId": folderId,
+						"currPage": pagination.currentPage(),
+						"listCount": pagination.listSize(),
+						"pStart": pagination.startPosition(),
+						"searchExt" : searchRequirement.extension,
+						"searchFileName" : searchRequirement.name,
+						"searchCreateName" : searchRequirement.creatorName,
+						"searchFileType" : searchContext.getFileType(),
+						"searchStartDate" : searchRequirement.startDate,
+						"searchEndDate" : searchRequirement.endDate
+					},
+					dataType: "JSON",
+					async: false,
+					success : function(result) {
+						if (result.status != "ok") {
+							if (result.code == 1) {
+								alert("<spring:message code='ezWebFolder.t306'/>");
+							} else if (result.code == 2) {
+								alert("<spring:message code='ezWebFolder.t305'/>");
+							} else if (result.code == 3) {
+								alert("<spring:message code='ezWebFolder.t300'/>");
+							} else {
+								alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
+							}
+							
+							return;
+						}
+						
+						setButtons();
+						
+						result = result.data;
+						
+						pagination.setListSize(result.listCount);
+						pagination.setAmount(result.totalRows);
+						pagination.build();
+						
+						var dragDropArea = dom.dragDropArea;
+						
+						if (result.folderUpp == "root") {
+							dom.upload.setAttribute("hidden", "");
+							dragDropArea.ondragenter = null;
+							dragDropArea.ondragover = null;
+							dragDropArea.ondragover = null;
+						} else {
+							dom.upload.removeAttribute("hidden");
+							dragDropArea.ondragenter = function(e) {
+								onDragEnter(e)
+							};
+							dragDropArea.ondragover = function(e) {
+								onDragOver(e)
+							};
+							dragDropArea.ondrop = function(e) {
+								onDrop(e)
+							};
+						}
+						
+						renderList2(result.fileList);
+						setNamePath(result.folderPath, result.originalPath);
+						setMailBoxInfo(result.fldCnt, result.fileCnt);
+						
+						currentFolderId = folderId;
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>");
@@ -270,27 +361,15 @@
 				
 				dom.allCheckBox.checked = false;
 				
-				if (isShareMode) {
-					$('#updateDateHeader').css('display','none');
-					$('#sharerHeader').css('display','');
-					$('#shareDateHeader').css('display','');
-				} else {
-					$('#sharerHeader').css('display','none');
-					$('#shareDateHeader').css('display','none');
-					$('#updateDateHeader').css('display','');
-				}
-				
+				$('#updateDateHeader').css('display','none');
+				$('#sharerHeader').css('display','');
+				$('#shareDateHeader').css('display','');
 				
 				if (result == null || result.length == 0) {
 					var row = document.createElement("tr");
 					var column = document.createElement("td");
 					
-					if (isShareMode) {
-						column.setAttribute("colspan", "11");
-					} else {
-						column.setAttribute("colspan", "10");
-					}
-					
+					column.setAttribute("colspan", "11");
 					column.setAttribute("align", "center");
 					column.setAttribute("bgcolor", "#FFFFFF");
 					column.innerHTML = messages.strLang12;
@@ -393,12 +472,8 @@
 					creatorColumn.textContent = resultJson["createName"];
 					createDateColumn.textContent = resultJson["createDate"].substring(0, 10);
 					updateDateColumn.textContent = resultJson["updateDate"].substring(0, 10);
-					
-					if (isShareMode) {
-						sharerColumn.textContent = resultJson["sharerName"];
-						shareDateColumn.textContent = resultJson["shareDate"].substring(0, 10);
-					}
-					
+					sharerColumn.textContent = resultJson["sharerName"];
+					shareDateColumn.textContent = resultJson["shareDate"].substring(0, 10);
 					absolutePathColumn.textContent = resultJson["folderPath"];
 					
 					if (resultJson["shareStatus"] == "Y") {
@@ -438,14 +513,169 @@
 					row.appendChild(sizeColumn);
 					row.appendChild(creatorColumn);
 					row.appendChild(createDateColumn);
+					row.appendChild(sharerColumn);
+					row.appendChild(shareDateColumn);
+					row.appendChild(absolutePathColumn);
+					row.appendChild(shareStatusColumn);
 					
-					if (isShareMode) {
-						row.appendChild(sharerColumn);
-						row.appendChild(shareDateColumn);
+					dom.listTable.appendChild(row);
+				}
+			}
+			
+			function renderList2(result) {
+				checkedArr = [];
+				$('#tblFileList tr').not(":first").remove();
+				
+				dom.allCheckBox.checked = false;
+				
+				$('#sharerHeader').css('display','none');
+				$('#shareDateHeader').css('display','none');
+				$('#updateDateHeader').css('display','');
+				
+				if (result == null || result.length == 0) {
+					var row = document.createElement("tr");
+					var column = document.createElement("td");
+					
+					column.setAttribute("colspan", "10");
+					column.setAttribute("align", "center");
+					column.setAttribute("bgcolor", "#FFFFFF");
+					column.innerHTML = messages.strLang12;
+					column.setAttribute("id", "nodataRow");
+					
+					row.appendChild(column);
+					dom.listTable.appendChild(row);
+					
+					return;
+				}
+				
+				var len = result.length;
+				var resultJson;
+				var isFolder;
+				
+				var row;
+				var checkboxColumn, favoriteIconColumn, fileIconColumn, nameColumn, sizeColumn, 
+					creatorColumn, createDateColumn, updateDateColumn, absolutePathColumn, shareStatusColumn;
+				
+				var inputElement;
+				var fileIconElement;
+				
+				for (var i = 0; i < len; i++) {
+					resultJson = result[i];
+					
+					if (resultJson["fileTypeName"] === 'folder') {
+						isFolder = true;
 					} else {
-						row.appendChild(updateDateColumn);
+						isFolder = false;
 					}
 					
+					row = document.createElement("tr");
+					
+					checkboxColumn = document.createElement("td");
+					favoriteIconColumn = document.createElement("td");
+					fileIconColumn = document.createElement("td");
+					nameColumn = document.createElement("td");
+					sizeColumn = document.createElement("td");
+					creatorColumn = document.createElement("td");
+					createDateColumn = document.createElement("td");
+					updateDateColumn = document.createElement("td");
+					absolutePathColumn = document.createElement("td");
+					shareStatusColumn = document.createElement("td");
+					
+					setStyles([ nameColumn, sizeColumn, creatorColumn, createDateColumn, updateDateColumn, absolutePathColumn ], function(style) {
+						style.overflow = "hidden";
+						style.textOverflow = "ellipsis";
+						style.whiteSpace = "nowrap";
+					});
+					
+					setStyles([ checkboxColumn, favoriteIconColumn, fileIconColumn, sizeColumn, shareStatusColumn ], function(style) {
+						style.textAlign = "center";
+					})
+					
+					row.setAttribute("class", "bnkWebFolder");
+					row.setAttribute("targetId", resultJson["fileId"]);
+					row.setAttribute("targetType", isFolder ? "D" : "F");
+					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
+					
+					inputElement = document.createElement("input");
+					inputElement.setAttribute("type", "checkbox");
+					inputElement.setAttribute("value", resultJson["fileId"]);
+					inputElement.setAttribute("class", "checkBnk");
+					inputElement.addEventListener("change", rowContext.onCheckboxChange);
+					inputElement.addEventListener("click", function(event) {
+						event.stopPropagation();
+					});
+					inputElement.addEventListener("dblclick", function(event) {
+						event.stopPropagation();
+					});
+					
+					checkboxColumn.appendChild(inputElement);
+					
+					fileIconElement = document.createElement("img");
+					fileIconElement.setAttribute("class", "none-drag");
+					fileIconElement.addEventListener("click", favoriteContext.onImageClick);
+					fileIconElement.addEventListener("dblclick", function(event) {
+						event.stopPropagation();
+					});
+					
+					if (resultJson["favouriteStatus"] == "0") {
+						fileIconElement.src = "/images/ImgIcon/view-flag.gif";
+					} else {
+						fileIconElement.src = "/images/ImgIcon/icon-flag.gif";
+						row.setAttribute("favorite", "");
+					}
+					
+					favoriteIconColumn.appendChild(fileIconElement);
+					
+					fileIconElement = document.createElement("img");
+					fileIconElement.setAttribute("class", "webFolderImg");
+					fileIconElement.src = resultJson["fileIconUrl"];
+					
+					fileIconColumn.appendChild(fileIconElement);
+					
+					nameColumn.textContent = resultJson["fileName"];
+					creatorColumn.textContent = resultJson["createName1"];
+					createDateColumn.textContent = resultJson["createDate"].substring(0, 10);
+					updateDateColumn.textContent = resultJson["updateDate"].substring(0, 10);
+					absolutePathColumn.textContent = resultJson["filePosition"];
+					
+					if (resultJson["fileShareStatus"] == "Y") {
+						var spanElmt = document.createElement("span");
+						spanElmt.innerHTML = "<img src='/images/webfolder/sharing2.png' class='webFolderImg' />";
+						spanElmt.addEventListener("click", function () {
+							shareContext.showShareInfo(this);
+						});
+						shareStatusColumn.appendChild(spanElmt);
+					} else if (resultJson["fileShareStatus"] == "S") {
+						var spanElmt = document.createElement("span");
+						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
+						shareStatusColumn.appendChild(spanElmt);
+					} else {
+						shareStatusColumn.textContent = "";
+					}
+					
+					if (isFolder) {
+						row.ondblclick = function() {
+							onFolderDoubleClick(this);
+						};
+						
+						sizeColumn.textContent = "-";
+					} else {
+						row.addEventListener("dblclick", function(event) {
+							downloadFileByDbClick(event);
+							rowContext.setSelectState(this, true);
+						});
+						
+						sizeColumn.textContent = getFileSize(resultJson["fileSize"]);
+					}
+					
+					row.appendChild(checkboxColumn);
+					row.appendChild(favoriteIconColumn);
+					row.appendChild(fileIconColumn);
+					row.appendChild(nameColumn);
+					row.appendChild(sizeColumn);
+					row.appendChild(creatorColumn);
+					row.appendChild(createDateColumn);
+					row.appendChild(updateDateColumn);
 					row.appendChild(absolutePathColumn);
 					row.appendChild(shareStatusColumn);
 					
@@ -888,7 +1118,6 @@
 			               <input type="text" id="Sdatepicker" class="datepicker" style="width:80px;text-align:center" readonly="readonly">
 			                ~
 			               <input type="text" id="Edatepicker" class="datepicker" style="width:80px;text-align:center" readonly="readonly">
-			               <input type="checkbox" style="margin-left:30px;" id="checkSubSearch" /><label for="checkSubSearch">하위폴더 검색</label>
 			           </td>
 					</tr>
 			       
