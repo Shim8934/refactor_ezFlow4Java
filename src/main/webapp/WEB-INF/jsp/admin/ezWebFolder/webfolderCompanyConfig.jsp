@@ -136,14 +136,14 @@
 				<table class="content" style="width:400px">
 					<tr style="height: 40px;">
 						<th style="width:25%"><spring:message code='ezWebFolder.t130'/></th>
-						<th>
+						<th style="background : #ffff;">
 							<input id="uploadLimit" type="text" style="height: 30px; padding: 0px 5px;" value="<c:out value='${upLimit}'/>" />
 							<span><spring:message code='ezWebFolder.t132' /></span>
 						</th>
 					</tr>
 					<tr style="height: 40px;">
 						<th><spring:message code='ezWebFolder.t131'/></th>
-						<th>
+						<th style="background : #ffff;">
 							<input id="personalLimit" type="text" style="height: 30px; padding: 0px 5px;" value="<c:out value='${persLimit}'/>" />
 							<span><spring:message code='ezWebFolder.t132' /></span>
 						</th>

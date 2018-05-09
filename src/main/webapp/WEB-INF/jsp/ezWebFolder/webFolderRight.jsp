@@ -42,26 +42,24 @@
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
-			var divList          = document.getElementById("dragDropArea");
-			var reheight         = document.documentElement.clientHeight - 200;
-			divList.style.height = reheight + "px";
+			var reheight = document.documentElement.clientHeight - 200;
+			document.getElementById("dragDropArea").style.height = reheight + "px";
 			
-			var divList          = document.getElementById("pageArea");
-			var reheightPage     = document.documentElement.clientHeight - 100;
-			divList.style.height = reheightPage + "px";
-			
+			reheight = document.documentElement.clientHeight - 100;
+			document.getElementById("pageArea").style.height = reheight + "px";
 		};
 		
 		document.onselectstart = function(){
 			return false;
-		}
+		};
 		
 		$(function () {
 			$('#upload').css('display','none');
 			getFileList(folderId);
 			
 			searchContext.setSearchStartEventHandler(function() {
-				getFileList(folderId);
+				$("#idSelect").val("");
+				onFileTypeChange("");
 			});
 			
 			pagination.setPageChangeEventHandler(function() {
@@ -91,9 +89,9 @@
 				}
 			};
 			
-			document.addEventListener("click", listOptionHidden);
-			parent.frames["left"].document.addEventListener("click", listOptionHidden);
-			parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("click", listOptionHidden);
+			document.addEventListener("mouseup", listOptionHidden, true);
+			parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
+			parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("mouseup", listOptionHidden, true);
 			
 			// listoption 클릭 이벤트
 			document.getElementById("webfolderlistoptiondiv").addEventListener("click", function(event) {
@@ -310,7 +308,7 @@
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
 					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'D' : 'F');
-					trElmt.addEventListener("click", function(event) { rowContext.onRowClick(this); });
+					trElmt.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					if (result[i]["fileTypeName"] != 'folder') {
 						trElmt.addEventListener("dblclick", function(event) {
@@ -323,7 +321,7 @@
 					inputElmt.setAttribute("type", "checkbox");
 					inputElmt.setAttribute("value", result[i]["fileId"]);
 					inputElmt.setAttribute("class", "checkBnk");
-					inputElmt.addEventListener("change", function(event) { event.stopPropagation(); rowContext.onCheckboxChange(this); });
+					inputElmt.addEventListener("change", rowContext.onCheckboxChange);
 					inputElmt.addEventListener("click", function(event) { event.stopPropagation(); });
 					inputElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 					
@@ -331,7 +329,7 @@
 					
 					var faImgElmt = document.createElement("img");
 					faImgElmt.setAttribute("class", "none-drag");
-					faImgElmt.addEventListener("click", function() { favoriteContext.onImageClick(this); });
+					faImgElmt.addEventListener("click", favoriteContext.onImageClick);
 					faImgElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 					
 					if (result[i]["favouriteStatus"] == "0") {
@@ -460,11 +458,10 @@
 	        var searchRequirement = searchContext.getCurrentRequirement();
 	        clearDatepicker();
 	        
-	        $('#searchExt').val(searchRequirement.extension);               
-            $('#searchFileName').val(searchRequirement.name);
-            $('#searchCreateName').val(searchRequirement.creatorName);
-            $('#Sdatepicker').val(searchRequirement.startDate);
-            $('#Edatepicker').val(searchRequirement.endDate);
+	        $('#searchExt').val("");               
+            $('#searchFileName').val("");
+            $('#searchCreateName').val("");
+            $('.datepicker').val("");
 	    
 	        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 	        var leftBody = parent.frames["left"].document.body;
@@ -656,10 +653,6 @@
 		}
        
 		function onFileTypeChange(value) {
-			if (value == "all") {
-				value = "";
-			}
-			
 			searchContext.setFileType(value);
 			pagination.setPage(1);
 		}
@@ -718,15 +711,15 @@
 				<li><span onClick="refreshView()"><spring:message code='ezWebFolder.t139'/></span></li>
 				<li><img src="/images/i_bar.gif"></li>
 				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
-				<li style="float:left;">
+				<li style="float:left; height: 28px;">
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value)">
-						<option value="all" data-imagesrc="/images/webfolder/allTypes.png"  selected><spring:message code='ezWebFolder.t191'/></option><!-- 전체 -->
-						<option value="document" data-imagesrc="/images/webfolder/msWord.png"       ><spring:message code='ezWebFolder.t192'/></option><!-- 문서 -->
-						<option value="music" data-imagesrc="/images/webfolder/mp3.png"      ><spring:message code='ezWebFolder.t193'/></option><!-- 음악 -->
-						<option value="video" data-imagesrc="/images/webfolder/mp4.png"      ><spring:message code='ezWebFolder.t194'/></option><!-- 영상 -->
-						<option value="image" data-imagesrc="/images/webfolder/jpg.png"      ><spring:message code='ezWebFolder.t195'/></option><!-- 그림 -->
-						<option value="folder" data-imagesrc="/images/webfolder/fldr.png"    ><spring:message code='ezWebFolder.t213'/></option><!-- 폴더 -->
-						<option value="zip" data-imagesrc="/images/webfolder/zip.png"        ><spring:message code='ezWebFolder.t196'/></option><!-- 압축파일 -->
+						<option value=""><spring:message code='ezWebFolder.t191'/></option>
+						<option value="document"><spring:message code='ezWebFolder.t192'/></option>
+						<option value="music"><spring:message code='ezWebFolder.t193'/></option>
+						<option value="video"><spring:message code='ezWebFolder.t194'/></option>
+						<option value="image"><spring:message code='ezWebFolder.t195'/></option>
+						<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
+						<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
 					</select>
 				</li>
 			</ul>

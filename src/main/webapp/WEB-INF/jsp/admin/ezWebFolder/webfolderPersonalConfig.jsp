@@ -351,20 +351,23 @@
 							<li><a id="btnRefresh" onClick="refreshView();"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 						</ul>
 					</div>
-					<div id="searchPanel" style="z-index: 2000; position: fixed; height: auto; width: 500px; border: 1px solid #666666; background-color: #f2f2f2; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
-						<div style="margin: 10px;">
-							<table style="border-collapse: collapse; width: 100%;">
+					<div id="searchPanel" style="z-index: 2000; position: fixed; height: auto; width: 500px; border: 1px solid #666666; background-color: white; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
+						<div style="margin: 20px;">
+							<table style="border-collapse: collapse; width: 458px;">
 								<tr>
-									<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t23'/></th>
+									<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px">&nbsp;<spring:message code='ezWebFolder.t23'/></th>
 								</tr>
 								<tr>
-									<th style="width: 100px; min-width: 100px; height: 30px;"><spring:message code='ezWebFolder.t141'/></th>
-									<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 358px; width: 358px;">
+									<td class="wfSearchTh2" colspan="2"></td>
+								</tr>
+								<tr>
+									<th style="height: 30px;"><spring:message code='ezWebFolder.t141'/></th>
+									<td style="border: 1px solid #d2d2d2; background-color: #fff;">
 										<select id="searchOption" style="margin-left: 10px;">
 											<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
 											<option value="userName"><spring:message code='ezWebFolder.t143' /></option>
 										</select>
-										<input id="inputSearch" type="text" style="width: 250px; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ccc;">
+										<input id="inputSearch" type="text" style="width: 275px; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ddd;">
 									</td>
 								</tr>
 								<tr>
@@ -391,14 +394,14 @@
 			<div id="mainSetting" style="margin: 10px 0px; height:500px; overflow: auto;">
 				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileStorage">
 					<tr>
-						<th width="10px"><input type="checkbox"></th>
-						<th headers="cn" width="120px" style=""                   ><spring:message code='ezWebFolder.t146'/></th>
-						<th headers="dn" width="120px" style=""                   ><spring:message code='ezWebFolder.t142'/></th>
-						<th headers="un" width="120px" style=""                   ><spring:message code='ezWebFolder.t143'/></th>
-						<th headers="ut" width="40px"  style=""                   ><spring:message code='ezWebFolder.t147'/></th>
-						<th              width="80px"  style="text-align: center;"><spring:message code='ezWebFolder.t148'/></th>
-						<th headers="tc" width="80px"  style="text-align: center;"><spring:message code='ezWebFolder.t149'/></th>
-						<th              width="60px"  style="text-align: center;"><spring:message code='ezWebFolder.t150'/></th>
+						<th width="20px"><input type="checkbox"></th>
+						<th headers="cn" style="width: 20%;"><spring:message code='ezWebFolder.t146'/></th>
+						<th headers="dn" style="width: 20%;"><spring:message code='ezWebFolder.t142'/></th>
+						<th headers="un" style="width: 20%;"><spring:message code='ezWebFolder.t143'/></th>
+						<th headers="ut" style="width: 5%;" ><spring:message code='ezWebFolder.t147'/></th>
+						<th              style="text-align: center; width: 8%;"><spring:message code='ezWebFolder.t148'/></th>
+						<th headers="tc" style="text-align: center; width: 8%;"><spring:message code='ezWebFolder.t149'/></th>
+						<th              style="text-align: center; width: 15%;"><spring:message code='ezWebFolder.t150'/></th>
 					</tr>
 				</table>
 			</div>

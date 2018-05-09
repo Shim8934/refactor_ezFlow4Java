@@ -12,7 +12,7 @@
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
-<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
+<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css"/>
 <!-- date Picker -->
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 <script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
@@ -160,6 +160,9 @@
 		});
 		
 		searchContext.setSearchStartEventHandler(function() {
+			pagination.setPage(1, true);
+			$("#idSelect").val("");
+			searchContext.setFileType("");
 			context.refreshList(true);
 		});
 		
@@ -191,9 +194,9 @@
 			}
 		};
 		
-		document.addEventListener("click", listOptionHidden);
-		parent.frames["left"].document.addEventListener("click", listOptionHidden);
-		parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("click", listOptionHidden);
+		document.addEventListener("mouseup", listOptionHidden, true);
+		parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
+		parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("mouseup", listOptionHidden, true);
 		
 		// listoption 클릭 이벤트
 		dom.listoptiondiv.addEventListener("click", function(event) {
@@ -250,10 +253,10 @@
 					if (result.code == 1) {
 						console.log("<spring:message code='ezWebFolder.t306'/>");
 						return;
-					}else if (result.code == 2) {
+					} else if (result.code == 2) {
 						alert("<spring:message code='ezWebFolder.t305'/>");
 						return;
-					}else if (result.code == 3) {
+					} else if (result.code == 3) {
 						alert("<spring:message code='ezWebFolder.t300'/>");
 						return;
 					}
@@ -307,10 +310,10 @@
 					if (result.code == 1) {
 						console.log("<spring:message code='ezWebFolder.t306'/>");
 						return;
-					}else if (result.code == 2) {
+					} else if (result.code == 2) {
 						alert("<spring:message code='ezWebFolder.t305'/>");
 						return;
-					}else if (result.code == 3) {
+					} else if (result.code == 3) {
 						alert("<spring:message code='ezWebFolder.t300'/>");
 						return;
 					}
@@ -482,9 +485,7 @@
 			row.setAttribute("class", "bnkWebFolder");
 			row.setAttribute("targetId", resultJson[columnMap.id]);
 			row.setAttribute("targetPath", resultJson[columnMap.path]);
-			row.addEventListener("click", function(event) {
-				rowContext.onRowClick(this);
-			});
+			row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 			
 			if (!isFromFolder && isFolder) {
 				row.setAttribute("folderType", targetType.charAt(2));
@@ -500,10 +501,7 @@
 			inputElement.setAttribute("type", "checkbox");
 			inputElement.setAttribute("value", resultJson[columnMap.id]);
 			inputElement.setAttribute("class", "checkBnk");
-			inputElement.addEventListener("change", function(event) {
-				event.stopPropagation();
-				rowContext.onCheckboxChange(this);
-			});
+			inputElement.addEventListener("change", rowContext.onCheckboxChange);
 			inputElement.addEventListener("click", function(event) {
 				event.stopPropagation();
 			});
@@ -515,9 +513,7 @@
 			
 			fileIconElement = document.createElement("img");
 			fileIconElement.setAttribute("class", "none-drag");
-			fileIconElement.addEventListener("click", function() {
-				favoriteContext.onImageClick(this);
-			});
+			fileIconElement.addEventListener("click", favoriteContext.onImageClick);
 			fileIconElement.addEventListener("dblclick", function(event) {
 				event.stopPropagation();
 			});
@@ -731,7 +727,7 @@
 					alert(messages.strLang13);
 				} else {
 					openLeftPanel();
-					DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
+					DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
 				}
 				
 				refreshView();
@@ -776,7 +772,7 @@
 					alert(messages.strLang13);
 				} else {
 					openLeftPanel();
-					DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
+					DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 				}
 			},
 			error: function(error) {
@@ -894,10 +890,6 @@
 	};
 	
 	function onFileTypeChange(value) {
-		if (value == "all") {
-			value = "";
-		}
-		
 		searchContext.setFileType(value);
 		pagination.setPage(1);
 	}
@@ -933,7 +925,7 @@
 </script>
 </head>
 <body class="mainbody" favoritemode>
-	<h1 onclick='context.setListAsFavorite(false);' style="cursor: pointer; display: inline-block;">
+	<h1>
 		즐겨찾기<span id="mailBoxInfo"></span>
 	</h1>
 	<div id="pageArea">
@@ -942,36 +934,30 @@
 		</div>
 		<div id="mainmenu">
 			<ul>
-				<li id="" favoritemenu onClick="fileDownload()"><span><spring:message code='ezWebFolder.t186' /></span></li>
-				<li id="upload" onClick="fileUpload()"><span><spring:message code='ezWebFolder.t187' /></span></li>
-				<li id="" onClick="fileDelete()" favoritemenu><span><spring:message code='ezWebFolder.t274' /></span></li>
-				<li id="" onClick="fileRename()" favoritemenu><span><spring:message code='ezWebFolder.t273' /></span></li>
-				<li id="" onClick="fileMove()"><span><spring:message code='ezWebFolder.t275' /></span></li>
-				<li id="" favoritemenu><img src="/images/i_bar.gif"></li>
-				<li id="" favoritemenu onClick="favoriteContext.toggleAll()"><span><spring:message code='ezWebFolder.t281' /></span></li>
-				<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
-				<li id=""><img src="/images/i_bar.gif"></li>
-				<li id="SearchOption" favoritemenu mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123' /></span></li>
-				<li id=""><img src="/images/i_bar.gif"></li>
-				<li id="" onClick="context.refreshList(true)" favoritemenu><span><spring:message code='ezWebFolder.t139' /></span></li>
-				<li id="" favoritemenu><img src="/images/i_bar.gif"></li>
+				<li favoritemenu onclick="fileDownload()"><span><spring:message code='ezWebFolder.t186'/></span></li>
+				<li id="upload" onclick="fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
+				<li favoritemenu onclick="fileDelete()"><span><spring:message code='ezWebFolder.t274'/></span></li>
+				<li favoritemenu onclick="fileRename()"><span><spring:message code='ezWebFolder.t273'/></span></li>
+				<li onclick="fileMove()"><span><spring:message code='ezWebFolder.t275'/></span></li>
+				<li favoritemenu><img src="/images/i_bar.gif"></li>
+				<li favoritemenu onclick="favoriteContext.toggleAll()"><span><spring:message code='ezWebFolder.t281'/></span></li>
+				<li><img src="/images/i_bar.gif"></li>
+				<li id="SearchOption" favoritemenu mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
+				<li><img src="/images/i_bar.gif"></li>
+				<li favoritemenu onclick="context.refreshList(true)"><span><spring:message code='ezWebFolder.t139'/></span></li>
+				<li favoritemenu><img src="/images/i_bar.gif"></li>
+				<li favoritemenu style="height: 28px;">
+					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value);">
+						<option value=""><spring:message code='ezWebFolder.t191'/></option>
+						<option value="document"><spring:message code='ezWebFolder.t192'/></option>
+						<option value="music"><spring:message code='ezWebFolder.t193'/></option>
+						<option value="video"><spring:message code='ezWebFolder.t194'/></option>
+						<option value="image"><spring:message code='ezWebFolder.t195'/></option>
+						<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
+						<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
+					</select>
+				</li>
 				<li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
-				<li id="right" favoritemenu style="float: left;"><select class="select" id="idSelect" onchange="onFileTypeChange(this.value);">
-						<option value="all" data-imagesrc="/images/webfolder/allTypes.png" selected><spring:message code='ezWebFolder.t191' /></option>
-						<!-- 전체 -->
-						<option value="document" data-imagesrc="/images/webfolder/msWord.png"><spring:message code='ezWebFolder.t192' /></option>
-						<!-- 문서 -->
-						<option value="music" data-imagesrc="/images/webfolder/mp3.png"><spring:message code='ezWebFolder.t193' /></option>
-						<!-- 음악 -->
-						<option value="video" data-imagesrc="/images/webfolder/mp4.png"><spring:message code='ezWebFolder.t194' /></option>
-						<!-- 영상 -->
-						<option value="image" data-imagesrc="/images/webfolder/jpg.png"><spring:message code='ezWebFolder.t195' /></option>
-						<!-- 그림 -->
-						<option value="folder" data-imagesrc="/images/webfolder/fldr.png"><spring:message code='ezWebFolder.t213' /></option>
-						<!-- 폴더 -->
-						<option value="zip" data-imagesrc="/images/webfolder/zip.png"><spring:message code='ezWebFolder.t196' /></option>
-						<!-- 압축파일 -->
-					</select></li>
 			</ul>
 		</div>
 
@@ -994,7 +980,7 @@
 							<col>
 						</colgroup>
 						<tr>
-							<th><spring:message code='ezBoard.t10021' /></th>
+							<th><spring:message code='ezBoard.t10021'/></th>
 							<td><select id="listcount" style="width: 40px; height: 20px;">
 									<option value="10">10</option>
 									<option value="20">20</option>
@@ -1007,33 +993,28 @@
 				</div>
 			</div>
 			<div class="shadow"></div>
-
 		</div>
-		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id=""></div>
-		<div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
-		<div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;"></div>
+		<div id="ResizeBarH" style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;"></div>
+		<div id="ResizeBarW" style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;"></div>
 
 		<div id="dragDropArea">
-			<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
+			<table id="tblFileList" class="mainlist" style="width: 100%; text-algin: center;">
 				<tr>
 					<th style="width: 20px; text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="checkAll"></th>
-					<th style="width: 18px; text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif' /></th>
-					<th style="width: 30px; text-align: center;"><spring:message code='ezWebFolder.t188' /></th>
-					<th style="width: 30%;"><spring:message code='ezWebFolder.t156' /></th>
-					<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157' /></th>
-					<th style="width: 7%;"><spring:message code='ezWebFolder.t189' /></th>
-					<th style="width: 10%;"><spring:message code='ezWebFolder.t190' /></th>
-					<th style="width: 25%; overflow: hidden;"><spring:message code='ezWebFolder.t199' /></th>
+					<th style="width: 18px; text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th>
+					<th style="width: 30px; text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
+					<th style="width: 30%;"><spring:message code='ezWebFolder.t156'/></th>
+					<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th>
+					<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th>
+					<th style="width: 10%;"><spring:message code='ezWebFolder.t190'/></th>
+					<th style="width: 25%; overflow: hidden;"><spring:message code='ezWebFolder.t199'/></th>
 				</tr>
 			</table>
 		</div>
-		<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px; display: none" />
-		<input type="hidden" onclick="fileupload()" />
+		<input id="file" type="file" onchange="onDrop()" multiple="multiple" style="width: 1px; height: 1px; display: none"/>
+		<input type="hidden" onclick="fileupload()"/>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display: none"></iframe>
-		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;" id="mailPanel">&nbsp;</div>
-		<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
-			<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
-		</div>
 		<div id="paginationCorrector"></div>
 		<div id="tblPageRayer"></div>
 	</div>
@@ -1042,44 +1023,44 @@
 		<div class="popupwrap4">
 			<table class="content" style="margin-top: 10px;">
 				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" width="16px" style="vertical-align: middle; padding-bottom: 1px" /> &nbsp;<spring:message code='ezWebFolder.t10' />&nbsp;<spring:message code='ezWebFolder.t123' /></th>
+					<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" width="16px" style="vertical-align: middle; padding-bottom: 1px"/> &nbsp;<spring:message code='ezWebFolder.t10'/>&nbsp;<spring:message code='ezWebFolder.t123'/></th>
 				</tr>
 				<tr>
 					<td style="border-left-color:white;border-right-color:white;height:10px" colspan="2"></td>
 				</tr>
 				<tr>
-					<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>
+					<th style="text-align: center"><spring:message code='ezBoard.t210'/></th>
 					<td><input type="text" id="Sdatepicker" class="datepicker" style="width: 80px; text-align: center" readonly="readonly"> ~ <input type="text" id="Edatepicker" class="datepicker" style="width: 80px; text-align: center" readonly="readonly"></td>
 				</tr>
 
 				<tr>
-					<th style="text-align: center"><spring:message code='ezWebFolder.t152' /></th>
+					<th style="text-align: center"><spring:message code='ezWebFolder.t152'/></th>
 					<!-- 확장자 -->
-					<td><input type="text" id="searchExt" style="width: 99%" value="" name="searchExt"></td>
+					<td><input id="searchExt" type="text" style="width: 99%" value="" name="searchExt"></td>
 				</tr>
 				<tr>
-					<th style="text-align: center"><spring:message code='ezWebFolder.t153' /></th>
+					<th style="text-align: center"><spring:message code='ezWebFolder.t153'/></th>
 					<!-- 파일명 -->
-					<td><input type="text" id="searchFileName" style="width: 99%" value="" name="searchFileName"></td>
+					<td><input id="searchFileName" type="text" style="width: 99%" value="" name="searchFileName"></td>
 				</tr>
 				<tr>
-					<th style="text-align: center"><spring:message code='ezWebFolder.t154' /></th>
+					<th style="text-align: center"><spring:message code='ezWebFolder.t154'/></th>
 					<!-- 작성자 -->
 					<td><input type="text" id="searchCreateName" style="width: 99%" value="" name="searchCreateName"></td>
 				</tr>
 			</table>
-			<br />
+			<br/>
 			<table style="width: 100%">
 				<tr>
-					<td style="text-align: center;"><a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142' /></span></a> <a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a></td>
+					<td style="text-align: center;"><a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142'/></span></a> <a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezAddress.t11'/></span></a></td>
 				</tr>
 			</table>
 		</div>
 	</div>
 	
-	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;" id="mailPanel">&nbsp;</div>
-	<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
-		<iframe src="" style="border: none;" id="iFrameLayer"></iframe>
+	<div id="mailPanel" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;">&nbsp;</div>
+	<div id="iFramePanel" class="layerpopup" style="z-index: 2000; position: absolute; display: none; top: 163.5px; right: 513.5px; height: 250px;">
+		<iframe id="iFrameLayer" src="" style="border: none;"></iframe>
 	</div>
 </body>
 </html>

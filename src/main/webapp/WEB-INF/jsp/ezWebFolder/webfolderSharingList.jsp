@@ -51,7 +51,8 @@
 				getFileList();
 				
 				searchContext.setSearchStartEventHandler(function() {
-					getFileList();
+					$("#fileTypeSelect").val("");
+					searchContext.setFileType("");
 				});
 				
 				searchContext.setFileTypeChangeEventHandler(function() {
@@ -84,9 +85,9 @@
 					}
 				};
 				
-				document.addEventListener("click", listOptionHidden);
-				parent.frames["left"].document.addEventListener("click", listOptionHidden);
-				parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("click", listOptionHidden);
+				document.addEventListener("mouseup", listOptionHidden, true);
+				parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
+				parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("mouseup", listOptionHidden, true);
 				
 				// listoption 클릭 이벤트
 				dom.listoptiondiv.addEventListener("click", function(event) {
@@ -188,7 +189,9 @@
 					detailName.textContent = "공유한목록";
 					detailName.setAttribute("style", "font-size:15px; ");
 					detailName.onclick = function() {
-						getFileList();
+						pagination.setPage(1, true);
+						$("#fileTypeSelect").val("");
+						searchContext.setFileType("");
 					};
 					
 					nameTag.appendChild(detailName);
@@ -307,18 +310,13 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", resultJson["folderFileType"]);
-					row.addEventListener("click", function(event) {
-						rowContext.onRowClick(this);
-					});
+					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");
 					inputElement.setAttribute("type", "checkbox");
 					inputElement.setAttribute("value", resultJson["fileId"]);
 					inputElement.setAttribute("class", "checkBnk");
-					inputElement.addEventListener("change", function(event) {
-						event.stopPropagation();
-						rowContext.onCheckboxChange(this);
-					});
+					inputElement.addEventListener("change", rowContext.onCheckboxChange);
 					inputElement.addEventListener("click", function(event) {
 						event.stopPropagation();
 					});
@@ -330,9 +328,7 @@
 					
 					fileIconElement = document.createElement("img");
 					fileIconElement.setAttribute("class", "none-drag");
-					fileIconElement.addEventListener("click", function() {
-						favoriteContext.onImageClick(this);
-					});
+					fileIconElement.addEventListener("click", favoriteContext.onImageClick);
 					fileIconElement.addEventListener("dblclick", function(event) {
 						event.stopPropagation();
 					});
@@ -740,7 +736,7 @@
 					<li><a onClick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 					<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 					<li><img src="/images/i_bar.gif"></li>
-					<li>
+					<li style="height: 28px;">
 						<select id="fileTypeSelect" class="select" onchange="onFileTypeChange(this.value);">
 							<option value=""><spring:message code='ezWebFolder.t191'/></option>
 							<option value="document"><spring:message code='ezWebFolder.t192'/></option>

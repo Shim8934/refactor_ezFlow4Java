@@ -30,6 +30,41 @@
 			var strLang34  = "<spring:message code='ezWebFolder.t184'/>";
 			var strError   = "<spring:message code='ezWebFolder.t134'/>";
 			var strSuccess = "<spring:message code='ezWebFolder.t27' />";
+			
+			$(function () {
+				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+					closeText: "<spring:message code='main.t3' />",
+					prevText: "<spring:message code='main.t0604' />",
+					nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+					monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+					           "<spring:message code='main.t0627' />"],
+					dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					                "<spring:message code='main.t0627' />"],
+					dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					              "<spring:message code='main.t0627' />"],
+					weekHeader: "Wk",
+					dateFormat: "yy-mm-dd",
+					firstDay: 0,
+					isRTL: false,
+					duration: 200,
+					showAnim: "show",
+					showMonthAfterYear: true
+				};
+				
+				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+			});
 		</script>
 	</head>
 	<body class="mainbody" onload="init('comp');" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
@@ -37,7 +72,7 @@
 			<spring:message code='ezWebFolder.t127'/>
 			<span id="mailBoxInfo"></span>
 		</h1>
-		<div id="companySelect">
+		<div id="companySelect" style="margin-left: 5px;">
 			<span><b><spring:message code='ezWebFolder.t129'/></b></span>
 			<select id="companyList">
 				<c:forEach var="item" items="${list}">
@@ -46,7 +81,7 @@
 			</select>
 		</div>
 		
-		<div id="mainmenu2" style="position: relative;">
+		<div id="mainmenu2" style="position: relative; margin-left: 5px;">
 			<ul>
 				<li id=""><a><span><spring:message code='ezWebFolder.t186'/></span></a></li>
 				<li id="uploadBttn" style="display: none;"><a><span><spring:message code='ezWebFolder.t187'/></span></a></li>
@@ -83,15 +118,18 @@
 			setParameter("<c:out value='${folderId}'/>", "<c:out value='${primary}'/>", "company", "<c:out value='${rootFolder}'/>");
 		</script>
 		
-		<div id="searchPanel"class="wfSearchPanel" style="display:none;">
-			<div style="margin: 10px;">
+		<div id="searchPanel" class="wfSearchPanel" style="display:none;">
+			<div style="margin: 20px;">
 				<table class="content wftable">
 					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t21'/></th>
+						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px">&nbsp;<spring:message code='ezWebFolder.t21'/></th>
+					</tr>
+					<tr>
+						<td class="wfSearchTh2" colspan="2"></td>
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t151'/></th>
-						<td class="wfSearchTd"><input type="text" id="Sdatepicker" style="width:80px; text-align:center" readonly="readonly">~<input type="text" id="Edatepicker" style="width:80px; text-align:center" readonly="readonly"></td>
+						<td class="wfSearchTd"><input type="text" id="Sdatepicker" style="width:80px; text-align:center" readonly="readonly">&nbsp;~&nbsp;<input type="text" id="Edatepicker" style="width:80px; text-align:center" readonly="readonly"></td>
 					</tr>
 					<tr>
 						<th class="wfSearchTh"><spring:message code='ezWebFolder.t152'/></th>
@@ -127,21 +165,21 @@
 			<span class="wfCloseBttn"></span>
 		</div>
 		
-		<div id="progress-wrp" style="display: none;">
+		<div id="progress-wrp" style="display: none; margin-left: 5px;">
 			<div class="progress-bar"></div ><div class="status">0%</div>
 		</div>
 		
-		<div id="dragDropArea">
+		<div id="dragDropArea" style="margin-left: 5px;">
 			<table class="mainlist wftablefile" id="tblFileList">
 				<tr>
-					<th width="10px" ><input type="checkbox"></th>
-					<th headers="ft" width="40px" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
-					<th headers="fn" width="200px"><spring:message code='ezWebFolder.t156'/></th>
-					<th headers="fs" width="60px" style="text-align: center;" ><spring:message code='ezWebFolder.t157'/></th>
-					<th headers="un" width="80px"><spring:message code='ezWebFolder.t189'/></th>
-					<th headers="cd" width="80px" ><spring:message code='ezWebFolder.t190'/></th>
-					<th headers="ud" width="80px" ><spring:message code='ezWebFolder.t198'/></th>
-					<th              width="160px"><spring:message code='ezWebFolder.t199'/></th>
+					<th width="20px" ><input type="checkbox"></th>
+					<th headers="ft" style="text-align: center; width: 20px;"><spring:message code='ezWebFolder.t188'/></th>
+					<th headers="fn" style="width: 30%;"><spring:message code='ezWebFolder.t156'/></th>
+					<th headers="fs" style="text-align: center; width: 6%;" ><spring:message code='ezWebFolder.t157'/></th>
+					<th headers="un" style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th>
+					<th headers="cd" style="width: 10%;"><spring:message code='ezWebFolder.t190'/></th>
+					<th headers="ud" style="width: 10%;"><spring:message code='ezWebFolder.t198'/></th>
+					<th              style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th>
 					<th headers="dt" width="70px" style="text-align: center;"><spring:message code='ezWebFolder.t200'/></th>
 				</tr>
 				

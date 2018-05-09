@@ -917,23 +917,19 @@ public class EzWebFolderGWController_m {
 			String createDate = commonUtil.getDateStringInUTC(format.format(new Date()), offset, true);
 			
 			for (String fileId : fileList) {
-				if (fileId.isEmpty()) {
+				if (fileId.isEmpty() || ezWebFolderService_m.isExistsFavorite(userId, fileId, "F", tenantId)) {
 					continue;
 				}
 				
-				if(!ezWebFolderService_m.isExistsFavorite(userId, fileId, "F", tenantId)) {
-					ezWebFolderService_m.addFavorite(userId, fileId, "F", createDate, tenantId);
-				}
+				ezWebFolderService_m.addFavorite(userId, fileId, "F", createDate, tenantId);
 			}
 			
 			for (String folderId : folderList) {
-				if (folderId.isEmpty()) {
+				if (folderId.isEmpty() || ezWebFolderService_m.isExistsFavorite(userId, folderId, "D", tenantId)) {
 					continue;
 				}
 				
-				if(!ezWebFolderService_m.isExistsFavorite(userId, folderId, "D", tenantId)) {
-					ezWebFolderService_m.addFavorite(userId, folderId, "D", createDate, tenantId);
-				}
+				ezWebFolderService_m.addFavorite(userId, folderId, "D", createDate, tenantId);
 			}
 			
 			result.put("status", "ok");
@@ -969,7 +965,6 @@ public class EzWebFolderGWController_m {
 		String serverName = request.getHeader("x-user-host");
 		String fileListStr = orElse((String) jsonObject.get("fileList"), "");
 		String folderListStr = orElse((String) jsonObject.get("folderList"), "");
-
 		JSONObject result = new JSONObject();
 
 		if (containsNull(serverName, userId) || (containsNull(fileListStr) && containsNull(folderListStr))) {
@@ -988,23 +983,19 @@ public class EzWebFolderGWController_m {
 			int tenantId = userInfo.getTenantId();
 			
 			for (String fileId : fileList) {
-				if (fileId.isEmpty()) {
+				if (fileId.isEmpty() || !ezWebFolderService_m.isExistsFavorite(userId, fileId, "F", tenantId)) {
 					continue;
 				}
 				
-				if(ezWebFolderService_m.isExistsFavorite(userId, fileId, "F", tenantId)) {
-					ezWebFolderService_m.deleteFavorite(userId, fileId, "F", tenantId);
-				}
+				ezWebFolderService_m.deleteFavorite(userId, fileId, "F", tenantId);
 			}
 			
 			for (String folderId : folderList) {
-				if (folderId.isEmpty()) {
+				if (folderId.isEmpty() || !ezWebFolderService_m.isExistsFavorite(userId, folderId, "D", tenantId)) {
 					continue;
 				}
 				
-				if(ezWebFolderService_m.isExistsFavorite(userId, folderId, "D", tenantId)) {
-					ezWebFolderService_m.deleteFavorite(userId, folderId, "D", tenantId);
-				}
+				ezWebFolderService_m.deleteFavorite(userId, folderId, "D", tenantId);
 			}
 			
 			result.put("status", "ok");
@@ -1308,7 +1299,7 @@ public class EzWebFolderGWController_m {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezwebfolder/check-admin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/trashcan-check-admin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkWfAdmin(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host") : "";
 		JSONObject result = new JSONObject();

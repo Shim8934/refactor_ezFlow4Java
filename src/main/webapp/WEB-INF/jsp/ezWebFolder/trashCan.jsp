@@ -68,7 +68,6 @@
 			return false;
 		}
 		
-
 		$(function() {
 			tableView.setTableId("tblFileList");
 			tableView.setTableType("deletedfile");
@@ -88,9 +87,9 @@
 				}
 			};
 			
-			document.addEventListener("click", listOptionHidden);
-			parent.frames["left"].document.addEventListener("click", listOptionHidden);
-			parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("click", listOptionHidden);
+			document.addEventListener("mouseup", listOptionHidden, true);
+			parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
+			parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("mouseup", listOptionHidden, true);
 			
 			// listoption 클릭 이벤트
 			document.getElementById("webfolderlistoptiondiv").addEventListener("click", function(event) {
@@ -116,15 +115,43 @@
 	
 	        $(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $(".datepicker").datepicker('setDate', "");
+	        
+			$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+					closeText: "<spring:message code='main.t3' />",
+					prevText: "<spring:message code='main.t0604' />",
+					nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+					monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+					           "<spring:message code='main.t0627' />"],
+					dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					                "<spring:message code='main.t0627' />"],
+					dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					              "<spring:message code='main.t0627' />"],
+					weekHeader: "Wk",
+					dateFormat: "yy-mm-dd",
+					firstDay: 0,
+					isRTL: false,
+					duration: 200,
+					showAnim: "show",
+					showMonthAfterYear: true
+				};
+				
+				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		});
 	    
 	    function changeValue(value) {
 	    	   searchFileType = value;
-	    	   
-	    	   if( value == "all" ) {
-	    		   searchFileType = "";
-	    	   }
-	    	   
 	    	   currentPage = 1;
 	    	   refreshView();
 	    }
@@ -237,8 +264,7 @@
 	                alert("<spring:message code='ezWebFolder.t164' />");
 	                return;
 	            }
-	        }
-	        else if (type == "quick") {
+	        } else if (type == "quick") {
 	            if (document.getElementById("txt_keyword").value == "") {
 	                alert("<spring:message code='ezWebFolder.t163' />");
 	                return;
@@ -260,7 +286,7 @@
 	         $('#searchCreateName').val(searchCreateName);
 		    
 		        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
-	     	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"left\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	     	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].searchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
 	     	
 	     	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
 	     	
@@ -268,7 +294,6 @@
 	     	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 	     	
 	     	$("#srarchpopup").modal();
-	     	
 	    }
    	   
 	    function searchOptionHidden() {
@@ -297,6 +322,7 @@
          
        function refreshView() {
     	   renderFileList();
+    	   window.parent.frames["left"].drawVolume();
        }
        
        function filePermanentDelete() {
@@ -321,9 +347,9 @@
 				}
 			}
     	   
-    	   showPanel(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
-       
-	       parent.frames["left"].drawVolume();
+    	   showPanel(450, 250, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+          
+    	   refreshView();
        }
 
        function changeCount(value) {
@@ -427,10 +453,10 @@
 				}
 			}
     	   
-    	   var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(450, 470));
+    	   var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(450, 490));
            try { OpenWin.focus(); } catch (e) { }
            
-           parent.frames["left"].drawVolume();
+           refreshView();
        }
     </script>
 </head>
@@ -444,9 +470,9 @@
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 			<li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
 			<li><img src="/images/i_bar.gif"></li>
-			<li id="right" style="float:left;">
+			<li id="right" style="float:left; height: 28px;">
 				<select class="select" id="idSelect" onchange="changeValue(this.value);">
-					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option>
+					<option value=""><spring:message code='ezWebFolder.t191'/></option>
 					<option value="document"><spring:message code='ezWebFolder.t192'/></option>
 					<option value="music"><spring:message code='ezWebFolder.t193'/></option>
 					<option value="video"><spring:message code='ezWebFolder.t194'/></option>
@@ -499,13 +525,13 @@
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
 				<th width="20px" ><input type="checkbox"></th>
-				<th headers="ft" width="40px" ><spring:message code='ezWebFolder.t188'/></th>
-				<th headers="fn" width="160px"><spring:message code='ezWebFolder.t156'/></th>
-				<th headers="fs"  style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center; width :60px;" ><spring:message code='ezWebFolder.t157'/></th>
-				<th headers="un" width="120px"><spring:message code='ezWebFolder.t189'/></th>
-				<th headers="cd" width="80px" ><spring:message code='ezWebFolder.t190'/></th>
-				<th headers="dd" width="80px" ><spring:message code='ezWebFolder.t288'/></th>
-				<th              width="160px"><spring:message code='ezWebFolder.t199'/></th>
+				<th headers="ft" style="text-align: center; width: 20px;"><spring:message code='ezWebFolder.t188'/></th>
+				<th headers="fn" style="width: 30%;"><spring:message code='ezWebFolder.t156'/></th>
+				<th headers="fs" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; width :6%;" ><spring:message code='ezWebFolder.t157'/></th>
+				<th headers="un" style="width: 7%"><spring:message code='ezWebFolder.t189'/></th>
+				<th headers="cd" style="width: 10%"><spring:message code='ezWebFolder.t190'/></th>
+				<th headers="dd" style="width: 10%"><spring:message code='ezWebFolder.t288'/></th>
+				<th              style="width: 25%"><spring:message code='ezWebFolder.t199'/></th>
 			</tr>
 		</table>
 	</div>

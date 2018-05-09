@@ -455,7 +455,7 @@ public class EzWebFolderController_m {
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
 		
-		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-admin/" + user.getId(), null, request, "get", null);
+		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
 		
 		if (!adminCheckResult.get("status").toString().equals("ok")) {
 			
@@ -514,7 +514,7 @@ public class EzWebFolderController_m {
 		param.put("fileList", fileList);               
 		param.put("folderList", folderList);
 		
-		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-admin/" + user.getId(), null, request, "get", null);
+		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
 		
 		if (!adminCheckResult.get("status").toString().equals("ok")) {
 			
@@ -643,7 +643,7 @@ public class EzWebFolderController_m {
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 	
-		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-admin/" + user.getId(), null, request, "get", null);
+		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
 		
 		if (!adminCheckResult.get("status").toString().equals("ok")) {
 			

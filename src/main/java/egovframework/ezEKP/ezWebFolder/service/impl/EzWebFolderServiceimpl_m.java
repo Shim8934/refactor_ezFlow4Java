@@ -1141,12 +1141,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		for (FavoriteVO favoriteVO : result) {
 			targetPath = ezWebFolderService.getFolderPath(favoriteVO.getTargetPath().split("\\|"), primary, tenantId);
-			
-			if (favoriteVO.getTargetType().startsWith("D")) {
-				favoriteVO.setTargetPath(targetPath.substring(0, targetPath.length() - 1));
-			} else {
-				favoriteVO.setTargetPath(targetPath + favoriteVO.getTargetName());
-			}
+			favoriteVO.setTargetPath(targetPath.substring(0, targetPath.length() - 1));
 		}
 		
 		return result;

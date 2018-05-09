@@ -73,6 +73,41 @@
 			window.onresize();
 		}
 		
+		$(function () {
+			$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+				closeText: "<spring:message code='main.t3' />",
+				prevText: "<spring:message code='main.t0604' />",
+				nextText: "<spring:message code='main.t0605' />",
+				currentText: "<spring:message code='main.t0606' />",
+				monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+				             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+				             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+				             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+				monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+				                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+				                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+				                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+				dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+				           "<spring:message code='main.t0627' />"],
+				dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+				                "<spring:message code='main.t0627' />"],
+				dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+				              "<spring:message code='main.t0627' />"],
+				weekHeader: "Wk",
+				dateFormat: "yy-mm-dd",
+				firstDay: 0,
+				isRTL: false,
+				duration: 200,
+				showAnim: "show",
+				showMonthAfterYear: true
+			};
+			
+			$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		});
+		
 		function keyPressPanel(e) {
 			if (e.which == 27 && document.getElementById("mailPanel").style.display == "") {
 				if (document.getElementById("iFramePanel").style.display == "none") {
@@ -297,7 +332,9 @@
 			}
 			
 			openLeftPanel();
-			DivPopUpShow(450, 150, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+			DivPopUpShow(450, 250, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+		
+			refreshView();
 		}
 		
 		function hiddenPanel () {
@@ -341,13 +378,13 @@
 					} else if (data.code == "4") {
 						alert("<spring:message code = 'ezWebFolder.t290'/>");
 					}
-					
-					refreshView();
 				},
 				error : function(error) {
 						alert("<spring:message code = 'ezWebFolder.t292'/>");
 				}
 			})
+			
+			refreshView();
 		}
 		
 		function moveTraschCan() {
@@ -374,6 +411,8 @@
 			
 			var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(420, 490));
 			try { OpenWin.focus(); } catch (e) { }
+			
+			refreshView();
 		}
 		
 		function closeAllPopups() {
@@ -381,12 +420,16 @@
 			document.getElementById("mailPanel").style.display   = "none";
 			document.getElementById("searchPanel").style.display = "none";
 			document.getElementById("iFramePanel").style.display = "none";
+			
+			if (document.getElementById("ui-datepicker-div")) {
+				document.getElementById("ui-datepicker-div").style.display = "none";
+			}
 		}
 	</script>
 </head>
 <body class="mainbody" onkeydown="keyPressPanel(event);">
     <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span></h1>
-	<div id="mainmenu2">
+	<div id="mainmenu2" style="margin-left: 5px;">
 		<ul>
 			<li id=""><a onClick="restoreTrashCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t287'/></span></a></li>
 			<li id=""><a onClick="moveTraschCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t282'/></span></a></li>
@@ -426,17 +469,17 @@
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id=""></div>
 	<div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 	<div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
-	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;overflow:auto;">
+	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px 10px 5px;overflow:auto;">
 		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
 			<tr>
 				<th width="20px" ><input type="checkbox"></th>
-				<th headers="ft" width="40px" ><spring:message code='ezWebFolder.t188'/></th>
-				<th headers="fn" width="160px"><spring:message code='ezWebFolder.t156'/></th>
-				<th headers="fs" width="60px" ><spring:message code='ezWebFolder.t157'/></th>
-				<th headers="un" width="120px"><spring:message code='ezWebFolder.t189'/></th>
-				<th headers="cd" width="80px" ><spring:message code='ezWebFolder.t190'/></th>
-				<th headers="dd" width="80px" ><spring:message code='ezWebFolder.t288'/></th>
-				<th              width="160px"><spring:message code='ezWebFolder.t199'/></th>
+				<th headers="ft" style="text-align: center; width: 20px;"><spring:message code='ezWebFolder.t188'/></th>
+				<th headers="fn" style="width: 30%;"><spring:message code='ezWebFolder.t156'/></th>
+				<th headers="fs" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; width :6%;" ><spring:message code='ezWebFolder.t157'/></th>
+				<th headers="un" style="width: 7%"><spring:message code='ezWebFolder.t189'/></th>
+				<th headers="cd" style="width: 10%"><spring:message code='ezWebFolder.t190'/></th>
+				<th headers="dd" style="width: 10%"><spring:message code='ezWebFolder.t288'/></th>
+				<th              style="width: 25%"><spring:message code='ezWebFolder.t199'/></th>
 			</tr>
 		</table>
 	</div>
@@ -445,16 +488,19 @@
         <iframe style="border:none;" id="iFrameLayer"></iframe>
     </div>
 	<div id="searchPanel"class="wfSearchPanel" style="display:none;">
-		<div style="margin: 10px;">
+		<div style="margin: 20px;">
 			<table class="content" style="margin-top:10px;">  
 				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' /></th>
+					<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px"/>&nbsp;<spring:message code='ezWebFolder.t10' /></th>
+				</tr>
+				<tr>
+					<td class="wfSearchTh2" colspan="2"></td>
 				</tr>
 				<tr>
 					<th style="text-align:center"><spring:message code='ezWebFolder.t190' /></th>
 					<td>
 						<input type="text" class="datepicker" id="enrollStartDate" style="width:80px;text-align:center" readonly="readonly">
-						~
+						&nbsp;~&nbsp;
 						<input type="text" class="datepicker" id="enrollEndDate" style="width:80px;text-align:center" readonly="readonly">
 					</td>
 				</tr>
@@ -462,7 +508,7 @@
 					<th style="text-align:center"><spring:message code='ezWebFolder.t288' /></th>
 					<td>
 						<input type="text" class="datepicker" id="delStartDate" style="width:80px;text-align:center" readonly="readonly">
-						~
+						&nbsp;~&nbsp;
 						<input type="text" class="datepicker" id="delEndDate" style="width:80px;text-align:center" readonly="readonly">
 					</td>
 				</tr>
@@ -483,8 +529,8 @@
 			<table style="width:100%">
 				<tr>
 					<td style="text-align:center;">
-						<a class="imgbtn"><span onClick="search('basic');"><spring:message code='ezAddress.t142' /></span></a>
-						<a class="imgbtn"><span onClick="doLayerPopup();"><spring:message code='ezAddress.t11' /></span></a>
+						<a class="webfolderBttn"><span onclick="search('basic');"><spring:message code='ezWebFolder.t123'/></span></a>
+						<a class="webfolderBttn"><span onclick="doLayerPopup();" ><spring:message code='ezWebFolder.t112'/></span></a>
 					</td>
 				</tr>
 			</table>

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -34,6 +35,9 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 	
 	@Autowired
 	private EzWebFolderService_m ezWebFolderService_m;
+	
+	@Autowired
+	private EzWebFolderAdminService ezWebFolderAdminService;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderServiceImpl_y.class);
 	
@@ -56,6 +60,7 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		String folderId = ezWebFolderAdminService.getMaxFolderID(tenantId);
 		LOGGER.debug("timeUTC: "+ timeUTC);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -72,6 +77,9 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			
 			if (ezWebFolderDAO_y.checkRootFolder(map) == 0) {
 				ezWebFolderDAO_y.insertRootFolder(map);
+				if (idMap.get("type").equals("D")) {
+					ezWebFolderAdminService.insertFolderUser(ezWebFolderAdminService.getMaxFolderUserSeq(tenantId), idMap.get("id"), "dept", folderId, userId, timeUTC, compId, tenantId);
+				}
 				LOGGER.debug("root folder created. idMap: " + idMap);
 			}
 		}
