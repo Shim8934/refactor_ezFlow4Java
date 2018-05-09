@@ -194,9 +194,9 @@
 			}
 		};
 		
-		document.addEventListener("click", listOptionHidden, true);
-		parent.frames["left"].document.addEventListener("click", listOptionHidden, true);
-		parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("click", listOptionHidden, true);
+		document.addEventListener("mouseup", listOptionHidden, true);
+		parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
+		parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("mouseup", listOptionHidden, true);
 		
 		// listoption 클릭 이벤트
 		dom.listoptiondiv.addEventListener("click", function(event) {
