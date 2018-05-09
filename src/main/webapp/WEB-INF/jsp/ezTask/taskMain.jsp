@@ -855,8 +855,8 @@
 		    		$(".row_body").css("background", "");
 		    	}
 		    	
-		    	/* 18-05-02 김민성 - 특수문자 검색 문제 수정..? */
-		    	filter = filter.replace("<", "&lt;").replace(">", "&gt;");
+		    	/* 18-05-07 김민성 - 특수문자 검색 수정 */
+		    	filter = MakeXMLString(filter);
 		    	
 		    	$.ajax({
 					type : "POST",
