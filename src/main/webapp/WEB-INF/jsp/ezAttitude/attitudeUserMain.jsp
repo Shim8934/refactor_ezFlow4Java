@@ -664,7 +664,12 @@
 				    		}
 
 				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i+1)));
-				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
+
+				    		if (json[i].writerName.length > 3) {
+				    			objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerName + "'></td>").text("\u00a0" + json[i].writerName.substring(0,2) + "..."));	
+				    		} else {
+				    			objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
+				    		}
 				    		if (json[i].writerDeptName.length > 6) {
 				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
 				    		} else {
@@ -735,7 +740,12 @@
 
 				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i-j+1)));
 				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].typeName));
-				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
+				    		if (json[i].writerName.length > 3) {
+				    			objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title ='" + json[i].writerName + "'></td>").text("\u00a0" + json[i].writerName.substring(0,2) + "..."));	
+				    		} else {
+				    			objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
+				    		}
+				    		
 				    		if (json[i].writerDeptName.length > 6) {
 				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
 				    		} else {
@@ -935,8 +945,8 @@
 				    <tbody style="max-height:500px; width:500px; display:block; overflow-y:auto;">
 				    	<tr>
 				    		<th style="height:30px">No.</th>
-				    		<th style="height:30px">사원명</th>
-				    		<th style="height:30px">부서명</th>
+				    		<th style="height:30px">이름</th>
+				    		<th style="height:30px">부서</th>
 				    		<th style="height:30px; text-align:center">일시</th>
 						</tr>
 				    </tbody>
@@ -963,8 +973,8 @@
 				    	<tr>
 				    		<th style="height:30px">No.</th>
 				    		<th style="height:30px">근태유형</th>
-				    		<th style="height:30px">사원명</th>
-				    		<th style="height:30px">부서명</th>
+				    		<th style="height:30px">이름</th>
+				    		<th style="height:30px">부서</th>
 				    		<th style="height:30px; text-align:center">일시</th>
 						</tr>
 				    </tbody>
