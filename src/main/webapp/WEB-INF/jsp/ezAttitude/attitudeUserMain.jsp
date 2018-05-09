@@ -666,9 +666,9 @@
 				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i+1)));
 
 				    		if (json[i].writerName.length > 3) {
-				    			objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerName + "'></td>").text("\u00a0" + json[i].writerName.substring(0,2) + "..."));	
+				    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerName + "'></td>").text(json[i].writerName.substring(0,2) + "..."));	
 				    		} else {
-				    			objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
+				    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(json[i].writerName));
 				    		}
 				    		if (json[i].writerDeptName.length > 6) {
 				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
@@ -705,9 +705,11 @@
 			}
 			
 			function searchByDay(t) {
-				var date = $(t).attr('dispdate')
+				var date = $(t).attr('dispdate');
 				var startDate = date + " 00:00:00";
 				var endDate = date + " 23:59:59";
+				
+				document.getElementById("popupDay_title").innerText = "근태내역확인 [" + date + "]";
 				
 				$.ajax({
 					type : "POST",
@@ -741,9 +743,9 @@
 				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i-j+1)));
 				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].typeName));
 				    		if (json[i].writerName.length > 3) {
-				    			objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title ='" + json[i].writerName + "'></td>").text("\u00a0" + json[i].writerName.substring(0,2) + "..."));	
+				    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title ='" + json[i].writerName + "'></td>").text(json[i].writerName.substring(0,2) + "..."));	
 				    		} else {
-				    			objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerName));
+				    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(json[i].writerName));
 				    		}
 				    		
 				    		if (json[i].writerDeptName.length > 6) {
