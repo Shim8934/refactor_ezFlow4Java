@@ -1569,11 +1569,11 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	
 	        var szFromName = "";
 	       
-	        for (count1 = 1; count1 < mailArr.length; count1++) {
-	        	if (count1 - 1 != i) {
+	        for (count1 = 1; count1 <= mailArr.length; count1++) {
+	        	if (count1 - 1 != i) { // tndk
 		            szFromName += mailArr[count1 - 1];
 		            
-		            if (count1 != mailArr.length - 1) {
+		            if (count1 != mailArr.length) {
 		            	szFromName += ";";
 		            }
 	        	}
@@ -1658,10 +1658,10 @@ function CompleteEmailAddress_Complete(rgParams) {
             }
         }
         var szFromName = "";
-        for (count1 = 1; count1 < checkname_cross_dialogArguments[3].length; count1++) {
+        for (count1 = 1; count1 <= checkname_cross_dialogArguments[3].length; count1++) {
         	if (count1 - 1 != checkname_cross_dialogArguments[7]) {
         		szFromName += checkname_cross_dialogArguments[3][count1-1];
-                if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";
+                if (count1 != checkname_cross_dialogArguments[3].length) szFromName += ";";
         	}
         	/*szFromName += checkname_cross_dialogArguments[3][count1];
             if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";*/
