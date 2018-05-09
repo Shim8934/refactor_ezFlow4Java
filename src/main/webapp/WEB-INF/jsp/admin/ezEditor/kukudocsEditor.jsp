@@ -338,12 +338,13 @@
 	            maxHeight : 0,
 	            width : '100%',
 	            height : '100%',
-	            lang : lang,
+	            defaultLanguage : lang,
 	            languagePathURL : '/js/ezEditor/kukudocsEditor/lang/',
 	            defaultFontFamily : defaultFontFamily,
 	            defaultFontSize : defaultFontSize,
 	            fontSize : fontSize,
 	            fontFamily : fontFamily,
+	            defaultTableWidth : 700,
 	            customMagicLineStyle : 'background-color:#888;',
 	            customAlignMenu : customAlignMenu,
 	            useMenuBar : false,
@@ -359,7 +360,6 @@
 	            Mouse_event : {'keyup' : CellCheckField},
 	            Key_event : {'mouseup' : CellCheckField}
 	        });
-			
 		</script>
 	</body>
 </html>

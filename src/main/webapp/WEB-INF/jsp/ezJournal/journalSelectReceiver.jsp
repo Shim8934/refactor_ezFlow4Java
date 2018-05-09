@@ -41,6 +41,7 @@
 	   		//올른쪽 리스트에서 선택된 유저
 	   		var selMainListUserId="";
 	   		var selMainListUserName="";
+	   		var selDeptId = "";
 	   		
 	   		function close_Click(){
 	   			window.close();
@@ -53,6 +54,7 @@
 					setUserList("DEPARTMENT", id,deptName);
 					selMainListUserId = "";
 					selUserId = "";
+					selDeptId = id;
 				  })
 				.jstree({ 
 					'core'   : {'data' : treeContent, 'multiple' : false},
@@ -370,6 +372,19 @@
 	            }
 	        }
 	   		
+	   		function infoview_click() { 
+	            if (selUserId == null || selUserId == "") {
+	                alert("<spring:message code='ezCircular.t148' />");
+	                return;
+	            }
+	            var pheight = window.screen.availHeight;
+	            var pwidth = window.screen.availWidth;
+	            var pTop = (pheight - 450) / 2;
+	            var pLeft = (pwidth - 420) / 2;
+	            
+	            window.open("/ezCommon/showPersonInfo.do?id=" + selUserId + "&dept=" + selDeptId, "", "height=450px,width=420px,  top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	        }
+	   		
 	   		function ok_Click() {
 	   			opener.selReceiver = JSON.stringify(receiverList);
 	   			opener.showReceiver();
@@ -392,7 +407,7 @@
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
         <h1 style="height: 20px;"><spring:message code='ezJournal.t88'/></h1>
-	    <div id="close">
+       <%--  <div id="close">
 	        <ul>
 	            <li><span onclick="ok_Click()"><spring:message code='ezJournal.t15'/></span></li>
 	            <li><span onclick="close_Click()"><spring:message code='ezJournal.t16'/></span></li>
@@ -400,7 +415,7 @@
 	    </div>
 	    <script type="text/javascript">
             selToggleList(document.getElementById("close"), "ul", "li", "0");
-        </script>
+        </script> --%>
 	    <table style="width:100%">
 			<tr>
 				<td>
@@ -413,7 +428,7 @@
 					        	</div>
 					        </div>
 				        	<td id="journalOrgan_content" style="display: none;">
-				        		<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px; padding:0px; border-top: none;">
+				        		<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 1px; padding:0px; border-top: none;">
 				                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
 				                        <table style="margin-top: 3px; width: 100%;">
 				                            <tr>
@@ -437,7 +452,7 @@
 				                                </td>
 				                                <td>
 				                                    <div style="float: right; margin-right: 5px; position: relative;">
-				                                       
+				                                    	<a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>  
 				                                    </div>
 				                                </td> 
 				                                <td></td>   
@@ -530,10 +545,10 @@
 	      		</td> 
 			</tr>
         </table>
-        <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
-		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
-		</div> 
+		<div class="btnposition">
+	    	<a class="imgbtn" onClick="ok_Click()" ><span><spring:message code='ezJournal.t15' /></span></a>
+	    	<a class="imgbtn" onClick="close_Click()" ><span><spring:message code='ezJournal.t16' /></span></a>
+		</div>
 	</body>
 </html>
 
