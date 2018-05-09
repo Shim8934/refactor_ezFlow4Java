@@ -23,17 +23,18 @@
 	   		var lpDeptId;
 	   		var lpDeptName;
 	   		//레이어팝업의 오른쪽의 부서정보
-	   		var lpDepts=[];
-	   		var lpDeptNames=[];
+	   		var lpDepts = [];
+	   		var lpDeptNames = [];
+	   		var lpAuthTypes = [];
 	   		//오른쪽에서 없앨 부서
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
 	   		
-	   		function setLpDeptId(elem){
-	   			lpDeptId = $(elem).attr("targetId");
-	   			lpDeptName = $(elem).attr("targetName");
-	   		}
+// 	   		function setLpDeptId(elem){
+// 	   			lpDeptId = $(elem).attr("targetId");
+// 	   			lpDeptName = $(elem).attr("targetName");
+// 	   		}
 	   	
 	   		function close_Click(){
 	   			window.close();
@@ -43,6 +44,7 @@
 				$('#treeview').on('changed.jstree', function (e, data) {
 					lpDeptId = data.instance.get_node(data.selected).id;
 					lpDeptName = data.instance.get_node(data.selected).text;
+					lpAuthType = "R"; //초기값(기본값)
 				  }).on('dblclick.jstree', function (e, data) {
 						addDeptInLP();
 				}).jstree({ 
@@ -58,13 +60,15 @@
 	   			for (var i = 0; i < lpDepts.length; i++) {
 					if (lpDepts[i] == lpDeptId) {
 		   				alert("선택된 항목입니다.");
-						flag=false;
+						flag = false;
 					}
 				}
 	   			if (flag) {
-		   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
+// 		   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
+		   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" targetAuthType="+lpAuthType+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
 		   			lpDepts.push(lpDeptId);
 		   			lpDeptNames.push(lpDeptName);
+		   			lpAuthTypes.push(lpAuthType);
 	   			}
 	   		}
 	   		
@@ -73,8 +77,11 @@
 	   			var targetDeptId = $(".selectTR").attr("targetId");
 	   			if (targetDeptId) {
 		   			var targetDeptName = $(".selectTR").attr("targetName");
+		   			var targetAuthType = $(".selectTR").attr("targetAuthType");
+		   			
 	   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
 	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
+	   				lpAuthTypes.splice(lpAuthTypes.indexOf(targetAuthType),1);
 	   				$(".selectTR").remove();
 	   			} else {
 	   				alert("부서를 선택해 주세요");
@@ -83,7 +90,8 @@
 	   		
 	   		//오프너의 부서 이름과 아이디 세팅
 	   		function setAuthorViewDept(){
-	   			opener.setDeptName(JSON.stringify(lpDepts),JSON.stringify(lpDeptNames));
+	   			opener.setDeptName(lpDepts, lpDeptNames);
+	   			opener.authRadioSet(lpAuthTypes);
 	   			window.close();
 	   		}
 	   		
@@ -101,8 +109,9 @@
 	   				},"#lplistView tr");
 	   			});
 	   			for (var i = 0; i < opener.deptIds.length; i++) {
-	   				lpDeptId=opener.deptIds[i];
-	   				lpDeptName=opener.deptNames[i];
+	   				lpDeptId = opener.deptIds[i];
+	   				lpDeptName = opener.deptNames[i];
+	   				lpAuthType = opener.authTypes[i];
 	   				addDeptInLP();
 				}
    			});

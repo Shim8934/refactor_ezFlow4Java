@@ -126,7 +126,7 @@ public interface EzAttitudeService {
 
 	public void deleteAttitudeAuth(String selectUserId, int tenantId, String companyId) throws Exception;
 
-	public void saveAttitudeAuthDept(int tenantId, String companyId, String selectedUser, String deptIds) throws Exception;
+	public void saveAttitudeAuthDept(int tenantId, String companyId, String selectedUser, String deptIds, String authTypes) throws Exception;
 
 	public List<JournalAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId, String userId, String isAllDept) throws Exception;
 	

@@ -1874,10 +1874,11 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String selectedUser = request.getParameter("selectedUser");
 			String deptIds = request.getParameter("deptIds");
+			String authTypes = request.getParameter("authTypes");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			ezAttitudeService.saveAttitudeAuthDept(info.getTenantId(), companyId, selectedUser, deptIds);
+			ezAttitudeService.saveAttitudeAuthDept(info.getTenantId(), companyId, selectedUser, deptIds, authTypes);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -2027,22 +2027,50 @@ public class EzAttitudeAdminBOMController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuth.do")
 	public String saveAttitudeAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		if (request.getParameter("userId")!=null) {
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String isAllDept = "";
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+
+		if (userId != null) {
 			
-			model.addAttribute("selectedUser", request.getParameter("userId"));
+			model.addAttribute("selectedUser", userId);
 			model.addAttribute("selectedUserName", request.getParameter("userName"));
 			
-			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezattitude/users/" + request.getParameter("userId") + "/attitude-auth", null, request,"get",null);
+			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/attitude-auth";
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("isAllDept", isAllDept)
+					.queryParam("userId", userId);
+			
+			
+			RestTemplate rest = new RestTemplate();
+			
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 			
 			String status = resultBody.get("status").toString();
 			
-			if (status.equals("ok")) {
-				JSONArray deptList = (JSONArray) resultBody.get("data");
+			JSONArray authorDeptList = new JSONArray();
+			if (status.equals("ok")) {		
+				authorDeptList = (JSONArray) resultBody.get("data");
 				
-				model.addAttribute("deptList", deptList);
+				model.addAttribute("deptList", authorDeptList);
 			}
 		}
+		
 		model.addAttribute("companyId",request.getParameter("companyId"));
+
 		return "admin/ezAttitude/saveAttitudeAuth";
 	}
 	
@@ -2249,12 +2277,9 @@ public class EzAttitudeAdminBOMController {
 		JSONArray authorDeptList = new JSONArray();
 		if (status.equals("ok")) {		
 			authorDeptList = (JSONArray) resultBody.get("data");
-			
-//			model.addAttribute("authorDeptList", authorDeptList);
 		}
 		
 		LOGGER.debug("attitudeAuthorDeptList ended");
-//		return "admin/ezAttitude/attitudeAuthorDeptList";
 		return authorDeptList;
 	}
 	
@@ -2277,6 +2302,7 @@ public class EzAttitudeAdminBOMController {
 		String selectedUser = request.getParameter("selectedUser");
 		String companyId = request.getParameter("companyId");
 		String deptIds = request.getParameter("deptIds");
+		String authTypes = request.getParameter("authTypes");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitude-auth";
@@ -2289,6 +2315,7 @@ public class EzAttitudeAdminBOMController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("selectedUser", selectedUser)
 				.queryParam("deptIds", deptIds)
+				.queryParam("authTypes", authTypes)
 				.queryParam("userId", userInfo.getId());
 		
 		RestTemplate rest = new RestTemplate();
