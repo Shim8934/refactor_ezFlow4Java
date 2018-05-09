@@ -18,6 +18,7 @@
 	            font-size: 9pt;
 	            color: #333333;
 	            padding-left:4.5px;
+	            padding-bottom:2px;
 	        }
 	
 	        .photo_name {
@@ -738,7 +739,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<div style="height:460px;">
+		<div style="height:465px;">
 	    	<table id="tblList">
 	    	</table>
 	    </div>
