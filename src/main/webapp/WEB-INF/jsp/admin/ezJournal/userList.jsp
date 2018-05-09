@@ -51,7 +51,7 @@
 		        </tr>
 		        <c:forEach items="${userList}" var="user">
 			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
-						<td><c:out value="${user.userName }" /></td>
+						<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.userName }" /></td>
 						<td><c:out value="${user.jikwi }" /></td>
 						<td><c:out value="${user.mail }" /></td>
 					</tr>

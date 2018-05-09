@@ -394,9 +394,10 @@
 			        
 			        stompClient.subscribe('/reply/finishVoteForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;
+			        	var brdId = "${brdId}";
 			        	
 			            if (ret == "OK") {							
-			            	document.location.href = "/ezPoll/pollVote.do?qstId=" + qstId;
+			            	document.location.href = "/ezPoll/pollVote.do?qstId=" + qstId + "&brdId=" + brdId;
 					    }
 				    });
 			        

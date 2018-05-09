@@ -996,7 +996,6 @@
 									<td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_PhotoAttachAdd_onclick()" ><spring:message code = 'ezCommunity.t1177' /></span></a></td>
 			                	</c:otherwise>
 		                	</c:choose>
-	                	
 							
       					</tr>
       				</table>
@@ -1004,7 +1003,7 @@
 			</tr>
 			<tr>
     			<td style="height:100%" id="EdtorSize">
-	    			<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do?type=COMMUNITYPHOTO" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe>
+	    			<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto; margin-top:-1px"></iframe>
     			</td>
   			</tr>
   			<tr id="docTR" style="display:none">

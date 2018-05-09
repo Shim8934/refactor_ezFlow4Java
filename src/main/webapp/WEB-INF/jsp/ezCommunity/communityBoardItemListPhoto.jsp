@@ -16,8 +16,8 @@
 	        <!--
 	        .photo_tit {
 	            font-size: 9pt;
-	            font-weight: bold;
 	            color: #333333;
+	            padding-left:4.5px;
 	        }
 	
 	        .photo_name {
@@ -105,7 +105,6 @@
                             listXML += "</tr></table>";
                             listXML += "<table width='146' border='0' cellpadding='1' cellspacing='1' style='margin-top:5px'>";
                             listXML += "<tr><td class='photo_tit' style='cursor:pointer;'  onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'>";
-                            listXML += "<img src='/images/photo_tit.gif' width='17' height='16' align='absbottom'>";
                             
                             var title = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "Title").trim();
                             var oneLineCnt = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ONELINECNT");
@@ -541,8 +540,7 @@
 	            if (newPage <= parseInt(totalPage)) {
 	                window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + newPage.toString() + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + "<c:out value = '${code}' />";
 				}
-	        }
-	
+	        }	
 	
 	        function goPrevPage_onclick(objPage) {
 	            newPage = (parseInt(objPage) - 1) * 10 + 1;
@@ -719,15 +717,13 @@
 	    	<c:if test="${boardInfo.boardID !=  '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
 	    		<ul>
 	        		<li><span onclick="NewItem_onclick()"><spring:message code = 'ezCommunity.t923' /></span></li>
-		            <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 		            <li style="display: none"><span onclick="DeleteItem_onclick()"><spring:message code = 'ezCommunity.t208' /></span></li>
 	        </c:if>
 	        
 	        <c:if test="${boardInfo.gubun != '2' && boardInfo.boardID !=  '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
 	        		<li style="display: none"><span onclick="CopyItem_onclick()"><spring:message code = 'ezCommunity.t911' /></span></li>
 	        </c:if>
-	        
-	        <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+
             <li><span onclick="refresh_onclick()"><spring:message code = 'ezCommunity.t912' /></span></li>
             
             <c:if test="${boardInfo.read_FG == 'true' && boardInfo.boardID !=  '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
