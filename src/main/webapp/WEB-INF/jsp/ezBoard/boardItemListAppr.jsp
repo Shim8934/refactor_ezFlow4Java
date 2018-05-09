@@ -917,6 +917,20 @@
 		                refresh_onclick();
 					}
 		        }
+		        
+		        var applyCount = "0";
+		        
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getApplyCount.do",
+					success: function(text){
+						applyCount = text;
+					}     			
+				});
+		        
+		       	$(window.parent.frames['left'].document.getElementById("applyCount")).text("(" + applyCount + ")");
 		    }
 		    function Appr_onclick_Complete() {
 		

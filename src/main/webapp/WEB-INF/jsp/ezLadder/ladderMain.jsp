@@ -76,26 +76,12 @@
 		
 		</script>
 		<style type="text/css">
-			.effect {
-				width:30px;
-				height:30px;
-			}
-			#mainmenu li {
-				border-color: #ddd;
-				border-radius:0px;
-			}
-			.participantBtn {
-				height:28px;
-				
-				border:1px solid #B5B3B3;
-			}
-			.mainlist th {
-			    cursor: pointer;
-			}
-			
+			.effect {width:30px; height:30px;}
+			#mainmenu li {border-color: #ddd; border-radius:0px;}
+			.participantBtn {height:28px; border:1px solid #B5B3B3;}
+			.mainlist th {cursor: pointer;}
 			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}
 			#mainmenu .participantBtn{cursor: pointer;}
-			
 		</style>
 	</head>
 	<body class="mainbody" style="overflow: hidden;">
@@ -131,7 +117,7 @@
 			</ul>
 		</div>
 		<div style="width:100%; overflow: hidden;">
- 		 <table class="mainlist" style="width:100%;">
+ 		 	<table class="mainlist" style="width:100%;">
 			    <tr class="header" style="height=20px;">
 					<th onClick="listSort(0)" width="50px"><spring:message code="ezLadder.t002"/> <span id="sort_0" ></span></th> 
 					<th onClick="listSort(1)"><spring:message code="ezLadder.t003"/> <span id="sort_1" ></span></th> 

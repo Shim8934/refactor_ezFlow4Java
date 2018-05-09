@@ -388,6 +388,7 @@
 				$(".pollDiv h2").attr("class", "off");
 				$(".myb h2").attr("class", "off");
 				$(".myb").next().attr("class", "off");//마이게시판 하위 ul off
+				$(".ApprDiv").attr("class", "off");
 					
 		            var rootBoardID = ID;
 		            var num = obj.split("TreeCtrl");
@@ -556,7 +557,7 @@
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
 		    }
 		    function ConfigMyBoard() {
-		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(457, 418));
+		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(460, 418));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function MyBoard() {
@@ -572,6 +573,22 @@
 		        window.parent.frames["right"].location.href = "/ezBoard/boardReservedItemList.do";
 		    }
 		    function Apprboard() {
+		    	$(".ApprDiv").attr("class", "on");
+		        
+		    	var applyCount = "0";
+		        
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getApplyCount.do",
+					success: function(text){
+						applyCount = text;
+					}     			
+				});
+		        
+		       	$(document.getElementById("applyCount")).text("(" + applyCount + ")");
+		       	
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemListAppr.do";
 		    }
 	    </script>
@@ -652,6 +669,13 @@
 	            	</c:if>
 	        	</ul> --%>
 		    </c:if>
+		    <c:if test="${applyFlag == 'OK'}">
+	            <div class="ApprDiv" onclick="Apprboard()">
+			        <h2>
+			            <span><spring:message code="ezBoard.t999001" /> <span id="applyCount">(${applyCount})</span></span>
+			        </h2>
+	            </div>
+		    </c:if>
 		    <div class="pollDiv" onclick="Poll_Open(1)" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
 	        	<h2><span><spring:message code="ezBoard.t371" /></span></h2>
 	        </div>
@@ -666,11 +690,6 @@
 	        <h3>
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
-	    <c:if test="${applyFlag == 'OK'}">
-	        <h3 style="border-top:0px">
-	            <span onclick="Apprboard()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t999001" /></span>
-	        </h3>
-	    </c:if>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

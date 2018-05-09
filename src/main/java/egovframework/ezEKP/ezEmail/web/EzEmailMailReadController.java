@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.web;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -44,6 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1007,17 +1009,30 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
 		String realPath = commonUtil.getRealPath(request);
 		pDirPath = realPath + pDirPath;
-		String xmlPath = pDirPath + commonUtil.separator + fileDate + commonUtil.separator + fileId;
-		logger.debug("realFilePath=" + xmlPath);
-		
 		String serverLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(serverLang));
+		String realFilePath = pDirPath + commonUtil.separator + fileDate;
+		
+		//get fileId with extension
+		fileId = fileId.substring(0, 36);
+		File directory = new File(realFilePath);
+		File[] files = directory.listFiles((FileFilter) new PrefixFileFilter(fileId));
+		
+		for (int i = 0; i < files.length; i++) {
+			if (!files[i].getName().endsWith("__.txt")) {
+				fileId = files[i].getName();
+				break;
+			}
+		}
+		
+		realFilePath = realFilePath + commonUtil.separator + fileId;
+		logger.debug("realFilePath=" + realFilePath);
 		
 		//get original filename from text file
 		String fileName = "";
-		File originalNameFile = new File(xmlPath + "__.txt");
+		File originalNameFile = new File(realFilePath + "__.txt");
 		if (!originalNameFile.exists()) {
-			logger.error("originalNameFile not found. filePath=" + xmlPath + "__.txt");
+			logger.error("originalNameFile not found. filePath=" + realFilePath + "__.txt");
 		} else {
 			InputStreamReader isr = null;
 			try {
@@ -1042,7 +1057,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("originalFileName=" + fileName);
 		
 		try {
-			downFile(request, response, xmlPath, fileName);
+			downFile(request, response, realFilePath, fileName);
 		} catch (FileNotFoundException e) {
 			response.setContentType("text/plain; charset=utf-8");
 			response.getWriter().print(egovMessageSource.getMessage("main.t4", locale));
