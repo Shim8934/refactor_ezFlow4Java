@@ -1732,8 +1732,6 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-e.printStackTrace();
-LOGGER.debug(e.getMessage());
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
