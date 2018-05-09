@@ -1480,6 +1480,10 @@ function CompleteEmailAddress(formName, validDIV, iType) {
     var newElem;
     var count1;
     var length;
+    
+    if (mailArr[mailArr.length - 1] == ""){
+    	mailArr.pop(); 
+    }
 
     nLen = mailArr.length;
     for (var i = 0; i < nLen; i++) {
@@ -1541,10 +1545,19 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	            validDIV.appendChild(newElem);
 	        }
 	        var szFromName = "";
-	        for (count1 = 1; count1 < mailArr.length; count1++) {
+	        for (count1 = 1; count1 <= mailArr.length; count1++) {
+	        	if (count1 - 1 != i) { // tndk
+		            szFromName += mailArr[count1 - 1];
+		            
+		            if (count1 != mailArr.length) {
+		            	szFromName += ";";
+		            }
+	        	}
+	        }
+	        /*for (count1 = 1; count1 < mailArr.length; count1++) {
 	            szFromName += mailArr[count1];
 	            if (count1 != mailArr.length - 1) szFromName += ";";
-	        }
+	        }*/
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
 	        return;
@@ -1568,12 +1581,14 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	
 	        var szFromName = "";
 	       
-	        for (count1 = 1; count1 < mailArr.length; count1++) {
-	            szFromName += mailArr[count1];
-	            
-	            if (count1 != mailArr.length - 1) {
-	            	szFromName += ";";
-	            }
+	        for (count1 = 1; count1 <= mailArr.length; count1++) {
+	        	if (count1 - 1 != i) { // tndk
+		            szFromName += mailArr[count1 - 1];
+		            
+		            if (count1 != mailArr.length) {
+		            	szFromName += ";";
+		            }
+	        	}
 	        }
 	        
 	        formName.value = szFromName;
@@ -1654,9 +1669,13 @@ function CompleteEmailAddress_Complete(rgParams) {
             }
         }
         var szFromName = "";
-        for (count1 = 1; count1 < checkname_cross_dialogArguments[3].length; count1++) {
-            szFromName += checkname_cross_dialogArguments[3][count1];
-            if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";
+        for (count1 = 1; count1 <= checkname_cross_dialogArguments[3].length; count1++) {
+        	if (count1 - 1 != checkname_cross_dialogArguments[7]) {
+        		szFromName += checkname_cross_dialogArguments[3][count1-1];
+                if (count1 != checkname_cross_dialogArguments[3].length) szFromName += ";";
+        	}
+        	/*szFromName += checkname_cross_dialogArguments[3][count1];
+            if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";*/
         }
         checkname_cross_dialogArguments[6].value = szFromName;
     }
