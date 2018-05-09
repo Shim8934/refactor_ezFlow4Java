@@ -163,7 +163,11 @@
                 return;
             }
             if ( parent =='#' ) {
-	            alert("최상위 폴더는 수정할 수 없습니다.");
+            	if (folderType == "S") {
+            		alert("공유받은 폴더는 수정할 수 없습니다.");
+            	} else {
+	            	alert("최상위 폴더는 수정할 수 없습니다.");
+            	}
 	            return;
             }else if (folderType == "C") {
             	for ( var i = 0 ; i <test.length; i++) {
@@ -229,7 +233,11 @@
             }
            	
             if ( parent =='#' ) {
-	            alert("최상위 폴더는 이동할 수 없습니다.");
+            	if (folderType == "S") {
+            		alert("공유받은 폴더는 이동할 수 없습니다.");
+            	} else {
+	            	alert("최상위 폴더는 이동할 수 없습니다.");
+            	}
 	            return;
             }else if (folderType == "C") {
             	for ( var i = 0 ; i <test.length; i++) {
@@ -260,6 +268,11 @@
                 return;
             }
            	
+            if (parent == '#' && folderType != "S") {
+	            alert("최상위 폴더는 복사할 수 없습니다.");
+	            return;
+            }
+            
             moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
             moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
             moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
