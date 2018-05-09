@@ -93,10 +93,12 @@
 				    },
 				    success : function(json){
 						alert("삭제되었습니다.");
-						window.close();
 			            try {
 			                window.opener.att_refresh();
-			            } catch (e) { }
+			            } catch (e) { 
+			            	window.opener.getAttitudeMainList(); 
+			            }
+			            window.close();
 				    }
 			    });
 		    }
@@ -127,7 +129,7 @@
 			            try {
 			                window.opener.att_refresh();
 			            } catch (e) {
-			            window.opener.getAttitudeMainList();
+			            	window.opener.getAttitudeMainList();
 		        		}
 			            window.close();
 				    }
@@ -160,7 +162,7 @@
 				    	try {
 			                window.opener.att_refresh();
 			            } catch (e) {
-			            window.opener.getAttitudeMainList();
+			            	window.opener.getAttitudeMainList();
 		        		}
 			            window.close();
 				    }

@@ -1283,7 +1283,7 @@
 				    	<tr>
 				    		<th style="width:120px;height:30px">승인일시</th>
 				  			<th style="height:30px">승인자</th>
-				  			<th style="width:120px;height:30px">신청일시</th>
+				  			<th style="width:120px;height:30px">수정신청일시</th>
 				  			<th style="height:30px">승인상태</th>
 						</tr>
 				    </tbody>
