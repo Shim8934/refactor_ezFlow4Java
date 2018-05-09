@@ -1234,10 +1234,6 @@
 		]]>
 	</insert>
 	
-<<<<<<< HEAD
-	
-	
-	<!-- 추가 by mslim -->
 	<insert id="EzPMSDAO.addBoard" parameterClass="ProjectBoardVO">
 		<![CDATA[
 			INSERT INTO tbl_pms_item_list (
@@ -1254,7 +1250,7 @@
 			)
 		]]>
 	</insert>
-=======
+
 	<insert id="EzPMSDAO.addKanbanOrder" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_PMS_MAINLIST (
@@ -1280,5 +1276,4 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</update>
->>>>>>> 3909689e92f97026126f65b9ca87d23e2f780c91
 </sqlMap>

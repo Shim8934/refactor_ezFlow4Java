@@ -210,6 +210,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		insert ("EzPMSDAO.addTaskGroup", map);
 	}
 	
+	public Long addBoard(ProjectBoardVO vo) {
+		return (Long) insert ("EzPMSDAO.addBoard", vo);
+	}
+	
 	public void addKanbanOrder(Map<String, Object> map) {
 		insert ("EzPMSDAO.addKanbanOrder", map);
 	}
@@ -217,10 +221,5 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void changeKanbanOrder(Map<String, Object> map) {
 		update ("EzPMSDAO.changeKanbanOrder", map);
 	
-	}
-	
-//	By mslim
-	public Long addBoard(ProjectBoardVO vo) {
-		return (Long) insert ("EzPMSDAO.addBoard", vo);
 	}
 }
