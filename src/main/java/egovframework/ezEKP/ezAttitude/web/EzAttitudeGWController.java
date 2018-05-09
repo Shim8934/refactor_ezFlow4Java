@@ -811,7 +811,6 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId + "] started.");
 		
 		JSONObject result = new JSONObject();
-		JSONObject data = new JSONObject();
 		
 		try{
 			String serverName = request.getHeader("x-user-host");
@@ -827,11 +826,9 @@ public class EzAttitudeGWController {
 //				typeInfo.setImgPath("/images/default_pic.jpg");
 //			}
 			
-			data.put("typeInfo", typeInfo);
-			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", data);
+			result.put("data", typeInfo);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

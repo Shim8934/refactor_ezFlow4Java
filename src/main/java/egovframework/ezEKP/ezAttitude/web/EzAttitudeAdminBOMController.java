@@ -422,12 +422,10 @@ public class EzAttitudeAdminBOMController {
 				
 		String status = resultBody.get("status").toString();
 		
-		JSONObject data = new JSONObject();
 		JSONObject typeInfo = new JSONObject();
 		
 		if (status.equals("ok")) {
-			data = (JSONObject) resultBody.get("data");
-			typeInfo = (JSONObject) data.get("typeInfo");
+			typeInfo = (JSONObject) resultBody.get("data");
 			
 			model.addAttribute("typeInfo", typeInfo);
 			model.addAttribute("companyId", companyId);
@@ -438,7 +436,7 @@ public class EzAttitudeAdminBOMController {
 		return "/admin/ezAttitude/saveAttitudeType";
 	}
 	/**
-	 * 아이콘 업로드 함수
+	 * 아이콘 업로드 함수--------------------아이콘 사용안하므로..삭제?
 	 * @return
 	 * @throws Exception
 	 */

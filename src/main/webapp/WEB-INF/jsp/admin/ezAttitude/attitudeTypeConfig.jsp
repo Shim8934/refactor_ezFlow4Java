@@ -206,9 +206,9 @@
 	      	</ul>
 	      	<ul>
 <%-- 	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.t33' /></span></li> --%>
-	      		<li><span onclick="add_type()">추가</span></li>
-	      		<li><span onclick="mod_type()">수정</span></li>
-	      		<li><span onclick="del_type()">삭제</span></li>
+	      		<li><span onclick="add_type()">유형추가</span></li>
+	      		<li><span onclick="mod_type()">유형수정</span></li>
+	      		<li><span onclick="del_type()">유형삭제</span></li>
 	      		<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 	      		<li><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></li>
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
