@@ -52,6 +52,8 @@
 	        
 	        //권한자 리스트 셋팅
 	        function attitudeAuthListSet(result) {
+	        	userList = [];
+	        	
                 var html = "";
                 if (result.length != null && result.length != 0) {
 	                for (var i = 0; i < result.length; i++) {

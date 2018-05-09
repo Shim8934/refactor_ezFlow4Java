@@ -981,34 +981,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		Date startDate = sdf.parse(searchStartDate);
 		cal.setTime(startDate);
 		
-		String tempDateTime = "";
-		
 		List<AdminAttitudeVO> totalList = new ArrayList<AdminAttitudeVO>();
 		
-		/* 2018-05-01 이효진 추후개선 미입력자이거말고 어떠케뽑는지 모르겟어서 */
-		/*while (true) {
-			tempDateTime = sdf.format(cal.getTime());
-			
-			//day_of_week 1 일 2 월 3 화 ...
-			//여기 어떠케해서 휴일때 list조회안하고 add안하게 바꿔야함
-			LOGGER.debug("tempDateTime = " + tempDateTime + " || day = " + cal.get(Calendar.DAY_OF_WEEK));
-			
-			map.put("searchStartDate", commonUtil.getDateStringInUTC(tempDateTime + " 00:00:00", offset, true));
-			map.put("searchEndDate", commonUtil.getDateStringInUTC(tempDateTime + " 23:59:59", offset, true));
-			
-			List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeAbsentList(map);
-			
-			LOGGER.debug("resultList size = " + resultList.size());
-			
-			totalList.addAll(resultList);
-			cal.add(Calendar.DAY_OF_MONTH, 1);
-			
-			if (tempDateTime.equals(searchEndDate)) {
-				break;
-			}
-		};*/
-		
-		////
 		for (String tempDate : checkHoliday(searchStartDate, searchEndDate, userLang, companyId, tenantId)) {
 			LOGGER.debug("tempDateTime = " + tempDate);
 			
