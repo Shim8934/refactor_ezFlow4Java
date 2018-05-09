@@ -668,4 +668,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.getReaderListCount", map);
 	}
 	
+	public void updateMoveOneLineReply(Map<String, Object> map) throws Exception{
+		update("EzBoardDAO.updateMoveOneLineReply", map);
+	}
+	
 }
