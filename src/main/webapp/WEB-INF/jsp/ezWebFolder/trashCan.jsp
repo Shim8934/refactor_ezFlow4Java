@@ -291,6 +291,7 @@
          
        function refreshView() {
     	   renderFileList();
+    	   window.parent.frames["left"].drawVolume();
        }
        
        function filePermanentDelete() {
@@ -316,8 +317,8 @@
 			}
     	   
     	   showPanel(450, 250, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
-       
-	       parent.frames["left"].drawVolume();
+          
+    	   refreshView();
        }
 
        function changeCount(value) {
@@ -424,7 +425,7 @@
     	   var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(450, 490));
            try { OpenWin.focus(); } catch (e) { }
            
-           parent.frames["left"].drawVolume();
+           refreshView();
        }
     </script>
 </head>
