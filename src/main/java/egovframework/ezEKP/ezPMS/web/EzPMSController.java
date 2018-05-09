@@ -447,7 +447,6 @@ public class EzPMSController {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/updateProjectStatus.do")
 	@ResponseBody
 	public String updateProjectStatus(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
@@ -456,7 +455,7 @@ public class EzPMSController {
 		String userId = userInfo.getId();
 		int tenantId = userInfo.getTenantId();
 		String deptId = userInfo.getDeptID();
-		String realStartDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String changeDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
 		String projectIdList = param.get("projectList").toString();
 		String url = "/rest/ezPMS/projects/" + projectIdList + "/status";
@@ -464,7 +463,7 @@ public class EzPMSController {
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
 		param.put("deptId", deptId);
-		param.put("realStartDate", realStartDate);
+		param.put("changeDate", changeDate);
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
 		String status = result.get("status").toString();

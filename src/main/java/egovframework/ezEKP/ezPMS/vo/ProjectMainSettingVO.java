@@ -3,7 +3,7 @@ package egovframework.ezEKP.ezPMS.vo;
 //프로젝트관리 메인 화면 환경설정
 public class ProjectMainSettingVO {
 	// 환경설정 아이디 
-    private String settingId;
+    private Long settingId;
 
     // 테넌트 아이디 
     private int tenantId;
@@ -68,11 +68,11 @@ public class ProjectMainSettingVO {
 		this.userName2 = userName2;
 	}
 
-	public String getSettingId() {
+	public Long getSettingId() {
         return settingId;
     }
 
-    public void setSettingId(String settingId) {
+    public void setSettingId(Long settingId) {
         this.settingId = settingId;
     }
 

@@ -3,19 +3,19 @@ package egovframework.ezEKP.ezPMS.vo;
 //작업이력
 public class TaskLogListVO {
 	 // 이력 아이디 
-    private int logId;
+    private Long logId;
 
     // 테넌트 아이디 
     private int tenantId;
 
     // 프로젝트 아이디 
-    private int projectId;
+    private Long projectId;
 
     // 그룹 아이디 
-    private int groupId;
+    private Long groupId;
 
     // 업무 아이디 
-    private int taskId;
+    private Long taskId;
 
     // 이력 일 
     private String logDate;
@@ -38,11 +38,11 @@ public class TaskLogListVO {
     // 사용자 부서다국어 
     private String userDeptname2;
 
-    public int getLogId() {
+    public Long getLogId() {
         return logId;
     }
 
-    public void setLogId(int logId) {
+    public void setLogId(Long logId) {
         this.logId = logId;
     }
 
@@ -54,27 +54,27 @@ public class TaskLogListVO {
         this.tenantId = tenantId;
     }
 
-    public int getProjectId() {
+    public Long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(int projectId) {
+    public void setProjectId(Long projectId) {
         this.projectId = projectId;
     }
 
-    public int getGroupId() {
+    public Long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }
 
-    public int getTaskId() {
+    public Long getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(int taskId) {
+    public void setTaskId(Long taskId) {
         this.taskId = taskId;
     }
 

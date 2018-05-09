@@ -1171,17 +1171,28 @@
 		]]>	
 	</update>
 	
-	<update id="EzPMS.updateProjectRealStartDate" parameterClass="map">
-		<![CDATA[
+	<update id="EzPMS.updateProjectRealDate" parameterClass="map">
 			UPDATE	
 				tbl_pms_project	
 			SET
-				REAL_START_DATE = #realStartDate#
+		<isEqual property="status" compareValue="P">
+			<![CDATA[
+				REAL_START_DATE = #changeDate#
+			]]>
+		</isEqual>
+		<isNotEqual property="status" compareValue="P">
+		<isEqual property="status" compareValue="C">
+			<![CDATA[
+				REAL_END_DATE = #changeDate#
+			]]>
+		</isEqual>
+		</isNotEqual>
+			<![CDATA[
 			WHERE	
 				PROJECT_ID = #projectId#
 			AND
 				TENANT_ID = #tenantId#
-		]]>
+			]]>
 	</update>
 	
 	<select id="EzPMSDAO.getKanbanOrder" parameterClass="map" resultClass="String">

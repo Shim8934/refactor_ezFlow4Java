@@ -117,7 +117,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int addNewProject(Map<String, Object> map) {
+	public Long addNewProject(Map<String, Object> map) {
 		LOGGER.debug("[SERVICE] addNewProject started.");
 		
 		map.put("progress", 0);
@@ -152,13 +152,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			LOGGER.debug("Error : " + e.getMessage() + " " + e.getStackTrace());
 		}
 		
-		int projectId = ezPMSDAO.addNewProject(map);
+		Long projectId = ezPMSDAO.addNewProject(map);
 		LOGGER.debug("[SERVICE] addNewProject ended.");
 		return projectId;
 	}
 
 	@Override
-	public void deleteProject(int tenantId, int projectId) {
+	public void deleteProject(int tenantId, Long projectId) {
 		LOGGER.debug("Service deleteProject started.");	
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -205,7 +205,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void updateProjectStatus(int projectId, String status, int tenantId, String realStartDate, String planEndDate) {
+	public void updateProjectStatus(Long projectId, String status, int tenantId, String realStartDate, String planEndDate) {
 		LOGGER.debug("updateProjectStatus started.");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
@@ -238,7 +238,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public ProjectInfoVO getProjectDetails(int projectId, String userId, int tenantId, String mode, String lang, String deptId) {
+	public ProjectInfoVO getProjectDetails(Long projectId, String userId, int tenantId, String mode, String lang, String deptId) {
 		LOGGER.debug("getProjectDetail started");
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -327,7 +327,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectMemberVO> getProjectMemberList(int projectId, int roleId, String lang, int tenantId) {
+	public List<ProjectMemberVO> getProjectMemberList(Long projectId, int roleId, String lang, int tenantId) {
 		LOGGER.debug("getProjectMemberList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -344,19 +344,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectTaskVO> getMyTasks(int projectId, String status, int tenantId, String userId, String offset, String lang) {
+	public List<ProjectTaskVO> getMyTasks(Long projectId, String status, int tenantId, String userId, String offset, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ProjectTaskVO> getProjectTasks(int projectId, String status, int tenantId, String offset, String lang) {
+	public List<ProjectTaskVO> getProjectTasks(Long projectId, String status, int tenantId, String offset, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void changeKanbanOrder(int projectId, String userId, String orderStatus, int tenantId) {
+	public void changeKanbanOrder(Long projectId, String userId, String orderStatus, int tenantId) {
 		LOGGER.debug("[SERVICE] changeKanbanOrder started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
@@ -370,7 +370,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
-	public void addKanbanOrder(int projectId, String userId, String orderStatus, int tenantId) {
+	public void addKanbanOrder(Long projectId, String userId, String orderStatus, int tenantId) {
 		LOGGER.debug("[SERVICE] addKanbanOrder started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
@@ -383,13 +383,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
-	public int addFavoriteProject(int projectId, String userId, int tenantId) {
+	public int addFavoriteProject(Long projectId, String userId, int tenantId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		
-		List<Integer> favoriteProjectId = ezPMSDAO.getFavoriteProject(map);
+		List<Long> favoriteProjectId = ezPMSDAO.getFavoriteProject(map);
 		
 		for (int i = 0; i < favoriteProjectId.size(); i++) {
 			if (projectId == favoriteProjectId.get(i)) {
@@ -402,7 +402,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void deleteFavoriteProject(int projectId, String userId, int tenantId) {
+	public void deleteFavoriteProject(Long projectId, String userId, int tenantId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("userId", userId);
@@ -419,7 +419,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<TaskLogListVO> getTaskLogList(int taskId, int groupId, Map<String, Object> map, String offset, String lang, int tenantId) {
+	public List<TaskLogListVO> getTaskLogList(Long taskId, Long groupId, Map<String, Object> map, String offset, String lang, int tenantId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -444,7 +444,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getTaskListCount(String status, String mytask, int projectId, int tenantId) {
+	public int getTaskListCount(String status, String mytask, Long projectId, int tenantId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -456,13 +456,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getMemberCount(int projectId, int roleId, int tenantId) {
+	public int getMemberCount(Long projectId, int roleId, int tenantId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public String getKanbanOrder(int projectId, String userId, int tenantId) {
+	public String getKanbanOrder(Long projectId, String userId, int tenantId) {
 		LOGGER.debug("[SERVICE] getKanbanOrder started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -595,13 +595,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectMemberScheduleVO> getMemberScheduleList(int projectId, String startDate, String endDate) {
+	public List<ProjectMemberScheduleVO> getMemberScheduleList(Long projectId, String startDate, String endDate) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ProjectTaskVO getTaskDetails(int taskId) {
+	public ProjectTaskVO getTaskDetails(Long taskId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -613,7 +613,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int deleteTask(int taskId) {
+	public int deleteTask(Long taskId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -654,7 +654,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public ProjectGroupVO getGroupDetails(int groupId) {
+	public ProjectGroupVO getGroupDetails(Long groupId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -666,13 +666,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int deleteGroup(int groupId) {
+	public int deleteGroup(Long groupId) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public String getUserRole(String userId, int projectId, int tenantId) {
+	public String getUserRole(String userId, Long projectId, int tenantId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -702,7 +702,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId, String onlyGroup) {
+	public List<ProjectTaskTreeVO> getProjectTaskTree(Long projectId, String onlyGroup) {
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("project_Id", projectId);
@@ -836,7 +836,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 	
 	@Override
-	public List<ProjectMemberVO> getProjectMember(int projectId, int roleId, String lang) {
+	public List<ProjectMemberVO> getProjectMember(Long projectId, int roleId, String lang) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -888,7 +888,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void deleteProjectMember(int projectId, int tenantId) {
+	public void deleteProjectMember(Long projectId, int tenantId) {
 		LOGGER.debug("[SERVICE] deleteProjectMember Started");
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("projectId", projectId);
@@ -900,14 +900,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void updateProjectRealStartDate(int projectId, int tenantId, String realStartDate) {
+	public void updateProjectRealDate(Long projectId, int tenantId, String changeDate, String status) {
 		LOGGER.debug("[SERVICE] updateProjectRealStartDate Started");
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
-		map.put("realStartDate", realStartDate);
+		map.put("changeDate", changeDate);
+		map.put("status", status);
 		
-		ezPMSDAO.updateProjectRealStartDate(map);
+		ezPMSDAO.updateProjectRealDate(map);
 		LOGGER.debug("[SERVICE] updateProjectRealStartDate Ended");
 	}
 }

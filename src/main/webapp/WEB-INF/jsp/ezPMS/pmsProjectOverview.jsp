@@ -111,26 +111,26 @@ function ableToChangeStatus() {
 	switch(status){
 		case "L" :
 		case "P" :
-			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span onclick='changeStatus(C)'>";
+			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='C' onclick='changeStatus(this)'>";
 			strHTML += "프로젝트 완료";
 			strHTML += "</span></a> ";
-			strHTML += "<a class='imgbtn'><span onclick='changeStatus(S)'>";
+			strHTML += "<a class='imgbtn'><span id='S' onclick='changeStatus(this)'>";
 			strHTML += "프로젝트 보류";
 			strHTML += "</span></a>";
 			break;
 		case "W" :
-			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span onclick='changeStatus(P)'>";
+			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='P' onclick='changeStatus(this)'>";
 			strHTML += "프로젝트 진행";
 			strHTML += "</span></a> ";
-			strHTML += "<a class='imgbtn'><span onclick='changeStatus(S)'>";
+			strHTML += "<a class='imgbtn'><span id='S' onclick='changeStatus(this)'>";
 			strHTML += "프로젝트 보류";
 			strHTML += "</span></a>";
 			break;
 		case "S" :
-			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span onclick='changeStatus(P)'>";
+			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='P' onclick='changeStatus(this)'>";
 			strHTML += "프로젝트 진행";
 			strHTML += "</span></a> ";	
-			strHTML += "<a class='imgbtn'><span onclick='changeStatus(C)'>";
+			strHTML += "<a class='imgbtn'><span id='C' onclick='changeStatus(this)'>";
 			strHTML += "프로젝트 완료";
 			strHTML += "</span></a>";
 			break;
@@ -166,7 +166,7 @@ function setKanbanList() {
 		strHTML += "</div>";
 		strHTML += "</div>";
 	}
-	console.log(strHTML);
+	
 	$("#kanbanArea").html(strHTML);
 	
 	CurrentHeight = $(window).height()-100;
@@ -227,6 +227,52 @@ function changeTab(clickTabId, nowTabAttr) {
 	$("#"+nowTabAttr, parent.document).attr("class", "tab");
 	$("#"+clickTabId, parent.document).attr("class", "tabon");
 }
+
+function changeStatus(status) {
+	console.log($(status).attr("id"));
+	var changeStatus = $(status).attr("id");
+	var nowStatus = status;
+	var response;
+	
+	if (changeStatus == "C") {
+		response = confirm("프로젝트를 완료하면 하위 작업이 모두 완료됩니다. \n 진행하시곘습니까?");
+	} else {
+		response = confirm("프로젝트의 상태를 변경하시겠습니까?");
+	}
+	
+	if (response == true) {
+		data = {
+				nowStatus : nowStatus,
+				status : changeStatus,
+				projectList : projectId
+			}
+			
+			$.ajax({
+				type : "POST",
+				dataType: "text",
+				contentType: "application/json; charset=UTF-8",
+				url : "/ezPMS/updateProjectStatus.do",
+				data :JSON.stringify(data),
+				success : function(result) {
+					if (result == "permitted") {
+						if (changeStatus == "P") {
+							alert("상태가 변경되었습니다. \n현재일보다 마감일이 빠른 프로젝트는 지연 프로젝트 상태로 변경됩니다.");
+						} else {
+							alert("상태가 변경되었습니다.");
+						}
+						
+						window.location.reload();
+					} else {
+						alert("프로젝트 담당자만 상태를 변경할 수 있습니다.");
+						return;
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+				}
+			});
+	}
+}
+
 </script>
 <style type="text/css">
 #kanbanArea {

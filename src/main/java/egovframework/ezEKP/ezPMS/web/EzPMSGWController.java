@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
@@ -140,7 +141,7 @@ public class EzPMSGWController {
 			project.put("status", "W");
 			project.put("upperGroupId", 0);
 			
-			int projectId = ezPMSService.addNewProject(project);
+			Long projectId = ezPMSService.addNewProject(project);
 			
 			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json.get("managerList");
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("participantList"));
@@ -218,7 +219,7 @@ public class EzPMSGWController {
 			
 			if (roleCheck.equals("")) {
 				for (int i = 0; i < projectIdList.length; i++) {
-					ezPMSService.deleteProject(info.getTenantId(),Integer.parseInt(projectIdList[i]));	
+					ezPMSService.deleteProject(info.getTenantId(),Long.parseLong(projectIdList[i]));	
 				}
 				roleCheck = "permitted";
 			}
@@ -332,7 +333,7 @@ public class EzPMSGWController {
 			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 			String deptId = info.getDeptId();
 			String nowStatus = request.getParameter("nowStatus");
-			String realStartDate = request.getParameter("realStartDate");
+			String changeDate = request.getParameter("changeDate");
 			
 			LOGGER.debug("status : " + status + ", " + "userId : " + ", tenantId : " + tenantId + ", deptId : " + deptId);
 			
@@ -360,13 +361,22 @@ public class EzPMSGWController {
 				roleCheck = "permitted";
 				
 				for (int i = 0; i < projectIdList.length; i++) {
-					ProjectInfoVO project = ezPMSService.getProjectDetails(Integer.parseInt(projectIdList[i]), userId, info.getTenantId(), "new", info.getLang(), deptId);
+					ProjectInfoVO project = ezPMSService.getProjectDetails(Long.parseLong(projectIdList[i]), userId, info.getTenantId(), "new", info.getLang(), deptId);
 					String planEndDate = project.getPlanEndDate();
 					
-					ezPMSService.updateProjectStatus(Integer.parseInt(projectIdList[i]), status, info.getTenantId(), realStartDate, planEndDate);	
+					ezPMSService.updateProjectStatus(Long.parseLong(projectIdList[i]), status, info.getTenantId(), changeDate, planEndDate);	
 					
 					if (nowStatus.equals("W") && status.equals("P")) {
-						ezPMSService.updateProjectRealStartDate(Integer.parseInt(projectIdList[i]), info.getTenantId(), realStartDate);
+						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status);
+					}
+					
+					if (status.equals("C")) {
+						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status);
+						
+						ProjectTaskVO task = new ProjectTaskVO();
+						
+						
+						ezPMSService.updateTask(task);
 					}
 				}
 			}
@@ -389,7 +399,7 @@ public class EzPMSGWController {
 	//프로젝트 개요 정보 호출
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/userId/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getProjectOverview(@PathVariable int projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+	public JSONObject getProjectOverview(@PathVariable Long projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -431,7 +441,7 @@ public class EzPMSGWController {
 	//프로젝트 수정
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject updateProject(@RequestBody JSONObject json, @PathVariable int projectId, HttpServletRequest request) throws Exception {
+	public JSONObject updateProject(@RequestBody JSONObject json, @PathVariable Long projectId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -442,7 +452,7 @@ public class EzPMSGWController {
 			int tenantId = info.getTenantId();
 			
 			ProjectInfoVO project = new ProjectInfoVO();
-			project.setProjectId(Integer.parseInt(request.getParameter("projectId")));
+			project.setProjectId(Long.parseLong(request.getParameter("projectId")));
 			project.setProjectName(request.getParameter("projectName"));
 			project.setWeightInput(Integer.parseInt(request.getParameter("weightInput")));
 			project.setPlanEndDate(request.getParameter("planEndDate"));
@@ -493,7 +503,7 @@ public class EzPMSGWController {
 	//프로젝트 역할별 멤버 보기
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/roles/{roleId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getProjectMember(@PathVariable int projectId, @PathVariable int roleId, HttpServletRequest request) throws Exception {
+	public JSONObject getProjectMember(@PathVariable Long projectId, @PathVariable int roleId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -525,7 +535,7 @@ public class EzPMSGWController {
 	//칸반 순서 변경
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/userId/{userId}/order", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject changeKanbanOrder(@PathVariable int projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+	public JSONObject changeKanbanOrder(@PathVariable Long projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "/order] started.");
 		
 		JSONObject result = new JSONObject();
@@ -572,10 +582,10 @@ public class EzPMSGWController {
 			int addResult = 0;
 			
 			if (projectIdList.length == 1) {
-				addResult = ezPMSService.addFavoriteProject(Integer.parseInt(projectIdList[0]), userId, info.getTenantId());
+				addResult = ezPMSService.addFavoriteProject(Long.parseLong(projectIdList[0]), userId, info.getTenantId());
 			} else {
 				for (int i = 0; i < projectIdList.length; i++) {
-					ezPMSService.addFavoriteProject(Integer.parseInt(projectIdList[i]), userId, info.getTenantId());
+					ezPMSService.addFavoriteProject(Long.parseLong(projectIdList[i]), userId, info.getTenantId());
 				}
 				addResult = 0;
 			}
@@ -609,7 +619,7 @@ public class EzPMSGWController {
 			String[] projectIdList = projectId.split("_");
 			
 			for (int i = 0; i < projectIdList.length; i++) {
-				ezPMSService.deleteFavoriteProject(Integer.parseInt(projectIdList[i]), userId, info.getTenantId());
+				ezPMSService.deleteFavoriteProject(Long.parseLong(projectIdList[i]), userId, info.getTenantId());
 			}
 			
 			result.put("status", "ok");
@@ -659,7 +669,7 @@ public class EzPMSGWController {
 	//작업이력 리스트 호출
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/logs", method = RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getTaskLogList(@PathVariable int projectId, HttpServletRequest request) throws Exception {
+	public JSONObject getTaskLogList(@PathVariable Long projectId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/logs] started.");
 		
 		JSONObject result = new JSONObject();
@@ -669,8 +679,8 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			int taskId = Integer.parseInt(request.getParameter("taskId"));
-			int groupId = Integer.parseInt(request.getParameter("groupId"));
+			Long taskId = Long.parseLong(request.getParameter("taskId"));
+			Long groupId = Long.parseLong(request.getParameter("groupId"));
 			
 			Map<String, Object> search = new HashMap<>();
 			
@@ -750,7 +760,7 @@ public class EzPMSGWController {
 	//업무 리스트 개수 호출
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/tasks/count", method = RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getTaskListCount(@PathVariable int projectId, HttpServletRequest request) throws Exception {
+	public JSONObject getTaskListCount(@PathVariable Long projectId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/"+ projectId + "/tasks/count] started.");
 		
 		JSONObject result = new JSONObject();
@@ -816,7 +826,7 @@ public class EzPMSGWController {
 	//멤버 수 호출
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/role/{roleId}/count", method = RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getMemberCount(@PathVariable int projectId, @PathVariable int roleId, HttpServletRequest request) throws Exception {
+	public JSONObject getMemberCount(@PathVariable Long projectId, @PathVariable int roleId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/"+ projectId + "/role/" + roleId + "/count] started.");
 		
 		JSONObject result = new JSONObject();

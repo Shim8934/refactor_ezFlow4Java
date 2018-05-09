@@ -24,43 +24,43 @@ public interface EzPMSService {
 
 	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status, Map<String, Object> search, String offset, String lang);
 	
-	public int addNewProject(Map<String, Object> map);
+	public Long addNewProject(Map<String, Object> map);
 	
-	public void deleteProject(int tenantId, int projectId);
+	public void deleteProject(int tenantId, Long projectId);
 	
 	public void updateMainSetting(ProjectMainSettingVO project, int tenantId);
 	
-	public void updateProjectStatus(int projectId, String status, int tenantId, String realStartDate, String planEndDate);
+	public void updateProjectStatus(Long projectId, String status, int tenantId, String realStartDate, String planEndDate);
 	
-	public ProjectInfoVO getProjectDetails(int projectId, String userId, int tenantId, String mode, String lang, String deptId);
+	public ProjectInfoVO getProjectDetails(Long projectId, String userId, int tenantId, String mode, String lang, String deptId);
 	
 	public void updateProject(ProjectInfoVO project, int tenantId);
 	
-	public List<ProjectMemberVO> getProjectMember(int projectId, int roleId, String lang);
+	public List<ProjectMemberVO> getProjectMember(Long projectId, int roleId, String lang);
 	
-	public List<ProjectTaskVO> getMyTasks(int projectId, String status, int tenantId, String userId, String offset, String lang);
+	public List<ProjectTaskVO> getMyTasks(Long projectId, String status, int tenantId, String userId, String offset, String lang);
 	
-	public List<ProjectTaskVO> getProjectTasks(int projectId, String status, int tenantId, String offset, String lang);
+	public List<ProjectTaskVO> getProjectTasks(Long projectId, String status, int tenantId, String offset, String lang);
 	
-	public void changeKanbanOrder(int projectId, String userId, String orderStatus, int tenantId);
+	public void changeKanbanOrder(Long projectId, String userId, String orderStatus, int tenantId);
 	
-	public int addFavoriteProject(int projectId, String userId, int tenantId);
+	public int addFavoriteProject(Long projectId, String userId, int tenantId);
 	
-	public void deleteFavoriteProject(int projectId, String userId, int tenantId);
+	public void deleteFavoriteProject(Long projectId, String userId, int tenantId);
 	
 	public void addTaskLog(TaskLogListVO taskLog, int tenantId, String userId);
 	
-	public List<TaskLogListVO> getTaskLogList(int taskId, int groupId, Map<String, Object> map, String offset, String lang, int tenantId);
+	public List<TaskLogListVO> getTaskLogList(Long taskId, Long groupId, Map<String, Object> map, String offset, String lang, int tenantId);
 	
 	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang);
 	
-	public int getTaskListCount(String status, String mytask, int projectId, int tenantId);
+	public int getTaskListCount(String status, String mytask, Long projectId, int tenantId);
 	
 	public int getTaskLogListCount(TaskLogListVO taskLog, int tenantId);
 	
-	public int getMemberCount(int projectId, int roleId, int tenantId);
+	public int getMemberCount(Long projectId, int roleId, int tenantId);
 	
-	public String getKanbanOrder(int projectId, String userId, int tenantId);
+	public String getKanbanOrder(Long projectId, String userId, int tenantId);
 	
 	public List<String> getProjectNameList(String userId, int tenantId);
 	
@@ -70,27 +70,27 @@ public interface EzPMSService {
 	
 	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList);
 	
-	public List<ProjectMemberScheduleVO> getMemberScheduleList(int projectId, String startDate, String endDate);
+	public List<ProjectMemberScheduleVO> getMemberScheduleList(Long projectId, String startDate, String endDate);
 	
-	public ProjectTaskVO getTaskDetails(int taskId);
+	public ProjectTaskVO getTaskDetails(Long taskId);
 	
 	public int updateTask(ProjectTaskVO task);
 	
-	public int deleteTask(int taskId);
+	public int deleteTask(Long taskId);
 	
 	public void addGroup(Map<String, Object> map);
 	
-	public ProjectGroupVO getGroupDetails(int groupId);
+	public ProjectGroupVO getGroupDetails(Long groupId);
 	
 	public int updateGroup(ProjectGroupVO group);
 	
-	public int deleteGroup(int groupId);
+	public int deleteGroup(Long groupId);
 	
-	public String getUserRole(String userId, int projectId, int tenantId);
+	public String getUserRole(String userId, Long projectId, int tenantId);
 	
 	public ProjectMainSettingVO getProjectMainSetting(String userId, int tenantId, String userIdType);
 	
-	public List<ProjectTaskTreeVO> getProjectTaskTree(int projectId, String onlyGroup);
+	public List<ProjectTaskTreeVO> getProjectTaskTree(Long projectId, String onlyGroup);
 
 	public List<ProjectUserVO> getDeptUserList(int tenantId, String key, String value, String lang) throws Exception;
 
@@ -98,7 +98,7 @@ public interface EzPMSService {
 
 	public List<DeptViewVO> getDeptViewList(String userId, String companyId, int tenantId, String lang) throws Exception;
 	
-	public List<ProjectMemberVO> getProjectMemberList(int projectId, int roleId, String lang, int tenantId);
+	public List<ProjectMemberVO> getProjectMemberList(Long projectId, int roleId, String lang, int tenantId);
 
 	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId);
 
@@ -110,10 +110,10 @@ public interface EzPMSService {
 	
 	public List<TaskMemberVO> getTaskMemberList(int tenantId, long taskId, String lang);
 
-	public void deleteProjectMember(int projectId, int tenantId);
+	public void deleteProjectMember(Long projectId, int tenantId);
 
-	public void updateProjectRealStartDate(int projectId, int tenantId, String realStartDate);
+	public void updateProjectRealDate(Long projectId, int tenantId, String realStartDate, String status);
 
-	public void addKanbanOrder(int projectId, String userId, String orderStatus, int tenantId);
+	public void addKanbanOrder(Long projectId, String userId, String orderStatus, int tenantId);
 
 }
