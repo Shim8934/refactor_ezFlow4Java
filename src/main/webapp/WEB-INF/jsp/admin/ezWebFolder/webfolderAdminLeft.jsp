@@ -115,6 +115,10 @@
 				clearToggle();
 				getDepartmentData(companyId, "", "folderTree2");
 			}
+			
+			function closePop() {
+				window.parent.frames["right"].closeAllPopups();
+			}
 		</script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -164,7 +168,7 @@
   			<ul>
 			</ul>
 		</div>
-		<div id="bnkBlockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;"></div>
+		<div id="bnkBlockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;" onclick="closePop();"></div>
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		</script>

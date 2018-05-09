@@ -212,23 +212,29 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/addShare.do", method=RequestMethod.POST)
-	public @ResponseBody String addShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody JSONObject jsonParam) throws Exception {
+	public @ResponseBody String addShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("addShare started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		String folderFileId = (String) jsonParam.get("folderFileId");
-		String folderFileType = (String) jsonParam.get("folderFileType");
+		String folderFileId = request.getParameter("folderFileId");
+		String folderFileType = request.getParameter("folderFileType");
+		String deptList = request.getParameter("deptList");
+		String userList = request.getParameter("userList");
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
 		
 		if (((String) resultBody.get("status")).equals("ok")) {
 			JSONObject shareInfo = (JSONObject) resultBody.get("data");
 			
+			Map<String, Object> param = new HashMap<>();
+			param.put("deptList", deptList);
+			param.put("userList", userList);
+			
 			if (shareInfo == null) {
-				resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", null, request, "post", jsonParam);
+				resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, param, request, "post", null);
 			} else {
-				resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "put", jsonParam);
+				resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, param, request, "put", null);
 			}
 		}
 		
@@ -237,129 +243,72 @@ public class EzWebFolderController_m {
 	}
 	
 	@RequestMapping(value="/ezWebFolder/deleteShare.do", method=RequestMethod.POST)
-	public @ResponseBody String deleteShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody List<Map<String,String>> jsonParam) throws Exception {
+	public @ResponseBody String deleteShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("deleteShare started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		JSONObject resultJson = new JSONObject();
+		String fileList = orElse(request.getParameter("fileList"), "");
+		String folderList = orElse(request.getParameter("folderList"), "");
 		
-		if (jsonParam == null || jsonParam.size() == 0) {
-			resultJson.put("status", "error");
-			resultJson.put("code", "1");
-			return resultJson.toString();
+		Map<String, Object> param = new HashMap<>();
+		param.put("fileList", fileList);
+		param.put("folderList", folderList);
+		
+		JSONObject resultBody = checkPermission(request, userInfo.getId(), fileList, folderList);
+		
+		if (((String) resultBody.get("status")).equals("ok")) {
+			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", param, request, "delete", null);
 		}
-		
-		String status = "ok";
-		String code = "0";
-		
-		JSONObject resultBody = null;
-		Map<String, String> obj = null;
-		String folderFileId = null;
-		String folderFileType = null;
-		
-		for (int i = 0; i < jsonParam.size(); i++) {
-			obj = (Map<String, String>) jsonParam.get(i);
-			folderFileId = obj.get("folderFileId");
-			folderFileType = obj.get("folderFileType");
-			
-			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "delete", null);
-			
-			if (!((String) resultBody.get("status")).equals("ok")) {
-				status = "error";
-				code = "2";
-			}
-		}
-		
-		resultJson.put("status", status);
-		resultJson.put("code", code);
 		
 		logger.debug("deleteShare ended.");
-		return  resultJson.toString();
+		return  resultBody.toString();
 	}
 	
 	@RequestMapping(value="/ezWebFolder/hideShare.do", method=RequestMethod.POST)
-	public @ResponseBody String hideShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody List<Map<String,String>> jsonParam) throws Exception {
+	public @ResponseBody String hideShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("hideShare started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		JSONObject resultJson = new JSONObject();
+		String fileList = orElse(request.getParameter("fileList"), "");
+		String folderList = orElse(request.getParameter("folderList"), "");
 		
-		if (jsonParam == null || jsonParam.size() == 0) {
-			resultJson.put("status", "error");
-			resultJson.put("code", "1");
-			return resultJson.toString();
+		Map<String, Object> param = new HashMap<>();
+		param.put("fileList", fileList);
+		param.put("folderList", folderList);
+		
+		JSONObject resultBody = checkPermission(request, userInfo.getId(), fileList, folderList);
+		
+		if (((String) resultBody.get("status")).equals("ok")) {
+			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide", param, request, "post", null);
 		}
-		
-		String status = "ok";
-		String code = "0";
-		
-		JSONObject resultBody = null;
-		Map<String, String> obj = null;
-		String folderFileId = null;
-		String folderFileType = null;
-		
-		for (int i = 0; i < jsonParam.size(); i++) {
-			obj = (Map<String, String>) jsonParam.get(i);
-			folderFileId = obj.get("folderFileId");
-			folderFileType = obj.get("folderFileType");
-			
-			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide/" + folderFileId + "/" + folderFileType, null, request, "post", null);
-			
-			if (!((String) resultBody.get("status")).equals("ok")) {
-				status = "error";
-				code = "2";
-			}
-		}
-		
-		resultJson.put("status", status);
-		resultJson.put("code", code);
 		
 		logger.debug("hideShare ended.");
-		return  resultJson.toString();
+		return  resultBody.toString();
 	}
 	
 	@RequestMapping(value="/ezWebFolder/showShare.do", method=RequestMethod.POST)
-	public @ResponseBody String showShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody List<Map<String,String>> jsonParam) throws Exception {
+	public @ResponseBody String showShare(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("showShare started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		JSONObject resultJson = new JSONObject();
+		String fileList = orElse(request.getParameter("fileList"), "");
+		String folderList = orElse(request.getParameter("folderList"), "");
 		
-		if (jsonParam == null || jsonParam.size() == 0) {
-			resultJson.put("status", "error");
-			resultJson.put("code", "1");
-			return resultJson.toString();
+		Map<String, Object> param = new HashMap<>();
+		param.put("fileList", fileList);
+		param.put("folderList", folderList);
+		
+		JSONObject resultBody = checkPermission(request, userInfo.getId(), fileList, folderList);
+		
+		if (((String) resultBody.get("status")).equals("ok")) {
+			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide", param, request, "delete", null);
 		}
-		
-		String status = "ok";
-		String code = "0";
-		
-		JSONObject resultBody = null;
-		Map<String, String> obj = null;
-		String folderFileId = null;
-		String folderFileType = null;
-		
-		for (int i = 0; i < jsonParam.size(); i++) {
-			obj = (Map<String, String>) jsonParam.get(i);
-			folderFileId = obj.get("folderFileId");
-			folderFileType = obj.get("folderFileType");
-			
-			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide/" + folderFileId + "/" + folderFileType, null, request, "delete", null);
-			
-			if (!((String) resultBody.get("status")).equals("ok")) {
-				status = "error";
-				code = "2";
-			}
-		}
-		
-		resultJson.put("status", status);
-		resultJson.put("code", code);
 		
 		logger.debug("showShare ended.");
-		return  resultJson.toString();
+		return  resultBody.toString();
 	}
 	
 	@RequestMapping(value="/ezWebFolder/webfolderHiddenSharedList.do")
@@ -506,7 +455,7 @@ public class EzWebFolderController_m {
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
 		
-		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-admin/" + user.getId(), null, request, "get", null);
+		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
 		
 		if (!adminCheckResult.get("status").toString().equals("ok")) {
 			
@@ -565,7 +514,7 @@ public class EzWebFolderController_m {
 		param.put("fileList", fileList);               
 		param.put("folderList", folderList);
 		
-		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-admin/" + user.getId(), null, request, "get", null);
+		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
 		
 		if (!adminCheckResult.get("status").toString().equals("ok")) {
 			
@@ -694,7 +643,7 @@ public class EzWebFolderController_m {
 		
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 	
-		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/check-admin/" + user.getId(), null, request, "get", null);
+		JSONObject adminCheckResult = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
 		
 		if (!adminCheckResult.get("status").toString().equals("ok")) {
 			

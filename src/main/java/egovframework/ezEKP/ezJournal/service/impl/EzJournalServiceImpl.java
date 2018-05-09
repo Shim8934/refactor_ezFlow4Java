@@ -886,12 +886,12 @@ public class EzJournalServiceImpl implements EzJournalService {
 			// #146bb8 rgb(0, 144, 208)
 //			formThisHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");
 //			formThisHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
-			formThisHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + journal.getJournalTitle().trim() + "</span></p>");
+			formThisHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
 			formThisHtml.append(thisContent.trim() + "<p></p><p></p>");
 			
 //			formNextHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");   
 //			formNextHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
-			formNextHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + journal.getJournalTitle().trim() + "</span></p>");
+			formNextHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
 			formNextHtml.append(nextContent.trim() + "<p></p><p></p>");
 		}
 		

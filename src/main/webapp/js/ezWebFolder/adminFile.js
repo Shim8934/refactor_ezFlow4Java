@@ -70,6 +70,9 @@ function setButtons(mode) {
 	libttns[6].firstElementChild.onclick  = function() {refreshView();};
 	libttns[7].firstElementChild.onchange = function() {search_Set("1");};
 	
+	var listCountElmt = document.getElementById("listCount");
+	listCountElmt.onchange = function() {search_Set("1");};
+	
 	var divBttnElmt                          = document.getElementsByClassName("wfdivBttn")[0];
 	var searchBttns                          = divBttnElmt.children;
 	searchBttns[0].firstElementChild.onclick = function() {startSearch();};
@@ -80,6 +83,9 @@ function setButtons(mode) {
 	var fileUpElmt          = document.getElementById("file");
 	fileUpElmt.onchange     = function() {onDrop();};
 	fileUpElmt.onclick      = function() {this.value = null;};
+	
+	var mailPanelElmt       = document.getElementById("mailPanel");
+	mailPanelElmt.onclick   = function() {closeAllPopups();};
 }
 
 function keyPressPanel(e) {
@@ -94,6 +100,7 @@ function keyPressPanel(e) {
 }
 
 function reloadSelectBox() {
+	document.getElementById("listCount").selectedIndex      = 0;
 	document.getElementById("fileTypeSelect").selectedIndex = 0;
 }
 
@@ -130,6 +137,8 @@ function openSearchPanel() {
 
 function search_Set(pPage) {
 	var orderInf = tableView.getOrderInfo();
+	var listCnt  = document.getElementById("listCount").value;
+	
 	$.ajax({
 		type: "POST",
 		url: "/admin/ezWebFolder/getFileList.do",
@@ -143,6 +152,7 @@ function search_Set(pPage) {
 			"fileType"    : document.getElementById("fileTypeSelect").value,
 			"column"      : orderInf.col ? orderInf.col : "",
 			"order"       : orderInf.ord ? orderInf.ord : "",
+			"listCntSize" : listCnt,
 			"folderId"    : folderId
 		},
 		dataType: "JSON",
@@ -176,7 +186,7 @@ function renderData(result) {
 function startSearch() {
 	var sDateVal    = document.getElementById("Sdatepicker").value;
 	var eDateVal    = document.getElementById("Edatepicker").value;
-	var fileExtVal  = document.getElementById("fileExtVal").value;
+	var fileExtVal  = document.getElementById("fileExtVal").value.replace(/\s/g,'');
 	var fileNameVal = document.getElementById("fileNameVal").value;
 	var userNameVal = document.getElementById("fileCreatorVal").value;
 	var fileTypeIdx = document.getElementById("fileTypeVal").selectedIndex;
@@ -215,6 +225,13 @@ function openLeftPanel() {
 	leftFrame.body.style.overflow = "hidden";
 	blockLeft.style.height        = height + "px";
 	blockLeft.style.display       = "";
+}
+
+function closeAllPopups() {
+	closeLeftPanel();
+	document.getElementById("mailPanel").style.display   = "none";
+	document.getElementById("searchPanel").style.display = "none";
+	document.getElementById("iFramePanel").style.display = "none";
 }
 
 function closeLeftPanel() {

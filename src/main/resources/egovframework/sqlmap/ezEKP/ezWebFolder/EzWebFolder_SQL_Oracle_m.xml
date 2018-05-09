@@ -1199,18 +1199,18 @@
 				SELECT (LISTAGG(TO_CHAR(DISPLAYNAME), ',') within group (ORDER BY DISPLAYNAME) || '|' || LISTAGG(TO_CHAR(DISPLAYNAME2), ',') within group (ORDER BY DISPLAYNAME2))
 				FROM (
 					SELECT DISPLAYNAME, DISPLAYNAME2
-					FROM TBL_USERMASTER
+					FROM TBL_DEPTMASTER
 					WHERE CN IN
-					<iterate property="idList" open="(" close=")" conjunction=",">
-						#idList[].id#
+					<iterate property="deptList" open="(" close=")" conjunction=",">
+						#deptList[]#
 					</iterate>
 					AND TENANT_ID = #tenantId#
 					UNION
 					SELECT DISPLAYNAME, DISPLAYNAME2
-					FROM TBL_DEPTMASTER
+					FROM TBL_USERMASTER
 					WHERE CN IN
-					<iterate property="idList" open="(" close=")" conjunction=",">
-						#idList[].id#
+					<iterate property="userList" open="(" close=")" conjunction=",">
+						#userList[]#
 					</iterate>
 					AND TENANT_ID = #tenantId#
 				) UD

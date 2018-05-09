@@ -190,6 +190,17 @@ public class EzWebFolderGWController_m {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
+			String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
+			
+			if (!PermissionResult.equals("ok")) {
+				result.put("status", "error");
+				result.put("code", 3);
+				
+				logger.debug("checkPermission fail.");
+				logger.debug("getSharingInfo ended.");
+				return result;
+			}
+			
 			List<SimpleShareVO> list = ezWebFolderService_m.getShareInfo("", folderFileId, folderFileType, userInfo.getPrimary(), offset, tenantId);
 			
 			result.put("status", "ok");
@@ -237,6 +248,17 @@ public class EzWebFolderGWController_m {
 			String lang   = common.getLang();
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			
+			String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
+			
+			if (!PermissionResult.equals("ok")) {
+				result.put("status", "error");
+				result.put("code", 3);
+				
+				logger.debug("checkPermission fail.");
+				logger.debug("getUserSharingInfo ended.");
+				return result;
+			}
 			
 			List<SimpleShareVO> list = ezWebFolderService_m.getShareInfo(userId, folderFileId, folderFileType, userInfo.getPrimary(), offset, tenantId);
 			
@@ -365,22 +387,22 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 추가
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing", method=RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject addShare(@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception {
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType}", method=RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject addShare(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) throws Exception {
 		logger.debug("addShare started.");
 		
-		String serverName     = orElse(request.getHeader("x-user-host"), "");
-		String folderFileId   = orElse((String) jsonObject.get("folderFileId"), "");
-		String folderFileType = orElse((String) jsonObject.get("folderFileType"), "");
-		List<Map<String, String>> userList = (List<Map<String, String>>) jsonObject.get("userList");
+		String serverName = orElse(request.getHeader("x-user-host"), "");
+		String deptList = orElse(request.getParameter("deptList"), "");
+		String userList = orElse(request.getParameter("userList"), "");
 		
 		logger.debug("serverName: " + serverName + " || userId: " + userId + " || folderFileId: " + folderFileId + " || folderFileType: " + folderFileType);
+		logger.debug("deptList:" + deptList);
 		logger.debug("userList:" + userList);
 		
 		JSONObject result = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("") || userList == null || userList.size() == 0) {
+		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("") || (deptList.equals("") && userList.equals(""))) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -393,8 +415,22 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
+			String lang   = common.getLang();
 			
-			ezWebFolderService_m.insertShare(userId, folderFileId, folderFileType, userList, offset, tenantId);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			
+			String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
+			
+			if (!PermissionResult.equals("ok")) {
+				result.put("status", "error");
+				result.put("code", 3);
+				
+				logger.debug("checkPermission fail.");
+				logger.debug("addShare ended.");
+				return result;
+			}
+			
+			ezWebFolderService_m.insertShare(userId, folderFileId, folderFileType, deptList, userList, offset, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -414,18 +450,21 @@ public class EzWebFolderGWController_m {
 	 * 공유 수정
 	 */
 	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject updateShare(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception {
+	public JSONObject updateShare(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) throws Exception {
 		logger.debug("updateShare started.");
 		
 		String serverName = orElse(request.getHeader("x-user-host"), "");
-		List<Map<String, String>> userList = (List<Map<String, String>>) jsonObject.get("userList");
+		String deptList = orElse(request.getParameter("deptList"), "");
+		String userList = orElse(request.getParameter("userList"), "");
+		
 		logger.debug("serverName: " + serverName + " || userId: " + userId + " || folderFileId: " + folderFileId + " || folderFileType: " + folderFileType);
+		logger.debug("deptList:" + deptList);
 		logger.debug("userList:" + userList);
 		
 		JSONObject result = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("") || userList == null || userList.size() == 0) {
+		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("") || (deptList.equals("") && userList.equals(""))) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -438,8 +477,22 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
+			String lang   = common.getLang();
 			
-			ezWebFolderService_m.updateShare(folderFileId, folderFileType, userId, userList, offset, tenantId);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
+			
+			String PermissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
+			
+			if (!PermissionResult.equals("ok")) {
+				result.put("status", "error");
+				result.put("code", 3);
+				
+				logger.debug("checkPermission fail.");
+				logger.debug("updateShare ended.");
+				return result;
+			}
+			
+			ezWebFolderService_m.updateShare(folderFileId, folderFileType, userId, deptList, userList, offset, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -458,17 +511,20 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 삭제
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType}", method=RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public JSONObject deleteShare(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing", method=RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deleteShare(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("deleteShare started.");
 		
 		String serverName = orElse(request.getHeader("x-user-host"), "");
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || folderFileId: " + folderFileId + " || folderFileType: " + folderFileType);
+		String fileListStr = orElse(request.getParameter("fileList"), "");
+		String folderListStr = orElse(request.getParameter("folderList"), "");
+		
+		logger.debug("serverName: " + serverName + " || userId: " + userId + " || fileListStr: " + fileListStr + " || folderListStr: " + folderListStr);
 		
 		JSONObject result = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("")) {
+		if (serverName.equals("") || userId.equals("") || (fileListStr.equals("") && folderListStr.equals(""))) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -480,9 +536,25 @@ public class EzWebFolderGWController_m {
 			// TODO: commonInfoWeb 안타도록 수정
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
-			String offset = common.getOffSet();
 			
-			ezWebFolderService_m.deleteShare(folderFileId, folderFileType, userId, tenantId);
+			String[] fileList = fileListStr.split(",");
+			String[] folderList = folderListStr.split(",");
+			
+			for (String fileId : fileList) {
+				if (fileId.isEmpty()) {
+					continue;
+				}
+				
+				ezWebFolderService_m.deleteShare(fileId, "F", userId, tenantId);
+			}
+			
+			for (String folderId : folderList) {
+				if (folderId.isEmpty()) {
+					continue;
+				}
+				
+				ezWebFolderService_m.deleteShare(folderId, "D", userId, tenantId);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -564,17 +636,20 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 숨김
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/shared-hide/{folderFileId}/{folderFileType}", method=RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject hideShare(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/shared-hide", method=RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject hideShare(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("hideShare started.");
 		
 		String serverName = orElse(request.getHeader("x-user-host"), "");
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || folderFileId: " + folderFileId + " || folderFileType: " + folderFileType);
+		String fileListStr = orElse(request.getParameter("fileList"), "");
+		String folderListStr = orElse(request.getParameter("folderList"), "");
+		
+		logger.debug("serverName: " + serverName + " || userId: " + userId + " || fileListStr: " + fileListStr + " || folderListStr: " + folderListStr);
 		
 		JSONObject result = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("")) {
+		if (serverName.equals("") || userId.equals("") || (fileListStr.equals("") && folderListStr.equals(""))) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -591,7 +666,24 @@ public class EzWebFolderGWController_m {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
-			ezWebFolderService_m.hideShare(folderFileId, folderFileType, userId, userInfo.getDeptID(), userInfo.getCompanyID(), offset, tenantId);
+			String[] fileList = fileListStr.split(",");
+			String[] folderList = folderListStr.split(",");
+			
+			for (String fileId : fileList) {
+				if (fileId.isEmpty()) {
+					continue;
+				}
+				
+				ezWebFolderService_m.hideShare(fileId, "F", userId, userInfo.getDeptID(), userInfo.getCompanyID(), offset, tenantId);
+			}
+			
+			for (String folderId : folderList) {
+				if (folderId.isEmpty()) {
+					continue;
+				}
+				
+				ezWebFolderService_m.hideShare(folderId, "D", userId, userInfo.getDeptID(), userInfo.getCompanyID(), offset, tenantId);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -610,17 +702,20 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 숨김 취소
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/shared-hide/{folderFileId}/{folderFileType}", method=RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public JSONObject showShare(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/shared-hide", method=RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject showShare(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("showShare started.");
 		
 		String serverName = orElse(request.getHeader("x-user-host"), "");
-		logger.debug("serverName: " + serverName + " || userId: " + userId + " || folderFileId: " + folderFileId + " || folderFileType: " + folderFileType);
+		String fileListStr = orElse(request.getParameter("fileList"), "");
+		String folderListStr = orElse(request.getParameter("folderList"), "");
+		
+		logger.debug("serverName: " + serverName + " || userId: " + userId + " || fileListStr: " + fileListStr + " || folderListStr: " + folderListStr);
 		
 		JSONObject result = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("")) {
+		if (serverName.equals("") || userId.equals("") || (fileListStr.equals("") && folderListStr.equals(""))) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -637,7 +732,24 @@ public class EzWebFolderGWController_m {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
 			
-			ezWebFolderService_m.showShare(folderFileId, folderFileType, userId, userInfo.getDeptID(), userInfo.getCompanyID(), offset, tenantId);
+			String[] fileList = fileListStr.split(",");
+			String[] folderList = folderListStr.split(",");
+			
+			for (String fileId : fileList) {
+				if (fileId.isEmpty()) {
+					continue;
+				}
+				
+				ezWebFolderService_m.showShare(fileId, "F", userId, userInfo.getDeptID(), userInfo.getCompanyID(), offset, tenantId);
+			}
+			
+			for (String folderId : folderList) {
+				if (folderId.isEmpty()) {
+					continue;
+				}
+				
+				ezWebFolderService_m.showShare(folderId, "D", userId, userInfo.getDeptID(), userInfo.getCompanyID(), offset, tenantId);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1172,7 +1284,7 @@ public class EzWebFolderGWController_m {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezwebfolder/check-admin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/trashcan-check-admin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkWfAdmin(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		String serverName = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host") : "";
 		JSONObject result = new JSONObject();
