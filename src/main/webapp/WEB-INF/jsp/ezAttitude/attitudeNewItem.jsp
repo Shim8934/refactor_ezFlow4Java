@@ -271,6 +271,14 @@
 					attRegHolidayFlag = false;
 					return;
 				}
+				
+				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
+
+				if (!timeValid.test($('#Stimepicker').val()) || !timeValid.test($('#Etimepicker').val())) {
+					alert("올바른 시간을 지정해야 합니다.");
+					return;
+				}
+				
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezAttitude/attitudeSave.do",
@@ -426,12 +434,12 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <ul id="menuTable">	
-	                                <li><span onclick="save_attitude()">저장 후 닫기</span></li>
-	                            </ul>
+	                            <h1 style="padding:0px; margin-top:-5px;">근태작성</h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
+	                                <li><span onclick="save_attitude()">저장 후 닫기</span></li>
+	                                <li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>
 	                        </div>

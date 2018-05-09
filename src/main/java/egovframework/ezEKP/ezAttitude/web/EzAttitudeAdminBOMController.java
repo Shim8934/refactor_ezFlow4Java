@@ -1481,7 +1481,7 @@ public class EzAttitudeAdminBOMController {
 		
 		JSONArray list = new JSONArray();
 		JSONObject data = new JSONObject();
-		
+
 		if (status.equals("ok")) {
 			data = (JSONObject) resultBody.get("data");
 			list = (JSONArray) data.get("list");
@@ -1804,6 +1804,7 @@ public class EzAttitudeAdminBOMController {
 	 * 미입력자 메일발송
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/absentedListSendMail.do")
+	@ResponseBody
 	public JSONObject absentedListSendMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("absentedListSendMail started.");
 		
@@ -1814,13 +1815,9 @@ public class EzAttitudeAdminBOMController {
 		String companyId = request.getParameter("companyId");
 		String searchUserName = request.getParameter("userName");
 		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
 		String searchStartDate = request.getParameter("startDate");
 		String searchEndDate = request.getParameter("endDate");
-		String pageNum = request.getParameter("pageNum");
-		String listSize = request.getParameter("listSize");
-		String orderCell = request.getParameter("orderCell");
-		String orderOption = request.getParameter("orderOption");
-		String duplicated = request.getParameter("duplicated");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/attitudes/mail";
@@ -1834,15 +1831,12 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("companyId", companyId)
 				.queryParam("searchUserName", searchUserName)
 				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchTitle", searchTitle)
 				.queryParam("searchStartDate", searchStartDate)
 				.queryParam("searchEndDate", searchEndDate)
 				.queryParam("userId", userId)
-				.queryParam("pageNum", pageNum)
-				.queryParam("listSize", listSize)
-				.queryParam("orderCell", orderCell)
-				.queryParam("orderOption", orderOption)
-				.queryParam("duplicated", duplicated)
-				.queryParam("offsetMin", offsetMin);
+				.queryParam("offsetMin", offsetMin)
+				.queryParam("loginCookie", loginCookie);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -1855,8 +1849,9 @@ public class EzAttitudeAdminBOMController {
 		LOGGER.debug("status : " + status);
 		
 		JSONObject jObject = new JSONObject();
+		jObject.put("status", status);
 		if(status.equals("ok")){
-			jObject = (JSONObject) resultBody.get("data");
+			
 		}
 		
 		LOGGER.debug("absentedListSendMail ended.");

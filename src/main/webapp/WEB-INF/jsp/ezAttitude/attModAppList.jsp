@@ -57,6 +57,7 @@
 		var m_strColorDefault = "#ffffff";
 		var adminFlag = "${adminFlag}";
 		var checkAdmin = "${checkAdmin}";
+		var usepostDate = false;
 		
 		$(function(){
 			$(document).on('click', '#AttList th', function(){
@@ -104,6 +105,12 @@
 	        $("#Sdatepicker").datepicker('setDate', NowDate);
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker('setDate', NowDate);
+	        console.log("${startDate}");
+	        console.log("${endDate}");
+			if (checkAdmin == 'true') {
+				$("#Sdatepicker").val("${startDate}");
+	    		$("#Edatepicker").val("${endDate}");	
+			}
 	    });
 	    
 	    $(function () {
@@ -152,9 +159,12 @@
 				   "top" : obj.top + $("#search").height(),
 				   "left" : obj.left
 				});
-			
-			$("#Sdatepicker").datepicker('disable');
-	        $("#Edatepicker").datepicker('disable');
+			if (checkAdmin != "true") {
+				$("#Sdatepicker").datepicker('disable');
+		        $("#Edatepicker").datepicker('disable');	
+			} else {
+				usepostDate = true;
+			}
 		}
 		function makePageSelPage(){
 	        var strtext;
@@ -494,6 +504,15 @@
 	        $("#Sdatepicker").datepicker('setDate', NowDate);
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Edatepicker").datepicker('setDate', NowDate);
+	        
+	        if(!usepostDate){
+	            $("#Sdatepicker").datepicker('disable');
+	            $("#Edatepicker").datepicker('disable');
+	        }
+	        else {
+	            $("#Sdatepicker").datepicker('enable');
+	            $("#Edatepicker").datepicker('enable');
+	        }
 	    }
 	    
 	    function search_keypress(evt)
@@ -552,8 +571,6 @@
 	        else
 	            return;
 	    }
-	    
-	    var usepostDate = false;
 	    
 	    function DateSearch_Click() {
 	        if(usepostDate){
@@ -996,9 +1013,22 @@
 				    			json[i].apprStatus = "신청";
 				    		}
 				    		
-				    		var objTr = $("<tr></tr>").append($("<td style='width:50%'></td>").text("\u00a0" + json[i].apprDate));
-				    		objTr.append($("<td style='width:25%'></td>").text("\u00a0" + json[i].apprUserName));
-				    		objTr.append($("<td style='width:25%'></td>").text("\u00a0" + json[i].apprStatus));
+			    			if (json[i].apprDate != null) {
+			    				json[i].apprDate = json[i].apprDate.substring(0,16);
+			    			}
+			    			
+			    			if (json[i].apprDate == null) {
+			    				json[i].apprDate = "";
+			    			}
+			    			
+			    			if (json[i].apprUserName == null) {
+			    				json[i].apprUserName = "";
+			    			}
+			    			
+				    		var objTr = $("<tr></tr>").append($("<td style='width:35%'></td>").text("\u00a0" + json[i].apprDate));
+				    		objTr.append($("<td style='width:5%'></td>").text("\u00a0" + json[i].apprUserName));
+				    		objTr.append($("<td style='width:55%'></td>").text("\u00a0" + json[i].originDate.substring(0,16) + " -> " + json[i].changeDate.substring(11,16)));
+				    		objTr.append($("<td style='width:5%'></td>").text("\u00a0" + json[i].apprStatus));
 				    		
 				    		$("#addpopup_list tbody").append(objTr);	
 			    		}
@@ -1068,8 +1098,8 @@
 	                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
 						</td>
 						<td colspan="2">
-							<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="float:right; margin-top:3px;"><span>새로고침</span></a>
-							<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="float:right; margin-top:3px;"><span>검색</span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="margin-top:3px;"><span>새로고침</span></a>
+							<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="margin-top:3px;"><span>검색</span></a>
 						</td>
 					</tr>
 				</tbody>
@@ -1251,8 +1281,9 @@
 				    </thead>
 				    <tbody style="max-height:500px; width:440px; display:block; overflow-y:auto;">
 				    	<tr>
-				  			<th style="width:220px;height:30px">승인일시</th>
+				    		<th style="width:120px;height:30px">승인일시</th>
 				  			<th style="height:30px">승인자</th>
+				  			<th style="width:120px;height:30px">수정신청일시</th>
 				  			<th style="height:30px">승인상태</th>
 						</tr>
 				    </tbody>

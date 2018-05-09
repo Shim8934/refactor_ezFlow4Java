@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.util.Date;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -23,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -93,7 +97,7 @@ public class EzAttitudeAdminController {
 			@RequestParam(required=false)String startDate,
 			@RequestParam(required=false)String endDate) throws Exception {
 		LOGGER.debug("adminAttModAppList started");
-		
+
 		int totalAtt = 0;
 		int currentPage = 1;
 		int totalPages = 0;
@@ -120,6 +124,38 @@ public class EzAttitudeAdminController {
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
+		if (startDate == null || endDate == null) {
+			LOGGER.debug("$@%%(!#%*!#@$*%!@(#%!(@%(%!@");
+
+			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Calendar cal = Calendar.getInstance();
+			
+			String searchStartDate = localDate + " 00:00:00";
+			String searchEndDate = localDate + " 23:59:59";
+			
+			Date startDateforNull = sdf.parse(searchStartDate);
+			
+			cal = Calendar.getInstance();
+			cal.setTime(startDateforNull);
+			cal.add(Calendar.DAY_OF_MONTH, -7);
+			
+			searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+			searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
+			
+			startDate = searchStartDate.substring(0, 10);
+			endDate = searchEndDate.substring(0, 10);
+		}
+		
+//		Date startDate = sdf.parse(searchStartDate);
+		
+//		cal = Calendar.getInstance();
+//		cal.setTime(startDate);
+//		cal.add(Calendar.DAY_OF_MONTH, -7);
+//		
+//		searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
+//		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
+//		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes/count";
 									
@@ -265,6 +301,8 @@ public class EzAttitudeAdminController {
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("adminFlag", adminFlag);
 		model.addAttribute("checkAdmin", checkAdmin);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
 		
 		LOGGER.debug("attModAppList ended");
 		

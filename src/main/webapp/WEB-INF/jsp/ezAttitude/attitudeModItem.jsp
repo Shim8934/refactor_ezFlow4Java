@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>근태수정신청</title>
+		<title>지각수정신청</title>
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Tab.css" type="text/css" />
         <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -16,7 +16,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script>
+	    <script type="text/javascript" src="/js/ezSchedule/schedule_wri수정신청te_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/Calendar/TabMenu.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<!-- data picker-->		
@@ -159,8 +159,7 @@
 			    var ohour, ominute;
 			    var otime = $('#Otimepicker').val() 
 			    var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
-				console.log("${data.startDate}");
-				console.log(cDate);
+
 			    if ("${data.startDate}".substring(0,10) != cDate && "${data.typeId}" == "A02") {
 			    	alert("날짜는 수정하실 수 없습니다.");
 			    	return;
@@ -185,11 +184,17 @@
 				    	alert("저장 중 오류 발생")
 				    },
 				    success : function(json){
-						alert("저장되었습니다.");
-						window.opener.getAttitudeMainList();
-						window.close();
+				    	if(json == "success") {
+				    		alert("저장되었습니다.");	
+				    	} else {
+				    		alert("저장 중 오류 발생");
+				    	}
 			            try {
-			            } catch (e) { }
+			            	window.opener.getAttitudeMainList();
+			            } catch (e) { 
+			            	window.opener.att_refresh();
+			            }
+			            window.close();
 				    }
 			    });
 		    }
@@ -208,6 +213,7 @@
 	                        <div id="close">
 	                            <ul>
 	                                <li><span onclick="save()">수정신청</span></li>
+	                                <li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>
 	                        </div>

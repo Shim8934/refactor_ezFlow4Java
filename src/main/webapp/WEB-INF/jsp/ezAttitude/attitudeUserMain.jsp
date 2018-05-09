@@ -274,7 +274,7 @@
 					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1 - 2));
 					
 // 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"34px", "background-color": "#edf4fd"}).text($("#calTitle").text())));
-					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"34px", "background-color": "#edf4fd"}).text("근태 통계")));
+					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"34px", "background-color": "#edf4fd"}).text("근태통계")));
 					for (var i = 0; i < result.length; i++) {
 						
 						if (result[i].typeId == 'A01' || result[i].typeId == 'A03') {
@@ -646,13 +646,13 @@
 				    	$('#addpopup_list tbody').children('tr').not(":first").remove();
 				    	
 				    	if (json.length == 0) {
-				    		var uvobjTr = $("<tr></tr>").append($("<td style='width:5%; display:none;'></td>"));
-				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
-				    		uvobjTr.append($("<td style='width:20%; height:0px; display:;'></td>"));
-				    		uvobjTr.append($("<td style='width:70%; height:0px; display:;'></td>"));
+				    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:5%;height:0px;border:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:20%; height:0px; border:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:70%; height:0px; border:none;'></td>"));
 				    		$("#addpopup_list tbody").append(uvobjTr);
 				    		
-				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px;'></td>").text("내역이 없습니다."));
+				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px; border-top:none;'></td>").text("내역이 없습니다."));
 				    		$("#addpopup_list tbody").append(objTr);
 				    	}
 				    	
@@ -752,14 +752,14 @@
 				    	
 // 				    	if (json.length == j) {
 						if (i == 0) {
-				    		var uvobjTr = $("<tr></tr>").append($("<td style='width:5%; display:none;'></td>"));
-				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
-				    		uvobjTr.append($("<td style='width:10%; height:0px; display:;'></td>"));
-				    		uvobjTr.append($("<td style='width:20%; height:0px; display:;'></td>"));
-				    		uvobjTr.append($("<td style='width:60%; height:0px; display:;'></td>"));
+				    		var uvobjTr = $("<tr></tr>").append($("<td style='width:5%; height:0px; border:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:20%; height:0px; border:none;'></td>"));
+				    		uvobjTr.append($("<td style='width:60%; height:0px; border:none;'></td>"));
 				    		$("#addpopupDay_list tbody").append(uvobjTr);
 				    		
-				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px;'></td>").text("내역이 없습니다."));
+				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px; border-top:none;'></td>").text("내역이 없습니다."));
 				    		$("#addpopupDay_list tbody").append(objTr);
 				    	}
 				    },
