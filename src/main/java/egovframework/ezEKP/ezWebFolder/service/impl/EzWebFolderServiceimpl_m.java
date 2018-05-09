@@ -83,10 +83,17 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("subSearchFlag",     subSearchFlag);
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getSharingList(map);
-			
+		
+		String folderPath = null;
+		
 		for (ShareVO vo : list) {
-			// set folderPath
-			vo.setFolderPath(ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId));
+			folderPath = ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId);
+			
+			if (vo.getFolderFileType().startsWith("D")) {
+				vo.setFolderPath(folderPath.substring(0, folderPath.lastIndexOf(vo.getFileName()) - 1));
+			} else {
+				vo.setFolderPath(folderPath.substring(0, folderPath.length() - 1));
+			}
 		}
 		
 		return list;
@@ -122,9 +129,16 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getSharedList(map);
 		
+		String folderPath = null;
+		
 		for (ShareVO vo : list) {
-			// set folderPath
-			vo.setFolderPath(ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId));
+			folderPath = ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId);
+			
+			if (vo.getFolderFileType().startsWith("D")) {
+				vo.setFolderPath(folderPath.substring(0, folderPath.lastIndexOf(vo.getFileName()) - 1));
+			} else {
+				vo.setFolderPath(folderPath.substring(0, folderPath.length() - 1));
+			}
 		}
 		
 		return list;
@@ -158,9 +172,16 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getFolderFileList(map);
 		
+		String folderPath = null;
+		
 		for (ShareVO vo : list) {
-			// set folderPath
-			vo.setFolderPath(ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId));
+			folderPath = ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId);
+			
+			if (vo.getFolderFileType().startsWith("D")) {
+				vo.setFolderPath(folderPath.substring(0, folderPath.lastIndexOf(vo.getFileName()) - 1));
+			} else {
+				vo.setFolderPath(folderPath.substring(0, folderPath.length() - 1));
+			}
 		}
 		
 		return list;
@@ -615,9 +636,16 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getHiddenSharedList(map);
 		
+		String folderPath = null;
+		
 		for (ShareVO vo : list) {
-			// set folderPath
-			vo.setFolderPath(ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId));
+			folderPath = ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId);
+			
+			if (vo.getFolderFileType().startsWith("D")) {
+				vo.setFolderPath(folderPath.substring(0, folderPath.lastIndexOf(vo.getFileName()) - 1));
+			} else {
+				vo.setFolderPath(folderPath.substring(0, folderPath.length() - 1));
+			}
 		}
 		
 		return list;
