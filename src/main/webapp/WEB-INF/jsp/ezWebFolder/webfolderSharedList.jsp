@@ -93,6 +93,7 @@
 				
 				dom.listSizeSelect.addEventListener("change", function(event) {
 					optionHidden();
+					pagination.setPage(1, true);
 					pagination.setListSize(this.value);
 					refreshView();
 				});
