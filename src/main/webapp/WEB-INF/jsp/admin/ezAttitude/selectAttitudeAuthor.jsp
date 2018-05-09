@@ -66,7 +66,7 @@
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key":key, "value":value,"deptName":deptName},
+	   				data:{"key":key, "value":value,"deptName":deptName,"companyId":companyId},
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
 	   					if (picList.length==0 && key!="DEPARTMENT") {
