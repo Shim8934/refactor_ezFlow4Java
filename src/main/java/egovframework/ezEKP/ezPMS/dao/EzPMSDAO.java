@@ -211,7 +211,7 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	}
 	
 //	By mslim
-	public void addBoard(ProjectBoardVO vo) {
-		insert ("EzPMSDAO.addBoard", vo);
+	public Long addBoard(ProjectBoardVO vo) {
+		return (Long) insert ("EzPMSDAO.addBoard", vo);
 	}
 }

@@ -18,7 +18,7 @@
 	<typeAlias 	alias="ProjectCompanyVO" 							type="egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO" />
 	<typeAlias 	alias="ProjectUserInfoVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectMemberVO"/>
 	<typeAlias 	alias="ProjectTaskMemberVO" 									type="egovframework.ezEKP.ezPMS.vo.TaskMemberVO"/>
-	<typeAlias 	alias="ProjectBoard" 									type="egovframework.ezEKP.ezPMS.vo.ProjectBoard"/>
+	<typeAlias 	alias="ProjectBoardVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectBoardVO"/>
 	
     <resultMap id="projectInfoVO" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
@@ -1225,7 +1225,7 @@
 	
 	
 	<!-- 추가 by mslim -->
-	<insert id="EzPMSDAO.addBoard" parameterClass="ProjectBoard">
+	<insert id="EzPMSDAO.addBoard" parameterClass="ProjectBoardVO">
 		<![CDATA[
 			INSERT INTO tbl_pms_item_list (
 				tenant_id,			writer_id,			title,				write_overview,			write_type,
@@ -1236,7 +1236,7 @@
 			VALUES (
 				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
 				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#taskId#,
-				#groupId#,			#writerName#,		#writerName2#,		#writerDeptname#,		#writerDeptname2#,
+				#groupId#,			#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
 				#writerPosition#,	#writerPosition2#
 			)
 		]]>

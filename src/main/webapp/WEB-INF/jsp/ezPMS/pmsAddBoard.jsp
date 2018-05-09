@@ -16,24 +16,76 @@
 <script>
 var projectId = "${projectId}";
 var projectName = "${project.projectName}";
+var writerId = "${writerId}";
+var writerName = "${writerName}";
+var writerDeptName = "${writerDeptName}";
+var writeType = null;
 
 function addBoard() {
-	var emergency = false;
-	var notice = false;
-	if($("#emergency").is("checked")) {
-		emergency = true;
-	}
-	if($("#notice").is("checked")) {
-		notice = true;
-	}
+
 	var title = $("#title").val().trim();
-	var content = $("#content").val().trim();
+	var writeContent = $("#writeContent").val().trim();
+	
+	// 긴급 게시 / 공지 사항 여부
+	if($("#emergency").is("checked")) {
+		if($("#notice").is("checked")) {
+			writeType = 1;
+		} else {
+			writeType = 2;
+		}
+	} else {
+		if($("#notice").is("checked")) {
+			writeType = 3;
+		} else {
+			writeType = 4;
+		}
+	}
+	
+	if(title == "") {
+		alert("제목을 입력해주세요.");
+		return;
+	}
+	
+	if(writeContent == "") {
+		alert("내용을 입력해주세요.");
+		return;
+	}
 	
 	data = {
-			
+		projectId : projectId,
+		projectName : projectName,
+		writerId : writerId,
+		writerName : writerName,
+		writerDeptName : writerDeptName,
+		title : title,
+		writeContent : writeContent,
+		writeType : writeType
 	}
 	
+	console.log(projectId);
+	console.log(projectName);
+	console.log(writerId);
+	console.log(writerName);
+	console.log(writerDeptName);
+	console.log(title);
+	console.log(writeContent);
+	console.log(writeType);
 	
+	$.ajax({
+		type : "POST",
+		url : "/ezPMS/addBoard.do",
+		dataType : "json",
+		contentType : "application/json; charset=UTF-8",
+		data : JSON.stringify(data),
+		success : function(result) {
+			alert("성공");
+			parent.location.reload();
+			popupClose();
+		},
+		error : function() {
+			alert("실패");
+		}
+	})
 }
 </script>
 </head>
@@ -59,7 +111,7 @@ function addBoard() {
 			</tr>
 			<tr>
 				<th>내용</th>
-				<td colspan="3"><textarea id="content" style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
+				<td colspan="3"><textarea id="writeContent" style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
 			</tr>
 		</table>
 		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
