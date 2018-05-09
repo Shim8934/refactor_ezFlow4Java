@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title>attitudeTypeConfig</title>
+	    <title><spring:message code = 'ezAttitude.t3' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -190,7 +190,7 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code='ezAttitude.t12' /></h1>
+	    <h1><spring:message code='ezAttitude.t3' /></h1>
 		<div id="mainmenu">
 			<ul>
 	        	<li style="background: none;">

@@ -132,7 +132,7 @@
 		</script>
 	</head>
 	<body class="mainbody">
-	    <h1>근태권한관리</h1>
+	    <h1><spring:message code = 'ezAttitude.t8' /></h1>
 	    <div id="mainmenu">
 			<ul>
 	        	<li style="background: none;">
