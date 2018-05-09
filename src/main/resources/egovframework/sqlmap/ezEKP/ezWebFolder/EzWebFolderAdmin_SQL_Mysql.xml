@@ -104,9 +104,12 @@
 					(l.CREATE_DATE >= #startDate# AND l.CREATE_DATE <= #endDate#)
 				]]>
 			</isNotEqual>
-			<![CDATA[
-				AND l.LOG_TYPE = #actionType#
-			]]>
+			
+			<isNotEqual property="actionType" compareValue="M" prepend="AND">
+				<![CDATA[
+					l.LOG_TYPE = #actionType#
+				]]>
+			</isNotEqual>
 		</isEqual>
 	</sql>
 	
@@ -359,18 +362,23 @@
 	<select id="EzWebFolderAdminDAO.getListFileLogs" resultMap="fileLogVO">
 		<![CDATA[
 			SELECT
-				l.LOG_ID                                          AS LOG_ID,
-				l.FILE_TYPE                                       AS FILE_TYPE,
-				l.FILE_NAME                                       AS FILE_NAME,
-				l.FILE_SIZE                                       AS FILE_SIZE,
-				l.FILE_EXT                                        AS FILE_EXT,
-				l.LOG_TYPE                                        AS LOG_TYPE,
-				l.CREATE_ID                                       AS CREATE_ID,
-				l.CREATE_NAME1                                    AS CREATE_NAME1,
-				l.CREATE_NAME2                                    AS CREATE_NAME2,
-				DATE_ADD(l.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				l.COMPANY_ID                                      AS COMPANY_ID,
-				l.TENANT_ID                                       AS TENANT_ID
+				l.LOG_ID                                                         AS LOG_ID,
+				CASE
+					WHEN t.TYPE_NAME IS NOT NULL 
+						THEN (CASE WHEN #primary# = '1' THEN t.TYPE_NAME2 ELSE t.TYPE_NAME END) 
+						ELSE (CASE WHEN #primary# = '1' THEN (SELECT TYPE_NAME2 FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#)
+								ELSE (SELECT TYPE_NAME FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END
+				) END                                                            AS FILE_TYPE,
+				l.FILE_NAME                                                      AS FILE_NAME,
+				l.FILE_SIZE                                                      AS FILE_SIZE,
+				l.FILE_EXT                                                       AS FILE_EXT,
+				l.LOG_TYPE                                                       AS LOG_TYPE,
+				l.CREATE_ID                                                      AS CREATE_ID,
+				l.CREATE_NAME1                                                   AS CREATE_NAME1,
+				l.CREATE_NAME2                                                   AS CREATE_NAME2,
+				DATE_ADD(l.CREATE_DATE, INTERVAL #offset# MINUTE)                AS CREATE_DATE,
+				l.COMPANY_ID                                                     AS COMPANY_ID,
+				l.TENANT_ID                                                      AS TENANT_ID
 			FROM
 				TBL_WEBFOLDER_LOG l LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON l.FILE_EXT = t.FILE_EXT AND l.TENANT_ID = t.TENANT_ID
 		]]>

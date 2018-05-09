@@ -330,7 +330,8 @@
 						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t158'/></th>
 						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
 							<select style="height: 25px; padding: 0px; width: 85px;" id="actionType">
-								<option value="C" selected><spring:message code='ezWebFolder.t160'/></option>
+								<option value="M" selected><spring:message code='ezWebFolder.t191'/></option>
+								<option value="C"         ><spring:message code='ezWebFolder.t160'/></option>
 								<option value="D"         ><spring:message code='ezWebFolder.t161'/></option>
 								<option value="U"         ><spring:message code='ezWebFolder.t162'/></option>
 								<option value="R"         ><spring:message code='ezWebFolder.t111'/></option>
