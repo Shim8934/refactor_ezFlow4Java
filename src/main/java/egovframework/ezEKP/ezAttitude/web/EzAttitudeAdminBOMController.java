@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -658,7 +659,7 @@ public class EzAttitudeAdminBOMController {
 	}
 
 	/**
-	 * 관리자 사용자별 근태설정 메인화면 호출
+	 * 관리자 근무시간관리 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConf.do")
 	public String attitudeUserConf(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
@@ -920,7 +921,7 @@ public class EzAttitudeAdminBOMController {
 	}
 	
 	/**
-	 * 관리자 근태조회 메인화면 호출
+	 * 관리자 근태입력조회 메인화면 호출
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeCheck.do")
 	public String attitudeCheck(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -1226,6 +1227,7 @@ public class EzAttitudeAdminBOMController {
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		Locale locale = userInfo.getLocale();
 		
 		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
 				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
@@ -1321,7 +1323,7 @@ public class EzAttitudeAdminBOMController {
 			row.getCell(1).setCellStyle(headerStyle);
 			row.createCell(2).setCellValue("부서");
 			row.getCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue("구분");
+			row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t13", locale));
 			row.getCell(3).setCellStyle(headerStyle);
 			row.createCell(4).setCellValue("날짜");
 			row.getCell(4).setCellStyle(headerStyle);

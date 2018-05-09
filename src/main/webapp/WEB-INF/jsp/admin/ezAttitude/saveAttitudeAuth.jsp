@@ -118,6 +118,9 @@
 	    		$("#txtdept").val(deptString);
 	   			//리스트 출력
 	    		$('#contentlist .mainlist').html(html);
+	   			
+	   			alert($("#contentlist").scrollHeight);
+	   			alert($("#contentlist").clientHeight);
 	    	}	  
 	    	
 	    	//권한 라디오 체크
