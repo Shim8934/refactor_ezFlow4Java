@@ -106,9 +106,14 @@ public class EzWebFolderGWController_m {
 			int pageSizeInt  = Integer.parseInt(pageSize);
 			int pageNumInt   = Integer.parseInt(pageNum);
 			
+			//set pageSize
+			int userListCount = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+			
 			if (pageSizeInt == 0) {
-				pageSizeInt = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+				pageSizeInt = userListCount;
 			}
+			
+			ezWebFolderService_y.insertEnv(userId, tenantId, pageSizeInt);
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
@@ -331,9 +336,14 @@ public class EzWebFolderGWController_m {
 			int pageSizeInt  = Integer.parseInt(pageSize);
 			int pageNumInt   = Integer.parseInt(pageNum);
 			
+			//set pageSize
+			int userListCount = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+			
 			if (pageSizeInt == 0) {
-				pageSizeInt = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+				pageSizeInt = userListCount;
 			}
+			
+			ezWebFolderService_y.insertEnv(userId, tenantId, pageSizeInt);
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
@@ -606,9 +616,14 @@ public class EzWebFolderGWController_m {
 			int pageSizeInt  = Integer.parseInt(pageSize);
 			int pageNumInt   = Integer.parseInt(pageNum);
 			
+			//set pageSize
+			int userListCount = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+			
 			if (pageSizeInt == 0) {
-				pageSizeInt = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+				pageSizeInt = userListCount;
 			}
+			
+			ezWebFolderService_y.insertEnv(userId, tenantId, pageSizeInt);
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
