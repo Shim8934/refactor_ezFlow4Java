@@ -156,9 +156,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		update("EzPMSDAO.updateMainSetting", map);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Integer> getUserProjectRole(HashMap<String, Object> map) {
-		return (List<Integer>) list("EzPMSDAO.getUserProjectRole", map);
+	public int getUserProjectRole(HashMap<String, Object> map) {
+		return (int) select ("EzPMSDAO.getUserProjectRole", map);
 	}
 
 	public void updateProjectStatus(HashMap<String, Object> map) {
@@ -215,6 +214,11 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	
 	public void changeKanbanOrder(Map<String, Object> map) {
 		update ("EzPMSDAO.changeKanbanOrder", map);
+		
+	}
+
+	public void completeAllTasks(HashMap<String, Object> map) {
+		update ("EzPMSDAO.completeAllTasks", map);
 		
 	}
 }

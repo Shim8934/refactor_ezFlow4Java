@@ -21,6 +21,10 @@
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 110;
 setTotalCount("${projectListCount}");
+var progressColor = "${progressColor}";
+var completeColor = "${completeColor}";
+var overdueColor = "${overdueColor}";
+var holdColor = "${holdColor}";
 
 $(function(){
 	var projectList = new Array();
@@ -35,25 +39,25 @@ $(function(){
 	for (var i = 0; i < projectList.length; i++) {
 		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : projectList[i].progress,
-			fillBackGroundColor:"#9b59b6",
-			height:'15px',
-			radius:'15px',
+			fillBackgroundColor : progressColor,
+			height : '15px',
+			radius : '15px',
 			width : '80%'
 		});
 		
 		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : projectList[i].progress,
-			fillBackGroundColor:"#9b59b6",
-			height:'15px',
-			radius:'15px',
+			fillBackgroundColor : completeColor,
+			height : '15px',
+			radius : '15px',
 			width : '80%'
 		});
 		
 		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : projectList[i].progress,
-			fillBackGroundColor:"#9b59b6",
-			height:'15px',
-			radius:'15px',
+			fillBackgroundColor : overdueColor,
+			height : '15px',
+			radius : '15px',
 			width : '80%'
 		});
 	}

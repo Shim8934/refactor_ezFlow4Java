@@ -106,7 +106,7 @@ public interface EzPMSService {
 	
 	public Map<String, Object> getRemainingWeight(String projectId);
 
-	public List<Integer> getUserProjectRole(String userId, int tenantId, int projectId, String deptId);
+	public int getUserProjectRole(String userId, int tenantId, Long projectId, String deptId);
 	
 	public List<TaskMemberVO> getTaskMemberList(int tenantId, long taskId, String lang);
 
@@ -115,5 +115,7 @@ public interface EzPMSService {
 	public void updateProjectRealDate(Long projectId, int tenantId, String realStartDate, String status);
 
 	public void addKanbanOrder(Long projectId, String userId, String orderStatus, int tenantId);
+
+	public void completeAllTasks(long projectId, int tenantId, String realEndDate);
 
 }

@@ -23,7 +23,6 @@ var projectId = parent.projectId;
 var selOne = "";
 
 $(function(){
-	console.log("setting : " + kanbanOrder);
 	var kanbanOrderArr = kanbanOrder.split(",");
 	var strHTML = "";
 	strHTML += "<table class='.kanbanStatus'><tbody id='kanbanOrder'>";
