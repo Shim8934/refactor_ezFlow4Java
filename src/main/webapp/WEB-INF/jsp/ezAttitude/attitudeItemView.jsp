@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>근태 상세보기</title>
+		<title><spring:message code='ezAttitude.bbhs24'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -84,7 +84,7 @@
 			}
 			
 			function deleteAttitude() {
-				var delFlag = confirm("근태를 삭제하시겠습니까?");
+				var delFlag = confirm("<spring:message code='ezAttitude.bbhs26'/>");
 				if (delFlag) {
 					$.ajax({
 						type : "POST",
@@ -94,7 +94,7 @@
 							attitudeId : attitudeId
 						},
 						success : function(result) {
-							alert("근태를 삭제하였습니다.");
+							alert("<spring:message code='ezAttitude.bbhs27'/>");
 							window.opener.getAttitudeMainList();
 							window.opener.parent.frames["left"].getAttitudeList();
 							window.close();
@@ -137,15 +137,15 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                        	<h1 style="padding:0px; margin-top:-5px;">근태상세보기</h1>
+	                        	<h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.bbhs25'/></h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                            	<li><span onclick="sendMailAttitude()">메일로 발송</span></li>
-	                                <li><span onclick="modifyAttitude()">수정</span></li>
-	                            	<li><span onclick="deleteAttitude()">삭제</span></li>
+	                            	<li><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.bbhs28'/></span></li>
+	                                <li><span onclick="modifyAttitude()"><spring:message code='ezAttitude.bbhs29'/></span></li>
+	                            	<li><span onclick="deleteAttitude()"><spring:message code='ezAttitude.bbhs30'/></span></li>
 	                            	<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
-	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
+	                                <li><span onclick="window.close()"><spring:message code='ezAttitude.bbhs21'/></span></li>
 	                            </ul>
 	                        </div>
 	                    </td>
@@ -154,7 +154,7 @@
 	                    <td style="height: 20px">
 	                        <table id="attiInfoView" class="content">
 	                               <tr id="HolderWrite">
-	                                   <th>구분</th>
+	                                   <th><spring:message code='ezAttitude.bbhs22'/></th>
 	                                   <td id="typeName" colspan="2">
 	                                   </td>
 	                               </tr>

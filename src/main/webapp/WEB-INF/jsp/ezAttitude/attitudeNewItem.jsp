@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>근태 작성</title>
+		<title><spring:message code='ezAttitude.bbhs16'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -66,9 +66,9 @@
                 document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210 + "PX";
 		    }
 			
-		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
+		    var monthMsg = "<spring:message code='ezAttitude.bbhs1'/>";
 		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayMsg = "<spring:message code='ezAttitude.bbhs2'/>";
 		    var dayStr = dayMsg.split(";");
 		    
 			function setDatePicker(type) {
@@ -267,18 +267,18 @@
 				dateTypeCheck();
 				attRegCheck();
 				if (attRegHolidayFlag && holidayAttReg == "0") {
-					alert("근태일자에 휴무일이 포함되어 있습니다. 일자를 확인한 후 등록해주세요.");
+					alert("<spring:message code='ezAttitude.bbhs18'/>");
 					attRegHolidayFlag = false;
 					return;
 				}
 				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
 
 				if (!timeValid.test($('#Stimepicker').val()) || !timeValid.test($('#Etimepicker').val())) {
-					alert("올바른 시간을 지정해야 합니다.");
+					alert("<spring:message code='ezAttitude.bbhs37'/>");
 					return;
 				}
 				if (!check_time()) {
-					alert("시작시간은 종료시간보다 빨라야합니다.");
+					alert("<spring:message code='ezAttitude.bbhs23'/>");
 					return;
 				}
 				$.ajax({
@@ -298,7 +298,7 @@
 		        		mode : mode
 		        	},
 		        	success : function (result) {
-		        		alert("근태가 저장되었습니다.");
+		        		alert("<spring:message code='ezAttitude.bbhs19'/>");
 		        		window.opener.getAttitudeMainList();
 		        		window.opener.parent.frames["left"].getAttitudeList();
 		        		window.close();
@@ -449,11 +449,11 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <h1 style="padding:0px; margin-top:-5px;">근태작성</h1>
+	                            <h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.bbhs17'/></h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                                <li><span onclick="save_attitude()">저장 후 닫기</span></li>
+	                                <li><span onclick="save_attitude()"><spring:message code='ezAttitude.bbhs20'/></span></li>
 	                                <li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>

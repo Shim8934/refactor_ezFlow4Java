@@ -87,16 +87,16 @@
 		</div>
 	</article>
 	<div id="left" style="border-top:1px solid #dedede">
-		<h2><span id="userAttitude" onclick="functionFlag(1)" style="width:100%; display:inline-block">개인근태현황</span></h2>
+		<h2><span id="userAttitude" onclick="functionFlag(1)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs5'/></span></h2>
 		<ul></ul>
-		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block">부서근태현황</span></h2>
+		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs6'/></span></h2>
 		<ul></ul>
 		<c:if test="${attitudeConfigVO.attitudeModAppl == 1 }">
 			<h2><span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block"><spring:message code = 'ezAttitude.t7' /></span></h2>
 			<ul>
-				<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;신청현황</span></li>
+				<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs32'/></span></li>
 				<c:if test="${attitudeAdminCheck == true}">
-					<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;신청관리현황</span></li>
+					<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs33'/></span></li>
 				</c:if>
 			</ul>
 		</c:if>
@@ -191,7 +191,7 @@
 					
 					closedDay = result.attitudeConfigVO.closedDay.split(",");
 					if (closedDay[now.getDay()] == "1" || checkClosedToday) {
-			    		alert("휴일은 출/퇴근을 등록할 수 없습니다.");
+			    		alert("<spring:message code='ezAttitude.bbhs34'/>");
 					} else {
 						addAttitude(obj);
 					}
@@ -203,10 +203,10 @@
 	    	var pTypeId = obj.getAttribute("type");
 	    	var pDateType = obj.getAttribute("datetype");
 	    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
-	    		alert("출근 후 퇴근이 가능합니다.");
+	    		alert("<spring:message code='ezAttitude.bbhs35'/>");
 	    		return;
 	    	} else if (outComFlag) {
-	    		alert("조퇴 후 퇴근은 불가능합니다.");
+	    		alert("<spring:message code='ezAttitude.bbhs36'/>");
 	    		return;
 	    	}
 	    	$.ajax({
