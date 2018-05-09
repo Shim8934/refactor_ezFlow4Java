@@ -81,6 +81,7 @@ function manage_share(type) {
     }
 }
 
+/* 18-05-07 김민성 - 팝업 창 닫히는 타이밍 수정 */
 function manage_share_Complete(retVal) {
     switch (m_type) {
         case 1:
@@ -91,6 +92,7 @@ function manage_share_Complete(retVal) {
 					if (g_share != null) {
 						for (var i = 0; i < g_share["email"].length; i++) {
 							if (retVal["email"][0] == g_share["email"][i]) {
+								OpenWin.close();
 								if (primary == 1) {
 									alert(retVal["name"][0] + strLang55);
 								} else {
@@ -130,6 +132,7 @@ function manage_share_Complete(retVal) {
                 var j = 0;
                 for (var i = 0; i < retVal["id"].length; i++) {
                     if (g_person != null && g_person["email"][0] == retVal["email"][i]) {
+                    	OpenWin.close();
                     	if (primary == 1) {
                     		alert(retVal["name"][i] + strLang56);
                     	} else {

@@ -1006,7 +1006,7 @@
 		
 		    function SaveMyBoard() {
 		        if (CrossYN()) {
-		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 457, 418);
+		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 460, 418);
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else
@@ -1084,7 +1084,9 @@
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
 				</li>
-		        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63'/></span></li>
+		        <c:if test="${boardInfo.boardAdmin_FG == true}">
+			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
+		        </c:if>
 		  </ul>
 		</div>
 		<script type="text/javascript">

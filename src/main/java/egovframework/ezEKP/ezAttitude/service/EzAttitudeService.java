@@ -95,7 +95,7 @@ public interface EzAttitudeService {
 
 	public int getUsersModiyAttCount(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName ,String writerDeptName,String sysLang, String offSet, String type, String[] deptIdList, String admin, String checkAdmin) throws Exception;
 	
-	public List<HolidayVO> getHolidayList(String companyId, int tenantId) throws Exception;
+	public List<HolidayVO> getHolidayList(String isRest, String companyId, int tenantId) throws Exception;
 
 	public List<JournalAuthorVO> getDeptUserList(String tenantId, String key,	String value) throws Exception;
 

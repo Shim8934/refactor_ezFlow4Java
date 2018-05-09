@@ -848,7 +848,7 @@
 			}
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:auto" marginwidth="0" marginheight="0">
+	<body class="mainbody" style="overflow:auto; margin-bottom:0px;" marginwidth="0" marginheight="0">
 		<c:if test="${deptFlag != 'true'}">
 			<h1 id="titleimg">개인근태현황</h1>
 		</c:if>

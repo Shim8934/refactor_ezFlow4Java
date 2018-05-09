@@ -1462,7 +1462,7 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList(companyId, tenantId);
+			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList("", companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1741,6 +1741,8 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+e.printStackTrace();
+LOGGER.debug(e.getMessage());
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

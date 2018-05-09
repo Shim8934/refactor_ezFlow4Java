@@ -720,12 +720,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<HolidayVO> getHolidayList(String companyId, int tenantId)
-			throws Exception {
+	public List<HolidayVO> getHolidayList(String isRest, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getHolidayList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("isRest", isRest);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
@@ -986,7 +986,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		List<AdminAttitudeVO> totalList = new ArrayList<AdminAttitudeVO>();
 		
 		/* 2018-05-01 이효진 추후개선 미입력자이거말고 어떠케뽑는지 모르겟어서 */
-		while (true) {
+		/*while (true) {
 			tempDateTime = sdf.format(cal.getTime());
 			
 			//day_of_week 1 일 2 월 3 화 ...
@@ -1006,10 +1006,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if (tempDateTime.equals(searchEndDate)) {
 				break;
 			}
-		};
+		};*/
 		
 		////
-		/*for (String tempDate : checkHoliday(searchStartDate, searchEndDate, userLang, companyId, tenantId)) {
+		for (String tempDate : checkHoliday(searchStartDate, searchEndDate, userLang, companyId, tenantId)) {
 			LOGGER.debug("tempDateTime = " + tempDate);
 			
 			map.put("searchStartDate", commonUtil.getDateStringInUTC(tempDate + " 00:00:00", offset, true));
@@ -1019,7 +1019,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			totalList.addAll(resultList);
 			
 			LOGGER.debug("resultList size = " + resultList.size());
-		}*/
+		}
 		
 		if (duplicated.equals("distinct")) {
 			HashSet<AdminAttitudeVO> listSet = new HashSet<AdminAttitudeVO>(totalList);
@@ -1128,17 +1128,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		/*2018-05-08 이효진 holidayList 생성*/
 		//회사 기념일
-		//isrepeat 이면 반복이니 year짜르고 해당연도 붙임
-		//isSolar 0:음력 1:양력
-		List<HolidayVO> holidayList = getHolidayList(companyId, tenantId);
+		List<HolidayVO> holidayList = getHolidayList("rest", companyId, tenantId);
 		//근태휴무일
-//		CLOSED_DAY 일 ~ 토
-//		while문에 날짜별 요일 체크해서 1이면 휴무일처리 closedday 1이면 휴일 0이면 평일
 		AttitudeConfigVO attitudeConfig = getAttitudeConfig(tenantId, companyId);
-		String checkDay[] = attitudeConfig.getClosedDay().split(".");
+		String checkDay[] = attitudeConfig.getClosedDay().split(",");
 		//국가공휴일
-//		KoreanLunarCalendear 안에 상수 선언
-//		userlang 1:한국어 3:일본어
 		KoreanLunarCalendar koreaCalendar = KoreanLunarCalendar.getInstance();
 		
 		String nationHoliday[] = null;
@@ -1151,17 +1145,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			nationHoliday = koreaCalendar.HOLIDAY_KOREA;
 		}
 		
-		HolidayVO vo = new HolidayVO();
-		
 		for (String holiday : nationHoliday) {
 			String temp[] = holiday.split(", ");
-			vo.setHolidayDate(checkStartDate.substring(0,4) + "-" + temp[2] + "-" + temp[3] + " 00:00:00");
+			
+			HolidayVO vo = new HolidayVO();
+			vo.setHolidayDate(checkStartDate.substring(0,4) + "-" + temp[2] + "-" + temp[3]);
 			vo.setHolidayName(temp[0]);
 			vo.setHolidayName2(temp[1]);
 			vo.setIsRepeat(1);
-			vo.setIsRest(1);
-			vo.setIsSolar(temp[4].equals("1") ? 0 : 1);
-			vo.setIsUse(1);
+			vo.setIsSolar(temp[4].equals("1") ? 1 : 0);
 			vo.setUseCompany(companyId);
 			
 			holidayList.add(vo);
@@ -1169,14 +1161,39 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		//음력 -> 양력변환
 		DecimalFormat df = new DecimalFormat("00");
-				
+		String startYear = checkStartDate.substring(0, 4);
+		String endYear = checkEndDate.substring(0, 4);
+		
 		for (HolidayVO vo1 : holidayList) {
 			if (vo1.getIsSolar() == 0) {
 				String lunarDate = vo1.getHolidayDate();
 				
-				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.split("-")[0]), Integer.parseInt(lunarDate.split("-")[1]), Integer.parseInt(lunarDate.split("-")[2]), true);
-				vo1.setHolidayDate(koreaCalendar.getSolarYear() + "-" + df.format(koreaCalendar.getSolarMonth()) + "-" + df.format(koreaCalendar.getSolarDay()) + " 00:00:00");
+				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.substring(0, 4)), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), true);
+				vo1.setHolidayDate(koreaCalendar.getSolarYear() + "-" + df.format(koreaCalendar.getSolarMonth()) + "-" + df.format(koreaCalendar.getSolarDay()));
 			}
+			
+			String voYear = vo1.getHolidayDate().substring(0, 4);
+			
+			if (vo1.getIsRepeat() == 1) {
+				if (startYear.equals(endYear)) {
+					if (!startYear.equals(voYear)) {
+						vo1.setHolidayDate(vo1.getHolidayDate().replace(voYear, startYear));
+					}
+				} else {
+					if (!startYear.equals(voYear)) {
+						vo1.setHolidayDate(vo1.getHolidayDate().replace(voYear, startYear));
+					}
+					
+					if (!endYear.equals(voYear)) {
+						HolidayVO vo2 = new HolidayVO();
+						vo2.setHolidayDate(vo1.getHolidayDate().replace(startYear, endYear));
+						
+						holidayList.add(vo2);
+					}
+				}
+				
+			}
+			
 		}
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -1186,95 +1203,148 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		cal.setTime(startDate);
 		
 		String tempDate = "";
-			
+		boolean isContained = true;
+		
 		List<String> result = new ArrayList<String>();
 		
 		while (true) {
+			isContained = true;
 			tempDate = sdf.format(cal.getTime());
 			
-			switch (cal.get(Calendar.DAY_OF_WEEK)) {
-			case 0:
-				if (checkDay[0].equals("1")) {
-					result.add(tempDate);
-					break;
-				} else {
-					for (HolidayVO vo1 : holidayList) {
-						if (vo1.getHolidayDate().equals(tempDate)) {
-							result.add(tempDate);
-							break;
+			if (!result.contains(tempDate)) {
+				switch (cal.get(Calendar.DAY_OF_WEEK)) {
+				case 1:
+					if (checkDay[0].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
 						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
 					}
-				}
-			case 1:
-				if (checkDay[1].equals("1")) {
-					result.add(tempDate);
-					break;
-				} else {
-					for (HolidayVO vo1 : holidayList) {
-						if (vo1.getHolidayDate().equals(tempDate)) {
-							result.add(tempDate);
-							break;
+				case 2:
+					if (checkDay[1].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
 						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
 					}
-				}
-			case 2:
-				if (checkDay[2].equals("1")) {
-					result.add(tempDate);
-					break;
-				} else {
-					for (HolidayVO vo1 : holidayList) {
-						if (vo1.getHolidayDate().equals(tempDate)) {
-							result.add(tempDate);
-							break;
+				case 3:
+					if (checkDay[2].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
 						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
 					}
-				}
-			case 3:
-				if (checkDay[3].equals("1")) {
-					result.add(tempDate);
-					break;
-				} else {
-					for (HolidayVO vo1 : holidayList) {
-						if (vo1.getHolidayDate().equals(tempDate)) {
-							result.add(tempDate);
-							break;
+				case 4:
+					if (checkDay[3].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
 						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
 					}
-				}
-			case 4:
-				if (checkDay[4].equals("1")) {
-					result.add(tempDate);
-					break;
-				} else {
-					for (HolidayVO vo1 : holidayList) {
-						if (vo1.getHolidayDate().equals(tempDate)) {
-							result.add(tempDate);
-							break;
+				case 5:
+					if (checkDay[4].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
 						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
 					}
-				}
-			case 5:
-				if (checkDay[5].equals("1")) {
-					result.add(tempDate);
-					break;
-				} else {
-					for (HolidayVO vo1 : holidayList) {
-						if (vo1.getHolidayDate().equals(tempDate)) {
-							result.add(tempDate);
-							break;
+				case 6:
+					if (checkDay[5].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
 						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
 					}
-				}
-			case 6:
-				if (checkDay[6].equals("1")) {
-					result.add(tempDate);
-					break;
-				} else {
-					for (HolidayVO vo1 : holidayList) {
-						if (vo1.getHolidayDate().equals(tempDate)) {
-							result.add(tempDate);
-							break;
+				case 7:
+					if (checkDay[6].equals("1")) {
+						break;
+					} else {
+						for (HolidayVO vo1 : holidayList) {
+							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+								isContained = true;
+								break;
+							} else {
+								isContained = false;
+							}
 						}
+						
+						if (!isContained) {
+							result.add(tempDate);
+						}
+						
+						break;
 					}
 				}
 			}
