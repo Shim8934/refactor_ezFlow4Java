@@ -210,7 +210,7 @@
 						<div style="vertical-align:top; height:500px; border: none; width:100%; overflow-x:auto;overflow-y:auto;/* BORDER:#b6b6b6 1px solid; */ BACKGROUND-COLOR:#ffffff" >
 							<table id="formType" class="mainlist" style="width: 100%; border-width: 0px 0px 1px 0px;">
 								<tr>
-									<th style="text-align: center;"><spring:message code='ezJournal.t12'/></th>
+									<th style="text-align: center; border-top:none;"><spring:message code='ezJournal.t12'/></th>
 								</tr>
 								<c:forEach items="${typeList}" var="type">
 									<tr>
@@ -227,11 +227,11 @@
 			        		<table class="mainlist" style="width: 100%;">
 			        			<thead>
 			        				<tr>
-			        					<th style="width: 7%; text-align: center;"><spring:message code='ezJournal.t21'/></th>
-			        					<th style="width: 20%"><spring:message code='ezJournal.t22'/></th>
-			        					<th style="width: 20%"><spring:message code='ezJournal.t23'/></th>
-			        					<th style="width: 35%"><spring:message code='ezJournal.t24'/></th>
-			        					<th style="width: 13%"><spring:message code='ezJournal.t25'/></th>
+			        					<th style="width: 7%; text-align: center; border-top:none;"><spring:message code='ezJournal.t21'/></th>
+			        					<th style="width: 20%; border-top:none;"><spring:message code='ezJournal.t22'/></th>
+			        					<th style="width: 20%; border-top:none;"><spring:message code='ezJournal.t23'/></th>
+			        					<th style="width: 35%; border-top:none;"><spring:message code='ezJournal.t24'/></th>
+			        					<th style="width: 13%; border-top:none;"><spring:message code='ezJournal.t25'/></th>
 			        				</tr>
 			        			</thead>
 			        			<tbody id="formList" class="formList" style="margin: 0; padding: 0;" ondblclick="btnModForm()">
