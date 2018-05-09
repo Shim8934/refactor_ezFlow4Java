@@ -483,10 +483,6 @@
 							shareContext.showShareInfo(this);
 						});
 						shareStatusColumn.appendChild(spanElmt);
-					} else if (resultJson["shareStatus"] == "S") {
-						var spanElmt = document.createElement("span");
-						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
-						shareStatusColumn.appendChild(spanElmt);
 					} else {
 						shareStatusColumn.textContent = "";
 					}
@@ -884,7 +880,7 @@
 							alert(messages.strLang13);
 						} else {
 							openLeftPanel();
-							DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
+							DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 						}
 					},
 					error : function(error) {
