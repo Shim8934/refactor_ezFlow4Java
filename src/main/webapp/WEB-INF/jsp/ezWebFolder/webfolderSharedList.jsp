@@ -27,10 +27,7 @@
 		<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
 		<script type="text/javascript">
-			var file 		 = new Array();
-			var filelist = [];
 			var currentFolderId = "";
-			var originalPath = "";
 			var isShareMode = true;
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
@@ -50,21 +47,18 @@
 				// dom elements setup
 				initDomElement();
 				
-				getFileList();
-				
 				searchContext.setSearchStartEventHandler(function() {
+					pagination.setPage(1, true);
 					$("#fileTypeSelect").val("");
 					searchContext.setFileType("");
-				});
-				
-				searchContext.setFileTypeChangeEventHandler(function() {
-					getFileList();
+					refreshView();
 				});
 				
 				pagination.setPageChangeEventHandler(function() {
-					getFileList();
+					getFileList(currentFolderId);
 				});
 				
+				getFileList();
 				window.onresize();
 				
 				// datepicker setup
@@ -100,7 +94,7 @@
 				dom.listSizeSelect.addEventListener("change", function(event) {
 					optionHidden();
 					pagination.setListSize(this.value);
-					getFileList(folderId);
+					refreshView();
 				});
 		    });
 			
@@ -162,6 +156,7 @@
 							setNamePath(data.folderPath, data.folderPath2);
 							setMailBoxInfo(data.folderCount, data.fileCount);
 							
+							currentFolderId = folderId;
 						} else {
 							alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
 						}
@@ -291,9 +286,9 @@
 					var column = document.createElement("td");
 					
 					if (isShareMode) {
-						column.setAttribute("colspan", "10");
+						column.setAttribute("colspan", "11");
 					} else {
-						column.setAttribute("colspan", "9");
+						column.setAttribute("colspan", "10");
 					}
 					
 					column.setAttribute("align", "center");
@@ -481,7 +476,7 @@
 		    	currentPage = Value;
 		        pStart = (blockSize * (currentPage)) - blockSize;
 		        pEnd = blockSize;
-		        getFileList();
+		        getFileList(currentFolderId);
 		    }
 		    
 		   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
@@ -527,14 +522,10 @@
 			}
 			
 			function doLayerPopup(obj) {
-		        var searchRequirement = searchContext.getCurrentRequirement();
-		        clearDatepicker();
-		        
-		        $('#searchExt').val(searchRequirement.extension);               
-	            $('#searchFileName').val(searchRequirement.name);
-	            $('#searchCreateName').val(searchRequirement.creatorName);
-	            $('#Sdatepicker').val(searchRequirement.startDate);
-	            $('#Edatepicker').val(searchRequirement.endDate);
+				clearDatepicker();
+				document.getElementById("searchExt").value = "";
+				document.getElementById("searchFileName").value = "";
+				document.getElementById("searchCreateName").value = "";
 		    
 		        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 		        var leftBody = parent.frames["left"].document.body;
@@ -582,18 +573,13 @@
 				AttachDownFrame.location.href = downloadUrl;
 			}
 			
-			function endUpdate() {
-
-			}
 			
 			function fileUpload2() {
 				document.getElementById("file").click();
-//	     	   refreshView();
-//	     	   endUpdate();
 			}
 	       
 			function refreshView() {
-				getFileList();
+				getFileList(currentFolderId);
 			}
 	       
 	       function fileDelete() {
@@ -718,7 +704,7 @@
 					return undefined;
 				}
 				
-				var files  = [];
+				var files = [];
 				var folders = [];
 				var rowInfo;
 				
@@ -737,29 +723,18 @@
 					files : files
 				}
 			}
-			
-			function changeCount(value) {
-				blockSize = value;
-				currentPage = 1;
-				pStart = 0;
-				refreshView();
-			}
 	       
 			function onFileTypeChange(value) {
-				if (value == "all") {
-					value = "";
-				}
-				
-				currentPage = 1;
 				searchContext.setFileType(value);
+				pagination.setPage(1);
 			}
 	       
 			function downloadFileByDbClick(event) {
 				event.stopPropagation();
 				event.preventDefault();
-				var trElmt       = event.currentTarget;
+				var trElmt = event.currentTarget;
 				var fileFolderId = trElmt.getAttribute("targetId");
-				var filesList    = [];
+				var filesList = [];
 				filesList.push(fileFolderId);
 				
 				var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
@@ -769,18 +744,18 @@
 			function openLeftPanel() {
 				var leftFrame = window.parent.frames["left"].document;
 				var blockLeft = leftFrame.getElementById("bnkBlockLeft");
-				var height    = Math.max(leftFrame.documentElement.clientHeight, leftFrame.documentElement.scrollHeight);
+				var height = Math.max(leftFrame.documentElement.clientHeight, leftFrame.documentElement.scrollHeight);
 				leftFrame.body.style.overflow = "hidden";
-				blockLeft.style.height        = height + "px";
-				blockLeft.style.display       = "";
+				blockLeft.style.height = height + "px";
+				blockLeft.style.display = "";
 			}
 
 			function closeLeftPanel() {
 				var leftFrame = window.parent.frames["left"].document;
 				var blockLeft = leftFrame.getElementById("bnkBlockLeft");
 				leftFrame.body.style.overflow = "auto";
-				blockLeft.style.height        = "100%";
-				blockLeft.style.display       = "none";
+				blockLeft.style.height = "100%";
+				blockLeft.style.display = "none";
 			}
 		</script>
 	</head>
@@ -821,8 +796,8 @@
 							<option value="music"><spring:message code='ezWebFolder.t193'/></option>
 							<option value="video"><spring:message code='ezWebFolder.t194'/></option>
 							<option value="image"><spring:message code='ezWebFolder.t195'/></option>
-							<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
 							<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
+							<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
 						</select>
 					</li>
 					<li id="right" style="float:right;">
@@ -836,7 +811,8 @@
 			</script>
 			
 			<div id="progress-wrp" style="display: none;">
-		    	<div class="progress-bar"></div ><div class="status">0%</div>
+		    	<div class="progress-bar"></div>
+		    	<div class="status">0%</div>
 		    </div>
 			
 			<div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
@@ -851,7 +827,7 @@
 		                    <tr>
 		                        <th><spring:message code='ezBoard.t10021' /></th>
 		                        <td>
-		                            <select id="listcount" style="width: 40px; height: 20px;" onchange="changeCount(this.value);">
+		                            <select id="listcount" style="width: 40px; height: 20px;">
 		                                <option value="10">10</option>
 		                                <option value="20">20</option>
 		                                <option value="30">30</option>
@@ -865,6 +841,9 @@
 		        </div>
 		        <div class="shadow"></div>
 		 	</div>
+		 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id=""></div>
+	    	<div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
+	    	<div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 			
 			<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;">
 				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
@@ -891,6 +870,7 @@
 			<div class="layerpopup" style="z-index:2000; position:absolute; display:none;" id="iFramePanel">
 				<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
 			</div>
+			<div id="tblPageRayer"></div>
 		</div>
 		
 		<div id="srarchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
@@ -937,7 +917,6 @@
 			</div>
 		</div>	
 		
-		<div id="tblPageRayer"></div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
