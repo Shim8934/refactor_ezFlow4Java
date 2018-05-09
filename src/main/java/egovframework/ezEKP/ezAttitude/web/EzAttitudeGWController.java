@@ -335,16 +335,7 @@ public class EzAttitudeGWController {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			 
-			LOGGER.debug("companyId : " + companyId);
-			LOGGER.debug("tenantId : " + tenantId);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("offset : " + offset);
-			LOGGER.debug("content : " + content);
-			LOGGER.debug("changeDate : " + changeDate);
-			LOGGER.debug("originDate : " + originDate);
-			LOGGER.debug("attitudeId : " + attitudeId);
-			
+
 			status = ezAttitudeService.attSaveAppModify(attitudeId, companyId, tenantId, userId, info.getUserName(), 
 					info.getUserName2(), info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), 
 					info.getDeptName2(), changeDate, "0", content, offset, originDate);
@@ -1816,7 +1807,7 @@ LOGGER.debug(e.getMessage());
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");

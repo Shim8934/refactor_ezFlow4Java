@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title>attitudeConfig</title>
+	    <title><spring:message code = 'ezAttitude.t2' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 	    <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -133,7 +133,7 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code='ezAttitude.t10' /></h1>
+	    <h1><spring:message code='ezAttitude.t2' /></h1>
 	  	<div id="mainmenu">
 			<ul>
 	        	<li style="background: none;">
@@ -155,7 +155,7 @@
 		<table class="content" style="width:500px">
 			<tr style="height:30px;">
 	        	<th style="width: 70px; text-align:center">
-					<spring:message code='ezAttitude.t17' />
+					<spring:message code='ezAttitude.t12' />
 	            </th>
 	            <td style="width: 500px; text-align:left; padding-left: 5px;">
 	            	<input id="startTime" type="text" style="width:50px;"/> ~ <input id="endTime" type="text" style="width:50px;"/>

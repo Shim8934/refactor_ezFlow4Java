@@ -9,7 +9,8 @@
 		<title>left_attitude</title>
 		<link rel="stylesheet" href="/css/email_tree.css" type="text/css"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
-		<link rel="stylesheet" href="/css/main.css" type="text/css"/>		
+		<link rel="stylesheet" href="/css/main.css" type="text/css"/>	
+		<link rel="stylesheet" href="/css/ezAttitude/clockTemp1.css" type="text/css" />	
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>
@@ -59,29 +60,43 @@
 	</head>
 <body class="leftbody">
 	<div class="left_pims" title="근태관리"><span>근태관리</span></div>
+<!-- 	<article class="time"> -->
+<%-- 		<p class="title"><spring:message code='main.t00023' /></p> --%>
+<!-- 		<div style=" margin-left:52px ;width:110px; height:67px; border:2px solid grey; border-radius:27px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px; background-color:rgb(255,255,255);"> -->
+<!-- 			<p id="timeinput" style="margin:21px 0px 0px 2px;"></p> -->
+<!-- 		</div> -->
+<!-- 			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; overflow:hidden;"> -->
+<!-- 			<p id="inAttiClock" style="margin:5px 0px 0px 0px; font-size:13px;">출근 : 00:00:00</p> -->
+<!-- 			<p id="outAttiClock" style="margin:5px 0px 8px 0px;  font-size:13px;">퇴근 : 00:00:00</p> -->
+<!-- 			<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)" style="margin-left:0px;">출근</span> -->
+<!-- 			<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span> -->
+<!-- 		</div> -->
+<!-- 	</article> -->
 	<article class="time">
-		<p class="title"><spring:message code='main.t00023' /></p>
-		<div style=" margin-left:52px ;width:110px; height:67px; border:2px solid grey; border-radius:27px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px; background-color:rgb(255,255,255);">
-			<p id="timeinput" style="margin:21px 0px 0px 2px;"></p>
+		<div id="clock" class="light">
+			<div class="display">
+				<p class="title" style="padding:3px 0px 0px 11px; width:200px;"><spring:message code='main.t00023'/></p>
+				<div class="digits" style="padding:18px 0px 0px 15px; width:200px;"></div>
+			</div>
 		</div>
-			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; overflow:hidden;">
-			<p id="inAttiClock" style="margin:5px 0px 0px 0px; font-size:13px;">출근 : 00:00:00</p>
-			<p id="outAttiClock" style="margin:5px 0px 8px 0px;  font-size:13px;">퇴근 : 00:00:00</p>
-			<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)" style="margin-left:0px;">출근</span>
+		<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:213px;">
+			<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:13px;">출근 : 00:00:00</p>
+			<p id="outAttiClock" style="margin:5px 0px 8px 8px;  font-size:13px;">퇴근 : 00:00:00</p>
+			<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
 			<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span>
 		</div>
 	</article>
 	<div id="left" style="border-top:1px solid #dedede">
-		<h2><span id="userAttitude" onclick="functionFlag(1)" style="width:100%; display:inline-block">개인근태현황</span></h2>
+		<h2><span id="userAttitude" onclick="functionFlag(1)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs5'/></span></h2>
 		<ul></ul>
-		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block">부서근태현황</span></h2>
+		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs6'/></span></h2>
 		<ul></ul>
 		<c:if test="${attitudeConfigVO.attitudeModAppl == 1 }">
-			<h2><span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block">근태수정관리</span></h2>
+			<h2><span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block"><spring:message code = 'ezAttitude.t7' /></span></h2>
 			<ul>
-				<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;신청현황</span></li>
+				<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs32'/></span></li>
 				<c:if test="${attitudeAdminCheck == true}">
-					<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;신청관리현황</span></li>
+					<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs33'/></span></li>
 				</c:if>
 			</ul>
 		</c:if>
@@ -96,34 +111,13 @@
 		window.onload = function(){
 			setAttiBtnHover();
 			getAttitudeList();
-		    yourClock();
+		    //yourClock();
 		    select_memorialDays(uselang);
 		    
 		    document.getElementById('userAttitude').onclick();
 		    
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		}
-		
-		function yourClock() {
-	        var nd = new Date();
-	        var h, m;
-	        var s;
-	        var time = " ";		        
-	        time = getWorldTime(parseInt(userOffset.split(':')[0]),parseInt(userOffset.split(':')[1]));
-	        document.getElementById("timeinput").innerHTML = time;
-	        gizmo = setTimeout("yourClock()", 1000);
-	    }
-		
-		function getWorldTime(tzOffsetHour, tzOffsetMinute) { // 24시간제
-	        var now = new Date();
-	        var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (tzOffsetHour * 3600000) + (tzOffsetMinute * 60000);
-	        now.setTime(tz);
-	        var s =
-	          leadingZeros(now.getHours(), 2) + ':' +
-	          leadingZeros(now.getMinutes(), 2) + ':' +
-	          leadingZeros(now.getSeconds(), 2);
-	        return s;
-	    }
 		
 		 function leadingZeros(n, digits) {
 	        var zero = '';
@@ -197,7 +191,7 @@
 					
 					closedDay = result.attitudeConfigVO.closedDay.split(",");
 					if (closedDay[now.getDay()] == "1" || checkClosedToday) {
-			    		alert("휴일은 출/퇴근을 등록할 수 없습니다.");
+			    		alert("<spring:message code='ezAttitude.bbhs34'/>");
 					} else {
 						addAttitude(obj);
 					}
@@ -209,10 +203,10 @@
 	    	var pTypeId = obj.getAttribute("type");
 	    	var pDateType = obj.getAttribute("datetype");
 	    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
-	    		alert("출근 후 퇴근이 가능합니다.");
+	    		alert("<spring:message code='ezAttitude.bbhs35'/>");
 	    		return;
 	    	} else if (outComFlag) {
-	    		alert("조퇴 후 퇴근은 불가능합니다.");
+	    		alert("<spring:message code='ezAttitude.bbhs36'/>");
 	    		return;
 	    	}
 	    	$.ajax({
@@ -257,6 +251,74 @@
 	    			break;
 	    	}
 	    }
+	    
+	    $(function(){
+	    	var clock = $('#clock');
+	    	
+	    	var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');
+
+	    	// This object will hold the digit elements
+	    	var digits = {};
+
+	    	// Positions for the hours, minutes, and seconds
+	    	//'h1', 'h2', ':', 'm1', 'm2', ':', 's1', 's2'
+	    	var positions = [
+				'h1', 'h2', ':', 'm1', 'm2', ':', 's1', 's2'
+	    	];
+
+	    	// Generate the digits with the needed markup,
+	    	// and add them to the clock
+
+	    	var digit_holder = clock.find('.digits');
+
+	    	$.each(positions, function(){
+
+	    		if(this == ':'){
+	    			digit_holder.append('<div class="dots">');
+	    		}
+	    		else{
+
+	    			var pos = $('<div>');
+
+	    			for(var i=1; i<8; i++){
+	    				pos.append('<span class="d' + i + '">');
+	    			}
+
+	    			// Set the digits as key:value pairs in the digits object
+	    			digits[this] = pos;
+
+	    			// Add the digit elements to the page
+	    			digit_holder.append(pos);
+	    		}
+
+	    	});
+
+	    	(function update_time(){
+	    		var now = format();
+
+	    		digits.h1.attr('class', digit_to_name[now[0]]);
+	    		digits.h2.attr('class', digit_to_name[now[1]]);
+	    		digits.m1.attr('class', digit_to_name[now[2]]);
+	    		digits.m2.attr('class', digit_to_name[now[3]]);
+	    		digits.s1.attr('class', digit_to_name[now[4]]);
+	    		digits.s2.attr('class', digit_to_name[now[5]]);
+
+	    		// Mark the active day of the week
+	    		setTimeout(update_time, 1000);
+
+	    	})();
+	    	
+	    	function format(type){
+	 	        var now = new Date();
+		        var tz = now.getTime() + (now.getTimezoneOffset() * 60000) + (parseInt(userOffset.split(':')[0]) * 3600000) + (parseInt(userOffset.split(':')[1]) * 60000);
+		        now.setTime(tz);
+		        var s =
+		          leadingZeros(now.getHours(), 2)+
+		          leadingZeros(now.getMinutes(), 2)+
+		          leadingZeros(now.getSeconds(), 2);
+		        return s;
+	    	}
+	    });
 	</script>
 </body>
 </html>
