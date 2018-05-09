@@ -55,9 +55,10 @@ var favoriteContext = (function() {
 		requestAjax(files.toString(), folders.toString(), false, successHandle);
 	}
 	
-	function onImageClick(element) {
+	function onImageClick(event) {
 		event.stopPropagation();
 		
+		var element = event.target;
 		var rowElement = element.parentElement.parentElement;
 		var successHandle = function() {
 			toggleImage(rowElement, element);

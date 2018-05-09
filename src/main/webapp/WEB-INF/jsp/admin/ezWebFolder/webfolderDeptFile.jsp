@@ -135,14 +135,14 @@
 		<div id="dragDropArea">
 			<table class="mainlist wftablefile" style="width: 100%; text-algin: center;" id="tblFileList">
 				<tr>
-					<th              width="10px" ><input type="checkbox"></th>
-					<th headers="ft" width="40px" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
-					<th headers="fn" width="200px"><spring:message code='ezWebFolder.t156'/></th>
-					<th headers="fs" width="60px" style="text-align: center;"><spring:message code='ezWebFolder.t157'/></th>
-					<th headers="un" width="80px"><spring:message code='ezWebFolder.t189'/></th>
-					<th headers="cd" width="80px" ><spring:message code='ezWebFolder.t190'/></th>
-					<th headers="ud" width="80px" ><spring:message code='ezWebFolder.t198'/></th>
-					<th              width="160px"><spring:message code='ezWebFolder.t199'/></th>
+					<th width="20px" ><input type="checkbox"></th>
+					<th headers="ft" style="text-align: center; width: 20px;"><spring:message code='ezWebFolder.t188'/></th>
+					<th headers="fn" style="width: 30%;"><spring:message code='ezWebFolder.t156'/></th>
+					<th headers="fs" style="text-align: center; width: 6%;" ><spring:message code='ezWebFolder.t157'/></th>
+					<th headers="un" style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th>
+					<th headers="cd" style="width: 10%;"><spring:message code='ezWebFolder.t190'/></th>
+					<th headers="ud" style="width: 10%;"><spring:message code='ezWebFolder.t198'/></th>
+					<th              style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th>
 					<th headers="dt" width="70px" style="text-align: center;"><spring:message code='ezWebFolder.t200'/></th>
 				</tr>
 				
