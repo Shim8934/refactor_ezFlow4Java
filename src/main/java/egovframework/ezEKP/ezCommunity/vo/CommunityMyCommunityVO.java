@@ -41,6 +41,8 @@ public class CommunityMyCommunityVO {
 	String c_Logo_Thumbnail;
 	/** */
 	String c_ClubConfirmType;
+	/** 댓글갯수  //2018-05-07 홍승비 댓글갯수 표출 */
+	int oneLineCnt;
 	
 	public String getC_ClubNo() {
 		return c_ClubNo;
@@ -162,5 +164,10 @@ public class CommunityMyCommunityVO {
 	public void setC_ClubConfirmType(String c_ClubConfirmType) {
 		this.c_ClubConfirmType = c_ClubConfirmType;
 	}
-	
+	public int getOneLineCnt() {
+		return oneLineCnt;
+	}
+	public void setOneLineCnt(int oneLineCnt) {
+		this.oneLineCnt = oneLineCnt;
+	}
 }
