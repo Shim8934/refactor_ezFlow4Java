@@ -229,9 +229,12 @@ function openLeftPanel() {
 
 function closeAllPopups() {
 	closeLeftPanel();
-	document.getElementById("mailPanel").style.display   = "none";
-	document.getElementById("searchPanel").style.display = "none";
-	document.getElementById("iFramePanel").style.display = "none";
+	if (document.getElementById("ui-datepicker-div")) {
+		document.getElementById("ui-datepicker-div").style.display = "none";
+	}
+	document.getElementById("mailPanel").style.display         = "none";
+	document.getElementById("searchPanel").style.display       = "none";
+	document.getElementById("iFramePanel").style.display       = "none";
 }
 
 function closeLeftPanel() {

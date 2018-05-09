@@ -2324,6 +2324,7 @@ public class EzWebFolderGWController {
 			}
 			else {
 				result.put("status", "error");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
 				result.put("code", 0);
 			}
 		}
