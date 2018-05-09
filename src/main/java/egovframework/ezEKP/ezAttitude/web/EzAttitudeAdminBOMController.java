@@ -1416,7 +1416,7 @@ public class EzAttitudeAdminBOMController {
 	 */
 	@RequestMapping(value = {"/admin/ezAttitude/absentedListSendMail.do", "/ezAttitude/absentedListSendMail.do"})
 	@ResponseBody
-	public JSONObject absentedListSendMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String absentedListSendMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("absentedListSendMail started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1473,16 +1473,9 @@ public class EzAttitudeAdminBOMController {
 		
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
-		
-		JSONObject jObject = new JSONObject();
-		jObject.put("status", status);
-		if(status.equals("ok")){
-			
-		}
-		
 		LOGGER.debug("absentedListSendMail ended.");
 		
-		return jObject;
+		return status;
 	}
 	
 	/**
