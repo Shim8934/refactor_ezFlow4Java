@@ -21,6 +21,10 @@
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 110;
 setTotalCount("${projectListCount}");
+var progressColor = "${progressColor}";
+var completeColor = "${completeColor}";
+var overdueColor = "${overdueColor}";
+var holdColor = "${holdColor}";
 
 $(function(){
 	var projectList = new Array();
@@ -35,25 +39,25 @@ $(function(){
 	for (var i = 0; i < projectList.length; i++) {
 		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : projectList[i].progress,
-			fillBackGroundColor:"#9b59b6",
-			height:'15px',
-			radius:'15px',
+			fillBackgroundColor : progressColor,
+			height : '15px',
+			radius : '15px',
 			width : '80%'
 		});
 		
 		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : projectList[i].progress,
-			fillBackGroundColor:"#9b59b6",
-			height:'15px',
-			radius:'15px',
+			fillBackgroundColor : completeColor,
+			height : '15px',
+			radius : '15px',
 			width : '80%'
 		});
 		
 		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : projectList[i].progress,
-			fillBackGroundColor:"#9b59b6",
-			height:'15px',
-			radius:'15px',
+			fillBackgroundColor : overdueColor,
+			height : '15px',
+			radius : '15px',
 			width : '80%'
 		});
 	}
@@ -85,7 +89,7 @@ $(function(){
 				</table>
 			</c:when>
 			<c:otherwise>
-				<c:forEach items="${projectList }" var="project">
+			<c:forEach items="${projectList }" var="project">
 			<table id="${project.projectId }" class="projectList" style="margin: 10px 20px; float: left; position: relative; border: solid 1px gray; clear: none; width: 360px; left: 2%; cursor:pointer;" ondblclick="goProjectDetails(this)">
 				<tr>
 					<th colspan="2" style="height: 30px; font-size: 15px;">
@@ -139,7 +143,7 @@ $(function(){
 					<td class="memoTd">&nbsp;&nbsp;완료된 업무</td>
 					<td><div complete="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 						<div style="margin-top: 5px; display: inline-block;">
-							<c:out value="${project.progress }" />
+						<c:out value="${project.progress }" />
 						</div>
 					</td>
 				</tr>
@@ -147,7 +151,7 @@ $(function(){
 					<td class="memoTd">&nbsp;&nbsp;지연된 업무</td>
 					<td><div overdue="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 						<div style="margin-top: 5px; display: inline-block;">
-							<c:out value="${project.progress }" />
+						<c:out value="${project.progress }" />
 						</div>
 					</td>
 				</tr>

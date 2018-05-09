@@ -2,44 +2,31 @@ package egovframework.ezEKP.ezPMS.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.plaf.synth.SynthSplitPaneUI;
 
-import org.hsqldb.result.Result;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.jta.UserTransactionAdapter;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
-import egovframework.ezEKP.ezJournal.vo.JournalPagination;
-import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
-import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
-import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -202,6 +189,11 @@ public class EzPMSController {
 			model.addAttribute("listProjectStatus", listProjectStatus);
 			model.addAttribute("projectList", projectList);
 			model.addAttribute("projectListCount", projectListCount);
+			model.addAttribute("progressColor", param.get("progressColor"));
+			model.addAttribute("completeColor", param.get("completeColor"));
+			model.addAttribute("overdueColor", param.get("overdueColor"));
+			model.addAttribute("holdColor", param.get("holdColor"));
+			
 		}
 		LOGGER.debug("[result] projectSort : " + projectSort + ", projectLsitCount : " + projectListCount + ", currentPage : " + currentPage + ", listNumber : " + listNumber);
 		
@@ -504,11 +496,15 @@ public class EzPMSController {
 		if (status.equals("ok")) {
 			JSONObject resultJson = (JSONObject) result.get("data");
 			JSONObject project = (JSONObject) resultJson.get("project");
+			JSONObject mainSetting = (JSONObject) resultJson.get("mainSetting");
 			
 			String kanbanOrder = resultJson.get("kanbanOrder").toString();
+			int userRole = Integer.parseInt(resultJson.get("userRole").toString());
 			
 			model.addAttribute("project", project);
 			model.addAttribute("kanbanOrder", kanbanOrder);
+			model.addAttribute("userRole", userRole);
+			model.addAttribute("mainSetting", mainSetting);
 		}
 		
 		LOGGER.debug("ezPMS getProjectOverview ended");		
@@ -558,14 +554,30 @@ public class EzPMSController {
 	public String getProjectMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS getProjectMember started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
 		String projectId = request.getParameter("projectId");
 		String roleId = request.getParameter("roleId");
 		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		
 		String url = "/rest/ezPMS/projects/" + projectId + "/roles/" + roleId;
 		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject json = (JSONObject) result.get("data");
+			JSONArray memberList = (JSONArray) json.get("memberList");
+			int memberCount = memberList.size();
+			
+			model.addAttribute("roleId", roleId);
+			model.addAttribute("memberList", memberList);
+			model.addAttribute("memberCount", memberCount);
+		}
 		
 		LOGGER.debug("ezPMS getProjectMember ended");			
-		return null;
+		return "ezPMS/pmsProjectMember";
 	}
 	
 	/**

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
@@ -106,7 +107,7 @@ public interface EzPMSService {
 	
 	public Map<String, Object> getRemainingWeight(String projectId);
 
-	public List<Integer> getUserProjectRole(String userId, int tenantId, int projectId, String deptId);
+	public int getUserProjectRole(String userId, int tenantId, Long projectId, String deptId);
 	
 	public List<TaskMemberVO> getTaskMemberList(int tenantId, long taskId, String lang);
 
@@ -116,4 +117,7 @@ public interface EzPMSService {
 
 	public void addKanbanOrder(Long projectId, String userId, String orderStatus, int tenantId);
 
+	public void completeAllTasks(long projectId, int tenantId, String realEndDate);
+
+	public void addBoard(ProjectBoardVO vo);
 }

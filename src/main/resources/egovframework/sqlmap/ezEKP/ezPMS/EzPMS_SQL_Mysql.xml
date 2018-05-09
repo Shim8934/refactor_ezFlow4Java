@@ -18,6 +18,7 @@
 	<typeAlias 	alias="ProjectCompanyVO" 							type="egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO" />
 	<typeAlias 	alias="ProjectUserInfoVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectMemberVO"/>
 	<typeAlias 	alias="ProjectTaskMemberVO" 									type="egovframework.ezEKP.ezPMS.vo.TaskMemberVO"/>
+	<typeAlias 	alias="ProjectBoardVO" 									type="egovframework.ezEKP.ezPMS.vo.ProjectBoardVO"/>
 	
     <resultMap id="projectInfoVO" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
@@ -340,21 +341,21 @@
     <insert id="EzPMSDAO.addNewProject" parameterClass="Map">
     	<![CDATA[
     		INSERT INTO tbl_pms_project(
-    			tenant_id, 				project_name, 			plan_start_date, 			plan_end_date, 			real_start_date, 
+    			tenant_id, 				project_name, 			plan_start_date, 			plan_end_date,
     			head_manager_id, 		head_manager_name,		head_manager_name2, 		head_manager_deptname, 	head_manager_deptname2, 
     			status, 				progress, 				overview, 					weight_input, 			creator_id, 
     			creator_name, 			creator_name2, 			creator_deptname, 			creator_deptname2, 		workingday, 
     			rest_dueday, 			alam_mail_status,		create_date
     		) 
     		VALUES ( 
-    			#tenantId#,				#projectName#,			#planStartDate#,			#planEndDate#,			#realStartDate#, 
+    			#tenantId#,				#projectName#,			#planStartDate#,			#planEndDate#,
     			#headManagerId#,		#headManagerName#,		#headManagerName2#,			#headManagerDeptname#,	#headManagerDeptname2#,	
     			#status#,				#progress#,				#overview#,					#weightInput#,			#creatorId#, 
     			#creatorName#,			#creatorName2#,			#creatorDeptname#,			#creatorDeptname2#,		#workingDay#,
     			#restDueday#,			#endAlamStatus#,        #createDate#
     		)
     	]]>
-    	<selectKey keyProperty="id" resultClass="Integer">
+    	<selectKey keyProperty="id" resultClass="Long">
     		SELECT
     			last_insert_id()
     	</selectKey>
@@ -538,10 +539,10 @@
 				u.tenant_id as TENANT_ID,
 				p.user_id as USER_ID,
 				IFNULL(p.view_type,0) as VIEW_TYPE,
-				IFNULL(p.progress_color,"blue") as PROGRESS_COLOR,
-				IFNULL(p.complete_color,"green") as COMPLETE_COLOR,
-				IFNULL(p.overdue_color,"red") as OVERDUE_COLOR,
-				IFNULL(p.hold_color,"yellow") as HOLD_COLOR,
+				IFNULL(p.progress_color,'##66c2ff') as PROGRESS_COLOR,
+				IFNULL(p.complete_color,'##8DFF1B') as COMPLETE_COLOR,
+				IFNULL(p.overdue_color,'##FF1B1B') as OVERDUE_COLOR,
+				IFNULL(p.hold_color,'##ffff66') as HOLD_COLOR,
 				IFNULL(p.project_sort,0) as PROJECT_SORT,
 				IFNULL(p.list_number,10) as LIST_NUMBER,
 				IFNULL(p.list_project_status, "P") as LIST_PROJECT_STATUS,
@@ -1034,8 +1035,8 @@
 	
 	<select id="EzPMSDAO.getUserProjectRole"  parameterClass="map" resultClass="Integer">
 	<![CDATA[
-		SELECT DISTINCT
-			MEMBER_ROLE_ID 
+		SELECT 
+			MIN(MEMBER_ROLE_ID) 
 		FROM 
 			TBL_PMS_MEMBER 
 		WHERE  
@@ -1183,7 +1184,8 @@
 		<isNotEqual property="status" compareValue="P">
 		<isEqual property="status" compareValue="C">
 			<![CDATA[
-				REAL_END_DATE = #changeDate#
+				REAL_END_DATE = #changeDate#,
+				PROGRESS = #progress#
 			]]>
 		</isEqual>
 		</isNotEqual>
@@ -1233,6 +1235,23 @@
 		]]>
 	</insert>
 	
+	<insert id="EzPMSDAO.addBoard" parameterClass="ProjectBoardVO">
+		<![CDATA[
+			INSERT INTO tbl_pms_item_list (
+				tenant_id,			writer_id,			title,				write_overview,			write_type,
+				write_content,		write_date,			write_update_date,	read_count,				task_id,
+				group_id,			writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
+				writer_position,	writer_position2
+			)
+			VALUES (
+				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
+				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#taskId#,
+				#groupId#,			#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
+				#writerPosition#,	#writerPosition2#
+			)
+		]]>
+	</insert>
+
 	<insert id="EzPMSDAO.addKanbanOrder" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_PMS_MAINLIST (
@@ -1288,6 +1307,22 @@
     			WORKINGDAY = #workingday#
    			WHERE
    				TENANT_ID = #tenantId#
+ 		]]>
+	</update>
+
+	<update id="EzPMSDAO.completeAllTasks" parameterClass="map">
+		<![CDATA[
+			UPDATE	
+				TBL_PMS_TASK 
+			SET	
+				STATUS = #status#,
+				REAL_END_DATE = IFNULL(REAL_END_DATE, #realEndDate#),
+				REAL_START_DATE = IFNULL(REAL_START_DATE, #realEndDate#),
+				REAL_PROGRESS = #progress#
+			WHERE	
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
 		]]>
 	</update>
 </sqlMap>

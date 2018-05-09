@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezPMS.service.impl;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,10 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.swing.SortOrder;
 
-import org.apache.tools.ant.Project;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +18,9 @@ import org.springframework.stereotype.Service;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.ezEKP.ezPMS.dao.EzPMSDAO;
-import egovframework.ezEKP.ezPMS.service.EzPMSAdminService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
@@ -37,8 +33,6 @@ import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
-import egovframework.ezMobile.ezCommon.web.MCommonGWController;
-import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -280,7 +274,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public void updateProject(ProjectInfoVO project, int tenantId) {
 		LOGGER.debug("Service updateProject Started.");
 		
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", project.getProjectId());
 		map.put("projectName", project.getProjectName());
 		map.put("weightInput", project.getWeightInput());
@@ -620,6 +614,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void addGroup(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] addGroup started.");
 		map.put("delStatus", 0);
 		
 		try{
@@ -650,7 +645,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			LOGGER.debug("ERROR : " + e.getMessage() + " " + e.getStackTrace());
 		}
 		ezPMSDAO.addTaskGroup(map);
-		
+		LOGGER.debug("[SERVICE] addGroup ended.");
 	}
 
 	@Override
@@ -695,7 +690,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			System.out.println("ERROR : " + e.getMessage());
 		}
 		
-		
+		LOGGER.debug("listStatus : " + mainSetting.getListProjectStatus());
 		LOGGER.debug("[mainSetting] userMail : " + mainSetting.getUserMail());
 		LOGGER.debug("[SERVICE] getProjectMainSetting ended.");
 		return mainSetting;
@@ -809,7 +804,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("Service getUserInfo Started");
 		ProjectMemberVO userInfo = new ProjectMemberVO();
 		
-		HashMap<String, Object> param = new HashMap<>();
+		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("tenantId", tenantId);
 		param.put("userIdType", userIdType);
@@ -822,7 +817,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	
 	//유저의 프로젝트 role 확인
 	@Override
-	public List<Integer> getUserProjectRole (String userId, int tenantId, int projectId, String deptId) {
+	public int getUserProjectRole (String userId, int tenantId, Long projectId, String deptId) {
 		LOGGER.debug("[SERVICE] getUserProjectRole started");
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
@@ -830,7 +825,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("projectId", projectId);	
 		param.put("deptId", deptId);
 		
-		List<Integer> projectRole = ezPMSDAO.getUserProjectRole(param);
+		int projectRole = ezPMSDAO.getUserProjectRole(param);
 		LOGGER.debug("[SERVICE] getUserProjectRole ended");
 		return projectRole;
 	}
@@ -844,7 +839,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public void addProjectMember(ProjectMemberVO projectMemberList, int tenantId) {		
 		LOGGER.debug("[SERVICE] ezPMS addProjectMember Started");
-		HashMap<String, Object> map = new HashMap<>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		try {
 			map.put("userId", projectMemberList.getUserId());
@@ -877,7 +872,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public List<TaskMemberVO> getTaskMemberList(int tenantId, long taskId, String lang) {
 		LOGGER.debug("[SERVICE] ezPMS getTaskMemberList Started");
-		HashMap<String, Object> map = new HashMap<>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("taskId", taskId);
 		map.put("tenantId", tenantId);
 		map.put("lang", lang);
@@ -890,7 +885,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Override
 	public void deleteProjectMember(Long projectId, int tenantId) {
 		LOGGER.debug("[SERVICE] deleteProjectMember Started");
-		HashMap<String, Object> map = new HashMap<>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		
@@ -901,14 +896,37 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void updateProjectRealDate(Long projectId, int tenantId, String changeDate, String status) {
-		LOGGER.debug("[SERVICE] updateProjectRealStartDate Started");
-		HashMap<String, Object> map = new HashMap<>();
+		LOGGER.debug("[SERVICE] updateProjectRealDate Started");
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		map.put("changeDate", changeDate);
 		map.put("status", status);
+		map.put("progress", 100);
 		
 		ezPMSDAO.updateProjectRealDate(map);
-		LOGGER.debug("[SERVICE] updateProjectRealStartDate Ended");
+		LOGGER.debug("[SERVICE] updateProjectRealDate Ended");
+	}
+
+	@Override
+	public void completeAllTasks(long projectId, int tenantId, String realEndDate) {
+		LOGGER.debug("[SERVICE] completeAllTasks Started");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		map.put("realEndDate", realEndDate);
+		map.put("status", "C");
+		map.put("progress", 100);
+		
+		ezPMSDAO.completeAllTasks(map);
+		LOGGER.debug("[SERVICE] completeAllTasks Started");
+	}
+
+//	by mslim
+	@Override
+	public void addBoard(ProjectBoardVO vo) {
+		LOGGER.debug("[SERVICE] addBoard Started");
+		ezPMSDAO.addBoard(vo);
+		LOGGER.debug("[SERVICE] addBoard Started");
 	}
 }

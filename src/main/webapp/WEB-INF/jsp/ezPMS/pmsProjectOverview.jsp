@@ -22,11 +22,16 @@
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 100;
 var progress = "${project.progress}";
-var status = "${project.status}";
+var nowStatus = "${project.status}";
 var strHTML = "";
 var projectId = "${project.projectId}";
 var kanbanOrder = "${kanbanOrder}";
 var projectName = "${project.projectName}";
+var userRole = "${userRole}";
+var progressColor = "${mainSetting.progressColor}";
+var completeColor = "${mainSetting.completeColor}";
+var overdueColor = "${mainSetting.overdueColor}";
+var holdColor = "${mainSetting.holdColor}";
 
 $(document).ready(function(){
 	$(window).resize(function() {
@@ -79,28 +84,34 @@ $(function() {
 
 function initProgressBar() {
 	var strStatus = "";
+	var circleColor = "";
 	
-	switch(status){
+	switch(nowStatus){
 	case "P" :
 		strStatus = "진행";
+		circleColor = progressColor;
 		break;
 	case "W" :
 		strStatus = "대기";
+		circleColor = "grey";
 		break;
 	case "L" :
 		strStatus = "지연";
+		circleColor = overdueColor;
 		break;
 	case "S" :
 		strStatus = "보류";
+		circleColor = holdColor;
 		break;
 	case "C" :
 		strStatus = "완료";
+		circleColor = completeColor;
 		break;
 	}
 	
 	$(".progress_graph").circleProgress({
 		value: 0.4,
-		fill : {color : "blue"},
+		fill : {color : circleColor},
 		size : 134
 	}).on('circle-animation-progress', function(event, progress) {
 		$(this).find('strong').html(40 + "%<br><div style='font-size:20px'>" + strStatus + "</div>");
@@ -108,42 +119,44 @@ function initProgressBar() {
 }
 
 function ableToChangeStatus() {	
-	switch(status){
-		case "L" :
-		case "P" :
-			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='C' onclick='changeStatus(this)'>";
-			strHTML += "프로젝트 완료";
-			strHTML += "</span></a> ";
-			strHTML += "<a class='imgbtn'><span id='S' onclick='changeStatus(this)'>";
-			strHTML += "프로젝트 보류";
-			strHTML += "</span></a>";
-			break;
-		case "W" :
-			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='P' onclick='changeStatus(this)'>";
-			strHTML += "프로젝트 진행";
-			strHTML += "</span></a> ";
-			strHTML += "<a class='imgbtn'><span id='S' onclick='changeStatus(this)'>";
-			strHTML += "프로젝트 보류";
-			strHTML += "</span></a>";
-			break;
-		case "S" :
-			strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='P' onclick='changeStatus(this)'>";
-			strHTML += "프로젝트 진행";
-			strHTML += "</span></a> ";	
-			strHTML += "<a class='imgbtn'><span id='C' onclick='changeStatus(this)'>";
-			strHTML += "프로젝트 완료";
-			strHTML += "</span></a>";
-			break;
-		case "C" :
-			strHTML += "실제 시작일 : ";
-			strHTML += "${realStartDate}";
-			strHTML += "<br>";
-			strHTML += "실제 종료일 : ";
-			strHTML += "${realEndDate}";
-			break;
-	}
-	
-	$("#changeStatus").html(strHTML);
+	if (userRole == 1) {
+		switch(nowStatus){
+			case "L" :
+			case "P" :
+				strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='C' onclick='changeStatus(this)'>";
+				strHTML += "프로젝트 완료";
+				strHTML += "</span></a> ";
+				strHTML += "<a class='imgbtn'><span id='S' onclick='changeStatus(this)'>";
+				strHTML += "프로젝트 보류";
+				strHTML += "</span></a>";
+				break;
+			case "W" :
+				strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='P' onclick='changeStatus(this)'>";
+				strHTML += "프로젝트 진행";
+				strHTML += "</span></a> ";
+				strHTML += "<a class='imgbtn'><span id='S' onclick='changeStatus(this)'>";
+				strHTML += "프로젝트 보류";
+				strHTML += "</span></a>";
+				break;
+			case "S" :
+				strHTML += "<a class='imgbtn' style='margin-right:4px;'><span id='P' onclick='changeStatus(this)'>";
+				strHTML += "프로젝트 진행";
+				strHTML += "</span></a> ";	
+				strHTML += "<a class='imgbtn'><span id='C' onclick='changeStatus(this)'>";
+				strHTML += "프로젝트 완료";
+				strHTML += "</span></a>";
+				break;
+			case "C" :
+				strHTML += "실제 시작일 : ";
+				strHTML += "${project.realStartDate}";
+				strHTML += "<br>";
+				strHTML += "실제 종료일 : ";
+				strHTML += "${project.realEndDate}";
+				break;
+		}
+		
+		$("#changeStatus").html(strHTML);
+	} 
 }
 
 function editProjectInfo() {
@@ -229,9 +242,7 @@ function changeTab(clickTabId, nowTabAttr) {
 }
 
 function changeStatus(status) {
-	console.log($(status).attr("id"));
 	var changeStatus = $(status).attr("id");
-	var nowStatus = status;
 	var response;
 	
 	if (changeStatus == "C") {
@@ -273,6 +284,9 @@ function changeStatus(status) {
 	}
 }
 
+function getProjectMember(roleId) {
+	addProjectPopup(18, 29, 374, 350, "/ezPMS/getProjectMember.do?projectId=" + projectId + "&roleId=" + roleId);
+}
 </script>
 <style type="text/css">
 #kanbanArea {
@@ -337,7 +351,9 @@ function changeStatus(status) {
 
 <div id="iconArea" class="rightPart">
 		<div id="printReport" class="icon">출력</div>
-		<div id="editProjectInfo" class="icon" onclick="editProjectInfo()" style="cursor:pointer;"><img src="/images/ezLadder/icon_game03_no.png" style="width:40px; height:40px"></div>
+		<c:if test="${userRole eq 1 }">
+			<div id="editProjectInfo" class="icon" onclick="editProjectInfo()" style="cursor:pointer;"><img src="/images/ezLadder/icon_game03_no.png" style="width:40px; height:40px"></div>
+		</c:if>
 		<div id="setting" class="icon" style="cursor:pointer;" onclick="kanbanSetting()">환경설정</div>
 	</div>
 <div id="overviewArea" class="overview rightPart">
@@ -355,11 +371,11 @@ function changeStatus(status) {
 	<table style="width:95%; height:17%">
 		<tr>
 			<td><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px;" align="middle"><span>${project.headManagerName }</span></td>
-			<td><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 담당자보기 </td>
+			<td onclick="getProjectMember('1')" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 담당자보기 </td>
 		</tr>
 		<tr>
-			<td><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 참여자보기 </td>
-			<td><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 조회자보기 </td>
+			<td onclick="getProjectMember('2')" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 참여자보기 </td>
+			<td onclick="getProjectMember('3')" style="cursor:pointer;"><img src="/images/ezLadder/icon_defaultAttendant.png" width="30px" height="30px" align="middle"> 조회자보기 </td>
 		</tr>
 	</table>
 	<br>

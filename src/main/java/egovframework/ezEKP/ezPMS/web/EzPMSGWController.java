@@ -143,6 +143,8 @@ public class EzPMSGWController {
 			
 			Long projectId = ezPMSService.addNewProject(project);
 			
+			LOGGER.debug("addNewProject projectId : " + projectId);
+			
 			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json.get("managerList");
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("participantList"));
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("viewerList"));
@@ -200,16 +202,7 @@ public class EzPMSGWController {
 			String roleCheck = "";
 			
 			for (int i = 0; i < projectIdList.length; i++) {
-				List<Integer> userRoleList = ezPMSService.getUserProjectRole(userId, tenantId, Integer.parseInt(projectIdList[i]), deptId);
-				
-				int userRole = userRoleList.get(0);
-				
-				for (int j = 0; j < userRoleList.size(); j ++) {
-					if (userRole > userRoleList.get(j)) {
-						userRole = userRoleList.get(j);
-					}
-				}
-				
+				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, Long.parseLong(projectIdList[i]), deptId);
 				LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
 				
 				if (userRole != 1) {
@@ -254,9 +247,6 @@ public class EzPMSGWController {
 			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 			
 			ProjectMainSettingVO projectSetting = ezPMSService.getProjectMainSetting(userId, tenantId, userIdType);
-			
-			//test용
-			projectSetting.setListProjectStatus("W");
 			
 			LOGGER.debug("projectSetting : " + projectSetting.getViewType());
 			result.put("status", "ok");
@@ -335,21 +325,13 @@ public class EzPMSGWController {
 			String nowStatus = request.getParameter("nowStatus");
 			String changeDate = request.getParameter("changeDate");
 			
-			LOGGER.debug("status : " + status + ", " + "userId : " + ", tenantId : " + tenantId + ", deptId : " + deptId);
+			LOGGER.debug("nowStatus" + nowStatus + ", status : " + status + ", " + "userId : " + ", tenantId : " + tenantId + ", deptId : " + deptId);
 			
 			String[] projectIdList = projectId.split("_");
 			String roleCheck = "";
 			
 			for (int i = 0; i < projectIdList.length; i++) {
-				List<Integer> userRoleList = ezPMSService.getUserProjectRole(userId, tenantId, Integer.parseInt(projectIdList[i]), deptId);
-				
-				int userRole = userRoleList.get(0);
-				
-				for (int j = 0; j < userRoleList.size(); j ++) {
-					if (userRole > userRoleList.get(j)) {
-						userRole = userRoleList.get(j);
-					}
-				}
+				int userRole = ezPMSService.getUserProjectRole(userId, tenantId, Long.parseLong(projectIdList[i]), deptId);
 				
 				LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
 				if (userRole != 1) {
@@ -365,18 +347,16 @@ public class EzPMSGWController {
 					String planEndDate = project.getPlanEndDate();
 					
 					ezPMSService.updateProjectStatus(Long.parseLong(projectIdList[i]), status, info.getTenantId(), changeDate, planEndDate);	
-					
+					System.out.println(status);
+					System.out.println(nowStatus);
 					if (nowStatus.equals("W") && status.equals("P")) {
+						System.out.println(status);
 						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status);
 					}
 					
 					if (status.equals("C")) {
 						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status);
-						
-						ProjectTaskVO task = new ProjectTaskVO();
-						
-						
-						ezPMSService.updateTask(task);
+						ezPMSService.completeAllTasks(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate);
 					}
 				}
 			}
@@ -414,6 +394,8 @@ public class EzPMSGWController {
 			
 			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, mode, lang, deptId);
 			String kanbanOrder = ezPMSService.getKanbanOrder(projectId, userId, tenantId);
+			int userRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, deptId);
+			ProjectMainSettingVO mainSetting = ezPMSService.getProjectMainSetting(userId, tenantId, "user");
 			
 			if (kanbanOrder == null || kanbanOrder.equals("")) {
 				//default : 나의 전체업무, 전체 진행중인업무, 전체 완료된업무, 게시판
@@ -423,6 +405,8 @@ public class EzPMSGWController {
 			JSONObject data = new JSONObject();
 			data.put("project", project);
 			data.put("kanbanOrder", kanbanOrder);
+			data.put("userRole", userRole);
+			data.put("mainSetting", mainSetting);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -512,11 +496,12 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			int tenantId = info.getTenantId();
 			
-			List<ProjectMemberVO> memberList = ezPMSService.getProjectMember(projectId, roleId, lang);
+			List<ProjectMemberVO> memberList = ezPMSService.getProjectMemberList(projectId, roleId, lang, tenantId);
 			
 			JSONObject data = new JSONObject();
-			
+			data.put("memberList", memberList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -825,9 +810,9 @@ public class EzPMSGWController {
 	
 	//멤버 수 호출
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/role/{roleId}/count", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/roles/{roleId}/count", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getMemberCount(@PathVariable Long projectId, @PathVariable int roleId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/"+ projectId + "/role/" + roleId + "/count] started.");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/"+ projectId + "/roles/" + roleId + "/count] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -850,7 +835,7 @@ public class EzPMSGWController {
 		}
 		
 		
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/"+ projectId + "/role/" + roleId + "/count] ended.");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/"+ projectId + "/roles/" + roleId + "/count] ended.");
 		return result;
 	}
 	

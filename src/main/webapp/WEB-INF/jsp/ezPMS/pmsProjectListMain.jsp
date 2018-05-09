@@ -70,45 +70,9 @@ $(document).ready(function(){
 });
 
 $(function(){
-	
 	setProjectList();
 	getDatePicker();
 
-	var projectList = new Array();
-	
-	<c:forEach items="${projectList}" var="project">
-		var json = new Object();
-		json.projectId = "${project.projectId}";
-		json.progress = "${project.progress}";
-		projectList.push(json);
-	</c:forEach>
-	
-	for (var i = 0; i < projectList.length; i++) {
-		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : projectList[i].progress,
-			fillBackGroundColor:"#9b59b6",
-			height:'15px',
-			radius:'15px',
-			width : '80%'
-		});
-		
-		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : projectList[i].progress,
-			fillBackGroundColor:"#9b59b6",
-			height:'15px',
-			radius:'15px',
-			width : '80%'
-		});
-		
-		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
-			percentage : projectList[i].progress,
-			fillBackGroundColor:"#9b59b6",
-			height:'15px',
-			radius:'15px',
-			width : '80%'
-		});
-	}
-	
 	if(viewType == 0) {
 		$("#listcountTR").css("display", "none");
 	} else {
