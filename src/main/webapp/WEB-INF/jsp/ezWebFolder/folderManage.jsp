@@ -41,6 +41,7 @@
 		var folderType = "${folderType}";
 		var folderName1 = "";
 		var folderName2 = "";
+		var drawVolume = "";
         if ("${isFolderManager}" == "1") {
         	isFolderManager = true;
         }
@@ -52,6 +53,9 @@
                 return true;
         };
         function window_onload() {
+        	try {
+        		drawVolume = webfolder_folder_Manage[1] ;
+		    } catch (e) { }
     		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
         	folderList(folderType);
 
@@ -59,12 +63,16 @@
         var inputNameDlg_cross_dialogArguments = new Array();
         function Window_Close() {
             if (ReturnFunction!=null) {
-                if (!isDivPopUp)
+                if (!isDivPopUp) {
+                	window.opener.drawVolume();
                     window.close();
-                else
+                }
+                else {
                     CancelFunction();   
+                }
             }
             else
+            	window.opener.drawVolume();
                 window.close();
         }
         
@@ -266,7 +274,6 @@
 //             var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false, true)
 //             PostTreeView.putchildxml(nodeIdx, childxml);
         }
-        
 
         
 	    function add_onclick_Complete(szName) {
