@@ -38,7 +38,9 @@
 	            	dataType : "json",
 	            	data : {companyId : encodeURI($("#ListCompany").val())},
 	            	success : function(result) {
+	            		//리스트 셋팅
 	            		listSet(result);
+	            		//radio 체크
 	            		useSelect(result);
 	            	},
 	            	error : function() {
@@ -59,7 +61,7 @@
 	                    }
 	                    html += "<tr id='" + result[i].typeId + "' onclick='listClick(this);' ondblclick='dbclick(this);' style='cursor: pointer;' isAdd='" + result[i].isAdd + "'>";
 	                    html += "<td style='width:35%;color:gray;padding-left:15px;'>" + result[i].typeName + "</td>";
-	                    html += "<td style='width:25%;color:gray;padding-left:15px;'>" + gubun + "</td>";
+	                    html += "<td style='width:25%;color:gray;'>" + gubun + "</td>";
 	                    html += "<td style='width:20%;color:gray;text-align: center;'><input type='radio' name='useRadio"+ i +"' value='1' /></td>";
 	                    html += "<td style='width:20%;color:gray;text-align: center;'><input type='radio' name='useRadio"+ i +"' value='0' /></td>";
 	                    html += "</tr>";

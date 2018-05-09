@@ -25,6 +25,7 @@
 	   		//레이어팝업의 오른쪽의 부서정보
 	   		var lpDepts=[];
 	   		var lpDeptNames = [];
+	   		var lpAuthTypes = [];
 	   		//오른쪽에서 없앨 부서
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
@@ -92,12 +93,14 @@
 	   				success: function(result) {
 	   					lpDepts = [];
 	   					lpDeptNames = [];
+	   					lpAuthTypes = [];
 	   					$.each(result, function(idx, deptInfo){
 	   						if (deptInfo.mine == "yes") {
 	   							userDeptId = deptInfo.deptId;
 	   						} else {
 		   						lpDepts.push(deptInfo.deptId);
 		   						lpDeptNames.push(deptInfo.deptName);
+		   						lpAuthTypes.push(deptInfo.authType);
 	   						}
 	   					})
 	   				}
@@ -121,7 +124,8 @@
 	   			var userId = selectedUser;
 				if (userId) {
 					opener.setSelectedUser(userId,selectedUserName);
-		   			opener.setDeptName(JSON.stringify(lpDepts), JSON.stringify(lpDeptNames));
+		   			opener.setDeptName(lpDepts, lpDeptNames);
+		   			opener.authRadioSet(lpAuthTypes);
 		   			opener.userDeptId = userDeptId;
 					window.close();
 				} else {
