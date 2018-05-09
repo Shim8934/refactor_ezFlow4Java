@@ -1258,4 +1258,36 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</update>
+	
+	<update id="EzPMSDAO.updateTask" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				tbl_pms_task
+			SET	
+				GROUP_ID = #groupId#,
+				TASK_NAME = #taskName#,			
+				STATUS = #status#,
+				PLAN_START_DATE = #planStartDate#,
+				PLAN_END_DATE = #planEndDate#,
+				REAL_PROGRESS = realProgress,
+				WEIGHT = #weight#,
+				OVERVIEW = #overview#,
+				MEMBER_COUNT = #memberCount#,
+    			HEAD_MANAGER_ID = #headManagerId#,
+    			HEAD_MANAGER_NAME = #headManagerName#,
+    			HEAD_MANAGER_NAME2 = #headManagerName2#,
+    			HEAD_MANAGER_DEPTNAME = #headManagerDeptname#,
+    			HEAD_MANAGER_DEPTNAME2 = #headManagerDeptname2#, 
+    			WRITER_ID = #writerId#,
+    			WRITE_DATE = #writeDate#,
+    			WRITER_NAME = #writerName#,
+    			WRITER_NAME2 = #writerName2#,
+    			WRITER_DEPTNAME = #writerDeptname#,
+    			WRITER_DEPTNAME2 = #writerDeptname2#, 
+    			SORT_ORDER = #sortOrder#,
+    			WORKINGDAY = #workingday#
+   			WHERE
+   				TENANT_ID = #tenantId#
+		]]>
+	</update>
 </sqlMap>

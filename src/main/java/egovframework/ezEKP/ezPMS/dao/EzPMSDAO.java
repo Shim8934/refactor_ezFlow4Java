@@ -217,4 +217,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		update ("EzPMSDAO.changeKanbanOrder", map);
 		
 	}
+	
+	public void updateTask(Map<String, Object> map) {
+		update ("EzPMSDAO.updateTask", map);
+		
+	}
 }

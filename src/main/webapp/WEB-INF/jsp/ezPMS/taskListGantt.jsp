@@ -59,18 +59,27 @@
 	   			var tl = taskList;
 	   			projectDetails = ${projectDetail};
 	   			var pd = projectDetails;
-	   			const roleName = ["참여자", "관리자", "조회자", "없음"];
+	   			const roleName = ["담당자", "참여자", "조회자", "없음"];
+	   			const ganttStatus = {
+	   					"P": "STATUS_ACTIVE",
+	   					"S": "STATUS_SUSPENDED", 
+	   					"C": "STATUS_DONE",
+	   					"L": "STATUS_FAILED",
+	   					"W": "STATUS_WAITING",
+	   					"D": "STATUS_UNDEFINED"
+	   			}
+	   			
 	   			
 	   			ganttData.tasks = [{}];
 	   			ganttData.resources = [];
 	   			ganttData.roles = [];
 	   			
 	   			//프로젝트 데이터 가공부분.
-	   			ganttData.tasks[0].id = pd.projectId;
+	   			ganttData.tasks[0].id = "p" + pd.projectId;
 	   			ganttData.tasks[0].name = pd.projectName;
 	   			ganttData.tasks[0].code = "";
 	   			ganttData.tasks[0].level = 0;
-	   			ganttData.tasks[0].status = pd.status;
+	   			ganttData.tasks[0].status = ganttStatus[pd.status];
 	   			ganttData.tasks[0].start = new Date(pd.planStartDate).getTime();
 	   			ganttData.tasks[0].end = new Date(pd.planEndDate).getTime();
 	   			ganttData.tasks[0].duration = pd.workingday;
@@ -85,6 +94,7 @@
 	   				assig.id = pd.projectMember[i].userId;
 	   				assig.roleId = pd.projectMember[i].memberRoleId;
 	   				assig.effort = "";
+	   				
 	   				ganttData.tasks[0].assigs.push(assig);
 	   				
 	   				//인력, 역할 부분
@@ -92,6 +102,7 @@
 	   				role.id = pd.projectMember[i].userId;
 	   				resource.name = pd.projectMember[i].userName;
 	   				role.name = roleName[pd.projectMember[i].memberRoleId];
+	   				
 	   				ganttData.resources.push(resource);
 	   				ganttData.roles.push(role);
 	   			}
@@ -105,14 +116,15 @@
 	   			//업무 리스트 가공부분.
 	   			for(var i = 0; i < tl.length; i++){
 	   				ganttData.tasks[i + 1] = {};
-		   			ganttData.tasks[i + 1].id = tl[i].projectId + "-" + tl[i].taskId;
+		   			ganttData.tasks[i + 1].id = "t" + tl[i].projectId + "-" + tl[i].taskId;
 		   			ganttData.tasks[i + 1].name = tl[i].taskName;
 		   			ganttData.tasks[i + 1].code = "";
 		   			ganttData.tasks[i + 1].level = 1;
-		   			ganttData.tasks[i + 1].status = tl[i].status;
+		   			ganttData.tasks[i + 1].status = ganttStatus[tl[i].status];
 		   			ganttData.tasks[i + 1].start = new Date(tl[i].planStartDate).getTime();
 		   			ganttData.tasks[i + 1].end = new Date(tl[i].planEndDate).getTime();
 		   			ganttData.tasks[i + 1].duration = tl[i].workingday;
+		   			ganttData.tasks[i + 1].weight = tl[i].weight;
 		   			ganttData.tasks[i + 1].startIsMilestone = "";
 		   			ganttData.tasks[i + 1].endIsMilestone = "";
 		   			ganttData.tasks[i + 1].assigs = [];
@@ -124,6 +136,7 @@
 		   				assig.id = tl[i].taskMember[j].userId;
 		   				assig.roleId = 1;
 		   				assig.effort = "";
+		   				
 		   				ganttData.tasks[i + 1].assigs.push(assig);
 		   				
 		   				//인력, 역할 부분
@@ -131,6 +144,7 @@
 		   				role.id = tl[i].taskMember[j].userId;
 		   				resource.name = tl[i].taskMember[j].userName;
 		   				role.name = 1;
+		   				
 		   				ganttData.resources.push(resource);
 		   				ganttData.roles.push(role);
 		   			}
@@ -148,25 +162,88 @@
 	   			ganttData.canWriteOnParent = true;
 	   			ganttData.selectedRow = 0;
 	   			ganttData.deletedTaskIds = [];
+	   			ganttData.canAdd = true;
 	   			
+	   		}
+	   		
+	   		//테이블 헤더 넓이를 내용에 맞춤
+	   		function headerWidthFitting(){
+	   			var header = $(".ganttFixHead .gdfColHeader");
+	   			header.each(function(){
+	   				$(this).dblclick();
+	   			})
+	   		}
+	   		
+	   		//기본 옵션 세팅
+	   		function setDefOption(ganttMasterObj){
+	   			localStorage.TWPGanttGridState = {
+	   					"colSizes":[35,25,204,119,17,80,17,80,50,50,20,50,1000,35,25,204,204,17,80,17,80,50,50,20,50,1000,50,1000]
+	   			};
+	   		}
+	   		
+	   		function addTask(){
+	   			goAddTask();
+	   		}
+	   		
+	   		//업무 추가
+	   		function goAddTask(){
+   				var top = ($(window).height() - $(this).outerHeight()) / 2;
+   			    var left = ($(window).width() - $(this).outerWidth()) / 2;
+   				var feature = GetOpenPosition(top, left);
+   			 
+   				DivPopUpShow(845, 555, "/ezPMS/goAddTask.do?projectId=" + projectId);
 	   		}
 	   		
 	   		(function(){
 		   		initValues();
+		   		
 // 		   		ge = new GanttMaster();
 // 		   		ge.init($("#workSpace"));
 	   		})();
 	   		
+	   		window.onload = function(){
+		   		document.getElementById("pmsGanttRowDelBtn").onclick = function(){
+		   				$('#workSpace').trigger('deleteFocused.gantt');return false;
+		   		}
+		   		document.getElementById("pmsGanttRowNewBtn").onclick = addTask;
+		   		document.getElementById("pmsGanttRowNewBtn").onclick = saveTask;
+	   		};
 
 	   		
 		</script>
 		<style>
+		/* 		  달력 깨지지 않게 하기위함. */
+		  .calBox span{
+		  	clear: none;
+		  }
+		  
+		  li.pmsGanttMenuLi {
+		    float: left;
+		    margin: 0px 20px;
+		    list-style: none;
+		    border: 1px solid black;
+		    border-radius: 5px;
+		    text-align: center;
+		    cursor: pointer;
+		    padding: 3px;
+		  }
+		  
+		  #ndo{
+		  	display:none;
+		  }
 		</style>
 	</head>
 	<body style="background-color: #fff;">
-		<div id="ndo" style="position:absolute;right:5px;top:5px;width:378px;padding:5px;background-color: #FFF5E6; border:1px solid #F9A22F; font-size:12px" class="noprint">
-		  This Gantt editor is free thanks to <a href="http://twproject.com" target="_blank">Twproject</a> where it can be used on a complete and flexible project management solution.<br> Get your projects done! Give <a href="http://twproject.com" target="_blank">Twproject a try now</a>.
+		<div id="pmsGanttMenuDiv" class="pmsMenuDiv" style="height: 30px;">
+			<ul class="pmsGanttMenuUl">
+		        <li id="pmsGanttRowNewBtn" class="pmsGanttMenuLi">new</li>
+		        <li id="pmsGanttRowSaveBtn" class="pmsGanttMenuLi">save</li>
+		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi">delete</li>
+		        <li class="pmsGanttMenuLi">temp1</li>
+		        <li class="pmsGanttMenuLi">temp2</li>
+		    </ul>
 		</div>
+		
 		<div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden; border:1px solid #e5e5e5; position:relative; margin:0 5px;"></div>
 		
 		<style>
@@ -199,12 +276,13 @@
 		<script type="text/javascript">
 			var ge;
 			$(function() {
-			  var canWrite=true; //this is the default for test purposes
+			  var canWrite = true; //this is the default for test purposes
 			
 			  // here starts gantt initialization
 			  ge = new GanttMaster();
-			  ge.set100OnClose=true;
-			  ge.shrinkParent=true;
+			  ge.set100OnClose = true;
+			  ge.shrinkParent = true;
+// 			  ge.showBaselines = true;
 			
 			  ge.init($("#workSpace"));
 			  loadI18n(); //overwrite with localized ones
@@ -212,7 +290,7 @@
 			  //in order to force compute the best-fitting zoom level
 			  delete ge.gantt.zoom;
 			
-			  var project=loadFromLocalStorage();
+			  var project = getGanttProject();
 			
 			  if (!project.canWrite)
 			    $(".ganttButtonBar button.requireWrite").attr("disabled","true");
@@ -226,8 +304,8 @@
 			function getGanttProject(){
 				ret = ganttData;	
 			    //actualize data
-			    var offset=new Date().getTime()-ret.tasks[0].start;
-			    for (var i=0;i<ret.tasks.length;i++) {
+			    var offset = new Date().getTime() - ret.tasks[0].start;
+			    for (var i = 0; i < ret.tasks.length; i++) {
 			      ret.tasks[i].start = ret.tasks[i].start + offset;
 			    }
 			  return ret;
@@ -238,7 +316,7 @@
 			function loadGanttFromServer(taskId, callback) {
 			
 			  //this is a simulation: load data from the local storage if you have already played with the demo or a textarea with starting demo data
-			  var ret=loadFromLocalStorage();
+			  var ret = loadFromLocalStorage();
 			
 			  //this is the real implementation
 			  /*
@@ -367,10 +445,10 @@
 			
 			  //make resource editor
 			  var resourceEditor = $.JST.createFromTemplate({}, "RESOURCE_EDITOR");
-			  var resTbl=resourceEditor.find("#resourcesTable");
+			  var resTbl = resourceEditor.find("#resourcesTable");
 			
-			  for (var i=0;i<ge.resources.length;i++){
-			    var res=ge.resources[i];
+			  for (var i=0 ; i < ge.resources.length; i++){
+			    var res = ge.resources[i];
 			    resTbl.append($.JST.createFromTemplate(res, "RESOURCE_ROW"))
 			  }
 			
@@ -382,43 +460,43 @@
 			
 			  //bind save event
 			  resourceEditor.find("#resSaveButton").click(function(){
-			    var newRes=[];
+			    var newRes = [];
 			    //find for deleted res
-			    for (var i=0;i<ge.resources.length;i++){
-			      var res=ge.resources[i];
-			      var row = resourceEditor.find("[resId="+res.id+"]");
-			      if (row.length>0){
+			    for (var i = 0; i < ge.resources.length; i++){
+			      var res = ge.resources[i];
+			      var row = resourceEditor.find("[resId=" + res.id + "]");
+			      if (row.length > 0){
 			        //if still there save it
 			        var name = row.find("input[name]").val();
 			        if (name && name!="")
-			          res.name=name;
+			          res.name = name;
 			        newRes.push(res);
 			      } else {
 			        //remove assignments
-			        for (var j=0;j<ge.tasks.length;j++){
-			          var task=ge.tasks[j];
-			          var newAss=[];
-			          for (var k=0;k<task.assigs.length;k++){
-			            var ass=task.assigs[k];
-			            if (ass.resourceId!=res.id)
+			        for (var j = 0; j < ge.tasks.length; j++){
+			          var task = ge.tasks[j];
+			          var newAss = [];
+			          for (var k = 0; k < task.assigs.length; k++){
+			            var ass = task.assigs[k];
+			            if (ass.resourceId != res.id)
 			              newAss.push(ass);
 			          }
-			          task.assigs=newAss;
+			          task.assigs = newAss;
 			        }
 			      }
 			    }
 			
 			    //loop on new rows
-			    var cnt=0
+			    var cnt = 0;
 			    resourceEditor.find("[resId=new]").each(function(){
 			      cnt++;
 			      var row = $(this);
 			      var name = row.find("input[name]").val();
-			      if (name && name!="")
-			        newRes.push (new Resource("tmp_"+new Date().getTime()+"_"+cnt,name));
+			      if (name && name != "")
+			        newRes.push (new Resource("tmp_" + new Date().getTime() + "_" + cnt, name));
 			    });
 			
-			    ge.resources=newRes;
+			    ge.resources = newRes;
 			
 			    closeBlackPopup();
 			    ge.redraw();
@@ -431,7 +509,7 @@
 			function initializeHistoryManagement(){
 			
 			  //si chiede al server se c'è della hisory per la root
-			  $.getJSON(contextPath+"/applications/teamwork/task/taskAjaxController.jsp", {CM: "GETGANTTHISTPOINTS", OBJID:10236}, function (response) {
+			  $.getJSON(contextPath + "/applications/teamwork/task/taskAjaxController.jsp", {CM: "GETGANTTHISTPOINTS", OBJID:10236}, function (response) {
 			
 			    //se c'è
 			    if (response.ok == true && response.historyPoints && response.historyPoints.length>0) {
@@ -464,7 +542,7 @@
 			                ganttButtons.append(sliderDiv);
 			
 			                var minVal = 0;
-			                var maxVal = dh.length-1 ;
+			                var maxVal = dh.length - 1 ;
 			
 			                $("#slider").show().mbSlider({
 			                  rangeColor : '#2f97c6',
@@ -596,16 +674,17 @@
 			    <tr style="height:40px">
 			      <th class="gdfColHeader" style="width:35px; border-right: none"></th>
 			      <th class="gdfColHeader" style="width:25px;"></th>
-			      <th class="gdfColHeader gdfResizable" style="width:100px;">code/short name</th>
-			      <th class="gdfColHeader gdfResizable" style="width:300px;">name</th>
+			      <th class="gdfColHeader gdfResizable" style="width:300px;">업무명</th>
+			      <th class="gdfColHeader gdfResizable" style="width:100px; display:none;">code/short name</th>
 			      <th class="gdfColHeader"  align="center" style="width:17px;" title="Start date is a milestone."><span class="teamworkIcon" style="font-size: 8px;">^</span></th>
-			      <th class="gdfColHeader gdfResizable" style="width:80px;">start</th>
+			      <th class="gdfColHeader gdfResizable" style="width:80px;">시작일</th>
 			      <th class="gdfColHeader"  align="center" style="width:17px;" title="End date is a milestone."><span class="teamworkIcon" style="font-size: 8px;">^</span></th>
-			      <th class="gdfColHeader gdfResizable" style="width:80px;">End</th>
-			      <th class="gdfColHeader gdfResizable" style="width:50px;">dur.</th>
+			      <th class="gdfColHeader gdfResizable" style="width:80px;">완료일</th>
+			      <th class="gdfColHeader gdfResizable" style="width:50px;">남은기간</th>
+			      <th class="gdfColHeader gdfResizable" style="width:50px;">가중치</th>
 			      <th class="gdfColHeader gdfResizable" style="width:20px;">%</th>
 			      <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;">depe.</th>
-			      <th class="gdfColHeader gdfResizable" style="width:1000px; text-align: left; padding-left: 10px;">assignees</th>
+			      <th class="gdfColHeader gdfResizable" style="width:1000px; text-align: left; padding-left: 10px;">담당자</th>
 			    </tr>
 			    </thead>
 			  </table>
@@ -615,16 +694,17 @@
 			  <tr id="tid_(#=obj.id#)" taskId="(#=obj.id#)" class="taskEditRow (#=obj.isParent()?'isParent':''#) (#=obj.collapsed?'collapsed':''#)" level="(#=level#)">
 			    <th class="gdfCell edit" align="right" style="cursor:pointer;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> <span class="teamworkIcon" style="font-size:12px;" >e</span></th>
 			    <td class="gdfCell noClip" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
-			    <td class="gdfCell"><input type="text" name="code" value="(#=obj.code?obj.code:''#)" placeholder="code/short name"></td>
 			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+18#)px;">
 			      <div class="exp-controller" align="center"></div>
 			      <input type="text" name="name" value="(#=obj.name#)" placeholder="name">
 			    </td>
+			    <td class="gdfCell" style="display:none"><input type="text" name="code" value="(#=obj.code?obj.code:''#)" placeholder="code/short name"></td>
 			    <td class="gdfCell" align="center"><input type="checkbox" name="startIsMilestone"></td>
 			    <td class="gdfCell"><input type="text" name="start"  value="" class="date"></td>
 			    <td class="gdfCell" align="center"><input type="checkbox" name="endIsMilestone"></td>
 			    <td class="gdfCell"><input type="text" name="end" value="" class="date"></td>
 			    <td class="gdfCell"><input type="text" name="duration" autocomplete="off" value="(#=obj.duration#)"></td>
+			    <td class="gdfCell"><input type="text" name="weight" autocomplete="off" value="(#=obj.weight#)"></td>
 			    <td class="gdfCell"><input type="text" name="progress" class="validated" entrytype="PERCENTILE" autocomplete="off" value="(#=obj.progress?obj.progress:''#)" (#=obj.progressByWorklog?"readOnly":""#)></td>
 			    <td class="gdfCell requireCanSeeDep"><input type="text" name="depends" autocomplete="off" value="(#=obj.depends#)" (#=obj.hasExternalDep?"readonly":""#)></td>
 			    <td class="gdfCell taskAssigs">(#=obj.getAssigsString()#)</td>
@@ -680,13 +760,13 @@
 			  <div class="ganttTaskEditor">
 			    <h2 class="taskData">Task editor</h2>
 			    <table  cellspacing="1" cellpadding="5" width="100%" class="taskData table" border="0">
-			          <tr>
+		          <tr>
 			        <td width="200" style="height: 80px"  valign="top">
 			          <label for="code">code/short name</label><br>
 			          <input type="text" name="code" id="code" value="" size=15 class="formElements" autocomplete='off' maxlength=255 style='width:100%' oldvalue="1">
 			        </td>
 			        <td colspan="3" valign="top"><label for="name" class="required">name</label><br><input type="text" name="name" id="name"class="formElements" autocomplete='off' maxlength=255 style='width:100%' value="" required="true" oldvalue="1"></td>
-			          </tr>
+		          </tr>
 			
 			
 			      <tr class="dateRow">
@@ -875,5 +955,10 @@
 			    });
 			  }
 		</script>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
+		</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

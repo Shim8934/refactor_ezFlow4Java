@@ -371,7 +371,6 @@ public class EzPMSController2 {
 			model.addAttribute("taskList", taskList);
 		}
 		
-		//나중에 이름 정리 해야함.
 		JSONObject resultBodyProject = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/users/" + userInfo.getId() + "/gantt", param, request, "get", null);
 		status = resultBodyProject.get("status").toString();
 		
