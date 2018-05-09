@@ -11,6 +11,11 @@
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
+		<style>
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;
+	    	}
+	    </style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -402,14 +407,14 @@
 					<table id="TreeViewTD">
 					 	<tr>
 			                <div class="portlet_tabpart01">
-			                	<div class="portlet_tabpart01_top" id="tab1">
+			                	<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
 					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t89' /></span></p>
 									<p><span id="1tab2" tdname="journalFavorite" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t90' /></span></p>
 					        	</div>
 					        </div>
 				        	<td id="journalOrgan_content" style="display: none;">
-				        		<div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px; padding:0px; border-top: none;">
-				                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+				        		<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px; padding:0px; border-top: none;">
+				                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
 				                        <table style="margin-top: 3px; width: 100%;">
 				                            <tr>
 				                                <td>
@@ -451,7 +456,7 @@
 						            </tr>
 						        </table>
 		                  	</td>   
-		                  	<td id="journalFavorite_content" style="display:none; width:806px;">
+		                  	<td id="journalFavorite_content" style="display:none; width:700px;">
 	                        	<table style="width:100%">
 	                                <tr>
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
@@ -462,7 +467,7 @@
 		                                        <a class="imgbtn"><span onclick="deleteFavorite()"><spring:message code='ezJournal.t97'/></span></a>
 		                                    </div>
 	                                        <div class="border_gray">
-	                                            <div id="journalFavorite" style="Width: 100%; Height: 174px; OVERFLOW: AUTO; padding-top: 0px;">
+	                                            <div id="journalFavorite" style="Width: 100%; Height: 176px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table class="mainlist" id="favoriteList" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
@@ -516,7 +521,7 @@
 								 	</a>
 								</div>
 								<div class="receiver_borderbox">
-									<div id="receiverList" style="width: 250px; Height: 478px; overflow-x: auto; overflow-y: auto;">
+									<div id="receiverList" style="width: 250px; Height: 479px; overflow-x: auto; overflow-y: auto;">
 									</div>
 								</div>
 	                        </td>

@@ -18,9 +18,12 @@ var pagination = (function() {
 		listSize = size;
 	}
 	
-	function setPage(page) {
+	function setPage(page, disableHandler) {
 		currentPage = page;
-		eventHandler.pageChange(currentPage, listSize);
+		
+		if (!disableHandler) {
+			eventHandler.pageChange(currentPage, listSize);
+		}
 	}
 	
 	function setAmount(amount) {
