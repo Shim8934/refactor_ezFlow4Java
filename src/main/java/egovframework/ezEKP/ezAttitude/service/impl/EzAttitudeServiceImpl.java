@@ -278,7 +278,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		// TODO Auto-generated method stub
 		LOGGER.debug("insertAttitudeApplication started");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
+//		Map<String, Object> map = new HashMap<String, Object>();
 		
 //		map.put("", );
 //		map.put("", );
@@ -1566,53 +1566,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		return list;
-	}
-	
-	
-	
-	
-	
-	/** 2018-05-02 미입력자 정렬*/
-	class ascName implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o1.getUserName().compareTo(o2.getUserName());
-		}
-	}
-	
-	class descName implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o2.getUserName().compareTo(o1.getUserName());
-		}
-	}
-	
-	class ascTitle implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o1.getUserTitle().compareTo(o2.getUserTitle());
-		}
-	}
-	
-	class descTitle implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o2.getUserTitle().compareTo(o1.getUserTitle());
-		}
-	}
-	
-	class ascDeptName implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o1.getDeptName().compareTo(o2.getDeptName());
-		}
-	}
-	
-	class descDeptName implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o2.getDeptName().compareTo(o1.getDeptName());
-		}
 	}
 
 	@Override

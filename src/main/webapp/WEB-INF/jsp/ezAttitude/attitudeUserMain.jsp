@@ -633,7 +633,7 @@
 	   					deptId : encodeURIComponent(authDeptList.value)
 					},
 					success : function(result) {
-						if (result.status == "ok") {
+						if (result == "ok") {
 							alert("메일이 발송되었습니다.");
 						} else {
 							alert("메일 발송에 실패하였습니다.");
