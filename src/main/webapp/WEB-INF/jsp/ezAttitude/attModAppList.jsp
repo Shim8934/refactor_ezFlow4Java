@@ -996,18 +996,19 @@
 			    	$('#addpopup_list tbody').children('tr').not(":first").remove();
 			    	
 			    	if (json.length == 0) {
-			    		var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
+			    		var objTr = $("<tr></tr>").append($("<td colspan='4' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
 			    		
 			    		$("#addpopup_list tbody").append(objTr);
 			    	}
 			    	
 			    	for(var i = 0; i < json.length; i++) {
-			    		
 						if (json.length == 1 && json[i].apprStatus == 0) {
 							var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:center; width:440px;'></td>").text("내역이 없습니다."));
 				    		
 				    		$("#addpopup_list tbody").append(objTr);
 			    		} else {
+			    			var name = json[i].apprUserName;
+			    			
 			    			if (json[i].apprStatus == 1) {
 				    			json[i].apprStatus = "승인";
 				    		} else if (json[i].apprStatus == 2){
@@ -1024,12 +1025,21 @@
 			    				json[i].apprDate = "";
 			    			}
 			    			
+			    			if (json[i].apprUserName != null) {
+			    				if (json[i].apprUserName.length > 3) {
+				    				name = json[i].apprUserName.substring(0,2) + "...";
+				    			}	
+			    			}
+			    			
 			    			if (json[i].apprUserName == null) {
+			    				json[i].description = "";
 			    				json[i].apprUserName = "";
+			    				json[i].title = "";
+			    				name = "";
 			    			}
 			    			
 				    		var objTr = $("<tr></tr>").append($("<td style='width:35%'></td>").text("\u00a0" + json[i].apprDate));
-				    		objTr.append($("<td style='width:5%'></td>").text("\u00a0" + json[i].apprUserName));
+				    		objTr.append($("<td style='width:5%' title='" + json[i].description + " " + json[i].apprUserName + " " + json[i].title + "'></td>").text("\u00a0" + name));
 				    		objTr.append($("<td style='width:55%'></td>").text("\u00a0" + json[i].originDate.substring(0,16) + " -> " + json[i].changeDate.substring(11,16)));
 				    		objTr.append($("<td style='width:5%'></td>").text("\u00a0" + json[i].apprStatus));
 				    		

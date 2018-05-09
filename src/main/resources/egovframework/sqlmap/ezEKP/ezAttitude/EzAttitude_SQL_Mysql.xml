@@ -104,6 +104,8 @@
 		<result property="content"			column="CONTENT" 		columnIndex="5"/>
 		<result property="originDate"		column="ORIGIN_DATE"	columnIndex="6"/>
 		<result property="changeDate"		column="CHANGE_DATE"	columnIndex="7"/>
+		<result property="title"			column="TITLE"			columnIndex="8"/>
+		<result property="description"		column="DESCRIPTION"	columnIndex="9"/>
 	</resultMap>
 	
 	<resultMap id="getFormBody" class="AttitudeFormVO">
@@ -1162,23 +1164,33 @@
 	<select id="ezAttitudeDAO.attModGetHistory" parameterClass="Map" resultMap="attitudeApplicationHistoryVO">
 		<![CDATA[
 			SELECT
-				ATTITUDE_ID,
-				DATE_FORMAT(DATE_ADD(DATE_FORMAT(APPR_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS APPR_DATE,
-				APPR_USER_NAME,
-				APPR_STATUS,
-				CONTENT,
-				DATE_FORMAT(DATE_ADD(DATE_FORMAT(ORIGIN_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS ORIGIN_DATE,
-				DATE_FORMAT(DATE_ADD(DATE_FORMAT(CHANGE_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE
+				A.ATTITUDE_ID,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.APPR_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS APPR_DATE,
+				A.APPR_USER_NAME,
+				A.APPR_STATUS,
+				A.CONTENT,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.ORIGIN_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS ORIGIN_DATE,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
+				B.TITLE AS TITLE,
+				B.DESCRIPTION AS DESCRIPTION
 			FROM 
-				TBL_ATTITUDE_MODAPPL 
-			WHERE 
-				COMPANY_ID = #companyId#
-			AND 
-				TENANT_ID = #tenantId#
+				TBL_ATTITUDE_MODAPPL A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				 A.APPR_USER_ID = B.CN
 			AND
-				ATTITUDE_ID = #attModId#
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.COMPANY_ID = B.PHYSICALDELIVERYOFFICENAME
+			WHERE 
+				A.COMPANY_ID = #companyId#
+			AND 
+				A.TENANT_ID = #tenantId#
+			AND
+				A.ATTITUDE_ID = #attModId#
 			ORDER BY
-				APPR_DATE DESC
+				A.APPR_DATE DESC
 		]]>
 	</select>
 </sqlMap>
