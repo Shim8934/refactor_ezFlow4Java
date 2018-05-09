@@ -1480,10 +1480,12 @@ function CompleteEmailAddress(formName, validDIV, iType) {
     var newElem;
     var count1;
     var length;
-    nLen = mailArr.length;
+    
     if (mailArr[mailArr.length - 1] == ""){
     	mailArr.pop(); 
     }
+
+    nLen = mailArr.length;
     for (var i = 0; i < nLen; i++) {
 	    mailName = TrimText(mailArr[i]);
 	    if (mailName == "") {
@@ -1542,10 +1544,19 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	            validDIV.appendChild(newElem);
 	        }
 	        var szFromName = "";
-	        for (count1 = 1; count1 < mailArr.length; count1++) {
+	        for (count1 = 1; count1 <= mailArr.length; count1++) {
+	        	if (count1 - 1 != i) { // tndk
+		            szFromName += mailArr[count1 - 1];
+		            
+		            if (count1 != mailArr.length) {
+		            	szFromName += ";";
+		            }
+	        	}
+	        }
+	        /*for (count1 = 1; count1 < mailArr.length; count1++) {
 	            szFromName += mailArr[count1];
 	            if (count1 != mailArr.length - 1) szFromName += ";";
-	        }
+	        }*/
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
 	        return;
