@@ -191,7 +191,7 @@
 						if(items[$itemIdx] != $itemVal) {
 							items[$itemIdx] = $itemVal;
 							
-							if(ladderType == "1" && regNumber.test($itemVal) || $itemVal.slice(-1) == strLang24) {
+							if(ladderType == "1"/*  && regNumber.test($itemVal.replace(/,/g, "")) || $itemVal.slice(-1) == strLang24 */) {
 								getMoney($(this));
 								$("#totalmoney span").text(totalmoneyStr);
 							}
@@ -270,13 +270,14 @@
 						totalmoney -= moneyArr[obj.attr("_itemindex")];
 					}
 					
-					moneyArr[obj.attr("_itemindex")] = 0;
+					var itemidx = objLen > 1 ? i : obj.attr("_itemindex");
+					moneyArr[itemidx] = 0;
 					
-					inputval = obj.val().replace(",", "").replace(" ", "");
+					inputval = obj.val().replace(/,/g, "").replace(/ /g, "");
 					
 					if(!!inputval) {
 						if(regNumber.test(inputval) || inputval.slice(-1) == strLang24 && regNumber.test(inputval.slice(0, -1))) {
-							moneyArr[obj.attr("_itemindex")] = Number(inputval) || Number(inputval.slice(0, -1));
+							moneyArr[itemidx] = Number(inputval) || Number(inputval.slice(0, -1));
 						} else if(inputval.slice(-1) == strLang24) {
 							var tempMoneyArr = {"won": [], "unitidx": [], "wonStr": []};
 							var inputLastIdx = inputval.length - 2;
@@ -328,9 +329,9 @@
 								}
 							}
 							
-							moneyArr[obj.attr("_itemindex")] = Number(tempTotalMoney);
+							moneyArr[itemidx] = Number(tempTotalMoney);
 						}
-						totalmoney += moneyArr[obj.attr("_itemindex")];
+						totalmoney += moneyArr[itemidx];
 					}
 				}
 				totalmoneyStr = totalmoney.toString().replace(regexp, ',') || "0";
@@ -425,7 +426,7 @@
 			var ladder_select_attendant_dialogArguments = [];
 			function manage_attendant_after() {
 				
-				ladder_select_attendant_dialogArguments[0] = attendants;
+				ladder_select_attendant_dialogArguments[0] = {"attend": attendants, "item": items};
 				ladder_select_attendant_dialogArguments[1] = manage_attendant_complete;
 
 				GetOpenWindow("/ezLadder/setLadderAttendantPopUp.do", "ladder_select_attendant", 970, 680);
@@ -711,36 +712,16 @@
 				DivPopUpHidden();
 				
 				attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
+				items = [];
 				
-				if(addtype == "preladder") {
-					items = [];
-					userdata.forEach(function(line, idx) {
-						attendants["id"][idx] = line["userId"];
-						attendants["name"][idx] = line["userName"];
-						attendants["name2"][idx] = line["userName2"];
-						attendants["pic"][idx] = line["pic"];
-						attendants["order"][idx] = idx;
-						items[idx] = line["item"];
-					});
-				} else {
-					var order = 0;
-					var userdataLen = userdata["userId"].length;
-					
-					if(items == null) {
-						items = [];
-					}
-					
-					for(; order < userdataLen; order++) {
-						attendants["id"][order] = userdata["userId"][order];
-						attendants["name"][order] = userdata["userName"][order];
-						attendants["name2"][order] = userdata["userName2"][order];
-						attendants["pic"][order] = userdata["pic"][order];
-						attendants["order"][order] = order; 
-						if(items.length - 1 < order) {
-							items[order] = "";
-						}
-					}
-				}
+				userdata.forEach(function(line, idx) {
+					attendants["id"][idx] = line["userId"];
+					attendants["name"][idx] = line["userName"];
+					attendants["name2"][idx] = line["userName2"];
+					attendants["pic"][idx] = line["pic"];
+					attendants["order"][idx] = idx;
+					items[idx] = line["item"];
+				});
 				/* 사람 수 제한시 */
 				/* if(attendantlen + userdata.length > maxAttendant) {
 					alert(maxAttendant + "<spring:message code='ezLadder.t048' />");
@@ -748,6 +729,7 @@
 				} */
 				
 				setAttendantsView();
+				setLadderTypeDiv();
 			}
 			
 			/** 화면에 참여자 나타내기 */

@@ -35,6 +35,7 @@
 	        var RetValue;
 	        var ReturnFunction;
 	        var deptClickFlag;
+	        var attendants;
 	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -150,9 +151,10 @@
 	            var totalLen = totalRows.length;
 	
 	            var stridlength = 0;
-	            /* if (attendants != undefined && attendants != null && attendants["id"] != undefined && attendants["id"] != "") */
-	            if(!!RetValue && !! RetValue["id"]) {
-	                stridlength = RetValue["id"].length;
+	            
+	            attendants = RetValue["attend"];
+	            if(!!attendants && !! attendants["id"]) {
+	                stridlength = attendants["id"].length;
 	            }
 	
 	            for (var i = 0; i < stridlength; i++) {
@@ -164,16 +166,19 @@
 	                var strName;
 	                var strName2;
 	                var strPic;
+	                var item;
 	
-	                strId = RetValue["id"][i];
-	                strName = RetValue["name"][i];
-	                strName2 = RetValue["name2"][i];
-	                strPic = RetValue["pic"][i];
+	                strId = attendants["id"][i];
+	                strName = attendants["name"][i];
+	                strName2 = attendants["name2"][i];
+	                strPic = attendants["pic"][i];
+	                item = RetValue["item"][i];
 	
 	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strPic + "]]></DATA4>";
+	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + item + "]]></DATA5>";
 	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                
 	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -1193,7 +1198,7 @@
 		    function setBmGroup(type, ladderBmId) {
 		    	save_userlist();
 		    	
-		    	if(type !== "delete" && !rtn["userId"].length){
+		    	if(type !== "delete" && !rtn.length){
 		    		alert("<spring:message code='ezLadder.t058' />");
 		    		return;
 		    	}
@@ -1210,10 +1215,23 @@
 		    	
 		    	var ladderbmid = retAttendantPopInfo[2];
 		    	
+		    	var bmuserid;
+		    	var bmusername;
+		    	var bmusername2;
+		    	
 				if(type !== "delete") {
-			    	var bmuserid = rtn["userId"];
-			    	var bmusername = rtn["userName"];
-			    	var bmusername2 = rtn["userName2"];
+					bmuserid = rtn.reduce(function(result, curr) {
+						result.push(curr["userId"]);
+						return result;
+					}, []);
+			    	bmusername = rtn.reduce(function(result, curr) {
+						result.push(curr["userName"]);
+						return result;
+					}, []);
+			    	bmusername2 = rtn.reduce(function(result, curr) {
+						result.push(curr["userName2"]);
+						return result;
+					}, []);
 				}
 		    	
 		    	$.ajax({
@@ -1286,10 +1304,8 @@
 		    }
 		    
 		    /** msgtolist 의 유저 rtn에 추가 */
-		    var rtn = {};
+		    var rtn = [];
 		    function save_userlist() {
-		    	rtn = {"userId": [], "userName": [], "userName2": [], "pic": []}
-		    	
 		    	var listid = "MsgToList"; 
 		    	var selList = new ListView();
 		        selList.LoadFromID(listid);
@@ -1297,20 +1313,24 @@
 		        var totalRows = selList.GetDataRows();
 		        var totalLen = totalRows.length;
 		        
+		        var userId;
+		        var userName;
+		        var userName2;
+		        var pic;
+		        var item;
+		        
 		        for(var i = 0; i < totalLen; i++) {
-		        	if(GetAttribute(totalRows[i], "DATA1").substring(0, 14) == "anonyAttendant") {
-		        		rtn["userName"][i] = $(totalRows[i]).find("input").val();
-		        		rtn["userName2"][i] = $(totalRows[i]).find("input").val();
+		        	userId = GetAttribute(totalRows[i], "DATA1");
+		        	if(userId.substring(0, 14) == "anonyAttendant") {
+		        		userName = totalRows[i].getElementsByTagName("input")[0].value;
+		        		userName2 = totalRows[i].getElementsByTagName("input")[0].value;
 		        	} else {
-			        	rtn["userName"][i] = GetAttribute(totalRows[i], "DATA2");
-			        	rtn["userName2"][i] = GetAttribute(totalRows[i], "DATA3");
+		        		userName = GetAttribute(totalRows[i], "DATA2");
+			        	userName2 = GetAttribute(totalRows[i], "DATA3");
 		        	}
-		        	rtn["userId"][i] = GetAttribute(totalRows[i], "DATA1");
-		        	if(!!GetAttribute(totalRows[i], "DATA4")) {
-			        	rtn["pic"][i] = GetAttribute(totalRows[i], "DATA4");
-		        	} else {
-		        		rtn["pic"][i] = "";
-		        	}
+		        	pic = GetAttribute(totalRows[i], "DATA4") || "";
+		        	item = GetAttribute(totalRows[i], "DATA5") || "";
+		        	rtn[i] = {"userId": userId, "userName": userName, "userName2": userName2, "pic": pic, "item": item};
 		        }
 		    }
 		    

@@ -21,26 +21,27 @@
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript">
 	
-		var _ladder;
 		var _ladderLine;
+		
 		var ladderId;
 		var writerId;
 		var status;
 		var lineCnt;
-		var id = "${id}";
-		var searchSelect = "${searchSelect}";
-		var searchInput =  "${searchInput}";
-		var mode = "${mode}";
-		var currPage = "${currPage}";
-		var back = "back";
+		var deleteFlag;
+		var searchSelect;
+		var searchInput;
+		var mode;
+		var currPage;
+		var back;
+		var sort;
+		var sortFlag;
 		var allData = [];
-		var dragloc = {};
-		var droploc = {};
 		var stompClient = null;
 		var servername = null;
-		var deleteFlag = "${vo.deleteFlag}";
-		var sort = "${sort}";
-		var sortFlag = "${sortFlag}";
+		var loginId;
+		var id = "${id}";
+		var dragloc = {};
+		var droploc = {};
 		
 		$(window).unload(function() {
 			if (stompClient !== null) {
@@ -60,71 +61,63 @@
 			if(deleteFlag == 1) {
 				window.location.href = "/ezLadder/ladderMain.do?brdID=7"; 
 			}
-			initValues();
-			ladder_window_resize();
 			
-			if(status == 0) {
-				var usernum = _ladderLine.length;
-				add_user_change_ulsize(usernum);
-				changeUser(usernum);
-				
-				if(writerId == id) {
-					// 대기상태
+			initSetting();
+			
+			if(status == 0) { 
+				if(writerId == loginId) {
 					$(".ladderDrag")
-					.draggable({ // 드래그 리스트
-						revert: "invalid",
-						revertDuration: 400,
-						zIndex: 100,
-						addClasses: false,
-						start: function(event, ui) {
-							if(dragcnt == 0) {
-								originalPosition_left = ui.originalPosition.left;
-								dragcnt++;
+						.draggable({ // 드래그 리스트
+							revert: "invalid",
+							revertDuration: 400,
+							zIndex: 100,
+							addClasses: false,
+							start: function(event, ui) {
+								if(dragcnt == 0) {
+									originalPosition_left = ui.originalPosition.left;
+									dragcnt++;
+								}
+								dragloc = {"id": ui.helper[0].id, "beforeLeft": 0, "left": 0, "top": ui.originalPosition.top};
+								if(ui.position.left >= 0) {
+									dragloc.beforeLeft = Math.round(ui.position.left/150);
+								} else {
+									dragloc.beforeLeft = Math.round(Math.abs(ui.position.left/150)) * -1;
+								}
 							}
-							dragloc = {"id": ui.helper[0].id, "beforeLeft": 0, "left": 0, "top": ui.originalPosition.top};
-							if(ui.position.left >= 0) {
-								dragloc.beforeLeft = Math.round(ui.position.left/150);
-							} else {
-								dragloc.beforeLeft = Math.round(Math.abs(ui.position.left/150)) * -1;
-							}
-						}
-					})
-					.droppable({ // 드랍 리스트
-						accept: ".ladderDrag",
-						addClasses: false,
-						drop: function(event, ui) {
-							droploc = {"id": $(this).attr("id"), "left": 0};
+						})
+						.droppable({ // 드랍 리스트
+							accept: ".ladderDrag",
+							addClasses: false,
+							drop: function(event, ui) {
+								droploc = {"id": $(this).attr("id"), "left": 0};
+								
+								var _thisleft = Math.round($(this).css("left").split("px")[0]/150);
+								
+								if(ui.position.left >= 0) {
+									dragloc.left = Math.round(ui.position.left/150);
+								} else {
+									dragloc.left = Math.round(Math.abs(ui.position.left/150)) * -1;
+								}
+								
+								var moveValue = dragloc.left - dragloc.beforeLeft;
+								droploc.left = _thisleft - moveValue;
+								
+								afterDrag();
+								changeListOrder();
+							},
 							
-							var _thisleft = Math.round($(this).css("left").split("px")[0]/150);
-							
-							if(ui.position.left >= 0) {
-								dragloc.left = Math.round(ui.position.left/150);
-							} else {
-								dragloc.left = Math.round(Math.abs(ui.position.left/150)) * -1;
-							}
-							
-							var moveValue = dragloc.left - dragloc.beforeLeft;
-							droploc.left = _thisleft - moveValue;
-							
-							afterDrag();
-							changeListOrder();
-						},
-						
-					})
-					.on("mousedown", function() {
-						userSwitchFlag = true;
-					})
-					.on("mouseup", function() {
-						userSwitchFlag = false;
-					});
+						})
+						.on("mousedown", function() {
+							userSwitchFlag = true;
+						})
+						.on("mouseup", function() {
+							userSwitchFlag = false;
+						});
 				} else {
 					$(".ladderDrag").on("dragstart", function() {
 						return false;
 					});
 				}
-			} else if(status == 1) {
-				// 완료상태
-				canvasSetting();
 			}
 			
 			if(mode !== "preview" && (!stompClient || !stompClient.connected)) {
@@ -200,36 +193,48 @@
 		});
 		
 		function ladder_window_resize() {
-			var win_width = $(window).width() - 70;
-			var line_width = $("#attendantList").css("width").replace(/[^0-9]/g,'') * 1;
-			var title_width = win_width - $(".ladderGame_info").width();
-			
 			var $setTable = $(".setTable");
-			var $lineBox = $("#ladderLineBox");
-			var $startButton = $("#startButton");
+			var $lineBox = $setTable.find("#ladderLineBox");
+			var $startButton = $setTable.find("#startButton");
 			
-			$lineBox.css("width", win_width + "px");
-			$(".ladderGame_title").css("width", title_width);
+			var doc_widthPadding = Number($lineBox.css("padding-left").replace("px", ""));
+			var doc_width = document.body.clientWidth - doc_widthPadding;
+			var line_width = _ladderLine.length * 150;
 			
-			if(line_width > win_width) {
-				$("#blackBox").css("width", (line_width + 50) + "px");
-			} else {
-				$("#blackBox").css("width", (win_width + 50) + "px");
-			}
+			$lineBox.css("width", doc_width);
+			$setTable.find("#blackBox").css("width", ((line_width > doc_width ? line_width : doc_width) + doc_widthPadding) + "px");
 			
 			$startButton
 				.css("left", $setTable.width() / 2 - $startButton.width() / 2)
 				.css("top", ($setTable.height() - $lineBox.height()) + ($lineBox.height() / 2 - $startButton.height() / 2));
 		}
 		
-		function initValues() {
-			_ladder = ${vo};
+		function initSetting() {
 			_ladderLine = ${list};
 			
-			ladderId = _ladder.ladderId;
-			writerId = _ladder.writerId;
-			status = _ladder.status;
-			lineCnt = _ladder.lineCnt;
+			loginId = "<c:out value='${id}' />";
+			
+			ladderId = "<c:out value='${vo.ladderId}' />";
+			writerId = "<c:out value='${vo.writerId}' />";
+			status = "<c:out value='${vo.status}' />";
+			lineCnt = "<c:out value='${vo.lineCnt}' />";
+			deleteFlag = "<c:out value='${vo.deleteFlag}' />";
+			if(status == 1) {
+				lad = "<c:out value='${vo.lineArray}' />";
+			}
+			
+			searchSelect = "<c:out value='${searchSelect}' />";
+			searchInput = "<c:out value='${searchInput}' />";
+			mode = "<c:out value='${mode}' />";
+			currPage = "<c:out value='${currPage}' />";
+			back = "<c:out value='${back}' />";
+			sort = "<c:out value='${sort}' />";
+			sortFlag = "<c:out value='${sortFlag}' />";
+			
+			
+			$("#ladderLineBox").find("ul").css("width", _ladderLine.lenth * wSize + "px");
+			ladder_window_resize();
+			canvasSetting();
 		}
 		
 		function afterDrag() {
@@ -243,6 +248,8 @@
 			var ladId2 = droploc["id"].substring(4); //0
 			var ladorder1 = _ladderLine[ladId1].ladderOrder; //5
 			var ladorder2 = _ladderLine[ladId2].ladderOrder; //0
+			var laditem1 = _ladderLine[ladId1].item;
+			var laditem2 = _ladderLine[ladId2].item;
 			
 			$.ajax({
 				type: "POST",
@@ -262,14 +269,16 @@
 				success: function() {
 					_ladderLine[ladId1].ladderOrder = ladorder2; // 0
 					_ladderLine[ladId2].ladderOrder = ladorder1; // 5
+					_ladderLine[ladId1].item = laditem2;
+					_ladderLine[ladId2].item = laditem1;
 				}
 			});
 		}
 		
-		function add_user_change_ulsize(usernum) {
+		/* function add_user_change_ulsize(usernum) {
 			$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
 			$("#ladderCanvas").attr("width", (usernum * 150) + "px");
-		}
+		} */
 		
 		/** 웹소켓 */
 		var addCommentView = [];
@@ -322,30 +331,27 @@
 				stompClient.subscribe("/lad/start/" + ladderId, function(result) {	
 					loadLadder();
 					
-					if(result.body == id) {
+					if(result.body == loginId) {
 						$(".ladderDrag").draggable("destroy");
 					}
 				});
 			});
 		}
 		function canvasSetting() {
-			wInfo = _ladderLine.length;
-			lad = _ladder["lineArray"];
-			lineCnt = _ladder["lineCnt"];
+			changeUser(_ladderLine.length);
 			
-			if(!!lad) {
+			if(status == 1) {
+				$("#ladderLineBox").css("padding-bottom", "50px");
+				
 				ladArr = lad.split('');
+				
 				clickUserLadderAnimation();
+				ladderDrawInitSettingVar();
+				setLadInfo();
+				setDefaultLad();
+				printLadLine();
+				setUserPath();
 			}
-			
-			$("canvas").attr("width", (wInfo * wSize));
-			$("#ladderLineBox").css("padding-bottom", "50px");
-			
-			ladderDrawInitSettingVar();
-			setLadInfo();
-			setDefaultLad();
-			printLadLine();
-			setUserPath();
 		}
 		
 		function clickUserLadderAnimation() {
@@ -433,9 +439,9 @@
 					"currPage": currPage
 				},
 				success: function(ladderInfo) {
-					_ladder = ladderInfo["vo"];
+					status = ladderInfo["vo"]["status"];
+					lad = ladderInfo["vo"]["lineArray"];
 					_ladderLine = ladderInfo["list"];
-					status = _ladder.status;
 					
 					$("#lineDiv")
 						.css("height" , "675px")

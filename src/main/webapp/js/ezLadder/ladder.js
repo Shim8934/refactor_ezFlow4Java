@@ -21,6 +21,8 @@ var colors 	= ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5",
 
 function changeUser(len) {
 	wInfo = len;
+	
+	$("canvas").attr("width", wInfo * wSize);
 	setDefaultLad();
 }
 
@@ -128,10 +130,11 @@ var moveLeft;
 var $moveImg;
 
 function ladderDrawInitSettingVar() {
-	moveImgHalfHeight = ($("#drag0 img").height() + Number($("#drag0 img").css("border-width").split("px")[0]) * 2) / 2;
+	var $userImg = $("#drag0").find("img");
+	moveImgHalfHeight = ($userImg.height() + Number($userImg.css("border-width").split("px")[0]) * 2) / 2;
 	canvasTop = $("canvas").position().top + startYPoint - moveImgHalfHeight;
 	canvasBottom = canvasTop + $("canvas").height();
-	canvasLeft = $("canvas").position().left + moveImgHalfHeight / 2;
+	canvasLeft = ($("canvas").position().left + moveImgHalfHeight / 2) + 1;
 	moveTop = 0;
 	moveLeft = 0;
 }
