@@ -310,6 +310,9 @@ function Schedule_Repetition_onclick_Complete(retVal) {
             document.getElementById("iReFlag").value = "0";
             document.getElementById("tmpReFlag").value = "3";
             document.getElementById("AllDay").checked = false;
+            document.getElementById("Stimepicker").style.display = "";
+    	    document.getElementById("Etimepicker").style.display = "";
+    	    onck = "1";
         }
     }
     else {
