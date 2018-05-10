@@ -1332,4 +1332,45 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</update>
+	
+	<select id="EzPMSDAO.getGroupList" parameterClass="map" resultMap="projectGroupVO">
+		<![CDATA[
+			SELECT	
+				GROUP_ID,
+				TENANT_ID,
+				PROJECT_ID,
+				GROUP_NAME,
+				UPPER_GROUP_ID,
+				PLAN_START_DATE,
+				PLAN_END_DATE,
+				REAL_START_DATE,
+				REAL_END_DATE,
+				REAL_PROGRESS,
+				OVERVIEW,
+				MEMBER_COUNT,
+				HEAD_MANAGER_ID,
+				HEAD_MANAGER_NAME,
+				HEAD_MANAGER_NAME2,
+				HEAD_MANAGER_DEPTNAME,
+				HEAD_MANAGER_DEPTNAME2,
+				CREATOR_ID,
+				CREATE_DATE,
+				CREATOR_NAME,
+				CREATOR_NAME2,
+				CREATOR_DEPTNAME,
+				CREATOR_DEPTNAME2,
+				TREE_DEPTH,
+				ANCESTER_GROUP,
+				SORT_ORDER,
+				DEL_STATUS,
+				WORKINGDAY,
+				REST_DUEDAY
+			FROM 
+				TBL_PMS_GROUP
+			WHERE 
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
 </sqlMap>

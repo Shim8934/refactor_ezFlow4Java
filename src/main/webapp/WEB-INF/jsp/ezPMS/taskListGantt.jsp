@@ -52,6 +52,7 @@
 	   			// 사용자 아이디
 	   	 		userId = "",
 	   			ganttData = {},
+	   			groupList = {},
 	   			ge = "";
 	   		
 	   		function initValues(){
@@ -59,6 +60,7 @@
 	   			var tl = taskList;
 	   			projectDetails = ${projectDetail};
 	   			var pd = projectDetails;
+	   			groupList = ${groupList};
 	   			const roleName = ["담당자", "참여자", "조회자", "없음"];
 	   			const ganttStatus = {
 	   					"P": "STATUS_ACTIVE",
@@ -162,7 +164,7 @@
 	   			ganttData.canWriteOnParent = true;
 	   			ganttData.selectedRow = 0;
 	   			ganttData.deletedTaskIds = [];
-	   			ganttData.canAdd = true;
+// 	   			ganttData.canAdd = true;
 	   			
 	   		}
 	   		
@@ -194,6 +196,29 @@
    				DivPopUpShow(845, 555, "/ezPMS/goAddTask.do?projectId=" + projectId);
 	   		}
 	   		
+	   		function taskDetails(){
+	   			var curTask = {};
+	   			var taskId = 0;
+	   			curTask = ge.currentTask;
+	   			taskId = curTask.id.split("-")[1];
+	   			
+	   			$.ajax({
+					type: "POST",
+					url: "/ezPMS/getTaskDetails.do",
+					data: {"taskId": taskId},
+					dataType: "json",
+					success: function(result) {
+						
+					},
+					error: function (xhr, status, e){
+						alert("error");
+					},
+					complete: function() {
+						
+			        }
+				});
+	   		}
+	   		
 	   		(function(){
 		   		initValues();
 		   		
@@ -206,7 +231,8 @@
 		   				$('#workSpace').trigger('deleteFocused.gantt');return false;
 		   		}
 		   		document.getElementById("pmsGanttRowNewBtn").onclick = addTask;
-		   		document.getElementById("pmsGanttRowNewBtn").onclick = saveTask;
+		   		document.getElementById("pmsGanttTaskDetails").onclick = taskDetails;
+// 		   		document.getElementById("pmsGanttRowSaveBtn").onclick = saveTask;
 	   		};
 
 	   		
@@ -239,7 +265,7 @@
 		        <li id="pmsGanttRowNewBtn" class="pmsGanttMenuLi">new</li>
 		        <li id="pmsGanttRowSaveBtn" class="pmsGanttMenuLi">save</li>
 		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi">delete</li>
-		        <li class="pmsGanttMenuLi">temp1</li>
+		        <li id="pmsGanttTaskDetails" class="pmsGanttMenuLi">details</li>
 		        <li class="pmsGanttMenuLi">temp2</li>
 		    </ul>
 		</div>

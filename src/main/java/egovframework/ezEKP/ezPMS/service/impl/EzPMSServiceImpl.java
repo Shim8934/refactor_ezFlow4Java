@@ -502,8 +502,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectGroupVO> getGroupList(SearchVO search) {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.debug("[SERVICE] getGroupList started.");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("projectId", search.getProjectId());
+		param.put("tenantId", search.getTenantId());
+		
+		List<ProjectGroupVO> list = ezPMSDAO.getGroupList(param);
+		
+		LOGGER.debug("[SERVICE] getGroupList ended.");
+		return list;
 	}
 
 	@Override
