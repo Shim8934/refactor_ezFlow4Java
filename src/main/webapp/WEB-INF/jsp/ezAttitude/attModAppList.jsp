@@ -1161,14 +1161,25 @@
 									<c:if test="${selectedDeptID  == null}">
 										<option value=null selected></option>
 									</c:if>
-									<c:forEach var="item" items="${deptList}">
-										<c:if test="${selectedDeptID == item.deptId}">
-											<option value="<c:out value='${item.deptId}'/>" selected><c:out value='${item.deptName}'/></option>
-										</c:if>
-										<c:if test="${selectedDeptID != item.deptId}">
-											<option value="<c:out value='${item.deptId}'/>"><c:out value='${item.deptName}'/></option>
-										</c:if>
+									<c:forEach var="dept" items="${deptList}">
+										<c:if test="${dept.mine ne 'yes' }">
+											<c:if test="${selectedDeptID == dept.deptId}">
+												<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
+											</c:if>
+											<c:if test="${selectedDeptID != dept.deptId}">
+												<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
+											</c:if>
+										</c:if>										
 									</c:forEach>
+<%-- 									<c:if test="${deptList ne null }"> --%>
+<%-- 										<c:forEach items="${deptList}" var="dept"> --%>
+<%-- 										<c:choose> --%>
+<%-- 											<c:when test="${dept.mine ne 'yes' }"> --%>
+<%-- 												<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option> --%>
+<%-- 											</c:when> --%>
+<%-- 										</c:choose> --%>
+<%-- 										</c:forEach> --%>
+<%-- 									</c:if> --%>
 								</select> 
 <!-- 								<input id="writerDept_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/> -->
 							</td>
