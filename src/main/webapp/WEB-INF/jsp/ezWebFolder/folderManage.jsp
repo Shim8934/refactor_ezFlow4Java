@@ -5,12 +5,11 @@
 <html>
 <head>
     <title>폴더관리</title>
-<!--     <meta name="CODE_LANGUAGE" content="C#"> -->
     <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
-    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+    <link rel="stylesheet" href="<spring:message code='main.lhm02'/>" type="text/css">
+    <link rel="stylesheet" href="<spring:message code='ezEmail.c1'/>" type="text/css">
+	<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1'/>"></script>
     <script type="text/javascript" src="/js/mouseeffect.js"></script>
    	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
     <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
@@ -18,293 +17,299 @@
     <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jsTree/dist/jstree.js"></script>
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-    
     <script>
-        var lang = "${userinfo.lang}";
-        var PostTreeView = null;
-        var treeconfig = "";
-        var ReturnFunction;
-        var CancelFunction;
-        var isDivPopUp = false;
-        var isFolderManager = false;
-        var test = [];
-        
-        var createId = "";
-        var id = "";
-        var parent = "";
-        var companyFolderId = "";
-	    var deptFolderId    = "";
-	    var persFolderId    = "";
-	    var userId = "<c:out value='${userId}'/>";
+		var lang = "${userinfo.lang}";
+		var PostTreeView = null;
+		var treeconfig = "";
+		var ReturnFunction;
+		var CancelFunction;
+		var isDivPopUp = false;
+		var isFolderManager = "${isFolderManager}" == "1";
+		var test = [];
+		
+		var createId = "";
+		var id = "";
+		var parent = "";
+		var companyFolderId = "";
+		var deptFolderId = "";
+		var persFolderId = "";
+		var userId = "<c:out value='${userId}'/>";
 		var userName = "<c:out value='${userName}'/>";
-		var folderId="";
+		var folderId = "";
 		var folderType = "${folderType}";
 		var folderName1 = "";
 		var folderName2 = "";
 		var drawVolume = "";
-        if ("${isFolderManager}" == "1") {
-        	isFolderManager = true;
-        }
-        
-        document.onselectstart = function () {
-            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
-                return false;
-            else
-                return true;
-        };
-        function window_onload() {
-        	try {
-        		drawVolume = webfolder_folder_Manage[1] ;
-		    } catch (e) { }
-    		$('input:radio[name=treeType]:input[value='+folderType+']').attr("checked", true);
-        	folderList(folderType);
+		
+		var inputNameDlg_cross_dialogArguments = new Array();
+		var moveCopyFolderDlg_cross_dialogArguments = [];
+		var deleteFolderDlg_cross_dialogArguments = [];
+		
+		document.onselectstart = function() {
+			return event.srcElement.tagName == "INPUT" || event.srcElement.tagName == "TEXTAREA";
+		};
+		
+		function window_onload() {
+			try {
+				drawVolume = webfolder_folder_Manage[1];
+			} catch (e) {}
+			$('input:radio[name=treeType]:input[value=' + folderType + ']').attr("checked", true);
+			folderList(folderType);
+		}
 
-        }
-        var inputNameDlg_cross_dialogArguments = new Array();
-        function Window_Close() {
-            if (ReturnFunction!=null) {
-                if (!isDivPopUp) {
-                	window.opener.drawVolume();
-                    window.close();
-                }
-                else {
-                    CancelFunction();   
-                }
-            }
-            else
-            	window.opener.drawVolume();
-                window.close();
-        }
-        
-        function folderList(obj) {
-	    	$('#folderTree').jstree('destroy');
+		function Window_Close() {
+			if (ReturnFunction != null) {
+				if (!isDivPopUp) {
+					window.opener.drawVolume();
+					window.close();
+				} else {
+					CancelFunction();
+				}
+			} else
+				window.opener.drawVolume();
+			window.close();
+		}
+
+		function folderList(obj) {
+			$('#folderTree').jstree('destroy');
 			folderType = obj;
-			$.ajax ({
-				type :"POST",
+			$.ajax({
+				type: "POST",
 				async: false,
-				url  : "/ezWebFolder/folderList.do",
-				data : { 
-						 "folderId"   : folderId
-						,"folderType" : obj
-					},
+				url: "/ezWebFolder/folderList.do",
+				data: {
+					"folderId": folderId,
+					"folderType": obj
+				},
 				dataType: "JSON",
-				success : function (data) {
-//						upperId = data.data[0]["parent"];
+				success: function(data) {
+					//						upperId = data.data[0]["parent"];
 					var firstNode = "#" + folderId;
 					
 					$('#folderTree').jstree({
-						'plugins': ["core","types","json_data","themes","ui"],
-						'core' : {
-							"animation" : 0,
-							'data' : data.data,
-							"multiple" : false,
-							'themes' : {
-								"theme"      : "default",
-								"dots"       : false,
-								'responsive' : false,
-								'variant'    : 'small',
-								'stripes'    : false
+						'plugins': [ "core", "types", "json_data", "themes", "ui" ],
+						'core': {
+							"animation": 0,
+							'data': data.data,
+							"multiple": false,
+							'themes': {
+								"theme": "default",
+								"dots": false,
+								'responsive': false,
+								'variant': 'small',
+								'stripes': false
 							}
 						},
-						"types" : {
+						"types": {
 							"default": {
-								"icon" :"/images/webfolder/fldr.png"
+								"icon": "/images/webfolder/fldr.png"
 							}
 						},
 						"grid": {
-							"width"       : "20",
-							"margin-left" : "10"
+							"width": "20",
+							"margin-left": "10"
 						}
-					}).on('changed.jstree', function (e, data) {
-						folderId = data.selected[0]; 
-						createId = folderId != null ? data.node.original.createId : ""; 
-						folderName1 = folderName1 != null ? data.node.original.folderName1 : ""; 
-						folderName2 = folderName2 != null ? data.node.original.folderName2 : ""; 
-						parent   = data.node.original.parent; 
+					}).on('changed.jstree', function(e, data) {
+						folderId = data.selected[0];
+						createId = folderId != null ? data.node.original.createId : "";
+						folderName1 = folderName1 != null ? data.node.original.folderName1 : "";
+						folderName2 = folderName2 != null ? data.node.original.folderName2 : "";
+						parent = data.node.original.parent;
 					});
+					
 					console.log(folderType);
-					//$("input[value="+folderType+"]").attr('checked', true);
 				},
-				error : function(error) {
+				error: function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
 				}
 			});
-	    }
-        
-        function radioOnclick(obj) {
-        	folderId="";
-	        folderList(obj);
-        }
-        
-        function add_onclick() {
-            if (folderId == "") {
-                alert("<spring:message code='ezWebFolder.t257'/>");
-                return;
-            }
-            if (folderType == "C") {
-            	if ( parent =='#' ) {
-    	            alert("회사폴더 최상위에는 폴더를 추가할 수 없습니다.");
-    	            return;
-                }
-            }
-            
-            var functionType = "insert"; 
-            inputNameDlg_cross_dialogArguments[0] = folderId;
-            inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
-            inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
-            inputNameDlg_cross_dialogArguments[3] = functionType;
-            inputNameDlg_cross_dialogArguments[4] = folderName1;
-            inputNameDlg_cross_dialogArguments[5] = folderName2;
-            DivPopUpShow(330, 170, "/ezWebFolder/inputNameDlg.do");
-        }
-        function update_onclick() {
-            if (folderId == "") {
-                alert("<spring:message code='ezWebFolder.t256'/>");
-                return;
-            }
-            if ( parent =='#' ) {
-            	if (folderType == "S") {
-            		alert("공유받은 폴더는 수정할 수 없습니다.");
-            	} else {
-	            	alert("최상위 폴더는 수정할 수 없습니다.");
-            	}
-	            return;
-            }else if (folderType == "C") {
-            	for ( var i = 0 ; i <test.length; i++) {
-            		if (test[i].id == parent) {
-            			if(test[i].parent == '#') {
-            				alert("관리자만  관리가 가능한 폴더입니다.");
-				            return;
-            			} 
-            		}
-            	}
-            }
-            if (userId !=createId ) {
-            	alert("<spring:message code='ezWebFolder.t258'/>");
-            	
-            	return;
-            }else {
-            }
-            var functionType = "update"; 
-            inputNameDlg_cross_dialogArguments[0] = folderId;
-            inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
-            inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
-            inputNameDlg_cross_dialogArguments[3] = functionType;
-            inputNameDlg_cross_dialogArguments[4] = folderName1;
-            inputNameDlg_cross_dialogArguments[5] = folderName2;
-            DivPopUpShow(330, 170, "/ezWebFolder/inputNameDlg.do");
-        }
-        var deleteFolderDlg_cross_dialogArguments = [];
-        function delete_onclick() {
-            if (folderId == "") {
-                alert("<spring:message code='ezWebFolder.t259'/>");
-                return;
-            }
-            if ( parent =='#' ) {
-            	if (folderType == "S") {
-            		alert("공유받은 폴더는 삭제할 수 없습니다.");
-            	} else {
-	            	alert("최상위 폴더는 삭제할 수 없습니다.");
-            	}
-	            return;
-            }else if (folderType == "C") {
-            	for ( var i = 0 ; i <test.length; i++) {
-            		if (test[i].id == parent) {
-            			if(test[i].parent == '#') {
-            				alert("관리자만  관리가 가능한 폴더입니다.");
-				            return;
-            			} 
-            		}
-            	}
-            }
-            if (userId !=createId ) {
-            	alert("<spring:message code='ezWebFolder.t260'/>");
-            	
-            	return;
-            }
-            
-            deleteFolderDlg_cross_dialogArguments[0] = folderId;
-            deleteFolderDlg_cross_dialogArguments[1] = add_onclick_Complete
-            console.log("folderId delete_onclick function" + folderId);
-            console.log("deleteFolderDlg_cross_dialogArguments delete_onclick function" + deleteFolderDlg_cross_dialogArguments[0]);
-            DivPopUpShow(330, 220, "/ezWebFolder/folderDelete.do");
-        }
-        var moveCopyFolderDlg_cross_dialogArguments = [];
-        function move_onclick() {
-            if (folderId == "") {
-                alert("<spring:message code='ezWebFolder.t261'/>");
-                return;
-            }
-           	
-            if ( parent =='#' ) {
-            	if (folderType == "S") {
-            		alert("공유받은 폴더는 이동할 수 없습니다.");
-            	} else {
-	            	alert("최상위 폴더는 이동할 수 없습니다.");
-            	}
-	            return;
-            }else if (folderType == "C") {
-            	for ( var i = 0 ; i <test.length; i++) {
-            		if (test[i].id == parent) {
-            			if(test[i].parent == '#') {
-				            alert("관리자만  관리가 가능한 폴더입니다.");
-				            return;
-            			} 
-            		}
-            	}
-            }
-            
-            if (userId !=createId ) {
-            	alert("폴더생성자가 아닙니다. 폴더를 이동할 권한이 없습니다.");
-            	
-            	return;
-            }
-            moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
-            moveCopyFolderDlg_cross_dialogArguments[1] = "move";
-            moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
-            console.log("folderId moveCopy_onclick function" + folderId);
-            console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
-            DivPopUpShow(330, 470, "/ezWebFolder/folderMove.do");
-        }
-        function copy_onclick() {
-            if (folderId == "") {
-                alert("복사할 폴더를 선택하세요");
-                return;
-            }
-           	
-            if (parent == '#' && folderType != "S") {
-	            alert("최상위 폴더는 복사할 수 없습니다.");
-	            return;
-            }
-            
-            moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
-            moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
-            moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
-            DivPopUpShow(330, 470, "/ezWebFolder/folderMove.do");
-        }
-        function requestdata(event) {
-            if (!event) event = window.event;
-            var nodeIdx = event.nodeIdx;
-            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
-                nodeIdx = arguments[0].nodeIdx;
-            }
-//             var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false, true)
-//             PostTreeView.putchildxml(nodeIdx, childxml);
-        }
+		}
 
-        
-	    function add_onclick_Complete(szName) {
-	    	DivPopUpHidden();
-        	folderList(folderType);
-	    }
-        function returnFunction(type) {
-        	folderType = type;
-        	$('input:radio[name=treeType]:input[value='+folderType+']').prop("checked", true);
+		function radioOnclick(obj) {
+			folderId = "";
+			folderList(obj);
+		}
+
+		function add_onclick() {
+			if (folderId == "") {
+				alert("<spring:message code='ezWebFolder.t257'/>");
+				return;
+			}
+			
+			if (folderType == "C") {
+				if (parent == '#') {
+					alert("회사폴더 최상위에는 폴더를 추가할 수 없습니다.");
+					return;
+				}
+			}
+			
+			var functionType = "insert";
+			inputNameDlg_cross_dialogArguments[0] = folderId;
+			inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
+			inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
+			inputNameDlg_cross_dialogArguments[3] = functionType;
+			inputNameDlg_cross_dialogArguments[4] = folderName1;
+			inputNameDlg_cross_dialogArguments[5] = folderName2;
+			DivPopUpShow(330, 170, "/ezWebFolder/inputNameDlg.do");
+		}
+
+		function update_onclick() {
+			if (folderId == "") {
+				alert("<spring:message code='ezWebFolder.t256'/>");
+				return;
+			}
+			
+			if (parent == '#') {
+				if (folderType == "S") {
+					alert("공유받은 폴더는 수정할 수 없습니다.");
+				} else {
+					alert("최상위 폴더는 수정할 수 없습니다.");
+				}
+				
+				return;
+			} 
+			if (folderType == "C") {
+				for (var i = 0; i < test.length; i++) {
+					if (test[i].id == parent) {
+						if (test[i].parent == '#') {
+							alert("관리자만  관리가 가능한 폴더입니다.");
+							return;
+						}
+					}
+				}
+			}
+			
+			if (userId != createId) {
+				alert("<spring:message code='ezWebFolder.t258'/>");
+				return;
+			}
+			
+			var functionType = "update";
+			inputNameDlg_cross_dialogArguments[0] = folderId;
+			inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
+			inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
+			inputNameDlg_cross_dialogArguments[3] = functionType;
+			inputNameDlg_cross_dialogArguments[4] = folderName1;
+			inputNameDlg_cross_dialogArguments[5] = folderName2;
+			DivPopUpShow(330, 170, "/ezWebFolder/inputNameDlg.do");
+		}
+
+		function delete_onclick() {
+			if (folderId == "") {
+				alert("<spring:message code='ezWebFolder.t259'/>");
+				return;
+			}
+			
+			if (parent == '#') {
+				if (folderType == "S") {
+					alert("공유받은 폴더는 삭제할 수 없습니다.");
+				} else {
+					alert("최상위 폴더는 삭제할 수 없습니다.");
+				}
+				return;
+			} 
+			
+			if (folderType == "C") {
+				for (var i = 0; i < test.length; i++) {
+					if (test[i].id == parent) {
+						if (test[i].parent == '#') {
+							alert("관리자만  관리가 가능한 폴더입니다.");
+							return;
+						}
+					}
+				}
+			}
+			
+			if (userId != createId) {
+				alert("<spring:message code='ezWebFolder.t260'/>");
+				return;
+			}
+			
+			deleteFolderDlg_cross_dialogArguments[0] = folderId;
+			deleteFolderDlg_cross_dialogArguments[1] = add_onclick_Complete;
+			console.log("folderId delete_onclick function" + folderId);
+			console.log("deleteFolderDlg_cross_dialogArguments delete_onclick function" + deleteFolderDlg_cross_dialogArguments[0]);
+			DivPopUpShow(330, 220, "/ezWebFolder/folderDelete.do");
+		}
+
+		function move_onclick() {
+			if (folderId == "") {
+				alert("<spring:message code='ezWebFolder.t261'/>");
+				return;
+			}
+			
+			if (parent == '#') {
+				if (folderType == "S") {
+					alert("공유받은 폴더는 이동할 수 없습니다.");
+				} else {
+					alert("최상위 폴더는 이동할 수 없습니다.");
+				}
+				
+				return;
+			} else if (folderType == "C") {
+				for (var i = 0; i < test.length; i++) {
+					if (test[i].id == parent) {
+						if (test[i].parent == '#') {
+							alert("관리자만  관리가 가능한 폴더입니다.");
+							return;
+						}
+					}
+				}
+			}
+			
+			if (userId != createId) {
+				alert("폴더생성자가 아닙니다. 폴더를 이동할 권한이 없습니다.");
+				return;
+			}
+			
+			moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+			moveCopyFolderDlg_cross_dialogArguments[1] = "move";
+			moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
+			console.log("folderId moveCopy_onclick function" + folderId);
+			console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
+			DivPopUpShow(330, 470, "/ezWebFolder/folderMove.do");
+		}
+
+		function copy_onclick() {
+			if (folderId == "") {
+				alert("복사할 폴더를 선택하세요");
+				return;
+			}
+			
+			if (parent == '#' && folderType != "S") {
+				alert("최상위 폴더는 복사할 수 없습니다.");
+				return;
+			}
+			
+			moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
+			moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
+			moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
+			DivPopUpShow(330, 470, "/ezWebFolder/folderMove.do");
+		}
+
+		function requestdata(event) {
+			if (!event)
+				event = window.event;
+			var nodeIdx = event.nodeIdx;
+			if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
+				nodeIdx = arguments[0].nodeIdx;
+			}
+			//             var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false, true)
+			//             PostTreeView.putchildxml(nodeIdx, childxml);
+		}
+
+		function add_onclick_Complete(szName) {
+			DivPopUpHidden();
+			folderList(folderType);
+		}
+
+		function returnFunction(type) {
+			folderType = type;
+			$('input:radio[name=treeType]:input[value=' + folderType + ']').prop("checked", true);
         	add_onclick_Complete('');
-        }
-    </script>
+		}
+	</script>
 </head>
-
 <body scroll="no" class="popup" onload="javascript:window_onload()">
 	<h1>폴더관리</h1>
 	<div id="close">

@@ -300,6 +300,7 @@
 						style.overflow = "hidden";
 						style.textOverflow = "ellipsis";
 						style.whiteSpace = "nowrap";
+						style.wordWrap = "normal";
 					});
 					
 					setStyles([tdElmt2, tdElmt3, tdElmt5, tdElmt10], function(style) {

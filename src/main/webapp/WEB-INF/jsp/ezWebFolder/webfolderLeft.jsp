@@ -17,8 +17,6 @@
 		    var companyFolderId = "";
 		    var deptFolderId    = "";
 		    var persFolderId    = "";
-// 		    var userId = "<c:out value='${userId}'/>";
-// 			var userName = "<c:out value='${userName}'/>";
 			var folderId = "";
 			var folderUpper = "";
 			var folderType = null;
@@ -29,7 +27,7 @@
 		    
 			document.onselectstart = function() {
 				return false;
-			}
+			};
 		    
 		    $(function() { 
 				folderList('C');
@@ -43,19 +41,21 @@
 		    
 		    function folderList(obj) {
 		    	$($element).jstree('destroy');
+		    	
 				if ( obj == 'C') {
 					$element = '#tree';
-				}else if (obj == 'D') {
+				} else if (obj == 'D') {
 					$element = '#treeDept';
-				}else if (obj == 'U') {
+				} else if (obj == 'U') {
 					$element = '#treePer';
 				}
+				
 				folderType = obj;
 				$.ajax ({
 					type :"POST",
 					async: false,
 					url  : "/ezWebFolder/folderList.do",
-					data : { 
+					data : {
 							 "folderId"   : folderId
 							,"folderType" : obj
 						},
@@ -128,14 +128,11 @@
 						
 						if (percent > 90) {
 							barElmt.className = "myBar_red";
-						}
-						else if (percent > 70) {
+						} else if (percent > 70) {
 							barElmt.className = "myBar_orange";
-						}
-						else if (percent > 60) {
+						} else if (percent > 60) {
 							barElmt.className = "myBar_yellow";
-						}
-						else {
+						} else {
 							barElmt.className = "myBar_green";
 						}
 					},
@@ -150,14 +147,11 @@
 				
 				if (fileSize / 1024 / 1024 / 1024 > 1) {
 					fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 / 1024 * 10)) / 10).toFixed(1) + "GB";
-				}
-				else if (fileSize / 1024 / 1024 > 1) {
+				} else if (fileSize / 1024 / 1024 > 1) {
 					fileSize_ = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
-				}
-				else if (fileSize / 1024 > 1) {
+				} else if (fileSize / 1024 > 1) {
 					fileSize_ = parseInt(fileSize / 1024) + "KB";
-				}
-				else {
+				} else {
 					fileSize_ = fileSize + "B";
 				}
 				
@@ -171,8 +165,7 @@
 	        	var OpenWin = window.open("/ezWebFolder/folderManage.do?folderType="+folderType, "", GetOpenWindowfeature(600, 500));
 	            try { OpenWin.focus(); } catch (e) { }
 	            console.log(drawVolume());
-	            
-	        }	
+	        }
 		    
 		    function getFileList(folderId) {
 		    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do?folderId="+folderId+"&folderType="+folderType;
@@ -204,7 +197,7 @@
 			    
 			    if (useBottomFrameOnly == "NO") {
 					parent.parent.frames["topFrame"].contentWindow.showProgress();
-				} 
+				}
 			}
 			
 			function hiddenPanel() {
