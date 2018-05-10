@@ -57,20 +57,18 @@
 			// 윈도우 창 조절
 			function ladder_main_resize() {
 				var win_height = $(window).height() - 220;
-				
-					$(".div_scroll").css("height", win_height + "px");
-				
+				$(".div_scroll").css("height", win_height + "px");
 			}
 			// 사다리 종류 드롭박스
 			function checkSearchOption() {
 				if($("#searchOption option:selected").val()==='kind') {
-					$("#searchInput").hide();
+					$("#searchInput").css("display", "none");
 					$("#searchInput").val("");
-					$("#ladderType").show();
+					$("#ladderType").css("display", "block");
 				} else {
-					$("#ladderType").hide();
+					$("#ladderType").css("display", "none");
 					$("#searchInput").val("");
-					$("#searchInput").show();
+					$("#searchInput").css("display", "block");
 				} 
 			}
 		
