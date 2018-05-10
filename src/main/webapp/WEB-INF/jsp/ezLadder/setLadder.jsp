@@ -281,7 +281,7 @@
 			var moneyArr = [];
 			function getMoney(itemobj) {
 				var moneyUnit = {"unitStr": [strLang25, strLang26, strLang27, strLang28], "unitWon": [10, 100, 1000, 10000]};
-				var moneyNum = {"numStr": [strLang29, strLang30, strLang31, strLang32, strLang33, strLang34, strLang35, strLang36, strLang37], "number": [1, 2, 3, 4, 5, 6, 7, 8, 9]};
+				var moneyNum = {"numStr": [strLang29, strLang30, strLang31, strLang32, strLang33, strLang34, strLang35, strLang36, strLang37, "zero"], "number": [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]};
 				var inputval = "";
 				var objLen = itemobj.length;
 				var i = objLen > 1 ? 0 : itemobj.attr("_itemindex");
@@ -313,19 +313,28 @@
 							for(var j = inputLastIdx; j >= 0; j--) {
 								var UnitFlag = moneyUnit["unitStr"].indexOf(inputval[j]);
 								
-								if(UnitFlag != -1) {
+								if(UnitFlag != -1 || regNumber.test(inputval[j])) {
 									var tempArrLen = tempMoneyArr["won"].length;
-									var FrontNumFlag = function() {
-										var chkIdx1 = moneyNum["numStr"].indexOf(inputval[j - 1]);
-										var chkIdx2 = moneyNum["number"].indexOf(Number(inputval[j - 1]));
-										return chkIdx1 > chkIdx2 ? chkIdx1 : chkIdx1 < chkIdx2 ? chkIdx2 : -1;
-									}
+									var chkIdx1 = moneyNum["numStr"].indexOf(inputval[j - 1]);
+									var chkIdx2 = moneyNum["number"].indexOf(Number(inputval[j - 1]));
+									var chkIdx3 = moneyNum["number"].indexOf(Number(inputval[j - 2]));
+									var FrontNumFlag = chkIdx1 > chkIdx2 ? chkIdx1 : chkIdx1 < chkIdx2 ? chkIdx2 : -1;
 									
-									if(FrontNumFlag() != -1) {
-										tempMoneyArr["won"][tempArrLen] = moneyNum["number"][FrontNumFlag()] * moneyUnit["unitWon"][UnitFlag];
-										tempMoneyArr["unitidx"][tempArrLen] = UnitFlag;
-										tempMoneyArr["wonStr"][tempArrLen] = moneyNum["numStr"][FrontNumFlag()].concat(moneyUnit["unitStr"][UnitFlag]);
-										j--;
+									if(FrontNumFlag != -1) {
+										if(chkIdx1 != -1 || chkIdx3 == -1) {
+											tempMoneyArr["won"][tempArrLen] = moneyNum["number"][FrontNumFlag] * moneyUnit["unitWon"][UnitFlag];
+											tempMoneyArr["unitidx"][tempArrLen] = UnitFlag;
+											tempMoneyArr["wonStr"][tempArrLen] = moneyNum["numStr"][FrontNumFlag].concat(moneyUnit["unitStr"][UnitFlag]);
+											j--;
+										} else {
+											var tempNumArr = inputval.replace(/[^0-9]/g, " ").trim().split(" ");
+											var tempNum = tempNumArr[tempNumArr.length - 1];
+											
+											tempMoneyArr["won"][tempArrLen] = Number(tempNum + (moneyUnit["unitWon"][UnitFlag].toString().slice(1)));
+											tempMoneyArr["unitidx"][tempArrLen] = 0;
+											tempMoneyArr["wonStr"][tempArrLen] = tempNum.concat(moneyUnit["unitStr"][UnitFlag]);
+											break;
+										}
 									} else {
 										tempMoneyArr["won"][tempArrLen] = moneyUnit["unitWon"][UnitFlag];
 										tempMoneyArr["unitidx"][tempArrLen] = UnitFlag;
@@ -336,9 +345,11 @@
 								}
 							}
 							
-							tempMoneyArr["won"].reverse();
-							tempMoneyArr["unitidx"].reverse();
-							tempMoneyArr["wonStr"].reverse();
+							if(tempMoneyArr["won"].length > 1) {
+								tempMoneyArr["won"].reverse();
+								tempMoneyArr["unitidx"].reverse();
+								tempMoneyArr["wonStr"].reverse();
+							}
 							
 							var tempArrLen = tempMoneyArr["won"].length;
 							for(var j = 0; j < tempArrLen; j++) {
