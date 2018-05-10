@@ -201,7 +201,11 @@
                 return;
             }
             if ( parent =='#' ) {
-	            alert("최상위 폴더는 삭제할 수 없습니다.");
+            	if (folderType == "S") {
+            		alert("공유받은 폴더는 삭제할 수 없습니다.");
+            	} else {
+	            	alert("최상위 폴더는 삭제할 수 없습니다.");
+            	}
 	            return;
             }else if (folderType == "C") {
             	for ( var i = 0 ; i <test.length; i++) {
