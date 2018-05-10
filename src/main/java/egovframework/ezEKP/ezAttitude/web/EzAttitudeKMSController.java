@@ -417,15 +417,13 @@ public class EzAttitudeKMSController {
 			adminFlag = "true";
 			//권한부서 리스트
 			//c , k , wa -> 회사의 모든부서
-			url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/depts";
-			
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
 			adminFlag = "true";
 			isGAdmin = "Y";////////////////////////////////////////////없애도 될듯하다
 			// g -> 자신의 부서 + auth TB 확인해볼것.
-			url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
 		}
 		
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
 		
 		headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
