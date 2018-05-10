@@ -212,7 +212,7 @@
 				)
 			ORDER BY
 				A.TYPE_ID,
-				A.START_DATE
+				A.START_DATE DESC
 		]]>
 	</select>
 
