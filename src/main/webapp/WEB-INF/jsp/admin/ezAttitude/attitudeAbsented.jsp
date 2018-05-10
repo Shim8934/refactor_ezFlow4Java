@@ -355,10 +355,10 @@
 					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
 					<td style="width: *;" colspan=4>
-						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('search');">검색</span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('refresh');">새로고침</span></a>&nbsp;
-						<a class="imgbtn"><span onclick="exportExcel();">엑셀저장</span></a>&nbsp;
-						<a class="imgbtn"><span onclick="sendMail();">메일발송</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="sendMail();"><spring:message code='ezAttitude.lhj21' /></span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
@@ -371,7 +371,7 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.lhj17' /></th>
 					</tr>
 				</thead>
 				<tbody>

@@ -363,14 +363,14 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="width: 3%;">직위</td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
-					<td style="width: 3%">근태유형</td>
+					<td style="width: 3%"><spring:message code='ezAttitude.lhj18' /></td>
 					<td style="width: *;" colspan=3>
 						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select>
-						<a class="imgbtn" style="margin-left:10px;"><span onclick="searchAttitudeCheckList('search');">검색</span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');">새로고침</span></a>&nbsp;
-						<a class="imgbtn"><span onclick="exportExcel();">엑셀저장</span></a>&nbsp;
+						<a class="imgbtn" style="margin-left:10px;"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
@@ -382,10 +382,10 @@
 					<tr>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9'/></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime">시간</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">근태유형</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.lhj17' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime"><spring:message code='ezAttitude.lhj19' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name"><spring:message code='ezAttitude.lhj18' /></th>
 					</tr>
 				</thead>
 				<tbody>

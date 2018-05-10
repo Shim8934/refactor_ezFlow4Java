@@ -1928,7 +1928,7 @@ public class EzAttitudeGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
-			String isAllDept = request.getParameter("isAllDept");////////////////
+			String isAllDept = request.getParameter("isAllDept");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 		
 			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept);

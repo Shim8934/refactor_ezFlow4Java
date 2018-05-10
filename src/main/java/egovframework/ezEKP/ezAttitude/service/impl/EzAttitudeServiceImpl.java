@@ -1521,6 +1521,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		if (!isAllDept.equals("Y")) {
 			list = ezAttitudeDAO.getAttitudeAuthDeptList(map);
 		} else {
+			map.put("isAllDept", isAllDept);
 			list = ezAttitudeDAO.getCompanyDeptList(map);
 		}
 		

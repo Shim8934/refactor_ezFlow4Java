@@ -200,11 +200,16 @@ public class EzAttitudeBHSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userOffset = userInfo.getOffset().split("\\|")[1];
+		String isAllDept = "";
 		boolean attitudeAdminCheck = true;
 		
-		if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
-			attitudeAdminCheck = false;
-		}
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+			attitudeAdminCheck = true;
+			isAllDept = "Y";
+			
+		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+			attitudeAdminCheck = true;
+		}		
 		
 		String userId = userInfo.getId();
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -235,6 +240,42 @@ public class EzAttitudeBHSController {
 			model.addAttribute("attitudeConfigVO", attitudeConfigVO);
 		}
 		
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		
+		headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		entity = new HttpEntity<>(headers);
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("isAllDept", isAllDept)
+				.queryParam("userId", userInfo.getId());
+		
+		rest = new RestTemplate();
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		JSONArray deptList = new JSONArray();
+		
+		if(status.equals("ok")){
+			deptList = (JSONArray) resultBody.get("data");
+		}
+		
+		if (deptList.size() > 1) {
+			attitudeAdminCheck = true;
+		}
+		
+		LOGGER.debug("!@#!@#@$!@#%%#% : " + deptList.size());
+		
+		model.addAttribute("deptList", deptList);
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("uselang", userInfo.getLang());
 		model.addAttribute("attitudeAdminCheck", attitudeAdminCheck);

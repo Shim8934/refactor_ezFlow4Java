@@ -890,17 +890,27 @@
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${adminFlag == 'true'}">
-<!-- 					<li id="reply"><span onClick="searchDept()">부서검색</span></li> -->
 					<li>
 						<select id="authDeptList" style="width:100px; margin-top:5px;" onchange="deptChange()">
-							<c:forEach var="item" items="${deptList}">
-							<c:if test="${selectedDeptID == item.deptId}">
-							<option value="<c:out value='${item.deptId}'/>" selected><c:out value='${item.deptName}'/></option>
-							</c:if>
-							<c:if test="${selectedDeptID != item.deptId}">
-							<option value="<c:out value='${item.deptId}'/>"><c:out value='${item.deptName}'/></option>
-							</c:if>
+							<c:forEach var="dept" items="${deptList}">
+								<c:if test="${dept.mine != 'yes' }">
+									<c:if test="${selectedDeptID == dept.deptId}">
+										<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
+									</c:if>
+									<c:if test="${selectedDeptID != dept.deptId}">
+										<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
+									</c:if>
+								</c:if>
 							</c:forEach>
+<%-- 						<c:if test="${deptList ne null }"> --%>
+<%-- 							<c:forEach items="${deptList}" var="dept"> --%>
+<%-- 							<c:choose> --%>
+<%-- 								<c:when test="${dept.mine ne 'yes' }"> --%>
+<%-- 									<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option> --%>
+<%-- 								</c:when> --%>
+<%-- 							</c:choose> --%>
+<%-- 							</c:forEach> --%>
+<%-- 						</c:if> --%>
 						</select>
 					</li>
 		        	<li id="search"><span onClick="excelDown()"><spring:message code='ezAttitude.bbhs7'/></span></li>

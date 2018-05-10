@@ -194,7 +194,7 @@
 			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchGubun">
-			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') = #searchGubun#
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') = #searchGubun#
 		</isNotEmpty>
 		
 		<isNotEmpty property="orderCell">
@@ -259,7 +259,7 @@
 			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchGubun">
-			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL OR (TBL_ATTITUDE_USER_CONF.work_starttime = TBL_ATTITUDE_CONF.work_starttime AND TBL_ATTITUDE_USER_CONF.work_endtime = TBL_ATTITUDE_CONF.work_endtime), '0', '1') = #searchGubun#
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') = #searchGubun#
 		</isNotEmpty>
 	</select>
 	
@@ -913,6 +913,10 @@
 			SELECT 
 				CN AS deptId,
 				DISPLAYNAME AS deptName
+		]]>
+		<isNotEmpty prepend="," property="isAllDept">
+			'M' AS authType
+		</isNotEmpty>
 			FROM
 				TBL_DEPTMASTER
 			WHERE 
@@ -921,7 +925,6 @@
 				USEFLAG IS NOT NULL 
 			AND 
 				EXTENSIONATTRIBUTE1 = #companyId#
-		]]>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.checkUseAttitudeType" parameterClass="Map" resultClass="Integer">
