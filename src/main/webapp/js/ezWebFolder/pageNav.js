@@ -144,7 +144,7 @@ var pagination = (function() {
 
 function makePageSelPage(){
 	var pagingHTML = "<div class='pagenavi'>";
-	var pageNum = currentPage;
+	var pageNum = currentPage == 0 ? 1 : currentPage;
 	
 	document.getElementById("tblPageRayer").innerHTML = "";
 	document.getElementById("mailBoxInfo").innerHTML = " - [" + messages.strLang10 + "<span style='color:#017BEC;'> " + totalRows + " </span>" + messages.strLang11 + "]";
@@ -171,6 +171,8 @@ function makePageSelPage(){
 		maxNum = totalPages;
 	}
 	
+	maxNum = maxNum == 0 ? 1 : maxNum;
+
 	for (i = startNum; i <= maxNum; i++) {
 		if (i == pageNum) {
 			pagingHTML += "<span class='on'>" + i + "</span>";
