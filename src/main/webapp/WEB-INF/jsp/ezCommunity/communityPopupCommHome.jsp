@@ -32,6 +32,7 @@
 		    var strLang3 = "<spring:message code='ezCommunity.t1103' />"; 
 		    var strLang4 = "<spring:message code='ezCommunity.t2009' />"; 
 		    var strLang5 = "<spring:message code='ezCommunity.t1102' />"; 
+		    var strLang6 =  "<spring:message code='ezCommunity.t431' />";
 		    var isCrossBrowser = "{isCrossBrowser}";
 		    
 		    $(function () {
@@ -443,7 +444,7 @@
 		                    document.getElementById("mainboard").style.display = "none";
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
-		                case "btn_MemberInfo": alert(strLang5);
+		                case "btn_MemberInfo": alert(strLang6);
 		                    break;
 		                case "btn_MemberOut": alert(strLang5);
 		                    break;
