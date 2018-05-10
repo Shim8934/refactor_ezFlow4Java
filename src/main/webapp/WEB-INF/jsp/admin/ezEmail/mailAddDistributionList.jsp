@@ -323,7 +323,8 @@
 		        	},
 		        	success : function(result){	
 		        		var headerData = createXmlDom();
-	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+	                    headerData = loadXMLString(result);
+// 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 						
 	                    var xmlDom = loadXMLString(result);
 	                    if (CrossYN()) {

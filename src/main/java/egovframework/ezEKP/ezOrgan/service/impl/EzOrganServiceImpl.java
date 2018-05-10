@@ -699,7 +699,15 @@ public class EzOrganServiceImpl implements EzOrganService {
         List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
         
         StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
-        
+
+        if(pClass.equals("user")){
+       	 int totalcount = ezOrganDAO.getSearchListCount(map);
+	       	memberlist2 = new StringBuilder("<LISTVIEWDATA>");
+	        memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
+        }else{
+        	 memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
+        }
+      
 		for(int j=0; j < list.size(); j++){
 			Map<String, Object> map1 = new HashMap<String, Object>();			
 			OrganDeptVO organVO = list.get(j);
