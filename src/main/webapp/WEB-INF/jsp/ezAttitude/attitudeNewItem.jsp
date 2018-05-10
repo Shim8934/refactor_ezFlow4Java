@@ -272,8 +272,8 @@
 					return;
 				}
 				var timeValid = /^(2[0-3]|[01][0-9]):?([0-5][0-9])$/;
-
-				if (!timeValid.test($('#Stimepicker').val()) || !timeValid.test($('#Etimepicker').val())) {
+				
+				if ($('#Stimepicker').length && !timeValid.test($('#Stimepicker').val()) || $('#Etimepicker').length && !timeValid.test($('#Etimepicker').val())) {
 					alert("<spring:message code='ezAttitude.bbhs37'/>");
 					return;
 				}

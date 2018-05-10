@@ -280,7 +280,7 @@
 						if (result[i].typeId == 'A01' || result[i].typeId == 'A03') {
 							continue;
 						}
-						objTr = $("<tr></tr>").append($("<th style='width:50%'></th>").text(result[i].typeName));
+						objTr = $("<tr></tr>").append($("<th style='width:74px;'></th>").text(result[i].typeName));
 						objTd = $("<td></td>").css({"width" : "80px", "cursor" : "pointer"})
 						.attr("id",result[i].typeId).text("0" + "<spring:message code='ezAttitude.t21'/>")
 						.attr("parentId",result[i].parentId)
