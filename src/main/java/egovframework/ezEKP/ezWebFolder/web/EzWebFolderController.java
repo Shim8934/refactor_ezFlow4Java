@@ -2,13 +2,19 @@ package egovframework.ezEKP.ezWebFolder.web;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -41,8 +47,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.service.impl.EzWebFolderServiceImpl_y;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -191,6 +200,16 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl             = config.getProperty("config.webFolderGwServerURL");
 		String url                     = gwServerUrl + "/rest/ezwebfolder/filemanage/file-upload";
 		
+		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + userInfo.getId(), null, request, "get", null);
+		
+		if (!checkAdminPermmision.get("status").toString().equals("ok")){
+			JSONObject checkUserPermission = checkPermission(request, userInfo.getId(), "", folderId);
+			
+			if ("error".equals(checkUserPermission.get("status"))) {
+				return checkUserPermission.toString();
+			}
+		}
+		
 		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
 		requestFactory.setBufferRequestBody(false);
 		
@@ -262,37 +281,45 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/filemanage/file-download";
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("offset", user.getOffset())
-										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
-										.queryParam("folderList", listFolderId)
-										.queryParam("fileList", listFileId);
+		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + userInfo.getId(), null, request, "get", null);
 		
-		RestTemplate rest               = new RestTemplate();
-		//RequestCallback requestCallback = req -> req.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
-		RequestCallback requestCallback = new RequestCallback() {
-			@Override
-			public void doWithRequest(ClientHttpRequest req) throws IOException {
-				req.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
-				req.getHeaders().set("host-name", request.getServerName());
+		if (!checkAdminPermmision.get("status").toString().equals("ok")){
+			JSONObject checkPermission = checkPermission(request, user.getId(), listFileId, listFolderId);
+			
+			if (!"error".equals(checkPermission.get("status"))) {
+				UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+						.queryParam("offset", user.getOffset())
+						.queryParam("userId", user.getId())
+						.queryParam("lang", user.getLang())
+						.queryParam("folderList", listFolderId)
+						.queryParam("fileList", listFileId);
+				
+				RestTemplate rest               = new RestTemplate();
+				//RequestCallback requestCallback = req -> req.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
+				RequestCallback requestCallback = new RequestCallback() {
+					@Override
+					public void doWithRequest(ClientHttpRequest req) throws IOException {
+						req.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
+						req.getHeaders().set("host-name", request.getServerName());
+					}
+				};
+				
+				// Streams the response instead of loading it all in memory
+				ResponseExtractor<Void> responseExtractor = res -> {
+					response.setHeader("Content-Type", "application/zip");
+					response.setHeader("Content-Disposition", res.getHeaders().get("Content-Disposition").get(0));
+					
+					IOUtils.copy(res.getBody(), response.getOutputStream());
+					
+					response.getOutputStream().flush();
+					response.getOutputStream().close();
+					
+					return null;
+				};
+				
+				rest.execute(builder.build().encode().toUri(), HttpMethod.GET, requestCallback, responseExtractor);
 			}
-		};
-		
-		// Streams the response instead of loading it all in memory
-		ResponseExtractor<Void> responseExtractor = res -> {
-			response.setHeader("Content-Type", "application/zip");
-			response.setHeader("Content-Disposition", res.getHeaders().get("Content-Disposition").get(0));
-			
-			IOUtils.copy(res.getBody(), response.getOutputStream());
-			
-			response.getOutputStream().flush();
-			response.getOutputStream().close();
-			
-			return null;
-		};
-		
-		rest.execute(builder.build().encode().toUri(), HttpMethod.GET, requestCallback, responseExtractor);
+		}
 		
 		logger.debug("Download attach finishes!");
 	}
@@ -321,6 +348,16 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String listFileId   = request.getParameter("fileList");
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/file-delete";
+		
+		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + userInfo.getId(), null, request, "get", null);
+		
+		if (!checkAdminPermmision.get("status").toString().equals("ok")){
+			JSONObject checkUserPermission = checkPermission(request, user.getId(), listFileId, "");
+			
+			if ("error".equals(checkUserPermission.get("status"))) {
+				return checkUserPermission.toString();
+			}
+		}
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
@@ -378,26 +415,36 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/file-rename/fileid/" + fileId;
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-										.queryParam("tenantId", user.getTenantId())
-										.queryParam("offset", user.getOffset())
-										.queryParam("userId", user.getId())
-										.queryParam("lang", user.getLang())
-										.queryParam("newName", newName);
+		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + userInfo.getId(), null, request, "get", null);
 		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("host-name", request.getServerName());
+		if (!checkAdminPermmision.get("status").toString().equals("ok")){
+			JSONObject checkPermission = checkPermission(request, user.getId(), fileId, "");
+			
+			if (!"error".equals(checkPermission.get("status"))) {
+				
+				UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+						.queryParam("tenantId", user.getTenantId())
+						.queryParam("offset", user.getOffset())
+						.queryParam("userId", user.getId())
+						.queryParam("lang", user.getLang())
+						.queryParam("newName", newName);
+				
+				HttpHeaders headers = new HttpHeaders();
+				headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+				headers.set("host-name", request.getServerName());
+				
+				HttpEntity<?> entity = new HttpEntity<>(headers);
+				RestTemplate rest    = new RestTemplate();
+				
+				ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+				JSONParser jp                 = new JSONParser();
+				JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+				String status                 = resultBody.get("status").toString();
+				
+				logger.debug("Status: " + status);
+			}
+		}
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		RestTemplate rest    = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-		String status                 = resultBody.get("status").toString();
-		
-		logger.debug("Status: " + status);
 		logger.debug("Rename File finishes!");
 	}
 
@@ -462,6 +509,17 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/filemove/modes/" + mode;
+		
+		
+		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
+		
+		if (!checkAdminPermmision.get("status").toString().equals("ok")){
+			JSONObject checkUserPermission = checkPermission(request, user.getId(), fileList, folderId);
+			
+			if ("error".equals(checkUserPermission.get("status"))) {
+				return checkUserPermission.toString();
+			}
+		}
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("tenantId", user.getTenantId())
@@ -889,6 +947,80 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		return "json";
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject checkWfAdmin(HttpServletRequest request, String userId) throws ParseException {
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
+		String url         = gwServerUrl + "/rest/ezwebfolder/check-wfadmin/" + userId;
+		
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		JSONObject resultObj          =  new JSONObject();
+		
+		if (status.equals("ok")) {
+			if (resultBody.get("data").toString().equals("1")) {
+				resultObj.put("result", "ok");
+				
+			}
+			else {
+				resultObj.put("result", "notok");
+				resultObj.put("reason", resultBody.get("reason").toString());
+			}
+		}
+		else {
+			resultObj.put("result", "notok");
+			resultObj.put("reason", resultBody.get("reason").toString());
+		}
+		
+		return resultObj;
+	}
+	
+	private JSONObject checkPermission(HttpServletRequest request, String userId, String fileList, String folderList) {
+		Map<String, Object> checkPermission = new HashMap<>();
+		List<Map<String, Object>> checkList = new ArrayList<>();
+		Map<String, Object> map;
+		
+		String[] fileArray = fileList.split(",");
+		String[] folderArray = folderList.split(",");
+		
+		for (String fileId : fileArray) {
+			if (fileId.isEmpty()) {
+				continue;
+			}
+			
+			map = new HashMap<>();
+			map.put("checkId", fileId);
+			map.put("checkType", "F");
+			
+			checkList.add(map);
+		}
+		
+		for (String folderId : folderArray) {
+			if (folderId.isEmpty()) {
+				continue;
+			}
+			
+			map = new HashMap<>();
+			map.put("checkId", folderId);
+			map.put("checkType", "D");
+			
+			checkList.add(map);
+		}
+		
+		checkPermission.put("checkList"	, checkList);
+		
+		return commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userId + "/checkpermission", null, request, "post", new JSONObject(checkPermission));
 	}
 	
 	private class MultipartFileResource extends InputStreamResource {
