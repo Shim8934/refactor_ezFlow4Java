@@ -114,33 +114,32 @@
 			    });
 			});
 			    
-			var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
-			var monthStr = monthMsg.split(";");		    
-			var dayMsg = "일;월;화;수;목;금;토";
-			var dayStr = dayMsg.split(";");
-			
-			$(function () {
-			    $.datepicker.regional["ko"] = {
-			    	closeText: "닫기",
-			        prevText: "이전달",
-			        nextText: "다음달",
-					currentText: "오늘",
-			        monthNames: monthStr,
-			        monthNamesShort: monthStr,
-			        dayNames: dayStr,
-			        dayNamesShort: dayStr,
-			        dayNamesMin: dayStr,
-			        weekHeader: 'Wk',
-			        dateFormat: 'yy-mm-dd',
-			        firstDay: 0,
-			        isRTL: false,
-			        duration: 200,
-			        showAnim: 'show',
-			        showMonthAfterYear: true
-			    };
-			    
-			    $.datepicker.setDefaults($.datepicker.regional["ko"]);
-			});
+	    	var monthMsg = "<spring:message code='ezSchedule.t110' />";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayStr = dayMsg.split(";");
+		    
+		    $(function () {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+		            monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		    });
 			
 	    	function company_change(){
 	    		$('#receiverlist').empty();
@@ -159,7 +158,7 @@
     			searchEndDate = $("#Edatepicker").val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
-					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
+					alert("<spring:message code='ezAttitude.lhj15' />");
 		            return;
 				}
 	    		
@@ -196,7 +195,7 @@
 	    	
 	    	//검색 > 근태유형selectBox
 	    	function getAttitudeTypeList(typeList, typeId) {
-	    		var html = "<option value='total'>전체</option>";
+	    		var html = "<option value='total'><spring:message code='ezAttitude.lhj8' /></option>";
 	    		
 	    		for (var i = 0; i < typeList.length; i ++) {
 	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
@@ -236,7 +235,7 @@
 	    		}
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
@@ -256,7 +255,7 @@
 	    	
 			function searchAttitudeCheckList(searchType){
 				if (!checkPattern()) {
-					alert("날짜를 다시 지정해주세요.")
+					alert("<spring:message code='ezAttitude.lhj16' />")
 					return;
 				}
 				
@@ -275,7 +274,6 @@
 	    			$("#Sdatepicker").val("${searchStartDate}");
 	    			$("#Edatepicker").val("${searchEndDate}");
 	    			$("select[id='searchAttitudeType']").val('total');
-	    			$("#contentlist table.mainlist th").find("img").remove();
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";
@@ -283,9 +281,11 @@
 	    			searchStartDate = "${searchStartDate}";
 	    			searchEndDate = "${searchEndDate}";
 	    			searchAttitudeType = "total";
-	    			orderOption = "";
-	    			orderCell = "";
 	    		}
+	    		
+	    		$("#contentlist table.mainlist th").find("img").remove();
+	    		orderOption = "";
+	    		orderCell = "";
 	    		
 	    		pageNum = 1;
     			getAttitudeCheckList();
@@ -338,7 +338,7 @@
 	    <h1><spring:message code = 'ezAttitude.t5' /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
-	        	<li style="background: none;"><span style="border: none;"><b>회사선택</b></span></li>
+	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span></li>
 				<li>
 					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
 						<c:forEach var = "companyItem" items="${list }">
@@ -352,9 +352,9 @@
 	  	<table id="searchTable" style="width:100%;">
 			<tbody>
 				<tr>
-					<td style="width: 3%;">부서</td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t9'/></td>
 					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
-					<td style="width: 3%;">이름</td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;">검색기간</td>
 					<td style="width: 20%;">
@@ -380,9 +380,9 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9'/></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">날짜</th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime">시간</th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">근태유형</th>

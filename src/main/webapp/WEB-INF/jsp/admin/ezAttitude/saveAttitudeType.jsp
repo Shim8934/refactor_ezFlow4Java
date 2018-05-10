@@ -81,10 +81,21 @@
 //여기까지 파일
 
 			function OK_Click() {
-				if ($('#typeName').val() == "") {
+				var typeName = $('#typeName').val();
+				var typeName2 = $('#typeName2').val();
+				
+				if (typeName == "") {
 					alert('휴가유형명을 입력해주세요');
 					return;
 				}
+				
+				//태그 적용 안되게 하기
+				typeName = ReplaceText(ReplaceText(ReplaceText(typeName, "&", "&amp;"), "<", "&lt;"), ">", "&gt;");
+				
+				if (typeName2) {
+					typeName2 = ReplaceText(ReplaceText(ReplaceText(typeName2, "&", "&amp;"), "<", "&lt;"), ">", "&gt;");
+				}
+				
 				$.ajax({
 		        	type : "POST",
 		        	url : "/admin/ezAttitude/saveAttitudeType.do",
@@ -93,8 +104,8 @@
 		        		companyId : companyId,
 		        		typeId : typeId,
 		        		saveMode : saveMode,
-		        		typeName : $('#typeName').val(),
-		        		typeName2 : $('#typeName2').val()
+		        		typeName : typeName,
+		        		typeName2 : typeName2
 		        	},
 		        	success : function(result) {
 		        			alert('저장되었습니다.');
@@ -131,11 +142,11 @@
     				<table width="100%">
 			        	<tr class="primary">
 			          		<th><spring:message code='ezAttitude.t41' /></th>
-			          		<td><input id="typeName" type="text" style="width:100%" value="<c:out value = '${typeInfo.typeName}' />"></td>
+			          		<td><input id="typeName" type="text" style="width:100%" value="${typeInfo.typeName}"></td>
 			        	</tr>
 			        	<tr class="secondary">
 			          		<th><spring:message code='ezAttitude.t42' /></th>
-			          		<td><input id="typeName2" type="text" style="width:100%" value="<c:out value = '${typeInfo.typeName2}' />"></td>
+			          		<td><input id="typeName2" type="text" style="width:100%" value="${typeInfo.typeName2}"></td>
 			        	</tr>
     				</table>
     			</td> 

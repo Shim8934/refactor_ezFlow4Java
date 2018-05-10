@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>근무시간 수정</title>
+		<title><spring:message code = 'ezAttitude.lhj7' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -58,7 +58,7 @@
 		
 		function btnOk_onclick() {
 			if (!checkPattern()) {
-    			alert("근무시간를 다시 지정해주세요.")
+    			alert("<spring:message code='ezAttitude.lhj1' />")
     			return;
     		}
 			
@@ -89,7 +89,7 @@
 						opener.getUserConfList();
 	   					window.close();
 					} else {
-						alert("근무시간 수정 중 오류가 발생했습니다.");
+						alert("<spring:message code='ezAttitude.lhj9' />");
 	   					window.close();
 					}
    				}
@@ -102,21 +102,21 @@
 	</script>
 	
 	<body class="popup">
-		<h1>근무시간 수정</h1>
+		<h1><spring:message code='ezAttitude.lhj7' /></h1>
 		<table class="content"> 
 			<tr>
-				<th>기본값 지정</th>
-				<td><input type="checkbox" id="gubun" name="gubun" <c:if test="${vo.gubun == '0'}">checked="checked"</c:if> />설정된 회사 근무시간을 따름</td>
+				<th><spring:message code='ezAttitude.lhj10' /></th>
+				<td><input type="checkbox" id="gubun" name="gubun" <c:if test="${vo.gubun == '0'}">checked="checked"</c:if> /><spring:message code='ezAttitude.lhj11' /></td>
 			</tr>
 			<tr>
-				<th>근무시간</th>
+				<th><spring:message code='ezAttitude.t12' /></th>
 				<td><span><input id="workStartTime" type="text" style="width:50px;" <c:if test="${vo.gubun == '0'}">readonly="true"</c:if> value="${vo.workStartTime }"/>&nbsp; ~ &nbsp;<input id="workEndTime" type="text" style="width:50px;" <c:if test="${vo.gubun == '0'}">readonly="true"</c:if> value="${vo.workEndTime }"/></span></td>
 			</tr>
 		</table> 
 		
 		<div class="btnposition">
-			<a class="imgbtn"><span onclick="return btnOk_onclick()">확 인</span></a>
-			<a class="imgbtn"><span onclick="return btncancel_onclick()">취 소</span></a>
+			<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code='ezAttitude.lhj12' /></span></a>
+			<a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code='ezAttitude.lhj13' /></span></a>
 		</div>
 	</body>
 </html>

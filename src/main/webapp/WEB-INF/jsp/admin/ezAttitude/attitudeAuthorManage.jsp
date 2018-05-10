@@ -10,6 +10,7 @@
 <!-- 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />		 -->
 <%-- 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	     --%>
 	    <link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
+	    <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css">
 	    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
@@ -19,6 +20,7 @@
 	    	var adminCompany = "${adminCompany}";
 	    	var selectedUserId = "";
 	    	var selectedUserName = "";
+	    	var userList = [];
 			
 	        $(document).ready(function() {
 		        if (document.getElementById("ListCompany").length == 0) {
@@ -50,6 +52,8 @@
 	        
 	        //권한자 리스트 셋팅
 	        function attitudeAuthListSet(result) {
+	        	userList = [];
+	        	
                 var html = "";
                 if (result.length != null && result.length != 0) {
 	                for (var i = 0; i < result.length; i++) {
@@ -57,8 +61,11 @@
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userName + "</td>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userTitle + "</td>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userDeptName + "</td>";
-	                    html += "<td style='width:40%;color:gray;'>" + result[i].authDeptName2 + " <i class='fas fa-info-circle' style='margin-left: 5px; font-size: 14px;'></i></td>";
+	                    html += "<td style='width:40%;color:gray;'>" + result[i].authDeptName + " <i class='fas fa-info-circle' style='margin-left: 5px; font-size: 14px;'></i></td>";
 	                    html += "</tr>";
+	                    
+	                    var deptList = [result[i].authDeptId, result[i].authDeptName2, result[i].authDeptType];
+	                    userList.push(deptList);
 	                }
                 } else {
                 	html = "<tr><td colspan='4' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";
@@ -85,7 +92,7 @@
 				url+="?companyId="+companyId;
 				if (userId) {
 					url+="&userId="+userId+"&userName="+selectedUserName;
-					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 400));
+					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 420));
 				} else {
 					alert("권한설정할 대상을 선택해 주십시오.");
 				}
@@ -121,14 +128,223 @@
 	        	var url = "/admin/ezAttitude/saveAttitudeAuth.do";
 				var companyId = $("#ListCompany").val();
 				url+="?companyId="+companyId;
-				window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 400));
+				window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 420));
 	        }
 	        
 	        //권한부서 정보 hover로
 	        $(document).on('mouseover', '#contentlist table.mainlist i', function(e) {
-				alert($(this).closest('tr').attr('id'));
+				var trNum = $(this).closest('tr').prevAll().length;
+				var deptIdStr = userList[trNum][0];
+				var deptNameList = userList[trNum][1];
+				var authTypeStr = userList[trNum][2];
+				showTooltip(deptNameList, authTypeStr);
+			})
+	        $(document).on('mouseout', '#contentlist table.mainlist i', function(e) {
+	        	hideTooltip();
 			})
 	        
+	/////////////////툴팁//////////////////////////////////////////////////////////////
+			function showTooltip(deptNameList, authTypeStr, e) {
+// 			    tip = (!e.target ? event.srcElement.value : e.target.value)
+
+				var authTypeList = authTypeStr.split(",");
+				
+			    var html = "";
+			    html += "<table name='tooltip' class='calendar_layer' cellpadding='0' cellspacing='0' border='0' width='100%'>";
+				html += "<tr class='selectTR' style='background-color: rgb(237, 244, 253);'>";
+				html += "<th scope='col'>권한부서정보</th>";
+				html += "</tr>";
+				html += "<tr class='' style='background-color: rgb(255, 255, 255);'>";
+				html += "<td class='text'>";
+				html += "<table class='td_list' cellpadding='0' cellspacing='0' border='0' width='100%'>";
+				for (var i = 0; i < deptNameList.length; i++) {
+					var authName = "";
+					if (authTypeList[i] == "R") {
+						authName = "열람";
+					} else {
+						authName = "관리";
+					}
+					html += "<tr class='' style='background-color: rgb(255, 255, 255);'>";
+					html += "<td>" + deptNameList[i] + " (" + authName + ")</td>";
+					html += "</tr>";
+				}
+				html += "</table>";
+				html += "</td>";
+				html += "</tr>";
+				html += "</table>";
+			    $('#tooltip').html(html);
+			    $('#tooltip').css('left',getMouseXLocation(e) + 'px');
+			    $('#tooltip').css('top',getMouseYLocation(e) + 'px');
+			    $('#tooltip').css('visibility', 'visible');
+			}
+			
+			function hideTooltip() {
+				$('#tooltip').css('visibility', 'hidden');
+			}
+			/*
+			function TooltipMouseOver(obj, event) {			
+			    showTooltip_MouseOver();
+			}
+			
+			function showTooltip_MouseOver(e, pLocation) {
+			    tip = (!e.target ? event.srcElement.value : e.target.value)
+			
+			    var tTip = document.getElementById('tooltip'); 
+			    tTip.innerHTML = ""; // 
+			    var tTable = document.createElement("TABLE");
+			    var tTr = document.createElement("TR");
+			    var tTh = document.createElement("TH");
+			    tTable.className = "calendar_layer";
+			    tTable.setAttribute("cellpadding", "0");
+			    tTable.setAttribute("cellspacing", "0");
+			    tTable.setAttribute("border", "0");
+			    tTable.setAttribute("width", "100%");
+			    tTh.setAttribute("scope", "col");
+			    tTh.style.background = "#edf4fd";
+			    tTh.style.border = "1px solid #d1ddec";
+			    var oText = document.createTextNode("text");
+			    //tTh.innerHTML = pSubject;
+			    tTh.appendChild(oText);
+			    tTr.appendChild(tTh);
+			    tTable.appendChild(tTr);
+			
+			    var tTr = document.createElement("TR");
+			    var tTd = document.createElement("TD");
+			    tTd.className = "text";
+			    tTd.style.borderTop = "0px";
+			
+			    var sTable = document.createElement("TABLE");
+			    var sTr = document.createElement("TR");
+			    var sTd = document.createElement("TD");
+			    sTable.className = "td_list";
+			    sTable.setAttribute("cellpadding", "0");
+			    sTable.setAttribute("cellspacing", "0");
+			    sTable.setAttribute("border", "0");
+			    sTable.setAttribute("width", "100%");
+			
+			    
+			    var sTr = document.createElement("TR");
+			    var sTd = document.createElement("TD");
+			    var sSpan = document.createElement("SPAN");
+			    
+			    sTd.appendChild(sSpan);
+			    sTd.innerHTML += "[strLang270]<br/>";
+			    sTr.appendChild(sTd);
+			    sTable.appendChild(sTr);
+			
+			    
+			    if (pLocation != "") {
+			        var sTr = document.createElement("TR");
+			        var sTd = document.createElement("TD");
+			        var sSpan = document.createElement("SPAN");
+			        var oText2 = document.createTextNode(pLocation); 
+			        
+			        sTd.appendChild(sSpan);
+			        //sTd.innerHTML += "[" + strLang11 + "]<br/>" + pLocation;
+			        sTd.innerHTML += "[strLang11]<br/>";
+			        sTd.appendChild(oText2);
+			        sTr.appendChild(sTd);
+			        sTable.appendChild(sTr);
+			    }
+			    
+			    tTd.appendChild(sTable);
+			    tTr.appendChild(tTd);
+			    tTable.appendChild(tTr);
+			
+			    
+			    tTip.appendChild(tTable);
+			    tTip.style.left = getMouseXLocation(e) + 'px';
+			    tTip.style.top = getMouseYLocation(e) + 'px';
+			    tTip.style.visibility = 'visible';
+			}
+			*/
+			function getMouseXLocation(e) {
+			    if (e)
+			        var E = e;
+			    else
+			        var E = window.event;
+
+			    var tTip = document.getElementById("tooltip");
+			    if (navigator.userAgent.indexOf('Firefox') != -1) {
+			        if (E.clientX > 1000) {
+			            var locationX = E.clientX + document.documentElement.scrollLeft - tTip.clientWidth;
+			        } else {
+			            if (E.clientX > 300) {
+			                var locationX = E.clientX + document.documentElement.scrollLeft - tTip.clientWidth;
+			            }
+			            else
+			                var locationX = E.clientX + document.documentElement.scrollLeft;
+			        }
+			    }
+			    else {
+			        if (E.clientX > 1000) {
+			            var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+			        } else {
+			            if (E.clientX > 300) {
+			                var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+			            }
+			            else
+			                var locationX = E.clientX + document.body.scrollLeft;
+			        }
+			    }
+
+			    return locationX
+			}
+
+			function getMouseYLocation(e) {
+			    if (e)
+			        var E = e;
+			    else
+			        var E = window.event;
+
+			    var tTip = document.getElementById("tooltip");
+			    if (navigator.userAgent.indexOf('Firefox') != -1) {
+			        if (E.clientY > 500) {
+			            var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+			            locationY -= 12;
+			        }
+			        else {
+			            if (document.documentElement.scrollTop > 0) {
+			                
+			                var locationY
+			                
+			                if (tTip.clientHeight > E.clientY) {
+			                    locationY = E.clientY + document.documentElement.scrollTop;
+			                } else {
+			                    locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+			                }
+			            }
+			            else {
+			                var locationY = E.clientY + document.documentElement.scrollTop;
+			            }
+			            locationY += 12;
+			        }
+			    }
+			    else {
+			        if (E.clientY > 500) {
+			            var locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
+			            locationY -= 12;
+			        }
+			        else {
+			            if (document.body.scrollTop > 0) {
+			                var locationY
+			                
+			                if (tTip.clientHeight > E.clientY) {
+			                    locationY = E.clientY + document.body.scrollTop;
+			                } else {
+			                    locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
+			                }
+			            }
+			            else {
+			                var locationY = E.clientY + document.body.scrollTop;
+			            }
+			            locationY += 12;
+			        }
+			    }
+
+			    return locationY
+			}
+
 		</script>
 	</head>
 	<body class="mainbody">
@@ -168,6 +384,7 @@
                             <img src="/images/email/progress_img.gif" />
                         </td>
                     </tr>
+                    <div id="tooltip" style="position: absolute;visibility: hidden; z-index: 1000; background-color: white;"></div>
                 </table>
             </div>
         </div>

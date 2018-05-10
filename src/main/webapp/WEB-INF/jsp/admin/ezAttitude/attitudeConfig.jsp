@@ -89,6 +89,10 @@
 	        }
 	        
 	        function save_config() {
+	        	if (!checkPattern()) {
+	    			alert("근무시간를 다시 지정해주세요.")
+	    			return;
+	    		}
 	        	//시간
 	        	if( $("#endTime").val() < $("#startTime").val() ) {
 	        		alert('종료시간은 시작시간보다 늦어야 합니다.');
@@ -130,6 +134,49 @@
 		    	}
 		    })
 		    
+		    //시간 체크
+		    function checkPattern() {
+				var timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
+				
+				if ((timePattern.test($("#startTime").val()) && timePattern.test($("#endTime").val())) || ($("#startTime").val() == "" && $("#endTime").val() == "")) {
+					return true;
+				} else {
+					if (!timePattern.test($("#startTime").val())&& !timePattern.test($("endTime").val())) {
+						$("#startTime").focus();
+						return false;
+					} else if (!timePattern.test($("#startTime").val())) {
+						$("#startTime").focus();
+						return false;
+					} else if (!timePattern.test($("#endTime").val())) {
+						$("#endTime").focus();
+						return false;
+					}
+				}
+			}
+		    
+	     	//숫자만 입력 가능하게끔 -------------특수문자(shift+숫자)는 안먹힌다 -> 해결할것.
+			function filterNumber(event) {
+				var code = event.keyCode;
+				
+				if (code > 47 && code < 58) { //숫자
+					return;
+				}
+				
+				if (event.ctrlKey || event.altKey) { //alt, ctrl키
+				    return;
+				}
+				
+				if (code === 9 || code === 36 || code === 35 || code === 37 || code === 39 || code === 8 || code === 46) { //특수키
+					return;
+				}
+				
+				if (code === 186) { //콜론(:)
+					return;
+				}
+				
+				event.preventDefault();
+			}
+
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -158,7 +205,11 @@
 					<spring:message code='ezAttitude.t12' />
 	            </th>
 	            <td style="width: 500px; text-align:left; padding-left: 5px;">
-	            	<input id="startTime" type="text" style="width:50px;"/> ~ <input id="endTime" type="text" style="width:50px;"/>
+	            	<input id="startTime" type="text" style="width:50px; ime-mode:disabled;"/> 
+<!-- 	            	<input id="startTime" type="text" style="width:50px; ime-mode:disabled;" onkeydown="filterNumber(event);"/>  -->
+	            	~
+	            	<input id="endTime" type="text" style="width:50px; ime-mode:disabled;"/>
+<!-- 	            	<input id="endTime" type="text" style="width:50px; ime-mode:disabled;" onkeydown="filterNumber(event);"/> -->
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">

@@ -100,7 +100,7 @@
 	    	
 	    	function getUserConfList(){
 	    		if (!checkPattern()) {
-	    			alert("근무시간를 다시 지정해주세요.")
+	    			alert("<spring:message code= 'ezAttitude.lhj1' />")
 	    			return;
 	    		}
 	    		
@@ -145,11 +145,11 @@
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
 	    			resultHtml += "<td>" + vo.workStartTime + " ~ " + vo.workEndTime + "</td>";
-	    			resultHtml += "<td>" + (vo.gubun == '0' ? '회사' : '개인') + "</td></tr>";
+	    			resultHtml += "<td>" + (vo.gubun == "0" ? "<spring:message code='ezAttitude.lhj2' />" : "<spring:message code='ezAttitude.lhj3' />") + "</td></tr>";
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr><td colspan='5' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";
+	    			resultHtml = "<tr><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
@@ -172,7 +172,6 @@
 	    			$("#searchStartTime").val("");
 	    			$("#searchEndTime").val("");
 	    			$("[type='radio']:checked").val("");
-	    			$("#contentlist table.mainlist th").find("img").remove();
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";
@@ -180,10 +179,12 @@
 	    			searchStartTime = "";
 	    			searchEndTime = "";
 	    			searchGubun = "";
-	    			orderOption = "";
-	    			orderCell = "";
 	    		}
 	    		
+	    		$("#contentlist table.mainlist th").find("img").remove();
+	    		orderOption = "";
+    			orderCell = "";
+    			
 	    		pageNum = 1;
     			getUserConfList();
 	    	}
@@ -211,7 +212,7 @@
 	   			selectedUserIdList = selectedUserIdList.slice(0, -2);
 	   			
 	   			if (selectedUserIdList == "") {
-	   				alert("수정할 사원을 선택해주세요.");
+	   				alert("<spring:message code = 'ezAttitude.lhj4' />");
 	   			} else {
 		   			editUserConf(selectedUserIdList);
 	   			}
@@ -269,7 +270,7 @@
 	    <h1><spring:message code = 'ezAttitude.t4' /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
-	        	<li style="background: none;"><span style="border: none;"><b>회사선택</b></span></li>
+	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t15'/></b></span></li>
 				<li>
 					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
 						<c:forEach var = "companyItem" items="${list }">
@@ -283,30 +284,30 @@
 	  	<table id="searchTable" style="width:100%;">
 			<tbody>
 				<tr>
-					<td style="width: 3%;">부서</td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t9' /></td>
 					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
-					<td style="width: 3%;">이름</td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
 					<td style="width: 11%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
-					<td style="width: 3%;">구분</td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t13' /></td>
 					<td style="width: 20%;">
 						<span style="width: 90%;">
-							<input type="radio" name="searchGubun" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/>&nbsp;모두
-							<input type="radio" name="searchGubun" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;회사
-							<input type="radio" name="searchGubun" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;개인
+							<input type="radio" name="searchGubun" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/>&nbsp;<spring:message code='ezAttitude.lhj8' />
+							<input type="radio" name="searchGubun" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;<spring:message code='ezAttitude.lhj2' />
+							<input type="radio" name="searchGubun" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;<spring:message code='ezAttitude.lhj3' />
 						</span>
 					</td>
 				</tr>
 				<tr>
-					<td style="width: 3%;">직위</td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
-					<td style="width: 3%;">근무시간</td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t12' /></td>
 					<td>
 						<span id="topmenu"><input id="searchStartTime" type="text" style="width:50px; text-align:center;"/>&nbsp; ~ &nbsp;<input id="searchEndTime" type="text" style="width:50px; text-align:center;"/></span>
 					</td>
 					<td style=" width:*;" colspan=2>
-						<a class="imgbtn"><span onclick="searchUserConfList('search');">검색</span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchUserConfList('refresh');">새로고침</span></a>&nbsp;
-						<a class="imgbtn"><span onclick="editUserConfList();">근무시간수정</span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchUserConfList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchUserConfList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="editUserConfList();"><spring:message code='ezAttitude.lhj7' /></span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
@@ -317,11 +318,11 @@
 				<thead>
 					<tr>
 						<th style="width:20px;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="workstarttime">근무시간</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="gubun">구분</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9'/></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="workstarttime"><spring:message code='ezAttitude.t12' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="gubun"><spring:message code='ezAttitude.t13' /></th>
 					</tr>
 				</thead>
 				<tbody>

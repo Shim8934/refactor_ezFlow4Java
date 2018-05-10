@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.service.impl;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -278,7 +279,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		// TODO Auto-generated method stub
 		LOGGER.debug("insertAttitudeApplication started");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
+//		Map<String, Object> map = new HashMap<String, Object>();
 		
 //		map.put("", );
 //		map.put("", );
@@ -962,7 +963,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId) throws Exception {
+	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String deptId, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeAbsentedList started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -971,6 +972,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchTitle", searchTitle);
+		map.put("deptId", deptId);
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -981,34 +983,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		Date startDate = sdf.parse(searchStartDate);
 		cal.setTime(startDate);
 		
-		String tempDateTime = "";
-		
 		List<AdminAttitudeVO> totalList = new ArrayList<AdminAttitudeVO>();
 		
-		/* 2018-05-01 이효진 추후개선 미입력자이거말고 어떠케뽑는지 모르겟어서 */
-		/*while (true) {
-			tempDateTime = sdf.format(cal.getTime());
-			
-			//day_of_week 1 일 2 월 3 화 ...
-			//여기 어떠케해서 휴일때 list조회안하고 add안하게 바꿔야함
-			LOGGER.debug("tempDateTime = " + tempDateTime + " || day = " + cal.get(Calendar.DAY_OF_WEEK));
-			
-			map.put("searchStartDate", commonUtil.getDateStringInUTC(tempDateTime + " 00:00:00", offset, true));
-			map.put("searchEndDate", commonUtil.getDateStringInUTC(tempDateTime + " 23:59:59", offset, true));
-			
-			List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeAbsentList(map);
-			
-			LOGGER.debug("resultList size = " + resultList.size());
-			
-			totalList.addAll(resultList);
-			cal.add(Calendar.DAY_OF_MONTH, 1);
-			
-			if (tempDateTime.equals(searchEndDate)) {
-				break;
-			}
-		};*/
-		
-		////
 		for (String tempDate : checkHoliday(searchStartDate, searchEndDate, userLang, companyId, tenantId)) {
 			LOGGER.debug("tempDateTime = " + tempDate);
 			
@@ -1191,9 +1167,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 						holidayList.add(vo2);
 					}
 				}
-				
 			}
-			
 		}
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -1593,53 +1567,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		return list;
-	}
-	
-	
-	
-	
-	
-	/** 2018-05-02 미입력자 정렬*/
-	class ascName implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o1.getUserName().compareTo(o2.getUserName());
-		}
-	}
-	
-	class descName implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o2.getUserName().compareTo(o1.getUserName());
-		}
-	}
-	
-	class ascTitle implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o1.getUserTitle().compareTo(o2.getUserTitle());
-		}
-	}
-	
-	class descTitle implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o2.getUserTitle().compareTo(o1.getUserTitle());
-		}
-	}
-	
-	class ascDeptName implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o1.getDeptName().compareTo(o2.getDeptName());
-		}
-	}
-	
-	class descDeptName implements Comparator<AdminAttitudeVO> {
-		@Override
-		public int compare(AdminAttitudeVO o1, AdminAttitudeVO o2) {
-			return o2.getDeptName().compareTo(o1.getDeptName());
-		}
 	}
 
 	@Override
