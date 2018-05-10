@@ -481,10 +481,13 @@
 	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].searchOptionHidden();document.body.style.overflow=\"auto\";'></div>").appendTo(leftBody);        	
 	        	var popupX = parent.document.body.clientWidth / 2 - (500 / 2) - 220;
 	        	
-	        	$("#srarchpopup").css("left", popupX);
+	        	$("#searchpopup").css("left", popupX);
 	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 	        	
-	        	$("#srarchpopup").modal();
+	        	$("#searchpopup").modal();
+	        	$("#searchpopup").off("modal:close").on("modal:close", function() {
+	        		parent.frames["left"].document.body.style.overflow = "auto";
+	        	});
 		    }
 			
 			function searchOptionHidden() {
@@ -797,7 +800,7 @@
 						<th style="width: 29%;"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 						<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
 						<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-						<th id="dateInfoHeader" style="width: 9%;">등록일</th><!-- 등록일 -->
+						<th id="dateInfoHeader" style="width: 9%;"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
 						<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
 						<th id="shareInfoHeader" style="width: 35px; text-align: center;"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
 					</tr>
@@ -812,7 +815,7 @@
 			</div>
 		</div>
 		
-		<div id="srarchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
+		<div id="searchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
 			<div class="popupwrap4">
 				<table class="content" style="margin-top:10px;">  
 					<tr>

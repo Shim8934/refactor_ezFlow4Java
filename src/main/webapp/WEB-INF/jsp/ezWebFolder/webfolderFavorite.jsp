@@ -26,6 +26,7 @@
 <script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
 <script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
 <script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
+<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
 <script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
 <script type="text/javascript">
 	var context = (function() {
@@ -655,6 +656,9 @@
 		/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 
 		$("#searchpopup").modal();
+    	$("#searchpopup").off("modal:close").on("modal:close", function() {
+    		parent.frames["left"].document.body.style.overflow = "auto";
+    	});
 	}
 
 	function searchOptionHidden() {
@@ -939,6 +943,7 @@
 				<li favoritemenu onclick="fileDelete()"><span><spring:message code='ezWebFolder.t274'/></span></li>
 				<li favoritemenu onclick="fileRename()"><span><spring:message code='ezWebFolder.t273'/></span></li>
 				<li onclick="fileMove()"><span><spring:message code='ezWebFolder.t275'/></span></li>
+				<li onclick="shareContext.addShareView()"><span><spring:message code='ezWebFolder.t254'/></span></li>			
 				<li favoritemenu><img src="/images/i_bar.gif"></li>
 				<li favoritemenu onclick="favoriteContext.toggleAll()"><span><spring:message code='ezWebFolder.t281'/></span></li>
 				<li><img src="/images/i_bar.gif"></li>

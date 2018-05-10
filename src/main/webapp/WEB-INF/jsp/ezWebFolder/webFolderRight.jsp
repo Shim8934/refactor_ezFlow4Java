@@ -466,13 +466,16 @@
 	        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 	        var leftBody = parent.frames["left"].document.body;
 	        leftBody.style.overflow = "hidden";
-        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].searchOptionHidden();document.body.style.overflow=\"auto\";'></div>").appendTo(leftBody);        	
+        	$("<div id='blockLeft' class='blockLeft' style='position: fixed;' onclick='parent.frames[\"right\"].searchOptionHidden();'></div>").appendTo(leftBody);        	
         	var popupX = parent.document.body.clientWidth / 2 - (500 / 2) - 220;
         	
         	$("#searchpopup").css("left", popupX);
         	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
         	
         	$("#searchpopup").modal();
+        	$("#searchpopup").off("modal:close").on("modal:close", function() {
+        		parent.frames["left"].document.body.style.overflow = "auto";
+        	});
 	    }
 		
 	    function searchOptionHidden() {

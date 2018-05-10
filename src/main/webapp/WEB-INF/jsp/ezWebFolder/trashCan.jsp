@@ -253,16 +253,20 @@
 	         $('#searchFileName').val(searchFileName) ;
 	         $('#searchCreateName').val(searchCreateName);
 		    
-		        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
-	     	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"left\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+	        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+       		var leftBody = parent.frames["left"].document.body;
+			leftBody.style.overflow = "hidden";
+	     	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"left\"].SearchOptionHidden()'></div>").appendTo(leftBody);        	
 	     	
 	     	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
 	     	
-	     	$("#srarchpopup").css("left", popupX);
+	     	$("#searchpopup").css("left", popupX);
 	     	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 	     	
-	     	$("#srarchpopup").modal();
-	     	
+	     	$("#searchpopup").modal();
+        	$("#searchpopup").off("modal:close").on("modal:close", function() {
+        		parent.frames["left"].document.body.style.overflow = "auto";
+        	});
 	    }
    	   
 	    function searchOptionHidden() {
@@ -508,7 +512,7 @@
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
         <iframe style="border:none;" id="iFrameLayer"></iframe>
     </div>
-    <div id="srarchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
+    <div id="searchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
 		<div class="popupwrap4">
 			<table class="content" style="margin-top:10px;">  
 				<tr>

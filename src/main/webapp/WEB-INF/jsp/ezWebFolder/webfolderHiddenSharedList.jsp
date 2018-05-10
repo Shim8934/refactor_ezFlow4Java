@@ -53,9 +53,9 @@
 					}
 				};
 				
-				document.addEventListener("click", listOptionHidden);
-				parent.frames["left"].document.addEventListener("click", listOptionHidden);
-				parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("click", listOptionHidden);
+				document.addEventListener("mouseup", listOptionHidden, true);
+				parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
+				parent.parent.document.getElementById("topFrame").contentWindow.document.addEventListener("mouseup", listOptionHidden, true);
 				
 				// listoption 클릭 이벤트
 				dom.listoptiondiv.addEventListener("click", function(event) {
@@ -203,17 +203,14 @@
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", resultJson["folderFileType"]);
 					row.addEventListener("click", function(event) {
-						rowContext.onRowClick(this);
+						rowContext.onRowClick(event, this);
 					});
 					
 					inputElement = document.createElement("input");
 					inputElement.setAttribute("type", "checkbox");
 					inputElement.setAttribute("value", resultJson["fileId"]);
 					inputElement.setAttribute("class", "checkBnk");
-					inputElement.addEventListener("change", function(event) {
-						event.stopPropagation();
-						rowContext.onCheckboxChange(this);
-					});
+					inputElement.addEventListener("change", rowContext.onCheckboxChange);
 					inputElement.addEventListener("click", function(event) {
 						event.stopPropagation();
 					});
@@ -225,9 +222,7 @@
 					
 					fileIconElement = document.createElement("img");
 					fileIconElement.setAttribute("class", "none-drag");
-					fileIconElement.addEventListener("click", function() {
-						favoriteContext.onImageClick(this);
-					});
+					fileIconElement.addEventListener("click", favoriteContext.onImageClick);
 					fileIconElement.addEventListener("dblclick", function(event) {
 						event.stopPropagation();
 					});
@@ -443,9 +438,9 @@
 						<th style="width: 29%;"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 						<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
 						<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-						<th id="dateInfoHeader" style="width: 9%;">등록일</th><!-- 등록일 -->
+						<th id="dateInfoHeader" style="width: 9%;"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
 						<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-						<th id="shareInfoHeader" style="width: 6%; text-align: center;">공유상태</th><!-- 공유상태 -->
+						<th id="shareInfoHeader" style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
 					</tr>
 				</table>
 			</div>
