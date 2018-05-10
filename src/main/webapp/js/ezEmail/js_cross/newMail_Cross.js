@@ -1488,6 +1488,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
     nLen = mailArr.length;
     for (var i = 0; i < nLen; i++) {
 	    mailName = TrimText(mailArr[i]);
+	    
 	    if (mailName == "") {
 	        if (iType == 0)
 	            CompletToCnt++;
@@ -1617,7 +1618,6 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        checkname_cross_dialogArguments[4] = iType;
 	        checkname_cross_dialogArguments[5] = validDIV;
 	        checkname_cross_dialogArguments[6] = formName;
-	        checkname_cross_dialogArguments[7] = i; //tndk
 	        
 	        if (!CrossYN()) {
 	            EzHTTPTrans.style.display = "none";
@@ -1662,7 +1662,7 @@ function CompleteEmailAddress_Complete(rgParams) {
                     rgParams["returnedRecipientEmail"][count1], rgParams["returnedRecipientHref"][count1]);
 
                 var IsInsert = CheckMailReceiver(newElem);
-                                                                                     
+
                 if (!IsInsert) {
                     checkname_cross_dialogArguments[5].appendChild(newElem);
                 }
