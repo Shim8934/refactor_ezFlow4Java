@@ -1142,7 +1142,7 @@ public class CommonUtil {
 	 */
 	public JSONObject getJsonFromWebFolderRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
 		logger.debug("getJsonFromWebFolderRestApi started");
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + restUrl ;
 		
 		HttpHeaders headers = new HttpHeaders();
