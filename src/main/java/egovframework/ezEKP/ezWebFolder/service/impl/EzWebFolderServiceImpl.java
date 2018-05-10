@@ -843,8 +843,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				//Setting headers
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-				zipOutputStream          = new ZipOutputStream(response.getOutputStream());
-				HashSet<String> nameList = new HashSet<>();
+				zipOutputStream                = new ZipOutputStream(response.getOutputStream());
+				HashSet<String> nameList       = new HashSet<>();
+				HashSet<String> folderNameList = new HashSet<>();
 				
 				//Package files
 				for (int i = 0; i < fileIDList.length; i++) {
@@ -893,7 +894,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				
 				//Package folders
 				for (int i = 0; i < folderIdList.length; i++) {
-					packFolder(folderIdList[i], "", zipOutputStream, userName1, userName2, offset, userInfo.getPrimary(), userId, companyId, realPath, tenantId);
+					packFolder(folderNameList, folderIdList[i], "", zipOutputStream, userName1, userName2, offset, userInfo.getPrimary(), userId, companyId, realPath, tenantId);
 				}
 				
 				zipOutputStream.close();
@@ -914,14 +915,30 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		}
 	}
 	
-	private void packFolder(String folderId, String path, ZipOutputStream zipOutputStream, String userName1, String userName2, String offset, String primary, String userId, String companyId, String realPath, int tenantId) throws Exception {
+	private void packFolder(HashSet<String> folderNameList, String folderId, String path, ZipOutputStream zipOutputStream, String userName1, String userName2, String offset, String primary, String userId, String companyId, String realPath, int tenantId) throws Exception {
 		FileInputStream fileInputStream = null;
 		HashSet<String> inernameList    = new HashSet<>();
 		FolderVO folder                 = getFolderByFolderId(folderId, offset, tenantId);
 		List<FolderVO> listSubFolder    = getAllSubFolders(folderId, offset, tenantId);
 		List<FileVO> filesInFolder      = getAllFilesInFolder("", "", folderId, "", "0", "", "", "", "", "", "1", 0, 0, primary, offset, tenantId);
 		String folderName               = primary.equals("1") ? folder.getFolderName1() : folder.getFolderName2();
-		String newPath                  = path + folderName + commonUtil.separator;
+		
+		if (!folderNameList.contains(folderName)) {
+			folderNameList.add(folderName);
+		}
+		else {
+			int k           = 1;
+			String mainName = folderName;
+			folderName      = folderName + "(" + Integer.toString(k) + ")";
+			
+			while (folderNameList.contains(folderName)) {
+				folderName = mainName + "(" + Integer.toString(++k) + ")";
+			}
+			
+			folderNameList.add(folderName);
+		}
+		
+		String newPath = path + folderName + commonUtil.separator;
 		
 		zipOutputStream.putNextEntry(new ZipEntry(newPath));
 		zipOutputStream.closeEntry();
@@ -969,8 +986,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		}
 		
 		if (listSubFolder.size() > 0) {
+			HashSet<String> subfolderNameList = new HashSet<>();
 			for (FolderVO innerfolder : listSubFolder) {
-				packFolder(innerfolder.getFolderId(), newPath, zipOutputStream, userName1, userName2, offset, primary, userId, companyId, realPath, tenantId);
+				packFolder(subfolderNameList, innerfolder.getFolderId(), newPath, zipOutputStream, userName1, userName2, offset, primary, userId, companyId, realPath, tenantId);
 			}
 		}
 	}
