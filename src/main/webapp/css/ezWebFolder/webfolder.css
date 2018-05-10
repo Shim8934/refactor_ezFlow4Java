@@ -105,7 +105,8 @@ body[favoritemode] #paginationCorrector {height: 40px;}
 body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #mainmenu2 > ul > li[hidden] {display:none;}
 #mainmenu2 > ul > li >a {margin-top:3px;}
-#mainmenu2 > ul #right {float: right;}
+#mainmenu2 > ul #right {float: right; cursor: default;}
+#mainmenu2 > ul #right span {padding-right: 5px;}
 #mainmenu .select {height: 28px; border-radius: 3px; padding: 1px 0px 0px 4px; width: 80px; color: #666;} 
 
 #fileTypeSelect {height:29px; border-radius:3px; width:95px;}
@@ -117,10 +118,11 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #file {width:1px; height:1px; display:none;}
 #AttachDownFrame {width:0px; height:0px; display:none;}
 
-.wfSearchPanel {z-index:2000; position:fixed; height:auto; width:514px; border:1px solid #666666; background-color:#f2f2f2; border-radius:8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;}
+.wfSearchPanel {z-index:2000; position:fixed; height:auto; width:534px; border:1px solid #666666; background-color: #fff;; border-radius:8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;}
 .wftable {border-collapse:collapse; width:100%;}
 .wftablefile {width:100%; text-algin:center;}
 .wfSearchTh {width:100px; min-width:100px;}
+.wfSearchTh2 {border-left-color:white !important;border-right-color:white !important;height:10px !important;}
 .wfSearchTd {border:1px solid #b6b6b6; background-color:#fff; min-width:367px; width:367px;}
 .wfFogPanel {width:100%; height:100%; position:absolute; top:0px; left:0px; z-index:1000; background:none rgba(0,0,0,0.5);}
 .wfPopup {z-index:2000; position:absolute;}

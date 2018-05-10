@@ -22,15 +22,13 @@
 		<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
 		<script type="text/javascript">
-			var file 		 = new Array();
-			var filelist = [];
-			var originalPath = "";
-			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
-				var divList          = document.getElementById("dragDropArea");
-				var reheight         = document.documentElement.clientHeight - 220;
-				divList.style.height = reheight + "px";
+				var reheight = document.documentElement.clientHeight - 200;
+				document.getElementById("dragDropArea").style.height = reheight + "px";
+				
+				reheight = document.documentElement.clientHeight - 100;
+				document.getElementById("pageArea").style.height = reheight + "px";
 			};
 			
 			document.onselectstart = function() {
@@ -41,11 +39,13 @@
 				// dom elements setup
 				initDomElement();
 				
-				$('#upload').css('display','none');
-				getFileList();
+				pagination.setPageChangeEventHandler(function() {
+					getFileList();
+				});
 				
+				getFileList();
 				window.onresize();
-		        
+				
 		     	// listoption 다른 곳 클릭시 숨김 처리
 				var listOptionHidden = function(event) {
 					if (dom.listoptiondiv.getAttribute('mode') == "on" && !dom.layerViewpopup.contains(event.target)) {
@@ -65,8 +65,9 @@
 				
 				dom.listSizeSelect.addEventListener("change", function(event) {
 					optionHidden();
+					pagination.setPage(1, true);
 					pagination.setListSize(this.value);
-					getFileList();
+					refreshView();
 				});
 		    });
 			
@@ -74,7 +75,6 @@
 				dom = {
 					mailBoxInfo: document.getElementById("mailBoxInfo"),
 					mainmenu: document.getElementById("mainmenu"),
-					upload: document.getElementById("upload"),
 					originalPath: document.getElementById("originalPath"),
 					originalPathWrapper: document.getElementById("originalPathWrapper"),
 					dragDropArea: document.getElementById("dragDropArea"),
@@ -97,13 +97,6 @@
 					data: {
 						"pageNum"           : pagination.currentPage(),
 						"pageSize"          : pagination.listSize(),
-						"searchExt"         : searchRequirement.extension,
-						"searchFileName"    : searchRequirement.name,
-						"searchCreatorName" : searchRequirement.creatorName,
-						"searchFileType"    : searchContext.getFileType(),
-						"searchStartDate"   : searchRequirement.startDate,
-						"searchEndDate"     : searchRequirement.endDate,
-						"subSearchFlag"     : $('#checkSubSearch').is(':checked') ? "Y" : "N"
 					},
 					dataType: "JSON",
 					async: true,
@@ -145,7 +138,7 @@
 					var row = document.createElement("tr");
 					var column = document.createElement("td");
 					
-					column.setAttribute("colspan", "9");
+					column.setAttribute("colspan", "11");
 					column.setAttribute("align", "center");
 					column.setAttribute("bgcolor", "#FFFFFF");
 					column.innerHTML = messages.strLang12;
@@ -162,7 +155,9 @@
 				var isFolder;
 				
 				var row;
-				var checkboxColumn, favoriteIconColumn, fileIconColumn, nameColumn, sizeColumn, creatorColumn, createDateColumn, absolutePathColumn, shareStatusColumn;
+				var checkboxColumn, favoriteIconColumn, fileIconColumn, nameColumn, sizeColumn, 
+				creatorColumn, createDateColumn, updateDateColumn, sharerColumn, shareDateColumn, 
+				absolutePathColumn, shareStatusColumn;
 				
 				var inputElement;
 				var fileIconElement;
@@ -186,10 +181,13 @@
 					sizeColumn = document.createElement("td");
 					creatorColumn = document.createElement("td");
 					createDateColumn = document.createElement("td");
+					updateDateColumn = document.createElement("td");
+					sharerColumn = document.createElement("td");
+					shareDateColumn = document.createElement("td");
 					absolutePathColumn = document.createElement("td");
 					shareStatusColumn = document.createElement("td");
 					
-					setStyles([ nameColumn, sizeColumn, creatorColumn, createDateColumn, absolutePathColumn ], function(style) {
+					setStyles([ nameColumn, sizeColumn, creatorColumn, createDateColumn, updateDateColumn, sharerColumn, shareDateColumn, absolutePathColumn ], function(style) {
 						style.overflow = "hidden";
 						style.textOverflow = "ellipsis";
 						style.whiteSpace = "nowrap";
@@ -202,9 +200,7 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", resultJson["folderFileType"]);
-					row.addEventListener("click", function(event) {
-						rowContext.onRowClick(event, this);
-					});
+					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");
 					inputElement.setAttribute("type", "checkbox");
@@ -245,7 +241,9 @@
 					nameColumn.textContent = resultJson["fileName"];
 					creatorColumn.textContent = resultJson["createName"];
 					createDateColumn.textContent = resultJson["createDate"].substring(0, 10);
-// 					shareDateColumn.textContent = resultJson["shareDate"].substring(0, 10);
+					updateDateColumn.textContent = resultJson["updateDate"].substring(0, 10);
+					sharerColumn.textContent = resultJson["sharerName"];
+					shareDateColumn.textContent = resultJson["shareDate"].substring(0, 10);
 					absolutePathColumn.textContent = resultJson["folderPath"];
 					
 					if (resultJson["shareStatus"] == "Y") {
@@ -255,23 +253,14 @@
 							shareContext.showShareInfo(this);
 						});
 						shareStatusColumn.appendChild(spanElmt);
-					} else if (resultJson["shareStatus"] == "S") {
-						var spanElmt = document.createElement("span");
-						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
-						shareStatusColumn.appendChild(spanElmt);
 					} else {
 						shareStatusColumn.textContent = "";
 					}
 					
 					if (isFolder) {
-						row.ondblclick = function() {
-							onFolderDoubleClick(this);
-						};
-						
 						sizeColumn.textContent = "-";
 					} else {
 						row.addEventListener("dblclick", function(event) {
-							downloadFileByDbClick(event);
 							rowContext.setSelectState(this, true);
 						});
 						
@@ -285,6 +274,8 @@
 					row.appendChild(sizeColumn);
 					row.appendChild(creatorColumn);
 					row.appendChild(createDateColumn);
+					row.appendChild(sharerColumn);
+					row.appendChild(shareDateColumn);
 					row.appendChild(absolutePathColumn);
 					row.appendChild(shareStatusColumn);
 					
@@ -299,6 +290,11 @@
 					excutor(elements[i].style);
 				}
 			}
+			
+			// 날짜 초기화 버튼
+		   	function clearDatepicker() {
+		        $(".datepicker").datepicker('setDate', "");
+		    }
 			
 			function goToPageByNum(Value) {
 		    	currentPage = Value;
@@ -338,7 +334,7 @@
 					return undefined;
 				}
 				
-				var files  = [];
+				var files = [];
 				var folders = [];
 				var rowInfo;
 				
@@ -358,13 +354,6 @@
 				}
 			}
 			
-			function changeCount(value) {
-				blockSize = value;
-				currentPage = 1;
-				pStart = 0;
-				refreshView();
-			}
-	       
 			function showSharedList() {
 				location.href = "/ezWebFolder/webfolderSharedList.do";
 			}
@@ -372,7 +361,7 @@
 	</head>
 	<body class="mainbody">
 		<h1>
-			공유폴더
+			<spring:message code='ezWebFolder.t266'/>
 			<span id="mailBoxInfo"></span>
 		</h1>
 		
@@ -399,7 +388,8 @@
 			</script>
 			
 			<div id="progress-wrp" style="display: none;">
-		    	<div class="progress-bar"></div ><div class="status">0%</div>
+		    	<div class="progress-bar"></div>
+		    	<div class="status">0%</div>
 		    </div>
 			
 			<div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
@@ -414,7 +404,7 @@
 		                    <tr>
 		                        <th><spring:message code='ezBoard.t10021' /></th>
 		                        <td>
-		                            <select id="listcount" style="width: 40px; height: 20px;" onchange="changeCount(this.value);">
+		                            <select id="listcount" style="width: 40px; height: 20px;">
 		                                <option value="10">10</option>
 		                                <option value="20">20</option>
 		                                <option value="30">30</option>
@@ -428,6 +418,9 @@
 		        </div>
 		        <div class="shadow"></div>
 		 	</div>
+		 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id=""></div>
+	    	<div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
+	    	<div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 			
 			<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;">
 				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
@@ -438,9 +431,12 @@
 						<th style="width: 29%;"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 						<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
 						<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-						<th id="dateInfoHeader" style="width: 9%;"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+						<th style="width: 9%;"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+						<th id="updateDateHeader" style="display:none;width: 9%;">갱신일</th><!-- 갱신일 -->
+						<th id="sharerHeader" style="width: 7%;">공유자</th><!-- 공유자 -->
+						<th id="shareDateHeader" style="width: 9%;">공유받은날짜</th><!-- 공유받은날짜 -->
 						<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-						<th id="shareInfoHeader" style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
+						<th style="width: 35px; text-align: center;">공유</th><!-- 공유 -->
 					</tr>
 				</table>
 			</div>
@@ -451,17 +447,12 @@
 			<div class="layerpopup" style="z-index:2000; position:absolute; display:none;" id="iFramePanel">
 				<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
 			</div>
+			<div id="tblPageRayer"></div>
 		</div>
 		
-		<div id="tblPageRayer"></div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-	
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 	</body>
 </html>

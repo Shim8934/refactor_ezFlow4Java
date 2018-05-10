@@ -65,10 +65,12 @@ public class EzWebFolderGWController_m {
 	public JSONObject getSharingList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("getSharingList started.");
 		
-		String serverName 	= orElse(request.getHeader("x-user-host"), "");
-		String pageNum 		= orElse(request.getParameter("pageNum"), "1");
-		String pageSize 	= orElse(request.getParameter("pageSize"), "0");
-		String folderId = orElse(request.getParameter("folderId"), "");
+		String serverName = orElse(request.getHeader("x-user-host"), "");
+		String pageNum = orElse(request.getParameter("pageNum"), "1");
+		String pageSize = orElse(request.getParameter("pageSize"), "0");
+		// root폴더에서 하위의 파일만 모두 가져와야하는 문제때문에, 특정폴더 하위 리스트 가져오는 기능은 다른쪽 호출하여 처리하였음.
+		String folderId = "";
+//		String folderId = orElse(request.getParameter("folderId"), "");
 		String subSearchFlag = orElse(request.getParameter("subSearchFlag"), "N");
 		
 		SearchVO searchInfo = new SearchVO();
@@ -106,9 +108,14 @@ public class EzWebFolderGWController_m {
 			int pageSizeInt  = Integer.parseInt(pageSize);
 			int pageNumInt   = Integer.parseInt(pageNum);
 			
+			//set pageSize
+			int userListCount = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+			
 			if (pageSizeInt == 0) {
-				pageSizeInt = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+				pageSizeInt = userListCount;
 			}
+			
+			ezWebFolderService_y.insertEnv(userId, tenantId, pageSizeInt);
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
@@ -293,7 +300,9 @@ public class EzWebFolderGWController_m {
 		String serverName = orElse(request.getHeader("x-user-host"), "");
 		String pageNum = orElse(request.getParameter("pageNum"), "1");
 		String pageSize = orElse(request.getParameter("pageSize"), "0");
-		String folderId = orElse(request.getParameter("folderId"), "");
+		// root폴더에서 하위의 파일만 모두 가져와야하는 문제때문에, 특정폴더 하위 리스트 가져오는 기능은 다른쪽 호출하여 처리하였음.
+		String folderId = "";
+//		String folderId = orElse(request.getParameter("folderId"), "");
 		String subSearchFlag = orElse(request.getParameter("subSearchFlag"), "N");
 		
 		SearchVO searchInfo = new SearchVO();
@@ -331,9 +340,14 @@ public class EzWebFolderGWController_m {
 			int pageSizeInt  = Integer.parseInt(pageSize);
 			int pageNumInt   = Integer.parseInt(pageNum);
 			
+			//set pageSize
+			int userListCount = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+			
 			if (pageSizeInt == 0) {
-				pageSizeInt = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+				pageSizeInt = userListCount;
 			}
+			
+			ezWebFolderService_y.insertEnv(userId, tenantId, pageSizeInt);
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			
@@ -606,9 +620,14 @@ public class EzWebFolderGWController_m {
 			int pageSizeInt  = Integer.parseInt(pageSize);
 			int pageNumInt   = Integer.parseInt(pageNum);
 			
+			//set pageSize
+			int userListCount = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+			
 			if (pageSizeInt == 0) {
-				pageSizeInt = ezWebFolderService_y.getUsrListCount(tenantId, userId);
+				pageSizeInt = userListCount;
 			}
+			
+			ezWebFolderService_y.insertEnv(userId, tenantId, pageSizeInt);
 			
 			int startPoint = (pageNumInt - 1) * pageSizeInt;
 			

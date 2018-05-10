@@ -423,7 +423,6 @@ public class EzWebFolderGWController_y {
 		JSONObject jsonObj = new JSONObject();
 		String serverName = request.getHeader("x-user-host")      			!= null ? request.getHeader("x-user-host") 			: "" ;
 		String userId = request.getParameter("userId");
-		String folderType = request.getParameter("folderType") 				!= null ? request.getParameter("folderType") 		: "" ;
 		String searchExt = request.getParameter("searchExt")			 	!= null ? request.getParameter("searchExt") 		: "" ;
 		String searchFileName = request.getParameter("searchFileName") 		!= null ? request.getParameter("searchFileName")	: "" ;
 		String searchStartDate = request.getParameter("searchStartDate")	!= null ? request.getParameter("searchStartDate") 	: "" ;
@@ -464,11 +463,11 @@ public class EzWebFolderGWController_y {
 			}
 			
 			LOGGER.debug("listCount : " + listCount + ", currPage" + currPage+ ", totalpages"+ totalpages + ", pEnd" + pEnd );
-			LOGGER.debug("folderId : " + folderId + ", folderType : " + folderType + ", deptId : "+ deptId + ", offset" + offset );
+			LOGGER.debug("folderId : " + folderId + ", deptId : "+ deptId + ", offset" + offset );
 			LOGGER.debug("pStart : " + pStart + ", pEnd : " + pEnd);
 			
 			// fileCnt : 파일 개수 , fldCnt : 폴더 개수 , totalCount : 파일, 폴더 둘다 합한 개수 ( 페이징 하기 위해 필요 ) 
-			Map<String, Integer> cnt = service.getFileToTalCount(folderId,folderType,userId,deptId,tenantId , comId,
+			Map<String, Integer> cnt = service.getFileToTalCount(folderId, userId, deptId, tenantId, comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset , primary);
 			
@@ -490,7 +489,7 @@ public class EzWebFolderGWController_y {
 			pEnd = listCount;
 			
 			
-			fileList = service.getFileList(folderId, folderType, userId, deptId, tenantId , comId,
+			fileList = service.getFileList(folderId, userId, deptId, tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset, primary);
 			LOGGER.debug("fileListSize : " + fileList.size()+ ", searchStartDate : " +searchStartDate+", searchEndDate : "+searchEndDate );

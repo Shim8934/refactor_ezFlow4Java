@@ -355,10 +355,10 @@
 						<div style="margin: 20px;">
 							<table style="border-collapse: collapse; width: 458px;">
 								<tr>
-									<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px">&nbsp;<spring:message code='ezWebFolder.t23'/></th>
+									<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px">&nbsp;<spring:message code='ezWebFolder.t23'/></th>
 								</tr>
 								<tr>
-									<td style="border-left-color:white;border-right-color:white;height:10px" colspan="2"></td>
+									<td class="wfSearchTh2" colspan="2"></td>
 								</tr>
 								<tr>
 									<th style="height: 30px;"><spring:message code='ezWebFolder.t141'/></th>
@@ -367,7 +367,7 @@
 											<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
 											<option value="userName"><spring:message code='ezWebFolder.t143' /></option>
 										</select>
-										<input id="inputSearch" type="text" style="width: 285px; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ddd;">
+										<input id="inputSearch" type="text" style="width: 275px; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ddd;">
 									</td>
 								</tr>
 								<tr>

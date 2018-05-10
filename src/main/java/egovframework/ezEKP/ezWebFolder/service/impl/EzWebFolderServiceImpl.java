@@ -730,8 +730,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		
 		for (int i = 0; i < cnt; i++) {
 			fileSize[i]    = multiFileLists.get(i).getSize();
-			String extend  = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+			int dotPos     = pFileName[i].lastIndexOf(".");
+			String extend  = dotPos == -1 ? ".none" : pFileName[i].substring(dotPos + 1);
 			String newName = UUID.randomUUID().toString() + "." + extend;
+			
+			if (extend.length() >= 10) {
+				extend = ".etc";
+			}
 			
 			if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {
 				writeUploadedFile(multiFileLists.get(i), newName, pDirPath);

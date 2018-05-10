@@ -27,10 +27,8 @@
 		<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
 		<script type="text/javascript">
-			var file 		 = new Array();
-			var filelist = [];
 			var currentFolderId = "";
-			var originalPath = "";
+			var isShareMode = true;
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
@@ -49,22 +47,18 @@
 				// dom elements setup
 				initDomElement();
 				
-				$('#upload').css('display','none');
-				getFileList();
-				
 				searchContext.setSearchStartEventHandler(function() {
+					pagination.setPage(1, true);
 					$("#fileTypeSelect").val("");
 					searchContext.setFileType("");
-				});
-				
-				searchContext.setFileTypeChangeEventHandler(function() {
-					getFileList();
+					refreshView();
 				});
 				
 				pagination.setPageChangeEventHandler(function() {
-					getFileList();
+					getFileList(currentFolderId);
 				});
 				
+				getFileList();
 				window.onresize();
 				
 				// datepicker setup
@@ -99,8 +93,9 @@
 				
 				dom.listSizeSelect.addEventListener("change", function(event) {
 					optionHidden();
+					pagination.setPage(1, true);
 					pagination.setListSize(this.value);
-					getFileList(folderId);
+					refreshView();
 				});
 		    });
 			
@@ -108,7 +103,7 @@
 				dom = {
 					mailBoxInfo: document.getElementById("mailBoxInfo"),
 					mainmenu: document.getElementById("mainmenu"),
-					upload: document.getElementById("upload"),
+					upload: document.getElementById("uploadBtn"),
 					originalPath: document.getElementById("originalPath"),
 					originalPathWrapper: document.getElementById("originalPathWrapper"),
 					dragDropArea: document.getElementById("dragDropArea"),
@@ -123,52 +118,167 @@
 			}
 			
 			function getFileList(folderId) {
-				if (typeof(folderId) == "undefined") {
-					folderId = "";
+				if (isShareMode) {
+					getSharedList();
+				} else {
+					getFileList2(folderId);
 				}
-				
+			}
+			
+			function getSharedList() {
 				searchRequirement = searchContext.getCurrentRequirement();
 				
 				$.ajax({
 					type: "POST",
 					url: "/ezWebFolder/getSharedList.do",
 					data: {
-						"folderId"          : folderId,
-						"pageNum"           : pagination.currentPage(),
-						"pageSize"          : pagination.listSize(),
-						"searchExt"         : searchRequirement.extension,
-						"searchFileName"    : searchRequirement.name,
+						"pageNum" : pagination.currentPage(),
+						"pageSize" : pagination.listSize(),
+						"searchExt" : searchRequirement.extension,
+						"searchFileName" : searchRequirement.name,
 						"searchCreatorName" : searchRequirement.creatorName,
-						"searchFileType"    : searchContext.getFileType(),
-						"searchStartDate"   : searchRequirement.startDate,
-						"searchEndDate"     : searchRequirement.endDate,
-						"subSearchFlag"     : $('#checkSubSearch').is(':checked') ? "Y" : "N"
+						"searchFileType" : searchContext.getFileType(),
+						"searchStartDate" : searchRequirement.startDate,
+						"searchEndDate" : searchRequirement.endDate,
+						"subSearchFlag" : "N"
 					},
 					dataType: "JSON",
-					async: true,
+					async: false,
 					success : function(result) {
-						if (result.status == "ok") {
-							var data = result.data;
+						if (result.status != "ok") {
+							if (result.code == 1) {
+								alert("<spring:message code='ezWebFolder.t306'/>");
+							} else if (result.code == 2) {
+								alert("<spring:message code='ezWebFolder.t305'/>");
+							} else if (result.code == 3) {
+								alert("<spring:message code='ezWebFolder.t300'/>");
+							} else {
+								alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
+							}
 							
-							pagination.setListSize(data.pageSize);
-							pagination.setAmount(data.totalCount);
-							pagination.build();
-							
-							renderList(data.list);
-							
-							checkedArr = [];
-							
-							setNamePath(data.folderPath, data.folderPath2);
-							setMailBoxInfo(data.folderCount, data.fileCount);
-							
-						} else {
-							alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
+							return;
 						}
+						
+						var data = result.data;
+						
+						setButtons();
+						
+						pagination.setListSize(data.pageSize);
+						pagination.setAmount(data.totalCount);
+						pagination.build();
+						
+						var dragDropArea = dom.dragDropArea;
+						dragDropArea.ondragenter = null;
+						dragDropArea.ondragover = null;
+						dragDropArea.ondragover = null;
+						
+						renderList(data.list);
+						setNamePath(data.folderPath, data.folderPath2);
+						setMailBoxInfo(data.folderCount, data.fileCount);
+						
+						currentFolderId = "";
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
+			}
+			
+			function getFileList2(folderId) {
+				searchRequirement = searchContext.getCurrentRequirement();
+				
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/fileList.do",
+					data: {
+						"folderId": folderId,
+						"currPage": pagination.currentPage(),
+						"listCount": pagination.listSize(),
+						"pStart": pagination.startPosition(),
+						"searchExt" : searchRequirement.extension,
+						"searchFileName" : searchRequirement.name,
+						"searchCreateName" : searchRequirement.creatorName,
+						"searchFileType" : searchContext.getFileType(),
+						"searchStartDate" : searchRequirement.startDate,
+						"searchEndDate" : searchRequirement.endDate
+					},
+					dataType: "JSON",
+					async: false,
+					success : function(result) {
+						if (result.status != "ok") {
+							if (result.code == 1) {
+								alert("<spring:message code='ezWebFolder.t306'/>");
+							} else if (result.code == 2) {
+								alert("<spring:message code='ezWebFolder.t305'/>");
+							} else if (result.code == 3) {
+								alert("<spring:message code='ezWebFolder.t300'/>");
+							} else {
+								alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
+							}
+							
+							return;
+						}
+						
+						setButtons();
+						
+						result = result.data;
+						
+						pagination.setListSize(result.listCount);
+						pagination.setAmount(result.totalRows);
+						pagination.build();
+						
+						var dragDropArea = dom.dragDropArea;
+						
+						if (result.folderUpp == "root") {
+							dom.upload.setAttribute("hidden", "");
+							dragDropArea.ondragenter = null;
+							dragDropArea.ondragover = null;
+							dragDropArea.ondragover = null;
+						} else {
+							dom.upload.removeAttribute("hidden");
+							dragDropArea.ondragenter = function(e) {
+								onDragEnter(e)
+							};
+							dragDropArea.ondragover = function(e) {
+								onDragOver(e)
+							};
+							dragDropArea.ondrop = function(e) {
+								onDrop(e)
+							};
+						}
+						
+						renderList2(result.fileList);
+						setNamePath(result.folderPath, result.originalPath);
+						setMailBoxInfo(result.fldCnt, result.fileCnt);
+						
+						currentFolderId = folderId;
+					},
+					error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134'/>");
+					}
+				});
+			}
+			
+			function setButtons() {
+				if (isShareMode) {
+					$('#uploadBtn').css('display','none');
+					$('#fileDeleteBtn').css('display','none');
+					$('#fileRenameBtn').css('display','none');
+					$('#fileMoveCopyBtn').css('display','none');
+					
+					$('#fileCopyBtn').css('display','');
+					$('#hideShareBtn').css('display','');
+					$('#hiddenShareListBtn').css('display','');
+				} else {
+					$('#fileCopyBtn').css('display','none');
+					$('#hideShareBtn').css('display','none');
+					$('#hiddenShareListBtn').css('display','none');
+					
+					$('#uploadBtn').css('display','');
+					$('#fileDeleteBtn').css('display','');
+					$('#fileRenameBtn').css('display','');
+					$('#fileMoveCopyBtn').css('display','');
+				}
 			}
 			
 			// originalPath 는 한글 path
@@ -252,11 +362,15 @@
 				
 				dom.allCheckBox.checked = false;
 				
+				$('#updateDateHeader').css('display','none');
+				$('#sharerHeader').css('display','');
+				$('#shareDateHeader').css('display','');
+				
 				if (result == null || result.length == 0) {
 					var row = document.createElement("tr");
 					var column = document.createElement("td");
 					
-					column.setAttribute("colspan", "9");
+					column.setAttribute("colspan", "11");
 					column.setAttribute("align", "center");
 					column.setAttribute("bgcolor", "#FFFFFF");
 					column.innerHTML = messages.strLang12;
@@ -273,11 +387,12 @@
 				var isFolder;
 				
 				var row;
-				var checkboxColumn, favoriteIconColumn, fileIconColumn, nameColumn, sizeColumn, creatorColumn, createDateColumn, absolutePathColumn, shareStatusColumn;
+				var checkboxColumn, favoriteIconColumn, fileIconColumn, nameColumn, sizeColumn, 
+					creatorColumn, createDateColumn, updateDateColumn, sharerColumn, shareDateColumn, 
+					absolutePathColumn, shareStatusColumn;
 				
 				var inputElement;
 				var fileIconElement;
-				
 				
 				for (var i = 0; i < len; i++) {
 					resultJson = result[i];
@@ -297,10 +412,13 @@
 					sizeColumn = document.createElement("td");
 					creatorColumn = document.createElement("td");
 					createDateColumn = document.createElement("td");
+					updateDateColumn = document.createElement("td");
+					sharerColumn = document.createElement("td");
+					shareDateColumn = document.createElement("td");
 					absolutePathColumn = document.createElement("td");
 					shareStatusColumn = document.createElement("td");
 					
-					setStyles([ nameColumn, sizeColumn, creatorColumn, createDateColumn, absolutePathColumn ], function(style) {
+					setStyles([ nameColumn, sizeColumn, creatorColumn, createDateColumn, updateDateColumn, sharerColumn, shareDateColumn, absolutePathColumn ], function(style) {
 						style.overflow = "hidden";
 						style.textOverflow = "ellipsis";
 						style.whiteSpace = "nowrap";
@@ -354,7 +472,9 @@
 					nameColumn.textContent = resultJson["fileName"];
 					creatorColumn.textContent = resultJson["createName"];
 					createDateColumn.textContent = resultJson["createDate"].substring(0, 10);
-// 					shareDateColumn.textContent = resultJson["shareDate"].substring(0, 10);
+					updateDateColumn.textContent = resultJson["updateDate"].substring(0, 10);
+					sharerColumn.textContent = resultJson["sharerName"];
+					shareDateColumn.textContent = resultJson["shareDate"].substring(0, 10);
 					absolutePathColumn.textContent = resultJson["folderPath"];
 					
 					if (resultJson["shareStatus"] == "Y") {
@@ -364,7 +484,165 @@
 							shareContext.showShareInfo(this);
 						});
 						shareStatusColumn.appendChild(spanElmt);
-					} else if (resultJson["shareStatus"] == "S") {
+					} else {
+						shareStatusColumn.textContent = "";
+					}
+					
+					if (isFolder) {
+						row.ondblclick = function() {
+							onFolderDoubleClick(this);
+						};
+						
+						sizeColumn.textContent = "-";
+					} else {
+						row.addEventListener("dblclick", function(event) {
+							downloadFileByDbClick(event);
+							rowContext.setSelectState(this, true);
+						});
+						
+						sizeColumn.textContent = getFileSize(resultJson["fileSize"]);
+					}
+					
+					row.appendChild(checkboxColumn);
+					row.appendChild(favoriteIconColumn);
+					row.appendChild(fileIconColumn);
+					row.appendChild(nameColumn);
+					row.appendChild(sizeColumn);
+					row.appendChild(creatorColumn);
+					row.appendChild(createDateColumn);
+					row.appendChild(sharerColumn);
+					row.appendChild(shareDateColumn);
+					row.appendChild(absolutePathColumn);
+					row.appendChild(shareStatusColumn);
+					
+					dom.listTable.appendChild(row);
+				}
+			}
+			
+			function renderList2(result) {
+				checkedArr = [];
+				$('#tblFileList tr').not(":first").remove();
+				
+				dom.allCheckBox.checked = false;
+				
+				$('#sharerHeader').css('display','none');
+				$('#shareDateHeader').css('display','none');
+				$('#updateDateHeader').css('display','');
+				
+				if (result == null || result.length == 0) {
+					var row = document.createElement("tr");
+					var column = document.createElement("td");
+					
+					column.setAttribute("colspan", "10");
+					column.setAttribute("align", "center");
+					column.setAttribute("bgcolor", "#FFFFFF");
+					column.innerHTML = messages.strLang12;
+					column.setAttribute("id", "nodataRow");
+					
+					row.appendChild(column);
+					dom.listTable.appendChild(row);
+					
+					return;
+				}
+				
+				var len = result.length;
+				var resultJson;
+				var isFolder;
+				
+				var row;
+				var checkboxColumn, favoriteIconColumn, fileIconColumn, nameColumn, sizeColumn, 
+					creatorColumn, createDateColumn, updateDateColumn, absolutePathColumn, shareStatusColumn;
+				
+				var inputElement;
+				var fileIconElement;
+				
+				for (var i = 0; i < len; i++) {
+					resultJson = result[i];
+					
+					if (resultJson["fileTypeName"] === 'folder') {
+						isFolder = true;
+					} else {
+						isFolder = false;
+					}
+					
+					row = document.createElement("tr");
+					
+					checkboxColumn = document.createElement("td");
+					favoriteIconColumn = document.createElement("td");
+					fileIconColumn = document.createElement("td");
+					nameColumn = document.createElement("td");
+					sizeColumn = document.createElement("td");
+					creatorColumn = document.createElement("td");
+					createDateColumn = document.createElement("td");
+					updateDateColumn = document.createElement("td");
+					absolutePathColumn = document.createElement("td");
+					shareStatusColumn = document.createElement("td");
+					
+					setStyles([ nameColumn, sizeColumn, creatorColumn, createDateColumn, updateDateColumn, absolutePathColumn ], function(style) {
+						style.overflow = "hidden";
+						style.textOverflow = "ellipsis";
+						style.whiteSpace = "nowrap";
+					});
+					
+					setStyles([ checkboxColumn, favoriteIconColumn, fileIconColumn, sizeColumn, shareStatusColumn ], function(style) {
+						style.textAlign = "center";
+					})
+					
+					row.setAttribute("class", "bnkWebFolder");
+					row.setAttribute("targetId", resultJson["fileId"]);
+					row.setAttribute("targetType", isFolder ? "D" : "F");
+					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
+					
+					inputElement = document.createElement("input");
+					inputElement.setAttribute("type", "checkbox");
+					inputElement.setAttribute("value", resultJson["fileId"]);
+					inputElement.setAttribute("class", "checkBnk");
+					inputElement.addEventListener("change", rowContext.onCheckboxChange);
+					inputElement.addEventListener("click", function(event) {
+						event.stopPropagation();
+					});
+					inputElement.addEventListener("dblclick", function(event) {
+						event.stopPropagation();
+					});
+					
+					checkboxColumn.appendChild(inputElement);
+					
+					fileIconElement = document.createElement("img");
+					fileIconElement.setAttribute("class", "none-drag");
+					fileIconElement.addEventListener("click", favoriteContext.onImageClick);
+					fileIconElement.addEventListener("dblclick", function(event) {
+						event.stopPropagation();
+					});
+					
+					if (resultJson["favouriteStatus"] == "0") {
+						fileIconElement.src = "/images/ImgIcon/view-flag.gif";
+					} else {
+						fileIconElement.src = "/images/ImgIcon/icon-flag.gif";
+						row.setAttribute("favorite", "");
+					}
+					
+					favoriteIconColumn.appendChild(fileIconElement);
+					
+					fileIconElement = document.createElement("img");
+					fileIconElement.setAttribute("class", "webFolderImg");
+					fileIconElement.src = resultJson["fileIconUrl"];
+					
+					fileIconColumn.appendChild(fileIconElement);
+					
+					nameColumn.textContent = resultJson["fileName"];
+					creatorColumn.textContent = resultJson["createName1"];
+					createDateColumn.textContent = resultJson["createDate"].substring(0, 10);
+					updateDateColumn.textContent = resultJson["updateDate"].substring(0, 10);
+					absolutePathColumn.textContent = resultJson["filePosition"];
+					
+					if (resultJson["fileShareStatus"] == "Y") {
+						var spanElmt = document.createElement("span");
+						spanElmt.innerHTML = "<img src='/images/webfolder/sharing2.png' class='webFolderImg' />";
+						spanElmt.addEventListener("click", function () {
+							shareContext.showShareInfo(this);
+						});
+						shareStatusColumn.appendChild(spanElmt);
+					} else if (resultJson["fileShareStatus"] == "S") {
 						var spanElmt = document.createElement("span");
 						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
 						shareStatusColumn.appendChild(spanElmt);
@@ -394,6 +672,7 @@
 					row.appendChild(sizeColumn);
 					row.appendChild(creatorColumn);
 					row.appendChild(createDateColumn);
+					row.appendChild(updateDateColumn);
 					row.appendChild(absolutePathColumn);
 					row.appendChild(shareStatusColumn);
 					
@@ -410,6 +689,7 @@
 			}
 			
 			function onFolderDoubleClick(obj) {
+				isShareMode = false;
 				var folderId = obj.getAttribute("targetId");
 				getFileList(folderId);
 			}
@@ -423,7 +703,7 @@
 		    	currentPage = Value;
 		        pStart = (blockSize * (currentPage)) - blockSize;
 		        pEnd = blockSize;
-		        getFileList();
+		        getFileList(currentFolderId);
 		    }
 		    
 		   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
@@ -469,14 +749,10 @@
 			}
 			
 			function doLayerPopup(obj) {
-		        var searchRequirement = searchContext.getCurrentRequirement();
-		        clearDatepicker();
-		        
-		        $('#searchExt').val(searchRequirement.extension);               
-	            $('#searchFileName').val(searchRequirement.name);
-	            $('#searchCreateName').val(searchRequirement.creatorName);
-	            $('#Sdatepicker').val(searchRequirement.startDate);
-	            $('#Edatepicker').val(searchRequirement.endDate);
+				clearDatepicker();
+				document.getElementById("searchExt").value = "";
+				document.getElementById("searchFileName").value = "";
+				document.getElementById("searchCreateName").value = "";
 		    
 		        /* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 		        var leftBody = parent.frames["left"].document.body;
@@ -527,18 +803,13 @@
 				AttachDownFrame.location.href = downloadUrl;
 			}
 			
-			function endUpdate() {
-
-			}
 			
 			function fileUpload2() {
 				document.getElementById("file").click();
-//	     	   refreshView();
-//	     	   endUpdate();
 			}
 	       
 			function refreshView() {
-				getFileList();
+				getFileList(currentFolderId);
 			}
 	       
 	       function fileDelete() {
@@ -613,7 +884,7 @@
 							alert(messages.strLang13);
 						} else {
 							openLeftPanel();
-							DivPopUpShow(450, 180, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
+							DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 						}
 					},
 					error : function(error) {
@@ -622,7 +893,7 @@
 				});
 			}
 			
-			function fileMove() {
+			function fileMoveCopy() {
 				var selected = getSelectedFoldersAndFiles();
 				
 				if (selected === undefined) {
@@ -638,6 +909,22 @@
 				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString());
 			}
 			
+			function fileCopy() {
+				var selected = getSelectedFoldersAndFiles();
+				
+				if (selected === undefined) {
+					return;
+				}
+				
+				if (selected.folders.length > 0) {
+					alert(messages.strLang1);
+					return;
+				}
+				
+				openLeftPanel();
+				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString() + "&type=copy");
+			}
+			
 			function getSelectedFoldersAndFiles() {
 				var selectedRows = rowContext.getSelectedRows();
 				var selectedLength = selectedRows.length;
@@ -647,7 +934,7 @@
 					return undefined;
 				}
 				
-				var files  = [];
+				var files = [];
 				var folders = [];
 				var rowInfo;
 				
@@ -666,29 +953,18 @@
 					files : files
 				}
 			}
-			
-			function changeCount(value) {
-				blockSize = value;
-				currentPage = 1;
-				pStart = 0;
-				refreshView();
-			}
 	       
 			function onFileTypeChange(value) {
-				if (value == "all") {
-					value = "";
-				}
-				
-				currentPage = 1;
 				searchContext.setFileType(value);
+				pagination.setPage(1);
 			}
 	       
 			function downloadFileByDbClick(event) {
 				event.stopPropagation();
 				event.preventDefault();
-				var trElmt       = event.currentTarget;
+				var trElmt = event.currentTarget;
 				var fileFolderId = trElmt.getAttribute("targetId");
-				var filesList    = [];
+				var filesList = [];
 				filesList.push(fileFolderId);
 				
 				var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + filesList.toString();
@@ -698,18 +974,18 @@
 			function openLeftPanel() {
 				var leftFrame = window.parent.frames["left"].document;
 				var blockLeft = leftFrame.getElementById("bnkBlockLeft");
-				var height    = Math.max(leftFrame.documentElement.clientHeight, leftFrame.documentElement.scrollHeight);
+				var height = Math.max(leftFrame.documentElement.clientHeight, leftFrame.documentElement.scrollHeight);
 				leftFrame.body.style.overflow = "hidden";
-				blockLeft.style.height        = height + "px";
-				blockLeft.style.display       = "";
+				blockLeft.style.height = height + "px";
+				blockLeft.style.display = "";
 			}
 
 			function closeLeftPanel() {
 				var leftFrame = window.parent.frames["left"].document;
 				var blockLeft = leftFrame.getElementById("bnkBlockLeft");
 				leftFrame.body.style.overflow = "auto";
-				blockLeft.style.height        = "100%";
-				blockLeft.style.display       = "none";
+				blockLeft.style.height = "100%";
+				blockLeft.style.display = "none";
 			}
 		</script>
 	</head>
@@ -729,13 +1005,15 @@
 			<div id="mainmenu">
 				<ul>
 					<li><a onClick="fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-					<li id="upload"><a onClick="fileUpload2()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-					<li><a onClick="fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t117'/></span></a></li>
-					<li><a onClick="fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t118'/></span></a></li>
-					<li><a onClick="fileMove()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>
+					<li id="uploadBtn" style="display:none;"><a onClick="fileUpload2()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+					<li id="fileDeleteBtn" style="display:none;"><a onClick="fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t117'/></span></a></li>
+					<li id="fileRenameBtn" style="display:none;"><a onClick="fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t118'/></span></a></li>
+					<li id="fileMoveCopyBtn" style="display:none;"><a onClick="fileMoveCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>
+					<li id="fileCopyBtn"><a onClick="fileCopy()" style="margin-top: 3px;"><span>파일복사</span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
-					<li><a onClick="shareContext.hideShare()" style="margin-top: 3px;"><span>공유숨김</span></a></li>
-					<li><a onClick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span>공유숨김목록</span></a></li>
+					<li><a onClick="shareContext.addShareView()" style="margin-top: 3px;"><span>공유</span></a></li>
+					<li id="hideShareBtn"><a onClick="shareContext.hideShare()" style="margin-top: 3px;"><span>공유숨김</span></a></li>
+					<li id="hiddenShareListBtn"><a onClick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span>공유숨김목록</span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
 					<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 					<li><a onClick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
@@ -748,8 +1026,8 @@
 							<option value="music"><spring:message code='ezWebFolder.t193'/></option>
 							<option value="video"><spring:message code='ezWebFolder.t194'/></option>
 							<option value="image"><spring:message code='ezWebFolder.t195'/></option>
-							<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
 							<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
+							<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
 						</select>
 					</li>
 					<li id="right" style="float:right;">
@@ -763,7 +1041,8 @@
 			</script>
 			
 			<div id="progress-wrp" style="display: none;">
-		    	<div class="progress-bar"></div ><div class="status">0%</div>
+		    	<div class="progress-bar"></div>
+		    	<div class="status">0%</div>
 		    </div>
 			
 			<div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
@@ -778,7 +1057,7 @@
 		                    <tr>
 		                        <th><spring:message code='ezBoard.t10021' /></th>
 		                        <td>
-		                            <select id="listcount" style="width: 40px; height: 20px;" onchange="changeCount(this.value);">
+		                            <select id="listcount" style="width: 40px; height: 20px;">
 		                                <option value="10">10</option>
 		                                <option value="20">20</option>
 		                                <option value="30">30</option>
@@ -792,6 +1071,9 @@
 		        </div>
 		        <div class="shadow"></div>
 		 	</div>
+		 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id=""></div>
+	    	<div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
+	    	<div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 			
 			<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;">
 				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
@@ -802,9 +1084,12 @@
 						<th style="width: 29%;"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
 						<th style="width: 6%; text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
 						<th style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-						<th id="dateInfoHeader" style="width: 9%;"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+						<th style="width: 9%;"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+						<th id="updateDateHeader" style="display:none;width: 9%;">갱신일</th><!-- 갱신일 -->
+						<th id="sharerHeader" style="width: 7%;">공유자</th><!-- 공유자 -->
+						<th id="shareDateHeader" style="width: 9%;">공유받은날짜</th><!-- 공유받은날짜 -->
 						<th style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-						<th id="shareInfoHeader" style="width: 35px; text-align: center;"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
+						<th style="width: 35px; text-align: center;">공유</th><!-- 공유 -->
 					</tr>
 				</table>
 			</div>
@@ -815,6 +1100,7 @@
 			<div class="layerpopup" style="z-index:2000; position:absolute; display:none;" id="iFramePanel">
 				<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
 			</div>
+			<div id="tblPageRayer"></div>
 		</div>
 		
 		<div id="searchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
@@ -832,7 +1118,6 @@
 			               <input type="text" id="Sdatepicker" class="datepicker" style="width:80px;text-align:center" readonly="readonly">
 			                ~
 			               <input type="text" id="Edatepicker" class="datepicker" style="width:80px;text-align:center" readonly="readonly">
-			               <input type="checkbox" style="margin-left:30px;" id="checkSubSearch" /><label for="checkSubSearch">하위폴더 검색</label>
 			           </td>
 					</tr>
 			       
@@ -861,7 +1146,6 @@
 			</div>
 		</div>	
 		
-		<div id="tblPageRayer"></div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="" style="border:none;" id="iFrameLayer"></iframe>

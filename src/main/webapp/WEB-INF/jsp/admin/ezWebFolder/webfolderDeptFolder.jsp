@@ -417,7 +417,7 @@
 					success: function(data) {
 						var reason = data.reason;
 						if (reason) {
-							alert(reason);
+							//alert(reason);
 							returnVal = false;
 						}
 						else {
@@ -530,73 +530,87 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code='ezWebFolder.t219' /></h1>
-		<div id="companySelect" style="margin: 10px 0px;">
-			<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
-			<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="change();">
-				<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-			</select>
-		</div>
-		
-		<div style="height: 450px; width: 100%;">
-			<table style="border-collapse: collapse; width: 100%;">
-				<tr>
-					<td style="width: 350px; min-width: 350px;">
-						<div id="folderTree" style="width: 350px; height: 450px; border: 1px solid #666666; overflow: auto; overflow: auto; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
-					</td>
-					<td>
-						<div style="width: 500px; height: 450px; border: 1px solid #cccccc; margin-left: 10px;">
-							<table style="width: 100%;">
-								<tr>
-									<td>
-										<div style="margin: 80px 20px 5px 20px;">
-											<span><spring:message code='ezWebFolder.t226'/></span>
-											<input id="fldName" type="text" style="height: 25px; border-radius: 3px; border: 1px solid #666; width: 200px; margin-left: 2px; padding-left: 5px;">
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<div style="margin: 5px 20px 10px 20px;">
-											<span><spring:message code='ezWebFolder.t227'/></span>
-											<input id="fldName2" type="text" style="height: 25px; border-radius: 3px; border: 1px solid #666; width: 200px; margin-left: 2px; padding-left: 5px;">
-										</div>
-									</td>
-								</tr>
-								
-								<tr>
-									<td>
-										<div style="margin: 10px 20px; min-height: 240px; max-height: 240px;">
-											<span id="displayUsers"><spring:message code='ezWebFolder.t204'/></span>
-											<span id="newTargetDiv"></span>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<div style="text-align:center;" id="listBttn1">
-											<a class="webfolderBttn"><span onclick="saveChanges();" ><spring:message code='ezWebFolder.t133'/></span></a>
-											<a class="webfolderBttn"><span onclick="newFolder();"   ><spring:message code='ezWebFolder.t206'/></span></a>
-											<a class="webfolderBttn"><span onclick="moveFolder();"  ><spring:message code='ezWebFolder.t251'/></span></a>
-											<a class="webfolderBttn"><span onclick="deleteFolder();"><spring:message code='ezWebFolder.t111'/></span></a>
-										</div>
-										<div style="text-align:center; display: none;" id="listBttn2">
-											<a class="webfolderBttn"><span onclick="saveNewFolder();"><spring:message code='ezWebFolder.t133'/></span></a>
-											<a class="webfolderBttn"><span onclick="cancelAdd();"    ><spring:message code='ezWebFolder.t112'/></span></a>
-										</div>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</td>
-				</tr>
-			</table>
+		<div style="margin-left:5px">
+			<div id="companySelect" style="margin: 10px 0px;">
+				<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
+				<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="change();">
+					<c:forEach var="item" items="${list}">
+						<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+					</c:forEach>
+				</select>
+			</div>
+			
+			<div style="height: 450px; width: 100%;">
+				<table style="border-collapse: collapse; width: 100%;">
+					<tr>
+						<td style="width: 350px; min-width: 350px;">
+							<div id="folderTree" style="width: 350px; height: 450px; border: 1px solid #ddd; overflow: auto; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
+						</td>
+						<td>
+							<div style="width: 500px; height: 450px; border: 1px solid #ddd; margin-left: 10px; padding: 3px;">
+								<table style="width: 100%;">
+									<tr>
+										<td>
+											<div style="margin: 20px 20px 5px 20px;">
+												<img src="/images/kr/left/left_dot02.gif" />
+												<span><spring:message code='ezWebFolder.t226'/></span>
+												<input id="fldName" type="text" style="height: 25px; border-radius: 3px; border: 1px solid #ddd; width: 200px; margin-left: 2px; padding-left: 5px;">
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div style="margin: 5px 20px 10px 20px;">
+												<img src="/images/kr/left/left_dot02.gif" />
+												<span><spring:message code='ezWebFolder.t227'/></span>
+												<input id="fldName2" type="text" style="height: 25px; border-radius: 3px; border: 1px solid #ddd; width: 200px; margin-left: 2px; padding-left: 5px;">
+											</div>
+										</td>
+									</tr>
+									
+									<tr>
+										<td>
+											<div style="margin: 20px 20px 5px; min-height: 36px;">
+												<div style="display: inline-block; width: 52px; line-height: 30px;" id= "displayUsers">
+													<img src="/images/kr/left/left_dot02.gif"/>
+													<span id="displayUsers"><spring:message code='ezWebFolder.t204'/></span>
+												</div>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div style="margin: 0px 20px 40px; min-height: 200px; border:1px solid #ddd; padding:10px; border-radius:3px" >
+												<span id="newTargetDiv"></span>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div style="text-align:center;" id="listBttn1">
+												<a class="webfolderBttn"><span onclick="saveChanges();" ><spring:message code='ezWebFolder.t133'/></span></a>
+												<a class="webfolderBttn"><span onclick="newFolder();"   ><spring:message code='ezWebFolder.t206'/></span></a>
+												<a class="webfolderBttn"><span onclick="moveFolder();"  ><spring:message code='ezWebFolder.t251'/></span></a>
+												<a class="webfolderBttn"><span onclick="deleteFolder();"><spring:message code='ezWebFolder.t111'/></span></a>
+											</div>
+											<div style="text-align:center; display: none;" id="listBttn2">
+												<a class="webfolderBttn"><span onclick="saveNewFolder();"><spring:message code='ezWebFolder.t133'/></span></a>
+												<a class="webfolderBttn"><span onclick="cancelAdd();"    ><spring:message code='ezWebFolder.t112'/></span></a>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
 		</div>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+			
 	</body>
 </html>
