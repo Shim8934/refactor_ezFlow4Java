@@ -362,6 +362,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map1 = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
 		
 		map.put("v_CLASS", pClass);
 		map.put("v_CN", pDeptID);
@@ -408,8 +409,12 @@ public class EzOrganServiceImpl implements EzOrganService {
             memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
             memberCount++;
         }
+		map2.put("v_CN", pDeptID);
+		map2.put("v_TENANT_ID", tenantID);
+		String totalcount = ezOrganDAO.getMemberListCount(map2);
 		
-        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA><ROWS>");
+        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA>");
+        memberlist.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
         
         for (int i = 0; i < memberCount; i++) {
             memberlist.append(memberInfo[i]);
