@@ -524,8 +524,8 @@ function TableView() {
 				tdSize.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center;");
 				tdName.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
 				tdCreator.textContent      = lang == "1" ? resultElement["createName1"] : resultElement["createName2"];
-				tdUpdateDate.textContent   = resultElement["createDate"].substring(0, 10);
-				tdCreateDate.textContent   = resultElement["updateDate"].substring(0, 10);
+				tdUpdateDate.textContent   = resultElement["updateDate"].substring(0, 10);
+				tdCreateDate.textContent   = resultElement["createDate"].substring(0, 10);
 				tdAbsolutePath.textContent = resultElement["trashCanPath"];
 				tdAbsolutePath.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
 				
