@@ -1146,7 +1146,22 @@
 	                selList.DeleteRow(arrRows[i].id);
 	            }
 	        }
-	
+	        
+	        function onDragEnter(evt, obj) {
+                evt.stopPropagation();
+                evt.preventDefault();
+                evt.dataTransfer.dropEffect = "copy";
+                evt.dataTransfer.effectAllowed = "copy";
+                dropelement = obj.id;
+            }
+	        
+            function onDrop(evt, element) {
+                evt.stopPropagation();
+                evt.preventDefault();
+                InsertReceiver(element);
+            }
+            
+    
 	    </script>
 	</head>
 	<body class="popup">
@@ -1284,7 +1299,7 @@
 	                        <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezEmail.t659' /></span>
 	                    </h2>
 	                    <div class="listview">
-	                          <div id="ListViewMsgTo" style="width: 220px; Height: 477px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                          <div id="ListViewMsgTo" style="width: 220px; Height: 477px; overflow-x: auto; overflow-y: auto;" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                    </div>       
 	                </td>
 	            </tr>
