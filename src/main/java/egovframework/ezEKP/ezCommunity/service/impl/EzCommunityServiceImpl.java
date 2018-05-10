@@ -1385,9 +1385,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			logger.debug("pollDeleteGet1 ended. strRegUser=" + strRegUser);
 			
 			/* 2018-05-10 홍승비 - 삭제권한검사는 jsp(스크립트)에서 먼저 처리하도록 수정 */
-			if (strRegUser != null) {
-				logger.debug("pollDeleteGet3 started.");
-				
+			if (strRegUser != null) {				
 				Map<String, Object> map1 = new HashMap<String, Object>();
 				map1.put("v_CODE", code);
 				map1.put("tenantID", tenantID);
