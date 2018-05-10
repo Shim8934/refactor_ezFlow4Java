@@ -421,8 +421,8 @@
 				<td>
 					<table id="TreeViewTD">
 					 	<tr>
-			                <div class="portlet_tabpart01" style="width:678px;">
-			                	<div class="portlet_tabpart01_top" id="tab1" style="margin-top:25px;margin-bottom: 1px;">
+			                <div class="portlet_tabpart01" style="width:680px;">
+			                	<div class="portlet_tabpart01_top" id="tab1" style="margin-top:25px;margin-bottom: 2px;">
 					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t89' /></span></p>
 									<p><span id="1tab2" tdname="journalFavorite" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezJournal.t90' /></span></p>
 					        	</div>
@@ -471,7 +471,7 @@
 						            </tr>
 						        </table>
 		                  	</td>   
-		                  	<td id="journalFavorite_content" style="display:none; width:700px;">
+		                  	<td id="journalFavorite_content" style="display:none; width:680px;">
 	                        	<table style="width:100%">
 	                                <tr>
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
@@ -527,11 +527,11 @@
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver()">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                        	<div style="display: inline-flex; display: -ms-inline-flexbox; border-bottom: 1px solid #565b66; width: 252px; position: absolute;top: 55px;">
+	                        	<div style="display: inline-flex; display: -ms-inline-flexbox; border-bottom: 1px solid #565b66; width: 252px; position: absolute;top: 56px;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px; border-bottom:none;">
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
 									</h2>
-								 	<a class="imgbtn" style="margin-top: 5px; margin-left: 65px;">
+								 	<a class="imgbtn" style="margin-top: 6px; margin-left: 65px;">
 								 		<span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span>
 								 	</a>
 								</div>
@@ -548,6 +548,10 @@
 		<div class="btnposition">
 	    	<a class="imgbtn" onClick="ok_Click()" ><span><spring:message code='ezJournal.t15' /></span></a>
 	    	<a class="imgbtn" onClick="close_Click()" ><span><spring:message code='ezJournal.t16' /></span></a>
+		</div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>
