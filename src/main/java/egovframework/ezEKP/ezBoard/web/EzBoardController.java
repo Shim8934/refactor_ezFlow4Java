@@ -282,6 +282,13 @@ public class EzBoardController extends EgovFileMngUtil{
 			useQuestion = "YES";
 		}
 		
+		//2018-05-08 강민수92 게시물 승인 카운트 출력
+		if (applyFlag.equals("OK")) {
+			int applyCount = 0;
+			applyCount = ezBoardService.getApprBoardTotalItemCount(userInfo);
+			modelMap.addAttribute("applyCount", applyCount);
+		}
+		
         modelMap.addAttribute("userInfo", userInfo);
         modelMap.addAttribute("resultCount", resultCount);
         modelMap.addAttribute("resultXML", resultXML);
@@ -7205,7 +7212,19 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		logger.debug("set_TabUse2 ended");
 	}
-
+	
+	/*
+	 * 2018-05-09 강민수92 게시물승인 카운트 호출
+	 * */
+	@RequestMapping(value="/ezBoard/getApplyCount.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getApplyCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int applyCount = ezBoardService.getApprBoardTotalItemCount(userInfo);
+		
+		return Integer.toString(applyCount);
+	}
     
 }
 

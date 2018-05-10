@@ -1029,6 +1029,9 @@ public class CommonUtil {
     }
 	//html entity unescape 메서드 2018-04-06 강민수92
 	public String htmlUnescape(String html) throws Exception {
+		logger.debug("htmlUnescape started");
+		
+		html = html.replace("&nbsp;", " ");
 		html = html.replace("&quot;", "\"");
 		html = html.replace("&#39;", "'");
 		html = html.replace("&lt;", "<");
@@ -1043,7 +1046,7 @@ public class CommonUtil {
 		html = html.replace("&sup3;", "³");
 		html = html.replace("&acute;", "´");
 		html = html.replace("&mu;", "μ");
-		html = html.replace("&pa;", "¶");
+		html = html.replace("&para;", "¶");
 		html = html.replace("&middot;", "·");
 		html = html.replace("&cedil;", "¸");
 		html = html.replace("&sup1;", "¹");
@@ -1068,6 +1071,7 @@ public class CommonUtil {
 		String result = html;
 		
 		logger.debug("html result : " + result); 
+		logger.debug("htmlUnescape ended");
 		return result;
 		
 	}

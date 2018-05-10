@@ -32,6 +32,7 @@
 		    var strLang3 = "<spring:message code='ezCommunity.t1103' />"; 
 		    var strLang4 = "<spring:message code='ezCommunity.t2009' />"; 
 		    var strLang5 = "<spring:message code='ezCommunity.t1102' />"; 
+		    var strLang6 =  "<spring:message code='ezCommunity.t431' />";
 		    var isCrossBrowser = "{isCrossBrowser}";
 		    
 		    $(function () {
@@ -179,6 +180,8 @@
 			                                        span2.setAttribute("boardid", itemVO.boardID);
 			                                        span2.setAttribute("gubun", itemVO.gubun);
 			                                        span2.setAttribute("code", code);
+			                                        span2.style.border = "1px solid #d8d8d8";
+			                                        span2.style.width = "68px";
 			                                        span2.style.cursor = "pointer";
 			                                        span2.onclick = function () { ItemRead_onclick(this); };
 
@@ -441,7 +444,7 @@
 		                    document.getElementById("mainboard").style.display = "none";
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
-		                case "btn_MemberInfo": alert(strLang5);
+		                case "btn_MemberInfo": alert(strLang6);
 		                    break;
 		                case "btn_MemberOut": alert(strLang5);
 		                    break;

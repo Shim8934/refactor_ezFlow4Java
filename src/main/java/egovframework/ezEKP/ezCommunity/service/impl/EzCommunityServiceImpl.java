@@ -993,22 +993,22 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<CommunityCPollManagerVO> list = ezCommunityDAO.pollMainGet2(map);
-		
 		logger.debug("pollMainGet2 ended. size : " + list.size());
 		
-		String dateStr = commonUtil.getTodayUTCTime("").substring(0, 10);
+		String dateStr = commonUtil.getTodayUTCTime("");
 		logger.debug("userCurrentTime=" + dateStr);
 		
 		/* 2018-05-08 홍승비 - 커뮤니티 관리자의 설문조사 테이블 > 관리TD의 모든 버튼 활성 */
 		String sysopID = ezCommunityDAO.adminMemberListGet2(map);
 		logger.debug("sysopID=" + sysopID);
 		
+		/* 2018-05-10 홍승비 - 커뮤니티 설문조사 예정, 진행중, 완료 조건 비교 수정(년-월-일 시:분:초 단위까지 전부 비교) */
 		for (CommunityCPollManagerVO item : list) {
-			if (dateStr.compareTo(item.getPollStartDate().substring(0, 10)) < 0) {
+			if (dateStr.compareTo(item.getPollStartDate().substring(0, 19)) < 0) {
 				pollState = egovMessageSource.getMessage("ezCommunity.t677", userInfo.getLocale());
 				pollManager = egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale());
 			} else {
-				if (dateStr.compareTo(item.getPollStartDate().substring(0, 10)) >= 0 && dateStr.compareTo(item.getPollEndDate().substring(0, 10)) <= 0) {
+				if (dateStr.compareTo(item.getPollStartDate().substring(0, 19)) >= 0 && dateStr.compareTo(item.getPollEndDate().substring(0, 19)) <= 0) {
 					pollState = egovMessageSource.getMessage("ezCommunity.t679", userInfo.getLocale());
 					pollManager = egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale());
 				} else {
@@ -1037,8 +1037,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			logger.debug("pollMainGet4 ended.");
 
 			sb.append("<tr>");
-			/* 2018-05-07 홍승비 - 커뮤니티 설문조사 체크박스 사용 (삭제를 위한 해당설문ID, 커뮤니티ID) */
-			sb.append("<td><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" clubNo=\"" + item.getC_clubNo() + "\"/></td>");			
+			/* 2018-05-07 홍승비 - 커뮤니티 설문조사 체크박스 사용 (삭제를 위한 해당설문ID, 등록자ID, 커뮤니티ID) */
+			sb.append("<td><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" pollRegID=\"" + item.getPollRegUser() + "\" clubNo=\"" + item.getC_clubNo() + "\"/></td>");			
 			sb.append("<td style=\"text-overflow:ellipsis;overflow:hidden;white-space:nowrap;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
 			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
@@ -1382,59 +1382,38 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map.put("tenantID", tenantID);			
 			
 			String strRegUser = ezCommunityDAO.pollDeleteGet1(map).trim();
-			
 			logger.debug("pollDeleteGet1 ended. strRegUser=" + strRegUser);
 			
-			if (strRegUser != null) {
-				logger.debug("pollDeleteGet3 started.");
-				
+			/* 2018-05-10 홍승비 - 삭제권한검사는 jsp(스크립트)에서 먼저 처리하도록 수정 */
+			if (strRegUser != null) {				
 				Map<String, Object> map1 = new HashMap<String, Object>();
 				map1.put("v_CODE", code);
 				map1.put("tenantID", tenantID);
-				
-				String sysopID = ezCommunityDAO.pollDeleteGet3(map1).trim();
-				
-				logger.debug("pollDeleteGet3 ended. sysopID=" + sysopID);
-				
-				if (strRegUser.equals(userInfo.getId()) || sysopID.equals(userInfo.getId())) {
-					logger.debug("pollDeleteGet2 started.");
 
-					List<CommunityCPollQuestionVO> questionList = ezCommunityDAO.pollDeleteGet2(map);
+				logger.debug("pollDeleteGet2 started.");
+
+				List<CommunityCPollQuestionVO> questionList = ezCommunityDAO.pollDeleteGet2(map);				
+				logger.debug("pollDeleteGet2 ended. size=" + questionList.size());
+
+				for (CommunityCPollQuestionVO question : questionList) {
+					logger.debug("pollDeleteGet4 start. " + question.getQuestionID());
 					
-					logger.debug("pollDeleteGet2 ended. size=" + questionList.size());
-	
-					for (CommunityCPollQuestionVO question : questionList) {
-						logger.debug("pollDeleteGet4 start. " + question.getQuestionID());
-						
-						Map<String, Object> map2 = new HashMap<String, Object>();
-						map2.put("v_QUESTIONID", question.getQuestionID());
-						map2.put("tenantID", tenantID);
-						
-						List<CommunityCPollAnswerVO> answerList= ezCommunityDAO.pollDeleteGet4(map2);
-						
-						logger.debug("pollDeleteGet4 ended. size=" + answerList.size());
-						
-						for(CommunityCPollAnswerVO answer : answerList) {
-							logger.debug("getQuestionID="+ question.getQuestionID() + " || getAnswerID=" + answer.getAnswerID());
-							pollDeleteDel1(question.getQuestionID(), answer.getAnswerID(), tenantID);
-						}
-						
-						pollDeleteDel2(question.getQuestionID(), tenantID);
+					Map<String, Object> map2 = new HashMap<String, Object>();
+					map2.put("v_QUESTIONID", question.getQuestionID());
+					map2.put("tenantID", tenantID);
+					
+					List<CommunityCPollAnswerVO> answerList= ezCommunityDAO.pollDeleteGet4(map2);					
+					logger.debug("pollDeleteGet4 ended. size=" + answerList.size());
+					
+					for(CommunityCPollAnswerVO answer : answerList) {
+						logger.debug("getQuestionID="+ question.getQuestionID() + " || getAnswerID=" + answer.getAnswerID());
+						pollDeleteDel1(question.getQuestionID(), answer.getAnswerID(), tenantID);
 					}
 					
-					pollDeleteDel3(managerID[i], tenantID);
+					pollDeleteDel2(question.getQuestionID(), tenantID);
 				}
-				else {
-					/* 2018-05-07 홍승비 - 커뮤니티 설문조사 삭제권한 없는 경우의 경고창 */
-					response.setCharacterEncoding("UTF-8");
-					response.setContentType("text/html; charset=UTF-8");
-					response.getWriter().write("<script language='javascript'>\n");
-					response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezQuestion.t278", userInfo.getLocale()) + "\');\n");
-					response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
-					response.getWriter().write("</script>");
-					response.getWriter().flush();
-					return;
-				}
+				
+				pollDeleteDel3(managerID[i], tenantID);
 			}
 		}
 		
@@ -1453,7 +1432,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("pollRes started.");
 		
 		int isSave = 0;
-		double responseCount = 0;
+		int responseCount = 0;
 		int tenantID = userInfo.getTenantId();
 		
 		logger.debug("pollResGet2, pollResGet3 started.");
@@ -1510,25 +1489,29 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						sb.append("></td>");
 						sb.append("<td class=\"t2\">" + commonUtil.cleanValue(answerVO.getAnswerContent()) + "</td>");
 						
+						/* 2018-05-09 홍승비 - 커뮤니티 설문조사 이미지 대신 색깔 그래프로 표현 */
 						responseCount = pollResGetCount(questionVO.getQuestionID(), answerVO.getAnswerID(), tenantID);
 						int percent = 0;
+						int percentRev = 0;
 						
 						if (allResponseCount != 0) {
 							percent =  (int) ((double) responseCount / allResponseCount * 100);
 						}
+						
+						percentRev = 100 - percent;
 
 						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + responseCount + "/" + allResponseCount + "]</td>");
 						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + percent + "%]</td>");
 						sb.append("<td class=\"t2\" align=\"left\" width=\"180\">");
-						sb.append("<img src=\"/images/question_bar.gif\" width=\"" + percent + "\" height=\"");
+						sb.append("<div class=\"graphback\">");
+						sb.append("<p class=\"graphbar\"");
 						
 						if (percent == 0) {
-							sb.append("0");
+							sb.append("style=\"margin-right:" + percentRev + "%; border-left:0;border-right:0;\"></p></div></td>");
 						} else {
-							sb.append("10");
+							sb.append("style=\"margin-right:" + percentRev + "%;\"></p></div></td>");
 						}
-						
-						sb.append("\" alt=\"" + percent + "%\" border=\"0\"></td>");
+
 						sb.append("</tr>");
 
 						break;
@@ -1560,18 +1543,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                             percent = 0;
                         }
 						
+						percentRev = 100 - percent;
+
 						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + responseCount + "/" + allResponseCount + "]</td>");
 						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + percent + "%]</td>");
 						sb.append("<td class=\"t2\" align=\"left\" width=\"180\">");
-						sb.append("<img src=\"/images/question_bar.gif\" width=\"" + percent + "\" height=\"");
+						sb.append("<div class=\"graphback\">");
+						sb.append("<p class=\"graphbar\"");
 						
 						if (percent == 0) {
-                            sb.append("0");
+                            sb.append("style=\"margin-right:" + percentRev + "%;border-left:0;border-right:0;\"></p></div></td></tr>");
                         } else {
-                        	sb.append("10");
+                        	sb.append("style=\"margin-right:" + percentRev + "%;\"></p></div></td></tr>");
                         }
-						
-						sb.append("\" alt=\"" + percent + "%\" border=\"0\"></td></tr>");
 						
 						break;
 					case 3 :
