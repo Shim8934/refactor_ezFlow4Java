@@ -538,9 +538,11 @@
 			fileIconColumn.appendChild(fileIconElement);
 			
 			nameColumn.textContent = resultJson[columnMap.name];
+			nameColumn.setAttribute("title", resultJson[columnMap.name]);
 			creatorColumn.textContent = resultJson[columnMap.creatorName];
 			createDateColumn.textContent = resultJson[columnMap.createDate].substring(0, 10);
 			absolutePathColumn.textContent = resultJson[columnMap.path];
+			nameColumn.setAttribute("title", resultJson[columnMap.path]);
 			sizeColumn.style.textAlign = "center;"
 
 			var targetType = resultJson[columnMap.type];

@@ -468,12 +468,14 @@
 					fileIconColumn.appendChild(fileIconElement);
 					
 					nameColumn.textContent = resultJson["fileName"];
+					nameColumn.setAttribute("title", resultJson["fileName"]);
 					creatorColumn.textContent = resultJson["createName"];
 					createDateColumn.textContent = resultJson["createDate"].substring(0, 10);
 					updateDateColumn.textContent = resultJson["updateDate"].substring(0, 10);
 					sharerColumn.textContent = getUserSimpleListStr(resultJson["userListStr"]);
 					shareDateColumn.textContent = resultJson["shareDate"].substring(0, 10);
 					absolutePathColumn.textContent = resultJson["folderPath"];
+					absolutePathColumn.setAttribute("title", resultJson["folderPath"]);
 					
 					if (resultJson["shareStatus"] == "Y") {
 						var spanElmt = document.createElement("span");

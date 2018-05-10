@@ -523,11 +523,13 @@ function TableView() {
 				tdSize.textContent         = resultElement["trashCanExt"] != 'folder' ? getFileSize(resultElement["trashCanSize"]) : "-";
 				tdSize.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center;");
 				tdName.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
+				tdName.setAttribute("title", resultElement["trashCanName"]);
 				tdCreator.textContent      = lang == "1" ? resultElement["createName1"] : resultElement["createName2"];
 				tdUpdateDate.textContent   = resultElement["updateDate"].substring(0, 10);
 				tdCreateDate.textContent   = resultElement["createDate"].substring(0, 10);
 				tdAbsolutePath.textContent = resultElement["trashCanPath"];
 				tdAbsolutePath.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
+				tdAbsolutePath.setAttribute("title", resultElement["trashCanPath"]);
 				
 				trElement.appendChild(tdCheckbox);
 				trElement.appendChild(tdFileIcon);
