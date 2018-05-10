@@ -996,19 +996,20 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("pollMainGet2 ended. size : " + list.size());
 		
-		String dateStr = commonUtil.getTodayUTCTime("").substring(0, 10);
+		String dateStr = commonUtil.getTodayUTCTime("");
 		logger.debug("userCurrentTime=" + dateStr);
 		
 		/* 2018-05-08 홍승비 - 커뮤니티 관리자의 설문조사 테이블 > 관리TD의 모든 버튼 활성 */
 		String sysopID = ezCommunityDAO.adminMemberListGet2(map);
 		logger.debug("sysopID=" + sysopID);
 		
-		for (CommunityCPollManagerVO item : list) {
-			if (dateStr.compareTo(item.getPollStartDate().substring(0, 10)) < 0) {
+		/* 2018-05-10 홍승비 - 커뮤니티 설문조사 예정, 진행중, 완료 조건 비교 수정(년-월-일 시:분:초 단위까지 전부 비교) */
+		for (CommunityCPollManagerVO item : list) {			
+			if (dateStr.compareTo(item.getPollStartDate().substring(0, item.getPollStartDate().length()-2)) < 0) {
 				pollState = egovMessageSource.getMessage("ezCommunity.t677", userInfo.getLocale());
 				pollManager = egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale());
 			} else {
-				if (dateStr.compareTo(item.getPollStartDate().substring(0, 10)) >= 0 && dateStr.compareTo(item.getPollEndDate().substring(0, 10)) <= 0) {
+				if (dateStr.compareTo(item.getPollStartDate().substring(0, item.getPollStartDate().length()-2)) >= 0 && dateStr.compareTo(item.getPollEndDate().substring(0, item.getPollStartDate().length()-2)) <= 0) {
 					pollState = egovMessageSource.getMessage("ezCommunity.t679", userInfo.getLocale());
 					pollManager = egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale());
 				} else {
