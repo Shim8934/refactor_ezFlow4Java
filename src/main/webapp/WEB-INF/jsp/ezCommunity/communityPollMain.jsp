@@ -44,7 +44,7 @@
 					return;
 				}
 				else {
-					$("input:checkbox:checked").each(function () {
+					$("input:checkbox:checked[id != 'checkBoxHeader']").each(function () {
 						if (pClubNo == "") {
 							pClubNo = $(this).attr("clubNo");
 						}					
@@ -56,7 +56,7 @@
 
 			/* 2018-05-07 홍승비 - 삭제 여부 확인창 추가 */
 			function poll_Delete(pClubNo, managerID) {
-				if(confirm("<spring:message code='ezResource.t61' />")) {
+				if(confirm("<spring:message code='ezCommunity.t426' />")) {
 					window.location.href = "/ezCommunity/pollDelete.do?code=" + encodeURIComponent(pClubNo) + "&managerID=" + encodeURIComponent(managerID);			
 				}
 			}
@@ -82,6 +82,15 @@
 		        
 		        window.location.href = "/ezCommunity/pollRes.do?code=" + code + "&pollManagerID=" + itemno + "&pollState=" + pollstate;
 		    }
+		    
+		    function checkAll(obj) {
+		    	if(obj.checked) {
+		    		$("input:checkbox").prop("checked", true);
+		    	} else {
+		    		$("input:checkbox").prop("checked", false);
+		    	}    	
+		    }
+		    
 		</script>
 	</head>
 	<body class ="cmhome_body">
@@ -100,7 +109,7 @@
 		
 		<table id="tblList" class="cmhomelist" style="width:100%;margin-top:12px">
 			<tr>
-				<th style="width:27px;"><spring:message code='ezPoll.t105' /></th>
+				<th style="width:27px;"><input id="checkBoxHeader" type="checkbox" onclick="checkAll(this)"/></th>
 				<th><spring:message code='ezCommunity.t673' /></th>			
 			    <th style="width:170px;"><spring:message code='ezCommunity.t672' /></th>
 			    <th style="width:60px;"><spring:message code='ezCommunity.t674' /></th>

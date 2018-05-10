@@ -1871,7 +1871,7 @@
 	                            <td style="height: 35px;">
 	                                <h2 id="subtitle" style="display: none"><spring:message code='ezAddress.t231' /></h2>
 	                                <div class="portlet_tabpart01" style="margin:0px;">
-					            		<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
+					            		<div class="portlet_tabpart01_top" id="tab1">
 					            			<p id="orgTabButton">
 					            				<span onclick="orgTabButton_onClick()"><spring:message code='ezAddress.t351' /></span>
 					            			</p>
@@ -1902,7 +1902,7 @@
 	                </td>
 	                <td></td>
 	                <td>
-	                    <h2 id="ToTitle" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="font-weight: bold; height: 36px!important; line-height: 36px;">
+	                    <h2 id="ToTitle" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="font-weight: bold; height: 36px!important; line-height: 36px; position: absolute; top:87px; width:232px;">
 	                        <span style="min-width:45px;" id="ToTitleStr"><spring:message code='ezAddress.t364' /></span>
 	                    </h2>
 	                </td>
