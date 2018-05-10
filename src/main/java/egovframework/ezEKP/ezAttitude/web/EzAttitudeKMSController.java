@@ -274,6 +274,10 @@ public class EzAttitudeKMSController {
 			sysLang = "primary";
 		}
 		
+		if (deptid == null) { //문제가 없을까???=============================================================================================보미가 수정했습니다 한번 봐주시죠
+			deptid = userInfo.getDeptID(); 
+		}
+		
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
