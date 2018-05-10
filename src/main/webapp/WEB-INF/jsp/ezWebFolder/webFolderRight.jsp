@@ -348,6 +348,7 @@
 					tdElmt3.appendChild(fileIconElmt);
 					
 					tdElmt4.textContent = result[i]["fileName"];
+					tdElmt4.setAttribute("title", result[i]["fileName"]);
 					if(result[i]["typeId"] == "folder") {
 						tdElmt5.textContent = ' - ';
 					}else {
@@ -363,6 +364,7 @@
 					tdElmt7.textContent = result[i]["createDate"].substring(0, 10);
 					tdElmt8.textContent = result[i]["updateDate"].substring(0, 10);
 					tdElmt9.textContent = result[i]["filePosition"];
+					tdElmt9.setAttribute("title", result[i]["filePosition"]);
 // 					tdElmt10.textContent = result[i]["downloadCnt"];
 // 					tdElmt10.setAttribute("style","text-align: center;");
 					
