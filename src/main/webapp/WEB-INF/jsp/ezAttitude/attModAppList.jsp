@@ -1164,10 +1164,10 @@
 									<c:forEach var="dept" items="${deptList}">
 										<c:if test="${dept.mine ne 'yes' }">
 											<c:if test="${selectedDeptID == dept.deptId}">
-												<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
+												<option value="<c:out value='${dept.deptId}'/>" authType="<c:out value='${dept.authType}'/>" selected><c:out value='${dept.deptName}'/></option>
 											</c:if>
 											<c:if test="${selectedDeptID != dept.deptId}">
-												<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
+												<option value="<c:out value='${dept.deptId}'/>" authType="<c:out value='${dept.authType}'/>"><c:out value='${dept.deptName}' /></option>
 											</c:if>
 										</c:if>										
 									</c:forEach>

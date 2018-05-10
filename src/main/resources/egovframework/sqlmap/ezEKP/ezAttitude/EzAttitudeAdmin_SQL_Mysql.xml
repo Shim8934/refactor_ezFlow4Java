@@ -913,6 +913,10 @@
 			SELECT 
 				CN AS deptId,
 				DISPLAYNAME AS deptName
+		]]>
+		<isNotEmpty prepend="," property="isAllDept">
+			'M' AS authType
+		</isNotEmpty>
 			FROM
 				TBL_DEPTMASTER
 			WHERE 
@@ -921,7 +925,6 @@
 				USEFLAG IS NOT NULL 
 			AND 
 				EXTENSIONATTRIBUTE1 = #companyId#
-		]]>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.checkUseAttitudeType" parameterClass="Map" resultClass="Integer">
