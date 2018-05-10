@@ -1006,9 +1006,9 @@
 				<ul>
 					<li><a onClick="fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
 					<li id="uploadBtn" style="display:none;"><a onClick="fileUpload2()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-					<li id="fileDeleteBtn" style="display:none;"><a onClick="fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t117'/></span></a></li>
-					<li id="fileRenameBtn" style="display:none;"><a onClick="fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t118'/></span></a></li>
-					<li id="fileMoveCopyBtn" style="display:none;"><a onClick="fileMoveCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t120'/></span></a></li>
+					<li id="fileDeleteBtn" style="display:none;"><a onClick="fileDelete()" style="margin-top: 3px;"><span>파일삭제</span></a></li>
+					<li id="fileRenameBtn" style="display:none;"><a onClick="fileRename()" style="margin-top: 3px;"><span>파일명변경</span></a></li>
+					<li id="fileMoveCopyBtn" style="display:none;"><a onClick="fileMoveCopy()" style="margin-top: 3px;"><span>파일이동/복사</span></a></li>
 					<li id="fileCopyBtn"><a onClick="fileCopy()" style="margin-top: 3px;"><span>파일복사</span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
 					<li><a onClick="shareContext.addShareView()" style="margin-top: 3px;"><span>공유</span></a></li>
@@ -1016,8 +1016,8 @@
 					<li id="hiddenShareListBtn"><a onClick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span>공유숨김목록</span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
 					<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
-					<li><a onClick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 					<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
+					<li><a onClick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
 					<li style="height: 28px;">
 						<select id="fileTypeSelect" class="select" onchange="onFileTypeChange(this.value);">
