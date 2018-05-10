@@ -906,7 +906,7 @@
 		    }
 			
 		    /** 배현상 근태관리메서드 추가 */
-		    var outComFlag = false;
+		    var leaveEarlyFlag = false; // 조퇴가 등록되어있는지 체크
 		    function getAttitudeList() {
 		    	$.ajax({
 		    		type : "POST",
@@ -915,7 +915,7 @@
 		    		url : "/ezAttitude/getAttitudeList.do",
 		    		data : {},
 		    		success : function(result) {
-		    			outComFlag = false;
+		    			leaveEarlyFlag = false;
 		    			for (var i = 0; i < result.length; i++) {
 		    				if (result[i].typeId == "A01") {
 		    					$("#inAttiClock").text("출근 : " + result[i].startDate.split(" ")[1]);
@@ -927,7 +927,7 @@
 		    					$("#outAttiClock").text("퇴근 : " + result[i].startDate.split(" ")[1]);
 		    					$("#outAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
 		    				} else if (result[i].typeId == "A08") {
-		    					outComFlag = true;
+		    					leaveEarlyFlag = true;
 		    				}
 		    			}
 		    		}
@@ -940,7 +940,7 @@
 		    	if (pTypeId == "A03" && !$("#inAttiBtn").hasClass("btn_disabled")) {
 		    		alert("출근 후 퇴근이 가능합니다.");
 		    		return;
-		    	} else if (outComFlag) {
+		    	} else if (leaveEarlyFlag) {
 		    		alert("조퇴 후 퇴근은 불가능합니다.");
 		    		return;
 		    	}

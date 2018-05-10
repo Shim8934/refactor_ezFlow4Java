@@ -58,7 +58,7 @@
 		        }
 				select_memorialDays(uselang);
 				setHoliday();
-				
+				checkOutCom();
 				
 			}
 			
@@ -281,6 +281,10 @@
 					alert("<spring:message code='ezAttitude.bbhs23'/>");
 					return;
 				}
+				if (outComFlag) {
+					alert("<spring:message code='ezAttitude.bbhs40'/>");
+					return;
+				}
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezAttitude/attitudeSave.do",
@@ -439,6 +443,25 @@
 			    }
 			    
 			    return true;
+			}
+			
+			var outComFlag = false; // 퇴근이 등록된 경우 조퇴를 등록할 수 없게 하기 위한 변수
+			function checkOutCom() {
+				$.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : true,
+		    		url : "/ezAttitude/getAttitudeList.do",
+		    		data : {},
+		    		success : function(result) {
+		    			outComFlag = false;
+		    			for (var i = 0; i < result.length; i++) {
+		    				if (result[i].typeId == "A03") {
+		    					outComFlag = true;
+		    				}
+		    			}
+		    		}
+		    	})
 			}
 		</script>
 	</head>
