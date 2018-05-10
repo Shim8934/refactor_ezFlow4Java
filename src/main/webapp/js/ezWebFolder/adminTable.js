@@ -242,13 +242,13 @@ function TableView() {
 				trElmt.setAttribute("class", _unselectClass);
 				tdElmt1.textContent = _dataSource[i]["fileType"];
 				
-				tdElmt2.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+				tdElmt2.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
 				tdElmt2.setAttribute("title", _dataSource[i]["fileName"]);
 				tdElmt2.textContent = _dataSource[i]["fileName"];
 				
 				tdElmt3.textContent = getFileSize(_dataSource[i]["fileSize"]);
 				
-				tdElmt4.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+				tdElmt4.setAttribute("style","overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
 				tdElmt4.textContent = primary == "1" ? _dataSource[i]["createName1"] : _dataSource[i]["createName2"];
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
 				
@@ -261,7 +261,7 @@ function TableView() {
 					case "RE": tdElmt5.textContent = strActType6; break;
 				}
 				
-				tdElmt6.setAttribute("style", "text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+				tdElmt6.setAttribute("style", "text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
 				tdElmt6.textContent = _dataSource[i]["createDate"].substring(0, 19);
 				tdElmt6.setAttribute("title", tdElmt6.textContent);
 				
@@ -325,19 +325,19 @@ function TableView() {
 				
 				tdElmt1.appendChild(inputElmt);
 				
-				tdElmt2.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+				tdElmt2.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
 				tdElmt2.textContent = _dataSource[i]["companyName"];
 				tdElmt2.setAttribute("title", tdElmt2.textContent);
 				
-				tdElmt3.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+				tdElmt3.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
 				tdElmt3.textContent = _dataSource[i]["departmentName"];
 				tdElmt3.setAttribute("title", tdElmt3.textContent);
 				
-				tdElmt4.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+				tdElmt4.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
 				tdElmt4.textContent = _dataSource[i]["userName"];
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
 				
-				tdElmt5.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;");
+				tdElmt5.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
 				tdElmt5.textContent = _dataSource[i]["jobTitle"];
 				tdElmt5.setAttribute("title", tdElmt5.textContent);
 				
@@ -347,7 +347,7 @@ function TableView() {
 				tdElmt7.setAttribute("style", "text-align: center;");
 				tdElmt7.textContent = _dataSource[i]["totalCapacity"] + "GB";
 				
-				tdElmt8.setAttribute("style", "white-space:nowrap; text-align:center;");
+				tdElmt8.setAttribute("style", "white-space:nowrap; text-align:center; word-wrap: normal;");
 				
 				var span        = document.createElement("span");
 				span.className  = "workProgressBar";
@@ -429,7 +429,7 @@ function TableView() {
 				tdElmt2.setAttribute("style", "text-align: center;");
 				tdElmt3.textContent = _dataSource[i]["fileName"];
 				tdElmt3.setAttribute("title", _dataSource[i]["fileName"]);
-				tdElmt3.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
+				tdElmt3.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap; word-wrap: normal;");
 				tdElmt4.textContent = getFileSize(_dataSource[i]["fileSize"]);
 				tdElmt4.setAttribute("style", "text-align: center;");
 				tdElmt5.textContent = primary == "1" ? _dataSource[i]["createName1"] : _dataSource[i]["createName2"];
@@ -437,7 +437,7 @@ function TableView() {
 				tdElmt7.textContent = _dataSource[i]["updateDate"].substring(0, 10);
 				tdElmt8.textContent = _dataSource[i]["filePosition"];
 				tdElmt8.setAttribute("title", _dataSource[i]["filePosition"]);
-				tdElmt8.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
+				tdElmt8.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap; word-wrap: normal;");
 				tdElmt9.textContent = _dataSource[i]["downloadCnt"];
 				tdElmt9.setAttribute("style","text-align: center;");
 				
@@ -521,14 +521,14 @@ function TableView() {
 				
 				tdName.textContent         = resultElement["trashCanName"];
 				tdSize.textContent         = resultElement["trashCanExt"] != 'folder' ? getFileSize(resultElement["trashCanSize"]) : "-";
-				tdSize.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center;");
-				tdName.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
+				tdSize.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center; word-wrap: normal;");
+				tdName.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap; word-wrap: normal;");
 				tdName.setAttribute("title", resultElement["trashCanName"]);
 				tdCreator.textContent      = lang == "1" ? resultElement["createName1"] : resultElement["createName2"];
 				tdUpdateDate.textContent   = resultElement["updateDate"].substring(0, 10);
 				tdCreateDate.textContent   = resultElement["createDate"].substring(0, 10);
 				tdAbsolutePath.textContent = resultElement["trashCanPath"];
-				tdAbsolutePath.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap;");
+				tdAbsolutePath.setAttribute("style", "overflow: hidden;text-overflow: ellipsis;white-space: nowrap; word-wrap: normal;");
 				tdAbsolutePath.setAttribute("title", resultElement["trashCanPath"]);
 				
 				trElement.appendChild(tdCheckbox);

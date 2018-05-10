@@ -533,7 +533,7 @@
 				<th width="20px" ><input type="checkbox"></th>
 				<th headers="ft" style="text-align: center; width: 20px;"><spring:message code='ezWebFolder.t188'/></th>
 				<th headers="fn" style="width: 30%;"><spring:message code='ezWebFolder.t156'/></th>
-				<th headers="fs" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; width :6%;" ><spring:message code='ezWebFolder.t157'/></th>
+				<th headers="fs" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; word-wrap: normal; width :6%;" ><spring:message code='ezWebFolder.t157'/></th>
 				<th headers="un" style="width: 7%"><spring:message code='ezWebFolder.t189'/></th>
 				<th headers="cd" style="width: 10%"><spring:message code='ezWebFolder.t190'/></th>
 				<th headers="dd" style="width: 10%"><spring:message code='ezWebFolder.t288'/></th>
