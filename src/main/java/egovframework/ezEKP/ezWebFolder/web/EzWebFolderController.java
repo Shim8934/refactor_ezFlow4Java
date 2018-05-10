@@ -281,7 +281,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/filemanage/file-download";
 		
-		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + userInfo.getId(), null, request, "get", null);
+		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
 		
 		if (!checkAdminPermmision.get("status").toString().equals("ok")){
 			JSONObject checkPermission = checkPermission(request, user.getId(), listFileId, listFolderId);
@@ -349,7 +349,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/file-delete";
 		
-		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + userInfo.getId(), null, request, "get", null);
+		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
 		
 		if (!checkAdminPermmision.get("status").toString().equals("ok")){
 			JSONObject checkUserPermission = checkPermission(request, user.getId(), listFileId, "");
@@ -415,7 +415,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/file-rename/fileid/" + fileId;
 		
-		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + userInfo.getId(), null, request, "get", null);
+		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
 		
 		if (!checkAdminPermmision.get("status").toString().equals("ok")){
 			JSONObject checkPermission = checkPermission(request, user.getId(), fileId, "");
