@@ -84,7 +84,8 @@
 			// listoption 다른 곳 클릭시 숨김 처리
 			var listOptionHidden = function(event) {
 				if (document.getElementById("webfolderlistoptiondiv").getAttribute('mode') == "on"
-						&& !document.getElementById("layer_Viewpopup").contains(event.target)) {
+						&& !document.getElementById("layer_Viewpopup").contains(event.target)
+						&& event.target.id !== "webfolderlistoptiondiv") {
 					optionHidden();
 				}
 			};
