@@ -8,6 +8,7 @@ public class FolderTreeVO {
 	private String createId;
 	private String folderName1;
 	private String folderName2;
+	private String folderLevel;
 	
 	public String getId() {
 		return id;
@@ -64,9 +65,22 @@ public class FolderTreeVO {
 	public void setFolderName2(String folderName2) {
 		this.folderName2 = folderName2;
 	}
+	
+	public String getFolderLevel() {
+		return folderLevel;
+	}
+
+	public void setFolderLevel(String folderLevel) {
+		this.folderLevel = folderLevel;
+	}
 
 	@Override
 	public String toString() {
-		return "FolderTreeVO [id=" + id + ", text=" + text + ", parent=" + parent + ", selected=" + selected + ", createId=" + createId + "]";
+		return "FolderTreeVO [id=" + id + ", text=" + text + ", parent="
+				+ parent + ", selected=" + selected + ", createId=" + createId
+				+ ", folderName1=" + folderName1 + ", folderName2="
+				+ folderName2 + ", folderLevel=" + folderLevel + "]";
 	}
+
+
 }

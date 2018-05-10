@@ -300,6 +300,7 @@
         function returnFunction(type) {
         	folderType = type;
         	$('input:radio[name=treeType]:input[value='+folderType+']').prop("checked", true);
+        	add_onclick_Complete('');
         }
     </script>
 </head>

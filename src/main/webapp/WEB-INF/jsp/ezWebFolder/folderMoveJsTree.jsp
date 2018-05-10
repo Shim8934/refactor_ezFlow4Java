@@ -21,6 +21,7 @@
 		var selectedFolder = null;
 		var arrSubFolder   = [];
 		var moveCopyType = "";
+		var parentId = "";
 		
 		
 		window.onload = function () {
@@ -32,7 +33,7 @@
 	    	 try {
 	            	folderId 		= parent.moveCopyFolderDlg_cross_dialogArguments[0];
 	            	moveCopyType 	= parent.moveCopyFolderDlg_cross_dialogArguments[1];
-	            	returnFunction 	= parent.moveCopyFolderDlg_cross_dialogArguments[2] ;
+	            	returnFunction 	= parent.moveCopyFolderDlg_cross_dialogArguments[2];
 	            } catch (e) { }
 //		            if (InputValue != "") {
 //		                txt_FolderName.value = InputValue;
@@ -67,42 +68,38 @@
 				}
 				parent.returnFunction(folderType);
 				parent.folderList(folderType);
-				parent.DivPopUpHidden();
-				window.close();
-			}else if (code == 2) {
+			}else if (code == 3) {
 				alert("<spring:message code='ezWebFolder.t300'/>");
 			}else if(code == 4) {
 				alert("<spring:message code='ezWebFolder.t301'/>");
 				window.close();
 			}else {
-				alert("<spring:message code='ezWebFolder.t302'/>");
+				alert("<spring:message code='ezWebFolder.t305'/>");
 				window.close();
 				return;
 			}
 		}
 		function Window_Close() {
-			parent.DivPopUpHidden();
-			window.close();
+			parent.returnFunction(folderType);
 		}
 	    function folderList(obj) {
-//		    	folderId = "";
+			$('#folderTree').jstree('destroy');
 			folderType = obj;
-			
 			$.ajax ({
 				type :"POST",
 				async: false,
 				url  : "/ezWebFolder/folderList.do",
 				data : { 
-						 "folderId"   	 : folderId
+					 	"folderId"   	 : folderId
 						,"uppFolderId"   : uppFolderId
 						,"folderType" 	 : obj
-						
-				},
+					},
 				dataType: "JSON",
 				success : function (data) {
-					$.jstree.destroy();
+//						upperId = data.data[0]["parent"];
+					var firstNode = "#" + folderId;
+					
 					$('#folderTree').jstree({
-						
 						'plugins': ["core","types","json_data","themes","ui"],
 						'core' : {
 							"animation" : 0,
@@ -125,34 +122,41 @@
 							"width"       : "20",
 							"margin-left" : "10"
 						}
+					}).on('changed.jstree', function (e, data) {
+						uppFolderId = data.selected[0]; 
+						createId = folderId != null ? data.node.original.createId : ""; 
+						parentId = data.node.original.parent; 
 					});
-					uppFolderId = data.data[0].id;
-					$('#folderTree').jstree('refresh');
-					$('#folderTree').jstree("selected", folderId);
-			   		
+					console.log(folderType);
+					//$("input[value="+folderType+"]").attr('checked', true);
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
 				}
 			});
-			$('#folderTree').on('changed.jstree', function (e, data) {
-				var folderId = "";
-				uppFolderId = data.selected[0]; 
-			});
+			
+			
+			
+			
 	    }
 	    var obj = "";
 		function folderCopyMove(obj) {
 			if (uppFolderId == "") {
-				alert(uppFolderId);
 				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
+			}
+			
+			if (parentId == "#") {
+				if (folderType == "C") {
+					alert("<spring:message code='ezWebFolder.t310'/>");
+					return;
+				}
 			}
 			
 			if (folderId == uppFolderId) {
 				alert("<spring:message code='ezWebFolder.t210'/>");
 				return;
 			}
-// 			console.log("uppFolderId : "+uppFolderId+"folderId : "+ folderId);
 			
 			$.ajax({
 				type: "POST",
@@ -167,7 +171,6 @@
 				success : function(data) {
 					var code = data.code;
 					afterSuccess(code,obj);
-					
 				},
 				error : function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -190,6 +193,7 @@
 			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('C');"> <span><spring:message code="ezWebFolder.t233"/></span>
 			<input name="treeType" id="radio2" type="radio" value="D"         style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('D');"> <span><spring:message code="ezWebFolder.t234"/></span>
 			<input name="treeType" id="radio3" type="radio" value="U"         style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('U');"> <span><spring:message code='ezWebFolder.t235'/></span>
+			<input name="treeType" id="radio3" type="radio" value="S"         style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('S');"> <span><spring:message code='ezWebFolder.t266'/></span>
 		</div>
 	</div>
 	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 320px; height: 320px; overflow: auto; padding-top:5px" id="folderTree"></div>

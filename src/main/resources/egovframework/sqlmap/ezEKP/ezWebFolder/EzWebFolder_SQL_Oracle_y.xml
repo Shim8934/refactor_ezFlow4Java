@@ -39,36 +39,40 @@
 		<result property="createId"     column="CREATEID"     />
 		<result property="folderName1"  column="FOLDERNAME1"  />
 		<result property="folderName2"  column="FOLDERNAME2"  />
+		<result property="folderLevel"  column="FOLDERLEVEL"  />
 	</resultMap>
 	
 	<!-- File resultMap -->
     <resultMap id="fileVO" class="FileVO">
-        <result property="fileId"               column="FILE_ID"                 />              
-        <result property="fileName"         	column="FILE_NAME"               />
-        <result property="filePath"         	column="FILE_PATH"               />
-        <result property="fileSize"          	column="FILE_SIZE"               />
-        <result property="typeId"          		column="TYPE_ID"                 />
-        <result property="downloadCnt"          column="DOWN_COUNT"              />
-        <result property="fileExt"           	column="FILE_EXT"                />
-        <result property="folderId"           	column="FOLDER_ID"               />
-        <result property="useStatus"        	column="USE_STATUS"         	 />
-        <result property="createId"             column="CREATE_ID"            	 />
-        <result property="createName1"          column="CREATE_NAME1"          	 />
-        <result property="createName2"          column="CREATE_NAME2"          	 />
-        <result property="createDate"           column="CREATE_DATE"             />
-        <result property="updateId"             column="UPDATE_ID"               />
-        <result property="updateDate"           column="UPDATE_DATE"             />        
-        <result property="tenantId"         	column="TENANT_ID"               />
-        <result property="fileIconUrl"          column="TYPE_ICON"        		 />
-        <result property="folderPath"           column="FOLDER_PATH"             />
-        <result property="folderName"           column="FOLDER_NAME1"            />
-        <result property="favouriteStatus"      column="FAVORITE_STATUS"  		/>
-        <result property="fileShareStatus"      column="FILESHARE_STATUS"		/>
-        <result property="folderSort"      		column="FOLDER_SORT"			/>
-        <result property="fileTypeName"         column="TYPE_NAME"          />
-<!--         <result property="fileTypeId"           column="filetype_id"            columnIndex="16" /> -->
-<!--         <result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" /> -->
-<!--         <result property="tenantId"         	column="tenant_id"              columnIndex="19" /> -->
+        <result property="fileId"               column="FILE_ID"                 columnIndex="1"/>                                                             
+        <result property="fileName"         	column="FILE_NAME"               columnIndex="2"/>                                                    
+        <result property="filePath"         	column="FILE_PATH"               columnIndex="3"/>                                                    
+        <result property="fileSize"          	column="FILE_SIZE"               columnIndex="4"/>                                                        
+        <result property="typeId"          		column="TYPE_ID"                 columnIndex="5"/>                                                    
+        <result property="downloadCnt"          column="DOWN_COUNT"              columnIndex="6"/>                                                        
+        <result property="fileExt"           	column="FILE_EXT"                columnIndex="7"/>                                                      
+        <result property="folderId"           	column="FOLDER_ID"               columnIndex="8"/>                                                    
+        <result property="useStatus"        	column="USE_STATUS"         	 columnIndex="9"/>                                                      
+        <result property="createId"             column="CREATE_ID"            	 columnIndex="10"/>                                                    
+        <result property="createName1"          column="CREATE_NAME1"          	 columnIndex="11"/>                                                      
+        <result property="createName2"          column="CREATE_NAME2"          	 columnIndex="12"/>                                                      
+        <result property="createDate"           column="CREATE_DATE"             columnIndex="13"/>                                                      
+        <result property="updateId"             column="UPDATE_ID"               columnIndex="14"/>                                                    
+        <result property="updateDate"           column="UPDATE_DATE"             columnIndex="15"/>                                                        
+        <result property="tenantId"         	column="TENANT_ID"               columnIndex="16"/>                                                    
+        <result property="fileIconUrl"          column="TYPE_ICON"        		 columnIndex="17"/>                                                        
+        <result property="folderPath"           column="FOLDER_PATH"             columnIndex="18"/>                                                      
+        <result property="folderName"           column="FOLDER_NAME1"            columnIndex="19"/>                                                      
+        <result property="favouriteStatus"      column="FAVORITE_STATUS"  		 columnIndex="20"/>                                                       
+        <result property="fileShareStatus"      column="FILESHARE_STATUS"		 columnIndex="21"/>        
+        <result property="folderSort"      		column="FOLDER_SORT"			 columnIndex="22"/>        
+        <result property="fileTypeName"         column="TYPE_NAME"          	 columnIndex="23"/>            
+                                                                                                                                                                         
+                                                                                                                                                                                
+                                                                                                                                                                                  
+<!--         <result property="fileTypeId"           column="filetype_id"            columEND AS FILESHARE_STATUS,                                                  nIndex="16" /> -->
+<!--         <result property="fileIconUrl"          column="filetype_icon"          columdecode (f.FILE_EXT , 'folder',0,1) as FOLDER_SORT,                        nIndex="18" /> -->
+<!--         <result property="tenantId"         	column="tenant_id"              columntype.TYPE_NAME 	AS TYPE_NAME    		                                  Index="19" /> -->
     </resultMap>
     
     <!-- FileType resultMap -->
@@ -114,7 +118,7 @@
 				f.FILE_ID 	 			AS FILE_ID ,
 				f.FILE_NAME  			AS FILE_NAME	,
 				f.FILE_PATH	  			AS FILE_PATH	, 
-                   f.FILE_SIZE   			AS FILE_SIZE	,
+                f.FILE_SIZE   			AS FILE_SIZE	,
 				f.TYPE_ID	    		AS TYPE_ID		,
 				f.DOWN_COUNT   			AS DOWN_COUNT   ,
 				f.FILE_EXT	  			AS FILE_EXT     ,
@@ -278,13 +282,14 @@
 			    END TEXT,
 			    CREATE_ID AS CREATEID,
 			    FOLDER_NAME1 AS FOLDERNAME1, 
-			    FOLDER_NAME2 AS FOLDERNAME2  
+			    FOLDER_NAME2 AS FOLDERNAME2,
+			    FOLDER_LEVEL AS FOLDERLEVEL  
 			FROM TBL_WEBFOLDER_FOLDER
 			WHERE USE_STATUS = 'Y'
 			AND FOLDER_TYPE = 'U'
 			AND TENANT_ID = #tenantId#
 			AND OWNER_ID = #userId#
-			ORDER BY SELECTED DESC
+			ORDER BY SELECTED DESC, FOLDER_LEVEL 
 		]]>
 	</select>
 	
@@ -306,7 +311,8 @@
 	        	END TEXT,
 	        	CREATE_ID AS CREATEID,
 			    FOLDER_NAME1 AS FOLDERNAME1, 
-			    FOLDER_NAME2 AS FOLDERNAME2  
+			    FOLDER_NAME2 AS FOLDERNAME2,
+			    FOLDER_LEVEL AS FOLDERLEVEL   
 	        FROM TBL_WEBFOLDER_FOLDER
 	        WHERE USE_STATUS = 'Y'
 	        AND FOLDER_TYPE = 'D'
@@ -316,7 +322,7 @@
 			<iterate property="idList" open="(" close=")" conjunction=",">
 				#idList[]#
 			</iterate>
-			ORDER BY SELECTED DESC
+			ORDER BY SELECTED DESC , FOLDER_LEVEL 
 	</select>
 	
 	<select id="EzWebFolderDAO_y.getCompFolderTree" resultMap="folderTreeVO" parameterClass="Map">
@@ -337,7 +343,8 @@
 	        	END TEXT,
 	        	F.CREATE_ID AS CREATEID,
 			    F.FOLDER_NAME1 AS FOLDERNAME1, 
-			    F.FOLDER_NAME2 AS FOLDERNAME2  
+			    F.FOLDER_NAME2 AS FOLDERNAME2 ,
+			    F.FOLDER_LEVEL AS FOLDERLEVEL  
             FROM TBL_WEBFOLDER_FOLDER F
             JOIN (
 				SELECT FF.FOLDER_PATH
@@ -367,14 +374,15 @@
 	        	END TEXT,
 	        	CREATE_ID AS CREATEID,
 			    FOLDER_NAME1 AS FOLDERNAME1,
-			    FOLDER_NAME2 AS FOLDERNAME2
+			    FOLDER_NAME2 AS FOLDERNAME2,
+			    FOLDER_LEVEL AS FOLDERLEVEL 
 	        FROM TBL_WEBFOLDER_FOLDER
 	        WHERE OWNER_ID = #compId#
 	        AND FOLDER_TYPE = 'C'
 	        AND FOLDER_UPPER = 'root'
 	        AND USE_STATUS = 'Y'
 	        AND TENANT_ID = #tenantId#
-	        ORDER BY SELECTED DESC
+	        ORDER BY SELECTED DESC , FOLDERLEVEL 
 		]]>
 	</select>
 	
