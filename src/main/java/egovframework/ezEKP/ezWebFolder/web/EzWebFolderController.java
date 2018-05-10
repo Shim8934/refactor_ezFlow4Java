@@ -68,7 +68,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezWebFolder/webfolderMain.do")
 	public String webfolderMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String gwServerUrl = config.getProperty("config.webFolderGWServerURL");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/users/" +userInfo.getId() + "/checkRootFolder";
 		
 		HttpHeaders headers  = new HttpHeaders();
