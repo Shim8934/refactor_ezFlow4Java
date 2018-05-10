@@ -119,7 +119,7 @@
 	        	treeView.LoadFromID("FromTreeView");
 	        	var nodeIdx = treeView.GetSelectNode();
 
-	        	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + MakeXMLString(nodeIdx.GetNodeData("VALUE"));
+	        	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + MakeXMLString(nodeIdx.GetNodeData("VALUE"));
 	        	SelectDeptNM.setAttribute("countinfo","")
 	        	displayUserList(nodeIdx.GetNodeData("CN"));
 
@@ -244,7 +244,7 @@
 	            	document.getElementById("txtlist_table").style.display = "none";
 	            	document.getElementById("Search_txtlist_table").style.display = "none";
 	            	if (pSeach) {
-	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
+	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
 	                	SelectDeptNM.setAttribute("countinfo", "1")
 	            	}
 	        	} else {
@@ -256,7 +256,7 @@
 	            	} else {
 	                	document.getElementById("Search_txtlist_table").style.display = "";
 	                	document.getElementById("txtlist_table").style.display = "none";
-	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
+	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
 	                	SelectDeptNM.setAttribute("countinfo", "1")
 	            	}
 	        	}
@@ -836,19 +836,20 @@
       			selToggleList(document.getElementById("menu"), "ul", "li", "0");
       			selToggleList(document.getElementById("close"), "ul", "li", "0");
   			</script>
-        	<div class="portlet_tabpart03">
-	            <div class="portlet_tabpart03_top" id="tab1" style="border-bottom:0px;">
+  			<div style="width: 730px;">
+        	<div class="portlet_tabpart03" style="background-color:#f8f8fa; border: 1px solid #dedede; border-bottom: 0px; padding-top: 6px;">
+	            <div class="portlet_tabpart03_top" id="tab1" style="border-bottom: 0px; height: 28px;">
     	           <table style="width:100%;">
 						<tr>
 	                        <td>
-    	                        <div style="margin-left:5px;">
-        		                    <input id="deptkeyword" value="" onKeyPress="onkey_down(event)" style="width:120px;margin:0px;">
+    	                        <div style="margin-left:7px;">
+        		                    <input id="deptkeyword" value="" onKeyPress="onkey_down(event)" style="width:120px; height: 22px;">
                 			            <a class="imgbtn"><span onClick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>
 	                            </div>
                         	</td>
                        		<td>
-                           		<div style="float:right;margin-right:5px;">
-                            		<select id="search_type">
+                           		<div style="float:right;margin-right:7px;">
+                            		<select id="search_type" style="height: 22px;">
                             			<option selected value="displayname" usedefault="1"><spring:message code='ezPersonal.t9'/></option>
                             			<option value="description" usedefault="1"><spring:message code='ezPersonal.t7'/></option>
                             			<option value="title" usedefault="1"><spring:message code='ezPersonal.t69'/></option>
@@ -860,7 +861,7 @@
                             			<option value="mail" usedefault="0"><spring:message code='ezPersonal.t75'/></option>
                             			<option value="streetAddress" usedefault="0"><spring:message code='ezPersonal.t180'/></option>
                             		</select>
-                            		<input id="keyword" value="" onKeyPress="search_press(event)" onmousedown="keyword_Clear();" style="width:130px;margin:0px;">
+                            		<input id="keyword" value="" onKeyPress="search_press(event)" onmousedown="keyword_Clear();" style="width:120px;margin:0px;height: 22px;">
                             			<a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezPersonal.t83'/></span></a>
                            		</div>
                        		</td>
@@ -871,15 +872,15 @@
 		  <table>
     		<tr>
       			<td class="box">
-          			<div style="width:300px;height:450px;overflow-x:auto;overflow-y:auto;" id="TreeView" ></div>
+          			<div style="width:298px;height:450px;overflow-x:auto;overflow-y:auto;" id="TreeView" ></div>
       			</td>
       			<td></td>
-      			<td class="listview" style="width:426px">
+      			<td class="listview" style="width:426px;">
           			<table style="width:425px;margin-top:-1px;"  class="popup_mainlist" > 
               			<tr>
                   			<th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
-                      			<span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
-					  			<span style="float:right;">
+                      			<span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;padding-top: 3px;padding-left: 3px;"></span>
+					  			<span style="float:right;margin-top: 2px;margin-right: 3px;">
                           			<span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
                           			<span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
 					  			</span>
@@ -930,6 +931,7 @@
               	</tr>
           	</table>
 		  	<div style="vertical-align:top;text-align:center;height:auto;display:none;width:425px;" id="Print_DeptUserImgList"></div>
+		</div>
 		</div>
 	</body>
 </html>
