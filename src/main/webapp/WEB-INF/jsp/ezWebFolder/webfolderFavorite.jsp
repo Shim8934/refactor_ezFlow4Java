@@ -477,6 +477,7 @@
 				style.overflow = "hidden";
 				style.textOverflow = "ellipsis";
 				style.whiteSpace = "nowrap";
+				style.wordWrap = "normal";
 			});
 			
 			setStyles([ checkboxColumn, favoriteIconColumn, fileIconColumn, sizeColumn ], function(style) {
