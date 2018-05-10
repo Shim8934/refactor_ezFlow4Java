@@ -119,8 +119,9 @@
 	   			//리스트 출력
 	    		$('#contentlist .mainlist').html(html);
 	   			
-	   			alert($("#contentlist").scrollHeight);
-	   			alert($("#contentlist").clientHeight);
+	   			//스크롤바 생긴지 알 수 있나?????
+// 	   			alert($("#contentlist").scrollHeight);/////////////////////////////////////////////////////////////////////////////////////////////////
+// 	   			alert($("#contentlist").clientHeight);
 	    	}	  
 	    	
 	    	//권한 라디오 체크
