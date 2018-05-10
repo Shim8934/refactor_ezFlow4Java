@@ -400,8 +400,8 @@ public class EzWebFolderController_m {
 		param.put("searchFileName", orElse(request.getParameter("searchFileName"), ""));
 		param.put("searchCreateName", orElse(request.getParameter("searchCreateName"), ""));
 		param.put("searchFileType", orElse(request.getParameter("searchFileType"), ""));
-		param.put("endrollStartDate", orElse(request.getParameter("enrollStartDate"), ""));
-		param.put("endrollEndDate", orElse(request.getParameter("enrollEndDate"), ""));
+		param.put("enrollStartDate", orElse(request.getParameter("enrollStartDate"), ""));
+		param.put("enrollEndDate", orElse(request.getParameter("enrollEndDate"), ""));
 		param.put("delStartDate", orElse(request.getParameter("delStartDate"), ""));
 		param.put("delEndDate", orElse(request.getParameter("delEndDate"), ""));
 		param.put("column", orElse(request.getParameter("column"), ""));

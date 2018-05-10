@@ -133,6 +133,7 @@
 		function renderFileList() {
 			var orderInf = tableView.getOrderInfo();
 			var listCnt  = document.getElementById("listCount").value;
+			
 			$.ajax ({
 				type: "POST",
 				async: false,
@@ -216,37 +217,44 @@
 		}
 		
 		function search(type) {
+			var createStartVal = $("#enrollStartDate").val();
+			var createEndVal   = $("#enrollEndDate").val();
+			var delStartVal    = $("#delStartDate").val();
+			var delEndVal      = $("#delEndDate").val();
+			
+			console.log("createStartVal: " + createStartVal + " || createEndVal: " + createEndVal + " || delStartVal: " + delStartVal + " || delEndVal: " + delEndVal);
+			
 			if (type == "basic") {
-	           if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" 
-	        	    && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == ""  
-	        	    && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezWebFolder.t163' />");// 검색조건을 입력하세요 
-	                return;
-	            }
-	            if ($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezWebFolder.t308' />");
-	                return;
-	            }
-	            if ($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezWebFolder.t309' />");
-	                return;
-	            }
-	            if ($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezWebFolder.t308' />");
-	                return;
-	            }
-	            if ($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezWebFolder.t309' />");
-	                return;
-	            }
-	            if (new Date($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-	                alert("<spring:message code='ezWebFolder.t164' />");
-	                return;
-	            }
-	            if (new Date($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-	                alert("<spring:message code='ezWebFolder.t164' />");
-	                return;
-	            }
+				if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && createStartVal == "" 
+					&& createEndVal == "" && $("#delStartDate").val() == ""  
+					&& $("#delEndDate").val() == "") {
+					alert("<spring:message code='ezWebFolder.t163' />");// 검색조건을 입력하세요 
+					return;
+				}
+				if (createStartVal != "" && createEndVal == "") {
+					alert("<spring:message code='ezWebFolder.t308' />");
+					return;
+				}
+				if (createEndVal != "" && createStartVal == "") {
+					alert("<spring:message code='ezWebFolder.t309' />");
+					return;
+				}
+				if (delStartVal != "" && delEndVal == "") {
+					alert("<spring:message code='ezWebFolder.t308' />");
+					return;
+				}
+				if (delEndVal != "" && delStartVal == "") {
+					alert("<spring:message code='ezWebFolder.t309' />");
+					return;
+				}
+				if (createStartVal > createEndVal) {
+					alert("<spring:message code='ezWebFolder.t164' />");
+					return;
+				}
+				if (delStartVal > delEndVal) {
+					alert("<spring:message code='ezWebFolder.t164' />");
+					return;
+				}
 			}
 			else if (type == "quick") {
 				if (document.getElementById("txt_keyword").value == "") {
@@ -259,6 +267,7 @@
 				searchPanel.style.display = "none";
 				closeAllPopup();
 			}
+			
 			renderFileList();
 		}
 		

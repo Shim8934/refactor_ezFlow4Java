@@ -1052,7 +1052,7 @@ public class EzWebFolderGWController_m {
 		logger.debug("currPage=" + currPage);
 		logger.debug("listCount=" + listCount);
 		logger.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName + ",searchFileType=" + searchFileType);
-		logger.debug("endrollStartDate=" + endrollStartDate + ",endrollEndDate=" + delStartDate + ",delStartDate=" + delStartDate + ",delEndDate=" + delEndDate);
+		logger.debug("endrollStartDate=" + endrollStartDate + ",endrollEndDate=" + endrollEndDate + ",delStartDate=" + delStartDate + ",delEndDate=" + delEndDate);
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();

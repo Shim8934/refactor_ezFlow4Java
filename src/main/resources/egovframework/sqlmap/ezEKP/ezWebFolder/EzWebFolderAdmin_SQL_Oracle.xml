@@ -76,11 +76,7 @@
 		<isEqual property="searchChk" compareValue="1">
 			<isNotEqual property="fileExt" compareValue="" prepend="AND">
 				<![CDATA[
-					(
-							UPPER(l.FILE_EXT) LIKE CONCAT(CONCAT('%', UPPER(#fileExt#)), '%')
-						OR
-							LOWER(l.FILE_EXT) LIKE CONCAT(CONCAT('%', LOWER(#fileExt#)), '%')
-					)
+					(LOWER(l.FILE_EXT) LIKE CONCAT(CONCAT('%', LOWER(#fileExt#)), '%'))
 				]]>
 			</isNotEqual>
 			
