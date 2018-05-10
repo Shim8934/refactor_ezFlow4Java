@@ -175,19 +175,6 @@
 		context.setListAsFavorite(true);
 		window.onresize();
 		
-		// datepicker setup
-		$(".datepicker").datepicker({
-			changeMonth: true,
-			changeYear: true,
-			autoSize: true,
-			showOn: "both",
-			buttonImage: "/images/ImgIcon/calendar-month.gif",
-			buttonImageOnly: true
-		});
-		
-		$(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		$(".datepicker").datepicker('setDate', "");
-		
 		// listoption 다른 곳 클릭시 숨김 처리
 		var listOptionHidden = function(event) {
 			if (dom.listoptiondiv.getAttribute('mode') == "on"
@@ -212,6 +199,52 @@
 			pagination.setListSize(this.value);
 			context.refreshList(true);
 		});
+		
+		// datepicker setup
+		$(".datepicker").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			autoSize: true,
+			showOn: "both",
+			buttonImage: "/images/ImgIcon/calendar-month.gif",
+			buttonImageOnly: true
+		});
+		
+		$(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		$(".datepicker").datepicker('setDate', "");
+		
+		$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
+			closeText: "<spring:message code='main.t3'/>",
+			prevText: "<spring:message code='main.t0604'/>",
+			nextText: "<spring:message code='main.t0605'/>",
+			currentText: "<spring:message code='main.t0606'/>",
+			monthNames: ["<spring:message code='main.t0607'/>", "<spring:message code='main.t0608'/>", "<spring:message code='main.t0609'/>", 
+			             "<spring:message code='main.t0610'/>", "<spring:message code='main.t0611'/>", "<spring:message code='main.t0612'/>",
+			             "<spring:message code='main.t0613'/>", "<spring:message code='main.t0614'/>", "<spring:message code='main.t0615'/>", 
+			             "<spring:message code='main.t0616'/>", "<spring:message code='main.t0617'/>", "<spring:message code='main.t0618'/>"],
+			monthNamesShort: ["<spring:message code='main.t0607'/>", "<spring:message code='main.t0608'/>", "<spring:message code='main.t0609'/>", 
+			                  "<spring:message code='main.t0610'/>", "<spring:message code='main.t0611'/>", "<spring:message code='main.t0612'/>",
+			                  "<spring:message code='main.t0613'/>", "<spring:message code='main.t0614'/>", "<spring:message code='main.t0615'/>", 
+			                  "<spring:message code='main.t0616'/>", "<spring:message code='main.t0617'/>", "<spring:message code='main.t0618'/>"],
+			dayNames: ["<spring:message code='main.t0621'/>", "<spring:message code='main.t0622'/>", "<spring:message code='main.t0623'/>", 
+			           "<spring:message code='main.t0624'/>", "<spring:message code='main.t0625'/>", "<spring:message code='main.t0626'/>",
+			           "<spring:message code='main.t0627'/>"],
+			dayNamesShort: ["<spring:message code='main.t0621'/>", "<spring:message code='main.t0622'/>", "<spring:message code='main.t0623'/>", 
+			                "<spring:message code='main.t0624'/>", "<spring:message code='main.t0625'/>", "<spring:message code='main.t0626'/>", 
+			                "<spring:message code='main.t0627'/>"],
+			dayNamesMin: ["<spring:message code='main.t0621'/>", "<spring:message code='main.t0622'/>", "<spring:message code='main.t0623'/>", 
+			              "<spring:message code='main.t0624'/>", "<spring:message code='main.t0625'/>", "<spring:message code='main.t0626'/>", 
+			              "<spring:message code='main.t0627'/>"],
+			weekHeader: "Wk",
+			dateFormat: "yy-mm-dd",
+			firstDay: 0,
+			isRTL: false,
+			duration: 200,
+			showAnim: "show",
+			showMonthAfterYear: true
+		};
+		
+		$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	});
 	
 	function initDomElement() {
@@ -594,11 +627,6 @@
 		context.setList(folderId, folderType, false);
 	}
 
-	// 날짜 초기화 버튼
-	function clearDatepicker() {
-		$(".datepicker").datepicker('setDate', "");
-	}
-
 	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
 	function search(type) {
 		if (type == "basic") {
@@ -620,12 +648,12 @@
 			}
 			
 			if (requirement.startDate != "" && requirement.endDate == "") {
-				alert(messages.strLang18);
+				alert(messages.strLang21);
 				return;
 			}
 			
 			if (requirement.startDate == "" && requirement.endDate != "") {
-				alert(messages.strLang18);
+				alert(messages.strLang22);
 				return;
 			}
 			
@@ -636,8 +664,8 @@
 			
 			searchContext.search(requirement.startDate, requirement.endDate, requirement.name, requirement.creatorName, requirement.extension);
 		} else if (type == "quick") {
-			if (document.getElementById("txt_keyword").value == "") {
-				alert("<spring:message code='ezWebFolder.t163'/>");
+			if ($("#txt_keyword").val() == "") {
+				alert(messages.strLang20);
 				return;
 			}
 		}
@@ -646,10 +674,8 @@
 	}
 
 	function doLayerPopup(obj) {
-		clearDatepicker();
-		document.getElementById("searchExt").value = "";
-		document.getElementById("searchFileName").value = "";
-		document.getElementById("searchCreateName").value = "";
+		$("#searchExt, #searchFileName, #searchCreateName").val("");
+		$(".datepicker").datepicker('setDate', "");
 		
 		/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 		var leftBody = parent.frames["left"].document.body;
