@@ -207,7 +207,7 @@
 				optImgSearch();
 				addThumbnailEvent();
 				dateTimePickerSetting();
-				stopButtonPosition();
+// 				stopButtonPosition();
 				
 			}
 			
@@ -3308,6 +3308,11 @@
 								</c:choose>
 					  		</ul>
 						</div>
+						<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
+							<div id="stopButtonDiv" class="stopButtonDiv" onclick="finishVote()">
+								<i class="far fa-stop-circle" title="<spring:message code = 'ezPoll.t124'/>"></i>
+							</div>
+						</c:if>	
 					</div>
 					
 					
@@ -3588,11 +3593,11 @@
 				<img id="imgPopup" class="imgPopup">
    			</div>
    		</div>
-   		<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
-   			<div id="stopBtnToggle" class="stopBtnToggle"></div>
-	   		<div id="stopButton" class="stopButton" onclick="finishVote()">
-	   			<i class="far fa-stop-circle" style="margin: 7.5px;" title="<spring:message code = 'ezPoll.t124'/>"></i>
-			</div>
-		</c:if>
+<%--    		<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}"> --%>
+<!--    			<div id="stopBtnToggle" class="stopBtnToggle"></div> -->
+<!-- 	   		<div id="stopButton" class="stopButton" onclick="finishVote()"> -->
+<%-- 	   			<i class="far fa-stop-circle" style="margin: 7.5px;" title="<spring:message code = 'ezPoll.t124'/>"></i> --%>
+<!-- 			</div> -->
+<%-- 		</c:if> --%>
 	</body>
 </html>
