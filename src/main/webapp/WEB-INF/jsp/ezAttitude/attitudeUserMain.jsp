@@ -904,7 +904,7 @@
 							<c:forEach items="${deptList}" var="dept">
 							<c:choose>
 								<c:when test="${dept.mine ne 'yes' }">
-									<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
+									<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
 								</c:when>
 							</c:choose>
 							</c:forEach>

@@ -417,9 +417,9 @@ public class EzAttitudeKMSController {
 			adminFlag = "true";
 			//권한부서 리스트
 			//c , k , wa -> 회사의 모든부서
+			isAllDept = "Y";
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
 			adminFlag = "true";
-			isAllDept = "Y";////////////////////////////////////////////없애도 될듯하다
 			// g -> 자신의 부서 + auth TB 확인해볼것.
 		}
 		
