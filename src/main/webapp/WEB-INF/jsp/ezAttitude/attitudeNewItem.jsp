@@ -281,7 +281,7 @@
 					alert("<spring:message code='ezAttitude.bbhs23'/>");
 					return;
 				}
-				if (outComFlag) {
+				if (outComFlag && selectType == 'A08') {
 					alert("<spring:message code='ezAttitude.bbhs40'/>");
 					return;
 				}

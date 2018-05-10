@@ -620,7 +620,6 @@
 			function sendMail() {
 				$.ajax({
 					type : "POST",
-					dataType : "json",
 					async : true,
 					url : "/ezAttitude/absentedListSendMail.do",
 					data : {
