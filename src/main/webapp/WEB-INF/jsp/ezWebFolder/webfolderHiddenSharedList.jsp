@@ -189,13 +189,14 @@
 					absolutePathColumn = document.createElement("td");
 					shareStatusColumn = document.createElement("td");
 					
-					setStyles([ nameColumn, sizeColumn, creatorColumn, createDateColumn, updateDateColumn, sharerColumn, shareDateColumn, absolutePathColumn ], function(style) {
+					setStyles([nameColumn, sizeColumn, creatorColumn, createDateColumn, updateDateColumn, sharerColumn, shareDateColumn, absolutePathColumn], function(style) {
 						style.overflow = "hidden";
 						style.textOverflow = "ellipsis";
 						style.whiteSpace = "nowrap";
+						style.wordWrap = "normal";
 					});
 					
-					setStyles([ checkboxColumn, favoriteIconColumn, fileIconColumn, sizeColumn, shareStatusColumn ], function(style) {
+					setStyles([checkboxColumn, favoriteIconColumn, fileIconColumn, sizeColumn, shareStatusColumn], function(style) {
 						style.textAlign = "center";
 					})
 					
