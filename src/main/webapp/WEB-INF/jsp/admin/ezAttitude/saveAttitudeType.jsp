@@ -142,7 +142,7 @@
     				<table width="100%">
 			        	<tr class="primary">
 			          		<th><spring:message code='ezAttitude.t41' /></th>
-			          		<td><input id="typeName" type="text" style="width:100%" value="${typeInfo.typeName}"></td>
+			          		<td><input id="typeName" type="text" style="width:100%" value="<c:out value = '${typeInfo.typeName}' />"></td>
 			        	</tr>
 			        	<tr class="secondary">
 			          		<th><spring:message code='ezAttitude.t42' /></th>
