@@ -143,15 +143,10 @@
 	        if (url != "") window.location.href = url;
 	        
 	    	function NewItem_onclick() {
-	            if (UserLevel == "0" || UserLevel == "9") {
-					alert("<spring:message code = 'ezCommunity.t896' />");
+	            if (UserLevel == "0" || UserLevel == "9" || Write_FG != "true") {
+					alert("<spring:message code = 'ezCommunity.t431' />");
 	               	return;
 	           	}
-	            
-	           	if (Write_FG != "true") {
-					alert("<spring:message code = 'ezCommunity.t897' />");
-			        return;
-			    }
 	
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
@@ -166,15 +161,10 @@
 	        }
 	
 			function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
-	            if (UserLevel == "0" || UserLevel == "9") {
-	            	alert("<spring:message code = 'ezCommunity.t899' />");
+	            if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
+	            	alert("<spring:message code = 'ezCommunity.t431' />");
 	                return;
 	           	}
-	
-	           	if (Read_FG != "true") {
-	            	alert("<spring:message code = 'ezCommunity.t423' />");
-				    return;
-				}
 	           	
 	            if (CrossYN()) {
 	                var e = evt.target;
@@ -245,12 +235,7 @@
 					}
 	            }
 	
-	            if (Delete_FG != "true") {
-	                alert("<spring:message code = 'ezCommunity.t901' />");
-				    return;
-				}
-	
-	            if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false && gubun != "2") {
+	            if (Delete_FG != "true" || (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false && gubun != "2")) {
 	                alert("<spring:message code = 'ezCommunity.t431' />");
 				    return;
 				}
@@ -283,7 +268,7 @@
 	                        xmlhttp.open("POST", "aspx/DeleteItem.aspx?ItemList=" + arrList[0] + ";", false);
 	                        xmlhttp.send();
 	                        xmlhttp = null;
-	                        alert('<spring:message code = 'ezCommunity.t204' />');
+	                        alert("<spring:message code = 'ezCommunity.t204' />");
 	                        window.location.reload();
 	                    }
 	                }
@@ -309,7 +294,7 @@
 	                xmlhttp.open("POST", "interASP/DeleteItem.aspx?ItemList=" + arrList[0] + ";", false);
 	                xmlhttp.send();
 	                xmlhttp = null;
-	                alert('<spring:message code = 'ezCommunity.t204' />');
+	                alert("<spring:message code = 'ezCommunity.t204' />");
 	                window.location.reload();
 	            }
 	
@@ -583,20 +568,14 @@
 			}
 	
 			function CopyItem_onclick() {
-			    if (Read_FG != "true") {
-			        alert("<spring:message code = 'ezCommunity.t431' />");
-			        
-				    return;
-				}
-	
-	            if (strListInfo == "") {
-	                alert("<spring:message code = 'ezCommunity.t430' />");
-				    return;
-				}
-	
-	            if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
+	            if (Read_FG != "true" || (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false)) {
 	                alert("<spring:message code = 'ezCommunity.t431' />");
 	                
+				    return;
+				}
+	            
+	            if (strListInfo == "") {
+	                alert("<spring:message code = 'ezCommunity.t430' />");
 				    return;
 				}
 	            
@@ -624,7 +603,7 @@
 	
 	        function SetRead_onclick() {
 	            if (Read_FG != "true") {
-	                alert("<spring:message code = 'ezCommunity.t423' />");
+	                alert("<spring:message code = 'ezCommunity.t431' />");
 	                
 				    return;
 				}
@@ -687,7 +666,7 @@
 	
 			function NewPhotoItem_onclick() {
 			    if (Write_FG != "true") {
-			        alert("<spring:message code = 'ezCommunity.t897' />");
+			        alert("<spring:message code = 'ezCommunity.t431' />");
 			        
 				    return;
 				}
@@ -704,7 +683,7 @@
 	<body class="cmhome_body" style="overflow-x:hidden">
 	
 		<c:if test="${boardInfo.listView_FG != 'true' }">
-			<div style="margin-top: 100px; text-align: center"><spring:message code = 'ezCommunity.t909' /></div>
+			<div style="margin-top: 100px; text-align: center"><spring:message code = 'ezCommunity.t431' /></div>
 			<%
 				if (true) {
 					return;

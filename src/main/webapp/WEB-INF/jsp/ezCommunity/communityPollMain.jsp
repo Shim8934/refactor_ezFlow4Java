@@ -36,7 +36,7 @@
 				managerIDs = "";
 				
 				if (UserLevel == "0" || UserLevel == "9") {
-					alert("<spring:message code='ezCommunity.t1102' />");
+					alert("<spring:message code='ezCommunity.t431' />");
 			     	return;
 				}
 				if ($("input:checkbox:checked").length == 0) {
@@ -64,7 +64,7 @@
 			/* 2018-05-07 홍승비 - 설문추가 권한체크 html 분기(jstl)에서 스크립트 분기로 변경 */
 			function poll_add() {
 				if (UserLevel == "0" || UserLevel == "9") {
-		            alert("<spring:message code='ezCommunity.t1102' />");
+		            alert("<spring:message code='ezCommunity.t431' />");
 		            return;
 		        } else if ("${disable}" == true) {
 		        	alert("<spring:message code = 'ezCommunity.t667' />");
@@ -76,7 +76,7 @@
 
 		    function movepage(code, itemno, pollstate) {
 		        if (UserLevel == "0" || UserLevel == "9") {
-		            alert("<spring:message code='ezCommunity.t1102' />");
+		            alert("<spring:message code='ezCommunity.t431' />");
 		            return;
 		        }
 		        

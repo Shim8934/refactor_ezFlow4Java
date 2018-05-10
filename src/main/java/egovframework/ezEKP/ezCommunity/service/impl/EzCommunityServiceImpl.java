@@ -1425,11 +1425,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					pollDeleteDel3(managerID[i], tenantID);
 				}
 				else {
-					/* 2018-05-07 홍승비 - 커뮤니티 설문조사 삭제권한 없는 경우의 경고창 */
+					/* 2018-05-07 홍승비 - 커뮤니티 설문조사 삭제권한 없는 경우의 경고창 -> do 이전의 jsp로 옮기자. */
 					response.setCharacterEncoding("UTF-8");
 					response.setContentType("text/html; charset=UTF-8");
 					response.getWriter().write("<script language='javascript'>\n");
-					response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezQuestion.t278", userInfo.getLocale()) + "\');\n");
+					response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezCommunity.t431", userInfo.getLocale()) + "\');\n");
 					response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
 					response.getWriter().write("</script>");
 					response.getWriter().flush();
