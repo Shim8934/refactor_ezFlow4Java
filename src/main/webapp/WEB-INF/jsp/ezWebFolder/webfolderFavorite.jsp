@@ -190,7 +190,9 @@
 		
 		// listoption 다른 곳 클릭시 숨김 처리
 		var listOptionHidden = function(event) {
-			if (dom.listoptiondiv.getAttribute('mode') == "on" && !dom.layerViewpopup.contains(event.target)) {
+			if (dom.listoptiondiv.getAttribute('mode') == "on"
+					&& !dom.layerViewpopup.contains(event.target)
+					&& event.target.id !== "webfolderlistoptiondiv") {
 				optionHidden();
 			}
 		};
