@@ -761,10 +761,17 @@
 				var totalRow = listview.GetDataRows().length;
 				
 				/* 사람 수 제한 */
-				/* if(totalRow + userlist.length > RetValue["maxAttendant"]) {
+				if(totalRow + userlist["userId"].length > RetValue["maxAttendant"]) {
 					alert(RetValue["maxAttendant"] + "<spring:message code='ezLadder.t048' />");
-					userlist.splice(RetValue["maxAttendant"] - totalRow);
-				} */
+					var spliceNum = RetValue["maxAttendant"] - totalRow;
+					userlist["userId"].splice(spliceNum);
+					userlist["userName"].splice(spliceNum);
+					userlist["userName2"].splice(spliceNum);
+					userlist["pic"].splice(spliceNum);
+					userlist["temporder"].splice(spliceNum);
+					userlist["userdata"].splice(spliceNum);
+					len = userlist["userId"].length;
+				}
 				
 				for(; i < len; i++) {
 					if(userlist["userdata"][i] === "anony") {
@@ -773,11 +780,6 @@
 					} else {
 						strId = userlist["userId"][i];
 						strpic = userlist["pic"][i];
-						/* if(!userlist["pic"][i]) {
-							strpic = "/images/ezLadder/icon_defaultAttendant.png";
-						} else {
-							strpic = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userlist["pic"][i];
-						} */
 					}
 					strName = userlist["userName"][i];
 					strName2 = userlist["userName2"][i];

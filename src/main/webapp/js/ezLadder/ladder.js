@@ -1,4 +1,4 @@
-var userDiv = 101;
+var userDiv = 100;
 var clickUserOrder = -1;
 var resultOrder = -1;
 var startXPoint = userDiv/2; // 시작 위치 왼쪽부터 떨어진 거리
@@ -6,7 +6,8 @@ var startYPoint = 1; // 시작 위치 위부터 떨어진 거리
 var hInfo = 39 + 6; // 높이 수
 var wInfo = 0; // 멤버 수
 var hSize = 15; // 세로 간격
-var wSize = 150; // 가로 간격
+var wSize; // 가로 간격
+var ladLeftPadding;
 var moveSpeed = 6/*hSize / 10*/; // 애니메이션 속도
 var lad = ""; // 사다리 정보
 var ladArr = []; // 사다리 정보를 배열로 저장
@@ -22,7 +23,7 @@ var colors 	= ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5",
 function changeUser(len) {
 	wInfo = len;
 	
-	$("canvas").attr("width", wInfo * wSize);
+	$("canvas").attr("width", wInfo * wSize + ladLeftPadding);
 	setDefaultLad();
 }
 

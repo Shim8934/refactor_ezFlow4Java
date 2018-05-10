@@ -23,7 +23,8 @@
 			var secretFlag;
 			var ladderType;
 			var lineCnt;
-			var maxAttendant = 50;
+			var marginChangeAttendantNum = 50;
+			var maxAttendant = 70;
 			var maxname = 30;
 			var maxitem = 50;
 		
@@ -210,13 +211,21 @@
 								$("#totalmoney span").text(totalmoneyStr);
 							}
 						}
-					})
+					});
 			});
 			
 			function add_user_change_ulsize(usernum) {
-				$("#ladderLineBox ul").css("width", (usernum * 150) + "px");
-				$("#ladderCanvas").attr("width", (usernum * 150));
-				
+				if(usernum <= marginChangeAttendantNum) {
+					wSize = 150;
+					ladLeftPadding = 0;
+					$("#ladderLineBox li").css("margin-right", "50px");
+				} else{
+					wSize = 110;
+					ladLeftPadding = 40;
+					$("#ladderLineBox li").css("margin-right", "10px");
+				}
+				$("#ladderLineBox ul").css("width", (usernum * wSize) + "px");
+				$("#ladderCanvas").attr("width", (usernum * wSize));
 			}
 			
 			function setLadderTypeDiv() {
@@ -451,7 +460,7 @@
 			var ladder_select_attendant_dialogArguments = [];
 			function manage_attendant_after() {
 				
-				ladder_select_attendant_dialogArguments[0] = {"attend": attendants, "item": items};
+				ladder_select_attendant_dialogArguments[0] = {"attend": attendants, "item": items, "maxAttendant": maxAttendant};
 				ladder_select_attendant_dialogArguments[1] = manage_attendant_complete;
 
 				GetOpenWindow("/ezLadder/setLadderAttendantPopUp.do", "ladder_select_attendant", 970, 680);
@@ -511,8 +520,6 @@
 				setLadderTypeDiv();
 			}
 			
-			
-
 			/** 아이디+이름 검사 (익명인지 아닌지) */
 			var attendants = null;
 			var items = null;
@@ -699,6 +706,10 @@
 					});
 					
 					for(var i = 0, j = 0, k = 0; i < allUserLen() + 1; i++) {
+						if(totalLen >= maxAttendant) {
+							alert(maxAttendant + "<spring:message code='ezLadder.t048' />");
+							break;
+						}
 						if(alluser["temporder"].indexOf(i) != -1) {
 							if(!alluser["userId"][j]) {
 								attendants["id"][totalLen] = "anonyAttendant_" + totalLen;
@@ -739,6 +750,7 @@
 				attendants = { "id": [], "name": [], "name2": [], "pic": [], "order": [] };
 				items = [];
 				
+				var userdataLen = userdata.length;
 				userdata.forEach(function(line, idx) {
 					attendants["id"][idx] = line["userId"];
 					attendants["name"][idx] = line["userName"];
@@ -747,11 +759,6 @@
 					attendants["order"][idx] = idx;
 					items[idx] = line["item"];
 				});
-				/* 사람 수 제한시 */
-				/* if(attendantlen + userdata.length > maxAttendant) {
-					alert(maxAttendant + "<spring:message code='ezLadder.t048' />");
-					userdata.splice(maxAttendant - attendantlen);
-				} */
 				
 				setAttendantsView();
 				setLadderTypeDiv();
@@ -804,9 +811,10 @@
 						$("#tempItemList").append("<li><input type='text' class='input tempItem' readonly='readonly' style='background: rgb(244, 245, 245)' value='?' /></li>");
 						
 						$("#items" + i).val(items[i]);
+						
 					}
 					changeSliderValue();
-					add_user_change_ulsize(attendants["id"].length);
+					add_user_change_ulsize(len);
 					changeUser(len);
 				}
 				

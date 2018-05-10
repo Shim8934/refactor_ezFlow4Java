@@ -42,6 +42,7 @@
 		var id = "${id}";
 		var dragloc = {};
 		var droploc = {};
+		var marginChangeAttendantNum;
 		
 		$(window).unload(function() {
 			if (stompClient !== null) {
@@ -79,9 +80,9 @@
 								}
 								dragloc = {"id": ui.helper[0].id, "beforeLeft": 0, "left": 0, "top": ui.originalPosition.top};
 								if(ui.position.left >= 0) {
-									dragloc.beforeLeft = Math.round(ui.position.left/150);
+									dragloc.beforeLeft = Math.round(ui.position.left/wSize);
 								} else {
-									dragloc.beforeLeft = Math.round(Math.abs(ui.position.left/150)) * -1;
+									dragloc.beforeLeft = Math.round(Math.abs(ui.position.left/wSize)) * -1;
 								}
 							}
 						})
@@ -91,12 +92,12 @@
 							drop: function(event, ui) {
 								droploc = {"id": $(this).attr("id"), "left": 0};
 								
-								var _thisleft = Math.round($(this).css("left").split("px")[0]/150);
+								var _thisleft = Math.round($(this).css("left").split("px")[0]/wSize);
 								
 								if(ui.position.left >= 0) {
-									dragloc.left = Math.round(ui.position.left/150);
+									dragloc.left = Math.round(ui.position.left/wSize);
 								} else {
-									dragloc.left = Math.round(Math.abs(ui.position.left/150)) * -1;
+									dragloc.left = Math.round(Math.abs(ui.position.left/wSize)) * -1;
 								}
 								
 								var moveValue = dragloc.left - dragloc.beforeLeft;
@@ -194,12 +195,27 @@
 		
 		function ladder_window_resize() {
 			var $setTable = $(".setTable");
-			var $lineBox = $setTable.find("#ladderLineBox");
+			var $lineBox = $("#ladderLineBox");
 			var $startButton = $setTable.find("#startButton");
+			var attendantsLen = _ladderLine.length;
+			
+			var line_width;
+			if(attendantsLen <= marginChangeAttendantNum) {
+				wSize = 150;
+				ladLeftPadding = 0;
+				line_width = _ladderLine.length * wSize;
+				$lineBox.find("ul").css("width", attendantsLen * wSize + "px");
+				$lineBox.find("li").css("margin-right", wSize - userDiv + "px");
+			} else {
+				wSize = 110;
+				ladLeftPadding = 40;
+				line_width = _ladderLine.length * wSize + 40;
+				$lineBox.find("ul").css("width", attendantsLen * wSize + "px");
+				$lineBox.find("li").css("margin-right", wSize - userDiv + "px");
+			}
 			
 			var doc_widthPadding = Number($lineBox.css("padding-left").replace("px", ""));
 			var doc_width = document.body.clientWidth - doc_widthPadding;
-			var line_width = _ladderLine.length * 150;
 			
 			$lineBox.css("width", doc_width);
 			$setTable.find("#blackBox").css("width", ((line_width > doc_width ? line_width : doc_width) + doc_widthPadding) + "px");
@@ -231,15 +247,15 @@
 			sort = "<c:out value='${sort}' />";
 			sortFlag = "<c:out value='${sortFlag}' />";
 			
+			marginChangeAttendantNum = 50;
 			
-			$("#ladderLineBox").find("ul").css("width", _ladderLine.lenth * wSize + "px");
 			ladder_window_resize();
 			canvasSetting();
 		}
 		
 		function afterDrag() {
-			$("#" + dragloc.id).css("z-index", "10").animate({"left": originalPosition_left + dragloc.left * 150, "top": dragloc.top}, 400);
-			$("#" + droploc.id).css("z-index", "10").animate({"left": originalPosition_left + droploc.left * 150}, 400);
+			$("#" + dragloc.id).css("z-index", "10").animate({"left": originalPosition_left + dragloc.left * wSize, "top": dragloc.top}, 400);
+			$("#" + droploc.id).css("z-index", "10").animate({"left": originalPosition_left + droploc.left * wSize}, 400);
 		}
 		
 		/** 참여자 위치 바꾸기 */
@@ -387,7 +403,7 @@
 			}
 			
 			if(type.substring(0, 3) == "ani" || type.substring(3, 6) == "one") {
-				var scrollval = (resultOrder * 150 - $("#ladderLineBox").width()/2) + 75;
+				var scrollval = (resultOrder * wSize - $("#ladderLineBox").width()/2) + wSize/2;
 				$("#ladderLineBox").animate({"scrollLeft": scrollval}, 400);
 			} else {
 				$(".resultItem").css({"background": "#ffffff"});
@@ -461,7 +477,7 @@
 					var html = '';
 					_ladderLine.forEach(function(line, index) {
 						var picsrc = !line.pic ? "/images/ezLadder/icon_defaultAttendant.png" : "/admin/ezOrgan/getPersonalInfo.do?fileName=" + line.pic;
-						html += '<li><div id="drag' + index + '" class="userInfo" ondragstart="return false;" style="cursor: pointer;">';
+						html += '<li style="margin-right: ' + (wSize - userDiv) + 'px"><div id="drag' + index + '" class="userInfo" ondragstart="return false;" style="cursor: pointer;">';
 						if(!line.pic) {
 							html += '<span class="userPicWraper_d"><img src="/images/ezLadder/icon_defaultAttendant.png" class="userInfo" width="48px" height="48px" style="display: block;" /></span>';
 						} else {
@@ -838,7 +854,7 @@
 							</div>
 							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px; padding-top: 30px; padding-bottom: 20px; border-top:0px">
 								<div style="height: 100px;">
-									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
+									<ul id="attendantList">
 										<c:forEach var="line" items="${list}" varStatus="status">
 											<li _attendantIndex="${status.index}">
 												<div class="ladderDrag" id="drag${status.index}" style="cursor: pointer; left: 0px; border-radius: 5px;">
@@ -871,7 +887,7 @@
 									<canvas id='ladderCanvasLine' width='0' height='400'></canvas>
 									<canvas id='ladderCanvas' width='0' height='400'></canvas>
 								</div>
-								<ul id="itemList" style="margin-top: 16px; width: ${fn:length(list) * 150}px; height: 50px;">
+								<ul id="itemList" style="margin-top: 16px; height: 50px;">
 									<c:forEach var="line" items="${list}">
 										<li>
 											<div title="${line.item}" class="resultItem" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
@@ -886,7 +902,7 @@
 						<c:if test="${vo.status eq 1}">
 							<div id="ladderLineBox" style="border: 1px solid #ddd; background: #FFF; min-width: 750px; padding-top: 20px; border-top:0px">
 								<div style="height: 100px; margin-top:10px; margin-bottom: 20px;">
-									<ul id="attendantList" style="width: ${fn:length(list) * 150}px;">
+									<ul id="attendantList">
 										<c:forEach var="line" items="${list}" varStatus="status">
 											<li>
 												<div id="drag${status.index}" class="userInfo" ondragstart="return false;" style="cursor: pointer;position: relative;">
@@ -913,7 +929,7 @@
 									<canvas id='ladderCanvasLine' width='0' height='675'></canvas>
 									<canvas id='ladderCanvas' width='0' height='675'></canvas>
 								</div>
-								<ul id="itemList" style="margin-top: 14px; width: ${fn:length(list) * 150}px; height: 50px;">
+								<ul id="itemList" style="margin-top: 14px; height: 50px;">
 									<c:forEach var="line" items="${list}">
 										<li>
 											<div title="${line.item}" class="resultItem" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">

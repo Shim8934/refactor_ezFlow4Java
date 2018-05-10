@@ -506,7 +506,7 @@
 		        } else {
 		        	window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
 		        }
-	            SetTreeviewUnSelect("");		            
+	            SetTreeviewUnSelect("");
 			}
 
 		    function toggleQuestionList() {
@@ -683,10 +683,10 @@
 	            <%-- <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
 	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li> --%>	            
 	        </ul>
-	        <div class="ladder" onclick="ladder_Func(1)">
-	        	<h2><span><spring:message code="ezBoard.l001" /></span></h2>
-	        </div>
-	        <ul></ul>
+			<div class="ladder" onclick="ladder_Func(1)">
+				<h2><span><spring:message code="ezBoard.l001" /></span></h2>
+			</div>
+			<ul></ul>
 	        <h3>
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 	    </h3>
