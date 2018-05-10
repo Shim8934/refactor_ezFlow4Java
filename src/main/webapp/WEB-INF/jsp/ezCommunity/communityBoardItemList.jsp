@@ -178,13 +178,8 @@
     		}
     		
     		function NewItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
-				    alert("<spring:message code='ezCommunity.t896' />");
-				    return;
-				}
-    			    
-				if (Write_FG != "true") {
-				    alert("<spring:message code='ezCommunity.t897' />");
+    			if (UserLevel == "0" || UserLevel == "9" || Write_FG != "true") {
+				    alert("<spring:message code='ezCommunity.t431' />");
 				    return;
 				}
 				
@@ -198,13 +193,8 @@
 			}
     		 
     		function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
-   				if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t899' />");
-    				return;
-    			}
-    				
-    			if(Read_FG != "true") {
-    				alert("<spring:message code='ezCommunity.t423' />");
+   				if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
 
@@ -248,8 +238,8 @@
     		var checkpassword_dialogArguments = new Array();
     		
     		function DeleteItem_onclick() {	
-    			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t900' />");
+    			if (UserLevel == "0" || UserLevel == "9" || Delete_FG != "true") {
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					
@@ -265,11 +255,6 @@
     					alert("<spring:message code='ezCommunity.lhj01' />");
     					return;
     				}
-    			}
-
-    			if(Delete_FG != "true") {
-    				alert("<spring:message code='ezCommunity.t901' />");
-    				return;
     			}
     			
     			if (CheckIfHasReplies()) {
@@ -308,7 +293,7 @@
     		
     		function DeleteItem_onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined") {
-		            alert("<spring:message code='ezCommunity.t901' />");
+		            alert("<spring:message code='ezCommunity.t431' />");
 		            return;
 		        }
 
@@ -572,8 +557,8 @@
     		}
 
     		function CopyItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t905' />");
+    			if (UserLevel == "0" || UserLevel == "9" || (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false)) {
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					
@@ -581,12 +566,7 @@
     				alert("<spring:message code='ezCommunity.t430' />");
     				return;
     			}
-    			
-    			if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
-    				alert("<spring:message code='ezCommunity.t431' />");
-    				return;
-    			}
-    			
+
     			var arrList = new Array();
     			var strItemList = "";
     			var i=0;
@@ -612,13 +592,8 @@
     		}
     		
     		function SetRead_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t899' />");
-    				return;
-    			}
-    					
-    			if(Read_FG != "true") {
-    				alert("<spring:message code='ezCommunity.t423' />");
+    			if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
 
@@ -658,7 +633,7 @@
 
     		function MemberInfo_onclick(pUserID) {
     			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t906' />");
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					
@@ -672,7 +647,7 @@
 
     		function ReservationItem_onclick() {
     			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t907' />");
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     			
@@ -686,7 +661,7 @@
 
     		function search_onclick() {
     			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t908' />");
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					

@@ -20360,9 +20360,9 @@
    <insert id="EzApprovalG.insertGongRamExpAprDocInfo" parameterClass="Map">
    		    INSERT INTO 
    		    	TBL_EXPAPRDOCINFO 
-   		    (         DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, PUBLICITYYN) 
+   		    (         DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
    		    (SELECT 
-   		    	#v_GONGRAMDOCID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, PUBLICITYYN 
+   		    	#v_GONGRAMDOCID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
    		     FROM 
    		     	TBL_EXPENDAPRDOCINFO 
              WHERE 

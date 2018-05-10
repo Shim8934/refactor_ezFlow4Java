@@ -1593,16 +1593,16 @@
 				<td>
 	        		<table id="TreeViewTD">
 	                	<tr>
-	                		<div class="portlet_tabpart01">
-	        					<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
+	                		<div class="portlet_tabpart01" style="margin-top: 25px; margin-bottom: 2px;">
+	        					<div class="portlet_tabpart01_top" id="tab1" style="width:664px;">
 					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezCircular.t41' /></span></p>
 									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezCircular.t12' /></span></p>
 						        </div>
 						    </div>
 	                    	<td id="circularOrgan_content" style="display:none;">
 	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 1px; padding:0px; border-top: 0px;">
-	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
-	                                    <table style="margin-top: 3px; width: 100%;">
+	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea; height:30px;">
+	                                    <table style="margin-top: 5px; width: 100%;">
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
@@ -1724,11 +1724,11 @@
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:4px;">
+	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:4px;position: absolute;top: 56px;width: 237px;">
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezCircular.t34'/></span>
 	                            </h2>
-	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 506px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                            <div class="receiver_borderbox" style="border-top: 1px solid #ddd;">
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 539px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>

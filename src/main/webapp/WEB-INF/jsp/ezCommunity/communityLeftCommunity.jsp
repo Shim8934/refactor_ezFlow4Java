@@ -327,7 +327,7 @@
 	                    	window.open("/ezCommunity/commHome/poll/pollMain.do?code=" + code + "&userLevel=" + UserLevel, "right");
 	                        break;
 	                    case "btn_MemberInfo": 
-	                    	alert("<spring:message code='ezCommunity.t1102' />");
+	                    	alert("<spring:message code='ezCommunity.t431' />");
 	                		break;
 			            case "btn_MemberOut": 
 			            	alert("<spring:message code='ezCommunity.t1102' />");

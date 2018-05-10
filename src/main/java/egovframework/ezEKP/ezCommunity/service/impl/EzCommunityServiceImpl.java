@@ -1425,11 +1425,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					pollDeleteDel3(managerID[i], tenantID);
 				}
 				else {
-					/* 2018-05-07 홍승비 - 커뮤니티 설문조사 삭제권한 없는 경우의 경고창 */
+					/* 2018-05-07 홍승비 - 커뮤니티 설문조사 삭제권한 없는 경우의 경고창 -> do 이전의 jsp로 옮기자. */
 					response.setCharacterEncoding("UTF-8");
 					response.setContentType("text/html; charset=UTF-8");
 					response.getWriter().write("<script language='javascript'>\n");
-					response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezQuestion.t278", userInfo.getLocale()) + "\');\n");
+					response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezCommunity.t431", userInfo.getLocale()) + "\');\n");
 					response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
 					response.getWriter().write("</script>");
 					response.getWriter().flush();
@@ -1453,7 +1453,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("pollRes started.");
 		
 		int isSave = 0;
-		double responseCount = 0;
+		int responseCount = 0;
 		int tenantID = userInfo.getTenantId();
 		
 		logger.debug("pollResGet2, pollResGet3 started.");
@@ -1510,25 +1510,29 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						sb.append("></td>");
 						sb.append("<td class=\"t2\">" + commonUtil.cleanValue(answerVO.getAnswerContent()) + "</td>");
 						
+						/* 2018-05-09 홍승비 - 커뮤니티 설문조사 이미지 대신 색깔 그래프로 표현 */
 						responseCount = pollResGetCount(questionVO.getQuestionID(), answerVO.getAnswerID(), tenantID);
 						int percent = 0;
+						int percentRev = 0;
 						
 						if (allResponseCount != 0) {
 							percent =  (int) ((double) responseCount / allResponseCount * 100);
 						}
+						
+						percentRev = 100 - percent;
 
 						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + responseCount + "/" + allResponseCount + "]</td>");
 						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + percent + "%]</td>");
 						sb.append("<td class=\"t2\" align=\"left\" width=\"180\">");
-						sb.append("<img src=\"/images/question_bar.gif\" width=\"" + percent + "\" height=\"");
+						sb.append("<div class=\"graphback\">");
+						sb.append("<p class=\"graphbar\"");
 						
 						if (percent == 0) {
-							sb.append("0");
+							sb.append("style=\"margin-right:" + percentRev + "%; border-left:0;border-right:0;\"></p></div></td>");
 						} else {
-							sb.append("10");
+							sb.append("style=\"margin-right:" + percentRev + "%;\"></p></div></td>");
 						}
-						
-						sb.append("\" alt=\"" + percent + "%\" border=\"0\"></td>");
+
 						sb.append("</tr>");
 
 						break;
@@ -1560,18 +1564,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                             percent = 0;
                         }
 						
+						percentRev = 100 - percent;
+
 						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + responseCount + "/" + allResponseCount + "]</td>");
 						sb.append("<td class=\"t2\" align=\"center\" width=\"60\">[" + percent + "%]</td>");
 						sb.append("<td class=\"t2\" align=\"left\" width=\"180\">");
-						sb.append("<img src=\"/images/question_bar.gif\" width=\"" + percent + "\" height=\"");
+						sb.append("<div class=\"graphback\">");
+						sb.append("<p class=\"graphbar\"");
 						
 						if (percent == 0) {
-                            sb.append("0");
+                            sb.append("style=\"margin-right:" + percentRev + "%;border-left:0;border-right:0;\"></p></div></td></tr>");
                         } else {
-                        	sb.append("10");
+                        	sb.append("style=\"margin-right:" + percentRev + "%;\"></p></div></td></tr>");
                         }
-						
-						sb.append("\" alt=\"" + percent + "%\" border=\"0\"></td></tr>");
 						
 						break;
 					case 3 :

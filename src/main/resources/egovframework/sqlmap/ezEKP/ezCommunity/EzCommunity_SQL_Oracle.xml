@@ -1397,7 +1397,7 @@
 				AND
 					tenant_id = #tenantID#
 				ORDER BY
-					c_visited DESC
+					c_indate
 			]]>
 		</isEqual>
 		
@@ -1421,7 +1421,7 @@
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
 					ORDER BY
-						TBL_C_CLUBUSER.c_visited DESC
+						TBL_C_CLUBUSER.c_indate
 				]]>
 			</isEqual>
 			
@@ -1438,7 +1438,7 @@
 					AND
 						tenant_id = #tenantID#
 					ORDER BY
-						c_visited DESC
+						c_indate
 				]]>
 			</isNotEqual>
 		</isNotEqual>

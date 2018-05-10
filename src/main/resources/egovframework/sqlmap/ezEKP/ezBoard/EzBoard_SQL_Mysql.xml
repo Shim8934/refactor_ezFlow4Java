@@ -4587,6 +4587,19 @@
 			   						ITEMID = #itemID# )
 	  	]]>
   </select>
-	
+  
+  <update id="EzBoardDAO.updateMoveOneLineReply" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_ONELINEREPLY
+			SET 
+				BOARDID = #destBoardID#,
+	            ITEMID = #destItemID#
+	        WHERE
+	        	BOARDID = #orgBoardID#
+	        AND
+	        	ITEMID = #orgItemID#
+		]]>
+  </update>
+  	
 </sqlMap>
 
