@@ -15,6 +15,7 @@
 			var code = "<c:out value = '${code}' />";
 // 		var ch_CommunityAdmin = "${chCommunityAdmin}";
 		    var UserLevel = "<c:out value ='${userLevel}' />";
+		    var userID = "<c:out value ='${userInfo.id}' />";
 		    
 		    window.onload = function () {
 				$("#tblList").html($("#tblList").html() + '${strXML}');
@@ -31,26 +32,38 @@
 			/* 2018-05-07 홍승비 - 체크박스를 사용하는 상단 삭제 버튼 기능 추가 */
 			var pClubNo = "";
 			var managerIDs = "";
+			var delOK = "";
 			function poll_BeforeDelete () {
 				pClubNo = "";
 				managerIDs = "";
+				delOK = "";
 				
-				if (UserLevel == "0" || UserLevel == "9") {
-					alert("<spring:message code='ezCommunity.t431' />");
-			     	return;
-				}
 				if ($("input:checkbox:checked").length == 0) {
 					alert("<spring:message code='ezQuestion.t161' />");
 					return;
 				}
+				if (UserLevel == "0" || UserLevel == "9") {
+					alert("<spring:message code='ezCommunity.t431' />");
+			     	return;
+				}
 				else {
 					$("input:checkbox:checked[id != 'checkBoxHeader']").each(function () {
+						/* 2018-05-10 삭제 권한 확인 .do에서 jsp로 옮김 */
+						if (UserLevel != "4" && $(this).attr("pollRegID") != userID) {
+							delOK = "no";
+							alert("<spring:message code='ezCommunity.t431' />");
+					     	return false;
+						}
+
 						if (pClubNo == "") {
 							pClubNo = $(this).attr("clubNo");
-						}					
+						}
 						managerIDs += $(this).attr("id");
 					});
-					poll_Delete(pClubNo, managerIDs);
+					
+					if (delOK != "no") {
+						poll_Delete(pClubNo, managerIDs);
+					}
 				}
 			}
 
@@ -78,13 +91,12 @@
 		        if (UserLevel == "0" || UserLevel == "9") {
 		            alert("<spring:message code='ezCommunity.t431' />");
 		            return;
-		        }
-		        
+		        } 
 		        window.location.href = "/ezCommunity/pollRes.do?code=" + code + "&pollManagerID=" + itemno + "&pollState=" + pollstate;
 		    }
 		    
 		    function checkAll(obj) {
-		    	if(obj.checked) {
+		    	if (obj.checked) {
 		    		$("input:checkbox").prop("checked", true);
 		    	} else {
 		    		$("input:checkbox").prop("checked", false);
