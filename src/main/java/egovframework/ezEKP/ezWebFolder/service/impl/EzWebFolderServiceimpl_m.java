@@ -759,15 +759,15 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject getTrashCanList(String realColmn, String order, String userId, String offset, int tenantId, int currPage, int pEnd, 
-			String searchExt, String searchFileName, String searchCreateName,String searchFileType, String endrollStartDate, String endrollEndDate,
+			String searchExt, String searchFileName, String searchCreateName,String searchFileType, String enrollStartDate, String enrollEndDate,
 			String delStartDate, String delEndDate, String mode) throws Exception {
 		int totalRows  = 0;
 		int totalPages = 0;
 		int pStart 	   = 0;
 		
-		if (!endrollStartDate.equals("") && !endrollEndDate.equals("")) {
-			endrollStartDate = commonUtil.getDateStringInUTC(endrollStartDate + " 00:00:00", offset, true);
-			endrollEndDate   = commonUtil.getDateStringInUTC(endrollEndDate + " 23:59:59", offset, true);
+		if (!enrollStartDate.equals("") && !enrollEndDate.equals("")) {
+			enrollStartDate = commonUtil.getDateStringInUTC(enrollStartDate + " 00:00:00", offset, true);
+			enrollEndDate   = commonUtil.getDateStringInUTC(enrollEndDate + " 23:59:59", offset, true);
 		}
 		
 		if (!delStartDate.equals("") && !delEndDate.equals("")) {
@@ -783,8 +783,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("searchFileName", searchFileName);
 		map.put("searchCreateName", searchCreateName);
 		map.put("searchFileType", searchFileType);
-		map.put("endrollStartDate", endrollStartDate);
-		map.put("endrollEndDate", endrollEndDate);
+		map.put("endrollStartDate", enrollStartDate);
+		map.put("endrollEndDate", enrollEndDate);
 		map.put("delStartDate", delStartDate);
 		map.put("delEndDate", delEndDate);
 		map.put("realColmn", realColmn);

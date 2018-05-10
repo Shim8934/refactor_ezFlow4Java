@@ -1029,8 +1029,8 @@ public class EzWebFolderGWController_m {
 		String searchFileName 	= orElse(request.getParameter("searchFileName"), "");
 		String searchCreateName = orElse(request.getParameter("searchCreateName"), "");
 		String searchFileType   = orElse(request.getParameter("searchFileType"), "");
-		String endrollStartDate = orElse(request.getParameter("enrollStartDate"), "");
-		String endrollEndDate 	= orElse(request.getParameter("enrollEndDate"), "");
+		String enrollStartDate = orElse(request.getParameter("enrollStartDate"), "");
+		String enrollEndDate 	= orElse(request.getParameter("enrollEndDate"), "");
 		String delStartDate 	= orElse(request.getParameter("delStartDate"), "");
 		String delEndDate 		= orElse(request.getParameter("delEndDate"), "");
 		String column           = orElse(request.getParameter("column"), "");
@@ -1052,7 +1052,7 @@ public class EzWebFolderGWController_m {
 		logger.debug("currPage=" + currPage);
 		logger.debug("listCount=" + listCount);
 		logger.debug("searchExt=" + searchExt + ",searchFileName=" + searchFileName + ",searchCreateName=" + searchCreateName + ",searchFileType=" + searchFileType);
-		logger.debug("endrollStartDate=" + endrollStartDate + ",endrollEndDate=" + endrollEndDate + ",delStartDate=" + delStartDate + ",delEndDate=" + delEndDate);
+		logger.debug("enrollStartDate=" + enrollStartDate + ",enrollEndDate=" + enrollEndDate + ",delStartDate=" + delStartDate + ",delEndDate=" + delEndDate);
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -1081,7 +1081,7 @@ public class EzWebFolderGWController_m {
 		try {
 			List<TrashCanVO> trashCanList = null;
 			JSONObject resultList = ezWebFolderService_m.getTrashCanList(realColmn, order.toUpperCase(), userId, offset, tenantId, currPage, listCount,
-										searchExt, searchFileName, searchCreateName, searchFileType, endrollStartDate, endrollEndDate, delStartDate, delEndDate, mode);
+										searchExt, searchFileName, searchCreateName, searchFileType, enrollStartDate, enrollEndDate, delStartDate, delEndDate, mode);
 			int fileCnt = 0;
 			int folderCnt = 0;
 			int totalCount = 0;
