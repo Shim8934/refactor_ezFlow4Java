@@ -309,7 +309,7 @@ public class EzAttitudeKMSController {
 		
 		JSONObject data = new JSONObject();
 		JSONArray list = new JSONArray();
-		
+		String isAllDept = "";
 		if(status.equals("ok")){
 			totalAtt = Integer.parseInt(resultBody.get("data").toString());
 		}
@@ -419,7 +419,7 @@ public class EzAttitudeKMSController {
 			//c , k , wa -> 회사의 모든부서
 		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
 			adminFlag = "true";
-			isGAdmin = "Y";////////////////////////////////////////////없애도 될듯하다
+			isAllDept = "Y";////////////////////////////////////////////없애도 될듯하다
 			// g -> 자신의 부서 + auth TB 확인해볼것.
 		}
 		
@@ -434,7 +434,7 @@ public class EzAttitudeKMSController {
 		builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", userInfo.getCompanyID())
 				.queryParam("userId", userInfo.getId())
-				.queryParam("isGAdmin", isGAdmin);
+				.queryParam("isAllDept", isAllDept);
 		
 		rest = new RestTemplate();
 		
@@ -451,7 +451,7 @@ public class EzAttitudeKMSController {
 		if(status.equals("ok")){
 			deptList = (JSONArray) resultBody.get("data");
 		}
-		
+		LOGGER.debug("!@#@#%!@%(*!#%*#!%*Q : " + deptList.size());
 		model.addAttribute("selectedDeptID", deptid);
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userTimeSet", offset);
@@ -1238,6 +1238,10 @@ public class EzAttitudeKMSController {
 		
 		if(status.equals("ok")){
 			deptList = (JSONArray) resultBody.get("data");
+		}
+		
+		if (deptList.size() > 1) {
+			adminFlag = "true";
 		}
 		
 		model.addAttribute("deptList", deptList);
