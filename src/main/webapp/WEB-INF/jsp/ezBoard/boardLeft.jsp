@@ -669,13 +669,13 @@
 	            	</c:if>
 	        	</ul> --%>
 		    </c:if>
-		    <c:if test="${applyFlag == 'OK'}">
+		  <%--   <c:if test="${applyFlag == 'OK'}">
 	            <div class="ApprDiv" onclick="Apprboard()">
 			        <h2>
 			            <span><spring:message code="ezBoard.t999001" /> <span id="applyCount">(${applyCount})</span></span>
 			        </h2>
 	            </div>
-		    </c:if>
+		    </c:if> --%>
 		    <div class="pollDiv" onclick="Poll_Open(1)" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
 	        	<h2><span><spring:message code="ezBoard.t371" /></span></h2>
 	        </div>
@@ -688,8 +688,13 @@
 			</div>
 			<ul></ul>
 	        <h3>
-	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
-	    </h3>
+		        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
+		    </h3>
+		    <c:if test="${applyFlag == 'OK'}">
+		    	<h3 style="border-top:0px">
+			        <span onclick="Apprboard()"><spring:message code="ezBoard.t999001" /> <span id="applyCount">(${applyCount})</span></span>
+			    </h3>	
+		    </c:if>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

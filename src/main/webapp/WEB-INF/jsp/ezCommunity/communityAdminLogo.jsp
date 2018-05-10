@@ -83,15 +83,6 @@
 		            image.reset();
 		            parent.parent.window.close();
 		        }
-		        
-				function pre_onclick() {
-				    if (image.logo.value != "") {
-				        if (window.parent.parent.opener != null) {
-				            window.parent.parent.opener.coplogo.src = image.logo.value;
-				            window.parent.parent.opener.coplogo.style.visibility = "visible";
-				        }
-				    }
-				}
 				
 				function go() {
 					image.submit();
@@ -220,6 +211,11 @@
 		            }
 		            
 		            document.getElementById("Type").value = checkValue;
+		            
+		            /* 2018-05-10 홍승비 - 디폴트 로고인 경우 타입에 맞추어 로고 변경하도록 수정 */
+		            if (document.getElementById("logoprev").src.indexOf("default_logo_") > -1 ) {
+		            	document.getElementById("default").value = "default_logo_" + checkValue + ".jpg";	
+		            }	            
 		        }
 		        
 		        function btn_AttachSelect_onclick() {
@@ -238,7 +234,7 @@
     	<form enctype="multipart/form-data" method="post" name="image" action="/ezCommunity/adminLogoOk.do">
 	        <input type="hidden" name="code" id="code" value="<c:out value = '${code}' />">
 	        <input type="hidden" name="type" id="Type" value="">
-	        <input type="hidden" name="imageSrc" id="imageSrc" value="">
+	        <input type="hidden" name="default" id="default" value="">
 	        <table class="content" style="margin-top:5px">
 	            <tr>
 	                <th style="line-height:16px; padding-top:3px; text-align:center;"><spring:message code='ezCommunity.jjh03' /><br>(894 * 100)<%-- <spring:message code = 'ezCommunity.t1529' /><spring:message code = 'ezCommunity.t498' /> --%></th>
@@ -297,7 +293,6 @@
 	    	</table>
 	 	   <br/><br/><br/>
 	    	<div class="btnposition btnpositionNew">
-	    		<a class="imgbtn" name="Submit" onclick="pre_onclick()" style="display: none"><span><spring:message code = 'ezCommunity.t502' /></span></a>
 	        	<a class="imgbtn" name="Submit2" onclick="go()"><span><spring:message code = 'ezCommunity.t20' /></span></a>
 	        	<a class="imgbtn" name="Submit3" onclick="cancle_onclick()"><span><spring:message code = 'ezCommunity.t109' /></span></a>
 	        	<a class="imgbtn" name="Submit4" onclick="close_onclick()"><span><spring:message code = 'ezCommunity.t21' /></span></a>

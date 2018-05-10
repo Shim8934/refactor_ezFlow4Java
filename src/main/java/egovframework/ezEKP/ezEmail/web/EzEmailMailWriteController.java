@@ -573,7 +573,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		if (orgMessage.isMimeType("multipart/related")) {
 			        		MimeMultipart relatedPart = new MimeMultipart("related");
 			        		
-			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, false)) {
 			        			resendMessage.setContent(relatedPart);
 			        		}	        			
 			        		else {
@@ -703,7 +703,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        			if (orgMessage.isMimeType("multipart/related")) {
 				        		MimeMultipart relatedPart = new MimeMultipart("related");
 				        		
-				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, true)) {
 				        			replyMessage.setContent(relatedPart);
 				        		}	        			
 				        		else {
@@ -724,7 +724,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		else {
 			        		MimeMultipart relatedPart = new MimeMultipart("related");
 			        		
-			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, false)) {
 			        			replyMessage.setContent(relatedPart);
 			        		}
 			        		else {
@@ -3215,6 +3215,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								int count = mp.getCount();
 								BodyPart p = null;
 								boolean hasAttach = false;
+								boolean hasInlineImage = false;
+								boolean hasRelated = false;
 								
 								// Multipart의 각 Part별 처리를 수행한다.
 								for (int i = 0; i < count; i++) {
@@ -3226,6 +3228,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								    logger.debug("Part is multipart/related");
 	    								    
 	    									hasAttach = true;
+	    									hasRelated = true;
 	    									
 	    									logger.debug("relatedPart=" + relatedPart);
 	    									
@@ -3309,6 +3312,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								    if (!contentIdSet.contains(contentId)) {
 	    								        logger.debug("Adding ContentId=" + contentId);
 	    								        
+	    								        hasInlineImage = true;
 	    								        mixedPart.addBodyPart(p);
 	    								    }
 	    								}
@@ -3335,6 +3339,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								}							
 	    								
 	    								break;
+									}
+								}
+								
+								// multipart/related 안에 첨부파일이 들어 있는 메일이 코린도에서 수신되어
+								// 해당 메일이 인라인 이미지도 포함한 경우의 처리를 위해 추가함
+								if (oldMessage.isMimeType("multipart/related")) {
+									logger.debug("hasAttach=" + hasAttach + ",hasRelated=" + hasRelated
+													+ ",hasInlineImage=" + hasInlineImage);
+									
+									if (hasAttach && !hasRelated && hasInlineImage) {
+										hasAttach = false;
 									}
 								}
 								
