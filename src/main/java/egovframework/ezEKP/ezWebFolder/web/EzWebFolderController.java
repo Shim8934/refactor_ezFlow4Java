@@ -283,44 +283,46 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
 		
-		if (!checkAdminPermmision.get("status").toString().equals("ok")){
-			JSONObject checkPermission = checkPermission(request, user.getId(), listFileId, listFolderId);
-			
-			if (!"error".equals(checkPermission.get("status"))) {
-				UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
-						.queryParam("offset", user.getOffset())
-						.queryParam("userId", user.getId())
-						.queryParam("lang", user.getLang())
-						.queryParam("folderList", listFolderId)
-						.queryParam("fileList", listFileId);
-				
-				RestTemplate rest               = new RestTemplate();
-				//RequestCallback requestCallback = req -> req.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
-				RequestCallback requestCallback = new RequestCallback() {
-					@Override
-					public void doWithRequest(ClientHttpRequest req) throws IOException {
-						req.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
-						req.getHeaders().set("host-name", request.getServerName());
-					}
-				};
-				
-				// Streams the response instead of loading it all in memory
-				ResponseExtractor<Void> responseExtractor = res -> {
-					response.setHeader("Content-Type", "application/zip");
-					response.setHeader("Content-Disposition", res.getHeaders().get("Content-Disposition").get(0));
-					
-					IOUtils.copy(res.getBody(), response.getOutputStream());
-					
-					response.getOutputStream().flush();
-					response.getOutputStream().close();
-					
-					return null;
-				};
-				
-				rest.execute(builder.build().encode().toUri(), HttpMethod.GET, requestCallback, responseExtractor);
-			}
+		JSONObject checkPermission = null;
+		
+		if (!checkAdminPermmision.get("status").toString().equals("ok")) {
+			checkPermission = checkPermission(request, user.getId(), listFileId, listFolderId);
 		}
 		
+		if (checkAdminPermmision.get("status").toString().equals("ok") || !"error".equals(checkPermission.get("status"))){
+			UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("offset", user.getOffset())
+					.queryParam("userId", user.getId())
+					.queryParam("lang", user.getLang())
+					.queryParam("folderList", listFolderId)
+					.queryParam("fileList", listFileId);
+			
+			RestTemplate rest               = new RestTemplate();
+			//RequestCallback requestCallback = req -> req.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
+			RequestCallback requestCallback = new RequestCallback() {
+				@Override
+				public void doWithRequest(ClientHttpRequest req) throws IOException {
+					req.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
+					req.getHeaders().set("host-name", request.getServerName());
+				}
+			};
+			
+			// Streams the response instead of loading it all in memory
+			ResponseExtractor<Void> responseExtractor = res -> {
+				response.setHeader("Content-Type", "application/zip");
+				response.setHeader("Content-Disposition", res.getHeaders().get("Content-Disposition").get(0));
+				
+				IOUtils.copy(res.getBody(), response.getOutputStream());
+				
+				response.getOutputStream().flush();
+				response.getOutputStream().close();
+				
+				return null;
+			};
+			
+			rest.execute(builder.build().encode().toUri(), HttpMethod.GET, requestCallback, responseExtractor);
+		}
+	
 		logger.debug("Download attach finishes!");
 	}
 
@@ -417,32 +419,33 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + user.getId(), null, request, "get", null);
 		
-		if (!checkAdminPermmision.get("status").toString().equals("ok")){
-			JSONObject checkPermission = checkPermission(request, user.getId(), fileId, "");
+		JSONObject checkPermission = null;
+		
+		if (!checkAdminPermmision.get("status").toString().equals("ok")) {
+			checkPermission = checkPermission(request, user.getId(), fileId, "");
+		}
+				
+		if (checkAdminPermmision.get("status").toString().equals("ok") || !"error".equals(checkPermission.get("status"))) {
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("tenantId", user.getTenantId())
+					.queryParam("offset", user.getOffset())
+					.queryParam("userId", user.getId())
+					.queryParam("lang", user.getLang())
+					.queryParam("newName", newName);
 			
-			if (!"error".equals(checkPermission.get("status"))) {
-				
-				UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-						.queryParam("tenantId", user.getTenantId())
-						.queryParam("offset", user.getOffset())
-						.queryParam("userId", user.getId())
-						.queryParam("lang", user.getLang())
-						.queryParam("newName", newName);
-				
-				HttpHeaders headers = new HttpHeaders();
-				headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-				headers.set("host-name", request.getServerName());
-				
-				HttpEntity<?> entity = new HttpEntity<>(headers);
-				RestTemplate rest    = new RestTemplate();
-				
-				ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-				JSONParser jp                 = new JSONParser();
-				JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
-				String status                 = resultBody.get("status").toString();
-				
-				logger.debug("Status: " + status);
-			}
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("host-name", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			RestTemplate rest    = new RestTemplate();
+			
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+			JSONParser jp                 = new JSONParser();
+			JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+			String status                 = resultBody.get("status").toString();
+			
+			logger.debug("Status: " + status);
 		}
 		
 		logger.debug("Rename File finishes!");
