@@ -68,19 +68,6 @@
 			
 			window.onresize();
 			
-			// datepicker setup
-			$(".datepicker").datepicker({
-				changeMonth: true,
-				changeYear: true,
-				autoSize: true,
-				showOn: "both",
-				buttonImage: "/images/ImgIcon/calendar-month.gif",
-				buttonImageOnly: true
-			});
-	
-	        $(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	        $(".datepicker").datepicker('setDate', "");
-	        
 			// listoption 다른 곳 클릭시 숨김 처리
 			var listOptionHidden = function(event) {
 				if (document.getElementById("webfolderlistoptiondiv").getAttribute('mode') == "on"
@@ -105,6 +92,52 @@
 				pagination.setListSize(this.value);
 				refreshView();
 			});
+			
+			// datepicker setup
+			$(".datepicker").datepicker({
+				changeMonth: true,
+				changeYear: true,
+				autoSize: true,
+				showOn: "both",
+				buttonImage: "/images/ImgIcon/calendar-month.gif",
+				buttonImageOnly: true
+			});
+	
+	        $(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $(".datepicker").datepicker('setDate', "");
+	        
+			$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
+				closeText: "<spring:message code='main.t3'/>",
+				prevText: "<spring:message code='main.t0604'/>",
+				nextText: "<spring:message code='main.t0605'/>",
+				currentText: "<spring:message code='main.t0606'/>",
+				monthNames: ["<spring:message code='main.t0607'/>", "<spring:message code='main.t0608'/>", "<spring:message code='main.t0609'/>", 
+				             "<spring:message code='main.t0610'/>", "<spring:message code='main.t0611'/>", "<spring:message code='main.t0612'/>",
+				             "<spring:message code='main.t0613'/>", "<spring:message code='main.t0614'/>", "<spring:message code='main.t0615'/>", 
+				             "<spring:message code='main.t0616'/>", "<spring:message code='main.t0617'/>", "<spring:message code='main.t0618'/>"],
+				monthNamesShort: ["<spring:message code='main.t0607'/>", "<spring:message code='main.t0608'/>", "<spring:message code='main.t0609'/>", 
+				                  "<spring:message code='main.t0610'/>", "<spring:message code='main.t0611'/>", "<spring:message code='main.t0612'/>",
+				                  "<spring:message code='main.t0613'/>", "<spring:message code='main.t0614'/>", "<spring:message code='main.t0615'/>", 
+				                  "<spring:message code='main.t0616'/>", "<spring:message code='main.t0617'/>", "<spring:message code='main.t0618'/>"],
+				dayNames: ["<spring:message code='main.t0621'/>", "<spring:message code='main.t0622'/>", "<spring:message code='main.t0623'/>", 
+				           "<spring:message code='main.t0624'/>", "<spring:message code='main.t0625'/>", "<spring:message code='main.t0626'/>",
+				           "<spring:message code='main.t0627'/>"],
+				dayNamesShort: ["<spring:message code='main.t0621'/>", "<spring:message code='main.t0622'/>", "<spring:message code='main.t0623'/>", 
+				                "<spring:message code='main.t0624'/>", "<spring:message code='main.t0625'/>", "<spring:message code='main.t0626'/>", 
+				                "<spring:message code='main.t0627'/>"],
+				dayNamesMin: ["<spring:message code='main.t0621'/>", "<spring:message code='main.t0622'/>", "<spring:message code='main.t0623'/>", 
+				              "<spring:message code='main.t0624'/>", "<spring:message code='main.t0625'/>", "<spring:message code='main.t0626'/>", 
+				              "<spring:message code='main.t0627'/>"],
+				weekHeader: "Wk",
+				dateFormat: "yy-mm-dd",
+				firstDay: 0,
+				isRTL: false,
+				duration: 200,
+				showAnim: "show",
+				showMonthAfterYear: true
+			};
+			
+			$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	     });
 	    
 	    // 폴더관리

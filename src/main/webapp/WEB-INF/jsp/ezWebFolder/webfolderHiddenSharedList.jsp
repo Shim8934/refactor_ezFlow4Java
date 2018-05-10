@@ -296,11 +296,6 @@
 				}
 			}
 			
-			// 날짜 초기화 버튼
-		   	function clearDatepicker() {
-		        $(".datepicker").datepicker('setDate', "");
-		    }
-			
 			function goToPageByNum(Value) {
 		    	currentPage = Value;
 		        pStart = (blockSize * (currentPage)) - blockSize;
