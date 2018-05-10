@@ -3216,6 +3216,8 @@
 	        AND
 	        	    TBL_FormContainer.COMPANYID = #companyID#
 		</isNotEmpty>
+		ORDER BY
+			TBL_FORMCONTAINER.formcontid
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSecurityType" parameterClass="Map" resultClass="ApprGLeftVO"> -->
 <!-- 		{CALL EZSP_GETSECURITYTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
