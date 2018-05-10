@@ -56,7 +56,7 @@
 
 			/* 2018-05-07 홍승비 - 삭제 여부 확인창 추가 */
 			function poll_Delete(pClubNo, managerID) {
-				if(confirm("<spring:message code='ezCommunity.t426' />")) {
+				if (confirm("<spring:message code='ezCommunity.t426' />")) {
 					window.location.href = "/ezCommunity/pollDelete.do?code=" + encodeURIComponent(pClubNo) + "&managerID=" + encodeURIComponent(managerID);			
 				}
 			}
