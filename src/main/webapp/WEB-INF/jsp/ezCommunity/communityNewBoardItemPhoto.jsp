@@ -470,8 +470,7 @@
 			        if (pDocID != "") {
 			            message.SetEditorContent(message.SetEditorContent(message.GetEditorContent() + "<hr>" + docContent.document.body.innerHTML));
 			        }
-			        
-			        JSleep(1000);
+
 			        var strBody = message.GetEditorContent();
 			        
 		        	strBody = ConvertHTMLtoMHT(message.GetEditorContent());
@@ -480,8 +479,7 @@
 		        	if (pDocID != "") {
 			            message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
 			        }
-			        
-			        JSleep(1000);
+
 			        var strBody = message.GetEditorContent();
 			        
 		        	if (trim_Cross(strBody) != "" || pDocID == "") {
@@ -519,12 +517,13 @@
 		        xmlDom = null;
 		    }
 	
-		    function JSleep(sTime) {
+		    /* 2018-05-10 홍승비 - 게시물 저장 시 JSleep 함수 미사용 */
+			/*function JSleep(sTime) {
 				var start = new Date().getTime();
 		        
 		        while (new Date().getTime() < start + sTime) {
 		        };
-		    }
+		    } */
 	
 		    function ReplaceText( orgStr, findStr, replaceStr ) {
 		        var re = new RegExp( findStr, "gi" );
@@ -923,7 +922,6 @@
 			            					<input type="text" id='_D2' class='datepicker_date' name="txtPermanence" readonly="readonly">
 							            	<img id="img_EndCalDisp" src="/images/i_scheduler.gif" width="19" height="15" align="absMiddle" style="CURSOR: pointer; POSITION: relative" popuplocation='bottomright' tabindex="0" popupLocation='topright' forcemarginleft="-40"  forceMarginTop="30">
 							            	<input id='_T2' type="hidden" class='datepicker_time' readonly="readonly" name="hidden">
-							            	<img align="middle" border="0" height="20" id="img_EndTime" src="../../images/arrow_right.gif" style="DISPLAY: none; POSITION: relative" width="20" popupLocation='bottomright'>
 							            </span>		
 	          						</c:when>
 	          						
@@ -936,7 +934,6 @@
 								            <input type="text" id='_D2' class='datepicker_date' name="txtPermanence" readonly>
 								            <img id="img_EndCalDisp" src="/images/i_scheduler.gif" width="19" height="16" align="absMiddle" style="CURSOR: pointer; POSITION: relative" popuplocation='bottomright' tabindex="0" popupLocation='topright'>
 								            <input id='_T2' type="hidden" class='datepicker_time' readonly name="hidden">
-								            <img align="middle" border="0" height="20" id="img_EndTime" src="../../images/arrow_right.gif" style="DISPLAY: none; CURSOR: pointer; POSITION: relative" width="20" popupLocation='bottomright'>
 								        </span>
 	          						</c:otherwise>
 	          					</c:choose>
