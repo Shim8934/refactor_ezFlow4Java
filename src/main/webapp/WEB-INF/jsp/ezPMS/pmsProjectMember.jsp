@@ -43,8 +43,9 @@
 		 for (var i = 0; i < memberList.length; i++) {
 			strHTML += "<tr id='" + memberList[i].userId + "' class='white' style='border:1px solid #ddd'>";
 			strHTML += "<td style='border-right:none; width:100%'>";
+			strHTML += "<img src='" + memberList[i].userImage + "' style='display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;' onclick='menuQst_DetailUserInfo(" + memberList[i].userId + ")'>";
 			strHTML += "<a style='cursor:pointer; display:inline-block; padding:0px 10px; float:left; line-height:41px; overflow:hidden;";
-			strHTML += "text-overflow:ellipsis; max-width:120px; white-space:nowrap;' onclick='menuQst_DetailUserInfo(" + memberList[i].userId +")'>"
+			strHTML += "text-overflow:ellipsis; max-width:120px; white-space:nowrap;' onclick='menuQst_DetailUserInfo(" + memberList[i].userId + ")'>"
 			strHTML += memberList[i].userName;
 			strHTML += "(" + memberList[i].userDeptname + ")";
 			strHTML += "</a>";

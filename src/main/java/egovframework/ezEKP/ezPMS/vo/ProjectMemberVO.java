@@ -37,7 +37,10 @@ public class ProjectMemberVO {
 
     // 사용자 아이디 종류 
     private String userIdType;
-
+    
+    // 사용자 사진
+    private String userImage;
+    
     public Long getMemberId() {
         return memberId;
     }
@@ -133,4 +136,12 @@ public class ProjectMemberVO {
     public void setUserIdType(String userIdType) {
         this.userIdType = userIdType;
     }
+
+	public String getUserImage() {
+		return userImage;
+	}
+
+	public void setUserImage(String userImage) {
+		this.userImage = userImage;
+	}
 }

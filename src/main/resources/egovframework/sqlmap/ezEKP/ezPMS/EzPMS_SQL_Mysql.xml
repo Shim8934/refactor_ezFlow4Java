@@ -327,8 +327,15 @@
 		where
 			TENANT_ID = #tenantId#
 		<isNotEqual property="key" compareValue="DEPARTMENT">
-			and 
+			<isEqual property="key" compareValue="CN">
+			and
+				$key$ = #value#
+			</isEqual>
+			<isNotEqual property="key" compareValue="CN">
+				and 
 				$key$ like concat('%',#value#,'%')
+		
+			</isNotEqual>
 		</isNotEqual>
 		<isEqual property="key" compareValue="DEPARTMENT">
 			and 
@@ -873,7 +880,7 @@
 			VIEW_TYPE = #viewType#, PROGRESS_COLOR = #progressColor#, 
 			COMPLETE_COLOR = #completeColor#, OVERDUE_COLOR = #overdueColor#,
 			HOLD_COLOR = #holdColor#, PROJECT_SORT = #projectSort#, 
-			LIST_NUMBER = #listNumber#, LIST_PROJECT_STATUS = #listProjectStatus# 
+			LIST_NUMBER = #listNumber#
 		WHERE
 			USER_ID = #userId# 
 		AND

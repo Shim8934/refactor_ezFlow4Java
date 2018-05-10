@@ -40,6 +40,10 @@ var endAlamStatus = "${project.alamMailStatus}";
 var headManagerId = "${project.headManagerId}";
 var mode = "${mode}"
 var projectId = "${project.projectId}";
+//비교하여 새로 추가된 사용자에게 메일 보냄
+var beforeManagerList = [];
+var beforeParticipantList = [];
+var beforeViewerList = [];
 
  $(function() {	
 	getDatePicker();
@@ -68,10 +72,13 @@ var projectId = "${project.projectId}";
 			
 			if (member.memberRoleId == 1) {
 				managerList.push(member);
+				beforeManagerList.push(member);
 			} else if (member.memberRoleId == 2) {
 				participantList.push(member);
+				beforeParticipantList.push(member);
 			} else {
 				viewerList.push(member);
+				beforeViewerList.push(member);
 			}
 		}
 		
@@ -271,6 +278,7 @@ var projectId = "${project.projectId}";
 		success : function(result) {
 			try { 
 				if (mode == "edit") {
+					sendNotiMail(result, projectName);
 					alert ("프로젝트가 수정되었습니다.");
 					parent.window.location.reload();
 					parent.projectId = projectId;
@@ -334,7 +342,11 @@ var projectId = "${project.projectId}";
 			 managerList : managerList,
 			 participantList : participantList,
 			 viewerList : viewerList,
-			 projectId : projectId
+			 projectId : projectId,
+			 beforeManagerList : beforeManagerList,
+			 beforeParticipantList : beforeParticipantList,
+			 beforeViewerList : beforeViewerList,
+			 mode : mode
 		 }
 	 
 	 $.ajax({

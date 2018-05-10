@@ -238,8 +238,7 @@ function changeMainSetting() {
 		completeColor : completeColor,
 		overdueColor  : overdueColor,
 		holdColor     : holdColor,
-		listNumber : listNumber,
-		listProjectStatus : listProjectStatus
+		listNumber : listNumber
 	}
 	
 	$.ajax({
