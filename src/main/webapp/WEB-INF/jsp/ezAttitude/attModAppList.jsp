@@ -57,6 +57,7 @@
 		var m_strColorDefault = "#ffffff";
 		var adminFlag = "${adminFlag}";
 		var checkAdmin = "${checkAdmin}";
+		var authFlag = "${authFlag}";
 		var usepostDate = false;
 		
 		$(function(){
@@ -80,7 +81,16 @@
 	    			
 	    			get_att_list();
 				}
-			})	
+			})
+			
+			if (authFlag == 'M') {
+				
+			} else {
+				if (adminFlag == "true"){
+					$("#appr").hide();
+					$("#ret").hide();
+				}
+			}
 		})
 		
 		$(function () {
@@ -403,6 +413,18 @@
 	    	if (excel == true) {
 	    		$('#ExcelAttList tbody').children( 'tr:not(:first)' ).remove();
 	    	} else {
+	    		if (adminFlag == "true"){
+		    		if (data.authFlag == 'M') {
+							$("#appr").show();
+							$("#ret").show();
+					} else {
+						if (adminFlag == "true"){
+							$("#appr").hide();
+							$("#ret").hide();
+						}
+					}
+	    		}	
+	    		
 	    		totalAtt = data.totalAtt;
 		    	totalPages = data.totalPages;
 		    	makePageSelPage();
@@ -1120,8 +1142,8 @@
 		</c:if>
         <ul id="tb_Parent">
         <c:if test="${adminFlag == 'true'}">
-			<li id="reply"><span onClick="modApprove()">승인</span></li>
-        	<li id="search"><span onClick="modReturn()">반려</span></li>
+			<li id="appr"><span onClick="modApprove()">승인</span></li>
+        	<li id="ret"><span onClick="modReturn()">반려</span></li>
 		</c:if>
 		<c:if test="${adminFlag != 'true' && checkAdmin != 'true'}">
 			<li><span onClick="attList_del()">삭제</span></li>
@@ -1164,10 +1186,10 @@
 									<c:forEach var="dept" items="${deptList}">
 										<c:if test="${dept.mine ne 'yes' }">
 											<c:if test="${selectedDeptID == dept.deptId}">
-												<option value="<c:out value='${dept.deptId}'/>" authType="<c:out value='${dept.authType}'/>" selected><c:out value='${dept.deptName}'/></option>
+												<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
 											</c:if>
 											<c:if test="${selectedDeptID != dept.deptId}">
-												<option value="<c:out value='${dept.deptId}'/>" authType="<c:out value='${dept.authType}'/>"><c:out value='${dept.deptName}' /></option>
+												<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
 											</c:if>
 										</c:if>										
 									</c:forEach>

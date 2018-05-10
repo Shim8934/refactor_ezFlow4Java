@@ -261,6 +261,7 @@ public class EzAttitudeKMSController {
 		String url = "";
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String isGAdmin = "";
+		String authFlag = "";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -455,9 +456,15 @@ public class EzAttitudeKMSController {
 		if(status.equals("ok")){
 			deptList = (JSONArray) resultBody.get("data");
 		}
-		LOGGER.debug("!@#@#%!@%(*!#%*#!%*Q : " + deptList.size());
+		for (int i = 0; i < deptList.size(); i++ ){
+			JSONObject dept = (JSONObject)deptList.get(i);
+			if (dept.get("deptId").equals(deptid)) {
+				authFlag = (String) dept.get("authType");
+			}
+		}
 		model.addAttribute("selectedDeptID", deptid);
 		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("authFlag", authFlag);
 		model.addAttribute("userTimeSet", offset);
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("totalAtt", totalAtt);
@@ -485,7 +492,8 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String orderCell,
 			@RequestParam(required=false)String orderOption,
 			@RequestParam(required=false)String adminFlag,
-			@RequestParam(required=false)String checkAdmin) throws Exception {
+			@RequestParam(required=false)String checkAdmin,
+			@RequestParam(required=false)String writerDeptId) throws Exception {
 		
 		LOGGER.debug("getAttModAppList started");
 
@@ -495,6 +503,8 @@ public class EzAttitudeKMSController {
 		int endPoint = 15;
 		int totalPages = 0;
 		int totalAtt = 0;
+		String isAllDept = "";
+		String authFlag = "";
 		
 		if (pageNum != null) {
 			currentPage = Integer.parseInt(pageNum);
@@ -514,12 +524,6 @@ public class EzAttitudeKMSController {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
-		
-		if(adminFlag.equals("true")){
-			if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
-				return new JSONObject();
-			}
-		}
 		
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
@@ -568,7 +572,6 @@ public class EzAttitudeKMSController {
 		JSONArray list = new JSONArray();
 		
 		if(status.equals("ok")){
-			LOGGER.debug("!!!!!!!!!!!!!!!!!! : " + resultBody.toJSONString());
 			totalAtt = Integer.parseInt(resultBody.get("data").toString());
 		}
 		totalPages = (totalAtt + pageSize - 1)/pageSize;
@@ -597,6 +600,12 @@ public class EzAttitudeKMSController {
 				endPoint = totalAtt;
 			}
 		}
+		
+		LOGGER.debug("startPoint : " + startPoint);
+		LOGGER.debug("endPoint : " + endPoint);
+		LOGGER.debug("currentPage : " + currentPage);
+		LOGGER.debug("totalPages : " + totalPages);
+		
 		if (excelReq.equals("true")) {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", userInfo.getCompanyID())
@@ -653,10 +662,57 @@ public class EzAttitudeKMSController {
 			resultj.put("list", list);
 		}
 		
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+			adminFlag = "true";
+			//권한부서 리스트
+			//c , k , wa -> 회사의 모든부서
+			isAllDept = "Y";
+		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+			adminFlag = "true";
+			// g -> 자신의 부서 + auth TB 확인해볼것.
+		}
+		
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		
+		headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		entity = new HttpEntity<>(headers);
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("isAllDept", isAllDept);
+		
+		rest = new RestTemplate();
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		JSONArray deptList = new JSONArray();
+		
+		if(status.equals("ok")){
+			deptList = (JSONArray) resultBody.get("data");
+		}
+		for (int i = 0; i < deptList.size(); i++ ){
+			JSONObject dept = (JSONObject)deptList.get(i);
+			if (dept.get("deptId").equals(writerDeptId)) {
+				authFlag = (String) dept.get("authType");
+			}
+		}
+		
+		
 		resultj.put("startDate", startDate);
 		resultj.put("endDate", endDate);
 		resultj.put("totalAtt", totalAtt);
 		resultj.put("totalPages", totalPages);
+		resultj.put("authFlag", authFlag);
 		
 		LOGGER.debug("getAttModAppList ended");
 		
