@@ -647,7 +647,7 @@ public class EzLadderController {
 			model.addAttribute("currPage", currPage);
 			model.addAttribute("sort", sort);
 			model.addAttribute("sortFlag", sortFlag);
-			
+			model.addAttribute("back", "back");
 			model.addAttribute("vo", vo); // ladder
 			model.addAttribute("list", list);// ladder line list
 			model.addAttribute("cmtlist", cmtlist); // ladder comment list
@@ -699,6 +699,12 @@ public class EzLadderController {
 		logger.debug("deleteLadder ended.");
 		
 		if (status.equals("ok")) {
+			logger.debug(allData.get(0) + "\n");
+			logger.debug(allData.get(1) + "\n");
+			logger.debug(allData.get(2) + "\n");
+			logger.debug(allData.get(3) + "\n");
+			logger.debug(allData.get(4) + "\n");
+			logger.debug(allData.get(5) + "\n");
 			if(allData.get(5).equals("back")) {
 				return "redirect:/ezLadder/ladderMain.do?mode=" + allData.get(3) + ""
 						+ "&currPage=" + allData.get(4) + "&searchSelect=" + allData.get(1) + "&searchInput=" + allData.get(2)  + "&sort=writeDate&sortFlag=desc";

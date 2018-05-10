@@ -59,11 +59,10 @@
 		var dragcnt = 0;
 		var originalPosition_left = 0;
 		$(function() {
+			initSetting();
 			if(deleteFlag == 1) {
 				window.location.href = "/ezLadder/ladderMain.do?brdID=7"; 
 			}
-			
-			initSetting();
 			
 			if(status == 0) { 
 				if(writerId == loginId) {
