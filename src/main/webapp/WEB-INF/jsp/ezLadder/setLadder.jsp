@@ -497,12 +497,15 @@
 				changeUser(idLen);
 				
 				var $userIds = $("[name='userIds']");
+				var $itemInput = $("[name='items']");
 				for(var i = index; i < idLen; i++) {
 					if(attendants["id"][i].substring(0, 14) == "anonyAttendant") {
 						attendants["id"][i] = "anonyAttendant_" + i;
 						$userIds.eq(i).val("anonyAttendant_" + i);
 					}
 					attendants["order"][i] = i;
+					
+					$itemInput.eq(i).attr("_itemindex", i);
 				}
 				
 				changeSliderValue();
