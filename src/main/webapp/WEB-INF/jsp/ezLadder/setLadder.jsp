@@ -354,9 +354,9 @@
 								}
 							}
 						}
-						totalmoney += moneyArr[itemindex];
-						totalmoneyStr = totalmoney.toString().replace(regexp, ',') || "0";
 					}
+					totalmoney += moneyArr[itemindex];
+					totalmoneyStr = totalmoney.toString().replace(regexp, ',') || "0";
 				}
 			}
 			
