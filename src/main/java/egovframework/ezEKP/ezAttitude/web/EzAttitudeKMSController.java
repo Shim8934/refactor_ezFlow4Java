@@ -459,7 +459,9 @@ public class EzAttitudeKMSController {
 		for (int i = 0; i < deptList.size(); i++ ){
 			JSONObject dept = (JSONObject)deptList.get(i);
 			if (dept.get("deptId").equals(deptid)) {
-				authFlag = (String) dept.get("authType");
+				if (!((String) dept.get("authType")).equals("")) {
+					authFlag = (String) dept.get("authType");
+				}
 			}
 		}
 		model.addAttribute("selectedDeptID", deptid);
@@ -703,7 +705,9 @@ public class EzAttitudeKMSController {
 		for (int i = 0; i < deptList.size(); i++ ){
 			JSONObject dept = (JSONObject)deptList.get(i);
 			if (dept.get("deptId").equals(writerDeptId)) {
-				authFlag = (String) dept.get("authType");
+				if (!((String) dept.get("authType")).equals("")) {
+					authFlag = (String) dept.get("authType");
+				}
 			}
 		}
 		
@@ -846,10 +850,6 @@ public class EzAttitudeKMSController {
 			sysLang = "primary";
 		}
 		
-		if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
-			return "cmm/error/adminDenied";
-		}
-		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/modifyattitudes";
 		
@@ -876,6 +876,7 @@ public class EzAttitudeKMSController {
 		String status = resultBody.get("status").toString();
 		
 		LOGGER.debug("apprAttModApp ended");
+		
 		return status;
 	}
 	
@@ -1038,6 +1039,9 @@ public class EzAttitudeKMSController {
 			@RequestParam(required=false)String adminFlag) throws Exception {
 		LOGGER.debug("attModAppDetail started");
 		
+		String isAllDept = "";
+		String attModDeptId = "";
+		String authFlag = "";
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
@@ -1045,17 +1049,7 @@ public class EzAttitudeKMSController {
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
-		
-		if (adminFlag != null) {
-			if (adminFlag.equals("true")) {
-				if (userInfo.getRollInfo().indexOf("wa=1") == -1) {
-					return "cmm/error/adminDenied";
-				}
-			}
-		} else {
-			adminFlag = "false";
-		}
-		
+
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
@@ -1091,7 +1085,58 @@ public class EzAttitudeKMSController {
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
 			LOGGER.debug("!@##$!@#%$$#%!%" + data.toJSONString());
+			attModDeptId = (String) data.get("writerDeptId");
 			model.addAttribute("data", data);
+		}
+		
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+			adminFlag = "true";
+			isAllDept = "Y";
+		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+			adminFlag = "true";
+		}
+		
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		
+		headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		entity = new HttpEntity<>(headers);
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("isAllDept", isAllDept)
+				.queryParam("userId", userInfo.getId());
+		
+		rest = new RestTemplate();
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		JSONArray deptList = new JSONArray();
+		
+		if(status.equals("ok")){
+			deptList = (JSONArray) resultBody.get("data");
+		}
+		
+		for (int i = 0; i < deptList.size(); i++ ){
+			JSONObject dept = (JSONObject)deptList.get(i);
+			if (dept.get("deptId").equals(attModDeptId)) {
+				if (!((String) dept.get("authType")).equals("")) {
+					authFlag = (String) dept.get("authType");
+				}
+				adminFlag = "true";
+			}
+		}
+		
+		if (authFlag.equals("")) {
+			return "cmm/error/adminDenied";
 		}
 		
 		model.addAttribute("userLang", userInfo.getLang());
@@ -1100,6 +1145,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("adminFlag", adminFlag);
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("font", font);
+		model.addAttribute("authFlag", authFlag);
 		
 		LOGGER.debug("attModAppDetail ended");
 		

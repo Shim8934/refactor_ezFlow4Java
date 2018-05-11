@@ -82,7 +82,10 @@
 	    			get_att_list();
 				}
 			})
-			
+
+			if (checkAdmin == 'true') {
+				authFlag = 'M';
+			}
 			if (authFlag == 'M') {
 				
 			} else {
@@ -119,7 +122,8 @@
 	        console.log("${endDate}");
 			if (checkAdmin == 'true') {
 				$("#Sdatepicker").val("${startDate}");
-	    		$("#Edatepicker").val("${endDate}");	
+	    		$("#Edatepicker").val("${endDate}");
+	    		usepostDate = true;
 			}
 	    });
 	    
@@ -162,6 +166,20 @@
 	    });
 	    
 		window.onload = function() {
+			if (checkAdmin == "true") {
+				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
+		    	
+	    		infoStr += '</span> 개 - ';
+	    		infoStr += startDate.substring(0,4) + '년' + 
+	    		startDate.substring(5,7) + '월' + 
+	    		startDate.substring(8,10) + '일~';
+		    	infoStr += endDate.substring(0,4) + '년' + 
+		    	endDate.substring(5,7) + '월' + 
+		    	endDate.substring(8,10) + '일]</span>';
+		    	
+		    	$("#mailBoxInfo").html(infoStr);
+			}
+			
 			var obj = $("#search").offset();
 			
 			$("#layer_popup").css({
@@ -172,8 +190,6 @@
 			if (checkAdmin != "true") {
 				$("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');	
-			} else {
-				usepostDate = true;
 			}
 		}
 		function makePageSelPage(){
@@ -414,14 +430,18 @@
 	    		$('#ExcelAttList tbody').children( 'tr:not(:first)' ).remove();
 	    	} else {
 	    		if (adminFlag == "true"){
-		    		if (data.authFlag == 'M') {
-							$("#appr").show();
-							$("#ret").show();
+	    			authFlag = data.authFlag;
+	    			
+	    			if(checkAdmin == 'true') {
+		    			authFlag = 'M'; 
+		    		}
+	    			
+		    		if (authFlag == 'M') {
+						$("#appr").show();
+						$("#ret").show();
 					} else {
-						if (adminFlag == "true"){
-							$("#appr").hide();
-							$("#ret").hide();
-						}
+						$("#appr").hide();
+						$("#ret").hide();
 					}
 	    		}	
 	    		
@@ -805,7 +825,7 @@
 			    success : function(json){
 			    	get_att_list(currentPage);
 			    	if (json == "error") {
-			    		alert("이미 승인 혹은 반려된 항목입니다.");			    			
+			    		alert("이미 처리된 항목입니다.");			    			
 			    	} else {
 			    		alert("삭제되었습니다.");	
 			    	}
@@ -817,7 +837,11 @@
 	    }
 	    
 		//승인
-	    function modApprove() { 
+	    function modApprove() {
+			if (authFlag != "M") {
+				alert("권한이 없습니다. 관리자에게 문의하세요");
+				return;
+			}
 	    	ShowAttProgress();
 	    	
 	    	var attList = $(".checkAtt:checked");
@@ -867,6 +891,11 @@
 	    
 	  	//반려
 	    function modReturn() {
+	    	if (authFlag != "M") {
+				alert("권한이 없습니다. 관리자에게 문의하세요");
+				return;
+			}
+	  		
 	    	ShowAttProgress();
 	    	
 	    	var attList = $(".checkAtt:checked");

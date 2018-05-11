@@ -1156,7 +1156,10 @@ public class EzAttitudeGWController {
 					type = null;
 				}
 			}
-			endPoint = Integer.parseInt(endPoint)- Integer.parseInt(startPoint) + "";
+			if (endPoint != null && startPoint != null) {
+				endPoint = Integer.parseInt(endPoint)- Integer.parseInt(startPoint) + "";
+			}
+			
 			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
 
 			deptIdList = new String[authDeptlist.size()];
