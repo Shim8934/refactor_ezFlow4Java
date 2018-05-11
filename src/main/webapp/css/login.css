@@ -27,8 +27,8 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 .pw{width:227px; height:41px; margin:0px 0px 15px 0px; padding:0px 0px 0px 0px; background:url(/images/kr/login/input_bg_pw.gif) #f1f1f1 18px center no-repeat; border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;}
 .btn_login {width:227px; height:41px; margin:0px 0px 15px 0px; padding:0px;}
 
-#uid {background:url(/images/kr/login/txt_id.gif) no-repeat 0px 14px; width:178px; height:41px; margin:0px 0px 0px 46px; padding:0px 5px 0px 0px; line-height:21px; color:#6d6d6d; font-size:14px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}
-#upw {background:url(/images/kr/login/txt_pw.gif) no-repeat 0px 14px; width:178px; height:41px;  margin:0px 0px 0px 46px; padding:0px 5px 0px 0px; line-height:21px; color:#6d6d6d; font-size:14px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}
+#uid {background:url(/images/kr/login/txt_id.gif) no-repeat 0px 14px; width:178px; height:41px; margin:0px 0px 0px 46px; padding:0px 5px 0px 0px; line-height:21px; color:#333; font-size:14px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}
+#upw {background:url(/images/kr/login/txt_pw.gif) no-repeat 0px 14px; width:178px; height:41px;  margin:0px 0px 0px 46px; padding:0px 5px 0px 0px; line-height:21px; color:#333; font-size:14px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}
 
 .input_text.focus,
 .input_text.focusnot { background:#f1f1f1 !important;}
@@ -50,5 +50,5 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 .help span.icon{margin:0px 5px 0px 0px;}
 .help span.txt{border-bottom:1px solid #a0a0a0;}*/
 
-footer{font-size:14px; color:#c3c3c3; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+footer{font-size:12px; color:#333; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif; font-weight:bold}
 footer p{margin:18px 0px 0px 0px; padding:0px; text-align:center;}
