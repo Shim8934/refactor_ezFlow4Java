@@ -44,6 +44,7 @@
 			} else {
 				$('#topMenu').text("<spring:message code='ezWebFolder.t297'/>");
 			}
+			$('input:radio[name=treeType]:input[value=' + folderType + ']').prop("checked", true);
 		});
 		
 		function typeCheck() {
@@ -61,11 +62,11 @@
 				} else if (obj == "copy") {
 					alert("<spring:message code='ezWebFolder.t299'/>");
 				}
-				
 				parent.returnFunction(folderType);
 				parent.folderList(folderType);
 			} else if (code == 3) {
 				alert("<spring:message code='ezWebFolder.t300'/>");
+				window.close();
 			} else if (code == 4) {
 				alert("<spring:message code='ezWebFolder.t301'/>");
 				window.close();
@@ -122,11 +123,11 @@
 						}
 					}).on('changed.jstree', function(e, data) {
 						uppFolderId = data.selected[0];
-						createId = folderId != null ? data.node.original.createId : "";
 						parentId = data.node.original.parent;
 					});
 					console.log(folderType);
 					//$("input[value="+folderType+"]").attr('checked', true);
+// 					$('input:radio[name=treeType]:input[value=' + folderType + ']').prop("checked", true);
 				},
 				error: function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
@@ -164,7 +165,7 @@
 				async: false,
 				success: function(data) {
 					var code = data.code;
-					afterSuccess(code, obj);
+					afterSuccess(code, moveCopyType);
 				},
 				error: function(error) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
