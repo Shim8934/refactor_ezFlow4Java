@@ -35,7 +35,7 @@ public class EzPMSController3 {
 	private Properties config;
 	
 	@RequestMapping(value="/ezPMS/getProjectBoard.do")
-	public String getProjectBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+	public String getProjectBoard(HttpServletRequest request, Model model) {
 		
 		LOGGER.debug("ezPMS getProjectBoard started");		
 		String projectId = request.getParameter("projectId");
@@ -48,7 +48,7 @@ public class EzPMSController3 {
 	}
 	
 	@RequestMapping(value="/ezPMS/goAddBoard.do")
-	public String goAddBoard(HttpServletRequest request, Model model, ProjectBoardVO vo , @CookieValue("loginCookie") String loginCookie) {
+	public String goAddBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		
 		LOGGER.debug("ezPMS goAddBoard started");
 		
@@ -58,14 +58,14 @@ public class EzPMSController3 {
 		String writerName = userInfo.getDisplayName();
 		String writerDeptName = userInfo.getDeptName();
 		
-		String projectId = request.getParameter("projectId");
 		String projectName = request.getParameter("projectName");
+		String projectId = request.getParameter("projectId");
 		String taskName = request.getParameter("taskName");
 		String groupId = request.getParameter("groupId");
 		String taskId = request.getParameter("taskId");
 		
-		model.addAttribute("projectId", projectId);
 		model.addAttribute("projectName", projectName);
+		model.addAttribute("projectId", projectId);
 		model.addAttribute("writerId", writerId);
 		model.addAttribute("writerName", writerName);
 		model.addAttribute("writerDeptName", writerDeptName);
@@ -106,5 +106,18 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS addBoard ended");
 		
 		return "json";
+	}
+	
+	@RequestMapping(value="/ezPMS/getTaskSelectionTree.do")
+	public String getTaskSelectionTree(HttpServletRequest request, Model model) throws Exception {
+		
+		LOGGER.debug("ezPMS getTaskTree started");
+		
+		String projectId = request.getParameter("projectId");	
+		model.addAttribute("projectId", projectId);
+		
+		LOGGER.debug("ezPMS getTaskTree started");
+		
+		return "/ezPMS/pmsTaskSelectionTree";
 	}
 }

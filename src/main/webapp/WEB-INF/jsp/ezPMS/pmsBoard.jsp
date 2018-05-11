@@ -5,8 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="/css/ezPMS/default/style.min.css"
-	type="text/css" />
+<link rel="stylesheet" href="/css/ezPMS/default/style.min.css" type="text/css" />
 <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -18,25 +17,32 @@
 	
 	
 	function goAddBoard() {
-		var chosenTask = $("a.jstree-clicked");
-		
-		if(!chosenTask.length) {
-			alert("트리에서 업무를 선택해주세요");
-			return;
-		}
-		var taskName = chosenTask.text();
+		var chosenTask = $("a.jstree-clicked");	
 		var project = $("li[role='treeitem'][aria-level='1']");
 		var projectName = project.children("a").text();
-		var groupId = project.attr("id");
-		var taskId = -1;
+		var groupId = project.attr("id"); // 수정 필요
+		var taskId = -1;		
+		var taskName = null;
 		
-		if(chosenTask.parent().attr("aria-level") != '1') {
-			taskId = chosenTask.parent().attr("id").substr(1);
-		} 
+		if(!chosenTask.length) {
+			taskName = projectName;
+		} else {
+			taskName = chosenTask.text();
+			if(chosenTask.parent().attr("id").charAt(0) == 't') { // 여기도 수정이 필요할 수도 있다. 그룹 안에 그룹이 생겼을 때 어떻게 될지 아직 모르겠음. 아마 전체적인 수정이 필요할 수도
+				groupId = chosenTask.parents("li").eq(1).attr("id");
+				taskId = chosenTask.parent().attr("id").substr(1);
+			} else {
+				groupId = chosenTask.parent().attr("id");
+			}
+		}
 		
-		console.log(projectName);
-		DivPopUpShow(845, 555, "/ezPMS/goAddBoard.do?projectId=" + projectId + "&projectName=" + projectName + "&taskName=" 
-																 + taskName + "&groupId=" + groupId + "&taskId=" + taskId);
+		var height = window.screen.availHeight;
+        var width = window.screen.availWidth;
+        var top = (height - 820) / 2;
+        var left = (width - 790) / 2;
+		
+		window.open("/ezPMS/goAddBoard.do?projectName=" + projectName + "&projectId=" + projectId + "&taskName=" + taskName + "&groupId=" + groupId + "&taskId=" + taskId, 
+					"", "width=790, height=820, resizable=no, scrollbars=no, status=no, top=" + top + ", left=" + left + ";");
 	}
 	
 	$(document).ready(function() {
@@ -65,9 +71,5 @@
 		</ul>
 	</div>	
 	<div id="test" class="tree"></div>
-	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.4); display: none;" id="mailPanel">&nbsp;</div>
-	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
-	</div>
 </body>
 </html>
