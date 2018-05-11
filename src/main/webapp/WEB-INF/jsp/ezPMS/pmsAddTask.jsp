@@ -309,9 +309,15 @@ function addTask() {
 			</tr>
 			<tr>
 				<th>계획시작일</th>
-				<td style="width:50%"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"></td>
+				<td style="width:50%">
+					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+					<span style="margin-left:20px ">현재 시작일 : ${projectStartDate}</span>
+				</td>
 				<th>계획종료일</th>
-				<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></td>
+				<td>
+					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+					<span style="margin-left:20px ">현재 종료일 : ${projectEndDate}</span>
+				</td>
 			</tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openMemberList()"><span>담당자</span></a></th>

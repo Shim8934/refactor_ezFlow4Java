@@ -24,39 +24,36 @@ var viewerList = parent.viewerArray;
 
 $(function() {
 	var strHTML = "";
-	for (var i = 0; i < managerList.length; i++) {
-		if (managerList[i].userIdType == "user") {
-			strHTML += "<tr class='white hover' style='border: 1px solid #ddd; cursor:pointer;' id=" + managerList[i].userId + " onclick='setMainListUserAuthorDept(this)'>";
-			strHTML += "<td style='border-right:none; max-width: 200px; width: 190px;'>";
-			strHTML += "<a style='cursor:pointer; display:inline-block; padding: 0px 10px 0px 10px; float: left; line-height: 40px; overflow: hidden; text-overflow: ellipsis; max-width:120px; white-space: nowrap;' onClick='menuQst_DetailUserInfo(" + managerList[i].userId+ ")'>"
-//			strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-			strHTML += managerList[i].userName;
-			strHTML += "(" + managerList[i].userDeptname + ")";
-			strHTML += "</a>";
-			strHTML += "</td>";
-			strHTML += "</tr>";
-		} else {
-			$.ajax({
-   				type:"post",
-   				dataType:"json",
-   				url:"/ezPMS/getDeptUserList.do",
-   				data:{"key" : "DEPARTMENT", "value" : managerList[i].userId, "deptName" : managerList[i].userName},
-   				async: false,
-   				success: function(result){
-   					for (var j = 0; j < result.userList.length; j++) {
-   						strHTML += "<tr class='white hover' style='border: 1px solid #ddd; cursor:pointer;' id=" + result.userList[j].userId + " onclick='setMainListUserAuthorDept(this)'>";
-   						strHTML += "<td style='border-right:none; max-width: 200px; width: 190px;'>";
-   						strHTML += "<a style='cursor:pointer; display:inline-block; padding: 0px 10px 0px 10px; float: left; line-height: 40px; overflow: hidden; text-overflow: ellipsis; max-width:120px; white-space: nowrap;' onClick='menuQst_DetailUserInfo(" + result.userList[j].userId + ")'>";
-   						strHTML += result.userList[j].userName;
-   						strHTML += "(" + result.userList[j].userDeptname + ")";
-   						strHTML += "</a>";
-   						strHTML += "</td>";
-   						strHTML += "</tr>";
-   					}
-   				}
-   			});
+	var data = {
+			userList : managerList
+	};
+	
+	$.ajax({
+   		type:"POST",
+   		url:"/ezPMS/getHeadManagerList.do",
+		dataType : "json",
+		contentType: "application/json;charset=UTF-8",
+   		data:JSON.stringify(data),
+   		async: false,
+   		success: function(result){
+   			console.log(result);
+   			for (var j = 0; j < result.userList.length; j++) {
+   				strHTML += "<tr class='white hover' style='border: 1px solid #ddd; cursor:pointer;' id=" + result.userList[j].userId + " onclick='setMainListUserAuthorDept(this)'>";
+   				strHTML += "<td style='border-right:none; max-width: 200px; width: 190px;'>";
+   				strHTML += "<img src='" + result.userList[j].userImg + "' style='display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;' onclick='menuQst_DetailUserInfo(" + result.userList[j].userId + ")'>";
+   				strHTML += "<a style='cursor:pointer; display:inline-block; padding: 0px 10px 0px 10px; float: left; line-height: 40px; overflow: hidden; text-overflow: ellipsis; max-width:120px; white-space: nowrap;' onClick='menuQst_DetailUserInfo(" + result.userList[j].userId + ")'>";
+   				strHTML += result.userList[j].userName;
+   				strHTML += "(" + result.userList[j].deptName + ")";
+   				strHTML += "</a>";
+   				strHTML += "</td>";
+   				strHTML += "</tr>";
+   			}
+   		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert("error : " + textStatus);
 		}
-	}
+   	});
+	
 	$("#managerName").html(strHTML);
 });
 

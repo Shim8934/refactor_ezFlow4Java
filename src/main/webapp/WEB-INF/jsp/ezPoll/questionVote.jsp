@@ -9,7 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
-		<link rel="stylesheet" href="/css/font-awesome-4.7.0/css/font-awesome.css">
+		<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css">
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
@@ -206,7 +206,8 @@
 				emoticonPanelClose();
 				optImgSearch();
 				addThumbnailEvent();
-				dateTimePickerSetting()
+				dateTimePickerSetting();
+// 				stopButtonPosition();
 				
 			}
 			
@@ -394,9 +395,10 @@
 			        
 			        stompClient.subscribe('/reply/finishVoteForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;
+			        	var brdId = "${brdId}";
 			        	
 			            if (ret == "OK") {							
-			            	document.location.href = "/ezPoll/pollVote.do?qstId=" + qstId;
+			            	document.location.href = "/ezPoll/pollVote.do?qstId=" + qstId + "&brdId=" + brdId;
 					    }
 				    });
 			        
@@ -3099,6 +3101,26 @@
 		        w.focus();
 		  	}
 		  	
+		  	function stopButtonPosition(){
+		  		var stopBtnDiv = $("#stopButton");
+		  		var stopBtnToggle = $("#stopBtnToggle");
+		  		var posFromTop = 0.95;
+		  		if(stopBtnDiv){
+		  			stopBtnDiv.css({"top":(window.innerHeight - stopBtnDiv.outerHeight()) * posFromTop});
+		  			stopBtnToggle.css({"top":(window.innerHeight - stopBtnDiv.outerHeight()) * posFromTop});
+		  			
+		  			$(window).scroll(function(){
+			  			var stopBtn_TopOffset = (window.innerHeight - stopBtnDiv.outerHeight()) * posFromTop;
+			    		stopBtnDiv.css({"top":$(this).scrollTop() + stopBtn_TopOffset});
+		  				stopBtnToggle.css({"top":$(this).scrollTop() + stopBtn_TopOffset});
+	    			});
+		  			
+		  			$("#stopBtnToggle").click(function(){
+		  				stopBtnDiv.toggle();
+		  			});
+		  		}
+		  	}
+		  	
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -3286,6 +3308,11 @@
 								</c:choose>
 					  		</ul>
 						</div>
+						<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
+							<div id="stopButtonDiv" class="stopButtonDiv" onclick="finishVote()">
+								<i class="far fa-stop-circle" title="<spring:message code = 'ezPoll.t124'/>"></i>
+							</div>
+						</c:if>	
 					</div>
 					
 					
@@ -3566,5 +3593,11 @@
 				<img id="imgPopup" class="imgPopup">
    			</div>
    		</div>
+<%--    		<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}"> --%>
+<!--    			<div id="stopBtnToggle" class="stopBtnToggle"></div> -->
+<!-- 	   		<div id="stopButton" class="stopButton" onclick="finishVote()"> -->
+<%-- 	   			<i class="far fa-stop-circle" style="margin: 7.5px;" title="<spring:message code = 'ezPoll.t124'/>"></i> --%>
+<!-- 			</div> -->
+<%-- 		</c:if> --%>
 	</body>
 </html>

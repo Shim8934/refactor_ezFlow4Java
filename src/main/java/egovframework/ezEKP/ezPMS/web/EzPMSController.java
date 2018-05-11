@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezPMS.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -23,8 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.let.user.login.vo.LoginVO;
@@ -50,7 +54,9 @@ public class EzPMSController {
 	
 	@Resource(name = "EzEmailService")
 	private EzEmailService ezEmailService;
-	
+
+	@Autowired
+	private EzOrganService ezOrganService;	
 	/**
 	 * 프로젝트 관리 메인화면 호출함수
 	 */
@@ -826,6 +832,7 @@ public class EzPMSController {
 	 */
 	@RequestMapping(value="/ezPMS/selectHeadManager.do")
 	public String selectHeadManager(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		
 		return "ezPMS/selectHeadManager";
 	}
 	
@@ -839,7 +846,7 @@ public class EzPMSController {
 		LOGGER.debug("getDeptUserList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
+		Map<String, Object> param = new HashMap<String, Object>();
 		String key = request.getParameter("key");
 		param.put("key",key );
 		param.put("value", request.getParameter("value"));
@@ -872,28 +879,65 @@ public class EzPMSController {
 		LOGGER.debug("sendNotiMail Started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String mode = param.get("mode").toString();
 		String projectName = (String) param.get("projectName");
 		int projectId = (int) param.get("projectId");
-		List<Map<String, Object>> managerList = (List<Map<String, Object>>) param.get("managerList");
+		List<Map<String, Object>> managerList = null;
 		List<Map<String, Object>> participantList = (List<Map<String, Object>>) param.get("participantList");
 		List<Map<String, Object>> viewerList = (List<Map<String, Object>>) param.get("viewerList");
+		List<Map<String, Object>> beforeManagerList = (List<Map<String, Object>>) param.get("beforeManagerList");
+		List<Map<String, Object>> beforeParticipantList = (List<Map<String, Object>>) param.get("beforeParticipantList");
+		List<Map<String, Object>> beforeViewerList = (List<Map<String, Object>>) param.get("beforeViewerList");
 		
 		param.put("tenantId", userInfo.getTenantId());
 		
 		try{
-			getToArrMailList(managerList, param, request, projectName, projectId, "관리자", loginCookie);
+			if (param.get("managerList") != null) {
+				managerList = (List<Map<String, Object>>) param.get("managerList");
+			}
+			if (mode.equals("edit")) {
+				Iterator<Map<String, Object>> managerIter = managerList.iterator();
+				
+				while (managerIter.hasNext()) {
+					Map<String, Object> manager = managerIter.next();
+					
+					if (beforeManagerList.contains(manager)) {
+						managerList.remove(manager);
+					}
+				}
+//				
+//				if (beforeParticipantList != null || beforeParticipantList.size() != 0) {
+//					for (Map<String, Object> participant : participantList) {
+//						if (beforeParticipantList.contains(participant)) {
+//							participantList.remove(participant);
+//						}
+//					}
+//				}
+//				
+//				if (beforeViewerList != null || beforeViewerList.size() != 0) {
+//					for (Map<String, Object> viewer : viewerList) {
+//						if (beforeViewerList.contains(viewer)) {
+//							viewerList.remove(viewer);
+//						}
+//					}
+//				}
+			}
 			
-			if (participantList.size() != 0) {
+			if (managerList.size() > 0 || managerList != null) {
+				getToArrMailList(managerList, param, request, projectName, projectId, "관리자", loginCookie);
+			}
+			
+			if (participantList.size() > 0 || participantList != null) {
 				getToArrMailList(participantList, param, request, projectName, projectId, "참여자", loginCookie);
 			}
 			
-			if (viewerList.size() != 0) {
+			if (viewerList.size() > 0 || viewerList != null) {
 				getToArrMailList(viewerList, param, request, projectName, projectId, "조회자", loginCookie);
 			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			LOGGER.debug("ERROR : " + e.getMessage());
+			LOGGER.debug("sendNotiMail ERROR : " + e.getMessage());
 		}
 	}
 	
@@ -948,7 +992,7 @@ public class EzPMSController {
 			LOGGER.debug("getToArrMailList ended");
 			return toArr;
 		} catch (Exception e) {
-			LOGGER.debug("ERROR : " + e.getMessage());
+			LOGGER.debug("getToArrMailList ERROR : " + e.getMessage());
 			return null;
 		}
 	}
@@ -993,5 +1037,31 @@ public class EzPMSController {
 		return "ezPMS/projectNameList";
 	}
 	
-	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/getHeadManagerList.do")
+	@ResponseBody
+	public JSONObject getHeadManagerList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		LOGGER.debug("getDeptUserList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		
+		String url = "/rest/ezPMS/list/users";
+		param.put("userId", userId);
+		
+		List<Map<String, Object>> managerList = (List<Map<String, Object>>) param.get("userList");
+		JSONObject listJson = new JSONObject();
+		listJson.put("userList", managerList);
+		param.remove("userList");
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "post", listJson);
+		String status = result.get("status").toString();
+		
+		JSONObject userList = new JSONObject();
+		if (status.equals("ok")) {
+			userList.put("userList", result.get("data"));
+		}
+		
+		LOGGER.debug("getDeptUserList ended");
+		return userList;
+	}
 }

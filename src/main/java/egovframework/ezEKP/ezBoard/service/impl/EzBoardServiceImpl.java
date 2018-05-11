@@ -3399,6 +3399,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "move", userInfo.getTenantId());
 			}
 			
+			//2018-05-09 강민수92 댓글도 이동
+			moveOneLineReply(orgBoardID, orgItemID, destBoardID, destItemID); 
+			
 			StringBuilder sb = new StringBuilder();
 
 	        sb.append("<NODES>");
@@ -3448,7 +3451,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("moveItem ended");
 		return result;
 	}
-	
+
 	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode, int tenantID) throws Exception {
 		logger.debug("copyAttachments started");
 
@@ -3831,6 +3834,21 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		logger.debug("getReaderListCount ended");
 		return ezBoardDAO.getReaderListCount(map);
+	}
+
+	@Override
+	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception {
+		logger.debug("moveOneLineReply started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("orgBoardID", orgBoardID);
+		map.put("orgItemID", orgItemID);
+		map.put("destBoardID", destBoardID);
+		map.put("destItemID", destItemID);
+		
+		ezBoardDAO.updateMoveOneLineReply(map);
+		
+		logger.debug("moveOneLineReply ended");
 	}
 
 

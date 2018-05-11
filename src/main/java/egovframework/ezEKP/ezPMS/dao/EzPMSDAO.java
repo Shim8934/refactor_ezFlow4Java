@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
@@ -226,4 +227,15 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		update ("EzPMSDAO.completeAllTasks", map);
 		
 	}
+	
+	public void updateTask(Map<String, Object> map) {
+		update ("EzPMSDAO.updateTask", map);
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ProjectGroupVO> getGroupList(Map<String, Object> map){
+		return (List<ProjectGroupVO>) list ("EzPMSDAO.getGroupList", map);
+	}
+	
 }

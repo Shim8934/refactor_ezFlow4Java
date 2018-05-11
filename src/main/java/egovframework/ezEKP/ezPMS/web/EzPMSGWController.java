@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezPMS.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -10,7 +9,6 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.tools.ant.Project;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
-import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
@@ -51,6 +49,9 @@ public class EzPMSGWController {
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	//프로젝트 리스트 호출
 	@SuppressWarnings("unchecked")
@@ -485,7 +486,7 @@ public class EzPMSGWController {
 	}
 	
 	//프로젝트 역할별 멤버 보기
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "null" })
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/roles/{roleId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getProjectMember(@PathVariable Long projectId, @PathVariable int roleId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "] started.");
@@ -500,6 +501,23 @@ public class EzPMSGWController {
 			
 			List<ProjectMemberVO> memberList = ezPMSService.getProjectMemberList(projectId, roleId, lang, tenantId);
 			
+			for (ProjectMemberVO member: memberList) {
+				String imagePath = ezOrganService.getPropertyValue(member.getUserId(), "extensionAttribute2", tenantId);
+				
+				if (imagePath != null && !imagePath.equals("")) {
+					String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", tenantId)+ commonUtil.separator + imagePath;
+					String fullPath = request.getServletContext().getRealPath(realPath);
+				
+					if (fullPath != null || !fullPath.equals("")) {
+						member.setUserImage("/ezCommon/downloadAttach.do?filePath=" + realPath);
+					} else {
+						member.setUserImage("/images/poll/default_pic_vote.gif");
+					}
+				} else {
+					member.setUserImage("/images/poll/default_pic_vote.gif");
+				}
+			}
+		
 			JSONObject data = new JSONObject();
 			data.put("memberList", memberList);
 			
@@ -927,8 +945,27 @@ public class EzPMSGWController {
 				String serverName = request.getHeader("x-user-host");
 				MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 				String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+				int tenantId = info.getTenantId();
 				
 				List<ProjectUserVO> userList = ezPMSService.getDeptUserList(info.getTenantId(), key, value,lang);
+				
+				for (ProjectUserVO member: userList) {
+					String imagePath = ezOrganService.getPropertyValue(member.getUserId(), "extensionAttribute2", tenantId);
+					
+					if (imagePath != null && !imagePath.equals("")) {
+						String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", tenantId)+ commonUtil.separator + imagePath;
+						String fullPath = request.getServletContext().getRealPath(realPath);
+					
+						if (fullPath != null || !fullPath.equals("")) {
+							member.setUserImg("ezCommon/downloadAttach.do?filePath=" + realPath);
+						} else {
+							member.setUserImg("images/poll/default_pic_vote.gif");
+						}
+					} else {
+						member.setUserImg("images/poll/default_pic_vote.gif");
+					}
+				}
+				
 				
 				result.put("status", "ok");
 				result.put("code", 0);
@@ -941,5 +978,77 @@ public class EzPMSGWController {
 			
 			LOGGER.debug("ezJournal G/W getUserList ended.");
 			return result;
-		}		
+		}
+		
+		/**
+		 * 프로젝트관리 G/W [GET] 총괄담당자 후보 정보 호출 (부서까지) 
+		 */
+		@SuppressWarnings("unchecked")
+		@RequestMapping(value="/rest/ezPMS/list/users", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+		public JSONObject getHeadManagerList(@RequestBody JSONObject json, HttpServletRequest request) throws Exception {
+			LOGGER.debug("ezPMS G/W getHeadManagerList started.");
+			
+			JSONObject result = new JSONObject();
+			
+			try {
+				String serverName = request.getHeader("x-user-host");
+				MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+				String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+				int tenantId = info.getTenantId();
+				List<Map<String, Object>> userList = (List<Map<String, Object>>) json.get("userList");
+				
+				List<ProjectUserVO> managerList = new ArrayList<ProjectUserVO>();
+				
+				for (int i = 0; i < userList.size(); i++) {
+					if (userList.get(i).get("userIdType").equals("user")) {
+						String userId = userList.get(i).get("userId").toString();
+						List<ProjectUserVO> memberList = ezPMSService.getDeptUserList(tenantId, "CN", userId, lang);
+						
+						for (ProjectUserVO member : memberList) {
+							if (!managerList.contains(member)) {
+								managerList.add(member);
+							}
+						}
+					} else {
+						String userId = userList.get(i).get("userId").toString();
+						List<ProjectUserVO> deptUserList = ezPMSService.getDeptUserList(tenantId, "DEPARTMENT", userId, lang);
+						
+						for (ProjectUserVO member : deptUserList) {
+							if (!managerList.contains(member)) {
+								managerList.add(member);
+							}
+						}
+					}
+				}
+				
+				for (ProjectUserVO member: managerList) {
+					String imagePath = ezOrganService.getPropertyValue(member.getUserId(), "extensionAttribute2", tenantId);
+					
+					if (imagePath != null && !imagePath.equals("")) {
+						String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", tenantId)+ commonUtil.separator + imagePath;
+						String fullPath = request.getServletContext().getRealPath(realPath);
+					
+						if (fullPath != null || !fullPath.equals("")) {
+							member.setUserImg("/ezCommon/downloadAttach.do?filePath=" + realPath);
+						} else {
+							member.setUserImg("/images/poll/default_pic_vote.gif");
+						}
+					} else {
+						member.setUserImg("/images/poll/default_pic_vote.gif");
+					}
+				}
+				
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", managerList);
+			} catch (Exception e) {
+				result.put("code", 1);
+				result.put("status", "error");
+				result.put("data", "");
+			}
+			
+			LOGGER.debug("ezPMS G/W getHeadManagerList ended.");
+			return result;
+		}
 }
