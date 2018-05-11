@@ -180,8 +180,6 @@
 			                                        span2.setAttribute("boardid", itemVO.boardID);
 			                                        span2.setAttribute("gubun", itemVO.gubun);
 			                                        span2.setAttribute("code", code);
-			                                        span2.style.border = "1px solid #d8d8d8";
-			                                        span2.style.width = "68px";
 			                                        span2.style.cursor = "pointer";
 			                                        span2.onclick = function () { ItemRead_onclick(this); };
 
