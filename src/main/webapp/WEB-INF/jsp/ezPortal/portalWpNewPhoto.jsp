@@ -20,7 +20,7 @@
         	    			</ul>
 		 				</c:when>
 		 				<c:otherwise>
-		 					<div class='nodata_portlet '>
+		 					<div class='nodata_portlet'>
             				<p><img src='/images/kr/main/nodata_plan.png' width='92' height='84'></p>
             				<p><spring:message code='main.t00026' /></p>
             			</div>

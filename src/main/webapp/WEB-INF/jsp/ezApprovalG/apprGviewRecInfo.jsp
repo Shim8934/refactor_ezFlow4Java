@@ -7,6 +7,7 @@
 <title><spring:message code='ezApprovalG.t858' /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
+<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
@@ -57,12 +58,22 @@
 	</tr>
 </table>
 <br>
-<div id="tabnav">
+<%-- <div id="tabnav">
 	<ul>
 		<li id="tab_ViewRec0"><span onclick ="MM_swapImagesub('0'); tab_onclick('0')" ><spring:message code='ezApprovalG.t832'/></span></li>
 		<li id="tab_ViewRec1"><span onclick ="MM_swapImagesub('1'); tab_onclick('1')" ><spring:message code='ezApprovalG.t840'/></span></li>
 		<li id="tab_ViewRec2"><span onclick ="MM_swapImagesub('2'); tab_onclick('2')" ><spring:message code='ezApprovalG.t94'/></span></li>
 	</ul>
+</div> --%>
+<div class="portlet_tabpart01" style="margin:0px;">
+	<div class="portlet_tabpart01_top" style="border-bottom:0px;">
+		<p id="tab_ViewRec0"><span onclick="MM_swapImagesub('0'); tab_onclick('0')" class="tabon"><spring:message code='ezApprovalG.t832'/></span>
+		</p>
+		<p id="tab_ViewRec1"><span onclick="MM_swapImagesub('1'); tab_onclick('1')"><spring:message code='ezApprovalG.t840'/></span>
+		</p>
+		<p id="tab_ViewRec2"><span onclick="MM_swapImagesub('2'); tab_onclick('2')"><spring:message code='ezApprovalG.t94'/></span>
+		</p>
+	</div>
 </div>
 <div ID="divTabDis1" style="DISPLAY: block; WIDTH:100%; HEIGHT: 215px;"> 
 	<table class="content">

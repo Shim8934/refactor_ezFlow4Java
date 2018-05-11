@@ -512,8 +512,7 @@
 		        if (pDocID != "") {
 		        	message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
 		        }
-		            
-		        JSleep(1000);
+
 		        var strBody = message.GetEditorContent();
 		        
 		        if (trim_Cross(strBody) != "" || pDocID == "") {
@@ -569,7 +568,6 @@
 		                alert("<spring:message code='ezCommunity.t1150'/>" + pStartDate.substr(0, 16) + "<spring:message code='ezCommunity.t1151'/>");
 		            }
 		            
-		            JSleep(500);
 					window.opener.location.reload(true);
 					saveFlag = false;
 					
@@ -584,13 +582,14 @@
 		        clickFlag = true;
 		    }
 	
-		    function JSleep(sTime) {
+			 /* 2018-05-10 홍승비 - 게시물 저장 시 JSleep 함수 미사용 */
+		  	/* function JSleep(sTime) {
 		        var start = new Date().getTime();
 		        
 		        while (new Date().getTime() < start + sTime) {
 		        };
-		    }
-	
+		    } */
+
 		    function ReplaceText( orgStr, findStr, replaceStr ) {
 		        var re = new RegExp( findStr, "gi" );
 		        return ( orgStr.replace( re, replaceStr ) );
@@ -641,7 +640,7 @@
 		            document.getElementById("reservation_date").style.display = "none";
 		        }
 		    }
-						
+
 		    function PreviewItem() {
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
