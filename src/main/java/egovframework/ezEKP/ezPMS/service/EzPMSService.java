@@ -73,7 +73,7 @@ public interface EzPMSService {
 	
 	public List<ProjectMemberScheduleVO> getMemberScheduleList(Long projectId, String startDate, String endDate);
 	
-	public ProjectTaskVO getTaskDetails(Long taskId);
+	public ProjectTaskVO getTaskDetails(Long taskId, int tenantId);
 	
 	public int updateTask(ProjectTaskVO task);
 	

@@ -27,6 +27,11 @@
 <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script type="text/javascript">
+	var taskDetails;
+	
+	window.onload(function(){
+		taskDetails = ${taskDetails};
+	})
 </script>
 </head>
 <body class="popup">

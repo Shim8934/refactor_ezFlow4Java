@@ -238,4 +238,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (List<ProjectGroupVO>) list ("EzPMSDAO.getGroupList", map);
 	}
 	
+	public ProjectTaskVO getTaskDetails(Map<String, Object> map){
+		return (ProjectTaskVO) select ("EzPMSDAO.getTaskDetails", map);
+	}
+	
 }

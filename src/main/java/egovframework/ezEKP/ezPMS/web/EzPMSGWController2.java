@@ -181,7 +181,7 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			ProjectTaskVO taskVO = ezPMSService.getTaskDetails(Long.parseLong(taskId));
+			ProjectTaskVO taskVO = ezPMSService.getTaskDetails(Long.parseLong(taskId), info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

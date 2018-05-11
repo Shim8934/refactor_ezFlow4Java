@@ -406,20 +406,17 @@ public class EzPMSController2 {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String projectId = request.getParameter("projectId");
 		String taskId = request.getParameter("taskId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
-			JSONArray taskList = (JSONArray) resultBody.get("data");
-			model.addAttribute("taskList", taskList);
+			JSONObject taskDetails = (JSONObject) resultBody.get("data");
+			model.addAttribute("taskDetails", taskDetails);
 		}
-		
-		model.addAttribute("projectId", projectId);
 		
 		LOGGER.debug("ezPMS getTaskDetails ended");
 		

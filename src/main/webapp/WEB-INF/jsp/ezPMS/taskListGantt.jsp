@@ -200,7 +200,12 @@
 	   			var curTask = {};
 	   			var taskId = 0;
 	   			curTask = ge.currentTask;
-	   			taskId = curTask.id.match(/_t\d+/)[0].match(/\d/);
+	   			if(curTask.id.indexOf("_t") != -1){
+	   				taskId = curTask.id.match(/_t\d+/)[0].match(/\d/)[0];
+	   			}
+	   			else{
+	   				return false;
+	   			}
 	   			
 	   			$.ajax({
 					type: "POST",
@@ -208,7 +213,7 @@
 					data: {"taskId": taskId},
 					dataType: "json",
 					success: function(result) {
-						
+						alert(result);
 					},
 					error: function (xhr, status, e){
 						alert("error");
