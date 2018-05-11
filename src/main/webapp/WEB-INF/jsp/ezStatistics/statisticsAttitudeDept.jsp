@@ -82,18 +82,10 @@
         selDeptID = selnode.GetNodeData("CN");
         selDeptName = selnode.GetNodeData("value");
         
-        //만약 회사 클릭시
-//         if (selnode.GetNodeData("SETNODEICONBYNAME") != "") {
-//         	company_typeList(selDeptID, typeId);
-//         } else {
-        	company_typeList(selnode.GetNodeData("extensionattribute2"), typeId);
-//         }
+		//부서별 근태유형 리스트
+        company_typeList(selnode.GetNodeData("extensionattribute2"), typeId);
         //통계
         getAttitudeStatistics();
-        
-        
-        
-//         alert(selnode.parentNode);
     }
 
     //[+] 버튼
@@ -116,10 +108,8 @@
         createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
         createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName");
 
-
         xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
         xmlHTTP.send(xmlpara);
-
 
         xmlRtn = loadXMLString(xmlHTTP.responseText);
         {
@@ -130,7 +120,6 @@
                 xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
             }
         }
-
 
         var treeView = new TreeView();
         treeView.LoadFromID("FromTreeView");
@@ -158,22 +147,25 @@
         }
         else {
             var selyear = parseInt(document.getElementById("selyear").value);
-            if ((selyear < tempyear - 2 || selyear < tempyear + 2) && selyear + 2 <= year) {
-                document.getElementById("selyear").innerHTML = "";
-                tempyear = selyear + 2;
-                for (var i = 0; i < 5; i++) {
-                    var option = document.createElement("OPTION");
-                    option.value = tempyear;
-                    option.innerHTML = tempyear;
-
-                    if (selyear == tempyear)
-                        option.selected = true;
-
-                    document.getElementById("selyear").appendChild(option);
-                    tempyear--;
+            document.getElementById("selyear").innerHTML = "";
+            tempyear = selyear + 2;
+            for (var i = 0; i < 5; i++) {
+            	if (tempyear > year) {
+                	tempyear--;
+                	continue;
                 }
-                tempyear = selyear + 2;
+            	
+                var option = document.createElement("OPTION");
+                option.value = tempyear;
+                option.innerHTML = tempyear;
+
+                if (selyear == tempyear)
+                    option.selected = true;
+
+                document.getElementById("selyear").appendChild(option);
+                tempyear--;
             }
+            tempyear = selyear + 2;
         }
     }
     

@@ -356,7 +356,7 @@
 					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
-					<td style="width: 3%;">검색기간</td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.lhj22' /></td>
 					<td style="width: 20%;">
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
