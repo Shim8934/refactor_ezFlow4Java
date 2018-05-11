@@ -464,6 +464,26 @@ public class EzAttitudeKMSController {
 				}
 			}
 		}
+		
+		int myDeptCount = 0;
+		JSONObject dept = new JSONObject();
+		
+		for(int i = 0; i < deptList.size(); i++) {
+			dept = (JSONObject) deptList.get(i);
+			if (dept.get("deptId").equals(userInfo.getDeptID())) {
+				myDeptCount++;
+			}
+		}
+		
+		if (myDeptCount == 1) {
+			for(int i = 0; i < deptList.size(); i++) {
+				dept = (JSONObject) deptList.get(i);
+				if (dept.get("deptId").equals(userInfo.getDeptID())) {
+					dept.put("mine", "no");
+				}
+			}
+		}
+		
 		model.addAttribute("selectedDeptID", deptid);
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("authFlag", authFlag);
