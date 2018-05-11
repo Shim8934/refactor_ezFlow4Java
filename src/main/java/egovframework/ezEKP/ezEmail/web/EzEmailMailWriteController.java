@@ -430,6 +430,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
         
+        String multipartFirstIdx = "0";
+        
         // in case of new
         if (_url.equals("") && _cmd.equals("NEW")) {
         	to = msgto;
@@ -539,6 +541,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						if (attachedFileList.size() > 0) {
 			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+
+			                multipartFirstIdx = attachedFileList.get(0).get("index");
+			                logger.debug("EDIT multipartFirstIdx=" + multipartFirstIdx);
 			                
 							for (int i = 0; i < attachedFileList.size(); i++) {
 								Map<String, String> fileInfo = attachedFileList.get(i);
@@ -655,6 +660,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        		if (attachedFileList.size() > 0) {
 			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+
+			                multipartFirstIdx = attachedFileList.get(0).get("index");
+			                logger.debug("RESEND multipartFirstIdx=" + multipartFirstIdx);
 			                
 							for (int i = 0; i < attachedFileList.size(); i++) {
 								Map<String, String> fileInfo = attachedFileList.get(i);
@@ -891,6 +899,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		if (_cmd.equals("FORWARD")) {
 							if (attachedFileList.size() > 0) {
 				                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+
+				                multipartFirstIdx = attachedFileList.get(0).get("index");
+				                logger.debug("FORWARD multipartFirstIdx=" + multipartFirstIdx);
 				                
 								for (int i = 0; i < attachedFileList.size(); i++) {
 									Map<String, String> fileInfo = attachedFileList.get(i);
@@ -1104,6 +1115,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useLetter", useLetter);
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 추가
 		model.addAttribute("drafts", ezEmailUtil.getDraftsFolderId(locale)); // 임시보관함 스트링 추가 (윤진) 
+		model.addAttribute("multipartFirstIdx", multipartFirstIdx);
 		
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);
