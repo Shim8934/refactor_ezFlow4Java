@@ -2,13 +2,13 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezWebFolder_y">
-	<typeAlias  alias="FileVO"          	type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
-	<typeAlias  alias="FileTypeVO"          type="egovframework.ezEKP.ezWebFolder.vo.FileTypeVO"/>
-	<typeAlias  alias="FolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"/>
-	<typeAlias  alias="FolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
-	<typeAlias  alias="loginVO" 			type="egovframework.let.user.login.vo.LoginVO"/>
-	<typeAlias alias="FolderTreeVO"         type="egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO"/>
-
+	<typeAlias  alias="webFolderFileVO"          	type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
+	<typeAlias  alias="webFolderFileTypeVO"          type="egovframework.ezEKP.ezWebFolder.vo.FileTypeVO"/>
+	<typeAlias  alias="webFolderFolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"/>
+	<typeAlias  alias="webFolderFolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
+	<typeAlias  alias="webFolderloginVO" 			type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias 	alias="webFolderTreeVO"         type="egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO"/>
+	
 	<!-- 로그인 처리를 위한 resultMap -->
 	<resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
 		<result property="id"					column="CN"   						columnIndex="1"/>
@@ -31,7 +31,7 @@
 	</resultMap>
 	
 	<!-- FolderTree resultMap -->
-	<resultMap id="folderTreeVO" class="FolderTreeVO">
+	<resultMap id="folderTreeVO" class="webFolderTreeVO">
 		<result property="id"           column="ID"           />
 		<result property="text"         column="TEXT"         />
 		<result property="parent"       column="PARENT"       />
@@ -43,7 +43,7 @@
 	</resultMap>
 	
 	<!-- File resultMap -->
-    <resultMap id="fileVO" class="FileVO">
+    <resultMap id="fileVO" class="webFolderFileVO">
         <result property="fileId"               column="FILE_ID"                 columnIndex="1"/>                                                             
         <result property="fileName"         	column="FILE_NAME"               columnIndex="2"/>                                                    
         <result property="filePath"         	column="FILE_PATH"               columnIndex="3"/>                                                    
@@ -76,14 +76,14 @@
     </resultMap>
     
     <!-- FileType resultMap -->
-    <resultMap id="folderSimpleVO" class="FolderSimpleVO">
+    <resultMap id="folderSimpleVO" class="webFolderFolderSimpleVO">
         <result property="folderId"             column="FOLDER_ID"               columnIndex="1" />              
         <result property="folderName"         	column="FOLDER_NAME"             columnIndex="2" />
 		<result property="folderLevel"         	column="FOLDER_LEVEL"            columnIndex="3" />
     </resultMap>
     
     <!-- Folder resultMap -->
-    <resultMap id="folderVO" class="FolderVO">
+    <resultMap id="folderVO" class="webFolderFolderVO">
         <result property="folderId"             column="FOLDER_ID"                columnIndex="1"  />              
         <result property="folderName1"         	column="FOLDER_NAME1"             columnIndex="2"  />
         <result property="folderName2"         	column="FOLDER_NAME2"             columnIndex="3"  />
@@ -105,7 +105,7 @@
     </resultMap>
     
     <!-- FolderSimple resultMap -->
-    <resultMap id="fileTypeVO" class="FileTypeVO">
+    <resultMap id="fileTypeVO" class="webFolderFileTypeVO">
         <result property="typeId"               column="TYPE_ID"                columnIndex="1" />              
         <result property="typeName"         	column="TYPE_NAME"              columnIndex="2" />
         <result property="fileExt"         	    column="FILE_EXT"               columnIndex="3" />
@@ -629,12 +629,14 @@
 				                and 
 				                	folder.USE_STATUS = 'Y'
 				                and 
-				                	folder.company_id = #comId#		
+				                	folder.company_id = #comId#
+				                and 
+				                	folder_path <> #folderPath#		
 						]]>
 					<![CDATA[
 					) t 
 					
-					where folder_path like (#folderPath#||'%') and folder_path <> #folderPath#
+					where folder_path like (#folderPath#||'%') 
 					]]>
 					<include refid="searchAll"/>
 					<![CDATA[
@@ -731,10 +733,11 @@
 	                and folder.USE_STATUS = 'Y'
 	                and folder.company_id = #comId#
 	                and type.tenant_id = #tenantId#
+	                and folder_path <> #folderPath#	
 			]]>
 			<isEqual property = "flag" compareValue="1" prepend="AND">
 				<![CDATA[
-					folder.folder_path like ('%'||#folderPath#||'%') and folder_path <> #folderPath#
+					folder.folder_path like ('%'||#folderPath#||'%') 
 				]]>
 			</isEqual>
 			<isEqual property= "flag" compareValue="0" prepend="AND">

@@ -2,82 +2,88 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezWebFolder_y">
-	<typeAlias  alias="FileVO"          	type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
-	<typeAlias  alias="FileTypeVO"          type="egovframework.ezEKP.ezWebFolder.vo.FileTypeVO"/>
-	<typeAlias  alias="FolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"/>
-	<typeAlias  alias="FolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
-	<typeAlias  alias="loginVO" 			type="egovframework.let.user.login.vo.LoginVO"/>
-	<typeAlias alias="FolderTreeVO"         type="egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO"/>
+	<typeAlias  alias="webFolderFileVO"          	type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
+	<typeAlias  alias="webFolderFileTypeVO"          type="egovframework.ezEKP.ezWebFolder.vo.FileTypeVO"/>
+	<typeAlias  alias="webFolderFolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"/>
+	<typeAlias  alias="webFolderFolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
+	<typeAlias  alias="webFolderloginVO" 			type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias 	alias="webFolderTreeVO"         type="egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO"/>
 	
 	<!-- 로그인 처리를 위한 resultMap -->
 	<resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
-		<result property="id"					column="cn"   						columnIndex="1"/>
-		<result property="password" 			column="password" 					columnIndex="2"/>
-		<result property="displayName1" 		column="displayname"				columnIndex="3"/>
-		<result property="displayName2" 		column="displayname2" 				columnIndex="4"      nullValue=""/>
-		<result property="deptID" 				column="department" 				columnIndex="5"/>
-		<result property="deptName1" 			column="description" 				columnIndex="6"/>
-		<result property="deptName2" 			column="description2" 				columnIndex="7"      nullValue=""/>
-		<result property="title1" 				column="title" 						columnIndex="8"/>
-		<result property="title2" 				column="title2" 					columnIndex="9"      nullValue=""/>
-		<result property="companyID" 			column="companyid" 					columnIndex="10"/>
-		<result property="companyName1" 		column="company" 					columnIndex="11"/>
-		<result property="companyName2" 		column="company2" 					columnIndex="12"     nullValue=""/>		
-		<result property="updateDT" 			column="updatedt"					columnIndex="13"/>
-		<result property="rollInfo" 			column="rollinfo"					columnIndex="14"/>
-		<result property="phone" 				column="telephonenumber"			columnIndex="15"/>
-		<result property="email"				column="mail"						columnIndex="16"/>
-		<result property="jikChek"				column="jikchek"					columnIndex="17"/>
-        <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
+		<result property="id"					column="CN"   						columnIndex="1"/>
+		<result property="displayName1" 		column="DISPLAYNAME"				columnIndex="2"/>
+		<result property="displayName2" 		column="DISPLAYNAME2" 				columnIndex="3"      nullValue=""/>
+		<result property="deptID" 				column="DEPARTMENT" 				columnIndex="4"/>
+		<result property="deptName1" 			column="DESCRIPTION" 				columnIndex="5"/>
+		<result property="deptName2" 			column="DESCRIPTION2" 				columnIndex="6"      nullValue=""/>
+		<result property="title1" 				column="TITLE" 						columnIndex="7"/>
+		<result property="title2" 				column="TITLE2" 					columnIndex="8"      nullValue=""/>
+		<result property="companyID" 			column="COMPANYID" 					columnIndex="9"/>
+		<result property="companyName1" 		column="COMPANY" 					columnIndex="10"/>
+		<result property="companyName2" 		column="COMPANY2" 					columnIndex="11"     nullValue=""/>		
+		<result property="updateDT" 			column="UPDATEDT"					columnIndex="12"/>
+		<result property="rollInfo" 			column="ROLLINFO"					columnIndex="13"/>
+		<result property="phone" 				column="TELEPHONENUMBER"			columnIndex="14"/>
+		<result property="email"				column="MAIL"						columnIndex="15"/>
+		<result property="jikChek"				column="JIKCHEK"					columnIndex="16"/>
+        <result property="tenantId"             column="TENANT_ID"                  columnIndex="17"/>
 	</resultMap>
-	<!-- File resultMap -->
 	
 	<!-- FolderTree resultMap -->
-	<resultMap id="folderTreeVO" class="FolderTreeVO">
-		<result property="id"        column="ID"        columnIndex="1"/>
-		<result property="text"      column="TEXT"      columnIndex="2"/>
-		<result property="parent"    column="PARENT"    columnIndex="3"/>
-		<result property="selected"  column="SELECTED"  columnIndex="4"/>
-		<result property="createId"  column="CREATEID"  columnIndex="5"/>
+	<resultMap id="folderTreeVO" class="webFolderTreeVO">
+		<result property="id"           column="ID"           />
+		<result property="text"         column="TEXT"         />
+		<result property="parent"       column="PARENT"       />
+		<result property="selected"     column="SELECTED"     />
+		<result property="createId"     column="CREATEID"     />
+		<result property="folderName1"  column="FOLDERNAME1"  />
+		<result property="folderName2"  column="FOLDERNAME2"  />
+		<result property="folderLevel"  column="FOLDERLEVEL"  />
 	</resultMap>
 	
-    <resultMap id="fileVO" class="FileVO">
-        <result property="fileId"               column="file_id"                columnIndex="1"  />              
-        <result property="fileName"         	column="file_name"              columnIndex="2"  />
-        <result property="filePath"         	column="file_path"              columnIndex="3"  />
-        <result property="fileSize"          	column="file_size"              columnIndex="4"  />
-        <result property="typeId"          		column="type_id"                columnIndex="5"  />
-        <result property="downloadCnt"          column="down_count"             columnIndex="6"  />
-        <result property="fileExt"           	column="file_ext"               columnIndex="7"	 />
-        <result property="folderId"           	column="folder_id"              columnIndex="8"  />
-        <result property="useStatus"        	column="use_status"         	columnIndex="9"	 />
-        <result property="createId"             column="create_id"            	columnIndex="10" />
-        <result property="createName1"          column="create_name1"          	columnIndex="11" />
-        <result property="createDate"           column="create_date"            columnIndex="12" />
-        <result property="updateId"             column="update_id"              columnIndex="13" />
-        <result property="updateDate"           column="update_date"            columnIndex="14" />        
-        <result property="tenantId"         	column="tenant_id"              columnIndex="15" />
-        <result property="fileIconUrl"          column="TYPE_ICON"        		columnIndex="16" />
-        <result property="folderPath"           column="FOLDER_PATH"            columnIndex="17" />
-        <result property="folderName"           column="FOLDER_NAME1"           columnIndex="18" />
-        <result property="favouriteStatus"      column="FAVORITE_STATUS"  		columnIndex="19"/>
-        <result property="fileShareStatus"      column="FILESHARE_STATUS"		columnIndex="20"/>
-        <result property="folderSort"      		column="FOLDER_SORT"			columnIndex="21"/>
-        <result property="fileTypeName"         column="filetype_name"          columnIndex="22" />
-<!--         <result property="fileTypeId"           column="filetype_id"            columnIndex="16" /> -->
-<!--         <result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" /> -->
-<!--         <result property="tenantId"         	column="tenant_id"              columnIndex="19" /> -->
+	<!-- File resultMap -->
+    <resultMap id="fileVO" class="webFolderFileVO">
+        <result property="fileId"               column="FILE_ID"                 columnIndex="1"/>                                                             
+        <result property="fileName"         	column="FILE_NAME"               columnIndex="2"/>                                                    
+        <result property="filePath"         	column="FILE_PATH"               columnIndex="3"/>                                                    
+        <result property="fileSize"          	column="FILE_SIZE"               columnIndex="4"/>                                                        
+        <result property="typeId"          		column="TYPE_ID"                 columnIndex="5"/>                                                    
+        <result property="downloadCnt"          column="DOWN_COUNT"              columnIndex="6"/>                                                        
+        <result property="fileExt"           	column="FILE_EXT"                columnIndex="7"/>                                                      
+        <result property="folderId"           	column="FOLDER_ID"               columnIndex="8"/>                                                    
+        <result property="useStatus"        	column="USE_STATUS"         	 columnIndex="9"/>                                                      
+        <result property="createId"             column="CREATE_ID"            	 columnIndex="10"/>                                                    
+        <result property="createName1"          column="CREATE_NAME1"          	 columnIndex="11"/>                                                      
+        <result property="createName2"          column="CREATE_NAME2"          	 columnIndex="12"/>                                                      
+        <result property="createDate"           column="CREATE_DATE"             columnIndex="13"/>                                                      
+        <result property="updateId"             column="UPDATE_ID"               columnIndex="14"/>                                                    
+        <result property="updateDate"           column="UPDATE_DATE"             columnIndex="15"/>                                                        
+        <result property="tenantId"         	column="TENANT_ID"               columnIndex="16"/>                                                    
+        <result property="fileIconUrl"          column="TYPE_ICON"        		 columnIndex="17"/>                                                        
+        <result property="folderPath"           column="FOLDER_PATH"             columnIndex="18"/>                                                      
+        <result property="folderName"           column="FOLDER_NAME1"            columnIndex="19"/>                                                      
+        <result property="favouriteStatus"      column="FAVORITE_STATUS"  		 columnIndex="20"/>                                                       
+        <result property="fileShareStatus"      column="FILESHARE_STATUS"		 columnIndex="21"/>        
+        <result property="folderSort"      		column="FOLDER_SORT"			 columnIndex="22"/>        
+        <result property="fileTypeName"         column="TYPE_NAME"          	 columnIndex="23"/>            
+                                                                                                                                                                         
+                                                                                                                                                                                
+                                                                                                                                                                                  
+<!--         <result property="fileTypeId"           column="filetype_id"            columEND AS FILESHARE_STATUS,                                                  nIndex="16" /> -->
+<!--         <result property="fileIconUrl"          column="filetype_icon"          columdecode (f.FILE_EXT , 'folder',0,1) as FOLDER_SORT,                        nIndex="18" /> -->
+<!--         <result property="tenantId"         	column="tenant_id"              columntype.TYPE_NAME 	AS TYPE_NAME    		                                  Index="19" /> -->
     </resultMap>
     
     <!-- FileType resultMap -->
-    <resultMap id="folderSimpleVO" class="FolderSimpleVO">
+    <resultMap id="folderSimpleVO" class="webFolderFolderSimpleVO">
         <result property="folderId"             column="FOLDER_ID"               columnIndex="1" />              
         <result property="folderName"         	column="FOLDER_NAME"             columnIndex="2" />
 		<result property="folderLevel"         	column="FOLDER_LEVEL"            columnIndex="3" />
     </resultMap>
     
     <!-- Folder resultMap -->
-    <resultMap id="folderVO" class="FolderVO">
+    <resultMap id="folderVO" class="webFolderFolderVO">
         <result property="folderId"             column="FOLDER_ID"                columnIndex="1"  />              
         <result property="folderName1"         	column="FOLDER_NAME1"             columnIndex="2"  />
         <result property="folderName2"         	column="FOLDER_NAME2"             columnIndex="3"  />
@@ -85,7 +91,7 @@
         <result property="folderPath"          	column="FOLDER_PATH"              columnIndex="5"  />
         <result property="folderStep"           column="FOLDER_STEP"              columnIndex="6"  />
         <result property="folderLevel"          column="FOLDER_LEVEL"             columnIndex="7"  />
-        <result property="folderUpper"          column="FOLDER_UPPER"             columnIndex="8"  />
+        <result property="folderUpper"          column="FOLDER_UPPER"     	      columnIndex="8"  />
         <result property="useStatus"           	column="USE_STATUS"               columnIndex="9"  />
         <result property="ownerId"        	    column="OWNER_ID"         	      columnIndex="10" />
         <result property="createId"             column="CREATE_ID"            	  columnIndex="11" />
@@ -99,7 +105,7 @@
     </resultMap>
     
     <!-- FolderSimple resultMap -->
-    <resultMap id="fileTypeVO" class="FileTypeVO">
+    <resultMap id="fileTypeVO" class="webFolderFileTypeVO">
         <result property="typeId"               column="TYPE_ID"                columnIndex="1" />              
         <result property="typeName"         	column="TYPE_NAME"              columnIndex="2" />
         <result property="fileExt"         	    column="FILE_EXT"               columnIndex="3" />
@@ -109,49 +115,42 @@
     <sql id="fileListSelect">
     	<![CDATA[
 	   		SELECT 
-				type.TYPE_ICON    ,
-				folder.FOLDER_PATH	  as FOLDER_PATH,
-				folder.FOLDER_NAME1    as FOLDER_NAME1,
-				file.FILE_ID 	  ,
-				file.FILE_NAME 	  ,
-				file.FILE_PATH	  ,
-				file.FILE_SIZE	  ,
-				file.TYPE_ID	  ,
-				file.DOWN_COUNT	  ,
-				file.FILE_EXT	  AS FILE_EXT,
-				file.FOLDER_ID	  ,
-				file.USE_STATUS   ,
-				file.CREATE_ID	  ,
-				if ( #primary# = '1' , file.CREATE_NAME1, file.CREATE_NAME2) as CREATE_NAME1,
-				DATE_ADD(file.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				file.UPDATE_ID	  ,
-				DATE_ADD(file.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,       	 
-				file.TENANT_ID    ,
-				if (EXISTS (
-					select *
-					from tbl_webfolder_favor fav 
-					where fav.USER_ID = #userId# and fav.tenant_id = #tenantId# and file.file_id = fav.target_id 
-						and fav.target_type = 'F'),'1','0')as FAVORITE_STATUS,
-				if (EXISTS (
-					select *
-					from tbl_webfolder_share sh
-					where sh.USER_ID = #userId# and sh.tenant_id = #tenantId# and file.file_id = sh.FOLDERFILE_ID 
-						and sh.folderfile_type = 'F'),'1','0')as FILESHARE_STATUS ,
-				if (file.FILE_EXT = 'folder',0,1) as FOLDER_SORT,
-				type.TYPE_NAME 	AS filetype_name    		
+				f.FILE_ID 	 			AS FILE_ID ,
+				f.FILE_NAME  			AS FILE_NAME	,
+				f.FILE_PATH	  			AS FILE_PATH	, 
+                f.FILE_SIZE   			AS FILE_SIZE	,
+				f.TYPE_ID	    		AS TYPE_ID		,
+				f.DOWN_COUNT   			AS DOWN_COUNT   ,
+				f.FILE_EXT	  			AS FILE_EXT     ,
+				f.FOLDER_ID	    		AS FOLDER_ID    ,
+				f.USE_STATUS     		AS USE_STATUS   ,
+				f.CREATE_ID	    		AS CREATE_ID    ,
+				if ( #primary# = '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
+				f.CREATE_NAME2 as CREATE_NAME2,
+				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				f.UPDATE_ID	  			as UPDATE_ID,
+				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,    
+				f.TENANT_ID    			as TENANT_ID,
+				type.TYPE_ICON   		as TYPE_ICON ,
+				folder.FOLDER_PATH	  	as FOLDER_PATH,
+				folder.FOLDER_NAME1    	as FOLDER_NAME1,
+				if(s.user_id = null,'1','0') as FAVORITE_STATUS,
+				CASE WHEN EXISTS(SELECT SHARE_ID FROM TBL_WEBFOLDER_SHARE WHERE FOLDERFILE_ID = f.FILE_ID AND FOLDERFILE_TYPE = 'F' AND TENANT_ID = f.TENANT_ID)
+					THEN 'Y'
+					ELSE 'N'
+				END AS FILESHARE_STATUS,
+				if (f.FILE_EXT = 'folder',0,1) as FOLDER_SORT,
+				type.TYPE_NAME 	AS TYPE_NAME 		
 		]]>	
     </sql>
     <sql id="fldSelect">
     	<![CDATA[
 			union all 
 	    	select DISTINCT
-				type.TYPE_ICON		AS TYPE_ICON    ,     
-				folder.FOLDER_PATH  AS FOLDER_PATH  ,     
-				folder.FOLDER_NAME1 AS FOLDER_NAME1 ,    
 				folder.FOLDER_ID    AS FILE_ID 	    ,     
 				folder.FOLDER_NAME1 AS FILE_NAME	,     
 				folder.FOLDER_PATH  AS FILE_PATH	,     
-				0 					AS FILE_SIZE	,     
+				'0'					AS FILE_SIZE	,     
 				'folder'			AS TYPE_ID		, 	  
 				0 					AS DOWN_COUNT   ,     
 				'folder'            AS FILE_EXT     ,     
@@ -159,23 +158,21 @@
 				folder.USE_STATUS   AS USE_STATUS   ,     
 				folder.CREATE_ID	AS CREATE_ID    ,     
 				if ( #primary# = '1' , folder.CREATE_NAME1, folder.CREATE_NAME2) as CREATE_NAME1,
+				folder.CREATE_NAME2 as CREATE_NAME2,
 				DATE_ADD(folder.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				folder.UPDATE_ID	AS UPDATE_ID    , 
-				DATE_ADD(folder.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				folder.UPDATE_ID	  ,
+				DATE_ADD(folder.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,	
 				folder.TENANT_ID	as TENANT_ID    ,
-				if (EXISTS (
-					select *
-					from tbl_webfolder_favor fav 
-					where fav.USER_ID = #userId# and fav.tenant_id = #tenantId# and folder.folder_id = fav.target_id 
-						and fav.target_type = 'D'),'1','0')as FAVORITE_STATUS,
-						
-				if (EXISTS (
-					select *
-					from tbl_webfolder_share sh
-					where sh.USER_ID = #userId# and sh.tenant_id = #tenantId# and folder.folder_id = sh.FOLDERFILE_ID 
-						and sh.folderfile_type = 'D'),'1','0')as FILESHARE_STATUS,
-				if (FILE_EXT = 'folder',0,1) as FOLDER_SORT,
-				type.TYPE_NAME 	AS filetype_name  
+				type.TYPE_ICON		AS TYPE_ICON    ,     
+				folder.FOLDER_PATH  AS FOLDER_PATH  ,     
+				folder.FOLDER_NAME1 AS FOLDER_NAME1 ,    
+				if(s.user_id =null, '1','0') as FAVORITE_STATUS,
+                CASE WHEN EXISTS(SELECT SHARE_ID FROM TBL_WEBFOLDER_SHARE WHERE FOLDERFILE_ID = folder.FOLDER_ID AND FOLDERFILE_TYPE = 'D' AND TENANT_ID = folder.TENANT_ID)
+					THEN 'Y'
+					ELSE 'N'
+				END AS FILESHARE_STATUS,
+				if (FILE_EXT ='folder',0,1) as FOLDER_SORT,
+				type.TYPE_NAME 	AS TYPE_NAME    
 		]]>			      
     </sql>
     
@@ -187,22 +184,26 @@
 		</isNotEqual>		
 		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
 			<![CDATA[
-				t.CREATE_NAME1 LIKE CONCAT('%', #searchCreateName#, '%')
+				(t.CREATE_NAME1 LIKE CONCAT('%', #searchCreateName#, '%')
+				or
+				t.CREATE_NAME2 LIKE CONCAT('%', #searchCreateName#, '%'))
        		]]> 
 		</isNotEqual>		
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 			<![CDATA[
-				t.filetype_name LIKE CONCAT('%', #searchFileType#, '%')
+				t.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
        		]]> 
 		</isNotEqual>		
 		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 			<![CDATA[
 				t.FILE_NAME LIKE CONCAT('%', #searchFileName#, '%')
        		]]> 
+       		
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(t.CREATE_DATE, '%Y-%m-%d') >= #searchStartDate# AND DATE_FORMAT(t.CREATE_DATE, '%Y-%m-%d')<= #searchEndDate#)
+				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
+					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
 			]]>
 		</isNotEqual>	
     </sql>
@@ -216,16 +217,10 @@
 		where 
 			tenant_id = #tenantId#
 			and 
-				USER_ID in (
-					select dept.cn 		
-					from tbl_deptmaster dept left outer join tbl_addjobmaster addj on(dept.cn = addj.deptid) 
-					where addj.cn = #userId# 
-					union all
-					select owner_id 
-					from tbl_webfolder_folderuser user inner join tbl_webfolder_folder folder on user.folder_id = folder.folder_id  
-					where user_id = #userId# AND USER_TYPE = 'chief' and folder.tenant_id = #tenantId# group by seq_id 
-				)
-			or user_id = #userId# or user_id= #deptId#
+				USER_ID in 
+					<iterate property="idList" open="(" close=")" conjunction=",">
+			            #idList[].id#
+			         </iterate>
     </sql>
     
     <select id="EzWebFolderDAO_y.checkRootFolder" parameterClass="Map" resultClass="Integer"> 
@@ -274,26 +269,29 @@
 	<select id="EzWebFolderDAO_y.getUserFolderTree" resultMap="folderTreeVO" parameterClass="Map">
 		<![CDATA[
 	        SELECT
-	        	FOLDER_ID AS ID,
-	        	CASE WHEN FOLDER_UPPER = 'root'
-	        		THEN '##'
-	        		ELSE FOLDER_UPPER
-	        	END PARENT,
-	        	CASE WHEN FOLDER_UPPER = 'root'
-	        		THEN TRUE
-	        		ELSE FALSE
-	        	END SELECTED,
-	        	CASE WHEN #primary# = '1'
-	        		THEN FOLDER_NAME1
-	        		ELSE FOLDER_NAME2
-	        	END TEXT,
-	        	CREATE_ID AS CREATEID
+	        	FOLDER_ID as id,
+			    CASE WHEN FOLDER_UPPER = 'root'
+			        THEN '##'
+			        ELSE FOLDER_UPPER
+			    END PARENT,
+			    CASE WHEN FOLDER_UPPER = 'root'
+			        THEN 1
+			        ELSE 0
+			    END SELECTED,
+			    CASE WHEN #primary# = '1'
+			        THEN FOLDER_NAME1
+			        ELSE FOLDER_NAME2
+			    END TEXT,
+			    CREATE_ID AS CREATEID,
+			    FOLDER_NAME1 AS FOLDERNAME1, 
+			    FOLDER_NAME2 AS FOLDERNAME2,
+			    FOLDER_LEVEL AS FOLDERLEVEL
 	        FROM TBL_WEBFOLDER_FOLDER
 	        WHERE USE_STATUS = 'Y'
 	        AND FOLDER_TYPE = 'U'
 	        AND TENANT_ID = #tenantId#
 	        AND OWNER_ID = #userId#
-	        ORDER BY SELECTED DESC
+	        ORDER BY SELECTED DESC, FOLDER_LEVEL
 		]]>
 	</select>
 	
@@ -306,14 +304,17 @@
 	        		ELSE FOLDER_UPPER
 	        	END PARENT,
 	        	CASE WHEN FOLDER_UPPER = 'root'
-	        		THEN TRUE
-	        		ELSE FALSE
+	        		THEN 1
+	        		ELSE 0
 	        	END SELECTED,
 	        	CASE WHEN #primary# = '1'
 	        		THEN FOLDER_NAME1
 	        		ELSE FOLDER_NAME2
 	        	END TEXT,
-	        	CREATE_ID AS CREATEID
+	        	CREATE_ID AS CREATEID,
+			    FOLDER_NAME1 AS FOLDERNAME1, 
+			    FOLDER_NAME2 AS FOLDERNAME2,
+			    FOLDER_LEVEL AS FOLDERLEVEL   
 	        FROM TBL_WEBFOLDER_FOLDER
 	        WHERE USE_STATUS = 'Y'
 	        AND FOLDER_TYPE = 'D'
@@ -323,7 +324,7 @@
 			<iterate property="idList" open="(" close=")" conjunction=",">
 				#idList[]#
 			</iterate>
-			ORDER BY SELECTED DESC
+			ORDER BY SELECTED DESC , FOLDER_LEVEL 
 	</select>
 	
 	<select id="EzWebFolderDAO_y.getCompFolderTree" resultMap="folderTreeVO" parameterClass="Map">
@@ -335,14 +336,17 @@
 	        		ELSE FOLDER_UPPER
 	        	END PARENT,
 	        	CASE WHEN F.FOLDER_UPPER = 'root'
-	        		THEN TRUE
-	        		ELSE FALSE
+	        		THEN 1
+	        		ELSE 0
 	        	END SELECTED,
 	        	CASE WHEN #primary# = '1'
 	        		THEN F.FOLDER_NAME1
 	        		ELSE F.FOLDER_NAME2
 	        	END TEXT,
-	        	F.CREATE_ID AS CREATEID
+	        	F.CREATE_ID AS CREATEID,
+			    F.FOLDER_NAME1 AS FOLDERNAME1, 
+			    F.FOLDER_NAME2 AS FOLDERNAME2 ,
+			    F.FOLDER_LEVEL AS FOLDERLEVEL  
             FROM TBL_WEBFOLDER_FOLDER F
             JOIN (
 				SELECT FF.FOLDER_PATH
@@ -357,27 +361,30 @@
 				#idList[]#
 			</iterate>
 		<![CDATA[
-				WHERE FF.TENANT_ID = #tenantId# ) AS FP
-            ON F.FOLDER_PATH LIKE CONCAT(FP.FOLDER_PATH, '%')
+				WHERE FF.TENANT_ID = #tenantId# ) FP
+            ON F.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%')
 			WHERE F.USE_STATUS = 'Y'
 			AND F.TENANT_ID = #tenantId#
 	        UNION
 	        SELECT
 	        	FOLDER_ID AS ID,
 	        	'##' AS PARENT,
-	        	TRUE AS SELECTED,
+	        	1  AS SELECTED,
 	        	CASE WHEN #primary# = '1'
 	        		THEN FOLDER_NAME1
 	        		ELSE FOLDER_NAME2
 	        	END TEXT,
-	        	CREATE_ID AS CREATEID
+	        	CREATE_ID AS CREATEID,
+			    FOLDER_NAME1 AS FOLDERNAME1,
+			    FOLDER_NAME2 AS FOLDERNAME2,
+			    FOLDER_LEVEL AS FOLDERLEVEL 
 	        FROM TBL_WEBFOLDER_FOLDER
 	        WHERE OWNER_ID = #compId#
 	        AND FOLDER_TYPE = 'C'
 	        AND FOLDER_UPPER = 'root'
 	        AND USE_STATUS = 'Y'
 	        AND TENANT_ID = #tenantId#
-	        ORDER BY SELECTED DESC
+	        ORDER BY SELECTED DESC , FOLDERLEVEL 
 		]]>
 	</select>
     
@@ -455,54 +462,66 @@
 			FROM 
 				TBL_WEBFOLDER_FOLDER  
 			WHERE  
-                FOLDER_ID = #folderId#
+                	FOLDER_ID = #folderId#
                 and TENANT_ID = #tenantId#
     </select>
     
     
 	<select id="EzWebFolderDAO_y.getFileList" resultMap="fileVO" parameterClass="Map">   
-   		<include refid="fileListSelect"/>
+   		<![CDATA[
+	        	select *
+	        	from (
+    	]]>
+ 		<include refid="fileListSelect"/>
 		<![CDATA[
-			from tbl_webfolder_file file inner join (
+		
+			from tbl_webfolder_file f inner join (
 				select *
 				from tbl_webfolder_folder  
 				where 	folder_id = #folderId# 
 					and tenant_id = #tenantId# 
 					and folder_type = #folderType# 
-				group by folder_path) as folder 
-					on folder.folder_id  = file.folder_id
-			inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = #tenantId#
-			where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'  
+				) folder 
+					on folder.folder_id  = f.folder_id
+			inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id  = #tenantId# 
+			left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+				and s.tenant_id = #tenantId# and s.target_type ='F'
+			where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'  
 			
 		]]>
         <include refid="fldSelect"/>
         <![CDATA[
-            from 
-	            tbl_webfolder_filetype AS type LEFT OUTER JOIN  tbl_webfolder_folder as folder ON type.TYPE_NAME = 'folder'
-            where 
-					folder.tenant_id = #tenantId#	 
-				and 
-					folder.FOLDER_TYPE = #folderType#
-                and 
-                	folder.USE_STATUS = 'Y'
-                and 
-                	folder.folder_upper = #folderId#
-                and 
-                	folder.company_id = #comId#
+	            from 
+		            tbl_webfolder_filetype type LEFT OUTER JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder'
+		            left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
+		            	and s.tenant_id = #tenantId# and s.target_type ='D'
+	            where 
+						folder.tenant_id = #tenantId#	 
+					and 
+						folder.FOLDER_TYPE = #folderType#
+	                and 
+	                	folder.USE_STATUS = 'Y'
+	                and 
+	                	folder.folder_upper = #folderId#
+	                and 
+	                	folder.company_id = #comId#
+	            ) t
+	            where 1=1
    		]]>	
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(CREATE_DATE, '%Y-%m-%d') >= #searchStartDate# AND DATE_FORMAT(CREATE_DATE, '%Y-%m-%d')<= #searchEndDate#)
+				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
+					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 			<![CDATA[
-				type.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
-       		]]> 
+				t.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+			]]>
 		</isNotEqual>
+			
 		<![CDATA[
-		 	group by FILE_ID
-			ORDER BY FOLDER_SORT,CREATE_DATE desc 
+			ORDER BY FOLDER_SORT, CREATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -510,62 +529,61 @@
 	<select id="EzWebFolderDAO_y.getFileListR" resultMap="fileVO" parameterClass="Map">   
    		<include refid="fileListSelect"/>
 		<isEqual property="folderType" compareValue="C" >
-   			<![CDATA[
-   			from tbl_webfolder_folder as folder  left join  (
-			
-				select 	
-					SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
-					fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type, fld.tenant_id
-				from tbl_webfolder_folder fld inner join 
-			
-				(
-			]]>
-			<include refid="checkAddJob"/>
-			<![CDATA[	
-				) as user on fld.folder_id = user.folder_id 
-	
-				where fld.folder_type = #folderType#
-				
-				and user.tenant_id = #tenantId#
-				
-			)as t on folder.FOLDER_PATH like concat('%',t.folder_path,'%') 
-	        
-			inner join tbl_webfolder_file file on folder.FOLDER_ID = file.folder_id
-			inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID and type.tenant_id = #tenantId# 
-		where 
-		file.tenant_id = #tenantId#
-		and file.use_status ='Y'
-		and t.tenant_id = #tenantId#
-			]]>	
+   			FROM 
+				TBL_WEBFOLDER_FOLDER folder JOIN TBL_WEBFOLDER_FILE f
+					ON folder.FOLDER_ID = f.FOLDER_ID AND folder.TENANT_ID = f.TENANT_ID
+				JOIN (	
+					SELECT FF.FOLDER_PATH
+					FROM TBL_WEBFOLDER_FOLDER FF
+					JOIN TBL_WEBFOLDER_FOLDERUSER FU
+					ON FF.FOLDER_ID = FU.FOLDER_ID
+					AND FF.TENANT_ID = FU.TENANT_ID
+					AND FF.FOLDER_TYPE = 'C'
+					AND FF.USE_STATUS = 'Y'
+					AND FU.USER_ID IN 
+					<iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[].id#
+					</iterate>
+					WHERE FF.TENANT_ID = #tenantId# ) FP
+				ON folder.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%')
+				JOIN TBL_WEBFOLDER_FILETYPE type 
+					ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#
+				left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+					and s.tenant_id = #tenantId# and s.target_type ='F'   
+			WHERE f.USE_STATUS = 'Y'
+			AND f.TENANT_ID = #tenantId#
    		</isEqual>
    		<isNotEqual property="folderType" compareValue="C">
 			<![CDATA[
-				FROM tbl_webfolder_file as file inner join (
+				FROM tbl_webfolder_file f inner join (
 				select 
 					* 
 				from 
 					tbl_webfolder_folder 
-				where 
-						folder_path like concat(#folderPath#,'%') 
+				where folder_path like concat(#folderPath# , '%') 
 					and tenant_id = #tenantId# 
-					and folder_type = #folderType#) as folder on file.folder_id = folder.folder_id and folder.tenant_id = file.tenant_id
-				inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
-				where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
+					and folder_type = #folderType# and USE_STATUS = 'Y') folder 
+				on f.folder_id = folder.folder_id 
+				and folder.tenant_id = f.tenant_id
+				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
+				left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+						and s.tenant_id = #tenantId# and s.target_type ='F' 
+				where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(file.CREATE_DATE, '%Y-%m-%d') >= #searchStartDate# AND DATE_FORMAT(file.CREATE_DATE, '%Y-%m-%d')<= #searchEndDate#)
+				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
+					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 			<![CDATA[
-				type.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
-       		]]> 
+				t.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+			]]>
 		</isNotEqual>
 		<![CDATA[
-		 	group by FILE_ID
-			ORDER BY FOLDER_SORT,CREATE_DATE desc 
+			ORDER BY FOLDER_SORT, CREATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -576,43 +594,47 @@
 					t.*	 
 			from 
 				(
-		]]>
-		<include refid="fileListSelect"/>
-		<![CDATA[
-			from tbl_webfolder_file file inner join (
-				select *
-				from tbl_webfolder_folder  
-				where folder_path like concat(#folderPath#,'%') and tenant_id = #tenantId# and folder_type = #folderType# group by folder_path) 
-					as folder on folder.folder_id  = file.folder_id
-			inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
-			where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
+			]]>
+			<include refid="fileListSelect"/>
+				<![CDATA[
+					from tbl_webfolder_file f inner join (
+						select *
+						from tbl_webfolder_folder  
+						where folder_path like concat(#folderPath#, '%') and tenant_id = #tenantId# and folder_type = #folderType# ) 
+							folder on folder.folder_id  = f.folder_id
+					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
+					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+						and s.tenant_id = #tenantId# and s.target_type ='F'   
+					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
+					
+				]]>
+				<include refid="fldSelect"/>
+				<![CDATA[
+				    from tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder' and folder.tenant_id = #tenantId#
+				    left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
+		            	and s.tenant_id = #tenantId# and s.target_type ='D' 
+				    where 
+							folder.tenant_id = #tenantId# 
+						and
+							type.tenant_id = #tenantId#
+						and 
+							folder.FOLDER_TYPE = #folderType#
+		                and 
+		                	folder.USE_STATUS = 'Y'
+		                and 
+		                	folder.company_id = #comId#
+		                and 
+		                	folder_path <> #folderPath#		
+				]]>
+			<![CDATA[
+			) t 
 			
-		]]>
-		<include refid="fldSelect"/>
-		<![CDATA[
-			from tbl_webfolder_filetype AS type inner JOIN  tbl_webfolder_folder as folder ON type.TYPE_NAME = 'folder' and folder.tenant_id = #tenantId#
-			where 
-				folder.tenant_id = #tenantId# 
-			and
-				type.tenant_id = #tenantId#
-			and 
-				folder.FOLDER_TYPE = #folderType#
-	        and 
-	          	folder.USE_STATUS = 'Y'
-	        and 
-	           	folder.company_id = #comId#		
-	        group by FILE_ID		
-			      
-		]]>
-		<![CDATA[
-			) as t 
-			
-			where folder_path like concat(#folderPath#,'%') 
-		]]>
-		<include refid="searchAll"/>
-		<![CDATA[
-			group by FILE_ID
-			ORDER BY FOLDER_SORT,CREATE_DATE desc 
+			where folder_path like concat(#folderPath#, '%') 
+			]]>
+			<include refid="searchAll"/>
+			<![CDATA[
+				
+			ORDER BY FOLDER_SORT, CREATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -624,340 +646,314 @@
 				(
 		]]>
 		<include refid="fileListSelect"/>
-		<isEqual property="folderType" compareValue="C" >
-   			<![CDATA[
-   			from tbl_webfolder_folder as folder  left join  (
-			
-				select 	
-					SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
-					fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type, fld.tenant_id
-				from tbl_webfolder_folder fld inner join 
-			
-				(
-				]]>
-				<include refid="checkAddJob"/>
+			<isEqual property="folderType" compareValue="C" >
+	   			FROM 
+					TBL_WEBFOLDER_FOLDER folder JOIN TBL_WEBFOLDER_FILE f
+						ON folder.FOLDER_ID = f.FOLDER_ID AND folder.TENANT_ID = f.TENANT_ID
+					JOIN (	
+						SELECT FF.FOLDER_PATH
+						FROM TBL_WEBFOLDER_FOLDER FF
+						JOIN TBL_WEBFOLDER_FOLDERUSER FU
+						ON FF.FOLDER_ID = FU.FOLDER_ID
+						AND FF.TENANT_ID = FU.TENANT_ID
+						AND FF.USE_STATUS = 'Y'
+						AND FF.FOLDER_TYPE = 'C'
+						AND FU.USER_ID IN 
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+						WHERE FF.TENANT_ID = #tenantId# ) FP
+					ON folder.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%')
+					JOIN TBL_WEBFOLDER_FILETYPE type 
+						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#
+					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+						and s.tenant_id = #tenantId# and s.target_type ='F'    
+				 WHERE f.USE_STATUS = 'Y'
+				 AND f.TENANT_ID = #tenantId#
+	   		</isEqual>
+	   		<isNotEqual property="folderType" compareValue="C">
 				<![CDATA[
-					
-				) as user on fld.folder_id = user.folder_id 
-	
-				where fld.folder_type = #folderType#
-				
-				and user.tenant_id = #tenantId#
-				
-			)as auth on folder.FOLDER_PATH like concat('%',auth.folder_path,'%') 
-	        
-			inner join tbl_webfolder_file file on folder.FOLDER_ID = file.folder_id
-			inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID and type.tenant_id = #tenantId# 
-	        
-				
-			where 
-			file.tenant_id = #tenantId#
-			and file.use_status ='Y'
-			and auth.tenant_id = #tenantId#
-
-			]]>	
-   		</isEqual>
-   		<isNotEqual property="folderType" compareValue="C">
+					FROM tbl_webfolder_file f inner join (
+					select 
+						* 
+					from 
+						tbl_webfolder_folder 
+					where 
+							folder_path like concat(#folderPath# , '%') 
+						and folder_path <> #folderPath#
+						and tenant_id = #tenantId# 
+						and folder_type = #folderType# and use_status = 'Y'
+					) folder on f.folder_id = folder.folder_id
+					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
+					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+						and s.tenant_id = #tenantId# and s.target_type ='F'   
+					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
+				]]>
+			</isNotEqual>
 			<![CDATA[
-				FROM tbl_webfolder_file as file inner join (
-				select 
-					* 
-				from 
-					tbl_webfolder_folder 
-				where 
-						folder_path like concat(#folderPath#,'%') 
-					and tenant_id = #tenantId# 
-					and folder_type = #folderType#
-				) as folder on file.folder_id = folder.folder_id
-				inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
-				where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
-			]]>
-		</isNotEqual>
-			<![CDATA[
-				) as t 
+				) t 
 				
-				where folder_path like concat(#folderPath#,'%') 
+				where folder_path like concat(#folderPath# ,'%') 
 			]]>
-		<include refid="searchAll"/>
-		<![CDATA[
-			group by FILE_ID
-			ORDER BY FOLDER_SORT,CREATE_DATE desc 
-			LIMIT #pStart#, #pEnd#
+			<include refid="searchAll"/>
+			<![CDATA[
+				
+				ORDER BY FOLDER_SORT,CREATE_DATE desc 
+				LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
 	
 	<select id="EzWebFolderDAO_y.getFldToTalCount" resultClass="Integer" parameterClass="Map">   
-		<![CDATA[
-           	SELECT count(folder.folder_id)
-            from 
-	            tbl_webfolder_filetype AS type inner JOIN  tbl_webfolder_folder as folder ON type.TYPE_NAME = 'folder'
-            where 
-					folder.tenant_id = #tenantId#	 
-				and folder.FOLDER_TYPE = #folderType#
-                and folder.USE_STATUS = 'Y'
-                and folder.company_id = #comId#
-                and type.tenant_id = #tenantId#
-		]]>
-		<isEqual property = "flag" compareValue="1" prepend="AND">
+		<isNotEqual property="parentId" compareValue="root" >
 			<![CDATA[
-				folder.folder_path like concat('%',#folderPath#, '%')
+	           	SELECT count(folder.folder_id) as cnt
+	            from 
+		            tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder'
+	            where 
+						folder.tenant_id = #tenantId#	 
+					and folder.FOLDER_TYPE = #folderType#
+	                and folder.USE_STATUS = 'Y'
+	                and folder.company_id = #comId#
+	                and type.tenant_id = #tenantId#
+	                and folder_path <> #folderPath#	
 			]]>
-		</isEqual>
-		<isEqual property= "flag" compareValue="0" prepend="AND">
-			<![CDATA[
-				folder.folder_upper = #folderId#
-			]]>
-		</isEqual>
-         
-		<isNotEqual property="searchExt" compareValue="" prepend="AND">
-			<![CDATA[
-				type.FILE_EXT LIKE CONCAT('%', #searchExt#, '%')
-       		]]> 
-		</isNotEqual>		
-		<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
-			<![CDATA[
-				folder.CREATE_NAME1 LIKE CONCAT('%', #searchCreateName#, '%')
-				or
-				folder.CREATE_NAME2 LIKE CONCAT('%', #searchCreateName#, '%')
-       		]]> 
-		</isNotEqual>		
-		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
-			<![CDATA[
-				type.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
-       		]]> 
-		</isNotEqual>		
-		<isNotEqual property="searchFileName" compareValue="" prepend="AND">
-			<![CDATA[
-					folder.folder_name1 LIKE CONCAT('%', #searchFileName#, '%')
-				or
-					folder.folder_name2 LIKE CONCAT('%', #searchFileName#, '%')
-       		]]> 
+			<isEqual property = "flag" compareValue="1" prepend="AND">
+				<![CDATA[
+					folder.folder_path like concat('%', #folderPath#, '%') 
+				]]>
+			</isEqual>
+			<isEqual property= "flag" compareValue="0" prepend="AND">
+				<![CDATA[
+					folder.folder_upper = #folderId#
+				]]>
+			</isEqual>
+	         
+			<isNotEqual property="searchExt" compareValue="" prepend="AND">
+				<![CDATA[
+					type.FILE_EXT LIKE CONCAT('%', #searchExt#, '%')
+	       		]]> 
+			</isNotEqual>		
+			<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+				<![CDATA[
+					(folder.CREATE_NAME1 LIKE CONCAT('%', #searchCreateName#, '%')
+					or
+					folder.CREATE_NAME2 LIKE CONCAT('%', #searchCreateName#, '%'))
+	       		]]> 
+			</isNotEqual>		
+			<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+				<![CDATA[
+					type.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+	       		]]> 
+			</isNotEqual>	
+			<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+				<![CDATA[
+					(folder.folder_name1 LIKE CONCAT('%', #searchFileName#, '%')
+					or
+					folder.folder_name2 LIKE CONCAT('%', #searchFileName#, '%'))
+	       		]]> 
+			</isNotEqual>
+			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
+				<![CDATA[
+					(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
+					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)	
+				]]>
+			</isNotEqual>
 		</isNotEqual>
-		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
-			<![CDATA[
-				(DATE_FORMAT(folder.CREATE_DATE, '%Y-%m-%d') >= #searchStartDate# AND DATE_FORMAT(folder.CREATE_DATE, '%Y-%m-%d')<= #searchEndDate#)
-			]]>
-		</isNotEqual>
-		
 		<isEqual property="parentId" compareValue="root" >
-			select count(*)
-			from tbl_webfolder_folder
+			select count(*) as cnt
+			from dual 
 			where 1=0
 		</isEqual>
-		<![CDATA[
-			group by folder.folder_id
-			ORDER BY CREATE_DATE desc
-		]]>
 	</select>
 	<select id="EzWebFolderDAO_y.searchFileToTalCount" resultClass="Integer" parameterClass="Map">   
    		<![CDATA[
 			SELECT distinct count(*)
 			from 
 				(
-	  					SELECT DISTINCT
-						folder.FOLDER_NAME1   	AS FOLDER_NAME1,
-						file.FILE_ID 	  		AS FILE_ID,
-						file.FILE_NAME 	  		AS FILE_NAME,
-						file.FILE_EXT	  		AS FILE_EXT,
-						file.FOLDER_ID	  		AS FOLDER_ID,
-						file.USE_STATUS   		AS USE_STATUS,
-						if ( #primary# = '1' , file.CREATE_NAME1, file.CREATE_NAME2) as CREATE_NAME1,
-						DATE_ADD(file.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-						file.TENANT_ID    ,
-						type.TYPE_NAME 	AS filetype_name    	   		
-					from tbl_webfolder_file file inner join (
-						select 
-							* 
-						from 
-							tbl_webfolder_folder 
-						where 
-								folder_path like concat(#folderPath#,'%') 
-							and tenant_id = #tenantId# 
-							and folder_type = #folderType#
-						) 
-							as folder on folder.folder_id  = file.folder_id
-							
-					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
-					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
-					
-					) as t
-					where 1=1
-						
-			]]>	
-	
-			<include refid="searchAll"/>
-		</select>
-		
-		<select id="EzWebFolderDAO_y.searchFileToTalCountR" resultClass="Integer" parameterClass="Map">   
-			<![CDATA[
-			SELECT distinct count(*)
-			from 
-				(
-			]]>       
-			<![CDATA[
-	   		SELECT DISTINCT
-					folder.FOLDER_NAME1    as FOLDER_NAME1,
-					file.FILE_ID 	  ,
-					file.FILE_NAME 	  ,
-					file.FILE_EXT	  AS FILE_EXT,
-					file.FOLDER_ID	  ,
-					file.USE_STATUS   ,
-					if ( #primary# = '1' , file.CREATE_NAME1, file.CREATE_NAME2) as CREATE_NAME1,
-					DATE_ADD(file.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-					file.TENANT_ID    ,
-					type.TYPE_NAME 	AS filetype_name    	   		
-			]]>	
-				<isEqual property="folderType" compareValue="C" >
-		   			<![CDATA[
-		   			from tbl_webfolder_folder as folder  left join  (
-					
-						select 	
-							SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
-							fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type, fld.tenant_id
-						from tbl_webfolder_folder fld inner join 
-					
-						(
-					]]>
-					<include refid="checkAddJob"/>
-					<![CDATA[
-							
-						) as user on fld.folder_id = user.folder_id 
-			
-						where fld.folder_type = #folderType#
-						
-						and user.tenant_id = #tenantId#
-						
-					)as t on folder.FOLDER_PATH like concat('%',t.folder_path,'%') 
-			        
-					inner join tbl_webfolder_file file on folder.FOLDER_ID = file.folder_id
-					inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID and type.tenant_id = #tenantId# 
-			        
-					
-				where 
-				file.tenant_id = #tenantId#
-				and file.use_status ='Y'
-				and t.tenant_id = #tenantId#
-					]]>	
-		   		</isEqual>
-		   		<isNotEqual property="folderType" compareValue="C">
-					<![CDATA[
-						FROM tbl_webfolder_file as file inner join (
-							select 
-								* 
-							from 
-								tbl_webfolder_folder 
-							where 
-									folder_path like concat(#folderPath#,'%') 
-								and tenant_id = #tenantId# 
-								and folder_type = #folderType#
-							) as folder on file.folder_id = folder.folder_id
-						inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
-						where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
-					]]>
-				</isNotEqual>
-			<![CDATA[
-				) as t
-				where 1=1
-						
-			]]>	
-
-		<include refid="searchAll"/>
-		
-	</select>
-	<select id="EzWebFolderDAO_y.getFileToTalCount" resultClass="Integer" parameterClass="Map">   
-   		<![CDATA[
-   		select count(*) from ( 
-   			SELECT file.file_id
-		]]>	
-		<![CDATA[
-			from tbl_webfolder_file file inner join (
-				select *
-				from tbl_webfolder_folder  
-				where folder_id = #folderId# and tenant_id = #tenantId#  group by folder_path) 
-					as t on t.folder_id  = file.folder_id
-			inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID and type.tenant_id = file.tenant_id 
-			where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
-		]]>
-		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
-			<![CDATA[
-				type.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
-       		]]> 
-		</isNotEqual>
-		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
-			<![CDATA[
-				(DATE_FORMAT(file.CREATE_DATE, '%Y-%m-%d') >= #searchStartDate# AND DATE_FORMAT(file.CREATE_DATE, '%Y-%m-%d')<= #searchEndDate#)
-			]]>
-		</isNotEqual>	
-		<![CDATA[
-			group by file.file_id)as totalCount
-		]]>
-	</select>
-	<select id="EzWebFolderDAO_y.getFileToTalCountR" resultClass="Integer" parameterClass="Map"> 
-		<![CDATA[
-   		select count(*) from ( 
-   			SELECT file.file_id
-		]]>	
-			<isEqual property="folderType" compareValue="C" >
-	   			<![CDATA[
-		   			from tbl_webfolder_folder as folder  left join  (
-				
-					select 	
-						SUBSTRING_INDEX(SUBSTRING_INDEX(fld.FOLDER_PATH, '|', 2),'|',-1) as a,
-						fld.folder_id, fld.folder_name1,fld.folder_path, fld.folder_type, fld.tenant_id
-					from tbl_webfolder_folder fld inner join 
-				
-					(
-					]]>
-					<include refid="checkAddJob"/>
-					<![CDATA[
-						
-					) as user on fld.folder_id = user.folder_id 
-		
-					where fld.folder_type = #folderType#
-					
-					and user.tenant_id = #tenantId#
-					
-				)as t on folder.FOLDER_PATH like concat('%',t.folder_path,'%') 
-		        
-				inner join tbl_webfolder_file file on folder.FOLDER_ID = file.folder_id
-				inner join tbl_webfolder_filetype type on type.TYPE_ID = file.TYPE_ID and type.tenant_id = #tenantId# 
-		        
-				
-			where 
-			file.tenant_id = #tenantId#
-			and file.use_status ='Y'
-			and t.tenant_id = #tenantId#
-					
-					
-				]]>	
-	   		</isEqual>
-	   		<isNotEqual property="folderType" compareValue="C">
-				<![CDATA[
-					FROM tbl_webfolder_file as file inner join (
+		   		SELECT DISTINCT
+						folder.FOLDER_NAME1    	AS FOLDER_NAME1,
+						f.FILE_ID 	  			AS FILE_ID,
+						f.FILE_NAME 	  		AS FILE_NAME,
+						f.FILE_EXT	  			AS FILE_EXT,
+						f.FOLDER_ID	  			AS FOLDER_ID,
+						f.USE_STATUS   			AS USE_STATUS,
+						if ( #primary# = '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
+						f.CREATE_NAME2 as CREATE_NAME2,
+						DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+						f.TENANT_ID    			AS TENANT_ID,
+						type.TYPE_NAME 			AS TYPE_NAME    	   		
+				from tbl_webfolder_file f inner join (
 					select 
 						* 
 					from 
 						tbl_webfolder_folder 
 					where 
-							folder_path like concat(#folderPath#,'%') 
+							folder_path like concat(#folderPath# , '%') 
 						and tenant_id = #tenantId# 
-						and folder_type = #folderType#) as t on file.folder_id = t.folder_id
-					inner join  tbl_webfolder_filetype AS type ON type.TYPE_ID = file.TYPE_ID  and type.tenant_id = file.tenant_id 
-					where file.tenant_id = #tenantId# and file.USE_STATUS = 'Y'
+						and folder_type = #folderType#
+						and use_status = 'Y'
+					) folder on folder.folder_id  = f.folder_id
+						
+				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
+				where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
+			]]>	
+			<![CDATA[
+			) t
+			where 1=1
+			]]>	
+		<include refid="searchAll"/>
+	</select>
+		
+	<select id="EzWebFolderDAO_y.searchFileToTalCountR" resultClass="Integer" parameterClass="Map">   
+		<![CDATA[
+			SELECT distinct count(*)
+			from 
+				(
+	   			SELECT DISTINCT
+					folder.FOLDER_NAME1    	AS FOLDER_NAME1,
+					f.FILE_ID 	  			AS FILE_ID,
+					f.FILE_NAME 	  		AS FILE_NAME,
+					f.FILE_EXT	  			AS FILE_EXT,
+					f.FOLDER_ID	  			AS FOLDER_ID,
+					f.USE_STATUS   			AS USE_STATUS,
+					if ( #primary# = '1' , f.CREATE_NAME1, f.CREATE_NAME2) AS CREATE_NAME1,
+					f.CREATE_NAME2 AS CREATE_NAME2,
+					DATE_ADD(file.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+					f.TENANT_ID    ,
+					type.TYPE_NAME 			AS TYPE_NAME    	   		
+			]]>	
+			<isEqual property="folderType" compareValue="C" >
+		   			FROM 
+					TBL_WEBFOLDER_FOLDER folder JOIN TBL_WEBFOLDER_FILE f
+						ON folder.FOLDER_ID = f.FOLDER_ID AND folder.TENANT_ID = f.TENANT_ID
+					JOIN (	
+						SELECT FF.FOLDER_PATH
+						FROM TBL_WEBFOLDER_FOLDER FF
+						JOIN TBL_WEBFOLDER_FOLDERUSER FU
+						ON FF.FOLDER_ID = FU.FOLDER_ID
+						AND FF.TENANT_ID = FU.TENANT_ID
+						AND FF.USE_STATUS='Y'
+						AND FF.FOLDER_TYPE = 'C'
+						AND FU.USER_ID IN 
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+						WHERE FF.TENANT_ID = #tenantId# ) FP
+					ON folder.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%')
+					JOIN TBL_WEBFOLDER_FILETYPE type 
+						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
+				 WHERE f.USE_STATUS = 'Y'
+				 AND f.TENANT_ID = #tenantId#
+	   		</isEqual>
+	   		<isNotEqual property="folderType" compareValue="C">
+				<![CDATA[
+					FROM tbl_webfolder_file f inner join (
+						select 
+							* 
+						from 
+							tbl_webfolder_folder 
+						where 
+								folder_path like concat(#folderPath# ,'%') 
+							and tenant_id = #tenantId# 
+							and folder_type = #folderType#
+						) folder on f.folder_id = folder.folder_id
+					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
+					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
 				]]>
 			</isNotEqual>
+		<![CDATA[
+			) t
+			where 1=1
+		]]>	
+
+		<include refid="searchAll"/>
+		
+	</select>
+	<select id="EzWebFolderDAO_y.getFileToTalCount" resultClass="Integer" parameterClass="Map">   
+   		select count(*) from ( 
+   			SELECT f.file_id
+				from tbl_webfolder_file f 
+				inner join (
+					select *
+					from tbl_webfolder_folder  
+					where folder_id = #folderId# 
+					and tenant_id = #tenantId# and use_status='Y' ) t 
+				on t.folder_id  = f.folder_id
+				inner join  tbl_webfolder_filetype type 
+				ON type.TYPE_ID = f.TYPE_ID 
+				and type.tenant_id = f.tenant_id 
+				where f.tenant_id = #tenantId# 
+				and f.USE_STATUS = 'Y'
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 			<![CDATA[
-				type.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+				t.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
        		]]> 
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(file.CREATE_DATE, '%Y-%m-%d') >= #searchStartDate# AND DATE_FORMAT(file.CREATE_DATE, '%Y-%m-%d')<= #searchEndDate#)
+				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
+					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+			]]>
+		</isNotEqual>	
+		) totalCount
+	</select>
+	<select id="EzWebFolderDAO_y.getFileToTalCountR" resultClass="Integer" parameterClass="Map"> 
+		<![CDATA[
+   		select count(*) from ( 
+   			SELECT file_id
+		]]>	
+		<isEqual property="folderType" compareValue="C" >
+	  		FROM 
+				TBL_WEBFOLDER_FOLDER folder JOIN TBL_WEBFOLDER_FILE f
+					ON folder.FOLDER_ID = f.FOLDER_ID AND folder.TENANT_ID = f.TENANT_ID
+				JOIN (	
+					SELECT FF.FOLDER_PATH
+					FROM TBL_WEBFOLDER_FOLDER FF
+					JOIN TBL_WEBFOLDER_FOLDERUSER FU
+					ON FF.FOLDER_ID = FU.FOLDER_ID
+					AND FF.TENANT_ID = FU.TENANT_ID
+					AND FF.FOLDER_TYPE = 'C'
+					AND FU.USER_ID IN 
+					<iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[].id#
+					</iterate>
+					WHERE FF.TENANT_ID = #tenantId# and use_status='Y' ) FP
+				ON folder.FOLDER_PATH LIKE  CONCAT(FP.FOLDER_PATH , '%')
+				JOIN TBL_WEBFOLDER_FILETYPE type 
+					ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
+			 WHERE F.USE_STATUS = 'Y'
+			 AND F.TENANT_ID = #tenantId#
+   		</isEqual>
+   		<isNotEqual property="folderType" compareValue="C">
+			<![CDATA[
+				FROM tbl_webfolder_file f inner join (
+					select 
+						* 
+					from 
+						tbl_webfolder_folder 
+					where 
+							folder_path like CONCAT(#folderPath# , '%') 
+						and tenant_id = #tenantId# 
+						and folder_type = #folderType#
+						and use_status='Y') t on f.folder_id = t.folder_id
+				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  
+							and type.tenant_id = f.tenant_id 
+				where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
+			]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+       		]]> 
+		</isNotEqual>
+		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
+			<![CDATA[
+				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
+					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
 			]]>
 		</isNotEqual>	
 		<![CDATA[
-			group by file.file_id)as totalCount
+			)totalCount 
 		]]>
 	</select>
 	
@@ -1212,15 +1208,25 @@
 	
 	<select id="EzWebFolderDAO_y.checkSubCreater" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			select count(DISTINCT if (create_id =#userId#,'1','0')) as checked 
-			from tbl_webfolder_folder
-			where folder_path like (
-				select concat(folder.folder_path,'%')
-				from tbl_webfolder_folder folder  
-				where folder.folder_id like concat('%',#folderId#,'%') and folder.TENANT_ID = #tenantId# 
-					and folder.company_id = #comId#
-				)
-				and tenant_id = #tenantId#
+			SELECT CASE WHEN (
+                 SELECT COUNT(*)
+                   FROM (
+                            select create_id
+                            from tbl_webfolder_folder where folder_path like concat(#folderPath# , '%') and tenant_id = #tenantId#
+                            GROUP BY create_id
+                        )
+                 ) = (
+                     SELECT COUNT(*)
+                       FROM (
+                            select create_id
+                            from tbl_webfolder_folder where folder_path likeconcat(#folderPath# , '%') and tenant_id = #tenantId#
+                            GROUP BY create_id
+                      )
+                 WHERE CREATE_ID = #userId#
+                 ) THEN '1'
+			     ELSE '0'
+			     END AS RESULT
+			FROM DUAL
 		]]>
 	</select>
 	<select id="EzWebFolderDAO_y.checkFileCreater" parameterClass="Map" resultClass="Integer">
@@ -1339,5 +1345,29 @@
 		ON DUPLICATE KEY UPDATE env_value = #listCount#
 		
 	</insert>
+	<select id ="EzWebFolderDAO_y.folderDetailByFileId" parameterClass="Map" resultMap="folderVO">
+		<![CDATA[
+			SELECT fld.*
+			FROM TBL_WEBFOLDER_FOLDER fld inner join TBL_WEBFOLDER_FILE f ON f.folder_id = fld.folder_id
+			WHERE f.TENANT_ID = #tenantId# and fld.COMPANY_ID = #comId# and f.FILE_ID = #fileId# 
+		]]>
+	</select>
+	<select id="EzWebFolderDAO_y.checkCompanyFolderPermission" parameterClass="Map" resultClass="Integer">
+		SELECT COUNT(*) 
+		FROM TBL_WEBFOLDER_FOLDERUSER FU
+		JOIN TBL_WEBFOLDER_FOLDER F
+		ON FU.FOLDER_ID = F.FOLDER_ID
+		AND FU.TENANT_ID = F.TENANT_ID
+		WHERE F.FOLDER_TYPE = 'C'
+		AND FU.USER_ID IN
+		<iterate property="permissionIdList" open="(" close=")" conjunction=",">
+			#permissionIdList[]#
+		</iterate>
+		AND FU.FOLDER_ID IN
+		<iterate property="folderIdList" open="(" close=")" conjunction=",">
+			#folderIdList[]#
+		</iterate>
+		AND FU.TENANT_ID = #tenantId#
+	</select>
 </sqlMap>
 

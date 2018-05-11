@@ -2,13 +2,13 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezWebFolder">
-	<typeAlias  alias="FileVO"              type="egovframework.ezEKP.ezWebFolder.vo.FileVO"        />
-	<typeAlias  alias="FileTypeVO"          type="egovframework.ezEKP.ezWebFolder.vo.FileTypeVO"    />
-	<typeAlias  alias="FolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"      />
-	<typeAlias  alias="FolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
-	<typeAlias  alias="FolderUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.FolderUserVO"  />
-	<typeAlias  alias="SimpleDeptVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO"  />
-	<typeAlias  alias="SimpleUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO"  />
+	<typeAlias  alias="webFolderFileVO"              type="egovframework.ezEKP.ezWebFolder.vo.FileVO"        />
+	<typeAlias  alias="webFolderFileTypeVO"          type="egovframework.ezEKP.ezWebFolder.vo.FileTypeVO"    />
+	<typeAlias  alias="webFolderFolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"      />
+	<typeAlias  alias="webFolderFolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
+	<typeAlias  alias="webFolderFolderUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.FolderUserVO"  />
+	<typeAlias  alias="webFolderSimpleDeptVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO"  />
+	<typeAlias  alias="webFolderSimpleUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO"  />
 	<typeAlias  alias="OrganDeptVO"         type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"       />
 	<typeAlias  alias="EnvVO"               type="egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO"/>
 	
@@ -78,7 +78,7 @@
 	</sql>
 	
 	<!-- File resultMap -->
-	<resultMap id="fileVO" class="FileVO">
+	<resultMap id="fileVO" class="webFolderFileVO">
 		<result property="fileId"               column="file_id"                columnIndex="1"  />
 		<result property="fileName"             column="file_name"              columnIndex="2"  />
 		<result property="filePath"             column="file_path"              columnIndex="3"  />
@@ -102,7 +102,7 @@
 	</resultMap>
 	
 	<!-- File resultMap2 -->
-	<resultMap id="fileVO2" class="FileVO">
+	<resultMap id="fileVO2" class="webFolderFileVO">
 		<result property="fileId"               column="file_id"                columnIndex="1"  />
 		<result property="fileName"             column="file_name"              columnIndex="2"  />
 		<result property="filePath"             column="file_path"              columnIndex="3"  />
@@ -134,7 +134,7 @@
 	</resultMap>
 	
 	<!-- 로그인  resultMap -->
-	<resultMap id="folderUserVO" class="FolderUserVO">
+	<resultMap id="folderUserVO" class="webFolderFolderUserVO">
 		<result property="userId"               column="USER_ID"                 columnIndex="1"/>
 		<result property="displayName1"         column="DISPLAY_NAME1"           columnIndex="2"/>
 		<result property="displayName2"         column="DISPLAY_NAME2"           columnIndex="3"/>
@@ -142,7 +142,7 @@
 	</resultMap>
 	
 	<!-- FolderSimpleVO resultMap -->
-	<resultMap id="folderSimpleVO" class="FolderSimpleVO">
+	<resultMap id="folderSimpleVO" class="webFolderFolderSimpleVO">
 		<result property="folderId"             column="FOLDER_ID"              columnIndex="1"/>
 		<result property="folderName"           column="FOLDER_NAME"            columnIndex="2"/>
 		<result property="folderName2"          column="FOLDER_NAME2"           columnIndex="3"/>
@@ -151,7 +151,7 @@
 	</resultMap>
 	
 	<!-- FolderSimpleVO resultMap -->
-	<resultMap id="folderSimpleVO2" class="FolderSimpleVO">
+	<resultMap id="folderSimpleVO2" class="webFolderFolderSimpleVO">
 		<result property="folderId"             column="FOLDER_ID"              columnIndex="1"/>
 		<result property="folderName"           column="FOLDER_NAME"            columnIndex="2"/>
 		<result property="folderName2"          column="FOLDER_NAME2"           columnIndex="3"/>
@@ -161,7 +161,7 @@
 	</resultMap>
 	
 	<!-- Folder resultMap -->
-	<resultMap id="folderVO" class="FolderVO">
+	<resultMap id="folderVO" class="webFolderFolderVO">
 		<result property="folderId"             column="FOLDER_ID"                columnIndex="1"  />
 		<result property="folderName1"          column="FOLDER_NAME1"             columnIndex="2"  />
 		<result property="folderName2"          column="FOLDER_NAME2"             columnIndex="3"  />
@@ -184,7 +184,7 @@
 	</resultMap>
 	
 	<!-- FolderSimple resultMap -->
-	<resultMap id="fileTypeVO" class="FileTypeVO">
+	<resultMap id="fileTypeVO" class="webFolderFileTypeVO">
 		<result property="typeId"               column="TYPE_ID"                columnIndex="1" />
 		<result property="typeName"             column="TYPE_NAME"              columnIndex="2" />
 		<result property="fileExt"              column="FILE_EXT"               columnIndex="3" />
@@ -193,7 +193,7 @@
 	</resultMap>
 	
 	<!-- SimpleDept resultMap -->
-	<resultMap id="simpleDeptVO" class="SimpleDeptVO">
+	<resultMap id="simpleDeptVO" class="webFolderSimpleDeptVO">
 		<result property="deptId"               column="DEPT_ID"                columnIndex="1"/>
 		<result property="deptName"             column="DEPT_NAME"              columnIndex="2"/>
 		<result property="level"                column="LEVEL"                  columnIndex="3"/>
@@ -201,7 +201,7 @@
 	</resultMap>
 	
 	<!-- OrganDeptVO resultMap -->
-	<resultMap id="deptMemberInfo" class="SimpleUserVO">
+	<resultMap id="deptMemberInfo" class="webFolderSimpleUserVO">
 		<result property="userId"               column="cn"                     columnIndex="1"/>
 		<result property="position"             column="position"               columnIndex="2"/>
 		<result property="userName"             column="displayName"            columnIndex="3"/>

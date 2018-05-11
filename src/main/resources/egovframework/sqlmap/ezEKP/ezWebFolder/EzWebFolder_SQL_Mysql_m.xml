@@ -3,15 +3,15 @@
 
 <sqlMap namespace="ezWebFolder_m">
 	<!-- FolderFile typeAlias  -->
-	<typeAlias alias="TrashCanVO"       type="egovframework.ezEKP.ezWebFolder.vo.TrashCanVO"/>
-	<typeAlias alias="ShareVO"          type="egovframework.ezEKP.ezWebFolder.vo.ShareVO"/>
-	<typeAlias alias="FolderFileVO"     type="egovframework.ezEKP.ezWebFolder.vo.FolderFileVO"/>
-	<typeAlias alias="FavoriteVO"       type="egovframework.ezEKP.ezWebFolder.vo.FavoriteVO"/>
-	<typeAlias alias="SimpleShareVO"    type="egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO"/>
-	<typeAlias alias="ShareSubVO"	    type="egovframework.ezEKP.ezWebFolder.vo.ShareSubVO"/>
+	<typeAlias alias="webFolderTrashCanVO"       type="egovframework.ezEKP.ezWebFolder.vo.TrashCanVO"/>
+	<typeAlias alias="webFolderShareVO"          type="egovframework.ezEKP.ezWebFolder.vo.ShareVO"/>
+	<typeAlias alias="webFolderFolderFileVO"     type="egovframework.ezEKP.ezWebFolder.vo.FolderFileVO"/>
+	<typeAlias alias="webFolderFavoriteVO"       type="egovframework.ezEKP.ezWebFolder.vo.FavoriteVO"/>
+	<typeAlias alias="webFolderSimpleShareVO"    type="egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO"/>
+	<typeAlias alias="webFolderShareSubVO"	    type="egovframework.ezEKP.ezWebFolder.vo.ShareSubVO"/>
 	
 	<!-- TrashFile resultMap -->
-	<resultMap id="trashCanVO" class="TrashCanVO">
+	<resultMap id="trashCanVO" class="webFolderTrashCanVO">
 		<result property="trashCanId"      column="TRASHCAN_ID"        columnIndex="1"/>
 		<result property="trashCanName"    column="TRASHCAN_NAME"      columnIndex="2"/>
 		<result property="trashCanIconUrl" column="TRASHCAN_ICON_URL"  columnIndex="3"/>
@@ -28,7 +28,7 @@
 	</resultMap>
 	
 	<!-- FavoriteFile resultMap -->
-	<resultMap id="favoriteVO" class="FavoriteVO">
+	<resultMap id="favoriteVO" class="webFolderFavoriteVO">
 		<result property="targetId"			column="TARGET_ID"		 />
 		<result property="targetName"		column="TARGET_NAME"	 />
 		<result property="targetType"		column="TARGET_TYPE"	 />
@@ -44,7 +44,7 @@
 	</resultMap>
 
 	<!-- ShareFile resultMap -->
-    <resultMap id="shareVO" class="ShareVO">
+    <resultMap id="shareVO" class="webFolderShareVO">
         <result property="fileId"                 column="FILE_ID"                columnIndex="1"  />
         <result property="fileName"               column="FILE_NAME"              columnIndex="2"  />
         <result property="folderFileType"         column="FOLDERFILE_TYPE"        columnIndex="3"  />
@@ -74,7 +74,7 @@
     </resultMap>
 	
 	<!-- ShareInfo resultMap -->
-    <resultMap id="simpleShareVO" class="SimpleShareVO">
+    <resultMap id="simpleShareVO" class="webFolderSimpleShareVO">
     	<result property="shareId"                column="SHARE_ID"               columnIndex="1"  />
     	<result property="sharerId"               column="SHARER_ID"              columnIndex="2"  />
     	<result property="sharerName"             column="SHARER_NAME"            columnIndex="3"  />
@@ -85,7 +85,7 @@
     </resultMap>
     
     <!-- ShareSubInfo resultMap -->
-    <resultMap id="shareSubVO" class="ShareSubVO">
+    <resultMap id="shareSubVO" class="webFolderShareSubVO">
     	<result property="userId"                 column="USER_ID"                columnIndex="1"  />
     	<result property="userName"               column="USER_NAME"              columnIndex="2"  />
     	<result property="userType"               column="USER_TYPE"              columnIndex="3"  />
