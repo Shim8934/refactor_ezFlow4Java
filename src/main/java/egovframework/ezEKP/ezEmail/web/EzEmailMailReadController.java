@@ -950,6 +950,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						response.setContentType(part.getContentType());
 						
 						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
+						
 						response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
 						logger.debug("content-disposition=" + "attachment; filename=\"" + filename + "\"");
 						
