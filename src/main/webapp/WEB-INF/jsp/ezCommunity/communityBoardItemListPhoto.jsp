@@ -8,48 +8,28 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
 		<style type="text/css">
-	        <!--
 	        .photo_tit {
 	            font-size: 9pt;
 	            color: #333333;
 	            padding-left:4.5px;
 	            padding-bottom:2px;
 	        }
-	
 	        .photo_name {
 	            font-size: 9pt;
 	            color: #00539b;
 	        }
-	
 	        .photo_num {
 	            font-size: 9pt;
 	            font-weight: bold;
 	            color: #639933;
 	        }
-	        -->
 	    </style>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     	<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
     	<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-    	<style>
-	        .pagetd {
-	            padding-top: 6px;
-	        }
-	
-	        .pcol {
-	            padding-top: 6px;
-	        }
-	
-	        .Right_Point01 {
-	            font: bold;
-	            color: #017bec;
-	        }
-	    </style>
-    	
     	<script type="text/javascript">
 	    	var pBoardID = "<c:out value = '${boardInfo.boardID}' />";
 	        var pBoardName = "<c:out value = '${boardInfo.boardName}' />";
