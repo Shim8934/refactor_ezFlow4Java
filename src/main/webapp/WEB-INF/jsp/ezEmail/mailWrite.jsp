@@ -151,6 +151,8 @@
 	    var secureReadCount = "0";
 	    var secureReadDate = "";
 	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
+	    var folderPath = "${drafts}";
+	    var multipartFirstIdx = "${multipartFirstIdx}";
 
 	    //업무일지 아이디
 	    var journalId = "${journalId}";
@@ -830,7 +832,6 @@
 		            }
 		            
 		            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
-		            var folderPath = "${drafts}";
 	        	    var scheme = document.location.protocol + "//" + document.location.hostname;
 	        	    
 	                if (document.location.port != "80") {
@@ -857,7 +858,7 @@
 			                aitem = "/ezEmail/downloadAttach.do?" 
 			                				+ "mode=Attach"
 			                				+ "&folderPath=" + encodeURIComponent(folderPath)
-			                				+ "&filename=" + encodeURIComponent(filename)
+			                				+ "&filename=" + encodeURIComponent(filename);
 		                }
 		                
 		                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
@@ -867,6 +868,7 @@
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "ITEMID", attid);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "UID", g_url);
 		            }
+		            
 		            returnvalue(strXML);
 	        	}
 	        	
