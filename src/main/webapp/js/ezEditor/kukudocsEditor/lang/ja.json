@@ -718,7 +718,8 @@
     "pasteKeydownMessage": "Ctrl + V（Mac:CMD + V）キーボードショートカットを使用してください。",
     "cutKeydownMessage": "Ctrl + X（Mac:CMD + X）ショートカットを使用してください。",
     "notFoundTextErrorMessage": "文字列が見つかりません。",
-    "errorParsingError" : "変換中にエラーが発生しました。"
+    "errorParsingError" : "変換中にエラーが発生しました。",
+    "pasteParsingError" : "貼り付け中にエラーが発生しました。"
   },
   "processingMessage" : "変換中 ...",
   "paragraphInsert": "段落挿入",

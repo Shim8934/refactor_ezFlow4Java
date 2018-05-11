@@ -786,7 +786,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        		if (orgMessage.isMimeType("multipart/related")) {
 			        		MimeMultipart relatedPart = new MimeMultipart("related");
 			        		
-			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, false)) {
 			        			resendMessage.setContent(relatedPart);
 			        		} else {
 			        			resendMessage.setText("placeholder");
@@ -878,7 +878,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        			if (orgMessage.isMimeType("multipart/related")) {
 				        		MimeMultipart relatedPart = new MimeMultipart("related");
 				        		
-				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, true)) {
 				        			replyMessage.setContent(relatedPart);
 				        		} else {
 				        			replyMessage.setText("placeholder");
@@ -895,7 +895,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        		} else {
 			        		MimeMultipart relatedPart = new MimeMultipart("related");
 			        		
-			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, false)) {
 			        			replyMessage.setContent(relatedPart);
 			        		} else {
 			        			replyMessage.setText("placeholder");
