@@ -91,13 +91,8 @@
 	        }
 
 	        function btn_Modify_Onclick() {
-	            if (Write_FG != "true") {
-	                alert("<spring:message code = 'ezCommunity.t939' />");
-	                return;
-	            }
-
-	            if (strWriterID != SSUserID && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
-	                alert("<spring:message code = 'ezCommunity.t939' />");
+	            if ((Write_FG != "true") || (strWriterID != SSUserID && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK")) {
+	                alert("<spring:message code = 'ezCommunity.t431' />");
 	                return;
 	            }
 
