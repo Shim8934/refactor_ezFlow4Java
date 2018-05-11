@@ -730,7 +730,7 @@
 		        var pLeft = (pwidth - 765) / 2;
 
 		        if (gubun == "3") {
-		        	GetOpenWindow("/ezCommunity/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 800);
+		        	GetOpenWindow("/ezCommunity/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
 		        } else {
 		        	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
 		        }
@@ -773,6 +773,12 @@
 		    		return temp;
 		    	}
 		    }
+		    
+		    /* 2018-05-11 홍승비 - 팝업홈 메인에서 글 삭제할 경우 새로고침 동작 */
+		    function refresh_onclick() {
+	            window.location.reload();
+	        }
+ 	        
 		</script>
 	</head>
 	
