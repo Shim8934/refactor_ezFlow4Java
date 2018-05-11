@@ -1,3 +1,4 @@
+"use strict";
 var rowContext = (function() {
 	var className = {
 		selected: "bnkWebFolder2",

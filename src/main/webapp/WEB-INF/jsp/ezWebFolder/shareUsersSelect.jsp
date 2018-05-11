@@ -25,12 +25,12 @@
 			var arrSubFolder = [];
 			var selectedDept = "";
 			var selectedUser = "";
-			var strErrMsg = "<spring:message code='ezWebFolder.t134' />";
-			var strDataNotFound = "<spring:message code='ezWebFolder.t144' />";
-			var strAlreadyAdd = "<spring:message code='ezWebFolder.t169' />";
-			var strAlertMsg = "<spring:message code='ezWebFolder.t171' />";
-			var strSearchError = "<spring:message code='ezWebFolder.t232' />";
-			var strSearchNotFound = "<spring:message code='ezWebFolder.t172' />";
+			var strErrMsg = "<spring:message code='ezWebFolder.t134'/>";
+			var strDataNotFound = "<spring:message code='ezWebFolder.t144'/>";
+			var strAlreadyAdd = "<spring:message code='ezWebFolder.t169'/>";
+			var strAlertMsg = "<spring:message code='ezWebFolder.t171'/>";
+			var strSearchError = "<spring:message code='ezWebFolder.t232'/>";
+			var strSearchNotFound = "<spring:message code='ezWebFolder.t172'/>";
 			var folderFileId = "<c:out value='${folderFileId}'/>";
 			var folderFileType = "<c:out value='${folderFileType}'/>";
 			
@@ -50,19 +50,19 @@
 						type: "POST",
 						url: "/ezWebFolder/getShareUserList.do",
 						data: {
-							"folderFileId" : folderFileId,
-							"folderFileType" : folderFileType
+							"folderFileId": folderFileId,
+							"folderFileType": folderFileType
 						},
 						dataType: "JSON",
 						async: false,
-						success : function(data) {
+						success: function(data) {
 							if (data.status == "ok") {
 								initRangeData(data.data.userList);
 							} else {
 								alert(strErrMsg + " code: " + data.code);
 							}
 						},
-						error : function(error) {
+						error: function(error) {
 							alert(strErrMsg);
 						}
 					});
@@ -116,23 +116,23 @@
 	<body class="popup">
 		<c:if test="${type eq 'NEW'}"><h1>공유 추가</h1></c:if>
 		<c:if test="${type ne 'NEW'}"><h1>공유 수정</h1></c:if>
-		<table> 
-			<tr> 
+		<table>
+			<tr>
 				<td width="195" valign="top">
 					<h2><spring:message code='ezWebFolder.t205' /></h2>
 					<div style="overflow:auto; width:280px; height:270px; background-color:#ffffff; white-space: nowrap; padding:0;" id="TreeView" class="box"></div>
 				</td>
-				<td width="30" align="center" valign="middle"> 
+				<td width="30" align="center" valign="middle">
 					<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_dept();" style="cursor:pointer"></div>
 					<div><img src="/images/arr_left.gif" width="16" height="16" vspace="3" onclick="unselect_dept();" style="cursor:pointer"></div>
 				</td>
 				<td valign="top">
-					<h2><spring:message code='ezSchedule.t1004' /></h2>
+					<h2><spring:message code='ezSchedule.t1004'/></h2>
 					<div class="listview" style="margin-bottom:5px">
 						<div id="DeptListView" style="overflow:auto;width:280px;height:270px;border:0">
 							<table id="DListView" class="mainlist" style="width:100%;">
 								<tr>
-									<th style="text-align:center;"><spring:message code='ezWebFolder.t142' /></th>
+									<th style="text-align:center;"><spring:message code='ezWebFolder.t142'/></th>
 								</tr>
 							</table>
 						</div>
@@ -141,24 +141,24 @@
 			</tr>
 			<tr>
 				<td valign="top">
-					<h2 style="display: inline-block;"><spring:message code='ezWebFolder.t179' /></h2>
+					<h2 style="display: inline-block;"><spring:message code='ezWebFolder.t179'/></h2>
 					<span style="float:right;padding-top:3px">
 						<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="width:120px;height:20px">
 						<a class="imgbtn btnSearch" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top"><span><spring:message code='ezTask.t183' /></span></a>
-					</span>	
+					</span>
 					<div class="listview" style="margin-top:3px;margin-bottom:5px">
 						<div id="OrganListView" style="overflow:auto; width:280px; height:240px;border:0">
 							<table id="Organ" class="mainlist" style="width: 100%;">
 								<tr id="Organ_TH" style="">
-									<th id="Organ_TH_0" class="h4_center" width="50px"><spring:message code='ezWebFolder.t175' /></th>
-									<th id="Organ_TH_1" class="h5_center" width="70px"><spring:message code='ezWebFolder.t176' /></th>
-									<th id="Organ_TH_2" class="h5_center" width="60px"><spring:message code='ezWebFolder.t142' /></th>
+									<th id="Organ_TH_0" class="h4_center" width="50px"><spring:message code='ezWebFolder.t175'/></th>
+									<th id="Organ_TH_1" class="h5_center" width="70px"><spring:message code='ezWebFolder.t176'/></th>
+									<th id="Organ_TH_2" class="h5_center" width="60px"><spring:message code='ezWebFolder.t142'/></th>
 								</tr>
 							</table>
 						</div>
 					</div>
-				</td> 
-				<td width="30" align="center" valign="middle"> 
+				</td>
+				<td width="30" align="center" valign="middle">
 					<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_member();" style="cursor:pointer"></div>
 					<div><img src="/images/arr_left.gif"  width="16" height="16" vspace="3" onclick="unselect_member();" style="cursor:pointer"></div>
 				</td> 
@@ -168,18 +168,18 @@
 						<div id="MemberListView" style="overflow:auto; width:280px; height:240px;border:0">
 							<table id="MListView" class="mainlist" style="width:100%;">
 								<tr>
-									<th style="text-align:center;"><spring:message code='ezWebFolder.t175' /></th>
+									<th style="text-align:center;"><spring:message code='ezWebFolder.t175'/></th>
 								</tr>
 							</table>
 						</div>
 					</div>
-				</td> 
+				</td>
 			</tr>
-			<tr style="height:35px;">				
+			<tr style="height:35px;">
 				<td colspan="3">
 					<div class="btnposition" style="margin-top:5px;padding-top:0px">
-						<a class="imgbtn btnSave"   name="Submit"  onClick="addShare();"><span><spring:message code='ezWebFolder.t116' /></span></a>
-						<a class="imgbtn btnCancel" name="Submit2" onClick="close_onclick();"><span><spring:message code='ezWebFolder.t112' /></span></a>
+						<a class="imgbtn btnSave"   name="Submit"  onclick="addShare();"><span><spring:message code='ezWebFolder.t116'/></span></a>
+						<a class="imgbtn btnCancel" name="Submit2" onclick="close_onclick();"><span><spring:message code='ezWebFolder.t112'/></span></a>
 					</div>
 				</td>
 			</tr>

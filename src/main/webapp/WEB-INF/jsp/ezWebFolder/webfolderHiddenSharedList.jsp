@@ -164,7 +164,6 @@
 				var inputElement;
 				var fileIconElement;
 				
-				
 				for (var i = 0; i < len; i++) {
 					resultJson = result[i];
 					

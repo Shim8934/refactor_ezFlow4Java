@@ -167,7 +167,8 @@
 				}
 				
 				return;
-			} 
+			}
+			
 			if (folderType == "C") {
 				for (var i = 0; i < test.length; i++) {
 					if (test[i].id == parent) {

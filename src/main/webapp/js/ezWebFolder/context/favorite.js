@@ -1,3 +1,4 @@
+"use strict";
 var favoriteContext = (function() {
 	
 	function toggleAll() {
@@ -10,6 +11,7 @@ var favoriteContext = (function() {
 		}
 		
 		var hasNoFavorite = false;
+		var rowElement;
 		var i;
 		
 		for (i = 0; i < selectedLength; i++) {

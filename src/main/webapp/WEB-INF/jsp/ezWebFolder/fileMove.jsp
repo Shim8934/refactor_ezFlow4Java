@@ -327,10 +327,10 @@
 			</select>
 		</c:if>
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"> <span><spring:message code="ezWebFolder.t233"/></span>
-			<input name="treeType" id="radio2" type="radio" value="dept"         style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"> <span><spring:message code="ezWebFolder.t234"/></span>
+			<input name="treeType" id="radio1" type="radio" value="comp" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
+			<input name="treeType" id="radio2" type="radio" value="dept" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
 			<c:if test="${mode == 'normal'}">
-				<input name="treeType" id="radio3" type="radio" value="user"     style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"> <span><spring:message code="ezWebFolder.t235"/></span>
+				<input name="treeType" id="radio3" type="radio" value="user" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio3"><span> <spring:message code="ezWebFolder.t235"/></span></label>
 			</c:if>
 		</div>
 	</div>

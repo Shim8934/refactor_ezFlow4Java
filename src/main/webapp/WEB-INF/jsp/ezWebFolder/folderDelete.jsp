@@ -15,20 +15,18 @@
 	<script type="text/javascript">
 		var folderId = "";
 		var ReturnFunction;
+		
 		window.onload = function () {
             try {
             	folderId = parent.deleteFolderDlg_cross_dialogArguments[0];
             	ReturnFunction = parent.deleteFolderDlg_cross_dialogArguments[1];
-            } catch (e) { }
-//	            if (InputValue != "") {
-//	                txt_FolderName.value = InputValue;
-//	            }
+            } catch (e) {}
+            
             try {
                 txt_FolderName.focus();
-            }
-            catch (e)
-            { }
+            } catch (e) {}
         }
+		
 		function wClose() {
 			parent.DivPopUpHidden();
 			window.close();
@@ -57,8 +55,7 @@
 // 						wClose();
 						ReturnFunction(folderId);
 						alert("<spring:message code='ezWebFolder.t280'/>")
-					}
-					else {
+					} else {
 						alert("<spring:message code='ezWebFolder.t113'/>");
 						afterDeleteSuccess();
 					}
@@ -79,8 +76,8 @@
 	</div>
 	<div style="height:100px; border:1px solid #ddd; font-size:12px;padding:10px"><spring:message code='ezWebFolder.t307'/></div>		
 	<div style="margin: 6px 0px 0px; text-align: center;">
-		<a id="btnSave"  class="webfolderBttn" onClick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
-		<a id="btnCancel"class="webfolderBttn" onClick="wClose();"  ><span><spring:message code='ezWebFolder.t112'/></span></a>
+		<a id="btnSave" class="webfolderBttn" onclick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
+		<a id="btnCancel"class="webfolderBttn" onclick="wClose();"><span><spring:message code='ezWebFolder.t112'/></span></a>
 	</div>
 	
 </body>

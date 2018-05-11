@@ -23,7 +23,7 @@
         var treeconfig = "";
         var test = [];
         var parent = "";
-		var folderId="";
+		var folderId = "";
 		var folderType = "${folderType}";
 		var checkedfileList = "${fileList}";
 		var checkedfolderList = "${folderList}";
@@ -35,14 +35,14 @@
         
         function folderList(obj) {
 			folderType = obj;
-			$.ajax ({
+			$.ajax({
 				type :"POST",
 				async: true,
 				url  : "/ezWebFolder/folderList.do",
 				data : { 
-						 "folderId"   : folderId
-						,"folderType" : obj
-					},
+					"folderId": folderId,
+					"folderType": obj
+				},
 				dataType: "JSON",
 				success : function (data) {
 					test = data.data;
@@ -71,27 +71,26 @@
 							"width"       : "25",
 							"margin-left" : "10"
 						}
-			   		
-			}).on('loaded.jstree', function() {
-				firFolderId = data.data[0]["id"];
-				var test = "#" + folderId;
-				var elmentTest = document.getElementById(firFolderId);
-				var childE = document.getElementById(firFolderId + "_anchor");
-				childE.setAttribute("class", "jstree-anchor jstree-clicked");
-				elmentTest.setAttribute("aria-selected", "true");
-				folderId = firFolderId;
-			}).on('changed.jstree', function (e, data) {
-				folderId = data.selected[0];
-				parent = data.node.original.parent;
+					}).on('loaded.jstree', function() {
+						firFolderId = data.data[0]["id"];
+						var test = "#" + folderId;
+						var elmentTest = document.getElementById(firFolderId);
+						var childE = document.getElementById(firFolderId + "_anchor");
+						childE.setAttribute("class", "jstree-anchor jstree-clicked");
+						elmentTest.setAttribute("aria-selected", "true");
+						folderId = firFolderId;
+					}).on('changed.jstree', function (e, data) {
+						folderId = data.selected[0];
+						parent = data.node.original.parent;
+					});
+				},
+			    error : function(error) {
+					alert("<spring:message code='ezWebFolder.t134' />" + error);
+				}
 			});
-	    },
-	    error : function(error) {
-			alert("<spring:message code='ezWebFolder.t134' />" + error);
-			}
-		});
-	}
+		}
 
-        function move_onclick() {
+		function move_onclick() {
         	
             if (folderId == "") {
                 alert("<spring:message code='ezWebFolder.t261'/>");
@@ -123,13 +122,13 @@
             		} else if (data.code == 2) {
 	            		alert("<spring:message code='ezWebFolder.t285'/>");
 					}else if (data.code == 3) {
-						alert("<spring:message code = 'ezWebFolder.t28'/>");
+						alert("<spring:message code='ezWebFolder.t28'/>");
 					} 
             	},
             	error : function(error) {
             		alert(messages.strLang7 + error);
             	}
-            })
+            });
             
             window.close();
             opener.refreshView();
@@ -141,9 +140,9 @@
 	<h1><spring:message code='ezWebFolder.t286'/></h1>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<div style="position: absolute; top: 0px; right: 0px;">
-			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('C');"> <span><spring:message code='ezWebFolder.t233'/></span>
-			<input name="treeType" id="radio2" type="radio" value="D"         style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('D');"> <span><spring:message code='ezWebFolder.t234'/></span>
-			<input name="treeType" id="radio3" type="radio" value="U"         style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('U');"> <span><spring:message code='ezWebFolder.t235'/></span>
+			<input name="treeType" id="radio1" type="radio" value="C" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('C');"><label for="radio1"><span> <spring:message code='ezWebFolder.t233'/></span></label>
+			<input name="treeType" id="radio2" type="radio" value="D" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('D');"><label for="radio2"><span> <spring:message code='ezWebFolder.t234'/></span></label>
+			<input name="treeType" id="radio3" type="radio" value="U" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('U');"><label for="radio3"><span> <spring:message code='ezWebFolder.t235'/></span></label>
 		</div>
 	</div>
 	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding-top:5px" id="folderTree"></div>

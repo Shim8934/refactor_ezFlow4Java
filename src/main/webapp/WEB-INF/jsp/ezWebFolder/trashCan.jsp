@@ -59,14 +59,13 @@
         var tableView = new TableView();
 		
 		window.onresize = function () {
-			var divList          = document.getElementById("dragDropArea");
-			var reheight         = document.documentElement.clientHeight - 160;
-			divList.style.height = reheight + "px";
+			var reheight = document.documentElement.clientHeight - 160;
+			document.getElementById("dragDropArea").style.height = reheight + "px";
 		};
 		
-		document.onselectstart = function(){
+		document.onselectstart = function() {
 			return false;
-		}
+		};
 		
 		$(function() {
 			tableView.setTableId("tblFileList");
@@ -235,42 +234,49 @@
 	    
    		function search(type) {
 	        if (type == "basic") {
-	           if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" 
-	        	    && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == ""  
-	        	    && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezWebFolder.t163' />");// 검색조건을 입력하세요 
-	                return;
-	            }
-	            if ($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezWebFolder.t308' />");
-	                return;
-	            }
-	            if ($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezWebFolder.t309' />");
-	                return;
-	            }
-	            if ($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezWebFolder.t308' />");
-	                return;
-	            }
-	            if ($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	                alert("<spring:message code='ezWebFolder.t309' />");
-	                return;
-	            }
-	            if (new Date($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-	                alert("<spring:message code='ezWebFolder.t164' />");
-	                return;
-	            }
-	            if (new Date($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-	                alert("<spring:message code='ezWebFolder.t164' />");
-	                return;
-	            }
+				if ($("#searchExt").val() == "" && $("#searchFileName").val() == "" && $("#searchCreateName").val() == "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" 
+				  && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == ""  
+				  && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+				     alert("<spring:message code='ezWebFolder.t163' />");// 검색조건을 입력하세요 
+				     return;
+				 }
+				
+				 if ($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+				     alert("<spring:message code='ezWebFolder.t308' />");
+				     return;
+				 }
+				 
+				 if ($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+				     alert("<spring:message code='ezWebFolder.t309' />");
+				     return;
+				 }
+				 
+				 if ($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+				     alert("<spring:message code='ezWebFolder.t308' />");
+				     return;
+				 }
+				 
+				 if ($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+				     alert("<spring:message code='ezWebFolder.t309' />");
+				     return;
+				 }
+				 
+				 if (new Date($("#enrollStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#enrollEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+				     alert("<spring:message code='ezWebFolder.t164' />");
+				     return;
+				 }
+				 
+				 if (new Date($("#delStartDate").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#delEndDate").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+				     alert("<spring:message code='ezWebFolder.t164' />");
+				     return;
+				 }
 	        } else if (type == "quick") {
 	            if (document.getElementById("txt_keyword").value == "") {
 	                alert("<spring:message code='ezWebFolder.t163' />");
 	                return;
 	            }
 	        }
+	        
 	        searchOptionHidden();
 	        renderFileList();
 	    }
@@ -307,37 +313,36 @@
 	        document.getElementById("SearchOption").setAttribute("mode", "off");
 	    }
    	   
-   	   function optionView(obj){
-   		 if (obj.getAttribute("mode") == "off") {
-   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
- 	        document.getElementById("layer_Viewpopup").style.top = "100px";
-   	        document.getElementById("layer_Viewpopup").style.display = "";
-   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-   	        obj.setAttribute("mode", "on");
-   	    }
-   	    else {
-   	        optionHidden();
-   	    }
-   	   }
+		function optionView(obj){
+			if (obj.getAttribute("mode") == "off") {
+			    document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+				document.getElementById("layer_Viewpopup").style.top = "100px";
+				document.getElementById("layer_Viewpopup").style.display = "";
+				obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+				obj.setAttribute("mode", "on");
+			} else {
+				optionHidden();
+			}
+		}
    	   
 	 	function optionHidden() {
-	 	    document.getElementById("layer_Viewpopup").style.display = "none";
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
+			document.getElementById("layer_Viewpopup").style.display = "none";
+			document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+			document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
 	 	}
          
-       function refreshView() {
-    	   renderFileList();
-    	   window.parent.frames["left"].drawVolume();
-       }
+		function refreshView() {
+			renderFileList();
+			window.parent.frames["left"].drawVolume();
+		}
        
-       function filePermanentDelete() {
-    	   var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
+		function filePermanentDelete() {
+			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
     	   
-	   	   if (listOfChecked.length <= 0) {
-	   			alert("<spring:message code = 'ezWebFolder.t295'/>");
-	   			return;
-	   	   }
+			if (listOfChecked.length <= 0) {
+				alert("<spring:message code = 'ezWebFolder.t295'/>");
+				return;
+			}
 	   	   
 		   	var filesList  = [];
 			var folderList = [];
@@ -347,54 +352,52 @@
 				
 				if (listOfChecked[i].getAttribute("ext") == 'folder') {
 					folderList.push(fileFolderId);
-				}
-				else {
+				} else {
 					filesList.push(fileFolderId);
 				}
 			}
     	   
-    	   showPanel(450, 250, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
-          
-    	   refreshView();
-       }
+			showPanel(450, 250, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+			refreshView();
+		}
 
-       function changeCount(value) {
-    	   blockSize = value;
-    	   currentPage = 1;
-    	   renderFileList();
-       }
+		function changeCount(value) {
+			blockSize = value;
+			currentPage = 1;
+			renderFileList();
+		}
        
-       function showPanel(popUpW, popUpH, URL) {
-    	   try {
-    	        var Position = DivPopUpPosition(popUpW, popUpH);
-    	        document.getElementById("iFrameLayer").src = URL;
-    	        document.getElementById("iFramePanel").style.top = Position[0] + "px";
-    	        document.getElementById("iFramePanel").style.left = Position[1] + "px";
-    	        document.getElementById("iFramePanel").style.height = popUpH + "px";
-    	        document.getElementById("iFrameLayer").style.width = popUpW + "px";
-    	        document.getElementById("iFrameLayer").style.height = popUpH + "px";
-    	        document.getElementById("mailPanel").style.display = "";
-    	        document.getElementById("iFramePanel").style.display = "";
-    	        parent.frames["left"].showPanel();
-    	    } catch (e) {}
-       }
+		function showPanel(popUpW, popUpH, URL) {
+			try {
+				var Position = DivPopUpPosition(popUpW, popUpH);
+				document.getElementById("iFrameLayer").src = URL;
+				document.getElementById("iFramePanel").style.top = Position[0] + "px";
+				document.getElementById("iFramePanel").style.left = Position[1] + "px";
+				document.getElementById("iFramePanel").style.height = popUpH + "px";
+				document.getElementById("iFrameLayer").style.width = popUpW + "px";
+				document.getElementById("iFrameLayer").style.height = popUpH + "px";
+				document.getElementById("mailPanel").style.display = "";
+				document.getElementById("iFramePanel").style.display = "";
+				parent.frames["left"].showPanel();
+			} catch (e) {}
+		}
        
-       function hiddenPanel () {
-    	   try {
-    	        document.getElementById("mailPanel").style.display = "none";
-    	        document.getElementById("iFramePanel").style.display = "none";
-    	        document.getElementById("iFrameLayer").src = "/blank.htm";
-    	        parent.frames["left"].hiddenPanel();
-    	    } catch (e) {}
-       }
+		function hiddenPanel () {
+			try {
+				document.getElementById("mailPanel").style.display = "none";
+				document.getElementById("iFramePanel").style.display = "none";
+				document.getElementById("iFrameLayer").src = "/blank.htm";
+				parent.frames["left"].hiddenPanel();
+			} catch (e) {}
+		}
 		
-       function restoreTrashCan() {
+		function restoreTrashCan() {
 			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
     	   
-	   	   if (listOfChecked.length <= 0) {
-	   			alert("<spring:message code = 'ezWebFolder.t295'/>");
-	   			return;
-	   	   }
+			if (listOfChecked.length <= 0) {
+				alert("<spring:message code = 'ezWebFolder.t295'/>");
+				return;
+			}
 	   	   
 		   	var filesList  = [];
 			var folderList = [];
@@ -404,8 +407,7 @@
 				
 				if (listOfChecked[i].getAttribute("ext") == 'folder') {
 					folderList.push(fileFolderId);
-				}
-				else {
+				} else {
 					filesList.push(fileFolderId);
 				}
 			}
@@ -415,9 +417,9 @@
 				async: false,
 				url : "/ezWebFolder/restoreTrashCan.do",
 				dataType: "json",
-				data : {
-					"fileList" : filesList.toString(),
-					"folderList" :  folderList.toString()
+				data: {
+					"fileList": filesList.toString(),
+					"folderList":  folderList.toString()
 				},
 				success : function (data) {
 					if (data.code == 0) {
@@ -433,37 +435,37 @@
 				error : function(error) {
 					alert(messages.strLang7 + error);
 				}
-			})
-				refreshView();
-       }
+			});
+    		
+			refreshView();
+		}
        
-       function moveTraschCan() {
+		function moveTraschCan() {
 			var listOfChecked = document.getElementsByClassName("bnkWebFolder2");
-    	   
-	   	   if (listOfChecked.length <= 0) {
-	   			alert("<spring:message code = 'ezWebFolder.t295'/>");
-	   			return;
-	   	   }
-	   	   
-		   	var filesList  = [];
+		 	   
+			if (listOfChecked.length <= 0) {
+				alert("<spring:message code = 'ezWebFolder.t295'/>");
+				return;
+			}
+		 	   
+			var filesList  = [];
 			var folderList = [];
-			
+		
 			for (var i = 0; i < listOfChecked.length; i++) {
 				var fileFolderId = listOfChecked[i].getAttribute("targetid");
 				
 				if (listOfChecked[i].getAttribute("ext") == 'folder') {
 					folderList.push(fileFolderId);
-				}
-				else {
+				} else {
 					filesList.push(fileFolderId);
 				}
 			}
-    	   
-    	   var OpenWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(450, 490));
-           try { OpenWin.focus(); } catch (e) { }
-           
-           refreshView();
-       }
+		 	   
+			var openWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(450, 490));
+			try { openWin.focus(); } catch (e) {}
+			   
+		    refreshView();
+		}
     </script>
 </head>
 <body class="mainbody">

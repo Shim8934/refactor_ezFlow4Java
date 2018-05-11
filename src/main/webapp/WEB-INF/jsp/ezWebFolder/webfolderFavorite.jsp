@@ -25,10 +25,12 @@
 <!-- module -->
 <script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
 <script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
+<script type="text/javascript" src="/js/ezWebFolder/context/buttons.js"></script>
 <script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
 <script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
 <script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
 <script type="text/javascript">
+	"use strict";
 	var context = (function() {
 		var isFavoriteMode = false;
 		
@@ -399,6 +401,7 @@
 	function setNamePath(folderPath, originalPath) {
 		var nameTag = document.createElement("span");
 		var originPath;
+		var pathes;
 		
 		// for statement using
 		var detailName;
@@ -407,11 +410,11 @@
 		
 		folderPath = folderPath.substring(1, folderPath.length - 1);
 		originPath = folderPath.split("|");
-		path = originalPath.split("/");
+		pathes = originalPath.split("/");
 		
 		$('#originalPath').empty();
 		dom.originalPath.appendChild(nameTag);
-		length = path.length - 1;
+		length = pathes.length - 1;
 		
 		for (var i = 0; i < length; i++) {
 			detailName = document.createElement("span");
@@ -425,7 +428,7 @@
 				context.setList(this.id);
 			};
 
-			detailName.textContent = path[i] ;
+			detailName.textContent = pathes[i] ;
 			/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
 			detailName.setAttribute("style", "font-size:15px; ");
 			nameTag.appendChild(detailName);
@@ -630,7 +633,7 @@
 	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
 	function search(type) {
 		if (type == "basic") {
-			requirement = {
+			var requirement = {
 				startDate: $("#Sdatepicker").datepicker({
 					dateFormat: 'yy-mm-dd'
 				}).val(),
@@ -680,16 +683,16 @@
 		/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 		var leftBody = parent.frames["left"].document.body;
 		leftBody.style.overflow = "hidden";
-		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].searchOptionHidden();document.body.style.overflow=\"auto\";'></div>").appendTo(leftBody);
+		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].searchOptionHidden();'></div>").appendTo(leftBody);
 		var popupX = parent.document.body.clientWidth / 2 - (500 / 2) - 220;
 		
 		$("#searchpopup").css("left", popupX);
 		/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 
 		$("#searchpopup").modal();
-    	$("#searchpopup").off("modal:close").on("modal:close", function() {
-    		parent.frames["left"].document.body.style.overflow = "auto";
-    	});
+		$("#searchpopup").off("modal:close").on("modal:close", function() {
+			parent.frames["left"].document.body.style.overflow = "auto";
+		});
 	}
 
 	function searchOptionHidden() {
@@ -714,151 +717,8 @@
 		document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 	}
 
-	function fileDownload() {
-		var selected = getSelectedFoldersAndFiles();
-		
-		if (selected === undefined) {
-			return;
-		}
-		
-		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + selected.files.toString() + "&folderList=" + selected.folders.toString();
-		
-		AttachDownFrame.location.href = downloadUrl;
-	}
-
-	function fileUpload() {
-		document.getElementById("file").click();
-		refreshView();
-	}
-
 	function refreshView() {
 		getFileList(folderId);
-	}
-
-	function fileDelete() {
-		var selected = getSelectedFoldersAndFiles();
-		
-		if (selected === undefined) {
-			return;
-		}
-		
-		if (selected.folders.length > 0) {
-			alert(messages.strLang1);
-			return;
-		}
-		
-		$.ajax({
-			type: "POST",
-			url: "/ezWebFolder/checkPermission.do",
-			data: {
-				"fileList": selected.files.toString()
-			},
-			dataType: "JSON",
-			async: true,
-			success: function(data) {
-				var result = data.resultValue;
-				
-				if (result != "ok") {
-					alert(messages.strLang13);
-				} else {
-					openLeftPanel();
-					DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
-				}
-				
-				refreshView();
-			},
-			error: function(error) {
-				alert(messages.strLang7 + error);
-			}
-		});
-	}
-
-	function fileRename() {
-		var selected = getSelectedFoldersAndFiles();
-		
-		if (selected === undefined) {
-			return;
-		}
-		
-		if (selected.folders.length > 0) {
-			alert(messages.strLang1);
-			return;
-		}
-		
-		if (selected.files.length > 1) {
-			alert(messages.strLang6);
-			return;
-		}
-		
-		var fileId = selected.files[0];
-		
-		$.ajax({
-			type: "POST",
-			url: "/ezWebFolder/checkPermission.do",
-			data: {
-				"fileId": fileId
-			},
-			dataType: "JSON",
-			async: true,
-			success: function(data) {
-				var result = data.resultValue;
-				
-				if (result != "ok") {
-					alert(messages.strLang13);
-				} else {
-					openLeftPanel();
-					DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
-				}
-			},
-			error: function(error) {
-				alert(messages.strLang7 + error);
-			}
-		});
-	}
-
-	function fileMove() {
-		var selected = getSelectedFoldersAndFiles();
-		
-		if (selected === undefined) {
-			return;
-		}
-		
-		if (selected.folders.length > 0) {
-			alert(messages.strLang1);
-			return;
-		}
-		
-		openLeftPanel();
-		DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString());
-	}
-
-	function getSelectedFoldersAndFiles() {
-		var selectedRows = rowContext.getSelectedRows();
-		var selectedLength = selectedRows.length;
-		
-		if (selectedLength <= 0) {
-			alert("<spring:message code = 'ezWebFolder.t108'/>");
-			return undefined;
-		}
-		
-		var files = [];
-		var folders = [];
-		var rowInfo;
-		
-		for (var i = 0; i < selectedLength; i++) {
-			rowInfo = rowContext.getRowInfo(selectedRows[i]);
-			
-			if (rowInfo.type === 'D') {
-				folders.push(rowInfo.id);
-			} else {
-				files.push(rowInfo.id);
-			}
-		}
-		
-		return {
-			folders: folders,
-			files: files
-		}
 	}
 
 	// adapter function
@@ -969,11 +829,11 @@
 		</div>
 		<div id="mainmenu">
 			<ul>
-				<li favoritemenu onclick="fileDownload()"><span><spring:message code='ezWebFolder.t186'/></span></li>
-				<li id="upload" onclick="fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
-				<li favoritemenu onclick="fileDelete()"><span><spring:message code='ezWebFolder.t274'/></span></li>
-				<li favoritemenu onclick="fileRename()"><span><spring:message code='ezWebFolder.t273'/></span></li>
-				<li onclick="fileMove()"><span><spring:message code='ezWebFolder.t275'/></span></li>
+				<li favoritemenu onclick="buttons.fileDownload()"><span><spring:message code='ezWebFolder.t186'/></span></li>
+				<li id="upload" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
+				<li favoritemenu onclick="buttons.fileDelete()"><span><spring:message code='ezWebFolder.t274'/></span></li>
+				<li favoritemenu onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t273'/></span></li>
+				<li onclick="buttons.fileMove()"><span><spring:message code='ezWebFolder.t275'/></span></li>
 				<li onclick="shareContext.addShareView()"><span><spring:message code='ezWebFolder.t254'/></span></li>			
 				<li favoritemenu><img src="/images/i_bar.gif"></li>
 				<li favoritemenu onclick="favoriteContext.toggleAll()"><span><spring:message code='ezWebFolder.t281'/></span></li>

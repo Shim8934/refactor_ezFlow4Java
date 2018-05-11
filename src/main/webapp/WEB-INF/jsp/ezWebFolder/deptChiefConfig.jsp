@@ -28,6 +28,7 @@
 				document.body.style.oUserSelect      = 'none';
 				document.body.style.UserSelect       = 'none';
 			}
+			
 			getDataForChief();
 		}
 		
@@ -35,7 +36,7 @@
 			getSelectedDeptsForChief();
 		}
 		
-		function Change_Click() {
+		function changeClick() {
 			var jsonData = getJsonSelectedDepts();
 			
 			$.ajax({
@@ -64,7 +65,7 @@
 </head>
 <body style="margin-left: 10px; margin-right: 10px;">
 	<br/>
-	<h2><spring:message code="ezWebFolder.t239" /></h2>
+	<h2><spring:message code="ezWebFolder.t239"/></h2>
 	<span class="txt">▒<spring:message code="ezWebFolder.t242"/></span>
 	<br />
 	<table class="content" style="width: 650px;margin-top:5px; border: none;">
@@ -84,10 +85,10 @@
 		</tr>
 	
 	</table>
- 	<br />
+ 	<br/>
 	<div style="width:623px;text-align:center;">      
-		<a class="webfolderBttn" onclick="Change_Click()"><span><spring:message code="ezWebFolder.t133" /></span></a>
-		<a class="webfolderBttn" onclick="Cancel_Click()"><span><spring:message code="ezWebFolder.t112" /></span></a>
+		<a class="webfolderBttn" onclick="changeClick()"><span><spring:message code="ezWebFolder.t133" /></span></a>
+		<a class="webfolderBttn" onclick="changeClick()"><span><spring:message code="ezWebFolder.t112" /></span></a>
 	</div>
 </body>
 </html>

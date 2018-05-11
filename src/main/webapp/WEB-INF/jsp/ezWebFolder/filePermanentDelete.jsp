@@ -42,8 +42,7 @@
 					if (reason) {
 						alert(reason);
 						afterDeleteSuccess();
-					}
-					else {
+					} else {
 						if (data.code == 1) {
 							alert("<spring:message code='ezWebFolder.t113'/>");
 						} else if (data.code == 2) {
@@ -57,6 +56,7 @@
             		alert(messages.strLang7 + error);
 				}
 			});
+			
 			afterDeleteSuccess();
 		}
 	</script>
@@ -65,8 +65,8 @@
 	<h1 id ="topMenu" style="margin:0px;margin-top:2px"><spring:message code='ezWebFolder.t19'/></h1>
 	<div style="margin: 0px 0px 12px;height:110px;border:1px solid #ddd;padding:15px;font-size:12px;"><spring:message code='ezWebFolder.t294'/></div>	
 	<div style="margin: 6px 0px 0px; bottom: 0px; text-align: center">
-		<a id="btnSave"  class="webfolderBttn" onClick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
-		<a id="btnCancel"class="webfolderBttn" onClick="wClose();"  ><span><spring:message code='ezWebFolder.t112'/></span></a>
+		<a id="btnSave"  class="webfolderBttn" onclick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
+		<a id="btnCancel"class="webfolderBttn" onclick="wClose();"  ><span><spring:message code='ezWebFolder.t112'/></span></a>
 	</div>
 </body>
 </html>

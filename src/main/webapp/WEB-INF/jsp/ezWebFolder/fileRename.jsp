@@ -33,7 +33,7 @@
 		function ok_Click() {
 			var newName = document.getElementById("nameInput").value;
 			
-			if (isValid(newName) == true) {
+			if (isValid(newName)) {
 				alert('<spring:message code='ezWebFolder.t211'/>');
 				return;
 			}
@@ -66,8 +66,8 @@
 		</div>
 	</div>	
 	<div style="margin: 6px 0px 0px; bottom: 0px; text-align: center">
-		<a id="btnSave"   class="webfolderBttn" onClick="ok_Click();"><span><spring:message code='ezWebFolder.t116'/></span></a>
-		<a id="btnCancel" class="webfolderBttn" onClick="wClose();"><span><spring:message code='ezWebFolder.t112'/></span></a>
+		<a id="btnSave" class="webfolderBttn" onclick="ok_Click();"><span><spring:message code='ezWebFolder.t116'/></span></a>
+		<a id="btnCancel" class="webfolderBttn" onclick="wClose();"><span><spring:message code='ezWebFolder.t112'/></span></a>
 	</div>
 	
 </body>

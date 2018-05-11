@@ -1,3 +1,4 @@
+"use strict";
 var searchContext = (function() {
 	
 	var isSearchPage = false;
