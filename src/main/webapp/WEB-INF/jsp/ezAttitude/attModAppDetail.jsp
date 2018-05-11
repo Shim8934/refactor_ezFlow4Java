@@ -221,16 +221,16 @@
 	                            		<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 	                            	</c:if>
 <!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
-	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0}">
+	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && attitudeConfigVO.attitudeModAppl == 1}">
 	                            		<li><span onclick="modify()">수정</span></li>
 	                            	</c:if>
-	                            	<c:if test="${userId == data.writerId && data.apprStatus != 0}">
+	                            	<c:if test="${userId == data.writerId && data.apprStatus != 0 && attitudeConfigVO.attitudeModAppl == 1}">
 	                            		<li><span onclick="reMod()">재신청</span></li>
 	                            	</c:if>
 	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0}">
 	                            		<li><span onclick="del()">삭제</span></li>
 	                            	</c:if>
-	                            	<c:if test="${userId == data.writerId || (adminFlag == 'true' && data.apprStatus == 0)}">
+	                            	<c:if test="${(userId == data.writerId || (adminFlag == 'true' && data.apprStatus == 0)) && attitudeConfigVO.attitudeModAppl == 1}">
 	                            		<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 	                            	</c:if>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
