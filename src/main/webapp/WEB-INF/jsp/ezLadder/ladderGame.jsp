@@ -60,9 +60,6 @@
 		var originalPosition_left = 0;
 		$(function() {
 			initSetting();
-			if(deleteFlag == 1) {
-				window.location.href = "/ezLadder/ladderMain.do?brdID=7"; 
-			}
 			
 			if(status == 0) { 
 				if(writerId == loginId) {
@@ -248,8 +245,13 @@
 			
 			marginChangeAttendantNum = 50;
 			
-			ladder_window_resize();
-			canvasSetting();
+			if(deleteFlag == "0") {
+				ladder_window_resize();
+				canvasSetting();
+			} else {
+				alert("<spring:message code='ezLadder.t010' />");
+				window.close();
+			}
 		}
 		
 		function afterDrag() {

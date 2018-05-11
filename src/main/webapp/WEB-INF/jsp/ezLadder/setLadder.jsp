@@ -275,13 +275,13 @@
 			}
 			
 			var totalmoney = 0;
-			var totalmoneyStr = "";
+			var totalmoneyStr = "0";
 			var regNumber = /^[0-9]*$/;
 			var regexp = /\B(?=(\d{3})+(?!\d))/g;
 			var moneyArr = [];
 			function getMoney(itemobj) {
 				var moneyUnit = {"unitStr": [strLang25, strLang26, strLang27, strLang28], "unitWon": [10, 100, 1000, 10000]};
-				var moneyNum = {"numStr": [strLang29, strLang30, strLang31, strLang32, strLang33, strLang34, strLang35, strLang36, strLang37, "zero"], "number": [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]};
+				var moneyNum = {"numStr": [strLang29, strLang30, strLang31, strLang32, strLang33, strLang34, strLang35, strLang36, strLang37], "number": [1, 2, 3, 4, 5, 6, 7, 8, 9]};
 				var inputval = "";
 				var objLen = itemobj.length;
 				var i = objLen > 1 ? 0 : itemobj.attr("_itemindex");
@@ -305,81 +305,59 @@
 						
 						if(regNumber.test(inputval)) {
 							moneyArr[itemindex] = Number(inputval);
+							obj.val(moneyArr[itemindex].toString().replace(regexp, ','));
 						} else{
-							var tempMoneyArr = {"won": [], "unitidx": [], "wonStr": []};
-							var inputLastIdx = inputval.length - 1;
-							var tempTotalMoney = 0;
+							var inputArr = inputval.split("");
+							var inputUnit = [];
 							
-							for(var j = inputLastIdx; j >= 0; j--) {
-								var UnitFlag = moneyUnit["unitStr"].indexOf(inputval[j]);
+							inputArr.forEach(function(arr, idx) {
+								var mUnitFlag = moneyUnit["unitStr"].indexOf(arr);
+								var mNumFlag = moneyNum["numStr"].indexOf(arr);
 								
-								if(UnitFlag != -1 || regNumber.test(inputval[j])) {
-									var tempArrLen = tempMoneyArr["won"].length;
-									var chkIdx1 = moneyNum["numStr"].indexOf(inputval[j - 1]);
-									var chkIdx2 = moneyNum["number"].indexOf(Number(inputval[j - 1]));
-									var chkIdx3 = moneyNum["number"].indexOf(Number(inputval[j - 2]));
-									var FrontNumFlag = chkIdx1 > chkIdx2 ? chkIdx1 : chkIdx1 < chkIdx2 ? chkIdx2 : -1;
-									
-									if(FrontNumFlag != -1) {
-										if(chkIdx1 != -1 || chkIdx3 == -1) {
-											tempMoneyArr["won"][tempArrLen] = moneyNum["number"][FrontNumFlag] * moneyUnit["unitWon"][UnitFlag];
-											tempMoneyArr["unitidx"][tempArrLen] = UnitFlag;
-											tempMoneyArr["wonStr"][tempArrLen] = moneyNum["numStr"][FrontNumFlag].concat(moneyUnit["unitStr"][UnitFlag]);
-											j--;
+								if(mUnitFlag != -1) {
+									var mUnitString = moneyUnit["unitWon"][mUnitFlag].toString();
+									if(idx == 0) {
+										inputArr[idx] = mUnitString.substring(0, 1) + mUnitString.slice(1) + "/";
+									} else {
+										if(mUnitFlag == 3) {
+											inputArr[idx] = "/" + mUnitString.slice(1) + "/";
+											inputUnit.push(-1);
 										} else {
-											var tempNumArr = inputval.replace(/[^0-9]/g, " ").trim().split(" ");
-											var tempNum = tempNumArr[tempNumArr.length - 1];
-											
-											tempMoneyArr["won"][tempArrLen] = Number(tempNum + (moneyUnit["unitWon"][UnitFlag].toString().slice(1)));
-											tempMoneyArr["unitidx"][tempArrLen] = 0;
-											tempMoneyArr["wonStr"][tempArrLen] = tempNum.concat(moneyUnit["unitStr"][UnitFlag]);
-											break;
+											inputArr[idx] = mUnitString.slice(1) + "/";
+										}
+									}
+									inputUnit.push(mUnitFlag);
+								} else if(mNumFlag != -1) {
+									inputArr[idx] = moneyNum["number"][mNumFlag].toString();
+								}
+							});
+							
+							if(inputUnit.length > 0) {
+								var afterInputArr = inputArr.join("").split("/");
+								var tempTotal = afterInputArr.reduce(function(result, currDt, idx) {
+									if(inputUnit[idx + 1] != 3 && inputUnit[idx] > inputUnit[idx + 1] || inputUnit[idx + 1] == 3 || !inputUnit[idx + 1]) {
+										if(currDt == "0000") {
+											result = Number(result.toString().concat(currDt));
+										} else {
+											result += Number(currDt);
 										}
 									} else {
-										tempMoneyArr["won"][tempArrLen] = moneyUnit["unitWon"][UnitFlag];
-										tempMoneyArr["unitidx"][tempArrLen] = UnitFlag;
-										tempMoneyArr["wonStr"][tempArrLen] = moneyUnit["unitStr"][UnitFlag];
-									}
-								} else {
-									break;
-								}
-							}
-							
-							if(tempMoneyArr["won"].length > 1) {
-								tempMoneyArr["won"].reverse();
-								tempMoneyArr["unitidx"].reverse();
-								tempMoneyArr["wonStr"].reverse();
-							}
-							
-							var tempArrLen = tempMoneyArr["won"].length;
-							for(var j = 0; j < tempArrLen; j++) {
-								if(tempMoneyArr["unitidx"][j + 1] != 3 && tempMoneyArr["unitidx"][j] < tempMoneyArr["unitidx"][j + 1]) {
-									tempTotalMoney = 0;
-									break;
-								}
-								
-								if(tempMoneyArr["unitidx"][j] == 3) {
-									if(tempMoneyArr["wonStr"][j].length == 2) {
-										tempTotalMoney += tempMoneyArr["won"][j] / moneyUnit["unitWon"][3];
-									} else if(tempTotalMoney == 0) {
-										tempTotalMoney = 1;
+										result = undefined;
 									}
 									
-									tempTotalMoney *= moneyUnit["unitWon"][3];
-								} else {
-									tempTotalMoney += tempMoneyArr["won"][j];
+									return result;
+								}, 0);
+								
+								if(!!tempTotal) {
+									moneyArr[itemindex] = tempTotal;
+									obj.val(moneyArr[itemindex].toString().replace(regexp, ','));
 								}
 							}
-							
-							moneyArr[itemindex] = tempTotalMoney;
-						}
-						if(moneyArr[itemindex] != 0) {
-							obj.val(moneyArr[itemindex].toString().replace(regexp, ','));
 						}
 						totalmoney += moneyArr[itemindex];
+						totalmoneyStr = totalmoney.toString().replace(regexp, ',') || "0";
 					}
 				}
-				totalmoneyStr = totalmoney.toString().replace(regexp, ',') || "0";
 			}
 			
 			/** 재사용 사다리 정보 가져오기 */
