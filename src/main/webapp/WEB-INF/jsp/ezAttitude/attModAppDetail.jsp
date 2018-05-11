@@ -125,7 +125,11 @@
 				    	alert("승인 중 오류 발생")
 				    },
 				    success : function(json){
-				    	alert("승인되었습니다.");
+				    	if (json == "ok") {
+				    		alert("승인되었습니다.");	
+				    	} else {
+				    		alert("승인 중 오류 발생")	
+				    	}
 			            try {
 			                window.opener.att_refresh();
 			            } catch (e) {
@@ -158,7 +162,11 @@
 				    	alert("반려 중 오류 발생")
 				    },
 				    success : function(json){
-				    	alert("반려되었습니다.");
+				    	if (json == "ok") {
+				    		alert("반려되었습니다.");	
+				    	} else {
+				    		alert("반려 중 오류 발생");
+				    	}
 				    	try {
 			                window.opener.att_refresh();
 			            } catch (e) {
@@ -213,11 +221,11 @@
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                            	<c:if test="${adminFlag == 'true' && data.apprStatus == 0}">
+	                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && data.apprStatus == 0}">
 		                            	<li><span onclick="modApprove()">승인</span></li>
 		                                <li><span onclick="modReturn()">반려</span></li>
 	                            	</c:if>
-	                            	<c:if test="${adminFlag == 'true' && userId == data.writerId && data.apprStatus == 0}">
+	                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && userId == data.writerId && data.apprStatus == 0}">
 	                            		<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 	                            	</c:if>
 <!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
@@ -248,6 +256,12 @@
                                             <td colspan="2" readonly>
                                             	<c:out value='${data.typeName}' />
 <!--                                             	다국어 작업 -->
+                                            </td>
+                                        </tr>
+                                        <tr id="HolderWrite">
+                                            <th>성명</th>
+                                            <td colspan="2" readonly title="<c:out value='${data.writerDeptName}' /> <c:out value='${data.writerName}' /> <c:out value='${data.writerTitle}' />">
+                                            	<c:out value='${data.writerName}' />
                                             </td>
                                         </tr>
 	                                    <tr>
@@ -281,7 +295,7 @@
 	                </tr>
 	                <tr>
 		                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-		                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 390px; background-color: white"></iframe>	                    
+		                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 365px; background-color: white"></iframe>	                    
 		                </td>
 	            	</tr>
 	            </table>

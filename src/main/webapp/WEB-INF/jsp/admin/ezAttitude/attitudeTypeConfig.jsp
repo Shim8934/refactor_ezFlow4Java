@@ -226,7 +226,7 @@
                                 <th style="text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
                             </tr>
                         </table>
-                        <div id="contentlist" name="contentlist" style="height: 350px; overflow-y: auto;">
+                        <div id="contentlist" name="contentlist" style="height: 343px; overflow-y: auto;">
                         	<table class="mainlist" style="width: 100%;">
                                 <tr>
                                     <td style="text-align: center;">

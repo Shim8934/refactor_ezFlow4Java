@@ -377,7 +377,7 @@
                     <th style="width: 40%;"><span>권한부서</span></th>
                 </tr>
             </table>
-            <div id="contentlist" name="contentlist" style="height: 160px; overflow-y: auto;">
+            <div id="contentlist" name="contentlist" style="height: 460px; overflow-y: auto;">
                 <table class="mainlist" style="width: 100%;">
                     <tr>
                         <td style="text-align: center;">

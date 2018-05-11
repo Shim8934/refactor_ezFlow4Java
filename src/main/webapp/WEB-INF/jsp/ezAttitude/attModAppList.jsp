@@ -57,6 +57,7 @@
 		var m_strColorDefault = "#ffffff";
 		var adminFlag = "${adminFlag}";
 		var checkAdmin = "${checkAdmin}";
+		var authFlag = "${authFlag}";
 		var usepostDate = false;
 		
 		$(function(){
@@ -80,7 +81,19 @@
 	    			
 	    			get_att_list();
 				}
-			})	
+			})
+
+			if (checkAdmin == 'true') {
+				authFlag = 'M';
+			}
+			if (authFlag == 'M') {
+				
+			} else {
+				if (adminFlag == "true"){
+					$("#appr").hide();
+					$("#ret").hide();
+				}
+			}
 		})
 		
 		$(function () {
@@ -109,7 +122,8 @@
 	        console.log("${endDate}");
 			if (checkAdmin == 'true') {
 				$("#Sdatepicker").val("${startDate}");
-	    		$("#Edatepicker").val("${endDate}");	
+	    		$("#Edatepicker").val("${endDate}");
+	    		usepostDate = true;
 			}
 	    });
 	    
@@ -152,6 +166,20 @@
 	    });
 	    
 		window.onload = function() {
+			if (checkAdmin == "true") {
+				var infoStr = ' [총 <span style="color:#017BEC;">' + totalAtt;
+		    	
+	    		infoStr += '</span> 개 - ';
+	    		infoStr += startDate.substring(0,4) + '년' + 
+	    		startDate.substring(5,7) + '월' + 
+	    		startDate.substring(8,10) + '일~';
+		    	infoStr += endDate.substring(0,4) + '년' + 
+		    	endDate.substring(5,7) + '월' + 
+		    	endDate.substring(8,10) + '일]</span>';
+		    	
+		    	$("#mailBoxInfo").html(infoStr);
+			}
+			
 			var obj = $("#search").offset();
 			
 			$("#layer_popup").css({
@@ -162,8 +190,6 @@
 			if (checkAdmin != "true") {
 				$("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');	
-			} else {
-				usepostDate = true;
 			}
 		}
 		function makePageSelPage(){
@@ -403,6 +429,22 @@
 	    	if (excel == true) {
 	    		$('#ExcelAttList tbody').children( 'tr:not(:first)' ).remove();
 	    	} else {
+	    		if (adminFlag == "true"){
+	    			authFlag = data.authFlag;
+	    			
+	    			if(checkAdmin == 'true') {
+		    			authFlag = 'M'; 
+		    		}
+	    			
+		    		if (authFlag == 'M') {
+						$("#appr").show();
+						$("#ret").show();
+					} else {
+						$("#appr").hide();
+						$("#ret").hide();
+					}
+	    		}	
+	    		
 	    		totalAtt = data.totalAtt;
 		    	totalPages = data.totalPages;
 		    	makePageSelPage();
@@ -783,7 +825,7 @@
 			    success : function(json){
 			    	get_att_list(currentPage);
 			    	if (json == "error") {
-			    		alert("이미 승인 혹은 반려된 항목입니다.");			    			
+			    		alert("이미 처리된 항목입니다.");			    			
 			    	} else {
 			    		alert("삭제되었습니다.");	
 			    	}
@@ -795,7 +837,11 @@
 	    }
 	    
 		//승인
-	    function modApprove() { 
+	    function modApprove() {
+			if (authFlag != "M") {
+				alert("권한이 없습니다. 관리자에게 문의하세요");
+				return;
+			}
 	    	ShowAttProgress();
 	    	
 	    	var attList = $(".checkAtt:checked");
@@ -845,6 +891,11 @@
 	    
 	  	//반려
 	    function modReturn() {
+	    	if (authFlag != "M") {
+				alert("권한이 없습니다. 관리자에게 문의하세요");
+				return;
+			}
+	  		
 	    	ShowAttProgress();
 	    	
 	    	var attList = $(".checkAtt:checked");
@@ -1120,8 +1171,8 @@
 		</c:if>
         <ul id="tb_Parent">
         <c:if test="${adminFlag == 'true'}">
-			<li id="reply"><span onClick="modApprove()">승인</span></li>
-        	<li id="search"><span onClick="modReturn()">반려</span></li>
+			<li id="appr"><span onClick="modApprove()">승인</span></li>
+        	<li id="ret"><span onClick="modReturn()">반려</span></li>
 		</c:if>
 		<c:if test="${adminFlag != 'true' && checkAdmin != 'true'}">
 			<li><span onClick="attList_del()">삭제</span></li>
@@ -1164,10 +1215,10 @@
 									<c:forEach var="dept" items="${deptList}">
 										<c:if test="${dept.mine ne 'yes' }">
 											<c:if test="${selectedDeptID == dept.deptId}">
-												<option value="<c:out value='${dept.deptId}'/>" authType="<c:out value='${dept.authType}'/>" selected><c:out value='${dept.deptName}'/></option>
+												<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
 											</c:if>
 											<c:if test="${selectedDeptID != dept.deptId}">
-												<option value="<c:out value='${dept.deptId}'/>" authType="<c:out value='${dept.authType}'/>"><c:out value='${dept.deptName}' /></option>
+												<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
 											</c:if>
 										</c:if>										
 									</c:forEach>

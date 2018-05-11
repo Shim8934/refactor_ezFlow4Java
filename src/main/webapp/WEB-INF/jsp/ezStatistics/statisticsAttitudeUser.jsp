@@ -220,22 +220,26 @@
         }
         else {
             var selyear = parseInt(document.getElementById("selyear").value);
-            if ((selyear < tempyear - 2 || selyear < tempyear + 2) && selyear + 2 <= year) {
-                document.getElementById("selyear").innerHTML = "";
-                tempyear = selyear + 2;
-                for (var i = 0; i < 5; i++) {
-                    var option = document.createElement("OPTION");
-                    option.value = tempyear;
-                    option.innerHTML = tempyear;
-
-                    if (selyear == tempyear)
-                        option.selected = true;
-
-                    document.getElementById("selyear").appendChild(option);
-                    tempyear--;
+            document.getElementById("selyear").innerHTML = "";
+            tempyear = selyear + 2;
+            for (var i = 0; i < 5; i++) {
+                if (tempyear > year) {
+                	tempyear--;
+                	continue;
                 }
-                tempyear = selyear + 2;
+                
+                var option = document.createElement("OPTION");
+                option.value = tempyear;
+                option.innerHTML = tempyear;
+
+                if (selyear == tempyear) {
+                    option.selected = true;
+                }
+
+                document.getElementById("selyear").appendChild(option);
+                tempyear--;
             }
+            tempyear = selyear + 2;
         }
     }
 

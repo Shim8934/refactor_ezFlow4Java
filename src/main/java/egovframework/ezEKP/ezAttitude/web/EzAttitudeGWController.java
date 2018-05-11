@@ -1156,6 +1156,9 @@ public class EzAttitudeGWController {
 					type = null;
 				}
 			}
+			if (endPoint != null && startPoint != null) {
+				endPoint = Integer.parseInt(endPoint)- Integer.parseInt(startPoint) + "";
+			}
 			
 			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
 
@@ -1236,6 +1239,12 @@ public class EzAttitudeGWController {
 			for (int i = 0; i < authDeptlist.size(); i++) {
 				deptIdList[i] = authDeptlist.get(i).getDeptId();
 			}
+			
+			if (deptid != null) {
+				deptIdList = new String[1];
+				deptIdList[0] = deptid;
+			}
+			
 			int attListCount = ezAttitudeService.getUsersModiyAttCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, type, deptIdList, adminFlag, checkAdmin);
 
 			result.put("status", "ok");
