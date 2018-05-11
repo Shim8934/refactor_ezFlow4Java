@@ -1669,11 +1669,9 @@ function CompleteEmailAddress_Complete(rgParams) {
             }
         }
         var szFromName = "";
-        for (count1 = 1; count1 <= checkname_cross_dialogArguments[3].length; count1++) {
-        	if (count1 - 1 != checkname_cross_dialogArguments[7]) {
+        for (count1 = 1; count1 < checkname_cross_dialogArguments[3].length; count1++) {
         		szFromName += checkname_cross_dialogArguments[3][count1-1];
-                if (count1 != checkname_cross_dialogArguments[3].length) szFromName += ";";
-        	}
+                if (count1 != checkname_cross_dialogArguments[3].length-1) szFromName += ";";
         	/*szFromName += checkname_cross_dialogArguments[3][count1];
             if (count1 != checkname_cross_dialogArguments[3].length - 1) szFromName += ";";*/
         }
