@@ -396,7 +396,7 @@
 								SELECT 
 									* 
 									FROM 
-										VAPRDOINGDOCLIST 
+										VGONGRAMAPRDOINGDOCLIST
 		               				WHERE 
 		               					APRMEMBERID = #v_USERID#
 		               				AND 
@@ -8916,7 +8916,7 @@
    			SELECT 
    				COUNT(DOCID) 
    			FROM 
-   				VAPRDOINGDOCLIST 
+   				VGONGRAMAPRDOINGDOCLIST 
    			WHERE 
    				APRMEMBERID = #v_USERID# 
    			AND 
@@ -9899,7 +9899,7 @@
 			 SELECT 
 			 		COUNT(DOCID) 
 			 FROM 
-			 		VAPRDOINGDOCLIST  
+			 		VGONGRAMAPRDOINGDOCLIST
 			 WHERE 
 			 		APRMEMBERID = #v_USERID#
 			 AND 
@@ -12256,7 +12256,7 @@
 				SELECT 
 					COUNT(DOCID) 
 				FROM 
-					vgongramaprdoingdoclist 
+					VGONGRAMAPRDOINGDOCLIST
          		WHERE 
          			TENANT_ID = #v_TENANTID#
          		AND
