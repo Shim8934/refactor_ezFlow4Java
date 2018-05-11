@@ -202,10 +202,10 @@
 	                        </p>	                        	                        
 	                    </fieldset>
 	                    <input type="hidden" name="message" value="${message}" />		                    
-				    </form>					
-				</div>			
-			</div>
-			<footer><p>COPYRIGHT &copy; 2018 KAONI CO., LTD. ALL RIGHT RESERVED</p></footer>			
+				    </form>				    					
+				</div>
+				<footer><p style="font-family: Malgun Gothic, Meiryo UI">COPYRIGHT &copy; 2018 KAONI CO., LTD. ALL RIGHT RESERVED</p></footer>											
+			</div>									
 		</div>				
 		<div class="noti_layer" style="position:absolute;top:295px;left:800px;display:none;" id="divCapsLock">
 			<span class="arrow">
