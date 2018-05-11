@@ -118,7 +118,7 @@
 	   			//업무 리스트 가공부분.
 	   			for(var i = 0; i < tl.length; i++){
 	   				ganttData.tasks[i + 1] = {};
-		   			ganttData.tasks[i + 1].id = "t" + tl[i].projectId + "-" + tl[i].taskId;
+		   			ganttData.tasks[i + 1].id = "p" + tl[i].projectId + "_t" + tl[i].taskId;
 		   			ganttData.tasks[i + 1].name = tl[i].taskName;
 		   			ganttData.tasks[i + 1].code = "";
 		   			ganttData.tasks[i + 1].level = 1;
@@ -200,7 +200,7 @@
 	   			var curTask = {};
 	   			var taskId = 0;
 	   			curTask = ge.currentTask;
-	   			taskId = curTask.id.split("-")[1];
+	   			taskId = curTask.id.match(/_t\d+/)[0].match(/\d/);
 	   			
 	   			$.ajax({
 					type: "POST",
