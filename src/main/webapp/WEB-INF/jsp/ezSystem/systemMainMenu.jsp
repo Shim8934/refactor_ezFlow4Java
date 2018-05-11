@@ -66,7 +66,7 @@
 				}		
 						
 				var jsonStr = JSON.stringify(paramArray);
-		
+				
 				$.ajax({
 					type : "POST",
 					url : "/admin/ezSystem/updateSysParam.do",

@@ -339,7 +339,7 @@
 			            document.getElementById("ScheduleList").innerHTML = listHTML;			        	
 			        else {
 			            var nodata = "<div class='nodata_schedule'>";
-			            nodata += "<p style='margin-left:10px'><img src='/images/" + strLang1_total + "/main/nodata_plan.png' width='92' height='84' style='margin:5px 0px'></p>";
+			            nodata += "<p style='margin-left:10px'><img src='/images/" + strLang1_total + "/main/nodata_plan.png' width='92' height='84' style='margin:10px 0px 0px'></p>";
 			            nodata += "<p style='margin-left:10px'>" + strLang2_total + "</p></div>";
 
 			            var scrollbox = {};

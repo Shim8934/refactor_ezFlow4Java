@@ -1370,13 +1370,15 @@ _list li {
 	padding:0px;
 	list-style:none;
 }
+
+/* 2018-05-10 홍승비 - 커뮤니티 팝업홈 게시판 리스트 li 글머리 수정 */
 .btype_list ul li {
 	clear:both;
 	margin:0px; 
 	padding:0px 0px 0px 10px;
 	line-height:23px;
 	height:23px;
-	background:url(../images/kr/community/type1/board_dotted.gif) no-repeat 2px 10px;	
+	background:url('/images/kr/left/left_dot02.gif') no-repeat 0px 7px #fff;
 	white-space:nowrap; 
 	overflow:hidden; 
 	text-overflow:ellipsis;
@@ -1437,11 +1439,12 @@ _list li {
 	list-style:none; 
 	color:#333;
 	cursor: pointer;}
+	
+/* 2018-05-11 홍승비 - 커뮤니티 팝업홈 포토게시판 보더 제거 */
 .btype_photo ul .photo { 
 	display:block; 
 	height:68px;
 	margin-bottom:5px;
-	border:2px solid #d8d8d8;
 }
 .btype_photo ul li .ptxt {
 	height:20px;

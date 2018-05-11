@@ -8,47 +8,28 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
 		<style type="text/css">
-	        <!--
 	        .photo_tit {
 	            font-size: 9pt;
 	            color: #333333;
 	            padding-left:4.5px;
+	            padding-bottom:2px;
 	        }
-	
 	        .photo_name {
 	            font-size: 9pt;
 	            color: #00539b;
 	        }
-	
 	        .photo_num {
 	            font-size: 9pt;
 	            font-weight: bold;
 	            color: #639933;
 	        }
-	        -->
 	    </style>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     	<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
     	<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-    	<style>
-	        .pagetd {
-	            padding-top: 6px;
-	        }
-	
-	        .pcol {
-	            padding-top: 6px;
-	        }
-	
-	        .Right_Point01 {
-	            font: bold;
-	            color: #017bec;
-	        }
-	    </style>
-    	
     	<script type="text/javascript">
 	    	var pBoardID = "<c:out value = '${boardInfo.boardID}' />";
 	        var pBoardName = "<c:out value = '${boardInfo.boardName}' />";
@@ -139,18 +120,20 @@
     			makePageSelPage();
     		});
 	        
-	        if (url != "") window.location.href = url;
+	        document.onselectstart = function () {
+			    window.event.cancelBubble = true;
+			    window.event.returnValue = false;
+			}
+	        
+	        if (url != "") {
+	        	window.location.href = url;
+	        }
 	        
 	    	function NewItem_onclick() {
-	            if (UserLevel == "0" || UserLevel == "9") {
-					alert("<spring:message code = 'ezCommunity.t896' />");
+	            if (UserLevel == "0" || UserLevel == "9" || Write_FG != "true") {
+					alert("<spring:message code = 'ezCommunity.t431' />");
 	               	return;
 	           	}
-	            
-	           	if (Write_FG != "true") {
-					alert("<spring:message code = 'ezCommunity.t897' />");
-			        return;
-			    }
 	
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
@@ -165,15 +148,10 @@
 	        }
 	
 			function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
-	            if (UserLevel == "0" || UserLevel == "9") {
-	            	alert("<spring:message code = 'ezCommunity.t899' />");
+	            if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
+	            	alert("<spring:message code = 'ezCommunity.t431' />");
 	                return;
 	           	}
-	
-	           	if (Read_FG != "true") {
-	            	alert("<spring:message code = 'ezCommunity.t423' />");
-				    return;
-				}
 	           	
 	            if (CrossYN()) {
 	                var e = evt.target;
@@ -197,213 +175,30 @@
 	                window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=800,width=750,top=" + pTop + ",left=" + pLeft, "");
 	            }
 	        }
-	
-// 	        function checkBox_checked(pItemID, pUserID) {
-// 	            if (window.event.srcElement.checked) {
-// 	                strListInfo += pItemID + "," + pUserID + ";";
-// 	            } else {
-// 	                strListInfo = ReplaceText(strListInfo, pItemID + "," + pUserID + ";", "");
-// 	            }
-// 	        }
-	
-// 	        function checkBox_checkAll() {
-// 	            var i = 0;
-	            
-// 	            for (i = 1; i < document.frmOutbox.length; i++) {
-// 	                if (document.frmOutbox[i].type == 'checkbox') {
-// 	                    if (document.frmOutbox.checkbox.checked) {
-// 	                        document.frmOutbox[i].checked = true;
-// 	                        strListInfo = ListInfo.innerText;
-// 	                    } else {
-// 	                        document.frmOutbox[i].checked = false;
-// 	                        strListInfo = "";
-// 	                    }
-// 	                }
-// 	            }
-// 	        }
-	        
-	        var checkpassword_dialogArguments = new Array();
-	        
-	        function DeleteItem_onclick() {
-	            if (gubun == "2") {
-	                if (strListInfo == "") {
-	                    alert("<spring:message code = 'ezCommunity.t424' />");
-					    return;
-					}
-	
-	                arrList = strListInfo.split(",;");
-	
-	                if (arrList.length > 2) {
-	                    alert("<spring:message code = 'ezCommunity.t919' />");
-					    return;
-					}
-	            } else {
-	                if (strListInfo == "") {
-	                    alert("<spring:message code = 'ezCommunity.t424' />");
-					    return;
-					}
-	            }
-	
-	            if (Delete_FG != "true") {
-	                alert("<spring:message code = 'ezCommunity.t901' />");
-				    return;
-				}
-	
-	            if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false && gubun != "2") {
-	                alert("<spring:message code = 'ezCommunity.t431' />");
-				    return;
-				}
-	
-	            if (CheckIfHasReplies()) {
-	                alert("<spring:message code = 'ezCommunity.t425' />");
-				    return;
-				}
-	
-	            if (gubun == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
-	                if (CrossYN()) {
-	                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-	                    var OpenWin = window.open("aspx/CheckPassWord.aspx?ItemID=" + arrList[0], "CheckPassWord", GetOpenWindowfeature(340, 200));
-	                    
-	                    try { OpenWin.focus(); } catch (e) { }
-	                } else {
-	                    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-	                    feature = feature + GetShowModalPosition(330, 200);
-	                    var ret = window.showModalDialog("aspx/CheckPassWord.aspx?ItemID=" + arrList[0], "", feature);
-	
-	                    if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") {
-	                    	return;
-	                    }
-	                    
-	                    if (ret == "NO") {
-	                        alert("<spring:message code = 'ezCommunity.t921' />");
-	                        return;
-	                    } else {
-	                        var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	                        xmlhttp.open("POST", "aspx/DeleteItem.aspx?ItemList=" + arrList[0] + ";", false);
-	                        xmlhttp.send();
-	                        xmlhttp = null;
-	                        alert('<spring:message code = 'ezCommunity.t204' />');
-	                        window.location.reload();
-	                    }
-	                }
-	            } else {
-	                var ret = confirm("<spring:message code = 'ezCommunity.t426' />");
-	                
-				    if (ret) {
-				        DeleteItem();
-				    }
-				}
-	        }
-	
-	        function DeleteItem_onclick_Complete(ret) {
-	            if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") {
-	            	return;
-	            }
-	
-	            if (ret == "NO") {
-	                alert("<spring:message code = 'ezCommunity.t921' />");
-	                return;
-	            } else {
-	                var xmlhttp = createXMLHttpRequest();
-	                xmlhttp.open("POST", "interASP/DeleteItem.aspx?ItemList=" + arrList[0] + ";", false);
-	                xmlhttp.send();
-	                xmlhttp = null;
-	                alert('<spring:message code = 'ezCommunity.t204' />');
-	                window.location.reload();
-	            }
-	
-	            var ret = confirm("<spring:message code = 'ezCommunity.t426' />");
-	            
-	            if (ret) {
-	                DeleteItem();
-	            }
-	        }
-	
-	        function CheckIfHasReplies() {
-	            var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	            xmlhttp.open("POST", "interASP/CheckIfHasReply.aspx?ItemList=" + strListInfo, false);
-	            xmlhttp.send();
-	            
-	            if (xmlhttp.responseText == "FALSE") {
-	                xmlhttp = null;
-	                return false;
-	            }
-	            
-	            xmlhttp = null;
-	            
-	            return true;
-	        }
-	
-	        function DeleteItem() {
-	            var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	            xmlhttp.open("POST", "interASP/DeleteItem.aspx?ItemList=" + strListInfo, false);
-	            xmlhttp.send();
-	            xmlhttp = null;
-	            window.location.reload();
-	        }
-	
-	        function ReplaceText(orgStr, findStr, replaceStr) {
-	            var re = new RegExp(findStr, "gi");
-	            
-	            return (orgStr.replace(re, replaceStr));
-	        }
-	
-	        function CheckOwnerShip() {
-	            var arrList = new Array();
-	            var i = 0;
-	
-	            arrList = strListInfo.split(";");
-	            
-	            for (i = 0; i < arrList.length - 1; i++) {
-	                if (arrList[i].split(",")[1].indexOf(SSUserID) == -1) {
-	                    arrList = null;
-	                    
-	                    return false;
-	                }
-	            }
-	            
-	            arrList = null;
-	            
-	            return true;
-	        }
-	
+
 	        function refresh_onclick() {
 	            window.location.reload(false);
 	        }
-	        
+ 	        
 	        function refresh_onclick2() {
 	        	if ($('#tblList tbody tr').children().length == '11') {
 	        		newPage = parseInt(CurPage) - 1;
 		            
-	        		if (newPage == 0) newPage = 1;
-	        		
-		            if (newPage > 0) {
+	        		if (newPage == 0) {
+	        			newPage = 1;
+	        		} else if (newPage > 0) {
 		                window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + newPage + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + "<c:out value = '${code}' />";
-					}	
+					}
 	        	} else {
 		            window.location.reload(false);        		
 	        	}
-	        }
-	
-	        function AddToMyBoards() {
-	            var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	            xmlhttp.open("POST", "interASP/AddToMyBoards.aspx?BoardID=" + pBoardID + "&BoardName=" + escape(pBoardName), false);
-	            xmlhttp.send();
-	
-	            if (xmlhttp.responseXML.text == "OK") {
-	                alert("<spring:message code = 'ezCommunity.t902' />");
-				} else {
-				    alert("<spring:message code = 'ezCommunity.t903' />");
-				}
-	            
-	            xmlhttp = null;
-	        }
-	
-	        var BlockSize = 10;
+	        }  
 	        
 	        function td_Create1(strtext) {
 	            document.getElementById("tblPageRayer").innerHTML = strtext;
 	        }
+	        
+	        var BlockSize = 10;
 	        function makePageSelPage() {
 	            var strtext;
 	            var PagingHTML = "";
@@ -525,192 +320,11 @@
 	                window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + parseInt(newPage) + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + "<c:out value = '${code}' />";
 				}
 	        }
-	
-	        function prevPage_onclick() {
-	            newPage = parseInt(CurPage) - 1;
-	            
-	            if (newPage > 0) {
-	                window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + newPage.toString() + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + "<c:out value = '${code}' />";
-				}
-	        }
-	
-	        function nextPage_onclick() {
-	            newPage = parseInt(CurPage) + 1;
-	            
-	            if (newPage <= parseInt(totalPage)) {
-	                window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + newPage.toString() + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + "<c:out value = '${code}' />";
-				}
-	        }	
-	
-	        function goPrevPage_onclick(objPage) {
-	            newPage = (parseInt(objPage) - 1) * 10 + 1;
-	
-	            if (newPage < 0) {
-	            	newPage = 1;
-	            }
-	            
-	            if (newPage > 0) {
-	                window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + newPage.toString() + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + "<c:out value = '${code}' />";
-				}
-	
-	        }
-	
-	        function goNextPage_onclick(objPage) {
-	            newPage = (parseInt(objPage) - 1) * 10 + 1;
-	            
-	            if (newPage <= parseInt(totalPage)) {
-	                window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + newPage.toString() + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + "<c:out value = '${code}' />";
-				}
-	        }
-	
-	        function moveToPage() {
-	            if (window.event.keyCode == 13) {
-	                var newPage = txt_PageInputNum.value;
-	                
-	                if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
-	                    window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + parseInt(newPage) + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + "<c:out value = '${code}' />";
-					}
-	            }
-	        }
-	
-	        function SortPage(SortBy) {
-	            window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + CurPage + "&bBoardID=" + pBoardID + "&pBoardName=" + pBoardName + "&sortBy=" + SortBy + "&code=" + "<c:out value = '${code}' />";
-			}
-	
-			function SelCateList_onChange() {
-			    window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + CurPage + "&boardID=" + pBoardID + "&pBoardName=" + pBoardName + "&sortBy=" + pSortBy + "&cateID=" + SelCateList.value + "&code=" + "<c:out value = '${code}' />";
-			}
-	
-			function CopyItem_onclick() {
-			    if (Read_FG != "true") {
-			        alert("<spring:message code = 'ezCommunity.t431' />");
-			        
-				    return;
-				}
-	
-	            if (strListInfo == "") {
-	                alert("<spring:message code = 'ezCommunity.t430' />");
-				    return;
-				}
-	
-	            if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
-	                alert("<spring:message code = 'ezCommunity.t431' />");
-	                
-				    return;
-				}
-	            
-	            var arrList = new Array();
-	            var strItemList = "";
-	            var i = 0;
-	
-	            arrList = strListInfo.split(";");
-	            
-	            for (i = 0; i < arrList.length - 1; i++) {
-	                strItemList += arrList[i].split(",")[0] + ";";
-	            }
-	            
-	            arrList = null;
-	
-	            var pheigth = window.screen.availHeight;
-	            var pwidth = window.screen.availWidth;
-	            pheigth = parseInt(pheigth) / 2;
-	            pwidth = parseInt(pwidth) / 2;
-	            pheigth = pheigth - 200;
-	            pwidth = pwidth - 127;
-	
-	            window.open("CopyBoardItem.aspx?ItemIDList=" + strItemList + "&BoardID=" + pBoardID, "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
-	        }
-	
-	        function SetRead_onclick() {
-	            if (Read_FG != "true") {
-	                alert("<spring:message code = 'ezCommunity.t423' />");
-	                
-				    return;
-				}
-	
-	            if (strListInfo == "") {
-	                alert("<spring:message code = 'ezCommunity.t427' />");
-	                
-				    return;
-				}
-	
-	            var ret = confirm("<spring:message code = 'ezCommunity.t428' />");
-	            
-			    if (ret) {
-			        var arrList = new Array();
-			        var strItemList = "";
-			        var i = 0;
-	
-			        arrList = strListInfo.split(";");
-			        
-			        for (i = 0; i < arrList.length - 1; i++) {
-			            strItemList += arrList[i].split(",")[0] + ";";
-			        }
-			        
-			        arrList = null;
-	
-			        var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-			        xmlhttp.open("POST", "interASP/SetRead.aspx?BoardID=" + pBoardID + "&ItemIDList=" + strItemList, false);
-			        xmlhttp.send();
-	
-			        xmlhttp = null;
-			        
-			        refresh_onclick();
-			    }
-			}
-	
-			function MemberInfo_onclick(pUserID) {
-			    if (gubun == "2") {
-			    	return;
-			    }
-			    
-			    var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-			    feature = feature + GetOpenPosition(420, 450);
-			    window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + pUserID, "", feature);
-			}
-	
-			function ReservationItem_onclick() {
-			    var OrgBoardParameters = "Page=" + CurPage + "&BoardID=" + pBoardID + "&SortBy=" + pSortBy;
-			    window.location.href = "BoardReservedItemList.aspx?OrgBoardParameters=" + escape(OrgBoardParameters);
-			}
-	
-			document.onselectstart = function () {
-			    window.event.cancelBubble = true;
-			    window.event.returnValue = false;
-			}
-	
-			function search_onclick() {
-			    var OrgBoardParameters = "Page=" + CurPage + "&BoardID=" + pBoardID + "&SortBy=" + pSortBy;
-			    window.location.href = "SearchBoardItem.aspx?BoardID=" + pBoardID + "&OrgBoardParameters=" + escape(OrgBoardParameters);
-			}
-	
-			function NewPhotoItem_onclick() {
-			    if (Write_FG != "true") {
-			        alert("<spring:message code = 'ezCommunity.t897' />");
-			        
-				    return;
-				}
-	
-	            var pheight = window.screen.availHeight;
-	            var pwidth = window.screen.availWidth;
-	            var pTop = (pheight - 720) / 2;
-	            var pLeft = (pwidth - 765) / 2;
-	
-	            window.open("NewBoardItem_Photo.aspx?BoardID=" + pBoardID + "&Mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-	        }
+	        
+	  		 /* 2018-05-11 홍승비 - 커뮤니티 포토게시판 사용하지 않는 코드 정리 */        
     	</script>
 	</head>
 	<body class="cmhome_body" style="overflow-x:hidden">
-	
-		<c:if test="${boardInfo.listView_FG != 'true' }">
-			<div style="margin-top: 100px; text-align: center"><spring:message code = 'ezCommunity.t909' /></div>
-			<%
-				if (true) {
-					return;
-				}
-			%>
-		</c:if>
-	    
 	    <h1 class="type1_h1">${boardInfo.boardName }<span id="mailBoxInfo"></span></h1>
 	    
 	    <div id = "mainmenu">
@@ -719,26 +333,15 @@
 	        		<li><span onclick="NewItem_onclick()"><spring:message code = 'ezCommunity.t923' /></span></li>
 		            <li style="display: none"><span onclick="DeleteItem_onclick()"><spring:message code = 'ezCommunity.t208' /></span></li>
 	        </c:if>
-	        
-	        <c:if test="${boardInfo.gubun != '2' && boardInfo.boardID !=  '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
-	        		<li style="display: none"><span onclick="CopyItem_onclick()"><spring:message code = 'ezCommunity.t911' /></span></li>
-	        </c:if>
 
-            <li><span onclick="refresh_onclick()"><spring:message code = 'ezCommunity.t912' /></span></li>
-            
-            <c:if test="${boardInfo.read_FG == 'true' && boardInfo.boardID !=  '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
-            		<li style="display: none"><span onclick="search_onclick()"><spring:message code = 'ezCommunity.t31' /></span></li>
-            		<li style="display: none"><span onclick="AddToMyBoards()"><spring:message code = 'ezCommunity.t916' /></span></li>
-            </c:if>
-            
-            		<li style="display: none"><span onclick="ReservationItem_onclick()"><spring:message code = 'ezCommunity.t913' /></span></li>
+            	<li><span onclick="refresh_onclick()"><spring:message code = 'ezCommunity.t912' /></span></li>  
             	</ul>
 	    </div>
 
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<div style="height:460px;">
+		<div style="height:465px;">
 	    	<table id="tblList">
 	    	</table>
 	    </div>
