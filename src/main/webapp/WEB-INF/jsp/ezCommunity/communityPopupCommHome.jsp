@@ -13,8 +13,7 @@
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 		<script type="text/javascript">
 			var primary = "<c:out value='${primary}'/>";
 			var xmlDomTreeView = createXmlDom();
@@ -180,8 +179,6 @@
 			                                        span2.setAttribute("boardid", itemVO.boardID);
 			                                        span2.setAttribute("gubun", itemVO.gubun);
 			                                        span2.setAttribute("code", code);
-			                                        span2.style.border = "1px solid #d8d8d8";
-			                                        span2.style.width = "68px";
 			                                        span2.style.cursor = "pointer";
 			                                        span2.onclick = function () { ItemRead_onclick(this); };
 
