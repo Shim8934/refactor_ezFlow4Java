@@ -207,21 +207,26 @@
 	   				return false;
 	   			}
 	   			
-	   			$.ajax({
-					type: "POST",
-					url: "/ezPMS/getTaskDetails.do",
-					data: {"taskId": taskId},
-					dataType: "json",
-					success: function(result) {
-						alert(result);
-					},
-					error: function (xhr, status, e){
-						alert("error");
-					},
-					complete: function() {
+				var top = ($(window).height() - $(this).outerHeight()) / 2;
+   			    var left = ($(window).width() - $(this).outerWidth()) / 2;
+   				var feature = GetOpenPosition(top, left);
+   			 
+   				DivPopUpShow(845, 555, "/ezPMS/getTaskDetails.do?taskId=" + taskId);
+   				
+// 	   			$.ajax({
+// 					type: "POST",
+// 					url: "/ezPMS/getTaskDetails.do",
+// 					data: {"taskId": taskId},
+// 					dataType: "json",
+// 					success: function(result) {
+// 					},
+// 					error: function (xhr, status, e){
+// 						alert("error");
+// 					},
+// 					complete: function() {
 						
-			        }
-				});
+// 			        }
+// 				});
 	   		}
 	   		
 	   		(function(){
