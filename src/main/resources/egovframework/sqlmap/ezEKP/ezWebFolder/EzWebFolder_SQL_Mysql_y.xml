@@ -818,7 +818,7 @@
 					f.USE_STATUS   			AS USE_STATUS,
 					if ( #primary# = '1' , f.CREATE_NAME1, f.CREATE_NAME2) AS CREATE_NAME1,
 					f.CREATE_NAME2 AS CREATE_NAME2,
-					DATE_ADD(file.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+					DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
 					f.TENANT_ID    ,
 					type.TYPE_NAME 			AS TYPE_NAME    	   		
 			]]>	
