@@ -287,6 +287,21 @@
 			moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
 			DivPopUpShow(330, 470, "/ezWebFolder/folderMove.do");
 		}
+		
+		function share_onclick() {
+			if (folderId == "") {
+				alert("공유할 폴더를 선택하세요");
+				return;
+			}
+			
+			if (parent == '#' && folderType != "S") {
+				alert("최상위 폴더는 공유할 수 없습니다.");
+				return;
+			}
+			
+			var openWindow = window.open("/ezWebFolder/addShareView.do?folderFileId=" + folderId + "&folderFileType=D", "addShareView", GetOpenWindowfeature(610, 685));
+	        try { openWindow.focus(); } catch (e) { }
+		}
 
 		function requestdata(event) {
 			if (!event)
@@ -334,6 +349,7 @@
       	<a class="webfolderBttn" onclick="update_onclick()"><span><spring:message code="ezWebFolder.t162"/></span></a>
       	<a class="webfolderBttn" onclick="move_onclick()"><span><spring:message code="ezWebFolder.t121"/></span></a>
       	<a class="webfolderBttn" onclick="copy_onclick()"><span><spring:message code="ezWebFolder.t122"/></span></a>
+      	<a class="webfolderBttn" onclick="share_onclick()"><span>공유</span></a>
       	<a class="webfolderBttn" onclick="delete_onclick()"><span><spring:message code="ezWebFolder.t111"/></span></a>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
