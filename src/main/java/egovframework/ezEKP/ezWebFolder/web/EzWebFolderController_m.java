@@ -139,7 +139,20 @@ public class EzWebFolderController_m {
 		String folderFileId = request.getParameter("folderFileId");
 		String folderFileType = request.getParameter("folderFileType");
 		
-		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
+		Map<String, Object> checkPermission = new HashMap<>();
+		List<Map<String, Object>> checkList = new ArrayList<>();
+		Map<String, Object> map = new HashMap<>();
+		map.put("checkId", folderFileId);
+		map.put("checkType", folderFileType);
+		checkList.add(map);
+		checkPermission.put("checkList"	, checkList);
+		
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/checkpermission", null, request, "post", new JSONObject(checkPermission));
+		
+		if (((String) resultBody.get("status")).equals("ok")) {
+			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
+		}
+		
 		String result = "";
 		
 		if (((String) resultBody.get("status")).equals("ok")) {
@@ -221,7 +234,19 @@ public class EzWebFolderController_m {
 		String deptList = request.getParameter("deptList");
 		String userList = request.getParameter("userList");
 		
-		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
+		Map<String, Object> checkPermission = new HashMap<>();
+		List<Map<String, Object>> checkList = new ArrayList<>();
+		Map<String, Object> map = new HashMap<>();
+		map.put("checkId", folderFileId);
+		map.put("checkType", folderFileType);
+		checkList.add(map);
+		checkPermission.put("checkList"	, checkList);
+		
+		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/checkpermission", null, request, "post", new JSONObject(checkPermission));
+		
+		if (((String) resultBody.get("status")).equals("ok")) {
+			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing/" + folderFileId + "/" + folderFileType, null, request, "get", null);
+		}
 		
 		if (((String) resultBody.get("status")).equals("ok")) {
 			JSONObject shareInfo = (JSONObject) resultBody.get("data");
