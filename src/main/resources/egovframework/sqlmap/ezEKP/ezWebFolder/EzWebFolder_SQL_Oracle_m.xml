@@ -110,6 +110,7 @@
 		<result property="createId"     column="CREATEID"     />
 		<result property="folderName1"  column="FOLDERNAME1"  />
 		<result property="folderName2"  column="FOLDERNAME2"  />
+		<result property="folderLevel"  column="FOLDERLEVEL"  />
 	</resultMap>
 	
 	<sql id="searchTerm">
@@ -267,7 +268,8 @@
 		    END TEXT,
 		    CREATE_ID AS CREATEID,
 		    FOLDER_NAME1 AS FOLDERNAME1,
-		    FOLDER_NAME2 AS FOLDERNAME2 
+		    FOLDER_NAME2 AS FOLDERNAME2,
+		    FOLDER_LEVEL AS FOLDERLEVEL 
 		FROM TBL_WEBFOLDER_FOLDER D2
 		JOIN (
 		    SELECT D.FOLDER_PATH
@@ -296,6 +298,7 @@
 		ON D2.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
 		AND D2.TENANT_ID = #tenantId#
 		WHERE D2.USE_STATUS = 'Y'
+		ORDER BY SELECTED DESC, FOLDER_LEVEL
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getSharingList" parameterClass="Map" resultMap="shareVO">
