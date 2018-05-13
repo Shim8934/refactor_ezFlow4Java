@@ -125,73 +125,6 @@ var shareContext = (function() {
 		}, refreshView);
 	}
 	
-//	function toggleAll() {
-//		var selectedRows = rowContext.getSelectedRows();
-//		var selectedLength = selectedRows.length;
-//		
-//		if (selectedLength === 0) {
-//			alert(messages.strLang5);
-//			return;
-//		}
-//		
-//		var hasNoFavorite = false;
-//		var i;
-//		
-//		for (i = 0; i < selectedLength; i++) {
-//			if (!selectedRows[i].hasAttribute("favorite")) {
-//				hasNoFavorite = true;
-//				break;
-//			}
-//		}
-//		
-//		var requestAjax = hasNoFavorite ? addFavorite : deleteFavorite;
-//		var rowElement, imageElement, successHandle, rowInfo;
-//		
-//		for (i = 0; i < selectedLength; i++) {
-//			rowElement = selectedRows[i];
-//			imageElement = rowElement.querySelector("img:first-child");
-//			successHandle = function() {
-//				toggleImage(rowElement, imageElement);
-//			};
-//			
-//			rowInfo = rowContext.getRowInfo(selectedRows[i]);
-//			requestAjax(rowInfo.id, rowInfo.type, false, successHandle);
-//		}
-//	}
-	
-//	function onImageClick(element) {
-//		event.stopPropagation();
-//		
-//		var rowElement = element.parentElement.parentElement;
-//		var successHandle = function() {
-//			toggleImage(rowElement, element);
-//		};
-//		
-//		toggleFavorite(rowElement, true, successHandle, successHandle);
-//	}
-	
-//	function toggleFavorite(rowElement, isAsync, addHandler, deleteHandler) {
-//		var rowInfo = rowContext.getRowInfo(rowElement);
-//		
-//		if (rowInfo.isFavorite) {
-//			deleteFavorite(rowInfo.id, rowInfo.type, isAsync, deleteHandler);
-//		} else {
-//			addFavorite(rowInfo.id, rowInfo.type, isAsync, addHandler);
-//		}
-//	}
-	
-	/** private function **/
-	
-//	function toggleImage(rowElement, imageElement) {
-//		if (rowElement.hasAttribute("favorite")) {
-//			imageElement.src = "/images/ImgIcon/view-flag.gif";
-//			rowElement.removeAttribute("favorite");
-//		} else {
-//			imageElement.src = "/images/ImgIcon/icon-flag.gif";
-//			rowElement.setAttribute("favorite", "");
-//		}
-//	}
-	
 	function requestShareAjax(url, isAsync, data, successHandler) {
 		$.ajax({
 			type: "POST",
@@ -200,8 +133,20 @@ var shareContext = (function() {
 			dataType: "json",
 			data: data,
 			success: function(result) {
-				if (result.status === "error") {
-					alert(messages.strLang7 + " code:" + result.code);
+				if (result.status != "ok") {
+					if (result.code == 1) {
+						console.log("<spring:message code='ezWebFolder.t306' />");
+						return;
+					} else if (result.code == 2) {
+						alert("<spring:message code='ezWebFolder.t305' />");
+						return;
+					} else if (result.code == 3) {
+						alert("<spring:message code='ezWebFolder.t300' />");
+						return;
+					} else {
+						alert(messages.strLang7 + " code:" + result.code);
+						return;
+					}
 				}
 				
 				if (successHandler) {
@@ -215,9 +160,6 @@ var shareContext = (function() {
 	}
 	
 	return {
-//		onImageClick: onImageClick,
-//		toggleAll: toggleAll,
-//		toggleFavorite: toggleFavorite,
 		addShareView: addShareView,
 		showShareInfo: showShareInfo,
 		showHiddenSharedList: showHiddenSharedList,
