@@ -69,6 +69,32 @@ function initRangeData(initData) {
 	}
 }
 
+function search_complete(userId, userName) {
+	var userList = document.getElementById("MListView");
+	
+	for (var i = 1; i < userList.rows.length; i++) {
+		if (userList.rows[i].getAttribute("nodeId") == userId) {
+			alert(strAlreadyAdd);
+			return;
+		}
+	}
+	
+	var trElmt = document.createElement("tr");
+	var tdElmt = document.createElement("td");
+	
+	trElmt.setAttribute("nodeId", userId);
+	trElmt.setAttribute("userName", userName);
+	trElmt.setAttribute("class", "selectedDept");
+	trElmt.onclick = function() {userSelect(this);};
+	trElmt.ondblclick = function() {unselectUser(this)};
+	
+	tdElmt.setAttribute("style", "text-align:center;");
+	tdElmt.textContent = userName;
+	
+	trElmt.appendChild(tdElmt);
+	userList.appendChild(trElmt);
+}
+
 function getData(deptId, companyId) {
 	$.ajax({
 		type: "POST",
@@ -513,8 +539,10 @@ function cnsearch_click() {
 		alert(strSearchNotFound);
 		return;
 	} else if (adCount == 1) {
-		var deptId = getNodeText(GetElementsByTagName(xmlDOM, "DATA3")[0]);
-		getData(deptId, pCompanyID);
+		var userId = getNodeText(GetElementsByTagName(xmlDOM, "DATA2")[0]);
+		var userName = getNodeText(GetElementsByTagName(xmlDOM, "CELL")[3]);
+		
+		search_complete(userId, userName);
 	} else {
 		var rgParams = new Array();
 		rgParams["addrBook"] = xmlDOM;
@@ -527,9 +555,11 @@ function cnsearch_click() {
 }
 
 function cnsearch_click_Complete(RetValue) {
-	if (RetValue["deptid"] != "") {
-		var deptId = RetValue["deptid"];
-		getData(deptId, pCompanyID);
+	if (RetValue["userid"] != "") {
+		var userId = RetValue["userid"];
+		var userName = RetValue["username"];
+		
+		search_complete(userId, userName);
 	}
 }
 
