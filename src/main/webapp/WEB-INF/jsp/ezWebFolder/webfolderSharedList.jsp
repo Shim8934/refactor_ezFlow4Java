@@ -27,8 +27,10 @@
 		<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
 		<script type="text/javascript">
-			var currentFolderId = "";
+			var folderId = "";
 			var isShareMode = true;
+			var isSubSearching = "N";
+			var strSuccess  = "<spring:message code='ezWebFolder.t27'/>";
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
@@ -55,7 +57,7 @@
 				});
 				
 				pagination.setPageChangeEventHandler(function() {
-					getFileList(currentFolderId);
+					getFileList();
 				});
 				
 				getFileList();
@@ -152,11 +154,11 @@
 				};
 			}
 			
-			function getFileList(folderId) {
+			function getFileList() {
 				if (isShareMode) {
 					getSharedList();
 				} else {
-					getFileList2(folderId);
+					getFileList2();
 				}
 			}
 			
@@ -175,7 +177,7 @@
 						"searchFileType" : searchContext.getFileType(),
 						"searchStartDate" : searchRequirement.startDate,
 						"searchEndDate" : searchRequirement.endDate,
-						"subSearchFlag" : "N"
+						"subSearchFlag" : isSubSearching
 					},
 					dataType: "JSON",
 					async: false,
@@ -211,7 +213,7 @@
 						setNamePath(data.folderPath, data.folderPath2);
 						setMailBoxInfo(data.folderCount, data.fileCount);
 						
-						currentFolderId = "";
+						folderId = "";
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>");
@@ -219,7 +221,7 @@
 				});
 			}
 			
-			function getFileList2(folderId) {
+			function getFileList2() {
 				searchRequirement = searchContext.getCurrentRequirement();
 				
 				$.ajax({
@@ -285,8 +287,6 @@
 						renderList2(result.fileList);
 						setNamePath(result.folderPath, result.originalPath);
 						setMailBoxInfo(result.fldCnt, result.fileCnt);
-						
-						currentFolderId = folderId;
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>");
@@ -296,14 +296,25 @@
 			
 			function setButtons() {
 				if (isShareMode) {
-					$('#uploadBtn').css('display','none');
-					$('#fileDeleteBtn').css('display','none');
-					$('#fileRenameBtn').css('display','none');
-					$('#fileMoveCopyBtn').css('display','none');
-					
-					$('#fileCopyBtn').css('display','');
-					$('#hideShareBtn').css('display','');
-					$('#hiddenShareListBtn').css('display','');
+					if (isSubSearching === "Y") {
+						$('#uploadBtn').css('display','none');
+						$('#fileCopyBtn').css('display','none');
+						$('#hideShareBtn').css('display','none');
+						$('#hiddenShareListBtn').css('display','none');
+						
+						$('#fileDeleteBtn').css('display','');
+						$('#fileRenameBtn').css('display','');
+						$('#fileMoveCopyBtn').css('display','');
+					} else {
+						$('#uploadBtn').css('display','none');
+						$('#fileDeleteBtn').css('display','none');
+						$('#fileRenameBtn').css('display','none');
+						$('#fileMoveCopyBtn').css('display','none');
+						
+						$('#fileCopyBtn').css('display','');
+						$('#hideShareBtn').css('display','');
+						$('#hiddenShareListBtn').css('display','');
+					}
 				} else {
 					$('#fileCopyBtn').css('display','none');
 					$('#hideShareBtn').css('display','none');
@@ -337,9 +348,9 @@
 					detailName.textContent = "공유받은목록";
 					detailName.setAttribute("style", "font-size:15px; ");
 					detailName.onclick = function() {
-						pagination.setPage(1, true);
-						$("#fileTypeSelect").val("");
-						searchContext.setFileType("");
+						isShareMode = true;
+						isSubSearching = "N";
+						nameFileList("");
 					};
 					
 					nameTag.appendChild(detailName);
@@ -357,7 +368,7 @@
 					detailName.className = "aName";
 					detailName.id = originPath[i];
 					detailName.onclick = function() {
-						getFileList(this.id);
+						nameFileList(this.id);
 					};
 
 					detailName.textContent = path[i] ;
@@ -391,21 +402,39 @@
 				$("#listcount").val(pagination.listSize()).prop("selected", true);
 			}
 			
+			function nameFileList(param) {
+				folderId = param;
+				searchContext.clearRequirement();
+				$("#fileTypeSelect").val("");
+				onFileTypeChange("");
+			}
+			
 			function renderList(result) {
 				checkedArr = [];
 				$('#tblFileList tr').not(":first").remove();
 				
 				dom.allCheckBox.checked = false;
 				
-				$('#updateDateHeader').css('display','none');
-				$('#sharerHeader').css('display','');
-				$('#shareDateHeader').css('display','');
+				if (isSubSearching === "Y") {
+					$('#sharerHeader').css('display','none');
+					$('#shareDateHeader').css('display','none');
+					$('#updateDateHeader').css('display','');
+				} else {
+					$('#updateDateHeader').css('display','none');
+					$('#sharerHeader').css('display','');
+					$('#shareDateHeader').css('display','');
+				}
 				
 				if (result == null || result.length == 0) {
 					var row = document.createElement("tr");
 					var column = document.createElement("td");
 					
-					column.setAttribute("colspan", "11");
+					if (isSubSearching === "Y") {
+						column.setAttribute("colspan", "10");
+					} else {
+						column.setAttribute("colspan", "11");
+					}
+					
 					column.setAttribute("align", "center");
 					column.setAttribute("bgcolor", "#FFFFFF");
 					column.innerHTML = messages.strLang12;
@@ -548,8 +577,14 @@
 					row.appendChild(sizeColumn);
 					row.appendChild(creatorColumn);
 					row.appendChild(createDateColumn);
-					row.appendChild(sharerColumn);
-					row.appendChild(shareDateColumn);
+					
+					if (isSubSearching === "Y") {
+						row.appendChild(updateDateColumn);
+					} else {
+						row.appendChild(sharerColumn);
+						row.appendChild(shareDateColumn);
+					}
+					
 					row.appendChild(absolutePathColumn);
 					row.appendChild(shareStatusColumn);
 					
@@ -728,8 +763,8 @@
 			
 			function onFolderDoubleClick(obj) {
 				isShareMode = false;
-				var folderId = obj.getAttribute("targetId");
-				getFileList(folderId);
+				folderId = obj.getAttribute("targetId");
+				getFileList();
 			}
 			
 			// 날짜 초기화 버튼
@@ -741,7 +776,7 @@
 		    	currentPage = Value;
 		        pStart = (blockSize * (currentPage)) - blockSize;
 		        pEnd = blockSize;
-		        getFileList(currentFolderId);
+		        getFileList();
 		    }
 		    
 		   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
@@ -774,7 +809,9 @@
 						alert(messages.strLang19);
 						return;
 					}
-	           
+	           		
+					isSubSearching = "Y";
+					
 					searchContext.search(requirement.startDate, requirement.endDate, requirement.name, requirement.creatorName, requirement.extension);
 				} else if (type == "quick") {
 					if (document.getElementById("txt_keyword").value == "") {
@@ -847,7 +884,7 @@
 			}
 	       
 			function refreshView() {
-				getFileList(currentFolderId);
+				getFileList();
 			}
 	       
 	       function fileDelete() {
