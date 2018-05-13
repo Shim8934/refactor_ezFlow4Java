@@ -199,7 +199,7 @@
 									onclick="deleteJournalReply(${reply.replyId })">
 									</c:if>
 									</td>
-								<td style="text-align: right; padding-right: 8px"><c:out value='${reply.replyDate }'/></td>
+								<td style="text-align: right; padding-right: 8px"><c:out value='${fn:substring(reply.replyDate, 0, 16) }'/></td>
 							</tr>
 							</c:forEach>
 						</c:otherwise>
