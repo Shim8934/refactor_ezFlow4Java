@@ -9,8 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 		<script type="text/javascript">
 			var code = "<c:out value = '${code}' />";
 // 		var ch_CommunityAdmin = "${chCommunityAdmin}";
@@ -21,10 +20,6 @@
 				$("#tblList").html($("#tblList").html() + '${strXML}');
 			}
 		    
-		    function alertMessage() {
-				alert("<spring:message code = 'ezCommunity.t667' />");
-			}	  
-
 			function poll_edit(pClubNo, managerID) {
 				window.location.href = "/ezCommunity/pollEdit.do?pClubNo=" + encodeURIComponent(pClubNo) + "&managerID=" + encodeURIComponent(managerID);
 			}

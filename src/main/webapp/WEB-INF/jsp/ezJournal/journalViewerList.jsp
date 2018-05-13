@@ -48,7 +48,7 @@
 									<td align="left" style="width: 130px; text-align: center; cursor: pointer;"><c:out value='${viewer.userName }'/></td>
 									<td align="left" style="width: 120px; text-align: center; cursor: pointer;"><c:out value='${viewer.deptName }'/></td>
 									<td align="left" style="width: 80px; text-align: center; cursor: pointer;"><c:out value='${viewer.jikwi }'/></td>
-									<td align="left" style="width: 150px; text-align: center; cursor: pointer;"><c:out value='${viewer.date }'/></td>
+									<td align="left" style="width: 150px; text-align: center; cursor: pointer;"><c:out value='${fn:substring(viewer.date, 0, 16) }'/></td>
 								</tr>
 				            </c:forEach>
 						</table>
