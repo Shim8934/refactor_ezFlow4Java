@@ -65,11 +65,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		AttitudeVO attitudeVO = ezAttitudeDAO.getAttitudeInfo(map);
 		
-		attitudeVO.setTypeName(commonUtil.cleanValue(attitudeVO.getTypeName()));
-		attitudeVO.setContent(commonUtil.cleanValue(attitudeVO.getContent()));
-		attitudeVO.setRegion(commonUtil.cleanValue(attitudeVO.getRegion()));
-		attitudeVO.setMobile(commonUtil.cleanValue(attitudeVO.getMobile()));
-		attitudeVO.setBizSub(commonUtil.cleanValue(attitudeVO.getBizSub()));
+//		attitudeVO.setTypeName(commonUtil.cleanValue(attitudeVO.getTypeName()));
+//		attitudeVO.setContent(commonUtil.cleanValue(attitudeVO.getContent()));
+//		attitudeVO.setRegion(commonUtil.cleanValue(attitudeVO.getRegion()));
+//		attitudeVO.setMobile(commonUtil.cleanValue(attitudeVO.getMobile()));
+//		attitudeVO.setBizSub(commonUtil.cleanValue(attitudeVO.getBizSub()));
 		
 		LOGGER.debug("getAttitudeInfo ended");
 		return attitudeVO;
@@ -173,6 +173,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 		List<AttitudeVO> resultList = ezAttitudeDAO.getAttitudeList(map);
 		
+		for (int i = 0; i < resultList.size() ; i++) {
+			resultList.get(i).setBizSub(commonUtil.cleanValue(resultList.get(i).getBizSub()));
+			resultList.get(i).setMobile(commonUtil.cleanValue(resultList.get(i).getMobile()));
+			resultList.get(i).setRegion(commonUtil.cleanValue(resultList.get(i).getRegion()));
+		}
 		LOGGER.debug("getAttitudeList ended");
 		return resultList;
 	}
