@@ -643,7 +643,7 @@
 	    
 	    function type_change(){
 	    	type = $("input:radio[name=searchCheck]:checked").val();
-	    	get_att_list();
+	    	goToPageByNum(1);
 	    }
 	    
 	    function type_set(){
