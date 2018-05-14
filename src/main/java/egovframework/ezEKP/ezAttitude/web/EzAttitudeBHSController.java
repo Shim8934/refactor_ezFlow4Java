@@ -63,16 +63,17 @@ public class EzAttitudeBHSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String searchDeptId = request.getParameter("deptId");
+		String date = request.getParameter("date");
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		
-		String tempDate = commonUtil.getTodayUTCTime("");
-		Date firstDayofMonth = sdf.parse(tempDate);
+		String searchStartDate = date + "-01";
+		Date firstDayofMonth = sdf.parse(searchStartDate);
 		
 		cal.setTime(firstDayofMonth);
-		String searchStartDate = tempDate.substring(0, 8) + "01";
-		String searchEndDate = tempDate.substring(0, 8) + Integer.toString(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		
+		String searchEndDate = searchStartDate.substring(0, 8) + Integer.toString(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("searchDeptId", searchDeptId);

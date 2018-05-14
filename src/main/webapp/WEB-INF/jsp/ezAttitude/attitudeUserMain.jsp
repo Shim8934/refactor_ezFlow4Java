@@ -856,7 +856,7 @@
 			}
 			
 			function popupAbsentedList() {
-    			var url = "/ezAttitude/popupAbsentedList.do?deptId=" + encodeURIComponent(authDeptList.value);
+    			var url = "/ezAttitude/popupAbsentedList.do?deptId=" + encodeURIComponent(authDeptList.value) + "&date=" + $("#calTitle").text().trim();
 	    		
 	    		if (CrossYN()) {
 	    			OpenWin = GetOpenWindow(url, "", "600", "700");

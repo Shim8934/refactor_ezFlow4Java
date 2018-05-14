@@ -77,8 +77,8 @@
 	   					deptId : searchDeptId,
 	   					startDate : searchStartDate,
 	   					endDate : searchEndDate,
-	   					pageNum : pageNum,
-	   					listSize : listSize,
+	   					pageNum : "",
+	   					listSize : "",
 	   					orderCell : orderCell,
 	   					orderOption : orderOption,
 	   					duplicated : "duplicated"
@@ -95,11 +95,11 @@
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
 	    		result.forEach(function(vo, index) {
-	    			resultHtml += "<tr userid='" + vo.userId + "'>";
-	    			resultHtml += "<td>" + vo.userName + "</td>";
+	    			resultHtml += "<tr userid='" + vo.writerId + "'>";
+	    			resultHtml += "<td>" + vo.startDate + "</td>";
+	    			resultHtml += "<td>" + vo.userName + "</td>"
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
-	    			resultHtml += "<td>" + vo.deptName + "</td>";
-	    			resultHtml += "<td>" + vo.startDate + "</td></tr>"
+	    			resultHtml += "<td>" + vo.deptName + "</td></tr>";
 	    		});
 	    		
 	    		if (resultHtml == "") {
@@ -147,40 +147,30 @@
 		            	getAbsentedList();
 		        }
 		    }
-			
-			function exportExcel() {
-				if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
-					alert('엑셀다운');
-					return;
-				}
-				
-		    	exportExcelframe.location.href="/admin/ezAttitude/excelAbsentedListExport.do?companyId=" + companyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&deptId=" + searchDeptId + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&orderCell=" + orderCell + "&orderOption=" + orderOption + "&duplicated=duplicated";
-		    	exportExcelframe.target="_blank";
-			}
 		</script>
 	</head>
 	
 	<body class="popup">
 		<h1>미입력자 목록</h1>
-		<div id="contentlist">
+		<table class="mainlist" style="width:100%;">
+			<thead>
+				<tr>
+					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
+					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
+					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
+					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="startdate">일자</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="contentlist" style="height:550px; overflow-y: auto;">
 			<table class="mainlist" style="width:100%;">
-				<thead>
-					<tr>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="startdate">일자</th>
-					</tr>
-				</thead>
 				<tbody></tbody>
 			</table>
 		</div>
 		
 		<div class="btnposition">
 			<a class="imgbtn"><span onclick="return btnSendMail_onclick()">메일발송</span></a>
-			<a class="imgbtn"><span onclick="exportExcel();">엑셀다운</span></a>
 			<a class="imgbtn"><span onclick="return btnClose_onclick()">닫기</span></a>
 		</div>
-		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
 	</body>
 </html>
