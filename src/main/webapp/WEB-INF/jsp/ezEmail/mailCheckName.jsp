@@ -159,10 +159,9 @@
 		
 				var listCount = arrRows.length;
 		
-				if (listCount == 0) 
-		        {		
-				    cancel_onClick();
-					return;
+				if (listCount == 0) {		
+// 				    cancel_onClick();
+// 					return;
 		        }
 				if (ReturnFunction!=null) {
 				    Arguments["recipientTDData"] = "change";
@@ -222,8 +221,8 @@
 		        var listCount = arrRows.length;
 
 		        if (listCount == 0) {
-		            cancel_onClick();
-		            return;
+// 		            cancel_onClick();
+// 		            return;
 		        }
 		        if (ReturnFunction != null) {
 		            Arguments["recipientTDData"] = "delete";

@@ -1568,9 +1568,9 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	            	szFromName += ";";
 	            }
 	        }
-	        
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
+	        return false;
 	    } else {
 	        rgParams = new Array();
 	        rgParams["recipientTDData"] = null;
@@ -1602,6 +1602,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        }    
 	        
 	        DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
+	        return false;
 	    }
     }
     
