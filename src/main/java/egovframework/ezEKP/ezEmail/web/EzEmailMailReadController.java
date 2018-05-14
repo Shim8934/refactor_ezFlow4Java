@@ -824,7 +824,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								try {
 									input = part.getInputStream();
 									
-									ZipEntry zipEntry = new ZipEntry(filename[i]);
+									String nfcFilename = commonUtil.normalizeFileName(filename[i]);
+									
+									ZipEntry zipEntry = new ZipEntry(nfcFilename);
 									
 									zos.putNextEntry(zipEntry);
 									
@@ -951,8 +953,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						
 						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
 						
-						response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
-						logger.debug("content-disposition=" + "attachment; filename=\"" + filename + "\"");
+						String nfcFilename = commonUtil.normalizeFileName(filename);
+						
+						response.addHeader("content-disposition", "attachment; filename=\"" + nfcFilename + "\"");
+						logger.debug("content-disposition=" + "attachment; filename=\"" + nfcFilename + "\"");
 						
 						InputStream input = null;
 						OutputStream output = null;
@@ -1792,6 +1796,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, true, false, locale, null, null);
 					pBody = bodyInfoList.get(0);
+					pBody = pBody.replaceAll("\"", "\\\\\""); // 인쇄 영역 분리로 인해
 					pAttachListHtml = bodyInfoList.get(1);
 					
 					if (bodyInfoList.get(4).equals("OK")) {
@@ -1825,6 +1830,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("mailPrint ended.");
 		
 		return "ezEmail/mailPrint";
+	}
+	
+	/**
+	 * 메일 인쇄 본문영역
+	 */
+	@RequestMapping(value="/ezEmail/mailPrintContent.do")
+	public String mailPrintContent(Model model, HttpServletRequest request) throws Exception{
+		return "ezEmail/mailPrintContent";
 	}
 	
 	/**

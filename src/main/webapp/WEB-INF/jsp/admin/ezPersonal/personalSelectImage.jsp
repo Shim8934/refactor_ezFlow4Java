@@ -162,6 +162,7 @@
 		        			mode : mode,
 		        			displayName : txtDisplayName.value,
 		        			displayName2 : txtDisplayName2.value,
+		        			url : txtDisplayName3.value,
 		        			fileName : fileName,
 		        			sliderImage : SliderImgPath},
 		        	dataType : "text",
@@ -218,6 +219,7 @@
 		            xml = result;
 		            document.getElementById("txtDisplayName").value = getNodeText(SelectSingleNodeNew(xml, "DATA/ROW/SLIDERNAME"));
 		            document.getElementById("txtDisplayName2").value = getNodeText(SelectSingleNodeNew(xml, "DATA/ROW/SLIDERNAME2"));
+		            document.getElementById("txtDisplayName3").value = getNodeText(SelectSingleNodeNew(xml, "DATA/ROW/URL"));
 		            document.getElementById("UploadSliderImage").src = getNodeText(SelectSingleNodeNew(xml, "DATA/ROW/IMAGEPATH"));
 		            document.getElementById("UploadSliderImage").style.display = "";
 		    }
@@ -272,6 +274,15 @@
 		                    <td><input type="text" id="txtDisplayName2" style="width:100%" maxLength="50"></td>	
 	                    </tr>
 	                </table>
+				</td>
+			</tr>
+			<!-- 18-05-10 김민성 - URL 수정 추가 -->
+			<tr>
+				<th>
+					<spring:message code = 'ezPersonal.kmsp01' />
+				</th>
+				<td>
+					<input type="text" id="txtDisplayName3"  style="width:100%">
 				</td>
 			</tr>
 			<tr>

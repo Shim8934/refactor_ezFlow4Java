@@ -1478,6 +1478,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
     nLen = mailArr.length;
     for (var i = 0; i < nLen; i++) {
 	    mailName = TrimText(mailArr[i]);
+	    
 	    if (mailName == "") {
 	        if (iType == 0)
 	            CompletToCnt++;
@@ -1568,9 +1569,9 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	            	szFromName += ";";
 	            }
 	        }
-	        
 	        formName.value = szFromName;
 	        CompleteEmailAddress(formName, validDIV, iType);
+	        return false;
 	    } else {
 	        rgParams = new Array();
 	        rgParams["recipientTDData"] = null;
@@ -1602,6 +1603,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        }    
 	        
 	        DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
+	        return false;
 	    }
     }
     

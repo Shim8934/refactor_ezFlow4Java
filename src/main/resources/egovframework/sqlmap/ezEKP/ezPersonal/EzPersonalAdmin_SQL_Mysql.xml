@@ -169,6 +169,7 @@
 		</isNotEqual>
 	</select> 
 	
+	<!-- 18-05-10 김민성 - 슬라이드 이미지 검색시 URL 추가 -->
 	<select id="EzPersonalAdmin.EZSP_GETSLIDERLIST" parameterClass="Map"		resultClass="PersonalSliderImageVO">
 		<isEqual property="v_MODE" compareValue="ADMIN">
 			<isEmpty property="v_SLIDERID">
@@ -181,7 +182,8 @@
                    		REGUSERID ,
                    		REGDATE ,
                    		SN ,
-                   		ISUSE 
+                   		ISUSE ,
+                   		URL
               		FROM
               			TBL_PS_SLIDERIMAGE 
              		WHERE
@@ -203,7 +205,8 @@
                    		REGUSERID ,
                    		REGDATE ,
                    		SN ,
-                   		ISUSE 
+                   		ISUSE ,
+                   		URL
               		FROM
               			TBL_PS_SLIDERIMAGE 
              		WHERE
@@ -228,7 +231,8 @@
                 	REGUSERID ,
                 	REGDATE ,
                 	SN ,
-                	ISUSE 
+                	ISUSE ,
+                	URL
            		FROM
            			TBL_PS_SLIDERIMAGE 
           		WHERE
@@ -709,9 +713,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_SLIDERIMAGE
-        		( SLIDERID, SLIDERNAME, SLIDERNAME2, FILENAME, IMAGEPATH, REGUSERID, REGDATE, COMPANYID, ISUSE, SN, TENANT_ID )
+        		( SLIDERID, SLIDERNAME, SLIDERNAME2, FILENAME, IMAGEPATH, REGUSERID, REGDATE, COMPANYID, ISUSE, SN, TENANT_ID, URL )
         	VALUES
-        		( #v_SLIDERID#, #v_SLIDERNAME#, #v_SLIDERNAME2#, #v_FILENAME#, #v_IMAGEPATH#, #v_REGUSERID#, #v_REGDATE#, #v_COMPANYID#, 1, #count# + 1, #tenantID# )
+        		( #v_SLIDERID#, #v_SLIDERNAME#, #v_SLIDERNAME2#, #v_FILENAME#, #v_IMAGEPATH#, #v_REGUSERID#, #v_REGDATE#, #v_COMPANYID#, 1, #count# + 1, #tenantID#, #v_URL# )
 		]]>
 	</insert>
 	
@@ -723,7 +727,8 @@
          		SLIDERNAME = #v_SLIDERNAME#,
              	SLIDERNAME2 = #v_SLIDERNAME2#,
              	FILENAME = #v_FILENAME#,
-             	IMAGEPATH = #v_IMAGEPATH#
+             	IMAGEPATH = #v_IMAGEPATH#,
+             	URL = #v_URL#
        		WHERE
        			SLIDERID = #v_SLIDERID#
        		AND
