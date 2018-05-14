@@ -277,7 +277,7 @@
 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd", "color":"black", "border":"1px solid #d1ddec"}).text("<spring:message code='ezAttitude.bbhs38'/>")));
 					for (var i = 0; i < result.length; i++) {
 						
-						if (result[i].typeId == 'A01' || result[i].typeId == 'A03') {
+						if (result[i].typeId == 'A01' || result[i].typeId == 'A03' || result[i].typeId == 'A05') {
 							continue;
 						}
 						objTr = $("<tr></tr>").append($("<th style='width:74px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:normal' title='" + result[i].typeName.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></th>").text(result[i].typeName));
@@ -617,30 +617,6 @@
 	            document.getElementById("formAgent").submit();
 	        }
 			
-			function sendMail() {
-				$.ajax({
-					type : "POST",
-					async : true,
-					url : "/ezAttitude/absentedListSendMail.do",
-					data : {
-						companyId : '${userInfo.companyID}',
-	   					userName : '',
-	   					deptName : '',
-	   					title : '',
-	   					startDate : '',
-	   					endDate : '',
-	   					deptId : encodeURIComponent(authDeptList.value)
-					},
-					success : function(result) {
-						if (result == "ok") {
-							alert("메일이 발송되었습니다.");
-						} else {
-							alert("메일 발송에 실패하였습니다.");
-						}
-					}
-				});
-			}
-	
 			function searchByTypeId(t) {
 				var typeName = t.parentElement.getElementsByTagName("th").item(0).innerText;
 				var pDate = $("#calTitle").text().trim();
@@ -902,6 +878,9 @@
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${adminFlag == 'true'}">
+		        	<li id="search"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.t6'/></span></li>
+		        	<li id="search"><span onClick="excelDown()"><spring:message code='ezAttitude.bbhs7'/></span></li>
+					<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 					<li>
 						<select id="authDeptList" style="width:100px; margin-top:5px;" onchange="deptChange()">
 							<c:forEach var="dept" items="${deptList}">
@@ -925,9 +904,6 @@
 <%-- 						</c:if> --%>
 						</select>
 					</li>
-		        	<li id="search"><span onClick="excelDown()"><spring:message code='ezAttitude.bbhs7'/></span></li>
-<%-- 		        	<li id="search"><span onClick="sendMail()"><spring:message code='ezAttitude.bbhs8'/></span></li> --%>
-		        	<li id="search"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.bbhs8'/></span></li>
 				</c:if>
 				<c:if test="${adminFlag != 'true'}">
 					<select id="authDeptList" style="width:100px; margin-top:5px; display:none;" onchange="deptChange()">

@@ -103,14 +103,34 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'>ë¯¸ìë ¥ìê° ììµëë¤.</td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    	}
 			
 			function btnSendMail_onclick() {
-// 				sendMail.do 만들어논거 태우게 
+				$.ajax({
+					type : "POST",
+					async : true,
+					url : "/ezAttitude/absentedListSendMail.do",
+					data : {
+						companyId : companyId,
+	   					userName : "",
+	   					deptName : "",
+	   					title : "",
+	   					startDate : "",
+	   					endDate : "",
+	   					deptId : searchDeptId
+					},
+					success : function(result) {
+						if (result == "ok") {
+							alert("메일이 발송되었습니다.");
+						} else {
+							alert("메일 발송에 실패하였습니다.");
+						}
+					}
+				});
 			}
 			
 			function btnClose_onclick() {
