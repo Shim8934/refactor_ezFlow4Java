@@ -114,7 +114,7 @@
 						<c:out value='${journal.writerName}'/>
 					</td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:12%;">
-						<c:out value='${journal.journalDate}'/>
+						<c:out value='${fn:substring(journal.journalDate, 0, 16) }'/>
 					</td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:12%;">
 						<c:out value='${journal.formName}'/>
