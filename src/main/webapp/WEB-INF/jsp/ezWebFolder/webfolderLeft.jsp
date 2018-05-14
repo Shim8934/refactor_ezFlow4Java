@@ -213,7 +213,7 @@
 			}
 			
 			function wfAdministrator() {
-				window.open("/admin/ezWebFolder/webFolderConfig.do", "", GetOpenWindowfeature(1380, 800));
+				window.open("/admin/ezWebFolder/webFolderConfig.do", "", "");
 			}
 		</script>
 	</head>
@@ -280,7 +280,7 @@
 			</h3>
 			<c:if test="${isWfAdmin == '1'}">
 				<h3 style="border-top:0px;margin-top:-4px">
-					<span onclick="wfAdministrator();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t25" /></span><!-- 웹폴더 관리자 -->
+					<span  onclick="wfAdministrator();" style="width:100%; display:inline-block;" ><spring:message code="ezWebFolder.t25" /></span><!-- 웹폴더 관리자 -->
 				</h3>
 			</c:if>
 			<!-- <div id='myProgress' style='margin-left:20px;'>
