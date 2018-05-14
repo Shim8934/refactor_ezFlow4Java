@@ -1719,7 +1719,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, String companyId, int tenantID) throws Exception {
 		logger.debug("getSearchList started");
 		
@@ -1856,7 +1855,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("getSearchList ended");
 		
 		return memberlist2.toString();
-=======
+	}
+	
 	public String setListType(String listType, String userID, int tenantID) throws Exception {
 		logger.debug("setListType started");
 		
@@ -1885,7 +1885,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("getListType started");
 		return listType;
 		
->>>>>>> origin/master
 	}
 }
 
