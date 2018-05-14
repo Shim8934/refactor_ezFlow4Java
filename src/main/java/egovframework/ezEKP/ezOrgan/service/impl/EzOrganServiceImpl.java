@@ -1717,6 +1717,37 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		return result;
 	}
+	
+	@Override
+	public String setListType(String listType, String userID, int tenantID) throws Exception {
+		logger.debug("setListType started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("listType", listType);
+		map.put("userID",userID);
+		map.put("tenantID",tenantID);
+
+		ezOrganDAO.setListType(map);
+		
+		logger.debug("setListType started");
+		return "TRUE";
+		
+	}
+
+	@Override
+	public String getListType(String userID, int tenantID) throws Exception {
+		logger.debug("getListType started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		String listType = ezOrganDAO.getListType(map);
+		
+		logger.debug("getListType started");
+		return listType;
+		
+	}
 }
 
 
