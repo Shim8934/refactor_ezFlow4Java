@@ -249,7 +249,7 @@
 		        objTr.appendChild(objTh3);
 		        
 		        var objTh4 = document.createElement("TH");
-		        setNodeText(objTh4, "<spring:message code='ezSystem.x0001' />");
+		        setNodeText(objTh4, "<spring:message code='ezEmail.sjw04' />");
 		        objTh4.style.width = "20%";
 		        objTr.appendChild(objTh4);
 		
