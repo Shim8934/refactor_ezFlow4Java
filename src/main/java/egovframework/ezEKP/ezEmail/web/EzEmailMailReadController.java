@@ -824,7 +824,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								try {
 									input = part.getInputStream();
 									
-									ZipEntry zipEntry = new ZipEntry(filename[i]);
+									String nfcFilename = commonUtil.normalizeFileName(filename[i]);
+									
+									ZipEntry zipEntry = new ZipEntry(nfcFilename);
 									
 									zos.putNextEntry(zipEntry);
 									
@@ -951,8 +953,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						
 						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
 						
-						response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
-						logger.debug("content-disposition=" + "attachment; filename=\"" + filename + "\"");
+						String nfcFilename = commonUtil.normalizeFileName(filename);
+						
+						response.addHeader("content-disposition", "attachment; filename=\"" + nfcFilename + "\"");
+						logger.debug("content-disposition=" + "attachment; filename=\"" + nfcFilename + "\"");
 						
 						InputStream input = null;
 						OutputStream output = null;

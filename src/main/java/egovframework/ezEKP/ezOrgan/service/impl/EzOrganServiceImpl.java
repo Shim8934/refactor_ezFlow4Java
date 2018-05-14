@@ -409,12 +409,8 @@ public class EzOrganServiceImpl implements EzOrganService {
             memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
             memberCount++;
         }
-		map2.put("v_CN", pDeptID);
-		map2.put("v_TENANT_ID", tenantID);
-		String totalcount = ezOrganDAO.getMemberListCount(map2);
-		
-        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA>");
-        memberlist.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
+
+        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA><ROWS>");
         
         for (int i = 0; i < memberCount; i++) {
             memberlist.append(memberInfo[i]);
@@ -699,14 +695,6 @@ public class EzOrganServiceImpl implements EzOrganService {
         List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
         
         StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
-
-        if(pClass.equals("user")){
-       	 int totalcount = ezOrganDAO.getSearchListCount(map);
-	       	memberlist2 = new StringBuilder("<LISTVIEWDATA>");
-	        memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
-        }else{
-        	 memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
-        }
       
 		for(int j=0; j < list.size(); j++){
 			Map<String, Object> map1 = new HashMap<String, Object>();			
@@ -1728,6 +1716,37 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("isProxyUser ended");
 		
 		return result;
+	}
+	
+	@Override
+	public String setListType(String listType, String userID, int tenantID) throws Exception {
+		logger.debug("setListType started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("listType", listType);
+		map.put("userID",userID);
+		map.put("tenantID",tenantID);
+
+		ezOrganDAO.setListType(map);
+		
+		logger.debug("setListType started");
+		return "TRUE";
+		
+	}
+
+	@Override
+	public String getListType(String userID, int tenantID) throws Exception {
+		logger.debug("getListType started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		String listType = ezOrganDAO.getListType(map);
+		
+		logger.debug("getListType started");
+		return listType;
+		
 	}
 }
 
