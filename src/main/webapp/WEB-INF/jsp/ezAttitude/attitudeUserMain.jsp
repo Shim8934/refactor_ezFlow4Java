@@ -36,6 +36,10 @@
 /* 				color : red; */
 			}
 			
+			#attiCalendar td[modappl='1'][typeId=A01] {
+				cursor : pointer;
+			}
+			
 			#attiCalendar td[modappl='1'][typeId=A02] {
 				color : black;
 			}
@@ -156,21 +160,22 @@
 					attitudeItemView(this);
 				})
 				
-				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02]', function(){
+				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02],tr td[typeid=A01]', function(){
 					//근태수정신청은 개인근태현황에서만 가능
+					var typeid = $(this).attr('typeid');
 					var modappl = $(this).attr('modappl');
 					var attitudeid = $(this).attr('attitudeid');
 					if (deptFlag != "true") {
-						if (modappl == 0) {
+						if (modappl == 0 && typeid == 'A02') {
 							attitudeModItem(this);	
-						} else {
+						} else if (modappl == 1) {
 							mod_detail(attitudeid);
 						}
 						
 					} else {
-						if (modappl == 0) {
+						if (modappl == 0 && typeid == 'A02') {
 							console.log(this);
-						} else {
+						} else if (modappl == 1){
 							mod_detail(attitudeid);
 						}
 					}
