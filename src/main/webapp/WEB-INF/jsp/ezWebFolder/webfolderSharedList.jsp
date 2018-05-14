@@ -102,38 +102,30 @@
 		        $(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $(".datepicker").datepicker('setDate', "");
 				
-				$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
-					closeText: "<spring:message code='main.t3'/>",
-					prevText: "<spring:message code='main.t0604'/>",
-					nextText: "<spring:message code='main.t0605'/>",
-					currentText: "<spring:message code='main.t0606'/>",
-					monthNames: ["<spring:message code='main.t0607'/>", "<spring:message code='main.t0608'/>", "<spring:message code='main.t0609'/>", 
-					             "<spring:message code='main.t0610'/>", "<spring:message code='main.t0611'/>", "<spring:message code='main.t0612'/>",
-					             "<spring:message code='main.t0613'/>", "<spring:message code='main.t0614'/>", "<spring:message code='main.t0615'/>", 
-					             "<spring:message code='main.t0616'/>", "<spring:message code='main.t0617'/>", "<spring:message code='main.t0618'/>"],
-					monthNamesShort: ["<spring:message code='main.t0607'/>", "<spring:message code='main.t0608'/>", "<spring:message code='main.t0609'/>", 
-					                  "<spring:message code='main.t0610'/>", "<spring:message code='main.t0611'/>", "<spring:message code='main.t0612'/>",
-					                  "<spring:message code='main.t0613'/>", "<spring:message code='main.t0614'/>", "<spring:message code='main.t0615'/>", 
-					                  "<spring:message code='main.t0616'/>", "<spring:message code='main.t0617'/>", "<spring:message code='main.t0618'/>"],
-					dayNames: ["<spring:message code='main.t0621'/>", "<spring:message code='main.t0622'/>", "<spring:message code='main.t0623'/>", 
-					           "<spring:message code='main.t0624'/>", "<spring:message code='main.t0625'/>", "<spring:message code='main.t0626'/>",
-					           "<spring:message code='main.t0627'/>"],
-					dayNamesShort: ["<spring:message code='main.t0621'/>", "<spring:message code='main.t0622'/>", "<spring:message code='main.t0623'/>", 
-					                "<spring:message code='main.t0624'/>", "<spring:message code='main.t0625'/>", "<spring:message code='main.t0626'/>", 
-					                "<spring:message code='main.t0627'/>"],
-					dayNamesMin: ["<spring:message code='main.t0621'/>", "<spring:message code='main.t0622'/>", "<spring:message code='main.t0623'/>", 
-					              "<spring:message code='main.t0624'/>", "<spring:message code='main.t0625'/>", "<spring:message code='main.t0626'/>", 
-					              "<spring:message code='main.t0627'/>"],
-					weekHeader: "Wk",
-					dateFormat: "yy-mm-dd",
-					firstDay: 0,
-					isRTL: false,
-					duration: 200,
-					showAnim: "show",
-					showMonthAfterYear: true
-				};
-				
-				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619'/>"]);
+		        var monthMsg = "<spring:message code='ezSchedule.t110' />";
+			    var monthStr = monthMsg.split(";");		    
+			    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+			    var dayStr = dayMsg.split(";");
+			    
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+		            monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 			
 			function initDomElement() {
@@ -715,10 +707,6 @@
 							shareContext.showShareInfo(this);
 						});
 						shareStatusColumn.appendChild(spanElmt);
-					} else if (resultJson["fileShareStatus"] == "S") {
-						var spanElmt = document.createElement("span");
-						spanElmt.innerHTML = "<img src='/images/webfolder/sharing.png' class='webFolderImg' />";
-						shareStatusColumn.appendChild(spanElmt);
 					} else {
 						shareStatusColumn.textContent = "";
 					}
@@ -1081,9 +1069,9 @@
 				<ul>
 					<li><a onClick="fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
 					<li id="uploadBtn" style="display:none;"><a onClick="fileUpload2()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-					<li id="fileDeleteBtn" style="display:none;"><a onClick="fileDelete()" style="margin-top: 3px;"><span>파일삭제</span></a></li>
-					<li id="fileRenameBtn" style="display:none;"><a onClick="fileRename()" style="margin-top: 3px;"><span>파일명변경</span></a></li>
-					<li id="fileMoveCopyBtn" style="display:none;"><a onClick="fileMoveCopy()" style="margin-top: 3px;"><span>파일이동/복사</span></a></li>
+					<li id="fileDeleteBtn" style="display:none;"><a onClick="fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
+					<li id="fileRenameBtn" style="display:none;"><a onClick="fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
+					<li id="fileMoveCopyBtn" style="display:none;"><a onClick="fileMoveCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
 					<li id="fileCopyBtn"><a onClick="fileCopy()" style="margin-top: 3px;"><span>파일복사</span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
 					<li><a onClick="shareContext.addShareView()" style="margin-top: 3px;"><span>공유</span></a></li>
