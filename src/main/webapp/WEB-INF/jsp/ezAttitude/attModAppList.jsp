@@ -995,6 +995,7 @@ tr.hover:hover {
 						_RowObject.getElementsByTagName("td").item(0)
 								.getElementsByTagName("input").item(0).checked = false;
 					}
+<<<<<<< HEAD
 					listContentArry = new Array();
 					_RowObject = obj;
 					var PrelistContent;
@@ -1007,6 +1008,133 @@ tr.hover:hover {
 							""));
 					var CurPoint = parseInt(CurlistContent.replace("attList_",
 							""));
+=======
+	    		}	
+	    		
+	    		totalAtt = data.totalAtt;
+		    	totalPages = data.totalPages;
+		    	makePageSelPage();
+		    	
+		    	infoStr += ' [총 <span style="color:#017BEC;">' + data.totalAtt;
+		    	
+		    	if (data.startDate != null && data.endDate != null) {
+		    		infoStr += '</span> 개 - ';
+		    		infoStr += data.startDate.substring(0,4) + '년' + 
+			    	data.startDate.substring(5,7) + '월' + 
+			    	data.startDate.substring(8,10) + '일~';
+			    	infoStr += data.endDate.substring(0,4) + '년' + 
+			    	data.endDate.substring(5,7) + '월' + 
+			    	data.endDate.substring(8,10) + '일]</span>';
+		    	} else {
+		    		infoStr += '</span> 개]';
+		    	}
+		    	
+		    	$("#mailBoxInfo").html(infoStr);
+		    	$('#AttList tbody').children( 'tr:not(:first)' ).remove();
+	    	}
+	    	
+	    	if (excel != true) {
+		    	if (attList.length == 0) {
+		    		if (adminFlag != "true") {
+		    			$('#AttList tbody').append('<tr><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');
+		    		} else {
+		    			$('#AttList tbody').append('<tr><td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></tr>');	
+		    		}
+		    	}
+	    	}
+	    	
+	    	for (var i = 0 ; i < attList.length; i ++) {
+	    		var htmlStr = "";
+	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" draggable="true" style="cursor:pointer;">';
+	    		if (excel == true) {
+	    		} else {
+	    			htmlStr += '<td style="padding:0"> <input type="checkbox" class="checkAtt"' 
+	    	    	htmlStr += 'id="attCheck_' + attList[i].attitudeId + '_' + attList[i].applCnt +'"';
+	    	    	htmlStr += 'value="' + attList[i].attitudeId + '_' + attList[i].applCnt +'"';
+	    	    	htmlStr += 'status="' + attList[i].apprStatus + '"';
+	    	    	htmlStr += ' onclick="event_listCheckboxclick(this)"/></td>';	
+	    		}
+	    		if (excel == true) {
+	    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(1)-1) * 15) + '</td>';
+	    			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';
+	    		} else {
+	    			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 15) + '</td>';
+	    			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';	
+	    		}
+    			
+    			if (adminFlag == 'true') {
+    				htmlStr += '<td>' + attList[i].writerName + '</td>';
+    				htmlStr += '<td>' + attList[i].writerDeptName + '</td>';
+    			}
+    			
+    			htmlStr += '<td>' + attList[i].originDate.substring(11,19) + ' -> ' + attList[i].changeDate.substring(11,19) + '</td>';
+    			
+    			if (attList[i].apprStatus == 0) {
+    				htmlStr += '<td id="attStauts">신청</td>';	
+    			}
+    			if (attList[i].apprStatus == 1) {
+    				htmlStr += '<td id="attStauts">승인</td>';	
+    			}
+    			if (attList[i].apprStatus == 2) {
+    				htmlStr += '<td id="attStauts">반려</td>';	
+    			}
+    			if (attList[i].apprUserName == null) {
+    				htmlStr += '<td>' + "" + '</td>';
+    			} else {
+    				htmlStr += '<td>' + attList[i].apprUserName + '</td>';	
+    			}
+    			
+    			if  (excel != true) {
+    				htmlStr += '<td><a class="imgbtn" id="mailInBtn" onclick="getHistory(this)"><span>내역확인</span></a></td>';	
+    			}
+    			
+    			htmlStr += '</tr>';
+    			if  (excel == true) {
+    				$('#ExcelAttList tbody').append(htmlStr);
+    				btnexportexcel_onclick();
+    			} else {
+    				$('#AttList tbody').append(htmlStr);
+    			}
+	    	}
+	    }
+	    
+	    function date_reset() {
+	    	$("#Sdatepicker").datepicker({
+	            changeMonth: true,
+	            changeYear: true,
+	            autoSize: true,
+	            showOn: "both",
+	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImageOnly: true
+	        });
+	        $("#Edatepicker").datepicker({
+	            changeMonth: true,
+	            changeYear: true,
+	            autoSize: true,
+	            showOn: "both",
+	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImageOnly: true
+	        });
+	        var NowDate = utcDate2(offsetMin);
+	        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#Sdatepicker").datepicker('setDate', NowDate);
+	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#Edatepicker").datepicker('setDate', NowDate);
+	        
+	        if(!usepostDate){
+	            $("#Sdatepicker").datepicker('disable');
+	            $("#Edatepicker").datepicker('disable');
+	        }
+	        else {
+	            $("#Sdatepicker").datepicker('enable');
+	            $("#Edatepicker").datepicker('enable');
+	        }
+	    }
+	    
+	    function search_keypress(evt)
+		{	
+	        var curevent = (typeof event == 'undefined' ? evt : event)
+>>>>>>> 5db6538a61ac129e38d0f8af51e3c3327b406360
 
 					if (PrePoint < CurPoint) {
 						for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {

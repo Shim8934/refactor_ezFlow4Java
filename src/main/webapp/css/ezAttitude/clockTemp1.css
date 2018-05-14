@@ -61,15 +61,9 @@ section, footer, header, aside{
 	text-align:center;
 	border-radius:6px;
 	position:relative;
-	height: 83px;
+	height: 73px;
 }
 
-#inAttiClock, #outAttiClock {
-	background: url("/images/clock.png") no-repeat 0 3px;
-	background-size: 13px;
-	height:20px;
-	font-family: Malgun Gothic, Meiryo UI;
-}
 /*-------------------------
 	Light color theme
 --------------------------*/
@@ -142,7 +136,7 @@ section, footer, header, aside{
 #clock .digits div{
 	text-align:left;
 	position:relative;
-	width: 28px;
+	width: 25px;
 	height:50px;
 	display:inline-block;
 }
@@ -165,15 +159,15 @@ section, footer, header, aside{
 	border:5px solid;
 }
 
-#clock .digits .d1{			height:5px;width:17px;top:0;left:0px;}
+#clock .digits .d1{			height:5px;width:14px;top:0;left:0px;}
 #clock .digits .d1:before{	border-width:0 0px 0px 0;border-right-color:inherit;left:-6px;}
 #clock .digits .d1:after{	border-width:0 0 0px 0px;border-left-color:inherit;right:-7px;}
 
-#clock .digits .d2{			height:5px;width:3px;top:13px;left:6px;}
+#clock .digits .d2{			height:5px;width:0px;top:13px;left:6px;}
 #clock .digits .d2:before{	border-width:3px 4px 2px;border-right-color:inherit;left:-6px;}
 #clock .digits .d2:after{	border-width:3px 4px 2px;border-left-color:inherit;right:-8px;}
 
-#clock .digits .d3{			height:5px;width:5px;top:27px;left:6px;}
+#clock .digits .d3{			height:5px;width:2px;top:27px;left:6px;}
 #clock .digits .d3:before{	border-width:5px 5px 0 0;border-right-color:inherit;left:-5px;}
 #clock .digits .d3:after{	border-width:5px 0 0 5px;border-left-color:inherit;right:-5px;}
 
