@@ -223,9 +223,10 @@
 		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
-		        		
 		        		var headerData = createXmlDom();
-	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		        		
+	                    headerData = loadXMLString(result);
+// 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 	
 	                    if (CrossYN()) {
 	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
