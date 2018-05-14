@@ -904,7 +904,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AdminAttitudeVO> getAttitudeList2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId) throws Exception {
+	public List<AdminAttitudeVO> getAttitudeList2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String searchDeptId) throws Exception {
 		LOGGER.debug("getAttitudeList2 started");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -920,6 +920,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
+		map.put("searchDeptId", searchDeptId);
 		map.put("searchTitle", searchTitle);
 		map.put("searchAttitudeType", searchAttitudeType);
 		map.put("searchStartDate", searchStartDate);
@@ -941,7 +942,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public String getAttitudeCount2(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate,
-			String searchEndDate, String searchAttitudeType,String offset, String companyId, int tenantId) throws Exception {
+			String searchEndDate, String searchAttitudeType,String offset, String companyId, int tenantId, String searchDeptId) throws Exception {
 		LOGGER.debug("getAttitudeCount2 started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -956,6 +957,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchAttitudeType", searchAttitudeType);
 		map.put("searchStartDate", searchStartDate);
 		map.put("searchEndDate", searchEndDate);
+		map.put("searchDeptId", searchDeptId);
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);

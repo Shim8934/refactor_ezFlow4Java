@@ -627,6 +627,9 @@
 				A.type_id = #searchAttitudeType#
 			]]>
 		</isNotEqual>
+		<isNotEmpty prepend="AND" property="searchDeptId">
+			C.DEPARTMENT = #searchDeptId#
+		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			C.description LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
@@ -697,6 +700,9 @@
 				A.type_id = #searchAttitudeType#
 			]]>
 		</isNotEqual>
+		<isNotEmpty prepend="AND" property="searchDeptId">
+			C.DEPARTMENT = #searchDeptId#
+		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			C.description LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
