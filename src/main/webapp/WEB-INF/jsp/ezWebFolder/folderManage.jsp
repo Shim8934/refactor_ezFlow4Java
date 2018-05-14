@@ -25,7 +25,7 @@
 		var CancelFunction;
 		var isDivPopUp = false;
 		var isFolderManager = "${isFolderManager}" == "1";
-		var test = [];
+		var parentControll = [];
 		
 		var createId = "";
 		var id = "";
@@ -84,6 +84,7 @@
 				dataType: "JSON",
 				success: function(data) {
 					//						upperId = data.data[0]["parent"];
+					parentControll = data.data;
 					var firstNode = "#" + folderId;
 					
 					$('#folderTree').jstree({
@@ -170,9 +171,9 @@
 			}
 			
 			if (folderType == "C") {
-				for (var i = 0; i < test.length; i++) {
-					if (test[i].id == parent) {
-						if (test[i].parent == '#') {
+				for (var i = 0; i < parentControll.length; i++) {
+					if (parentControll[i].id == parent) {
+						if (parentControll[i].parent == '#') {
 							alert("관리자만  관리가 가능한 폴더입니다.");
 							return;
 						}
@@ -211,9 +212,9 @@
 			} 
 			
 			if (folderType == "C") {
-				for (var i = 0; i < test.length; i++) {
-					if (test[i].id == parent) {
-						if (test[i].parent == '#') {
+				for (var i = 0; i < parentControll.length; i++) {
+					if (parentControll[i].id == parent) {
+						if (parentControll[i].parent == '#') {
 							alert("관리자만  관리가 가능한 폴더입니다.");
 							return;
 						}
@@ -247,10 +248,11 @@
 				}
 				
 				return;
-			} else if (folderType == "C") {
-				for (var i = 0; i < test.length; i++) {
-					if (test[i].id == parent) {
-						if (test[i].parent == '#') {
+			} 
+			if (folderType == "C") {
+				for (var i = 0; i < parentControll.length; i++) {
+					if (parentControll[i].id == parent) {
+						if (parentControll[i].parent == '#') {
 							alert("관리자만  관리가 가능한 폴더입니다.");
 							return;
 						}
