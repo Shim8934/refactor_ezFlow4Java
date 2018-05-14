@@ -71,6 +71,12 @@
                 return;
             }
         }
+        
+        // 2018.05.09 재은 수정 (경고알림이 총용량보다 더 크거나 같을경우)
+        if (Number(document.getElementById("TextQuota2").value) >= Number(document.getElementById("TextQuota3").value)) {
+        	alert("<spring:message code='ezEmail.jje01'/>");
+        	return;
+        }
 
         var xmlHTTP = createXMLHttpRequest();
         var xmlpara = createXmlDom();

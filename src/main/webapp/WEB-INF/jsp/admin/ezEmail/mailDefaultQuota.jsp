@@ -30,6 +30,12 @@
                     return;
                 }
                 
+                // 2018.05.09 재은 수정 (경고알림이 총용량보다 더 크거나 같을경우)
+                if (Number(defaultWarnInput.value) >= Number(defaultMaxInput.value)) {
+                	alert("<spring:message code='ezEmail.jje01' />");
+                	return;
+                }
+                
                 var strXML = "<DATA>";
                 strXML += "<WARNSTORAGE>" + parseFloat(Remove1000Sep(defaultWarnInput.value, ",", "") * 1024) + "</WARNSTORAGE>";
                 strXML += "<MAXSTORAGE>" + parseFloat(Remove1000Sep(defaultMaxInput.value, ",", "") * 1024) + "</MAXSTORAGE>";
