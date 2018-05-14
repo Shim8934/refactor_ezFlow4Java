@@ -1150,6 +1150,7 @@ public class EzAttitudeAdminBOMController {
 		String searchUserName = request.getParameter("userName");
 		String searchDeptName = request.getParameter("deptName");
 		String searchTitle = request.getParameter("title");
+		String searchDeptId = request.getParameter("deptId");
 		String searchStartDate = request.getParameter("startDate");
 		String searchEndDate = request.getParameter("endDate");
 		String pageNum = request.getParameter("pageNum");
@@ -1173,6 +1174,7 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("searchTitle", searchTitle)
 				.queryParam("searchStartDate", searchStartDate)
 				.queryParam("searchEndDate", searchEndDate)
+				.queryParam("searchDeptId", searchDeptId)
 				.queryParam("userId", userId)
 				.queryParam("pageNum", pageNum)
 				.queryParam("listSize", listSize)
@@ -1214,6 +1216,7 @@ public class EzAttitudeAdminBOMController {
 		String searchUserName = request.getParameter("userName");
 		String searchDeptName = request.getParameter("deptName");
 		String searchTitle = request.getParameter("title");
+		String searchDeptId = request.getParameter("deptId");
 		String searchStartDate = request.getParameter("startDate");
 		String searchEndDate = request.getParameter("endDate");
 		String searchAttitudeType = request.getParameter("attitudeType");
@@ -1227,9 +1230,9 @@ public class EzAttitudeAdminBOMController {
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		Locale locale = userInfo.getLocale();
 		
-		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
-				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
-				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
+		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchDeptId = " + searchDeptId
+				+ " || searchStartDate = " + searchStartDate + " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType
+				+ " || pageNum = " + pageNum + " || listSize = " + listSize + " || orderCell = " + orderCell + "orderOption = " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
@@ -1252,6 +1255,7 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("searchUserName", searchUserName)
 				.queryParam("searchDeptName", searchDeptName)
 				.queryParam("searchTitle", searchTitle)
+				.queryParam("searchDeptId", searchDeptId)
 				.queryParam("searchStartDate", searchStartDate)
 				.queryParam("searchEndDate", searchEndDate)
 				.queryParam("searchAttitudeType", searchAttitudeType)
@@ -1429,7 +1433,7 @@ public class EzAttitudeAdminBOMController {
 		String searchTitle = request.getParameter("title");
 		String searchStartDate = request.getParameter("startDate");
 		String searchEndDate = request.getParameter("endDate");
-		String deptId = request.getParameter("deptId");
+		String searchDeptId = request.getParameter("deptId");
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		
 		if (requestURL.indexOf("admin") == -1) {
@@ -1459,7 +1463,7 @@ public class EzAttitudeAdminBOMController {
 				.queryParam("searchTitle", searchTitle)
 				.queryParam("searchStartDate", searchStartDate)
 				.queryParam("searchEndDate", searchEndDate)
-				.queryParam("deptId", deptId)
+				.queryParam("searchDeptId", searchDeptId)
 				.queryParam("userId", userId)
 				.queryParam("offsetMin", offsetMin)
 				.queryParam("loginCookie", loginCookie);
