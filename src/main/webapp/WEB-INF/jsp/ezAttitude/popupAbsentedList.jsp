@@ -169,7 +169,7 @@
 		</div>
 		
 		<div class="btnposition">
-			<a class="imgbtn"><span onclick="return btnSendMail_onclick()">메일발송</span></a>
+			<c:if test="${searchEndDate != ''}"><a class="imgbtn"><span onclick="return btnSendMail_onclick()">메일발송</span></a></c:if>
 			<a class="imgbtn"><span onclick="return btnClose_onclick()">닫기</span></a>
 		</div>
 	</body>
