@@ -63,16 +63,26 @@ public class EzAttitudeBHSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String searchDeptId = request.getParameter("deptId");
+		String date = request.getParameter("date");
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		
-		String tempDate = commonUtil.getTodayUTCTime("");
-		Date firstDayofMonth = sdf.parse(tempDate);
+		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10);
+		String searchStartDate = date + "-01";
+		String searchEndDate = "";
 		
-		cal.setTime(firstDayofMonth);
-		String searchStartDate = tempDate.substring(0, 8) + "01";
-		String searchEndDate = tempDate.substring(0, 8) + Integer.toString(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		if (date.compareTo(today.substring(0, 7)) == 0) {
+			//현재달
+			searchEndDate = today;
+		} else if (date.compareTo(today.substring(0, 7)) == -1) {
+			//이전달
+			Date firstDayofMonth = sdf.parse(searchStartDate);
+			cal.setTime(firstDayofMonth);
+			
+			searchEndDate = searchStartDate.substring(0, 8) + Integer.toString(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		}
+		//2018-05-14 이효진 다음달일땐 searchEndDate "" 으로 가져가서 미입력조회없이 tr에 정보없다고 script로
 		
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("searchDeptId", searchDeptId);

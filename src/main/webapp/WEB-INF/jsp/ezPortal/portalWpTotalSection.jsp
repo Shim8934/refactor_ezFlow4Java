@@ -167,13 +167,14 @@
     		<article class="time" style="margin-right:0px">
     			<div id="clock" class="light">
 					<div class="display">
-						<div class="digits" style="padding-top:17px;width:120px;height:112px;border:1px solid #ddd;border-radius:15px"></div>
+						<p class="title" style="margin-left:0px"></p>
+						<div class="digits" style="padding-top:7px;padding-left:5px;height:52px;"></div>
 					</div>
 				</div>
     			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:122px">
     				<p id="inAttiClock" style="margin-top:2px;margin-left:11px;font-size:12px;text-align: left; padding-left:20px">출근 : 출근 전</p>
-					<p id="outAttiClock" style="margin-top:5px;margin-left:11px;margin-bottom:27px;font-size:12px;text-align: left; padding-left:20px">퇴근 : 퇴근 전</p>
-					<span style="margin-left:14px" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
+					<p id="outAttiClock" style="margin-top:5px;margin-left:11px;margin-bottom:16px;font-size:12px;text-align: left; padding-left:20px">퇴근 : 퇴근 전</p>
+					<span style="margin-left:13px" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
 					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:5px">퇴근</span>
     			</div>
    			</article>
@@ -242,6 +243,12 @@
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
 		    var pNoneActiveX = "YES";
+		    
+		    var year = sDate.getFullYear();
+		 	var mon = leadingZeros((sDate.getMonth() + 1), 2);
+		 	var day = sDate.getDate();		 	
+		 	
+		 	$(".title").html(year + "년 " + mon + "월 " + day + "일");
 
 		    function window_onload_total() {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {

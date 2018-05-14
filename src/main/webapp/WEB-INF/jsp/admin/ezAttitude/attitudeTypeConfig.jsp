@@ -44,7 +44,7 @@
 	            		useSelect(result);
 	            	},
 	            	error : function() {
-	            		alert("리스트를 가져오는 도중 에러 발생");
+	            		alert("<spring:message code='ezAttitude.kbm3' />");
 	            	}
 	            });
 	        }
@@ -55,9 +55,9 @@
 	                for (var i = 0; i < result.length; i++) {
 	                    var gubun = "";
 	                    if (result[i].isAdd == "0") {
-	                    	gubun = "기본";
+	                    	gubun = "<spring:message code='ezAttitude.kbm7' />";
 	                    } else {
-	                    	gubun = "추가";
+	                    	gubun = "<spring:message code='ezAttitude.kbm8' />";
 	                    }
 	                    html += "<tr id='" + result[i].typeId + "' onclick='listClick(this);' ondblclick='dbclick(this);' style='cursor:pointer;' isAdd='" + result[i].isAdd + "'>";
 	                    html += "<td style='width:110px;color:gray;padding-left:15px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;' title='" + result[i].typeName + "'>" + result[i].typeName + "</td>";
@@ -67,7 +67,7 @@
 	                    html += "</tr>";
 	                }
                 } else {
-    	    		html = "<tr><td colspan='3' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";	
+    	    		html = "<tr><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
                 }
                 $("#contentlist table").html(html);
 	        }
@@ -103,10 +103,10 @@
 	            		"companyId" : encodeURI($("#ListCompany").val())
 	            	},
 	            	success : function() {
-	            		alert('저장되었습니다');
+	            		alert("<spring:message code='ezAttitude.bbhs19' />");
 	            	},
 	            	error : function() {
-	            		alert('저장하는 중 오류 발생');
+	            		alert("<spring:message code='ezAttitude.kbm3' />");
 	            	}
 	            });        	
 	        }
@@ -114,33 +114,37 @@
 	        var saveType_dialogArguments = new Array();
 	        //유형 추가
 	        function add_type() {
-	            if (CrossYN()) {
-	            	saveType_dialogArguments[0] = $("#ListCompany").val();
-                    var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=525px, height=170px', GetOpenWindowfeature(800, 520));
+	        	var url = "/admin/ezAttitude/addAttitudeType.do";
+				var companyId = $("#ListCompany").val();
+				url+="?companyId="+companyId;
+				window.open(url, "saveAttitudeType", GetOpenWindowfeature(525, 170));
+// 	            if (CrossYN()) {
+// 	            	saveType_dialogArguments[0] = $("#ListCompany").val();
+//                     var OpenWin = window.open("/admin/ezAttitude/addAttitudeType.do?companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=525px, height=170px', GetOpenWindowfeature(800, 520));
                     
-                    try { OpenWin.focus(); } catch (e) { }
-	            } else {
-                	rtnValue = window.showModalDialog("/admin/ezAttitude/addAttitudeType.do", $("#ListCompany").val(),
-                        "dialogHeight:155px;dialogwidth:540px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
+//                     try { OpenWin.focus(); } catch (e) { }
+// 	            } else {
+//                 	rtnValue = window.showModalDialog("/admin/ezAttitude/addAttitudeType.do", $("#ListCompany").val(),
+//                         "dialogHeight:155px;dialogwidth:540px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 520));
 	                
-	                if (typeof (rtnValue) != "undefined") {
-	                    company_change();
-	                }
-	            }
+// 	                if (typeof (rtnValue) != "undefined") {
+// 	                    company_change();
+// 	                }
+// 	            }
 	        }
 	        //유형 삭제
 	        function del_type() {
 	        	if (selectTypeId == null || selectTypeId == "") {
-	        		alert("유형을 먼저 선택해 주세요");
+	        		alert("<spring:message code='ezAttitude.kbm9' />");
 	        		return;
 	        	}
 	        	
 	        	if (isAdd == 0) {
-	        		alert("기본유형은 삭제할 수 없습니다.");
+	        		alert("<spring:message code='ezAttitude.kbm10' />");
 	        		return;
 	        	}
 	        	
-	        	if (confirm("정말로 삭제하시겠습니까?")) {
+	        	if (confirm("<spring:message code='ezAttitude.kbm11' />")) {
 					$.ajax({
 						type : "POST",
 						url : "/admin/ezAttitude/deleteAttitudeType.do",
@@ -151,14 +155,14 @@
 						},
 						success : function(result) {
 							if (result == "false") {
-								alert("현재 사용중인 유형입니다.");
+								alert("<spring:message code='ezAttitude.kbm12' />");
 							} else {
-								alert("삭제되었습니다.");
+								alert("<spring:message code='ezAttitude.bbhs27' />");
 								company_change();
 							}
 						},
 						error : function() {
-							alert("삭제하는 도중 오류 발생");
+							alert("<spring:message code='ezAttitude.kbm3' />");
 						}
 					})
 	        	}
@@ -167,14 +171,20 @@
 	        //수정버튼
 	        function mod_type() {
 	        	if (selectTypeId == null || selectTypeId == "") {
-	        		alert("유형을 먼저 선택해 주세요");
+	        		alert("<spring:message code='ezAttitude.kbm9' />");
 	        		return;
 	        	}
-	        	if (isAdd == 0) {
-	        		alert("기본유형은 삭제할 수 없습니다.");
-	        		return;
-	        	}
-	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + selectTypeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=525px, height=170px', GetOpenWindowfeature(800, 520));
+// 	        	if (isAdd == 0) {
+// 	        		alert("기본유형은 수정할 수 없습니다.");
+// 	        		return;
+// 	        	}
+
+	        	var url = "/admin/ezAttitude/showAttitudeType.do";
+				url += "?companyId=" + $("#ListCompany").val();
+				url += "&typeId=" + selectTypeId;
+				window.open(url, "showAttitudeType", GetOpenWindowfeature(525, 170));
+				
+// 	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + selectTypeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=525px, height=170px', GetOpenWindowfeature(800, 520));
 	        }
 	        
 	        function listClick(elem) {
@@ -184,11 +194,16 @@
 	        
 	        //유형 상세보기(수정창)
 	        function dbclick(elem) {
-	        	saveType_dialogArguments[0] = $("#ListCompany").val();
-            	var typeId = elem.id;
-	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + typeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=525px, height=170px', GetOpenWindowfeature(800, 520));
+// 	        	saveType_dialogArguments[0] = $("#ListCompany").val();
+//             	var typeId = elem.id;
+// 	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + typeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=525px, height=170px', GetOpenWindowfeature(800, 520));
 	        	
-	        	try { OpenWin.focus(); } catch (e) { }
+// 	        	try { OpenWin.focus(); } catch (e) { }
+
+	        	var url = "/admin/ezAttitude/showAttitudeType.do";
+				url += "?companyId=" + $("#ListCompany").val();
+				url += "&typeId=" + elem.id;
+				window.open(url, "showAttitudeType", GetOpenWindowfeature(525, 170));
 	        }
 		    
 	    </script>
@@ -210,9 +225,9 @@
 	      	</ul>
 	      	<ul>
 <%-- 	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.t33' /></span></li> --%>
-	      		<li><span onclick="add_type()">유형추가</span></li>
-	      		<li><span onclick="mod_type()">유형수정</span></li>
-	      		<li><span onclick="del_type()">유형삭제</span></li>
+	      		<li><span onclick="add_type()"><spring:message code='ezAttitude.kbm4' /></span></li>
+	      		<li><span onclick="mod_type()"><spring:message code='ezAttitude.kbm5' /></span></li>
+	      		<li><span onclick="del_type()"><spring:message code='ezAttitude.kbm6' /></span></li>
 	      		<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 	      		<li><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></li>
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
@@ -226,7 +241,7 @@
                         <table class="mainlist" style="width: 100%;">
                             <tr>
                                 <th style="width: 110px;padding-left:15px;"><span><spring:message code='ezAttitude.t35' /></span></th>
-                                <th style="width: 110px;text-align: center;"><span>유형구분</span></th>
+                                <th style="width: 110px;text-align: center;"><span><spring:message code='ezAttitude.kbm13' /></span></th>
                                 <th style="width: 90px;text-align: center;"><span><spring:message code='ezAttitude.t36' /></span></th>
                                 <th style="text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
                             </tr>
