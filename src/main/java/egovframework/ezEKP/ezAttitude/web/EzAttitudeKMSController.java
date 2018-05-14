@@ -1080,13 +1080,17 @@ public class EzAttitudeKMSController {
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
-
+		
+		String deptFlag = "";
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/modifyattitude/" + attModId;
 									
+		if (adminFlag != null) {
+			deptFlag = adminFlag;
+		}
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
@@ -1114,8 +1118,7 @@ public class EzAttitudeKMSController {
 		JSONObject data = new JSONObject();
 		
 		if(status.equals("ok")){
-			data = (JSONObject) resultBody.get("data");
-			LOGGER.debug("!@##$!@#%$$#%!%" + data.toJSONString());
+			data = (JSONObject) resultBody.get("data");			
 			attModDeptId = (String) data.get("writerDeptId");
 			model.addAttribute("data", data);
 			
@@ -1196,6 +1199,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("font", font);
 		model.addAttribute("authFlag", authFlag);
+		model.addAttribute("deptFlag", deptFlag);
 		
 		LOGGER.debug("attModAppDetail ended");
 		
