@@ -1012,7 +1012,7 @@
 				success : function(result) {
 					var titleDate = "";
 					var objDiv = $("<div></div>");
-					var objTable = $("<table></table>").css({"clear":"both", "margin":"0px", "border-collapse":"collapse", "empty-cells":"show", "width":"830px"});
+					var objTable = $("<table></table>").css({"clear":"both", "margin":"0px", "border-collapse":"collapse", "empty-cells":"show"});
 					var objTr = $("<tr></tr>").append($("<th></th>").text("구분")).append($("<td></td>").text(result.attitudeVO.typeName));
 					
 					objTable.append(objTr);
@@ -1051,7 +1051,7 @@
 					objTable.find("#bizsub").text(result.attitudeVO.bizSub);
 					objTable.find("#region").length == 0 ? "" : objTable.find("#region").text(result.attitudeVO.region);
 					objTable.find("#content").html(result.attitudeVO.content);
-					message.SetEditorContent("<p></p><p></p><hr>" + objDiv.html());
+					message.SetEditorContent("<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
 				}
 			});
 	    }
