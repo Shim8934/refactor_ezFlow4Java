@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -38,7 +39,7 @@
 	                <span class="icon_btn"><span onclick="goJournalDetail(this);" id="${journal.journalId}" style="cursor: pointer; padding-right: 5px;">
 	                    <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"><c:out value='${journal.journalTitle }'/></span></span>
 	            </p>
-	            <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><c:out value='${journal.journalDate }'/></span></span>
+	            <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><c:out value='${fn:substring(journal.journalDate, 0, 16) }'/></span></span>
 	            <dl class="mail_item">
 	                <dt>게시자:
 	                    <span style="display: inline-block"><span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor:pointer" onclick="OpenUserInfo('${journal.writerId}');"><c:out value='${journal.writerName }'/></span></span>

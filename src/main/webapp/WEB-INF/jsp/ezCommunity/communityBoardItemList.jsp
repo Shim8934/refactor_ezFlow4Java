@@ -9,27 +9,18 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<link rel="stylesheet" type="text/css" href="/css/community.css" />
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-        
-        <style type="text/css"> 
-	        .pagetd{padding-top:6px; }
-	        .pcol{padding-top:6px; }
-	        .Right_Point01 {
-		        font:bold;
-		        color:#017bec;
-        	}
-        	
+		<style type="text/css">
         	#tblList td{
         		white-space: nowrap;
         		text-overflow: ellipsis;
         		overflow:hidden;
         	}
         </style>
-    	
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
+		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     	<script type="text/javascript">
     		var pBoardID = '<c:out value="${boardInfo.boardID}" />';
     		var pBoardName = "<c:out value='${pBoardName}' />";
@@ -173,6 +164,11 @@
     			makePageSelPage();
     		});
     		
+    		document.onselectstart = function () {
+    		    window.event.cancelBubble = true;
+    		    window.event.returnValue = false;
+    		};
+    		
     		if (url != "") { 
 				window.location.href = url;
     		}
@@ -197,9 +193,7 @@
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
-
-// 		       	var e = evt.currentTarget.innerHTML;
-  		        	
+  	
    		        if (evt.currentTarget.getElementsByTagName("B").length == 1) {
    		            evt.currentTarget.getElementsByTagName("nobr")[0].innerHTML = evt.currentTarget.getElementsByTagName("B")[0].innerHTML;
    		        }
@@ -385,25 +379,11 @@
     			}
     		}
 
-    		function AddToMyBoards() {
-    			var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    			xmlhttp.open("POST", "aspx/AddToMyBoards.aspx?BoardID=" + pBoardID + "&BoardName=" + escape(pBoardName), false);
-    			xmlhttp.send();
-    			
-    			if(xmlhttp.responseXML.text == "OK") {
-    				alert("<spring:message code='ezCommunity.t902' />");
-    			} else {
-    				alert("<spring:message code='ezCommunity.t903' />");
-    			}
-    			xmlhttp = null;		
-    		}
-    		
-            var BlockSize = 10;
-            
             function td_Create1(strtext) {
                 $("#tblPageRayer").html(strtext);
             }
             
+            var BlockSize = 10;
             function makePageSelPage() {
                 var strtext;
                 var PagingHTML = "";
@@ -525,22 +505,6 @@
     			    window.location.href = "/ezCommunity/boardItemList.do?page=" + parseInt(newPage) + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;
     		    }
     		}
-            
-            function prevPage_onclick() {
-    			newPage = parseInt(CurPage) - 1;
-    			
-    			if(newPage > 0) {
-    				window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage.toString() + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;
-    			}
-    		}
-
-    		function nextPage_onclick() {
-    			newPage = parseInt(CurPage) + 1;
-    			
-    			if(newPage <= parseInt(totalPage)) {
-    				window.location.href = "/ezCommunity/BoardItemList.do?page=" + newPage.toString() + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;
-    			}
-    		}
 
     		function moveToPage() {
     			if(window.event.keyCode == 13) {
@@ -654,11 +618,6 @@
     			window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + encodeURIComponent(CurPage) + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + encodeURIComponent(pSortBy) + "&code=" + encodeURIComponent(code);
     		}
 
-    		document.onselectstart = function () {
-    		    window.event.cancelBubble = true;
-    		    window.event.returnValue = false;
-    		};
-
     		function search_onclick() {
     			if (UserLevel == "0" || UserLevel == "9") {
     				alert("<spring:message code='ezCommunity.t431' />");
@@ -669,32 +628,6 @@
     			window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&orgBoardParameters=" + encodeURIComponent(OrgBoardParameters) + "&code=" + encodeURIComponent(code);
     		}
 
-    		function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
-   		        try {
-   		            var heigth = window.screen.availHeight;
-   		            var width = window.screen.availWidth;
-
-   		            var left = 0;
-   		            var top = 0;
-
-   		            if (window.screen.width > 800) {
-   		                var pleftpos;
-
-   		                pleftpos = parseInt(width) - 770;
-   		                heigth = parseInt(heigth) - 30;
-   		                width = parseInt(width) - pleftpos;
-
-   		                left = pleftpos / 2;
-   		            } else {
-   		                heigth = parseInt(heigth) - 30;
-   		                width = parseInt(width) - 10;
-   		            }
-   		            
-   		            window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
-   		        } catch (e) {
-   		            alert("openwindow :: " + e.description);
-   		        }
-   		    }
     	</script>    
         
 	</head>

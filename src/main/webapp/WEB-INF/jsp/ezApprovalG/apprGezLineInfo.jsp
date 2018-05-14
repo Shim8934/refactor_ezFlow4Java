@@ -286,14 +286,19 @@
 		    function methodForTabAction(target) {
             	var tab1 = document.getElementById("tagsub1").children[0];
             	var tab2 = document.getElementById("tagsub4").children[0];
-            	var tab3 = document.getElementById("tdGongRam").children[0];
+            	var tab3 = "";
+            	if (document.getElementById("tdGongRam") != null) {
+            		tab3 = document.getElementById("tdGongRam").children[0];
+            	}
             	if (target == "1") {
             		tab1.className = "tabon";
             		tab2.className = "";
+            		if (tab3 != "")
             		tab3.className = "";
             	} else if (target == "4") {
             		tab1.className = "";
             		tab2.className = "tabon";
+            		if (tab3 != "")
             		tab3.className = "";
             	} else if (target == "5") {
             		tab1.className = "";
@@ -356,7 +361,7 @@
        	
 		<div class="listview" style="overflow-x:auto;width:100%;"><div id="lvAprLine" style="HEIGHT:350px;WIDTH:100%;"></div></div>
 		<script type="text/javascript" >
-			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+			//selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	</body>
