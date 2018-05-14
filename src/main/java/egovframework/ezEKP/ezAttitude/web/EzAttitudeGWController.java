@@ -1121,7 +1121,8 @@ public class EzAttitudeGWController {
 			@RequestParam(value="orderCell", required=false) String orderCell,
 			@RequestParam(value="orderOption", required=false) String orderOption,
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
-			@RequestParam(value="checkAdmin", required=false) String checkAdmin) {
+			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
+			@RequestParam(value="deptid", required=false) String deptid) {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
@@ -1166,6 +1167,11 @@ public class EzAttitudeGWController {
 			
 			for (int i = 0; i < authDeptlist.size(); i++) {
 				deptIdList[i] = authDeptlist.get(i).getDeptId();
+			}
+			
+			if (deptid != null) {
+				deptIdList = new String[1];
+				deptIdList[0] = deptid;
 			}
 			
 			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersModiyAtt(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, sysLang, offset, startPoint, endPoint, type, order, adminFlag, checkAdmin, deptIdList);
