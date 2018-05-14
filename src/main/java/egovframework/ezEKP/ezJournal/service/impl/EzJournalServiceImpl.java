@@ -631,7 +631,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public JournalVO getJournal(String journalId,String userId, String viewDate, int tenantId, String lang) throws Exception {
+	public JournalVO getJournal(String journalId,String userId, String viewDate, int tenantId, String lang, String offset) throws Exception {
 		logger.debug("getJournal started");
 		
 		logger.debug("journalId : "+journalId);
@@ -644,6 +644,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("userId", userId);
 		param.put("viewDate", viewDate);
 		param.put("lang", lang);
+		param.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		if (!viewDate.equals("")) {
 			ezJournalDAO.insertViewInfo(param);
@@ -1081,7 +1082,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId, String lang) throws Exception {
+	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId, String lang, String offset) throws Exception {
 		logger.debug("getJournalReplyList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1089,6 +1090,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("tenantId", tenantId);
 		map.put("journalId", journalId);
 		map.put("lang", lang);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		List<JournalReplyVO> replyList = ezJournalDAO.selectJournalReplyList(map);
 		
@@ -1129,7 +1131,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 	
 	@Override
-	public List<JournalReceiverVO> getReceiverList(String journalId, String startCount, String listCnt, int tenantId, String lang) {
+	public List<JournalReceiverVO> getReceiverList(String journalId, String startCount, String listCnt, int tenantId, String lang, String offset) throws Exception {
 		logger.debug("getReceiverList started.");
 	
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1140,14 +1142,15 @@ public class EzJournalServiceImpl implements EzJournalService {
 			map.put("listCnt", Integer.parseInt(listCnt));
 		}
 		map.put("lang", lang);
-		
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		logger.debug("***" + map);
 		List<JournalReceiverVO> receiverList = ezJournalDAO.getReceiverList(map);
 		logger.debug("getReceiverList ended.");
 		return receiverList;
 	}
 
 	@Override
-	public List<JournalReceiverVO> getJournalViewerList(String journalId,String startCount, String listCnt, int tenantId, String lang) throws Exception {
+	public List<JournalReceiverVO> getJournalViewerList(String journalId,String startCount, String listCnt, int tenantId, String lang, String offset) throws Exception {
 		logger.debug("getJournalViewerList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1156,6 +1159,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("startCount", Integer.parseInt(startCount));
 		map.put("listCnt", Integer.parseInt(listCnt));
 		map.put("lang", lang);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		List<JournalReceiverVO> viewerList = ezJournalDAO.getViewerList(map);
 		logger.debug("getJournalViewerList ended.");
