@@ -8,10 +8,10 @@
 		<title>
 			<c:choose>
 				<c:when test="${not empty selectedUser }">
-					권한수정
+					<spring:message code='ezAttitude.kbm16' />
 				</c:when>
 				<c:otherwise>
-					권한등록
+					<spring:message code='ezAttitude.kbm15' />
 				</c:otherwise>
 			</c:choose>
 		</title>
@@ -77,7 +77,7 @@
 	    	//부서선택
 	    	function selectDept(){
 	    		if (selectedUser == "" || selectedUser == null) {
-	    			alert("권한자를 선택해주세요");
+	    			alert("<spring:message code='ezAttitude.kbm24' />");
 	    			return;
 	    		}
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthorDept.do";
@@ -97,7 +97,7 @@
 				var html = "";
 				
 				if (deptIds.length == 0) {
-					html = "<tr><td colspan='3' style='text-align: center;'>권한부서가 없습니다.</td></tr>";
+					html = "<tr><td colspan='3' style='text-align: center;'><spring:message code='ezAttitude.lhj14' /></td></tr>";
 				} else {
 		    		for (var i = 0; i < deptIds.length; i++) {
 	    				deptString += deptNames[i] + ", "; //이름
@@ -141,7 +141,7 @@
 	    	//권한 저장
 	    	function saveAuthDept(){
 	    		if (deptIdStr == "" || deptIdStr == null) {
-	    			alert("권한 부서를 선택해주세요");
+	    			alert("<spring:message code='ezAttitude.kbm25' />");
 	    			return;
 	    		}
 
@@ -166,16 +166,16 @@
 		   					authTypes : authlist
 		   				},
 		   				success: function(){
-		   					alert("권한이 등록되었습니다.");
+		   					alert("<spring:message code='ezAttitude.kbm26' />");
 	   						opener.company_change();
 	   						window.close();
 		   				},
 		   				error : function() {
-		   					alert("권한을 등록하는 도중 에러 발생");
+		   					alert("<spring:message code='ezAttitude.kbm3' />");
 		   				}
 		   			});
 	    		} else {
-	    			alert("권한 부서를 선택해 주세요.");
+	    			alert("<spring:message code='ezAttitude.kbm25' />");
 	    		}
 	   		}
 	    	
@@ -185,27 +185,27 @@
 	    <h1>
 	    	<c:choose>
 				<c:when test="${not empty selectedUser }">
-					권한수정
+					<spring:message code='ezAttitude.kbm16' />
 				</c:when>
 				<c:otherwise>
-					권한등록
+					<spring:message code='ezAttitude.kbm15' />
 				</c:otherwise>
 			</c:choose>
 	    </h1>
 	    <table class="content">
 	        <tr>
-	            <th style="width:200px; text-align:center">권한자</th>
+	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.kbm27' /></th>
 	            <td>
 	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-top:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:2px;"><span onclick="select_person()">지정</span></a>                
+	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:2px;"><span onclick="select_person()"><spring:message code='ezAttitude.kbm29' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="width:200px; text-align:center">권한부서</th>
+	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.kbm28' /></th>
 	            <td>
 <!-- 	                <input id="txtdept" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" /> -->
 	                <textarea rows="3" id="txtdept" type="text" style="margin-top:2px; width:77%; resize:none;" onfocus="this.blur();" readonly="readonly" ></textarea>
-	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top: 15px;"><span onclick="selectDept()">지정</span></a>                
+	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top: 15px;"><span onclick="selectDept()"><spring:message code='ezAttitude.kbm29' /></span></a>                
 	            </td>
 	        </tr>
 	    </table>
@@ -214,22 +214,22 @@
 		<div style="width: 100%; height: 100%;">
             <table class="mainlist" style="width: 100%;">
                 <tr>
-                    <th style="width: 50%; padding-left:15px;"><span>부서</span></th>
-                    <th style="width: 25%; text-align: center;"><span>열람</span></th>
-                    <th style="width: 25%; text-align: center;"><span>관리</span></th>
+                    <th style="width: 50%; padding-left:15px;"><span><spring:message code='ezAttitude.t9' /></span></th>
+                    <th style="width: 25%; text-align: center;"><span><spring:message code='ezAttitude.kbm22' /></span></th>
+                    <th style="width: 25%; text-align: center;"><span><spring:message code='ezAttitude.kbm23' /></span></th>
                 </tr>
             </table>
             <div id="contentlist" name="contentlist" style="height: 160px; overflow-y: auto;">
                 <table class="mainlist" style="width: 100%;">
                     <tr>
-                        <td colspan="3" style="text-align: center;">권한부서가 없습니다.</td>
+                        <td colspan="3" style="text-align: center;"><spring:message code='ezAttitude.lhj14' /></td>
                     </tr>
                 </table>
             </div>
         </div>
         <div class="btnposition">
-	        <a class="imgbtn"><span onclick="saveAuthDept();" >저장</span></a>
-	        <a class="imgbtn"><span onclick="window.close();">취소</span></a>      
+	        <a class="imgbtn"><span onclick="saveAuthDept();" ><spring:message code='ezAttitude.t16' /></span></a>
+	        <a class="imgbtn"><span onclick="window.close();"><spring:message code='ezAttitude.t34' /></span></a>
 	    </div>
 	</body>
 </html>

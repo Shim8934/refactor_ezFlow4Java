@@ -90,12 +90,12 @@
 	        
 	        function save_config() {
 	        	if (!checkPattern()) {
-	    			alert("근무시간를 다시 지정해주세요.")
+	    			alert("<spring:message code='ezAttitude.lhj1' />");
 	    			return;
 	    		}
 	        	//시간
 	        	if( $("#endTime").val() < $("#startTime").val() ) {
-	        		alert('종료시간은 시작시간보다 늦어야 합니다.');
+	        		alert("<spring:message code='ezAttitude.lhj15' />");
 	        		return;
 	        	}
 	        	//휴무요일
@@ -116,11 +116,11 @@
 	            			closedDateAttitude : $('input[name=close_date_attitude]:checked').val()
 	            	},
 	            	success : function() {
-	            		alert('저장되었습니다.');
+	            		alert("<spring:message code='ezAttitude.bbhs19' />");
 	            		company_change();
 	            	},
 	            	error : function() {
-	            		alert('에러발생');
+	            		alert("<spring:message code='ezAttitude.kbm3' />");
 	            	}
 	            });
 	        }

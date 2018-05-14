@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title><spring:message code='ezAttitude.kbm30' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
@@ -78,7 +78,7 @@
 	   			});
 	   		}
 	   		
-	   		//선택된 사원의 권한 부서 보여주기
+	   		//선택된 사원의 권한 부서
 	   		function setUserAuthorDept(elem) {
 	   			selectedUser = $(elem).attr("id");
 	   			selectedUserName = $(elem).attr("name");
@@ -115,7 +115,7 @@
 	   			if(value) {
 		   			setUserList(key, value);
 	   			} else {
-	   				alert("검색어를 입력해주세요")
+	   				alert("<spring:message code='ezAttitude.kbm32' />");
 	   			}
 	   		}
 	   		
@@ -129,7 +129,7 @@
 		   			opener.userDeptId = userDeptId;
 					window.close();
 				} else {
-					alert("사원을 선택해 주세요");
+					alert("<spring:message code='ezAttitude.kbm19' />");
 				}
 	   		}
 	   		
@@ -143,11 +143,11 @@
 		</style>
 	</head>
 	<body class="popup"> 
-        <h1>권한자 지정</h1>
+        <h1><spring:message code='ezAttitude.kbm30' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="setAuthorViewUser()">확인</span></li>
-	            <li><span onclick="close_Click()">닫기</span></li>
+	            <li><span onclick="setAuthorViewUser()"><spring:message code='ezAttitude.t38' /></span></li>
+	            <li><span onclick="close_Click()"><spring:message code='ezAttitude.bbhs21' /></span></li>
 	        </ul>
 	    </div>
 		<table id="TreeViewTD">
