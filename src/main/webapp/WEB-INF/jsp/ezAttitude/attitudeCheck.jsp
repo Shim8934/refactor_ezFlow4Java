@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title><spring:message code = 'ezAttitude.t6' /></title>
+		<title><spring:message code = 'ezAttitude.t5' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -40,6 +40,7 @@
 	    	var searchUserName = ""; // 검색조건 (사원명)
 	    	var searchDeptName = ""; // 검색조건 (부서명)
 	    	var searchTitle = ""; // 검색조건 (직위)
+	    	var searchAttitudeType = "total"; // 검색조건(근태유형)
 	    	//검색조건 (근무시간) Hr,Min 묶음으로
 	    	var searchStartDate = "${searchStartDate}";
 	    	var searchEndDate = "${searchEndDate}";
@@ -88,7 +89,7 @@
 		    			$("#contentlist table.mainlist th").find("img").remove();
 		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
 		    			
-		    			getAttitudeAbsentedList();
+		    			getAttitudeCheckList();
 	    			}
 	    		});
 	    	});
@@ -143,76 +144,104 @@
 	    	function company_change(){
 	    		$('#receiverlist').empty();
 	    		pCompanyId = $("select[name=ListCompany]").val();
-	    		getAttitudeAbsentedList();
+	    		getAttitudeCheckList();
 	    	}
 	    	
-	    	function getAttitudeAbsentedList() {
-	    		if (!checkPattern()) {
-	    			alert("날짜를 다시 지정해주세요.");
-	    			return;
+	    	function getAttitudeCheckList(){
+	    		var typeId = $('#attitudeType').val();
+	    		
+	    		if (typeId == "total") {
+	    			typeId = "";
 	    		}
 	    		
-	    		searchStartDate = $("#Sdatepicker").val();
+    			searchStartDate = $("#Sdatepicker").val();
     			searchEndDate = $("#Edatepicker").val();
 	    		
 	    		if (searchStartDate > searchEndDate) {
-					alert("시작일을 종료일보다 빠르게 지정해주십시오.");
+					alert("<spring:message code='ezAttitude.lhj15' />");
 		            return;
 				}
 	    		
-	    		searchUserName = $("#searchUserName").val();
-				searchDeptName = $("#searchDeptName").val();
-				searchTitle = $("#searchTitle").val();
-	    		searchStartDate = $("#Sdatepicker").val();
-	    		searchEndDate = $("#Edatepicker").val();
-	    		
 	    		$.ajax({
-					type : "post",
-					dataType : "json",
-					async : false,
-					url : "/admin/ezAttitude/getAttitudeAbsentedList.do",
-					data : {
-						companyId : pCompanyId,
+	    			data : "GET",
+	    			dataType : "json",
+	    			async : false,
+	    			url : "/admin/ezAttitude/attitudeCheckList.do",
+	    			data : {
+	    				companyId : pCompanyId,
 	   					userName : searchUserName,
 	   					deptName : searchDeptName,
 	   					title : searchTitle,
-	   					deptId : "",
 	   					startDate : searchStartDate,
 	   					endDate : searchEndDate,
+	   					attitudeType : searchAttitudeType,
 	   					pageNum : pageNum,
 	   					listSize : listSize,
 	   					orderCell : orderCell,
-	   					orderOption : orderOption,
-	   					duplicated : "duplicated"
-					},
-					success : function(result) {
-						totalCount = result.totalCount;
+	   					orderOption : orderOption
+    				},
+	    			success : function(result){
+	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
-						getAttitudeAbsentedList_after(result.list);
-					}
-				});
+	    				getAttitudeCheckList_after(result.list);
+	    				//근태유형 리스트
+	    				getAttitudeTypeList(result.typeList, result.typeId);
+	    			},
+	    			error : function() {
+	    				alert('리스트를 가져오는중 오류 발생');
+	    			}
+	    		});
 	    	}
 	    	
-			function getAttitudeAbsentedList_after(result){
+	    	//검색 > 근태유형selectBox
+	    	function getAttitudeTypeList(typeList, typeId) {
+	    		var html = "<option value='total'><spring:message code='ezAttitude.lhj8' /></option>";
+	    		
+	    		for (var i = 0; i < typeList.length; i ++) {
+	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
+	    		}
+	    		
+	    		$('#searchAttitudeType').html(html);
+	    		
+	    		if (typeId != "") {
+	    			$('#searchAttitudeType').val(typeId);
+	    		}
+	    	}
+	    	
+	    	function getAttitudeCheckList_after(result){
 	    		var resultHtml = "";
+	    		
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
-	    		result.forEach(function(vo, index) {
-	    			resultHtml += "<tr userid='" + vo.writerId + "'>";
-	    			resultHtml += "<td>" + vo.userName + "</td>";
-	    			resultHtml += "<td>" + vo.userTitle + "</td>";
-	    			resultHtml += "<td>" + vo.deptName + "</td>";
-	    			resultHtml += "<td>" + vo.startDate + "</td></tr>"
-	    		});
+	    		for (var i = 0; i < result.length; i ++) {
+	    			resultHtml += "<tr userid='" + result[i].writerId + "'>"
+	    			   			+ "<td>" + result[i].userName + "</td>"
+	    			   			+ "<td>" + result[i].userTitle + "</td>"
+	    			   			+ "<td>" + result[i].deptName + "</td>";
+	    						
+	    			if (result[i].endDate == null || result[i].endDate == "") {
+	    				resultHtml += "<td>" + result[i].startDate + "</td>";
+	    			} else {
+	    				resultHtml += "<td>" + result[i].startDate + " ~ " + result[i].endDate + "</td>";
+	    			}
+	    			
+	    			if (result[i].endTime == null || result[i].endTime == "") {
+	    				resultHtml += "<td>" + result[i].startTime + "</td>";
+	    			} else {
+	    				resultHtml += "<td>" + result[i].startTime + " ~ " + result[i].endTime + "</td>";
+	    			}
+	    			
+	    			resultHtml += "<td>" + result[i].typeName + "</td></tr>";
+	    		}
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='4' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
-			
+	    	
 	    	//페이지 이동 함수
 	    	function goToPageByNum(pCurPage){
 	    		if (pCurPage == 0 || totalPage < pCurPage) {
@@ -221,10 +250,10 @@
 		    		pageNum = pCurPage;
 	    		}
 	    		
-	    		getAttitudeAbsentedList();
+	    		getAttitudeCheckList();
 	    	}
 	    	
-			function searchAttitudeAbsentedList(searchType){
+			function searchAttitudeCheckList(searchType){
 				if (!checkPattern()) {
 					alert("<spring:message code='ezAttitude.lhj16' />")
 					return;
@@ -236,6 +265,7 @@
 	    			searchTitle = $("#searchTitle").val();
 	    			searchStartDate = $("#Sdatepicker").val();
 	    			searchEndDate = $("#Edatepicker").val();
+	    			searchAttitudeType = $("select[id='searchAttitudeType']").val();
 	    		} else {
 	    			//새로고침
 	    			$("#searchUserName").val("");
@@ -243,12 +273,14 @@
 	    			$("#searchTitle").val("");
 	    			$("#Sdatepicker").val("${searchStartDate}");
 	    			$("#Edatepicker").val("${searchEndDate}");
+	    			$("select[id='searchAttitudeType']").val('total');
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";
 	    			searchTitle = "";
 	    			searchStartDate = "${searchStartDate}";
 	    			searchEndDate = "${searchEndDate}";
+	    			searchAttitudeType = "total";
 	    		}
 	    		
 	    		$("#contentlist table.mainlist th").find("img").remove();
@@ -256,32 +288,34 @@
 	    		orderCell = "";
 	    		
 	    		pageNum = 1;
-	    		getAttitudeAbsentedList();
+    			getAttitudeCheckList();
 	    	}
 			
+			//엑셀 다운로드
 			function exportExcel() {
-	    		if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
+				if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
 					alert('출력할 내용이 없습니다');
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/admin/ezAttitude/excelAbsentedListExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&orderCell=" + orderCell + "&orderOption=" + orderOption + "&duplicated=duplicated";
+		    	exportExcelframe.location.href="/admin/ezAttitude/excelAttitudeListExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&attitudeType=" + searchAttitudeType + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
 		    	exportExcelframe.target="_blank";
 			}
 			
-	    	function searchPress(evt) {
+			function searchPress(evt) {
 		        if (window.event) {
 		            if (window.event.keyCode == 13) {
-		            	searchAttitudeAbsentedList('search');
+		            	searchAttitudeCheckList('search');
 		            }
 		        } else {
 		            if (evt.which == 13)
-		            	searchAttitudeAbsentedList('search');
+		            	searchAattitudeCheckList('search');
 		        }
 		    }
 			
 			function checkPattern() {
 				var datePattern =  /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
+				/* var timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/; */
 				
 				if (datePattern.test($("#Sdatepicker").val()) && datePattern.test($("#Edatepicker").val())) {
 					return true;
@@ -298,34 +332,10 @@
 					}
 				}
 			}
-			
-			function sendMail() {
-				$.ajax({
-					type : "POST",
-					async : true,
-					url : "/admin/ezAttitude/absentedListSendMail.do",
-					data : {
-						companyId : pCompanyId,
-	   					userName : searchUserName,
-	   					deptName : searchDeptName,
-	   					title : searchTitle,
-	   					startDate : searchStartDate,
-	   					endDate : searchEndDate,
-	   					deptId : ''
-					},
-					success : function(result) {
-						if (result == "ok") {
-							alert("메일이 발송되었습니다.");
-						} else {
-							alert("메일 발송에 실패하였습니다.");
-						}
-					}
-				});
-			}
 	    </script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code = 'ezAttitude.t6' /><span id="mailBoxInfo"></span></h1>
+	    <h1><spring:message code = 'ezAttitude.t5' /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
 	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span></li>
@@ -342,7 +352,7 @@
 	  	<table id="searchTable" style="width:100%;">
 			<tbody>
 				<tr>
-					<td style="width: 3%;"><spring:message code='ezAttitude.t9' /></td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t9'/></td>
 					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
@@ -355,11 +365,12 @@
 				<tr>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
-					<td style="width: *;" colspan=4>
-						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
+					<td style="width: 3%"><spring:message code='ezAttitude.lhj18' /></td>
+					<td style="width: *;" colspan=3>
+						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select>
+						<a class="imgbtn" style="margin-left:10px;"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="sendMail();"><spring:message code='ezAttitude.lhj21' /></span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
@@ -373,6 +384,8 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.lhj17' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="starttime"><spring:message code='ezAttitude.lhj19' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name"><spring:message code='ezAttitude.lhj18' /></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -380,7 +393,7 @@
 			</table>
 	  	</div>
 	  	
-		<div style="color: #666; padding-top: 10px"></div>
+	  	<div style="color: #666; padding-top: 10px"></div>
 		<div id="tblPageRayer"></div>
 		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
 	</body>
