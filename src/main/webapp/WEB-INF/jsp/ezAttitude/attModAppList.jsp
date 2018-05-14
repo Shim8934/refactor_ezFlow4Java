@@ -488,8 +488,14 @@
                  htmlStr += 'status="' + attList[i].apprStatus + '"';
                  htmlStr += ' onclick="event_listCheckboxclick(this)"/></td>';   
              }
-             htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 15) + '</td>';
-             htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';
+             
+             if (excel == true) {
+	   			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(1)-1) * 15) + '</td>';
+	   			htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';
+	   		 } else {
+	   			htmlStr += '<td>' + (parseInt(i) + 1 + (parseInt(currentPage)-1) * 15) + '</td>';
+  				htmlStr += '<td>' + attList[i].originDate.substring(0,10) + '</td>';	
+	   		 }
              
              if (adminFlag == 'true') {
                 htmlStr += '<td>' + attList[i].writerName + '</td>';
