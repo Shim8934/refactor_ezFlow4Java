@@ -1585,4 +1585,26 @@
 		AND
 			CN = #userID#
 	</select>
+		
+	<update id="EzOrganDAO.setListType" parameterClass="Map">
+		UPDATE
+			TBL_USERMASTER
+		SET
+			LISTTYPE = #listType#
+		WHERE
+			CN = #userID#
+		AND
+			TENANT_ID = #tenantID#			
+	</update>
+	
+	<select id="EzOrganDAO.getListType" parameterClass="Map" resultClass="String">
+		SELECT
+			LISTTYPE
+		FROM 
+			TBL_USERMASTER
+		WHERE
+			CN = #userID#
+		AND
+			TENANT_ID = #tenantID#	
+	</select>
 </sqlMap>

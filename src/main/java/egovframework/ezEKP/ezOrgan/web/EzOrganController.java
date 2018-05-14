@@ -405,4 +405,37 @@ public class EzOrganController {
 		logger.debug("isProxyUser ended.");
 		return result;
 	}
+	
+	@RequestMapping(value = "/ezOrgan/setListType.do", produces = "text/xml;charsert=utf-8")
+	@ResponseBody
+	public String setListType(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("setListType started.");
+		String listType = request.getParameter("listType");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String userID = userInfo.getId();
+		int tenantID = userInfo.getTenantId();
+		
+		ezOrganService.setListType(listType, userID, tenantID);
+		
+		logger.debug("setListType ended.");
+		return "TRUE";
+	}
+	
+	@RequestMapping(value = "/ezOrgan/getListType.do", produces = "text/xml;charsert=utf-8")
+	@ResponseBody
+	public String getListType(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("getListType started.");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String userID = userInfo.getId();
+		int tenantID = userInfo.getTenantId();
+		
+		String listType = ezOrganService.getListType(userID, tenantID);
+		
+		if (listType == null) {
+			listType = "TXT";
+		}
+		
+		logger.debug("getListType ended.");
+		return listType;
+	}
 }
