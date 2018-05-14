@@ -9,11 +9,7 @@
 			<c:when test="${pMode == 'new' || pUrl != ''}">
 				<title><spring:message code = 'ezCommunity.t1128' /></title>
 			</c:when>
-			
-			<c:when test="${pMode == 'reply' }">
-				<title><spring:message code = 'ezCommunity.t1129' /></title>
-			</c:when>
-			
+
 			<c:otherwise>
 				<title><spring:message code = 'ezCommunity.t1130' /></title>
 			</c:otherwise>
@@ -25,27 +21,18 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<c:if test="${isCrossBrowser == true}">
-			<script type="text/javascript" src="/js/ezCommunity/ConvertSaveImage.js"></script>
-			<script type="text/javascript" src="/js/ezCommunity/AttachMain_CK.js"></script>
-			<script type="text/javascript" src="/js/ezCommunity/AttachItem_CK.js"></script>
-		</c:if>
-		
-		<c:if test="${isCrossBrowser != true}">
-			<script type="text/javascript" src="/js/ezCommunity/AttachMain.js"></script>
-			<script type="text/javascript" src="/js/ezCommunity/AttachItem.js"></script>
-			<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		</c:if>
-		
+		<script type="text/javascript" src="/js/ezCommunity/ConvertSaveImage.js"></script>
+		<script type="text/javascript" src="/js/ezCommunity/AttachMain_CK.js"></script>
+		<script type="text/javascript" src="/js/ezCommunity/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/datepicker.htc.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/composeappt.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		
 		<script type="text/javascript">
 			var pUploadFilePath = "<c:out value = '${pUploadPath}' />";
-			pBoardID = "<c:out value = '${boardInfo.boardID}' />";
+			var pBoardID = "<c:out value = '${boardInfo.boardID}' />";
 			var pBoardName = "<c:out value = '${boardInfo.boardName}' />";
-			pMode = "<c:out value = '${pMode}'/>";
+			var pMode = "<c:out value = '${pMode}'/>";
 			var pModeOld = "";
 			var MHTLoadComplete = "";
 			var SSUserID = "<c:out value = '${userInfo.id}' />";
@@ -73,9 +60,8 @@
 			var strItemLevel = "<c:out value = '${item.itemLevel}' />";
 			var strWriterTitle = "<c:out value = '${extensionAttribute3}' />";
 			
-			pAttachListXml = "";
-			
-			AttachLimit = "<c:out value = '${boardInfo.attachSizeLimit}' />";
+			var pAttachListXml = "";			
+			var AttachLimit = "<c:out value = '${boardInfo.attachSizeLimit}' />";
 			var pReservedItem = "<c:out value = '${pReservedItem}' />";
 			
 			var strUserRank = "<c:out value = '${userInfo.title1}' />";
@@ -88,9 +74,7 @@
 			var pUrl = "<c:out value = '${pUrl}' />";
 			var pDocID = "<c:out value = '${pDocID}' />";
 			var unloadflag = "0";
-		    PhotoBoard = "Y";
-// 		    var _hasattach = "<c:out value = '${_hasattach}' />";
-// 		    var NewGuid = "<c:out value = '${NewGuid}' />";
+		    var PhotoBoard = "Y";
 		    var flag = false;
 		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 		    var endDateTime = "<c:out value = '${endDateTime}' />"
@@ -100,58 +84,19 @@
 		    }
 		    
 		    window.onload = function () {
-
-		    	console.log("strStartDate   ::   " + strStartDate);
-		    	console.log("strEndDate   ::   " + strEndDate);
-		    	
-		        if(navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1){
+		        if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1){
 		            document.getElementById("file1").multiple = false;
 		        }
-	
-		        if (pReservedItem != "true")  {
-		        	document.getElementById("reservation_date").style.display = "none";
-		        }
 							
-		        if(pMode == "modify" && strAttachments != "") {
+		        if (pMode == "modify" && strAttachments != "") {
 		            pAttachListXml = MakeAttachList();
 		            RealImageName(pAttachListXml);
 		        }
-					
-		        if(pMode == "new") {
-		            btn_PostDate_Clear();
-		        } else {
-		            if (pReservedItem != "true") {
-		            	document.getElementById("idDatepicker").value = "";
-		            }
-		        }
-		        
-		        if (ExpireDays == -1) {
-		        	document.getElementById('Makedate').style.display = "none";
-		        }
-		        
+		        		        
 		        if( pMode == "modify") {												
 		            document.getElementById("txtTitle").value  = ConvMakeXMLString("<c:out value = '${item.title}' />");
-		            document.getElementById("txtAbstract").value = ConvMakeXMLString("<c:out value = '${item.absTract}' />");
 			        document.getElementById("txtPhotoFile").value = ConvMakeXMLString("<c:out value = '${item.extensionAttribute4}' />");
 		            document.getElementById("file1").multiple = false;
-		        }
-							
-		        if (pMode == "reply") {
-		            document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value = '${item.title}' />");
-		        }
-							
-		        if(pReservedItem != "true") {
-		            var nowDate = new Date();
-		            var weekstr="<spring:message code = 'ezCommunity.t440' />";
-		            var arry = weekstr.split(";");
-		            document.getElementById("idDatepicker").value = DateFormat(nowDate)+" ("+arry[nowDate.getDay()]+")";
-		            
-		            if (document.getElementById("_T1").value == "") {
-		                document.getElementById("_T1").value = "<spring:message code = 'ezCommunity.t436' />"+" 12:00";
-		            }
-		            
-		            idDatepicker_Temp = document.getElementById("idDatepicker").value;
-		            _T1_Temp = document.getElementById("_T1").value;
 		        }
 		    }
 	
@@ -166,26 +111,6 @@
 		        catch (e) {
 		            alert("RealImageName :: " + e.description);
 		        }
-		    }
-
-		    function DateFormat(obj) {
-		        var yy = String(obj.getFullYear()).substring(0, 4);
-		        
-		        if (String(obj.getMonth() + 1).length == 1) {
-		            var mm = "0" + (obj.getMonth() + 1);
-		        } else {
-		            var mm = obj.getMonth() + 1;
-		        }
-		        
-		        if (String(obj.getDate()).length == 1) {
-		            var dd = "0" + obj.getDate();
-		        } else {
-		            var dd = obj.getDate();
-		        }
-		        
-		        var date = String(yy) + "-" + String(mm) + "-" + String(dd);
-		        
-		        return date;
 		    }
 	
 		    function MakeAttachList() {
@@ -227,38 +152,6 @@
 		        
 		        return str;
 		    }
-	
-		    function GetStartDate() {
-		        var pReservationTime = "";
-		        
-		        if (document.getElementById("idDatepicker").value && document.getElementById("chk_reservation").checked) {
-		            if (document.getElementById("_T1").value) {
-		                var pDateSplit = document.getElementById("_T1").value.split(" ");
-		                var cTime = pDateSplit[1].split(":");
-												
-		                if (document.getElementById("_T1").value.substring(0, 2) == "<spring:message code = 'ezCommunity.t436' />") {				
-		                    if ( cTime[0] < 10 ) {
-		                        pReservationTime = "0" + document.getElementById("_T1").value.substring(3, 8);
-		                    } else if( cTime[0] == "12") {
-		                        pReservationTime = "00" + document.getElementById("_T1").value.substring(5, 8);
-		                    } else {
-		                        pReservationTime = document.getElementById("_T1").value.substring(3, 8);
-		                    }
-		                } else {
-		                    if ( cTime[0] < 10 ) {
-		                        pReservationTime = idDatepicker.startHours() + ":" + document.getElementById("_T1").value.substring(5, 7);
-		                    } else {
-		                        pReservationTime = idDatepicker.startHours() + ":" + document.getElementById("_T1").value.substring(6, 8);
-		                    }
-		                }
-		                
-		                pReservationTime = document.getElementById("idDatepicker").value.substring(0, 10) + " " + pReservationTime + ":00";
-		            } else {
-		                pReservationTime = document.getElementById("idDatepicker").value.substring(0, 10) + " 00:00:00";
-		            }
-		        }
-		        return pReservationTime;
-		    }
 
 		    /* 2018-05-11 홍승비 - 포토게시물 수정 시 만료일 로직 변경 */
 		    function GetEndDate() {
@@ -291,35 +184,11 @@
 		        
 		        var strXML = "";
 		        var newID = "";
-		        var pStartDate = GetStartDate();
+		        var pStartDate = strStartDate;
 		        var pEndDate = GetEndDate();
 		        
 		        console.log("pStartDate   ::   "+pStartDate);
 		        console.log("pEndDate   ::   "+pEndDate);
-	
-		        if (document.getElementById("chk_reservation").checked && pStartDate == "") {
-		            alert("<spring:message code = 'ezCommunity.t1139' />");
-		            
-		            return;
-		        }
-							
-		        if (pStartDate != "" && pStartDate < strNow) {
-		            alert("<spring:message code = 'ezCommunity.t1140' />");
-		            
-		            return;
-		        }
-	
-		        if (pEndDate != "" && pEndDate < strNow) {
-		            alert("<spring:message code = 'ezCommunity.t1141' />");
-		            
-		            return;
-		        }
-							
-		        if (pStartDate != "" && pEndDate != "" && pEndDate < pStartDate) {
-		            alert("<spring:message code = 'ezCommunity.t1142' />");
-		            
-		            return;
-		        }
 	
 		        if (document.getElementById("txtTitle").value == "") {
 		            alert("<spring:message code = 'ezCommunity.t1143' />");
@@ -328,28 +197,24 @@
 		            return;				
 		        }
 							
-		        if(pAttachListXml == "" || document.getElementById("txtPhotoFile").value == "") {
+		        if (pAttachListXml == "" || document.getElementById("txtPhotoFile").value == "") {
 		            alert("<spring:message code = 'ezCommunity.t1199' />");
 		            
 		            return;	
 		        }
-	
-		        if (pStartDate == "" && pReservedItem == "TRUE") {
-		            strParentWriteDate = "";
-		        }
 		        
 		        if (typeof (pAttachListXml) == "string") {
-		        	<c:if test="${isCrossBrowser != true}">
+/* 		        	<c:if test="${isCrossBrowser != true}">
 			        	var parser = new DOMParser();
 			        	pAttachListXml = parser.parseFromString(pAttachListXml, "text/xml");
 			            parser = null;
 			            
 			            newID += "{" + GetGUID().toUpperCase() + "}";
-	            	</c:if>
+	            	</c:if> */
 		        } else {
 		        	var xmldomNodes = SelectNodes(pAttachListXml,"LISTVIEWDATA/ROWS/ROW");
             		
-    		        for(var i=xmldomNodes.length; i>0; i--) {
+    		        for (var i=xmldomNodes.length; i>0; i--) {
     		            newID += "{" + GetGUID().toUpperCase() + "}";
     		        }
 		        }
@@ -361,52 +226,36 @@
 		        objNode = createNodeInsert(xmlDom, objNode, "NODES");
 		        objSubNode = createNodeAndAppandNode(xmlDom, objNode,objSubNode, "NODE");
 		        
-		        if(pMode != "modify") {
+		        if (pMode != "modify") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", newID);
 		        } else {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", strItemID);
 		        }
-	
-		        var importance = "";
 		        
-		        if(chkEmergent.checked) {
-		            importance = "1";
-		        } else {
-		            importance = "0";
-		        }
-		        
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "BOARDID", pBoardID);
-		        
-		        if (gubun != "2") {
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", SSUserID);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", SSUserName);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", SSUserName2);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", SSDeptID);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", SSDeptName);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", SSDeptName2);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYID", SSCompanyID);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME", SSCompanyName);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", SSCompanyName2);
-		        }
-		        
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "IMPORTANCE", importance);
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "BOARDID", pBoardID);	        
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", SSUserID);
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", SSUserName);
+	 	        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", SSUserName2);
+	            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", SSDeptID);
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", SSDeptName);
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", SSDeptName2);
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYID", SSCompanyID);
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME", SSCompanyName);
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", SSCompanyName2);		        
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "IMPORTANCE", "0");
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TITLE", MakeXMLString(document.getElementById("txtTitle").value));
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "STARTDATE", pStartDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ENDDATE", pEndDate);
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ABSTRACT",  MakeXMLString(document.getElementById("txtAbstract").value));
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ABSTRACT",  MakeXMLString(""));
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", MakeXMLString(AttachFileList_Photo()));
 	
-		        if(pMode == "new" || pUrl != "") {
+		        if (pMode == "new" || pUrl != "") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", newID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", "1");
-		        } else if(pMode == "modify" && pReservedItem == "") {
+		        } else if (pMode == "modify" && pReservedItem == "") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", strUpperItemIDTree);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", strParentWriteDate);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", strItemLevel);		
-		        } else if(pMode == "modify" && pReservedItem == "true") {
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", strUpperItemIDTree);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", pStartDate);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMLEVEL", strItemLevel);		
 		        } else {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", strUpperItemIDTree);
@@ -417,13 +266,9 @@
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "FILEPATH", pUploadFilePath);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE1", "");
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE2", "");
-		        
-		        if (gubun != "2") {
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", strUserRank);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", strUserRank2);
-            	    createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE4", MakeXMLString(GetFileName()));
-		        }
-							
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", strUserRank);
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", strUserRank2);
+           	    createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE4", MakeXMLString(GetFileName()));
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE5", MakeXMLString(GetSmallUrl()));
 							
 		        var obj = GetBODY(document.getElementById('docContent')).getElementsByTagName("TD");
@@ -437,34 +282,23 @@
 		                obj[i].removeAttribute('className');
 		            }
 		        }
-		        
-		        <c:if test="${isCrossBrowser != true}">
-			        if (pDocID != "") {
-			            message.SetEditorContent(message.SetEditorContent(message.GetEditorContent() + "<hr>" + docContent.document.body.innerHTML));
-			        }
 
-			        var strBody = message.GetEditorContent();
-			        
-		        	strBody = ConvertHTMLtoMHT(message.GetEditorContent());
-	        	</c:if>
-	        	<c:if test="${isCrossBrowser == true}">
-		        	if (pDocID != "") {
-			            message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
-			        }
-
-			        var strBody = message.GetEditorContent();
-			        
-		        	if (trim_Cross(strBody) != "" || pDocID == "") {
-			            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-			        } else {
-			            if (pDocID == "") {
-			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-			            } else {
-			                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
-			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
-			            }
-			        }
-	        	</c:if>
+		       	if (pDocID != "") {
+			           message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
+			       }
+		       	
+			  	var strBody = message.GetEditorContent();
+			    
+		       	if (trim_Cross(strBody) != "" || pDocID == "") {
+			   		strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+			   	} else {
+			    	if (pDocID == "") {
+			       		strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+		            } else {
+		            	var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
+		           	}
+			  	}
 		        
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);	
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD","");	
@@ -488,15 +322,8 @@
 		        xmlhttp = null;
 		        xmlDom = null;
 		    }
-	
 		    /* 2018-05-10 홍승비 - 게시물 저장 시 JSleep 함수 미사용 */
-			/*function JSleep(sTime) {
-				var start = new Date().getTime();
-		        
-		        while (new Date().getTime() < start + sTime) {
-		        };
-		    } */
-	
+
 		    function ReplaceText( orgStr, findStr, replaceStr ) {
 		        var re = new RegExp( findStr, "gi" );
 		        
@@ -509,26 +336,6 @@
 		        str = ReplaceText(str, ">", "&gt;");
 		        
 		        return str;
-		    }
-	
-		    function btn_PostDate_Clear() {
-		        idDatepicker.setIsoDateUTC("<c:out value = '${startDateTime}' />", "<c:out value = '${startDateTime}' />");
-		    }
-	
-		    function ChkPermanent() {
-		        if (document.getElementById("ChkPermanence").checked) {
-		            document.getElementById("Makedate").style.display = "none";
-		        } else {
-		            document.getElementById("Makedate").style.display = "";
-		        }		
-		    }
-	
-		    function Reservation_onclick() {
-		        if (document.getElementById("chk_reservation").checked == true)  {
-		            document.getElementById("reservation_date").style.display = "";
-		        } else {
-		            document.getElementById("reservation_date").style.display = "none";
-		        }
 		    }
 						
 		    function PreviewItem() {
@@ -547,15 +354,6 @@
 		        return dt;
 		    }
 						
-		    function AutoAddtoExpireDate() {
-		        var temp = ExpireDays;
-		        
-		        if (temp == -1) {
-		        	temp = 30;
-		        }
-							
-		        idDatepicker.vtLocalEndDate = AddDate(idDatepicker.vtLocalDate, temp);			
-		    }
 	
 		    function SelectBoard() {
 		        var url	= "BoardSelect_Cross.aspx";
@@ -660,18 +458,6 @@
 		        xmlhttp_boardinfo = null;			
 		    }
 						
-		    function InitializeSettings() {
-		        document.getElementById('tdBoardName').innerHTML = pBoardName;
-							
-		        if (ExpireDays == "-1") {
-		            document.getElementById('ChkPermanence').checked = true;
-		            document.getElementById('Makedate').style.display = "none";
-		        } else {
-		            document.getElementById('ChkPermanence').checked = false;
-		            document.getElementById('Makedate').style.display = "";
-		            idDatepicker.vtLocalEndDate(AddDate(idDatepicker.vtLocalDate(), parseInt(ExpireDays)));
-		        }
-		    }
 						
 		    function Title_onkeyDown(e) {
 		        if (window.event) {
@@ -858,95 +644,6 @@
 	          				<th><spring:message code = 'ezCommunity.t1168' /></th>
 	          				<td colspan="2" id="tdBoardName"><c:out value = '${boardInfo.boardName}' /></td>
 	        			</tr>
-			 
-	        			<tr id="tdReservationDate" style="DISPLAY:none">
-	          				<th><spring:message code = 'ezCommunity.t1169' /></th>
-	          				<td>
-	          					<c:choose>
-	          						<c:when test="${pReservedItem == 'true' }">
-	          							<input type="checkbox" id="chk_reservation" onClick="Reservation_onclick()" checked><spring:message code = 'ezCommunity.t913' />
-	          						</c:when>
-	          						
-	          						<c:otherwise>
-	          							<input type="checkbox" id="chk_reservation" onClick="Reservation_onclick()"><spring:message code = 'ezCommunity.t913' />
-	          						</c:otherwise>
-	          					</c:choose>
-	          					
-	            				<span id="reservation_date">
-	            					<input readonly="readonly" type="text" class="datepicker" id="idDatepicker" />   
-	            					<img id="img_StartCalDisp" src="/images/i_scheduler.gif" width="19" height="15" align="absMiddle" style="CURSOR: pointer; POSITION: relative" tabindex="0" popupLocation="bottomright"  forcemarginleft="-40"  forceMarginTop="30">&nbsp;&nbsp;&nbsp;
-	            					<input type="text" id='_T1' class='datepicker_time' name="textfield22522" readonly="readonly">
-	            					<img id="img_StartTime" src="/images/i_time.gif" width="17" height="16" align="absMiddle" style="CURSOR: pointer; POSITION: relative" popupLocation="bottomright"  forcemarginleft="-40"  forceMarginTop="30">&nbsp;
-	            					<a class="imgbtn"><span onClick="btn_PostDate_Clear()" popupLocation='topright'><spring:message code = 'ezCommunity.t444' /></span></a>
-	            				</span>
-	            			</td>
-	        			</tr>
-	        			<tr id="tdEndDate" style="DISPLAY:none">
-	          				<th><spring:message code = 'ezCommunity.t384' /></th>
-	          				<td>
-	          					<c:choose>
-	          						<c:when test="${(pMode != 'modify' && boardInfo.expireDays == '-1') || (pMode == 'modify' && fn:substring(strEndDate, 0, 4) == '9999') || (pUrl != '')}">
-	          							<span id="Chkbox">
-			            					<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onClick="return ChkPermanent()" checked>
-			            					<spring:message code = 'ezCommunity.t930' />
-			            				</span>
-			            				<span id="Makedate">
-			            					<input type="text" id='_D2' class='datepicker_date' name="txtPermanence" readonly="readonly">
-							            	<img id="img_EndCalDisp" src="/images/i_scheduler.gif" width="19" height="15" align="absMiddle" style="CURSOR: pointer; POSITION: relative" popuplocation='bottomright' tabindex="0" popupLocation='topright' forcemarginleft="-40"  forceMarginTop="30">
-							            	<input id='_T2' type="hidden" class='datepicker_time' readonly="readonly" name="hidden">
-							            </span>		
-	          						</c:when>
-	          						
-	          						<c:otherwise>
-	          							<span id="Chkbox">
-								            <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onClick="return ChkPermanent()">
-				            				<spring:message code = 'ezCommunity.t930' />
-				            			</span>
-				            			<span id="Makedate">
-								            <input type="text" id='_D2' class='datepicker_date' name="txtPermanence" readonly>
-								            <img id="img_EndCalDisp" src="/images/i_scheduler.gif" width="19" height="16" align="absMiddle" style="CURSOR: pointer; POSITION: relative" popuplocation='bottomright' tabindex="0" popupLocation='topright'>
-								            <input id='_T2' type="hidden" class='datepicker_time' readonly name="hidden">
-								        </span>
-	          						</c:otherwise>
-	          					</c:choose>
-	          				</td>
-	        			</tr>
-	        			<tr style="display:none">
-	          				<th><spring:message code = 'ezCommunity.t1171' /></th>
-	          				
-	          				<c:choose>
-	          					<c:when test="${item.importance == '1' }">
-	          						<td>
-			          					<INPUT type="checkbox" id="chkEmergent" checked>
-			            				<spring:message code = 'ezCommunity.t1172' />
-			            			</td>
-	          					</c:when>
-	          					
-	          					<c:otherwise>
-	          					<td>
-		          					<INPUT type="checkbox" id="chkEmergent">
-		            				<spring:message code = 'ezCommunity.t1172' />
-		            			</td>
-	          					</c:otherwise>
-	          				</c:choose>
-
-	        			</tr>
-	        			
-	        			<c:if test="${boardInfo.gubun == '2' }">
-	        				<tr style="display:none">
-					        	<th><spring:message code = 'ezCommunity.t1173' /></th>
-					          	<td><INPUT type=text id="txtNickName" style="WIDTH:150px" maxlength=15 value="<c:out value = '${writerName}' />">&nbsp;&nbsp;(<spring:message code = 'ezCommunity.t1174' /></td>
-					        </tr>
-					        <tr style="display:none">
-					        	<th><spring:message code = 'ezCommunity.t1175' /></th>
-					          	<td><INPUT type="password" id="txtPassWord" style="WIDTH:150px" maxlength="15">&nbsp;&nbsp;(<spring:message code = 'ezCommunity.t1176' /></td>
-					        </tr>
-	        			</c:if>
-	        
-        				<tr style="display:none">
-          					<th><spring:message code = 'ezCommunity.t433' /></th>
-          					<td><INPUT type="text" id="txtAbstract"  style="WIDTH:100%;word-break:break-all" value="" maxlength=100></td>
-				        </tr>
 				        <tr>
           					<th><spring:message code = 'ezCommunity.t124' /></th>
           					<td colspan ="2"><INPUT type="text" id="txtTitle" style="WIDTH:100%;word-wrap:break-word;word-break:break-all;" value="" maxlength=100 onKeyDown="Title_onkeyDown(event)"></td>
