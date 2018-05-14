@@ -33,6 +33,8 @@
 			var userOffset = "${userOffset}";
 			var companyId = "${companyId}";
 			var date = "${date}";
+			var time = "${time}";//현재시간
+			var nowTime = time.split(":");
 			var mode = "${mode}";
 			var pStartDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var pEndDate = "<c:out value='${attitudeInfo.endDate}'/>";
@@ -98,8 +100,8 @@
 		        	uploadSDate = startDate;
 		        	uploadEDate = endDate == "" ? startDate.split(" ")[0] + " 23:59:59" : endDate;
 		        } else {
-					uploadSDate = date + " 00:00:00";
-					uploadEDate = date + " 23:59:59";
+					uploadSDate = date + " " + nowTime[0] + ":" + nowTime[1] + ":00";
+					uploadEDate = date + " " + nowTime[0] + ":" + nowTime[1] + ":00";
 		        }
 		        
 		        modFirstFlag = false;
@@ -252,8 +254,8 @@
 						endDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 						break;
 					case "4":
-						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
-						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + nowTime[0] + ":" + nowTime[1] + ":00";
+						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + nowTime[0] + ":" + nowTime[1] + ":00";
 						break;
 					case "5":
 						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
