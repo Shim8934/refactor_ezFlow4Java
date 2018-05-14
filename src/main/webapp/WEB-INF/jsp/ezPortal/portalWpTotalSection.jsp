@@ -174,7 +174,7 @@
     			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:122px">
     				<p id="inAttiClock" style="margin-top:2px;margin-left:11px;font-size:12px;text-align: left; padding-left:20px">출근 : 출근 전</p>
 					<p id="outAttiClock" style="margin-top:5px;margin-left:11px;margin-bottom:16px;font-size:12px;text-align: left; padding-left:20px">퇴근 : 퇴근 전</p>
-					<span style="margin-left:14px" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
+					<span style="margin-left:13px" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
 					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:5px">퇴근</span>
     			</div>
    			</article>
