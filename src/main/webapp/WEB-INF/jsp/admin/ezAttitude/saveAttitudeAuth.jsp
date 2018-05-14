@@ -97,11 +97,11 @@
 				var html = "";
 				
 				if (deptIds.length == 0) {
-					html = "<tr></tr>";
+					html = "<tr><td colspan='3' style='text-align: center;'>권한부서가 없습니다.</td></tr>";
 				} else {
 		    		for (var i = 0; i < deptIds.length; i++) {
 	    				deptString += deptNames[i] + ", "; //이름
-	    				deptIdStr += deptIds[i] + ","; //아이디 필요한가?
+	    				deptIdStr += deptIds[i] + ","; //아이디
 		    
 	    				//리스트
 						html += "<tr>";
@@ -119,9 +119,6 @@
 	   			//리스트 출력
 	    		$('#contentlist .mainlist').html(html);
 	   			
-	   			//스크롤바 생긴지 알 수 있나?????
-// 	   			alert($("#contentlist").scrollHeight);/////////////////////////////////////////////////////////////////////////////////////////////////
-// 	   			alert($("#contentlist").clientHeight);
 	    	}	  
 	    	
 	    	//권한 라디오 체크
@@ -225,9 +222,7 @@
             <div id="contentlist" name="contentlist" style="height: 160px; overflow-y: auto;">
                 <table class="mainlist" style="width: 100%;">
                     <tr>
-                        <td style="text-align: center;">
-<!--                             <img src="/images/email/progress_img.gif" /> -->
-                        </td>
+                        <td colspan="3" style="text-align: center;">권한부서가 없습니다.</td>
                     </tr>
                 </table>
             </div>
