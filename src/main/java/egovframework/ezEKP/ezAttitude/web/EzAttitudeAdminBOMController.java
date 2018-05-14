@@ -934,20 +934,16 @@ public class EzAttitudeAdminBOMController {
 		}
 		
 		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		
-		String searchStartDate = localDate + " 00:00:00";
-		String searchEndDate = localDate + " 23:59:59";
-		
-		Date startDate = sdf.parse(searchStartDate);
 		
 		cal = Calendar.getInstance();
-		cal.setTime(startDate);
+		cal.setTime(sdf.parse(localDate));
 		cal.add(Calendar.DAY_OF_MONTH, -7);
 		
-		searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
-		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
+		String searchStartDate = sdf.format(cal.getTime());
+		String searchEndDate = localDate;
 		
 		//회사리스트
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -1078,20 +1074,16 @@ public class EzAttitudeAdminBOMController {
 		}
 		
 		String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		
-		String searchStartDate = localDate + " 00:00:00";
-		String searchEndDate = localDate + " 23:59:59";
-		
-		Date startDate = sdf.parse(searchStartDate);
 		
 		cal = Calendar.getInstance();
-		cal.setTime(startDate);
+		cal.setTime(sdf.parse(localDate));
 		cal.add(Calendar.DAY_OF_MONTH, -7);
 		
-		searchStartDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
-		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate, offset, true);
+		String searchStartDate = sdf.format(cal.getTime());
+		String searchEndDate = localDate;
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies";

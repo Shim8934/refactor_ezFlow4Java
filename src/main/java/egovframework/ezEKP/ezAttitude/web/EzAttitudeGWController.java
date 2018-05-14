@@ -1670,6 +1670,7 @@ public class EzAttitudeGWController {
 			String companyId = request.getParameter("companyId");
 			String searchUserName = request.getParameter("searchUserName");
 			String searchDeptName = request.getParameter("searchDeptName");
+			String searchDeptId = request.getParameter("searchDeptId");
 			String searchTitle = request.getParameter("searchTitle");
 			String searchStartDate = request.getParameter("searchStartDate");
 			String searchEndDate = request.getParameter("searchEndDate");
@@ -1687,8 +1688,8 @@ public class EzAttitudeGWController {
 			int tenantID = info.getTenantId();
 			String offset = info.getOffSet();
 			
-			String totalCount = ezAttitudeService.getAttitudeCount2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantID);
-			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID);
+			String totalCount = ezAttitudeService.getAttitudeCount2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantID, searchDeptId);
+			List<AdminAttitudeVO> list = ezAttitudeService.getAttitudeList2(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId);
 			
 			//구분 리스트
 			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());

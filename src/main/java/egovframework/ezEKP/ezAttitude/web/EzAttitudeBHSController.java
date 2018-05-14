@@ -72,7 +72,6 @@ public class EzAttitudeBHSController {
 		String searchStartDate = date + "-01";
 		String searchEndDate = "";
 		
-		LOGGER.debug(today.substring(0, 7));
 		if (date.compareTo(today.substring(0, 7)) == 0) {
 			//현재달
 			searchEndDate = today;
