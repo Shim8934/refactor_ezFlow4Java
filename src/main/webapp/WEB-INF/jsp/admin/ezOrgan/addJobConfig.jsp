@@ -146,7 +146,8 @@
 			        	success : function(xml){	
 			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();
-		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                    headerData = result;
+// 		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
 		                    if (CrossYN()) {
 		                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -182,7 +183,8 @@
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
-		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                headerData = result;
+// 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
 		                if (CrossYN()) {
 		                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -913,7 +915,8 @@
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                
 		                var headerData = createXmlDom();
-		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+// 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                headerData = result;
 		                
 		                if (CrossYN()) {
 		                	usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
