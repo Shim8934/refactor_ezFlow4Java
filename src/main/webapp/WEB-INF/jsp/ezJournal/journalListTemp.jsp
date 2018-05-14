@@ -84,7 +84,7 @@
 						</c:if>
 					</td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20%;">
-						<c:out value='${journal.journalDate}'/>
+						<c:out value='${fn:substring(journal.journalDate, 0, 16) }'/>
 					</td>
 				</tr>
 				</c:forEach>
