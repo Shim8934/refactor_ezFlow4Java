@@ -24546,4 +24546,17 @@
 			ADD_MONTHS(TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') , 1) > A.STARTDATE
 		</isEqual>
 	</select>
+	
+	<select id="EzApprovalG.getDocExt" parameterClass="Map" resultClass="String">
+		SELECT 
+			HREF
+		FROM
+			TBL_APRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</select>
 </sqlMap>

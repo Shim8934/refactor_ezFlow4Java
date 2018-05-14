@@ -26046,4 +26046,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return cabinetSN;
 
 	}
+	
+	public String getDocExt(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("getDocExt started");
+		String ext = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		String href = ezApprovalGDAO.getDocExt(map);
+		
+		ext = href.substring(href.length()-3, href.length());
+		ext = ext.toLowerCase();
+		
+		logger.debug("ext : " + ext);
+		logger.debug("getDocExt ended");
+		return ext;
+	}
 }

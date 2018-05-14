@@ -7679,4 +7679,23 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
+	
+	
+	/*
+	 * 2018-05-14 강민수92 문서의 확장자 체크
+	 */
+	@RequestMapping(value="/ezApprovalG/checkDocExt.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String checkDocExt(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("checkDocExt started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+		
+		String ext = ezApprovalGService.getDocExt(docID, companyID, tenantID);
+		
+		logger.debug("checkDocExt ended");
+		return ext;
+	}
 }

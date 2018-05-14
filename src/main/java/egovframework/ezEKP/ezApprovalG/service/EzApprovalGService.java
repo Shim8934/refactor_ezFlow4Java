@@ -529,5 +529,7 @@ public interface EzApprovalGService {
 	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception;
 
 	public String getDocManageDeptInfo(String deptID, int tenantID) throws Exception;
+	
+	public String getDocExt(String docID, String companyID, int tenantID) throws Exception;
 
 }
