@@ -477,7 +477,6 @@
 	                        <div id="close">
 	                            <ul>
 	                                <li><span onclick="save_attitude()"><spring:message code='ezAttitude.bbhs20'/></span></li>
-	                                <li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
 	                            </ul>
 	                        </div>

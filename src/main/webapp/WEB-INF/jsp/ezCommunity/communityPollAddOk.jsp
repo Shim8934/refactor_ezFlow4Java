@@ -19,9 +19,9 @@
 				if ( ByteLength(document.getElementById("pollSubject").value) > 200 ) {
 					alert("<spring:message code='ezCommunity.t614' />");
 					return;		
+				} else if (confirm("<spring:message code='ezPoll.t210'/>")) {			
+					document.getElementsByTagName("form")[0].submit();
 				}
-				
-				document.getElementsByTagName("form")[0].submit();
 			}
 	
 			function ByteLength(str) {

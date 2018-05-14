@@ -718,7 +718,8 @@
     "pasteKeydownMessage": "Please use the Ctrl + V (Mac: CMD + V) keyboard shortcut.",
     "cutKeydownMessage": "Please use the Ctrl + X (Mac: CMD + X) shortcut.",
     "notFoundTextErrorMessage": "String not found.",
-    "errorParsingError" : "An error occurred during conversion."
+    "errorParsingError" : "An error occurred during conversion.",
+    "pasteParsingError" : "An error occurred while pasting."
   },
   "processingMessage" : "Processing ...",
   "paragraphInsert": "Paragraph Insert",

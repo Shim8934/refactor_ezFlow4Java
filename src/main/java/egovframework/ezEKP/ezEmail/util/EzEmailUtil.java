@@ -1772,7 +1772,7 @@ public class EzEmailUtil {
 		return newMessage;
 	}
 	
-	public boolean copyInlineParts(Part src, Multipart dest) throws MessagingException, IOException {
+	public boolean copyInlineParts(Part src, Multipart dest, boolean includeAttachment) throws MessagingException, IOException {
 		if (src.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)src.getContent();
 			int count = mp.getCount();
@@ -1783,9 +1783,12 @@ public class EzEmailUtil {
 				
 				if (p instanceof MimePart) {
 					// 코린도에서 수신한 메일 중 multipart/related 안에 첨부 파일이 있는 경우가 있어
-					// Content ID 유무를 체크하는 코드를 제거함
-					dest.addBodyPart(p);	
-					isAdded = true;
+					// Content-Disposition: attachment 헤더가 있는 경우도 추가함
+					if (((MimePart)p).getContentID() != null
+							|| (includeAttachment && p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
+						dest.addBodyPart(p);	
+						isAdded = true;
+					}
 				}				
 			}
 			
@@ -1797,7 +1800,7 @@ public class EzEmailUtil {
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
-				if (copyInlineParts(p, dest)) {
+				if (copyInlineParts(p, dest, includeAttachment)) {
 					return true;
 				}
 			}

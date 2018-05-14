@@ -813,27 +813,31 @@
 	    	
 		    obj.idList = idList.slice(0,-1);
 			
-		    $.ajax({
-				type : 'post',
-			    url : '/ezAttitude/delAttModApp.do',
-			    data : obj,
-			    dataType : "text",
-			    error: function(xhr, status, error){
-			    	ajaxRunning = false;
-			    	alert("삭제 중 오류 발생")
-			    },
-			    success : function(json){
-			    	get_att_list(currentPage);
-			    	if (json == "error") {
-			    		alert("이미 처리된 항목입니다.");			    			
-			    	} else {
-			    		alert("삭제되었습니다.");	
-			    	}
-			    },
-				complete : function() {
-					HiddenAttProgress();
-				}
-		    });
+		    if (confirm("정말로 삭제하시겠습니까?")) {
+			    $.ajax({
+					type : 'post',
+				    url : '/ezAttitude/delAttModApp.do',
+				    data : obj,
+				    dataType : "text",
+				    error: function(xhr, status, error){
+				    	ajaxRunning = false;
+				    	alert("삭제 중 오류 발생")
+				    },
+				    success : function(json){
+				    	get_att_list(currentPage);
+				    	if (json == "error") {
+				    		alert("이미 처리된 항목입니다.");			    			
+				    	} else {
+				    		alert("삭제되었습니다.");	
+				    	}
+				    },
+					complete : function() {
+						HiddenAttProgress();
+					}
+			    });
+		    } else {
+		    	HiddenAttProgress();
+		    }
 	    }
 	    
 		//승인

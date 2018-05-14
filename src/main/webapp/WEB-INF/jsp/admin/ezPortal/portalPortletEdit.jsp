@@ -8,6 +8,7 @@
 		<title><spring:message code='ezPortal.t134'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
@@ -125,7 +126,7 @@
 						return;
 					}
 				}
-				
+				methodForTabAction(pIndex);
 				switch(pIndex.toString()) {
 					case "1":
 						menu_1.src = "/images/tap_portal01o.gif";
@@ -908,6 +909,25 @@
 				document.getElementById("newParamValue").value = ret[0];
 		        document.getElementById("newBoardName").value = ret[2];
 			}
+			
+			function methodForTabAction(target) {
+				var tab1 = document.getElementById("menu_1").children[0];
+				var tab2 = document.getElementById("menu_2").children[0];
+				var tab3 = document.getElementById("menu_3").children[0];
+				if (target == "1") {
+					tab1.className = "tabon";
+					tab2.className = "";
+					tab3.className = "";
+				} else if (target == "2") {
+					tab1.className = "";
+					tab2.className = "tabon";
+					tab3.className = "";
+				} else if (target == "3") {
+					tab1.className = "";
+					tab2.className = "";
+					tab3.className = "tabon";
+				}
+			}
     </script>
 	
 	<script language="javascript" type="text/javascript" FOR="objFormEditor" EVENT="DocumentComplete">
@@ -924,17 +944,23 @@
     			<li><span onClick="window.close()"><spring:message code='ezPortal.t8'/></span></li>
   			</ul>
 		</div>
-		<div id="tabnav">
+		<%-- <div id="tabnav">
   			<ul>
     			<li id="menu_1"><span onClick="toggle_menu(1)" ><spring:message code='ezPortal.t86'/></span></li>
     			<li id="menu_2"><span onClick="toggle_menu(2)" ><spring:message code='ezPortal.t150'/></span></li>
     			<li id="menu_3"><span onClick="toggle_menu(3)"><spring:message code='ezPortal.t87'/></span></li>
   			</ul>
+		</div> --%>
+		<div class="portlet_tabpart01" style="margin-top: 0px;">
+			<div class="portlet_tabpart01_top" id="tab1" style="border-bottom: 0px;">
+				<p id="menu_1"><span onClick="toggle_menu(1)" style="min-width: 45px; cursor:pointer;"><spring:message code='ezPortal.t86'/></span></p>
+				<p id="menu_2"><span onClick="toggle_menu(2)" style="min-width: 45px; cursor:pointer;"><spring:message code='ezPortal.t150'/></span></p>
+				<p id="menu_3"><span onClick="toggle_menu(3)" style="min-width: 45px; cursor:pointer;"><spring:message code='ezPortal.t87'/></span></p>
+			</div>
 		</div>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
-			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 		</script>
 		<!-- 일반설정 -->
 		<table id="toggle_tbl1" class="content">
@@ -1131,7 +1157,7 @@
   				</tr>
 			</table>
 			<!-- 인자설정 -->
-			<table id="toggle_tbl2_1" class="popuplist"  width="100%" style="display:none">
+			<table id="toggle_tbl2_1" class="popuplist"  width="100%" style="display:none; margin-top: -20px;">
   				<tr>
     				<th style="border-bottom:0px"><spring:message code='ezPortal.t115'/></th>
     				<th style="border-bottom:0px"><spring:message code='ezPortal.t116'/></th>
@@ -1204,7 +1230,7 @@
 				<a class="imgbtn"><span onClick="AddParameter()"><spring:message code='ezPortal.t62'/></span></a>
 			</div>
 			<!-- 권한설정 -->
-				<table id="toggle_tbl3_1" class="popuplist" style="display:none" width="100%">
+				<table id="toggle_tbl3_1" class="popuplist" style="display:none; margin-top: -20px;" width="100%">
   					<tr>
 						<th width="80" ><spring:message code='ezPortal.t91'/></th>
 						<th width="80" ><spring:message code='ezPortal.t92'/></th>

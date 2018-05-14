@@ -143,9 +143,10 @@
 			}
 			
 			function poll_send()  {
-				if(form_check() == false) {
+				if (form_check() == false) {
 					return;
-				} else {
+				}
+				else if (confirm("<spring:message code='ezAddress.t337'/>")) {
 					poll_edit.submit();
 				}
 			}
@@ -333,7 +334,7 @@
 				<tr>
 					<th><spring:message code='ezCommunity.t600' /></th>
 	      			<td>
-	      				<select id="selType" name="selType" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;" onChange="selTypeChange('${questionVO.answerType}');" disabled>	      				
+	      				<select id="selType" name="selType" style="font-size: 13px;vertical-align: middle;text-align: center;height: 24px;cursor: pointer;" onChange="selTypeChange('${questionVO.answerType}');" disabled>	      				
 	      					<c:choose>
 	      						<c:when test="${questionVO.answerType == '1' }">
 	      							<option value="1" selected><spring:message code='ezCommunity.t601' />
@@ -365,7 +366,7 @@
 	      					</c:choose>	      					
 	        			</select>
 	        			
-	        			<select id="selRes1" name="selRes1" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;" onChange="selResChange('${questionVO.answerViewType}');" disabled>
+	        			<select id="selRes1" name="selRes1" style="font-size: 13px;vertical-align: middle;text-align: center;height: 24px;cursor: pointer;" onChange="selResChange('${questionVO.answerViewType}');" disabled>
 	        				<c:choose>
 	        					<c:when test="${questionVO.answerViewType == '0' }">
 	        						<option value="0" selected><spring:message code='ezCommunity.t661' />
