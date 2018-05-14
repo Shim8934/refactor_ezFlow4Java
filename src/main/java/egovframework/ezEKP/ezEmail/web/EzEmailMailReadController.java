@@ -1792,6 +1792,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, true, false, locale, null, null);
 					pBody = bodyInfoList.get(0);
+					pBody = pBody.replaceAll("\"", "\\\\\""); // 인쇄 영역 분리로 인해
 					pAttachListHtml = bodyInfoList.get(1);
 					
 					if (bodyInfoList.get(4).equals("OK")) {
@@ -1825,6 +1826,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("mailPrint ended.");
 		
 		return "ezEmail/mailPrint";
+	}
+	
+	/**
+	 * 메일 인쇄 본문영역
+	 */
+	@RequestMapping(value="/ezEmail/mailPrintContent.do")
+	public String mailPrintContent(Model model, HttpServletRequest request) throws Exception{
+		return "ezEmail/mailPrintContent";
 	}
 	
 	/**
