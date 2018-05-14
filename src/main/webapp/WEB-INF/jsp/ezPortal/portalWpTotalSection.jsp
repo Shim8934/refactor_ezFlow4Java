@@ -167,14 +167,13 @@
     		<article class="time">
     			<div id="clock" class="light">
 					<div class="display">
-						<p class="title" style="margin-left:-9px; padding-top:3px;"><spring:message code='main.t00023'/></p>
-						<div class="digits" style="padding-top:18px;"></div>
+						<div class="digits" style="padding-top:17px;width:122px;height:50px;border:1px solid #333;border-radius:20px"></div>
 					</div>
 				</div>
-    			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center;">
-    				<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:13px;">출근 : 00:00:00</p>
-					<p id="outAttiClock" style="margin:5px 0px 8px 8px;  font-size:13px;">퇴근 : 00:00:00</p>
-					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
+    			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:122px">
+    				<p id="inAttiClock" style="margin-top:2px;margin-left:12px;font-size:12px;text-align: left; padding-left:22px">출근 : 출근 전</p>
+					<p id="outAttiClock" style="margin-top:5px;margin-left:12px;margin-bottom:16px;font-size:12px;text-align: left; padding-left:22px">퇴근 : 퇴근 전</p>
+					<span style="margin-left:14px" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
 					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span>
     			</div>
    			</article>
@@ -188,8 +187,7 @@
 		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/scrollbox.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.0.0/moment.min.js"></script>
+		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>		
 		<script type="text/javascript">
 		 	var UserOffset = "${userOffset}";
 		</script>
@@ -213,9 +211,10 @@
 				padding: 5px 4px;
 				font: 12px gulim;
 				padding-top: 7px;
- 				border: 1px solid #ddd;
+ 				border: 1px solid #d1e1f2;
  				color: #666;
-				border-radius:3px
+				border-radius:3px;
+				background-color: rgb(239, 244, 251);			
 			}
 			
 			.btn_hover{
@@ -225,7 +224,9 @@
 			}
 			
 			.btn_disabled{
-				background-color: rgb(153, 153, 153);
+				background-color: transparent !important;
+				border: 1px solid #ddd !important;
+				color: #aaa !important;
 			}
 		</style>   
 		<script type="text/javascript">
@@ -1073,8 +1074,8 @@
 			          leadingZeros(now.getMinutes(), 2)+
 			          leadingZeros(now.getSeconds(), 2);
 			        return s;
-		    	}
-
+		    	}	    	
+		    	
 		    });
 		    
 		    window_onload_total();

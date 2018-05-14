@@ -1151,8 +1151,8 @@
 						<td style="width: 11%;"><input type="text" id="writerDept_search" style="width: 90%;" onkeyup="search_keypress(event);"></td>
 						<td style="width: 3%;">구분</td>
 						<td style="width: 11%;">
-							<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio1">&nbsp;전체</label>
-							<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio2">&nbsp;신청</label>
+							<input name="searchCheck" id="Radio1" type="radio" value="all" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio1">&nbsp;전체</label>
+							<input name="searchCheck" id="Radio2" type="radio" value="0" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio2">&nbsp;신청</label>
 							<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio3">&nbsp;승인</label>
 							<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio4">&nbsp;반려</label>
 						</td>
@@ -1185,6 +1185,27 @@
         <c:if test="${checkAdmin != 'true'}">
         	<li id="search"><span onClick="search_popup()">검색</span></li>
 		</c:if>
+		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
+			<li>
+				<select id="writerDept_search" onchange="type_change()">
+					<c:if test="${selectedDeptID  == null}">
+						<option value=null selected></option>
+					</c:if>
+					<c:forEach var="dept" items="${deptList}">
+						<c:if test="${dept.mine ne 'yes' }">
+							<c:if test="${selectedDeptID == dept.deptId}">
+								<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
+							</c:if>
+							<c:if test="${selectedDeptID != dept.deptId}">
+								<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
+							</c:if>
+						</c:if>										
+					</c:forEach>
+				</select>
+			</li>
+		</c:if>
+
+
 		<c:if test="${adminFlag != 'true' || checkAdmin != 'true'}">
 			<li id="right">
 				<span style="float:right;font-weight:normal;color:black;border: none;">
@@ -1207,36 +1228,6 @@
 							<th nowrap>신청자명</th>
 							<td style="width:100%;"> 
 								<input id="writer_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
-							</td>
-						</tr>
-						<tr>
-							<th nowrap>신청부서명</th>
-							<td style="width:100%;">
-								<select id="writerDept_search" style="width:100%; heght:90%;">
-									<c:if test="${selectedDeptID  == null}">
-										<option value=null selected></option>
-									</c:if>
-									<c:forEach var="dept" items="${deptList}">
-										<c:if test="${dept.mine ne 'yes' }">
-											<c:if test="${selectedDeptID == dept.deptId}">
-												<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
-											</c:if>
-											<c:if test="${selectedDeptID != dept.deptId}">
-												<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
-											</c:if>
-										</c:if>										
-									</c:forEach>
-<%-- 									<c:if test="${deptList ne null }"> --%>
-<%-- 										<c:forEach items="${deptList}" var="dept"> --%>
-<%-- 										<c:choose> --%>
-<%-- 											<c:when test="${dept.mine ne 'yes' }"> --%>
-<%-- 												<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option> --%>
-<%-- 											</c:when> --%>
-<%-- 										</c:choose> --%>
-<%-- 										</c:forEach> --%>
-<%-- 									</c:if> --%>
-								</select> 
-<!-- 								<input id="writerDept_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/> -->
 							</td>
 						</tr>
 	              	</c:if>
