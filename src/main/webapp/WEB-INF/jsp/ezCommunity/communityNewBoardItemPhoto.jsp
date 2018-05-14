@@ -93,14 +93,17 @@
 // 		    var NewGuid = "<c:out value = '${NewGuid}' />";
 		    var flag = false;
 		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
+		    var endDateTime = "<c:out value = '${endDateTime}' />"
 		    
 		    window.onresize = function () {
 		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 160 + "PX";
 		    }
 		    
 		    window.onload = function () {
-		        initdatepicker();
-		        
+
+		    	console.log("strStartDate   ::   " + strStartDate);
+		    	console.log("strEndDate   ::   " + strEndDate);
+		    	
 		        if(navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1){
 		            document.getElementById("file1").multiple = false;
 		        }
@@ -164,38 +167,7 @@
 		            alert("RealImageName :: " + e.description);
 		        }
 		    }
-	
-		    function initdatepicker() {
-		        var idDatepicker = new datepicker('idDatepicker', 'idDatepicker');
-		        idDatepicker.attachEvent('datechange', onStartDateChanged);
-		        idDatepicker.attachEvent('enddatechange', onEndDateChanged);
-		        idDatepicker.attachEvent('timechange', onStartTimeChanged);
-		        idDatepicker.attachEvent('endtimechange', onEndTimeChanged);
-		        idDatepicker.elemDateButtons = "img_StartCalDisp;img_EndCalDisp";
-		        idDatepicker.elemDateInputs = "idDatepicker;_D2";
-		        idDatepicker.elemTimeButtons = "img_StartTime;img_EndTime";
-		        idDatepicker.elemTimeInputs = "_T1;_T2";
-		        idDatepicker.popupType = "both";
-		        idDatepicker.pickerDateFormat = "[yyyy]<spring:message code = 'ezCommunity.t435' />";
-		        idDatepicker.pickerTimeFormat = "[tt] [h]:[mm]";
-		        idDatepicker.inputDateFormat = "[yyyy]-[MM]-[dd] ([ddd])";
-		        idDatepicker.inputTimeFormat = "[tt] [h]:[mm]";
-		        idDatepicker.firstDayOfWeek = "0";
-		        idDatepicker.textAM = "<spring:message code = 'ezCommunity.t436' />";
-		        idDatepicker.textPM = "<spring:message code = 'ezCommunity.t437' />";
-		        idDatepicker.textDecimal = ".";
-		        idDatepicker.textHoursAbbrev = "<spring:message code = 'ezCommunity.t438' />";
-		        idDatepicker.textMustSpecifyValidTime = "<spring:message code = 'ezCommunity.t439' />";
-		        idDatepicker.daynameLetters = "<spring:message code = 'ezCommunity.t440' />";
-		        idDatepicker.daynamesShort = "<spring:message code = 'ezCommunity.t440' />";
-		        idDatepicker.daynamesLong = "<spring:message code = 'ezCommunity.t441' />";
-		        idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
-		        idDatepicker.monthnamesLong = "1<spring:message code = 'ezCommunity.t442' />";
-		        idDatepicker.isoDateUTF = "<c:out value = '${startDateTime}' />";
-		        idDatepicker.isoEndDateUTF = "<c:out value = '${endDateTime}' />";
-		        idDatepicker.ready();
-		    }
-		    
+
 		    function DateFormat(obj) {
 		        var yy = String(obj.getFullYear()).substring(0, 4);
 		        
@@ -287,18 +259,15 @@
 		        }
 		        return pReservationTime;
 		    }
-	
+
+		    /* 2018-05-11 홍승비 - 포토게시물 수정 시 만료일 로직 변경 */
 		    function GetEndDate() {
 		        var pEndDateTime;
 		        
-		        if (document.getElementById("ChkPermanence").checked) {
+		        if (ExpireDays == "-1") {
 		            pEndDateTime = "9999-12-30 23:59:59";
 		        } else {
-		            if (pMode == "modify" && document.getElementById("_D2").value.substring(0, 4) != "9999") {
-		                pEndDateTime = document.getElementById("_D2").value.substring(0, 10) + strEndDate.substring(10, 19);
-		            } else {
-		                pEndDateTime = document.getElementById("_D2").value.substring(0, 10) + strNow.substring(10, 19);
-		            }
+		            pEndDateTime = endDateTime.substring(0, 10) + " 23:59:59";
 		        }
 		        
 		        return pEndDateTime;
@@ -324,6 +293,9 @@
 		        var newID = "";
 		        var pStartDate = GetStartDate();
 		        var pEndDate = GetEndDate();
+		        
+		        console.log("pStartDate   ::   "+pStartDate);
+		        console.log("pEndDate   ::   "+pEndDate);
 	
 		        if (document.getElementById("chk_reservation").checked && pStartDate == "") {
 		            alert("<spring:message code = 'ezCommunity.t1139' />");
