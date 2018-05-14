@@ -239,7 +239,7 @@
 		        objTr.appendChild(objTh);
 		
 		        var objTh2 = document.createElement("TH");
-		        objTh2.style.width = "87%";
+		        objTh2.style.width = "67%";
 		        setNodeText(objTh2, "<spring:message code='ezEmail.t725' />");
 		        objTr.appendChild(objTh2);
 		
@@ -247,6 +247,11 @@
 		        setNodeText(objTh3, "<spring:message code='ezEmail.t726' />");
 		        objTh3.style.width = "13%";
 		        objTr.appendChild(objTh3);
+		        
+		        var objTh4 = document.createElement("TH");
+		        setNodeText(objTh4, "<spring:message code='ezEmail.sjw04' />");
+		        objTh4.style.width = "20%";
+		        objTr.appendChild(objTh4);
 		
 		        oTable.appendChild(objTr);
 		        document.getElementById("lstAttachLink").appendChild(oTable);
