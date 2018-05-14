@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.util.Date;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -23,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -48,6 +52,37 @@ public class EzAttitudeBHSController {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	/**
+	 * 근태 미입력자 팝업
+	 */
+	@RequestMapping(value = "/ezAttitude/popupAbsentedList.do")
+	public String popupAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("popupAbsentedList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String searchDeptId = request.getParameter("deptId");
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		
+		String tempDate = commonUtil.getTodayUTCTime("");
+		Date firstDayofMonth = sdf.parse(tempDate);
+		
+		cal.setTime(firstDayofMonth);
+		String searchStartDate = tempDate.substring(0, 8) + "01";
+		String searchEndDate = tempDate.substring(0, 8) + Integer.toString(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		model.addAttribute("searchDeptId", searchDeptId);
+		model.addAttribute("searchStartDate", searchStartDate);
+		model.addAttribute("searchEndDate", searchEndDate);
+		
+		LOGGER.debug("popupAbsentedList ended.");
+		
+		return "/ezAttitude/popupAbsentedList";
+	}
 	
 	/**
 	 * 사용자 근태리스트 출력
@@ -201,6 +236,7 @@ public class EzAttitudeBHSController {
 		
 		String userOffset = userInfo.getOffset().split("\\|")[1];
 		String isAllDept = "";
+		String authFlag = "";
 		boolean attitudeAdminCheck = true;
 		
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
@@ -271,11 +307,18 @@ public class EzAttitudeBHSController {
 		
 		if (deptList.size() > 1) {
 			attitudeAdminCheck = true;
+			
+			JSONObject dept = new JSONObject();
+			
+			for (int i = 0; i < deptList.size(); i++) {
+				dept = (JSONObject) deptList.get(i);
+				authFlag = (String) dept.get("authType");
+			}
 		}
 		
-		LOGGER.debug("!@#!@#@$!@#%%#% : " + deptList.size());
 		
 		model.addAttribute("deptList", deptList);
+		model.addAttribute("authFlag", authFlag);
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("uselang", userInfo.getLang());
 		model.addAttribute("attitudeAdminCheck", attitudeAdminCheck);
@@ -525,10 +568,14 @@ public class EzAttitudeBHSController {
 			}
 		}
 		
+		//현재시간
+		String time = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split(" ")[1];//////////////////////
+		
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attitudeTypeList", attitudeTypeList);
 		model.addAttribute("date", date);
+		model.addAttribute("time", time);
 		model.addAttribute("mode", mode);
 		
 		LOGGER.debug("/ezAttitude/attitudeNewItem ended");

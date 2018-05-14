@@ -84,6 +84,7 @@ public class EzAttitudeKMSController {
 		int pageSize = 15;
 		int startPoint = 0;
 		int endPoint = 15;
+		String type = "0";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -112,7 +113,8 @@ public class EzAttitudeKMSController {
 				.queryParam("endDate", endDate)
 				.queryParam("sysLang", sysLang)
 				.queryParam("offset", offsetMin)
-				.queryParam("pageNum", pageNum);
+				.queryParam("pageNum", pageNum)
+				.queryParam("type", type);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -142,7 +144,8 @@ public class EzAttitudeKMSController {
 				.queryParam("endDate", endDate)
 				.queryParam("sysLang", sysLang)
 				.queryParam("offset", offsetMin)
-				.queryParam("pageNum", pageNum);
+				.queryParam("pageNum", pageNum)
+				.queryParam("type", type);
 		
 		if (totalPages == 0 || totalPages == 1) {
 			
@@ -187,7 +190,8 @@ public class EzAttitudeKMSController {
 					.queryParam("offset", offsetMin)
 					.queryParam("pageNum", pageNum)
 					.queryParam("startPoint", startPoint)
-					.queryParam("endPoint", endPoint);
+					.queryParam("endPoint", endPoint)
+					.queryParam("type", type);
 			
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 			
@@ -262,6 +266,7 @@ public class EzAttitudeKMSController {
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String isGAdmin = "";
 		String authFlag = "";
+		String type = "0";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -275,7 +280,7 @@ public class EzAttitudeKMSController {
 			sysLang = "primary";
 		}
 		
-		if (deptid == null) { //문제가 없을까???=============================================================================================보미가 수정했습니다 한번 봐주시죠
+		if (deptid == null) {
 			deptid = userInfo.getDeptID(); 
 		}
 		
@@ -300,7 +305,8 @@ public class EzAttitudeKMSController {
 				.queryParam("offset", offsetMin)
 				.queryParam("pageNum", pageNum)
 				.queryParam("adminFlag", adminFlag)
-				.queryParam("deptid", deptid);
+				.queryParam("deptid", deptid)
+				.queryParam("type", type);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -332,7 +338,8 @@ public class EzAttitudeKMSController {
 				.queryParam("offset", offsetMin)
 				.queryParam("pageNum", pageNum)
 				.queryParam("adminFlag", adminFlag)
-				.queryParam("deptid", deptid);
+				.queryParam("deptid", deptid)
+				.queryParam("type", type);
 		
 		if (totalPages == 0 || totalPages == 1) {
 			
@@ -379,7 +386,8 @@ public class EzAttitudeKMSController {
 					.queryParam("startPoint", startPoint)
 					.queryParam("endPoint", endPoint)
 					.queryParam("adminFlag", adminFlag)
-					.queryParam("deptid", deptid);
+					.queryParam("deptid", deptid)
+					.queryParam("type", type);
 			
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 			
@@ -464,6 +472,26 @@ public class EzAttitudeKMSController {
 				}
 			}
 		}
+		
+		int myDeptCount = 0;
+		JSONObject dept = new JSONObject();
+		
+		for(int i = 0; i < deptList.size(); i++) {
+			dept = (JSONObject) deptList.get(i);
+			if (dept.get("deptId").equals(userInfo.getDeptID())) {
+				myDeptCount++;
+			}
+		}
+		
+		if (myDeptCount == 1) {
+			for(int i = 0; i < deptList.size(); i++) {
+				dept = (JSONObject) deptList.get(i);
+				if (dept.get("deptId").equals(userInfo.getDeptID())) {
+					dept.put("mine", "no");
+				}
+			}
+		}
+		
 		model.addAttribute("selectedDeptID", deptid);
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("authFlag", authFlag);
@@ -558,7 +586,8 @@ public class EzAttitudeKMSController {
 				.queryParam("orderCell", orderCell)
 				.queryParam("orderOption", orderOption)
 				.queryParam("adminFlag", adminFlag)
-				.queryParam("checkAdmin", checkAdmin);
+				.queryParam("checkAdmin", checkAdmin)
+				.queryParam("deptid", writerDeptId);
 		
 		RestTemplate rest = new RestTemplate();
 
@@ -623,7 +652,8 @@ public class EzAttitudeKMSController {
 					.queryParam("orderCell", orderCell)
 					.queryParam("orderOption", orderOption)
 					.queryParam("adminFlag", adminFlag)
-					.queryParam("checkAdmin", checkAdmin);
+					.queryParam("checkAdmin", checkAdmin)
+					.queryParam("deptid", writerDeptId);;
 		} else {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", userInfo.getCompanyID())
@@ -641,7 +671,8 @@ public class EzAttitudeKMSController {
 					.queryParam("orderCell", orderCell)
 					.queryParam("orderOption", orderOption)
 					.queryParam("adminFlag", adminFlag)
-					.queryParam("checkAdmin", checkAdmin);
+					.queryParam("checkAdmin", checkAdmin)
+					.queryParam("deptid", writerDeptId);;
 		}
 
 		rest = new RestTemplate();
@@ -1049,13 +1080,17 @@ public class EzAttitudeKMSController {
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
-
+		
+		String deptFlag = "";
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/modifyattitude/" + attModId;
 									
+		if (adminFlag != null) {
+			deptFlag = adminFlag;
+		}
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
@@ -1083,8 +1118,7 @@ public class EzAttitudeKMSController {
 		JSONObject data = new JSONObject();
 		
 		if(status.equals("ok")){
-			data = (JSONObject) resultBody.get("data");
-			LOGGER.debug("!@##$!@#%$$#%!%" + data.toJSONString());
+			data = (JSONObject) resultBody.get("data");			
 			attModDeptId = (String) data.get("writerDeptId");
 			model.addAttribute("data", data);
 			
@@ -1152,9 +1186,10 @@ public class EzAttitudeKMSController {
 				adminFlag = "true";
 			}
 		}
-		
-		if (authFlag.equals("")) {
-			return "cmm/error/adminDenied";
+		if (!userInfo.getId().equals(data.get("writerId"))) {
+			if (authFlag.equals("")) {
+				return "cmm/error/adminDenied";
+			}
 		}
 		
 		model.addAttribute("userLang", userInfo.getLang());
@@ -1164,6 +1199,7 @@ public class EzAttitudeKMSController {
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("font", font);
 		model.addAttribute("authFlag", authFlag);
+		model.addAttribute("deptFlag", deptFlag);
 		
 		LOGGER.debug("attModAppDetail ended");
 		
@@ -1366,6 +1402,25 @@ public class EzAttitudeKMSController {
 		
 		if (deptList.size() > 1) {
 			adminFlag = "true";
+		}
+		
+		int myDeptCount = 0;
+		JSONObject dept = new JSONObject();
+		
+		for(int i = 0; i < deptList.size(); i++) {
+			dept = (JSONObject) deptList.get(i);
+			if (dept.get("deptId").equals(userInfo.getDeptID())) {
+				myDeptCount++;
+			}
+		}
+		
+		if (myDeptCount == 1) {
+			for(int i = 0; i < deptList.size(); i++) {
+				dept = (JSONObject) deptList.get(i);
+				if (dept.get("deptId").equals(userInfo.getDeptID())) {
+					dept.put("mine", "no");
+				}
+			}
 		}
 		
 		model.addAttribute("deptList", deptList);

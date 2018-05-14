@@ -625,7 +625,7 @@
                     <a class="imgbtn" style="vertical-align: middle"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
                     &nbsp;&nbsp;
                     	근태유형 : 
-	                <select name="attitudeType" id="attitudeType" onchange="selectBox_change()" style="margin-top:4px; padding-right:40px;">
+	                <select name="attitudeType" id="attitudeType" onchange="selectBox_change()" style="width: 120px; margin-top:4px; padding-right:40px;">
 		      		</select>
                 </span>
             </td>

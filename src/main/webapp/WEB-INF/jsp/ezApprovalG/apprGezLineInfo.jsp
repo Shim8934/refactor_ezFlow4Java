@@ -16,6 +16,7 @@
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<style>
 			.mainlist tr th {
 				border-top:0px;
@@ -193,6 +194,7 @@
 		    }
 		    var g_tagSelectsub = "1";
 		    function MM_swapImagesub(nSel) {
+		    	methodForTabAction(nSel);
 		        if (nSel != g_tagSelectsub) {
 		            g_tagSelectsub = nSel;
 		            if (g_tagSelectsub == "1") {
@@ -281,6 +283,30 @@
 		    		}        			
 		    	});
 		    }
+		    function methodForTabAction(target) {
+            	var tab1 = document.getElementById("tagsub1").children[0];
+            	var tab2 = document.getElementById("tagsub4").children[0];
+            	var tab3 = "";
+            	if (document.getElementById("tdGongRam") != null) {
+            		document.getElementById("tdGongRam").children[0];
+            	}
+            	if (target == "1") {
+            		tab1.className = "tabon";
+            		tab2.className = "";
+            		if (tab3 != "")
+            		tab3.className = "";
+            	} else if (target == "4") {
+            		tab1.className = "";
+            		tab2.className = "tabon";
+            		if (tab3 != "")
+            		tab3.className = "";
+            	} else if (target == "5") {
+            		tab1.className = "";
+            		tab2.className = "";
+            		tab3.className = "tabon";
+            		if (tab3 != "")
+            	}
+            }
 		</script>
 	</head>
 	<body class="popup">
@@ -300,7 +326,7 @@
 		  </ul>
 		</div>
 		
-		<div id="tabnav">
+		<%-- <div id="tabnav">
 		  <ul>
 		  	<c:choose>
 				<c:when test="${docState == '015'}">
@@ -315,7 +341,25 @@
 		    	<li id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()" ><spring:message code='ezApprovalG.t946'/></span></li>
 		    </c:if>
 		  </ul>
-		</div>
+		</div> --%>
+		
+		<div class="portlet_tabpart01" style="margin:0px;">
+       		<div class="portlet_tabpart01_top" style="border-bottom:0px;">
+	       		<c:choose>
+					<c:when test="${docState == '015'}">
+		       			<p id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1');Approval_onclick()"class="tabon"><spring:message code='ezApprovalG.t946'/></span></p>
+					</c:when>
+					<c:otherwise>
+		       			<p id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1');Approval_onclick()"class="tabon"><spring:message code='ezApprovalG.t1769'/></span></p>
+					</c:otherwise>
+				</c:choose>
+       			<p id="tagsub4"><span onclick="pDocInfoValue='4';MM_swapImagesub('4');Opinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></p>
+       			<c:if test="${approvalFlag == 'G'}">
+	       			<p id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()"><spring:message code='ezApprovalG.t946'/></span></p>
+       			</c:if>
+       		</div>
+       	</div>
+       	
 		<div class="listview" style="overflow-x:auto;width:100%;"><div id="lvAprLine" style="HEIGHT:350px;WIDTH:100%;"></div></div>
 		<script type="text/javascript" >
 			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");

@@ -709,8 +709,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		if (!adminFlag.trim().equals("true")){
 			map.put("userId", userId);
 		} else if (checkAdmin.equals("false")) {
-			LOGGER.debug("#############################################false true####################################");
-//			String[] deptIdList = {"approval"};
 			map.put("deptIdList", deptIdList);
 		}
 		map.put("startDate", startDate);
@@ -970,7 +968,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String deptId, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId) throws Exception {
+	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchDeptId, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeAbsentedList started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -979,7 +977,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchTitle", searchTitle);
-		map.put("deptId", deptId);
+		map.put("searchDeptId", searchDeptId);
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1022,7 +1020,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					return o1.getUserName().compareTo(o2.getUserName());
 				}
 			});
-				
+			
 			break;
 		case "title" :
 			Collections.sort(totalList, new Comparator<AdminAttitudeVO>() {
@@ -1049,6 +1047,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					return o1.getStartDate().compareTo(o2.getStartDate());
 				}
 			});
+			
+			break;
 		default:
 			//startdate 역순
 			Collections.sort(totalList, new Comparator<AdminAttitudeVO>() {

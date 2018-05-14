@@ -105,6 +105,7 @@ public class EzAttitudeAdminController {
 		int startPoint = 0;
 		int endPoint = 15;
 		String adminFlag = "true";
+		String type = "0";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -125,7 +126,6 @@ public class EzAttitudeAdminController {
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		if (startDate == null || endDate == null) {
-			LOGGER.debug("$@%%(!#%*!#@$*%!@(#%!(@%(%!@");
 
 			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 10);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -175,7 +175,8 @@ public class EzAttitudeAdminController {
 				.queryParam("offset", offsetMin)
 				.queryParam("pageNum", pageNum)
 				.queryParam("adminFlag", adminFlag)
-				.queryParam("checkAdmin", checkAdmin);
+				.queryParam("checkAdmin", checkAdmin)
+				.queryParam("type", type);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -207,7 +208,8 @@ public class EzAttitudeAdminController {
 				.queryParam("offset", offsetMin)
 				.queryParam("pageNum", pageNum)
 				.queryParam("adminFlag", adminFlag)
-				.queryParam("checkAdmin", checkAdmin);
+				.queryParam("checkAdmin", checkAdmin)
+				.queryParam("type", type);
 		
 		if (totalPages == 0 || totalPages == 1) {
 			
@@ -254,7 +256,8 @@ public class EzAttitudeAdminController {
 					.queryParam("startPoint", startPoint)
 					.queryParam("endPoint", endPoint)
 					.queryParam("adminFlag", adminFlag)
-					.queryParam("checkAdmin", checkAdmin);
+					.queryParam("checkAdmin", checkAdmin)
+					.queryParam("type", type);
 			
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 			

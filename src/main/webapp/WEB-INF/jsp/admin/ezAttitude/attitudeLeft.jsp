@@ -59,7 +59,7 @@
 		</div>
 		
 		<script type="text/javascript">
-			//initToggleList(document.getElementById("left"), "h2", "ul", "li");
+			initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		</script>
 	</body>
 </html>

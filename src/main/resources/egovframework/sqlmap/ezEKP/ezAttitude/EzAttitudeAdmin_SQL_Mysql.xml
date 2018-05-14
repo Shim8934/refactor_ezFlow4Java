@@ -12,7 +12,7 @@
 	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>
 	<typeAlias alias="AttitudeAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO"/>
 	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
-	<typeAlias alias="JournalAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO" />
+	<typeAlias alias="AttitudeJournalAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO" />
 	
 	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
 		<result property="companyId"				column="COMPANY_ID"				columnIndex="1"/>
@@ -46,7 +46,7 @@
 		<result property="formHtml"					column="FORM_HTML"				columnIndex="5"/>
 	</resultMap>
 	
-	<resultMap class="JournalAuthorVO" id="userMap">
+	<resultMap class="AttitudeJournalAuthorVO" id="userMap">
 		<result property="userName" 				column="USER_NAME" 				columnIndex="1"/>
 		<result property="userId" 					column="USER_ID" 				columnIndex="2"/>
 		<result property="jikwi" 					column="JIKWI" 					columnIndex="3"/>
@@ -754,8 +754,8 @@
 		<isNotEmpty prepend="AND" property="searchTitle">
 			A.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="deptId">
-			A.department = #deptId#
+		<isNotEmpty prepend="AND" property="searchDeptId">
+			A.department = #searchDeptId#
 		</isNotEmpty>
 	</select>
 
@@ -808,7 +808,7 @@
 		]]>
 	</delete>
 		
-	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map" resultClass="JournalAuthorVO">
+	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map" resultClass="AttitudeJournalAuthorVO">
 		<![CDATA[
 			SELECT
 				D.DISPLAYNAME AS deptName,
@@ -908,7 +908,7 @@
 <!-- 		</iterate> -->
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="JournalAuthorVO">
+	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="AttitudeJournalAuthorVO">
 		<![CDATA[
 			SELECT 
 				CN AS deptId,

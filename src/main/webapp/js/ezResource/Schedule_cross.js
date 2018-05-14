@@ -299,20 +299,20 @@ function Schedule_Repetition_onclick_Complete(retVal) {
         return;
     }
 
-    
     if (typeof (retVal) == "number" && retVal == 0) {
         repetitionFlag = false;
         if (g_data["recurrence"] != "") {
             g_data["recurrence"] = "";
-
             g_data["recur_del"] = getXmlString(xmlDoc);
 
             document.getElementById("tr_STime").style.display = "";
-               
             document.getElementById("tr_Recur").style.display = "none";
-
             document.getElementById("iReFlag").value = "0";
             document.getElementById("tmpReFlag").value = "3";
+            document.getElementById("AllDay").checked = false;
+            document.getElementById("Stimepicker").style.display = "";
+    	    document.getElementById("Etimepicker").style.display = "";
+    	    onck = "1";
         }
     }
     else {

@@ -386,6 +386,31 @@ tr.hover:hover {
 			searchStartDate = "";
 			searchEndDate = "";
 		}
+<<<<<<< HEAD
+=======
+		#searchTable td {padding: 8px 5px;}
+		</style>
+		<script type="text/javascript">
+		var totalAtt 		  = ${totalAtt};
+		var startDate		  = "<c:out value='${startDate}'/>";
+		var endDate 		  = "<c:out value='${endDate}'/>";
+		var currentPage		  = ${currentPage};  		
+		var totalPages 		  = ${totalPages}; 		
+	    var blockSize 		  = 10;
+	    var orderCell = ""; // 정렬 명
+    	var orderOption = ""; // 정렬 형식(ASC, DESC)
+		var g_userLang 		  = "${userLang}";
+		var g_timezone 		  = "${userTimeSet}";
+		var offsetMin 		  = "${offsetMin}";
+		var type 			  = "0";
+		var m_strColorSelect = "#edf4fd";
+		var m_strColorOver = "#f4f5f5";
+		var m_strColorDefault = "#ffffff";
+		var adminFlag = "${adminFlag}";
+		var checkAdmin = "${checkAdmin}";
+		var authFlag = "${authFlag}";
+		var usepostDate = false;
+>>>>>>> 77504cd1a7fa3376759014915fa5a5d4e3dce700
 		
 		if (checkAdmin != true) {
 			$("#writer_search").val("");
@@ -639,6 +664,7 @@ tr.hover:hover {
 				$('#AttList tbody').append(htmlStr);
 			}
 		}
+<<<<<<< HEAD
 	}
 
 	function date_reset() {
@@ -777,6 +803,123 @@ tr.hover:hover {
 			if (event.shiftKey) {
 				PressShiftKey = false;
 			} else {
+=======
+		function makePageSelPage(){
+	        var strtext;
+	        var PagingHTML = "";
+	        document.getElementById("tblPageRayer").innerHTML = "";
+	        document.getElementById("mailBoxInfo").innerHTML = " [" + "총"  + "<span style='color:#017BEC;'> " + totalAtt + " </span>" + "개]";
+	        strtext = "<div class='pagenavi'>";
+	        PagingHTML += strtext;
+	        var pageNum = currentPage;
+	        
+	        if (totalPages > 1 && pageNum != 1) {
+	            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        else {
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        if (totalPages > blockSize) {
+	            if (pageNum > blockSize) {
+	                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + "이전" + "</span>";
+	                PagingHTML += strtext;
+	            }
+	            else {
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + "이전" + "</span>";
+	                PagingHTML += strtext;
+	            }
+	        }
+	        else {
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + "이전" + "</span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        var MaxNum;
+	        var i;
+	        var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1;
+
+	        if (totalPages >= (startNum + parseInt(blockSize))) {
+	            MaxNum = (startNum + parseInt(blockSize)) - 1;
+	        }
+	        else {
+	            MaxNum = totalPages;
+	        }
+
+	        for (i = startNum; i <= MaxNum; i++) {
+	            if (i == pageNum) {
+	                strtext = "<span class='on'>" + i + "</span>";
+	                PagingHTML += strtext;
+	            }
+	            else {
+					strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i + "</span>";
+	                PagingHTML += strtext;
+	            }
+	        }
+	        
+	        if (totalPages > blockSize) {
+	        	if (totalPages >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
+	        	    strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + "다음" + "</span>";
+	        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	        	}
+	        	else {
+	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "다음" + "</span>";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	        	}
+	        }
+	        else {
+	            strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + "다음" + "</span>";
+	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
+	            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        else {
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        PagingHTML += "</div>";
+	        td_Create1(PagingHTML);
+	    }
+	
+	    function td_Create1(strtext) {
+	        document.getElementById("tblPageRayer").innerHTML = strtext;
+	    }
+	    
+	    function search_popup() {
+	    	if ($("#layer_popup").css("display") == "none") {
+	       		$("#layer_popup").css("display","block");
+	       	} else {	
+	       		$("#layer_popup").css("display","none");
+	    	}
+	    }
+	    
+	    function popup_close() {
+	    	$("#layer_popup").css("display","none");
+// 	    	date_reset();
+	    }
+	    
+	    function att_search(r) {
+// 	    	popup_close();
+			if (r == "refresh") {
+				$("#writer_search").val("");
+    			$("#writerDept_search").val("");
+    			$("#appr_search").val("");
+    			if (usepostDate) {
+    				DateSearch_Click();
+    				$(usepostdate).prop("checked", false);
+    			}
+//     			$("#Radio2").prop("checked", true);
+//     			type = "0";
+>>>>>>> 77504cd1a7fa3376759014915fa5a5d4e3dce700
 			}
 			break;
 		}
@@ -890,6 +1033,7 @@ tr.hover:hover {
 						if (_RowObject.getElementsByTagName("td").item(0)
 								.getElementsByTagName("input").item(0).checked) {
 							_RowObject.style.backgroundColor = m_strColorDefault;
+<<<<<<< HEAD
 							_RowObject.getElementsByTagName("td").item(0)
 									.getElementsByTagName("input").item(0).checked = false;
 							listContentArry = ArrayDelete(listContentArry,
@@ -924,6 +1068,139 @@ tr.hover:hover {
 								.getAttribute("id");
 					}
 				}
+=======
+	                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+	                    }
+	                    listContentArry = new Array();
+	                }
+	                if (event.shiftKey) {
+	                    var SelectedPreObj = null;
+	                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
+	                        _RowObject = document.getElementById(listContentArry[Cnt]);
+	                        if (Cnt == 0){
+	                            SelectedPreObj = _RowObject;	
+	                        }
+	                        _RowObject.style.backgroundColor = m_strColorDefault;
+	                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+	                    }
+	                    listContentArry = new Array();
+	                    _RowObject = obj;
+	                    var PrelistContent;
+	                    if (SelectedPreObj == null)
+	                        PrelistContent = _RowObject.getAttribute("id");
+	                    else
+	                        PrelistContent = SelectedPreObj.getAttribute("id");
+	                    var CurlistContent = obj.getAttribute("id");
+	                    var PrePoint = parseInt(PrelistContent.replace("attList_", ""));
+	                    var CurPoint = parseInt(CurlistContent.replace("attList_", ""));
+
+	                    if (PrePoint < CurPoint) {
+	                        for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {
+	                            _RowObject = document.getElementById("attList_" + Cnt);
+	                            _RowObject.style.backgroundColor = m_strColorSelect;
+	                            _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+	                            listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
+	                        }
+
+	                    }
+	                    else if (PrePoint > CurPoint) {
+	                        for (var Cnt = PrePoint; Cnt >= CurPoint; Cnt--) {
+	                            _RowObject = document.getElementById("attList_" + Cnt);
+	                            _RowObject.style.backgroundColor = m_strColorSelect;
+	                            _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+	                            listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
+	                        }
+	                    }
+	                    else if (PrePoint == CurPoint) {
+	                        if (_RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked) {
+	                            _RowObject.style.backgroundColor = m_strColorDefault;
+	                            _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+	                            listContentArry = ArrayDelete(listContentArry, _RowObject.id);
+	                        }
+	                        else {
+	                            _RowObject.style.backgroundColor = m_strColorSelect;
+	                            _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+	                            listContentArry[listContentArry.length] = GetAttribute(_RowObject, "id");
+	                        }
+	                    }
+	                    else
+	                        return;
+	                }
+	                else {
+	                	
+	                    _RowObject = obj;
+	                    
+	                    if (_RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked) {
+	                    	
+	                        _RowObject.style.backgroundColor = m_strColorDefault;
+	                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+	                        listContentArry = ArrayDelete(listContentArry, _RowObject.id);
+	                    }
+	                    else {
+	                    	
+	                        _RowObject.style.backgroundColor = m_strColorSelect;
+	                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+	                        listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
+	                    }
+	                }
+	            }
+	        }
+	        else
+	            listEventCheckbox = false;
+	    }
+	    
+	    function attList_del() {
+	    	ShowAttProgress();
+	    	
+	    	var attList = $(".checkAtt:checked");
+	    	var idList = "";
+	    	
+	    	if (attList.length == 0) {
+	    		alert("삭제할 수정신청을 선택해주세요");
+	    		return;
+	    	}
+	    	
+	    	for (var i = 0; i < attList.length; i++) {
+	    		idList += attList[i].getAttribute("id").split("_")[1] + ","
+	    	}
+	    	
+	    	var obj = new Object();
+	    	
+		    obj.idList = idList.slice(0,-1);
+			
+		    if (confirm("정말로 삭제하시겠습니까?")) {
+			    $.ajax({
+					type : 'post',
+				    url : '/ezAttitude/delAttModApp.do',
+				    data : obj,
+				    dataType : "text",
+				    error: function(xhr, status, error){
+				    	ajaxRunning = false;
+				    	alert("삭제 중 오류 발생")
+				    },
+				    success : function(json){
+				    	get_att_list(currentPage);
+				    	if (json == "error") {
+				    		alert("이미 처리된 항목입니다.");			    			
+				    	} else {
+				    		alert("삭제되었습니다.");	
+				    	}
+				    },
+					complete : function() {
+						HiddenAttProgress();
+					}
+			    });
+		    } else {
+		    	HiddenAttProgress();
+		    }
+	    }
+	    
+		//승인
+	    function modApprove() {
+			if (authFlag != "M") {
+				alert("권한이 없습니다. 관리자에게 문의하세요");
+				return;
+>>>>>>> 77504cd1a7fa3376759014915fa5a5d4e3dce700
 			}
 		} else
 			listEventCheckbox = false;
@@ -1345,6 +1622,7 @@ tr.hover:hover {
 							id="writerDept_search" style="width: 90%;"
 							onkeyup="search_keypress(event);"></td>
 						<td style="width: 3%;">구분</td>
+<<<<<<< HEAD
 						<td style="width: 11%;"><input name="searchCheck" id="Radio1"
 							type="radio" value="all" checked
 							style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;"
@@ -1358,6 +1636,14 @@ tr.hover:hover {
 							name="searchCheck" id="Radio4" type="radio" value="2"
 							style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;"
 							onchange="type_set()" /><label for="Radio4">&nbsp;반려</label></td>
+=======
+						<td style="width: 11%;">
+							<input name="searchCheck" id="Radio1" type="radio" value="all" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio1">&nbsp;전체</label>
+							<input name="searchCheck" id="Radio2" type="radio" value="0" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio2">&nbsp;신청</label>
+							<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio3">&nbsp;승인</label>
+							<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio4">&nbsp;반려</label>
+						</td>
+>>>>>>> 77504cd1a7fa3376759014915fa5a5d4e3dce700
 					</tr>
 					<tr>
 						<td style="width: 3%;">승인자</td>
@@ -1380,6 +1666,7 @@ tr.hover:hover {
 				</tbody>
 			</table>
 		</c:if>
+<<<<<<< HEAD
 		<ul id="tb_Parent">
 			<c:if test="${adminFlag == 'true'}">
 				<li id="appr"><span onClick="modApprove()">승인</span></li>
@@ -1422,12 +1709,66 @@ tr.hover:hover {
 					style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none; margin: 10px 0px 0px 1px;"
 					class="popuplist">
 					<thead>
+=======
+        <ul id="tb_Parent">
+        <c:if test="${adminFlag == 'true'}">
+			<li id="appr"><span onClick="modApprove()">승인</span></li>
+        	<li id="ret"><span onClick="modReturn()">반려</span></li>
+		</c:if>
+		<c:if test="${adminFlag != 'true' && checkAdmin != 'true'}">
+			<li><span onClick="attList_del()">삭제</span></li>
+		</c:if>
+	        <li id="reply"><span onClick="get_excelAtt_list()">엑셀 다운로드</span></li>
+        <c:if test="${checkAdmin != 'true'}">
+        	<li id="search"><span onClick="search_popup()">검색</span></li>
+		</c:if>
+		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
+			<li>
+				<select id="writerDept_search" onchange="type_change()">
+					<c:if test="${selectedDeptID  == null}">
+						<option value=null selected></option>
+					</c:if>
+					<c:forEach var="dept" items="${deptList}">
+						<c:if test="${dept.mine ne 'yes' }">
+							<c:if test="${selectedDeptID == dept.deptId}">
+								<option value="<c:out value='${dept.deptId}'/>" selected><c:out value='${dept.deptName}'/></option>
+							</c:if>
+							<c:if test="${selectedDeptID != dept.deptId}">
+								<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
+							</c:if>
+						</c:if>										
+					</c:forEach>
+				</select>
+			</li>
+		</c:if>
+
+
+		<c:if test="${adminFlag != 'true' || checkAdmin != 'true'}">
+			<li id="right">
+				<span style="float:right;font-weight:normal;color:black;border: none;">
+					<input name="searchCheck" id="Radio1" type="radio" value="all" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
+					<input name="searchCheck" id="Radio2" type="radio" value="0" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;신청</label>
+					<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;승인</label>
+					<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;반려</label>
+				</span>
+			</li> 
+		</c:if>
+        </ul>
+        </div>
+        <c:if test="${checkAdmin != 'true'}">
+	        <div id="layer_popup" style="width:460px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none; z-index:1;">
+	          <div class="popupwrap1" style="background-color:#ffffff; position: relative;">
+	            <div class="popupwrap2" style="width:100%;">
+	              <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="content">
+	              	<c:if test="${adminFlag == 'true' || checkAdmin =='true'}">
+>>>>>>> 77504cd1a7fa3376759014915fa5a5d4e3dce700
 						<tr>
 							<th class="layerHeader" colspan="4" style="width: 440px;"><img
 								src="/images/kr/left/left_schedule.png"
 								style="vertical-align: middle; padding-bottom: 1px" /> &nbsp;검색
 							</th>
 						</tr>
+<<<<<<< HEAD
 					</thead>
 					<c:if test="${adminFlag == 'true' || checkAdmin =='true'}">
 						<tr>
@@ -1534,6 +1875,41 @@ tr.hover:hover {
 						<c:set var="changeDate" value="${list.changeDate}" />
 						<c:set var="originDate" value="${list.originDate}" />
 						<td>${fn:substring(originDate,0,10) }</td>
+=======
+	              	</c:if>
+	              	  <tr>
+	                    <th nowrap>승인자명</th>
+	                    <td style="width:100%;"> 
+							<input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width:100%;"/>
+		                </td>
+	                  </tr>
+	                  <tr>
+	                    <th>변경일자기간</th>
+	                    <td>
+	                    	<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate">검색기간 사용</label>
+	                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
+		                </td>
+	                  </tr>
+	              </table>
+	              <div class="btnposition">
+			        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span>날짜초기화</span></a>
+			        <a class="imgbtn" id="cancelBtn" onclick="att_search()"><span>검색</span></a>
+			        <a class="imgbtn" id="cancelBtn" onclick="popup_close()"><span>취소</span></a>
+			      </div>
+	            </div>
+	          </div>
+	        </div>
+        </c:if>
+        <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
+            <div id="contentlist" name="contentlist" style="border:0px solid blue;height:550px;width:100%;overflow-y:auto;" onblur>
+                <table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
+                	<tr> 
+						<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
+							<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
+						</th> 
+						<th width="60px" colname="NO">NO.</th> 
+						<th style="cursor:pointer" colname="START_DATE">일자</th>
+>>>>>>> 77504cd1a7fa3376759014915fa5a5d4e3dce700
 						<c:if test="${adminFlag == true}">
 							<td>${list.writerName}</td>
 							<td>${list.writerDeptName}</td>

@@ -718,7 +718,8 @@
     "pasteKeydownMessage": "Ctrl + V (Mac : CMD + V) 단축키를 사용하여 주시기 바랍니다.",
     "cutKeydownMessage": "Ctrl + X (Mac : CMD + X) 단축키를 사용하여 주시기 바랍니다.",
     "notFoundTestErrorMessage": "문자열을 찾을 수 없습니다.",
-    "errorParsingError" : "변환도중 에러가 발생되었습니다."
+    "errorParsingError" : "변환도중 에러가 발생되었습니다.",
+    "pasteParsingError" : "붙여넣기 도중 에러가 발생되었습니다."
   },
   "processingMessage" : "변환 중 ...",
   "paragraphInsert": "문단 추가",
