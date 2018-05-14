@@ -185,7 +185,7 @@
 				    },
 				    success : function(json){
 				    	if(json == "success") {
-				    		alert("저장되었습니다.");	
+				    		alert("<spring:message code='ezAttitude.kbm1'/>");	
 				    	} else {
 				    		alert("저장 중 오류 발생");
 				    	}
@@ -208,7 +208,7 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                        	<h1 style="padding:0px; margin-top:-5px;">근태수정신청하기</h1>
+	                        	<h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t28'/></h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
