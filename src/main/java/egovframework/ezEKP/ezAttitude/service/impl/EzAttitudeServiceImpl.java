@@ -64,6 +64,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		
 		AttitudeVO attitudeVO = ezAttitudeDAO.getAttitudeInfo(map);
+		
+		attitudeVO.setTypeName(commonUtil.cleanValue(attitudeVO.getTypeName()));
+		attitudeVO.setContent(commonUtil.cleanValue(attitudeVO.getContent()));
+		attitudeVO.setRegion(commonUtil.cleanValue(attitudeVO.getRegion()));
+		attitudeVO.setMobile(commonUtil.cleanValue(attitudeVO.getMobile()));
+		attitudeVO.setBizSub(commonUtil.cleanValue(attitudeVO.getBizSub()));
+		
 		LOGGER.debug("getAttitudeInfo ended");
 		return attitudeVO;
 	}
