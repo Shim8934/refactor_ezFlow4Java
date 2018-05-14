@@ -409,8 +409,8 @@ public class EzOrganServiceImpl implements EzOrganService {
             memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
             memberCount++;
         }
-		
-        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA>");
+
+        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA><ROWS>");
         
         for (int i = 0; i < memberCount; i++) {
             memberlist.append(memberInfo[i]);
