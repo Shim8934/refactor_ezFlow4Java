@@ -85,7 +85,7 @@
 				var typeName2 = $('#typeName2').val();
 				
 				if (typeName == "") {
-					alert('휴가유형명을 입력해주세요');
+					alert("<spring:message code='ezAttitude.kbm14' />");
 					return;
 				}
 				
@@ -108,12 +108,12 @@
 		        		typeName2 : typeName2
 		        	},
 		        	success : function(result) {
-		        			alert('저장되었습니다.');
+		        			alert("<spring:message code='ezAttitude.bbhs19' />");
 		        			window.opener.company_change();
 							window.close();
 		        	},
 		        	error : function() {
-		        		alert('저장하는 도중 에러 발생');
+		        		alert("<spring:message code='ezAttitude.kbm3' />");
 		        	}
 		        });
 			}
@@ -174,8 +174,8 @@
 <!--   			</tr> -->
 		</table>
 		<div class="btnposition">
-	        <a class="imgbtn"><span onclick="OK_Click();" >저장</span></a>
-	        <a class="imgbtn"><span onclick="close_Click();">취소</span></a>      
+	        <a class="imgbtn"><span onclick="OK_Click();" ><spring:message code='ezAttitude.t16' /></span></a>
+	        <a class="imgbtn"><span onclick="close_Click();"><spring:message code='ezAttitude.t34' /></span></a> 
 	    </div>
 		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezAttitude/iconUpload.do" target="ifrm" style="width: 1px; height: 1px;display:none">
