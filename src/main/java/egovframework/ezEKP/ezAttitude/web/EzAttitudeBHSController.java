@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.util.Date;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -23,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -48,6 +52,37 @@ public class EzAttitudeBHSController {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	/**
+	 * 근태 미입력자 팝업
+	 */
+	@RequestMapping(value = "/ezAttitude/popupAbsentedList.do")
+	public String popupAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("popupAbsentedList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String searchDeptId = request.getParameter("deptId");
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		
+		String tempDate = commonUtil.getTodayUTCTime("");
+		Date firstDayofMonth = sdf.parse(tempDate);
+		
+		cal.setTime(firstDayofMonth);
+		String searchStartDate = tempDate.substring(0, 8) + "01";
+		String searchEndDate = tempDate.substring(0, 8) + Integer.toString(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		model.addAttribute("searchDeptId", searchDeptId);
+		model.addAttribute("searchStartDate", searchStartDate);
+		model.addAttribute("searchEndDate", searchEndDate);
+		
+		LOGGER.debug("popupAbsentedList ended.");
+		
+		return "/ezAttitude/popupAbsentedList";
+	}
 	
 	/**
 	 * 사용자 근태리스트 출력

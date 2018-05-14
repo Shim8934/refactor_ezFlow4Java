@@ -754,8 +754,8 @@
 		<isNotEmpty prepend="AND" property="searchTitle">
 			A.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="deptId">
-			A.department = #deptId#
+		<isNotEmpty prepend="AND" property="searchDeptId">
+			A.department = #searchDeptId#
 		</isNotEmpty>
 	</select>
 

@@ -878,6 +878,18 @@
 		            window.location.href = "/ezAttitude/attitudeDeptMain.do?deptid=" + encodeURIComponent(authDeptList.value);
 		        }
 			}
+			
+			function popupAbsentedList() {
+    			var url = "/ezAttitude/popupAbsentedList.do?deptId=" + encodeURIComponent(authDeptList.value);
+	    		
+	    		if (CrossYN()) {
+	    			OpenWin = GetOpenWindow(url, "", "600", "700");
+	    			
+	    			try { OpenWin.focus();} catch (e) { }
+	    		} else {
+	    			showModalDialog(url, null, "dialogWidth:600px; dialogHeight:700px; status:no; help:no; scroll:no; edge:sunken");
+	    		}
+	    	}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto; margin-bottom:0px;" marginwidth="0" marginheight="0">
@@ -914,7 +926,8 @@
 						</select>
 					</li>
 		        	<li id="search"><span onClick="excelDown()"><spring:message code='ezAttitude.bbhs7'/></span></li>
-		        	<li id="search"><span onClick="sendMail()"><spring:message code='ezAttitude.bbhs8'/></span></li>
+<%-- 		        	<li id="search"><span onClick="sendMail()"><spring:message code='ezAttitude.bbhs8'/></span></li> --%>
+		        	<li id="search"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.bbhs8'/></span></li>
 				</c:if>
 				<c:if test="${adminFlag != 'true'}">
 					<select id="authDeptList" style="width:100px; margin-top:5px; display:none;" onchange="deptChange()">
