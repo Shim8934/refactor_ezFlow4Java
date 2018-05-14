@@ -782,7 +782,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public void getDownloadedFiles(String[] folderIdList, String[] fileIDList, String realPath, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void getDownloadedFiles(String[] folderIdList, String[] fileIDList, String realPath, LoginVO userInfo, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String userName1 = userInfo.getDisplayName1();
 		String userName2 = userInfo.getDisplayName2();
 		String offset    = userInfo.getOffset();
@@ -793,7 +793,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		if (fileIDList.length == 1 && folderIdList.length == 0) {
 			FileVO fileVO    = getFileByFileId(fileIDList[0], offset, tenantId);
 			String _fileName = fileVO.getFileName();
-			_fileName        = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), _fileName);
+			_fileName        = CommonUtil.getEncodedFileNameForDownload(userAgent, _fileName);
 			File file        = new File(realPath + fileVO.getFilePath());
 			
 			if (!file.exists()) {

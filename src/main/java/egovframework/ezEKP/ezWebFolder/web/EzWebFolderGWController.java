@@ -559,6 +559,8 @@ public class EzWebFolderGWController {
 		String userId       = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
 		String serverName   = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
 		String lang         = request.getParameter("lang")       != null ? request.getParameter("lang")       : "";
+		String userAgent    = request.getParameter("userAgent")  != null ? request.getParameter("userAgent")  : "";
+		
 		String[] fileIDList = listFileId.equals("")   ? new String[0] : listFileId.split(",");
 		String[] folderList = listFolderId.equals("") ? new String[0] : listFolderId.split(",");
 		
@@ -572,7 +574,7 @@ public class EzWebFolderGWController {
 		//Get absolute path of the application
 		String realPath  = request.getServletContext().getRealPath("");
 		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, offset);
-		ezWebFolderService.getDownloadedFiles(folderList, fileIDList, realPath, userInfo, request, response);
+		ezWebFolderService.getDownloadedFiles(folderList, fileIDList, realPath, userInfo, userAgent, request, response);
 		
 		logger.debug("File Download Finish!");
 		return;

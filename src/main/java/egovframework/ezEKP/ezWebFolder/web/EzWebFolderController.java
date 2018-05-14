@@ -291,6 +291,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		if (checkAdminPermmision.get("status").toString().equals("ok") || !"error".equals(checkPermission.get("status"))){
 			UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userAgent", request.getHeader("User-Agent"))
 					.queryParam("offset", user.getOffset())
 					.queryParam("userId", user.getId())
 					.queryParam("lang", user.getLang())
