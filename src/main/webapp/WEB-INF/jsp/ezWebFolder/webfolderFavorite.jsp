@@ -260,7 +260,6 @@
 			layerViewpopup: document.getElementById("layer_Viewpopup"),
 			allCheckBox: document.getElementById("checkAll"),
 			listTable: document.getElementById("tblFileList"),
-			layerViewpopup: document.getElementById("layer_Viewpopup"),
 			listoptiondiv: document.getElementById("webfolderlistoptiondiv"),
 			listSizeSelect: document.getElementById("listcount")
 		};
@@ -630,7 +629,6 @@
 		context.setList(folderId, folderType, false);
 	}
 
-	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
 	function search(type) {
 		if (type == "basic") {
 			var requirement = {
