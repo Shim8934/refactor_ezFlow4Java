@@ -1210,7 +1210,7 @@
 			SELECT 
 				cn,
 				department as displayName,
-				'' as extensionAttribute15,
+				n'' as extensionAttribute15,
 				'user' as type				
 			FROM 
 	    		TBL_USERMASTER A 
@@ -1225,7 +1225,7 @@
 	      	SELECT 
 	      		A.cn,
 	      		deptid as displayName,
-	      		'' as extensionAttribute15,
+	      		n'' as extensionAttribute15,
 	      		'user' as type
 	      	FROM	
 				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
@@ -1236,8 +1236,8 @@
 				
 				SELECT
 					cn,
-					'' as displayName,
-					'' as extensionAttribute15,
+					n'' as displayName,
+					n'' as extensionAttribute15,
 					'group' as type
 				FROM
 					TBL_DEPTMASTER 
@@ -1247,15 +1247,15 @@
 	    <isEqual property="type" compareValue="G">
 	    	SELECT
 	    		cn,
-	    		'' as displayName,
-	    		'' as extensionAttribute15,
+	    		n'' as displayName,
+	    		n'' as extensionAttribute15,
 	    		'group' as type
 	    	FROM
 	    		TBL_DEPTMASTER 
             $strSQL$ AND TENANT_ID = #v_TENANT_ID#
 	    </isEqual>
 	</select>
-	
+
 	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
 			<![CDATA[

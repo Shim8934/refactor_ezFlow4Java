@@ -79,7 +79,7 @@
 .voteTdBg .voteTdBg_layout{margin:0; text-align:center;}
 /* .voteBtn{height:43px; float:right; background:#eaeaea; border:1px solid #d0d0d0; border-radius:5px; padding:0px 10px; margin:10px 5px 0px 0px; line-height:41px; font-size:14px; display:inline-block; cursor:pointer;}
 .voteBtn span{font-size:16px; color:#004896; margin-left:3px;} */
-#_finish{margin:0px 8px;}
+#_finish{margin:0px 8px; display:none;}
 .voteBtnFooterInner{height:45px;background:#0470e4; color:#FFF; border-radius:5px; line-height:45px; padding:0px 26px; text-align:center; cursor: pointer; font-size:14px;display:inline-block;}
 
 .userName{display: block; color:#004896; font-size:14px; padding:10px 0px 0px 20px;}
@@ -180,3 +180,8 @@
 .iPBInnerDiv{height:50px; padding-right: 15px}
 
 .vote_listTd._imgOption{width:54px; border:1px solid #DDD; background:white;}
+/* floating stop Button area*/
+.stopButtonDiv{display: block; float: right; cursor: pointer; position: relative; color: red; font-size: 33px; margin: 8px 10px 0px 0px;}
+.stopButton{position: absolute; right: 30px; color: red; font-size: 80px; background: rgba(255,255,255,0.8); border-radius: 25px; cursor:pointer; border:1px solid #ddd;}
+.stopButton:hover{background-color:rgba(221, 238, 255, 0.8);}
+.stopBtnToggle{position: absolute;width: 13px;height: 13px;background: red;right: 30px;border-radius: 23px;z-index:1; cursor:pointer;}

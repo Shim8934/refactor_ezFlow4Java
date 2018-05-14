@@ -611,12 +611,17 @@ public class EzEmailMailListController {
 			if (uniqueId.endsWith(",")) {
 				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
 			}
+			
 			String[] folderAndMsgIdArray = uniqueId.split(",");
-			folderId = folderAndMsgIdArray[0].split("/")[0];			
+			
+			int delimiterIndex = folderAndMsgIdArray[0].lastIndexOf("/");
+			folderId = folderAndMsgIdArray[0].substring(0, delimiterIndex);			
 			uids = new long[folderAndMsgIdArray.length];
+			
 			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
 				String folderAndMsgId = folderAndMsgIdArray[i];
-				String msgId = folderAndMsgId.split("/")[1];
+				delimiterIndex = folderAndMsgId.lastIndexOf("/");
+				String msgId = folderAndMsgId.substring(delimiterIndex + 1);
 				uids[i] = Long.parseLong(msgId);
 			}	
 		}

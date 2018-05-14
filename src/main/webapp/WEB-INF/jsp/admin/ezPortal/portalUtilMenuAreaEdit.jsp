@@ -68,7 +68,7 @@
 			// 수정
 			function selectItem(pUID, pObj) {
 			    //if (CrossYN())
-			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=202", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));
+			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=202", "", "height = 350px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 350));
 	            //else
 	            //    window.open("MenuItem_Edit.aspx?pageid=" + pageid + "&mode=edit&uid=" + pUID + "&parentuid=202", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes");
 			}
