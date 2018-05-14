@@ -294,9 +294,9 @@ public class EzJournalController extends EgovFileMngUtil {
 			logger.debug(journalList.toJSONString());
 			for (int i = 0; i < journalList.size(); i++) {
 				JSONObject journal = (JSONObject) journalList.get(i);
-				String journalDate = (String) journal.get("journalDate");
-				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
-				journal.put("journalDate", journalDate.substring(0, 16));
+			//	String journalDate = (String) journal.get("journalDate");
+			//	journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+			//	journal.put("journalDate", journalDate.substring(0, 16));
 			}
 			model.addAttribute("journalList", journalList);
 			model.addAttribute("totalCount",totalCount);
@@ -1234,9 +1234,9 @@ public class EzJournalController extends EgovFileMngUtil {
 		JSONObject journal = null;
 		if (status.equals("ok")) {			
 			journal = (JSONObject) resultBody.get("data");
-			String journalDate = (String) journal.get("journalDate");
-			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
-			journal.put("journalDate", journalDate);
+		//	String journalDate = (String) journal.get("journalDate");
+		//	journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+		//	journal.put("journalDate", journalDate);
 			model.addAttribute("journal",journal);
 		}
 		
@@ -1275,9 +1275,9 @@ public class EzJournalController extends EgovFileMngUtil {
 			JSONObject journal = null;
 			if (status.equals("ok")) {
 				journal = (JSONObject) resultBody.get("data");
-				String journalDate = (String) journal.get("journalDate");
-				journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
-				journal.put("journalDate", journalDate);
+			//	String journalDate = (String) journal.get("journalDate");
+			//	journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+			//	journal.put("journalDate", journalDate);
 				model.addAttribute("journal",journal);
 			}
 			
@@ -1311,12 +1311,14 @@ public class EzJournalController extends EgovFileMngUtil {
 		JSONArray replyList = null;
 		if (status.equals("ok")) {			
 			replyList=  (JSONArray) resultBody.get("data");
+			/*
 			for (Object reply : replyList) {
 				JSONObject JOReply = (JSONObject)reply;
 				String replyDate = (String) JOReply.get("replyDate");
 				replyDate = commonUtil.getDateStringInUTC(replyDate, userInfo.getOffset(), false);
 				JOReply.put("replyDate", replyDate);
 			}
+			*/
 			model.addAttribute("replyList",replyList);
 			model.addAttribute("journalId",journalId);
 		}
@@ -1430,14 +1432,14 @@ public class EzJournalController extends EgovFileMngUtil {
 			
 			if (status.equals("ok")) {			
 				JSONArray viewerList=  (JSONArray) resultBody.get("data");
-				
+				/*
 				for (Object viewer : viewerList) {
 					JSONObject JOViewer = (JSONObject)viewer;
 					String viewDate = (String) JOViewer.get("date");
 					viewDate = commonUtil.getDateStringInUTC(viewDate, userInfo.getOffset(), false);
 					JOViewer.put("date", viewDate);
 				}
-				
+				*/
 				model.addAttribute("viewerList", viewerList);
 			}
 		}
@@ -1529,14 +1531,14 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		if (status.equals("ok")) {			
 			JSONArray viewerList=  (JSONArray) resultBody.get("data");
-			
+			/*
 			for (Object viewer : viewerList) {
 				JSONObject JOViewer = (JSONObject) viewer;
 				String viewDate = (String) JOViewer.get("date");
 				viewDate = commonUtil.getDateStringInUTC(viewDate, userInfo.getOffset(), false);
 				JOViewer.put("date", viewDate);
 			}
-			
+			*/
 			model.addAttribute("viewerList",viewerList);
 		}
 		
@@ -1664,11 +1666,11 @@ public class EzJournalController extends EgovFileMngUtil {
 		JSONObject journal = null;
 		if (status.equals("ok")) {			
 			journal = (JSONObject) resultBody.get("data");
-			String journalDate = (String) journal.get("journalDate");
-			journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
+		//	String journalDate = (String) journal.get("journalDate");
+		//	journalDate = commonUtil.getDateStringInUTC(journalDate, userInfo.getOffset(), false);
 			String journalContent = ((String) journal.get("journalContent")).replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
 			journal.put("journalContent", journalContent);
-			journal.put("journalDate", journalDate);
+		//	journal.put("journalDate", journalDate);
 		}
 		
 		logger.debug("getJournalJSON ended");

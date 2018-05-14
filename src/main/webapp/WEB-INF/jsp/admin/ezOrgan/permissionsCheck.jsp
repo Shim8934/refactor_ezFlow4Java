@@ -12,6 +12,9 @@
 	    	.box {
 	    		border-right:0px;
 	    	}
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;	    		
+	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -147,7 +150,7 @@
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
 		        nodeIdx = treeView.GetSelectNode();
-		        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + nodeIdx.GetNodeData("VALUE");
+		        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + nodeIdx.GetNodeData("VALUE");
 		        SelectDeptNM.setAttribute("countinfo", "")
 
 		        if (cn != "") {
@@ -163,7 +166,8 @@
 			        	success : function(xml){
 			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();
-		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                    headerData = result;
+// 		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
 		                    if (CrossYN()) {
 		                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -199,7 +203,8 @@
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
-		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+// 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                headerData = result;
 
 		                if (CrossYN()) {
 		                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -240,7 +245,7 @@
 		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang24 + "</span>]";
+		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
 		        
@@ -251,7 +256,7 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang24 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -264,7 +269,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang24 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -821,7 +826,8 @@
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                
 		                var headerData = createXmlDom();
-		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+// 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                headerData = result;
 		                
 		                if (CrossYN()) {
 		                	usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
@@ -1011,22 +1017,26 @@
 	            <li><span onclick="close_Click()"><spring:message code='ezOrgan.t143'/></span></li>
 	        </ul>
 	    </div>
+	    <script type="text/javascript">
+			selToggleList(document.getElementById("menu"), "ul", "li", "0");
+			selToggleList(document.getElementById("close"), "ul", "li", "0");
+		</script>
 	    <table id="TreeViewTD">
 	        <tr>
 	            <td>
-	                <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-	                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+	                <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                    <div class="portlet_tabpart03_top" id="tab1">
 	                        <table style="margin-top: 3px; width: 100%;">
 	                            <tr>
 	                                <td>
-	                                	<div style="padding-left:60px">
-	                                    	<input type="text" name="Input" id="deptkeyword" style="WIDTH: 110px; margin: 0px;" onkeypress="deptsearch_press()" />
+	                                	<div style="padding-left:5px;">
+	                                    	<input type="text" name="Input" id="deptkeyword" style="WIDTH: 120px; height:22px;" onkeypress="deptsearch_press()" />
 	                                        <a class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezOrgan.t93'/></span></a>
 	                                	</div>
 	                                </td>
 	                                <td>
-	                                    <div style="float:right">
-	                                        <select id="search_type">
+	                                    <div style="float:right; padding-right:5px;">
+	                                        <select id="search_type" style="height:22px;">
 	                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
 					                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
 					                            <option value="description"><spring:message code='ezOrgan.t68'/></option>
@@ -1038,7 +1048,7 @@
 					                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 					                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 	                                        </select>
-	                                        <input type="text" id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;" />
+	                                        <input type="text" id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; height:22px; margin: 0px;" />
 	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 	                                    </div>
 	                                </td>    
@@ -1047,7 +1057,7 @@
 	                        </table>
 	                    </div>
 	                </div>
-	                <table style="margin-top: 3px;">
+	                <table style="margin-top: 4px;">
 	                    <tr>
 	                        <td class="box">
 	                            <div style="width: 250px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
@@ -1056,8 +1066,8 @@
 	                        <td class="listview" style="width: 426px" id="orglistView">
 	                            <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                <tr>
-	                                    <th style="white-space:normal">
-	                                        <span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+	                                    <th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea">
+	                                        <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 	                                        <span style="float:right;">
 	                                            <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 	                                            <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
@@ -1065,36 +1075,36 @@
 	                                    </th>
 	                                </tr>
 	                            </table>
-	                            <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                            <div style="vertical-align: top; height: 441px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                    <tr>
-	                                        <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-	                                        <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td>
+	                                        <td style="width: 170px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
+	                                        <td style="width: 150px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
+	                                        <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezOrgan.t97'/></td>
 	                                    </tr>
 	                                </table>
 	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                    <tr>
-	                                        <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t68'/></td>
-	                                        <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-	                                        <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td>
+	                                        <td style="width: 130px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t68'/></td>
+	                                        <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
+	                                        <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
+	                                        <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezOrgan.t97'/></td>
 	                                    </tr>
 	                                </table>
 	                            </div>
-	                            <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+	                            <div style="vertical-align: top; text-align: center; height: 441px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
 	                        </td>    
 	                    </tr>
 	                </table>
 	            </td>        
-	            <td style="vertical-align:top; padding-top:4px; padding-left:3px;">
+	            <td style="vertical-align:top; padding-top:4px; padding-left:4px;">
 	                <table>
 	                    <tr>
 	                        <td>
-	                            <h2 id="Permission" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="cursor: pointer;">
+	                            <h2 id="Permission" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="margin-left:1px; border-bottom:0px;">
 	                                <span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezOrgan.t00011'/></span>
 	                            </h2>
-	                            <div class="receiver_borderbox">
+	                            <div class="receiver_borderbox" style="border-top: 1px solid #565b66; margin-top:1px;">
 	                                <div id="PermissionBasic" style="width: 250px; Height: 210px; overflow-x: auto; overflow-y: auto;" ondblclick="InsertReceiver()"></div>
 	                            </div>
 	                        </td>
@@ -1107,11 +1117,11 @@
 	                    </tr>
 	                    <tr>
 	                        <td>
-	                            <h2 id="UserAcl" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="cursor: pointer;">
+	                            <h2 id="UserAcl" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="margin-left:1px; border-bottom:0px;">
 	                                <span style="min-width: 45px;" id="Span1"><spring:message code='ezOrgan.t00012'/></span>
 	                            </h2>
-	                            <div class="receiver_borderbox">
-	                                <div id="UserAclList" style="width: 250px; Height: 209px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver()"></div>
+	                            <div class="receiver_borderbox" style="border-top: 1px solid #565b66;">
+	                                <div id="UserAclList" style="width: 250px; Height: 207px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver()"></div>
 	                            </div>
 	                        </td>
 	                    </tr>

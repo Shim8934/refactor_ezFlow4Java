@@ -51,7 +51,6 @@
 	        var url = "<c:out value = '${url}' />";
 	        var ShowAdjacent = "<c:out value = '${showAdjacent}' />";
 	        var gubun = "<c:out value = '${ boardInfo.gubun }' />";
-	        var PageHref = "boardItemList_Photo.aspx?BoardID=<c:out value = '${pBoardID}' />&Page=<c:out value = '${pPage}' />&SortBy=<c:out value = '${pSortBy}' />";
 // 	        var ch_CommunityAdmin = "<c:out value = '${chCommunityAdmin}' />";
 	        var UserLevel = "<c:out value = '${userLevel}' />";
 	        var pUse_Editor = "<c:out value = '${useEditor}' />";
@@ -140,11 +139,7 @@
 	            var pTop = (pheight - 720) / 2;
 	            var pLeft = (pwidth - 765) / 2;
 	
-	            if (CrossYN()) {
-	                window.open("/ezCommunity/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-	            } else {
-                    window.open("/ezCommunity/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-	            }
+              	window.open("/ezCommunity/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 	        }
 	
 			function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
@@ -167,20 +162,13 @@
 	
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
-	            var pTop = (pheight - 800) / 2;
+	            var pTop = (pheight - 683) / 2;
 	            var pLeft = (pwidth - 750) / 2;
-	            if (CrossYN()) {
-	                window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=800,width=750,top=" + pTop + ",left=" + pLeft, "");
-	            } else {
-	                window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=800,width=750,top=" + pTop + ",left=" + pLeft, "");
-	            }
+	            
+	          	window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=721,width=750,top=" + pTop + ",left=" + pLeft, "");
 	        }
 
 	        function refresh_onclick() {
-	            window.location.reload(false);
-	        }
- 	        
-	        function refresh_onclick2() {
 	        	if ($('#tblList tbody tr').children().length == '11') {
 	        		newPage = parseInt(CurPage) - 1;
 		            
@@ -192,7 +180,7 @@
 	        	} else {
 		            window.location.reload(false);        		
 	        	}
-	        }  
+	        }
 	        
 	        function td_Create1(strtext) {
 	            document.getElementById("tblPageRayer").innerHTML = strtext;
@@ -334,7 +322,7 @@
 		            <li style="display: none"><span onclick="DeleteItem_onclick()"><spring:message code = 'ezCommunity.t208' /></span></li>
 	        </c:if>
 
-            	<li><span onclick="refresh_onclick()"><spring:message code = 'ezCommunity.t912' /></span></li>  
+            		<li><span onclick="refresh_onclick()"><spring:message code = 'ezCommunity.t912' /></span></li>  
             	</ul>
 	    </div>
 

@@ -5,13 +5,14 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		
+
+		<!-- 18-05-10 김민성 - 포탈 메인 슬라이드 이미지 링크 추가 -->
 		<section class="body_bg1">
 			<div id="featured">
 				<c:choose>
 	            	<c:when test="${not empty sliderList}">
 	            		<c:forEach items="${sliderList}" var="slider">
-							<img src="${slider.imagePath}" style="width:467px;height:200px"/>
+							<a href='http://${slider.url }'  target="_blank"><img src="${slider.imagePath}" style="width:467px;height:200px" /></a>
 						</c:forEach>
 	            	</c:when>
 	            	<c:otherwise>

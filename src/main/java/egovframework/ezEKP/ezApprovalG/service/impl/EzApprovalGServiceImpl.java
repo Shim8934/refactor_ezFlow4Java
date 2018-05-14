@@ -899,7 +899,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			logger.debug("getAccessYNG Value : publicityCode =" + publicityCode);
 
 			if (approvalFlag.equals("G")) {
-				if (publicityCode.length() <= 0) {
+				if (publicityCode.length() <= 0 || publicityCode.equals(" ")) {
 					publicityCode = "1";
 				} else {
 					publicityCode = publicityCode.substring(0, 1);
