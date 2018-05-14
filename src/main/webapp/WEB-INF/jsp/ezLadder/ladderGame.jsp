@@ -520,7 +520,7 @@
 					var picsrc = !cmt["pic"] ? "/images/ezLadder/icon_defaultAttendant.png" : "/admin/ezOrgan/getPersonalInfo.do?fileName=" + cmt["pic"];
 					if(flag == "add") { 
 						// add
-						var html = '<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="' + cmt["id"] + '">';
+						var html = '<tr _comtIndex="' + cmt["id"] + '">';
 						html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo(\'' +  cmt["userId"] + '\')"><img src="' + picsrc + '" style="height: 38px; width:38px;"></div></td>';
 						html += '<td><div class="userName">' + cmt["userName"] + '</div>';
 						html += '<div id="div2Cmt' + cmt["id"] + '" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >';
@@ -767,6 +767,16 @@
 		a, a:hover {
 			color: transparent;
 		}
+		
+		table#commentListView tr {
+			border-bottom-color: #DDD;
+			border-bottom-width: 1px;
+			border-bottom-style: dotted;
+		}
+		
+		table#commentListView tr:last-child {
+			border-bottom-style: solid;
+		}
 	</style>
 </head>
 	<body class="mainbody">
@@ -962,7 +972,7 @@
 				</div>
 				<table style="width: 100%;" id="commentListView">
 					<c:forEach var="_comt" items="${cmtlist}">
-						<tr style="border-bottom: 1px dotted #ddd;" _comtIndex="<c:out value ="${_comt.id}" />">
+						<tr _comtIndex="<c:out value ="${_comt.id}" />">
 							<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; ">
 								<div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('${_comt.userId}')" >
 								<c:choose>
