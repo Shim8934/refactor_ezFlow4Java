@@ -42,6 +42,7 @@ public class LadderVO {
 	/** 사용자 아이디*/
 	private String userId;
 	private String pic;
+	private int cmt;
 	
 	
 	public int getTenant_id() {
@@ -183,4 +184,11 @@ public class LadderVO {
 	public void setPic(String pic) {
 		this.pic = pic == null ? "" : pic;
 	}
+	public int getCmt() {
+		return cmt;
+	}
+	public void setCmt(int cmt) {
+		this.cmt = cmt;
+	}
+
 }

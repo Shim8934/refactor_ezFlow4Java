@@ -80,6 +80,7 @@
 			.mainlist th {cursor: pointer;}
 			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}
 			#mainmenu .participantBtn{cursor: pointer;}
+			#cmt {color:red;}
 		</style>
 	</head>
 	<body class="mainbody" style="overflow: hidden;">
@@ -132,7 +133,7 @@
 		 		<c:forEach items="${list }" var="vo">
 					<tr class="black" style="height=30px;" onClick="getLadderGame(${vo.ladderId})">
 						<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" src ='/images/ezLadder/icon_game_thirty0${vo.type}.png' /></td>
-						<td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><c:out value ="${vo.title }" /></td>
+						<td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><c:out value ="${vo.title }" /><c:if test="${vo.cmt>0 }"> <span id="cmt"> [${vo.cmt}]</span></c:if></td>
 						<td style="text-align: left;" width="100px"><a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${vo.writerId}', event)">${vo.writerName }</a></td>
 						<td style="text-align: left;" width="140px">${vo.writeDate.substring(0,16) }</td>
 						
