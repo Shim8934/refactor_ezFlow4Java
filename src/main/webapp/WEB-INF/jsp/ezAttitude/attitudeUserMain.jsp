@@ -277,7 +277,7 @@
 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd", "color":"black", "border":"1px solid #d1ddec"}).text("<spring:message code='ezAttitude.bbhs38'/>")));
 					for (var i = 0; i < result.length; i++) {
 						
-						if (result[i].typeId == 'A01' || result[i].typeId == 'A03') {
+						if (result[i].typeId == 'A01' || result[i].typeId == 'A03' || result[i].typeId == 'A05') {
 							continue;
 						}
 						objTr = $("<tr></tr>").append($("<th style='width:74px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:normal' title='" + result[i].typeName.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></th>").text(result[i].typeName));

@@ -246,9 +246,11 @@ function monthDate(oThisDate, TDIndex) {
 	var className = "";
 	if (oThisMonth != oThisDate.getMonth()) {
 		className = " gray";
+	} else if (isholiday) {
+		className = " sun";
 	} else if (oThisDate.getDay() == 6) {
 		className = " sat";
-	} else if (oThisDate.getDay() == 0 || isholiday || companyHoliday[oThisDate.getDay()] == "1") {
+	} else if (oThisDate.getDay() == 0 || companyHoliday[oThisDate.getDay()] == "1") {
 		className = " sun";
 	}
 	
