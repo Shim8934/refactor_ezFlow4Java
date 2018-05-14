@@ -82,25 +82,27 @@
 		    	var obj = new Object();
 		    	
 		    	obj.idList = attid; 
-				
-			    $.ajax({
-					type : 'post',
-				    url : '/ezAttitude/delAttModApp.do',
-				    data : obj,
-				    dataType : "text",
-				    error: function(xhr, status, error){
-				    	alert("삭제 중 오류 발생")
-				    },
-				    success : function(json){
-						alert("삭제되었습니다.");
-			            try {
-			                window.opener.att_refresh();
-			            } catch (e) { 
-			            	window.opener.getAttitudeMainList(); 
-			            }
-			            window.close();
-				    }
-			    });
+		    	
+		    	if (confirm("정말로 삭제하시겠습니까?")) {
+				    $.ajax({
+						type : 'post',
+					    url : '/ezAttitude/delAttModApp.do',
+					    data : obj,
+					    dataType : "text",
+					    error: function(xhr, status, error){
+					    	alert("삭제 중 오류 발생")
+					    },
+					    success : function(json){
+							alert("삭제되었습니다.");
+				            try {
+				                window.opener.att_refresh();
+				            } catch (e) { 
+				            	window.opener.getAttitudeMainList(); 
+				            }
+				            window.close();
+					    }
+				    });
+		    	}
 		    }
 		    
 		    function modApprove() {
