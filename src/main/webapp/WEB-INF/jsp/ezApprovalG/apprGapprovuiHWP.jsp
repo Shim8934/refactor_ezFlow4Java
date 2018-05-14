@@ -300,6 +300,11 @@
 		            }
 		
 		            try {
+		            	var agent = navigator.userAgent.toLowerCase();
+		            	
+		            	if (!((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1)) {
+		            		throw "hwp";
+		            	}
 		                HwpCtrl.SetImgReg();
 		                HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 		                HwpCtrl.SetSaveMode(1);
@@ -327,7 +332,12 @@
 		            HwpCtrl.ezSetScrollPosInfo(0);
 		        }
 		        catch (e) {
-		            alert("<spring:message code='ezApprovalG.t1373'/>" + e.description);
+		        	if (e == "hwp") {
+		        		alert("한글(hwp)결재문서는 Internet Explorer에서만 열람 가능합니다.");	
+		        		window.close();
+		        	} else {
+			            alert("<spring:message code='ezApprovalG.t1373'/>" + e.description);
+		        	}
 			        hideProgress();
 			    }
 		    }
