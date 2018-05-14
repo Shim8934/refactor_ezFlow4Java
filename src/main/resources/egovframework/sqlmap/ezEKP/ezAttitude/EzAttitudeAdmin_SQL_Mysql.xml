@@ -295,9 +295,11 @@
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="statistics">
 			<![CDATA[
-				TYPE_ID NOT IN ('A01', 'A03')
+				TYPE_ID NOT IN ('A01', 'A03', 'A05')
 			]]>
 			</isNotEmpty>
+			AND
+				ISDEL = '0'
 	</select>
 	
 	<update id="ezAttitudeAdminDAO.updateAttitudeTypeConfig" parameterClass="Map">
@@ -942,10 +944,23 @@
 		]]>
 	</select>
 	
-	<delete id="ezAttitudeAdminDAO.deleteAttitudeType" parameterClass="Map">
+<!-- 	<delete id="ezAttitudeAdminDAO.deleteAttitudeType" parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			DELETE FROM  -->
+<!-- 				TBL_ATTITUDE_TYPE -->
+<!-- 			WHERE  -->
+<!-- 				TYPE_ID = #typeId# -->
+<!-- 			AND  -->
+<!-- 				TENANT_ID = #tenantId# -->
+<!-- 			AND  -->
+<!-- 				COMPANY_ID = #companyId# -->
+<!-- 		]]> -->
+<!-- 	</delete> -->
+	<update id="ezAttitudeAdminDAO.deleteAttitudeType" parameterClass="Map">
 		<![CDATA[
-			DELETE FROM 
-				TBL_ATTITUDE_TYPE
+			UPDATE TBL_ATTITUDE_TYPE
+			SET
+				ISDEL = '1'
 			WHERE 
 				TYPE_ID = #typeId#
 			AND 
@@ -953,6 +968,6 @@
 			AND 
 				COMPANY_ID = #companyId#
 		]]>
-	</delete>
+	</update>
 	
 </sqlMap>
