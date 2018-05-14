@@ -579,7 +579,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 			<![CDATA[
-				t.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+				type.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
 			]]>
 		</isNotEqual>
 		<![CDATA[
@@ -886,7 +886,7 @@
 				and f.USE_STATUS = 'Y'
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 			<![CDATA[
-				t.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+				type.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
        		]]> 
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
@@ -943,7 +943,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
 			<![CDATA[
-				t.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+				type.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
        		]]> 
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
