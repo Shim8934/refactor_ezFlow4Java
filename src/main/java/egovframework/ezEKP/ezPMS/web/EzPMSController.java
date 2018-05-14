@@ -873,7 +873,7 @@ public class EzPMSController {
 	}
 	
 	// 알림메일 발송
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "null" })
 	@RequestMapping(value="/ezPMS/sendNotiMail.do")
 	public void sendNotiMail(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		LOGGER.debug("sendNotiMail Started.");
@@ -883,61 +883,94 @@ public class EzPMSController {
 		String projectName = (String) param.get("projectName");
 		int projectId = (int) param.get("projectId");
 		List<Map<String, Object>> managerList = null;
-		List<Map<String, Object>> participantList = (List<Map<String, Object>>) param.get("participantList");
-		List<Map<String, Object>> viewerList = (List<Map<String, Object>>) param.get("viewerList");
-		List<Map<String, Object>> beforeManagerList = (List<Map<String, Object>>) param.get("beforeManagerList");
-		List<Map<String, Object>> beforeParticipantList = (List<Map<String, Object>>) param.get("beforeParticipantList");
-		List<Map<String, Object>> beforeViewerList = (List<Map<String, Object>>) param.get("beforeViewerList");
+		List<Map<String, Object>> participantList = null;
+		List<Map<String, Object>> viewerList = null;
+		List<Map<String, Object>> beforeManagerList = null;
+		List<Map<String, Object>> beforeParticipantList = null;
+		List<Map<String, Object>> beforeViewerList = null;
 		
 		param.put("tenantId", userInfo.getTenantId());
 		
 		try{
+			//수정된  member의 집합
 			if (param.get("managerList") != null) {
 				managerList = (List<Map<String, Object>>) param.get("managerList");
-			}
-			if (mode.equals("edit")) {
-				Iterator<Map<String, Object>> managerIter = managerList.iterator();
 				
-				while (managerIter.hasNext()) {
-					Map<String, Object> manager = managerIter.next();
-					
-					if (beforeManagerList.contains(manager)) {
-						managerList.remove(manager);
+				//이전 member의 집합
+				if (mode.equals("edit")) {
+					if (param.get("beforeManagerList") != null) {
+						beforeManagerList = (List<Map<String, Object>>) param.get("beforeManagerList");
+						
+						if (managerList.size() > 0 || managerList != null) {
+							Iterator<Map<String, Object>> managerIter = managerList.iterator();
+								
+							while (managerIter.hasNext()) {
+								Map<String, Object> manager = managerIter.next();
+								
+								if (beforeManagerList.contains(manager)) {
+									managerIter.remove();
+								}
+							}	
+						}
 					}
-				}
-//				
-//				if (beforeParticipantList != null || beforeParticipantList.size() != 0) {
-//					for (Map<String, Object> participant : participantList) {
-//						if (beforeParticipantList.contains(participant)) {
-//							participantList.remove(participant);
-//						}
-//					}
-//				}
-//				
-//				if (beforeViewerList != null || beforeViewerList.size() != 0) {
-//					for (Map<String, Object> viewer : viewerList) {
-//						if (beforeViewerList.contains(viewer)) {
-//							viewerList.remove(viewer);
-//						}
-//					}
-//				}
-			}
-			
-			if (managerList.size() > 0 || managerList != null) {
+				}			
 				getToArrMailList(managerList, param, request, projectName, projectId, "관리자", loginCookie);
 			}
 			
-			if (participantList.size() > 0 || participantList != null) {
+			if (param.get("participantList") != null) {
+				participantList = (List<Map<String, Object>>) param.get("participantList");
+				
+				//이전 member의 집합
+				if (mode.equals("edit")) {
+					if (param.get("beforeParticipantList") != null) {
+						beforeParticipantList = (List<Map<String, Object>>) param.get("beforeParticipantList");
+						
+						if (participantList.size() > 0 || participantList != null) {
+							Iterator<Map<String, Object>> participantIter = participantList.iterator();
+								
+							while (participantIter.hasNext()) {
+								Map<String, Object> participant = participantIter.next();
+								
+								if (beforeParticipantList.contains(participant)) {
+									participantIter.remove();
+								}
+							}	
+						}
+					}
+				}
+				
 				getToArrMailList(participantList, param, request, projectName, projectId, "참여자", loginCookie);
 			}
 			
-			if (viewerList.size() > 0 || viewerList != null) {
+			if (param.get("viewerList") != null) {
+				viewerList = (List<Map<String, Object>>) param.get("viewerList");
+				
+				//이전 member의 집합
+				if (mode.equals("edit")) {
+					if (param.get("beforeViewerList") != null) {
+						beforeViewerList = (List<Map<String, Object>>) param.get("beforeViewerList");
+						
+						if (viewerList.size() > 0 || viewerList != null) {
+							Iterator<Map<String, Object>> viewerIter = viewerList.iterator();
+								
+							while (viewerIter.hasNext()) {
+								Map<String, Object> viewer = viewerIter.next();
+								
+								if (beforeViewerList.contains(viewer)) {
+									viewerIter.remove();
+								}
+							}	
+						}
+					}
+				}
+				
 				getToArrMailList(viewerList, param, request, projectName, projectId, "조회자", loginCookie);
 			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			LOGGER.debug("sendNotiMail ERROR : " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -947,6 +980,10 @@ public class EzPMSController {
 		ArrayList<InternetAddress> toArrList = new ArrayList<InternetAddress>();
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		try {
+			if (nameList.size() == 0) {
+				return null;
+			}
+			
 			for (int i = 0; i < nameList.size(); i++) {
 				String userId = (String)nameList.get(i).get("userId");
 				
