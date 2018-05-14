@@ -400,11 +400,12 @@
 							for (var j = 0; j<= subDate; j++) {
 								betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
 								var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
-								var resultRegion = result[i].region.length >= 12 ? result[i].region.substring(0,12) + ".." : result[i].region;
-								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" + 
-										result[i].typeName + (resultRegion != "" ? " : " + resultRegion : "") + "</td></tr>"); 
-							} 
+								var resultRegion = result[i].region.length >= 32 ? result[i].region.substring(0,32) + ".." : result[i].region;
+								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append($("<tr></tr>").append($("<td></td>")
+																															.attr("attitudeId", result[i].attitudeId)
+																															.attr("typeId", result[i].typeId)
+																															.html(result[i].typeName + (resultRegion != "" ? " : " + resultRegion : ""))));
+							}
 						} else if (result[i].dateType == '3') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + "</td></tr>"); 
@@ -638,47 +639,80 @@
 						selectedDeptID : encodeURIComponent(authDeptList.value)
 					},
 					success : function(json) {
-						
-				    	$('#addpopup_list tbody').children('tr').not(":first").remove();
-				    	
-				    	if (json.length == 0) {
-				    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:5%;height:0px;border:none;'></td>"));
-				    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
-				    		uvobjTr.append($("<td style='width:20%; height:0px; border:none;'></td>"));
-				    		uvobjTr.append($("<td style='width:70%; height:0px; border:none;'></td>"));
-				    		$("#addpopup_list tbody").append(uvobjTr);
-				    		
-				    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
-				    		$("#addpopup_list tbody").append(objTr);
-				    	}
-				    	
-				    	for(var i = 0; i < json.length; i++) {
-				    		if (json[i].apprStatus == 1) {
-				    			json[i].apprStatus = "승인";
-				    		} else {
-				    			json[i].apprStatus = "반려";
-				    		}
-
-				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i+1)));
-
-				    		if (json[i].writerName.length > 3) {
-				    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerName + "'></td>").text(json[i].writerName.substring(0,2) + "..."));	
-				    		} else {
-				    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(json[i].writerName));
-				    		}
-				    		if (json[i].writerDeptName.length > 6) {
-				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
-				    		} else {
-				    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
-				    		}
-				    		if (json[i].endDate == null) {
-				    			objTr.append($("<td style='width:70%; text-align:center'></td>").text("\u00a0" + json[i].startDate));
-				    		} else {
-					    		objTr.append($("<td style='width:70%; text-align:center'></td>").text("\u00a0" + json[i].startDate+ "\u00a0~\u00a0" + json[i].endDate));				    			
-				    		}
-
-				    		$("#addpopup_list tbody").append(objTr);
-				    	}
+						if (deptFlag == true){
+					    	$('#addpopup_list tbody').children('tr').not(":first").remove();
+					    	
+					    	if (json.length == 0) {
+					    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:5%;height:0px;border:none;'></td>"));
+					    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
+					    		uvobjTr.append($("<td style='width:20%; height:0px; border:none;'></td>"));
+					    		uvobjTr.append($("<td style='width:70%; height:0px; border:none;'></td>"));
+					    		$("#addpopup_list tbody").append(uvobjTr);
+					    		
+					    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
+					    		$("#addpopup_list tbody").append(objTr);
+					    	}
+					    	
+					    	for(var i = 0; i < json.length; i++) {
+					    		if (json[i].apprStatus == 1) {
+					    			json[i].apprStatus = "승인";
+					    		} else {
+					    			json[i].apprStatus = "반려";
+					    		}
+	
+					    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i+1)));
+	
+					    		if (json[i].writerName.length > 3) {
+					    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerName + "'></td>").text(json[i].writerName.substring(0,2) + "..."));	
+					    		} else {
+					    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(json[i].writerName));
+					    		}
+					    		if (json[i].writerDeptName.length > 6) {
+					    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + json[i].writerDeptName + "'></td>").text("\u00a0" + json[i].writerDeptName.substring(0,5) + "..."));
+					    		} else {
+					    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
+					    		}
+					    		if (json[i].endDate == null) {
+					    			objTr.append($("<td style='width:70%; text-align:center'></td>").text("\u00a0" + json[i].startDate));
+					    		} else {
+						    		objTr.append($("<td style='width:70%; text-align:center'></td>").text("\u00a0" + json[i].startDate+ "\u00a0~\u00a0" + json[i].endDate));				    			
+					    		}
+	
+					    		$("#addpopup_list tbody").append(objTr);
+					    	}
+						} else {
+							$('#addpopup_list tbody').children('tr').not(":first").remove();
+					    	
+					    	if (json.length == 0) {
+					    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:41px;height:0px;border:none;'></td>"));
+					    		uvobjTr.append($("<td style='width:294px; height:0px; border:none;'></td>"));
+					    		uvobjTr.append($("<td style='width:404px; height:0px; border:none;'></td>"));
+					    		$("#addpopup_list tbody").append(uvobjTr);
+					    		
+					    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:738px; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
+					    		$("#addpopup_list tbody").append(objTr);
+					    	}
+					    	
+					    	for(var i = 0; i < json.length; i++) {
+					    		if (json[i].apprStatus == 1) {
+					    			json[i].apprStatus = "승인";
+					    		} else {
+					    			json[i].apprStatus = "반려";
+					    		}
+	
+					    		var objTr = $("<tr></tr>").append($("<td style='width:41px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + (i+1)));
+	
+					    		if (json[i].endDate == null) {
+					    			objTr.append($("<td style='width:294px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)));
+					    		} else {
+						    		objTr.append($("<td style='width:294px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16)));				    			
+					    		}
+					    		
+					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text();
+					    		objTr.append($("<td style='width:404px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(statusContent));
+					    		$("#addpopup_list tbody").append(objTr);
+					    	}
+						}
 				    },
 				    complete : function() {
 				    	try {
@@ -951,24 +985,31 @@
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		<!-- 근태유영별 팝업창 -->
-		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;max-width:800px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="display:block; width:500px; margin:10px 0px 0px 1px;">
+			    <table class="popuplist" id="addpopup_list" style="display:block; width:800px; margin:10px 0px 0px 1px; table-layout:fixed;">
 				    <thead>
 				    	<tr>
-						<th class="layerHeader" colspan="4" style="width:500px;">
+						<th class="layerHeader" colspan="4" style="width:716px;">
 							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
 							<span id="popup_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
 						</th>
 						</tr>
 				    </thead>
-				    <tbody style="max-height:500px; width:500px; display:block; overflow-y:auto;">
+				    <tbody style="max-height:500px; width:738px; display:block; overflow-y:auto; overflow-x:hidden; text-overflow: ellipsis; white-space: nowrap;">
 				    	<tr>
-				    		<th style="height:30px">No.</th>
-				    		<th style="height:30px"><spring:message code='ezAttitude.t10'/></th>
-				    		<th style="height:30px"><spring:message code='ezAttitude.t9'/></th>
-				    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
+				    		<c:if test="${deptFlag == 'true'}">
+				    			<th style="height:30px">No.</th>
+					    		<th style="height:30px"><spring:message code='ezAttitude.t10'/></th>
+					    		<th style="height:30px"><spring:message code='ezAttitude.t9'/></th>
+					    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
+				    		</c:if>
+				    		<c:if test="${deptFlag != 'true'}">
+				    			<th style="height:30px; width:41px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No.</th>
+				    			<th style="height:30px; width:294px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><spring:message code='ezAttitude.bbhs12'/></th>
+				    			<th style="height:30px; width:404px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">내용 및 사유</th>
+				    		</c:if>
 						</tr>
 				    </tbody>
 				</table>
