@@ -994,17 +994,19 @@
 				tbl_pms_group D
 			ON
 				A.GROUP_ID = D.GROUP_ID
-			WHERE 
-				C.USER_ID = #userId#
-			AND  
+			WHERE		 
 				A.PROJECT_ID = #projectId#
 			AND 
 				A.TENANT_ID = #tenantId#
+			AND
+				C.USER_ID = #userId#
 		]]>
 		<isNotNull property="status">
-			AND
-				B.STATUS LIKE CONCAT('%',#status#,'%')
-		</isNotNull>
+			<isNotEqual property="status" compareValue="A">
+				AND
+				A.STATUS LIKE CONCAT('%',#status#,'%')
+			</isNotEqual>
+			</isNotNull>
 		<isNotNull property="taskName">
 			AND
 				A.TASK_NAME LIKE CONCAT('%',#taskName#,'%')
@@ -1038,6 +1040,10 @@
 		</isNotNull>
 			ORDER BY 
 				PLAN_END_DATE DESC
+		<isNotEqual property="limit" compareValue="0">
+			LIMIT 
+				#startRow#, #limit#
+		</isNotEqual>
 	</select>
 	
 	<select id="EzPMSDAO.getUserProjectRole"  parameterClass="map" resultClass="Integer">
@@ -1416,5 +1422,127 @@
 			AND
 				TENANT_ID = #tenantId#
 		]]>
+	</select>
+	
+	<select id="EzPMSDAO.getMyTasks" parameterClass="map" resultMap="projectTaskVO">
+	<![CDATA[
+		SELECT	
+			A.TASK_ID,
+			A.TENANT_ID,
+			A.PROJECT_ID,
+			A.GROUP_ID,
+			A.TASK_NAME,
+			A.STATUS,
+			A.PLAN_START_DATE,
+			A.PLAN_END_DATE,
+			A.REAL_START_DATE,
+			A.REAL_END_DATE,
+			A.REAL_PROGRESS,
+			A.WEIGHT,
+			A.OVERVIEW,
+			A.MEMBER_COUNT,
+			A.HEAD_MANAGER_ID,
+			A.HEAD_MANAGER_NAME,
+			A.HEAD_MANAGER_NAME2,
+			A.HEAD_MANAGER_DEPTNAME,
+			A.HEAD_MANAGER_DEPTNAME2,
+			A.WRITER_ID,
+			A.WRITE_DATE,
+			A.WRITER_NAME,
+			A.WRITER_NAME2,
+			A.WRITER_DEPTNAME,
+			A.WRITER_DEPTNAME2,
+			A.TREE_DEPTH,
+			A.ANCESTER_GROUP,
+			A.SORT_ORDER,
+			A.WORKINGDAY,
+			IFNULL(A.REST_DUEDAY, 0) AS REST_DUEDAY,
+			IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
+			A.DEL_STATUS
+			FROM 
+				tbl_pms_task A
+			JOIN 
+				tbl_pms_project B
+			ON
+				A.PROJECT_ID = B.PROJECT_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			JOIN
+				tbl_pms_member C
+			ON	
+				A.PROJECT_ID = C.PROJECT_ID
+			JOIN
+				tbl_pms_group D
+			ON
+				A.GROUP_ID = D.GROUP_ID
+			JOIN	
+				tbl_pms_taskmember E
+			ON
+				A.TASK_ID = E.TASK_ID
+			AND 
+				C.USER_ID = E.USER_ID
+			WHERE 
+				E.USER_ID = #userId#
+			AND  
+				A.PROJECT_ID = #projectId#
+			AND 
+				A.TENANT_ID = #tenantId#
+		]]>
+		<isNotNull property="status">
+			<isNotEqual property="status" compareValue="A">
+				AND
+				A.STATUS = #status#
+			</isNotEqual>
+		</isNotNull>
+			ORDER BY 
+				PLAN_END_DATE DESC	
+		<isNotEqual property="limit" compareValue="0">
+			LIMIT 
+				#startRow#, #limit#
+		</isNotEqual>
+	</select>
+	
+	<select id="EzPMSDAO.getTaskListCount" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT	
+			COUNT(A.TASK_ID)	
+		FROM
+				tbl_pms_task A
+			JOIN 
+				tbl_pms_project B
+			ON
+				A.PROJECT_ID = B.PROJECT_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			JOIN
+				tbl_pms_member C
+			ON	
+				A.PROJECT_ID = C.PROJECT_ID
+			JOIN
+				tbl_pms_group D
+			ON
+				A.GROUP_ID = D.GROUP_ID
+			JOIN	
+				tbl_pms_taskmember E
+			ON
+				A.TASK_ID = E.TASK_ID
+			AND
+				C.USER_ID = E.USER_ID
+			WHERE 
+		]]>
+		<isEqual property="isMyTask" compareValue="M">
+			E.USER_ID = #userId#
+			AND  
+		</isEqual>
+				A.PROJECT_ID = #projectId#
+			AND 
+				A.TENANT_ID = #tenantId#
+		
+		<isNotNull property="status">
+			<isNotEqual property="status" compareValue="A">
+				AND
+				A.STATUS = #status#
+			</isNotEqual>
+		</isNotNull>
 	</select>
 </sqlMap>

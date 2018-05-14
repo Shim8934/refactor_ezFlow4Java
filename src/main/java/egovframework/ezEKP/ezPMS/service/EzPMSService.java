@@ -39,7 +39,7 @@ public interface EzPMSService {
 	
 	public List<ProjectMemberVO> getProjectMember(Long projectId, int roleId, String lang);
 	
-	public List<ProjectTaskVO> getMyTasks(Long projectId, String status, int tenantId, String userId, String offset, String lang);
+	public List<ProjectTaskVO> getMyTasks(Long projectId, String status, int tenantId, String userId, String offset, String lang, int limit, int startRow);
 	
 	public List<ProjectTaskVO> getProjectTasks(Long projectId, String status, int tenantId, String offset, String lang);
 	
@@ -55,7 +55,7 @@ public interface EzPMSService {
 	
 	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang);
 	
-	public int getTaskListCount(String status, String mytask, Long projectId, int tenantId);
+	public int getTaskListCount(String status, String mytask, Long projectId, int tenantId, String userId);
 	
 	public int getTaskLogListCount(TaskLogListVO taskLog, int tenantId);
 	
@@ -65,7 +65,7 @@ public interface EzPMSService {
 	
 	public List<String> getProjectNameList(String userId, int tenantId);
 	
-	public List<ProjectTaskVO> getTaskList(SearchVO search);
+	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow);
 	
 	public List<ProjectGroupVO> getGroupList(SearchVO search);
 	

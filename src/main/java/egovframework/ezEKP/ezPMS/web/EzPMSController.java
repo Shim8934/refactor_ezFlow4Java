@@ -595,12 +595,56 @@ public class EzPMSController {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/getTaskList.do")
-	public String getTaskList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	@ResponseBody
+	public JSONObject getTaskList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS getTaskList started");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		long projectId = Long.parseLong(param.get("projectId").toString());
+		String userId = userInfo.getId();
+		String kanbanOrder = param.get("kanbanOrder").toString();	
+		
+		String url = "/rest/ezPMS/task-list/" + projectId + "/users/" + userId;
+		String countUrl = "/rest/ezPMS/projects/" + projectId + "/tasks/count";
+		
+		JSONObject json = new JSONObject();
+		if (!kanbanOrder.equals("") || kanbanOrder != null) {
+			String[] kanbanStatus = kanbanOrder.split(",");
+			for (int i = 0; i < kanbanStatus.length; i++) {
+				if (kanbanStatus[i].contains("M")) {
+					kanbanStatus[i] = kanbanStatus[i].substring(kanbanStatus[i].length()-1);
+					param.put("isMyTask", "M");
+				} else {
+					param.put("isMyTask", "A");
+				}
+				
+				param.put("userId", userId);
+				param.put("status", kanbanStatus[i]);
+				
+				JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
+				String countStatus = countResult.get("status").toString();
+				
+				if (countStatus.equals("ok")) {
+					long taskCount = (Long) countResult.get("data");
+					
+					json.put("kanbanTaskCount" + (i + 1), taskCount);
+					
+					if (taskCount != 0) {
+						JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+						String status = result.get("status").toString();
+						
+						if (status.equals("ok")) {
+							JSONArray kanbanTask = (JSONArray) result.get("data");
+							json.put("kanbanTask" + (i + 1), kanbanTask);
+						}
+					}
+				}
+			}
+		}
 		LOGGER.debug("ezPMS getTaskList ended");			
-		return null;
+		return json;
 	}
 	
 	/**

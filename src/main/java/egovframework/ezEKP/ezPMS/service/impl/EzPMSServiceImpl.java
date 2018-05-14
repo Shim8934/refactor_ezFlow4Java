@@ -338,9 +338,22 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectTaskVO> getMyTasks(Long projectId, String status, int tenantId, String userId, String offset, String lang) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProjectTaskVO> getMyTasks(Long projectId, String status, int tenantId, String userId, String offset, String lang, int limit, int startRow) {
+		LOGGER.debug("[SERVICE] getMyTasks started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("status", status);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("lang", lang);
+		map.put("offset", offset);
+		map.put("limit", limit);
+		map.put("startRow", startRow);
+		
+		List<ProjectTaskVO> taskList = ezPMSDAO.getMyTasks(map);
+		
+		LOGGER.debug("[SERVICE] getMyTasks ended");
+		return taskList;
 	}
 
 	@Override
@@ -438,9 +451,20 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getTaskListCount(String status, String mytask, Long projectId, int tenantId) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getTaskListCount(String status, String mytask, Long projectId, int tenantId, String userId) {
+		LOGGER.debug("[SERVICE] getTaskListCount started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("status", status);
+		map.put("isMyTask", mytask);
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		
+		int taskCount = ezPMSDAO.getTaskListCount(map);
+		
+		LOGGER.debug("[SERVICE] getTaskListCount ended.");
+		return taskCount;
 	}
 
 	@Override
@@ -478,11 +502,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectTaskVO> getTaskList(SearchVO search) {
+	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow) {
 		LOGGER.debug("[SERVICE] getTaskList started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", "juhongsun");
+		param.put("userId", userId);
 		param.put("projectId", search.getProjectId());
 		param.put("taskName", search.getTaskName());
 		param.put("upperGroupName", search.getUpperGroupName());
@@ -493,6 +517,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("lang", ""); //파라미터로 받아와야함.
 		param.put("status", search.getStatus());
 		param.put("tenantId", search.getTenantId());
+		param.put("limit", limit);
+		param.put("startRow", startRow);
 		
 		List<ProjectTaskVO> list = ezPMSDAO.getTaskList(param);
 		

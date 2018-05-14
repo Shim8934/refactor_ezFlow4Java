@@ -92,17 +92,15 @@ public class EzPMSController2 {
 	 * @return
 	 */
 	@RequestMapping(value="/ezPMS/projectTaskList.do")
-	public String projectTaskList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+	public String projectTaskList(HttpServletRequest request, Model model,@RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
 		
 		LOGGER.debug("ezPMS projectTaskList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		String projectId = request.getParameter("projectId");
+		String userId = userInfo.getId();
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/task-list/" + projectId + "/users/" + userId, param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {

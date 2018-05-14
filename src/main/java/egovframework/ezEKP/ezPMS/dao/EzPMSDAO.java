@@ -241,5 +241,14 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public ProjectTaskVO getTaskDetails(Map<String, Object> map){
 		return (ProjectTaskVO) select ("EzPMSDAO.getTaskDetails", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ProjectTaskVO> getMyTasks(Map<String, Object> map) {
+		return (List<ProjectTaskVO>) list ("EzPMSDAO.getMyTasks", map);
+	}
+
+	public int getTaskListCount(Map<String, Object> map) {
+		return (int) select ("EzPMSDAO.getTaskListCount", map);
+	}
 	
 }

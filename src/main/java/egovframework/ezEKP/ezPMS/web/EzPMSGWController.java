@@ -769,19 +769,17 @@ public class EzPMSGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
+			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String status = request.getParameter("status");
-			String myTask = request.getParameter("myTask");
+			String isMyTask = request.getParameter("isMyTask");
 			
-			int taskListCount = ezPMSService.getTaskListCount(status, myTask, projectId, info.getTenantId());
-			
-			JSONObject data = new JSONObject();
-			data.put("taskListCount", taskListCount);
+			int taskListCount = ezPMSService.getTaskListCount(status, isMyTask, projectId, info.getTenantId(), userId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", data);
+			result.put("data", taskListCount);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			

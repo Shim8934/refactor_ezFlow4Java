@@ -42,7 +42,7 @@ $(document).ready(function(){
 });
 
 $(function() {
-	setKanbanList();
+	initKanbanList();
 	ableToChangeStatus();
 	initProgressBar();
 	
@@ -167,20 +167,48 @@ function kanbanSetting() {
 	addProjectPopup(18, 29, 500, 350, "/ezPMS/kanbanSetting.do?projectId=" + projectId);
 }
 
-function setKanbanList() {
+function initKanbanList() {
 	var kanbanOrderArr = kanbanOrder.split(",");
 	var strHTML = "";
-
+	
 	for (var i = 0; i < kanbanOrderArr.length; i++) {
-		strHTML += "<div id='kanban"+ (i + 1) +"' class='kanban'>";
+		strHTML += "<div id='kanban"+ (i + 1) +"' class='kanban' style='cursor : pointer'>";
 		strHTML += "<h1></h1>";
-		strHTML += "<div class='card'>";
-		strHTML += "Hello";
-		strHTML += "</div>";
+		strHTML += "<div class='cardArea'></div>"
 		strHTML += "</div>";
 	}
 	
 	$("#kanbanArea").html(strHTML);
+	
+	//칸반 내 업무 넣기
+	data = {
+			projectId : projectId,
+			kanbanOrder : kanbanOrder,
+			limit : 10,
+			startRow : 0
+	}
+			
+	$.ajax({
+		type : "POST",
+		dataType: "json",
+		contentType: "application/json; charset=UTF-8",
+		url : "/ezPMS/getTaskList.do",
+		data :JSON.stringify(data),
+		success : function(result) {
+			$("#kanban1").find("h1").append(" (" + result.kanbanTaskCount1 + ")");
+			$("#kanban2").find("h1").append(" (" + result.kanbanTaskCount2 + ")");
+			$("#kanban3").find("h1").append(" (" + result.kanbanTaskCount3 + ")");
+			$("#kanban4").find("h1").append(" (" + result.kanbanTaskCount4 + ")");
+			
+			setTasksIntoKanban(result.kanbanTask1, "kanban1", result.kanbanTaskCount1, "new");
+			setTasksIntoKanban(result.kanbanTask2, "kanban2", result.kanbanTaskCount2, "new");
+			setTasksIntoKanban(result.kanbanTask3, "kanban3", result.kanbanTaskCount3, "new");
+			setTasksIntoKanban(result.kanbanTask4, "kanban4", result.kanbanTaskCount4, "new");
+			
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+		}
+	});
 	
 	CurrentHeight = $(window).height()-100;
 	$(".kanban").css("height", CurrentHeight - 14 + "px");
@@ -217,7 +245,13 @@ function setKanbanList() {
 			break;
 		}
 		
-		$("#kanban" + (i + 1)).find("h1").text(title);
+		if (kanbanOrderArr[i].indexOf("M") == -1) {
+			$("#kanban" + (i + 1)).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"M" + kanbanOrderArr[i] + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'>MY!</span>");	
+		} else if (kanbanOrderArr[i].indexOf("B") == -1) {
+			$("#kanban" + (i + 1)).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"" + kanbanOrderArr[i].slice(-1) + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'>MY!</span>");
+		} else {
+			$("#kanban" + (i + 1)).find("h1").html(title);
+		}
 	}
 }
 
@@ -287,6 +321,161 @@ function changeStatus(status) {
 function getProjectMember(roleId) {
 	addProjectPopup(18, 29, 374, 350, "/ezPMS/getProjectMember.do?projectId=" + projectId + "&roleId=" + roleId);
 }
+
+function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType) {
+	if (taskList != null) {
+		var kanbanHTML = "";
+		for (var i = 0; i < taskList.length; i++) {
+			var taskStatus = "";
+			var statusColor = "";
+			
+			switch (taskList[i].status) {
+			case "P" :
+				taskStatus = "진행";
+				statusColor = progressColor;
+				break;
+			case "W" :
+				taskStatus = "대기";
+				statusColor = "grey";
+				break;
+			case "L" :
+				taskStatus = "지연";
+				statusColor = overdueColor;
+				break;
+			case "S" :
+				taskStatus = "보류";
+				statusColor = holdColor;
+				break;
+			case "C" :
+				taskStatus = "완료";
+				statusColor = completeColor;
+				break;
+			}
+			
+			kanbanHTML += "<div id='" + taskList[i].taskId + "' class='card' onclick='getTaskDetails(this)'>";
+			kanbanHTML += "<h5>" + taskList[i].taskName + "</h5>";
+			kanbanHTML += "<div class='progressArea" + taskList[i].taskId + "'></div>";
+			kanbanHTML += "<div style='float:left'><span style='border:1px solid black'>start</span>" + taskList[i].planStartDate + "</div><br>";
+			kanbanHTML += "<div><span style='border:1px solid black'>end </span>" + taskList[i].planEndDate;
+			kanbanHTML += "<div class='taskStatus' style='background-color:" + statusColor + "'>" + taskStatus + "</div></div>";
+			kanbanHTML += "</div>";
+		}
+		
+		if (taskType == "add") {
+			$("#" + targetPosition).find(".cardArea").append(kanbanHTML);
+		} else {
+			$("#" + targetPosition).find(".cardArea").html(kanbanHTML);
+		}
+		
+		for (var i = 0; i < taskList.length; i++) {
+			var statusColor = "";
+			
+			switch (taskList[i].status) {
+			case "P" :
+				taskStatus = "진행";
+				statusColor = progressColor;
+				break;
+			case "W" :
+				taskStatus = "대기";
+				statusColor = "grey";
+				break;
+			case "L" :
+				taskStatus = "지연";
+				statusColor = overdueColor;
+				break;
+			case "S" :
+				taskStatus = "보류";
+				statusColor = holdColor;
+				break;
+			case "C" :
+				taskStatus = "완료";
+				statusColor = completeColor;
+				break;
+			}
+			
+			$("#" + targetPosition).find(".progressArea" + taskList[i].taskId).LineProgressbar({
+				percentage : taskList[i].realProgress,
+				fillBackgroundColor : statusColor,
+				height : '15px',
+				radius : '15px',
+				width : '71%'
+			});
+		}
+		
+		var targetStatus = $("#" + targetPosition).attr("name");
+		var position = targetPosition;
+		var startRow = $("#" + targetPosition).find(".card").length;
+		
+		if (taskList.length >= 10) {
+			$("#" + targetPosition).append("<div class='moreBtn' name='" + targetStatus + "' onclick='moreTaskList(\"" + targetStatus + "\", \"" + targetPosition + "\", " + startRow + ", \"add\")' style='border:1px solid black; background-color:white; text-align:center;'><span>더보기</span></div>");
+		}
+	}
+}
+
+function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
+	$("#" + targetPosition).find(".moreBtn").remove();
+	data = {
+		projectId : projectId,
+		targetPosition : targetPosition,
+		kanbanOrder : targetStatus,
+		limit : 10,
+		startRow : startRow
+	}
+	
+	$.ajax({
+		type : "POST",
+		dataType: "json",
+		contentType: "application/json; charset=UTF-8",
+		url : "/ezPMS/getTaskList.do",
+		data :JSON.stringify(data),
+		success : function(result) {
+			setTasksIntoKanban(result.kanbanTask1, "" + targetPosition, result.kanbanTask1.length, "" + taskType);
+			
+			$("#" + targetPosition).attr("name", targetStatus);
+			var title = "";
+			
+			if (targetStatus.indexOf("M") != -1) {
+				title += "나의 ";
+			}
+			
+			switch (targetStatus.slice(-1)) {
+			case "A" : 
+				title += "전체 업무";
+				break;
+			case "W" :
+				title += "대기 중인 업무";
+				break;
+			case "P" :
+				title += "진행 중인 업무";
+				break;
+			case "C" :
+				title += "완료된 업무"
+				break;
+			case "S" :
+				title += "보류된 업무";
+				break;
+			case "L" :
+				title += "기한이 지난 업무";
+				break;
+			case "B" :
+				title += "게시판";
+				break;
+			}
+			
+			if (targetStatus.indexOf("M") == -1) {
+				$("#" + targetPosition).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"M" + targetStatus + "\", \""+ targetPosition +"\", 0, \"new\")'>MY!</span>");	
+			} else if (targetStatus.indexOf("B") == -1) {
+				$("#" + targetPosition).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"" + targetStatus.slice(-1) + "\", \""+ targetPosition +"\", 0, \"new\")'>MY!</span>");
+			} else {
+				$("#" + targetPosition).find("h1").html(title);
+			}
+			
+			$("#" + targetPosition).find("h1").append(" (" + result.kanbanTaskCount1 + ")");
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+		}
+	});
+}
 </script>
 <style type="text/css">
 #kanbanArea {
@@ -334,6 +523,12 @@ function getProjectMember(roleId) {
 	text-align: center;
 }
 
+.card > h5 {
+	margin : 0;
+	border-bottom : 1px solid #999;
+	padding-bottom : 5px;
+}
+
 .icon {
 	width:40px;
 	height:40px;
@@ -342,6 +537,14 @@ function getProjectMember(roleId) {
 	float : right;
 }
 
+.taskStatus {
+	float : right;
+}
+
+.percentCount {
+	width : 20%;
+	padding-left : 5px;
+}
 </style>
 </head>
 <body>
