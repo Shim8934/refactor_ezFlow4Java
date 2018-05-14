@@ -42,10 +42,9 @@
 				padding: 5px 4px;
 				font: 12px gulim;
 				padding-top: 7px;
- 				border: 1px solid #d1e1f2;
+ 				border: 1px solid #ddd;
  				color: #666;
 				border-radius:3px;
-				background-color: rgb(239, 244, 251);
 			}
 			
 			.btn_hover{
@@ -58,6 +57,13 @@
 				background-color: transparent !important;
 				border: 1px solid #ddd !important;
 				color: #aaa !important;
+			}
+			
+			#inAttiClock, #outAttiClock {
+				background: url("/images/clock.png") no-repeat 0 4px;
+				background-size: 14px;
+				height:20px;
+				font-family: Malgun Gothic, Meiryo UI;
 			}
 		</style>
 	</head>
@@ -79,14 +85,14 @@
 		<div id="clock" class="light">
 			<div class="display">
 				<%-- <p class="title" style="padding:3px 0px 0px 11px; width:200px;"><spring:message code='main.t00023'/></p> --%>
-				<div class="digits" style="padding:18px 0px 0px 0px; width:186px; border:1px solid #333; margin:16px; border-radius:20px;"></div>
+				<div class="digits" style="padding:18px 5px 0px 5px; width:186px; border:1px solid #333; margin:16px; margin-left:10px; border-radius:15px; height:120px"></div>
 			</div>
 		</div>
 		<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:213px; margin-bottom: 12px">
-			<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:12px; text-align: left; margin-left:60px; padding-left:22px">출근 : 출근 전</p>
-			<p id="outAttiClock" style="margin:5px 0px 12px 8px;  font-size:12px; text-align: left; margin-left:60px; padding-left:22px">퇴근 : 퇴근 전</p>
+			<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:14px; text-align: left; margin-left:50px; padding-left:22px;">출근 : 출근 전</p>
+			<p id="outAttiClock" style="margin:5px 0px 30px 8px;  font-size:14px; text-align: left; margin-left:50px; padding-left:22px">퇴근 : 퇴근 전</p>
 			<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
-			<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span>
+			<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:2px">퇴근</span>
 		</div>
 	</article>
 	<div id="left" style="border-top:1px solid #dedede">
@@ -149,7 +155,7 @@
 	    					$("#inAttiClock").text("출근 : " + result[i].startDate.split(" ")[1]);
 	    					$("#inAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
 	    				} else if (result[i].typeId == "A02") {
-	    					$("#inAttiClock").text("").append("출근 : <font color='red'>" + result[i].startDate.split(" ")[1] + "</font>");
+	    					$("#inAttiClock").text("").append("출근 : <font color='#ff4b00'>" + result[i].startDate.split(" ")[1] + "</font>");
 	    					$("#inAttiBtn").attr("onclick", "").addClass("btn_disabled").unbind("mouseenter");
 	    				} else if (result[i].typeId == "A03") {
 	    					$("#outAttiClock").text("퇴근 : " + result[i].startDate.split(" ")[1]);
