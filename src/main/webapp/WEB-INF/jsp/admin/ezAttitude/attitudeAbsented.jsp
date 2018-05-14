@@ -176,6 +176,7 @@
 	   					userName : searchUserName,
 	   					deptName : searchDeptName,
 	   					title : searchTitle,
+	   					deptId : "",
 	   					startDate : searchStartDate,
 	   					endDate : searchEndDate,
 	   					pageNum : pageNum,
@@ -264,7 +265,7 @@
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/admin/ezAttitude/excelAbsentedListExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&orderCell=" + orderCell + "&orderOption=" + orderOption + "&duplicated=duplicated";
+		    	exportExcelframe.location.href="/admin/ezAttitude/excelAbsentedListExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&orderCell=" + orderCell + "&orderOption=" + orderOption + "&duplicated=duplicated";
 		    	exportExcelframe.target="_blank";
 			}
 			

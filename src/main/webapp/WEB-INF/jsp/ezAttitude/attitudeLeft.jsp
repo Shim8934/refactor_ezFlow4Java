@@ -42,9 +42,10 @@
 				padding: 5px 4px;
 				font: 12px gulim;
 				padding-top: 7px;
- 				border: 1px solid #ddd;
+ 				border: 1px solid #d1e1f2;
  				color: #666;
-				border-radius:3px
+				border-radius:3px;
+				background-color: rgb(239, 244, 251);
 			}
 			
 			.btn_hover{
@@ -54,7 +55,9 @@
 			}
 			
 			.btn_disabled{
-				background-color: rgb(153, 153, 153);
+				background-color: transparent !important;
+				border: 1px solid #ddd !important;
+				color: #aaa !important;
 			}
 		</style>
 	</head>
@@ -75,13 +78,13 @@
 	<article class="time">
 		<div id="clock" class="light">
 			<div class="display">
-				<p class="title" style="padding:3px 0px 0px 11px; width:200px;"><spring:message code='main.t00023'/></p>
-				<div class="digits" style="padding:18px 0px 0px 15px; width:200px;"></div>
+				<%-- <p class="title" style="padding:3px 0px 0px 11px; width:200px;"><spring:message code='main.t00023'/></p> --%>
+				<div class="digits" style="padding:18px 0px 0px 0px; width:186px; border:1px solid #333; margin:16px; border-radius:20px;"></div>
 			</div>
 		</div>
-		<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:213px;">
-			<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:13px;">출근 : 00:00:00</p>
-			<p id="outAttiClock" style="margin:5px 0px 8px 8px;  font-size:13px;">퇴근 : 00:00:00</p>
+		<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:213px; margin-bottom: 12px">
+			<p id="inAttiClock" style="margin:5px 0px 0px 7px; font-size:12px; text-align: left; margin-left:60px; padding-left:22px">출근 : 출근 전</p>
+			<p id="outAttiClock" style="margin:5px 0px 12px 8px;  font-size:12px; text-align: left; margin-left:60px; padding-left:22px">퇴근 : 퇴근 전</p>
 			<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)">출근</span>
 			<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</span>
 		</div>
