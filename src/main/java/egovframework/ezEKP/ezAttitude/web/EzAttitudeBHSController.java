@@ -201,6 +201,7 @@ public class EzAttitudeBHSController {
 		
 		String userOffset = userInfo.getOffset().split("\\|")[1];
 		String isAllDept = "";
+		String authFlag = "";
 		boolean attitudeAdminCheck = true;
 		
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
@@ -271,11 +272,18 @@ public class EzAttitudeBHSController {
 		
 		if (deptList.size() > 1) {
 			attitudeAdminCheck = true;
+			
+			JSONObject dept = new JSONObject();
+			
+			for (int i = 0; i < deptList.size(); i++) {
+				dept = (JSONObject) deptList.get(i);
+				authFlag = (String) dept.get("authType");
+			}
 		}
 		
-		LOGGER.debug("!@#!@#@$!@#%%#% : " + deptList.size());
 		
 		model.addAttribute("deptList", deptList);
+		model.addAttribute("authFlag", authFlag);
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("uselang", userInfo.getLang());
 		model.addAttribute("attitudeAdminCheck", attitudeAdminCheck);
@@ -525,10 +533,14 @@ public class EzAttitudeBHSController {
 			}
 		}
 		
+		//현재시간
+		String time = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split(" ")[1];//////////////////////
+		
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attitudeTypeList", attitudeTypeList);
 		model.addAttribute("date", date);
+		model.addAttribute("time", time);
 		model.addAttribute("mode", mode);
 		
 		LOGGER.debug("/ezAttitude/attitudeNewItem ended");

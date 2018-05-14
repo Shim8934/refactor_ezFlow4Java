@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>수정신청 상세보기</title>
+		<title><spring:message code='ezAttitude.kbm2'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Tab.css" type="text/css" />
         <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
@@ -82,25 +82,27 @@
 		    	var obj = new Object();
 		    	
 		    	obj.idList = attid; 
-				
-			    $.ajax({
-					type : 'post',
-				    url : '/ezAttitude/delAttModApp.do',
-				    data : obj,
-				    dataType : "text",
-				    error: function(xhr, status, error){
-				    	alert("삭제 중 오류 발생")
-				    },
-				    success : function(json){
-						alert("삭제되었습니다.");
-			            try {
-			                window.opener.att_refresh();
-			            } catch (e) { 
-			            	window.opener.getAttitudeMainList(); 
-			            }
-			            window.close();
-				    }
-			    });
+		    	
+		    	if (confirm("정말로 삭제하시겠습니까?")) {
+				    $.ajax({
+						type : 'post',
+					    url : '/ezAttitude/delAttModApp.do',
+					    data : obj,
+					    dataType : "text",
+					    error: function(xhr, status, error){
+					    	alert("삭제 중 오류 발생")
+					    },
+					    success : function(json){
+							alert("삭제되었습니다.");
+				            try {
+				                window.opener.att_refresh();
+				            } catch (e) { 
+				            	window.opener.getAttitudeMainList(); 
+				            }
+				            window.close();
+					    }
+				    });
+		    	}
 		    }
 		    
 		    function modApprove() {
@@ -217,15 +219,15 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                        	<h1 style="padding:0px; margin-top:-5px;">수정신청상세보기</h1>
+	                        	<h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.kbm2'/></h1>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && data.apprStatus == 0}">
+	                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && data.apprStatus == 0 && deptFlag == 'true'}">
 		                            	<li><span onclick="modApprove()">승인</span></li>
 		                                <li><span onclick="modReturn()">반려</span></li>
 	                            	</c:if>
-	                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && userId == data.writerId && data.apprStatus == 0}">
+	                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && userId == data.writerId && data.apprStatus == 0 && deptFlag == 'true'}">
 	                            		<li style="background:none; padding-right:2px; padding-left:3px;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 	                            	</c:if>
 <!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
