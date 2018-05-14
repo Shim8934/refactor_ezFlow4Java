@@ -42,8 +42,7 @@
 					if (result == "ok") {
 						alert('<spring:message code="ezWebFolder.t182"/>');
 						listCnt = listCount;
-					}
-					else {
+					} else {
 						alert('<spring:message code="ezWebFolder.t134"/>');
 					}
 				},
