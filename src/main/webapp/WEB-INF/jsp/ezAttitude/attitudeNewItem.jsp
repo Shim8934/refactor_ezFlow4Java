@@ -200,6 +200,7 @@
 				}
 				
 				getFormBody();
+				editorResize();
 			}
 			
 			function getFormBody() {
@@ -464,6 +465,19 @@
 		    			}
 		    		}
 		    	})
+			}
+			
+			function editorResize() {
+				var typeId = $("#selectAtti").val();
+				var editHeight = document.documentElement.clientHeight;
+				
+				if (typeId == "A05" || typeId == "A06" || typeId == "A07" || typeId == "A08") {
+					editHeight = editHeight - 180;
+				} else {
+					editHeight = editHeight - 210;
+				}
+				editHeight += "PX";
+				$("#EdtorSize").css("height", editHeight);
 			}
 		</script>
 	</head>
