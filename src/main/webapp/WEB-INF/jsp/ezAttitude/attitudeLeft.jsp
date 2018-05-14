@@ -91,15 +91,13 @@
 		<ul></ul>
 		<h2><span id="deptAttitude" onclick="functionFlag(2)" style="width:100%; display:inline-block"><spring:message code='ezAttitude.bbhs6'/></span></h2>
 		<ul></ul>
-		<c:if test="${attitudeConfigVO.attitudeModAppl == 1 }">
-			<h2><span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block"><spring:message code = 'ezAttitude.t7' /></span></h2>
-			<ul>
-				<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs32'/></span></li>
-				<c:if test="${attitudeAdminCheck == true}">
-					<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs33'/></span></li>
-				</c:if>
-			</ul>
-		</c:if>
+		<h2><span id="" onclick="functionFlag(3)" style="width:100%; display:inline-block"><spring:message code = 'ezAttitude.t7' /></span></h2>
+		<ul>
+			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs32'/></span></li>
+			<c:if test="${attitudeAdminCheck == true}">
+				<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs33'/></span></li>
+			</c:if>
+		</ul>
 	</div>
 	<script type="text/javascript">
 		var userOffset = "${userOffset}";

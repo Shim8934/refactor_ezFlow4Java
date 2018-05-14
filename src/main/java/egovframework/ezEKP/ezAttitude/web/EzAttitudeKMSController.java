@@ -464,6 +464,26 @@ public class EzAttitudeKMSController {
 				}
 			}
 		}
+		
+		int myDeptCount = 0;
+		JSONObject dept = new JSONObject();
+		
+		for(int i = 0; i < deptList.size(); i++) {
+			dept = (JSONObject) deptList.get(i);
+			if (dept.get("deptId").equals(userInfo.getDeptID())) {
+				myDeptCount++;
+			}
+		}
+		
+		if (myDeptCount == 1) {
+			for(int i = 0; i < deptList.size(); i++) {
+				dept = (JSONObject) deptList.get(i);
+				if (dept.get("deptId").equals(userInfo.getDeptID())) {
+					dept.put("mine", "no");
+				}
+			}
+		}
+		
 		model.addAttribute("selectedDeptID", deptid);
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("authFlag", authFlag);
@@ -1087,6 +1107,24 @@ public class EzAttitudeKMSController {
 			LOGGER.debug("!@##$!@#%$$#%!%" + data.toJSONString());
 			attModDeptId = (String) data.get("writerDeptId");
 			model.addAttribute("data", data);
+			
+			url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudereg";
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userInfo.getId());
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			LOGGER.debug("status : " + status);
+			
+			JSONObject attitudeConfigVO = new JSONObject();
+			if (status.equals("ok")) {
+				attitudeConfigVO = (JSONObject) resultBody.get("data");
+				model.addAttribute("attitudeConfigVO", attitudeConfigVO);
+			}
 		}
 		
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
@@ -1348,6 +1386,25 @@ public class EzAttitudeKMSController {
 		
 		if (deptList.size() > 1) {
 			adminFlag = "true";
+		}
+		
+		int myDeptCount = 0;
+		JSONObject dept = new JSONObject();
+		
+		for(int i = 0; i < deptList.size(); i++) {
+			dept = (JSONObject) deptList.get(i);
+			if (dept.get("deptId").equals(userInfo.getDeptID())) {
+				myDeptCount++;
+			}
+		}
+		
+		if (myDeptCount == 1) {
+			for(int i = 0; i < deptList.size(); i++) {
+				dept = (JSONObject) deptList.get(i);
+				if (dept.get("deptId").equals(userInfo.getDeptID())) {
+					dept.put("mine", "no");
+				}
+			}
 		}
 		
 		model.addAttribute("deptList", deptList);
