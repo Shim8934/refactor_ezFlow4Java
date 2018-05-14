@@ -6433,6 +6433,7 @@ CREATE TABLE `tbl_ps_sliderimage` (
   `ISUSE` bigint(10) NOT NULL,
   `SN` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `URL` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`SLIDERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
