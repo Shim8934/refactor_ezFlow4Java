@@ -180,10 +180,10 @@
             </ul>
             -->
             </c:if>
-            <h2><span id="ATTITUDE" style="display:inline-block;width:100%;" onClick="menu_change('ATTITUDE')">근태 통계</span></h2>
+            <h2><span id="ATTITUDE" style="display:inline-block;width:100%;" onClick="menu_change('ATTITUDE')"><spring:message code='ezStatistics.kbm1' /></span></h2>
 		    <ul>
-			    <li><span style="display:inline-block;width:100%;" onClick="menu_change('ATTITUDE')">개인별 통계 출력</span></li>
-			    <li><span style="display:inline-block;width:100%;" onClick="goPage(24)">부서별 통계 출력</span></li>
+			    <li><span style="display:inline-block;width:100%;" onClick="menu_change('ATTITUDE')"><spring:message code='ezStatistics.t1018' /></span></li>
+			    <li><span style="display:inline-block;width:100%;" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li>
 		    </ul>
 	    </div>
         <script type="text/javascript">

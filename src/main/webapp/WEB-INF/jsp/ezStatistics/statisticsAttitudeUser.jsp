@@ -344,7 +344,7 @@
 		html += "</tr>";
 		html += "<tr>";
 		html += "<td rowspan='3'>"+selectUserName+"</td>";
-		html += "<td>일수</td>";
+		html += "<td><spring:message code='ezStatistics.kbm2' /></td>";
 		html += "<td>" + result[0].count + "</td>";
 		html += "<td>" + result[1].count + "</td>";
 		html += "<td>" + result[2].count + "</td>";
@@ -353,7 +353,7 @@
 		html += "<td>" + result[5].count + "</td>";
 		html += "</tr>";
 		html += "<tr>";
-		html += "<th style='text-align: center;'>데이터</th>";
+		html += "<th style='text-align: center;'><spring:message code='ezStatistics.t1000' /></th>";
 		html += "<th style='text-align: center;'>" + months[6] + "</th>";
 		html += "<th style='text-align: center;'>" + months[7] + "</th>";
 		html += "<th style='text-align: center;'>" + months[8] + "</th>";
@@ -362,7 +362,7 @@
 		html += "<th style='text-align: center;'>" + months[11] + "</th>";
 		html += "</tr>";
 		html += "<tr>";
-		html += "<td>일수</td>";
+		html += "<td><spring:message code='ezStatistics.kbm2' /></td>";
 		html += "<td>" + result[6].count + "</td>";
 		html += "<td>" + result[7].count + "</td>";
 		html += "<td>" + result[8].count + "</td>";
@@ -624,7 +624,7 @@
                     <input id="keyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
                     <a class="imgbtn" style="vertical-align: middle"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
                     &nbsp;&nbsp;
-                    	근태유형 : 
+                    	<spring:message code='ezStatistics.kbm3' /> : 
 	                <select name="attitudeType" id="attitudeType" onchange="selectBox_change()" style="width: 120px; margin-top:4px; padding-right:40px;">
 		      		</select>
                 </span>
@@ -653,7 +653,7 @@
 	                <div class="statistics_addition">
 	                    <dl>
 	                        <dt class="colorbox_wrap"><span style="background: #4bb2c5" class="colorbox"></span></dt>
-	                        <dd id="colorbox" class="additiontext">일수</dd>
+	                        <dd id="colorbox" class="additiontext"><spring:message code='ezStatistics.kbm2' /></dd>
 	                    </dl>
 	                </div>
                     <div id="chartdiv" style="width: 100%; text-align: center; display: none;">

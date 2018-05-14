@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezJournal.t165'/></title>
+		<title><spring:message code='ezAttitude.kbm31' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
@@ -59,7 +59,7 @@
 	   			var flag = true;
 	   			for (var i = 0; i < lpDepts.length; i++) {
 					if (lpDepts[i] == lpDeptId) {
-		   				alert("선택된 항목입니다.");
+		   				alert("<spring:message code='ezAttitude.kbm33' />");
 						flag = false;
 					}
 				}
@@ -84,7 +84,7 @@
 	   				lpAuthTypes.splice(lpAuthTypes.indexOf(targetAuthType),1);
 	   				$(".selectTR").remove();
 	   			} else {
-	   				alert("부서를 선택해 주세요");
+	   				alert("<spring:message code='ezAttitude.kbm34' />");
 	   			}
 	   		}
 	   		
@@ -126,8 +126,8 @@
 		</style>
 	</head>
 	
-	<body class="popup"> 
-        <h1><spring:message code='ezJournal.t165'/></h1>
+	<body class="popup">
+        <h1><spring:message code='ezAttitude.kbm31' /></h1>
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="setAuthorViewDept()"><spring:message code='main.t4008'/></span></li>
@@ -140,9 +140,9 @@
                     <div style="width: 250px; height: 100%; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
                 </td>
                 <td style="width: 30px; text-align: center;" rowspan="2">                            
-                      <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
-                      <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept(targetDept)">
-                 		</td>
+                	<img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
+                	<img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept(targetDept)">
+                </td>
                 <td class="listview" style="width: 200px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
                 	<div style="width: 200px%; height: 100%; overflow: auto;">
 	                	<table class="mainlist_free">

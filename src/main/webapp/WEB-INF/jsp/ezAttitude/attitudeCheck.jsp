@@ -36,6 +36,7 @@
 	    
 	    <script type="text/javascript">
 	    	var pCompanyId = ""; //현재 선택된 회사의 아이디
+	    	var pDeptId = ""; //현재 선택된 부서의 아이디
 	    	//검색조건 저장 변수
 	    	var searchUserName = ""; // 검색조건 (사원명)
 	    	var searchDeptName = ""; // 검색조건 (부서명)
@@ -50,6 +51,7 @@
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var adminCompany = "${adminCompany}";
+	    	var selectedDept = "${selectedDept}";
 	    	var listSize = 19;
 	    	
 	    	$(function(){
@@ -67,6 +69,18 @@
 		    		}
 		    		
 		            company_change();
+		        }
+	    		
+		        if (document.getElementById("ListDept").length == 0) {
+		            alert("부서 정보가 없습니다.");
+		        } else {
+		    		if (selectedDept != null) {
+		    			$('#ListDept').val(selectedDept);
+		    		} else {
+			            document.getElementById("ListDept").selectedIndex = 0;
+		    		}
+		    		
+		    		dept_change();
 		        }
 	    		
 	    		//헤더 클릭 시 정렬
@@ -144,6 +158,12 @@
 	    	function company_change(){
 	    		$('#receiverlist').empty();
 	    		pCompanyId = $("select[name=ListCompany]").val();
+// 	    		getAttitudeCheckList();
+	    	}
+	    	
+	    	function dept_change(){
+	    		$('#receiverlist').empty();
+	    		pDeptId = $("select[name=ListDept]").val();
 	    		getAttitudeCheckList();
 	    	}
 	    	
@@ -166,9 +186,10 @@
 	    			data : "GET",
 	    			dataType : "json",
 	    			async : false,
-	    			url : "/admin/ezAttitude/attitudeCheckList.do",
+	    			url : "/ezAttitude/attitudeCheckList.do",
 	    			data : {
 	    				companyId : pCompanyId,
+	    				deptId : pDeptId,
 	   					userName : searchUserName,
 	   					deptName : searchDeptName,
 	   					title : searchTitle,
@@ -338,11 +359,18 @@
 	    <h1><spring:message code = 'ezAttitude.t5' /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
-	        	<li style="background: none;"><span style="border: none;"><b><spring:message code='ezAttitude.t15' /></b></span></li>
+	        	<li style="background: none;"><span style="border: none;"><b>부서선택</b></span></li>
 				<li>
-					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
+					<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px; display:none;">
 						<c:forEach var = "companyItem" items="${list }">
 							<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
+						</c:forEach>
+		      		</select>
+	      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="margin-top:4px; padding-right:40px; width:100%">
+						<c:forEach var = "dept" items="${deptList}">
+							<c:if test="${dept.mine ne 'yes' }">
+								<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option>
+							</c:if>
 						</c:forEach>
 		      		</select>
 	      		</li>
@@ -352,10 +380,10 @@
 	  	<table id="searchTable" style="width:100%;">
 			<tbody>
 				<tr>
-					<td style="width: 3%;"><spring:message code='ezAttitude.t9'/></td>
-					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
+					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.lhj22' /></td>
 					<td style="width: 20%;">
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center"/> ~
@@ -363,12 +391,12 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
-					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
 					<td style="width: 3%"><spring:message code='ezAttitude.lhj18' /></td>
-					<td style="width: *;" colspan=3>
+					<td style="width: *;"  colspan=3>
 						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select>
-						<a class="imgbtn" style="margin-left:10px;"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
+					</td>
+					<td colspan=2>
+						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.bbhs7' /></span></a>&nbsp;
 					</td>

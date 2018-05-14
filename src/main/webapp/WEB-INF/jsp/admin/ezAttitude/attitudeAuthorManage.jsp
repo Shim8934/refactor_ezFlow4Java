@@ -45,7 +45,7 @@
 	            		attitudeAuthListSet(result);
 	            	},
 	            	error : function() {
-	            		alert("리스트를 가져오는 도중 에러 발생");
+	            		alert("<spring:message code = 'ezAttitude.kbm3' />");
 	            	}
 	            });
 	        }
@@ -68,7 +68,7 @@
 	                    userList.push(deptList);
 	                }
                 } else {
-                	html = "<tr><td colspan='4' style='text-align:center'>등록된 정보가 없습니다.</td></tr>";
+                	html = "<tr><td colspan='4' style='text-align:center'><spring:message code = 'ezAttitude.lhj14' /></td></tr>";
                 }
                 
                 $("#contentlist table.mainlist").html(html);
@@ -83,7 +83,7 @@
 	        //권한수정
 			function author_modify() {
 	        	if (selectedUserId == null || selectedUserId == "") {
-	        		alert("사원을 먼저 선택해 주세요");
+	        		alert("<spring:message code = 'ezAttitude.kbm19' />");
 	        		return;
 	        	}
 				var userId = selectedUserId;
@@ -94,17 +94,17 @@
 					url+="&userId="+userId+"&userName="+selectedUserName;
 					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 420));
 				} else {
-					alert("권한설정할 대상을 선택해 주십시오.");
+					alert("<spring:message code = 'ezAttitude.kbm20' />");
 				}
 			}
 	        
 	        //권한 삭제
 	        function author_delete() {
 	        	if (selectedUserId == null || selectedUserId == "") {
-	        		alert("사원을 먼저 선택해 주세요");
+	        		alert("<spring:message code = 'ezAttitude.kbm19' />");
 	        		return;
 	        	}
-	        	if (confirm("정말로 삭제하시겠습니까?")) {
+	        	if (confirm("<spring:message code = 'ezAttitude.kbm11' />")) {
 					$.ajax({
 						type : "POST",
 						url : "/admin/ezAttitude/deleteAttitudeAuth.do",
@@ -113,11 +113,11 @@
 							companyId : encodeURI($("#ListCompany").val())
 						},
 						success : function() {
-							alert("삭제되었습니다.");
+							alert("<spring:message code = 'ezAttitude.bbhs27' />");
 							company_change();
 						},
 						error : function() {
-							alert("삭제하는 도중 오류 발생");
+							alert("<spring:message code = 'ezAttitude.kbm3' />");
 						}
 					})
 	        	}
@@ -145,14 +145,14 @@
 	        
 	/////////////////툴팁//////////////////////////////////////////////////////////////
 			function showTooltip(deptNameList, authTypeStr, e) {
-// 			    tip = (!e.target ? event.srcElement.value : e.target.value)
+ 			    //tip = (!e.target ? event.srcElement.value : e.target.value)
 
 				var authTypeList = authTypeStr.split(",");
 				
 			    var html = "";
 			    html += "<table name='tooltip' class='calendar_layer' cellpadding='0' cellspacing='0' border='0' width='100%'>";
 				html += "<tr class='selectTR' style='background-color: rgb(237, 244, 253);'>";
-				html += "<th scope='col'>권한부서정보</th>";
+				html += "<th scope='col'><spring:message code = 'ezAttitude.kbm21' /></th>";
 				html += "</tr>";
 				html += "<tr class='' style='background-color: rgb(255, 255, 255);'>";
 				html += "<td class='text'>";
@@ -160,9 +160,9 @@
 				for (var i = 0; i < deptNameList.length; i++) {
 					var authName = "";
 					if (authTypeList[i] == "R") {
-						authName = "열람";
+						authName = "<spring:message code = 'ezAttitude.kbm22' />";
 					} else {
-						authName = "관리";
+						authName = "<spring:message code = 'ezAttitude.kbm23' />";
 					}
 					html += "<tr class='' style='background-color: rgb(255, 255, 255);'>";
 					html += "<td>" + deptNameList[i] + " (" + authName + ")</td>";
@@ -178,86 +178,12 @@
 			    $('#tooltip').css('visibility', 'visible');
 			}
 			
+	        //툴팁숨기기
 			function hideTooltip() {
 				$('#tooltip').css('visibility', 'hidden');
 			}
-			/*
-			function TooltipMouseOver(obj, event) {			
-			    showTooltip_MouseOver();
-			}
 			
-			function showTooltip_MouseOver(e, pLocation) {
-			    tip = (!e.target ? event.srcElement.value : e.target.value)
-			
-			    var tTip = document.getElementById('tooltip'); 
-			    tTip.innerHTML = ""; // 
-			    var tTable = document.createElement("TABLE");
-			    var tTr = document.createElement("TR");
-			    var tTh = document.createElement("TH");
-			    tTable.className = "calendar_layer";
-			    tTable.setAttribute("cellpadding", "0");
-			    tTable.setAttribute("cellspacing", "0");
-			    tTable.setAttribute("border", "0");
-			    tTable.setAttribute("width", "100%");
-			    tTh.setAttribute("scope", "col");
-			    tTh.style.background = "#edf4fd";
-			    tTh.style.border = "1px solid #d1ddec";
-			    var oText = document.createTextNode("text");
-			    //tTh.innerHTML = pSubject;
-			    tTh.appendChild(oText);
-			    tTr.appendChild(tTh);
-			    tTable.appendChild(tTr);
-			
-			    var tTr = document.createElement("TR");
-			    var tTd = document.createElement("TD");
-			    tTd.className = "text";
-			    tTd.style.borderTop = "0px";
-			
-			    var sTable = document.createElement("TABLE");
-			    var sTr = document.createElement("TR");
-			    var sTd = document.createElement("TD");
-			    sTable.className = "td_list";
-			    sTable.setAttribute("cellpadding", "0");
-			    sTable.setAttribute("cellspacing", "0");
-			    sTable.setAttribute("border", "0");
-			    sTable.setAttribute("width", "100%");
-			
-			    
-			    var sTr = document.createElement("TR");
-			    var sTd = document.createElement("TD");
-			    var sSpan = document.createElement("SPAN");
-			    
-			    sTd.appendChild(sSpan);
-			    sTd.innerHTML += "[strLang270]<br/>";
-			    sTr.appendChild(sTd);
-			    sTable.appendChild(sTr);
-			
-			    
-			    if (pLocation != "") {
-			        var sTr = document.createElement("TR");
-			        var sTd = document.createElement("TD");
-			        var sSpan = document.createElement("SPAN");
-			        var oText2 = document.createTextNode(pLocation); 
-			        
-			        sTd.appendChild(sSpan);
-			        //sTd.innerHTML += "[" + strLang11 + "]<br/>" + pLocation;
-			        sTd.innerHTML += "[strLang11]<br/>";
-			        sTd.appendChild(oText2);
-			        sTr.appendChild(sTd);
-			        sTable.appendChild(sTr);
-			    }
-			    
-			    tTd.appendChild(sTable);
-			    tTr.appendChild(tTd);
-			    tTable.appendChild(tTr);
-			
-			    
-			    tTip.appendChild(tTable);
-			    tTip.style.left = getMouseXLocation(e) + 'px';
-			    tTip.style.top = getMouseYLocation(e) + 'px';
-			    tTip.style.visibility = 'visible';
-			}
-			*/
+	        //마우스 X축 위치
 			function getMouseXLocation(e) {
 			    if (e)
 			        var E = e;
@@ -291,6 +217,7 @@
 			    return locationX
 			}
 
+			//마우스 Y축 위치
 			function getMouseYLocation(e) {
 			    if (e)
 			        var E = e;
@@ -363,18 +290,18 @@
 	      		</li>
 	      	</ul>
 		    <ul>
-		        <li><span onClick="author_add()">권한등록</span></li>
-		        <li><span onClick="author_modify()">권한수정</span></li>
-		        <li><span onClick="author_delete()">권한삭제</span></li>
+		        <li><span onClick="author_add()"><spring:message code='ezAttitude.kbm15' /></span></li>
+		        <li><span onClick="author_modify()"><spring:message code='ezAttitude.kbm16' /></span></li>
+		        <li><span onClick="author_delete()"><spring:message code='ezAttitude.kbm17' /></span></li>
 		    </ul>
 		</div>
         <div style="width: 100%; height: 100%;">
             <table class="mainlist" style="width: 100%;">
                 <tr>
-                    <th style="width: 20%;"><span>이름</span></th>
-                    <th style="width: 20%;"><span>직위</span></th>
-                    <th style="width: 20%;"><span>부서</span></th>
-                    <th style="width: 40%;"><span>권한부서</span></th>
+                    <th style="width: 20%;"><span><spring:message code='ezAttitude.t10' /></span></th>
+                    <th style="width: 20%;"><span><spring:message code='ezAttitude.t11' /></span></th>
+                    <th style="width: 20%;"><span><spring:message code='ezAttitude.t9' /></span></th>
+                    <th style="width: 40%;"><span><spring:message code='ezAttitude.kbm18' /></span></th>
                 </tr>
             </table>
             <div id="contentlist" name="contentlist" style="height: 460px; overflow-y: auto;">
