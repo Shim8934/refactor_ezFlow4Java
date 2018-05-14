@@ -28,10 +28,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
+
 
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -67,7 +69,10 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
     private EgovIdGnrService idgenService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileMngUtil.class);
-
+    
+    @Autowired
+	private CommonUtil commonUtil;
+    
     /**
      * 첨부파일에 대한 목록 정보를 취득한다.
      *
@@ -418,11 +423,13 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		    	
 	    	    String mimetype = "application/octet-stream"; //"application/x-msdownload"	
 	    	    
+	    	    String nfcFilename = commonUtil.normalizeFileName(orgFileName);
+	    	    
 	    	    // dhlee : 파일 크기가 큰 경우 메모리가 작은 시스템에서는 문제가 발생하여 BUFF_SIZE 만큼의 버퍼를 할당하도록 수정함.	    	    
 //	    	    response.setBufferSize(fSize);
 	    	    response.setBufferSize(BUFF_SIZE);	    	    
 				response.setContentType(mimetype);
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + orgFileName + "\"");				
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + nfcFilename + "\"");				
 //				response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(orgFileName, "UTF-8").replaceAll("\\+","\\ ") + ";");
 				response.setContentLength(fSize);
 //				response.setHeader("Content-Transfer-Encoding","binary");

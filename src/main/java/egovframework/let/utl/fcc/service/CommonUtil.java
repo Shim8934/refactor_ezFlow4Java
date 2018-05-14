@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -946,37 +947,6 @@ public class CommonUtil {
 		return xmlDoc;
 	}
 
-	//Baonk: Get user's infor from parameters
-	public LoginVO getUserForGw(String userId, String serverName, String lang, String timezone) {
-		try{
-			int tenantId  = loginService.getTenantId(serverName);
-			LoginVO login = new LoginVO();
-			login.setId(userId);
-			login.setDn("NOPASSWORD");
-			login.setTenantId(tenantId);
-			
-			LoginVO user = loginService.selectUser(login);
-			
-			if (!lang.equals("")) {
-				if (user.getPrimary().equals(lang)) {
-					user.setPrimary("1");
-				} else {
-					user.setPrimary("2");
-				}
-			}
-			
-			if (!timezone.equals("")) {
-				user.setOffset(timezone);
-			}
-			
-			return user;
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
 	/**
 	 * globals.properties에 있는 
 	 * DataBaseType을 반환
@@ -1027,6 +997,7 @@ public class CommonUtil {
         
         return propertyValue;
     }
+	
 	//html entity unescape 메서드 2018-04-06 강민수92
 	public String htmlUnescape(String html) throws Exception {
 		logger.debug("htmlUnescape started");
@@ -1135,6 +1106,54 @@ public class CommonUtil {
 		}
 		logger.debug("getJsonFromRestApi ended");
 		return resultBody;
+	}
+	
+	/**
+	 * 첨부파일명이 자소분리된 형태로 나올경우, 자소결합
+	 * @param filename
+	 * @return String
+	 */
+	public String normalizeFileName (String filename) {
+		logger.debug("normalizeFileName started");
+		logger.debug("filename=" + filename);
+		
+		String nfcFilename =  Normalizer.normalize(filename, Normalizer.Form.NFC);
+		
+		logger.debug("nfcFilename=" + nfcFilename);
+		logger.debug("normalizeFileName ended");
+		return nfcFilename;
+	}
+	
+	
+	//Baonk: Get user's infor from parameters
+	public LoginVO getUserForGw(String userId, String serverName, String lang, String timezone) {
+		try{
+			int tenantId  = loginService.getTenantId(serverName);
+			LoginVO login = new LoginVO();
+			login.setId(userId);
+			login.setDn("NOPASSWORD");
+			login.setTenantId(tenantId);
+			
+			LoginVO user = loginService.selectUser(login);
+			
+			if (!lang.equals("")) {
+				if (user.getPrimary().equals(lang)) {
+					user.setPrimary("1");
+				} else {
+					user.setPrimary("2");
+				}
+			}
+			
+			if (!timezone.equals("")) {
+				user.setOffset(timezone);
+			}
+			
+			return user;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
