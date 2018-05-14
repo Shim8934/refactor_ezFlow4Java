@@ -569,7 +569,7 @@ public class EzAttitudeBHSController {
 		}
 		
 		//현재시간
-		String time = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split(" ")[1];//////////////////////
+		String time = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split(" ")[1];
 		
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("userInfo", userInfo);

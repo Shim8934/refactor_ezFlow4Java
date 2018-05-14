@@ -274,13 +274,13 @@
 					var tdHeight = parseInt(calendarHeight.substr(0, calendarHeight.length - 2)/(result.length + 1 - 2));
 					
 // 					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd"}).text($("#calTitle").text())));
-					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd", "color":"black"}).text("<spring:message code='ezAttitude.bbhs38'/>")));
+					objTbody.prepend($("<tr></tr>").append($("<th></th>").attr("colspan","2").css({"height":"33px", "background-color": "#edf4fd", "color":"black", "border":"1px solid #d1ddec"}).text("<spring:message code='ezAttitude.bbhs38'/>")));
 					for (var i = 0; i < result.length; i++) {
 						
-						if (result[i].typeId == 'A01' || result[i].typeId == 'A03') {
+						if (result[i].typeId == 'A01' || result[i].typeId == 'A03' || result[i].typeId == 'A05') {
 							continue;
 						}
-						objTr = $("<tr></tr>").append($("<th style='width:74px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + result[i].typeName.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></th>").text(result[i].typeName));
+						objTr = $("<tr></tr>").append($("<th style='width:74px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:normal' title='" + result[i].typeName.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></th>").text(result[i].typeName));
 						objTd = $("<td nowrap></td>").css({"width" : "80px", "cursor" : "pointer"})
 						.attr("id",result[i].typeId).text("0" + "<spring:message code='ezAttitude.t21'/>")
 						.attr("parentId",result[i].parentId)
@@ -910,9 +910,9 @@
 						<option value="<c:out value='${selectedDeptID}'/>" selected><c:out value='${selectedDeptID}'/></option>
 					</select>
 				</c:if>
-				<li style="background:none;margin-left:7px;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;출/퇴근</li>
+				<li style="background:none;margin-left:7px;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;출근,퇴근</li>
 	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;휴가</li>
-	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;지각, 조퇴</li>
+	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;지각,조퇴</li>
                 <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
 			</ul>
 		</div>

@@ -44,9 +44,9 @@
 				
 				$("#typeName").text(" " + typeName);
 				$("#writerName").text(" " + writerName);
-				$("#region").text(" " + region);
-				$("#mobile").text(" " + mobile);
-				$("#bizsub").text(" " + bizSub);
+				$("#region").html(" " + region);
+				$("#mobile").html(" " + mobile);
+				$("#bizsub").html(" " + bizSub);
 				
 				var doc = document.getElementById('message').contentWindow.document;
 				doc.open();
