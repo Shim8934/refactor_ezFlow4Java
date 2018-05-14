@@ -16,7 +16,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
-import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 
 public interface EzAttitudeService {
@@ -97,7 +97,7 @@ public interface EzAttitudeService {
 	
 	public List<HolidayVO> getHolidayList(String isRest, String companyId, int tenantId) throws Exception;
 
-	public List<JournalAuthorVO> getDeptUserList(String tenantId, String key,	String value) throws Exception;
+	public List<AttitudeAuthorVO> getDeptUserList(String tenantId, String key,	String value) throws Exception;
 
 	public int delUsersModifyAtt(String companyId, int tenantId, String[] ids) throws Exception;
 
@@ -128,11 +128,11 @@ public interface EzAttitudeService {
 
 	public void saveAttitudeAuthDept(int tenantId, String companyId, String selectedUser, String deptIds, String authTypes) throws Exception;
 
-	public List<JournalAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId, String userId, String isAllDept) throws Exception;
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId, String userId, String isAllDept) throws Exception;
 	
 	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String deptId, String offset, String year,String typeId, int tenantId) throws Exception;
 
-	public List<JournalAuthorVO> getCompanyDeptList(String userId, String companyId, int tenantId) throws Exception;
+	public List<AttitudeAuthorVO> getCompanyDeptList(String userId, String companyId, int tenantId) throws Exception;
 
 	public int checkUseAttitudeType(String typeId, int tenantId, String companyId) throws Exception;
 

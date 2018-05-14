@@ -36,7 +36,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
-import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
@@ -743,7 +743,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	
 	@Override
-	public List<JournalAuthorVO> getDeptUserList(String tenantId, String key,
+	public List<AttitudeAuthorVO> getDeptUserList(String tenantId, String key,
 			String value) throws Exception {
 		LOGGER.debug("getDeptUserList started");
 		
@@ -753,7 +753,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("key", key);
 		map.put("value", value);
 		
-		List<JournalAuthorVO> userList = ezAttitudeDAO.getDeptUserList(map);
+		List<AttitudeAuthorVO> userList = ezAttitudeDAO.getDeptUserList(map);
 		
 		LOGGER.debug("getDeptUserList ended");
 		return userList;
@@ -1517,9 +1517,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<JournalAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId,
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId,
 			String userId, String isAllDept) throws Exception {
-		List<JournalAuthorVO> list = new ArrayList<JournalAuthorVO>();
+		List<AttitudeAuthorVO> list = new ArrayList<AttitudeAuthorVO>();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -1580,7 +1580,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<JournalAuthorVO> getCompanyDeptList(String userId,
+	public List<AttitudeAuthorVO> getCompanyDeptList(String userId,
 			String companyId, int tenantId) {
 		LOGGER.debug("getCompanyDeptList started");
 		Map<String, Object> map = new HashMap<String, Object>();

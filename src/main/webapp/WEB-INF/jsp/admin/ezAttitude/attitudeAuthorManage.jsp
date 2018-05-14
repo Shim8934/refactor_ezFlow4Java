@@ -59,8 +59,8 @@
 	                for (var i = 0; i < result.length; i++) {
 	                    html += "<tr id='" + result[i].userId + "' onclick='listClick(this);' ondblclick='author_modify()' style='cursor: pointer;'>";
 	                    html += "<td style='width:20%;color:gray;'>" + result[i].userName + "</td>";
-	                    html += "<td style='width:20%;color:gray;'>" + result[i].userTitle + "</td>";
-	                    html += "<td style='width:20%;color:gray;'>" + result[i].userDeptName + "</td>";
+	                    html += "<td style='width:20%;color:gray;'>" + result[i].jikwi + "</td>";
+	                    html += "<td style='width:20%;color:gray;'>" + result[i].deptName + "</td>";
 	                    html += "<td style='width:40%;color:gray;'>" + result[i].authDeptName + " <i class='fas fa-info-circle' style='margin-left: 5px; font-size: 14px;'></i></td>";
 	                    html += "</tr>";
 	                    

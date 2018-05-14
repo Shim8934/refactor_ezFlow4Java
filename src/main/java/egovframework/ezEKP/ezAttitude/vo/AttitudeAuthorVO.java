@@ -1,75 +1,93 @@
 package egovframework.ezEKP.ezAttitude.vo;
 
 public class AttitudeAuthorVO {
-	private String userId;
-	private String userName;
-	private String userTitle;
-	private String tenantId;
-	private String authDeptId;
-	private String authDeptName;
-	private String userDeptId;
-	private String userDeptName;
-	private String companyId;
-	private String authDeptType;
-	
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	public String getUserTitle() {
-		return userTitle;
-	}
-	public void setUserTitle(String userTitle) {
-		this.userTitle = userTitle;
-	}
-	public String getTenantId() {
-		return tenantId;
-	}
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
-	public String getAuthDeptId() {
-		return authDeptId;
-	}
-	public void setAuthDeptId(String authDeptId) {
-		this.authDeptId = authDeptId;
-	}
-	public String getAuthDeptName() {
-		return authDeptName;
-	}
-	public void setAuthDeptName(String authDeptName) {
-		this.authDeptName = authDeptName;
-	}
-	public String getUserDeptId() {
-		return userDeptId;
-	}
-	public void setUserDeptId(String userDeptId) {
-		this.userDeptId = userDeptId;
-	}
-	public String getUserDeptName() {
-		return userDeptName;
-	}
-	public void setUserDeptName(String userDeptName) {
-		this.userDeptName = userDeptName;
-	}
-	public String getCompanyId() {
-		return companyId;
-	}
-	public void setCompanyId(String companyId) {
-		this.companyId = companyId;
-	}
-	public String getAuthDeptType() {
-		return authDeptType;
-	}
-	public void setAuthDeptType(String authDeptType) {
-		this.authDeptType = authDeptType;
-	}
+		/** 사용자 아이디 */
+		private String userId;
+	    /** 사용자 이름 */
+	    private String userName;
+	    /** 사용자 직위 */
+	    private String jikwi;
+	    /** 메일 */
+	    private String mail;
+	    /** 이미지 */
+	    private String userImg;
+	    /** 부서 아이디 */
+	    private String deptId;
+	    /** 부서명 */
+	    private String deptName;
+	    /** 자신의 부서인지(yes/no) */
+	    private String mine;
+	    /** 권한타입(R/M) */
+	    private String authType;
+	    /** 권한부서 아이디 */
+		private String authDeptId;
+		/** 권한부서명 */
+		private String authDeptName;
+		
+		public String getUserId() {
+			return userId;
+		}
+		public void setUserId(String userId) {
+			this.userId = userId;
+		}
+		public String getUserName() {
+			return userName;
+		}
+		public void setUserName(String userName) {
+			this.userName = userName;
+		}
+		public String getJikwi() {
+			return jikwi;
+		}
+		public void setJikwi(String jikwi) {
+			this.jikwi = jikwi;
+		}
+		public String getMail() {
+			return mail;
+		}
+		public void setMail(String mail) {
+			this.mail = mail;
+		}
+		public String getUserImg() {
+			return userImg;
+		}
+		public void setUserImg(String userImg) {
+			this.userImg = userImg;
+		}
+		public String getDeptId() {
+			return deptId;
+		}
+		public void setDeptId(String deptId) {
+			this.deptId = deptId;
+		}
+		public String getDeptName() {
+			return deptName;
+		}
+		public void setDeptName(String deptName) {
+			this.deptName = deptName;
+		}
+		public String getMine() {
+			return mine;
+		}
+		public void setMine(String mine) {
+			this.mine = mine;
+		}
+		public String getAuthType() {
+			return authType;
+		}
+		public void setAuthType(String authType) {
+			this.authType = authType;
+		}
+		public String getAuthDeptId() {
+			return authDeptId;
+		}
+		public void setAuthDeptId(String authDeptId) {
+			this.authDeptId = authDeptId;
+		}
+		public String getAuthDeptName() {
+			return authDeptName;
+		}
+		public void setAuthDeptName(String authDeptName) {
+			this.authDeptName = authDeptName;
+		}
 }

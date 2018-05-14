@@ -12,7 +12,6 @@
 	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>
 	<typeAlias alias="AttitudeAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO"/>
 	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
-	<typeAlias alias="AttitudeJournalAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO" />
 	
 	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
 		<result property="companyId"				column="COMPANY_ID"				columnIndex="1"/>
@@ -46,7 +45,7 @@
 		<result property="formHtml"					column="FORM_HTML"				columnIndex="5"/>
 	</resultMap>
 	
-	<resultMap class="AttitudeJournalAuthorVO" id="userMap">
+	<resultMap class="AttitudeAuthorVO" id="userMap">
 		<result property="userName" 				column="USER_NAME" 				columnIndex="1"/>
 		<result property="userId" 					column="USER_ID" 				columnIndex="2"/>
 		<result property="jikwi" 					column="JIKWI" 					columnIndex="3"/>
@@ -771,11 +770,9 @@
 		<![CDATA[
 			SELECT 
 				A.USER_ID AS userId,
-			    A.TENANT_ID AS tenantId,
-			    A.COMPANY_ID AS companyId,
 			    B.DISPLAYNAME AS userName,
-			    B.TITLE AS userTitle,
-			    B.DESCRIPTION AS userDeptName,
+			    B.TITLE AS jikwi,
+			    B.DESCRIPTION AS deptName,
 			    group_concat(A.AUTH_DEPT_ID order by C.DISPLAYNAME) AS authDeptId,
 			    group_concat(C.DISPLAYNAME order by C.DISPLAYNAME) AS authDeptName,
     			group_concat(A.AUTH_TYPE order by C.DISPLAYNAME) AS authDeptType
@@ -816,7 +813,7 @@
 		]]>
 	</delete>
 		
-	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map" resultClass="AttitudeJournalAuthorVO">
+	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
 		<![CDATA[
 			SELECT
 				D.DISPLAYNAME AS deptName,
@@ -916,7 +913,7 @@
 <!-- 		</iterate> -->
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="AttitudeJournalAuthorVO">
+	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
 		<![CDATA[
 			SELECT 
 				CN AS deptId,

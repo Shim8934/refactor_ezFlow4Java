@@ -48,7 +48,6 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
-import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -493,7 +492,7 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			List<JournalAuthorVO> userList = ezAttitudeService.getDeptUserList(info.getTenantId() + "", key, value);
+			List<AttitudeAuthorVO> userList = ezAttitudeService.getDeptUserList(info.getTenantId() + "", key, value);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1161,7 +1160,7 @@ public class EzAttitudeGWController {
 				endPoint = Integer.parseInt(endPoint)- Integer.parseInt(startPoint) + "";
 			}
 			
-			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
 
 			deptIdList = new String[authDeptlist.size()];
 			
@@ -1238,7 +1237,7 @@ public class EzAttitudeGWController {
 				isAllDept = "Y";
 			}
 			
-			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(tenantId, companyId, userId, isAllDept);
 			
 			deptIdList = new String[authDeptlist.size()];
 			
@@ -1948,7 +1947,7 @@ public class EzAttitudeGWController {
 			String isAllDept = request.getParameter("isAllDept");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 		
-			List<JournalAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept);
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2042,7 +2041,7 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			userId = "";
 			
-			List<JournalAuthorVO> resultList = ezAttitudeService.getCompanyDeptList(userId, companyId, info.getTenantId());
+			List<AttitudeAuthorVO> resultList = ezAttitudeService.getCompanyDeptList(userId, companyId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

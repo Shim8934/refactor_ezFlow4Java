@@ -18,7 +18,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
-import egovframework.ezEKP.ezAttitude.vo.JournalAuthorVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAttitudeDAO")
@@ -121,8 +121,8 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<JournalAuthorVO> getDeptUserList(HashMap<String, String> map) throws Exception {
-		return (List<JournalAuthorVO>) list("ezAttitudeAdminDAO.getDeptUserList", map);
+	public List<AttitudeAuthorVO> getDeptUserList(HashMap<String, String> map) throws Exception {
+		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getDeptUserList", map);
 	}
 
 	public void saveAttitudeUserConfig(Map<String, Object> map) throws Exception {
@@ -247,9 +247,9 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<JournalAuthorVO> getAttitudeAuthDeptList(
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(
 			Map<String, Object> map) {
-		return (List<JournalAuthorVO>) list("ezAttitudeAdminDAO.getAttitudeAuthDeptList", map);
+		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getAttitudeAuthDeptList", map);
 	}
 	public void insertAttitudeAuth(Map<String, Object> map) {
 		insert("ezAttitudeAdminDAO.insertAttitudeAuth", map);
@@ -262,8 +262,8 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<JournalAuthorVO> getCompanyDeptList(Map<String, Object> map) {
-		return (List<JournalAuthorVO>) list("ezAttitudeAdminDAO.getCompanyDeptList", map);
+	public List<AttitudeAuthorVO> getCompanyDeptList(Map<String, Object> map) {
+		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getCompanyDeptList", map);
 	}
 
 	@SuppressWarnings("unchecked")
