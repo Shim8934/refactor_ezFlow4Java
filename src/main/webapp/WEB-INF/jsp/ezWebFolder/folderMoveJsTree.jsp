@@ -148,6 +148,10 @@
 				}
 			}
 			
+			if (uppFolderId.indexOf("_") > -1) {
+				uppFolderId = uppFolderId.substring(0, uppFolderId.indexOf("_"));
+			}
+			
 			if (folderId == uppFolderId) {
 				alert("<spring:message code='ezWebFolder.t210'/>");
 				return;

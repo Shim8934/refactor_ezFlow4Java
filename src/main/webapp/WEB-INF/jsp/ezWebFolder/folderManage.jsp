@@ -145,6 +145,11 @@
 			}
 			
 			var functionType = "insert";
+			
+			if (folderId.indexOf("_") > -1) {
+				folderId = folderId.substring(0, folderId.indexOf("_"));
+			}
+
 			inputNameDlg_cross_dialogArguments[0] = folderId;
 			inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
 			inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
@@ -187,6 +192,11 @@
 			}
 			
 			var functionType = "update";
+			
+			if (folderId.indexOf("_") > -1) {
+				folderId = folderId.substring(0, folderId.indexOf("_"));
+			}
+			
 			inputNameDlg_cross_dialogArguments[0] = folderId;
 			inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
 			inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
@@ -227,6 +237,10 @@
 				return;
 			}
 			
+			if (folderId.indexOf("_") > -1) {
+				folderId = folderId.substring(0, folderId.indexOf("_"));
+			}
+			
 			deleteFolderDlg_cross_dialogArguments[0] = folderId;
 			deleteFolderDlg_cross_dialogArguments[1] = add_onclick_Complete;
 			console.log("folderId delete_onclick function" + folderId);
@@ -265,6 +279,10 @@
 				return;
 			}
 			
+			if (folderId.indexOf("_") > -1) {
+				folderId = folderId.substring(0, folderId.indexOf("_"));
+			}
+			
 			moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
 			moveCopyFolderDlg_cross_dialogArguments[1] = "move";
 			moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
@@ -284,6 +302,10 @@
 				return;
 			}
 			
+			if (folderId.indexOf("_") > -1) {
+				folderId = folderId.substring(0, folderId.indexOf("_"));
+			}
+			
 			moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
 			moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
 			moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
@@ -299,6 +321,10 @@
 			if (parent == '#' && folderType != "S") {
 				alert("최상위 폴더는 공유할 수 없습니다.");
 				return;
+			}
+			
+			if (folderId.indexOf("_") > -1) {
+				folderId = folderId.substring(0, folderId.indexOf("_"));
 			}
 			
 			var openWindow = window.open("/ezWebFolder/addShareView.do?folderFileId=" + folderId + "&folderFileType=D", "addShareView", GetOpenWindowfeature(610, 685));

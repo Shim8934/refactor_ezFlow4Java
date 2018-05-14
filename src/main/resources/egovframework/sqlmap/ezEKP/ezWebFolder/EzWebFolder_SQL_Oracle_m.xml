@@ -253,10 +253,10 @@
 	
 	<select id="EzWebFolderDAO_m.getShareFolderTree" parameterClass="Map" resultMap="folderTreeVO">
 		SELECT
-			FOLDER_ID AS ID,
+			(FOLDER_ID || '_' || FP.NUM) AS ID,
 		    CASE WHEN FP.FOLDER_PATH = D2.FOLDER_PATH
 		        THEN '##'
-		        ELSE FOLDER_UPPER
+		        ELSE (FOLDER_UPPER || '_' || FP.NUM)
 		    END PARENT,
 		    CASE WHEN FP.FOLDER_PATH = D2.FOLDER_PATH
 		        THEN 1
@@ -272,7 +272,9 @@
 		    FOLDER_LEVEL AS FOLDERLEVEL 
 		FROM TBL_WEBFOLDER_FOLDER D2
 		JOIN (
-		    SELECT D.FOLDER_PATH
+		    SELECT
+		    	D.FOLDER_PATH,
+		    	ROWNUM AS NUM
 		    FROM TBL_WEBFOLDER_FOLDER D
 		    JOIN (
 		        SELECT DISTINCT
