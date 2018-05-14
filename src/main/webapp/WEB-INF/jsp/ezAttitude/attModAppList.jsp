@@ -59,6 +59,10 @@
 		var checkAdmin = "${checkAdmin}";
 		var authFlag = "${authFlag}";
 		var usepostDate = false;
+		var searchAppr = ""; //#appr_search
+		var searchWriter = ""; //#writer_search
+		var searchStartDate = ""; //
+		var searchEndDate = ""; //
 		
 		$(function(){
 			$(document).on('click', '#AttList th', function(){
@@ -182,11 +186,6 @@
 			
 			var obj = $("#search").offset();
 			
-			$("#layer_popup").css({
-				   "position" : "absolute",
-				   "top" : obj.top + $("#search").height(),
-				   "left" : obj.left
-				});
 			if (checkAdmin != "true") {
 				$("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');	
@@ -283,31 +282,69 @@
 	    }
 	    
 	    function search_popup() {
-	    	if ($("#layer_popup").css("display") == "none") {
-	       		$("#layer_popup").css("display","block");
-	       	} else {	
-	       		$("#layer_popup").css("display","none");
+	    	try {
+	    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);	
+	    	} catch(e) {
+	    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);
 	    	}
+        	
+        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+        	
+        	$("#popup2").css("left", popupX);
+        	
+			$("#popup2").modal({
+				  escapeClose: false,
+				  clickClose: false,
+				  showClose: false
+			});
 	    }
 	    
 	    function popup_close() {
-	    	$("#layer_popup").css("display","none");
-// 	    	date_reset();
+	    	$.modal.close();
 	    }
 	    
 	    function att_search(r) {
-// 	    	popup_close();
 			if (r == "refresh") {
 				$("#writer_search").val("");
     			$("#writerDept_search").val("");
     			$("#appr_search").val("");
     			if (usepostDate) {
-    				DateSearch_Click();
-    				$(usepostdate).prop("checked", false);
+    				date_reset();
     			}
-//     			$("#Radio2").prop("checked", true);
-//     			type = "0";
+    			$(Radio2).prop("checked", true);
+    			type_set();
 			}
+			
+ 	    	searchAppr = $("#appr_search").val();
+ 	    	searchWriter = $('#writer_search').val();
+ 	    	if (!checkAdmin) {
+ 	    		$("#appr_search").val("");
+	 	    	if (adminFlag == 'true'){
+		 	    	$("#writer_search").val("");
+	 	    	}
+	 	    	if (usepostDate) {
+	 	    		searchStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	 	    		searchEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		            if (searchStartDate > searchEndDate) {
+		                alert("시작일 보다 종료일이 빠를 수 없습니다.");
+		                return;
+		            } else {
+		            	date_reset();
+		            }
+		        } else {
+		        	searchStartDate = "";
+		        	searchEndDate = "";
+		        }
+ 	    	} else {
+ 	    		searchStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+ 	    		searchEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	            if (searchStartDate > searchEndDate) {
+	                alert("시작일 보다 종료일이 빠를 수 없습니다.");
+	                return;
+	            }
+ 	    	}
+ 	    	
+			popup_close();
 			goToPageByNum("1");
 	    }
 	    
@@ -320,18 +357,9 @@
 	    	
 	    	$("#HeaderAllCheckBox").prop("checked",false);
 	    	
-	    	if (usepostDate) {
-	            var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-		        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-
-	            if (startDate > endDate) {
-	                alert("시작일 보다 종료일이 빠를 수 없습니다.");
-	                return;
-	            }
-	        }
 	    	var obj = new Object();
 	    	
-		    obj.apprUserName = $('#appr_search').val();
+		    obj.apprUserName = searchAppr;
 		    if (adminFlag == 'true') {
 		    	if (checkAdmin == 'true') {
 		    		obj.writerDeptName = writerDept_search.value;
@@ -339,10 +367,10 @@
 		    		obj.writerDeptId = writerDept_search.value;
 			    	obj.writerDeptName = $("#writerDept_search option:selected").text();	
 		    	}
-		    	obj.writerName = $('#writer_search').val();
+		    	obj.writerName = searchWriter;
 		    }
-		    obj.startDate = startDate;
-		    obj.endDate = endDate;
+		    obj.startDate = searchStartDate;
+		    obj.endDate = searchEndDate;
 			obj.pageNum = pageNum;
 			obj.totalPages = totalPages;
 			obj.totalAtt = totalAtt;
@@ -373,17 +401,15 @@
 	    	ShowAttProgress();
 	    	
 	    	if (usepostDate) {
-	            var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-		        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-
-	            if (startDate > endDate) {
+	            if (searchStartDate > searchEndDate) {
 	                alert("시작일 보다 종료일이 빠를 수 없습니다.");
+	                HiddenAttProgress();
 	                return;
 	            }
 	        }
 	    	var obj = new Object();
 			
-		    obj.apprUserName = $('#appr_search').val();
+		    obj.apprUserName = searchAppr;
 		    if (adminFlag == 'true') {
 		    	if (checkAdmin == 'true') {
 		    		obj.writerDeptName = writerDept_search.value;
@@ -393,8 +419,8 @@
 		    	}
 		    	obj.writerName = $('#writer_search').val();
 		    }
-		    obj.startDate = startDate;
-		    obj.endDate = endDate;
+		    obj.startDate = searchStartDate;
+		    obj.endDate = searchEndDate;
 			obj.totalPages = totalPages;
 			obj.totalAtt = totalAtt;
 			obj.type = type;
@@ -451,7 +477,7 @@
 		    	
 		    	infoStr += ' [총 <span style="color:#017BEC;">' + data.totalAtt;
 		    	
-		    	if (data.startDate != null && data.endDate != null) {
+		    	if (data.startDate != "" && data.endDate != "") {
 		    		infoStr += '</span> 개 - ';
 		    		infoStr += data.startDate.substring(0,4) + '년' + 
 			    	data.startDate.substring(5,7) + '월' + 
@@ -551,17 +577,18 @@
 	        });
 	        var NowDate = utcDate2(offsetMin);
 	        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	        $("#Sdatepicker").datepicker('setDate', NowDate);
 	        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	        $("#Edatepicker").datepicker('setDate', NowDate);
 	        
-	        if(!usepostDate){
+	        if (!checkAdmin) {
+		        $(usepostdate).prop('checked', false);
+		        usepostDate = false;
+		        $("#Sdatepicker").datepicker('setDate', NowDate);
+		        $("#Edatepicker").datepicker('setDate', NowDate);
 	            $("#Sdatepicker").datepicker('disable');
 	            $("#Edatepicker").datepicker('disable');
-	        }
-	        else {
-	            $("#Sdatepicker").datepicker('enable');
-	            $("#Edatepicker").datepicker('enable');
+	        } else {
+	        	$("#Sdatepicker").val("${startDate}");
+	    		$("#Edatepicker").val("${endDate}");
 	        }
 	    }
 	    
@@ -1224,10 +1251,17 @@
         </ul>
         </div>
         <c:if test="${checkAdmin != 'true'}">
-	        <div id="layer_popup" style="width:460px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none; z-index:1;">
-	          <div class="popupwrap1" style="background-color:#ffffff; position: relative;">
-	            <div class="popupwrap2" style="width:100%;">
-	              <table style="width:100%;border-spacing:0px;border-collapse:collapse;border:none;"  class="content">
+	        <div id="popup2" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
+	            <div class="popupwrap3">
+	              <table style="display:block; width:440px; margin:10px 0px 0px 1px;"  class="popuplist">
+	               <thead>
+				    	<tr>
+						<th class="layerHeader" colspan="4" style="width:440px;">
+							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
+							&nbsp;검색
+						</th>
+						</tr>
+				    </thead>
 	              	<c:if test="${adminFlag == 'true' || checkAdmin =='true'}">
 						<tr>
 							<th nowrap>신청자명</th>
@@ -1256,7 +1290,7 @@
 			        <a class="imgbtn" id="cancelBtn" onclick="popup_close()"><span>취소</span></a>
 			      </div>
 	            </div>
-	          </div>
+	            <a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
 	        </div>
         </c:if>
         <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 

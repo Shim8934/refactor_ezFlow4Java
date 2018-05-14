@@ -85,7 +85,7 @@
 		<div id="clock" class="light">
 			<div class="display">
 				<%-- <p class="title" style="padding:3px 0px 0px 11px; width:200px;"><spring:message code='main.t00023'/></p> --%>
-				<div class="digits" style="padding:18px 5px 0px 5px; width:186px; border:1px solid #ddd; margin:16px; margin-left:10px; border-radius:15px; height:120px"></div>
+				<div class="digits" style="padding:18px 5px 0px 5px; width:186px; border:1px solid #ddd; margin:16px; margin-left:10px; border-radius:15px; height:130px"></div>
 			</div>
 		</div>
 		<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:213px; margin-bottom: 12px">
@@ -107,8 +107,7 @@
 				<li><span id="" onclick="functionFlag(4)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.bbhs33'/></span></li>
 			</c:if>
 			<c:if test="${authFlag == 'M'}">
-				<li><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;근태입력</span></li>
-				<li><span id="" onclick="functionFlag(6)" style="width:100%;display:inline-block">&nbsp;근태수정</span></li>
+				<li><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;근태관리</span></li>
 			</c:if>
 		</ul>
 	</div>
@@ -259,6 +258,9 @@
 	    			break;
 	    		case 4:	// 신청관리현황
 	    			window.open("/ezAttitude/manageAttModAppList.do", "right");
+	    			break;
+	    		case 5:	// 근태관리
+	    			window.open("/ezAttitude/attitudeAdminMod.do", "right");
 	    			break;
 	    	}
 	    }
