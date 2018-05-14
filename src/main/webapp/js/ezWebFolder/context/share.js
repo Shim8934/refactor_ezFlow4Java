@@ -10,7 +10,7 @@ var shareContext = (function() {
 		}
 		
 		if (selectedLength > 1) {
-			alert("하나만 선택하세요.");
+			alert(messages.strLang23);
 			return;
 		}
 		
