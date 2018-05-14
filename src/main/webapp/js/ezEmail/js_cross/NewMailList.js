@@ -255,7 +255,8 @@ function MakeListInfoHTML(ConentObject) {
                 for (var HRows = 0; HRows < XmlHeaderRows.length; HRows++) {
 
                     var _TDColum = document.createElement("TD");
-                    switch (SelectSingleNodeValue(XmlHeaderRows[HRows], "propname")) {
+                    var ssNodeValue = SelectSingleNodeValue(XmlHeaderRows[HRows], "propname");
+                    switch (ssNodeValue) {
                         case "importance":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
@@ -297,8 +298,8 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.setAttribute("data-msgto", p_Msgto);
                             // 재원 수정
                             _TDColum.setAttribute("data-name", p_Sender);
-                            _TDColum.onclick = function (event) { useMailWriteSenderClick == "NO" ? event_listclick(this, event) : new_mail_onclick(this); };
-                            //_TDColum.onclick = function (event) { event_listclick(this, event); };
+                            //_TDColum.onclick = function (event) { useMailWriteSenderClick == "NO" ? event_listclick(this, event) : new_mail_onclick(this); };
+                            _TDColum.onclick = function (event) { event_listclick(this, event); };
                             _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
                             _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
@@ -355,6 +356,19 @@ function MakeListInfoHTML(ConentObject) {
                             break;
                     }
                     _TR.appendChild(_TDColum);
+                    
+                    // 180514 보낸사람 클릭 시 메일 작성
+                    if (ssNodeValue == "sender" && useMailWriteSenderClick == "YES") { 
+                    	var _TDColumSpan = document.createElement("span");
+
+                    	_TDColumSpan.style.padding = "7px 0";
+                        _TDColumSpan.innerHTML = innerHTML;
+                        _TDColumSpan.onclick = function (event) { event_senderNameClick(this.parentElement, event); };
+                        _TDColumSpan.ondblclick = function (event) { event_senderNameDBClick(event); };
+                        
+                        _TR.lastChild.innerHTML = "";
+                        _TR.lastChild.appendChild(_TDColumSpan);
+                    }
                 }
                 GetListInfo_ContentObject.appendChild(_TR);
             }
@@ -1514,6 +1528,24 @@ function event_SublistDBClick(obj) {
     callMsgDlg(obj.getAttribute("_contentclass"), obj.getAttribute("_href"));
     MailList_ChangeStatus(obj);
 }
+// 보낸사람 클릭
+var mailWriteSenderChk = true;
+function event_senderNameClick(thisParent, event){
+	if (!mailWriteSenderChk) { 
+		return; 
+	} else {
+		setTimeout(function(){
+			new_mail_onclick(thisParent); // 메일쓰기
+			
+			mailWriteSenderChk = true;
+		}, 200);
+		
+		mailWriteSenderChk = false;
+	}
+}
+function event_senderNameDBClick(event) {
+	event.stopPropagation();
+}  
 var pGroupListClickObject;
 function event_GrouplistDBClick(obj) {
     if (_SublistDBClickEvent) {

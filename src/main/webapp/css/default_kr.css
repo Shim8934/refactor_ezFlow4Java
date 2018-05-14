@@ -1507,13 +1507,13 @@ form{display:inline;margin:0}
 .icon_btn {cursor:pointer;}
 .organwrap { border:1px solid #bebdbd; font-size:12px; width:400px; margin:3px 3px 0px 3px; table-layout:fixed;}
 .organwrap td {border:0px !important; padding:0px; }
-.organwrap .pictd { vertical-align:top; margin:0px; padding:3px; background:#f0f0f0;}
-.organwrap .pic { width:90px; height:90px; border:1px solid #cfcfcf!important; overflow:hidden; background:url(/images/OrganTree/porson_noimg.gif) ;}
+.organwrap .pictd { vertical-align:top; margin:0px; padding:3px; /* background:#f0f0f0; */}
+.organwrap .pic { width:90px; height:90px; border:1px solid #cfcfcf!important; overflow:hidden; background:url(/images/noperson.png) center; background-repeat: no-repeat;}
 .organwrap .pic img { border:0px !important;}
 .organinfo {border:0px !important;table-layout:fixed; width:100%;}
 .organinfo  td {border:1px solid #cfcfcf;font-size:12px; border:0px !important; padding:2px 10px !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .organinfo .name { font-weight:bold;}
-.organinfo  td .icon { vertical-align:middle; margin-right:5px;}
+.organinfo  td .icon { vertical-align:middle; margin-right:5px; margin-top:-2px}
 
 
 .organwrap_list {border-top:0px !important; border-left:0px !important; border-right:0px !important; border-bottom:1px solid #bebdbd!important;  font-size:12px; width:400px; margin:0px 3px; table-layout:fixed;}

@@ -755,10 +755,9 @@
 	                                    <td>
 	                                        <div style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 225px; HEIGHT: 370px; BACKGROUND-COLOR: #ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
 	                                    </td>
-	                                    <td width="5"></td>
 	                                    <td>
-	                                        <div class="listview">
-	                                            <div id="OrganListView" style="OVERFLOW: auto; WIDTH: 358px; HEIGHT: 370px; border: 0"></div>
+	                                        <div class="listview" style="margin-left: 2px;">
+	                                            <div id="OrganListView" style="OVERFLOW: auto; WIDTH: 358px; HEIGHT: 372px; border: 0;"></div>
 	                                        </div>
 	                                    </td>
 	                                </tr>
@@ -784,7 +783,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <table class="content" style="width:100%;">
+	                        <table class="content" style="width:100%; margin-top:1px;">
 	                            <tr>
 	                                <th><spring:message code = 'ezPersonal.t1019' /></th>
 	                                <td>
@@ -798,7 +797,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition" style="float: right">
+	    <div class="btnposition" style="float: center">
 	        <a class="imgbtn"><span onclick="confirm_onClick()"><spring:message code = 'ezPersonal.t12' /></span></a>
 	        <a class="imgbtn"><span onclick="return window.close()"><spring:message code = 'ezPersonal.t13' /></span></a>
 	    </div>

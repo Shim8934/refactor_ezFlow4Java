@@ -366,11 +366,16 @@
 		                    TRRows.item(i).setAttribute("_big", big);
 		                    TRRows.item(i).setAttribute("_itemid", itemid);
 		                    TRRows.item(i).childNodes.item(1).setAttribute("style", "cursor:pointer");
+		                    
 		                    TRRows.item(i).childNodes.item(1).onclick = function () { 
-			                    var fileIndex = $(this).closest('tr').attr('_fileindex');
-		                    	var fileUid = $(this).closest('tr').attr('_uid');
+			                    var partIdx = $(this).closest('tr').attr('_fileindex');
+		                    	var msgId = $(this).closest('tr').attr('_uid');
+		                    	var isBig = $(this).closest('tr').attr('_big');
 		                    	
-		                    	FileDownload(this, fileIndex, parseInt(fileUid)); 
+		                    	var firstIdx = window.parent.multipartFirstIdx;
+		                    	partIdx = parseInt(partIdx) + parseInt(firstIdx);
+	                    		
+		                    	FileDownload(this, parseInt(partIdx), parseInt(msgId), isBig); 
 		                    };
 		                }
 		        		
@@ -400,18 +405,11 @@
 		    }
 		    
 		    /* 2018-04-25 김유진 - 일반첨부시 해당 index와 uid를 받아서 download href를 넘겨주는 메서드 */
-		    function FileDownload(obj, fileIndex, fileUid) {
-				var emptyStr = "";
-				
-		    	if (typeof (fileIndex) == "undefined" || fileIndex == null) {
-		    		fileIndex = emptyStr;
-		    	} else if (typeof (fileUid) == "undefiend" || fileUid == null) {
-		    		fileUid = emptyStr;
-		    	}
+		    function FileDownload(obj, partIdx, msgId, isBig) {
 		    	
-		    	if (fileIndex != emptyStr && fileUid != emptyStr) {
+		    	if (isBig == "N") {
 		    		var href = GetAttribute(obj, "_href");
-		    		href = href + "&index=" + fileIndex + "&uid=" + fileUid;
+		    		href = href + "&index=" + partIdx + "&uid=" + msgId;
 		    		window.parent.DownloadAttach(href);
 		    	} else {
 			    	window.parent.DownloadAttach(GetAttribute(obj, "_href"));
