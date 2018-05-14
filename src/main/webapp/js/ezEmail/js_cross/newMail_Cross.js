@@ -1478,6 +1478,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
     nLen = mailArr.length;
     for (var i = 0; i < nLen; i++) {
 	    mailName = TrimText(mailArr[i]);
+	    
 	    if (mailName == "") {
 	        if (iType == 0)
 	            CompletToCnt++;
