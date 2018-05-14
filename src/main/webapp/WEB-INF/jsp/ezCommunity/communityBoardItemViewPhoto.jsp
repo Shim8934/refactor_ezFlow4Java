@@ -40,7 +40,6 @@
 		    var Reply_FG = "<c:out value = '${boardInfo.reply_FG}' />";
 		    var Delete_FG = "<c:out value = '${boardInfo.delete_FG}' />";
 		    var BoardGroupAdmin_FG = "<c:out value = '${boardInfo.boardGroupAdmin_FG}' />";
-		    var pReservedItem = "<c:out value = '${pReservedItem}' />";
 		    var OneLineReplyFlag = "<c:out value = '${ oneLineReplyFlag }' />";
 		    var gubun = "<c:out value = '${boardInfo.gubun }' />";
 		    var lang = "<c:out value = '${ strUserLang }' />";
@@ -91,17 +90,12 @@
 	        }
 
 	        function btn_Modify_Onclick() {
-	            if (Write_FG != "true") {
-	                alert("<spring:message code = 'ezCommunity.t939' />");
+	            if ((Write_FG != "true") || (strWriterID != SSUserID && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK")) {
+	                alert("<spring:message code = 'ezCommunity.t431' />");
 	                return;
 	            }
 
-	            if (strWriterID != SSUserID && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
-	                alert("<spring:message code = 'ezCommunity.t939' />");
-	                return;
-	            }
-
-				window.location.href = "/ezCommunity/newBoardItemPhoto.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+				window.location.href = "/ezCommunity/newBoardItemPhoto.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify";
 	        }
 
 	        function btnClose_onclick() {

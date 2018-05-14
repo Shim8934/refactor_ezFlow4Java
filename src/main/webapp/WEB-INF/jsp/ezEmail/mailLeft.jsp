@@ -229,7 +229,7 @@
 	            PostTreeView.putchildxml(nodeIdx, childxml);
 	        }
 	        
-	        function selectnode() {
+	        function selectnode(event) {
 	        	if (!event) event = window.event;
 	        	
 	        	if (event.which != 3) {

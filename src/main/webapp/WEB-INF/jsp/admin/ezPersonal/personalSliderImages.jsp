@@ -59,14 +59,14 @@
 		    function btn_Select() {
 		        if (CrossYN()) {
 		            selectimage_dialogArguments[1] = btn_Select_Complete;
-		            var SelectImage = window.open("/admin/ezPersonal/selectImage.do", "SelectImage", GetOpenWindowfeature(610, 410));
+		            var SelectImage = window.open("/admin/ezPersonal/selectImage.do", "SelectImage", GetOpenWindowfeature(610, 450));
 		            try { SelectImage.focus(); } catch (e) {
 		            }
 		        }
 		        else {
 		            var url = "/admin/ezPersonal/selectImage.do";
-		            var feature = "center:yes;status:no;dialogWidth:610px;dialogHeight:410px;edge:sunken;scroll:no" + GetShowModalPosition(610, 410);
-		            feature = feature + GetShowModalPosition(610, 410);
+		            var feature = "center:yes;status:no;dialogWidth:610px;dialogHeight:500px;edge:sunken;scroll:no" + GetShowModalPosition(610, 450);
+		            feature = feature + GetShowModalPosition(610, 450);
 		            window.showModalDialog(url, "", feature);
 		            window.location.reload(false);
 		        }
@@ -231,14 +231,14 @@
 		        if (CrossYN()) {
 		            selectimage_dialogArguments[1] = btn_Select_Complete;
 		            
-		            var SelectImage = window.open("/admin/ezPersonal/selectImage.do?item=" + document.getElementById(clickitem).getAttribute("DATA1"), "SelectImage", GetOpenWindowfeature(610, 410));
+		            var SelectImage = window.open("/admin/ezPersonal/selectImage.do?item=" + document.getElementById(clickitem).getAttribute("DATA1"), "SelectImage", GetOpenWindowfeature(610, 450));
 		            try { SelectImage.focus(); } catch (e) {
 		            }
 		        }
 		        else {
 		            var url = "/admin/ezPersonal/selectImage.do?item=" + document.getElementById(clickitem).getAttribute("DATA1") + "";
-		            var feature = "center:yes;status:no;dialogWidth:610px;dialogHeight:410px;edge:sunken;scroll:no" + GetShowModalPosition(610, 410);
-		            feature = feature + GetShowModalPosition(610, 410);
+		            var feature = "center:yes;status:no;dialogWidth:610px;dialogHeight:450px;edge:sunken;scroll:no" + GetShowModalPosition(610, 450);
+		            feature = feature + GetShowModalPosition(610, 450);
 	
 		            window.showModalDialog(url, "", feature);
 	
@@ -272,7 +272,9 @@
 		<table style="width:750px;height:215px;">
 	    	<tr>
 	            <td>
-					<div style="border:1px solid #dbdbda;width:435px;height:215px;border-top:0px;overflow-y:auto;overflow-x:hidden">
+	            <!-- 18-05-10 김민성 - 관리자 > 슬라이드 이미지 테이블 크기 수정 -->
+	            	<div style="border:1px solid #dbdbda;width:560px;height:215px;border-top:0px;overflow-y:auto;overflow-x:hidden">
+					<!-- <div style="border:1px solid #dbdbda;width:435px;height:215px;border-top:0px;overflow-y:auto;overflow-x:hidden"> -->
 	                	<div id="lvDocList"></div>
 	<%--                <table class="mainlist" style="width:100%;">
 		                    <tr>
