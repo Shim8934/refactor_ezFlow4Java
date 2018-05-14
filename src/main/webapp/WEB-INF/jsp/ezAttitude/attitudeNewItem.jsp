@@ -100,8 +100,8 @@
 		        	uploadSDate = startDate;
 		        	uploadEDate = endDate == "" ? startDate.split(" ")[0] + " 23:59:59" : endDate;
 		        } else {
-					uploadSDate = date + " " + nowTime[0] + ":" + nowTime[1] + ":00";
-					uploadEDate = date + " " + nowTime[0] + ":" + nowTime[1] + ":00";
+					uploadSDate = date + " " + nowTime[0] + ":00:00";
+					uploadEDate = date + " " + nowTime[0] + ":30:00";
 		        }
 		        
 		        modFirstFlag = false;
