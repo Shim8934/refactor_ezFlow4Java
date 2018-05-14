@@ -55,9 +55,9 @@
 	                for (var i = 0; i < result.length; i++) {
 	                    var gubun = "";
 	                    if (result[i].isAdd == "0") {
-	                    	gubun = "( 기본 )";
+	                    	gubun = "기본";
 	                    } else {
-	                    	gubun = "( 추가 )";
+	                    	gubun = "추가";
 	                    }
 	                    html += "<tr id='" + result[i].typeId + "' onclick='listClick(this);' ondblclick='dbclick(this);' style='cursor:pointer;' isAdd='" + result[i].isAdd + "'>";
 	                    html += "<td style='width:110px;color:gray;padding-left:15px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;' title='" + result[i].typeName + "'>" + result[i].typeName + "</td>";
@@ -170,6 +170,10 @@
 	        		alert("유형을 먼저 선택해 주세요");
 	        		return;
 	        	}
+	        	if (isAdd == 0) {
+	        		alert("기본유형은 삭제할 수 없습니다.");
+	        		return;
+	        	}
 	        	var OpenWin = window.open("/admin/ezAttitude/showAttitudeType.do?typeId=" + selectTypeId + "&companyId=" + $("#ListCompany").val(), "SaveAttitudeType", 'width=525px, height=170px', GetOpenWindowfeature(800, 520));
 	        }
 	        
@@ -214,7 +218,8 @@
 	      		<li><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></li>
 	      	</ul>
 	  	</div>
-	  	<table style="width: 450px; height: 380px;" >
+<!-- 	  	<table style="width: 450px; height: 380px;" > -->
+	  	<table style="width: 450px; height: 435px;" >
             <tr>
                 <td>
                     <div style="border: 1px solid #dbdbda;border-top:0px; width: 100%; height: 100%;">
@@ -226,7 +231,8 @@
                                 <th style="text-align: center;"><span><spring:message code='ezAttitude.t37' /></span></th>
                             </tr>
                         </table>
-                        <div id="contentlist" name="contentlist" style="height: 343px; overflow-y: auto;">
+<!--                         <div id="contentlist" name="contentlist" style="height: 343px; overflow-y: auto;"> -->
+                        <div id="contentlist" name="contentlist" style="height: 403px; overflow-y: auto;">
                         	<table class="mainlist" style="width: 100%;">
                                 <tr>
                                     <td style="text-align: center;">
