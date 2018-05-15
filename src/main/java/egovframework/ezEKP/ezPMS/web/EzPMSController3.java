@@ -1,10 +1,12 @@
 package egovframework.ezEKP.ezPMS.web;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -119,5 +121,28 @@ public class EzPMSController3 {
 		LOGGER.debug("ezPMS getTaskTree started");
 		
 		return "/ezPMS/pmsTaskSelectionTree";
+	}
+	
+	@RequestMapping(value="/ezPMS/getBoardList.do", method=RequestMethod.GET)
+	public String getBoardList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		
+		LOGGER.debug("ezPMS getBoardList started");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("projectId", request.getParameter("projectId"));
+		param.put("groupId", request.getParameter("groupId"));
+		param.put("taskId", request.getParameter("taskId"));
+	
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list", param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray boardList = (JSONArray) resultBody.get("data");
+			model.addAttribute("data", boardList);
+		} 
+		
+		LOGGER.debug("ezPMS getBoardList ended");
+		
+		return "/ezPMS/pmsBoardList";
 	}
 }

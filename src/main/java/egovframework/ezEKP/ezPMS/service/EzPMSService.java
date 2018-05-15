@@ -120,4 +120,6 @@ public interface EzPMSService {
 	public void completeAllTasks(long projectId, int tenantId, String realEndDate);
 
 	public void addBoard(ProjectBoardVO vo);
+	
+	public List<ProjectBoardVO> getBoardList(Long projectId, Long groupId, Long taskId);
 }

@@ -214,6 +214,11 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (Long) insert ("EzPMSDAO.addBoard", vo);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ProjectBoardVO> getBoardList(Map<String, Object> map) {
+		return (List<ProjectBoardVO>) list("EzPMSDAO.getBoardList", map);
+	}
+	
 	public void addKanbanOrder(Map<String, Object> map) {
 		insert ("EzPMSDAO.addKanbanOrder", map);
 	}

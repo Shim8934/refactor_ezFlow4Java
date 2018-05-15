@@ -232,7 +232,28 @@
 		<result property="userPosition2"			column="userPosition2"/>
 		<result property="userDeptname" 			column="userDeptname"/>
 		<result property="userDeptname2" 			column="userDeptname2"/>
-	</resultMap> 
+	</resultMap>
+	
+	<resultMap class="ProjectBoardVO" id="projectBoardVO">
+		<result property="itemId" 					column="item_id"/>
+		<result property="tenantId" 				column="tenant_id"/>
+		<result property="writerId" 				column="writer_id"/>
+		<result property="title" 					column="title"/>
+		<result property="writeOverview" 			column="write_overview"/>
+		<result property="writeType" 				column="write_type"/>
+		<result property="writeContent" 			column="write_content"/>
+		<result property="writeDate" 				column="write_date"/>
+		<result property="writeUpdateDate" 			column="write_update_date"/>
+		<result property="readCount" 				column="read_count"/>
+		<result property="taskId" 					column="task_id"/>
+		<result property="groupId" 					column="group_id"/>
+		<result property="writerName" 				column="writer_name"/>
+		<result property="writerName2" 				column="writer_name2"/>
+		<result property="writerDeptName" 			column="writer_deptname"/>
+		<result property="writerDeptName2" 			column="writer_deptname2"/>
+		<result property="writerPosition" 			column="writer_position"/>
+		<result property="writerPosition2" 			column="writer_position2"/>
+	</resultMap>
 	
     <!-- 조직도 만들기 위한 쿼리 -->
 	<select id="EzPMSDAO.selectDeptList" parameterClass="map" resultMap="projectDeptViewMap">
@@ -1258,6 +1279,18 @@
 			)
 		]]>
 	</insert>
+	
+	<select id="EzPMSDAO.getBoardList" parameterClass="map" resultMap="projectBoardVO">
+		<![CDATA[
+			SELECT * 
+			FROM tbl_pms_item_list B
+			JOIN tbl_pms_group G
+			ON B.group_id = G.group_id
+		]]>	
+		<isEqual property="groupId" compareValue="CN">	
+			WHERE project_id = #projectId#
+		</isEqual>
+	</select>
 
 	<insert id="EzPMSDAO.addKanbanOrder" parameterClass="map">
 		<![CDATA[
