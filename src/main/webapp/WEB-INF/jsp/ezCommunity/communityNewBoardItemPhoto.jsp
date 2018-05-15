@@ -147,7 +147,7 @@
 		    /* 2018-05-10 홍승비 - 게시물 저장 시 JSleep 함수 미사용 */
 		    function SaveItem() {
 		    	var strArray = document.getElementById('txtPhotoFile').value.split('.'); 
-		    	var mimeType = strArray[strArray.length-1];
+		    	var mimeType = strArray[strArray.length-1].toLowerCase();
 		    	if (mimeType != "gif" && mimeType != "jpg" && mimeType != "png" && mimeType != "jpeg") {
 		    		alert(strLang85);
 		    		return;
@@ -155,7 +155,6 @@
 
 		        if(MHTLoadComplete != "true") {
 		            alert("<spring:message code = 'ezCommunity.t1138' />");
-		            
 		            return;
 		        }
 		        
@@ -438,14 +437,12 @@
 		</table>
 		
 		<div id="txtAttachList"></div>
-   		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
-		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezCommunity/upload.do" target="ifrm" >
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px; display:none" />
+		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezCommunity/upload.do">
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="display:none" />
 			<input type="hidden" name="boardID" id="boardID" />
 			<input type="hidden" name="maxSize" id="maxSize" />
 			<input type="hidden" name="mode" id="mode" />
 			<input type="hidden" name="cnt" id="cnt" />
-			<input type="hidden" name="mailGubun" id="mailGubun" />
 		</form>
 		
 		<script type="text/javascript">

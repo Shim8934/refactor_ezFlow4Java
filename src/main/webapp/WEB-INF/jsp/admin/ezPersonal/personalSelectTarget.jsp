@@ -767,8 +767,8 @@
 	                </table>
 	            </td>
 	            <td width="30" align="center">
-	                <img style="cursor: pointer" src="/images/arr_right.gif" alt="" border="0" onclick="InsertReceiver(ListViewMsgTo)" width="16" height="16">
-	                <img style="cursor: pointer" src="/images/arr_left.gif" alt="" border="0" onclick="DeleteReceiver(ListViewMsgTo)" width="16" height="16">
+	                <img style="cursor: pointer" src="/images/kr/cm/arr_right.gif" alt="" border="0" onclick="InsertReceiver(ListViewMsgTo)" width="16" height="16">
+	                <img style="cursor: pointer" src="/images/kr/cm/arr_left.gif" alt="" border="0" onclick="DeleteReceiver(ListViewMsgTo)" width="16" height="16">
 	            </td>
 	            <td>
 	            	<table>
