@@ -708,13 +708,17 @@
 					    		var objTr = $("<tr></tr>").append($("<td style='width:41px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + (i+1)));
 	
 					    		if (json[i].endDate == null) {
-					    			objTr.append($("<td style='width:294px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)));
+					    			objTr.append($("<td style='width:280px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)));
 					    		} else {
-						    		objTr.append($("<td style='width:294px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16)));				    			
+					    			if (json[i].dateType == 4) {
+					    				objTr.append($("<td style='width:280px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,11)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,11)));
+					    			} else {
+						    			objTr.append($("<td style='width:280px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16)));
+					    			}
 					    		}
 					    		
-					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text();
-					    		objTr.append($("<td style='width:404px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(statusContent));
+					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,70);
+					    		objTr.append($("<td style='width:418px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(statusContent));
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
 						}
@@ -993,7 +997,7 @@
 		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;max-width:800px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="display:block; width:800px; margin:10px 0px 0px 1px; table-layout:fixed;">
+			    <table class="popuplist" id="addpopup_list" style="table-layout:fixed; display:block; width:800px; margin:10px 0px 0px 1px;">
 				    <thead>
 				    	<tr>
 						<th class="layerHeader" colspan="4" style="width:716px;">
@@ -1011,9 +1015,9 @@
 					    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
 				    		</c:if>
 				    		<c:if test="${deptFlag != 'true'}">
-				    			<th style="height:30px; width:41px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No.</th>
-				    			<th style="height:30px; width:294px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><spring:message code='ezAttitude.bbhs12'/></th>
-				    			<th style="height:30px; width:404px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">내용 및 사유</th>
+				    			<th style="height:30px;">No.</th>
+				    			<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
+				    			<th style="height:30px; text-align:center">내용 및 사유</th>
 				    		</c:if>
 						</tr>
 				    </tbody>
