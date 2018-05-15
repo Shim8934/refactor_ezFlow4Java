@@ -481,7 +481,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 	}
 	
 	@Override
-	public List<LadderLineVO> getLadderLineParticipant(LadderVO ladVO) throws Exception {
+	public List<LadderLineVO> getLadderLineParticipant(LadderVO ladVO, String mode, String back) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		logger.debug("getLadderLineParticipant started.");
 		String lang = commonUtil.getMultiData(ladVO.getLang(), ladVO.getTenant_id());
@@ -491,23 +491,19 @@ public class EzLadderServiceImpl implements EzLadderService {
 		List<LadderLineVO> list = ezLadderDAO.ladderGameParticipant(map);
 		
 		// 퇴사자 처리
-		int count = list.size()+1;
-		for(LadderLineVO userVO : list) {
-			String tempID = "";
-			Map<String, Object> searchMap = new HashMap<String, Object>();
-			searchMap.put("v_CN", userVO.getUserId());
-			searchMap.put("v_TENANT_ID", ladVO.getTenant_id());
-			String temp = ezOrganDAO.getPropertyValue_S1(searchMap);
-			if(userVO.getUserId().length()>14){
-				tempID = userVO.getUserId().substring(0, 14);
-			}
-			if (temp == null && !tempID.equals("anonyAttendant")) {
-				userVO.setUserId("anonyAttendant_" + count);
-				userVO.setUserName2(userVO.getUserName());
-				count++;
+		if(mode.equals("pre") && !back.equals("back")) {
+			for(int i=0; i<list.size(); i++) {
+				Map<String, Object> searchMap = new HashMap<String, Object>();
+				searchMap.put("v_CN", list.get(i).getUserId());
+				searchMap.put("v_TENANT_ID", ladVO.getTenant_id());
+				String temp = ezOrganDAO.getPropertyValue_S1(searchMap);
+			
+				if (temp == null) {
+					list.remove(i--);
+				}
 			}
 		}
-	
+		
 		if(lang.equals("2")) {
 			for(LadderLineVO userVO : list) {
 				userVO.setUserName(userVO.getUserName2());

@@ -601,7 +601,7 @@ public class EzLadderController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezLadder/getLadderGame.do", method = RequestMethod.GET)
-	public String getLadderGame(@CookieValue("loginCookie") String loginCookie, String ladderId, String searchSelect, String searchInput, String mode, String currPage, String sort, String sortFlag, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String getLadderGame(@CookieValue("loginCookie") String loginCookie, String ladderId, String searchSelect, String searchInput, String mode, String currPage, String sort, String sortFlag, ModelMap modelMap, String back, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getLadderGame started.");
 		
 		mode = mode != null ? mode : "all";
@@ -610,6 +610,7 @@ public class EzLadderController {
 		searchInput = searchInput != null ? searchInput : "";
 		sort = sort != null ? sort : "basic";
 		sortFlag = sortFlag != null ? sortFlag : "desc";
+		back = back != null ? back : "";
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.ladderGwServerURL");
@@ -622,11 +623,13 @@ public class EzLadderController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		RestTemplate rest = new RestTemplate();
-		
+		logger.debug("mode :" + mode);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("mode",mode)
 				.queryParam("tenant_id", userInfo.getTenantId())
 				.queryParam("offset", userInfo.getOffset())
-				.queryParam("lang", userInfo.getLang());
+				.queryParam("lang", userInfo.getLang())
+				.queryParam("back", back);
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		

@@ -453,7 +453,8 @@
 					"searchSelect": searchSelect,
 					"searchInput": searchInput,
 					"mode": "pre",
-					"currPage": currPage
+					"currPage": currPage,
+					"back": back
 				},
 				success: function(ladderInfo) {
 					status = ladderInfo["vo"]["status"];
