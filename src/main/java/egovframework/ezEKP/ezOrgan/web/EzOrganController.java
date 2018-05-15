@@ -420,8 +420,9 @@ public class EzOrganController {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String userID = userInfo.getId();
 		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
 		
-		ezOrganService.setListType(listType, userID, tenantID);
+		ezOrganService.setListType(listType, userID, tenantID, companyID);
 		
 		logger.debug("setListType ended.");
 		return "TRUE";
@@ -434,8 +435,9 @@ public class EzOrganController {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String userID = userInfo.getId();
 		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
 		
-		String listType = ezOrganService.getListType(userID, tenantID);
+		String listType = ezOrganService.getListType(userID, tenantID, companyID);
 		
 		if (listType == null) {
 			listType = "TXT";

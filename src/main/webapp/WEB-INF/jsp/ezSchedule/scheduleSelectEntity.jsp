@@ -182,6 +182,8 @@
 	                    listview.AddDataRow(objTr, Resultxml);
 	                }
 	            }
+	            
+	            ChangeListView_onClick(getOrganListType());
 	        }
 
 	        function RequestData(pNodeID, pTreeID) {
@@ -941,6 +943,7 @@
 		        pListType = Div;
 		        ListTypeChangeIcon();
 		        DisplayUserImageList();
+		        setOrganListType(pListType);
 		    }
 		    function keyword_Clear() {
 		    	document.getElementById("keyword").value = "";
@@ -1120,6 +1123,36 @@
 		                displayUserList();
 		        }
 		    }	
+		    
+	        function setOrganListType(pListType) {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/setListType.do",
+	        		async : false,
+	        		data : {
+	        			listType : pListType
+	        		},
+	        		success : function(result) {
+	        			
+	        		}
+	        		
+	        	})
+	        }
+	        
+	        function getOrganListType() {
+	        	var organListType = "TXT";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/getListType.do",
+	        		async : false,
+	        		success : function(result) {
+	        			organListType = result;
+	        		}
+	        	})
+	        	return organListType;
+	        }
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">

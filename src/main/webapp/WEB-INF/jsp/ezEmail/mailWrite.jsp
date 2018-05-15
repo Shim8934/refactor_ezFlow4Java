@@ -19,8 +19,8 @@
 		<!-- 수신인란 height 작업 -->
 		<style>
 			.viewtxtScroller {
-				min-height: 15px;
-				max-height: 15px;
+				min-height: 16px;
+				max-height: 16px;
 				overflow-y: auto;
 				margin-bottom: 3px;
 			}
