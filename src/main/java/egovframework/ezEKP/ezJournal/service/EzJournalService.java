@@ -265,7 +265,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public JournalVO getJournal(String journalId, String userId, String viewDate, int tenantId,String lang, String offset) throws Exception;
+	public JournalVO getJournal(String journalId, String userId, String isRead, int tenantId,String lang, String offset) throws Exception;
 
 	/**
 	 * 일지 저장하기
