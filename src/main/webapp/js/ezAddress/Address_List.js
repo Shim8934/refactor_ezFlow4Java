@@ -130,7 +130,7 @@ function MakeAddressList() {
             FolderType = SelectSingleNodeValue(XmlRows[Cnt], "FOLDERTYPE");
             FolderID = SelectSingleNodeValue(XmlRows[Cnt], "FOLDERID");
         }
-
+        
         if (document.getElementById("ListViewType").value == "list") {
             var _TR = document.createElement("TR");
             _TR.style.verticalAlign = "middle";
@@ -203,10 +203,11 @@ function MakeAddressList() {
             _TD3.style.whiteSpace = "nowrap";
             _TD3.style.overflow = "hidden";
             _TD3.style.textOverflow = "ellipsis";
+            
             if (CrossYN())
-                _TD3.innerText = Sname;
+                _TD3.innerText = Sname
             else
-                _TD3.innerHTML = "&nbsp;" + Sname;
+            	_TD3.innerHTML = "&nbsp;" + Sname;
             _TR.appendChild(_TD3);
 
             var _TD4 = document.createElement("TD");            
@@ -357,7 +358,9 @@ function MakeAddressList() {
             var ULTag = document.createElement("ul");
             /* 2018-04-25 장진혁 - 주소록 카드형식 UI 틀어짐현상때문에 수정 */
             ULTag.style.marginTop = "12px";
-
+            
+            Sname = replaceAll(Sname, "&", "&amp");
+            
             var UITag1 = document.createElement("li");
             UITag1.className = "name";            
             UITag1.innerHTML = imgType + Sname;
@@ -1019,4 +1022,9 @@ function Get_SameAddressCnt()
 
     if (xmlHTTP.status == 200 )
         return xmlHTTP.responseText;
+}
+
+// 재은 수정
+function replaceAll(str, searchStr, replaceStr) {
+	return str.split(searchStr).join(replaceStr);
 }
