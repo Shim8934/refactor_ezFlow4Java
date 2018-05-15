@@ -1797,10 +1797,13 @@ public class EzAttitudeGWController {
 			String userLang = info.getLang();
 			String offset = info.getOffSet();
 			
-			JSONObject absentedData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, "", "", "", "", "", userLang, offset, companyId, tenantID);
-			List<AdminAttitudeVO> list = (List<AdminAttitudeVO>) absentedData.get("list");
+			JSONObject duplicatedData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, "", "", "", "", "", userLang, offset, companyId, tenantID);
+			JSONObject distinctData = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, "", "", "", "", "distinct", userLang, offset, companyId, tenantID);
 			
-			ezAttitudeService.absentedListSendMail(list, loginCookie, searchStartDate, searchEndDate,info.getUserName(), info.getEmail());
+			List<AdminAttitudeVO> duplicatedList = (List<AdminAttitudeVO>) duplicatedData.get("list");
+			List<AdminAttitudeVO> distinctList = (List<AdminAttitudeVO>) distinctData.get("list");
+			
+			ezAttitudeService.absentedListSendMail(duplicatedList, distinctList, loginCookie, searchStartDate, searchEndDate,info.getUserName(), info.getEmail());
 			
 			LOGGER.debug("배현상 메일정보 확인 : " + info.getEmail());
 			JSONObject data = new JSONObject();

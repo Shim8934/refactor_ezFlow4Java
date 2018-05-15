@@ -71,11 +71,12 @@ public class EzAttitudeBHSController {
 		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10);
 		String searchStartDate = date + "-01";
 		String searchEndDate = "";
-		
+		LOGGER.debug(today.substring(0, 7));
+		LOGGER.debug("date.compareTo(today.substring(0, 7) = " + date.compareTo(today.substring(0, 7)));
 		if (date.compareTo(today.substring(0, 7)) == 0) {
 			//현재달
 			searchEndDate = today;
-		} else if (date.compareTo(today.substring(0, 7)) == -1) {
+		} else if (date.compareTo(today.substring(0, 7)) < 0) {
 			//이전달
 			Date firstDayofMonth = sdf.parse(searchStartDate);
 			cal.setTime(firstDayofMonth);
