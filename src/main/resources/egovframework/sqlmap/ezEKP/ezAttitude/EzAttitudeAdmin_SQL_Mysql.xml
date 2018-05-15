@@ -1001,7 +1001,7 @@
 		]]>
 		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
 			<![CDATA[
-				A.type_id = #searchAttitudeType#
+				CHANGE_TYPE_ID = #searchAttitudeType#
 			]]>
 		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchUserName">
@@ -1040,7 +1040,17 @@
 			AND
 				WRITER_DEPT_ID = #deptId#
 		]]>
-
+		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
+			<![CDATA[
+				CHANGE_TYPE_ID = #searchAttitudeType#
+			]]>
+		</isNotEqual>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			WRITER_NAME LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			WRITER_TITLE LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
 	</select>
 	
 </sqlMap>

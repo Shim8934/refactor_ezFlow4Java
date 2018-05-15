@@ -193,8 +193,7 @@
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
 	    				getAttitudeHistoryList_after(result.list);
 	    				//근태유형 리스트
-// 	    				getAttitudeTypeList(result.typeList, result.typeId);
-	    				$('#searchAttitudeType').val(typeId);
+	    				getAttitudeTypeList(result.typeList, result.typeId);
 	    			},
 	    			error : function() {
 	    				alert('리스트를 가져오는중 오류 발생');
@@ -202,20 +201,20 @@
 	    		});
 	    	}
 	    	
-// 	    	//검색 > 근태유형selectBox
-// 	    	function getAttitudeTypeList(typeList, typeId) {
-// 	    		var html = "<option value='total'><spring:message code='ezAttitude.lhj8' /></option>";
+	    	//검색 > 근태유형selectBox
+	    	function getAttitudeTypeList(typeList, typeId) {
+	    		var html = "<option value='total'><spring:message code='ezAttitude.lhj8' /></option>";
 	    		
-// 	    		for (var i = 0; i < typeList.length; i ++) {
-// 	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
-// 	    		}
+	    		for (var i = 0; i < typeList.length; i ++) {
+	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
+	    		}
 	    		
-// 	    		$('#searchAttitudeType').html(html);
+	    		$('#searchAttitudeType').html(html);
 	    		
-// 	    		if (typeId != "") {
-// 	    			$('#searchAttitudeType').val(typeId);
-// 	    		}
-// 	    	}
+	    		if (typeId != "") {
+	    			$('#searchAttitudeType').val(typeId);
+	    		}
+	    	}
 	    	
 	    	function getAttitudeHistoryList_after(result){
 	    		var resultHtml = "";
@@ -390,8 +389,8 @@
 						<select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select>
 					</td>
 					<td colspan=2>
-						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeHistoryList('search');"><spring:message code='ezAttitude.lhj5' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeHistoryList('refresh');"><spring:message code='ezAttitude.lhj6' /></span></a>&nbsp;
 					</td>
 				</tr>
 			</tbody>
@@ -401,11 +400,11 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Name"><spring:message code='ezAttitude.t10' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Title"><spring:message code='ezAttitude.t11' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Dept_Name"><spring:message code='ezAttitude.t9' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate">일시</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"><spring:message code='ezAttitude.lhj18' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Name"><spring:message code='ezAttitude.t10' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Title"><spring:message code='ezAttitude.t11' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Dept_Name"><spring:message code='ezAttitude.t9' /></th>
+						<th style="width:30%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate">일시</th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"><spring:message code='ezAttitude.lhj18' /></th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_User_Name">수정자</th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_Date">수정일시</th>
 					</tr>

@@ -1937,11 +1937,15 @@ public class EzAttitudeGWController {
 			
 			String totalCount = ezAttitudeService.getAttitudeHistoryCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantID, deptId);
 			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, deptId);
+		
+			//구분 리스트
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
 			data.put("totalCount", totalCount);
 			data.put("typeId", searchAttitudeType);
+			data.put("typeList", typeList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1951,7 +1955,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/bombom] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/] ended.");
 		return result;
 	}
 	
