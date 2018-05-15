@@ -269,6 +269,131 @@
 		</isEqual>
 	</insert>
 	
+	<insert id="ezAttitude.insertAdminAttHistory" parameterClass="Map">
+		INSERT INTO tbl_attitude_modappl_history(
+			COMPANY_ID,
+			TENANT_ID,
+			WRITER_ID,
+			WRITER_NAME,
+			WRITER_NAME2,
+			WRITER_TITLE,
+			WRITER_TITLE2,
+			WRITER_DEPT_ID,
+			WRITER_DEPT_NAME,
+			WRITER_DEPT_NAME2,
+			CHANGE_STARTDATE,
+			CHANGE_ENDDATE,
+			CHANGE_REGION,
+			CHANGE_MOBILE,
+			CHANGE_BIZSUB,
+			CHANGE_CONTENT,
+			CHANGE_IP,
+			CHANGE_DATE_TYPE,
+			CHANGE_TYPE_ID,
+			CHANGE_TYPE_NAME,
+			CHANGE_TYPE_NAME2,
+			APPR_USER_ID
+			)
+<!-- 		<isEqual property="isDefaultAtti" compareValue="true"> -->
+			SELECT
+				#companyId#,
+				#tenantId#,
+				#writerId#,
+				b.displayname,
+				b.displayname2,
+				b.title,
+				b.title2,
+				#deptId#,
+				b.DESCRIPTION,
+				b.DESCRIPTION2,
+				#startDate#,
+				IF(#endDate# = '', null, #endDate#),
+				IFNULL(#region#, ''),
+				IFNULL(#mobile#, ''),
+				IFNULL(#bizSub#, ''),
+				IFNULL(#content#, ''),
+				IFNULL(#ipAddress#, ''),
+				#dateType#,
+				#typeId#,
+				a.type_name,
+				a.type_name2,
+				#adminId#
+			FROM
+				(select 
+					*
+				from 
+					tbl_attitude_type
+				where
+					type_id = #typeId#
+				and
+					company_id = #companyId#
+				and
+					tenant_id = #tenantId#					
+				) a
+				,
+				(select 
+					*
+				from 
+					tbl_usermaster
+				where
+					cn = #writerId#
+				and
+					PHYSICALDELIVERYOFFICENAME = #companyId#
+				and
+					tenant_id = #tenantId#					
+				) b
+<!-- 		</isEqual> -->
+<!-- 		<isEqual property="isDefaultAtti" compareValue="false"> -->
+<!-- 			SELECT -->
+<!-- 				#companyId#, -->
+<!-- 				#tenantId#, -->
+<!-- 				#writerId#, -->
+<!-- 				b.displayname, -->
+<!-- 				b.displayname2, -->
+<!-- 				b.title, -->
+<!-- 				b.title2, -->
+<!-- 				#deptId#, -->
+<!-- 				b.DESCRIPTION, -->
+<!-- 				b.DESCRIPTION2, -->
+<!-- 				date_add(#startDate#, INTERVAL -#offsetMin# minute), -->
+<!-- 				IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)), -->
+<!-- 				IFNULL(#region#, ''), -->
+<!-- 				IFNULL(#mobile#, ''), -->
+<!-- 				IFNULL(#bizSub#, ''), -->
+<!-- 				IFNULL(#content#, ''), -->
+<!-- 				IFNULL(#ipAddress#, ''), -->
+<!-- 				#dateType#, -->
+<!-- 				#typeId#, -->
+<!-- 				a.type_name, -->
+<!-- 				a.type_name2, -->
+<!-- 				#adminId# -->
+<!-- 			FROM -->
+<!-- 				(select  -->
+<!-- 					* -->
+<!-- 				from  -->
+<!-- 					tbl_attitude_type -->
+<!-- 				where -->
+<!-- 					type_id = #typeId# -->
+<!-- 				and -->
+<!-- 					company_id = #companyId# -->
+<!-- 				and -->
+<!-- 					tenant_id = #tenantId#					 -->
+<!-- 				) a -->
+<!-- 				, -->
+<!-- 				(select  -->
+<!-- 					* -->
+<!-- 				from  -->
+<!-- 					tbl_usermaster -->
+<!-- 				where -->
+<!-- 					cn = #writerId# -->
+<!-- 				and -->
+<!-- 					PHYSICALDELIVERYOFFICENAME = #companyId# -->
+<!-- 				and -->
+<!-- 					tenant_id = #tenantId#					 -->
+<!-- 				) b -->
+<!-- 		</isEqual> -->
+	</insert>
+	
 	<select id="ezAttitude.getIsAttitudeUserConf" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
