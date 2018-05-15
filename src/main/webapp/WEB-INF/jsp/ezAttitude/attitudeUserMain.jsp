@@ -168,13 +168,13 @@
 					if (deptFlag != "true") {
 						if (modappl == 0 && typeid == 'A02') {
 							attitudeModItem(this);	
-						} else if (modappl == 1 || modappl == 2 || modappl == 3) {
+						} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
 							mod_detail(attitudeid);
 						}
 					} else {
 						if (modappl == 0 && typeid == 'A02') {
 							console.log(this);
-						} else if (modappl == 1 || modappl == 2 || modappl == 3){
+						} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4){
 							mod_detail(attitudeid);
 						}
 					}
@@ -459,8 +459,14 @@
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
 										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
 							} else {
+								var iconStr = "";
+								if (result[i].modAppl  == '2') {
+									iconStr = " <i class='fas fa-pencil-alt'></i>";
+								} else if (result[i].modAppl  == '3') {
+									iconStr = " <i class='fas fa-pencil-alt'></i>";
+								}
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].writerName + " : " + result[i].typeName + iconStr + "</td></tr>");
 							}	
 						}
 					}

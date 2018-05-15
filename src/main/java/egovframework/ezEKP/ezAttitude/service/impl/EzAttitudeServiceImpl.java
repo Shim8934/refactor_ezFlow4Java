@@ -909,7 +909,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		int modAppl = ezAttitudeDAO.getAttModApp(map);
 		
-		if (modAppl == 0) {
+		if (modAppl == 0 || modAppl == 4) {
 			map.put("modappl", "1");
 		} else if (modAppl == 3) {
 			map.put("modappl", "2");
@@ -1490,7 +1490,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			int modAppl = ezAttitudeDAO.getAttModApp(map);
 			
 			if (modAppl == 1) {
-				map.put("modappl", 0);
+				map.put("modappl", 4);
 			} else if (modAppl == 2) {
 				map.put("modappl", 3);
 			}
