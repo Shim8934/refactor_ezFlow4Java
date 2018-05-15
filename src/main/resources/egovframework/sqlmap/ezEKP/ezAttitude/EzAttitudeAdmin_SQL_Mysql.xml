@@ -775,7 +775,7 @@
 			    B.DESCRIPTION AS deptName,
 			    group_concat(A.AUTH_DEPT_ID order by C.DISPLAYNAME) AS authDeptId,
 			    group_concat(C.DISPLAYNAME order by C.DISPLAYNAME) AS authDeptName,
-    			group_concat(A.AUTH_TYPE order by C.DISPLAYNAME) AS authDeptType
+    			group_concat(A.AUTH_TYPE order by C.DISPLAYNAME) AS authType
 
 			FROM 
 				TBL_ATTITUDE_AUTH A

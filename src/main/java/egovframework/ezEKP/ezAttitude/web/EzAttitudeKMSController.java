@@ -1261,7 +1261,6 @@ public class EzAttitudeKMSController {
 		
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
-			LOGGER.debug("!@##$!@#%$$#%!%" + data.toJSONString());
 		}
 		
 		LOGGER.debug("attModAppDetail ended");
@@ -1941,5 +1940,136 @@ public class EzAttitudeKMSController {
 		LOGGER.debug("/ezAttitude/attitudeAbsented.do");
 		
 		return "/ezAttitude/attitudeAbsented";
+	}
+	
+	/**
+	 * 근태 상세보기
+	 */
+	@RequestMapping(value = "/ezAttitude/attitudeItemDetail.do")
+	public String attitudeItemDetail(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeItemDetail started");
+		
+		String deptId = "";
+		String isAllDept = "";
+		String adminFlag = "";
+		String authFlag = "";
+		JSONObject attitudeVO = new JSONObject();
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+		String userId = userInfo.getId();
+		String attitudeId = request.getParameter("attitudeId");
+		String typeId = request.getParameter("typeId");
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudetypes/" + typeId +"/forms/form";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject formVO = new JSONObject();
+		if (status.equals("ok")) {
+			formVO = (JSONObject) resultBody.get("data");
+			
+			model.addAttribute("formInfo", formVO);
+			
+			url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId; // 근태상세정보 GW 호출
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userId)
+					.queryParam("attitudeId", attitudeId);
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			LOGGER.debug("status : " + status);
+			
+			if (status.equals("ok")) {
+				attitudeVO = (JSONObject) resultBody.get("data");
+				model.addAttribute("attitudeInfo", attitudeVO);
+			}
+		} 
+		deptId = (String) attitudeVO.get("deptId");
+		
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
+			adminFlag = "true";
+			isAllDept = "Y";
+		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+			adminFlag = "true";
+		}
+		
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		
+		headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		entity = new HttpEntity<>(headers);
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("isAllDept", isAllDept)
+				.queryParam("userId", userInfo.getId());
+		
+		rest = new RestTemplate();
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		JSONArray deptList = new JSONArray();
+		
+		if(status.equals("ok")){
+			deptList = (JSONArray) resultBody.get("data");
+		}
+		
+//		//같은 부서면 최소한 읽기 권한은 부여
+//		if (userInfo.getDeptID().equals(deptId)) {
+//			authFlag = "R";
+//		}
+		
+		//권한 부서 목록에서 부서의 권한을 읽음
+		for (int i = 0; i < deptList.size(); i++ ){
+			JSONObject dept = (JSONObject)deptList.get(i);
+			if (dept.get("deptId").equals(deptId)) {
+				if (!((String) dept.get("authType")).equals("")) {
+					authFlag = (String) dept.get("authType");
+				}
+			}
+		}
+		
+		//자신의 부서와 다르고 권한이 없을 경우에는 접근을 제한한다.		
+//		if (!userInfo.getDeptID().equals(deptId)) {
+		//아무런 권한이 없으면 접근을 제한한다.
+		if (authFlag.equals("")) {
+			return "cmm/error/adminDenied";
+		}
+//		}
+		
+		model.addAttribute("font", font);
+		model.addAttribute("authFlag", authFlag);
+		
+		LOGGER.debug("/ezAttitude/attitudeItemDetail ended");
+		return "/ezAttitude/attitudeItemDetail";
 	}
 }
