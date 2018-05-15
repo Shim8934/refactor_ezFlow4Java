@@ -909,13 +909,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		int modAppl = ezAttitudeDAO.getAttModApp(map);
 		
-		if (modAppl == 2) {
-			map.put("modappl", "0");
-		} else if (modAppl == 3) {
+		if (modAppl == 0) {
 			map.put("modappl", "1");
+		} else if (modAppl == 3) {
+			map.put("modappl", "2");
 		}
 		//신청된 항목이 존재 할 때
-		if (modAppl != 0 || modAppl != 1) {
+		if (modAppl == 1 || modAppl == 2) {
 			//map.put("attModId", attitudeId);
 			//AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
 			//신청된 항목의 상태가 신청 상태 일 때는 추가 신청을 받지 않는다
@@ -1489,9 +1489,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("attitudeId", ids.split("_")[0]);
 			int modAppl = ezAttitudeDAO.getAttModApp(map);
 			
-			if (modAppl == 0) {
-				map.put("modappl", 2);
-			} else if (modAppl == 1) {
+			if (modAppl == 1) {
+				map.put("modappl", 0);
+			} else if (modAppl == 2) {
 				map.put("modappl", 3);
 			}
 			ezAttitudeDAO.setAttModApp(map);

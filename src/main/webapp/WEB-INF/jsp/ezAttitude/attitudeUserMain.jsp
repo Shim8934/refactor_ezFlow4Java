@@ -36,7 +36,7 @@
 /* 				color : red; */
 			}
 			
-			#attiCalendar td[modappl='1'][typeId=A01] {
+			#attiCalendar td[modappl='1'][typeId=A01],[modappl='2'][typeId=A01],[modappl='3'][typeId=A01] {
 				cursor : pointer;
 			}
 			
@@ -44,7 +44,7 @@
 				color : black;
 			}
 			
-			#attiCalendar td[typeId=A01], #attiCalendar td[typeId=A03] {
+			#attiCalendar td[typeId=A01][modappl='0'], #attiCalendar td[typeId=A03] {
 				cursor : context-menu;
 			}
 			
@@ -168,14 +168,13 @@
 					if (deptFlag != "true") {
 						if (modappl == 0 && typeid == 'A02') {
 							attitudeModItem(this);	
-						} else if (modappl == 1) {
+						} else if (modappl == 1 || modappl == 2 || modappl == 3) {
 							mod_detail(attitudeid);
 						}
-						
 					} else {
 						if (modappl == 0 && typeid == 'A02') {
 							console.log(this);
-						} else if (modappl == 1){
+						} else if (modappl == 1 || modappl == 2 || modappl == 3){
 							mod_detail(attitudeid);
 						}
 					}
@@ -426,7 +425,7 @@
 						} else {
 							var iconStr = "";
 							//0과 2는 icon을 추가하지 않는다.
-							if (result[i].modAppl  == '1') {
+							if (result[i].modAppl  == '2') {
 								iconStr = "<i class='fas fa-pencil-alt'></i>";
 							} else if (result[i].modAppl  == '3') {
 								iconStr = "<i class='fas fa-pencil-alt'></i>";
@@ -867,7 +866,7 @@
 					switch(tdTypeId)
 					{
 						case "A01": case "A03": case "A06": case "A07": //출근, 퇴근, 외출, 조퇴
-							if ($(this).attr("modAppl") == 0 || $(this).attr("modAppl") == 1) {
+							if ($(this).attr("modAppl") == 1 || $(this).attr("modAppl") == 2) {
 								tdClassName = "attiModLate";
 							} else {
 							    tdClassName = "attiDefault";
@@ -877,7 +876,7 @@
 							tdClassName = "attiOutCom";
 							break;
 						case "A02": case "A08": //지각
-							if ($(this).attr("modAppl") == 0 || $(this).attr("modAppl") == 1) {
+							if ($(this).attr("modAppl") == 1 || $(this).attr("modAppl") == 2) {
 								tdClassName = "attiModLate";
 							} else {
 							    tdClassName = "attiLate";
