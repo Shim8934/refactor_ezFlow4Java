@@ -28,6 +28,7 @@
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		
 		<script type="text/javascript">
+			var userId = "<c:out value='${info.userId }'/>";
 			var writerName = "${userInfo.displayName}";
 			var uselang = "${userInfo.lang}";
 			var userOffset = "${userOffset}";
@@ -221,7 +222,13 @@
 							bizSub = $("input[name=bizsub]").val();
 						}
 						
-						$("#attiwriteForm tr").not("tr:first").remove();
+// 						$("#attiwriteForm tr").not("tr:first").remove();
+						var trs = $("#attiwriteForm tr");
+						for (var i = 0; i < trs.length; i++) {
+							if (i > 2) {
+								trs[i].remove();	
+							}
+						}
 						$("#attiwriteForm tbody").after(result.formHtml);
 						$("#writerName").closest("tr").remove();
 						setDatePicker($("#periodblock").attr("datetype"));
@@ -290,10 +297,11 @@
 				}
 				$.ajax({
 		        	type : "POST",
-		        	url : "/ezAttitude/attitudeSave.do",
+		        	url : "/ezAttitude/attAdminSave.do",
 		        	async : false,
 		        	data : {
 		        		attitudeId : attitudeId,
+		        		userId : userId,
 		        		typeId : selectType,
 		        		region : $("input[name=region]").val(),
 		        		mobile : $("input[name=mobile]").val(),
@@ -306,8 +314,9 @@
 		        	},
 		        	success : function (result) {
 		        		alert("<spring:message code='ezAttitude.bbhs19'/>");
-		        		window.opener.getAttitudeMainList();
-		        		window.opener.parent.frames["left"].getAttitudeList();
+// 		        		window.opener.getAttitudeMainList();
+// 		        		window.opener.parent.frames["left"].getAttitudeList();
+						window.opener.getAttitudeAbsentedList();
 		        		window.close();
 		        	}
 		        });

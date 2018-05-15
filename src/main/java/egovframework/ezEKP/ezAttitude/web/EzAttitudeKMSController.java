@@ -2214,4 +2214,69 @@ public class EzAttitudeKMSController {
 		LOGGER.debug("/ezAttitude/attAdminNewItem ended");
 		return "ezAttitude/attAdminNewItem";
 	}
+	
+	/**
+	 * 사용자 근태 추가 및 수정
+	 */
+	@RequestMapping(value = "/ezAttitude/attAdminSave.do")
+	@ResponseBody
+	public void attAdminSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attAdminSave started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String attitudeId = request.getParameter("attitudeId");
+		String typeId = request.getParameter("typeId");
+		String region = request.getParameter("region");
+		String mobile = request.getParameter("mobile");
+		String bizSub = request.getParameter("bizSub");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		String dateType = request.getParameter("dateType");
+		String mode = request.getParameter("mode");
+		String content = request.getParameter("content");
+		String userId = request.getParameter("userId");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl;
+		
+		if (mode.equals("admin")) {
+			url += "/rest/ezattitude/users/" + userId + "/attitudes";
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId)
+				.queryParam("adminId", userInfo.getId())
+				.queryParam("typeId", typeId)
+				.queryParam("region", region)
+				.queryParam("mobile", mobile)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate)
+				.queryParam("bizSub", bizSub)
+				.queryParam("content", content)
+				.queryParam("dateType", dateType)
+				.queryParam("mode", mode);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		if (status.equals("ok")) {
+			
+		}
+		
+		LOGGER.debug("/ezAttitude/attAdminSave ended");
+	}
 }
