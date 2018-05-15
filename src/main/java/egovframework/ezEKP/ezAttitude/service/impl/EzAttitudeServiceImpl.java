@@ -78,17 +78,28 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void insertAttitude(String writerId, String deptId, String startDate,
 			String endDate, String region, String mobile, String bizsub, String content,
-			String ip, String typeId, String dateType, String offset, String companyId, int tenantId) throws Exception {
+			String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode) throws Exception {
 		LOGGER.debug("insertAttitude started");
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if (mode == null) {
+			mode = "";
+		}
 		
 		boolean isDefaultAtti = false;
 		map.put("writerId", writerId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
+		
+		
 		if (typeId.equals("A01") || typeId.equals("A03")) {
-			startDate = commonUtil.getTodayUTCTime("");
+			if (!mode.equals("admin")) {
+				startDate = commonUtil.getTodayUTCTime("");
+			} else {
+				startDate += ":00";
+				startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+			}
 			
 			if (typeId.equals("A01")) {
 				//사용자별 근태설정이 있는 지 검사
@@ -97,7 +108,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				
 				AttitudeUserConfigVO resultVO = ezAttitudeDAO.getAttitudeConfTime(map);
 				
-				String compareDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(11);
+				String compareDate = commonUtil.getDateStringInUTC(startDate, offset, false).substring(11);
 				String resultConfDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd") + " " + resultVO.getWorkStartTime() + ":00", offset, false).substring(11);
 				
 				LOGGER.debug("isValue : " + isValue + "////////" + resultVO.getWorkStartTime());
@@ -113,6 +124,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			}
 			
 			isDefaultAtti = true;
+		} else {
+			if (mode.equals("admin")) {
+				startDate += ":00";
+				startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+			}
 		}
 		
 		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");

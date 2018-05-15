@@ -239,11 +239,11 @@
 				var date = $(t).attr("date");
 				
 				if (CrossYN()) {
-                    var OpenWin = window.open("/ezAttitude/attAdminNewItem.do?date=" + date + "&mode=new&userid=" + userid, "attitudeNewItem", GetOpenWindowfeature(672, 640));
+                    var OpenWin = window.open("/ezAttitude/attAdminNewItem.do?date=" + date + "&mode=admin&userid=" + userid, "attitudeNewItem", GetOpenWindowfeature(672, 640));
                     
                     try { OpenWin.focus(); } catch (e) { }
 	            } else {
-                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItem.do?date=" + date + "&mode=new&userid=" + userid, "",
+                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItem.do?date=" + date + "&mode=admin&userid=" + userid, "",
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 	                
 	                if (typeof (rtnValue) != "undefined") {
