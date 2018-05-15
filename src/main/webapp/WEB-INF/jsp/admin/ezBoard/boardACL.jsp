@@ -631,6 +631,7 @@
 		        <MINSIZE>10</MINSIZE>
 		        <MAXSIZE>353</MAXSIZE>
 		        <NOWRAP>TRUE</NOWRAP>
+		        <STYLE>border-top:0px;</STYLE>
 		      </HEADER>
 		      <HEADER>
 		        <TYPE>NONE</TYPE>
@@ -641,6 +642,7 @@
 		        <MINSIZE>10</MINSIZE>
 		        <MAXSIZE>353</MAXSIZE>
 		        <NOWRAP>TRUE</NOWRAP>
+		        <STYLE>border-top:0px;</STYLE>
 		      </HEADER>
 		      <HEADER>
 		        <TYPE>NONE</TYPE>
@@ -651,6 +653,7 @@
 		        <MINSIZE>10</MINSIZE>
 		        <MAXSIZE>353</MAXSIZE>
 		        <NOWRAP>TRUE</NOWRAP>
+		        <STYLE>border-top:0px;</STYLE>
 		      </HEADER>
 		      <HEADER>
 		        <TYPE>NONE</TYPE>
@@ -661,12 +664,13 @@
 		        <MINSIZE>10</MINSIZE>
 		        <MAXSIZE>353</MAXSIZE>
 		        <NOWRAP>TRUE</NOWRAP>
+		        <STYLE>border-top:0px;</STYLE>
 		      </HEADER>
 		      <HEADER>
 		        <TYPE>NONE</TYPE>
 		        <NAME><spring:message code='ezBoard.t84'/></NAME>
 		        <WIDTH>20</WIDTH>
-		        <STYLE>text-align:center</STYLE>
+		        <STYLE>text-align:center;border-top:0px;</STYLE>
 		        <SORTABLE>TRUE</SORTABLE>
 		        <RESIZIBLE>TRUE</RESIZIBLE>
 		        <MINSIZE>10</MINSIZE>
@@ -677,7 +681,7 @@
 		        <TYPE>NONE</TYPE>
 		        <NAME><spring:message code='ezBoard.t83'/></NAME>
 		        <WIDTH>20</WIDTH>
-		        <STYLE>text-align:center</STYLE>
+		        <STYLE>text-align:center;border-top:0px;</STYLE>
 		        <SORTABLE>TRUE</SORTABLE>
 		        <RESIZIBLE>TRUE</RESIZIBLE>
 		        <MINSIZE>10</MINSIZE>
@@ -688,7 +692,7 @@
 		        <TYPE>NONE</TYPE>
 		        <NAME><spring:message code='ezBoard.t102'/></NAME>
 		        <WIDTH>20</WIDTH>
-		        <STYLE>text-align:center</STYLE>
+		        <STYLE>text-align:center;border-top:0px;</STYLE>
 		        <SORTABLE>TRUE</SORTABLE>
 		        <RESIZIBLE>TRUE</RESIZIBLE>
 		        <MINSIZE>10</MINSIZE>
@@ -699,7 +703,7 @@
 		        <TYPE>NONE</TYPE>
 		        <NAME><spring:message code='ezBoard.t86'/></NAME>
 		        <WIDTH>20</WIDTH>
-		        <STYLE>text-align:center</STYLE>
+		        <STYLE>text-align:center;border-top:0px;</STYLE>
 		        <SORTABLE>TRUE</SORTABLE>
 		        <RESIZIBLE>TRUE</RESIZIBLE>
 		        <MINSIZE>10</MINSIZE>
@@ -710,7 +714,7 @@
 		        <TYPE>NONE</TYPE>
 		        <NAME><spring:message code='ezBoard.t87'/></NAME>
 		        <WIDTH>20</WIDTH>
-		        <STYLE>text-align:center</STYLE>
+		        <STYLE>text-align:center;border-top:0px;</STYLE>
 		        <SORTABLE>TRUE</SORTABLE>
 		        <RESIZIBLE>TRUE</RESIZIBLE>
 		        <MINSIZE>10</MINSIZE>
@@ -721,7 +725,7 @@
 		        <TYPE>NONE</TYPE>
 		        <NAME><spring:message code='ezBoard.t88'/></NAME>
 		        <WIDTH>20</WIDTH>
-		        <STYLE>text-align:center</STYLE>
+		        <STYLE>text-align:center;border-top:0px;</STYLE>
 		        <SORTABLE>TRUE</SORTABLE>
 		        <RESIZIBLE>TRUE</RESIZIBLE>
 		        <MINSIZE>10</MINSIZE>
@@ -732,7 +736,7 @@
 		        <TYPE>NONE</TYPE>
 		        <NAME><spring:message code='ezBoard.t00051'/></NAME>
 		        <WIDTH>20</WIDTH>
-		        <STYLE>text-align:center</STYLE>
+		        <STYLE>text-align:center;border-top:0px;</STYLE>
 		        <SORTABLE>TRUE</SORTABLE>
 		        <RESIZIBLE>TRUE</RESIZIBLE>
 		        <MINSIZE>10</MINSIZE>
@@ -743,7 +747,7 @@
 		        <TYPE>NONE</TYPE>
 		        <NAME><spring:message code='ezBoard.t00052'/></NAME>
 		        <WIDTH>20</WIDTH>
-		        <STYLE>text-align:center</STYLE>
+		        <STYLE>text-align:center;border-top:0px;</STYLE>
 		        <SORTABLE>TRUE</SORTABLE>
 		        <RESIZIBLE>TRUE</RESIZIBLE>
 		        <MINSIZE>10</MINSIZE>
@@ -759,13 +763,25 @@
 		<c:if test="${pParentNeed != 'Y'}">
 			<br />
 		</c:if>
-		<c:if test="${adminType == 'y'}">
-			<div id="mainmenu">
-	            <ul>
+		<div id="mainmenu">
+            <ul>
+				<c:if test="${adminType == 'y'}">
 	                <li><span onclick="goBoardList()"><spring:message code='ezBoard.t72'/></span></li>
-	            </ul>
-	        </div>
-		</c:if>
+	                <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+				</c:if>
+            	<li><span onclick="SelectTarget()"><spring:message code='ezBoard.t602'/></span></li>
+            	<li><span onclick="SaveACL()"><spring:message code='ezBoard.t98'/></span></li>
+                <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+            	<li><span onclick="DeleteACL('one')"><spring:message code='ezBoard.t89'/></span></li>
+            	<li><span onclick="DeleteACL('type')"><spring:message code='ezBoard.t603'/></span></li>
+            	<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+            	<li><span onclick="AclCopy()"><spring:message code='ezBoard.t604'/></span></li>
+            	<li><span onclick="UnderBoardCopy()"><spring:message code='ezBoard.t605'/></span></li>
+            </ul>
+        </div>
+        <script type="text/javascript">
+	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
+	    </script>
         <script type="text/javascript">
             try{
                 parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t63'/>";
@@ -784,13 +800,15 @@
         <div class="listview">
             <div id="AccessList" style="BORDER: 0; HEIGHT: 250px; WIDTH: 100%; overflow:auto;"></div>
         </div>
+        <%-- 2018-05-15 천성준 - 프레임 상단으로 버튼 위치변경
         <a class="imgbtn" style="margin-top:5px;margin-bottom:5px;"><span onclick="SelectTarget()"><spring:message code='ezBoard.t602'/></span></a>
 		<a class="imgbtn" style="margin-top:5px;margin-bottom:5px;"><span onclick="SaveACL()"><spring:message code='ezBoard.t98'/></span></a>
 		<a class="imgbtn" style="margin-top:5px;margin-bottom:5px;"><span onclick="DeleteACL('one')"><spring:message code='ezBoard.t89'/></span></a>
 		<a class="imgbtn" style="margin-top:5px;margin-bottom:5px;"><span onclick="DeleteACL('type')"><spring:message code='ezBoard.t603'/></span></a>
 		<a class="imgbtn" style="margin-top:5px;margin-bottom:5px;"><span onclick="AclCopy()"><spring:message code='ezBoard.t604'/></span></a>
 		<a class="imgbtn" style="margin-top:5px;margin-bottom:5px;"><span onclick="UnderBoardCopy()"><spring:message code='ezBoard.t605'/></span></a>
-        <br>
+        --%>
+        <br> 
         <table class="content" style="width:100%;">
             <tr style="display: none">
                 <th><spring:message code='ezBoard.t93'/><br>
