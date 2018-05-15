@@ -6433,6 +6433,7 @@ CREATE TABLE `tbl_ps_sliderimage` (
   `ISUSE` bigint(10) NOT NULL,
   `SN` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `URL` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`SLIDERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -8430,6 +8431,7 @@ CREATE TABLE `tbl_usermaster` (
   `LASTLOGIN` datetime DEFAULT NULL,
   `LOGINCNT` bigint(10) DEFAULT '0',
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+  `LISTTYPE` varchar(3) DEFAULT 'TXT',
   PRIMARY KEY (`TENANT_ID`,`CN`),
   KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
