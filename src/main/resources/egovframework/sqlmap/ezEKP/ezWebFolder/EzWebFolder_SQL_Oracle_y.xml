@@ -1266,8 +1266,26 @@
 				USE_STATUS = 'T' ,
 				DELETER_ID = #userId#
 			where 
-			    	TENANT_ID = #tenantId#
-			    and FOLDER_PATH like (			
+		    	TENANT_ID = #tenantId#
+		    and 
+		    	FOLDER_ID = #folderId#
+		]]>
+	</update>
+	
+	<update id="EzWebFolderDAO_y.deleteSubFolder" parameterClass="Map" >
+		<![CDATA[
+			update
+				tbl_webfolder_folder
+			set
+				UPDATE_DATE  = TO_DATE(#timeUTC#,'YYYY-MM-DD HH24:MI:SS'),
+				USE_STATUS = 'N' ,
+				DELETER_ID = #userId#
+			where 
+		    	TENANT_ID = #tenantId#
+		    and
+		    	FODLER_ID != #folderId#
+		    and 
+		    	FOLDER_PATH like (			
 					select path 
 					from (
 						select (df.folder_path ||'%') as path
@@ -1275,6 +1293,7 @@
 						where df.folder_id = #folderId# and df.TENANT_ID = #tenantId# and df.company_id = #comId#) )
 		]]>
 	</update>
+	
 	<update id="EzWebFolderDAO_y.deleteFile" parameterClass="Map" >
 		<![CDATA[
 			update
@@ -1284,6 +1303,31 @@
 				use_status = 'T',
 				DELETER_ID = #userId#
 			where
+                TENANT_ID = #tenantId#
+            and  	
+				FOLDER_ID in (             
+                select folder.folder_id
+				from tbl_webfolder_folder folder  
+				where folder.folder_path like ('%|' || #folderId# || '|%') 
+                    and folder.TENANT_ID = #tenantId# 
+					and folder.company_id = #comId#
+                )
+		]]> 
+	</update>
+	
+	<update id="EzWebFolderDAO_y.deleteFileInFolder" parameterClass="Map" >
+		<![CDATA[
+			update
+				tbl_webfolder_file
+			set
+				UPDATE_DATE  = TO_DATE(#timeUTC#,'YYYY-MM-DD HH24:MI:SS'),
+				use_status = 'N',
+				DELETER_ID = #userId#
+			where
+            	TENANT_ID = #tenantId#
+            and
+				use_status != 'T',
+            and	  	
 				FOLDER_ID in (             
                 select folder.folder_id
             
@@ -1292,11 +1336,9 @@
                     and folder.TENANT_ID = #tenantId# 
 					and folder.company_id = #comId#
                 )
-            and TENANT_ID = #tenantId#  	
-				
-		
 		]]> 
 	</update>
+	
 	<insert id="EzWebFolderDAO_y.deptInsertTest" parameterClass="Map">
 		<selectKey keyProperty="id" resultClass="String">
 			<![CDATA[

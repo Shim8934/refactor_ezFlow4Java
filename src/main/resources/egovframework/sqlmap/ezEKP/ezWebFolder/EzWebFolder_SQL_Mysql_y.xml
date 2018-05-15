@@ -1266,11 +1266,30 @@
 			update
 				tbl_webfolder_folder as folder
 			set
-				 folder.use_status = 'T' ,
+				 folder.UPDATE_DATE = #timeUTC#,
+				 folder.use_status = 'T',
 				 folder.DELETER_ID = #userId#
 			where 
-					folder.TENANT_ID = #tenantId#
-				and folder.FOLDER_PATH like (			
+				folder.TENANT_ID = #tenantId#
+			and 
+				folder.FOLDER_ID = #folderId#
+		]]>
+	</update>
+	
+	<update id="EzWebFolderDAO_y.deleteSubFolder" parameterClass="Map" >
+		<![CDATA[
+			update
+				tbl_webfolder_folder as folder
+			set
+				 folder.UPDATE_DATE = #timeUTC#,
+				 folder.use_status = 'N',
+				 folder.DELETER_ID = #userId#
+			where 
+				folder.TENANT_ID = #tenantId#
+		    and 
+		        folder.FOLDER_ID != #folderId#
+			and 
+				folder.FOLDER_ID like (			
 					select path 
 			        from (
 						select concat(df.folder_path ,'%') as path
@@ -1278,6 +1297,7 @@
 						where df.folder_id = #folderId# and df.TENANT_ID = #tenantId# and df.company_id = #comId#)  a)
 		]]>
 	</update>
+	
 	<update id="EzWebFolderDAO_y.deleteFile" parameterClass="Map" >
 		<![CDATA[
 			update
@@ -1286,6 +1306,8 @@
 				file.use_status = 'T',
 				file.DELETER_ID = #userId#
 			where 
+				file.TENANT_ID = #tenantId#
+			and
 				file.FOLDER_ID in (
 					select id 
 			        from (
@@ -1294,9 +1316,33 @@
 						where folder.folder_path like concat('%|',#folderId#,'|%') and folder.TENANT_ID = #tenantId# 
 							and folder.company_id = #comId#)  
 						a)
-				and file.TENANT_ID = #tenantId#
+		]]>
+	</update>
+	 
+	<update id="EzWebFolderDAO_y.deleteFileInFolder" parameterClass="Map" >
+		<![CDATA[
+			update
+				tbl_webfolder_file as file
+			set
+			    file.UPDATE_DATE = #timeUTC#,
+				file.use_status = 'N',
+				file.DELETER_ID = #userId#
+			where 
+				file.TENANT_ID = #tenantId#
+			and
+				file.use_status != 'T',
+			and
+				file.FOLDER_ID in (
+					select id 
+			        from (
+						select concat(folder.folder_path ,'%') as path, folder.FOLDER_ID id
+						from tbl_webfolder_folder folder  
+						where folder.folder_path like concat('%|',#folderId#,'|%') and folder.TENANT_ID = #tenantId# 
+							and folder.company_id = #comId#)  
+						a)
 		]]> 
 	</update>
+	
 	<insert id="EzWebFolderDAO_y.deptInsertTest" parameterClass="Map">
 		<selectKey keyProperty="id" resultClass="String">
 			<![CDATA[

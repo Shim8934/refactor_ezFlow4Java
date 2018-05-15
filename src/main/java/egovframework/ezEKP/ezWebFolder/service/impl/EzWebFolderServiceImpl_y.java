@@ -658,13 +658,20 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("userId", userId);
 		map.put("timeUTC", timeUTC);
 		int result = 0;
+		
 		LOGGER.debug("folderId : "+folderId+"comId : "+comId+ "userId"+userId+"deleteSubFldAFile  Method");
+
 		result = checkCreater(folderId, tenantId, comId, userId);
 		// result 가 1이 아니면 creater가 자신이 아닌 폴더가 있다는 말 
 		if (result == 1) {
 			// result 1이면 creater가 모두 자신이라는 의미 
+			
+			//삭제를 원하는 폴더 삭제 (USE_STATUS = 'T')
 			ezWebFolderDAO_y.deleteFolder(map);
-			ezWebFolderDAO_y.deleteFile(map);
+			//하위 폴더 삭제 (USE_STATUS = 'N')
+			ezWebFolderDAO_y.deleteSubFolder(map);
+			//하위 파일 삭제 (USE_STATUS = 'N')
+			ezWebFolderDAO_y.deleteFileInFolder(map);
 			LOGGER.debug("deleteSubFldAFile is success");
 		}else{
 			LOGGER.debug("deleteSubFldAFile is fail");
