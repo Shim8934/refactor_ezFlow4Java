@@ -5,7 +5,7 @@ var messages = {
 	strLang4 : "파일 업로드에 실패했습니다.", 				// ezWebFolder.t107
 	strLang5 : "파일을 선택하세요.", 						// ezWebFolder.t108
 	strLang6 : "파일을 하나만 선택하세요.", 					// ezWebFolder.t115
-	strLang7 : "오류가 발생했습니다.", 					// ezWebFolder.t134
+	strLang7 : "에러가 발생했습니다.", 					// ezWebFolder.t134
 	strLang8 : "이전", 								// ezWebFolder.t135
 	strLang9 : "다음", 								// ezWebFolder.t136
 	strLang10 : "총", 								// ezWebFolder.t137
@@ -21,5 +21,7 @@ var messages = {
 	strLang20 : "검색 조건이 없습니다.", 					// ezBoard.t192
 	strLang21 : "검색기간의 종료일을 지정해 주세요.", 			//ezWebFolder.t308
 	strLang22 : "검색기간의 시작일을 지정해 주세요.", 			//ezWebFolder.t309
-	strLang23 : "하나만 선택하세요."
+	strLang23 : "하나만 선택하세요.",
+	strLang24 : "파라메터가 부족합니다.",
+	strLang25 : "접근 권한이 없습니다."
 }

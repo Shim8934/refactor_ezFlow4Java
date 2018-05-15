@@ -135,13 +135,13 @@ var shareContext = (function() {
 			success: function(result) {
 				if (result.status != "ok") {
 					if (result.code == 1) {
-						console.log("<spring:message code='ezWebFolder.t306' />");
+						console.log(messages.strLang24);
 						return;
 					} else if (result.code == 2) {
-						alert("<spring:message code='ezWebFolder.t305' />");
+						alert(messages.strLang7);
 						return;
 					} else if (result.code == 3) {
-						alert("<spring:message code='ezWebFolder.t300' />");
+						alert(messages.strLang25);
 						return;
 					} else {
 						alert(messages.strLang7 + " code:" + result.code);
