@@ -235,7 +235,7 @@
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
 	    		for (var i = 0; i < result.length; i ++) {
-	    			resultHtml += "<tr userid='" + result[i].writerId + "'>"
+	    			resultHtml += "<tr attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' userid='" + result[i].writerId + "' ondblclick=attDetail(this);>"
 	    			   			+ "<td>" + result[i].userName + "</td>"
 	    			   			+ "<td>" + result[i].userTitle + "</td>"
 	    			   			+ "<td>" + result[i].deptName + "</td>";
@@ -353,6 +353,19 @@
 					}
 				}
 			}
+			
+			function attDetail(t) {
+				var pAttitudeId = t.getAttribute("attitudeId"); 
+				var pTypeId = t.getAttribute("typeId");
+				if (CrossYN()) {
+					var OpenWin = window.open("/ezAttitude/attitudeItemDetail.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
+					
+					try { OpenWin.focus(); } catch (e) { }
+				} else {
+					rtnValue = window.showModalDialog("/ezAttitude/attitudeItemDetail.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
+					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+				}
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">
