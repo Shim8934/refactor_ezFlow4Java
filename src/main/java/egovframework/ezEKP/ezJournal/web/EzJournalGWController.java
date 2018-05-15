@@ -1470,12 +1470,12 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			String replyContent = request.getParameter("replyContent");
-			String replyDate = request.getParameter("replyDate");
+		//	String replyDate = request.getParameter("replyDate");
 		//	String journalTitle = request.getParameter("journalTitle");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			String journalWriter = ezJournalService.saveJorunalReply(journalId, userId, replyContent, replyDate, tenantId);
+			String journalWriter = ezJournalService.saveJorunalReply(journalId, userId, replyContent, tenantId);
 			
 			result.put("data", journalWriter);
 			result.put("status", "ok");
