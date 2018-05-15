@@ -71,11 +71,12 @@ public class EzAttitudeBHSController {
 		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10);
 		String searchStartDate = date + "-01";
 		String searchEndDate = "";
-		
+		LOGGER.debug(today.substring(0, 7));
+		LOGGER.debug("date.compareTo(today.substring(0, 7) = " + date.compareTo(today.substring(0, 7)));
 		if (date.compareTo(today.substring(0, 7)) == 0) {
 			//현재달
 			searchEndDate = today;
-		} else if (date.compareTo(today.substring(0, 7)) == -1) {
+		} else if (date.compareTo(today.substring(0, 7)) < 0) {
 			//이전달
 			Date firstDayofMonth = sdf.parse(searchStartDate);
 			cal.setTime(firstDayofMonth);
@@ -189,6 +190,8 @@ public class EzAttitudeBHSController {
 			url += "/rest/ezattitude/users/" + userId + "/attitudes";
 		} else if (mode.equals("mod")){
 			url += "/rest/ezattitude/attitudes/" + attitudeId; // update GW url
+		} else if (mode.equals("admin")){
+			url += "/rest/ezattitude/attitudes/" + attitudeId; // update GW url
 		}
 			
 		
@@ -207,7 +210,8 @@ public class EzAttitudeBHSController {
 				.queryParam("endDate", endDate)
 				.queryParam("bizSub", bizSub)
 				.queryParam("content", content)
-				.queryParam("dateType", dateType);
+				.queryParam("dateType", dateType)
+				.queryParam("mode", mode);
 		
 		RestTemplate rest = new RestTemplate();
 		

@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 		
+		<script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/Calendar/TabMenu.js"></script>
 	    <script type="text/javascript" src="/js/ezSchedule/lang/ezSchedule.js"></script>
 	    <script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
@@ -254,8 +255,8 @@
 						endDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 						break;
 					case "4":
-						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00:00";
-						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "23:59:59";
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + nowTime[0] + ":" + nowTime[1] + ":00";
+						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + nowTime[0] + ":" + nowTime[1] + ":00";
 						break;
 					case "5":
 						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
@@ -301,12 +302,12 @@
 		        		dateType : $("#periodblock").attr("datetype"),
 		        		startDate : startDate,
 		        		endDate : endDate,
-		        		mode : mode
+		        		mode : "admin"
 		        	},
 		        	success : function (result) {
 		        		alert("<spring:message code='ezAttitude.bbhs19'/>");
-		        		window.opener.getAttitudeMainList();
-		        		window.opener.parent.frames["left"].getAttitudeList();
+		        		window.opener.getAttitudeCheckList();
+// 		        		window.opener.parent.frames["left"].getAttitudeList();
 		        		window.close();
 		        	}
 		        });
@@ -477,19 +478,6 @@
 				}
 				editHeight += "PX";
 				$("#EdtorSize").css("height", editHeight);
-			}
-			
-			function allday_change() {
-				if ($("#alldaycheck").prop("checked") == true) {
-					$("#Stimepicker").css("display", "none");
-					$("#Etimepicker").css("display", "none");
-					$("#periodblock").attr("datetype", 4);
-					
-				} else {
-					$("#Stimepicker").css("display", "");
-					$("#Etimepicker").css("display", "");
-					$("#periodblock").attr("datetype", 5);
-				}
 			}
 		</script>
 	</head>
