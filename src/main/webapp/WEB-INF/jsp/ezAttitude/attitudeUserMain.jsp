@@ -963,7 +963,7 @@
 				</td>
 				<td style="vertical-align:top; width:10px;">&nbsp;</td>
 				<td style="vertical-align:top; width:9%; margin-left:5px;">
-					<div style="vertical-align:top; height:739px;" id="attiStatis">
+					<div style="vertical-align:top; height:696px;" id="attiStatis">
 					</div>
 				</td>
 			</tr>
