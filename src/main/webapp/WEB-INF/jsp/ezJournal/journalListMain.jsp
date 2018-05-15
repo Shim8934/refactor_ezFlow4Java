@@ -159,6 +159,7 @@
 			//업무일지 리스트 뿌리기
 			function setJournalList() {
 				var url = "/ezJournal/journalList.do";
+				console.log("listCnt : " + listCnt);
 				var jsonParam={};
 				jsonParam["listType"] = listType;
 				jsonParam["formId"] = $("#formId").val();
@@ -478,6 +479,7 @@
 			function selectedTR(elem){
 // 				onPreview = false;
 				var parentElem = $(elem).parent();
+				var isRead = "";
 				$("#journalList tr").removeClass("selectTR");
 				$("#journalList tr").find("input[type='checkbox']").removeProp("checked");
 	   			$(parentElem).addClass("selectTR");
@@ -489,6 +491,7 @@
 		   				if($(parentElem).attr("mine") == 'N'){
 		   	   				$(vc).text(parseInt($(vc).text())+1);
 		   				}
+		   				isRead = "N";
 			   			$(parentElem).removeClass("noView");
 		   			}
 // 	   				$("#ifrmPreViewH").attr("src","/ezJournal/journalPreview.do?journalId="+journalId);
@@ -500,7 +503,7 @@
 		   				success : function(journal){
 							$("#Preview_ContentW").html(journal);
 							$("#Preview_ContentH").html(journal);
-							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId="+journalId);
+							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId=" + journalId + "&isRead=" + isRead);
 							if(listType == 'recv'){
 								parent.left.setRecvCount();
 // 								setJournalList();
@@ -1327,10 +1330,12 @@
 	 //일지 상세화면
 	function goJournalDetail(elem){
 		var vc = $(elem).find(".viewCount");
+		var isRead = "";
 		if($(elem).hasClass("noView")){
 			if($(elem).attr("mine") == 'N'){
    				$(vc).text(parseInt($(vc).text()) + 1);
 			}
+			isRead = "N";
    			$(elem).removeClass("noView");
 		}
 // 	 	var pheight = window.sc reen.availHeight;
@@ -1347,7 +1352,7 @@
 								+ feature);
 			Openwin.focus();
 		} else {
-			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "",
+			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId + "&isRead=" + isRead, "journalDetail",
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			Openwin.focus();
