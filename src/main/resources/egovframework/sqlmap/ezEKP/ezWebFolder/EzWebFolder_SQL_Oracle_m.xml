@@ -1561,11 +1561,7 @@
 						tbl_webfolder_folder FOLDER
 						LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
 							ON FILE_TYPE.TYPE_NAME = 'folder' AND FOLDER.TENANT_ID = FILE_TYPE.TENANT_ID
-						LEFT JOIN TBL_WEBFOLDER_FOLDER PARENT
-							ON FOLDER.FOLDER_UPPER = PARENT.FOLDER_ID AND FOLDER.TENANT_ID = PARENT.TENANT_ID
 					WHERE
-							parent.USE_STATUS = 'Y'
-						AND
 							FOLDER.USE_STATUS = 'T'
 						AND
 							FOLDER.TENANT_ID = #tenantId#
@@ -1601,13 +1597,11 @@
 					LEFT JOIN TBL_WEBFOLDER_FOLDER FOLDER
 						ON FILES.FOLDER_ID = FOLDER.FOLDER_ID AND FILES.TENANT_ID = FOLDER.TENANT_ID
 				WHERE
-						FOLDER.USE_STATUS    = 'Y'
-					AND
-						FILES.USE_STATUS = 'T'
-					AND
-						FILES.TENANT_ID = #tenantId#
-					AND
-						FILES.DELETER_ID = #userId#
+					FILES.USE_STATUS = 'T'
+				AND
+					FILES.TENANT_ID = #tenantId#
+				AND
+					FILES.DELETER_ID = #userId#
 			]]>
 		
 			<include refid="searchTrashCanFile"/>
@@ -2158,13 +2152,11 @@
 			LEFT JOIN TBL_WEBFOLDER_FOLDER FOLDER
 				ON FILES.FOLDER_ID = FOLDER.FOLDER_ID AND FILES.TENANT_ID = FOLDER.TENANT_ID
 		WHERE
-				FOLDER.USE_STATUS = 'Y'
-			AND
-				FILES.USE_STATUS = 'T'
-			AND
-				FILES.TENANT_ID = #tenantId#
-			AND
-				FILES.DELETER_ID = #userId#
+			FILES.USE_STATUS = 'T'
+		AND
+			FILES.TENANT_ID = #tenantId#
+		AND
+			FILES.DELETER_ID = #userId#
 		<include refid="searchTrashCanFile"/>
 	</select>
 	
@@ -2175,16 +2167,12 @@
 			tbl_webfolder_folder FOLDER
 			LEFT JOIN TBL_WEBFOLDER_FILETYPE FILE_TYPE
 				ON FILE_TYPE.TYPE_NAME = 'folder' AND FOLDER.TENANT_ID = FILE_TYPE.TENANT_ID
-			LEFT JOIN TBL_WEBFOLDER_FOLDER parent
-				ON FOLDER.FOLDER_UPPER = parent.FOLDER_ID AND FOLDER.TENANT_ID = parent.TENANT_ID
 		WHERE
-				parent.USE_STATUS = 'Y'
-			AND
-				FOLDER.USE_STATUS = 'T'
-			AND
-				FOLDER.TENANT_ID = #tenantId#
-			AND
-				FOLDER.DELETER_ID = #userId#
+			FOLDER.USE_STATUS = 'T'
+		AND
+			FOLDER.TENANT_ID = #tenantId#
+		AND
+			FOLDER.DELETER_ID = #userId#
 		<include refid="searchTrashCanFolder"/>
 	</select>
 	
