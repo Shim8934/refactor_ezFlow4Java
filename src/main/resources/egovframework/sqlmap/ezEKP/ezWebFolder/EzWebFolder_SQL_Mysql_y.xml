@@ -1285,6 +1285,8 @@
 				 folder.use_status = 'N',
 				 folder.DELETER_ID = #userId#
 			where 
+				 folder.use_status = 'Y'
+			and 
 				folder.TENANT_ID = #tenantId#
 		    and 
 		        folder.FOLDER_ID != #folderId#
@@ -1330,7 +1332,7 @@
 			where 
 				file.TENANT_ID = #tenantId#
 			and
-				file.use_status != 'T',
+				file.use_status = 'Y',
 			and
 				file.FOLDER_ID in (
 					select id 

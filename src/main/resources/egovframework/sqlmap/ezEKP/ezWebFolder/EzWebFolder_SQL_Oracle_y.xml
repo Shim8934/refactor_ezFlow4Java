@@ -1281,6 +1281,8 @@
 				USE_STATUS = 'N' ,
 				DELETER_ID = #userId#
 			where 
+				USE_STATUS = 'Y'
+			and
 		    	TENANT_ID = #tenantId#
 		    and
 		    	FODLER_ID != #folderId#
@@ -1326,7 +1328,7 @@
 			where
             	TENANT_ID = #tenantId#
             and
-				use_status != 'T',
+				use_status = 'Y',
             and	  	
 				FOLDER_ID in (             
                 select folder.folder_id

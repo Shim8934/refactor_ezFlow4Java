@@ -792,6 +792,8 @@
 				DELETER_ID = #userId#,
 				UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE
+				USE_STATUS = 'Y'
+			AND
 				FOLDER_PATH LIKE CONCAT(#folderPath#, '%') 
 			AND
 				FOLDER_ID != #folderId#
