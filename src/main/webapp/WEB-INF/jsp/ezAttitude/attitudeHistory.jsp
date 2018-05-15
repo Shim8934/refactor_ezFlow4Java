@@ -226,15 +226,26 @@
 	    			resultHtml += "<tr attitudeId='" + result[i].attitudeId + "' userid='" + result[i].writerId + "';>"
 	    			   			+ "<td>" + result[i].writerName + "</td>"
 	    			   			+ "<td>" + result[i].writerTitle + "</td>"
-	    			   			+ "<td>" + result[i].writerdeptName + "</td>";
-	    			   			+ "<td>" + result[i].originStartdate + " ~ " + result[i].originEnddate + "->" + result[i].changeStartdate + " ~ " + result[i].changeEnddate + "</td>";
+	    			   			+ "<td>" + result[i].writerDeptName + "</td>";
+	    			   			
+// 	    			   			+ "<td>" + result[i].originStartdate + " ~ " + result[i].originEnddate + "->" + result[i].changeStartdate + " ~ " + result[i].changeEnddate + "</td>";
 	    			   			+ "<td>" + result[i].originTypeName + " -> " + result[i].changeTypeName + "</td>";
 	    						
-// 	    			if (result[i].endDate == null || result[i].endDate == "") {
-// 	    				resultHtml += "<td>" + result[i].startDate + "</td>";
-// 	    			} else {
-// 	    				resultHtml += "<td>" + result[i].startDate + " ~ " + result[i].endDate + "</td>";
-// 	    			}
+	    			if (result[i].originStartdate == null || result[i].originStartdate == "") {
+	    				resultHtml += "<td> 미입력 ->" + result[i].changeStartdate;
+	    				if (result[i].changeEnddate == null || result[i].changeEnddate == "") {
+	    					resultHtml += "</td>";
+	    				} else {
+	    					resultHtml += " ~ " + result[i].changeEnddate + "</td>";
+	    				}
+	    			} else {
+	    				resultHtml += "<td>" + result[i].originStartdate;
+	    				if (result[i].originEnddate == null || result[i].originEnddate == "") {
+	    					resultHtml += " -> " + result[i].changeStartdate + "</td>";
+	    				} else {
+	    					resultHtml += " ~ " + result[i].originEnddate + "->" + result[i].changeStartdate + " ~ " + result[i].changeEnddate + "</td>";
+	    				}
+	    			}
 	    			
 // 	    			if (result[i].endTime == null || result[i].endTime == "") {
 // 	    				resultHtml += "<td>" + result[i].startTime + "</td>";

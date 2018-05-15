@@ -1980,7 +1980,7 @@ public class EzAttitudeAdminBOMController {
 	 */
 	@RequestMapping(value = "/ezAttitude/attitudeHistoryList.do")
 	@ResponseBody
-	public JSONArray attitudeHistoryList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+	public JSONObject attitudeHistoryList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeHistoryList.do");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -2038,14 +2038,14 @@ public class EzAttitudeAdminBOMController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 		
-		JSONArray list = new JSONArray();
+		JSONObject data = new JSONObject();
 		if(status.equals("ok")){
-			list = (JSONArray) resultBody.get("data");
+			data = (JSONObject) resultBody.get("data");
 		}
 		
 		LOGGER.debug("/ezAttitude/attitudeHistoryList.do");
 		
-		return list;
+		return data;
 		
 	}
 	

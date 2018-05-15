@@ -998,36 +998,7 @@
 				TENANT_ID = #tenantId#
 			AND
 				WRITER_DEPT_ID = #deptId#
-			AND
-				(
-					(ORIGIN_STARTDATE >= #searchStartDate# AND ORIGIN_STARTDATE <= #searchEndDate#) 
-				OR
-					(ORIGIN_ENDDATE >= #searchStartDate# AND ORIGIN_ENDDATE < #searchEndDate#) 
-				OR
-					(ORIGIN_STARTDATE < #searchStartDate# AND ORIGIN_ENDDATE >= #searchEndDate#)
-				)
 		]]>
-		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
-			<![CDATA[
-				A.type_id = #searchAttitudeType#
-			]]>
-		</isNotEqual>
-		<isNotEmpty prepend="AND" property="searchUserName">
-			WRITER_NAME LIKE CONCAT('%', #searchUserName#, '%')
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchTitle">
-			WRITER_TITLE LIKE CONCAT('%', #searchTitle#, '%')
-		</isNotEmpty>
-		<isNotEmpty property="orderCell">
-			ORDER BY
-				$orderCell$ $orderOption$
-		</isNotEmpty>
-		<isEmpty property="orderCell">
-			ORDER BY
-				startdate DESC,
-				enddate DESC,
-				starttime DESC
-		</isEmpty>
 		<isNotEmpty property="listSize">
 			<![CDATA[
 				LIMIT
@@ -1048,26 +1019,7 @@
 				TENANT_ID = #tenantId#
 			AND
 				WRITER_DEPT_ID = #deptId#
-			AND
-				(
-					(ORIGIN_STARTDATE >= #searchStartDate# AND ORIGIN_STARTDATE <= #searchEndDate#) 
-				OR
-					(ORIGIN_ENDDATE >= #searchStartDate# AND ORIGIN_ENDDATE < #searchEndDate#) 
-				OR
-					(ORIGIN_STARTDATE < #searchStartDate# AND ORIGIN_ENDDATE >= #searchEndDate#)
-				)
 		]]>
-		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
-			<![CDATA[
-				A.type_id = #searchAttitudeType#
-			]]>
-		</isNotEqual>
-		<isNotEmpty prepend="AND" property="searchUserName">
-			WRITER_NAME LIKE CONCAT('%', #searchUserName#, '%')
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchTitle">
-			WRITER_TITLE LIKE CONCAT('%', #searchTitle#, '%')
-		</isNotEmpty>
 
 	</select>
 	
