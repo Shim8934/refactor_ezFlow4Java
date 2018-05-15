@@ -37,6 +37,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
+import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
@@ -1668,7 +1669,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public List<AdminAttitudeVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String searchDeptId) throws Exception {
+	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId) throws Exception {
 		LOGGER.debug("getAttitudeHistoryList started");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -1684,7 +1685,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
-		map.put("searchDeptId", searchDeptId);
+		map.put("deptId", deptId);
 		map.put("searchTitle", searchTitle);
 		map.put("searchAttitudeType", searchAttitudeType);
 		map.put("searchStartDate", searchStartDate);
@@ -1697,7 +1698,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("limit", limit);
 
-		List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeHistoryList(map);
+		List<ModApplHistoryVO> resultList = ezAttitudeDAO.getAttitudeHistoryList(map);
 
 		LOGGER.debug("getAttitudeHistoryList ended. resultList size = " + resultList.size());
 		
@@ -1706,7 +1707,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public String getAttitudeHistoryCount(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate,
-			String searchEndDate, String searchAttitudeType,String offset, String companyId, int tenantId, String searchDeptId) throws Exception {
+			String searchEndDate, String searchAttitudeType,String offset, String companyId, int tenantId, String deptId) throws Exception {
 		LOGGER.debug("getAttitudeHistoryCount started.");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
@@ -1721,7 +1722,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchAttitudeType", searchAttitudeType);
 		map.put("searchStartDate", searchStartDate);
 		map.put("searchEndDate", searchEndDate);
-		map.put("searchDeptId", searchDeptId);
+		map.put("deptId", deptId);
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);

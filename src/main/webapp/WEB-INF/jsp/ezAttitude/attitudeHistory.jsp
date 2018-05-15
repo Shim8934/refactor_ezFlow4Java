@@ -150,7 +150,7 @@
 	    	
 	    	function dept_change(){
 	    		$('#receiverlist').empty();
-	    		pDeptId = $("select[name=ListDept]").val();
+// 	    		pDeptId = $("select[name=ListDept]").val();
 	    		getAttitudeHistoryList();
 	    	}
 	    	
@@ -176,7 +176,7 @@
 	    			url : "/ezAttitude/attitudeHistoryList.do",
 	    			data : {
 	    				companyId : pCompanyId,
-	    				deptId : pDeptId,
+	    				deptId : $("#ListDept").val(),
 	   					userName : searchUserName,
 	   					deptName : searchDeptName,
 	   					title : searchTitle,
@@ -193,7 +193,8 @@
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
 	    				getAttitudeHistoryList_after(result.list);
 	    				//근태유형 리스트
-	    				getAttitudeTypeList(result.typeList, result.typeId);
+// 	    				getAttitudeTypeList(result.typeList, result.typeId);
+	    				$('#searchAttitudeType').val(typeId);
 	    			},
 	    			error : function() {
 	    				alert('리스트를 가져오는중 오류 발생');
@@ -201,20 +202,20 @@
 	    		});
 	    	}
 	    	
-	    	//검색 > 근태유형selectBox
-	    	function getAttitudeTypeList(typeList, typeId) {
-	    		var html = "<option value='total'><spring:message code='ezAttitude.lhj8' /></option>";
+// 	    	//검색 > 근태유형selectBox
+// 	    	function getAttitudeTypeList(typeList, typeId) {
+// 	    		var html = "<option value='total'><spring:message code='ezAttitude.lhj8' /></option>";
 	    		
-	    		for (var i = 0; i < typeList.length; i ++) {
-	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
-	    		}
+// 	    		for (var i = 0; i < typeList.length; i ++) {
+// 	    			html += "<option value='" + typeList[i].typeId + "'>" + typeList[i].typeName +  "</option>";
+// 	    		}
 	    		
-	    		$('#searchAttitudeType').html(html);
+// 	    		$('#searchAttitudeType').html(html);
 	    		
-	    		if (typeId != "") {
-	    			$('#searchAttitudeType').val(typeId);
-	    		}
-	    	}
+// 	    		if (typeId != "") {
+// 	    			$('#searchAttitudeType').val(typeId);
+// 	    		}
+// 	    	}
 	    	
 	    	function getAttitudeHistoryList_after(result){
 	    		var resultHtml = "";
@@ -222,24 +223,26 @@
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
 	    		for (var i = 0; i < result.length; i ++) {
-	    			resultHtml += "<tr attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' userid='" + result[i].writerId + "' ondblclick=attDetail(this);>"
-	    			   			+ "<td>" + result[i].userName + "</td>"
-	    			   			+ "<td>" + result[i].userTitle + "</td>"
-	    			   			+ "<td>" + result[i].deptName + "</td>";
+	    			resultHtml += "<tr attitudeId='" + result[i].attitudeId + "' userid='" + result[i].writerId + "';>"
+	    			   			+ "<td>" + result[i].writerName + "</td>"
+	    			   			+ "<td>" + result[i].writerTitle + "</td>"
+	    			   			+ "<td>" + result[i].writerdeptName + "</td>";
+	    			   			+ "<td>" + result[i].originStartdate + " ~ " + result[i].originEnddate + "->" + result[i].changeStartdate + " ~ " + result[i].changeEnddate + "</td>";
+	    			   			+ "<td>" + result[i].originTypeName + " -> " + result[i].changeTypeName + "</td>";
 	    						
-	    			if (result[i].endDate == null || result[i].endDate == "") {
-	    				resultHtml += "<td>" + result[i].startDate + "</td>";
-	    			} else {
-	    				resultHtml += "<td>" + result[i].startDate + " ~ " + result[i].endDate + "</td>";
-	    			}
+// 	    			if (result[i].endDate == null || result[i].endDate == "") {
+// 	    				resultHtml += "<td>" + result[i].startDate + "</td>";
+// 	    			} else {
+// 	    				resultHtml += "<td>" + result[i].startDate + " ~ " + result[i].endDate + "</td>";
+// 	    			}
 	    			
-	    			if (result[i].endTime == null || result[i].endTime == "") {
-	    				resultHtml += "<td>" + result[i].startTime + "</td>";
-	    			} else {
-	    				resultHtml += "<td>" + result[i].startTime + " ~ " + result[i].endTime + "</td>";
-	    			}
+// 	    			if (result[i].endTime == null || result[i].endTime == "") {
+// 	    				resultHtml += "<td>" + result[i].startTime + "</td>";
+// 	    			} else {
+// 	    				resultHtml += "<td>" + result[i].startTime + " ~ " + result[i].endTime + "</td>";
+// 	    			}
 	    			
-	    			resultHtml += "<td>" + result[i].typeName + "</td></tr>";
+// 	    			resultHtml += "<td>" + result[i].typeName + "</td></tr>";
 	    		}
 	    		
 	    		if (resultHtml == "") {
