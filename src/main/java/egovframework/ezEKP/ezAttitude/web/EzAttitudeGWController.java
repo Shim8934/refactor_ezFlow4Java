@@ -48,6 +48,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
+import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1901,4 +1902,61 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/"+companyId+"/depts] ended.");
 		return result;
 	}
+	
+	/**
+	 * G/W 근태수정관리 > 근태관리 > 관리내역  [GET] 관리내역 리스트 조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/manageHistories", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getAttitudeHistoryList(HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String companyId = request.getParameter("companyId");
+			String searchUserName = request.getParameter("searchUserName");
+			String searchDeptName = request.getParameter("searchDeptName");
+			String deptId = request.getParameter("deptId");
+			String searchTitle = request.getParameter("searchTitle");
+			String searchStartDate = request.getParameter("searchStartDate");
+			String searchEndDate = request.getParameter("searchEndDate");
+			String searchAttitudeType = request.getParameter("searchAttitudeType");
+			String pageNum = request.getParameter("pageNum");
+			String listSize = request.getParameter("listSize");
+			String orderCell = request.getParameter("orderCell");
+			String orderOption = request.getParameter("orderOption");
+			String offsetMin = request.getParameter("offsetMin");
+			String isAdmin = request.getParameter("isAdmin");
+			String statistics = request.getParameter("statistics");
+			String isuse = "1";
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantID = info.getTenantId();
+			String offset = info.getOffSet();
+			
+			String totalCount = ezAttitudeService.getAttitudeHistoryCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantID, deptId);
+			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, deptId);
+		
+			//구분 리스트
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
+			
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("totalCount", totalCount);
+			data.put("typeId", searchAttitudeType);
+			data.put("typeList", typeList);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/] ended.");
+		return result;
+	}
+	
 }

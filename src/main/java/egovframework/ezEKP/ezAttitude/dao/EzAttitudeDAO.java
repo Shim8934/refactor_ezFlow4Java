@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
+import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAttitudeDAO")
@@ -281,5 +282,13 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	
 	public void	insertAdminAttHistory2(Map<String, Object> map) throws Exception {
 		insert("ezAttitude.insertAdminAttHistory2", map);//TODO  ezAttitude -> ezAttitudeDAO 
+	}
+	
+	public List<ModApplHistoryVO> getAttitudeHistoryList(Map<String, Object> map) {
+		return (List<ModApplHistoryVO>) list("ezAttitudeAdminDAO.getAttitudeHistoryList", map);
+	}
+
+	public String getAttitudeHistoryCount(Map<String, Object> map) {
+		return (String) select("ezAttitudeAdminDAO.getAttitudeHistoryCount", map);//
 	}
 }

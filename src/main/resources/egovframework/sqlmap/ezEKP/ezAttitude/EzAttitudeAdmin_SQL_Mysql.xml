@@ -12,6 +12,7 @@
 	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>
 	<typeAlias alias="AttitudeAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO"/>
 	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
+	<typeAlias alias="ModApplHistoryVO" type="egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO"/>
 	
 	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
 		<result property="companyId"				column="COMPANY_ID"				columnIndex="1"/>
@@ -973,5 +974,83 @@
 				COMPANY_ID = #companyId#
 		]]>
 	</update>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeHistoryList" parameterClass="Map" resultClass="ModApplHistoryVO">
+		<![CDATA[
+			SELECT
+				ATTITUDE_ID as attitudeId,
+			    WRITER_NAME as writerName,
+			    WRITER_TITLE as writerTitle,
+			    WRITER_DEPT_NAME as writerDeptName,
+			    date_format(DATE_ADD(ORIGIN_STARTDATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') as originStartdate,
+			    date_format(DATE_ADD(ORIGIN_ENDDATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') as originEnddate,
+			    ifnull(date_format(DATE_ADD(CHANGE_STARTDATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i'),'') as changeStartdate,
+			    ifnull(date_format(DATE_ADD(CHANGE_ENDDATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i'),'') as changeEnddate,
+			    ORIGIN_TYPE_NAME as originTypeName,
+			    ifnull(CHANGE_TYPE_NAME,'') as changeTypeName,
+			    APPR_USER_NAME as apprUserName,
+			    date_format(APPR_DATE, '%Y-%m-%d %H:%i') as apprDate
+			FROM
+				TBL_ATTITUDE_MODAPPL_HISTORY
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				WRITER_DEPT_ID = #deptId#
+		]]>
+		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
+			<![CDATA[
+				CHANGE_TYPE_ID = #searchAttitudeType#
+			]]>
+		</isNotEqual>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			WRITER_NAME LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			WRITER_TITLE LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="orderCell">
+			ORDER BY
+				$orderCell$ $orderOption$
+		</isNotEmpty>
+		<isEmpty property="orderCell">
+			ORDER BY
+				changeStartdate DESC,
+				writerName
+		</isEmpty>
+		<isNotEmpty property="listSize">
+			<![CDATA[
+				LIMIT
+					#limit#, #listSize#
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeHistoryCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM
+				TBL_ATTITUDE_MODAPPL_HISTORY
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				WRITER_DEPT_ID = #deptId#
+		]]>
+		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
+			<![CDATA[
+				CHANGE_TYPE_ID = #searchAttitudeType#
+			]]>
+		</isNotEqual>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			WRITER_NAME LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			WRITER_TITLE LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+	</select>
 	
 </sqlMap>
