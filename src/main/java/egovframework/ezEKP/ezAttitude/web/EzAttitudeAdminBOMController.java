@@ -1317,11 +1317,11 @@ public class EzAttitudeAdminBOMController {
 			row.getCell(1).setCellStyle(headerStyle);
 			row.createCell(2).setCellValue("부서");
 			row.getCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t13", locale));
+			row.createCell(3).setCellValue("날짜");
 			row.getCell(3).setCellStyle(headerStyle);
-			row.createCell(4).setCellValue("날짜");
+			row.createCell(4).setCellValue("시간");
 			row.getCell(4).setCellStyle(headerStyle);
-			row.createCell(5).setCellValue("시간");
+			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t13", locale));
 			row.getCell(5).setCellStyle(headerStyle);
 			
 			//body
@@ -1330,22 +1330,22 @@ public class EzAttitudeAdminBOMController {
 				row = sheet.createRow(i + 1);
 
 				row.createCell(0).setCellValue(vo.getUserName());
-				
 				row.createCell(1).setCellValue(vo.getUserTitle());
 				row.createCell(2).setCellValue(vo.getDeptName());
-				row.createCell(3).setCellValue(vo.getTypeName());
 				
 				if (vo.getEndDate() != null && !vo.getEndDate().equals("")) {
-					row.createCell(4).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
+					row.createCell(3).setCellValue(vo.getStartDate() + " ~ " + vo.getEndDate());
 				} else {
-					row.createCell(4).setCellValue(vo.getStartDate());
+					row.createCell(3).setCellValue(vo.getStartDate());
 				}
 				
 				if (vo.getEndTime() != null && !vo.getEndTime().equals("")) {
-					row.createCell(5).setCellValue(vo.getStartTime() + " ~ " + vo.getEndTime());
+					row.createCell(4).setCellValue(vo.getStartTime() + " ~ " + vo.getEndTime());
 				} else {
-					row.createCell(5).setCellValue(vo.getStartTime());
+					row.createCell(4).setCellValue(vo.getStartTime());
 				}
+				
+				row.createCell(5).setCellValue(vo.getTypeName());
 				
 				row.getCell(0).setCellStyle(bodyStyle);
 				row.getCell(1).setCellStyle(bodyStyle);
