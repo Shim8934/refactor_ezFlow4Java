@@ -426,9 +426,9 @@
 							var iconStr = "";
 							//0과 2는 icon을 추가하지 않는다.
 							if (result[i].modAppl  == '2') {
-								iconStr = "<i class='fas fa-pencil-alt'></i>";
+								iconStr = " <i class='fas fa-pencil-alt'></i>";
 							} else if (result[i].modAppl  == '3') {
-								iconStr = "<i class='fas fa-pencil-alt'></i>";
+								iconStr = " <i class='fas fa-pencil-alt'></i>";
 							}
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>"); 
