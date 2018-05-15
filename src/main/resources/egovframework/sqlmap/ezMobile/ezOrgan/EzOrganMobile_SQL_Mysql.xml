@@ -12,11 +12,14 @@
             (SELECT
                 *,@rownum:=@rownum+1 as rowNum
             FROM
-                tbl_usermaster, (select @rownum:=0) tmp
+                tbl_usermaster AS B, (select @rownum:=0) tmp
             WHERE
-                PHYSICALDELIVERYOFFICENAME = #companyID#
+            NOT EXISTS
+				(SELECT 1 from jmocha.tbl_usermaster_retire as C where B.cn = C.cn and B.tenant_id = C.TENANT_ID)
+			AND
+                B.PHYSICALDELIVERYOFFICENAME = #companyID#
             AND
-                TENANT_ID = #tenantID#
+                B.TENANT_ID = #tenantID#
         ]]>        
         <isNotEmpty property="pSearchText">
             <![CDATA[
@@ -27,7 +30,7 @@
         
         <![CDATA[    
             ORDER BY
-                DISPLAYNAME ASC)A
+                B.DISPLAYNAME ASC)A
         ]]>
         <isNotEmpty property="rowNum">
             <![CDATA[
@@ -45,11 +48,14 @@
             SELECT
                 COUNT(*)
             FROM
-                tbl_usermaster
+                tbl_usermaster as B
             WHERE
-                PHYSICALDELIVERYOFFICENAME = #companyID#
+            NOT EXISTS
+				(SELECT 1 from jmocha.tbl_usermaster_retire as C where B.cn = C.cn and B.tenant_id = C.TENANT_ID)
+			AND
+                B.PHYSICALDELIVERYOFFICENAME = #companyID#
             AND
-                TENANT_ID = #tenantID#
+                B.TENANT_ID = #tenantID#
         ]]>        
         <isNotEmpty property="pSearchText">
             <![CDATA[
@@ -59,7 +65,7 @@
         </isNotEmpty>
         <![CDATA[    
             ORDER BY
-                DISPLAYNAME ASC
+                B.DISPLAYNAME ASC
         ]]> 
     </select>
     

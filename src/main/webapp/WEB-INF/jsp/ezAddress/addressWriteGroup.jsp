@@ -80,6 +80,7 @@
 	            	document.getElementById("MsgToList").className = "receiver_list";
 	            }
 	            
+	            ChangeListView_onClick(getOrganListType());
 	        }
 	        function address_requestdata(event) {
 	            if (!event) {
@@ -1367,6 +1368,7 @@
 	            pListType = Div;
 	            ListTypeChangeIcon();
 	            DisplayUserImageList();
+	            setOrganListType(pListType);
 	        }
 	        var loadaddresstree = false;
 	        function contactTabButton_onClick() {
@@ -1768,6 +1770,36 @@
             		tab3.className = "tabon";
             	}
             }
+		    
+	        function setOrganListType(pListType) {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/setListType.do",
+	        		async : false,
+	        		data : {
+	        			listType : pListType
+	        		},
+	        		success : function(result) {
+	        			
+	        		}
+	        		
+	        	})
+	        }
+	        
+	        function getOrganListType() {
+	        	var organListType = "TXT";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/getListType.do",
+	        		async : false,
+	        		success : function(result) {
+	        			organListType = result;
+	        		}
+	        	})
+	        	return organListType;
+	        }
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">

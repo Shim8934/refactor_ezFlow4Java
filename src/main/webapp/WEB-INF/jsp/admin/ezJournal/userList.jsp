@@ -11,6 +11,10 @@
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	   	<script type="text/javascript">
+	   		$(document).ready(function() {
+	   			ChangeListView_onClick(getOrganListType());
+	   		})
+	   	
 	   		function ChangeListView_onClick(flag) {
 	   			if (flag == 'TXT') {
 	   				$("#txtlist_Layer").css("display","");
@@ -23,8 +27,39 @@
 	   				$("#txtlist").attr("src","/images/kr/cm/btn_list.gif");
 	   				$("#imglist").attr("src","/images/kr/cm/btn_onimglist.gif");
     			}
+	   			
+	   			setOrganListType(flag);
 	   		}
 	   		
+	        function setOrganListType(pListType) {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/setListType.do",
+	        		async : false,
+	        		data : {
+	        			listType : pListType
+	        		},
+	        		success : function(result) {
+	        			
+	        		}
+	        		
+	        	})
+	        }
+	        
+	        function getOrganListType() {
+	        	var organListType = "TXT";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/getListType.do",
+	        		async : false,
+	        		success : function(result) {
+	        			organListType = result;
+	        		}
+	        	})
+	        	return organListType;
+	        }
 		</script>
 		<style>
 		</style>

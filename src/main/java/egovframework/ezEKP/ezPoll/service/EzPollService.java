@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollUsersVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzPollService {	
@@ -112,4 +114,19 @@ public interface EzPollService {
 	
 	public void sendPostNotiMail(LoginVO userInfo, String loginCookie, PollQuestionVO pollQuestion) throws Exception;
 	
+	public OrganUserVO getRetireEntryInfo(String cn, String lang, int tenantID) throws Exception;
+	
+	public void insertQstUsers(PollUsersVO user) throws Exception;
+	
+	public void insertQstUsers(PollQuestionVO pollQuestionVO) throws Exception;
+	
+	public void getAllMemberOfDept(List<LoginVO> list, String deptId, int tenantID) throws Exception;
+	
+	public PollUsersVO getQstUsers(PollUsersVO user) throws Exception;
+	
+	public void updateQstUsersStatus(int tenantId, int qstId, String userId, int userStatus) throws Exception;
+	
+	public void deleteUsersForQst(int tenantId, int qstId) throws Exception;
+	
+	public List<PollUsersVO> getAllUsersForQst(int tenantId, int qstId) throws Exception;
 }
