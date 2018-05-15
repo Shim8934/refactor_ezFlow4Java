@@ -43,6 +43,7 @@
 	   		var selMainListUserName="";
 	   		var selDeptId = "";
 	   		
+	   		document.onselectstart = function () { return false; };
 	   		function close_Click(){
 	   			window.close();
 	   		}

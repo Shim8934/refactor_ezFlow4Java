@@ -94,6 +94,8 @@ function Get_SearchAddressList() {
     xmlHTTPAddressList.onreadystatechange = Complete_Get_AddressList;
     xmlHTTPAddressList.send(xmlDom);
     try { ShowMailProgress(); } catch (e) {}
+    
+    document.getElementById("HeaderAllCheckBox").checked = false;
 }
 function MakeAddressList() {
     var XmlRows = SelectNodes(ListXML, "DATA/ROW");
@@ -453,6 +455,7 @@ function Complete_Get_AddressList() {
         }
         document.getElementById("mailBoxInfo").style.visibility = "visible";
         MakeAddressList();
+        
     }
 }
 function MakeNoDateList() {
@@ -464,6 +467,7 @@ function MakeNoDateList() {
 
         var _TD = document.createElement("TD");
         _TD.style.textAlign = "center";
+        _TD.id = "noData";
         _TD.innerHTML = strLang100;
         _TR.appendChild(_TD);
         document.getElementById("MailList").appendChild(_TR);
@@ -694,6 +698,11 @@ function event_listCheckboxclick(obj) {
     listEventCheckbox = true;
 }
 function event_HeaderCheckBoxClick(obj) {
+	
+	if (document.getElementById("MailList").childNodes.item(0).childNodes.item(0).id == 'noData') {
+		return;
+	}
+	
     if (obj.checked) {
         for (var i = 0; i < document.getElementById("MailList").childNodes.length; i++) {
             document.getElementById("MailList").childNodes.item(i).childNodes.item(0).childNodes.item(0).checked = true;

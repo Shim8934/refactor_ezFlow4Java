@@ -350,7 +350,7 @@
 			    
 			    selecttarget_cross_dialogArguments[0] = receiverData;
 			    selecttarget_cross_dialogArguments[1] = SelectTarget_Complete;
-			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do", "SelectTarget_Cross2", GetOpenWindowfeature(800, 520));
+			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do", "SelectTarget_Cross2", GetOpenWindowfeature(1144, 590));
 			    try { SelectTarget_Cross.focus(); } catch (e) {}
 			}
 			function SelectTarget_Complete(ret) {
