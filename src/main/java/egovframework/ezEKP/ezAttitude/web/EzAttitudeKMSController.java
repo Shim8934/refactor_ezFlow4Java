@@ -81,10 +81,10 @@ public class EzAttitudeKMSController {
 		
 		int totalAtt = 0;
 		int currentPage = 1;
-		int totalPages = 0;
-		int pageSize = 15;
+		int totalPages = 1;
+		int pageSize = 19;
 		int startPoint = 0;
-		int endPoint = 15;
+		int endPoint = 19;
 		String type = "0";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -149,7 +149,7 @@ public class EzAttitudeKMSController {
 				.queryParam("type", type);
 		
 		if (totalPages == 0 || totalPages == 1) {
-			
+			totalPages = 1;
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 			
 			jp = new JSONParser();
@@ -258,10 +258,10 @@ public class EzAttitudeKMSController {
 		
 		int totalAtt = 0;
 		int currentPage = 1;
-		int totalPages = 0;
-		int pageSize = 15;
+		int totalPages = 1;
+		int pageSize = 19;
 		int startPoint = 0;
-		int endPoint = 15;
+		int endPoint = 19;
 		String adminFlag = "true";
 		String url = "";
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -343,7 +343,7 @@ public class EzAttitudeKMSController {
 				.queryParam("type", type);
 		
 		if (totalPages == 0 || totalPages == 1) {
-			
+			totalPages = 1;
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 			
 			jp = new JSONParser();
@@ -528,11 +528,13 @@ public class EzAttitudeKMSController {
 		
 		LOGGER.debug("getAttModAppList started");
 
+		/* 2018-05-15 이효진 여기 관리자쪽 태울땐 16개정도하면 될듯*/
+		LOGGER.debug("adminFlag = " + adminFlag + " || checkAdmin = " + checkAdmin);
 		int currentPage = 1;
-		int pageSize = 15;
+		int pageSize = 19;
 		int startPoint = 0;
-		int endPoint = 15;
-		int totalPages = 0;
+		int endPoint = 19;
+		int totalPages = 1;
 		int totalAtt = 0;
 		String isAllDept = "";
 		String authFlag = "";
@@ -617,8 +619,8 @@ public class EzAttitudeKMSController {
 		
 		entity = new HttpEntity<>(headers);
 		
-		if (totalPages == 0 || totalPages == 1) {
-
+		if (totalPages == 0) {
+			totalPages = 1;
 		} else {
 			if (currentPage < totalPages) {
 				startPoint = (currentPage - 1)*pageSize;

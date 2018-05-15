@@ -64,7 +64,7 @@
 	                    html += "<td style='width:40%;color:gray;'>" + result[i].authDeptName + " <i class='fas fa-info-circle' style='margin-left: 5px; font-size: 14px;'></i></td>";
 	                    html += "</tr>";
 	                    
-	                    var deptList = [result[i].authDeptId, result[i].authDeptName2, result[i].authDeptType];
+	                    var deptList = [result[i].authDeptId, result[i].authDeptName2, result[i].authType];
 	                    userList.push(deptList);
 	                }
                 } else {
