@@ -501,14 +501,20 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <table id="attiwriteForm" class="content">
-								<tr id="selectTR">
+	                        	<tr id="userId" fixed="fix">
+	                        		<th>아이디</th>
+	                        		<td><c:out value="${info.userId }"/></td>
+	                        	</tr>
+	                        	<tr id="userName" fixed="fix">
+	                        		<th>이름</th>
+	                        		<td><c:out value="${info.userName }"/></td>
+	                        	</tr>
+								<tr id="selectTR" fixed="fix">
 									<th>구분</th>
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
-												<c:if test="${item.parentId ne 'A05' && item.typeId ne 'A01' && item.typeId ne 'A02' && item.typeId ne 'A03'}">
-													<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
-												</c:if>
+												<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
 											</c:forEach>
 										</select>
 										<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)">

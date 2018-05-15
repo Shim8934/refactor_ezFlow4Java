@@ -43,6 +43,8 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -67,6 +69,9 @@ public class EzAttitudeKMSController {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name = "MOptionService")
+	private MOptionService mOptionService;
 	
 	/**
 	 * 근태 수정 신청 현황
@@ -2162,7 +2167,6 @@ public class EzAttitudeKMSController {
 		String userId = request.getParameter("userid");
 		String date = request.getParameter("date");
 		String mode = request.getParameter("mode");
-		String attitudeId = request.getParameter("attitudeId");
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String userOffset = userInfo.getOffset().split("\\|")[1];
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() +"/attitudetypes";
@@ -2171,6 +2175,8 @@ public class EzAttitudeKMSController {
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
+		MCommonVO info = mOptionService.commonInfoWeb(request.getServerName(), userId);
+
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -2190,34 +2196,16 @@ public class EzAttitudeKMSController {
 		JSONArray attitudeTypeList = new JSONArray();
 		if (status.equals("ok")) {
 			attitudeTypeList = (JSONArray) resultBody.get("data");
-			
-			if (mode != null && mode.equals("mod")) {
-				url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId; // 근태상세정보 GW 호출
-				
-				builder = UriComponentsBuilder.fromHttpUrl(url)
-						.queryParam("userId", userId)
-						.queryParam("attitudeId", attitudeId);
-				
-				result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-				resultBody = (JSONObject) jp.parse(result.getBody());
-				
-				status = resultBody.get("status").toString();
-				LOGGER.debug("status : " + status);
-				
-				JSONObject attitudeVO = new JSONObject();
-				if (status.equals("ok")) {
-					attitudeVO = (JSONObject) resultBody.get("data");
-					
-					model.addAttribute("attitudeInfo", attitudeVO);
-				}
-			}
 		}
 		
 		//현재시간
 		String time = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split(" ")[1];
 		
 		model.addAttribute("userOffset", userOffset);
+		//관리자 정보
 		model.addAttribute("userInfo", userInfo);
+		//사용자 정보
+		model.addAttribute("info", info);
 		model.addAttribute("attitudeTypeList", attitudeTypeList);
 		model.addAttribute("date", date);
 		model.addAttribute("time", time);
