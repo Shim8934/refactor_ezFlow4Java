@@ -189,6 +189,8 @@ public class EzAttitudeBHSController {
 			url += "/rest/ezattitude/users/" + userId + "/attitudes";
 		} else if (mode.equals("mod")){
 			url += "/rest/ezattitude/attitudes/" + attitudeId; // update GW url
+		} else if (mode.equals("admin")){
+			url += "/rest/ezattitude/attitudes/" + attitudeId; // update GW url
 		}
 			
 		
@@ -207,7 +209,8 @@ public class EzAttitudeBHSController {
 				.queryParam("endDate", endDate)
 				.queryParam("bizSub", bizSub)
 				.queryParam("content", content)
-				.queryParam("dateType", dateType);
+				.queryParam("dateType", dateType)
+				.queryParam("mode", mode);
 		
 		RestTemplate rest = new RestTemplate();
 		

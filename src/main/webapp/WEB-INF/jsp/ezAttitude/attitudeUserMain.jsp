@@ -888,9 +888,9 @@
 			
 			function deptChange() {
 				if (authDeptList.value == "")
-		            window.location.href = "/ezAttitude/attitudeDeptMain.do";
+					getAttitudeMainList();
 		        else {
-		            window.location.href = "/ezAttitude/attitudeDeptMain.do?deptid=" + encodeURIComponent(authDeptList.value);
+		        	getAttitudeMainList();
 		        }
 			}
 			
