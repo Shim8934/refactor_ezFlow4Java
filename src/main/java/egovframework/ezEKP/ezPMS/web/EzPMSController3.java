@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import egovframework.ezEKP.ezPMS.vo.ProjectPagination;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -127,14 +128,33 @@ public class EzPMSController3 {
 	public String getBoardList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		
 		LOGGER.debug("ezPMS getBoardList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int totalCount = 0;
+		int listCnt = 10;
+		int countPage = 10;
+		int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		String projectId = request.getParameter("projectId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("projectId", request.getParameter("projectId"));
+		
 		param.put("groupId", request.getParameter("groupId"));
 		param.put("taskId", request.getParameter("taskId"));
-	
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list", param, request, "get", null);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list-count/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {			
+			totalCount = Integer.parseInt((String) resultBody.get("data"));
+		}
+		
+		ProjectPagination paging = new ProjectPagination(totalCount, listCnt, countPage, currentPage);
+		model.addAttribute("paging", paging);
+		
+		param.put("startRow", paging.getStartCount());
+		param.put("limit", listCnt);
+	
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
 			JSONArray boardList = (JSONArray) resultBody.get("data");

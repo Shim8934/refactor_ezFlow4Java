@@ -19,6 +19,8 @@
 	var taskName = null;
 	var containerId = "test";
 	
+	var currentPage = 1;
+	
 	$(document).ready(function() {
 		getProjectTaskTree(containerId, projectId, false);
 		getBoardList();
@@ -30,7 +32,9 @@
 				taskId = $(this).parent().attr("id").substr(1);
 			} else {
 				groupId = $(this).parent().attr("id");
+				taskId = null;
 			}
+
 			getBoardList();
 		})
 	});
@@ -50,13 +54,21 @@
 	    var top = (height - 820) / 2;
 	    var left = (width - 790) / 2;
 		
-		window.open("/ezPMS/goAddBoard.do?projectName=" + projectName + "&projectId=" + projectId + "&taskName=" + taskName + "&groupId=" + groupId + "&taskId=" + taskId, 
+		window.open("/ezPMS/goAddBoard.do?projectName=" + projectName + "&projectId=" + projectId 
+										  + "&groupId=" + groupId + "&taskName=" + taskName  + "&taskId=" + taskId, 
 					"", "width=790, height=820, resizable=no, scrollbars=no, status=no, top=" + top + ", left=" + left + ";");
 	}
 	
 	function getBoardList() {
 		$("#list").attr("width", "1000px");
-		$("#list").attr("src", "/ezPMS/getBoardList.do?projectId=" + projectId + "&groupId=" + groupId + "&taskId=" + taskId);
+		$("#list").load("/ezPMS/getBoardList.do?projectId=" + projectId + "&groupId=" + groupId + "&taskId=" + taskId
+												 + "&currentPage=" + currentPage);
+	}
+	
+	//페이지 번호에 의한 셋팅
+	function goToPageByNum(page){
+		currentPage = page;
+		getBoardList();
 	}
 </script>
 
@@ -83,7 +95,7 @@
 				<li class="off"><span onclick="">검색</span></li>
 			</ul>
 		</div>
-		<iframe id="list" frameborder="0" height="500px"></iframe>	
+		<span id="list"></span>
 	</div>
 </body>
 </html>

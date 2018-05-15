@@ -121,5 +121,7 @@ public interface EzPMSService {
 
 	public void addBoard(ProjectBoardVO vo);
 	
-	public List<ProjectBoardVO> getBoardList(Long projectId, Long groupId, Long taskId);
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, int startRow, int limit);
+	
+	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId);
 }

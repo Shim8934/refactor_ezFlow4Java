@@ -55,6 +55,28 @@ public class ProjectBoardVO {
 	
 	// 게시자 직위 다국어
 	private String writerPosition2;
+	
+	// 업무 명(tbl_pms_item_list에는 없는 컬럼)
+	private String taskName;
+	
+	// 그룹 명(tbl_pms_item_list에는 없는 컬럼)
+	private String groupName;
+	
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
 
 	public int getItemId() {
 		return itemId;
