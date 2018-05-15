@@ -227,33 +227,30 @@
 	    			   			+ "<td>" + result[i].writerName + "</td>"
 	    			   			+ "<td>" + result[i].writerTitle + "</td>"
 	    			   			+ "<td>" + result[i].writerDeptName + "</td>";
-	    			   			
-// 	    			   			+ "<td>" + result[i].originStartdate + " ~ " + result[i].originEnddate + "->" + result[i].changeStartdate + " ~ " + result[i].changeEnddate + "</td>";
-	    			   			+ "<td>" + result[i].originTypeName + " -> " + result[i].changeTypeName + "</td>";
 	    						
 	    			if (result[i].originStartdate == null || result[i].originStartdate == "") {
-	    				resultHtml += "<td> 미입력 ->" + result[i].changeStartdate;
+	    				resultHtml += "<td> 미입력  ->  " + result[i].changeStartdate;
 	    				if (result[i].changeEnddate == null || result[i].changeEnddate == "") {
 	    					resultHtml += "</td>";
 	    				} else {
-	    					resultHtml += " ~ " + result[i].changeEnddate + "</td>";
+	    					resultHtml += "  ~  " + result[i].changeEnddate + "</td>";
 	    				}
 	    			} else {
 	    				resultHtml += "<td>" + result[i].originStartdate;
 	    				if (result[i].originEnddate == null || result[i].originEnddate == "") {
-	    					resultHtml += " -> " + result[i].changeStartdate + "</td>";
+	    					resultHtml += "  ->  " + result[i].changeStartdate + "</td>";
 	    				} else {
-	    					resultHtml += " ~ " + result[i].originEnddate + "->" + result[i].changeStartdate + " ~ " + result[i].changeEnddate + "</td>";
+	    					resultHtml += "  ~  " + result[i].originEnddate + "  ->  " + result[i].changeStartdate + "  ~  " + result[i].changeEnddate + "</td>";
 	    				}
 	    			}
 	    			
-// 	    			if (result[i].endTime == null || result[i].endTime == "") {
-// 	    				resultHtml += "<td>" + result[i].startTime + "</td>";
-// 	    			} else {
-// 	    				resultHtml += "<td>" + result[i].startTime + " ~ " + result[i].endTime + "</td>";
-// 	    			}
-	    			
-// 	    			resultHtml += "<td>" + result[i].typeName + "</td></tr>";
+	    			if (result[i].originTypeName == null || result[i].originTypeName == "") {
+	    				resultHtml += "<td> 미입력  ->  " + result[i].changeTypeName + "</td>";
+	    			} else {
+	    				resultHtml += "<td>" + result[i].originTypeName + "  ->  " + result[i].changeTypeName + "</td>";
+	    			}
+	    			resultHtml += "<td>" + result[i].apprUserName + "</td>"
+	    						+ "<td>" + result[i].ApprDate + "</td></tr>";
 	    		}
 	    		
 	    		if (resultHtml == "") {
@@ -404,11 +401,13 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">일시</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name"><spring:message code='ezAttitude.lhj18' /></th>
+						<th style="width:10%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
+						<th style="width:30%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date">일시</th>
+						<th style="width:15%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name"><spring:message code='ezAttitude.lhj18' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">수정자</th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name">수정일시</th>
 					</tr>
 				</thead>
 				<tbody>
