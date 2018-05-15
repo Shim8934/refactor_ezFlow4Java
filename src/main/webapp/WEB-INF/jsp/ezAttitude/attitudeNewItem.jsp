@@ -59,7 +59,6 @@
 		        }
 				select_memorialDays(uselang);
 				setHoliday();
-				checkOutCom();
 				
 			}
 			
@@ -269,6 +268,7 @@
 				dateTypeCheck();
 				attRegCheck();
 				inputCheck();
+				checkOutCom();
 				if (attRegHolidayFlag && holidayAttReg == "0") {
 					alert("<spring:message code='ezAttitude.bbhs18'/>");
 					attRegHolidayFlag = false;
@@ -459,7 +459,9 @@
 		    		dataType : "json",
 		    		async : true,
 		    		url : "/ezAttitude/getAttitudeList.do",
-		    		data : {},
+		    		data : {
+		    			startDate : startDate.substring(0,11)
+		    		},
 		    		success : function(result) {
 		    			outComFlag = false;
 		    			for (var i = 0; i < result.length; i++) {
@@ -500,12 +502,12 @@
 			var inputCheckFlag = false;
 			function inputCheck() {
 				inputCheckFlag = true;
-				if ($.trim($("#mobile").val()) == "") {
-					$("mobile").focus();
-				} else if ($.trim($("#bizSub").val()) == "") {
-					$("#bizSub").focus();
-				} else if ($("#region").length != 0 && $.trim($("region").val()) == "") {
-					$("#region").focus();
+				if ($("#region").length != 0 && $.trim($("input[name=region]").val()) == "") {
+					$("input[name=region]").focus();
+				} else if ($.trim($("input[name=mobile]").val()) == "") {
+					$("input[name=mobile]").focus();
+				} else if ($.trim($("input[name=bizsub]").val()) == "") {
+					$("input[name=bizsub]").focus();
 				} else {
 					inputCheckFlag = false;
 				}

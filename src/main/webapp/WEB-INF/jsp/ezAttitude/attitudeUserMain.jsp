@@ -644,7 +644,7 @@
 						selectedDeptID : encodeURIComponent(authDeptList.value)
 					},
 					success : function(json) {
-						if (deptFlag == true){
+						if (deptFlag == 'true'){
 					    	$('#addpopup_list tbody').children('tr').not(":first").remove();
 					    	
 					    	if (json.length == 0) {
