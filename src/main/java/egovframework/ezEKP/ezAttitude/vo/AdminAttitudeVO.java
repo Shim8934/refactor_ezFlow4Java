@@ -37,6 +37,8 @@ public class AdminAttitudeVO {
 	private String deptName;
 	/** 유저 직급*/
 	private String userTitle;
+	/** 유저 이메일*/
+	private String userEmail;
 	
 	public String getTypeName() {
 		return typeName;
@@ -146,7 +148,12 @@ public class AdminAttitudeVO {
 	public void setUserTitle(String userTitle) {
 		this.userTitle = userTitle;
 	}
-	
+	public String getUserEmail() {
+		return userEmail;
+	}
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
 	/**
 	 *  HashSet 중복제거 Override
 	 */
