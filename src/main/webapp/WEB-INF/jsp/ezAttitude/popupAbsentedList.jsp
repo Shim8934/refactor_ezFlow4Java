@@ -64,6 +64,13 @@
 			});
 			
 	    	function getAbsentedList() {
+				if (searchEndDate == '') {
+					var resultHtml = "<tr id='List_TR_noItems'><td colspan='3' style='text-align:center'><spring:message code='ezAttitude.lhj23' /></td></tr>";
+					$("#contentlist table.mainlist tbody").append(resultHtml);
+					
+					return;
+				}
+	    		
 	    		$.ajax({
 					type : "post",
 					dastaType : "json",

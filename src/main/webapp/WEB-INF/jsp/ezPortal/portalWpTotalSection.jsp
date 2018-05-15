@@ -167,7 +167,7 @@
     		<article class="time" style="margin-right:0px">
     			<div id="clock" class="light">
 					<div class="display">
-						<p class="title" style="margin-left:0px"></p>
+						<p id="todayTime" class="title" style="margin-left:0px"></p>
 						<div class="digits" style="padding-top:7px;padding-left:5px;height:52px;"></div>
 					</div>
 				</div>
@@ -248,7 +248,7 @@
 		 	var mon = leadingZeros((sDate.getMonth() + 1), 2);
 		 	var day = sDate.getDate();		 	
 		 	
-		 	$(".title").html(year + "년 " + mon + "월 " + day + "일");
+		 	$("#todayTime").html(year + "년 " + mon + "월 " + day + "일");
 
 		    function window_onload_total() {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
