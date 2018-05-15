@@ -826,6 +826,8 @@ public class EzEmailUtil {
 			if (attachedFileList != null) {
 				Map<String, String> attachedFileInfo = new HashMap<String, String>();
 				
+				filename = commonUtil.normalizeFileName(filename);
+				
 				attachedFileInfo.put("filename", filename);
 				attachedFileInfo.put("size", String.valueOf(size));
 				attachedFileInfo.put("folderPath", folderPath);

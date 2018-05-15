@@ -166,7 +166,6 @@
 			        	success : function(xml){
 			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();
-// 		                    headerData = result;
 		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
 		                    if (CrossYN()) {

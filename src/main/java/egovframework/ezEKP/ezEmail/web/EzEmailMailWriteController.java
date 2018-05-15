@@ -1318,6 +1318,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 
                 pBigFileUpload = "Y";
                 
+                pFileName[i] = commonUtil.normalizeFileName(pFileName[i]);
+                
                 String base64OrgFileName = Base64.encodeBase64String(pFileName[i].getBytes("UTF-8"));
                 FileOutputStream fos = null;
                 
@@ -1639,7 +1641,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
-                	String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
+                	String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
                 	
                 	file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
                 	fos = new FileOutputStream(file);
@@ -1703,7 +1705,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis = new FileInputStream(filePath[i]);
 					bis = new BufferedInputStream(fis);
 					
-					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
+					String nfcFilename = commonUtil.normalizeFileName(newFileName[i]);
+					
+					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + nfcFilename);
 					bos = new BufferedOutputStream(fos);
 					
 					int data = 0;
@@ -1723,7 +1727,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	                }
 					
 					sb.append("<NODE>");
-					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
+					sb.append("<PUPLOADSN><![CDATA[" + nfcFilename + "]]></PUPLOADSN>");
 					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
 					sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
 					sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
@@ -1990,7 +1994,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
-					String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
+					String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
 					
 					file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
 					fos = new FileOutputStream(file);
@@ -2509,9 +2513,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
 				        messageBodyPart.setDataHandler(new DataHandler(source));
 				        
+				        String nfcFilename = commonUtil.normalizeFileName(fileName);
+				        		
 				        // MimeUtility.encodeText is needed to encode a file name in UTF-8 explicitly, 
 				        // otherwise, a wrong encoding may be used on some systems(linux, etc)
-				        String encodedFileName = MimeUtility.encodeText(fileName, "UTF-8", null);
+				        String encodedFileName = MimeUtility.encodeText(nfcFilename, "UTF-8", null);
 				        
 						// folding a filename is done manually since BodyPart.setFileName method encodes it based on RFC 2231.
 						// and some mailers (Daum, etc) may not understand it.			        

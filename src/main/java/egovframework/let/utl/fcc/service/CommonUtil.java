@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -1105,5 +1106,21 @@ public class CommonUtil {
 		}
 		logger.debug("getJsonFromRestApi ended");
 		return resultBody;
+	}
+	
+	/**
+	 * 첨부파일명이 자소분리된 형태로 나올경우, 자소결합
+	 * @param filename
+	 * @return String
+	 */
+	public String normalizeFileName (String filename) {
+		logger.debug("normalizeFileName started");
+		logger.debug("filename=" + filename);
+		
+		String nfcFilename =  Normalizer.normalize(filename, Normalizer.Form.NFC);
+		
+		logger.debug("nfcFilename=" + nfcFilename);
+		logger.debug("normalizeFileName ended");
+		return nfcFilename;
 	}
 }
