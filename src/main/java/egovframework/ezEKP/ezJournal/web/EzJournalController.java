@@ -1215,15 +1215,18 @@ public class EzJournalController extends EgovFileMngUtil {
 		logger.debug("getJournalDetail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		/*
 		String viewDate ="";
 		try {
 			viewDate = commonUtil.getTodayUTCTime("");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		*/
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("viewDate", viewDate);
+//		param.put("viewDate", viewDate);
+		param.put("isRead", request.getParameter("isRead"));
 		
 		String journalId = request.getParameter("journalId");
 		
@@ -1260,11 +1263,14 @@ public class EzJournalController extends EgovFileMngUtil {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("userId", userInfo.getId());
+			param.put("isRead", request.getParameter("isRead"));
+			/*
 			try {
 				param.put("viewDate",commonUtil.getTodayUTCTime(""));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			*/
 			
 			String journalId = request.getParameter("journalId");
 			
@@ -1646,16 +1652,18 @@ public class EzJournalController extends EgovFileMngUtil {
 		logger.debug("getJournalJSON started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		/*
 		String viewDate ="";
 		try {
 			viewDate = commonUtil.getTodayUTCTime("");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		*/
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("viewDate", viewDate);
+//		param.put("viewDate", viewDate);
 		
 		String journalId = request.getParameter("journalId");
 		
@@ -1692,6 +1700,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("isRead", request.getParameter("isRead"));
 		
 		String journalId = request.getParameter("journalId");
 		
