@@ -148,17 +148,17 @@
 					$(document).on('dblclick', '.td_day td', function(){
 						pMode = "new";
 						attitudeNewItem(this);
-					})	
+					});
 				} else { // 부서근태현황에서는 당일의 근태를 조회.
 					$(document).on('dblclick', '.td_day td', function(){
 						pMode = "new";
 						searchByDay(this);
-					})
+					});
 				}
 				
 				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function(){
 					attitudeItemView(this);
-				})
+				});
 				
 				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02],tr td[typeid=A01]', function(){
 					//근태수정신청은 개인근태현황에서만 가능
@@ -179,8 +179,14 @@
 							mod_detail(attitudeid);
 						}
 					}
-				})
-			})
+				});
+				
+				$(window).on("resize", function(){
+					var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+		        	$("#popup").css("left", popupX);
+		        	$("#popupDay").css("left", popupX);	        	
+		        });
+			});
 			
 			window.onload = function() {
 				select_memorialDays(uselang); // 공식 휴일 설정 => 언어에 따라 memorialDays에 변수가 담김
@@ -546,11 +552,7 @@
 		        	
 		        	$("#popup").css("left", popupX);
 		        	
-					$("#popup").modal({
-						  escapeClose: false,
-						  clickClose: false,
-						  showClose: false
-					});
+					$("#popup").modal();
 					
 					$("#originInCom").text($(obj).parents("td").attr("day") + $(obj).text().split(" :")[1]);
 					
@@ -736,11 +738,7 @@
 			        	
 			        	$("#popup").css("left", popupX);
 			        	
-						$("#popup").modal({
-							  escapeClose: false,
-							  clickClose: false,
-							  showClose: false
-						});
+						$("#popup").modal();
 				    }
 			    });
 			}
@@ -828,9 +826,9 @@
 			        	$("#popupDay").css("left", popupX);
 			        	
 						$("#popupDay").modal({
-							  escapeClose: false,
-							  clickClose: false,
-							  showClose: false
+// 							  escapeClose: false,
+// 							  clickClose: false,
+// 							  showClose: false
 						});
 				    }
 			    });
@@ -992,7 +990,7 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		<!-- 근태유영별 팝업창 -->
+		<!-- 근태유형별 팝업창 -->
 		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;max-width:800px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
