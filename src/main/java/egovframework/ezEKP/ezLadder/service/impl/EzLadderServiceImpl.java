@@ -491,8 +491,8 @@ public class EzLadderServiceImpl implements EzLadderService {
 		List<LadderLineVO> list = ezLadderDAO.ladderGameParticipant(map);
 		
 		// 퇴사자 처리
+		int count = list.size()+1;
 		for(LadderLineVO userVO : list) {
-			int count = 10000;
 			String tempID = "";
 			Map<String, Object> searchMap = new HashMap<String, Object>();
 			searchMap.put("v_CN", userVO.getUserId());
@@ -502,7 +502,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 				tempID = userVO.getUserId().substring(0, 14);
 			}
 			if (temp == null && !tempID.equals("anonyAttendant")) {
-				userVO.setUserId("anonyAttendant" + count);
+				userVO.setUserId("anonyAttendant_" + count);
+				userVO.setUserName2(userVO.getUserName());
+				System.out.println(userVO.getUserId());
 				count++;
 			}
 		}
