@@ -504,7 +504,6 @@ public class EzLadderServiceImpl implements EzLadderService {
 			if (temp == null && !tempID.equals("anonyAttendant")) {
 				userVO.setUserId("anonyAttendant_" + count);
 				userVO.setUserName2(userVO.getUserName());
-				System.out.println(userVO.getUserId());
 				count++;
 			}
 		}
