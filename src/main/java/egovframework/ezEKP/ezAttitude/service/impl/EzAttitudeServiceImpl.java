@@ -1350,7 +1350,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public void absentedListSendMail(List<AdminAttitudeVO> list, String loginCookie, String startDate, String endDate, String fromName, String fromEmail) throws Exception {
+	public void absentedListSendMail(List<AdminAttitudeVO> duplicatedList, List<AdminAttitudeVO> distinctList, String loginCookie, String startDate, String endDate, String fromName, String fromEmail) throws Exception {
 		//메일발송
 		
 		//title, body(미입력자 리스트 html로) 만들어서 전송
@@ -1365,21 +1365,26 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				+ "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>날짜</th>" 
 				+ "</thead><tbody>";
 		
-		InternetAddress from = new InternetAddress(fromEmail, fromName);
-		InternetAddress[] to = new InternetAddress[list.size()];
-		for (int i = 0; i < list.size(); i++) {
-			InternetAddress temp = new InternetAddress(list.get(i).getWriterId() + "@" + fromEmail.split("@")[1], list.get(i).getUserName());			
-			
-			to[i] = temp;
-			
-			table += "<tr><td style='border:1px solid #666'>" + list.get(i).getUserName()+ " </td>"
-					+ "<td style='border:1px solid #666'>" + list.get(i).getUserTitle() + "</td>"
-					+ "<td style='border:1px solid #666'>" + list.get(i).getDeptName() + "</td>"
-					+ "<td style='border:1px solid #666'>" + list.get(i).getStartDate() + "</td></tr>";
-			
+		for (AdminAttitudeVO vo : duplicatedList) {
+			table += "<tr><td style='border:1px solid #666'>" + vo.getUserName()+ " </td>"
+					+ "<td style='border:1px solid #666'>" + vo.getUserTitle() + "</td>"
+					+ "<td style='border:1px solid #666'>" + vo.getDeptName() + "</td>"
+					+ "<td style='border:1px solid #666'>" + vo.getStartDate() + "</td></tr>";
 		}
+		
 		table += "</tbody></table>";
 		memo += table;
+		
+		InternetAddress from = new InternetAddress(fromEmail, fromName);
+		InternetAddress[] to = new InternetAddress[distinctList.size()];
+		int i = 0;
+		
+		for (AdminAttitudeVO distinctVO : distinctList) {
+			InternetAddress temp = new InternetAddress(distinctVO.getWriterId() + "@" + fromEmail.split("@")[1], distinctVO.getUserName());
+			
+			to[i] = temp;
+			i++;
+		}
 		
 		ezEmailService.sendMail(loginCookie, from, to, null, null, subject, memo, false);
 	}
