@@ -1201,20 +1201,22 @@
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
 				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>
+			<div style="width : 946px;">
 	         <table class="content">
 	            <tr>
 	                <th><spring:message code='ezEmail.t710' /></th>
-	                <td>
-	                    &nbsp;<input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:99%;" value="${textName}">
+	                <td style="width:50%;">
+	                    &nbsp;<input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:98%;" value="${textName}">
 	                </td>
-                </tr>
-                <tr>
+               <!--  </tr>
+                <tr> -->
 	                <th><spring:message code='ezEmail.lhm09' /></th>
-	                <td>
-	                    &nbsp;<input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:99%;" value="${cn}">
+	                <td style="width:50%;">
+	                    &nbsp;<input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:98%;" value="${cn}">
 	                </td>
 	            </tr>
 	        </table>
+			</div>
 	        <table id="TreeViewTD" style="margin-top:5px;">
 	            <tr>
 	                <td>
@@ -1305,7 +1307,7 @@
 	                        <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezEmail.t659' /></span>
 	                    </h2>
 	                    <div class="listview">
-	                          <div id="ListViewMsgTo" style="width: 220px; Height: 477px; overflow-x: auto; overflow-y: auto;" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                          <div id="ListViewMsgTo" style="width: 220px; Height: 471px; overflow-x: auto; overflow-y: auto;" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                    </div>       
 	                </td>
 	            </tr>
