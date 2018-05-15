@@ -204,7 +204,7 @@
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.kbm28' /></th>
 	            <td>
 <!-- 	                <input id="txtdept" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" /> -->
-	                <textarea rows="3" id="txtdept" type="text" style="margin-top:2px; width:77%; resize:none;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	                <textarea rows="3" id="txtdept" type="text" style="margin-top:2px; width:77%; resize:none; overflow: auto;" onfocus="this.blur();" readonly="readonly" ></textarea>
 	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top: 15px;"><span onclick="selectDept()"><spring:message code='ezAttitude.kbm29' /></span></a>                
 	            </td>
 	        </tr>
