@@ -43,6 +43,8 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -67,6 +69,9 @@ public class EzAttitudeKMSController {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name = "MOptionService")
+	private MOptionService mOptionService;
 	
 	/**
 	 * 근태 수정 신청 현황
@@ -2148,5 +2153,65 @@ public class EzAttitudeKMSController {
 		
 		LOGGER.debug("/ezAttitude/attAdminModItem ended");
 		return "ezAttitude/attAdminModItem";
+	}
+	
+	/**
+	 *  관리자 작성화면
+	 */
+	@RequestMapping(value = "/ezAttitude/attAdminNewItem.do")
+	public String attAdminNewItem(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attAdminNewItem started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = request.getParameter("userid");
+		String date = request.getParameter("date");
+		String mode = request.getParameter("mode");
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String userOffset = userInfo.getOffset().split("\\|")[1];
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() +"/attitudetypes";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		MCommonVO info = mOptionService.commonInfoWeb(request.getServerName(), userId);
+
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId)
+				.queryParam("isuse", 1);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONArray attitudeTypeList = new JSONArray();
+		if (status.equals("ok")) {
+			attitudeTypeList = (JSONArray) resultBody.get("data");
+		}
+		
+		//현재시간
+		String time = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split(" ")[1];
+		
+		model.addAttribute("userOffset", userOffset);
+		//관리자 정보
+		model.addAttribute("userInfo", userInfo);
+		//사용자 정보
+		model.addAttribute("info", info);
+		model.addAttribute("attitudeTypeList", attitudeTypeList);
+		model.addAttribute("date", date);
+		model.addAttribute("time", time);
+		model.addAttribute("mode", mode);
+		
+		LOGGER.debug("/ezAttitude/attAdminNewItem ended");
+		return "ezAttitude/attAdminNewItem";
 	}
 }

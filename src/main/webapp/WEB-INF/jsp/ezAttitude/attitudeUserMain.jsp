@@ -96,7 +96,7 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid #ff4b00;
+			    border: 1px solid #df2b00;
 			    background: #ff4b00;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;

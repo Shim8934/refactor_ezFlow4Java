@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 		
+		<script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/Calendar/TabMenu.js"></script>
 	    <script type="text/javascript" src="/js/ezSchedule/lang/ezSchedule.js"></script>
 	    <script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
@@ -254,8 +255,8 @@
 						endDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 						break;
 					case "4":
-						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00:00";
-						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "23:59:59";
+						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + nowTime[0] + ":" + nowTime[1] + ":00";
+						endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + nowTime[0] + ":" + nowTime[1] + ":00";
 						break;
 					case "5":
 						startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
@@ -268,7 +269,6 @@
 			function save_attitude() {
 				dateTypeCheck();
 				attRegCheck();
-				inputCheck();
 				if (attRegHolidayFlag && holidayAttReg == "0") {
 					alert("<spring:message code='ezAttitude.bbhs18'/>");
 					attRegHolidayFlag = false;
@@ -286,10 +286,6 @@
 				}
 				if (outComFlag && selectType == 'A08') {
 					alert("<spring:message code='ezAttitude.bbhs40'/>");
-					return;
-				}
-				if (inputCheckFlag) {
-					alert("정보를 입력해주세요.");
 					return;
 				}
 				$.ajax({
@@ -483,33 +479,6 @@
 				editHeight += "PX";
 				$("#EdtorSize").css("height", editHeight);
 			}
-			
-			function allday_change() {
-				if ($("#alldaycheck").prop("checked") == true) {
-					$("#Stimepicker").css("display", "none");
-					$("#Etimepicker").css("display", "none");
-					$("#periodblock").attr("datetype", 4);
-					
-				} else {
-					$("#Stimepicker").css("display", "");
-					$("#Etimepicker").css("display", "");
-					$("#periodblock").attr("datetype", 5);
-				}
-			}
-			
-			var inputCheckFlag = false;
-			function inputCheck() {
-				inputCheckFlag = true;
-				if ($.trim($("#mobile").val()) == "") {
-					$("mobile").focus();
-				} else if ($.trim($("#bizSub").val()) == "") {
-					$("#bizSub").focus();
-				} else if ($("#region").length != 0 && $.trim($("region").val()) == "") {
-					$("#region").focus();
-				} else {
-					inputCheckFlag = false;
-				}
-			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -532,14 +501,20 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <table id="attiwriteForm" class="content">
-								<tr id="selectTR">
+	                        	<tr id="userId" fixed="fix">
+	                        		<th>아이디</th>
+	                        		<td><c:out value="${info.userId }"/></td>
+	                        	</tr>
+	                        	<tr id="userName" fixed="fix">
+	                        		<th>이름</th>
+	                        		<td><c:out value="${info.userName }"/></td>
+	                        	</tr>
+								<tr id="selectTR" fixed="fix">
 									<th>구분</th>
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
-												<c:if test="${item.parentId ne 'A05' && item.typeId ne 'A01' && item.typeId ne 'A02' && item.typeId ne 'A03'}">
-													<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
-												</c:if>
+												<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
 											</c:forEach>
 										</select>
 										<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)">
