@@ -57,8 +57,8 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid #35b07e;
-			    background: #35b07e;
+			    border: 1px solid #049c37;
+			    background: #01b43f;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;
 			    padding: 0;
@@ -70,7 +70,7 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid #018bfa;
+			    border: 1px solid #017ddf;
 			    background: #018bfa;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;
@@ -83,7 +83,7 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid #e9de13;
+			    border: 1px solid #ccc31f;
 			    background: #e9de13;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;
@@ -148,17 +148,17 @@
 					$(document).on('dblclick', '.td_day td', function(){
 						pMode = "new";
 						attitudeNewItem(this);
-					})	
+					});
 				} else { // 부서근태현황에서는 당일의 근태를 조회.
 					$(document).on('dblclick', '.td_day td', function(){
 						pMode = "new";
 						searchByDay(this);
-					})
+					});
 				}
 				
 				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function(){
 					attitudeItemView(this);
-				})
+				});
 				
 				$('#attiCalendar').on('dblclick', 'tr td[typeid=A02],tr td[typeid=A01]', function(){
 					//근태수정신청은 개인근태현황에서만 가능
@@ -179,8 +179,14 @@
 							mod_detail(attitudeid);
 						}
 					}
-				})
-			})
+				});
+				
+				$(window).on("resize", function(){
+					var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+		        	$("#popup").css("left", popupX);
+		        	$("#popupDay").css("left", popupX);	        	
+		        });
+			});
 			
 			window.onload = function() {
 				select_memorialDays(uselang); // 공식 휴일 설정 => 언어에 따라 memorialDays에 변수가 담김
@@ -546,11 +552,7 @@
 		        	
 		        	$("#popup").css("left", popupX);
 		        	
-					$("#popup").modal({
-						  escapeClose: false,
-						  clickClose: false,
-						  showClose: false
-					});
+					$("#popup").modal();
 					
 					$("#originInCom").text($(obj).parents("td").attr("day") + $(obj).text().split(" :")[1]);
 					
@@ -644,7 +646,7 @@
 						selectedDeptID : encodeURIComponent(authDeptList.value)
 					},
 					success : function(json) {
-						if (deptFlag == true){
+						if (deptFlag == 'true'){
 					    	$('#addpopup_list tbody').children('tr').not(":first").remove();
 					    	
 					    	if (json.length == 0) {
@@ -736,11 +738,7 @@
 			        	
 			        	$("#popup").css("left", popupX);
 			        	
-						$("#popup").modal({
-							  escapeClose: false,
-							  clickClose: false,
-							  showClose: false
-						});
+						$("#popup").modal();
 				    }
 			    });
 			}
@@ -828,9 +826,9 @@
 			        	$("#popupDay").css("left", popupX);
 			        	
 						$("#popupDay").modal({
-							  escapeClose: false,
-							  clickClose: false,
-							  showClose: false
+// 							  escapeClose: false,
+// 							  clickClose: false,
+// 							  showClose: false
 						});
 				    }
 			    });
@@ -952,10 +950,11 @@
 						<option value="<c:out value='${selectedDeptID}'/>" selected><c:out value='${selectedDeptID}'/></option>
 					</select>
 				</c:if>
-				<li style="background:none;margin-left:7px;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #018bfa; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;출근,퇴근</li>
-	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #35b07e; background:#35b07e; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;휴가</li>
-	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ff4b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;지각,조퇴</li>
-                <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #e9de13; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
+				<li style="background:none;margin-left:7px;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;출근,퇴근</li>
+	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;휴가</li>
+	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;지각,조퇴</li>
+                <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
+                <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid black; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;근태수정신청</li>
 			</ul>
 		</div>
 		
@@ -992,7 +991,7 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		<!-- 근태유영별 팝업창 -->
+		<!-- 근태유형별 팝업창 -->
 		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;max-width:800px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->

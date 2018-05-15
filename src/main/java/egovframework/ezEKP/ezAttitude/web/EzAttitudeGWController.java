@@ -117,14 +117,13 @@ public class EzAttitudeGWController {
 			}
 			
 			//imgPath 셋팅
-			
-			for (int i = 0; i < resultList.size(); i++) {
-				String imgPath = resultList.get(i).getImgPath();
-				if (imgPath != null && !imgPath.equals("")) {
-					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + info.getCompanyId() + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
-					resultList.get(i).setImgPath(imgPath);
-				}
-			}
+//			for (int i = 0; i < resultList.size(); i++) {
+//				String imgPath = resultList.get(i).getImgPath();
+//				if (imgPath != null && !imgPath.equals("")) {
+//					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + info.getCompanyId() + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+//					resultList.get(i).setImgPath(imgPath);
+//				}
+//			}
 	         
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -714,14 +713,14 @@ public class EzAttitudeGWController {
 			
 			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
 			
-			//imgPath 셋팅
-			for (AttitudeTypeVO typeInfo : attitudeTypeList) {
-				String imgPath = typeInfo.getImgPath();
-				if (!imgPath.equals("")) {
-					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
-					typeInfo.setImgPath(imgPath);
-				}
-			}
+//			//imgPath 셋팅
+//			for (AttitudeTypeVO typeInfo : attitudeTypeList) {
+//				String imgPath = typeInfo.getImgPath();
+//				if (!imgPath.equals("")) {
+//					imgPath = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId()) + commonUtil.separator + companyId + commonUtil.separator + "uploadIconFile" + commonUtil.separator + imgPath;
+//					typeInfo.setImgPath(imgPath);
+//				}
+//			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1292,189 +1291,6 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/{userId}/modifyattitudes/count] ended.");
 		return result;
 	}
-	
-	/**
-	 * G/W 근태관리 [GET] 근태유형관리 아이콘 업로드
-	 */
-	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{typeId}/iconupload", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject iconUpload(@PathVariable String companyId, @PathVariable String typeId, @RequestBody JSONObject jsonObject, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetype/" + typeId + "/iconupload] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try{			
-			JSONParser jp = new JSONParser();
-			jsonObject = (JSONObject) jp.parse(jsonObject.toJSONString());
-			
-			JSONObject fileObject = new JSONObject();
-			
-			String userId = "";
-			int maxSize = 0;
-			
-			if (jsonObject.get("fileObject") != null) {
-				fileObject = (JSONObject) jsonObject.get("fileObject");
-			}
-			
-			if (jsonObject.get("userID") != null) {
-				userId = (String) jsonObject.get("userID");
-			}
-			
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			int tenantId = info.getTenantId();
-			
-			String fileName = "";
-			String realPath = commonUtil.getRealPath(request);
-			Long fileSize = (Long) fileObject.get("fileSize");
-			String resultUpload = "";
-			String fileLocation = "";
-			String filePath = "";
-			String filePath2 = "";
-			String tempFilePath = "";
-			
-	        if (fileObject.get("originalFilename") != null && StringUtils.isNotBlank((String) fileObject.get("originalFilename"))) {
-	            fileName = (String) fileObject.get("originalFilename");
-	            
-	            if (fileName.indexOf(".") != -1) {
-	    			fileName = fileName.substring(fileName.lastIndexOf(".")+1);
-	    		} else {
-	    			fileName = "";
-	    		}
-	            fileName = typeId + "." + fileName;
-	        }
-	        
-	        filePath = commonUtil.getUploadPath("upload_attitude.ROOT", info.getTenantId());// /files/upload_attitude
-			if (!filePath.substring(filePath.length() - 1).equals(commonUtil.separator)) { 
-				filePath = filePath + commonUtil.separator;
-			}
-			
-			filePath = filePath + companyId + commonUtil.separator + "uploadIconFile";//  /files/upload_attitude/companyId/uploadIconFile
-			filePath2 = "/ezCommon/downloadAttach.do?filePath=" + filePath + commonUtil.separator + fileName;
-			
-			tempFilePath = commonUtil.getUploadPath("upload_attitude.TEMPUPLOAD", info.getTenantId());//  /files/upload_attitude/tempUploadIcon
-			if (!tempFilePath.substring(tempFilePath.length() - 1).equals(commonUtil.separator)) { 
-				tempFilePath = tempFilePath + commonUtil.separator;
-			}
-			
-			tempFilePath = tempFilePath + companyId + commonUtil.separator + "uploadIconFile";//  /files/upload_attitude/tempUploadIcon/companyId/uploadIconFile
-			
-			File file = new File(realPath + filePath);
-			
-			if (!file.exists()) {
-				file.mkdirs();
-			}
-			// file -> 임시저장할 폴더 생성.
-			File tempFile = new File(realPath + tempFilePath);
-			
-			if (!tempFile.exists()) {
-				tempFile.mkdirs();
-			}
-			          
-            attitudeWriteUploadedFile((String) fileObject.get("bytes"), fileName, realPath + tempFilePath);
-			
-            File imageFile = new File(realPath + tempFilePath + commonUtil.separator + fileName); 
-            
-    		if (imageFile.exists()) {
-    			BufferedImage bi = ImageIO.read(imageFile);	
-    			//화질 개선 코드			
-    			Image imgTarget = bi.getScaledInstance(119, 128, Image.SCALE_SMOOTH);
-    			int pixels[] = new int[119 * 128]; 
-    			PixelGrabber pg = new PixelGrabber(imgTarget, 0, 0, 119, 128, pixels, 0, 119); 
-    			try {
-    				pg.grabPixels(); // JEPG 포맷의 경우 오랜 시간이 걸린다.
-    			} catch (InterruptedException e) {
-    				throw new IOException(e.getMessage());
-    			} 
-    			BufferedImage destImg = new BufferedImage(119, 128, BufferedImage.TYPE_INT_RGB); 
-    			destImg.setRGB(0, 0, 119, 128, pixels, 0, 119);
-    			
-    			File iconImageFile = new File(realPath + filePath + commonUtil.separator + fileName);
-    			if (iconImageFile.exists()) {
-    				FileUtils.deleteQuietly(iconImageFile);
-    			}
-    			
-    			ImageIO.write(destImg, "png", iconImageFile);
-    			
-    			if (imageFile.exists()) {
-    				FileUtils.deleteQuietly(imageFile);
-    			}
-    		}
-			
-    		//filePath, filePath2만 가져가면 된다
-    		JSONObject data = new JSONObject();
-//			data.put("filePath", filePath + commonUtil.separator + fileName);
-			data.put("filePath2", filePath2);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", data);
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetype/" + typeId + "/iconupload] ended.");
-		return result;
-	}
-	
-	/**
-     * 첨부파일을 서버에 저장한다.
-     *
-     * @param file
-     * @param newName
-     * @param stordFilePath
-     * @throws Exception
-     */
-    public void attitudeWriteUploadedFile(String bytearray, String newName, String stordFilePath) throws Exception {
-    	
-    	LOGGER.debug("attitudeWriteUploadedFile statarted");
-    	
-		InputStream stream = null;
-		OutputStream bos = null;
-		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
-		
-		try {
-		    File cFile = new File(stordFilePathReal);
-	
-		    if (!cFile.isDirectory()) {
-				boolean _flag = cFile.mkdirs();
-				if (!_flag) {
-				    throw new IOException("Directory creation Failed ");
-				}
-		    }
-	
-		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
-		    LOGGER.debug("###" + stordFilePathReal + File.separator + newName + "###");
-		    int bytesRead = 0;
-		    byte[] buffer = new byte[BUFF_SIZE];
-		    Decoder decoder = Base64.getDecoder();
-
-		    bos.write(decoder.decode(bytearray));
-
-		} catch (FileNotFoundException fnfe) {
-			LOGGER.debug("fnfe: {}", fnfe);
-		} catch (IOException ioe) {
-			LOGGER.debug("ioe: {}", ioe);
-		} catch (Exception e) {
-			LOGGER.debug("e: {}", e);
-		} finally {
-		    if (bos != null) {
-				try {
-				    bos.close();
-				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		    if (stream != null) {
-				try {
-				    stream.close();
-				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		}
-		LOGGER.debug("attitudeWriteUploadedFile ended");
-    } 
 	
     /**
 	 * G/W 근태관리 [GET] 휴일리스트
