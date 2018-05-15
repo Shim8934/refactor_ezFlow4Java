@@ -268,6 +268,7 @@
 			function save_attitude() {
 				dateTypeCheck();
 				attRegCheck();
+				inputCheck();
 				if (attRegHolidayFlag && holidayAttReg == "0") {
 					alert("<spring:message code='ezAttitude.bbhs18'/>");
 					attRegHolidayFlag = false;
@@ -285,6 +286,10 @@
 				}
 				if (outComFlag && selectType == 'A08') {
 					alert("<spring:message code='ezAttitude.bbhs40'/>");
+					return;
+				}
+				if (inputCheckFlag) {
+					alert("정보를 입력해주세요.");
 					return;
 				}
 				$.ajax({
@@ -489,6 +494,20 @@
 					$("#Stimepicker").css("display", "");
 					$("#Etimepicker").css("display", "");
 					$("#periodblock").attr("datetype", 5);
+				}
+			}
+			
+			var inputCheckFlag = false;
+			function inputCheck() {
+				inputCheckFlag = true;
+				if ($.trim($("#mobile").val()) == "") {
+					$("mobile").focus();
+				} else if ($.trim($("#bizSub").val()) == "") {
+					$("#bizSub").focus();
+				} else if ($("#region").length != 0 && $.trim($("region").val()) == "") {
+					$("#region").focus();
+				} else {
+					inputCheckFlag = false;
 				}
 			}
 		</script>
