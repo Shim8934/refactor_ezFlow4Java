@@ -93,7 +93,6 @@
 					success : function(result) {
 						getAbsentedList_after(result.list);
 					}
-					
 				});
 	    	}
 	    	
@@ -116,8 +115,8 @@
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    	}
 			
-			function btnSendMail_onclick() {
-				$.ajax({
+			function btnSendMail_onclick() { 
+				/* $.ajax({
 					type : "POST",
 					async : true,
 					url : "/ezAttitude/absentedListSendMail.do",
@@ -137,7 +136,15 @@
 							alert("메일 발송에 실패하였습니다.");
 						}
 					}
-				});
+				}); */
+				var pheight = window.screen.availHeight;
+				var conHeight = pheight * 0.8;
+				var pwidth = window.screen.availwidth;
+				var pTop = (pheight - conHeight) / 2;
+				var pLeft = (pwidth - 890) / 2;
+				var szUrl = "/ezEmail/mailWrite.do?cmd=attitudeAbsented&companyId=" + companyId + "&userName=&deptName=&title=&deptId=" + searchDeptId + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&pageNum=&listSize=&orderCell=" + orderCell + "&orderOption=" + orderOption;
+					
+				window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
 			}
 			
 			function btnClose_onclick() {
@@ -158,11 +165,11 @@
 	</head>
 	
 	<body class="popup">
-		<h1>미입력자 목록</h1>
+		<h1>미입력자 목록<c:if test="${searchEndDate != ''}"><img style="float: right; margin-right: 5px; cursor: pointer;" src="/images/poll/sendMail01.png" onclick="btnSendMail_onclick()"></c:if></h1>
 		<table class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
-					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="startdate">일자</th>
+					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="startdate">날짜</th>
 					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname">이름</th>
 					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title">직위</th>
 					<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description">부서</th>
@@ -176,7 +183,6 @@
 		</div>
 		
 		<div class="btnposition">
-			<c:if test="${searchEndDate != ''}"><a class="imgbtn"><span onclick="return btnSendMail_onclick()">메일발송</span></a></c:if>
 			<a class="imgbtn"><span onclick="return btnClose_onclick()">닫기</span></a>
 		</div>
 	</body>

@@ -162,13 +162,12 @@ public class EzAttitudeGWController {
 			String adminId = request.getParameter("adminId");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			LOGGER.debug(startDate + "관리자 근태등록 기록@#$@(%!#*(%!#*$^%#(!$^(#$^(!#(%(#@!%(#!(%!@(%!(%");
-			ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, info.getOffSet(), info.getCompanyId(), info.getTenantId(), mode);
+			ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, info.getOffSet(), info.getCompanyId(), info.getTenantId(), mode, adminId);
 			
-			if (mode.equals("admin")) {
-				//관리자 근태등록 기록.
-				LOGGER.debug(adminId + "관리자 근태등록 기록@#$@(%!#*(%!#*$^%#(!$^(#$^(!#(%(#@!%(#!(%!@(%!(%");
-			}
+//			if (mode.equals("admin")) {
+//				//관리자 근태등록 기록.
+//				ezAttitudeService.insertAdminAttHistory(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, info.getOffSet(), info.getCompanyId(), info.getTenantId(), adminId);
+//			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1589,6 +1588,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

@@ -226,7 +226,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (!(tempStr.equals("") || tempStr.equals("REPLY") || tempStr.equals("REPLYALL") || tempStr.equals("FORWARD") || tempStr.equals("READ") 
 				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND")
 				|| tempStr.equals("RESEND") || tempStr.equals("BOARDDOTNET") || tempStr.equals("DOCSENDDOTNET")
-				|| tempStr.equals("COMMUNITYDOTNET")|| tempStr.equals("JOURNAL") || tempStr.equals("ATTITUDE")
+				|| tempStr.equals("COMMUNITYDOTNET")|| tempStr.equals("JOURNAL") || tempStr.equals("ATTITUDE") || tempStr.equals("ATTITUDEABSENTED")
 				/* 아직 이 값으로는 받는 부분 없음
 				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") */
 			)) {
@@ -996,6 +996,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         //근태관리
         else if(_cmd.equals("attitude")) {
         	attitudeId = request.getParameter("attitudeId");        			
+        }
+        //근태관리 미입력자 메일발송
+        else if (_cmd.equals("attitudeAbsented")) {
+        	model.addAttribute("moduleType", "attitudeAbsented");
+        	model.addAttribute("companyId", request.getParameter("companyId"));
+        	model.addAttribute("searchUserName", request.getParameter("userName"));
+        	model.addAttribute("searchDeptName", request.getParameter("deptName"));
+        	model.addAttribute("searchTitle", request.getParameter("title"));
+        	model.addAttribute("searchDeptId", request.getParameter("deptId"));
+        	model.addAttribute("searchStartDate", request.getParameter("startDate"));
+        	model.addAttribute("searchEndDate", request.getParameter("endDate"));
+//        	model.addAttribute("pageNum", request.getParameter("pageNum"));
+//        	model.addAttribute("listSize", request.getParameter("listSize"));
+//        	model.addAttribute("orderCell", request.getParameter("orderCell"));
+//        	model.addAttribute("orderOption", request.getParameter("orderOption"));
         }
         String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", loginInfo.getTenantId());
 		String fromAddressHtml = "";

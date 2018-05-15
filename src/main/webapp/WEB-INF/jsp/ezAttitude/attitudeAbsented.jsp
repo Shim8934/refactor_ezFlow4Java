@@ -232,6 +232,7 @@
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
+	    		$("#mailBoxInfo").html("총<span style='color:#017BEC;'> " + totalCount + " </span>개");
 	    	}
 			
 			function attitudeNewItem(t) {
@@ -364,7 +365,7 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code = 'ezAttitude.t6' /><span id="mailBoxInfo"></span></h1>
+	    <h1><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
 	        	<li style="background: none;"><span style="border: none;"><b>부서선택</b></span></li>

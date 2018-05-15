@@ -202,7 +202,7 @@
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
-	    			resultHtml += "<td>" + vo.startDate + "</td></tr>"
+	    			resultHtml += "<td>" + vo.startDate + "</td></tr>";
 	    		});
 	    		
 	    		if (resultHtml == "") {
@@ -300,7 +300,7 @@
 			}
 			
 			function sendMail() {
-				$.ajax({
+				/* $.ajax({
 					type : "POST",
 					async : true,
 					url : "/admin/ezAttitude/absentedListSendMail.do",
@@ -320,7 +320,15 @@
 							alert("메일 발송에 실패하였습니다.");
 						}
 					}
-				});
+				}); */
+				var pheight = window.screen.availHeight;
+				var conHeight = pheight * 0.8;
+				var pwidth = window.screen.availwidth;
+				var pTop = (pheight - conHeight) / 2;
+				var pLeft = (pwidth - 890) / 2;
+				var szUrl = "/ezEmail/mailWrite.do?cmd=attitudeAbsented&companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchDeptName + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&pageNum=&listSize=&orderCell=&orderOption=";
+					
+				window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
 			}
 	    </script>
 	</head>
