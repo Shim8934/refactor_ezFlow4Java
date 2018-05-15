@@ -668,7 +668,7 @@
 					    		uvobjTr.append($("<td style='width:70%; height:0px; border:none;'></td>"));
 					    		$("#addpopup_list tbody").append(uvobjTr);
 					    		
-					    		var objTr = $("<tr></tr>").append($("<td colspan='4' style='text-align:center; width:500px; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
+					    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
 					    	
@@ -692,10 +692,13 @@
 					    			objTr.append($("<td style='width:20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].writerDeptName));
 					    		}
 					    		if (json[i].endDate == null) {
-					    			objTr.append($("<td style='width:70%; text-align:center'></td>").text("\u00a0" + json[i].startDate.substring(0,16)));
+					    			objTr.append($("<td style='width:35%; text-align:center'></td>").text("\u00a0" + json[i].startDate.substring(0,16)));
 					    		} else {
-						    		objTr.append($("<td style='width:70%; text-align:center'></td>").text("\u00a0" + json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(0,16)));				    			
+						    		objTr.append($("<td style='width:35%; text-align:center'></td>").text("\u00a0" + json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(0,16)));				    			
 					    		}
+					    		
+					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,20);
+					    		objTr.append($("<td style='width:35%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(statusContent));
 	
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
@@ -733,7 +736,7 @@
 					    			}
 					    		}
 					    		
-					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,50);
+					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,20);
 					    		objTr.append($("<td style='width:60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(statusContent));
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
@@ -810,7 +813,7 @@
 					    		objTr.append($("<td style='width:35%; text-align:center'></td>").text("\u00a0" + json[i].startDate.substring(0,16) + "\u00a0~\u00a0" + json[i].endDate.substring(0,16)));				    			
 				    		}
 				    		
-				    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,30);
+				    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,20);
 				    		objTr.append($("<td style='width:30%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(statusContent));
 				    		$("#addpopupDay_list tbody").append(objTr);
 				    	}
@@ -1009,27 +1012,31 @@
 		<div id="popup" class="popupwrap2" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;max-width:800px;">
 			<div class="popupwrap3">
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="table-layout:fixed; margin:10px 0px 0px 1px;">
+			    <table class="popuplist" id="addpopup_list" style="table-layout:fixed; margin:10px 0px 0px 1px; display:block;">
 				    <thead>
 				    	<tr>
 					    	<c:if test="${deptFlag == 'true'}">
-								<th class="layerHeader" colspan="4" style="width:738px;">
+								<th class="layerHeader" colspan="5" style="width:738px;">
+								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
+								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
+								</th>
 							</c:if>
 							<c:if test="${deptFlag != 'true'}">
 								<th class="layerHeader" colspan="3" style="width:738px;">
-							</c:if>
 								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
 								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.bbhs3'/></span>
-							</th>
+								</th>
+							</c:if>
 						</tr>
 				    </thead>
-				    <tbody style="max-height:500px; overflow-y:auto;" style="width:738px;">
+				    <tbody style="max-height:500px; overflow-y:auto; width:738px; display:block;">
 				    	<tr>
 				    		<c:if test="${deptFlag == 'true'}">
 				    			<th style="height:30px">No.</th>
 					    		<th style="height:30px"><spring:message code='ezAttitude.t10'/></th>
 					    		<th style="height:30px"><spring:message code='ezAttitude.t9'/></th>
 					    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.bbhs12'/></th>
+					    		<th style="height:30px; text-align:center">내용 및 사유</th>
 				    		</c:if>
 				    		<c:if test="${deptFlag != 'true'}">
 				    			<th style="height:30px;">No.</th>
@@ -1045,10 +1052,10 @@
 		</div>
 		
 		<!-- 근태날짜별 팝업창 -->
-		<div id="popupDay" class="popupwrap4" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px; max-width:900px;">
+		<div id="popupDay" class="popupwrap4" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px; max-width:883px;">
 			<div class="popupwrap5">
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopupDay_list" style="display:block; width:840px; margin:10px 0px 0px 1px;">
+			    <table class="popuplist" id="addpopupDay_list" style="table-layout:fixed; display:block; margin:10px 0px 0px 1px;">
 				    <thead>
 				    	<tr>
 						<th class="layerHeader" colspan="6" style="width:840px;">
@@ -1057,7 +1064,7 @@
 						</th>
 						</tr>
 				    </thead>
-				    <tbody style="max-height:500px; width:840px; display:block; overflow-y:auto;">
+				    <tbody style="max-height:500px; width:820px; display:block; overflow-y:auto;">
 				    	<tr>
 				    		<th style="height:30px">No.</th>
 				    		<th style="height:30px"><spring:message code='ezAttitude.bbhs15'/></th>
