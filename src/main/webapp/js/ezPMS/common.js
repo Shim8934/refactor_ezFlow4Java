@@ -87,3 +87,27 @@ function addProjectPopup(topPct, leftPct, popUpW, popUpH, URL) {
         document.getElementById("iFramePanel").style.display = "";
     } catch (e) {}
 }
+
+//작업이력 추가
+function addTaskLog(projectId, logStatus, groupId, taskId, logContent) {
+	var data = {
+		projectId : projectId,
+		logStatus : logStatus,
+		groupId : groupId,
+		taskId : taskId,
+		logContent : logContent
+	}
+	
+	$.ajax({
+		type : "post",
+		url : "/ezPMS/addTaskLog.do",
+		contentType: "application/json; charset=UTF-8",
+		data : JSON.stringify(data),
+		success : function(data) {
+			
+		},
+		error : function(request, status, error) {
+			alert("code : " + request.status + "\nerror : " + error);
+		}
+	});
+}

@@ -37,7 +37,10 @@ public class TaskLogListVO {
 
     // 사용자 부서다국어 
     private String userDeptname2;
-
+    
+    //작업이력 내용
+    private String logContent;
+    
     public Long getLogId() {
         return logId;
     }
@@ -133,4 +136,12 @@ public class TaskLogListVO {
     public void setUserDeptname2(String userDeptname2) {
         this.userDeptname2 = userDeptname2;
     }
+
+	public String getLogContent() {
+		return logContent;
+	}
+
+	public void setLogContent(String logContent) {
+		this.logContent = logContent;
+	}
 }

@@ -53,30 +53,7 @@ $(function() {
 	
 	$("#kanbanArea").sortable({
 		update : function(event, ui) {
-			var kanban = $(".kanban");
-			var orderStatus = "";
-			
-			for (var i = 0; i < kanban.length; i++) {
-				orderStatus += kanban.eq(i).attr("name") + ",";
-			}
-			
-			orderStatus = orderStatus.slice(0,-1);
-			
-			 var data = {
-				projectId : projectId,
-				orderStatus : orderStatus
-			}
-			
-			 $.ajax({
-				type : "POST",
-				url : "/ezPMS/changeKanbanOrder.do",
-				contentType: "application/json; charset=UTF-8",
-				data :JSON.stringify(data),
-				success : function(result) {},
-				error : function(jqXHR, textStatus, errorThrown) {
-					alert("error : " + textStatus);
-				}
-			});  
+			updateOrderStatus();
 		}
 	});
 	$("#kanbanArea").disableSelection();
@@ -245,9 +222,9 @@ function initKanbanList() {
 			break;
 		}
 		
-		if (kanbanOrderArr[i].indexOf("M") == -1) {
+		if (kanbanOrderArr[i].indexOf("M") == -1 && kanbanOrderArr[i].indexOf("B") == -1) {
 			$("#kanban" + (i + 1)).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"M" + kanbanOrderArr[i] + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'>MY!</span>");	
-		} else if (kanbanOrderArr[i].indexOf("B") == -1) {
+		} else if (kanbanOrderArr[i].indexOf("M") != -1 && kanbanOrderArr[i].indexOf("B") == -1) {
 			$("#kanban" + (i + 1)).find("h1").html(title + "<span style='float:right; border:1px solid black;' onclick='moreTaskList(\"" + kanbanOrderArr[i].slice(-1) + "\", \"kanban"+ (i + 1) +"\", 0, \"new\")'>MY!</span>");
 		} else {
 			$("#kanban" + (i + 1)).find("h1").html(title);
@@ -414,6 +391,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType) {
 
 function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 	$("#" + targetPosition).find(".moreBtn").remove();
+	
 	data = {
 		projectId : projectId,
 		targetPosition : targetPosition,
@@ -471,10 +449,41 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 			}
 			
 			$("#" + targetPosition).find("h1").append(" (" + result.kanbanTaskCount1 + ")");
+			
+			updateOrderStatus();	
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 		}
 	});
+	
+}
+
+function updateOrderStatus() {
+	var kanban = $(".kanban");
+	var orderStatus = "";
+	
+	for (var i = 0; i < kanban.length; i++) {
+		console.log(kanban.eq(i).attr("name"));
+		orderStatus += kanban.eq(i).attr("name") + ",";
+	}
+	
+	orderStatus = orderStatus.slice(0,-1);
+	
+	 var data = {
+		projectId : projectId,
+		orderStatus : orderStatus
+	}
+	
+	 $.ajax({
+		type : "POST",
+		url : "/ezPMS/changeKanbanOrder.do",
+		contentType: "application/json; charset=UTF-8",
+		data :JSON.stringify(data),
+		success : function(result) {},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert("error : " + textStatus);
+		}
+	});  
 }
 </script>
 <style type="text/css">

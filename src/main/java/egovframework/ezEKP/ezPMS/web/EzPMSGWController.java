@@ -66,7 +66,7 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String status = request.getParameter("status");
-			String deptId = request.getParameter("deptId");
+			String deptId = info.getDeptId();
 			
 			String searchByName = "";
 			if (!request.getParameter("searchByName").equals("{}")) {
@@ -117,8 +117,9 @@ public class EzPMSGWController {
 		
 		JSONObject result = new JSONObject();
 		try{
+			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			Map<String, Object> project = new HashMap<String, Object>();
 			project.put("projectName", request.getParameter("projectName"));
@@ -128,14 +129,15 @@ public class EzPMSGWController {
 			project.put("overview", request.getParameter("overview"));
 			project.put("endAlamStatus", request.getParameter("endAlamStatus"));
 			project.put("headManagerId", request.getParameter("headManagerId"));
-			project.put("writerName", request.getParameter("writerName"));
-			project.put("creatorId", request.getParameter("userId"));
-			project.put("creatorName", request.getParameter("creatorName"));
-			project.put("creatorName2", request.getParameter("creatorName2"));
-			project.put("creatorDeptname", request.getParameter("creatorDeptname"));
-			project.put("creatorDeptname2", request.getParameter("creatorDeptname2"));
+			project.put("writerName", info.getUserName());
+			project.put("creatorId", userId);
+			project.put("creatorName", info.getUserName());
+			project.put("creatorName2", info.getUserName2());
+			project.put("creatorDeptname", info.getDeptName());
+			project.put("creatorDeptname2", info.getDeptName2());
 			project.put("createDate", request.getParameter("createDate"));
 			project.put("tenantId", info.getTenantId());
+			//최상위 그룹 생성을 위한 파라미터
 			project.put("treeDepth", 0);
 			project.put("ancestorGroup", "0");
 			project.put("sortOrder", 1);
@@ -153,19 +155,21 @@ public class EzPMSGWController {
 			project.put("projectId", projectId);
 			project.put("groupName", request.getParameter("projectName"));
 			project.put("memberCount", projectMemberList.size());
+			//그룹 생성
 			ezPMSService.addGroup(project);
 			
+			//프로젝트 멤버 테이블에 추가
 			for (int i = 0; i < projectMemberList.size(); i++) {
-				String userId = projectMemberList.get(i).get("userId").toString();
-				int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+				String memberId = projectMemberList.get(i).get("userId").toString();
+				int tenantId = info.getTenantId();
 				String userIdType = projectMemberList.get(i).get("userIdType").toString();
 				
-				ProjectMemberVO member = ezPMSService.getUserInfo(userId, tenantId, userIdType);
+				ProjectMemberVO member = ezPMSService.getUserInfo(memberId, tenantId, userIdType);
 				member.setMemberRoleId((int)projectMemberList.get(i).get("memberRoleId"));
 				member.setProjectId(projectId);
 				member.setUserIdType(userIdType);
 				
-				ezPMSService.addProjectMember(member, Integer.parseInt(request.getParameter("tenantId")));
+				ezPMSService.addProjectMember(member, tenantId);
 			}
 			
 			result.put("status", "ok");
@@ -190,14 +194,14 @@ public class EzPMSGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			String status = request.getParameter("status");
 			String userId = request.getParameter("userId");
-			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
-			String deptId = request.getParameter("deptId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String status = request.getParameter("status");
+			int tenantId = info.getTenantId();
+			String deptId = info.getDeptId();
 			
-			LOGGER.debug("status : " + status + ", " + "userId : " + ", tenantId : " + tenantId + ", deptId : " + deptId);
+			LOGGER.debug("status : " + status + ", " + "userId : " + userId + ", tenantId : " + tenantId + ", deptId : " + deptId);
 			
 			String[] projectIdList = projectId.split("_");
 			String roleCheck = "";
@@ -213,8 +217,8 @@ public class EzPMSGWController {
 			
 			if (roleCheck.equals("")) {
 				for (int i = 0; i < projectIdList.length; i++) {
-					ezPMSService.deleteProject(info.getTenantId(),Long.parseLong(projectIdList[i]));	
-				}
+					ezPMSService.deleteProject(tenantId, Long.parseLong(projectIdList[i]));	
+				} 
 				roleCheck = "permitted";
 			}
 			
@@ -226,7 +230,6 @@ public class EzPMSGWController {
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		
 		
 		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId + "] ended.");
 		return result;
@@ -245,7 +248,7 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			String userIdType = request.getParameter("userIdType");
-			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+			int tenantId = info.getTenantId();
 			
 			ProjectMainSettingVO projectSetting = ezPMSService.getProjectMainSetting(userId, tenantId, userIdType);
 			
@@ -274,8 +277,7 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
-			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+			int tenantId = info.getTenantId();
 			
 			ProjectMainSettingVO project = new ProjectMainSettingVO();
 			project.setViewType(Integer.parseInt(request.getParameter("viewType")));
@@ -318,11 +320,12 @@ public class EzPMSGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			String status = request.getParameter("status");
 			String userId = request.getParameter("userId");
-			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
 			String deptId = info.getDeptId();
+			
+			String status = request.getParameter("status");
 			String nowStatus = request.getParameter("nowStatus");
 			String changeDate = request.getParameter("changeDate");
 			
@@ -341,15 +344,12 @@ public class EzPMSGWController {
 			}
 			
 			if (roleCheck.equals("")) {
-				roleCheck = "permitted";
-				
 				for (int i = 0; i < projectIdList.length; i++) {
 					ProjectInfoVO project = ezPMSService.getProjectDetails(Long.parseLong(projectIdList[i]), userId, info.getTenantId(), "new", info.getLang(), deptId);
 					String planEndDate = project.getPlanEndDate();
 					
 					ezPMSService.updateProjectStatus(Long.parseLong(projectIdList[i]), status, info.getTenantId(), changeDate, planEndDate);	
-					System.out.println(status);
-					System.out.println(nowStatus);
+					
 					if (nowStatus.equals("W") && status.equals("P")) {
 						System.out.println(status);
 						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate, status);
@@ -360,6 +360,8 @@ public class EzPMSGWController {
 						ezPMSService.completeAllTasks(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate);
 					}
 				}
+				
+				roleCheck = "permitted";
 			}
 			
 			result.put("status", "ok");
@@ -388,10 +390,10 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			String mode = request.getParameter("mode");
 			int tenantId = info.getTenantId();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			String deptId = info.getDeptId();
+			String mode = request.getParameter("mode");
 			
 			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, mode, lang, deptId);
 			String kanbanOrder = ezPMSService.getKanbanOrder(projectId, userId, tenantId);
@@ -437,7 +439,7 @@ public class EzPMSGWController {
 			int tenantId = info.getTenantId();
 			
 			ProjectInfoVO project = new ProjectInfoVO();
-			project.setProjectId(Long.parseLong(request.getParameter("projectId")));
+			project.setProjectId(projectId);
 			project.setProjectName(request.getParameter("projectName"));
 			project.setWeightInput(Integer.parseInt(request.getParameter("weightInput")));
 			project.setPlanEndDate(request.getParameter("planEndDate"));
@@ -455,7 +457,7 @@ public class EzPMSGWController {
 			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json.get("managerList");
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("participantList"));
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("viewerList"));
-			System.out.println(projectMemberList.size());
+			
 			for (int i = 0; i < projectMemberList.size(); i++) {
 				String userId = (String)projectMemberList.get(i).get("userId");
 				String userIdType = (String)projectMemberList.get(i).get("userIdType");
@@ -465,7 +467,7 @@ public class EzPMSGWController {
 				member.setProjectId(projectId);
 				member.setUserIdType(userIdType);
 				
-				ezPMSService.addProjectMember(member, Integer.parseInt(request.getParameter("tenantId")));
+				ezPMSService.addProjectMember(member, tenantId);
 			}
 			
 			JSONObject data = new JSONObject();
@@ -475,6 +477,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -496,11 +499,12 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int tenantId = info.getTenantId();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
 			List<ProjectMemberVO> memberList = ezPMSService.getProjectMemberList(projectId, roleId, lang, tenantId);
 			
+			//사원 이미지 사진 불러오기
 			for (ProjectMemberVO member: memberList) {
 				String imagePath = ezOrganService.getPropertyValue(member.getUserId(), "extensionAttribute2", tenantId);
 				
@@ -546,14 +550,14 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
 			String orderStatus = request.getParameter("orderStatus");
-			
-			String kanbanOrder = ezPMSService.getKanbanOrder(projectId, userId, info.getTenantId());
+			String kanbanOrder = ezPMSService.getKanbanOrder(projectId, userId, tenantId);
 			
 			if (kanbanOrder == null || kanbanOrder.equals("")) {
-				ezPMSService.addKanbanOrder(projectId, userId, orderStatus, info.getTenantId());
+				ezPMSService.addKanbanOrder(projectId, userId, orderStatus, tenantId);
 			} else if (!kanbanOrder.equals(orderStatus)) {
-				ezPMSService.changeKanbanOrder(projectId, userId, orderStatus, info.getTenantId());
+				ezPMSService.changeKanbanOrder(projectId, userId, orderStatus, tenantId);
 			}
 			
 			result.put("status", "ok");
@@ -581,7 +585,6 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			String[] projectIdList = projectId.split("_");
-			
 			int addResult = 0;
 			
 			if (projectIdList.length == 1) {
@@ -649,16 +652,41 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantId = info.getTenantId();
+			String userId = request.getParameter("userId");
+			String userName = info.getUserName();
+			String userName2 = info.getUserName2();
+			String userDeptname = info.getDeptName();
+			String userDeptname2 = info.getDeptName2();
 			
 			TaskLogListVO taskLog = new TaskLogListVO();
+			taskLog.setUserId(userId);
+			taskLog.setUserName(userName);
+			taskLog.setUserName2(userName2);
+			taskLog.setUserDeptname(userDeptname);
+			taskLog.setUserDeptname2(userDeptname2);
+			taskLog.setTenantId(tenantId);
+			taskLog.setProjectId(Long.parseLong(request.getParameter("projectId")));
+			taskLog.setLogStatus(Integer.parseInt(request.getParameter("logStatus")));
+			taskLog.setLogContent(request.getParameter("logContent"));
+			taskLog.setLogDate(request.getParameter("logDate"));
 			
-			ezPMSService.addTaskLog(taskLog, info.getTenantId(), info.getUserId());
+			if (!request.getParameter("groupId").equals("") && request.getParameter("groupId") != null) {
+				taskLog.setGroupId(Long.parseLong(request.getParameter("groupId")));
+			}
+			
+			if (!request.getParameter("taskId").equals("") && request.getParameter("taskId") != null) {
+				taskLog.setTaskId(Long.parseLong(request.getParameter("taskId")));
+			}
+			
+			ezPMSService.addTaskLog(taskLog, tenantId, userId);
 			
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -685,7 +713,10 @@ public class EzPMSGWController {
 			Long taskId = Long.parseLong(request.getParameter("taskId"));
 			Long groupId = Long.parseLong(request.getParameter("groupId"));
 			
+			//검색을 위한 search 파라미터
 			Map<String, Object> search = new HashMap<>();
+			search.put("location", request.getParameter("location"));
+			
 			
 			List<TaskLogListVO> taskLogList = ezPMSService.getTaskLogList(taskId, groupId, search, info.getOffSet(), lang, info.getTenantId());
 			
@@ -716,12 +747,8 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String lang = info.getLang();
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String searchByName = "";
-			
-			if (lang.equals("1")) {
-				lang = "";
-			}
 			
 			if (!request.getParameter("searchByName").equals("{}")) {
 				searchByName = request.getParameter("searchByName").toString();

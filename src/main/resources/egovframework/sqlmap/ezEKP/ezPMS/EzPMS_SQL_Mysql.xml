@@ -1545,4 +1545,16 @@
 			</isNotEqual>
 		</isNotNull>
 	</select>
+	
+	<insert id="EzPMSDAO.addTaskLog" parameterClass="map">
+		INSERT INTO	TBL_PMS_LOG (
+			TENANT_ID,			PROJECT_ID,			GROUP_ID,		TASK_ID,
+			LOG_DATE,			LOG_STATUS,			USER_NAME,		USER_NAME2,
+			USER_DEPTNAME,		USER_DEPTNAME2,		LOG_CONTENT,	USER_ID
+		) VALUES (
+			#tenantId#,			#projectId#,		#groupId#,		#taskId#,
+			#logDate#,			#logStatus#,		#userName#,		#userName2#,
+			#userDeptname#,		#userDeptname2#,	#logContent#,	#userId#
+		)
+	</insert>
 </sqlMap>

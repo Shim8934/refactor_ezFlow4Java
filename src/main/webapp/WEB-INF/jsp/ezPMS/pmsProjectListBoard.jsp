@@ -61,62 +61,51 @@ $(function(){
 			width : '80%'
 		});
 	}
-	
-	if(viewType == 0) {
-		$("#memoStyleDiv").css("display", "");
-		$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
-		document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
-	} else {
-		$("#MailListRayer").css("display", "inline-block");
-		$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
-		
-		document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
-		document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-
-	}
-
 });
-
 </script>
 </head>
 <body>
 	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: none;">
-		<div style="width: 100%; overflow: auto;" id="divList">
+		<div style="width: 100%;" id="divList">
 			<div id="lvBoardList">
-				<table id="projectList" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowondblclick="ItemRead_onclick(this)" width="100%" border="0"
-							class="mainlist" style="min-width: 569px;">
+				<table id="tableHeader" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowondblclick="ItemRead_onclick(this)" width="100%" border="0"
+							class="mainlist" style="overflow:hidden">
 					<thead id="BoardList_THEAD">
 						<tr id="BoardList_TH">
-							<th id="BoardList_TH_0" style="text-align: left; overflow: hidden; white-space: nowrap; cursor: pointer; width: 20px;"
+							<th id="BoardList_TH_0" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;"
 								class="h4_center" bgcolor="#CCCCCC">
 								<input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);"
 									style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 							</th>
 							<th id="BoardList_TH_1" onclick="setListOrder(this)" order="PROJECT_NAME" style="text-align: left; overflow: hidden; white-space: nowrap; 
-								text-overflow: ellipsis; cursor: pointer; width: *;" class="h5_center">프로젝트명</th>
+								text-overflow: ellipsis; cursor: pointer; width: 12%;" class="h5_center">프로젝트명</th>
 							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
 								class="h5_center">총괄 담당자</th>
 							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROGRESS"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
 								class="h5_center">전체 진행률</th>
 							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="COMPLETE_TASK"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
 								class="h5_center">완료된 업무</th>
 							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="LATE_TASK"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 110px"
 								class="h5_center">기한 지난 업무</th>
 							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="REST_DUEDAY"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 45px;"
 								class="h5_center">남은 기간</th>
 							<th id="BoardList_TH_7" onclick="setListOrder(this)" order="PLAN_START_DATE"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 15%;"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 10%;"
 								class="h5_center">프로젝트 기간</th>
 							<th id="BoardList_TH_8" onclick="setListOrder(this)" order="STATUS"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 5%;"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 30px;"
 								class="h5_center">상태</th>
 							</tr>
 							</thead>
+						</table>
+					</div>
+					<div id="projectListBody" multiselectable="false" useocs="false" style="overflow:auto; min-width: 469px; height: 456px;">
+					<table id="tableBody" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" rowondblclick="ItemRead_onclick(this)"  width="100%" border="0" class="mainlist" style="">
 							<tbody style="background-color: rgb(255, 255, 255);">
 								<c:choose>
 									<c:when test="${empty projectList}">
@@ -127,36 +116,36 @@ $(function(){
 									<c:otherwise>
 										<c:forEach items="${projectList }" var="project">
 									<tr style="cursor: pointer;" id="${project.projectId }" class="listRow" ondblclick="goProjectDetails(this)">
-										<td style="width: 50px; cursor: default; text-align: center"><input
+										<td style="width: 20px; cursor: default; text-align: center"><input
 											type="checkbox" onchange="checkedCheckbox(this);"
 											name="boardCheckbox"
 											style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;"></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out
+											style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 12%"><c:out
 												value="${project.projectName }" /></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px"><c:out
 												value="${project.headManagerName }" /></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><div
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
 												name="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 											<div style="margin-top: 5px; display: inline-block;">
 												<c:out value="${project.progress }" />
 											</div></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><div
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
 												complete="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 											<div style="margin-top: 5px; display: inline-block;">
 												<c:out value="${project.progress }" />
 											</div></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><div
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 110px"><div
 												overdue="${project.projectId }" style="margin-right: 2px;"></div>&nbsp;
 											<div style="margin-top: 5px; display: inline-block;">
 												<c:out value="${project.progress }" />
 											</div></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">D
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 45px">D
 											<c:choose>
 												<c:when test="${project.restDueday ge 0 }">- <c:out
 														value="${project.restDueday }" />
@@ -167,11 +156,11 @@ $(function(){
 											</c:choose>
 										</td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 10%"><c:out
 												value="${project.planStartDate }" /> ~ <c:out
 												value="${project.planEndDate }" /></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px"><c:out
 												value="${project.status }" /></td>
 									</tr>
 								</c:forEach>

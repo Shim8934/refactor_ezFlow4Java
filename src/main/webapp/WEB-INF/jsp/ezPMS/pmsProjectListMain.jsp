@@ -64,10 +64,48 @@ $(document).ready(function(){
 			document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
 		} else {
 			document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
-			document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
+		}
+
+		if(viewType == 0) {
+			$("#memoStyleDiv").css("display", "");
+			$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
+			document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
+		} else {
+			$("#MailListRayer").css("display", "inline-block");
+			$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
+			
+			document.getElementById("divList").style.overflow = "auto";
+			document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+			document.getElementById("MailListRayer").style.width = "100%";
+			document.getElementById("divList").style.height = (CurrentHeight - 45) + "px";
+			document.getElementById("projectListBody").style.height = (CurrentHeight - 50 - 35) + "px";
 		}
 	});
+	
 });
+
+function projectListScroll(){
+	if(viewType == 0) {
+		$("#memoStyleDiv").css("display", "");
+		$("#memoStyle").attr("src", "/images/kr/cm/btn_onnoframe.gif");
+		document.getElementById("memoStyleDiv").style.height = (CurrentHeight - 50) + "px";
+	} else {
+		$("#MailListRayer").css("display", "inline-block");
+		$("#boardStyle").attr("src", "/images/kr/cm/btn_onbottomframe.gif");
+		
+		document.getElementById("divList").style.overflow = "auto";
+		document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+		document.getElementById("MailListRayer").style.width = "100%";
+		document.getElementById("divList").style.height = (CurrentHeight - 45) + "px";
+		document.getElementById("projectListBody").style.height = (CurrentHeight - 50 - 35) + "px";
+	}
+	
+	
+	var thWidth = document.getElementById("tableHeader").clientWidth - document.getElementById("tableBody").clientWidth;
+	if(thWidth > 0){ 
+		$("#BoardList_TH").append('<th style=width:2px;></th>');
+	} 
+}
 
 $(function(){
 	setProjectList();
@@ -90,6 +128,7 @@ $(function(){
 	$("#listcount option[value='"+ listNumber +"']").attr("selected", true);
 	$("#listByStatus option[value='" + listProjectStatus + "']").attr("selected", true);
 	$("#deleteFavorite").css("display", "none");
+	
 });
 
 function getDatePicker() {
@@ -247,11 +286,8 @@ function changeMainSetting() {
 		contentType: "application/json; charset=UTF-8",
 		url : "/ezPMS/updateMainSetting.do",
 		data :JSON.stringify(data),
-		success : function(result) {
-			console.log(result);
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-		}
+		success : function(result) {},
+		error : function(jqXHR, textStatus, errorThrown) {}
 	});
 }
 
@@ -294,10 +330,8 @@ function setListOrder(elem){
 	setProjectList();
 }
 
-function setInitOrder(){
-	
+function setInitOrder(){	
 	$("#BoardList_TH th").each(function () {
-	
 		if(orderWhat == $(this).attr("order")) {
 			if(orderHow == 'asc'){
 				$(this).attr("sort","asc");
@@ -308,6 +342,8 @@ function setInitOrder(){
 			}
 		}
 	});
+
+	projectListScroll();
 }
 
 function setProjectList() {
@@ -697,6 +733,8 @@ function searchProject() {
 function emptyDate(elem){
 	$(elem).siblings('input').val("");
 }
+
+
 </script>
 <style type="text/css">
 .viewType {

@@ -272,18 +272,23 @@ var beforeViewerList = [];
 	$.ajax({
 		type : "POST",
 		url : "/ezPMS/addNewProject.do",
-		dataType : "json",
+		dataType : "text",
 		contentType: "application/json; charset=UTF-8",
 		data :JSON.stringify(data),
 		success : function(result) {
 			try { 
+				console.log(result);
 				if (mode == "edit") {
 					sendNotiMail(result, projectName);
+					var logContent = "[" + projectName + "]의 정보가 수정되었습니다."
+					addTaskLog(result, 0, null, null, logContent);
 					alert ("프로젝트가 수정되었습니다.");
-					parent.window.location.reload();
 					parent.projectId = projectId;
+					parent.window.location.reload();
 				} else {
 					sendNotiMail(result, projectName);
+					var logContent = "[" + projectName + "](이)가 생성되었습니다."
+					addTaskLog(result, 0, null, null, logContent);
 					alert("새프로젝트가 추가되었습니다.");
 					parent.setProjectList(); 
 				}

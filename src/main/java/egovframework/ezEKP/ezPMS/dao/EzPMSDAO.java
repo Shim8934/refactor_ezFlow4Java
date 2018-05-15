@@ -250,5 +250,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public int getTaskListCount(Map<String, Object> map) {
 		return (int) select ("EzPMSDAO.getTaskListCount", map);
 	}
+
+	public void addTaskLog(Map<String, Object> map) {
+		insert ("EzPMSDAO.addTaskLog", map);
+		
+	}
 	
 }

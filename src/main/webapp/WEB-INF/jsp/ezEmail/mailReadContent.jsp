@@ -324,6 +324,10 @@
 		        	});
 		        }
 		        
+		        function goProjectDetails(projectId) {
+		        	parent.window.open("/ezPMS/getProjectDetails.do?projectId=" + projectId, "right");
+		        	parent.window.open("/ezPMS/pmsLeft.do?mode=mail", "left");
+		        }
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">

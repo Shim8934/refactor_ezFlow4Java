@@ -421,13 +421,30 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void addTaskLog(TaskLogListVO taskLog, int tenantId, String userId) {
-		// TODO Auto-generated method stub
+		LOGGER.debug("[SERVICE] addTaskLog started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", taskLog.getUserId());
+		map.put("userName", taskLog.getUserName());
+		map.put("userName2", taskLog.getUserName2());
+		map.put("userDeptname", taskLog.getUserDeptname());
+		map.put("userDeptname2", taskLog.getUserDeptname2());
+		map.put("tenantId", taskLog.getTenantId());
+		map.put("projectId", taskLog.getProjectId());
+		map.put("logStatus", taskLog.getLogStatus());
+		map.put("logContent", taskLog.getLogContent());
+		map.put("logDate", taskLog.getLogDate());
+		map.put("groupId", taskLog.getGroupId());
+		map.put("taskId", taskLog.getTaskId());
 		
+		ezPMSDAO.addTaskLog(map);
+		LOGGER.debug("[SERVICE] addTaskLog ended");
 	}
 
 	@Override
 	public List<TaskLogListVO> getTaskLogList(Long taskId, Long groupId, Map<String, Object> map, String offset, String lang, int tenantId) {
-		// TODO Auto-generated method stub
+		LOGGER.debug("[SERVICE] getTaskLogList started");
+		
+		LOGGER.debug("[SERVICE] getTaskLogList ended");
 		return null;
 	}
 

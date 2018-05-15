@@ -12,9 +12,12 @@
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
+	    var mode = "${mode}";
 	        $(function() {
-	        	window.open("/ezPMS/pmsProjectListMain.do", "right");
-	        	
+	        	if (mode != "mail") {
+	        		window.open("/ezPMS/pmsProjectListMain.do", "right");
+	        	}
+	    
 	        	$("#pmsSetting").click(function() {
 	        		window.open("/ezPMS/pmsSetting.do", "right");
 	        	});
