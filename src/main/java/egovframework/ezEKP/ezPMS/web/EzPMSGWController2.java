@@ -59,7 +59,7 @@ public class EzPMSGWController2 {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/task-list/{projectId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getTaskList(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+	public JSONObject getTaskList(@PathVariable long projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId + "/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
@@ -68,14 +68,36 @@ public class EzPMSGWController2 {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			String isMyTask = request.getParameter("isMyTask");
+			int tenantId = info.getTenantId();
+			String offset = info.getOffSet();
+			int limit = 0; 
+			int startRow = 0;
+			
+			if (request.getParameter("limit") != null) {
+				limit = Integer.parseInt(request.getParameter("limit"));
+			}
+			
+			if (request.getParameter("startRow") != null) {
+				startRow = Integer.parseInt(request.getParameter("startRow"));
+			}
 			
 			SearchVO search = new SearchVO();
 			search.setTenantId(info.getTenantId());
-			search.setProjectId(Long.parseLong(projectId));
+			search.setProjectId(projectId);
 			search.setMemberId(request.getParameter("headManagerName"));
-			
-			
-			List<ProjectTaskVO> taskList = ezPMSService.getTaskList(search);
+			search.setStatus(request.getParameter("status"));
+			search.setIsMyTask(request.getParameter("isMyTask"));
+			search.setTenantId(tenantId);
+
+			List<ProjectTaskVO> taskList = new ArrayList<ProjectTaskVO>();
+			if (isMyTask.equals("M")) {
+				String status  =request.getParameter("status");
+				taskList = ezPMSService.getMyTasks(projectId, status, tenantId, userId, offset, lang, limit, startRow);
+			} else {
+				taskList = ezPMSService.getTaskList(search, userId, limit, startRow);
+			}
+			 
 			
 			for(int i = 0; i < taskList.size(); i++ ){
 				taskList.get(i).setTaskMember(ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));

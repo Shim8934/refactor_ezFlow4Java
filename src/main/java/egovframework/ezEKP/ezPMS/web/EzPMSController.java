@@ -595,12 +595,56 @@ public class EzPMSController {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/getTaskList.do")
-	public String getTaskList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	@ResponseBody
+	public JSONObject getTaskList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS getTaskList started");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		long projectId = Long.parseLong(param.get("projectId").toString());
+		String userId = userInfo.getId();
+		String kanbanOrder = param.get("kanbanOrder").toString();	
+		
+		String url = "/rest/ezPMS/task-list/" + projectId + "/users/" + userId;
+		String countUrl = "/rest/ezPMS/projects/" + projectId + "/tasks/count";
+		
+		JSONObject json = new JSONObject();
+		if (!kanbanOrder.equals("") || kanbanOrder != null) {
+			String[] kanbanStatus = kanbanOrder.split(",");
+			for (int i = 0; i < kanbanStatus.length; i++) {
+				if (kanbanStatus[i].contains("M")) {
+					kanbanStatus[i] = kanbanStatus[i].substring(kanbanStatus[i].length()-1);
+					param.put("isMyTask", "M");
+				} else {
+					param.put("isMyTask", "A");
+				}
+				
+				param.put("userId", userId);
+				param.put("status", kanbanStatus[i]);
+				
+				JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
+				String countStatus = countResult.get("status").toString();
+				
+				if (countStatus.equals("ok")) {
+					long taskCount = (Long) countResult.get("data");
+					
+					json.put("kanbanTaskCount" + (i + 1), taskCount);
+					
+					if (taskCount != 0) {
+						JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+						String status = result.get("status").toString();
+						
+						if (status.equals("ok")) {
+							JSONArray kanbanTask = (JSONArray) result.get("data");
+							json.put("kanbanTask" + (i + 1), kanbanTask);
+						}
+					}
+				}
+			}
+		}
 		LOGGER.debug("ezPMS getTaskList ended");			
-		return null;
+		return json;
 	}
 	
 	/**
@@ -873,7 +917,7 @@ public class EzPMSController {
 	}
 	
 	// 알림메일 발송
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "null" })
 	@RequestMapping(value="/ezPMS/sendNotiMail.do")
 	public void sendNotiMail(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		LOGGER.debug("sendNotiMail Started.");
@@ -883,61 +927,94 @@ public class EzPMSController {
 		String projectName = (String) param.get("projectName");
 		int projectId = (int) param.get("projectId");
 		List<Map<String, Object>> managerList = null;
-		List<Map<String, Object>> participantList = (List<Map<String, Object>>) param.get("participantList");
-		List<Map<String, Object>> viewerList = (List<Map<String, Object>>) param.get("viewerList");
-		List<Map<String, Object>> beforeManagerList = (List<Map<String, Object>>) param.get("beforeManagerList");
-		List<Map<String, Object>> beforeParticipantList = (List<Map<String, Object>>) param.get("beforeParticipantList");
-		List<Map<String, Object>> beforeViewerList = (List<Map<String, Object>>) param.get("beforeViewerList");
+		List<Map<String, Object>> participantList = null;
+		List<Map<String, Object>> viewerList = null;
+		List<Map<String, Object>> beforeManagerList = null;
+		List<Map<String, Object>> beforeParticipantList = null;
+		List<Map<String, Object>> beforeViewerList = null;
 		
 		param.put("tenantId", userInfo.getTenantId());
 		
 		try{
+			//수정된  member의 집합
 			if (param.get("managerList") != null) {
 				managerList = (List<Map<String, Object>>) param.get("managerList");
-			}
-			if (mode.equals("edit")) {
-				Iterator<Map<String, Object>> managerIter = managerList.iterator();
 				
-				while (managerIter.hasNext()) {
-					Map<String, Object> manager = managerIter.next();
-					
-					if (beforeManagerList.contains(manager)) {
-						managerList.remove(manager);
+				//이전 member의 집합
+				if (mode.equals("edit")) {
+					if (param.get("beforeManagerList") != null) {
+						beforeManagerList = (List<Map<String, Object>>) param.get("beforeManagerList");
+						
+						if (managerList.size() > 0 || managerList != null) {
+							Iterator<Map<String, Object>> managerIter = managerList.iterator();
+								
+							while (managerIter.hasNext()) {
+								Map<String, Object> manager = managerIter.next();
+								
+								if (beforeManagerList.contains(manager)) {
+									managerIter.remove();
+								}
+							}	
+						}
 					}
-				}
-//				
-//				if (beforeParticipantList != null || beforeParticipantList.size() != 0) {
-//					for (Map<String, Object> participant : participantList) {
-//						if (beforeParticipantList.contains(participant)) {
-//							participantList.remove(participant);
-//						}
-//					}
-//				}
-//				
-//				if (beforeViewerList != null || beforeViewerList.size() != 0) {
-//					for (Map<String, Object> viewer : viewerList) {
-//						if (beforeViewerList.contains(viewer)) {
-//							viewerList.remove(viewer);
-//						}
-//					}
-//				}
-			}
-			
-			if (managerList.size() > 0 || managerList != null) {
+				}			
 				getToArrMailList(managerList, param, request, projectName, projectId, "관리자", loginCookie);
 			}
 			
-			if (participantList.size() > 0 || participantList != null) {
+			if (param.get("participantList") != null) {
+				participantList = (List<Map<String, Object>>) param.get("participantList");
+				
+				//이전 member의 집합
+				if (mode.equals("edit")) {
+					if (param.get("beforeParticipantList") != null) {
+						beforeParticipantList = (List<Map<String, Object>>) param.get("beforeParticipantList");
+						
+						if (participantList.size() > 0 || participantList != null) {
+							Iterator<Map<String, Object>> participantIter = participantList.iterator();
+								
+							while (participantIter.hasNext()) {
+								Map<String, Object> participant = participantIter.next();
+								
+								if (beforeParticipantList.contains(participant)) {
+									participantIter.remove();
+								}
+							}	
+						}
+					}
+				}
+				
 				getToArrMailList(participantList, param, request, projectName, projectId, "참여자", loginCookie);
 			}
 			
-			if (viewerList.size() > 0 || viewerList != null) {
+			if (param.get("viewerList") != null) {
+				viewerList = (List<Map<String, Object>>) param.get("viewerList");
+				
+				//이전 member의 집합
+				if (mode.equals("edit")) {
+					if (param.get("beforeViewerList") != null) {
+						beforeViewerList = (List<Map<String, Object>>) param.get("beforeViewerList");
+						
+						if (viewerList.size() > 0 || viewerList != null) {
+							Iterator<Map<String, Object>> viewerIter = viewerList.iterator();
+								
+							while (viewerIter.hasNext()) {
+								Map<String, Object> viewer = viewerIter.next();
+								
+								if (beforeViewerList.contains(viewer)) {
+									viewerIter.remove();
+								}
+							}	
+						}
+					}
+				}
+				
 				getToArrMailList(viewerList, param, request, projectName, projectId, "조회자", loginCookie);
 			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			LOGGER.debug("sendNotiMail ERROR : " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -947,6 +1024,10 @@ public class EzPMSController {
 		ArrayList<InternetAddress> toArrList = new ArrayList<InternetAddress>();
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		try {
+			if (nameList.size() == 0) {
+				return null;
+			}
+			
 			for (int i = 0; i < nameList.size(); i++) {
 				String userId = (String)nameList.get(i).get("userId");
 				

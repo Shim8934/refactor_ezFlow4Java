@@ -48,6 +48,8 @@ public class SearchVO {
 	//계획종료일
 	private String planEndDate;
 	
+	//나의 업무인지 아닌지
+	private String isMyTask;
 	
 
 	public int getTenantId() {
@@ -169,6 +171,13 @@ public class SearchVO {
 	public void setPlanEndDate(String planEndDate) {
 		this.planEndDate = planEndDate;
 	}
-	
+
+	public String getIsMyTask() {
+		return isMyTask;
+	}
+
+	public void setIsMyTask(String isMyTask) {
+		this.isMyTask = isMyTask;
+	}
 
 }

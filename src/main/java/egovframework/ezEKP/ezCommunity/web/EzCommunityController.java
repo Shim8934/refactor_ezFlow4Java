@@ -4078,26 +4078,21 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 포토게시판 쓰기화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/newBoardItemPhoto")
+	@RequestMapping(value = "/ezCommunity/newBoardItemPhoto.do")
 	public String newBoardItemPhoto (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String pUploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		CommunityBoardItemVO item = null;
 		CommunityBoardPropertyVO boardInfo = null;
-		String url = "", startDateTime = "", endDateTime = "", expireDays = "", itemID = "";
-		/*String strAbstract = "";*/
-		String browser = ClientUtil.getClientInfo(request, "browser");
-		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-		
+		String startDateTime = "", endDateTime = "", expireDays = "", itemID = "";
+//		String browser = ClientUtil.getClientInfo(request, "browser");		
 		String boardID = request.getParameter("boardID");
 		String mode = request.getParameter("mode");
 		
+		/* 2018-05-14 홍승비 - 포토게시판에서 의미를 가지지 않는 파라미터 제거(url, isCrossBrowser) */
 		if (request.getParameter("itemID") != null) {
 			itemID = request.getParameter("itemID");
-		}
-		if (request.getParameter("url") != null) {
-			url = request.getParameter("url");
 		}
 		
 		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
@@ -4110,53 +4105,39 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response, userInfo)) {
 			return "cmm/error/egovError";
 		}
+
+		boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		if (!url.equals("")) {
-			startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false);
-			endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd");
-			expireDays = "-1";
-		} else {
-			boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
-			
-			if (userInfo.getLang().equals("2")) {
-				boardInfo.setBoardName(boardInfo.getBoardName2());
-			}
-			
-			expireDays = boardInfo.getExpireDays();
-			
-			if (!mode.equals("new")) {
-				item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
-				
-				if (mode.equals("reply")) {
-					item.setTitle("[" + egovMessageSource.getMessage("ezCommunity.t1179", userInfo.getLocale()) + item.getTitle());
-					item.setItemLevel(item.getItemLevel() + 1);
-				} 
-				/*else {
-					strAbstract = item.getAbsTract();
-				}*/				
-			}
-			
-			startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false);
-			
-			//만료일을 설정하는 부분
-			if (mode.equals("modify")) { // 수정인 경우
-				if (item.getEndDate().substring(0, 4).equals("9999")) { //영구게시인 경우
-					if (expireDays.equals("-1")) { // 게시판 설정이 영구게시인 경우 만료일 컨트롤 값을 30일 뒤로 자동세팅
-						endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd");
-					} else { // 게시판 설정이 영구게시가 아니면 설정된 만료일 만큼 뒤로 세팅
-						endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), Integer.parseInt(expireDays), "yyyy-MM-dd");
-					}
-				} else { // 수정 전에 설정되었던 만료일로 세팅함
-					endDateTime = item.getEndDate().split(" ")[0];
-				}
-				
-				item.setExtensionAttribute4(item.getExtensionAttribute4().replace("&amp;", "&"));
-			} else { //새 게시나 답변인 경우
-				if (expireDays.equals("-1")) {
-					endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd"); 
-				} else {
+		if (userInfo.getLang().equals("2")) {
+			boardInfo.setBoardName(boardInfo.getBoardName2());
+		}
+		
+		expireDays = boardInfo.getExpireDays();
+		
+		if (!mode.equals("new")) {
+			item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
+		}
+		
+		startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false);
+		
+		// 만료일을 설정하는 부분
+		if (mode.equals("modify")) { // 수정인 경우
+			if (item.getEndDate().substring(0, 4).equals("9999")) { //영구게시인 경우
+				if (expireDays.equals("-1")) { // 게시판 설정이 영구게시인 경우 만료일 컨트롤 값을 30일 뒤로 자동세팅
+					endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd");
+				} else { // 게시판 설정이 영구게시가 아니면 설정된 만료일 만큼 뒤로 세팅
 					endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), Integer.parseInt(expireDays), "yyyy-MM-dd");
 				}
+			} else { // 수정 전에 설정되었던 만료일로 세팅함
+				endDateTime = item.getEndDate().split(" ")[0];
+			}
+			
+			item.setExtensionAttribute4(item.getExtensionAttribute4().replace("&amp;", "&"));
+		} else { //새 게시나 답변인 경우
+			if (expireDays.equals("-1")) {
+				endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd"); 
+			} else {
+				endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), Integer.parseInt(expireDays), "yyyy-MM-dd");
 			}
 		}
 		
@@ -4164,14 +4145,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("editor", editor);
 		model.addAttribute("pUploadPath", pUploadFilePath);
 		model.addAttribute("pMode", mode);
-		model.addAttribute("pUrl", url);
-		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("item", item);
 		model.addAttribute("expireDays", expireDays);
 		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("endDateTime", endDateTime);
-		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		return "ezCommunity/communityNewBoardItemPhoto";
