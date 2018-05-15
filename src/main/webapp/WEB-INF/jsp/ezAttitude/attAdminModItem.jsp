@@ -65,7 +65,7 @@
 			}
 			
 			window.onresize = function () {   	
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210 + "PX";
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) + "PX";
 		    }
 			
 		    var monthMsg = "<spring:message code='ezAttitude.bbhs1'/>";
@@ -477,7 +477,7 @@
 					editHeight = editHeight - 210;
 				}
 				editHeight += "PX";
-				$("#EdtorSize").css("height", editHeight);
+				$("#EdtorSize").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 55 + "PX");
 			}
 		</script>
 	</head>
@@ -506,7 +506,7 @@
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
-												<c:if test="${item.parentId ne 'A05' && item.typeId ne 'A01' && item.typeId ne 'A02' && item.typeId ne 'A03'}">
+												<c:if test="${item.parentId ne 'A05'}">
 													<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
 												</c:if>
 											</c:forEach>
@@ -531,7 +531,7 @@
 	            </table>
 	        </div>
 	        <script type="text/javascript">
-		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 210+ "PX";
+		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) + "PX";
 		    </script>
 	    </form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

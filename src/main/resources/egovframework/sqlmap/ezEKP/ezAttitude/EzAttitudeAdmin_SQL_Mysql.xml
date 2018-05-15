@@ -984,12 +984,12 @@
 			    WRITER_DEPT_NAME as writerDeptName,
 			    date_format(DATE_ADD(ORIGIN_STARTDATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') as originStartdate,
 			    date_format(DATE_ADD(ORIGIN_ENDDATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') as originEnddate,
-			    date_format(DATE_ADD(CHANGE_STARTDATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') as changeStartdate,
-			    date_format(DATE_ADD(CHANGE_ENDDATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') as changeEnddate,
+			    ifnull(date_format(DATE_ADD(CHANGE_STARTDATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i'),'') as changeStartdate,
+			    ifnull(date_format(DATE_ADD(CHANGE_ENDDATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i'),'') as changeEnddate,
 			    ORIGIN_TYPE_NAME as originTypeName,
-			    CHANGE_TYPE_NAME as changeTypeName,
+			    ifnull(CHANGE_TYPE_NAME,'') as changeTypeName,
 			    APPR_USER_NAME as apprUserName,
-			    date_format(APPR_DATE, '%Y-%m-%d %H:%i') as ApprDate
+			    date_format(APPR_DATE, '%Y-%m-%d %H:%i') as apprDate
 			FROM
 				TBL_ATTITUDE_MODAPPL_HISTORY
 			WHERE
@@ -998,18 +998,10 @@
 				TENANT_ID = #tenantId#
 			AND
 				WRITER_DEPT_ID = #deptId#
-			AND
-				(
-					(ORIGIN_STARTDATE >= #searchStartDate# AND ORIGIN_STARTDATE <= #searchEndDate#) 
-				OR
-					(ORIGIN_ENDDATE >= #searchStartDate# AND ORIGIN_ENDDATE < #searchEndDate#) 
-				OR
-					(ORIGIN_STARTDATE < #searchStartDate# AND ORIGIN_ENDDATE >= #searchEndDate#)
-				)
 		]]>
 		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
 			<![CDATA[
-				A.type_id = #searchAttitudeType#
+				CHANGE_TYPE_ID = #searchAttitudeType#
 			]]>
 		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchUserName">
@@ -1024,9 +1016,8 @@
 		</isNotEmpty>
 		<isEmpty property="orderCell">
 			ORDER BY
-				startdate DESC,
-				enddate DESC,
-				starttime DESC
+				changeStartdate DESC,
+				writerName
 		</isEmpty>
 		<isNotEmpty property="listSize">
 			<![CDATA[
@@ -1048,18 +1039,10 @@
 				TENANT_ID = #tenantId#
 			AND
 				WRITER_DEPT_ID = #deptId#
-			AND
-				(
-					(ORIGIN_STARTDATE >= #searchStartDate# AND ORIGIN_STARTDATE <= #searchEndDate#) 
-				OR
-					(ORIGIN_ENDDATE >= #searchStartDate# AND ORIGIN_ENDDATE < #searchEndDate#) 
-				OR
-					(ORIGIN_STARTDATE < #searchStartDate# AND ORIGIN_ENDDATE >= #searchEndDate#)
-				)
 		]]>
 		<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
 			<![CDATA[
-				A.type_id = #searchAttitudeType#
+				CHANGE_TYPE_ID = #searchAttitudeType#
 			]]>
 		</isNotEqual>
 		<isNotEmpty prepend="AND" property="searchUserName">
@@ -1068,7 +1051,6 @@
 		<isNotEmpty prepend="AND" property="searchTitle">
 			WRITER_TITLE LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
-
 	</select>
 	
 </sqlMap>

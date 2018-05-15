@@ -54,7 +54,8 @@
 				doc.write('${attitudeInfo.content}');
 				doc.close();
 				
-				region == "" ? $("#message").css("height","405px") : $("#message").css("height", "380px"); 
+				$("#message").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 75 + "PX");
+				//region == "" ? $("#message").css("height","405px") : $("#message").css("height", "380px");
 				
 				var fontFamily = font.split("|")[0];
 				var fontSize = font.split("|")[1];

@@ -134,9 +134,10 @@
 		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="14"/>
 		<result  property="typeId" 				column="TYPE_ID"				columnIndex="15"/>
 		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
-		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
-		<result  property="writerName"			column="DISPLAYNAME"			columnIndex="18"/>
-		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="19"/>
+		<result  property="typeName2"			column="TYPE_NAME2"				columnIndex="17"/>
+		<result  property="imgPath"				column="IMG_PATH"				columnIndex="18"/>
+		<result  property="writerName"			column="DISPLAYNAME"			columnIndex="19"/>
+		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="20"/>
 	</resultMap>
 	
 	<select id="ezAttitude.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
@@ -292,9 +293,10 @@
 			CHANGE_TYPE_ID,
 			CHANGE_TYPE_NAME,
 			CHANGE_TYPE_NAME2,
-			APPR_USER_ID
+			APPR_USER_ID,
+			APPR_USER_NAME,
+			APPR_USER_NAME2
 			)
-<!-- 		<isEqual property="isDefaultAtti" compareValue="true"> -->
 			SELECT
 				#companyId#,
 				#tenantId#,
@@ -317,7 +319,9 @@
 				#typeId#,
 				a.type_name,
 				a.type_name2,
-				#adminId#
+				#adminId#,
+				c.displayname,
+				c.displayname2
 			FROM
 				(select 
 					*
@@ -342,56 +346,18 @@
 				and
 					tenant_id = #tenantId#					
 				) b
-<!-- 		</isEqual> -->
-<!-- 		<isEqual property="isDefaultAtti" compareValue="false"> -->
-<!-- 			SELECT -->
-<!-- 				#companyId#, -->
-<!-- 				#tenantId#, -->
-<!-- 				#writerId#, -->
-<!-- 				b.displayname, -->
-<!-- 				b.displayname2, -->
-<!-- 				b.title, -->
-<!-- 				b.title2, -->
-<!-- 				#deptId#, -->
-<!-- 				b.DESCRIPTION, -->
-<!-- 				b.DESCRIPTION2, -->
-<!-- 				date_add(#startDate#, INTERVAL -#offsetMin# minute), -->
-<!-- 				IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)), -->
-<!-- 				IFNULL(#region#, ''), -->
-<!-- 				IFNULL(#mobile#, ''), -->
-<!-- 				IFNULL(#bizSub#, ''), -->
-<!-- 				IFNULL(#content#, ''), -->
-<!-- 				IFNULL(#ipAddress#, ''), -->
-<!-- 				#dateType#, -->
-<!-- 				#typeId#, -->
-<!-- 				a.type_name, -->
-<!-- 				a.type_name2, -->
-<!-- 				#adminId# -->
-<!-- 			FROM -->
-<!-- 				(select  -->
-<!-- 					* -->
-<!-- 				from  -->
-<!-- 					tbl_attitude_type -->
-<!-- 				where -->
-<!-- 					type_id = #typeId# -->
-<!-- 				and -->
-<!-- 					company_id = #companyId# -->
-<!-- 				and -->
-<!-- 					tenant_id = #tenantId#					 -->
-<!-- 				) a -->
-<!-- 				, -->
-<!-- 				(select  -->
-<!-- 					* -->
-<!-- 				from  -->
-<!-- 					tbl_usermaster -->
-<!-- 				where -->
-<!-- 					cn = #writerId# -->
-<!-- 				and -->
-<!-- 					PHYSICALDELIVERYOFFICENAME = #companyId# -->
-<!-- 				and -->
-<!-- 					tenant_id = #tenantId#					 -->
-<!-- 				) b -->
-<!-- 		</isEqual> -->
+				,
+				(select 
+					*
+				from 
+					tbl_usermaster
+				where
+					cn = #adminId#
+				and
+					PHYSICALDELIVERYOFFICENAME = #companyId#
+				and
+					tenant_id = #tenantId#					
+				) c
 	</insert>
 	
 	<select id="ezAttitude.getIsAttitudeUserConf" parameterClass="Map" resultClass="String">
@@ -998,6 +964,7 @@
 			A.DATE_TYPE,
 			A.TYPE_ID,
 			B.TYPE_NAME,
+			B.TYPE_NAME2,
 			B.IMG_PATH,
 		    C.DISPLAYNAME,
 		    C.DESCRIPTION
@@ -1326,4 +1293,118 @@
 				A.APPR_DATE DESC
 		]]>
 	</select>
+	
+	<insert id="ezAttitude.insertAdminAttHistory2" parameterClass="Map">
+		INSERT INTO tbl_attitude_modappl_history(
+			COMPANY_ID,
+			TENANT_ID,
+			WRITER_ID,
+			WRITER_NAME,
+			WRITER_NAME2,
+			WRITER_TITLE,
+			WRITER_TITLE2,
+			WRITER_DEPT_ID,
+			WRITER_DEPT_NAME,
+			WRITER_DEPT_NAME2,
+			CHANGE_STARTDATE,
+			CHANGE_ENDDATE,
+			CHANGE_REGION,
+			CHANGE_MOBILE,
+			CHANGE_BIZSUB,
+			CHANGE_CONTENT,
+			CHANGE_IP,
+			CHANGE_DATE_TYPE,
+			CHANGE_TYPE_ID,
+			CHANGE_TYPE_NAME,
+			CHANGE_TYPE_NAME2,
+			APPR_USER_ID,
+			APPR_USER_NAME,
+			APPR_USER_NAME2,
+			ATTITUDE_ID,
+			ORIGIN_STARTDATE,
+			ORIGIN_ENDDATE,
+			ORIGIN_CONTENT,
+			ORIGIN_REGION,
+			ORIGIN_MOBILE,
+			ORIGIN_BIZSUB,
+			ORIGIN_IP,
+			ORIGIN_TYPE_ID,
+			ORIGIN_TYPE_NAME,
+			ORIGIN_TYPE_NAME2,
+			ORIGIN_DATE_TYPE
+			)
+			SELECT
+				#attVO.companyId#,
+				#tenantId#,
+				#attVO.writerId#,
+				b.displayname,
+				b.displayname2,
+				b.title,
+				b.title2,
+				#attVO.deptId#,
+				b.DESCRIPTION,
+				b.DESCRIPTION2,
+				#startDate#,
+				IF(#endDate# = '', null, #endDate#),
+				IFNULL(#region#, ''),
+				IFNULL(#mobile#, ''),
+				IFNULL(#bizSub#, ''),
+				IFNULL(#content#, ''),
+				IFNULL(#ipAddress#, ''),
+				#dateType#,
+				#typeId#,
+				a.type_name,
+				a.type_name2,
+				#adminId#,
+				c.displayname,
+				c.displayname2,
+				#attitudeId#,
+				#attVO.startDate#,
+				#attVO.endDate#,
+				#attVO.content#,
+				#attVO.region#,
+				#attVO.mobile#,
+				#attVO.bizSub#,
+				#attVO.ip#,
+				#attVO.typeId#,
+				#attVO.typeName#,
+				#attVO.typeName2#,
+				#attVO.dateType#
+			FROM
+				(select 
+					*
+				from 
+					tbl_attitude_type
+				where
+					type_id = #typeId#
+				and
+					company_id = #attVO.companyId#
+				and
+					tenant_id = #tenantId#					
+				) a
+				,
+				(select 
+					*
+				from 
+					tbl_usermaster
+				where
+					cn = #attVO.writerId#
+				and
+					PHYSICALDELIVERYOFFICENAME = #attVO.companyId#
+				and
+					tenant_id = #tenantId#					
+				) b
+				,
+				(select 
+					*
+				from 
+					tbl_usermaster
+				where
+					cn = #adminId#
+				and
+					PHYSICALDELIVERYOFFICENAME = #attVO.companyId#
+				and
+					tenant_id = #tenantId#					
+				) c
+	</insert>
 </sqlMap>

@@ -258,17 +258,17 @@ public class EzAttitudeGWController {
 			
 			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getTenantId());
 			
-			String originUserId = attitudeVO.getWriterId();
-			String originTypeId = attitudeVO.getTypeId();
-			String originStartDate = attitudeVO.getStartDate();
-			String originEndDate = attitudeVO.getEndDate();
-			String originRegion = attitudeVO.getRegion();
-			String originMobile = attitudeVO.getMobile();
-			String originBizSub = attitudeVO.getBizSub();
-			String originContent = attitudeVO.getContent();
-			String originDateType = attitudeVO.getDateType();
+//			String originUserId = attitudeVO.getWriterId();
+//			String originTypeId = attitudeVO.getTypeId();
+//			String originStartDate = attitudeVO.getStartDate();
+//			String originEndDate = attitudeVO.getEndDate();
+//			String originRegion = attitudeVO.getRegion();
+//			String originMobile = attitudeVO.getMobile();
+//			String originBizSub = attitudeVO.getBizSub();
+//			String originContent = attitudeVO.getContent();
+//			String originDateType = attitudeVO.getDateType();
 			
-			ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, info.getTenantId());
+			ezAttitudeService.updateAttitude(attitudeId, startDate, endDate, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attitudeVO, userId, info.getTenantId());
 			
 			//관리자에서 수정 했을 경우 테이블에 기록을 남긴다.
 			if (mode.equals("admin")) {
@@ -1937,11 +1937,15 @@ public class EzAttitudeGWController {
 			
 			String totalCount = ezAttitudeService.getAttitudeHistoryCount(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, offset, companyId, tenantID, deptId);
 			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchAttitudeType, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, deptId);
+		
+			//구분 리스트
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId());
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
 			data.put("totalCount", totalCount);
 			data.put("typeId", searchAttitudeType);
+			data.put("typeList", typeList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1951,7 +1955,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/bombom] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/] ended.");
 		return result;
 	}
 	
