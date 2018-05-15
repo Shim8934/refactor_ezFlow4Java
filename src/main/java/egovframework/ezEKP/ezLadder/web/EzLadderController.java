@@ -623,7 +623,7 @@ public class EzLadderController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		RestTemplate rest = new RestTemplate();
-		logger.debug("mode :" + mode);
+		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("mode",mode)
 				.queryParam("tenant_id", userInfo.getTenantId())

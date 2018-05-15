@@ -619,7 +619,8 @@ public class EzLadderGWController {
 	@RequestMapping(value = "ladder/ladders/{ladderId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8") 
 	public JSONObject gwSetUserOrder(@PathVariable String ladderId , @PathVariable String userId, HttpServletRequest request, LadderVO ladVO) {
 		logger.debug("web G/W LADDER [PUT /ladder/ladders/" + ladderId+ "/users/" + userId + "] started.");
-		String mode ="all";
+		String mode = "all";
+		String back = "back";
 		JSONObject result = new JSONObject();
 		String firstUser = request.getParameter("firstUser");
 		String secondUser = request.getParameter("secondUser");
@@ -630,7 +631,7 @@ public class EzLadderGWController {
 		
 		try {
 			ezLadderService.setUserOrder(ladVO, firstUser, secondUser, firstUserOrder, secondUserOrder, firstItem, secondItem);
-			List<LadderLineVO> lineVO = ezLadderService.getLadderLineParticipant(ladVO, mode);
+			List<LadderLineVO> lineVO = ezLadderService.getLadderLineParticipant(ladVO, mode, back);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
