@@ -159,6 +159,8 @@
 	    //근태관리
 	    var attitudeId = "${attitudeId}";
 	    var attitudeIncludeMe = false; 
+	    var searchStartDate = "${searchStartDate}";
+	    var searchEndDate = "${searchEndDate}";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -1566,8 +1568,8 @@
    					deptName : "${searchDeptName}",
    					title : "${searchTitle}",
    					deptId : "${searchDeptId}",
-   					startDate : "${searchStartDate}",
-   					endDate : "${searchEndDate}",
+   					startDate : searchStartDate,
+   					endDate : searchEndDate,
    					pageNum : "",
    					listSize : "",
    					orderCell : "",
@@ -1587,7 +1589,28 @@
 						
 						xmpTo.innerHTML = resultHtml;
 					} else {
-// 						getAbsentedList_after(result.list);
+						var resultHtml = "<p>해당 메일을 받은 사원은 " + searchStartDate + "&nbsp;~&nbsp;" + searchEndDate + " 중 근태를 미입력한 사원입니다.</p><p>확인 후 근태를 등록해주시기 바랍니다.</p><p></p><hr>";
+						resultHtml += "<p></p><p><span style='font-size:18px;'><strong>&nbsp;근태미입력자</strong></span></p><p></p>";
+						resultHtml += "<table style='border-collapse:collapse; width:800px;'>";
+						resultHtml += "<thead><tr>";
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>날짜</th>" ;
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>이름</th>";
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>직위</th>";
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>부서</th>";
+						resultHtml += "</thead><tbody>";
+						
+						result.list.forEach(function(vo, index) {
+			    			resultHtml += "<tr><td style='border:1px solid #666'>" + vo.startDate+ " </td>";
+			    			resultHtml += "<td style='border:1px solid #666'>" + vo.userName + "</td>";
+			    			resultHtml += "<td style='border:1px solid #666'>" + vo.userTitle + "</td>";
+			    			resultHtml += "<td style='border:1px solid #666'>" + vo.deptName + "</td></tr>";
+			    		});
+						
+						resultHtml += "</tbody></table>";
+						
+						$("#eSubject").val("[근태미입력공지] " + searchStartDate + " ~ " + searchEndDate);
+						
+						message.SetEditorContent(resultHtml);
 					}
 				}
 			});
