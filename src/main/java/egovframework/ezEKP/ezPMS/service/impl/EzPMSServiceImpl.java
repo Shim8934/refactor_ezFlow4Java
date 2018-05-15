@@ -986,6 +986,32 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	public void addBoard(ProjectBoardVO vo) {
 		LOGGER.debug("[SERVICE] addBoard Started");
 		ezPMSDAO.addBoard(vo);
-		LOGGER.debug("[SERVICE] addBoard Started");
+		LOGGER.debug("[SERVICE] addBoard Ended");
+	}
+
+	@Override
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, int startRow, int limit) {
+		LOGGER.debug("[SERVICE] getBoardList Started");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("taskId", taskId);
+		map.put("startRow", startRow);
+		map.put("limit", limit);
+		LOGGER.debug("[SERVICE] getBoardList Ended");
+		return ezPMSDAO.getBoardList(map);
+	}
+
+	@Override
+	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId) {
+		LOGGER.debug("[SERVICE] getBoardListCount Started");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("projectId", projectId);
+		map.put("groupId", groupId);
+		map.put("taskId", taskId);
+		LOGGER.debug("[SERVICE] getBoardListCount Ended");
+		return ezPMSDAO.getBoardListCount(map);
 	}
 }

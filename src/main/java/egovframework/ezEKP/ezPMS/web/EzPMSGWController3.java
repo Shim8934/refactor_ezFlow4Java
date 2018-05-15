@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPMS.web;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -9,6 +10,7 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @RestController
@@ -56,7 +59,7 @@ public class EzPMSGWController3 {
 			projectBoardVO.setWriteType(Integer.parseInt(request.getParameter("writeType")));
 			projectBoardVO.setReadCount(0);
 			projectBoardVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
-			if(Long.parseLong(request.getParameter("taskId")) != -1) {
+			if(!request.getParameter("taskId").equals("null")) {
 				projectBoardVO.setTaskId(Long.parseLong(request.getParameter("taskId")));
 			}
 			projectBoardVO.setWriterPosition(request.getParameter("writerPosition"));
@@ -66,13 +69,85 @@ public class EzPMSGWController3 {
 			ezPMSService.addBoard(projectBoardVO);
 			
 			result.put("status", "ok");
+			result.put("code", 0);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
+			result.put("code", 1);
 		}
 		
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/boards] ended");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/boards/list/{projectId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getBoardList(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list] started");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+	
+			Long groupId = -1L;
+			Long taskId = -1L;
+			if(!request.getParameter("groupId").equals("null")) {
+				groupId = Long.parseLong(request.getParameter("groupId"));
+			} 
+			if(!request.getParameter("taskId").equals("null")) {
+				taskId = Long.parseLong(request.getParameter("taskId"));
+			}
+			int startRow = Integer.parseInt(request.getParameter("startRow"));
+			int limit = Integer.parseInt(request.getParameter("limit"));
+			
+			List<ProjectBoardVO> boardList = ezPMSService.getBoardList(info.getTenantId(), Long.parseLong(projectId), groupId, taskId, startRow, limit);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", boardList);		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list] ended");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/boards/list-count/{projectId}/users/{userId}", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getBoardListCount(@PathVariable String projectId, @PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list-count] started");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			Long groupId = -1L;
+			Long taskId = -1L;
+			if(!request.getParameter("groupId").equals("null")) {
+				groupId = Long.parseLong(request.getParameter("groupId"));
+			} 
+			if(!request.getParameter("taskId").equals("null")) {
+				taskId = Long.parseLong(request.getParameter("taskId"));
+			}
+			
+			int totalCount = ezPMSService.getBoardListCount(info.getTenantId(), Long.parseLong(projectId), groupId, taskId);
+			
+			result.put("data", totalCount + "");
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("data", "");
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+		
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list-count] ended");
 		return result;
 	}
 }

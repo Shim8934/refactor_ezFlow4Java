@@ -86,7 +86,7 @@ function addBoard() {
 		data : JSON.stringify(data),
 		success : function(result) {
 			alert("성공");
-			parent.location.reload();
+			opener.getBoardList();
 			window.close();
 		},
 		error : function() {
