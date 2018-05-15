@@ -278,4 +278,8 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void deleteAttitudeType(Map<String, Object> map) {
 		delete("ezAttitudeAdminDAO.deleteAttitudeType", map);
 	}
+	
+	public void	insertAdminAttHistory2(Map<String, Object> map) throws Exception {
+		insert("ezAttitude.insertAdminAttHistory2", map);//TODO  ezAttitude -> ezAttitudeDAO 
+	}
 }

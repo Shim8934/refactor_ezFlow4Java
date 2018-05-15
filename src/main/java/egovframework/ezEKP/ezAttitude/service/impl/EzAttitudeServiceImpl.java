@@ -269,7 +269,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void updateAttitude(String attitudeId, String startDate,
 			String endDate, String region, String mobile, String bizSub, String content, 
-			String offset, String ip, String typeId, String dateType, int tenantId) throws Exception {
+			String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, int tenantId) throws Exception {
 		LOGGER.debug("updateAttitude started");
 		
 		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
@@ -290,6 +290,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		ezAttitudeDAO.updateAttitude(map);
 		
+		if (mode.equals("admin")) {
+			map.put("attVO", attVO);
+			map.put("adminId", adminId);
+			ezAttitudeDAO.insertAdminAttHistory2(map);
+		}
 		LOGGER.debug("updateAttitude ended");
 	}
 

@@ -37,6 +37,8 @@ public class AttitudeVO {
 	private String typeId;
 	/** 근태타입명*/
 	private String typeName;
+	/** 근태타입명2*/
+	private String typeName2;
 	/** 근태타입 이미지*/
 	private String imgPath;
 	/** 작성자명*/
