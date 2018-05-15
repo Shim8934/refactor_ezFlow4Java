@@ -49,7 +49,7 @@
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var selecUserList = "";//리스트에 선택된 userList(,로 구분)
 	    	var adminCompany = "${adminCompany}";
-	    	var listSize = 19;
+	    	var listSize = 18;
 	    	
 	    	$(function(){
 	    		$('#searchStartTime').timepicker({ 'timeFormat': 'H:i' });
@@ -230,6 +230,14 @@
 	    		}
 	    	}
 	    	
+	    	//근무시간 수정 시 리스트 흔들려서 서버에서 받는게 아니라 스크립트로 글자만 수정시켜줌
+	    	function changeUserConfList(workStartTime, workEndTime, gubun, userIdList) {
+	    		userIdList.split(", ").forEach(function(id, index) {
+	    			$("tr[userid = '" + id + "'] td:nth-child(5)").html(workStartTime + " ~ " + workEndTime);
+	    			$("tr[userid = '" + id + "'] td:nth-child(6)").html(gubun == "0" ? "<spring:message code='ezAttitude.lhj2' />" : "<spring:message code='ezAttitude.lhj3' />");
+	    		});
+	    	}
+	    	
 	    	function userDbClick() {
 	    		editUserConf($(this).attr('userid'));
 	    	}
@@ -313,7 +321,7 @@
 			</tbody>
 		</table>
 		
-		<div id="contentlist" style="width:100%; height:620px;">
+		<div id="contentlist" style="width:100%; height:610px;">
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>

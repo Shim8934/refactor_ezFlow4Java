@@ -50,7 +50,7 @@
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var adminCompany = "${adminCompany}";
-	    	var listSize = 19;
+	    	var listSize = 18;
 	    	
 	    	$(function(){
 	    		$("#Sdatepicker").val("${searchStartDate}");
@@ -376,7 +376,7 @@
 			</tbody>
 		</table>
 		
-	  	<div id="contentlist" style="width:100%; height:620px;">
+	  	<div id="contentlist" style="width:100%; height:610px;">
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>

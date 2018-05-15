@@ -43,8 +43,8 @@
 		var totalAtt 		  = ${totalAtt};
 		var startDate		  = "<c:out value='${startDate}'/>";
 		var endDate 		  = "<c:out value='${endDate}'/>";
-		var currentPage		  = ${currentPage};  		
-		var totalPages 		  = ${totalPages}; 		
+		var currentPage		  = ${currentPage};
+		var totalPages 		  = ${totalPages};
 	    var blockSize 		  = 10;
 	    var orderCell = ""; // 정렬 명
     	var orderOption = ""; // 정렬 형식(ASC, DESC)
@@ -1218,8 +1218,9 @@
         	<li id="search"><span onClick="search_popup()">검색</span></li>
 		</c:if>
 		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
+			<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 			<li>
-				<select id="writerDept_search" onchange="type_change()">
+				<select id="writerDept_search" onchange="type_change()" style="margin-top:5px;">
 					<c:if test="${selectedDeptID  == null}">
 						<option value=null selected></option>
 					</c:if>
@@ -1238,7 +1239,7 @@
 		</c:if>
 
 
-		<c:if test="${adminFlag != 'true' || checkAdmin != 'true'}">
+		<c:if test="${adminFlag != 'true' || checkAdmin != 'true'}"> 
 			<li id="right">
 				<span style="float:right;font-weight:normal;color:black;border: none;">
 					<input name="searchCheck" id="Radio1" type="radio" value="all" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;전체</label>
@@ -1293,69 +1294,69 @@
 	            <a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
 	        </div>
         </c:if>
-        <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
-            <div id="contentlist" name="contentlist" style="border:0px solid blue;height:550px;width:100%;overflow-y:auto;" onblur>
-                <table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
-                	<tr> 
-						<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
-							<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
-						</th> 
-						<th width="60px" colname="NO">NO.</th> 
-						<th style="cursor:pointer" colname="START_DATE">일자</th>
-						<c:if test="${adminFlag == true}">
-							<th style="cursor:pointer" colname="WRITER_NAME">신청자</th>
-							<th style="cursor:pointer" colname="WRITER_DEPT_NAME">신청부서</th>
-						</c:if>
-						<th width="250px" style="cursor:pointer" colname="NO">신청시각</th>
-						<th width="80px" style="cursor:pointer" colname="APPR_STATUS" >승인상태</th>
-						<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th>
-						<th width="150px" style="cursor:pointer" colname="NO">내역확인</th> 
-			    	</tr>
-			    	
-			    	<c:forEach var="list" items="${list}" varStatus="i"> 
-				        <tr id = "attList_${i.count}" class="white" draggable="true" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" style="cursor:pointer;">
-							<td style="padding:0"><input type="checkbox" class="checkAtt" id="attCheck_<c:out value ="${list.attitudeId}"/>_<c:out value ="${list.applCnt}"/>" value="<c:out value="${list.attitudeId}" />_<c:out value ="${list.applCnt}"/>" status=<c:out value="${list.apprStatus}"/> onclick="event_listCheckboxclick(this)"/></td>
-				          	<td>${i.count}</td>
-				          	<c:set var="changeDate" value="${list.changeDate}"/>
-				          	<c:set var="originDate" value="${list.originDate}"/>
-							<td>${fn:substring(originDate,0,10) }</td>
-							<c:if test="${adminFlag == true}">
-								<td>${list.writerName}</td>
-								<td>${list.writerDeptName}</td>
-							</c:if>
-							<td>${fn:substring(originDate,11,19) } -> ${fn:substring(changeDate,11,19) }</td>
-							<c:if test="${list.apprStatus == 0}">
-				          		<td id="attStauts">신청</td>	
-				          	</c:if>
-				          	<c:if test="${list.apprStatus == 1}">
-				          		<td id="attStauts">승인</td>	
-				          	</c:if>
-				          	<c:if test="${list.apprStatus == 2}">
-				          		<td id="attStauts">반려</td>	
-				          	</c:if>
-				          	<td>${list.apprUserName}</td>
-				          	<td>
-				          		<a class="imgbtn" id="mailInBtn" onclick="getHistory(this)">
-				          			<span>내역확인</span>
-				          		</a>
-				          	</td>
-				        </tr>
-		        </c:forEach>
-		        
-			    <c:if test="${list.size() == 0}"> 
-			        <tr>
-			        	<c:if test="${adminFlag == 'true'}">
-							<td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td>
-						</c:if>
-						<c:if test="${adminFlag != 'true'}">
-							<td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td>
-						</c:if>
-		       		</tr> 
-		        </c:if> 
-                </table>
-            </div>
-            <div id="tblPageRayer"  style="width:470px; margin:6px auto;"></div>
-        </span>
+       	<c:choose>
+			<c:when test="${checkAdmin == 'true'}">
+				<div id="contentlist" name="contentlist" style="border:0px solid blue;height:600px;width:100%;overflow-y:auto;" onblur>
+			</c:when>
+			<c:otherwise>
+				<div id="contentlist" name="contentlist" style="border:0px solid blue;height:680px;width:100%;overflow-y:auto;" onblur>
+			</c:otherwise>
+		</c:choose>
+		<table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
+			<tr>
+				<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
+					<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
+				</th>
+				<th width="60px" colname="NO">NO.</th>
+				<th style="cursor:pointer" colname="START_DATE">일자</th>
+				
+				<c:if test="${adminFlag == true}">
+					<th style="cursor:pointer" colname="WRITER_NAME">신청자</th>
+					<th style="cursor:pointer" colname="WRITER_DEPT_NAME">신청부서</th>
+				</c:if>
+				
+				<th width="250px" style="cursor:pointer" colname="NO">신청시각</th>
+				<th width="80px" style="cursor:pointer" colname="APPR_STATUS" >승인상태</th>
+				<th width="150px" style="cursor:pointer" colname="APPR_USER_NAME">승인자</th>
+				<th width="150px" style="cursor:pointer" colname="NO">내역확인</th>
+			</tr>
+		    	
+			<c:forEach var="list" items="${list}" varStatus="i"> 
+				<tr id = "attList_${i.count}" class="white" draggable="true" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" style="cursor:pointer;">
+					<td style="padding:0"><input type="checkbox" class="checkAtt" id="attCheck_<c:out value ="${list.attitudeId}"/>_<c:out value ="${list.applCnt}"/>" value="<c:out value="${list.attitudeId}" />_<c:out value ="${list.applCnt}"/>" status=<c:out value="${list.apprStatus}"/> onclick="event_listCheckboxclick(this)"/></td>
+					<td>${i.count}</td>
+					<c:set var="changeDate" value="${list.changeDate}"/>
+					<c:set var="originDate" value="${list.originDate}"/>
+					<td>${fn:substring(originDate,0,10) }</td>
+					<c:if test="${adminFlag == true}">
+						<td>${list.writerName}</td>
+						<td>${list.writerDeptName}</td>
+					</c:if>
+					<td>${fn:substring(originDate,11,19) } -> ${fn:substring(changeDate,11,19) }</td>
+					<c:if test="${list.apprStatus == 0}">
+						<td id="attStauts">신청</td>
+					</c:if>
+					<c:if test="${list.apprStatus == 1}">
+						<td id="attStauts">승인</td>
+					</c:if>
+					<c:if test="${list.apprStatus == 2}">
+						<td id="attStauts">반려</td>
+					</c:if>
+					<td>${list.apprUserName}</td>
+					<td><a class="imgbtn" id="mailInBtn" onclick="getHistory(this)"><span>내역확인</span></a></td>
+				</tr>
+			</c:forEach>
+	        
+		    <c:if test="${list.size() == 0}"> 
+		        <tr>
+		        	<c:if test="${adminFlag == 'true'}"><td colspan="9" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></c:if>
+					<c:if test="${adminFlag != 'true'}"><td colspan="7" align="center"  bgcolor="#FFFFFF">등록된 신청내역이 없습니다.</td></c:if>
+	       		</tr>
+	        </c:if>
+		</table>
+		</div>
+		<div style="color: #666; padding-top: 10px"></div>
+		<div id="tblPageRayer"></div>
         <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="attPanel" onclick="ContextMenuHidden();" ></div>
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="AttProgress">
 		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
@@ -1382,10 +1383,10 @@
 			    <table class="popuplist" id="addpopup_list" style="display:block; width:440px; margin:10px 0px 0px 1px;">
 				    <thead>
 				    	<tr>
-						<th class="layerHeader" colspan="4" style="width:440px;">
-							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
-							&nbsp;근태내역확인
-						</th>
+							<th class="layerHeader" colspan="4" style="width:440px;">
+								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
+								&nbsp;근태내역확인
+							</th>
 						</tr>
 				    </thead>
 				    <tbody style="max-height:500px; width:440px; display:block; overflow-y:auto;">
