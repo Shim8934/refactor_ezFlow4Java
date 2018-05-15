@@ -149,7 +149,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String localDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).split(" ")[0];
 			startDate = localDate + " 00:00:00";
 			endDate = localDate + " 23:59:59";
-		} else { //startDate와 endDate가 있는 경우 한달의 근태를 출력 
+		} else if (!startDate.equals("") && endDate.equals("")) {
+			startDate = startDate + " 00:00:00";
+			endDate = startDate + " 23:59:59"; 
+		} else {
 			startDate = startDate + " 00:00:00";
 			endDate = endDate + " 23:59:59";
 		}
