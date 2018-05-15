@@ -158,6 +158,7 @@
 	    var journalId = "${journalId}";
 	    //근태관리
 	    var attitudeId = "${attitudeId}";
+	    var attitudeIncludeMe = false; 
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -195,6 +196,12 @@
 	        m_rgParams4PostOption["bodyType"] = g_bodyType;
 	        m_rgParams4PostOption["EachMail"] = iseachMail;
 	        m_rgParams4PostOption["SecurityMail"] = pSecurity;
+	        
+	        var moduleType = "${moduleType}";
+	        
+	        if (moduleType == "attitudeAbsented") {
+	        	getAttitudeAbsentedList("distinct");
+	        }
 	        
 	        if (xmpTo.innerHTML != "") {
 	        	var moduleType = "<c:out value='${moduleType}'/>";
@@ -327,7 +334,12 @@
             	// 현재 스크롤 위치를 저장
             	currentScrollPos = jqueryElement.scrollTop();
             	domElement.previousScrollPos = currentScrollPos;
-            });            
+            });
+            
+            if (attitudeIncludeMe) {
+            	document.getElementById('toMe').checked = 'checked';
+	            MailToMe_Onclick();
+            }
 		}
 	    
 		var isAutoSave = false;
@@ -913,6 +925,9 @@
 	            else if (Org_cmd == "attitude") {
 	            	getAttitudeToMail();
 	            	return;
+	            }
+	            else if (Org_cmd == "attitudeAbsented") {
+	            	getAttitudeAbsentedList("duplicated");
 	            }
 	            
 	            initFlag = true;
@@ -1537,6 +1552,46 @@
 	    	DivPopUpShow(583, 485, "/ezEmail/mailLetter.do");
 	    }
 	    
+	    //근태관리 미입력메일발송
+	    function getAttitudeAbsentedList(gubun) {
+	    	//본문내용추가
+	    	$.ajax({
+				type : "post",
+				dastaType : "json",
+				async : false,
+				url : "/admin/ezAttitude/getAttitudeAbsentedList.do",
+				data : {
+					companyId : "${companyId}",
+   					userName : "${searchUserName}",
+   					deptName : "${searchDeptName}",
+   					title : "${searchTitle}",
+   					deptId : "${searchDeptId}",
+   					startDate : "${searchStartDate}",
+   					endDate : "${searchEndDate}",
+   					pageNum : "",
+   					listSize : "",
+   					orderCell : "",
+   					orderOption : "",
+   					duplicated : gubun
+				},
+				success : function(result) {
+					if (gubun == "distinct") {
+						var resultHtml = "";
+						
+						result.list.forEach(function(vo, index) {
+			    			resultHtml += "\"" + vo.userName + "\"";
+			    			resultHtml += " <" + vo.userEmail + ">, ";
+			    		});
+						
+						resultHtml = resultHtml.slice(0, -2);
+						
+						xmpTo.innerHTML = resultHtml;
+					} else {
+// 						getAbsentedList_after(result.list);
+					}
+				}
+			});
+	    }
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  

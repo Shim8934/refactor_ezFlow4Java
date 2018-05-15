@@ -3119,8 +3119,13 @@ function getEmailAddressList(ReceiverList) {
         var pEmail = receiverPart[1].replace("<", "").replace(">", "");
         
         if (g_cmd != "EDIT") {
-            if (pEmail == g_myemail) 
+            if (pEmail == g_myemail) {
+            	if (Org_cmd == "attitudeAbsented") {
+            		attitudeIncludeMe = true;
+                }
+            	
             	continue;
+            }
         }
         
         retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");
