@@ -893,19 +893,24 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		int modAppl = ezAttitudeDAO.getAttModApp(map);
 		
+		if (modAppl == 2) {
+			map.put("modappl", "0");
+		} else if (modAppl == 3) {
+			map.put("modappl", "1");
+		}
 		//신청된 항목이 존재 할 때
-		if (modAppl != 0) {
-			map.put("attModId", attitudeId);
-			AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+		if (modAppl != 0 || modAppl != 1) {
+			//map.put("attModId", attitudeId);
+			//AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
 			//신청된 항목의 상태가 신청 상태 일 때는 추가 신청을 받지 않는다
-			if (aav.getApprStatus().equals("0")) {
-				return "fail";
-			}
+			//if (aav.getApprStatus().equals("0")) {
+			return "fail";
+			//}
 		}
 		
 		/*근태수정신청 저장*/
 		ezAttitudeDAO.attSaveAppModify(map);
-		/*근태수정신청이 된 항목 달력에 노란색 표시*/
+		/*attitude modappl수정*/
 		ezAttitudeDAO.setAttModApp(map);
 		
 		return "success";
@@ -1459,6 +1464,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			
 			map.put("typeId", typeId);
 			ezAttitudeDAO.changeUsersAttType(map);
+			
+			//승인일 때 attitude의 modappl상태값 변경 3(수정상태)
+			map.put("attitudeId", ids.split("_")[0]);
+			map.put("modappl", 3);
+			ezAttitudeDAO.setAttModApp(map);
+		} else if (changeStatus.equals("ret")) {
+			map.put("attitudeId", ids.split("_")[0]);
+			int modAppl = ezAttitudeDAO.getAttModApp(map);
+			
+			if (modAppl == 0) {
+				map.put("modappl", 2);
+			} else if (modAppl == 1) {
+				map.put("modappl", 3);
+			}
+			ezAttitudeDAO.setAttModApp(map);
 		}
 	}
 
