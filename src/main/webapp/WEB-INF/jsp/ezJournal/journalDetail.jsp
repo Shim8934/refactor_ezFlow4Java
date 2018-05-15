@@ -39,7 +39,7 @@
 			function journalDelete() {
 				
 				if (confirm("<spring:message code='ezJournal.t139'/>")) {
-					$.ajax (
+					$.ajax ({
 						type : "POST",
 						dataType : "text",
 						async : "false",

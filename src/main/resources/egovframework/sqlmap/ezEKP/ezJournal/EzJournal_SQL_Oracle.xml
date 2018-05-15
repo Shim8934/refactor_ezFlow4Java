@@ -33,14 +33,14 @@
 	</resultMap>
 	
 	<resultMap class="journalVO" id="journalContentMap">
-		<result property="journalContent" 	column="journal_content"		jdbcType="CLOB" 	javaType="java.lang.String"/>
+		<result property="journalContent" 	column="journal_content"		jdbcType="CLOB" 	javaType="String"/>
 		<result property="journalTitle" 	column="journal_title"/>
 	</resultMap>
 	
 	<resultMap class="journalVO" id="journalMap" groupBy="journalId">
 		<result property="journalId" 		column="journal_id"/>
 		<result property="journalTitle" 	column="journal_title"/>
-		<result property="journalContent" 	column="journal_content"		jdbcType="CLOB" 	javaType="java.lang.String"/>
+		<result property="journalContent" 	column="journal_content"		jdbcType="CLOB" 	javaType="String"/>
 		<result property="journalDate" 		column="journal_date"/>
 		<result property="deptShare" 		column="dept_share"/>
 		<result property="writerName" 		column="writer_name"/>
@@ -130,7 +130,7 @@
 		<result property="journalUse" 		column="used" 		columnIndex="2" />
 	</resultMap>
 
-	<resultMap class="JournalFormInfoVO" id="JournalFormInfo" groupBy="formId">
+	<resultMap class="JournalFormInfoVO" id="JournalFormInfo" 	groupBy="formId">
 		<result property="formId" 			column="form_id" />
 		<result property="formName" 		column="form_name" />
 		<result property="formInfo" 		column="form_info" />
@@ -138,7 +138,7 @@
 		<result property="formWriter" 		column="form_writer" />
 		<result property="formStatus" 		column="form_status" />
 		<result property="typeId" 			column="type_id" />
-		<result property="depts" 		resultMap="ezJournal.journalDeptInfoVO"/>
+		<result property="depts" 		resultMap="ezJournal.deptInfoVO"/>
 	</resultMap>
 
 	<resultMap class="JournalFormInfoVO" id="formInfoVO">
@@ -152,7 +152,7 @@
 		<result property="formId" 			column="form_id" />
 		<result property="formName" 		column="form_name" />
 		<result property="formInfo" 		column="form_info" />
-		<result property="formContent" 		column="form_content" 			jdbcType="CLOB" 	javaType="java.lang.String"/>
+		<result property="formContent" 		column="form_content" 			jdbcType="CLOB" 	javaType="String"/>
 		<result property="formStatus" 		column="form_status" />
 	</resultMap>
 
@@ -193,7 +193,7 @@
 		where
 			tenant_id = #tenantId#
 		and 
-			company_id=#companyId#
+			company_id = #companyId#
 		<isNotEmpty property="used">
 			and used = #used#
 		</isNotEmpty>
@@ -257,9 +257,12 @@
 
 	<!-- 양식함 삭제 -->
 	<delete id="deleteJournalTypeList" parameterClass="Map">
-		delete from tbl_journal_form_type 
-		where company_id = #companyId# 
-		and tenant_id = #tenantId#
+		delete from 
+			tbl_journal_form_type 
+		where 
+			company_id = #companyId# 
+		and 
+			tenant_id = #tenantId#
 	</delete>
 
 	<!-- 양식함 사용여부 수정 -->
@@ -283,12 +286,12 @@
 				a.form_id,
 				a.form_name,
 				a.form_info,
-				TO_CHAR(a.form_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')  AS form_date,
+				TO_CHAR(a.form_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as form_date,
 				a.form_writer,
 				a.form_status,
 				a.type_id,
 				b.dept_id,
-				nvl(d.DISPLAYNAME$lang$,(select DISPLAYNAME$lang$ from tbl_deptmaster dd where dd.CN = #companyId# and dd.tenant_id = #tenantId#)) as dept_name
+				nvl(d.DISPLAYNAME$lang$, (select DISPLAYNAME$lang$ from tbl_deptmaster dd where dd.CN = #companyId# and dd.tenant_id = #tenantId#)) as dept_name
 			from 
 				tbl_journal_form a 
 			left join tbl_journal_form_use_dept b on (a.form_id = b.form_id and a.tenant_id = b.tenant_id)
@@ -397,7 +400,7 @@
 			case 
 				when d.extensionattribute1 = null
 				<isNotEmpty property="companyId">
-				or d.CN = #companyId#
+					or d.CN = #companyId#
 				</isNotEmpty>
 					then N'##'
 				else d.EXTENSIONATTRIBUTE1 
@@ -1301,7 +1304,7 @@
 		select 
 			r.reply_id as reply_id,
 			r.reply_content as reply_content,
-			substring(r.reply_date,1,16) as reply_date,
+			TO_CHAR(r.reply_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as reply_date,
 			u.DISPLAYNAME$lang$ as reply_writer_name,
 			u.CN as reply_writer,
 			case 
