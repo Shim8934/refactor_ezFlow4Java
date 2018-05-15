@@ -14,6 +14,7 @@
 	        var myVar;
 	        window.onload = function ()
 	        {
+	        	message.document.getElementById("printArea").innerHTML = "${pBody}";
 	            myVar = setInterval(function () { DocumentComplate() }, 2000);
 	        }
 	        function DocumentComplate()
@@ -79,14 +80,16 @@
 	            </td>
 	        </tr>
 	        </c:if>
+	        <tr>
+	        	<td colspan="4" style="border : medium none" height="10px">
+	        	</td>
+	        </tr>
+	        <tr>
+	        	<td colspan="4" style="border : 1px solid #ddd">
+	        		<iframe  id="message" name="message" src="mailPrintContent.do" frameborder="0" style="width:100%;height:100%; overflow:auto" ></iframe>
+	        	</td>
+	        </tr>
 	        </table>
-	        <div style="height:100%; margin:5px; word-wrap:break-word; word-break:normal; display:block">
-	            <div style="height:100%; border:1px solid #ddd;vertical-align:top;">
-	               <div style="padding:10px">
-	                    ${pBody}
-	                </div>
-	            </div>
-	        </div>
-	    
+	        
 	</body>
 </html>
