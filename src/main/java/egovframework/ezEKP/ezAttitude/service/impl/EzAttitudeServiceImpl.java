@@ -78,17 +78,28 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void insertAttitude(String writerId, String deptId, String startDate,
 			String endDate, String region, String mobile, String bizsub, String content,
-			String ip, String typeId, String dateType, String offset, String companyId, int tenantId) throws Exception {
+			String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode) throws Exception {
 		LOGGER.debug("insertAttitude started");
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if (mode == null) {
+			mode = "";
+		}
 		
 		boolean isDefaultAtti = false;
 		map.put("writerId", writerId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
+		
+		
 		if (typeId.equals("A01") || typeId.equals("A03")) {
-			startDate = commonUtil.getTodayUTCTime("");
+			if (!mode.equals("admin")) {
+				startDate = commonUtil.getTodayUTCTime("");
+			} else {
+				startDate += ":00";
+				startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+			}
 			
 			if (typeId.equals("A01")) {
 				//사용자별 근태설정이 있는 지 검사
@@ -97,7 +108,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				
 				AttitudeUserConfigVO resultVO = ezAttitudeDAO.getAttitudeConfTime(map);
 				
-				String compareDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(11);
+				String compareDate = commonUtil.getDateStringInUTC(startDate, offset, false).substring(11);
 				String resultConfDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd") + " " + resultVO.getWorkStartTime() + ":00", offset, false).substring(11);
 				
 				LOGGER.debug("isValue : " + isValue + "////////" + resultVO.getWorkStartTime());
@@ -113,6 +124,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			}
 			
 			isDefaultAtti = true;
+		} else {
+			if (mode.equals("admin")) {
+				startDate += ":00";
+				startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+			}
 		}
 		
 		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
@@ -893,19 +909,24 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		int modAppl = ezAttitudeDAO.getAttModApp(map);
 		
+		if (modAppl == 0 || modAppl == 4) {
+			map.put("modappl", "1");
+		} else if (modAppl == 3) {
+			map.put("modappl", "2");
+		}
 		//신청된 항목이 존재 할 때
-		if (modAppl != 0) {
-			map.put("attModId", attitudeId);
-			AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
+		if (modAppl == 1 || modAppl == 2) {
+			//map.put("attModId", attitudeId);
+			//AttitudeApplicationVO aav = ezAttitudeDAO.attModAppDetail(map);
 			//신청된 항목의 상태가 신청 상태 일 때는 추가 신청을 받지 않는다
-			if (aav.getApprStatus().equals("0")) {
-				return "fail";
-			}
+			//if (aav.getApprStatus().equals("0")) {
+			return "fail";
+			//}
 		}
 		
 		/*근태수정신청 저장*/
 		ezAttitudeDAO.attSaveAppModify(map);
-		/*근태수정신청이 된 항목 달력에 노란색 표시*/
+		/*attitude modappl수정*/
 		ezAttitudeDAO.setAttModApp(map);
 		
 		return "success";
@@ -1459,6 +1480,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			
 			map.put("typeId", typeId);
 			ezAttitudeDAO.changeUsersAttType(map);
+			
+			//승인일 때 attitude의 modappl상태값 변경 3(수정상태)
+			map.put("attitudeId", ids.split("_")[0]);
+			map.put("modappl", 3);
+			ezAttitudeDAO.setAttModApp(map);
+		} else if (changeStatus.equals("ret")) {
+			map.put("attitudeId", ids.split("_")[0]);
+			int modAppl = ezAttitudeDAO.getAttModApp(map);
+			
+			if (modAppl == 1) {
+				map.put("modappl", 4);
+			} else if (modAppl == 2) {
+				map.put("modappl", 3);
+			}
+			ezAttitudeDAO.setAttModApp(map);
 		}
 	}
 

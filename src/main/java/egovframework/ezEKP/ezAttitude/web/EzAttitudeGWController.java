@@ -157,14 +157,22 @@ public class EzAttitudeGWController {
 			String bizSub = request.getParameter("bizSub");
 			String content = request.getParameter("content");
 			String dateType = request.getParameter("dateType");
+			String mode = request.getParameter("mode");
+			String adminId = request.getParameter("adminId");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			LOGGER.debug(startDate + "관리자 근태등록 기록@#$@(%!#*(%!#*$^%#(!$^(#$^(!#(%(#@!%(#!(%!@(%!(%");
+			ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, info.getOffSet(), info.getCompanyId(), info.getTenantId(), mode);
 			
-			ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, info.getOffSet(), info.getCompanyId(), info.getTenantId());
+			if (mode.equals("admin")) {
+				//관리자 근태등록 기록.
+				LOGGER.debug(adminId + "관리자 근태등록 기록@#$@(%!#*(%!#*$^%#(!$^(#$^(!#(%(#@!%(#!(%!@(%!(%");
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 		}
@@ -264,7 +272,8 @@ public class EzAttitudeGWController {
 			
 			//관리자에서 수정 했을 경우 테이블에 기록을 남긴다.
 			if (mode.equals("admin")) {
-				LOGGER.debug("관리자에서 수정 했을 경우 테이블에 기록을 남긴다$%*!#$%*!#$*%!*&#@%*!#$%*!#@$%*!*$%!*%*!*%*!@#%*");
+				//userId 수정한 사람 아이디
+				LOGGER.debug(userId + "관리자에서 수정 했을 경우 테이블에 기록을 남긴다$%*!#$%*!#$*%!*&#@%*!#$%*!#@$%*!*$%!*%*!*%*!@#%*");
 			}
 			
 			result.put("status", "ok");
