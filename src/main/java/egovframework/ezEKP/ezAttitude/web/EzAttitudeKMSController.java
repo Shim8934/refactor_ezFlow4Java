@@ -2072,4 +2072,81 @@ public class EzAttitudeKMSController {
 		LOGGER.debug("/ezAttitude/attitudeItemDetail ended");
 		return "/ezAttitude/attitudeItemDetail";
 	}
+	
+	/**
+	 * 관리자 수정 작성화면
+	 */
+	@RequestMapping(value = "/ezAttitude/attAdminModItem.do")
+	public String attAdminModItem(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attAdminModItem started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String date = request.getParameter("date");
+		String mode = request.getParameter("mode");
+		String attitudeId = request.getParameter("attitudeId");
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String userOffset = userInfo.getOffset().split("\\|")[1];
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() +"/attitudetypes";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId)
+				.queryParam("isuse", 1);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONArray attitudeTypeList = new JSONArray();
+		if (status.equals("ok")) {
+			attitudeTypeList = (JSONArray) resultBody.get("data");
+			
+			if (mode != null && mode.equals("mod")) {
+				url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId; // 근태상세정보 GW 호출
+				
+				builder = UriComponentsBuilder.fromHttpUrl(url)
+						.queryParam("userId", userId)
+						.queryParam("attitudeId", attitudeId);
+				
+				result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+				resultBody = (JSONObject) jp.parse(result.getBody());
+				
+				status = resultBody.get("status").toString();
+				LOGGER.debug("status : " + status);
+				
+				JSONObject attitudeVO = new JSONObject();
+				if (status.equals("ok")) {
+					attitudeVO = (JSONObject) resultBody.get("data");
+					
+					model.addAttribute("attitudeInfo", attitudeVO);
+				}
+			}
+		}
+		
+		//현재시간
+		String time = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split(" ")[1];
+		
+		model.addAttribute("userOffset", userOffset);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("attitudeTypeList", attitudeTypeList);
+		model.addAttribute("date", date);
+		model.addAttribute("time", time);
+		model.addAttribute("mode", mode);
+		
+		LOGGER.debug("/ezAttitude/attAdminModItem ended");
+		return "ezAttitude/attAdminModItem";
+	}
 }
