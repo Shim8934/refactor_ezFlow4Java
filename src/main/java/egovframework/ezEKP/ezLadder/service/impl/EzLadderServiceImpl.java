@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderOrderVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -36,6 +37,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 	
 	@Resource(name="EzLadderDAO")
 	private EzLadderDAO ezLadderDAO;
+	
+	@Resource(name = "EzOrganDAO")
+	private EzOrganDAO ezOrganDAO;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -486,6 +490,23 @@ public class EzLadderServiceImpl implements EzLadderService {
 		map.put("lang", lang);
 		List<LadderLineVO> list = ezLadderDAO.ladderGameParticipant(map);
 		
+		// 퇴사자 처리
+		for(LadderLineVO userVO : list) {
+			int count = 10000;
+			String tempID = "";
+			Map<String, Object> searchMap = new HashMap<String, Object>();
+			searchMap.put("v_CN", userVO.getUserId());
+			searchMap.put("v_TENANT_ID", ladVO.getTenant_id());
+			String temp = ezOrganDAO.getPropertyValue_S1(searchMap);
+			if(userVO.getUserId().length()>14){
+				tempID = userVO.getUserId().substring(0, 14);
+			}
+			if (temp == null && !tempID.equals("anonyAttendant")) {
+				userVO.setUserId("anonyAttendant" + count);
+				count++;
+			}
+		}
+	
 		if(lang.equals("2")) {
 			for(LadderLineVO userVO : list) {
 				userVO.setUserName(userVO.getUserName2());
