@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -78,7 +79,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void insertAttitude(String writerId, String deptId, String startDate,
 			String endDate, String region, String mobile, String bizsub, String content,
-			String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode) throws Exception {
+			String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode, String adminId) throws Exception {
 		LOGGER.debug("insertAttitude started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -147,6 +148,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("dateType", dateType);
 		
 		ezAttitudeDAO.insertAttitude(map);
+		
+		if (mode.equals("admin")) {
+			map.put("adminId", adminId);
+			ezAttitudeDAO.insertAdminAttHistory(map);
+		}
+		
 		LOGGER.debug("insertAttitude ended");
 	}
 
@@ -1665,5 +1672,33 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		
 		ezAttitudeDAO.deleteAttitudeType(map);
+	}
+
+	@Override
+	public void insertAdminAttHistory(String writerId, String deptId,
+			String startDate, String endDate, String region, String mobile,
+			String bizSub, String content, String ip, String typeId,
+			String dateType, String offset, String companyId, int tenantId,
+			String adminId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		boolean isDefaultAtti = false;
+		
+		map.put("writerId", writerId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("deptId", deptId);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("region", region);
+		map.put("mobile", mobile);
+		map.put("bizSub", bizSub);
+		map.put("content", content);
+		map.put("ipAddress", ip);
+		map.put("typeId", typeId);
+		map.put("adminId", adminId);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
+		map.put("dateType", dateType);
+		
 	}
 }

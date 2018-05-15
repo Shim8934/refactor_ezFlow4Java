@@ -23,7 +23,10 @@ public interface EzAttitudeService {
 	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, int tenantId) throws Exception;
 	
 	public void insertAttitude(String writerId, String deptId, String startDate, String endDate, String region,
-			String mobile, String bizSub, String content, String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode) throws Exception;
+			String mobile, String bizSub, String content, String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode, String adminId) throws Exception;
+	
+	public void insertAdminAttHistory(String writerId, String deptId, String startDate, String endDate, String region,
+			String mobile, String bizSub, String content, String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String adminId) throws Exception;
 	
 	public List<AttitudeVO> getAttitudeList(String pidList, String deptIdList, String yrmh, String typeId, String startDate, String endDate, String offset, int tenantId, String deptFlag) throws Exception;
 	

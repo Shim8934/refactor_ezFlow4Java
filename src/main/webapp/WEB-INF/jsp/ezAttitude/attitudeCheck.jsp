@@ -261,6 +261,7 @@
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
+	    		$("#mailBoxInfo").html("총<span style='color:#017BEC;'> " + totalCount + " </span>개");
 	    	}
 	    	
 	    	//페이지 이동 함수
@@ -369,7 +370,7 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code = 'ezAttitude.t5' /><span id="mailBoxInfo"></span></h1>
+		<h1><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
 	        	<li style="background: none;"><span style="border: none;"><b>부서선택</b></span></li>
