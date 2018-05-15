@@ -1630,4 +1630,70 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		ezAttitudeDAO.deleteAttitudeType(map);
 	}
+	
+	@Override
+	public List<AdminAttitudeVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String searchDeptId) throws Exception {
+		LOGGER.debug("getAttitudeHistoryList started");
+		
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		int limit = 0;
+		
+		if (pageNum != null && !pageNum.equals("")) {
+			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+		}
+		
+		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchUserName", searchUserName);
+		map.put("searchDeptName", searchDeptName);
+		map.put("searchDeptId", searchDeptId);
+		map.put("searchTitle", searchTitle);
+		map.put("searchAttitudeType", searchAttitudeType);
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("orderCell", orderCell);
+		map.put("orderOption", orderOption);
+		map.put("listSize", listSize);
+		map.put("offsetMin", offsetMin);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("limit", limit);
+
+		List<AdminAttitudeVO> resultList = ezAttitudeDAO.getAttitudeHistoryList(map);
+
+		LOGGER.debug("getAttitudeHistoryList ended. resultList size = " + resultList.size());
+		
+		return resultList;
+	}
+
+	@Override
+	public String getAttitudeHistoryCount(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate,
+			String searchEndDate, String searchAttitudeType,String offset, String companyId, int tenantId, String searchDeptId) throws Exception {
+		LOGGER.debug("getAttitudeHistoryCount started.");
+		
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchUserName", searchUserName);
+		map.put("searchDeptName", searchDeptName);
+		map.put("searchTitle", searchTitle);
+		map.put("searchAttitudeType", searchAttitudeType);
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
+		map.put("searchDeptId", searchDeptId);
+		map.put("offsetMin", offsetMin);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		String result = ezAttitudeDAO.getAttitudeHistoryCount(map);
+		
+		LOGGER.debug("getAttitudeHistoryCount end. result = " + result);
+		
+		return result;
+	}
 }

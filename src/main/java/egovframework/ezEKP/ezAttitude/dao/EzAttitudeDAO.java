@@ -274,4 +274,14 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void deleteAttitudeType(Map<String, Object> map) {
 		delete("ezAttitudeAdminDAO.deleteAttitudeType", map);
 	}
+
+	public List<AdminAttitudeVO> getAttitudeHistoryList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getAttitudeHistoryCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

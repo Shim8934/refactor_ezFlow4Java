@@ -137,4 +137,9 @@ public interface EzAttitudeService {
 	public int checkUseAttitudeType(String typeId, int tenantId, String companyId) throws Exception;
 
 	public void deleteAttitudeType(String typeId, int tenantId, String companyId);
+	
+	public List<AdminAttitudeVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String searchAttitudeType, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String searchDeptId) throws Exception;
+		
+	public String getAttitudeHistoryCount(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate,	String searchEndDate, String searchAttitudeType,String offset, String companyId, int tenantId, String searchDeptId) throws Exception;
+	
 }

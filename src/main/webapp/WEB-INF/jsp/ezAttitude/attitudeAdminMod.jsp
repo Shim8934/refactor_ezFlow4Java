@@ -45,7 +45,7 @@
 	                    document.getElementById("BoardEnv_ifrm").src = "/ezAttitude/attitudeAbsented.do";
 	                    break;
 	                case "BoardEnv_div3":
-	                    document.getElementById("BoardEnv_ifrm").src = "";
+	                    document.getElementById("BoardEnv_ifrm").src = "/ezAttitude/attitudeHistory.do";
 	                    break;
 	            }
 	        }
