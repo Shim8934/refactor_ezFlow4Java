@@ -36,7 +36,7 @@
 /* 				color : red; */
 			}
 			
-			#attiCalendar td[modappl='1'][typeId=A01] {
+			#attiCalendar td[modappl='1'][typeId=A01],[modappl='2'][typeId=A01],[modappl='3'][typeId=A01] {
 				cursor : pointer;
 			}
 			
@@ -44,7 +44,7 @@
 				color : black;
 			}
 			
-			#attiCalendar td[typeId=A01], #attiCalendar td[typeId=A03] {
+			#attiCalendar td[typeId=A01][modappl='0'], #attiCalendar td[typeId=A03] {
 				cursor : context-menu;
 			}
 			
@@ -168,14 +168,13 @@
 					if (deptFlag != "true") {
 						if (modappl == 0 && typeid == 'A02') {
 							attitudeModItem(this);	
-						} else if (modappl == 1) {
+						} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
 							mod_detail(attitudeid);
 						}
-						
 					} else {
 						if (modappl == 0 && typeid == 'A02') {
 							console.log(this);
-						} else if (modappl == 1){
+						} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4){
 							mod_detail(attitudeid);
 						}
 					}
@@ -423,9 +422,16 @@
 						} else if (result[i].dateType == '1') { 
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append( 
 									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + "</td></tr>"); 
-						} else { 
+						} else {
+							var iconStr = "";
+							//0과 2는 icon을 추가하지 않는다.
+							if (result[i].modAppl  == '2') {
+								iconStr = " <i class='fas fa-pencil-alt'></i>";
+							} else if (result[i].modAppl  == '3') {
+								iconStr = " <i class='fas fa-pencil-alt'></i>";
+							}
 							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + (result[i].modAppl  == '1' && result[i].typeId  == 'A01' ? "  <i class='fas fa-pencil-alt'></i>" : "") + "</td></tr>"); 
+									"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>"); 
 						} 
 					}
 					setAttitudeSquare();
@@ -453,8 +459,14 @@
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
 										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
 							} else {
+								var iconStr = "";
+								if (result[i].modAppl  == '2') {
+									iconStr = " <i class='fas fa-pencil-alt'></i>";
+								} else if (result[i].modAppl  == '3') {
+									iconStr = " <i class='fas fa-pencil-alt'></i>";
+								}
 								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append(
-										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].writerName + " : " + result[i].typeName + "</td></tr>");
+										"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].writerName + " : " + result[i].typeName + iconStr + "</td></tr>");
 							}	
 						}
 					}
@@ -860,13 +872,21 @@
 					switch(tdTypeId)
 					{
 						case "A01": case "A03": case "A06": case "A07": //출근, 퇴근, 외출, 조퇴
-						    tdClassName = "attiDefault";
+							if ($(this).attr("modAppl") == 1 || $(this).attr("modAppl") == 2) {
+								tdClassName = "attiModLate";
+							} else {
+							    tdClassName = "attiDefault";
+							}
 							break;
 						case "A04": case "A09": case "A10": //외근, 출장, 휴가
 							tdClassName = "attiOutCom";
 							break;
 						case "A02": case "A08": //지각
-							tdClassName = $(this).attr("modAppl") == 1 ? "attiModLate" : "attiLate";
+							if ($(this).attr("modAppl") == 1 || $(this).attr("modAppl") == 2) {
+								tdClassName = "attiModLate";
+							} else {
+							    tdClassName = "attiLate";
+							}
 							break;
 						default: //나머지 휴가
 							tdClassName = "attiVacation";
@@ -875,14 +895,14 @@
 					$(this).prepend(squareSpan.addClass(tdClassName));
 				});
 				
-				checkAttiModAppl();
+				checkAttiModAppl(); //근태수정신청 비허용인 경우 dblclick 제거
 			}
 			
 			function checkAttiModAppl(){
-				$('#attiCalendar tr td[typeid=A02]').each(function(){
+				$('#attiCalendar tr td[typeid=A02],[typeid=A01]').each(function(){
 					if (!attitudeModAppl) {
 						$(this).css("cursor", "context-menu");
-						$('#attiCalendar').off('dblclick', "tr td[typeid=A02]");
+						$('#attiCalendar').off('dblclick', "tr td[typeid=A02],[typeid=A01]");
 					}
 				});
 			}
@@ -933,15 +953,6 @@
 									</c:if>
 								</c:if>
 							</c:forEach>
-<%-- 						<c:if test="${deptList ne null }"> --%>
-<%-- 							<c:forEach items="${deptList}" var="dept"> --%>
-<%-- 							<c:choose> --%>
-<%-- 								<c:when test="${dept.mine ne 'yes' }"> --%>
-<%-- 									<option value="<c:out value='${dept.deptId}'/>"><c:out value='${dept.deptName}'/></option> --%>
-<%-- 								</c:when> --%>
-<%-- 							</c:choose> --%>
-<%-- 							</c:forEach> --%>
-<%-- 						</c:if> --%>
 						</select>
 					</li>
 				</c:if>
