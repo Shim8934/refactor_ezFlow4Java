@@ -170,7 +170,7 @@
 		});
 		
 		pagination.setPageChangeEventHandler(function() {
-			context.refreshList();
+			context.refreshList(true);
 		});
 		
 		// load favorite list
@@ -267,6 +267,7 @@
 
 	function loadListAsFavorite(isAsync) {
 		var searchRequirement = searchContext.getCurrentRequirement();
+		showProgress();
 		
 		$.ajax({
 			type: "post",
@@ -284,6 +285,7 @@
 				listCount: pagination.listSize()
 			},
 			success: function(result) {
+				hideProgress();
 				result = result.data;
 				
 				if (result.status == "error") {
@@ -308,9 +310,8 @@
 				
 				setMailBoxInfo(result.folderCount, result.fileCount);
 			},
-			
 			error: function(error) {
-				alert("<spring:message code='ezWebFolder.t134'/>" + error);
+				hideProgress();
 			}
 		})
 	}
@@ -321,6 +322,7 @@
 		}
 		
 		var searchRequirement = searchContext.getCurrentRequirement();
+		showProgress();
 		
 		$.ajax({
 			type: "POST",
@@ -341,6 +343,7 @@
 				"searchEndDate": searchRequirement.endDate
 			},
 			success: function(result) {
+				hideProgress();
 				result = result.data;
 				
 				if (result.status == "error") {
@@ -385,7 +388,7 @@
 				setMailBoxInfo(result.fldCnt, result.fileCnt);
 			},
 			error: function(error) {
-				alert("<spring:message code='ezWebFolder.t134'/>" + error);
+				hideProgress();
 			}
 		});
 	}
@@ -950,6 +953,10 @@
 				</tr>
 			</table>
 		</div>
+	</div>
+	
+	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
+		<img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
 	</div>
 	
 	<div id="mailPanel" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;">&nbsp;</div>
