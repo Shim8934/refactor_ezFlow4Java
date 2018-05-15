@@ -94,6 +94,8 @@ function Get_SearchAddressList() {
     xmlHTTPAddressList.onreadystatechange = Complete_Get_AddressList;
     xmlHTTPAddressList.send(xmlDom);
     try { ShowMailProgress(); } catch (e) {}
+    
+    document.getElementById("HeaderAllCheckBox").checked = false;
 }
 function MakeAddressList() {
     var XmlRows = SelectNodes(ListXML, "DATA/ROW");
@@ -453,6 +455,7 @@ function Complete_Get_AddressList() {
         }
         document.getElementById("mailBoxInfo").style.visibility = "visible";
         MakeAddressList();
+        
     }
 }
 function MakeNoDateList() {

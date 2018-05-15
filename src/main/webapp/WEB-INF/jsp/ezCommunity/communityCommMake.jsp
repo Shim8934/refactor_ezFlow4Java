@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>comm_make</title>
+		<title><spring:message code='ezCommunity.t1011' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
@@ -13,8 +13,9 @@
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-
-		<script type="text/javascript">		
+		<script type="text/javascript">
+		
+			/* 2018-05-15 홍승비 - 커뮤니티 만들기 팝업창으로 수정 */
 			function check() {
 		        var newID = "{" + GetGUID().toUpperCase() + "}";
 		        var new_subID = "{" + GetGUID().toUpperCase() + "}";
@@ -24,33 +25,25 @@
 
 		        if (document.make.clubName.value == "" || trim_Cross(document.make.clubName.value) == "") {
 		            alert("<spring:message code='ezCommunity.t2' />");
-
 	                document.make.clubName.focus();
-
 	                return;
 	            }
 
 	            if (document.make.clubName.value.length > 50) {
 	                alert("<spring:message code='ezCommunity.t3' />");
-
 	                document.make.clubName.focus();
-
 	                return;
 	            }
 
 	            if (document.make.clubName2.value.length > 50) {
 	                alert("<spring:message code='ezCommunity.t3' />");
-
 	                document.make.clubName2.focus();
-
 	                return;
 	            }
 
 	            if (document.make.intro.value.length > 2000) {
 	                alert("<spring:message code='ezCommunity.t1009' />");
-
 	                document.make.intro.focus();
-
 	                return;
 	            }
 
@@ -61,15 +54,12 @@
 	            if (selA == 0 && selB == 0 && selC == 0) {
 	                alert("<spring:message code='ezCommunity.t4' />");
 	                make.cCateA.focus();
-
 	                return;
 	            }
 
 	            if (document.make.intro.value == "") {
 	                alert("<spring:message code='ezCommunity.t1010' />");
-
 	                document.make.intro.focus();
-
 	                return;
 	            }
 
@@ -191,13 +181,17 @@
 	        
 		</script>
 	</head>
-	<body class="mainbody">
-		<h1><spring:message code='ezCommunity.t1011' /></h1>
-	    <div id="mainmenu" style="margin-bottom:10px">
+	<body class="popup">
+	    <div id="menu" style="margin-bottom:10px">
 	        <ul>
-	            <li><span id="btnDraft" onclick="javascript:check();"><spring:message code='ezCommunity.t1011' /></span></li>
-	            <li><span id="btnDraft" onclick="javascript:back();"><spring:message code='ezCommunity.t109' /></span></li>
+	            <li><span id="btnDraft" onclick="check()"><spring:message code='ezCommunity.t1011' /></span></li>
+	            <li><span id="btnDraft" onclick="window.location.reload(true)"><spring:message code='ezCommunity.t109' /></span></li>
 	        </ul>
+	    </div>
+	    <div id="close">
+	    	<ul>
+	    		<li><span onclick="window.close()"><spring:message code='ezCommunity.t21' /></span></li>
+	    	</ul>
 	    </div>
 		<form method="post" name="make" action="/ezCommunity/commMakeOk.do" enctype="multipart/form-data">
 			<input type="hidden" name="makeID" value="<c:out value='${userInfo.id }' />">
@@ -207,7 +201,7 @@
             <input type="hidden" name="sNewID">
             <input type="hidden" name="sNewSubID">
             
-	    	<table class="content" style="width:100%">
+	    	<table class="content" style="width:100%; margin-top:16px;">
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1012' /></th>
 	                <td colspan="2">
@@ -328,7 +322,8 @@
 			</table> 
 	    </form>	    
 	    <script type="text/javascript">
-            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+            selToggleList(document.getElementById("menu"), "ul", "li", "0");
+            selToggleList(document.getElementById("close"), "ul", "li", "0");
         </script>
 	</body>
 </html>

@@ -1719,13 +1719,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	@Override
-	public String setListType(String listType, String userID, int tenantID) throws Exception {
+	public String setListType(String listType, String userID, int tenantID, String companyID) throws Exception {
 		logger.debug("setListType started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("listType", listType);
 		map.put("userID",userID);
 		map.put("tenantID",tenantID);
+		map.put("companyID", companyID);
 
 		ezOrganDAO.setListType(map);
 		
@@ -1735,12 +1736,13 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getListType(String userID, int tenantID) throws Exception {
+	public String getListType(String userID, int tenantID, String companyID) throws Exception {
 		logger.debug("getListType started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		
 		String listType = ezOrganDAO.getListType(map);
 		
