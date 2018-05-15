@@ -100,6 +100,10 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public void updateFolderUseStatus(Map<String, Object> map) {
 		update("EzWebFolderDAO.updateFolderUseStatus", map);
 	}
+	
+	public void updateSubFolderUseStatus(Map<String, Object> map) {
+		update("EzWebFolderDAO.updateSubFolderUseStatus", map);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<FileVO> getAllFilesInFolder(Map<String, Object> map) {

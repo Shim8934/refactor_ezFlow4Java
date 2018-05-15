@@ -257,6 +257,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folder.getFolderPath());
+		map.put("folderId",   folder.getFolderId());
 		map.put("userId",     userInfo.getId());
 		map.put("tenantId",   userInfo.getTenantId());
 		map.put("timeUTC",    timeUTC);
@@ -275,8 +276,10 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		
 		//Update status for all files even in sub folders
 		ezWebFolderDAO.updateStatusAllFilesInFolder(map);
-		//Update status for all sub folders
+		//Update status for folders
 		ezWebFolderDAO.updateFolderUseStatus(map);
+		//Update status for all sub folders
+		ezWebFolderDAO.updateSubFolderUseStatus(map);
 	}
 
 	@Override
