@@ -219,7 +219,7 @@
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
 	    		result.forEach(function(vo, index) {
-	    			resultHtml += "<tr userid='" + vo.userId + "'>";
+	    			resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "' ondblclick=attitudeNewItem(this);>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
@@ -233,6 +233,24 @@
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
 	    	}
+			
+			function attitudeNewItem(t) {
+				var userid = $(t).attr("userid");
+				var date = $(t).attr("date");
+				
+				if (CrossYN()) {
+                    var OpenWin = window.open("/ezAttitude/attAdminNewItem.do?date=" + date + "&mode=new&userid=" + userid, "attitudeNewItem", GetOpenWindowfeature(672, 640));
+                    
+                    try { OpenWin.focus(); } catch (e) { }
+	            } else {
+                	rtnValue = window.showModalDialog("/ezAttitude/attAdminNewItem.do?date=" + date + "&mode=new&userid=" + userid, "",
+                        "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+	                
+	                if (typeof (rtnValue) != "undefined") {
+	                    company_change();
+	                }
+	            }
+			}
 			
 	    	//페이지 이동 함수
 	    	function goToPageByNum(pCurPage){
