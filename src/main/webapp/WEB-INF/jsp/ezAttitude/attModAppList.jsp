@@ -1218,8 +1218,9 @@
         	<li id="search"><span onClick="search_popup()">검색</span></li>
 		</c:if>
 		<c:if test="${checkAdmin != 'true' && adminFlag == 'true'}">
+			<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
 			<li>
-				<select id="writerDept_search" onchange="type_change()">
+				<select id="writerDept_search" onchange="type_change()" style="margin-top:5px;">
 					<c:if test="${selectedDeptID  == null}">
 						<option value=null selected></option>
 					</c:if>
