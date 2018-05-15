@@ -97,8 +97,8 @@
 						},
 						success : function(result) {
 							alert("<spring:message code='ezAttitude.bbhs27'/>");
-							window.opener.getAttitudeMainList();
-							window.opener.parent.frames["left"].getAttitudeList();
+							window.opener.getAttitudeCheckList();
+// 							window.opener.parent.frames["left"].getAttitudeList();
 							window.close();
 						}
 					})
@@ -110,11 +110,11 @@
 				if (CrossYN()) {
                     openWin = window.open("/ezAttitude/attAdminModItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(672, 640));
                     
-                    try { OpenWin.focus(); } catch (e) { }
+                    try { openWin.focus(); } catch (e) { }
 	            } else {
                 	openWin = window.showModalDialog("/ezAttitude/attAdminModItem.do?attitudeId=" + attitudeId + "&mode=mod", "",
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
-                	 try { OpenWin.focus(); } catch (e) { }
+                	 try { openWin.focus(); } catch (e) { }
 	            }
 				openWin.opener = window.opener;
 				window.close();
