@@ -70,7 +70,7 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid #017ddf;
+			    border: 1px solid #018bfa;
 			    background: #018bfa;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;
@@ -83,7 +83,7 @@
 			    display: inline-block;
 			    width: 11px;
 			    height: 11px;
-			    border: 1px solid #ccc31f;
+			    border: 1px solid #e9de13;
 			    background: #e9de13;
 			    overflow: hidden;
 			    margin: -2px 5px 0px 0px;
@@ -689,12 +689,12 @@
 							$('#addpopup_list tbody').children('tr').not(":first").remove();
 					    	
 					    	if (json.length == 0) {
-					    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:41px;height:0px;border:none;'></td>"));
-					    		uvobjTr.append($("<td style='width:294px; height:0px; border:none;'></td>"));
-					    		uvobjTr.append($("<td style='width:404px; height:0px; border:none;'></td>"));
+					    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:42px;height:0px;border:none;'></td>"));
+					    		uvobjTr.append($("<td style='width:261px; height:0px; border:none;'></td>"));
+					    		uvobjTr.append($("<td style='width:434px; height:0px; border:none;'></td>"));
 					    		$("#addpopup_list tbody").append(uvobjTr);
 					    		
-					    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:738px; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
+					    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:737px; border-top:none;'></td>").text("<spring:message code='ezAttitude.bbhs4'/>"));
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
 					    	
@@ -705,20 +705,22 @@
 					    			json[i].apprStatus = "반려";
 					    		}
 	
-					    		var objTr = $("<tr></tr>").append($("<td style='width:41px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + (i+1)));
-	
+					    		var objTr = $("<tr></tr>").append($("<td style='width:42px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + (i+1)));
+								
 					    		if (json[i].endDate == null) {
-					    			objTr.append($("<td style='width:280px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)));
+					    			objTr.append($("<td style='width:261px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)));
 					    		} else {
-					    			if (json[i].dateType == 4) {
-					    				objTr.append($("<td style='width:280px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,11)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,11)));
+					    			if (json[i].dateType == 3) {
+					    				objTr.append($("<td style='width:261px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(11,16)));
+					    			} else if (json[i].dateType == 4 && json[i].typeId != 'A04') {
+					    				objTr.append($("<td style='width:261px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,11)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,11)));
 					    			} else {
-						    			objTr.append($("<td style='width:280px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16)));
+						    			objTr.append($("<td style='width:261px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].startDate.substring(0,16)+ "\u00a0~\u00a0" + json[i].endDate.substring(0,16)));
 					    			}
 					    		}
 					    		
-					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,70);
-					    		objTr.append($("<td style='width:418px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(statusContent));
+					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,50);
+					    		objTr.append($("<td style='width:434px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(statusContent));
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
 						}
@@ -859,14 +861,11 @@
 					var tdClassName = "";
 					switch(tdTypeId)
 					{
-						case "A01": case "A03": case "A06": //출근, 퇴근, 외출, 조퇴
+						case "A01": case "A03": case "A06": case "A07": //출근, 퇴근, 외출, 조퇴
 						    tdClassName = "attiDefault";
 							break;
 						case "A04": case "A09": case "A10": //외근, 출장, 휴가
 							tdClassName = "attiOutCom";
-							break;
-						case "A07": //휴근
-							tdClassName = "attiWeekCom";
 							break;
 						case "A02": case "A08": //지각
 							tdClassName = $(this).attr("modAppl") == 1 ? "attiModLate" : "attiLate";
@@ -953,10 +952,10 @@
 						<option value="<c:out value='${selectedDeptID}'/>" selected><c:out value='${selectedDeptID}'/></option>
 					</select>
 				</c:if>
-				<li style="background:none;margin-left:7px;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;출근,퇴근</li>
-	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;휴가</li>
-	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #df2b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;지각,조퇴</li>
-                <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
+				<li style="background:none;margin-left:7px;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #018bfa; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;출근,퇴근</li>
+	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #35b07e; background:#35b07e; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;휴가</li>
+	            <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ff4b00; background:#ff4b00; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;지각,조퇴</li>
+                <li style="background:none;cursor:context-menu"><span style="display:inline-block; width:11px; height:11px; border:1px solid #e9de13; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;외근</li>
 			</ul>
 		</div>
 		
