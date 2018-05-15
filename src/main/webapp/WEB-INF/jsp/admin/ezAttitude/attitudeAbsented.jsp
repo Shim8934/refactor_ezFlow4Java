@@ -202,7 +202,7 @@
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
-	    			resultHtml += "<td>" + vo.startDate + "</td></tr>"
+	    			resultHtml += "<td>" + vo.startDate + "</td></tr>";
 	    		});
 	    		
 	    		if (resultHtml == "") {
