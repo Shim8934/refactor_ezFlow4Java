@@ -294,6 +294,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		if (mode.equals("admin")) {
 			map.put("attVO", attVO);
 			map.put("adminId", adminId);
+			map.put("apprDate", commonUtil.getTodayUTCTime(""));
 			ezAttitudeDAO.insertAdminAttHistory2(map);
 		}
 		LOGGER.debug("updateAttitude ended");
