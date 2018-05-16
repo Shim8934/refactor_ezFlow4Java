@@ -994,6 +994,16 @@
 			TENANT_ID = #tenant_id#
 		AND 
 			DISPLAYNAME$lang$ = #name#
+		AND 
+			DISPLAYNAME$lang$
+		NOT IN (
+			SELECT
+				DISPLAYNAME
+			FROM
+				TBL_USERMASTER_RETIRE
+			WHERE 
+				DISPLAYNAME$lang$ = #name#
+			)
 	</select>
 	
  	<insert id="EzLadderDAO.insertLadderSet" parameterClass="LadderVO">
@@ -1105,17 +1115,37 @@
 	</insert>
 	
 	<select id="EzLadderDAO.selectLadderCommentList" parameterClass="LadderCommentVO" resultClass="LadderCommentVO">
+		<![CDATA[
 		SELECT 
-			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE, TENANT_ID
+			ID, LADDERID, COMMENT, USERID, USERNAME, USERNAME2, WRITEDATE, C.TENANT_ID, U.EXTENSIONATTRIBUTE2 AS PIC
 		FROM
-			TBL_LADDER_COMMENT
+			TBL_LADDER_COMMENT C
+		LEFT JOIN(
+			SELECT
+				*
+			FROM
+				TBL_USERMASTER
+			WHERE
+				CN
+			NOT IN(
+				SELECT
+					CN
+				FROM
+					TBL_USERMASTER_RETIRE
+				)
+			) U
+		ON
+			C.TENANT_ID = U.TENANT_ID
+		AND
+			C.USERID = U.CN
 		WHERE
-			TENANT_ID = #tenant_id#
+			C.TENANT_ID = #tenant_id#
 		AND 
 			LADDERID = #ladderId# 
 		ORDER BY 
 			WRITEDATE 
 		DESC
+		]]>
 	</select>
 	
 	<insert id="EzLadderDAO.insertLadderComment" parameterClass="LadderCommentVO">
@@ -1290,11 +1320,29 @@
 	
 	<select id="EzLadderDAO.ladderGameParticipant" resultClass="LadderLineVO">
 		SELECT
-			TENANT_ID, LADDERID, ID AS LINEID, USERID, USERNAME, USERNAME2, RESULTUSERID, RESULTUSERNAME, RESULTUSERNAME2, ITEM, LADDERORDER
+			L.TENANT_ID, LADDERID, ID AS LINEID, USERID, USERNAME, USERNAME2, U.EXTENSIONATTRIBUTE2 AS PIC, RESULTUSERID, RESULTUSERNAME, RESULTUSERNAME2, ITEM, LADDERORDER
 		FROM
-			TBL_LADDER_LINE
+			TBL_LADDER_LINE L
+		LEFT JOIN (
+			SELECT
+				*
+			FROM
+				TBL_USERMASTER
+			WHERE
+				CN
+			NOT IN (
+				SELECT
+					CN
+				FROM
+					TBL_USERMASTER_RETIRE
+				)
+			) U
+		ON
+			L.TENANT_ID = U.TENANT_ID
+		AND
+			L.USERID = U.CN
 		WHERE
-			TENANT_ID = #tenantId#
+			L.TENANT_ID = #tenantId#
 		AND
 			LADDERID = #ladderId#
 		ORDER BY

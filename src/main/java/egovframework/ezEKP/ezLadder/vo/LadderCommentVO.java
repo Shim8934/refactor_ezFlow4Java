@@ -79,7 +79,7 @@ public class LadderCommentVO {
 		return pic;
 	}
 	public void setPic(String pic) {
-		this.pic = pic == null ? "" : pic;
+		this.pic = pic != null ? pic : "";
 	}
 	public String getOffset() {
 		return offset;
@@ -93,7 +93,6 @@ public class LadderCommentVO {
 	public void setLang(String lang) {
 		this.lang = lang;
 	}
-	
 	@Override
 	public String toString() {
 		return "LadderCommentVO [tenant_id=" + tenant_id + ", id=" + id

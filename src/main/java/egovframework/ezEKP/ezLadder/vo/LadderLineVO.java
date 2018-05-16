@@ -65,7 +65,7 @@ public class LadderLineVO {
 		return userId;
 	}
 	public void setUserId(String userId) {
-		this.userId = userId;
+		this.userId = userId;;
 	}
 	public String getUserName() {
 		return userName;
@@ -131,7 +131,7 @@ public class LadderLineVO {
 		return pic;
 	}
 	public void setPic(String pic) {
-		this.pic = pic == null ? "" : pic;
+		this.pic = pic != null ? pic : "";
 	}
 	
 	/** 배열 */

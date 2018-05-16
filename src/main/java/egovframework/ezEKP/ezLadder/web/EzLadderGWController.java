@@ -561,14 +561,6 @@ public class EzLadderGWController {
 			List<LadderLineVO> list = ezLadderService.getLadderLineParticipant(ladVO, mode, back);
 			List<LadderCommentVO> cmtlist = ezLadderService.selectComments(cmtVO);
 			
-			vo.setPic(ezOrganService.getPropertyValue(vo.getWriterId(), "extensionAttribute2", vo.getTenant_id()));
-			for(LadderLineVO lineVO : list) {
-				lineVO.setPic(ezOrganService.getPropertyValue(lineVO.getUserId(), "extensionAttribute2", lineVO.getTenant_id()));
-			}
-			for(LadderCommentVO commentVO : cmtlist) {
-				commentVO.setPic(ezOrganService.getPropertyValue(commentVO.getUserId(), "extensionAttribute2", commentVO.getTenant_id()));
-			}
-			
 			result.put("status", "ok");
 			result.put("code", "0");
 			result.put("ladder", vo);
