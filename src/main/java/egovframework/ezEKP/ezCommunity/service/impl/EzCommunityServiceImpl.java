@@ -1793,14 +1793,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		/* 2018-05-16 홍승비 - 등록한 로고, 썸네일 이미지 삭제 기능 추가 */
-		if(defaultLogo != null && !defaultLogo.equals("")) {
+		if (defaultLogo != null && !defaultLogo.equals("")) {
 			logoFileNameLogo = defaultLogo;
 		}
-		if(defaultThumb != null && !defaultThumb.equals("")) {
+		if (defaultThumb != null && !defaultThumb.equals("")) {
 			logoFileNameThumbnail = defaultThumb;
 		}
 		
-		if(!logoFileNameLogo.equals("") || !logoFileNameThumbnail.equals("") || !copType.equals("")) {
+		if (!logoFileNameLogo.equals("") || !logoFileNameThumbnail.equals("") || !copType.equals("")) {
 			adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, copType, code, tenantID);
 		}		
 	}
