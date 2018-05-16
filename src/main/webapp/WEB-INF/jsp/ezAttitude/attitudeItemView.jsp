@@ -42,6 +42,9 @@
 				
 				$("#attiInfoView tr td *").remove();
 				
+				//유형명
+            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
+				
 				$("#typeName").text(" " + typeName);
 				$("#writerName").text(" " + writerName);
 				$("#region").html(" " + region);
