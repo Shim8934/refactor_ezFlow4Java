@@ -12,6 +12,8 @@ public class JournalAuthorVO {
 	private String mail;
 	private String mine;
 	private String userImg;
+	/** 정렬순서값*/
+	private String extensionAttribute15;
 	
 	public String getUserImg() {
 		return userImg;
@@ -67,4 +69,11 @@ public class JournalAuthorVO {
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
 	}
+	public String getExtensionAttribute15() {
+		return extensionAttribute15;
+	}
+	public void setExtensionAttribute15(String extensionAttribute15) {
+		this.extensionAttribute15 = extensionAttribute15;
+	}
+	
 }
