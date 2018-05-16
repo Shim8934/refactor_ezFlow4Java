@@ -45,7 +45,9 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Oracle_m.xml"/>
 	<!-- 모바일 oracle -->
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezOption/EzOptionMobile_SQL_Oracle.xml"/>
-    
+    <!-- 사다리게임-->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezLadder/EzLadder_SQL_Oracle.xml"/>
+
 	<!-- 2.관리자 모듈관리 SQL쿼리 XML -->
 	
 	<!-- 게시판 관리자 -->

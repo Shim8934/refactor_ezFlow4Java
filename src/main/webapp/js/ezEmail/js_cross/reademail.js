@@ -1053,6 +1053,6 @@ function mail_link(){
 		}
 	}
 	
-	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(820, 900));
+	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(880, 900));
 
 }

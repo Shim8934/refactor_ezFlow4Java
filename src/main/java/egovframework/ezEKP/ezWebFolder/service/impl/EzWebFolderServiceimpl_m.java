@@ -1047,19 +1047,22 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("updateDate", updateDate);
 		
 		int result = ezWebFolderDAO.restoreSubFolder(map);
+		int isFail =  0;
 		
 		if (result > 0) {
 			LOGGER.debug("restoreSubFolder is success");
 		} else {
 			LOGGER.debug("restoreSubFolder is fail");
+			isFail = 1;
 		}
 		
-		return result;
+		return isFail;
 	}
 	
 	@Override
 	public int restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC, String userName1, String userName2) throws Exception {
-		int failCount = 0;
+		int failType = 0;
+		int isFail = 0;
 		
 		for (String file : fileIDList) {
 			if (!file.equals("")) {
@@ -1069,9 +1072,14 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					FolderVO folderVO = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
 					
 					if (folderVO != null && folderVO.getUseStatus().equals("Y")) {
-						failCount += restoreFile(fileVO, tenantId,  userId, timeUTC, companyId, offset, userName1, userName2);
+						isFail = restoreFile(fileVO, tenantId,  userId, timeUTC, companyId, offset, userName1, userName2);
+						
+						if (isFail == 1) {
+							failType = 2;
+						}
+					
 					} else {
-						failCount += 1;
+						failType = 4;
 					}
 				}
 			}
@@ -1086,20 +1094,26 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					int isRestored = restoreFolder(folderVO.getFolderId(), tenantId, userId, timeUTC);
 					
 					if (isRestored > 0) {
-						failCount += restoreSubFolder(folderVO.getFolderPath(), folderVO.getFolderId(), tenantId, userId, timeUTC, folderVO.getUpdateDate());
-						failCount += restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2, folderVO.getUpdateDate());
+						
+						if (isFail != 1) {
+							isFail  = restoreSubFolder(folderVO.getFolderPath(), folderVO.getFolderId(), tenantId, userId, timeUTC, folderVO.getUpdateDate());
+							isFail  = restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
+							
+						} else {
+							failType = 2;
+						}
 					}
 				} else {
-					failCount += 1;
+					failType = 4;
 				}
 			}
 		}
 		
-		return failCount;
+		return failType;
 	}
 	
 	@Override
-	public int restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2, String updateDate) throws Exception {
+	public int restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath);
@@ -1107,13 +1121,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("userId",     userId);
 		map.put("timeUTC",    timeUTC);
 		
-		if (updateDate.contains(".")) {
-			map.put("updateDate", updateDate.substring(0, updateDate.indexOf(".")));
-		} else {
-			map.put("updateDate", updateDate);
-		}
-		
-		int failCount = 0;
+		int isFail = 0;
 		List<String> searchFiles = ezWebFolderDAO.selectAllFilesInFolder(map);
 		
 		for (String file : searchFiles) {
@@ -1127,12 +1135,12 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				
 				LOGGER.debug("restoreFileInFolder is success");
 			} else {
-				failCount += 1;
+				isFail = 1;
 				LOGGER.debug("restoreFileInFolder is fail");
 			}
 		}
 		
-		return failCount;
+		return isFail;
 	}
 			
 	@Override
@@ -1287,7 +1295,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				
 				if (destFolderVO != null) {
 					moveFolder(folderVO, destFolderVO, userId, offset, tenantId, timeUTC);
-					restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2, folderVO.getUpdateDate());
+					restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
 				}
 			}
 		}
