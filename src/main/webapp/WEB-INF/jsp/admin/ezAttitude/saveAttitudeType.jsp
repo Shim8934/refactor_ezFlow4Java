@@ -22,27 +22,23 @@
 		<script type="text/javascript">
 			var companyId = "${companyId}";
 			var typeId = "${typeInfo.typeId}";
-	        var typeName = "${typeInfo.typeName}";
+	        var typeName = "<c:out value = '${typeInfo.typeName}' />";
 	        var typeName2 = "${typeInfo.typeName2}";
 			var saveMode = "";
-			
-// 	        window.onload = window_onload;
-// 	        function window_onload() {
+
 			$(function(){
 	            //수정모드일 때
 	            if(typeId != "") {
 	            	saveMode = "modify";
+	            	
 	            	//휴가유형명
-// 	            	var typeName = typeName.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-	            	typeName = typeName.replaceAll("&lt;", ">").replaceAll("&gt;", ">");
-
+	            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
 					$("#typeName").val(typeName);
 	            } else {
 	    			typeId = "<c:out value = '${typeId}' />";
 	            }
 		
-			})    
-// 	        }
+			})
 
 			function OK_Click() {
 				var typeName = $('#typeName').val();
@@ -54,10 +50,10 @@
 				}
 				
 				//태그 적용 안되게 하기
-				typeName = ReplaceText(ReplaceText(ReplaceText(typeName, "&", "&amp;"), "<", "&lt;"), ">", "&gt;");
+				typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), '"',"&quot;");
 				
 				if (typeName2) {
-					typeName2 = ReplaceText(ReplaceText(ReplaceText(typeName2, "&", "&amp;"), "<", "&lt;"), ">", "&gt;");
+					typeName2 = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&", "&amp;"), "<", "&lt;"), ">", "&gt;"), '"',"&quot;");
 				}
 				
 				$.ajax({
@@ -106,7 +102,8 @@
     				<table width="100%">
 			        	<tr class="primary">
 			          		<th><spring:message code='ezAttitude.t41' /></th>
-			          		<td><input id="typeName" type="text" style="width:100%" value="<c:out value = '${typeInfo.typeName}' />"></td>
+<%-- 			          		<td><input id="typeName" type="text" style="width:100%" value="<c:out value = '${typeInfo.typeName}' />"></td> --%>
+			          		<td><input id="typeName" type="text" style="width:100%" value=""></td>
 			        	</tr>
 			        	<tr class="secondary">
 			          		<th><spring:message code='ezAttitude.t42' /></th>
