@@ -1352,7 +1352,7 @@
 								+ feature);
 			Openwin.focus();
 		} else {
-			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId + "&isRead=" + isRead, "journalDetail",
+			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId + "&isRead=" + isRead, "",
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			Openwin.focus();
