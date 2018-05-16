@@ -79,24 +79,44 @@
 		</table>
 		<div style="vertical-align: top; height: 440px; overflow: auto; width: 100%;" id="txtlist_Layer">
 			<table style="width:100%; border: 1px solid #B6B6B6;" class="mainlist">
-				<tr>
-					<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-					<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-					<td style="width: 50%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='main.t78'/></td>
-		        </tr>
-		        <c:forEach items="${userList}" var="user">
-			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
-						<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.userName }" /></td>
-						<td><c:out value="${user.jikwi }" /></td>
-						<td><c:out value="${user.mail }" /></td>
-					</tr>
-		        </c:forEach>
+			<c:choose>
+				<c:when test="${key eq 'DEPARTMENT' }">
+					<tr>
+						<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
+						<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
+						<td style="width: 50%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='main.t78'/></td>
+			        </tr>
+			        <c:forEach items="${userList}" var="user">
+				        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
+							<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.userName }" /></td>
+							<td><c:out value="${user.jikwi }" /></td>
+							<td><c:out value="${user.mail }" /></td>
+						</tr>
+			        </c:forEach>
+		        </c:when>
+		        <c:otherwise>
+		        	<tr>
+						<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t40'/></td>
+						<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
+						<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
+						<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='main.t78'/></td>
+			        </tr>
+			        <c:forEach items="${userList}" var="user">
+				        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
+							<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.deptName }" /></td>
+							<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.userName }" /></td>
+							<td><c:out value="${user.jikwi }" /></td>
+							<td><c:out value="${user.mail }" /></td>
+						</tr>
+			        </c:forEach>
+		        </c:otherwise>
+			</c:choose>
 		    </table>
 		</div>
 		<div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 100%;" id="DeptUserImgList">
 			<c:forEach items="${userList}" var="user">
 				<table class="organwrap" cellspacing="0" cellpadding="0" style="margin-top: 5px; margin-left: auto; margin-right: auto;">
-			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
+			        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
 						<td class="pictd"><div class="pic">
 						<c:if test="${not empty user.userImg }">
 						<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${user.userImg }" width="90px" height="90px">
