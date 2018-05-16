@@ -251,7 +251,7 @@ public class EzAttitudeBHSController {
 		String userOffset = userInfo.getOffset().split("\\|")[1];
 		String isAllDept = "";
 		String authFlag = "";
-		boolean attitudeAdminCheck = true;
+		boolean attitudeAdminCheck = false;
 		
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("wa=1") != -1) {
 			attitudeAdminCheck = true;
