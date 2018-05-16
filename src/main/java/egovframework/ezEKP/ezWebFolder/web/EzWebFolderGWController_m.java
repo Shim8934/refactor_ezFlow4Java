@@ -1240,12 +1240,14 @@ public class EzWebFolderGWController_m {
 				}
 			}
 			
-			int failCount = ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId,
+			int failType = ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId,
 					userId, offset, companyId, timeUTC, userInfo.getDisplayName1(), userInfo.getDisplayName2());
 			
-			if (failCount == 0) {
+			if (failType == 0) {
 				result.put("code", 0);
-			 } else {
+			 } else if (failType == 2) {
+				 result.put("code", 2);
+			 } else if (failType == 4) {
 				 result.put("code", 4);
 			 }
 			

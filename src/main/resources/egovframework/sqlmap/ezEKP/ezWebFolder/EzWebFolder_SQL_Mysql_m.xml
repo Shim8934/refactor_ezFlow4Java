@@ -1202,7 +1202,7 @@
 		</isNotEqual>
 		<isEqual property="realColmn" compareValue="">
 			<![CDATA[
-				ORDER BY SLEVEL, TRASHCAN_EXT, UPDATE_DATE DESC
+				ORDER BY SLEVEL, UPDATE_DATE,TRASHCAN_EXT DESC
 			]]>
 		</isEqual>
 		
@@ -1339,13 +1339,11 @@
 		WHERE
 			TENANT_ID = #tenantId#
 		AND
+			USE_STATUS != 'Y' 
+		AND
 			FILE_ID = #fileId#
 		AND
 			DELETER_ID = #userId#
-		<isNotNull property="updateDate">
-		AND 
-		   	UPDATE_DATE = #updateDate#
-		</isNotNull>
 	</update>
 	
 	<update id="EzWebFolderDAO_m.restoreFolder" parameterClass="Map">
