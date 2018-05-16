@@ -476,8 +476,8 @@
 		                  	<td id="journalFavorite_content" style="display:none; width:680px;">
 	                        	<table style="width:100%">
 	                                <tr>
-	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
-                                        	<h2 class="h2_dot" style="padding-top: 2px; display: inline-block;"><spring:message code='ezJournal.t95'/></h2>
+	                                    <td style="background-color: #f3f3f3; padding: 0px 0 3px 0; background-color: #ffffff; height: 20px;">
+                                        	<h2 class="h2_dot" style="display: inline-block;"><spring:message code='ezJournal.t95'/></h2>
 		                                    <div style="float:right; margin-top: 1px;">
 		                                        <a class="imgbtn"><span onclick="applyFavorite()"><spring:message code='ezJournal.t135'/></span></a>
 		                                        <a class="imgbtn"><span onclick="modifyFavorite()"><spring:message code='ezJournal.t96'/></span></a>
