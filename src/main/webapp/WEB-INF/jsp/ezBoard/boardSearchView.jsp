@@ -864,14 +864,15 @@
 			    var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 			    feature = feature += GetOpenPosition(340,656);
 			    
-			    //추가
+		        var strItemList = "";
 			    for(var i = 0; i < boardIdList.length ; i++) {
-					var pBoardID = boardIdList[i];
-					var strItemList = ItemIdList[i];
-					
-					console.log(boardIdList[i] + ", " + ItemIdList[i]);
-					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + ItemIdList[i] + "&boardID=" + boardIdList[i] + "&mode=COPY", "", feature, "");	
+					strItemList += ItemIdList[i] + ";";
+					console.log(strItemList);
 				}
+			    
+			    window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + boardIdList[1] + "&mode=COPY", "", feature, "");	
+			    
+			    
 			    
 			}
 			function SetRead_onclick() {
@@ -928,19 +929,6 @@
 					getBoardList();
 				}
 			}
-			/* function () {
-			    var arrList = new Array();
-			    var i = 0;
-			    arrList = strListInfo.split(";");
-			    for (i = 0; i < arrList.length - 1; i++) {
-			        if (arrList[i].split(",")[1].indexOf(SSUserID) == -1) {
-			            arrList = null;
-			            return false;
-			        }
-			    }
-			    arrList = null;
-			    return true;
-			} */
 			
 			function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
@@ -956,7 +944,7 @@
 		    }
 		</script>
 </head>
-<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
+<body class="mainbody" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	<h1><spring:message code="ezBoard.khj1" /></h1>
 			<div id="mainmenu">
 			  <ul>

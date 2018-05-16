@@ -2571,6 +2571,7 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA17>" + "true" + "</DATA17>");
 						resultXML.append("<DATA18>" + "true" + "</DATA18>");
 						resultXML.append("<DATA19>" + "OK" + "</DATA19>");
+						resultXML.append("<DATA20>" + "true" + "</DATA20>"); //추가
 					} else if(boardGroupAdmin_FG != null && boardGroupAdmin_FG.equals("OK")) {
 						logger.debug("FG2"); //게시물그룹관리자 
 						resultXML.append("<DATA14>" + "true" + "</DATA14>");
@@ -2579,10 +2580,7 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA17>" + "true" + "</DATA17>");
 						resultXML.append("<DATA18>" + "true" + "</DATA18>");
 						resultXML.append("<DATA19>" + "OK" + "</DATA19>");
-						
-						//2018-05-16 혜정 추가
-						//List<HashMap<String, Object>> BoardGroupAdminSearchList = ezBoardService.getGroupAdminSearchBoardItemList(userInfo, boardListVO, boardVO);
-					
+						resultXML.append("<DATA20>" + "true" + "</DATA20>");
 					} else{ 
 						logger.debug("FG3");
 						resultXML.append("<DATA14>" + boardSearchList.get(j).get("BOARDADMIN_FG") + "</DATA14>");
@@ -2591,6 +2589,7 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA17>" + boardSearchList.get(j).get("REPLY_FG") + "</DATA17>");
 						resultXML.append("<DATA18>" + boardSearchList.get(j).get("DELETE_FG") + "</DATA18>");
 						resultXML.append("<DATA19>" + "NO" + "</DATA19>");
+						resultXML.append("<DATA20>" + boardSearchList.get(j).get("LISTVIEW_FG") + "</DATA20>");
 					}	
 				}
 				resultXML.append("</CELL>");

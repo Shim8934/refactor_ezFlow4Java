@@ -682,24 +682,14 @@
 	        <span onclick="boardSearch()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.khj1" /></span>
 	    	</h3>
 	    	<!-- 끝 -->
-	        <h3>
-
-	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
-	    	</h3>
-	    <c:if test="${applyFlag == 'OK'}">
-	        <h3 style="border-top:0px">
-	            <span onclick="Apprboard()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t999001" /></span>
-	        </h3>
-	    </c:if>
-
+			<h3>
 		        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 		    </h3>
 		    <c:if test="${applyFlag == 'OK'}">
 		    	<h3 style="border-top:0px">
-			        <span onclick="Apprboard()"><spring:message code="ezBoard.t999001" /> <span id="applyCount">(${applyCount})</span></span>
+			        <span onclick="Apprboard()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t999001" /></span>
 			    </h3>	
 		    </c:if>
-
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

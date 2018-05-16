@@ -1974,7 +1974,7 @@
 		</isEqual>
 		<isEqual property="v_GUHAN" compareValue="2">
 		<![CDATA[
-			  SELECT 
+			 SELECT 
   					A.BOARDID,
   					A.ITEMID,
   					A.WRITERID,
@@ -2018,7 +2018,8 @@
   			    	M.READ_FG,
                     M.WRITE_FG,
                     M.REPLY_FG,
-                    M.DELETE_FG
+                    M.DELETE_FG,
+                    M.LISTVIEW_FG
 				  FROM 
 				  	TBL_BOARD_ITEM A 
 				  LEFT OUTER JOIN 
@@ -2046,36 +2047,12 @@
 				  AND
 				  	A.BOARDID = I.BOARDID
 				  INNER JOIN
-				  	( SELECT 
-				  		BOARDID,
-				  		TENANT_ID, 
-				  		READ_FG, 
-				  		WRITE_FG, 
-				  		REPLY_FG, 
-				  		DELETE_FG, 
-				  		LISTVIEW_FG,
-				  		BOARDADMIN_FG
-				  	  FROM 
-				  	    TBL_BOARD_BOARDMANAGE
-				  	  WHERE
-				  	   ( ACCESSID = #v_pCompanyID#
-				  	     OR ACCESSID = #v_pDeptID#
-				  	     OR ACCESSID = #v_PUSERID#)
-				   ) M	    
+				    TBL_BOARD_BOARDMANAGE M	    
 				  ON 
 					A.TENANT_ID = M.TENANT_ID
 				  AND
 					A.BOARDID = M.BOARDID					
 				  WHERE 
-				  	I.BOARDGROUPID IN 
-				  	(SELECT 
-				  		BOARDID 
-				  	 FROM 
-				  	 	TBL_BOARD_BOARDMANAGE
-				  	 WHERE
-				  	 	( ACCESSID = #v_pCompanyID# AND ACCESS_ = '1' ) 
-				  	     OR ( ACCESSID = #v_pDeptID# AND ACCESS_ = '1' )
-				  	     OR ( ACCESSID = #v_PUSERID# AND ACCESS_ = '1' ))
 				  	$v_PWHEREBOARD$
 				  AND
 				  	A.TENANT_ID = #v_TENANTID#
@@ -2090,6 +2067,18 @@
 							OR 
 						A.APPRFLAG IS NULL
 					  )
+				  AND 
+				  	I.BOARDGROUPID IN
+				  (SELECT 
+				  		BOARDID
+				  	FROM
+				  		TBL_BOARD_BOARDMANAGE
+				  	WHERE
+				  		( BOARDADMIN_FG = 'true' OR ACCESS_ = '1')
+				  	AND
+				  		( ACCESSID = #v_pCompanyID#
+				  	     OR ACCESSID = #v_pDeptID#
+				  	     OR ACCESSID = #v_PUSERID#))	
 				  $v_PSUBQUERY$ 
  				  ORDER BY 
  				  	$iv_PORDERBYSUB$
