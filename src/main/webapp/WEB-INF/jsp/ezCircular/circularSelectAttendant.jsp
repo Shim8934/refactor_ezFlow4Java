@@ -920,7 +920,12 @@
 
 							var getlistview = new ListView();
 							getlistview.LoadFromID(listid);
-							var bFlag = getlistview.ExistRow("DATA2", strEmail);
+                            var bFlag = getlistview.ExistRow("DATA2", strName); //2018.05.16 (문성업) 수정  - 시작 
+							
+							if (strId == "<c:out value='${userID}' />") {
+								alert("<spring:message code='ezCircular.t149' />");
+								return;
+							} // 회람자 한 명 누른 상태에서 shift+마우스 왼클릭 하고 화살표를 누르면 회람자가 연속으로 출력되지 않거나 작성자도 출력되지 않게 수정 - 끝
 
 							if (bFlag) {
 								pAddFlag = true;
