@@ -51,7 +51,7 @@ public interface EzPMSService {
 	
 	public void addTaskLog(TaskLogListVO taskLog, int tenantId, String userId);
 	
-	public List<TaskLogListVO> getTaskLogList(Long taskId, Long groupId, Map<String, Object> map, String offset, String lang, int tenantId);
+	public List<TaskLogListVO> getTaskLogList(Long taskId, Map<String, Object> map, String offset, String lang, int tenantId) throws Exception ;
 	
 	public int getProjectListCount(ProjectInfoVO project, int tenantId, String userId, String deptId, String lang);
 	

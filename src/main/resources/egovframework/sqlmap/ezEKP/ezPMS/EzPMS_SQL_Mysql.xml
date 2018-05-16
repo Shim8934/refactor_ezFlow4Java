@@ -178,6 +178,8 @@
     	<result property="userName2"						column="USER_NAME2"					columnIndex="10"/>
     	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="11"/>
     	<result property="userDeptname2"					column="USER_DEPTNAME2"				columnIndex="12"/>
+   		<result property="logContent" 						column="LOG_CONTENT"				columnIndex="13"/>
+   		<result property="taskName" 						column="TASK_NAME"				columnIndex="14"/>
     </resultMap>
     
     <resultMap id="projectTaskTreeVO" class="ProjectTaskTreeVO">
@@ -403,7 +405,7 @@
 				FROM TBL_PMS_GROUP
 				WHERE
 					PROJECT_ID = #project_Id#
-						AND
+				AND
 					DEL_STATUS = 0
 			]]>
 	</select>
@@ -1636,4 +1638,57 @@
 			#userDeptname#,		#userDeptname2#,	#logContent#,	#userId#
 		)
 	</insert>
+	
+	<select id="EzPMSDAO.getTaskLogListCount" parameterClass="map" resultClass="Integer">
+		SELECT	
+			COUNT(LOG_ID)
+		FROM
+			TBL_PMS_LOG
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzPMSDAO.getTaskLogList" parameterClass="map" resultMap="ProjectTaskLogListVO">
+		SELECT 
+			A.LOG_ID AS LOG_ID,
+			A.TENANT_ID AS TENANT_ID,
+			A.PROJECT_ID AS PROJECT_ID,
+			B.PROJECT_NAME AS TASK_NAME,
+			A.GROUP_ID AS GROUP_ID,
+			A.TASK_ID AS TASK_ID,
+			DATE_ADD(DATE_FORMAT(LOG_DATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as LOG_DATE,
+			A.LOG_STATUS AS LOG_STATUS,
+			A.USER_ID AS USER_ID,
+			A.USER_NAME AS USER_NAME,
+			A.USER_NAME2 AS USER_NAME2,
+			A.USER_DEPTNAME AS USER_DEPTNAME,
+			A.USER_DEPTNAME2 AS USER_DEPTNAME2,
+			A.LOG_CONTENT AS LOG_CONTENT
+		FROM
+			TBL_PMS_LOG A
+		<isEqual property="groupId" compareValue="0">
+			<isEqual property="taskId" compareValue="0">
+				JOIN	
+					TBL_PMS_PROJECT B
+				ON
+					A.PROJECT_ID = B.PROJECT_ID
+			</isEqual>
+		</isEqual>
+		WHERE
+			A.PROJECT_ID = #projectId#
+		AND
+			A.TENANT_ID = #tenantId#
+		<isNotEqual property="orderWhat" compareValue="init">
+		ORDER BY	
+			$orderWhat$ $orderHow$
+		</isNotEqual>
+		<isEqual property="orderWhat" compareValue="init">
+		ORDER BY 
+			LOG_ID DESC
+		</isEqual>
+		limit 
+			#startCount#, #listNumber# 
+	</select>
 </sqlMap>

@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
+import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -262,6 +263,15 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void addTaskLog(Map<String, Object> map) {
 		insert ("EzPMSDAO.addTaskLog", map);
 		
+	}
+
+	public int getTaskLogListCount(Map<String, Object> map) {
+		return (int) select ("EzPMSDAO.getTaskLogListCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<TaskLogListVO> getTaskLogList(Map<String, Object> map) {
+		return (List<TaskLogListVO>) list ("EzPMSDAO.getTaskLogList", map);
 	}
 	
 }

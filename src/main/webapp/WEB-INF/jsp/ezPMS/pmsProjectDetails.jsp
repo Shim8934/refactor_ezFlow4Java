@@ -61,7 +61,7 @@ $(function() {
 		var nowTabAttr = $(".tabon").attr("id");
 		changeTab(clickTabId, nowTabAttr);
 		
-		$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskLogList.do");
+		$("#FBoard_ifrm").attr("src", "/ezPMS/getTaskLogMain.do?projectId=" + projectId + "&onlyGroup=false");
 	});
 	
 	$("#1tab5").click(function(){

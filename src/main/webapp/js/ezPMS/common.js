@@ -1,39 +1,32 @@
 /**
  * 프로젝트 업무트리 가져오기
  */
-function getProjectTaskTree(containerId, projectId, onlyGroup) {
-	$.ajax({
-		type : "post",
-		dataType : "json",
-		url : "/ezPMS/projectTaskTree.do",
-		data : {
-			"projectId" : projectId, "onlyGroup" : onlyGroup
+function getProjectTaskTree(containerId, data, location) {
+	$("#"+containerId).jstree({
+		'core' : {
+			'data' : data,
+			'multiple' : false,
+			'animation' : 0,
+			'themes' : {
+				'responsive' : false,
+				//'variant' : 'small',
+				'stripes' : false
+			}
 		},
-		success : function(data) {
-			$("#"+containerId).jstree({
-				'core' : {
-					'data' : data.data,
-					'multiple' : false,
-					'animation' : 0,
-					'themes' : {
-						'responsive' : false,
-						//'variant' : 'small',
-						'stripes' : false
-					}
-				},
-				'plugins' : [ 'sort' ],
-				'sort' : function(a, b) {
-					var a1 = this.get_node(a);
-					var b1 = this.get_node(b);
-					return (a1.original.sort > b1.original.sort) ? 1 : -1;
-				}
-			})
-			.bind("loaded.jstree", function (event, data) {
-		        $(this).jstree("open_all");
-		    })
-		},
-		error : function(request, status, error) {
-			alert("code : " + request.status + "\nerror : " + error);
+		'plugins' : [ 'sort' ],
+		'sort' : function(a, b) {
+			var a1 = this.get_node(a);
+			var b1 = this.get_node(b);
+			return (a1.original.sort > b1.original.sort) ? 1 : -1;
+		}
+	})
+	.bind("loaded.jstree", function (event, data) {
+		$(this).jstree("open_all");
+		var firstNode = $(this).find(".jstree-anchor");
+		$("#" + firstNode[0].id).addClass("jstree-clicked");
+		
+		if (location == "taskLog") {
+			setContentList();
 		}
 	});
 }

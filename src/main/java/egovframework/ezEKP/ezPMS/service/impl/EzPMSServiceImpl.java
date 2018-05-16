@@ -441,11 +441,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<TaskLogListVO> getTaskLogList(Long taskId, Long groupId, Map<String, Object> map, String offset, String lang, int tenantId) {
+	public List<TaskLogListVO> getTaskLogList(Long projectId, Map<String, Object> map, String offset, String lang, int tenantId) throws Exception {
 		LOGGER.debug("[SERVICE] getTaskLogList started");
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		map.put("lang", lang);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		
+		List<TaskLogListVO> taskLogList = ezPMSDAO.getTaskLogList(map);
 		
 		LOGGER.debug("[SERVICE] getTaskLogList ended");
-		return null;
+		return taskLogList;
 	}
 
 	@Override
@@ -486,8 +492,21 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public int getTaskLogListCount(TaskLogListVO taskLog, int tenantId) {
-		// TODO Auto-generated method stub
-		return 0;
+		LOGGER.debug("[SERVICE] getTaskLogListCount started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", taskLog.getProjectId());
+		map.put("searchByContent", taskLog.getLogContent());
+		map.put("searchByStatus", taskLog.getLogStatus());
+		map.put("groupId", taskLog.getGroupId());
+		map.put("taskId", taskLog.getTaskId());
+		map.put("tenantId", tenantId);
+		
+		int taskLogListCount = ezPMSDAO.getTaskLogListCount(map);
+		
+		LOGGER.debug("taskLogListCount : " + taskLogListCount);
+		LOGGER.debug("[SERVICE] getTaskLogListCount ended.");
+		return taskLogListCount;
 	}
 
 	@Override

@@ -41,6 +41,9 @@ public class TaskLogListVO {
     //작업이력 내용
     private String logContent;
     
+    //작업이름
+    private String taskName;
+    
     public Long getLogId() {
         return logId;
     }
@@ -143,5 +146,13 @@ public class TaskLogListVO {
 
 	public void setLogContent(String logContent) {
 		this.logContent = logContent;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 }

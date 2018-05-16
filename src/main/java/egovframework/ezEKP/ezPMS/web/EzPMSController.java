@@ -127,7 +127,13 @@ public class EzPMSController {
 		}
 		
 		String url = "/rest/ezPMS/projects/userId/"+userId;
-		String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
+		
+
+			if(viewType.equals("1")) {
+				viewType = "Board";
+			} else {
+				viewType = "Memo";
+			}String countUrl = "/rest/ezPMS/projects/userId/" + userId + "/count";
 		
 		param.put("userIdType", "user");
 		param.put("projectSort", projectSort);
@@ -173,12 +179,6 @@ public class EzPMSController {
 						model.addAttribute("viewType", viewType);
 					}
 				}
-			}
-
-			if(viewType.equals("1")) {
-				viewType = "Board";
-			} else {
-				viewType = "Memo";
 			}
 			
 			model.addAttribute("listProjectStatus", listProjectStatus);
@@ -717,6 +717,41 @@ public class EzPMSController {
 	}
 	
 	/**
+	 * 작업이력 리스트 페이지 호출
+	 * @param loginCookie
+	 * @param request
+	 * @param resp
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezPMS/getTaskLogMain.do")
+	public String getTaskLogMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		LOGGER.debug("ezPMS getTaskLogMain started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String projectId = request.getParameter("projectId");
+		String onlyGroup = request.getParameter("onlyGroup");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("onlyGroup", onlyGroup);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONArray treeData = (JSONArray) resultBody.get("data");
+			model.addAttribute("data", treeData);
+		}
+		
+		model.addAttribute("projectId", request.getParameter("projectId"));
+		
+		LOGGER.debug("ezPMS getTaskLogMain ended");				
+		return "ezPMS/pmsTaskLogMain";
+	}
+	
+	/**
 	 * 작업이력 리스트
 	 * @param loginCookie
 	 * @param request
@@ -726,13 +761,60 @@ public class EzPMSController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ezPMS/getTaskLogList.do")
-	public String getTaskLogList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+	public String getTaskLogList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("ezPMS getTaskLogList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String projectId = request.getParameter("projectId");
-		
+		long projectId = Long.parseLong(param.get("projectId").toString());
+		String userId = userInfo.getId();
+		param.put("userId", userId);
+
 		String url = "/rest/ezPMS/projects/" + projectId + "/logs";
+		String countUrl = "/rest/ezPMS/projects/" + projectId + "/logs/count";
 		
+		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
+		String countStatus = countResult.get("status").toString();
+		int logListCount = 0;
+		int listNumber = Integer.parseInt(param.get("listNumber").toString());
+		int currentPage = Integer.parseInt(param.get("currentPage").toString());
+		
+		if (countStatus.equals("ok")) {
+			JSONObject countJson = (JSONObject) countResult.get("data");
+			
+			if (countJson.get("taskLogListCount").toString() != null) {
+				logListCount = Integer.parseInt(countJson.get("taskLogListCount").toString());
+				model.addAttribute("taskLogListCount", logListCount);
+				model.addAttribute("contentTitle", projectId);
+				ProjectPagination paging = new ProjectPagination(logListCount, listNumber, 10, currentPage);
+				model.addAttribute("paging", paging);
+				
+				if (logListCount != 0) {
+					//현재 페이지
+					param.put("currentPage", currentPage);
+					//한 페이지에 보여질 개수
+					param.put("listNumber", listNumber);
+					//프로젝트 총 개수
+					param.put("listCount", logListCount);
+					param.put("startCount", paging.getStartCount());
+					
+					//header 정렬 프로젝트 순서
+					if (param.get("orderWhat") == null || param.get("orderWhat").equals("")) {
+						param.put("orderWhat", "init");
+					}
+					
+					if (param.get("orderHow") == null || param.get("orderHow").equals("")) {
+						param.put("orderHow", "asc");
+					}
+					
+					JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+					String status = result.get("status").toString();
+		
+					if (status.equals("ok")) {
+						JSONArray logList = (JSONArray) result.get("data");
+						model.addAttribute("logList", logList);
+					}
+				}
+			}
+		}
 		LOGGER.debug("ezPMS getTaskLogList ended");				
 		return "ezPMS/pmsTaskLogList";
 	}

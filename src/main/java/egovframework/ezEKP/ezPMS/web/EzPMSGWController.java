@@ -709,22 +709,25 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			
-			Long taskId = Long.parseLong(request.getParameter("taskId"));
-			Long groupId = Long.parseLong(request.getParameter("groupId"));
-			
+
 			//검색을 위한 search 파라미터
 			Map<String, Object> search = new HashMap<>();
 			search.put("location", request.getParameter("location"));
+			search.put("startCount", request.getParameter("startCount"));
+			search.put("listNumber", request.getParameter("listNumber"));
+			search.put("listCount", request.getParameter("listCount"));
+			search.put("orderWhat", request.getParameter("orderWhat"));
+			search.put("orderHow", request.getParameter("orderHow"));
+			search.put("taskId", request.getParameter("taskId"));
+			search.put("groupId", request.getParameter("groupId"));
+			search.put("searchByContent", request.getParameter("searchByContent"));
+			search.put("searchByStatus", request.getParameter("searchByStatus"));
 			
-			
-			List<TaskLogListVO> taskLogList = ezPMSService.getTaskLogList(taskId, groupId, search, info.getOffSet(), lang, info.getTenantId());
-			
-			JSONObject data = new JSONObject();
+			List<TaskLogListVO> taskLogList = ezPMSService.getTaskLogList(projectId, search, info.getOffSet(), lang, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", data);
+			result.put("data", taskLogList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -821,7 +824,7 @@ public class EzPMSGWController {
 	//작업이력 리스트 개수 호출
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/logs/count", method = RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getTaskLogListCount(@PathVariable int projectId, HttpServletRequest request) throws Exception {
+	public JSONObject getTaskLogListCount(@PathVariable long projectId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/"+ projectId + "/tasks/count] started.");
 		
 		JSONObject result = new JSONObject();
@@ -831,6 +834,20 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			TaskLogListVO taskLog = new TaskLogListVO();
+			taskLog.setProjectId(projectId);
+			taskLog.setLogContent(request.getParameter("searchByContent"));
+			
+			if (!request.getParameter("searchByStatus").equals("") && request.getParameter("searchByStatus") != null) {
+				taskLog.setLogStatus(Integer.parseInt(request.getParameter("searchByStatus")));
+			}
+			
+			if (!request.getParameter("groupId").equals("") && request.getParameter("groupId") != null) {
+				taskLog.setGroupId(Long.parseLong(request.getParameter("groupId")));
+			}
+			
+			if (!request.getParameter("taskId").equals("") && request.getParameter("taskId") != null) {
+				taskLog.setGroupId(Long.parseLong(request.getParameter("taskId")));
+			}
 			
 			int taskLogListCount = ezPMSService.getTaskLogListCount(taskLog, info.getTenantId());
 			
@@ -841,6 +858,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");

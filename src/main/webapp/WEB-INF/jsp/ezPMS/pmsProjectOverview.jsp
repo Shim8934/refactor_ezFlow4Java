@@ -557,9 +557,7 @@ function updateOrderStatus() {
 </style>
 </head>
 <body>
-<div id="kanbanArea" class="overview">
-	
-</div>
+<div id="kanbanArea" class="overview"></div>
 
 <div id="iconArea" class="rightPart">
 		<div id="printReport" class="icon">출력</div>

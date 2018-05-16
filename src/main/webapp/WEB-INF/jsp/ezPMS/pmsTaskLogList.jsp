@@ -1,12 +1,181 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
+<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+<script type="text/javascript">
+var CurrentHeight = document.documentElement.clientHeight - 100;
+var contentTitle = $(".jstree-clicked").find("a").text();
+
+$(function() {
+	$("#divList").css("height", (CurrentHeight - 120) + "px");
+	$("#projectListBody").css("height", (CurrentHeight - 150) + "px");
+	
+	if (contentTitle == "") {
+		var treeItemId = $("li[role=treeitem]").attr("id");
+		contentTitle = $("#" + treeItemId + "_anchor").text();
+		setContentTitle(contentTitle, "${taskLogListCount}");
+	}
+});
+
+</script>
 </head>
 <body>
-Task Log List Open
+	<div style="width: 100%;" id="divList">
+		<div id="lvBoardList">
+			<table id="tableHeader" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowondblclick="ItemRead_onclick(this)" width="100%" border="0"
+						class="mainlist" style="overflow:hidden">
+				<thead id="BoardList_THEAD">
+					<tr id="BoardList_TH">
+						<th id="BoardList_TH_0" onclick="setListOrder(this)" order="PROJECT_NAME" style="text-align: left; overflow: hidden; white-space: nowrap; 
+							text-overflow: ellipsis; cursor: pointer; width: 20px; text-align: center" class="h5_center">상태</th>
+						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 20%;"
+							class="h5_center">작업 내용</th>
+						<th id="BoardList_TH_2" onclick="setListOrder(this)" order="PROGRESS"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 40px"
+							class="h5_center">작업 이름</th>
+						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="COMPLETE_TASK"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 30px"
+							class="h5_center">담당자</th>
+						<th id="BoardList_TH_4" onclick="setListOrder(this)" order="LATE_TASK"
+							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px"
+							class="h5_center">등록일</th>
+						</tr>
+						</thead>
+					</table>
+				</div>
+				<div id="projectListBody" multiselectable="false" useocs="false" style="overflow:auto; min-width: 469px;">
+				<table id="tableBody" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" rowondblclick="ItemRead_onclick(this)"  width="100%" border="0" class="mainlist" style="">
+						<tbody style="background-color: rgb(255, 255, 255);">
+							<c:choose>
+								<c:when test="${empty logList}">
+									<tr>
+										<td colspan="9" style="text-align : center"> 작업이력이 없습니다. </td>
+									</tr>
+								</c:when>
+							<c:otherwise>
+								<c:forEach items="${logList }" var="log">
+								<tr style="cursor: pointer;" id="${log.logId }" class="listRow" ondblclick="goProjectDetails(this)">
+									<td style="width: 20px; cursor: default; text-align: center"><c:out value="${log.logStatus }"/></td>
+									<td onclick="selectedTR(this);"
+										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 20%"><c:out
+											value="${log.logContent }" /></td>
+									<td onclick="selectedTR(this);"
+										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 40px; text-align:center;"><c:out
+											value="${log.taskName }" /></td>
+									<td onclick="selectedTR(this);"
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 30px"><c:out
+											value="${log.userName }" /></td>
+									<td onclick="selectedTR(this);"
+										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px"><div
+											name="${log.logId }" style="margin-right: 2px;"></div>&nbsp;
+										<div style="margin-top: 5px; display: inline-block;">
+											<c:out value="${log.logDate }" />
+										</div>
+									</td>
+								</tr>
+								</c:forEach>
+							</c:otherwise>
+							</c:choose>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<c:choose>
+				<c:when test="${paging.endPage>0 }">
+					<div id="tblPageRayer" style="width: 470px; margin: 6px auto;">
+					<div class="pagenavi">
+							<c:choose>
+								<c:when test="${paging.currentPage gt 1}">
+									<span onclick="goToPageByNum(1)" class="btnimg"><img
+										src="/images/sub/btn_p_prev.gif" width="16" height="16"></span>
+								</c:when>
+								<c:otherwise>
+									<span class="btnimg"><img
+										src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${paging.startPage gt 1}">
+									<span onclick="goToPageByNum(${paging.startPage-1})"
+										class="btnimg"><img src="/images/sub/btn_prev.gif"
+										width="16" height="16"></span>
+								</c:when>
+								<c:otherwise>
+									<span class="btnimg"><img
+										src="/images/sub/btn_prev01.gif" width="16" height="16"></span>
+								</c:otherwise>
+							</c:choose>
+							<span class="ptxt"
+								onclick="<c:if test="${paging.currentPage gt 1 }">goToPageByNum(${paging.currentPage-1})</c:if>"><spring:message
+									code='ezApproval.t931' /></span>
+							<c:forEach begin="0" end="${paging.endPage-paging.startPage }"
+								varStatus="status">
+								<c:choose>
+									<c:when
+										test="${paging.startPage+status.index eq  paging.currentPage}">
+										<span class="on">${paging.currentPage }</span>
+									</c:when>
+									<c:otherwise>
+										<span
+											onclick="goToPageByNum(${paging.startPage+status.index})">${paging.startPage+status.index}</span>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+							<span class="ptxt"
+								onclick="<c:if test="${paging.totalPage gt paging.currentPage }">goToPageByNum(${paging.currentPage+1})</c:if>"><spring:message
+									code='ezApproval.t932' /></span>
+							<c:choose>
+								<c:when test="${paging.totalPage gt paging.endPage }">
+									<span class="btnimg"
+										onclick="goToPageByNum(${paging.endPage+1})"><img
+										src="/images/sub/btn_next.gif" width="16" height="16"></span>
+								</c:when>
+								<c:otherwise>
+									<span class="btnimg"><img
+										src="/images/sub/btn_next01.gif" width="16" height="16"></span>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${paging.totalPage gt paging.currentPage }">
+									<span class="btnimg"
+										onclick="goToPageByNum(${paging.totalPage})"><img
+										src="/images/sub/btn_n_next.gif" width="16" height="16"></span>
+								</c:when>
+								<c:otherwise>
+									<span class="btnimg"><img
+										src="/images/sub/btn_n_next01.gif" width="16" height="16"></span>
+								</c:otherwise>
+							</c:choose>
+						</div>
+					</div>
+				</c:when>
+			<c:otherwise>
+		<div id="tblPageRayer" style="width: 470px; margin: 6px auto;">
+					<div class="pagenavi">
+						<span class="btnimg"><img
+							src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>
+						<span class="btnimg"><img
+							src="/images/sub/btn_prev01.gif" width="16" height="16"></span>
+						<span class="ptxt"> <spring:message code='ezApproval.t931' /></span> <span class="on">1</span> <span
+							class="ptxt"><spring:message code='ezApproval.t932' /></span> <span
+							class="btnimg"><img src="/images/sub/btn_next01.gif"
+								width="16" height="16"></span> <span class="btnimg"><img
+							src="/images/sub/btn_n_next01.gif" width="16" height="16"></span>
+					</div>
+				</div>
+			</c:otherwise>
+		</c:choose>
 </body>
 </html>
