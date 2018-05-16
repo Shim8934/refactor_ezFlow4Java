@@ -111,12 +111,14 @@
 	</resultMap>
 
 	<resultMap class="journalAuthorVO" id="userMap">
-		<result property="userName"			column="user_name" />
-		<result property="userId" 			column="user_id" />
-		<result property="jikwi" 			column="jikwi" />
-		<result property="mail" 			column="mail" />
-		<result property="deptName" 		column="dept_name" />
-		<result property="userImg" 			column="user_img" />
+		<result property="userName"					column="user_name" />
+		<result property="userId" 					column="user_id" />
+		<result property="jikwi" 					column="jikwi" />
+		<result property="mail" 					column="mail" />
+		<result property="deptId" 					column="dept_id" />
+		<result property="deptName" 				column="dept_name" />
+		<result property="userImg" 					column="user_img" />
+		<result property="extensionAttribute15" 	column="extensionAttribute15" />
 	</resultMap>
 
 	<resultMap class="journalAuthorVO" id="deptMap">
@@ -542,29 +544,60 @@
 
 	<!-- 해당부서의 사원리스트 -->
 	<select id="selectUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
-		select
-			DISPLAYNAME$lang$ as user_name,
-			CN as user_id,
-			TITLE$lang$ as jikwi,
-			MAIL as mail,
-			DESCRIPTION$lang$ as dept_name,
-			EXTENSIONATTRIBUTE2 as user_img
-		from 
-			tbl_usermaster
-		where
-			TENANT_ID = #tenantId#
-		and
-			PHYSICALDELIVERYOFFICENAME = #companyId#
-		<isNotEqual property="key" compareValue="DEPARTMENT">
-			and 
-				$key$ like '%'||#value#||'%'
-		</isNotEqual>
-		<isEqual property="key" compareValue="DEPARTMENT">
-			and 
-				$key$ = #value#
-		</isEqual>
-		order by 
-			lpad(nvl(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME$lang$
+		select * from 
+			(	select
+					DISPLAYNAME$lang$ as user_name,
+					CN as user_id,
+					TITLE$lang$ as jikwi,
+					MAIL as mail,
+					DEPARTMENT as dept_id,
+					DESCRIPTION$lang$ as dept_name,
+					EXTENSIONATTRIBUTE2 as user_img,
+					SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15
+				from 
+					tbl_usermaster
+				where
+					TENANT_ID = #tenantId#
+				and
+					PHYSICALDELIVERYOFFICENAME = #companyId#
+				and
+				    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE) 
+				<isNotEqual property="key" compareValue="DEPARTMENT">
+					and 
+						$key$ like '%'||#value#||'%'
+				</isNotEqual>
+				<isEqual property="key" compareValue="DEPARTMENT">
+					and 
+						$key$ = #value#
+				</isEqual>
+			union all 
+				select
+		        	A.DISPLAYNAME$lang$ as user_name,
+					A.CN as user_id,
+					B.TITLE$lang$ as jikwi,
+					A.MAIL as mail,
+					B.DEPTID as dept_id,
+					C.DISPLAYNAME$lang$ as dept_name,
+					A.EXTENSIONATTRIBUTE2 as user_img,
+					SUBSTR('0000000000', 1, 10 - LENGTH(NVL(A.EXTENSIONATTRIBUTE15, '0'))) || NVL(A.EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15
+				from
+					tbl_addjobmaster B
+				join
+					tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+				join
+					tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+				where
+					B.TENANT_ID = #tenantId#
+				<isNotEqual property="key" compareValue="DEPARTMENT">
+					and 
+						A.$key$ like '%'||#value#||'%'
+				</isNotEqual>
+				<isEqual property="key" compareValue="DEPARTMENT">
+					and 
+						B.DEPTID = #value#
+				</isEqual>
+			) AA
+		ORDER BY 8 ASC, 1 ASC
 	</select>
 
 	<!-- 양식 상세정보 -->
