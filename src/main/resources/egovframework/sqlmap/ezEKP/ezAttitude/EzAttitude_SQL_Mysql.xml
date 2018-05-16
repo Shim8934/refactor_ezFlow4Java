@@ -1331,7 +1331,8 @@
 			ORIGIN_TYPE_ID,
 			ORIGIN_TYPE_NAME,
 			ORIGIN_TYPE_NAME2,
-			ORIGIN_DATE_TYPE
+			ORIGIN_DATE_TYPE,
+			APPR_DATE
 			)
 			SELECT
 				#attVO.companyId#,
@@ -1369,7 +1370,8 @@
 				#attVO.typeId#,
 				#attVO.typeName#,
 				#attVO.typeName2#,
-				#attVO.dateType#
+				#attVO.dateType#,
+				#apprDate#
 			FROM
 				(select 
 					*
@@ -1383,6 +1385,86 @@
 					tenant_id = #tenantId#					
 				) a
 				,
+				(select 
+					*
+				from 
+					tbl_usermaster
+				where
+					cn = #attVO.writerId#
+				and
+					PHYSICALDELIVERYOFFICENAME = #attVO.companyId#
+				and
+					tenant_id = #tenantId#					
+				) b
+				,
+				(select 
+					*
+				from 
+					tbl_usermaster
+				where
+					cn = #adminId#
+				and
+					PHYSICALDELIVERYOFFICENAME = #attVO.companyId#
+				and
+					tenant_id = #tenantId#					
+				) c
+	</insert>
+	
+	<insert id="ezAttitude.insertAdminAttHistory3" parameterClass="Map">
+		INSERT INTO tbl_attitude_modappl_history(
+			COMPANY_ID,
+			TENANT_ID,
+			WRITER_ID,
+			WRITER_NAME,
+			WRITER_NAME2,
+			WRITER_TITLE,
+			WRITER_TITLE2,
+			WRITER_DEPT_ID,
+			WRITER_DEPT_NAME,
+			WRITER_DEPT_NAME2,
+			APPR_USER_ID,
+			APPR_USER_NAME,
+			APPR_USER_NAME2,
+			ATTITUDE_ID,
+			ORIGIN_STARTDATE,
+			ORIGIN_ENDDATE,
+			ORIGIN_CONTENT,
+			ORIGIN_REGION,
+			ORIGIN_MOBILE,
+			ORIGIN_BIZSUB,
+			ORIGIN_IP,
+			ORIGIN_TYPE_ID,
+			ORIGIN_TYPE_NAME,
+			ORIGIN_TYPE_NAME2,
+			ORIGIN_DATE_TYPE
+			)
+			SELECT
+				#attVO.companyId#,
+				#tenantId#,
+				#attVO.writerId#,
+				b.displayname,
+				b.displayname2,
+				b.title,
+				b.title2,
+				#attVO.deptId#,
+				b.DESCRIPTION,
+				b.DESCRIPTION2,
+				#adminId#,
+				c.displayname,
+				c.displayname2,
+				#attitudeId#,
+				#attVO.startDate#,
+				#attVO.endDate#,
+				#attVO.content#,
+				#attVO.region#,
+				#attVO.mobile#,
+				#attVO.bizSub#,
+				#attVO.ip#,
+				#attVO.typeId#,
+				#attVO.typeName#,
+				#attVO.typeName2#,
+				#attVO.dateType#
+			FROM
 				(select 
 					*
 				from 

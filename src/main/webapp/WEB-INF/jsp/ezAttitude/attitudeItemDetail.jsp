@@ -33,7 +33,7 @@
 			var endDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var font = "<c:out value='${font}'/>";
 			var authFlag = "<c:out value='${authFlag}'/>";
-			
+
 			window.onload = function () {
 				setHtml();
 			}
@@ -94,9 +94,10 @@
 					$.ajax({
 						type : "POST",
 						async : true,
-						url : "/ezAttitude/attitudeDeleteItem.do",
+						url : "/ezAttitude/adminAttiDelItem.do",
 						data : {
-							attitudeId : attitudeId
+							attitudeId : attitudeId,
+							mode : "admin"
 						},
 						success : function(result) {
 							alert("<spring:message code='ezAttitude.bbhs27'/>");
@@ -110,6 +111,7 @@
 			
 			function modifyAttitude() {
 				var openWin = null;
+				
 				if (CrossYN()) {
                     openWin = window.open("/ezAttitude/attAdminModItem.do?attitudeId=" + attitudeId + "&mode=mod", "attitudeNewItem", GetOpenWindowfeature(672, 640));
                     
@@ -119,7 +121,7 @@
                         "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
                 	 try { openWin.focus(); } catch (e) { }
 	            }
-				openWin.opener = window.opener;
+				openWin.listRefresh = window.opener.getAttitudeCheckList;
 				window.close();
 			}
 			

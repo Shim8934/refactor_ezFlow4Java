@@ -49,6 +49,7 @@
 			var holidayFlag = false;
 			var closedDay = "";
 			var holidayAttReg = true;
+			var listRefresh;
 			
 			window.onload = function () {
 				if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -306,8 +307,7 @@
 		        	},
 		        	success : function (result) {
 		        		alert("<spring:message code='ezAttitude.bbhs19'/>");
-		        		window.opener.getAttitudeCheckList();
-// 		        		window.opener.parent.frames["left"].getAttitudeList();
+		        		listRefresh();
 		        		window.close();
 		        	}
 		        });
