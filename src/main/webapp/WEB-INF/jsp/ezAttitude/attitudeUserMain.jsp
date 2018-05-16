@@ -736,7 +736,7 @@
 					    			}
 					    		}
 					    		
-					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,20);
+					    		var statusContent = $("<p></p>").html((json[i].region == "" ? "" : "근무지 : " + json[i].region + " / ")+ json[i].content).text().substring(0,45);
 					    		objTr.append($("<td style='width:60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text(statusContent));
 					    		$("#addpopup_list tbody").append(objTr);
 					    	}
