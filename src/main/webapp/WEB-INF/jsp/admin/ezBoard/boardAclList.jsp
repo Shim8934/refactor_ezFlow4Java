@@ -61,7 +61,7 @@
 		        var xmldom = createXmlDom();
 		        var strHTML = "";
 		        xmldom = loadXMLString(strXML);
-		        strHTML = "<table id='TopBoards' width=100% border=0>"
+		        strHTML = "<table id='TopBoards' width=100% border=0 style=margin-top:-1px;>"
 		        var xmldomNodes = SelectNodes(xmldom, "TREEVIEWDATA/NODE");
 		        var items = xmldomNodes.length;
 		        for (i = 0; i < xmldomNodes.length; i++) {
@@ -287,6 +287,7 @@
 		        		<MINSIZE>10</MINSIZE>
 		        		<MAXSIZE>100</MAXSIZE>
 		        		<NOWRAP>TRUE</NOWRAP>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		    	</HEADERS>
 		  	</LISTVIEWDATA>
@@ -298,8 +299,8 @@
 		        	<div class="box" style="width:320px;height:550px;overflow:auto;word-break:break-all" id="TopBoardsList"></div>
 		        </td>
 		        <td style="width:30px; text-align:center; padding:10px;">
-		            <img style="cursor:pointer; border:0px; width:16px; height:16px;" src="/images/arr_right.gif" onclick="InsertReceiver()" />
-		            <img style="cursor:pointer; border:0px; width:16px; height:16px;" src="/images/arr_left.gif" onclick="DeleteReceiver()" />
+		            <img style="cursor:pointer; border:0px; width:16px; height:16px;" src="/images/kr/cm/arr_right.gif" onclick="InsertReceiver()" />
+		            <img style="cursor:pointer; border:0px; width:16px; height:16px;" src="/images/kr/cm/arr_left.gif" onclick="DeleteReceiver()" />
 		        </td>
 		        <td style="vertical-align:top; width:100%; height:100%;">
 		            <div class="listview">
