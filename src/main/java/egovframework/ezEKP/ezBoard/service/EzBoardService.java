@@ -96,7 +96,7 @@ public interface EzBoardService {
 	
 	public BoardListVO getItemInfo(String mode, String itemID, String lang, int tenantID) throws Exception;
 	
-	public BoardListVO getCopyItem(String orgItemID, String orgBoardID, int tenantID) throws Exception;
+	public BoardListVO getCopyItem(String orgItemID, int tenantID) throws Exception;
 	
 	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID, String multiLang, int tenantID) throws Exception;
 	
