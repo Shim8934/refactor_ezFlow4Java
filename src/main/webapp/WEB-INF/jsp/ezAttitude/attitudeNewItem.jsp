@@ -59,7 +59,7 @@
 		        }
 				select_memorialDays(uselang);
 				setHoliday();
-				
+				setTypeName();
 			}
 			
 			window.onresize = function () {   	
@@ -517,6 +517,14 @@
 				} else {
 					inputCheckFlag = false;
 				}
+			}
+			
+			function setTypeName() {
+				$('#subSelectAtti option').each(function(){
+					var typeName = $(this).text();
+					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
+					$(this).text(typeName);
+				})
 			}
 		</script>
 	</head>

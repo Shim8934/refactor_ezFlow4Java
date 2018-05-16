@@ -291,7 +291,7 @@
 						if (result[i].typeId == 'A01' || result[i].typeId == 'A03' || result[i].typeId == 'A05') {
 							continue;
 						}
-						objTr = $("<tr></tr>").append($("<th style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:normal' title='" + result[i].typeName.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></th>").text(result[i].typeName));
+						objTr = $("<tr></tr>").append($("<th style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:normal' title='" + result[i].typeName.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></th>").html(result[i].typeName));
 						objTd = $("<td nowrap></td>").css({"width" : "80px", "cursor" : "pointer"})
 						.attr("id",result[i].typeId).text("0" + "<spring:message code='ezAttitude.t21'/>")
 						.attr("parentId",result[i].parentId)
@@ -796,7 +796,7 @@
 				    		}
 
 				    		var objTr = $("<tr></tr>").append($("<td style='width:5%'></td>").text("\u00a0" + (i-j+1)));
-				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").text("\u00a0" + json[i].typeName));
+				    		objTr.append($("<td style='max-width:10%; width:10%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></td>").html("\u00a0" + json[i].typeName));
 				    		if (json[i].writerName.length > 3) {
 				    			objTr.append($("<td style='max-width:10%; width:10%; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title ='" + json[i].writerName + "'></td>").text(json[i].writerName.substring(0,2) + "..."));	
 				    		} else {

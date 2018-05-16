@@ -62,6 +62,7 @@
 				select_memorialDays(uselang);
 				setHoliday();
 				checkOutCom();
+				setTypeName();
 			}
 			
 			window.onresize = function () {   	
@@ -477,6 +478,14 @@
 				}
 				editHeight += "PX";
 				$("#EdtorSize").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 55 + "PX");
+			}
+			
+			function setTypeName() {
+				$('#subSelectAtti option').each(function(){
+					var typeName = $(this).text();
+					typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
+					$(this).text(typeName);
+				})
 			}
 		</script>
 	</head>
