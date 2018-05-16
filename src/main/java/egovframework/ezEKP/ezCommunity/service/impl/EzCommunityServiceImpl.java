@@ -313,7 +313,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			response.getWriter().write("<script language='javascript'>");
 			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1029", userInfo.getLocale()) + "');");
 			/* 2018-05-16 홍승비 - 경고메세지 처리를 jsp 내부에서 보이도록 하기 위해 수정 */
-			response.getWriter().write("history.go(-history.length);");
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 			
