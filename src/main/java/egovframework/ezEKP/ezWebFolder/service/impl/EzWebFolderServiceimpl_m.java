@@ -1087,7 +1087,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					
 					if (isRestored > 0) {
 						failCount += restoreSubFolder(folderVO.getFolderPath(), folderVO.getFolderId(), tenantId, userId, timeUTC, folderVO.getUpdateDate());
-						failCount += restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
+						failCount += restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2, folderVO.getUpdateDate());
 					}
 				} else {
 					failCount += 1;
@@ -1099,12 +1099,19 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public int restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
+	public int restoreFileInFolder(String folderPath, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2, String updateDate) throws Exception {
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath);
-		map.put("tenantId", tenantId);
-		map.put("userId", userId);
-		map.put("timeUTC", timeUTC);
+		map.put("tenantId",   tenantId);
+		map.put("userId",     userId);
+		map.put("timeUTC",    timeUTC);
+		
+		if (updateDate.contains(".")) {
+			map.put("updateDate", updateDate.substring(0, updateDate.indexOf(".")));
+		} else {
+			map.put("updateDate", updateDate);
+		}
 		
 		int failCount = 0;
 		List<String> searchFiles = ezWebFolderDAO.selectAllFilesInFolder(map);
@@ -1128,10 +1135,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		return failCount;
 	}
 			
-	private String getWebFolderDirPath(int tenantId) {
-		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
-	}
-		
 	@Override
 	public List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception {
 		SearchVO searchDateInfo = createSearchDateInfo(searchInfo, offset);
@@ -1289,7 +1292,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				
 				if (destFolderVO != null) {
 					moveFolder(folderVO, destFolderVO, userId, offset, tenantId, timeUTC);
-					restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
+					restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2, folderVO.getUpdateDate());
 				}
 			}
 		}
@@ -1327,21 +1330,23 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		folderVO.setUseStatus("Y");
 		ezWebFolderAdminService.insertFolder(folderVO);
 		
-		movSubFolders(userId, destFolderVO.getFolderType(), oldPath, newPath, timeUTC, destFolderVO.getOwnerId(), levelDistance, tenantId);
+		movSubFolders(userId, destFolderVO.getFolderType(), oldPath, newPath, timeUTC, destFolderVO.getOwnerId(), levelDistance, tenantId, folderVO.getFolderId(), folderVO.getUpdateDate());
 	}
 	
 	@Override
 	public void movSubFolders(String userId, String folderType, String oldPath, String newPath, String timeUTC, String ownerId,
-			int levelDistance, int tenantId) throws Exception {
+			int levelDistance, int tenantId, String folderId, String updateDate) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("userId",        userId);
+		map.put("folderId",      folderId);
 		map.put("folderType",    folderType);
 		map.put("oldPath",       oldPath);
 		map.put("newPath",       newPath);
-		map.put("timeUTC",    timeUTC);
+		map.put("timeUTC",       timeUTC);
 		map.put("ownerId",       ownerId);
 		map.put("levelDistance", levelDistance);
 		map.put("tenantId",      tenantId);
+		map.put("updateDate",     updateDate);
 		
 		ezWebFolderDAO.moveSubFolders(map);
 	}
