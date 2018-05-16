@@ -31,6 +31,7 @@
 		    var pDocID = "${docID}";
 		    var pDeptID = "${deptID}";
 		    var pDocState = "${docState}";
+		    var pAprState = "${aprState}";
 		    var ChildDocInfo = "${childDocInfo}";
 		    var xmlhttp = createXMLHttpRequest();	
 		    var FLAG;
@@ -51,7 +52,12 @@
 		                getEndLine(tempDocID);
 		            }
 		            else if (FLAG == "APR") {
-		                getAprLine(tempDocID);
+		            	if (pAprState == "N") {
+		            		getAprLine("");
+			                return;
+		            	} else {
+			                getAprLine(tempDocID);
+		            	}
 		            }
 		            else {
 		                getAprLine("");
@@ -253,7 +259,12 @@
 		            getEndLine(tempDocID);
 		        }
 		        else if (FLAG == "APR") {
-		            getAprLine(tempDocID);
+		        	if (pAprState == "N") {
+	            		getAprLine("");
+		                return;
+	            	} else {
+		                getAprLine(tempDocID);
+	            	}
 		        }
 		        else
 		            getAprLine("");

@@ -848,7 +848,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		List<JournalVO> journalList = ezJournalDAO.selectSumJournalList(param);
 			
 		for (JournalVO journal : journalList) {
-			String journalContent = journal.getJournalContent();
+			String journalContent = journal.getJournalContent().toString();
 			Elements thisElems = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").children();
 
 			synchronized (thisElems) {
@@ -1096,13 +1096,13 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public String saveJorunalReply(String journalId, String userId, String replyContent, String replyDate, int tenantId)throws Exception {
+	public String saveJorunalReply(String journalId, String userId, String replyContent, int tenantId)throws Exception {
 		logger.debug("saveJorunalReply started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("replyContent", replyContent);
-		map.put("replyDate", replyDate);
+		map.put("replyDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantId", tenantId);
 		map.put("journalId", journalId);
 		

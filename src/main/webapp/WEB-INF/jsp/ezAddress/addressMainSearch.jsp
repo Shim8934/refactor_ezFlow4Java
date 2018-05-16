@@ -394,7 +394,7 @@
 	                    <option value="S_NAME"><spring:message code='ezAddress.t124' /></option>
 	                    <option value="S_COMPANY"><spring:message code='ezAddress.t51' /></option>
 	                    <option value="S_DEPT"><spring:message code='ezAddress.t54' /></option>
-	                    <option value="S_TITLE"><spring:message code='ezAddress.t52' /></option>
+	                    <option value="S_TITLE"><spring:message code='main.t77' /></option>
 	                    <option value="S_COMPANY_ADDR"><spring:message code='ezAddress.t295' /></option>
 	                    <option value="S_HOME_ADDR"><spring:message code='ezAddress.t296' /></option>
 	                    <option value="S_MEMO"><spring:message code='ezAddress.t259' /></option>
