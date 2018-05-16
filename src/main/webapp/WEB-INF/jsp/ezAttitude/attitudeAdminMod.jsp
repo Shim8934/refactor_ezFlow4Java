@@ -66,6 +66,21 @@
 	                }
 	                obj.className = "tabon";
 	                Tab1_SelectID = obj.id;
+	                console.log(Tab1_SelectID);
+	                if (Tab1_SelectID == "modify"){
+	                	$("absent").text("근태입력");
+	                	$("history").text("관리내역");
+	                }
+	                
+					if (Tab1_SelectID == "absent"){
+						$("modify").text("근태관리");
+                		$("history").text("근태내역");
+	                }
+	                
+					if (Tab1_SelectID == "history"){
+						$("absent").text("근태입력");
+                		$("history").text("근태내역");
+					}
 	                ChangeTab(obj);
 	            }
 	        }
@@ -92,9 +107,9 @@
 		<h1><p style="padding-left:5px">근태관리</p></h1>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
-	            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="modify">근태수정</span></p>
-	            <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="absent">근태입력</span></p>
-	            <p id="BoardEnv_sub3"><span divname="BoardEnv_div3" id="history">관리내역</span></p>
+	            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="modify" style="width:100px; text-align: center;">근태수정</span></p>
+	            <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="absent" style="width:100px; text-align: center;">근태입력</span></p>
+	            <p id="BoardEnv_sub3"><span divname="BoardEnv_div3" id="history" style="width:100px; text-align: center;">관리내역</span></p>
 	        </div>
 	    </div>
 	    <iframe id="BoardEnv_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>

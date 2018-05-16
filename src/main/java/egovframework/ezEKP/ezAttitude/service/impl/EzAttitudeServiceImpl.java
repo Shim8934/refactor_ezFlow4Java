@@ -152,6 +152,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		if (mode.equals("admin")) {
 			map.put("adminId", adminId);
+			map.put("apprDate", commonUtil.getTodayUTCTime(""));
 			ezAttitudeDAO.insertAdminAttHistory(map);
 		}
 		
@@ -315,7 +316,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			//정보 읽어와서 히스토리에 삭제라고 기록할거
 			map.put("attVO", attitudeVO);
 			map.put("adminId", userId);
-			
+			map.put("apprDate", commonUtil.getTodayUTCTime(""));
 			ezAttitudeDAO.insertAdminAttHistory3(map);
 		}
 		
