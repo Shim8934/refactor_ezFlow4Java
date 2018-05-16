@@ -200,16 +200,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String gwServerUrl             = config.getProperty("config.webFolderGwServerURL");
 		String url                     = gwServerUrl + "/rest/ezwebfolder/filemanage/file-upload";
 		
-		JSONObject checkAdminPermmision = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/trashcan-check-admin/" + userInfo.getId(), null, request, "get", null);
-		
-		if (!checkAdminPermmision.get("status").toString().equals("ok")){
-			JSONObject checkUserPermission = checkPermission(request, userInfo.getId(), "", folderId);
-			
-			if ("error".equals(checkUserPermission.get("status"))) {
-				return checkUserPermission.toString();
-			}
-		}
-		
 		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
 		requestFactory.setBufferRequestBody(false);
 		

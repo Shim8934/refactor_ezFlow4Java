@@ -1297,7 +1297,7 @@
 									TENANT_ID = #tenantId#
 					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
 			WHERE
-				f.USE_STATUS = 'T';
+				f.USE_STATUS != 'Y';
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getFolderByFolderPath"  parameterClass="Map" resultMap="trashCanVO">
@@ -1354,11 +1354,30 @@
 		WHERE
 			TENANT_ID = #tenantId#
 		AND
+			FOLDER_ID = #folderId#
+ 		AND
+			DELETER_ID = #userId#
+	</update>
+	
+	<update id="EzWebFolderDAO_m.restoreSubFolder" parameterClass="Map">
+		UPDATE
+			TBL_WEBFOLDER_FOLDER
+		SET
+			USE_STATUS = 'Y',
+			UPDATE_DATE = #timeUTC#,
+			DELETER_ID = null
+		WHERE
+			USE_STATUS = 'Y',
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			FOLDER_ID != #folderId#
+		AND
 			FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
  		AND
 			DELETER_ID = #userId#
 		AND
-			COMPANY_ID = #companyId#	
+			UPDATE_DATE = #updateDate#
 	</update>
 	
 	<select id="EzWebFolderDAO_m.getFavorites" resultMap="favoriteVO">

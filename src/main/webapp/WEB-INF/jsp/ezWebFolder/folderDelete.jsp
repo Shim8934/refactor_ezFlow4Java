@@ -33,9 +33,9 @@
 		}
 		
 		function afterDeleteSuccess() {
+			window.close();
 			parent.refreshView();
 			parent.DivPopUpHidden();
-			window.close();
 		}
 		
 		function ok_Click() {
@@ -52,7 +52,7 @@
 					var reason = data.status;
 					
 					if (reason == "ok") {
-// 						wClose();
+						wClose();
 						ReturnFunction(folderId);
 						alert("<spring:message code='ezWebFolder.t280'/>")
 					} else {

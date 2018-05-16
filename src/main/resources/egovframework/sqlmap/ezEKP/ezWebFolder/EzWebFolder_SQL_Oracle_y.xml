@@ -1323,12 +1323,12 @@
 				tbl_webfolder_file
 			set
 				UPDATE_DATE  = TO_DATE(#timeUTC#,'YYYY-MM-DD HH24:MI:SS'),
-				use_status = 'N',
+				USE_STATUS = 'N',
 				DELETER_ID = #userId#
 			where
             	TENANT_ID = #tenantId#
             and
-				use_status = 'Y',
+				USE_STATUS = 'Y'
             and	  	
 				FOLDER_ID in (             
                 select folder.folder_id
