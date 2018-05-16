@@ -1310,7 +1310,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/"+journalId+"/replies", param, request,"get",null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/" + journalId + "/replies", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		JSONArray replyList = null;
@@ -1348,19 +1348,21 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		String journalId = request.getParameter("journalId");
 		String replyContent = request.getParameter("replyContent");
+		/*
 		String replyDate=null;
 		try {
 			replyDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		*/
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("replyContent", replyContent);
-		param.put("replyDate", replyDate);
-		param.put("loginCookie", loginCookie);
+//		param.put("replyDate", replyDate);
+//		param.put("loginCookie", loginCookie);
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/" + journalId+"/replies", param, request, "post", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals/" + journalId + "/replies", param, request, "post", null);
 		String journalWriter = (String) resultBody.get("data");
 		logger.debug("saveJournalReply ended");
 		
