@@ -25,12 +25,6 @@
 	        var typeName = "<c:out value = '${typeInfo.typeName}' />";
 	        var typeName2 = "${typeInfo.typeName2}";
 			var saveMode = "";
-			
-			// String replaceAll function 선언
-			String.prototype.replaceAll = function (search, replacement) {
-				var target = this;
-				return target.split(search).join(replacement);
-			}
 
 			$(function(){
 	            //수정모드일 때
@@ -38,14 +32,13 @@
 	            	saveMode = "modify";
 	            	
 	            	//휴가유형명
-	            	typeName = typeName.replaceAll("&amp;","&").replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;","&").replaceAll("&quot;",'"');
+	            	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"');
 					$("#typeName").val(typeName);
 	            } else {
 	    			typeId = "<c:out value = '${typeId}' />";
 	            }
 		
 			})
-			
 
 			function OK_Click() {
 				var typeName = $('#typeName').val();
