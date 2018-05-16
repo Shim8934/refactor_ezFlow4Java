@@ -380,7 +380,10 @@ public class EzJournalGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
+			if (companyId == null || companyId.equals("")) {
+				companyId = info.getCompanyId();
+			}
 			
 			LOGGER.debug("companyId : " + companyId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
