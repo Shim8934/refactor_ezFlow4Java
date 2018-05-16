@@ -1157,12 +1157,19 @@
   				</tr>
 			</table>
 			<!-- 인자설정 -->
-			<table id="toggle_tbl2_1" class="popuplist"  width="100%" style="display:none; margin-top: -20px;">
+			<table id="toggle_tbl2_1" class="popuplist"  width="100%" style="display:none; margin-top: -20px; margin-bottom:5px;">
   				<tr>
     				<th style="border-bottom:0px"><spring:message code='ezPortal.t115'/></th>
     				<th style="border-bottom:0px"><spring:message code='ezPortal.t116'/></th>
     				<th style="border-bottom:0px"></th>
   				</tr>
+  				<c:if test="${paramHtml == ''}">
+  					<tr>
+  						<td colspan="3" style="text-align: center; color:#5b5a5a;">
+		    				<spring:message code='main.t00026'/>
+  						</td>
+  					</tr>
+  				</c:if>
 				${paramHtml}
 			</table>
 			<table id="toggle_tbl2_2" class="content" style="display:none">
@@ -1238,6 +1245,13 @@
 						<th width="80" ><spring:message code='ezPortal.t94'/></th>
 						<th>&nbsp;</th>
   					</tr>
+  					<c:if test="${aclList == '[]'}">
+	  					<tr>
+	  						<td colspan="5" style="text-align: center; color:#5b5a5a;">
+		    				<spring:message code='main.t00026'/>
+  							</td>
+  						</tr>
+  					</c:if>
 		  			<c:forEach items="${aclList}" var="item">
   	  					<tr>
     						<td>${item.accessID}</td>
