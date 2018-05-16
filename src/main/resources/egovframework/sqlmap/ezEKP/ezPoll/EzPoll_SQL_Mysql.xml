@@ -9,6 +9,7 @@
     <typeAlias  alias="PollUserAnswerVO"               type="egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO"/>
     <typeAlias  alias="PollQuestionStatusVO"           type="egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO"/>
     <typeAlias  alias="PollUserVO"   				   type="egovframework.ezEKP.ezPoll.vo.PollUserVO"/>
+    <typeAlias  alias="PollUsersVO"   				   type="egovframework.ezEKP.ezPoll.vo.PollUsersVO"/>
 
     <!-- question resultMap -->
     <resultMap id="pollQuestion" class="PollQuestionVO">
@@ -84,8 +85,18 @@
     	<result property="userId"             	column="user_id"                   	columnIndex="2"/>
         <result property="tenantId"         	column="tenant_id"                	columnIndex="3"/>
         <result property="userType"         	column="user_type"                	columnIndex="4"/>
-    </resultMap>  
+    </resultMap>
      
+    <resultMap id="pollUsers" class="PollUsersVO">
+    	<result property="userId"             	column="USER_ID"                   	columnIndex="1"/>
+    	<result property="userName"             column="USER_NAME"                  columnIndex="2"/>
+        <result property="userName2"         	column="USER_NAME2"                	columnIndex="3"/>
+        <result property="deptId"         		column="DEPT_ID"                	columnIndex="4"/>
+        <result property="deptName"         	column="DEPT_NAME"                	columnIndex="5"/>
+        <result property="deptName2"         	column="DEPT_NAME2"                	columnIndex="6"/>
+        <result property="userStatus"         	column="USER_STATUS"                columnIndex="7"/>
+    </resultMap>
+    
     <insert id="EzPollDAO.insertQuestion" parameterClass="Map">      	
         <selectKey keyProperty="v_temp" resultClass="Integer">
 			<![CDATA[
@@ -1115,4 +1126,91 @@
 				OPENTOALL = 1
 		]]>				
     </select>
+    
+     <select id="EzPollDAO.getQstUsers" resultMap="pollUsers">
+		<![CDATA[
+			SELECT 
+				 USER_ID,
+				 USER_NAME,
+				 USER_NAME2,
+				 DEPT_ID,
+				 DEPT_NAME,
+				 DEPT_NAME2,
+				 USER_STATUS
+			FROM 
+				TBL_VOTE_USERS
+			WHERE  
+				TENANT_ID = #tenant_id#
+			AND
+				QST_ID = #qst_id#
+		]]>				
+		<isNotEmpty property="user_id"> 
+			AND
+				USER_ID = #user_id#	
+       	</isNotEmpty>
+    </select>
+    
+    <insert id="EzPollDAO.insertQstUsers" parameterClass="Map">
+       	<![CDATA[
+            INSERT INTO TBL_VOTE_USERS(
+                TENANT_ID,		QST_ID,			USER_ID,		USER_NAME, 		USER_NAME2,
+                DEPT_ID, 		DEPT_NAME, 		DEPT_NAME2, 	USER_STATUS
+            )
+            VALUES(
+                #tenant_id#,	#qst_id#,		#user_id#,		#user_name#, 	#user_name2#,
+                #dept_id#, 		#dept_name#, 	#dept_name2#, 	#user_status#
+            )
+       	]]>
+    </insert>
+    
+    <update id="EzPollDAO.updateQstUsers" parameterClass="Map">
+   		<![CDATA[
+            UPDATE 
+           		 TBL_VOTE_USERS
+            SET 
+            	 USER_ID = #user_id#,
+				 USER_NAME = #user_name#,
+				 USER_NAME2 = #user_name2#,
+				 DEPT_ID = #dept_id#,
+				 DEPT_NAME = #dept_name#,
+				 DEPT_NAME2 = #dept_name2#,
+				 USER_STATUS  = #user_status#
+            WHERE
+       			 QST_ID = #qst_id#
+            AND
+               	 TENANT_ID = #tenant_id#
+            AND
+               	 USER_ID = #user_id#
+		]]>
+    </update>
+    
+    <delete id="EzPollDAO.deleteUsersForQst" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM
+				TBL_VOTE_USERS
+          	WHERE
+          		QST_ID = #qst_id#
+			AND
+				TENANT_ID = #tenant_id#
+		]]>
+		<isNotEmpty property="user_id"> 
+			AND
+				USER_ID = #user_id#
+		</isNotEmpty>
+   </delete>
+   
+   <update id="EzPollDAO.updateQstUsersStatus" parameterClass="Map">
+  		<![CDATA[
+           UPDATE 
+       		 	TBL_VOTE_USERS
+           SET 
+				USER_STATUS  = #user_status#
+           WHERE
+      			QST_ID = #qst_id#
+           AND
+              	TENANT_ID = #tenant_id#
+           AND
+              	USER_ID = #user_id#
+	]]>
+   </update>
 </sqlMap>
