@@ -600,7 +600,7 @@
 	            pwidth = parseInt(pwidth) / 2;
 	            pheigth = pheigth - 192;
 	            pwidth = pwidth - 260;
-	            window.open("/admin/ezBoard/boardAclList.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=655,width=700px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/admin/ezBoard/boardAclList.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=660,width=700px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 	        function UnderBoardCopy() {
 	            var pheigth = window.screen.availHeight;
