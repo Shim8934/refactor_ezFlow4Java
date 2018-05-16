@@ -532,7 +532,7 @@ public class EzWebFolderGWController_m {
 		JSONObject result = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("") || (fileListStr.equals("") && folderListStr.equals(""))) {
+		if (containsNull(serverName, userId) || (fileListStr.isEmpty() && folderListStr.isEmpty())) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -600,7 +600,7 @@ public class EzWebFolderGWController_m {
 		JSONObject data = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (userId.equals("") || serverName.equals("")) {
+		if (containsNull(userId, serverName)) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -667,7 +667,7 @@ public class EzWebFolderGWController_m {
 		JSONObject result = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("") || (fileListStr.equals("") && folderListStr.equals(""))) {
+		if (containsNull(serverName, userId) || (fileListStr.isEmpty() && folderListStr.isEmpty())) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -739,7 +739,7 @@ public class EzWebFolderGWController_m {
 		JSONObject result = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("") || (fileListStr.equals("") && folderListStr.equals(""))) {
+		if (containsNull(serverName, userId) || (fileListStr.isEmpty() && folderListStr.isEmpty())) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -872,7 +872,6 @@ public class EzWebFolderGWController_m {
 			data.put("folderCount", folderCount);
 			data.put("fileCount", fileCount);
 			data.put("listCount", listCount);
-			
 			data.put("targetList", favoriteFiles);
 			
 			result.put("status", "ok");

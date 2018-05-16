@@ -1196,10 +1196,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("searchFileType", searchInfo.getSearchFileType());
 		parameterMap.put("searchStartDate", searchDateInfo.getSearchStartDate());
 		parameterMap.put("searchEndDate", searchDateInfo.getSearchEndDate());
-		
+
 		String[] searchTargets = { searchInfo.getSearchExt(), searchInfo.getSearchFileName(), searchInfo.getSearchCreateName() };
 		boolean hasSearchKeyword = Arrays.stream(searchTargets).anyMatch(str -> !str.toString().isEmpty());
-		
+
 		if (hasSearchKeyword) {
 			parameterMap.put("isContainsSubList", "test");
 		}
@@ -1218,7 +1218,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public boolean isExistsFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception {
-
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
 		parameterMap.put("targetId", targetId);
@@ -1235,7 +1234,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public void addFavorite(String userId, String targetId, String targetType, String createDate, int tenantId) throws Exception {
-		
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
 		parameterMap.put("targetId", targetId);
@@ -1248,7 +1246,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Override
 	public int deleteFavorite(String userId, String targetId, String targetType, int tenantId) throws Exception {
-		
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("userId", userId);
 		parameterMap.put("targetId", targetId);
@@ -1260,7 +1257,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public int deleteFavoriteAnyUser(String targetId, String targetType, int tenantId) throws Exception {
-		
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("targetId", targetId);
 		parameterMap.put("targetType", targetType);
@@ -1271,7 +1267,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public int deleteFavoritesInFolder(String folderId, int tenantId) throws Exception {
-		
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("folderId", folderId);
 		parameterMap.put("tenantId", tenantId);

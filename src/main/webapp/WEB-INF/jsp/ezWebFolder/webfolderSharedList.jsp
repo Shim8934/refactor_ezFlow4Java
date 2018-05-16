@@ -21,9 +21,10 @@
 		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<!-- module -->
 		<script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
+		<script type="text/javascript" src="/js/ezWebFolder/context/buttons.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
+		<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
 		<script type="text/javascript">
@@ -125,6 +126,7 @@
 		            showAnim: 'show',
 		            showMonthAfterYear: true
 		        };
+		        
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 			
@@ -858,168 +860,9 @@
 		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
 		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 		 	}
-		 	
-			function fileDownload() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-	    		
-	    		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + selected.files.toString() + "&folderList=" + selected.folders.toString();
-				
-				AttachDownFrame.location.href = downloadUrl;
-			}
 			
-			
-			function fileUpload2() {
-				document.getElementById("file").click();
-			}
-	       
 			function refreshView() {
 				getFileList();
-			}
-	       
-	       function fileDelete() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-				
-				if (selected.folders.length > 0) {
-					alert(messages.strLang1);
-					return;
-				}
-				
-				$.ajax({
-					type: "POST",
-					url: "/ezWebFolder/checkPermission.do",
-					data: {
-						"fileList" : selected.files.toString()
-					},
-					dataType: "JSON",
-					async: true,
-					success : function(data) {
-						var result = data.resultValue;
-						
-						if (result != "ok") {
-							alert(messages.strLang13);
-						} else {
-							openLeftPanel();
-							DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
-						}
-						
-						refreshView();
-					},
-					error : function(error) {
-						alert(messages.strLang7 + error);
-					}
-				});
-			}
-			
-			function fileRename() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-				
-				if (selected.folders.length > 0) {
-					alert(messages.strLang1);
-					return;
-				}
-				
-				if (selected.files.length > 1) {
-					alert(messages.strLang6);
-					return;
-				}
-				
-				var fileId = selected.files[0];
-				
-				$.ajax({
-					type: "POST",
-					url: "/ezWebFolder/checkPermission.do",
-					data: {
-						"fileId" : fileId
-					},
-					dataType: "JSON",
-					async: true,
-					success : function(data) {
-						var result = data.resultValue;
-						
-						if (result != "ok") {
-							alert(messages.strLang13);
-						} else {
-							openLeftPanel();
-							DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
-						}
-					},
-					error : function(error) {
-						alert(messages.strLang7 + error);
-					}
-				});
-			}
-			
-			function fileMoveCopy() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-				
-				if (selected.folders.length > 0) {
-					alert(messages.strLang1);
-					return;
-				}
-				
-				openLeftPanel();
-				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString());
-			}
-			
-			function fileCopy() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-				
-				if (selected.folders.length > 0) {
-					alert(messages.strLang1);
-					return;
-				}
-				
-				openLeftPanel();
-				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString() + "&type=copy");
-			}
-			
-			function getSelectedFoldersAndFiles() {
-				var selectedRows = rowContext.getSelectedRows();
-				var selectedLength = selectedRows.length;
-				
-				if (selectedLength <= 0) {
-					alert(messages.strLang5);
-					return undefined;
-				}
-				
-				var files = [];
-				var folders = [];
-				var rowInfo;
-				
-				for (var i = 0; i < selectedLength; i++) {
-					rowInfo = rowContext.getRowInfo(selectedRows[i]);
-					
-					if (rowInfo.type === 'D') {
-						folders.push(rowInfo.id);
-					} else {
-						files.push(rowInfo.id);
-					}
-				}
-				
-				return {
-					folders : folders,
-					files : files
-				}
 			}
 	       
 			function onFileTypeChange(value) {
@@ -1072,20 +915,20 @@
 			
 			<div id="mainmenu">
 				<ul>
-					<li><a onClick="fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-					<li id="uploadBtn" style="display:none;"><a onClick="fileUpload2()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-					<li id="fileDeleteBtn" style="display:none;"><a onClick="fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
-					<li id="fileRenameBtn" style="display:none;"><a onClick="fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
-					<li id="fileMoveCopyBtn" style="display:none;"><a onClick="fileMoveCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
-					<li id="fileCopyBtn"><a onClick="fileCopy()" style="margin-top: 3px;"><span>파일복사</span></a></li>
+					<li><a onclick="buttons.fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
+					<li id="uploadBtn" style="display:none;"><a onclick="buttons.fileUpload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+					<li id="fileDeleteBtn" style="display:none;"><a onclick="buttons.fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
+					<li id="fileRenameBtn" style="display:none;"><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
+					<li id="fileMoveCopyBtn" style="display:none;"><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
+					<li id="fileCopyBtn"><a onclick="buttons.fileCopy()" style="margin-top: 3px;"><span>파일복사</span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
-					<li><a onClick="shareContext.addShareView()" style="margin-top: 3px;"><span>공유</span></a></li>
-					<li id="hideShareBtn"><a onClick="shareContext.hideShare()" style="margin-top: 3px;"><span>공유숨김</span></a></li>
-					<li id="hiddenShareListBtn"><a onClick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span>공유숨김목록</span></a></li>
+					<li><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span>공유</span></a></li>
+					<li id="hideShareBtn"><a onclick="shareContext.hideShare()" style="margin-top: 3px;"><span>공유숨김</span></a></li>
+					<li id="hiddenShareListBtn"><a onclick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span>공유숨김목록</span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
-					<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
-					<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
-					<li><a onClick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
+					<li><span onclick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
+					<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
+					<li><a onclick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
 					<li style="height: 28px;">
 						<select id="fileTypeSelect" class="select" onchange="onFileTypeChange(this.value);">

@@ -43,7 +43,6 @@ var buttons = (function() {
 		
 		fileUpload: function() {
 			document.getElementById("file").click();
-			refreshView();
 		},
 		
 		fileDelete: function() {
@@ -127,7 +126,7 @@ var buttons = (function() {
 			});
 		},
 		
-		fileMove: function() {
+		fileMoveAndCopy: function() {
 			var selected = getSelectedFoldersAndFiles();
 			
 			if (selected === undefined) {
@@ -141,6 +140,22 @@ var buttons = (function() {
 			
 			openLeftPanel();
 			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString());
+		},
+		
+		fileCopy: function() {
+			var selected = getSelectedFoldersAndFiles();
+			
+			if (selected === undefined) {
+				return;
+			}
+			
+			if (selected.folders.length > 0) {
+				alert(messages.strLang1);
+				return;
+			}
+			
+			openLeftPanel();
+			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString() + "&type=copy");
 		},
 	};
 })();
