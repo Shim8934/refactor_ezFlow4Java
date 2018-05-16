@@ -848,7 +848,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		List<JournalVO> journalList = ezJournalDAO.selectSumJournalList(param);
 			
 		for (JournalVO journal : journalList) {
-			String journalContent = journal.getJournalContent().toString();
+			String journalContent = journal.getJournalContent();
 			Elements thisElems = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").children();
 
 			synchronized (thisElems) {
@@ -884,12 +884,12 @@ public class EzJournalServiceImpl implements EzJournalService {
 			// #146bb8 rgb(0, 144, 208)
 //			formThisHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");
 //			formThisHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
-			formThisHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
+			formThisHtml.append("<p><img style='width:18px;height:18px;vertical-align:sub;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA; font-family: Malgun Gothic; font-size: 13px;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
 			formThisHtml.append(thisContent.trim() + "<p></p><p></p>");
 			
 //			formNextHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");   
 //			formNextHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
-			formNextHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
+			formNextHtml.append("<p><img style='width:18px;height:18px;vertical-align:sub;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA; font-family: Malgun Gothic; font-size: 13px;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
 			formNextHtml.append(nextContent.trim() + "<p></p><p></p>");
 		}
 		

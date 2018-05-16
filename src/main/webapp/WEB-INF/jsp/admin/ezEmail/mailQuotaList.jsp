@@ -307,7 +307,7 @@
 		  	
 		  	// 편지함 용량수정 이벤트 호출
 		  	function mod_quota(res){
-		  		var width=450, height=200;
+		  		var width=480, height=210;
 		  		var left = (screen.availWidth - width) / 2;
 		  		var top = (screen.availHeight - height) / 2;
 		  		var specs = "width=" + width;
