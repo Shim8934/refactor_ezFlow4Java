@@ -595,7 +595,7 @@
 	        var address_foldermanage_dialogArguments = new Array();
 	        function address_foldermanage() {
 	            address_foldermanage_dialogArguments[1] = address_foldermanage_Complete;
-	            var OpenWin = window.open("/ezAddress/addressFolderManage.do", "address_foldermanage", GetOpenWindowfeature(450, 500));
+	            var OpenWin = window.open("/ezAddress/addressFolderManage.do", "address_foldermanage", GetOpenWindowfeature(500, 500));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function address_foldermanage_Complete(ret) {
