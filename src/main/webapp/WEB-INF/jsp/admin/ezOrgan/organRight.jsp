@@ -959,7 +959,7 @@
 		            return;
 		        }
 		        
-		        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=450px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(450, 240));
+		        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=480px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
 		    }
 		    
 		    function mod_sign() {
