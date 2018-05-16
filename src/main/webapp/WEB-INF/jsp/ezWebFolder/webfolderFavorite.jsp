@@ -852,6 +852,7 @@
 						<option value="image"><spring:message code='ezWebFolder.t195'/></option>
 						<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
 						<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
+						<option value="unknown"><spring:message code='ezWebFolder.t311'/></option>
 					</select>
 				</li>
 				<li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
