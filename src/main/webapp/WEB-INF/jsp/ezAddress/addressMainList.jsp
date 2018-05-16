@@ -241,12 +241,12 @@
 	                    address_movecopy_dialogArguments[1] = move_address_Complete;
 	                    address_movecopy_dialogArguments[2] = "CLOSE";
 	                    address_movecopy_dialogArguments[3] = xmlDom;
-	                    address_movecopyOpenWin = window.open("/ezAddress/addressMoveCopy.do", "address_movecopy", GetOpenWindowfeature(320, 375));
+	                    address_movecopyOpenWin = window.open("/ezAddress/addressMoveCopy.do", "address_movecopy", GetOpenWindowfeature(500, 375));
 	                    try { address_movecopyOpenWin.focus(); } catch (e) { }
 	                }
 	                else {
-	                    var feature = "dialogHeight:375px; dialogWidth:320px; status:no; help:no; edge:sunken";
-	                    feature = feature + GetShowModalPosition(320, 375);
+	                    var feature = "dialogHeight:375px; dialogWidth:500px; status:no; help:no; edge:sunken";
+	                    feature = feature + GetShowModalPosition(500, 375);
 	                    var moveUrl = window.showModalDialog("/ezAddress/addressMoveCopy.do", null, feature);
 	                    if (typeof (moveUrl) == "undefined")
 	                        return;
