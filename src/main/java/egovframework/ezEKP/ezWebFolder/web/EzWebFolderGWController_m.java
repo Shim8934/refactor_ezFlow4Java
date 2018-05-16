@@ -88,7 +88,7 @@ public class EzWebFolderGWController_m {
 		JSONObject data = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("")) {
+		if (containsNull(serverName, userId)) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -179,7 +179,7 @@ public class EzWebFolderGWController_m {
 		JSONObject result = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("")) {
+		if (containsNull(serverName, userId, folderFileId, folderFileType)) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -237,7 +237,7 @@ public class EzWebFolderGWController_m {
 		JSONObject result = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("")) {
+		if (containsNull(serverName, userId, folderFileId, folderFileType)) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -317,7 +317,7 @@ public class EzWebFolderGWController_m {
 		JSONObject data = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("")) {
+		if (containsNull(serverName, userId)) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -412,7 +412,7 @@ public class EzWebFolderGWController_m {
 		JSONObject result = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("") || (deptList.equals("") && userList.equals(""))) {
+		if (containsNull(serverName, userId, folderFileId, folderFileType) || (deptList.isEmpty() && userList.isEmpty())) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
@@ -473,7 +473,7 @@ public class EzWebFolderGWController_m {
 		JSONObject result = new JSONObject();
 		
 		// 요청  파라미터 비어있을 경우 에러 리턴
-		if (serverName.equals("") || userId.equals("") || folderFileId.equals("") || folderFileType.equals("") || (deptList.equals("") && userList.equals(""))) {
+		if (containsNull(serverName, userId, folderFileId, folderFileType) || (deptList.isEmpty() && userList.isEmpty())) {
 			result.put("status", "error");
 			result.put("code", 1);
 			
