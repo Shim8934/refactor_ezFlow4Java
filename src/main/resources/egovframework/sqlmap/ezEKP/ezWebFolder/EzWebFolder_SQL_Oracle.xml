@@ -42,6 +42,11 @@
 				t.TYPE_NAME = 'zip'
 			]]>
 		</isEqual>
+		<isEqual property="fileType" compareValue="7" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME is null
+			]]>
+		</isEqual>
 		
 		<isEqual property="searchChk" compareValue="1">
 			<isNotEqual property="fileExt" compareValue="" prepend="AND">
