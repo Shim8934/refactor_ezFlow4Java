@@ -2581,7 +2581,7 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA19>" + "OK" + "</DATA19>");
 						
 						//2018-05-16 혜정 추가
-						//ezBoardService.BoardGroupAdminList(boardSearchList.get(j).get("BOARDID").toString());
+						//List<HashMap<String, Object>> BoardGroupAdminSearchList = ezBoardService.getGroupAdminSearchBoardItemList(userInfo, boardListVO, boardVO);
 					
 					} else{ 
 						logger.debug("FG3");
@@ -2597,8 +2597,6 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 			resultXML.append("</ROW>");
 		}
-		//2018-05-16  혜정 추가
-		
 		
 		resultXML.append("</ROWS>");
 		resultXML.append("</LISTVIEWDATA>");
@@ -7312,5 +7310,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		return Integer.toString(applyCount);
 	}
     
+
 }
 

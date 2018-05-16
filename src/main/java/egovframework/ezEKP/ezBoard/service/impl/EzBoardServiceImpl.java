@@ -1586,12 +1586,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
-		//혜정 수정 시작 
 		/*if (boardVO.getSubFlag().equals("Y")) {
 			map.put("v_PWHEREBOARD", " (BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
 		} else {
 			map.put("v_PWHEREBOARD", " BOARDID = '" + boardVO.getBoardId() + "' ");
 		}*/
+		//혜정 수정
 		if(userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
 			logger.debug("v_GUHAN : 1");
 			if (boardVO.getSubFlag().equals("Y")) {
@@ -1604,7 +1604,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				map.put("v_PWHEREBOARD", " BOARDID = '" + boardVO.getBoardId() + "' ");
 			}
 		}else{
-			//수정해야함
+			
 			logger.debug("v_GUHAN : 2");
 			if (boardVO.getSubFlag().equals("Y")) {
 				map.put("v_PWHEREBOARD", " (BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
@@ -1619,7 +1619,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		//혜정 수정 끝
 
 		logger.debug("getSearchBoardItemCount ended");
-		return ezBoardDAO.getSearchBoardItemCount(map); //2018-05-16 쿼리수정
+		return ezBoardDAO.getSearchBoardItemCount(map); 
 	}
 
 	@Override
