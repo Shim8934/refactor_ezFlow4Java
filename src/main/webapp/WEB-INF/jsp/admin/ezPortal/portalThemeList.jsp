@@ -35,7 +35,7 @@
 				var themeinfo_dialogArguments = new Array();
 				function newpage() {
 				    themeinfo_dialogArguments[1] = newpage_Complete;
-				    var OpenWin = window.open("/admin/ezPortal/themeInfo.do?mode=new", "ThemeInfo", GetOpenWindowfeature(550, 560));
+				    var OpenWin = window.open("/admin/ezPortal/themeInfo.do?mode=new", "ThemeInfo", GetOpenWindowfeature(550, 500));
 				    try { OpenWin.focus(); } catch (e) { }
 				}
 				
@@ -53,7 +53,7 @@
 		        function Theme_onClick(pUID) {
 		            themeinfo_dialogArguments = new Array();
 		            themeinfo_dialogArguments[1] = newpage_Complete;
-		            var OpenWin = window.open("/admin/ezPortal/themeInfo.do?mode=modify&uID=" + pUID, "ThemeInfo", GetOpenWindowfeature(550, 560));
+		            var OpenWin = window.open("/admin/ezPortal/themeInfo.do?mode=modify&uID=" + pUID, "ThemeInfo", GetOpenWindowfeature(550, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        function deleteTopMenu() {

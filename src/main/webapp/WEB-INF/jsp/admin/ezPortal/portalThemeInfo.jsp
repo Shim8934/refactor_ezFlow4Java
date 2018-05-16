@@ -349,7 +349,7 @@
                     		</tr>
                     		<tr class="secondary">
                         		<th style="width:16%"><spring:message code='ezPortal.t404'/></th>
-                        		<td style="border-bottom:1px solid #ddd;">
+                        		<td>
                         			<c:choose>
                         				<c:when test="${mode == 'new'}">
                         					<input type="text" id="Title2" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="255"/>
