@@ -162,6 +162,12 @@
 		        $("#Sdatepicker").change(function(){
 		        	checkHoliday($(this).val());
 		        })
+		        
+		        if (typeId == 'A04' && dateType == 4) {
+		        	$("#Stimepicker").css("display", "none");
+					$("#Etimepicker").css("display", "none");
+					$(alldaycheck).prop("checked",true);
+		        }
 			}
 			
 			function Editor_Complete() {
