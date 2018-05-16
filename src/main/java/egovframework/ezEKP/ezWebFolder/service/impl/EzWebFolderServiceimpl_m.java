@@ -996,10 +996,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	public int restoreFile(FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("fileId", fileVO.getFileId());
+		map.put("fileId",   fileVO.getFileId());
 		map.put("tenantId", tenantId);
-		map.put("userId", userId);
-		map.put("timeUTC", timeUTC);
+		map.put("userId",   userId);
+		map.put("timeUTC",  timeUTC);
 		
 		int isFail = 0;
 		int result = ezWebFolderDAO.restoreFile(map);
@@ -1016,14 +1016,13 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public int restoreFolder(String folderPath, int tenantId, String userId, String companyId, String timeUTC) throws Exception{
+	public int restoreFolder(String folderId, int tenantId, String userId, String timeUTC) throws Exception{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("folderPath", folderPath);
+		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
-		map.put("userId", userId);
-		map.put("companyId", companyId);
-		map.put("timeUTC", timeUTC);
+		map.put("userId",   userId);
+		map.put("timeUTC",  timeUTC);
 		
 		int result = ezWebFolderDAO.restoreFolder(map);
 		
@@ -1031,6 +1030,28 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			LOGGER.debug("restoreFolder is success");
 		} else {
 			LOGGER.debug("restoreFolder is fail");
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public int restoreSubFolder(String folderPath, String folderId, int tenantId, String userId, String timeUTC, String updateDate) throws Exception {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("folderPath", folderPath);
+		map.put("folderId",   folderId);
+		map.put("tenantId",   tenantId);
+		map.put("userId",     userId);
+		map.put("timeUTC",    timeUTC);
+		map.put("updateDate", updateDate);
+		
+		int result = ezWebFolderDAO.restoreSubFolder(map);
+		
+		if (result > 0) {
+			LOGGER.debug("restoreSubFolder is success");
+		} else {
+			LOGGER.debug("restoreSubFolder is fail");
 		}
 		
 		return result;
@@ -1062,9 +1083,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				FolderVO upperFolderVO = ezWebFolderService.getFolderByFolderId(folderVO.getFolderUpper(), offset, tenantId);
 				
 				if (upperFolderVO != null && upperFolderVO.getUseStatus().equals("Y")) {
-					int isRestored = restoreFolder(folderVO.getFolderPath(), tenantId, userId, companyId, timeUTC);
+					int isRestored = restoreFolder(folderVO.getFolderId(), tenantId, userId, timeUTC);
 					
 					if (isRestored > 0) {
+						failCount += restoreSubFolder(folderVO.getFolderPath(), folderVO.getFolderId(), tenantId, userId, timeUTC, folderVO.getUpdateDate());
 						failCount += restoreFileInFolder(folderVO.getFolderPath(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
 					}
 				} else {
@@ -1256,7 +1278,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				if (fileVO != null) {
 					moveFile (file, folderId, tenantId , timeUTC);
 					ezWebFolderService.saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
-
 				}
 			}
 		}
@@ -1350,5 +1371,5 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 		return result;
 	}
-
+	
 }
