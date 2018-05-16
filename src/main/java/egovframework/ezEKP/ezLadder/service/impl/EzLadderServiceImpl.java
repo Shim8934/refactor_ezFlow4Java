@@ -492,13 +492,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 		
 		// 퇴사자 처리
 		if(mode.equals("pre") && !back.equals("back")) {
-			for(int i=0; i<list.size(); i++) {
-				Map<String, Object> searchMap = new HashMap<String, Object>();
-				searchMap.put("v_CN", list.get(i).getUserId());
-				searchMap.put("v_TENANT_ID", ladVO.getTenant_id());
-				String temp = ezOrganDAO.getPropertyValue_S1(searchMap);
-			
-				if (temp == null) {
+			List<String> allUser = ezLadderDAO.getTblUserMaster(map);
+			for(int i=0; i<list.size(); i++) {	
+				if(!allUser.contains(list.get(i).getUserId())){
 					list.remove(i--);
 				}
 			}
