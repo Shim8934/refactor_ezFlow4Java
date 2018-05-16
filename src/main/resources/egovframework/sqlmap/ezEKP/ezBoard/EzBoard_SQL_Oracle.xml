@@ -827,8 +827,6 @@
        			TENANT_ID = #v_TENANTID#
        		AND  
        			ITEMID = #v_PORGITEMID#
-            AND 
-            	BOARDID = #v_PORGBOARDID#
 		]]>
 	</select>
 	

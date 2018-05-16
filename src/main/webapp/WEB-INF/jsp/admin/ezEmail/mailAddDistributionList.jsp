@@ -90,6 +90,8 @@
 	                xmlHTTP2.onreadystatechange = event_GetDistributionList;
 	                xmlHTTP2.send(xmlpara);
 	            }
+	            
+	            ChangeListView_onClick(getOrganListType());
 	        }
 	
 	        function MakeXMLString(pStr) {
@@ -223,10 +225,9 @@
 		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
-		        		var headerData = createXmlDom();
 		        		
-	                    headerData = loadXMLString(result);
-// 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		        		var headerData = createXmlDom();
+	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 	
 	                    if (CrossYN()) {
 	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
@@ -326,8 +327,7 @@
 		        	},
 		        	success : function(result){	
 		        		var headerData = createXmlDom();
-	                    headerData = loadXMLString(result);
-// 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 						
 	                    var xmlDom = loadXMLString(result);
 	                    if (CrossYN()) {
@@ -948,6 +948,7 @@
 	            pListType = Div;
 	            ListTypeChangeIcon();
 	            DisplayUserImageList();
+	            setOrganListType(pListType);
 	        }
 	
 	        function keyword_Clear() {
@@ -1166,7 +1167,35 @@
                 InsertReceiver(element);
             }
             
-    
+	        function setOrganListType(pListType) {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/setListType.do",
+	        		async : false,
+	        		data : {
+	        			listType : pListType
+	        		},
+	        		success : function(result) {
+	        			
+	        		}
+	        		
+	        	})
+	        }
+	        
+	        function getOrganListType() {
+	        	var organListType = "TXT";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/getListType.do",
+	        		async : false,
+	        		success : function(result) {
+	        			organListType = result;
+	        		}
+	        	})
+	        	return organListType;
+	        }
 	    </script>
 	</head>
 	<body class="popup">
@@ -1203,20 +1232,22 @@
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
 				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>
+			<div style="width : 946px;">
 	         <table class="content">
 	            <tr>
 	                <th><spring:message code='ezEmail.t710' /></th>
-	                <td>
-	                    &nbsp;<input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:99%;" value="${textName}">
+	                <td style="width:50%;">
+	                    &nbsp;<input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:98%;" value="${textName}">
 	                </td>
-                </tr>
-                <tr>
+               <!--  </tr>
+                <tr> -->
 	                <th><spring:message code='ezEmail.lhm09' /></th>
-	                <td>
-	                    &nbsp;<input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:99%;" value="${cn}">
+	                <td style="width:50%;">
+	                    &nbsp;<input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:98%;" value="${cn}">
 	                </td>
 	            </tr>
 	        </table>
+			</div>
 	        <table id="TreeViewTD" style="margin-top:5px;">
 	            <tr>
 	                <td>
@@ -1307,7 +1338,7 @@
 	                        <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezEmail.t659' /></span>
 	                    </h2>
 	                    <div class="listview">
-	                          <div id="ListViewMsgTo" style="width: 220px; Height: 477px; overflow-x: auto; overflow-y: auto;" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                          <div id="ListViewMsgTo" style="width: 220px; Height: 471px; overflow-x: auto; overflow-y: auto;" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                    </div>       
 	                </td>
 	            </tr>

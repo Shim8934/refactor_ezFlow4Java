@@ -312,7 +312,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (clubVO != null) {
 			response.getWriter().write("<script language='javascript'>");
 			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1029", userInfo.getLocale()) + "');");
-			response.getWriter().write("history.back();");			
+			/* 2018-05-16 홍승비 - 경고메세지 처리를 jsp 내부에서 보이도록 하기 위해 수정 */
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 			
@@ -377,7 +377,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		//TODO 2016-05-03 이효진 뷰에서 banner을 사용하지 않아서 파라미터로 받지 않는다.
-		//2018-04-11 홍승비 thumbnail을 로고와 분리하여 대표 이미지로 사용한다.
+		// 2018-04-11 홍승비 thumbnail을 로고와 분리하여 대표 이미지로 사용한다.
 		if (cClubThumb != null && !cClubThumb.isEmpty()) {
 			attachFile = cClubThumb.getOriginalFilename();
 			thumbFileSize = (int) cClubThumb.getSize();
@@ -488,7 +488,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (clubVO == null) {
 			response.getWriter().write("<script language='javascript'>\n");
 			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1529", userInfo.getLocale()) + egovMessageSource.getMessage("ezCommunity.t1027", userInfo.getLocale()) + "');\n");
-			response.getWriter().write("document.location.href = '/ezCommunity/commMake.do?flag=1';\n");
+			response.getWriter().write("window.close();");
+			response.getWriter().write("parent.window.close();");
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 		}
@@ -1733,15 +1734,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		String code = request.getParameter("code");
 		String copType = request.getParameter("type");
-		String defaultLogo = request.getParameter("default");
+		String defaultLogo = request.getParameter("defaultLogo");
+		String defaultThumb = request.getParameter("defaultThumb");
 		MultipartFile logoFile = request.getFile("logo");
 		MultipartFile thumbFile = request.getFile("thumb");
 		String logoFileNameLogo = "";
 		String logoFileNameThumbnail = "";
 		
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", tenantID) + commonUtil.separator;
-
-		//상단 이미지 저장
+		
+		// 상단 이미지 저장
 		if (!logoFile.isEmpty()) {
 			attachFile = logoFile.getOriginalFilename();
 			iStart = attachFile.lastIndexOf(".");
@@ -1765,7 +1767,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			file.delete();
 		}
-		//썸네일 저장
+		// 썸네일 저장
 		if (!thumbFile.isEmpty()) {
 			attachFile = thumbFile.getOriginalFilename();
 			iStart = attachFile.lastIndexOf(".");
@@ -1790,11 +1792,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			file.delete();
 		}
 		
-		if(defaultLogo != null) {
+		/* 2018-05-16 홍승비 - 등록한 로고, 썸네일 이미지 삭제 기능 추가 */
+		if (defaultLogo != null && !defaultLogo.equals("")) {
 			logoFileNameLogo = defaultLogo;
 		}
+		if (defaultThumb != null && !defaultThumb.equals("")) {
+			logoFileNameThumbnail = defaultThumb;
+		}
 		
-		if(!logoFileNameLogo.equals("") || !logoFileNameThumbnail.equals("") || !copType.equals("")) {
+		if (!logoFileNameLogo.equals("") || !logoFileNameThumbnail.equals("") || !copType.equals("")) {
 			adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, copType, code, tenantID);
 		}		
 	}

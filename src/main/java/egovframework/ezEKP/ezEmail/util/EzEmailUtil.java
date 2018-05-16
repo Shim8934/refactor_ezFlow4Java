@@ -826,6 +826,8 @@ public class EzEmailUtil {
 			if (attachedFileList != null) {
 				Map<String, String> attachedFileInfo = new HashMap<String, String>();
 				
+				filename = commonUtil.normalizeFileName(filename);
+				
 				attachedFileInfo.put("filename", filename);
 				attachedFileInfo.put("size", String.valueOf(size));
 				attachedFileInfo.put("folderPath", folderPath);
@@ -1166,6 +1168,18 @@ public class EzEmailUtil {
 			String filename = getSubject(nestedMessage);;
 			filename = (filename != null) ? filename + ".eml" : "ForwardedMessage.eml";
 						
+			if (attachedFileList != null) {
+				Map<String, String> attachedFileInfo = new HashMap<String, String>();
+				
+				attachedFileInfo.put("filename", filename);
+				attachedFileInfo.put("size", String.valueOf(size));
+				attachedFileInfo.put("folderPath", folderPath);
+				attachedFileInfo.put("uid", String.valueOf(uid));
+				attachedFileInfo.put("index", String.valueOf(bodyPartIndex));
+				
+				attachedFileList.add(attachedFileInfo);
+			}
+			
 			if (forPrint) {
 				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
