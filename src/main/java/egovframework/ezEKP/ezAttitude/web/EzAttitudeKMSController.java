@@ -2279,4 +2279,48 @@ public class EzAttitudeKMSController {
 		
 		LOGGER.debug("/ezAttitude/attAdminSave ended");
 	}
+	
+	/**
+	 * 관리자 근태 삭제
+	 */
+	@RequestMapping(value = "/ezAttitude/adminAttiDelItem.do")
+	@ResponseBody
+	public void attitudeDeleteItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeDeleteItem started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String attitudeId = request.getParameter("attitudeId");
+		String mode = request.getParameter("mode");
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId)
+				.queryParam("mode", mode);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		if (status.equals("ok")) {
+			
+		}
+		
+		LOGGER.debug("/ezAttitude/attitudeDeleteItem ended");
+	}
 }

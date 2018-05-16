@@ -301,7 +301,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public void deleteAttitude(String attitudeId, int tenantId)
+	public void deleteAttitude(String attitudeId, int tenantId, String mode, AttitudeVO attitudeVO, String userId)
 			throws Exception {
 		LOGGER.debug("deleteAttitude started");
 		
@@ -309,6 +309,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		map.put("attitudeId", attitudeId);
 		map.put("tenantId", tenantId);
+		
+		if (mode.equals("admin")) {
+			LOGGER.debug("admin history write");
+			//정보 읽어와서 히스토리에 삭제라고 기록할거
+			map.put("attVO", attitudeVO);
+			map.put("adminId", userId);
+			
+			ezAttitudeDAO.insertAdminAttHistory3(map);
+		}
 		
 		ezAttitudeDAO.deleteAttitude(map);
 		LOGGER.debug("deleteAttitude ended");
