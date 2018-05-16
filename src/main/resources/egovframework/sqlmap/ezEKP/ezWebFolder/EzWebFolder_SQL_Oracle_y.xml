@@ -114,7 +114,7 @@
     </resultMap>
         <sql id="fileListSelect">
     	<![CDATA[
-	   		SELECT 
+	   		SELECT DISTINCT
 				f.FILE_ID 	 			AS FILE_ID ,
 				f.FILE_NAME  			AS FILE_NAME	,
 				f.FILE_PATH	  			AS FILE_PATH	, 

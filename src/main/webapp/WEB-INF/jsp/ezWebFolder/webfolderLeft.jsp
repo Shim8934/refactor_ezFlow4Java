@@ -41,7 +41,6 @@
 		    
 		    function folderList(obj) {
 		    	$($element).jstree('destroy');
-		    	
 				if ( obj == 'C') {
 					$element = '#tree';
 				} else if (obj == 'D') {
@@ -53,7 +52,7 @@
 				folderType = obj;
 				$.ajax ({
 					type :"POST",
-					async: false,
+					async: true,
 					url  : "/ezWebFolder/folderList.do",
 					data : {
 							 "folderId"   : folderId
@@ -103,7 +102,7 @@
 						});
 					},
 					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134' />" + error);
+// 						alert("<spring:message code='ezWebFolder.t134' />" + error + (ssss) );
 					}
 				});
 		    }
@@ -113,6 +112,7 @@
 					url: "/ezWebFolder/getUserCapicity.do",
 					type: "POST",
 					dataType: "JSON",
+					async : true,
 					success : function(data) {
 						var result      = data.userCapacity;
 						var totalVolume = result["totalCapacity"] + "GB";
@@ -137,7 +137,7 @@
 						}
 					},
 					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134' />" + error);
+// 						alert("<spring:message code='ezWebFolder.t134' />" + error + (tttt));
 					}
 				});
 			}

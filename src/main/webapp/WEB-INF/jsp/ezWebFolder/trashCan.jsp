@@ -29,6 +29,7 @@
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 	<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/adminTable.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
 	<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
    		var lang = ${userInfo.lang};
@@ -67,7 +68,7 @@
 			return false;
 		};
 		
-		$(function() {
+		window.onload = function() {
 			tableView.setTableId("tblFileList");
 			tableView.setTableType("deletedfile");
 			tableView.setSelectedClass("bnkWebFolder2");
@@ -148,7 +149,7 @@
 				};
 				
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-		});
+		}
 	    
 	    function changeValue(value) {
 	    	   searchFileType = value;
@@ -158,6 +159,8 @@
 	    
 	    function renderFileList() {
 	    	var orderInf = tableView.getOrderInfo();
+	    	showProgress();
+	    	
 			$.ajax ({
 				type: "POST",
 				async: true,
@@ -200,9 +203,11 @@
 					makePageSelPage();
 					document.getElementById("mailBoxInfo").innerHTML = " - [ 폴더 " + "<span style='color:#017BEC;'>" 
 					+ folderCnt +" </span>"+ strLang42 +" / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>" + strLang42 + "]";
+					hideProgress();
 				},
 				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					hideProgress();
+// 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			})
 			
@@ -597,6 +602,12 @@
 		</div>
 	</div>	
 	<div id="tblPageRayer"></div>
+	
+	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
+		<img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+	</div>
+		
+	
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>

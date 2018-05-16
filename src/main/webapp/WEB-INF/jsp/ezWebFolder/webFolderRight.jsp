@@ -53,7 +53,7 @@
 			return false;
 		};
 		
-		$(function () {
+		window.onload = function() {
 			$('#upload').css('display','none');
 			getFileList(folderId);
 			
@@ -138,7 +138,7 @@
 			};
 			
 			$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-	     });
+	     }
 	    
 	    // 폴더관리
 	    function folder_Manage() {
@@ -154,10 +154,10 @@
 	    	
 	    	searchRequirement = searchContext.getCurrentRequirement();
 	    	folderId = a;
-	    	
+	    	showProgress();
 			$.ajax ({
 				type:"POST",
-				async: false,
+				async: true,
 				url : "/ezWebFolder/fileList.do",
 				data : { 
 					 "folderId"   		: folderId,
@@ -174,10 +174,12 @@
 					},
 				dataType: "JSON",
 				success : function (data) {
+					hideProgress();
 					successFile(data);
 				},
 				error : function(error) {
-					alert(messages.strLang7 + error);
+					hideProgress();
+// 					alert(messages.strLang7 + error);
 				}
 			});
 		}
@@ -230,6 +232,7 @@
 				+ fileCnt +" </span>"  + messages.strLang11 + "]";
 			$("#listcount").val(result.listCount).prop("selected", true);
 			parent.frames["left"].drawVolume();
+			
 		} 
 		
 		// originalPath 는 한글 path
@@ -399,8 +402,6 @@
 					tdElmt8.textContent = result[i]["updateDate"].substring(0, 10);
 					tdElmt9.textContent = result[i]["filePosition"];
 					tdElmt9.setAttribute("title", result[i]["filePosition"]);
-// 					tdElmt10.textContent = result[i]["downloadCnt"];
-// 					tdElmt10.setAttribute("style","text-align: center;");
 					
 					if (result[i]["fileShareStatus"] == "Y") {
 						var spanElmt = document.createElement("span");
@@ -725,6 +726,18 @@
 			blockLeft.style.height        = "100%";
 			blockLeft.style.display       = "none";
 		}
+		
+		function showProgress() {
+			var CurrentHeight = document.documentElement.clientHeight;
+			var CurrenWidth = document.documentElement.clientWidth;
+			document.getElementById("progressPanel").style.top = (CurrentHeight / 2) + "px";
+			document.getElementById("progressPanel").style.left = (CurrenWidth / 2) - 100 + "px";
+		    document.getElementById("progressPanel").style.display = "block";
+		}
+        
+        function hideProgress() {
+        	document.getElementById("progressPanel").style.display = "none";
+        }
     </script>
 </head>
 <body class="mainbody" style="padding-bottom:10px;">
@@ -871,8 +884,9 @@
 			</table>
 		</div>
 	</div>	
-	
-	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
+	    <img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+	</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 	</div>

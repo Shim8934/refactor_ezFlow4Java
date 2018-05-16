@@ -52,8 +52,8 @@
 		function window_onload() {
 			try {
 				drawVolume = webfolder_folder_Manage[1];
+				$('input:radio[name=treeType]:input[value=' + folderType + ']').attr("checked", true);
 			} catch (e) {}
-			$('input:radio[name=treeType]:input[value=' + folderType + ']').attr("checked", true);
 			folderList(folderType);
 		}
 
