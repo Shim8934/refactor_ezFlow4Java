@@ -414,19 +414,7 @@ public class EzWebFolderGWController {
 			}
 			
 			if (searchChk.equals("1")) {
-				if (startDate.equals("")) {
-					/*
-					//Get logs in three months
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					Date now             = new Date();
-					Calendar cal         = Calendar.getInstance();
-					cal.setTime(now);
-					cal.add(Calendar.MONTH, -3);
-					
-					startDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), offset, true);
-					endDate   = commonUtil.getDateStringInUTC(sdf.format(now), offset, true);*/
-				}
-				else {
+				if (!startDate.equals("")) {
 					String startDateTmp = startDate + " 00:00:00";
 					String endDateTmp   = endDate + " 23:59:59";
 					startDate           = commonUtil.getDateStringInUTC(startDateTmp, offset, true);
@@ -438,9 +426,6 @@ public class EzWebFolderGWController {
 			
 			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(realColmn, order.toUpperCase(), companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, startPoint, pageSize, primary, offset, tenantId);
 			totalRows                    = ezWebFolderAdminService.getTotalFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, primary, tenantId);
-			
-			logger.debug("totalRows: " + totalRows);
-			
 			totalPages                   = (totalRows + pageSize - 1)/pageSize;
 			
 			result.put("data", listFileLogs);
@@ -460,6 +445,101 @@ public class EzWebFolderGWController {
 		return result;
 	}
 
+	@RequestMapping(value="/rest/ezwebfolderadmin/export-logs", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject createExcelFile(HttpServletRequest request, Locale locale) {
+		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
+		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
+		String offset     = request.getParameter("offset")      != null ? request.getParameter("offset")                        : "";
+		String lang       = request.getParameter("lang")        != null ? request.getParameter("lang")                          : "";
+		String companyId  = request.getParameter("companyId")   != null ? request.getParameter("companyId")                     : "";
+		String startDate  = request.getParameter("startDate")   != null ? request.getParameter("startDate")                     : "";
+		String endDate    = request.getParameter("endDate")     != null ? request.getParameter("endDate")                       : "";
+		String fileExt    = request.getParameter("fileExt")     != null ? request.getParameter("fileExt")                       : "";
+		String fileName   = request.getParameter("fileName")    != null ? request.getParameter("fileName")                      : "";
+		String userName   = request.getParameter("userName")    != null ? request.getParameter("userName")                      : "";
+		String fileType   = request.getParameter("fileType")    != null ? request.getParameter("fileType")                      : "";
+		String actionType = request.getParameter("actionType")  != null ? request.getParameter("actionType")                    : "";
+		String column     = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
+		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
+		
+		String searchChk  = "1";
+		String realColmn  = "";
+		
+		logger.debug("StartDate: " + startDate + " || EndDate: " + endDate + " || FileExt: " + fileExt + " || FileName: " + fileName + " || File Type: " + fileType + " || Username: " + userName + " || Action Type: " + actionType);
+		
+		JSONObject result = new JSONObject();
+		
+		if (serverName.equals("") || offset.equals("") || companyId.equals("") || fileType.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, lang, "");
+			int tenantId     = userInfo.getTenantId();
+			String primary   = userInfo.getPrimary();
+			
+			if (!column.equals("") && !order.equals("")) {
+				switch(column) {
+					case "ft": realColmn = "FILE_TYPE"                                          ; break;
+					case "fn": realColmn = "FILE_NAME"                                          ; break;
+					case "fs": realColmn = "FILE_SIZE"                                          ; break;
+					case "un": realColmn = primary.equals("1") ? "CREATE_NAME1" : "CREATE_NAME2"; break;
+					case "at": realColmn = "LOG_TYPE"                                           ; break;
+					case "ad": realColmn = "CREATE_DATE"                                        ; break;
+					default  : realColmn = "FILE_NAME"                                          ; break;
+				}
+			}
+			
+			logger.debug("Column: " + realColmn + " || order: " + order + " || companyId: " + companyId + " TenantId: " + tenantId);
+			
+			if (startDate.equals("") && endDate.equals("") && fileExt.equals("") && fileName.equals("") && userName.equals("") && actionType.equals("")) {
+				searchChk = "0";
+			}
+			
+			if (searchChk.equals("1")) {
+				if (!startDate.equals("")) {
+					String startDateTmp = startDate + " 00:00:00";
+					String endDateTmp   = endDate + " 23:59:59";
+					startDate           = commonUtil.getDateStringInUTC(startDateTmp, offset, true);
+					endDate             = commonUtil.getDateStringInUTC(endDateTmp, offset, true);
+				}
+			}
+			
+			logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
+			
+			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(realColmn, order.toUpperCase(), companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, 0, 0, primary, offset, tenantId);
+			String realPath              = request.getServletContext().getRealPath("");
+			String pDirPath              = ezWebFolderService.getWebFolderDirPath(tenantId);
+			pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
+			String excelPath             = ezWebFolderAdminService.createExcelFileLogs(realPath + commonUtil.separator, pDirPath, listFileLogs, primary, locale);
+			
+			if (excelPath.equals("")) {
+				result.put("status", "error");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
+				result.put("code", 1);
+				return result;
+			}
+			
+			result.put("status", "ok");
+			result.put("data", excelPath);
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
+		}
+		
+		return result;
+	}
+	
 	@RequestMapping(value="/rest/ezwebfolder/filemanage/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) throws Exception {
 		JSONParser jp          = new JSONParser();
@@ -2374,6 +2454,28 @@ public class EzWebFolderGWController {
 		}
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/rest/ezwebfolder/download-excel", method=RequestMethod.GET, produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	public void getFileExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String fileName     = request.getParameter("fileName")   != null ? request.getParameter("fileName")   : "";
+		String serverName   = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String userAgent    = request.getParameter("userAgent")  != null ? request.getParameter("userAgent")  : "";
+		
+		logger.debug("serverName: " + serverName + " || File Name: " + fileName);
+		
+		if (serverName.equals("") || fileName.equals("")) {
+			logger.debug("downloadAttach illegal arguments!");
+			return;
+		}
+		
+		//Get absolute path of the application
+		String realPath  = request.getServletContext().getRealPath("");
+		int tenantId     = loginService.getTenantId(serverName);
+		ezWebFolderAdminService.getExcelFile(fileName, realPath, userAgent, response, tenantId);
+		
+		logger.debug("File Download Finish!");
+		return;
 	}
 	
 	@RequestMapping(value="/rest/ezwebfolder/check-wfadmin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")

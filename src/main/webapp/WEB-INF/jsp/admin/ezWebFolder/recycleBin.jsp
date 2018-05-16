@@ -458,7 +458,7 @@
 			</li>
 			<li id="right">
 				<span><spring:message code='ezWebFolder.t29'/></span>
-				<select id="listCount" style="height: 29px;" onchange="renderFileList();">
+				<select id="listCount" class="wfListCnt" onchange="renderFileList();">
 					<option selected="selected">10</option>
 					<option>20</option>
 					<option>30</option>

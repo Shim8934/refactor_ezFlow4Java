@@ -104,7 +104,7 @@
 				</li>
 				<li id="right">
 					<span><spring:message code='ezWebFolder.t29'/></span>
-					<select id="listCount" style="height: 29px;">
+					<select id="listCount" class="wfListCnt">
 						<option selected="selected">10</option>
 						<option>20</option>
 						<option>30</option>
