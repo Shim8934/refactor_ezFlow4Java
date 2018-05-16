@@ -245,7 +245,7 @@
 			deleteFolderDlg_cross_dialogArguments[1] = add_onclick_Complete;
 			console.log("folderId delete_onclick function" + folderId);
 			console.log("deleteFolderDlg_cross_dialogArguments delete_onclick function" + deleteFolderDlg_cross_dialogArguments[0]);
-			DivPopUpShow(330, 220, "/ezWebFolder/folderDelete.do");
+			DivPopUpShow(335, 225, "/ezWebFolder/folderDelete.do");
 		}
 
 		function move_onclick() {
