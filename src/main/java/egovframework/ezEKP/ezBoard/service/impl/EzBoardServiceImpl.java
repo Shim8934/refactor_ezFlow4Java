@@ -3416,7 +3416,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			destItemID = "{" + UUID.randomUUID() + "}";
 			
 			BoardListVO boardListVO = getCopyItem(orgItemID, orgBoardID, userInfo.getTenantId());
-			
+			System.out.println("뽝 : " + boardListVO.getContent());
 			//MHT 파일위치 변경
 			boardListVO.setContentLocation(boardListVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
 			boardListVO.setStartDate("");
@@ -3455,6 +3455,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "move", userInfo.getTenantId());
 			}
 			
+			//2018-05-09 강민수92 댓글도 이동
+			moveOneLineReply(orgBoardID, orgItemID, destBoardID, destItemID); 
+			
 			StringBuilder sb = new StringBuilder();
 
 	        sb.append("<NODES>");
@@ -3490,6 +3493,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
 	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
 	        sb.append("<GUBUN>M</GUBUN>");
+	        sb.append("<DOCCONTENT>" + commonUtil.cleanValue(boardListVO.getContent()) + "</DOCCONTENT>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -3503,7 +3507,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("moveItem ended");
 		return result;
 	}
-	
+
 	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode, int tenantID) throws Exception {
 		logger.debug("copyAttachments started");
 
@@ -3562,7 +3566,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
 		boardListVO.setRealPath(realPath);
 		boardListVO.setTenantID(userInfo.getTenantId());
-		boardListVO.setContent(commonUtil.htmlUnescape(doc.getElementsByTagName("DOCCONTENT").item(0).getTextContent()));
+		
+		if (doc.getElementsByTagName("DOCCONTENT").item(0) != null) {
+			boardListVO.setContent(commonUtil.htmlUnescape(doc.getElementsByTagName("DOCCONTENT").item(0).getTextContent()));
+		}		
 		
 		if (pMode.equals("copy")) {
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
@@ -3883,6 +3890,21 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		logger.debug("getReaderListCount ended");
 		return ezBoardDAO.getReaderListCount(map);
+	}
+
+	@Override
+	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception {
+		logger.debug("moveOneLineReply started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("orgBoardID", orgBoardID);
+		map.put("orgItemID", orgItemID);
+		map.put("destBoardID", destBoardID);
+		map.put("destItemID", destItemID);
+		
+		ezBoardDAO.updateMoveOneLineReply(map);
+		
+		logger.debug("moveOneLineReply ended");
 	}
 
 

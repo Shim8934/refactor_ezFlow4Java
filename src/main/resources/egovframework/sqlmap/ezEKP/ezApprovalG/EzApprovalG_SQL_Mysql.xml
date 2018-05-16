@@ -406,7 +406,7 @@
 									FROM 
 										vgongramaprdoingdoclist 
 		               				WHERE 
-		               					APRMEMBERID IN ($v_USERIDS$) 
+		               					APRMEMBERID = #v_USERID#
 		               				AND 
 		               					APRTYPE = '015'
 		               				AND 
@@ -2285,7 +2285,6 @@
 		<isEqual property="v_PMODE" compareValue="REC">
 			<isGreaterEqual property="v_temp" compareValue="1">
 			<isGreaterEqual property="v_temp2" compareValue="1">
-			<![CDATA[
 				SELECT 
 						DOCID ,
 	                    PROCESSORID ,
@@ -2294,13 +2293,14 @@
 	            		TBL_APRRECEIPTPROCESSINFO 
                 WHERE  
                 		DOCID = #v_PDOCID#
+				<isEqual property="approvalFlag" compareValue="G">
                 AND 
                 		PROCESSORID = #v_PAPRUSERID#
+				</isEqual>                
                 AND
 						TENANT_ID = #v_TENANTID#
 				AND
 						COMPANYID = #companyID#   
-						]]>
 			</isGreaterEqual>
 			<isLessThan property="v_temp2" compareValue="1">
 			<![CDATA[
@@ -2443,20 +2443,20 @@
 	</select>
 		
 	<select id ="EzApprovalG.countRecTempDocID2" parameterClass="Map" resultClass="int">
-	<![CDATA[
 		SELECT 
 			COUNT(DOCID)  
         FROM 
           	TBL_APRRECEIPTPROCESSINFO 
         WHERE  
           	DOCID = #v_PDOCID#
+		<isEqual compareValue="G" property="approvalFlag">
         AND 
           	PROCESSORID = #v_PAPRUSERID#
+		</isEqual>         
         AND
 			TENANT_ID = #v_TENANTID#
 	    AND
 			COMPANYID = #companyID#	
-	]]>
 	</select>
 			
 	<select id ="EzApprovalG.countRecTempDocID3" parameterClass="Map" resultClass="ApprGAprLineVO">
@@ -3206,6 +3206,8 @@
 	        AND
 	        	TBL_FormContainer.COMPANYID = #companyID#
 		</isNotEmpty>
+		ORDER BY
+			TBL_FORMCONTAINER.formcontid
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSecurityType" parameterClass="Map" resultClass="ApprGLeftVO"> -->
 <!-- 		{CALL EZSP_GETSECURITYTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -8836,8 +8838,27 @@
 	   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#	
 	   	]]>
 	   	UNION ALL 
-	   	<!-- 공람 문서 -->
+	   	<!-- 공람 문서 --><!-- 2018-04-30 천성준 (#12468) 대리 결재자여도 회람(공람)문서는 제외 -->
 		<![CDATA[
+   			SELECT 
+   				COUNT(DOCID) 
+   			FROM 
+   				VGONGRAMAPRDOINGDOCLIST 
+   			WHERE 
+   				APRMEMBERID = #v_USERID#
+   			AND 
+   				APRTYPE = '015' 
+   			AND 
+   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
+	   		AND 
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+	   		AND	
+	   			TENANT_ID = #v_TENANTID#
+	   		AND
+	   			COMPANYID = #companyID#	
+	   	]]>
+	   	<!-- 공람 문서 -->
+		<!-- <![CDATA[
    			SELECT 
    				COUNT(DOCID) 
    			FROM 
@@ -8854,7 +8875,7 @@
 	   			TENANT_ID = #v_TENANTID#
 	   		AND
 	   			COMPANYID = #companyID#	
-	   	]]>
+	   	]]> -->
         UNION ALL
         <!-- 공람한 문서 -->
         <![CDATA[
@@ -9810,8 +9831,25 @@
 				COMPANYID = #companyID#
 		
 		</isEqual>
-		<!-- 공람할 문서 -->
+		<!-- 공람할 문서 --><!-- 2018-04-30 천성준 (#12468) 대리 결재자여도 회람(공람)문서는 제외 -->
 		<isEqual property="v_LISTTYPE" compareValue="99">
+		<![CDATA[
+			 SELECT 
+			 	COUNT(DOCID) 
+			 FROM 
+			 	vgongramaprdoingdoclist  
+			 WHERE 
+			 	APRMEMBERID = #v_USERID#
+			 AND 
+			 	APRTYPE = '015'
+			 AND
+				TENANT_ID =#v_TENANTID#
+			 AND
+				COMPANYID = #companyID# 
+		]]>
+		</isEqual>
+		<!-- 공람할 문서 -->
+		<!-- <isEqual property="v_LISTTYPE" compareValue="99">
 		<![CDATA[
 			 SELECT 
 			 	COUNT(DOCID) 
@@ -9826,7 +9864,7 @@
 			 AND
 				COMPANYID = #companyID# 
 		]]>
-		</isEqual>
+		</isEqual> -->
 		<!-- 공람한 문서 -->
 		<isEqual property="v_LISTTYPE" compareValue="10">
 		<![CDATA[

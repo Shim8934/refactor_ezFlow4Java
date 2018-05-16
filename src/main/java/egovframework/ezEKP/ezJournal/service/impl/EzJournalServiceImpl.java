@@ -16,6 +16,7 @@ import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -240,6 +241,9 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("companyId", companyId);
 		param.put("lang", lang);
 		List<DeptViewVO> deptList = ezJournalDAO.getDeptViewVO(param);
+		for(int i=0; i < deptList.size(); i++) {
+			deptList.get(i).setText(commonUtil.cleanValue(deptList.get(i).getText())); 
+		}
 		
 		logger.debug("getDeptViewList ended");
 		return deptList;
@@ -254,6 +258,9 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("userId", userId);
 		param.put("lang", lang);
 		List<JournalAuthorVO> deptList = ezJournalDAO.getAuthDeptList(param);
+		for(int i=0; i < deptList.size(); i++) {
+			deptList.get(i).setDeptName(commonUtil.cleanValue(deptList.get(i).getDeptName())); 
+		}
 		
 		logger.debug("getAuthDeptList ended");
 		return deptList;
@@ -624,21 +631,19 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public JournalVO getJournal(String journalId,String userId, String viewDate, int tenantId, String lang) throws Exception {
+	public JournalVO getJournal(String journalId,String userId, String isRead, int tenantId, String lang, String offset) throws Exception {
 		logger.debug("getJournal started");
+		logger.debug("journalId: " + journalId + ", tenantId: " + tenantId + ", userId: " + userId + ", isRead: " + isRead);
 		
-		logger.debug("journalId : "+journalId);
-		logger.debug("tenantId : "+tenantId);
-		logger.debug("userId : "+userId);
-		logger.debug("viewDate : "+viewDate);
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("journalId", journalId);
 		param.put("tenantId", tenantId);
 		param.put("userId", userId);
-		param.put("viewDate", viewDate);
+		param.put("viewDate", commonUtil.getTodayUTCTime(""));
 		param.put("lang", lang);
+		param.put("offset", commonUtil.getMinuteUTC(offset));
 		
-		if (!viewDate.equals("")) {
+		if (isRead.equals("N")) {
 			ezJournalDAO.insertViewInfo(param);
 		}
 		JournalVO result = ezJournalDAO.selectJournal(param);
@@ -843,19 +848,48 @@ public class EzJournalServiceImpl implements EzJournalService {
 		List<JournalVO> journalList = ezJournalDAO.selectSumJournalList(param);
 			
 		for (JournalVO journal : journalList) {
-			String journalContent = journal.getJournalContent();
-			String thisContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").html();
-			String nextContent = Jsoup.parseBodyFragment(journalContent).body().getElementById("nextJournal").html();
+			String journalContent = journal.getJournalContent().toString();
+			Elements thisElems = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").children();
+
+			synchronized (thisElems) {
+				Iterator<Element> it = thisElems.iterator();
+				while (it.hasNext()) {
+					String elemHtml = it.next().html().replaceAll("&nbsp;", "");
+					String elemText =Jsoup.parseBodyFragment(elemHtml).text().trim();
+					if (elemText.equals("")) {
+						it.remove();
+					} else {
+						break;
+					}
+				}
+			}
+			String thisContent = thisElems.toString();
+			
+			Elements nextElems = Jsoup.parseBodyFragment(journalContent).body().getElementById("nextJournal").children();
+
+			synchronized (nextElems) {
+				Iterator<Element> it = nextElems.iterator();
+				while (it.hasNext()) {
+					String elemHtml = it.next().html().replaceAll("&nbsp;", "");
+					String elemText =Jsoup.parseBodyFragment(elemHtml).text().trim();
+					if (elemText.equals("")) {
+						it.remove();
+					} else {
+						break;
+					}
+				}
+			}
+			String nextContent = nextElems.toString();
 			
 			// #146bb8 rgb(0, 144, 208)
 //			formThisHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");
 //			formThisHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
-			formThisHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + journal.getJournalTitle().trim() + "</span></p>");
+			formThisHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
 			formThisHtml.append(thisContent.trim() + "<p></p><p></p>");
 			
 //			formNextHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");   
 //			formNextHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
-			formNextHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + journal.getJournalTitle().trim() + "</span></p>");
+			formNextHtml.append("<p><img style='width:18px;height:18px;vertical-align:text-bottom;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
 			formNextHtml.append(nextContent.trim() + "<p></p><p></p>");
 		}
 		
@@ -1045,7 +1079,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId, String lang) throws Exception {
+	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId, String lang, String offset) throws Exception {
 		logger.debug("getJournalReplyList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1053,7 +1087,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("tenantId", tenantId);
 		map.put("journalId", journalId);
 		map.put("lang", lang);
-		
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+
 		List<JournalReplyVO> replyList = ezJournalDAO.selectJournalReplyList(map);
 		
 		logger.debug("getJournalReplyList ended.");
@@ -1061,13 +1096,13 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public String saveJorunalReply(String journalId, String userId, String replyContent, String replyDate, int tenantId)throws Exception {
+	public String saveJorunalReply(String journalId, String userId, String replyContent, int tenantId)throws Exception {
 		logger.debug("saveJorunalReply started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("replyContent", replyContent);
-		map.put("replyDate", replyDate);
+		map.put("replyDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantId", tenantId);
 		map.put("journalId", journalId);
 		
@@ -1093,7 +1128,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 	
 	@Override
-	public List<JournalReceiverVO> getReceiverList(String journalId, String startCount, String listCnt, int tenantId, String lang) {
+	public List<JournalReceiverVO> getReceiverList(String journalId, String startCount, String listCnt, int tenantId, String lang, String offset) throws Exception {
 		logger.debug("getReceiverList started.");
 	
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1104,6 +1139,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 			map.put("listCnt", Integer.parseInt(listCnt));
 		}
 		map.put("lang", lang);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		List<JournalReceiverVO> receiverList = ezJournalDAO.getReceiverList(map);
 		logger.debug("getReceiverList ended.");
@@ -1111,7 +1147,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public List<JournalReceiverVO> getJournalViewerList(String journalId,String startCount, String listCnt, int tenantId, String lang) throws Exception {
+	public List<JournalReceiverVO> getJournalViewerList(String journalId,String startCount, String listCnt, int tenantId, String lang, String offset) throws Exception {
 		logger.debug("getJournalViewerList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1120,6 +1156,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("startCount", Integer.parseInt(startCount));
 		map.put("listCnt", Integer.parseInt(listCnt));
 		map.put("lang", lang);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		List<JournalReceiverVO> viewerList = ezJournalDAO.getViewerList(map);
 		logger.debug("getJournalViewerList ended.");

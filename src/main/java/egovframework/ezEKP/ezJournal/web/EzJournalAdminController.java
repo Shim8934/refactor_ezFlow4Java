@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -470,7 +468,9 @@ public class EzJournalAdminController {
 				JSONObject jo = (JSONObject) authList.get(i);
 				String [] authDeptArr = jo.get("authDept").toString().split("%");
 				if (authDeptArr.length > 1) {
-					jo.replace("authDept", authDeptArr[0] + egovMessageSource.getMessage("ezJournal.t124") + (authDeptArr.length - 1));
+					jo.replace("authDept", commonUtil.cleanValue(authDeptArr[0]) + egovMessageSource.getMessage("ezJournal.t124", userInfo.getLocale()) + (authDeptArr.length - 1));
+				} else {
+					jo.replace("authDept", commonUtil.cleanValue(authDeptArr[0]));
 				}
 			}
 			model.addAttribute("authList", authList);

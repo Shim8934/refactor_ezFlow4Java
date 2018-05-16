@@ -13,8 +13,7 @@
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 		<script type="text/javascript">
 			var primary = "<c:out value='${primary}'/>";
 			var xmlDomTreeView = createXmlDom();
@@ -32,6 +31,7 @@
 		    var strLang3 = "<spring:message code='ezCommunity.t1103' />"; 
 		    var strLang4 = "<spring:message code='ezCommunity.t2009' />"; 
 		    var strLang5 = "<spring:message code='ezCommunity.t1102' />"; 
+		    var strLang6 =  "<spring:message code='ezCommunity.t431' />";
 		    var isCrossBrowser = "{isCrossBrowser}";
 		    
 		    $(function () {
@@ -117,9 +117,9 @@
 	                            p.className = "title";
 	                            
 	                            if (primary == "1") {
-	                                p.innerHTML=length_check(infoVO.boardName);
+	                                p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='width:16px; height:16px; padding-right:5px; vertical-align:middle' />" + length_check(infoVO.boardName);
 	                            } else {
-	                            	p.innerHTML=length_check(infoVO.boardName2);
+	                            	p.innerHTML= "<img src='/images/kr/community/type1/icon_board_big.gif' style='width:16px; height:16px; padding-right:5px;vertical-align:middle' />" + length_check(infoVO.boardName2);
 	                            }
 	                            
 	                            var span = document.createElement("span");
@@ -157,7 +157,12 @@
 		                                    
 		                                    if (itemVO.gubun != "3") {
 		                                    	span2.className = "txt";
-		                                        span2.innerHTML = itemVO.title;
+		                                        span2.innerHTML = itemVO.title;		                                       
+		                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈 메인화면 일반/그룹/익명게시물 댓글수 표출 */
+		                                        if (itemVO.oneLineCnt > 0) {
+		                                        	span2.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
+		                                        }
+		                                        
 		                                        span2.setAttribute("itemid", itemVO.itemID);
 		                                        span2.setAttribute("boardid", itemVO.boardID);
 		                                        span2.setAttribute("gubun", itemVO.gubun);
@@ -168,7 +173,7 @@
 		                                        span3.className = "date";
 		                                        span3.innerHTML = itemVO.writeDate.substring(0, 10);
 		                                    } else {
-		                                    	if(imageCnt < 4) {
+		                                    	if (imageCnt < 4) {
 		                                    		span2.className = "photo";
 			                                        span2.setAttribute("itemid", itemVO.itemID);
 			                                        span2.setAttribute("boardid", itemVO.boardID);
@@ -180,13 +185,19 @@
 			                                        var img = document.createElement("IMG");
 			                                        var imgUrl = itemVO.extensionAttribute5;
 			                                        
-			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + itemVO.boardID + "&fileName=" + imgUrl;
+			                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈화면 사진경로 수정 */
+			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + itemVO.boardID + "&fileName=" + imgUrl;
 			                                        img.style.width = "68px";
 			                                        img.style.height = "68px";
 
 			                                        span2.appendChild(img);
 			                                        span3.className = "ptxt";
 			                                        span3.innerHTML = itemVO.title;
+			                                        /* 2018-05-07 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물 댓글수 표출 */
+			                                        if (itemVO.oneLineCnt > 0) {
+			                                        	span3.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
+			                                        }
+			                                        
 			                                        span3.setAttribute("itemid", itemVO.itemID);
 			                                        span3.setAttribute("boardid", itemVO.boardID);
 			                                        span3.setAttribute("gubun", itemVO.gubun);
@@ -430,7 +441,7 @@
 		                    document.getElementById("mainboard").style.display = "none";
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
-		                case "btn_MemberInfo": alert(strLang5);
+		                case "btn_MemberInfo": alert(strLang6);
 		                    break;
 		                case "btn_MemberOut": alert(strLang5);
 		                    break;
@@ -719,9 +730,9 @@
 		        var pLeft = (pwidth - 765) / 2;
 
 		        if (gubun == "3") {
-		        	GetOpenWindow("/ezCommunity/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 800);
+		        	GetOpenWindow("/ezCommunity/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
 		        } else {
-		        	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 800);
+		        	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
 		        }
 		    }
 
@@ -762,6 +773,12 @@
 		    		return temp;
 		    	}
 		    }
+		    
+		    /* 2018-05-11 홍승비 - 팝업홈 메인에서 글 삭제할 경우 새로고침 동작 */
+		    function refresh_onclick() {
+	            window.location.reload();
+	        }
+ 	        
 		</script>
 	</head>
 	

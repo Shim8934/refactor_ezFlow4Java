@@ -408,7 +408,7 @@
 						<td id="OwnerID"  style="cursor:pointer;text-overflow: ellipsis; overflow: hidden;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}')" nowrap>${list.ownerNm}</td>
 						<td id="OwnerPosition">${list.ownerPosition}</td>
 						<td id="OwnerCall">${list.ownerCall} </td>			
-						<td id="ResLocation" style="text-overflow: ellipsis; overflow: hidden"><nobr>${list.resLocation}</nobr> </td>
+						<td id="ResLocation" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><c:out value='${list.resLocation}'/></td>
 					</tr> 
 				</c:forEach>
 			</c:if>

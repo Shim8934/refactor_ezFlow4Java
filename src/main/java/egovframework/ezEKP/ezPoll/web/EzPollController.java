@@ -64,6 +64,7 @@ import egovframework.ezEKP.ezPoll.vo.PollEmailSimpleUser;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollUsersVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -642,6 +643,7 @@ public class EzPollController extends EgovFileMngUtil {
 				ezPollService.deleteQuestionRelated(pollQuestionVO.getQstId(), loginVO.getTenantId());	
 				ezPollService.deleteAnswers(pollQuestionVO.getQstId(), loginVO.getTenantId());	
 				ezPollService.deleteUserAndQuestion(pollQuestionVO.getQstId(), loginVO.getTenantId());
+				ezPollService.deleteUsersForQst(loginVO.getTenantId(), pollQuestionVO.getQstId());
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -690,6 +692,7 @@ public class EzPollController extends EgovFileMngUtil {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
+		String brdId = request.getParameter("brdId") != null ? request.getParameter("brdId") : "";
 		int totalUsers = 0;		
 		int totalVotes = 0;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -798,24 +801,75 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Get all related users for this question
 		Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
-		getAllUserForQuestion(loginVO, qstId, setOfUserIds);
+//		getAllUserForQuestion(loginVO, qstId, setOfUserIds);
+		
+		List<PollUsersVO> pollUsersList = ezPollService.getAllUsersForQst(tenantId, qstId);
+		for(PollUsersVO pollUser : pollUsersList){
+			LoginVO pollUserLoginVo = new LoginVO();
+			
+			pollUserLoginVo.setId(pollUser.getUserId());
+			if(loginVO.getLang().equals("1")){
+				pollUserLoginVo.setDisplayName1(pollUser.getUserName());
+			}else{
+				pollUserLoginVo.setDisplayName1(pollUser.getUserName2());
+			}
+			pollUserLoginVo.setDisplayName2(pollUser.getUserName2());
+			pollUserLoginVo.setDeptID(pollUser.getDeptId());
+			pollUserLoginVo.setDeptName(pollUser.getDeptName());
+			pollUserLoginVo.setDeptName2(pollUser.getDeptName2());
+			setOfUserIds.add(pollUserLoginVo);
+		}
+		
 		List<LoginVO> listofTotalUsers = new ArrayList<LoginVO>(setOfUserIds);
 		totalUsers = listofTotalUsers.size();	
 		
 		//Check if user has the vote privilege
-		if (listofTotalUsers.contains(loginVO)) {
-			model.addAttribute("hasVotePrivilege", 1);
-		}
-		else {
-			model.addAttribute("hasVotePrivilege", 0);
+//		if (listofTotalUsers.contains(loginVO)) {
+//			model.addAttribute("hasVotePrivilege", 1);
+//		}
+//		else {
+//			model.addAttribute("hasVotePrivilege", 0);
+//		}
+		
+		boolean isVoteUser = false;
+		for(LoginVO user: listofTotalUsers){
+			if(user.getId().equals(loginVO.getId())){
+				model.addAttribute("hasVotePrivilege", 1);
+				isVoteUser = true;
+				break;
+			}
+			else{
+				model.addAttribute("hasVotePrivilege", 0);
+			}
 		}
 		
 		//Get all seen users
 		List<String> listOfCurrentSeenUsers = ezPollService.getNumberOfSeenUsers(qstId, tenantId);
 		totalSeenUsers = listOfCurrentSeenUsers.size();
 		
-		if (listofTotalUsers.contains(loginVO)) {
-			if (!listOfCurrentSeenUsers.contains(loginVO.getId())) {
+//		if (listofTotalUsers.contains(loginVO)) {
+//			if (!listOfCurrentSeenUsers.contains(loginVO.getId())) {
+//				//Update seen users number 
+//				PollQuestionStatusVO pollQstStatusVO = new PollQuestionStatusVO();
+//				pollQstStatusVO.setUserId(loginVO.getId());
+//				pollQstStatusVO.setTenantId(loginVO.getTenantId());
+//				pollQstStatusVO.setQustId(qstId);	
+//				ezPollService.insertSeenQuestion(pollQstStatusVO);
+//				totalSeenUsers = totalSeenUsers + 1;
+//				getUpdateSeenRequests(totalSeenUsers, qstId, loginVO.getTenantId());
+//			}
+//		}
+		
+		boolean isSeenUser = false;
+		for(String userId: listOfCurrentSeenUsers){
+			if(userId.equals(loginVO.getId())){
+				isSeenUser = true;
+				break;
+			}
+		}
+		
+		if (isVoteUser) {
+			if (!isSeenUser) {
 				//Update seen users number 
 				PollQuestionStatusVO pollQstStatusVO = new PollQuestionStatusVO();
 				pollQstStatusVO.setUserId(loginVO.getId());
@@ -896,7 +950,8 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Sort list of comments by comment id
 		Collections.sort(listComments, (PollCommentVO cmt1, PollCommentVO cmt2) -> {
-	        return Integer.valueOf(cmt1.getCmtId()).compareTo(cmt2.getCmtId());
+//	        return Integer.valueOf(cmt1.getCmtId()).compareTo(cmt2.getCmtId());
+	        return Integer.valueOf(cmt2.getCmtId()).compareTo(cmt1.getCmtId());
 		});
 		
 		//Set image for each commented user
@@ -923,7 +978,8 @@ public class EzPollController extends EgovFileMngUtil {
 			numberOfCmt = 0;
 		}
 		else {
-			numberOfCmt = listComments.get((listComments.size() - 1)).getCmtId();
+//			numberOfCmt = listComments.get((listComments.size() - 1)).getCmtId();
+			numberOfCmt = listComments.get(0).getCmtId();
 		}		
 		
 		//User image
@@ -947,11 +1003,17 @@ public class EzPollController extends EgovFileMngUtil {
 		//Get creator department
 		LoginVO pollCreator = loginService.selectReceiver(pollQuestionVO.getCreator(), tenantId);
 		
-		if (loginVO.getPrimary().equals("1")) {
-			model.addAttribute("creatorDept", pollCreator.getDeptName1());
+		if(pollCreator != null){
+			if (loginVO.getPrimary().equals("1")) {
+				model.addAttribute("creatorDept", pollCreator.getDeptName1());
+			}
+			else {
+				model.addAttribute("creatorDept", pollCreator.getDeptName2());
+			}
 		}
-		else {
-			model.addAttribute("creatorDept", pollCreator.getDeptName2());
+		
+		if(brdId != ""){
+			model.addAttribute("brdId", Integer.parseInt(brdId));
 		}
 		
 		model.addAttribute("listComments", listComments);
@@ -976,6 +1038,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("params", params);
 		model.addAttribute("searchStr", searchStr);
 		model.addAttribute("searchN", searchN);		
+		
 		
 		logger.debug("Question vote finishes!");		
 		return "/ezPoll/questionVote";
@@ -1959,7 +2022,24 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Get all users for this question
 		Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
-		getAllUserForQuestion(loginVO, qstId, setOfUserIds);
+//		getAllUserForQuestion(loginVO, qstId, setOfUserIds);
+		List<PollUsersVO> pollUsersList = ezPollService.getAllUsersForQst(tenantId, qstId);
+		for(PollUsersVO pollUser : pollUsersList){
+			LoginVO pollUserLoginVo = new LoginVO();
+			
+			pollUserLoginVo.setId(pollUser.getUserId());
+			if(loginVO.getLang().equals("1")){
+				pollUserLoginVo.setDisplayName1(pollUser.getUserName());
+			}else{
+				pollUserLoginVo.setDisplayName1(pollUser.getUserName2());
+			}
+			pollUserLoginVo.setDisplayName2(pollUser.getUserName2());
+			pollUserLoginVo.setDeptID(pollUser.getDeptId());
+			pollUserLoginVo.setDeptName(pollUser.getDeptName());
+			pollUserLoginVo.setDeptName2(pollUser.getDeptName2());
+			setOfUserIds.add(pollUserLoginVo);
+		}
+		
 		List<LoginVO> listOfUnvotedUsers = new ArrayList<LoginVO>(setOfUserIds);		
 		
 		//Get list of users and their answers
@@ -2077,7 +2157,24 @@ public class EzPollController extends EgovFileMngUtil {
 	
 		//Get all related users for this question
 		Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
-		getAllUserForQuestion(loginVO, qstId, setOfUserIds);
+//		getAllUserForQuestion(loginVO, qstId, setOfUserIds);
+		List<PollUsersVO> pollUsersList = ezPollService.getAllUsersForQst(tenantId, qstId);
+		for(PollUsersVO pollUser : pollUsersList){
+			LoginVO pollUserLoginVo = new LoginVO();
+			
+			pollUserLoginVo.setId(pollUser.getUserId());
+			if(loginVO.getLang().equals("1")){
+				pollUserLoginVo.setDisplayName1(pollUser.getUserName());
+			}else{
+				pollUserLoginVo.setDisplayName1(pollUser.getUserName2());
+			}
+			pollUserLoginVo.setDisplayName2(pollUser.getUserName2());
+			pollUserLoginVo.setDeptID(pollUser.getDeptId());
+			pollUserLoginVo.setDeptName(pollUser.getDeptName());
+			pollUserLoginVo.setDeptName2(pollUser.getDeptName2());
+			setOfUserIds.add(pollUserLoginVo);
+		}
+		
 		List<LoginVO> listofUnseenUsers = new ArrayList<LoginVO>(setOfUserIds);
 		List<LoginVO> listofSeenUsers = new ArrayList<LoginVO>();
 		
@@ -2086,27 +2183,84 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		for (String _userID : listOfSeenUsers) {
 			LoginVO user = loginService.selectReceiver(_userID, tenantId);
-			String userImagePath = user.getUserFileUrl();
-			
-			if (userImagePath != null && !userImagePath.equals("")) {
-				String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", user.getTenantId())+ commonUtil.separator + userImagePath;
-				String fullPath = request.getServletContext().getRealPath(realPath);
-				
-				if (checkExist(fullPath)) {
-					user.setUserFileUrl("/ezCommon/downloadAttach.do?filePath=" + realPath);
+			OrganUserVO retireuser = null;
+			if(user == null){
+				retireuser = ezPollService.getRetireEntryInfo(_userID, loginVO.getLang(), tenantId);
+				user = new LoginVO();
+				//퇴직자 처리. userStatus:0 재직, 1퇴직, 2삭제
+				if(retireuser != null){
+					ezPollService.updateQstUsersStatus(tenantId, qstId, _userID, 1);
+					user.setUserFileUrl("/images/poll/default_pic_vote.gif");
+					user.setId(_userID);
+					user.setDisplayName(retireuser.getDisplayName());
+					if(loginVO.getLang().equals("1")){
+						user.setDisplayName1(retireuser.getDisplayName());
+					}else{
+						user.setDisplayName1(retireuser.getDisplayName2());
+					}
+					user.setDisplayName2(retireuser.getDisplayName2());
+					user.setDeptName(retireuser.getDescription());
+					user.setDeptName2(retireuser.getDescription2());
+					user.setEmail(retireuser.getMail());
 				}
+				//퇴직자였다가 삭제된 인원 처리.
+				else{
+					ezPollService.updateQstUsersStatus(tenantId, qstId, _userID, 2);
+					PollUsersVO users = new PollUsersVO();
+					users.setQstId(qstId);
+					users.setTenantId(tenantId);
+					users.setUserId(_userID);
+					users = ezPollService.getQstUsers(users);
+					
+					user.setUserFileUrl("/images/poll/default_pic_vote.gif");
+					user.setId(_userID);
+					if(loginVO.getLang().equals("1")){
+						user.setDisplayName1(users.getUserName());
+					}else{
+						user.setDisplayName1(users.getUserName2());
+					}
+					user.setDisplayName2(users.getUserName2());
+					user.setDeptName(users.getDeptName());
+					user.setDeptName2(users.getDeptName2());
+				}
+			}
+			else{
+				ezPollService.updateQstUsersStatus(tenantId, qstId, _userID, 0);
+			}
+			
+			if(!(user == null && retireuser != null)){
+				String userImagePath = user.getUserFileUrl();
+				
+				if (userImagePath != null && !userImagePath.equals("")) {
+					String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", user.getTenantId())+ commonUtil.separator + userImagePath;
+					String fullPath = request.getServletContext().getRealPath(realPath);
+					
+					if (checkExist(fullPath)) {
+						user.setUserFileUrl("/ezCommon/downloadAttach.do?filePath=" + realPath);
+					}
+					else {
+						user.setUserFileUrl("/images/poll/default_pic_vote.gif");
+					}
+				} 
 				else {
 					user.setUserFileUrl("/images/poll/default_pic_vote.gif");
 				}
-			} 
-			else {
-				user.setUserFileUrl("/images/poll/default_pic_vote.gif");
 			}
 			listofSeenUsers.add(user);
 		}		
 		
 		int numberOfSeenUsers = listofSeenUsers.size();
 		listofUnseenUsers.removeAll(listofSeenUsers);
+		
+		for(int i = 0; i < listofUnseenUsers.size(); i++){
+			for(int j =0; j < listofSeenUsers.size(); j++){
+				if(listofUnseenUsers.get(i).getId().equals(listofSeenUsers.get(j).getId())){
+					listofUnseenUsers.remove(i);
+					break;
+				}
+				
+			}
+		}
 		int numberOfUnseenUsers = listofUnseenUsers.size();
 		
 		//Add user image
@@ -2584,7 +2738,7 @@ public class EzPollController extends EgovFileMngUtil {
 		if (pollQuestionVO.getTarget() == 0) {	
 			pollQuestionVO.setReceiverType("company");
 			pollQuestionVO.setUserId(loginVO.getCompanyID());			
-			ezPollService.insertQustReceivers(pollQuestionVO);			
+			ezPollService.insertQustReceivers(pollQuestionVO);
 		}
 		else {	
 			Document doc = commonUtil.convertStringToDocument(StrXmlRange);
@@ -2613,6 +2767,7 @@ public class EzPollController extends EgovFileMngUtil {
 				ezPollService.insertQustReceivers(pollQuestionVO);
 			}
 		}
+		ezPollService.insertQstUsers(pollQuestionVO);
 		
 		logger.debug("Save question finishes");
 		return "OK";
@@ -2747,7 +2902,9 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			for (String _userID : userIdList) {				
 				LoginVO user = loginService.selectReceiver(_userID, loginVO.getTenantId());
-				list.add(user);
+				if(user != null){
+					list.add(user);
+				}
 			}
 		}	
 		
@@ -2782,6 +2939,9 @@ public class EzPollController extends EgovFileMngUtil {
 				
 				//Delete in table Comment
 				ezPollService.deleteCommentOfQst(qstId, loginVO.getTenantId());
+				
+				//Delete in table users
+				ezPollService.deleteUsersForQst(qstId, loginVO.getTenantId());
 				
 				//Inform waiting users
 				String result = "{\"result\":\"DELETED\", \"userId\":\"" + loginVO.getId() + "\"}";

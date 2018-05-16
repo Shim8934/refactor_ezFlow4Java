@@ -9,27 +9,18 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<link rel="stylesheet" type="text/css" href="/css/community.css" />
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-        
-        <style type="text/css"> 
-	        .pagetd{padding-top:6px; }
-	        .pcol{padding-top:6px; }
-	        .Right_Point01 {
-		        font:bold;
-		        color:#017bec;
-        	}
-        	
+		<style type="text/css">
         	#tblList td{
         		white-space: nowrap;
         		text-overflow: ellipsis;
         		overflow:hidden;
         	}
         </style>
-    	
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
+		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     	<script type="text/javascript">
     		var pBoardID = '<c:out value="${boardInfo.boardID}" />';
     		var pBoardName = "<c:out value='${pBoardName}' />";
@@ -84,7 +75,6 @@
     		
     		$(function () {
     			var xmldoc = loadXMLString('${strXML}');
-    			
     			var listXML = '';
     			
     			for (var i = 0; i < SelectNodes(xmldoc,"NODES/NODE").length; i++) {
@@ -120,10 +110,25 @@
 					
 					if (pBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
                         listXML += "<TD class='"+ urgency +"'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName") + "</TD>";
-                        listXML += "<TD class='"+ urgency +"' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "boardName") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\", event)'><nobr>" + bTag + strEmergent + strSpace + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title") + "</nobr></TD>";						
-					} else {
-						listXML += "<TD class='"+ urgency +"' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Writer") + "\", event)'><nobr>" + bTag + strEmergent + strSpace + Replace2HTML(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title")) + "</nobr></TD>";
+                        listXML += "<TD class='"+ urgency +"' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
+                        	+ SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "boardName") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \""
+                        	+ SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\", event)'><nobr>" + bTag + strEmergent + strSpace + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title") + "</nobr>"
+                        	/* 2018-05-04 홍승비 - 커뮤니티 일반/그룹/익명게시판 리스트에서 댓글 표시하기 */
+                        	if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) { 
+                        		listXML += "<SPAN style='color:#c64200'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                        	}
+                        listXML += "</TD>";
 					}
+					else {
+						listXML += "<TD class='"+ urgency +"' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
+							+ pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Writer") + "\", event)'><nobr>"
+							+ bTag + strEmergent + strSpace + Replace2HTML(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title")) + "</nobr>";
+							/* 2018-05-04 홍승비 - 커뮤니티 일반/그룹/익명게시판 리스트에서 댓글 표시하기 */
+							if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) { 
+                        		listXML += "<SPAN style='color:#c64200'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                        	}
+                        listXML += "</TD>";
+					}				
 					
 					if (gubun == '1') {
 						listXML += "<TD class='"+ urgency +"'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterCompanyName").trim() + "</TD>";
@@ -159,18 +164,18 @@
     			makePageSelPage();
     		});
     		
+    		document.onselectstart = function () {
+    		    window.event.cancelBubble = true;
+    		    window.event.returnValue = false;
+    		};
+    		
     		if (url != "") { 
 				window.location.href = url;
     		}
     		
     		function NewItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
-				    alert("<spring:message code='ezCommunity.t896' />");
-				    return;
-				}
-    			    
-				if (Write_FG != "true") {
-				    alert("<spring:message code='ezCommunity.t897' />");
+    			if (UserLevel == "0" || UserLevel == "9" || Write_FG != "true") {
+				    alert("<spring:message code='ezCommunity.t431' />");
 				    return;
 				}
 				
@@ -184,18 +189,11 @@
 			}
     		 
     		function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
-   				if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t899' />");
+   				if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
-    				
-    			if(Read_FG != "true") {
-    				alert("<spring:message code='ezCommunity.t423' />");
-    				return;
-    			}
-
-// 		       	var e = evt.currentTarget.innerHTML;
-  		        	
+  	
    		        if (evt.currentTarget.getElementsByTagName("B").length == 1) {
    		            evt.currentTarget.getElementsByTagName("nobr")[0].innerHTML = evt.currentTarget.getElementsByTagName("B")[0].innerHTML;
    		        }
@@ -204,8 +202,7 @@
     		    var pwidth = window.screen.availWidth;
     		    var pTop = (pheight - 720) / 2;
     		    var pLeft = (pwidth - 765) / 2; */
-    		    
-   		    	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent, "", 750, 800);
+    		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent, "", 750, 721);
     		}
     		
     		function checkBox_checked(pItemID, pUserID, evt) {
@@ -235,8 +232,8 @@
     		var checkpassword_dialogArguments = new Array();
     		
     		function DeleteItem_onclick() {	
-    			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t900' />");
+    			if (UserLevel == "0" || UserLevel == "9" || Delete_FG != "true") {
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					
@@ -252,11 +249,6 @@
     					alert("<spring:message code='ezCommunity.lhj01' />");
     					return;
     				}
-    			}
-
-    			if(Delete_FG != "true") {
-    				alert("<spring:message code='ezCommunity.t901' />");
-    				return;
     			}
     			
     			if (CheckIfHasReplies()) {
@@ -295,7 +287,7 @@
     		
     		function DeleteItem_onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined") {
-		            alert("<spring:message code='ezCommunity.t901' />");
+		            alert("<spring:message code='ezCommunity.t431' />");
 		            return;
 		        }
 
@@ -387,25 +379,11 @@
     			}
     		}
 
-    		function AddToMyBoards() {
-    			var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    			xmlhttp.open("POST", "aspx/AddToMyBoards.aspx?BoardID=" + pBoardID + "&BoardName=" + escape(pBoardName), false);
-    			xmlhttp.send();
-    			
-    			if(xmlhttp.responseXML.text == "OK") {
-    				alert("<spring:message code='ezCommunity.t902' />");
-    			} else {
-    				alert("<spring:message code='ezCommunity.t903' />");
-    			}
-    			xmlhttp = null;		
-    		}
-    		
-            var BlockSize = 10;
-            
             function td_Create1(strtext) {
                 $("#tblPageRayer").html(strtext);
             }
             
+            var BlockSize = 10;
             function makePageSelPage() {
                 var strtext;
                 var PagingHTML = "";
@@ -527,22 +505,6 @@
     			    window.location.href = "/ezCommunity/boardItemList.do?page=" + parseInt(newPage) + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;
     		    }
     		}
-            
-            function prevPage_onclick() {
-    			newPage = parseInt(CurPage) - 1;
-    			
-    			if(newPage > 0) {
-    				window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage.toString() + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;
-    			}
-    		}
-
-    		function nextPage_onclick() {
-    			newPage = parseInt(CurPage) + 1;
-    			
-    			if(newPage <= parseInt(totalPage)) {
-    				window.location.href = "/ezCommunity/BoardItemList.do?page=" + newPage.toString() + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;
-    			}
-    		}
 
     		function moveToPage() {
     			if(window.event.keyCode == 13) {
@@ -559,8 +521,8 @@
     		}
 
     		function CopyItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t905' />");
+    			if (UserLevel == "0" || UserLevel == "9" || (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false)) {
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					
@@ -568,12 +530,7 @@
     				alert("<spring:message code='ezCommunity.t430' />");
     				return;
     			}
-    			
-    			if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
-    				alert("<spring:message code='ezCommunity.t431' />");
-    				return;
-    			}
-    			
+
     			var arrList = new Array();
     			var strItemList = "";
     			var i=0;
@@ -599,13 +556,8 @@
     		}
     		
     		function SetRead_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t899' />");
-    				return;
-    			}
-    					
-    			if(Read_FG != "true") {
-    				alert("<spring:message code='ezCommunity.t423' />");
+    			if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
 
@@ -645,7 +597,7 @@
 
     		function MemberInfo_onclick(pUserID) {
     			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t906' />");
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					
@@ -659,21 +611,16 @@
 
     		function ReservationItem_onclick() {
     			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t907' />");
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     			
     			window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + encodeURIComponent(CurPage) + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + encodeURIComponent(pSortBy) + "&code=" + encodeURIComponent(code);
     		}
 
-    		document.onselectstart = function () {
-    		    window.event.cancelBubble = true;
-    		    window.event.returnValue = false;
-    		};
-
     		function search_onclick() {
     			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t908' />");
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					
@@ -681,32 +628,6 @@
     			window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&orgBoardParameters=" + encodeURIComponent(OrgBoardParameters) + "&code=" + encodeURIComponent(code);
     		}
 
-    		function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
-   		        try {
-   		            var heigth = window.screen.availHeight;
-   		            var width = window.screen.availWidth;
-
-   		            var left = 0;
-   		            var top = 0;
-
-   		            if (window.screen.width > 800) {
-   		                var pleftpos;
-
-   		                pleftpos = parseInt(width) - 770;
-   		                heigth = parseInt(heigth) - 30;
-   		                width = parseInt(width) - pleftpos;
-
-   		                left = pleftpos / 2;
-   		            } else {
-   		                heigth = parseInt(heigth) - 30;
-   		                width = parseInt(width) - 10;
-   		            }
-   		            
-   		            window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
-   		        } catch (e) {
-   		            alert("openwindow :: " + e.description);
-   		        }
-   		    }
     	</script>    
         
 	</head>
@@ -742,7 +663,7 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<div>
+		<div style = "height:370px;">
 			<table  id="tblList" class="cmhomelist" style="width:100%">
 				<form name="frmOutbox" action="/ezCommunity/boardItemList.do" method="post">
 					<tr>

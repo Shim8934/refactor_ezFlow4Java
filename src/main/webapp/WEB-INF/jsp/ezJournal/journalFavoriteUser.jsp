@@ -6,11 +6,11 @@
 		<c:when test="${fn:length(userList) > 0}">
 			<c:forEach items="${userList}" var="user" varStatus="status">
 				<tr id="${user.userId}" name="${user.userName}" class="hover" onclick="setUserAuthorDept(this)" ondblclick="setAuthorViewUser()">
-					<td>${status.count }</td>
-					<td>${user.userName }</td>
-					<td>${user.jikwi }</td>
-					<td>${user.deptName }</td>
-					<td>${user.mail }</td>
+					<td><c:out value='${status.count }'/></td>
+					<td><c:out value='${user.userName }'/></td>
+					<td><c:out value='${user.jikwi }'/></td>
+					<td><c:out value='${user.deptName }'/></td>
+					<td><c:out value='${user.mail }'/></td>
 				</tr>
 			</c:forEach>
 		</c:when>

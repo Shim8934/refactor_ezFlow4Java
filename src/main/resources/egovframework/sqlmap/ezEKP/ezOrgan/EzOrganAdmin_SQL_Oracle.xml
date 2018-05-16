@@ -63,6 +63,9 @@
 					<isEqual property="search_keycode" compareValue="2">
 						DESCRIPTION LIKE '%' || #search_keyword# || '%'
 					</isEqual>
+					<isEqual property="search_keycode" compareValue="3">
+						CN LIKE '%' || #search_keyword# || '%'
+					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 	</sql>

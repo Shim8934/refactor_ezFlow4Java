@@ -214,7 +214,7 @@ CREATE TABLE `jmocha_address_folder` (
   `folder_type` char(1) DEFAULT NULL,
   `folder_name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`folder_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -268,7 +268,7 @@ CREATE TABLE `jmocha_address_info` (
   `s_type` char(1) DEFAULT NULL,
   PRIMARY KEY (`address_id`),
   KEY `owner_id` (`owner_id`,`s_email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3115 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -302,7 +302,7 @@ CREATE TABLE `jmocha_address_simple` (
   `simple_email` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`simple_idx`),
   KEY `user_id_index` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=166 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -427,7 +427,7 @@ CREATE TABLE `jmocha_inbox_rule` (
   `PRIORITY` int(11) NOT NULL,
   PRIMARY KEY (`RULE_ID`),
   KEY `idx_jmocha_inbox_rule_USER_ID` (`USER_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=266 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -446,7 +446,7 @@ CREATE TABLE `jmocha_inbox_rule_sub` (
   PRIMARY KEY (`ITEM_ID`),
   KEY `RULE_ID_idx` (`RULE_ID`),
   CONSTRAINT `RULE_ID` FOREIGN KEY (`RULE_ID`) REFERENCES `jmocha_inbox_rule` (`RULE_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=652 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -461,6 +461,42 @@ CREATE TABLE `jmocha_init_mailbox` (
   `tenant_id` int(11) NOT NULL,
   `order` int(11) DEFAULT NULL,
   PRIMARY KEY (`mailbox_name`,`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_letter`
+--
+
+DROP TABLE IF EXISTS `jmocha_letter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_letter` (
+  `letter_no` int(11) NOT NULL AUTO_INCREMENT,
+  `displayname` varchar(45) DEFAULT NULL,
+  `displayname2` varchar(45) DEFAULT NULL,
+  `letter_order` int(11) DEFAULT NULL,
+  `letterbox_no` int(11) DEFAULT NULL,
+  `letter_id` varchar(510) DEFAULT NULL,
+  PRIMARY KEY (`letter_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_letterbox`
+--
+
+DROP TABLE IF EXISTS `jmocha_letterbox`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_letterbox` (
+  `letterbox_no` int(11) NOT NULL,
+  `parent_letterbox_no` int(11) DEFAULT NULL,
+  `displayname` varchar(45) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `displayname2` varchar(45) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `company_id` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `tenant_id` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`letterbox_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -589,7 +625,7 @@ CREATE TABLE `jmocha_mail_pop3` (
   `ssl_yn` int(11) DEFAULT NULL,
   PRIMARY KEY (`pop3_idx`),
   KEY `pop3_index` (`user_id`,`pop3_server`,`pop3_user_id`(255))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -639,7 +675,7 @@ CREATE TABLE `jmocha_mail_recall` (
   `recall_date` datetime DEFAULT NULL,
   PRIMARY KEY (`recall_idx`),
   KEY `recall_message_id_index` (`message_id`,`sender_email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -695,7 +731,7 @@ CREATE TABLE `jmocha_mail_secure` (
   PRIMARY KEY (`secure_id`),
   KEY `fk_mail_secure_idx` (`mailbox_id`,`mail_uid`),
   CONSTRAINT `fk_mail_secure` FOREIGN KEY (`mailbox_id`, `mail_uid`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -870,7 +906,7 @@ CREATE TABLE `jmocha_stat_mail_log` (
   KEY `IDX_TENANT_ID` (`TENANT_ID`),
   KEY `IDX_LOG_DATE` (`LOG_DATE`),
   KEY `IDX_EVENT_TYPE` (`EVENT_TYPE`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=489292 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2404,8 +2440,8 @@ CREATE TABLE `tbl_board_item` (
   `EXTENSIONATTRIBUTE8` varchar(200) DEFAULT NULL,
   `EXTENSIONATTRIBUTE9` varchar(200) DEFAULT NULL,
   `EXTENSIONATTRIBUTE10` varchar(200) DEFAULT NULL,
-  `CONTENT` longtext,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `CONTENT` longtext,
   PRIMARY KEY (`TENANT_ID`,`ITEMID`),
   KEY `writedate` (`WRITEDATE`,`PARENTWRITEDATE`),
   KEY `writedate1` (`WRITEDATE`)
@@ -2809,7 +2845,7 @@ CREATE TABLE `tbl_c_clubguest` (
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0',
   PRIMARY KEY (`NO`),
   UNIQUE KEY `IDX_TBL_C_CLUBGUEST` (`TENANT_ID`,`NO`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2987,7 +3023,7 @@ CREATE TABLE `tbl_c_pollanswer` (
   `TENANT_ID` bigint(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ANSWERID`),
   UNIQUE KEY `PK_TBL_C_POLLANSWER` (`TENANT_ID`,`ANSWERID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3010,7 +3046,7 @@ CREATE TABLE `tbl_c_pollmanager` (
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0',
   PRIMARY KEY (`MANAGERID`),
   UNIQUE KEY `IDX_TBL_C_POLLMANAGER` (`TENANT_ID`,`MANAGERID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3031,7 +3067,7 @@ CREATE TABLE `tbl_c_pollquestion` (
   `TENANT_ID` bigint(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`QUESTIONID`),
   UNIQUE KEY `IDX_TBL_C_POLLQUESTION` (`TENANT_ID`,`QUESTIONID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3056,7 +3092,7 @@ CREATE TABLE `tbl_c_pollresponse` (
   KEY `FK_TBL_C_POLLRESPONSE2_idx` (`TENANT_ID`,`ANSWERID`),
   CONSTRAINT `FK_TBL_C_POLLRESPONSE1` FOREIGN KEY (`TENANT_ID`, `QUESTIONID`) REFERENCES `tbl_c_pollquestion` (`TENANT_ID`, `QUESTIONID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_TBL_C_POLLRESPONSE2` FOREIGN KEY (`TENANT_ID`, `ANSWERID`) REFERENCES `tbl_c_pollanswer` (`TENANT_ID`, `ANSWERID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3248,7 +3284,7 @@ CREATE TABLE `tbl_circular` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3266,7 +3302,7 @@ CREATE TABLE `tbl_circular_bm` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularBMId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3285,7 +3321,7 @@ CREATE TABLE `tbl_circular_bmuser` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularBMUserId`),
   KEY `tenantId_memberId_circularBMId_index` (`tenantId`,`memberId`,`circularBMId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3307,7 +3343,7 @@ CREATE TABLE `tbl_circular_comment` (
   `status` mediumint(5) DEFAULT NULL,
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularCommentId`,`circularId`,`tenantId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3327,7 +3363,7 @@ CREATE TABLE `tbl_circular_commentstate` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularCommentStateId`),
   KEY `tenantId_cn_circularCommentId_index` (`tenantId`,`memberId`,`circularCommentId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3346,7 +3382,7 @@ CREATE TABLE `tbl_circular_file` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularFileId`),
   KEY `tenantId_circularId_index` (`tenantId`,`circularId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3364,7 +3400,7 @@ CREATE TABLE `tbl_circular_folder` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularFolderId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3382,7 +3418,7 @@ CREATE TABLE `tbl_circular_link` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularLinkId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3423,7 +3459,7 @@ CREATE TABLE `tbl_circular_option` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularOptionId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3449,7 +3485,7 @@ CREATE TABLE `tbl_circular_user` (
   `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularUserId`),
   KEY `tenantId_memberId_circularId_index` (`tenantId`,`memberId`,`circularId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3768,7 +3804,7 @@ CREATE TABLE `tbl_connection_info` (
   `CONNECTAGENT` varchar(1000) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0',
   PRIMARY KEY (`SEQUENCE`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15311 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4033,6 +4069,27 @@ CREATE TABLE `tbl_depttempletdetail` (
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERID`(255),`FORMID`,`APRDEPTSN`,`APRDEPTMEMBERSN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_docdeletehistory`
+--
+
+DROP TABLE IF EXISTS `tbl_docdeletehistory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_docdeletehistory` (
+  `DOCID` varchar(100) NOT NULL,
+  `DOCNO` varchar(45) DEFAULT NULL,
+  `DOCTITLE` varchar(255) DEFAULT NULL,
+  `DEPTNAME` varchar(50) DEFAULT NULL,
+  `WRITERNAME` varchar(45) DEFAULT NULL,
+  `DELETEUSERID` varchar(40) DEFAULT NULL,
+  `DELETETIME` datetime DEFAULT NULL,
+  `TENANT_ID` varchar(45) NOT NULL,
+  `COMPANYID` varchar(45) NOT NULL,
+  PRIMARY KEY (`DOCID`,`COMPANYID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4508,7 +4565,7 @@ CREATE TABLE `tbl_formconninfo` (
   `DESCRIPTION` varchar(100) DEFAULT NULL,
   `UPPERNODE` varchar(100) NOT NULL,
   PRIMARY KEY (`SN`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4582,6 +4639,7 @@ CREATE TABLE `tbl_forminfo` (
   `FORMCONNFLAG` varchar(4) DEFAULT 'N',
   `FORMGAMSAFLAG` varchar(4) DEFAULT '1',
   `FORMORDER` bigint(10) DEFAULT NULL,
+  `FORMDRAFTALLFLAG` varchar(4) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`FORMID`,`TENANT_ID`,`COMPANYID`)
@@ -4783,7 +4841,381 @@ CREATE TABLE `tbl_holidaylist` (
   `TENANT_ID` mediumint(5) DEFAULT NULL,
   PRIMARY KEY (`HOLIDAYID`),
   UNIQUE KEY `IDX_TBL_HOLIDAYLIST` (`TENANT_ID`,`HOLIDAYID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_journal`
+--
+
+DROP TABLE IF EXISTS `tbl_journal`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_journal` (
+  `journal_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '일지 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `journal_title` varchar(200) DEFAULT NULL COMMENT '일지 제목',
+  `journal_content` longtext COMMENT '일지 내용',
+  `journal_date` datetime DEFAULT NULL COMMENT '일지 일',
+  `journal_writer` varchar(80) DEFAULT NULL COMMENT '일지 작성자',
+  `form_id` bigint(10) DEFAULT NULL COMMENT '양식 아이디',
+  `dept_share` varchar(45) DEFAULT NULL COMMENT '부서 공유',
+  `journal_status` varchar(200) DEFAULT NULL COMMENT '일지 상태',
+  `journal_dept` varchar(80) DEFAULT NULL,
+  `journal_text` longtext,
+  `journal_sum` varchar(45) DEFAULT 'N',
+  PRIMARY KEY (`journal_id`,`tenant_id`),
+  KEY `FK_tbl_journal_form_id_tbl_journal_form_form_id` (`form_id`),
+  CONSTRAINT `FK_tbl_journal_form_id_tbl_journal_form_form_id` FOREIGN KEY (`form_id`) REFERENCES `tbl_journal_form` (`form_id`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=591 DEFAULT CHARSET=utf8 COMMENT='일지';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_journal_auth`
+--
+
+DROP TABLE IF EXISTS `tbl_journal_auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_journal_auth` (
+  `user_id` varchar(200) NOT NULL COMMENT '사원아이디',
+  `dept_id` varchar(200) NOT NULL COMMENT '부서아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='열람권한';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_journal_env`
+--
+
+DROP TABLE IF EXISTS `tbl_journal_env`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_journal_env` (
+  `user_id` varchar(200) NOT NULL COMMENT '사원아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `list_cnt` int(11) DEFAULT '20' COMMENT '리스트 수',
+  `viewenv` varchar(200) DEFAULT 'NONE' COMMENT '미리보기(NONE:기본,W:가로분할보기,H:세로분할보기)',
+  `preview_wcontent` int(10) DEFAULT '50' COMMENT '가로분할보기시 본문영역길이',
+  `preview_hcontent` int(10) DEFAULT '50' COMMENT '세로분할보기시 본문영역길이',
+  `reply_alert` varchar(45) DEFAULT 'Y' COMMENT '댓글 알림',
+  `recv_alert` varchar(45) DEFAULT 'Y' COMMENT '수신 알림',
+  PRIMARY KEY (`user_id`,`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='환경설정';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_journal_file`
+--
+
+DROP TABLE IF EXISTS `tbl_journal_file`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_journal_file` (
+  `file_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '파일 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `file_path` varchar(200) DEFAULT NULL COMMENT '파일 경로',
+  `journal_id` bigint(10) DEFAULT NULL COMMENT '일지 아이디',
+  `file_size` varchar(45) DEFAULT NULL,
+  `file_name` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`file_id`,`tenant_id`),
+  KEY `FK_tbl_journal_file_journal_id_tbl_journal_journal_id` (`journal_id`),
+  CONSTRAINT `FK_tbl_journal_file_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='첨부파일';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_journal_form`
+--
+
+DROP TABLE IF EXISTS `tbl_journal_form`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_journal_form` (
+  `form_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '양식 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `form_name` varchar(200) NOT NULL COMMENT '양식 명',
+  `form_content` text COMMENT '양식 내용',
+  `type_id` varchar(80) NOT NULL COMMENT '함 아이디',
+  `form_date` datetime NOT NULL COMMENT '양식 일',
+  `form_writer` varchar(200) NOT NULL COMMENT '양식 작성자',
+  `form_info` varchar(4000) DEFAULT NULL COMMENT '양식 설명',
+  `form_status` varchar(45) DEFAULT NULL COMMENT '양식 상태',
+  `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
+  PRIMARY KEY (`form_id`,`tenant_id`),
+  KEY `FK_tbl_journal_form_type_id_tbl_journal_form_type_type_id_idx` (`type_id`),
+  KEY `FK_tbl_journal_form_company_id_tbl_journal_form_type_compan_idx` (`company_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='양식';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_journal_form_type`
+--
+
+DROP TABLE IF EXISTS `tbl_journal_form_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_journal_form_type` (
+  `type_id` varchar(80) NOT NULL COMMENT '함 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
+  `used` varchar(45) NOT NULL DEFAULT 'use' COMMENT '사용',
+  PRIMARY KEY (`type_id`,`tenant_id`,`company_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='양식함';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_journal_form_use_dept`
+--
+
+DROP TABLE IF EXISTS `tbl_journal_form_use_dept`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_journal_form_use_dept` (
+  `dept_id` varchar(200) NOT NULL COMMENT '부서 아이디',
+  `form_id` bigint(10) NOT NULL COMMENT '양식 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  KEY `FK_tbl_journal_form_user_dept_form_id_tbl_journal_form_form_id` (`form_id`),
+  CONSTRAINT `FK_tbl_journal_form_user_dept_form_id_tbl_journal_form_form_id` FOREIGN KEY (`form_id`) REFERENCES `tbl_journal_form` (`form_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='양식사용부서';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_journal_recv`
+--
+
+DROP TABLE IF EXISTS `tbl_journal_recv`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_journal_recv` (
+  `user_id` varchar(200) NOT NULL COMMENT '사원아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `journal_id` bigint(10) DEFAULT NULL COMMENT '일지 아이디',
+  `recieve_date` datetime DEFAULT NULL COMMENT '수신 일',
+  `recv_status` varchar(45) DEFAULT 'Y',
+  KEY `FK_tbl_journal_recv_journal_id_tbl_journal_journal_id` (`journal_id`),
+  CONSTRAINT `FK_tbl_journal_recv_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='수신';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_journal_recv_favorite`
+--
+
+DROP TABLE IF EXISTS `tbl_journal_recv_favorite`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_journal_recv_favorite` (
+  `favorite_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '즐찾 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `user_id` varchar(200) DEFAULT NULL COMMENT '사원아이디',
+  `favorite_name` varchar(200) DEFAULT NULL COMMENT '즐찾 명',
+  `favorite_date` datetime DEFAULT NULL COMMENT '즐찾 일',
+  PRIMARY KEY (`favorite_id`,`tenant_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='즐찾';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_journal_recv_favorite_list`
+--
+
+DROP TABLE IF EXISTS `tbl_journal_recv_favorite_list`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_journal_recv_favorite_list` (
+  `favorite_id` bigint(10) NOT NULL COMMENT '즐찾 아이디',
+  `user_id` varchar(300) DEFAULT NULL COMMENT '사원아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  KEY `FK_tbl_journal_recv_favorite_list_favorite_id` (`favorite_id`),
+  CONSTRAINT `FK_tbl_journal_recv_favorite_list_favorite_id` FOREIGN KEY (`favorite_id`) REFERENCES `tbl_journal_recv_favorite` (`favorite_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='즐찾 리스트';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_journal_reply`
+--
+
+DROP TABLE IF EXISTS `tbl_journal_reply`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_journal_reply` (
+  `reply_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '댓글 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `reply_content` varchar(4000) DEFAULT NULL COMMENT '댓글 내용',
+  `journal_id` bigint(10) NOT NULL COMMENT '일지 아이디',
+  `reply_date` datetime DEFAULT NULL COMMENT '댓글 일',
+  `reply_writer` varchar(80) DEFAULT NULL COMMENT '댓글 작성자',
+  PRIMARY KEY (`reply_id`,`tenant_id`),
+  KEY `FK_tbl_journal_reply_journal_id_tbl_journal_journal_id` (`journal_id`),
+  CONSTRAINT `FK_tbl_journal_reply_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='댓글';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_journal_view`
+--
+
+DROP TABLE IF EXISTS `tbl_journal_view`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_journal_view` (
+  `user_id` varchar(200) NOT NULL COMMENT '사원아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `journal_id` bigint(10) NOT NULL COMMENT '일지 아이디',
+  `view_date` datetime DEFAULT NULL COMMENT '확인 일',
+  PRIMARY KEY (`user_id`,`tenant_id`,`journal_id`),
+  KEY `FK_tbl_journal_view_journal_id_tbl_journal_journal_id` (`journal_id`),
+  CONSTRAINT `FK_tbl_journal_view_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지조회';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_ladder`
+--
+
+DROP TABLE IF EXISTS `tbl_ladder`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_ladder` (
+  `tenant_id` mediumint(5) NOT NULL,
+  `ladderid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(500) DEFAULT NULL,
+  `type` tinyint(4) NOT NULL,
+  `status` tinyint(4) DEFAULT '0',
+  `secretflag` tinyint(4) DEFAULT '0',
+  `writerid` varchar(80) NOT NULL,
+  `writername` varchar(120) NOT NULL,
+  `writername2` varchar(120) DEFAULT NULL,
+  `deptname` varchar(100) NOT NULL,
+  `deptname2` varchar(100) DEFAULT NULL,
+  `linecnt` smallint(6) NOT NULL,
+  `linearray` text,
+  `deleteflag` tinyint(4) DEFAULT '0',
+  `writedate` varchar(40) DEFAULT NULL,
+  `startdate` varchar(40) DEFAULT NULL,
+  `deletedate` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`ladderid`,`tenant_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_ladder_bm`
+--
+
+DROP TABLE IF EXISTS `tbl_ladder_bm`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_ladder_bm` (
+  `tenant_id` mediumint(5) NOT NULL,
+  `ladderbmid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `bmname` varchar(100) DEFAULT NULL,
+  `userId` varchar(80) NOT NULL,
+  `regdate` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`ladderbmid`,`tenant_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_ladder_bmuser`
+--
+
+DROP TABLE IF EXISTS `tbl_ladder_bmuser`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_ladder_bmuser` (
+  `tenant_id` mediumint(5) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ladderbmid` bigint(20) NOT NULL,
+  `userId` varchar(80) DEFAULT NULL,
+  `username` varchar(120) NOT NULL,
+  `username2` varchar(120) DEFAULT NULL,
+  PRIMARY KEY (`id`,`tenant_id`),
+  KEY `fk_tbl_ladder_bmuser` (`ladderbmid`),
+  CONSTRAINT `fk_tbl_ladder_bmuser` FOREIGN KEY (`ladderbmid`) REFERENCES `tbl_ladder_bm` (`ladderbmid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_ladder_codelist`
+--
+
+DROP TABLE IF EXISTS `tbl_ladder_codelist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_ladder_codelist` (
+  `tenant_id` mediumint(5) NOT NULL,
+  `code` varchar(20) NOT NULL,
+  `language` tinyint(4) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `description` varchar(400) DEFAULT NULL,
+  PRIMARY KEY (`tenant_id`,`code`,`language`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_ladder_comment`
+--
+
+DROP TABLE IF EXISTS `tbl_ladder_comment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_ladder_comment` (
+  `tenant_id` mediumint(5) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ladderid` bigint(20) NOT NULL,
+  `comment` text,
+  `userid` varchar(80) NOT NULL,
+  `username` varchar(120) NOT NULL,
+  `username2` varchar(120) DEFAULT NULL,
+  `writedate` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`id`,`tenant_id`),
+  KEY `tbl_ladder_comment_fk` (`ladderid`),
+  CONSTRAINT `tbl_ladder_comment_fk` FOREIGN KEY (`ladderid`) REFERENCES `tbl_ladder` (`ladderid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_ladder_line`
+--
+
+DROP TABLE IF EXISTS `tbl_ladder_line`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_ladder_line` (
+  `tenant_id` mediumint(5) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ladderid` bigint(20) NOT NULL,
+  `userid` varchar(80) DEFAULT NULL,
+  `username` varchar(120) NOT NULL,
+  `username2` varchar(120) DEFAULT NULL,
+  `item` varchar(100) DEFAULT NULL,
+  `ladderorder` smallint(6) NOT NULL,
+  `resultuserid` varchar(80) DEFAULT NULL,
+  `resultusername` varchar(120) DEFAULT NULL,
+  `resultusername2` varchar(120) DEFAULT NULL,
+  PRIMARY KEY (`id`,`tenant_id`),
+  KEY `tbl_ladder_line_fk` (`ladderid`),
+  CONSTRAINT `tbl_ladder_line_fk` FOREIGN KEY (`ladderid`) REFERENCES `tbl_ladder` (`ladderid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=470 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_ladder_order`
+--
+
+DROP TABLE IF EXISTS `tbl_ladder_order`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_ladder_order` (
+  `tenant_id` mediumint(5) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ladderid` bigint(20) NOT NULL,
+  `changeladderid` bigint(20) DEFAULT NULL,
+  `userId` varchar(80) DEFAULT NULL,
+  PRIMARY KEY (`id`,`tenant_id`),
+  KEY `fk_tbl_ladder_order` (`ladderid`),
+  CONSTRAINT `fk_tbl_ladder_order` FOREIGN KEY (`ladderid`) REFERENCES `tbl_ladder` (`ladderid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5180,7 +5612,7 @@ CREATE TABLE `tbl_notification` (
   `COMPANYID` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`ITEMSEQ`),
   UNIQUE KEY `IDX_TBL_NOTIFICATION` (`TENANT_ID`,`ITEMSEQ`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11791 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5936,7 +6368,7 @@ CREATE TABLE `tbl_ps_popup` (
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`ITEMSEQ`),
   UNIQUE KEY `IDX_TBL_PS_POPUP` (`TENANT_ID`,`COMPANYID`,`ITEMSEQ`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6001,6 +6433,7 @@ CREATE TABLE `tbl_ps_sliderimage` (
   `ISUSE` bigint(10) NOT NULL,
   `SN` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `URL` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`SLIDERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6716,7 +7149,7 @@ CREATE TABLE `tbl_schedule` (
   `CONTENTPATH` varchar(500) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`SCHEDULEID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6756,7 +7189,7 @@ CREATE TABLE `tbl_scheduleattach` (
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`ATTACHID`),
   UNIQUE KEY `IDX_TBL_SCHEDULEATTACH` (`ATTACHID`,`SCHEDULEID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6831,7 +7264,7 @@ CREATE TABLE `tbl_schedulerepetition_del` (
   `ENDDATE` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) DEFAULT NULL,
   PRIMARY KEY (`REPETITIONID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6994,7 +7427,7 @@ CREATE TABLE `tbl_serialnumgen` (
   `COMPANYID` varchar(20) DEFAULT NULL,
   `IDX` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`IDX`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7160,7 +7593,7 @@ CREATE TABLE `tbl_task` (
   `TOTALREP` mediumint(9) NOT NULL DEFAULT '0',
   `TENANTID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TASKID`,`TENANTID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7308,7 +7741,7 @@ CREATE TABLE `tbl_taskcomment` (
   `COMMENT` longtext NOT NULL,
   `TENANTID` mediumint(5) NOT NULL,
   PRIMARY KEY (`COMMENTID`,`TASKID`,`TENANTID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7998,6 +8431,7 @@ CREATE TABLE `tbl_usermaster` (
   `LASTLOGIN` datetime DEFAULT NULL,
   `LOGINCNT` bigint(10) DEFAULT '0',
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+  `LISTTYPE` varchar(3) DEFAULT 'TXT',
   PRIMARY KEY (`TENANT_ID`,`CN`),
   KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -8187,12 +8621,12 @@ CREATE TABLE `tbl_vote_question` (
   `SET_DATE` tinyint(4) NOT NULL DEFAULT '0',
   `IS_SORTING` tinyint(4) NOT NULL DEFAULT '0',
   `IS_SELONLYONCE` tinyint(4) NOT NULL DEFAULT '0',
-  `SENDPOSTNOTICE` tinyint(4) NOT NULL DEFAULT '0',
-  `OPENTOALL` tinyint(4) NOT NULL DEFAULT '0',
   `VOTEOPTION1` tinyint(4) DEFAULT '0',
   `VOTEOPTION2` tinyint(4) DEFAULT '0',
   `VOTEOPTION3` tinyint(4) DEFAULT '0',
   `VOTEOPTION4` tinyint(4) DEFAULT '0',
+  `SENDPOSTNOTICE` tinyint(4) NOT NULL DEFAULT '0',
+  `OPENTOALL` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -8252,23 +8686,23 @@ CREATE TABLE `tbl_vote_user_and_question` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Temporary view structure for view `v_ajsb_emp`
+-- Table structure for table `tbl_vote_user_and_question`
 --
 
-DROP TABLE IF EXISTS `tbl_docdeletehistory`;
+DROP TABLE IF EXISTS `tbl_vote_users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_docdeletehistory` (
-  `DOCID` varchar(100) NOT NULL,
-  `DOCNO` varchar(45) DEFAULT NULL,
-  `DOCTITLE` varchar(255) DEFAULT NULL,
-  `DEPTNAME` varchar(50) DEFAULT NULL,
-  `WRITERNAME` varchar(45) DEFAULT NULL,
-  `DELETEUSERID` varchar(40) DEFAULT NULL,
-  `DELETETIME` datetime DEFAULT NULL,
-  `TENANT_ID` varchar(45) NOT NULL,
-  `COMPANYID` varchar(45) NOT NULL,
-  PRIMARY KEY (`DOCID`,`COMPANYID`,`TENANT_ID`)
+CREATE TABLE `tbl_vote_users` (
+  `TENANT_ID` int(11) NOT NULL,
+  `QST_ID` int(11) NOT NULL,
+  `USER_ID` varchar(80) NOT NULL,
+  `USER_NAME` varchar(120) NOT NULL,
+  `USER_NAME2` varchar(120),
+  `DEPT_ID` varchar(80),
+  `DEPT_NAME` varchar(200),
+  `DEPT_NAME2` varchar(200),
+  `USER_STATUS` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`TENANT_ID`,`QST_ID`,`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -8665,150 +9099,3 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
-
------------------------- 업무일지  -----------------------------
--- jmocha.tbl_journal_form_type Table Create SQL
-CREATE TABLE `tbl_journal_form_type` (
-  `type_id` varchar(80) NOT NULL COMMENT '함 아이디',
-  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
-  `used` varchar(45) NOT NULL DEFAULT 'use' COMMENT '사용',
-  PRIMARY KEY (`type_id`,`tenant_id`,`company_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='양식함';
-
-
--- jmocha.tbl_journal_form Table Create SQL
-CREATE TABLE `tbl_journal_form` (
-  `form_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '양식 아이디',
-  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  `form_name` varchar(200) NOT NULL COMMENT '양식 명',
-  `form_content` text COMMENT '양식 내용',
-  `type_id` varchar(80) NOT NULL COMMENT '함 아이디',
-  `form_date` datetime NOT NULL COMMENT '양식 일',
-  `form_writer` varchar(200) NOT NULL COMMENT '양식 작성자',
-  `form_info` varchar(4000) DEFAULT NULL COMMENT '양식 설명',
-  `form_status` varchar(45) DEFAULT NULL COMMENT '양식 상태',
-  `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
-  PRIMARY KEY (`form_id`,`tenant_id`),
-  KEY `FK_tbl_journal_form_type_id_tbl_journal_form_type_type_id_idx` (`type_id`),
-  KEY `FK_tbl_journal_form_company_id_tbl_journal_form_type_compan_idx` (`company_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='양식';
-
-
--- jmocha.tbl_journal Table Create SQL
-CREATE TABLE `tbl_journal` (
-  `journal_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '일지 아이디',
-  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  `journal_title` varchar(200) DEFAULT NULL COMMENT '일지 제목',
-  `journal_content` longtext COMMENT '일지 내용',
-  `journal_date` datetime DEFAULT NULL COMMENT '일지 일',
-  `journal_writer` varchar(80) DEFAULT NULL COMMENT '일지 작성자',
-  `form_id` bigint(10) DEFAULT NULL COMMENT '양식 아이디',
-  `dept_share` varchar(45) DEFAULT NULL COMMENT '부서 공유',
-  `journal_status` varchar(200) DEFAULT NULL COMMENT '일지 상태',
-  `journal_dept` varchar(80) DEFAULT NULL,
-  `journal_text` longtext,
-  `journal_sum` varchar(45) DEFAULT 'N',
-  PRIMARY KEY (`journal_id`,`tenant_id`),
-  KEY `FK_tbl_journal_form_id_tbl_journal_form_form_id` (`form_id`),
-  CONSTRAINT `FK_tbl_journal_form_id_tbl_journal_form_form_id` FOREIGN KEY (`form_id`) REFERENCES `tbl_journal_form` (`form_id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지';
-
--- jmocha.tbl_journal_recv_favorite Table Create SQL
-CREATE TABLE `tbl_journal_recv_favorite` (
-  `favorite_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '즐찾 아이디',
-  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  `user_id` varchar(200) DEFAULT NULL COMMENT '사원아이디',
-  `favorite_name` varchar(200) DEFAULT NULL COMMENT '즐찾 명',
-  `favorite_date` datetime DEFAULT NULL COMMENT '즐찾 일',
-  PRIMARY KEY (`favorite_id`,`tenant_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='즐찾';
-
-
--- jmocha.tbl_journal_reply Table Create SQL
-CREATE TABLE `tbl_journal_reply` (
-  `reply_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '댓글 아이디',
-  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  `reply_content` varchar(4000) DEFAULT NULL COMMENT '댓글 내용',
-  `journal_id` bigint(10) NOT NULL COMMENT '일지 아이디',
-  `reply_date` datetime DEFAULT NULL COMMENT '댓글 일',
-  `reply_writer` varchar(80) DEFAULT NULL COMMENT '댓글 작성자',
-  PRIMARY KEY (`reply_id`,`tenant_id`),
-  KEY `FK_tbl_journal_reply_journal_id_tbl_journal_journal_id` (`journal_id`),
-  CONSTRAINT `FK_tbl_journal_reply_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='댓글';
-
--- jmocha.tbl_journal_form_user_dept Table Create SQL
-CREATE TABLE `tbl_journal_form_use_dept` (
-  `dept_id` varchar(200) NOT NULL COMMENT '부서 아이디',
-  `form_id` bigint(10) NOT NULL COMMENT '양식 아이디',
-  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  KEY `FK_tbl_journal_form_user_dept_form_id_tbl_journal_form_form_id` (`form_id`),
-  CONSTRAINT `FK_tbl_journal_form_user_dept_form_id_tbl_journal_form_form_id` FOREIGN KEY (`form_id`) REFERENCES `tbl_journal_form` (`form_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='양식사용부서';
-
--- jmocha.tbl_journal_auth Table Create SQL
-CREATE TABLE `tbl_journal_auth` (
-  `user_id` varchar(200) NOT NULL COMMENT '사원아이디',
-  `dept_id` varchar(200) NOT NULL COMMENT '부서아이디',
-  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='열람권한';
-
-
--- jmocha.tbl_journal_recv Table Create SQL
-CREATE TABLE `tbl_journal_recv` (
-  `user_id` varchar(200) NOT NULL COMMENT '사원아이디',
-  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  `journal_id` bigint(10) DEFAULT NULL COMMENT '일지 아이디',
-  `recieve_date` datetime DEFAULT NULL COMMENT '수신 일',
-  `recv_status` varchar(45) DEFAULT 'Y',
-  KEY `FK_tbl_journal_recv_journal_id_tbl_journal_journal_id` (`journal_id`),
-  CONSTRAINT `FK_tbl_journal_recv_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='수신';
-
--- jmocha.tbl_journal_file Table Create SQL
-CREATE TABLE `tbl_journal_file` (
-  `file_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '파일 아이디',
-  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  `file_path` varchar(200) DEFAULT NULL COMMENT '파일 경로',
-  `journal_id` bigint(10) DEFAULT NULL COMMENT '일지 아이디',
-  `file_size` varchar(45) DEFAULT NULL,
-  `file_name` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`file_id`,`tenant_id`),
-  KEY `FK_tbl_journal_file_journal_id_tbl_journal_journal_id` (`journal_id`),
-  CONSTRAINT `FK_tbl_journal_file_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='첨부파일';
-
--- jmocha.tbl_journal_env Table Create SQL
-CREATE TABLE `tbl_journal_env` (
-  `user_id` varchar(200) NOT NULL COMMENT '사원아이디',
-  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  `list_cnt` int(11) DEFAULT '20' COMMENT '리스트 수',
-  `viewenv` varchar(200) DEFAULT 'NONE' COMMENT '미리보기(NONE:기본,W:가로분할보기,H:세로분할보기)',
-  `preview_wcontent` int(10) DEFAULT '50' COMMENT '가로분할보기시 본문영역길이',
-  `preview_hcontent` int(10) DEFAULT '50' COMMENT '세로분할보기시 본문영역길이',
-  `reply_alert` varchar(45) DEFAULT 'Y' COMMENT '댓글 알림',
-  `recv_alert` varchar(45) DEFAULT 'Y' COMMENT '수신 알림',
-  PRIMARY KEY (`user_id`,`tenant_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='환경설정';
-
--- jmocha.tbl_journal_recv_favorite_list Table Create SQL
-CREATE TABLE `tbl_journal_recv_favorite_list` (
-  `favorite_id` bigint(10) NOT NULL COMMENT '즐찾 아이디',
-  `user_id` varchar(300) DEFAULT NULL COMMENT '사원아이디',
-  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  KEY `FK_tbl_journal_recv_favorite_list_favorite_id` (`favorite_id`),
-  CONSTRAINT `FK_tbl_journal_recv_favorite_list_favorite_id` FOREIGN KEY (`favorite_id`) REFERENCES `tbl_journal_recv_favorite` (`favorite_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='즐찾 리스트';
-
--- jmocha.tbl_journal_env Table Create SQL
-CREATE TABLE `tbl_journal_view` (
-  `user_id` varchar(200) NOT NULL COMMENT '사원아이디',
-  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  `journal_id` bigint(10) NOT NULL COMMENT '일지 아이디',
-  `view_date` datetime DEFAULT NULL COMMENT '확인 일',
-  PRIMARY KEY (`user_id`,`tenant_id`,`journal_id`),
-  KEY `FK_tbl_journal_view_journal_id_tbl_journal_journal_id` (`journal_id`),
-  CONSTRAINT `FK_tbl_journal_view_journal_id_tbl_journal_journal_id` FOREIGN KEY (`journal_id`) REFERENCES `tbl_journal` (`journal_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='일지조회';

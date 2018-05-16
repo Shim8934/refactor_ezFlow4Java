@@ -9,6 +9,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />	    
+	    <style>
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;
+	    	}
+	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -193,6 +198,8 @@
 	                
 	                listview.AddDataRow(objTr, Resultxml);
 	            }
+	            
+	            ChangeListView_onClick(getOrganListType());
 	        }
 	
 	        var schedule_add_user_cross_dialogArguments = new Array();
@@ -315,7 +322,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right: 3px;\" >" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;");
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -730,7 +737,7 @@
 		            
 		            if (pSeach) {
 		                //document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -744,7 +751,7 @@
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
 	                    //document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1026,6 +1033,7 @@
 		        pListType = Div;
 		        ListTypeChangeIcon();
 		        DisplayUserImageList();
+		        setOrganListType(pListType);
 		    }
 		    function keyword_Clear() {
 		    	document.getElementById("keyword").value = "";
@@ -1223,6 +1231,108 @@
 		                displayUserList();
 		        }
 		    }
+		    function Add_Dept() {
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        var nodeIdx = treeView.GetSelectNode();
+
+		        $.ajax({
+					url : '/ezSchedule/getDeptUserList.do',
+					method : 'POST',
+					async : false,
+					dataType : "xml",
+					data : {
+						deptID : nodeIdx.GetNodeData("CN"),
+					},
+   					success : function(text) {
+   						xmlRtn = text;
+
+   						for (var i = 0 ; i < SelectNodes(xmlRtn, "DATA/ROW").length ; i++) {
+   				            pparsingXML2 = "";
+   				            pparsingXML = "";
+   				            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+   				            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(xmlRtn.getElementsByTagName("CN")[i]) + "</DATA1>";
+   				            pparsingXML = pparsingXML + "<DATA2><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></DATA2>";
+   				            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME2")[i]) + "]]></DATA3>";
+   				            pparsingXML = pparsingXML + "<DATA4><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DESCRIPTION")[i]) + "]]></DATA4>";
+   				            pparsingXML = pparsingXML + "<DATA5><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DESCRIPTION2")[i]) + "]]></DATA5>";
+   				            pparsingXML = pparsingXML + "<DATA6><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></DATA6>";
+   				            pparsingXML = pparsingXML + "<DATA7><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("TITLE")[i]) + "]]></DATA7>";
+   				            pparsingXML = pparsingXML + "<DATA8>" + getNodeText(xmlRtn.getElementsByTagName("TELEPHONENUMBER")[i]) + "</DATA8>";
+   				            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + " (" + getNodeText(xmlRtn.getElementsByTagName("DESCRIPTION")[i]) + ")" + "]]></VALUE></CELL></ROW>";
+   				            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+   				            Resultxml = loadXMLString(pparsingXML2);
+
+   				            var listid = "MsgToList";
+   				            var listview = new ListView();
+   				            listview.LoadFromID(listid);
+
+   				            var MaxID = 0;
+   				            var InitTr = listview.GetDataRows();
+
+   				            if (getNodeText(xmlRtn.getElementsByTagName("CN")[i]) == "<c:out value='${userInfo.id}' />")
+   				                continue;
+   				            if (listview.ExistRow("DATA1", getNodeText(xmlRtn.getElementsByTagName("CN")[i])))
+   				                continue;
+
+   				            var MaxCntNum = 0;
+   				            for (var j = 0  ; j < InitTr.length  ; j++) {
+   				                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+   				                if (MaxID < curnum) {
+   				                    MaxID = curnum;
+   				                    MaxCntNum = j;
+   				                }
+   				            }
+
+   				            var objTr = listview.AddRow(InitTr.length);
+   				            if (MaxCntNum != 0) {
+   				                MaxCntNum = MaxCntNum + 1;
+   				            }
+
+   				            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+   				            listview.AddDataRow(objTr, Resultxml);
+
+   				            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+   				            for (var y = 0; y < _tdlength; y++) {
+   				                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+   				                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+   				            }
+   				        }
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+					}
+				});
+		    }
+		    
+	        function setOrganListType(pListType) {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/setListType.do",
+	        		async : false,
+	        		data : {
+	        			listType : pListType
+	        		},
+	        		success : function(result) {
+	        			
+	        		}
+	        		
+	        	})
+	        }
+	        
+	        function getOrganListType() {
+	        	var organListType = "TXT";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/getListType.do",
+	        		async : false,
+	        		success : function(result) {
+	        			organListType = result;
+	        		}
+	        	})
+	        	return organListType;
+	        }
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
@@ -1233,13 +1343,13 @@
 	        		<table id="TreeViewTD">
 	                	<tr>
 	                    	<td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px;">
+	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
 	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
-	                                                    <select id="search_type">
+	                                                    <select id="search_type" style="height: 22px;">
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezSchedule.t18' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezSchedule.t12' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezSchedule.t14' /></option>
@@ -1250,12 +1360,13 @@
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezSchedule.t22' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezSchedule.t23' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px; height: 22px;">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezSchedule.t24' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px;">
+														<a href="#" class="imgbtn"><span onclick="Add_Dept()"><spring:message code='ezSchedule.t00004' /></span></a>
 	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezSchedule.t1052' /></span></a>
 	                                                </div>
 	                                            </td>
@@ -1272,9 +1383,9 @@
 	                                    <td class="listview" style="width: 426px" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
-	                                                <th style="white-space:normal">
-	                                                    <span id="SelectDeptNM" style="font-weight: bold; width: 300px;height:30px;text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
-	                                                    <span style="float:right;">
+	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
+	                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom; margin-top:2px;"></span>
+	                                                    <span style="float:right;margin-right: 1px;margin-top: 1px;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 	                                                        <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
 	                                                    </span>
@@ -1284,22 +1395,22 @@
 	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
-	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezSchedule.t1050' /></td>
+	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
+	                                                    <td style="width: 130px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
+	                                                    <td style="color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t1050' /></td>
 	                                                </tr>
 	                                            </table>
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t12' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezSchedule.t1050' /></td>
+	                                                    <td style="width: 130px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t12' /></td>
+	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
+	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
+	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezSchedule.t1050' /></td>
 	                                                </tr>
 	                                            </table>
 	                                        </div>
 	                                        <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-	                                        <div id="tblPageRayer" style="text-align:center;border-top:1px solid #ddd;height:32px"></div>
+	                                        <div id="tblPageRayer" style="text-align:center;border-top:1px; height:32px"></div>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -1313,7 +1424,7 @@
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezSchedule.t152' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 520px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 511px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>

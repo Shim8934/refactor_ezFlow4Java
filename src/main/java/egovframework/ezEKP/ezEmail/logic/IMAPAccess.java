@@ -37,10 +37,13 @@ import com.sun.mail.imap.IMAPStore;
 import com.sun.mail.util.MailSSLSocketFactory;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 
 public class IMAPAccess {
 
     private static final Logger logger = LoggerFactory.getLogger(IMAPAccess.class);
+    
+    private EzEmailUtil ezEmailUtil;
     
 	private String host;
 	private String port;
@@ -51,26 +54,30 @@ public class IMAPAccess {
 	private Locale locale;
 	// 간혹 SocketTimeoutException이 발생하는 경우가 있어 시간을 짧게 설정하고 retry를 수행하도록 함.
 	// James 서버의 netty 버전을 3.10.6.Final로 올린 이후로는 SocketTimeoutException이 발생하지 않는 것으로 보임.
-	private int timeout = 10000; 
-	private int connectionTimeout = 10000; 
+	// 청와대에서 용량이 큰 메일을 다수 삭제할 경우 타임아웃이 발생하여 10초에서 120초로 변경함 
+	private int timeout = 120000; 
+	private int connectionTimeout = 20000; 
 	
 	private static final String DEFAULT_FOLDER_NAMES 
 		= "INBOX,보낸 편지함,임시 보관함,지운 편지함,개인 편지함,정크 메일" // 한국어
-		+ ",Sent Items,Drafts,Trash,Personal folder,Junk E-Mail" // 영어
+		+ ",Sent Items,Drafts,Trash,Personal folder,Junk E-Mail,Sent" // 영어
 		+ ",送信済み,下書き,ゴミ箱,パーソナル,迷惑メール" // 일본어
 		+ ",Kotak Keluar,Konsep,Sampah,Folder Personal,E-mail Junk"; // 인도네시아어
 	private static final Set<String> DEFAULT_FOLDER_NAME_SET = new HashSet<>(Arrays.asList(DEFAULT_FOLDER_NAMES.split(",")));
 	
-	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, Locale locale) {
+	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, 
+						Locale locale, EzEmailUtil ezEmailUtil) {
 		this.host = host;
 		this.port = port;
 		this.userName = userName;
 		this.password = password;
 		this.egovMessageSource = egovMessageSource;
 		this.locale = locale;
+		this.ezEmailUtil = ezEmailUtil;
 	}
 	
-	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, Locale locale, int timeout, int connectionTimeout) {
+	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, 
+						Locale locale, int timeout, int connectionTimeout, EzEmailUtil ezEmailUtil) {
 		this.host = host;
 		this.port = port;
 		this.userName = userName;
@@ -79,6 +86,7 @@ public class IMAPAccess {
 		this.locale = locale;
 		this.timeout = timeout;
 		this.connectionTimeout = connectionTimeout;
+		this.ezEmailUtil = ezEmailUtil;
 	}
 	
 	private Store getStore() {
@@ -157,12 +165,12 @@ public class IMAPAccess {
 		try {
 			Folder rootFolder = getStore().getDefaultFolder();
 			
-			Folder inbox = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", locale));
-			Folder sent = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t645", locale));
-			Folder draft = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t646", locale));
-			Folder trash = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));
-			Folder personal = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t648", locale));
-			Folder junk = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t99000029", locale));
+			Folder inbox = rootFolder.getFolder(ezEmailUtil.getInboxFolderId());
+			Folder sent = rootFolder.getFolder(ezEmailUtil.getSentFolderId(locale));
+			Folder draft = rootFolder.getFolder(ezEmailUtil.getDraftsFolderId(locale));
+			Folder trash = rootFolder.getFolder(ezEmailUtil.getTrashFolderId(locale));
+			Folder personal = rootFolder.getFolder(ezEmailUtil.getPersonalFolderId(locale));
+			Folder junk = rootFolder.getFolder(ezEmailUtil.getJunkFolderId(locale));
 			
 			// if default folders do not exist, create the folders.
 			if (!inbox.exists()) {
@@ -220,12 +228,12 @@ public class IMAPAccess {
 				setReculsiveSubscribe(rootFolder, true);
 			}
 			
-			Folder inbox = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", locale));
-			Folder sent = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t645", locale));
-			Folder draft = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t646", locale));
-			Folder trash = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));
-			Folder personal = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t648", locale));
-			Folder junk = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t99000029", locale));
+			Folder inbox = rootFolder.getFolder(ezEmailUtil.getInboxFolderId());
+			Folder sent = rootFolder.getFolder(ezEmailUtil.getSentFolderId(locale));
+			Folder draft = rootFolder.getFolder(ezEmailUtil.getDraftsFolderId(locale));
+			Folder trash = rootFolder.getFolder(ezEmailUtil.getTrashFolderId(locale));
+			Folder personal = rootFolder.getFolder(ezEmailUtil.getPersonalFolderId(locale));
+			Folder junk = rootFolder.getFolder(ezEmailUtil.getJunkFolderId(locale));
 			
 			// if default folders do not exist, create the folders.
 			if (!inbox.exists()) {
@@ -293,12 +301,12 @@ public class IMAPAccess {
 						String folderName = folder.getName();
 						
 						if (!isUseDefaultFoldersForLangOnly) {
-							if (!folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))
-									&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))
-									&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))
-									&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))
-									&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))
-									&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))
+							if (!folderName.equalsIgnoreCase(ezEmailUtil.getInboxFolderId())
+									&& !folderName.equalsIgnoreCase(ezEmailUtil.getSentFolderId(locale))
+									&& !folderName.equalsIgnoreCase(ezEmailUtil.getDraftsFolderId(locale))
+									&& !folderName.equalsIgnoreCase(ezEmailUtil.getTrashFolderId(locale))
+									&& !folderName.equalsIgnoreCase(ezEmailUtil.getPersonalFolderId(locale))
+									&& !folderName.equalsIgnoreCase(ezEmailUtil.getJunkFolderId(locale))
 									) {
 								topLevelFolders.add(folder);
 							}
@@ -328,12 +336,12 @@ public class IMAPAccess {
 					String folderName = folder.getName();
 					
 					if (!isUseDefaultFoldersForLangOnly) {
-						if (!folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))
-								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))
-								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))
-								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))
-								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))
-								&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))
+						if (!folderName.equalsIgnoreCase(ezEmailUtil.getInboxFolderId())
+								&& !folderName.equalsIgnoreCase(ezEmailUtil.getSentFolderId(locale))
+								&& !folderName.equalsIgnoreCase(ezEmailUtil.getDraftsFolderId(locale))
+								&& !folderName.equalsIgnoreCase(ezEmailUtil.getTrashFolderId(locale))
+								&& !folderName.equalsIgnoreCase(ezEmailUtil.getPersonalFolderId(locale))
+								&& !folderName.equalsIgnoreCase(ezEmailUtil.getJunkFolderId(locale))
 								) {
 							topLevelFolders.add(folder);
 						}
@@ -604,12 +612,14 @@ public class IMAPAccess {
 		return isAttached;
 	}
 	
-	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource, Locale locale){
-		return new IMAPAccess(host, port, username, password, egovMessageSource, locale);
+	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource, 
+								Locale locale, EzEmailUtil ezEmailUtil) {
+		return new IMAPAccess(host, port, username, password, egovMessageSource, locale, ezEmailUtil);
 	}
 	
-	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource, Locale locale, int timeout, int connectionTimeout){
-		return new IMAPAccess(host, port, username, password, egovMessageSource, locale, timeout, connectionTimeout);
+	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource, 
+								Locale locale, int timeout, int connectionTimeout, EzEmailUtil ezEmailUtil) {
+		return new IMAPAccess(host, port, username, password, egovMessageSource, locale, timeout, connectionTimeout, ezEmailUtil);
 	}
 	
 	public static class MessageSubjectComparator implements Comparator<Message> {

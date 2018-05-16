@@ -37,15 +37,14 @@
 		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 		<script type="text/javascript">
 			var checkValue = "type1";
 			var CopType = "<c:out value = '${clubVO.c_Type}' />";
 			var logosrc = "${clubVO2.c_Logo}";
 			var thumbsrc = "${clubVO2.c_Logo_Thumbnail}";
 
-			window.onload = function () {				
+			window.onload = function () {
 		        if (CopType != null) {
 		            var imgCnt = document.getElementsByName("radType").length;
 		            
@@ -68,76 +67,24 @@
                 	document.getElementById("thumbprev").src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + thumbsrc, "C_LOGO_THUMBNAIL";
                 }
 		        document.getElementById("logoprev").style.display = "";
-		        document.getElementById("thumbprev").style.display = "";
-		        
-		        if (CrossYN()) {
-		            document.getElementById("logo").style.width = "1px";
-		            document.getElementById("logo").style.height = "1px";
-		        } else {
-		            document.getElementById("logo").style.position = "absolute";
-		            document.getElementById("logo").style.filter = "alpha(opacity = 0)";
-		            document.getElementById("logo").style.cursor = "pointer";
-
-		            if (userLang == "1") {
-		                document.getElementById("logo").style.left = "110px";
-		                document.getElementById("logo").style.width = "75px";
-		                document.getElementById("logo").style.height = "22px";
-		            } else if (userLang == "2") {
-		                document.getElementById("logo").style.left = "145px";
-		                document.getElementById("logo").style.width = "50px";
-		                document.getElementById("logo").style.height = "22px";
-		            } else if (userLang == "3") {
-		                document.getElementById("logo").style.left = "138px";
-		                document.getElementById("logo").style.width = "95px";
-		                document.getElementById("logo").style.height = "22px";
-		            } else {
-		                document.getElementById("logo").style.left = "90px";
-		                document.getElementById("logo").style.width = "75px";
-		                document.getElementById("logo").style.height = "22px";
-		            }
-		        }
+		        document.getElementById("thumbprev").style.display = "";		        
 		    }
 			
 		    function cancle_onclick() {
 		        if (!confirm("<spring:message code = 'ezCommunity.t449' />")) {
 				        return;
-				    }
+				 }
 		        image.reset();
 		        window.location.reload(true);
-		//        if (window.parent.parent.opener != null)
-			//	    window.parent.parent.opener.location.reload();
-				}
+			}
 		    
 		        function close_onclick() {
-/* 		            if(window.parent.parent.opener != null) {
-		                window.parent.parent.opener.location.reload();
-		            } */
 		            image.reset();
 		            parent.parent.window.close();
 		        }
-		        
-				function pre_onclick() {
-				    if (image.logo.value != "") {
-				        if (window.parent.parent.opener != null) {
-				            window.parent.parent.opener.coplogo.src = image.logo.value;
-				            window.parent.parent.opener.coplogo.style.visibility = "visible";
-				        }
-				    }
-				}
 				
 				function go() {
-				    if(window.parent.parent.opener != null) {
-				    	document.getElementById("imageSrc").value = window.parent.parent.opener.coplogo.src;
-				    	<c:if test="${isCrossBrowser == true}">
-							image.submit();
-						</c:if>
-				        <c:if test="${isCrossBrowser != true}">
-				        	adminLogoUpload();
-				        	adminThumbUpload();
-				        	window.location.reload(true);
-				        </c:if>
-				    } else {
-				    }
+					image.submit();
 		        }
 
 		        //로고, 베너 등록 시 이미지 파일 확장자가 아닐 때 비교하는 함수 추가_2013.01.30
@@ -263,6 +210,11 @@
 		            }
 		            
 		            document.getElementById("Type").value = checkValue;
+		            
+		            /* 2018-05-10 홍승비 - 디폴트 로고인 경우 타입에 맞추어 로고 변경하도록 수정 */
+		            if (document.getElementById("logoprev").src.indexOf("default_logo_") > -1 ) {
+		            	document.getElementById("default").value = "default_logo_" + checkValue + ".jpg";	
+		            }	            
 		        }
 		        
 		        function btn_AttachSelect_onclick() {
@@ -273,157 +225,6 @@
 		            document.getElementById("thumb").click();
 		        }
 		        
-		        <c:if test="${isCrossBrowser == false}">
-					var filesize = "";
-					var filepath = "";
-					var strBase64 = "";
-			        function btn_AttachAdd_onclick() {
-			            var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
-			            filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
-			            
-			            if (filepath == "") return;
-			            
-			            strBase64 = ezUtil.DownloadToBase64(filepath);
-			            filesize = ezUtil.getFileSize(filepath)
-			            ezUtil = null;
-		
-			            var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
-			            var temp = ezUtil.GetImageSize(filepath);
-			            ezUtil = null;
-		
-			            imageWidth = temp.split("*")[0];
-			            imageHeight = temp.split("*")[1];
-		
-			            fileName = filepath.substr(filepath.lastIndexOf("\\") + 1);
-			            
-			            document.getElementById("filename1").innerHTML = fileName;
-			            
-			            var check = "false";
-			            var extension = filepath.split('.');
-			            check = compareExtension(check, extension[1]);
-
-			            if (check == "false") {
-			                alert("<spring:message code ='ezCommunity.lhj03' />");
-			                logo = "";
-			            }
-
-			            if (filepath != "") {
-			                window.parent.parent.opener.coplogo.src = filepath;
-			                window.parent.parent.opener.coplogo.style.visibility = "visible";
-			            } else {
-			                image.reset();
-			            }
-			        }
-			        
-			        function btn_AttachAddThumb_onclick() {
-			            var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
-			            filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
-			            
-			            if (filepath == "") return;
-			            
-			            strBase64 = ezUtil.DownloadToBase64(filepath);
-			            filesize = ezUtil.getFileSize(filepath)
-			            ezUtil = null;
-		
-			            var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
-			            var temp = ezUtil.GetImageSize(filepath);
-			            ezUtil = null;
-		
-			            imageWidth = temp.split("*")[0];
-			            imageHeight = temp.split("*")[1];
-		
-			            fileName = filepath.substr(filepath.lastIndexOf("\\") + 1);
-			            
-			            document.getElementById("filename2").innerHTML = fileName;
-			            
-			            var check = "false";
-			            var extension = filepath.split('.');
-			            check = compareExtension(check, extension[1]);
-
-			            if (check == "false") {
-			                alert("<spring:message code ='ezCommunity.lhj03' />");
-			                thumb = "";
-			            }
-
-			            if (filepath == "") {
-			                image.reset();
-			            }
-			        }
-			        
-			        function adminLogoUpload() {
-			        	var result;
-			        	var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
-			            
-			            if (filepath == "") return;
-			            
-			            ezUtil = null;
-		
-			            var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
-			            var temp = ezUtil.GetImageSize(filepath);
-			            ezUtil = null;
-		
-			            imageWidth = temp.split("*")[0];
-			            imageHeight = temp.split("*")[1];
-		
-			            fileName = filepath.substr(filepath.lastIndexOf("\\") + 1);
-			            
-			           	$.ajax({
-			            	type : "POST",
-			            	url : "/ezCommunity/adminLogoUploadIE9.do",
-			            	async : false,
-			            	data : {
-			            		fileName : fileName,
-			            		fileData : strBase64,
-			            		code : $("#code").val(),
-			            		type : $("#Type").val(),
-			            		imageSrc : $("#imageSrc").val()
-			            	},
-			            	dataType : "json",
-			            	success : function(result) {
-			            		if (result.result == true) {
-			            			window.location.href = "/ezCommunity/adminLogoIE9Ok.do?code=" + $("#code").val();
-			            		}
-			            	}
-			            });
-			        }
-			        function adminThumbUpload() {
-			        	var result;
-			        	var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
-			            
-			            if (filepath == "") return;
-			            
-			            ezUtil = null;
-		
-			            var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
-			            var temp = ezUtil.GetImageSize(filepath);
-			            ezUtil = null;
-		
-			            imageWidth = temp.split("*")[0];
-			            imageHeight = temp.split("*")[1];
-		
-			            fileName = filepath.substr(filepath.lastIndexOf("\\") + 1);
-			            
-			           	$.ajax({
-			            	type : "POST",
-			            	url : "/ezCommunity/adminThumbUploadIE9.do",
-			            	async : false,
-			            	data : {
-			            		fileName : fileName,
-			            		fileData : strBase64,
-			            		code : $("#code").val(),
-			            		type : $("#Type").val(),
-			            		imageSrc : $("#imageSrc").val()
-			            	},
-			            	dataType : "json",
-			            	success : function(result) {
-			            		if (result.result == true) {
-			            			window.location.href = "/ezCommunity/adminThumbIE9Ok.do?code=" + $("#code").val();
-			            		}
-			            	}
-			            });
-			        }
-				</c:if>
-				
 		</script>
 	</head>
 	<body class="mainbody">
@@ -432,89 +233,69 @@
     	<form enctype="multipart/form-data" method="post" name="image" action="/ezCommunity/adminLogoOk.do">
 	        <input type="hidden" name="code" id="code" value="<c:out value = '${code}' />">
 	        <input type="hidden" name="type" id="Type" value="">
-	        <input type="hidden" name="imageSrc" id="imageSrc" value="">
-	        <%-- <div class="subtxt">
-	            <spring:message code = 'ezCommunity.t500' /><br>
-	        </div> --%>
+	        <input type="hidden" name="default" id="default" value="">
 	        <table class="content" style="margin-top:5px">
 	            <tr>
 	                <th style="line-height:16px; padding-top:3px; text-align:center;"><spring:message code='ezCommunity.jjh03' /><br>(894 * 100)<%-- <spring:message code = 'ezCommunity.t1529' /><spring:message code = 'ezCommunity.t498' /> --%></th>
 	                <td>
-	                    <c:if test="${isCrossBrowser == true}">
-	                    	<a class="imgbtn" style="vertical-align:middle; margin-top:10px; margin-bottom:0px;"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
-	                    	<span class="filename1" id="filename1"></span>
-	                    	<input type="file" id="logo" name="logo" accept="image/*" onchange="return logo_onpropertychange()" style="display:none">
-	                    	<span><img class="prev" id="logoprev" src="" style="width:321.84px;"></span>
-	                    </c:if>
-	                    <c:if test="${isCrossBrowser == false}">
-	                    	<a class="imgbtn" style="vertical-align:middle; margin-top:10px; margin-bottom:0px;"><span id="btn_AttachAdd_logo" onclick="return btn_AttachAdd_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
-	                    	<span class="filename1" id="filename1"></span>
-	                    	<input type="file" id="logo" name="logo" accept="image/*" style="display:none">
-	                    	<span><img class="prev" id="logoprev" src="" style="width:321.84px;"></span>
-	                    </c:if>
+	                    <a class="imgbtn" style="vertical-align:middle; margin-top:10px; margin-bottom:0px;"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
+	                    <span class="filename1" id="filename1"></span>
+	                    <input type="file" id="logo" name="logo" accept="image/*" onchange="return logo_onpropertychange()" style="display:none">
+	                    <span><img class="prev" id="logoprev" src="" style="width:321.84px;"></span>
 	                </td>
 	            </tr>
 	            <tr>
 	                <th style="line-height:16px; padding-top:3px; text-align:center;"><spring:message code='ezCommunity.jjh02' /><br>(198 * 140)</th>
 	                <td>
-	                    <c:if test="${isCrossBrowser == true}">
-	                    	<a class="imgbtn" style="vertical-align:middle; margin-top:10px; margin-bottom:0px;"><span id="btn_AttachAdd_thumb" onclick="return btn_AttachSelectThumb_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
-	                    	<span class="filename2" id="filename2"></span>
-	                    	<input type="file" id="thumb" name="thumb" accept="image/*" onchange="return thumb_onpropertychange()" style="display:none">
-	                    	<span><img class="prev" id="thumbprev" src="" style="width:50.4px;"></span>
-	                    </c:if>
-	                    <c:if test="${isCrossBrowser == false}">
-	                    	<a class="imgbtn" style="vertical-align:middle; margin-top:10px; margin-bottom:0px;"><span id="btn_AttachAdd_thumb" onclick="return btn_AttachAddThumb_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
-	                    	<span class="filename2" id="filename2"></span>
-	                    	<input type="file" id="thumb" name="thumb" accept="image/*" style="display:none">
-	                    	<span><img class="prev" id="thumbprev" src="" style="width:50.4px;"></span>
-	                    </c:if>
+	                    <a class="imgbtn" style="vertical-align:middle; margin-top:10px; margin-bottom:0px;"><span id="btn_AttachAdd_thumb" onclick="return btn_AttachSelectThumb_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
+	                    <span class="filename2" id="filename2"></span>
+	                    <input type="file" id="thumb" name="thumb" accept="image/*" onchange="return thumb_onpropertychange()" style="display:none">
+	                    <span><img class="prev" id="thumbprev" src="" style="width:50.4px;"></span>
 	                </td>
 	            </tr>
 	        </table>
 	        <br/><br/>
-	    <div class="subtxt" style="color:#666"><spring:message code = 'ezCommunity.t2013' /></div>
-	    <table style="width:100%;">
-	        <tr style="height:190px;">
-	            <td>
-	                <img src="/images/ezCommunity/cop_type5.png" style="width:300px;height:180px;cursor:pointer;" id="type5" onclick="radioClick(this,'img')"/>
-	            </td>
-	            <td>
-	                <img src="/images/ezCommunity/cop_type2.png" style="width:300px;height:180px;cursor:pointer;" id="type2" onclick="radioClick(this,'img')"/>
-	            </td>
-	        </tr>
-	        <tr style="height:20px;text-align:center;">
-	            <td>
-	                <input type="radio" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;" checked="checked"/>Type1
-	            </td>
-	            <td>
-	                <input type="radio" name="radType" value="type2" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type2
-	            </td>
-	        </tr>
-	        <tr style="height:190px;">
-	            <td>
-	                <img src="/images/ezCommunity/cop_type3.png" style="width:300px;height:180px;cursor:pointer;padding-top:5px" id="type3" onclick="radioClick(this,'img')"/>
-	            </td>
-	            <td>
-	                <img src="/images/ezCommunity/cop_type4.png" style="width:300px;height:180px;cursor:pointer;padding-top:5px" id="type4" onclick="radioClick(this,'img')"/>
-	            </td>
-	        </tr>
-	        <tr style="height:20px;text-align:center;">
-	            <td>
-	                <input type="radio" name="radType" value="type3" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type3
-	            </td>
-	            <td>
-	                <input type="radio" name="radType" value="type4" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type4
-	            </td>
-	        </tr>
-	    </table>
-	    <br/><br/><br/>
-	    <div class="btnposition btnpositionNew">
-	            <a class="imgbtn" name="Submit" onclick="javascript:pre_onclick();" style="display: none"><span><spring:message code = 'ezCommunity.t502' /></span></a>
-	            <a class="imgbtn" name="Submit2" onclick="javascript:go();"><span><spring:message code = 'ezCommunity.t20' /></span></a>
-	            <a class="imgbtn" name="Submit3" onclick="javascript:cancle_onclick();"><span><spring:message code = 'ezCommunity.t109' /></span></a>
-	            <a class="imgbtn" name="Submit4" onclick="close_onclick()"><span><spring:message code = 'ezCommunity.t21' /></span></a>
-	        </div>
+	  	  	<div class="subtxt" style="color:#666"><spring:message code = 'ezCommunity.t2013' /></div>
+	   	 	<table style="width:100%;">
+		        <tr style="height:190px;">
+		            <td>
+		                <img src="/images/ezCommunity/cop_type5.png" style="width:300px;height:180px;cursor:pointer;" id="type5" onclick="radioClick(this,'img')"/>
+		            </td>
+		            <td>
+		                <img src="/images/ezCommunity/cop_type2.png" style="width:300px;height:180px;cursor:pointer;" id="type2" onclick="radioClick(this,'img')"/>
+		            </td>
+		        </tr>
+		        <tr style="height:20px;text-align:center;">
+		            <td>
+		                <input type="radio" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;" checked="checked"/>Type1
+		            </td>
+		            <td>
+		                <input type="radio" name="radType" value="type2" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type2
+		            </td>
+		        </tr>
+		        <tr style="height:190px;">
+		            <td>
+		                <img src="/images/ezCommunity/cop_type3.png" style="width:300px;height:180px;cursor:pointer;padding-top:5px" id="type3" onclick="radioClick(this,'img')"/>
+		            </td>
+		            <td>
+		                <img src="/images/ezCommunity/cop_type4.png" style="width:300px;height:180px;cursor:pointer;padding-top:5px" id="type4" onclick="radioClick(this,'img')"/>
+		            </td>
+		        </tr>
+		        <tr style="height:20px;text-align:center;">
+		            <td>
+		                <input type="radio" name="radType" value="type3" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type3
+		            </td>
+		            <td>
+		                <input type="radio" name="radType" value="type4" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/>Type4
+		            </td>
+		        </tr>
+	    	</table>
+	 	   <br/><br/><br/>
+	    	<div class="btnposition btnpositionNew">
+	        	<a class="imgbtn" name="Submit2" onclick="go()"><span><spring:message code = 'ezCommunity.t20' /></span></a>
+	        	<a class="imgbtn" name="Submit3" onclick="cancle_onclick()"><span><spring:message code = 'ezCommunity.t109' /></span></a>
+	        	<a class="imgbtn" name="Submit4" onclick="close_onclick()"><span><spring:message code = 'ezCommunity.t21' /></span></a>
+	       </div>
     	</form>
 	</body>
 </html>

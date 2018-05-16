@@ -886,7 +886,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			logger.debug("getAccessYNG Value : publicityCode =" + publicityCode);
 
 			if (approvalFlag.equals("G")) {
-				if (publicityCode.length() <= 0) {
+				if (publicityCode.length() <= 0 || publicityCode.equals(" ")) {
 					publicityCode = "1";
 				} else {
 					publicityCode = publicityCode.substring(0, 1);
@@ -8404,6 +8404,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             rtnXML.append("<WRITERNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent())) + "</WRITERNAME2>");
             rtnXML.append("<WRITERJOBTITLE2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent())) + "</WRITERJOBTITLE2>");
             rtnXML.append("<WRITERDEPTNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent())) + "</WRITERDEPTNAME2>");
+            rtnXML.append("<PUBLICITYYN>" + makeXMLString(makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent())) + "</PUBLICITYYN>");
 		} else {
 			for (int k = 0; k < selecteds.length; k++) {
 				if (!selecteds[k].trim().equals("")) {
@@ -15699,6 +15700,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
+		if (docXML.getElementsByTagName("PUBLICITYYN").item(0) != null) {
+			tempValue = docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent().trim();
+			
+			if (!tempValue.equals("")) {
+				if (firstFlag) {
+					map.put("v_PUBLICITYYN", tempValue);
+					map.put("v_FIRSTFLAG19", firstFlag);
+					firstFlag = false;
+				} else {
+					map.put("v_PUBLICITYYN", tempValue);
+					map.put("v_FIRSTFLAG19", firstFlag);
+				}
+			}
+		}
+		
 		if (docXML.getElementsByTagName("LIMITRANGE").item(0) != null) {
 			tempValue = docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim();
 			
@@ -18590,7 +18606,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_temp3", 0);
 		map.put("v_temp4", 0);
-		
+		map.put("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", tenantID));
+
 		if (checkMode.equals("VIE")) {
 			v_temp  = ezApprovalGDAO.countVieTempDocID(map);
 			map.put("v_temp", v_temp);
@@ -21064,6 +21081,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_Status", makeListField(signXML2.getElementsByTagName("STATUS").item(0).getTextContent()).trim());
 			map.put("v_SpecialRecordCode", makeListField(signXML2.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()).trim());
 			map.put("v_PublicityCode", makeListField(signXML2.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent()).trim());
+			map.put("v_PublicityYN", makeListField(signXML2.getElementsByTagName("PUBLICITYYN").item(0).getTextContent()).trim());
 			map.put("v_LimitRange", makeListField(signXML2.getElementsByTagName("LIMITRANGE").item(0).getTextContent()).trim());
 			map.put("v_PageNum", makeListField(signXML2.getElementsByTagName("PAGENUM").item(0).getTextContent()).trim());
 			map.put("v_CabinetID", makeListField(signXML2.getElementsByTagName("CABINETID").item(0).getTextContent()).trim());
@@ -21743,14 +21761,45 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang) throws Exception {
+	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang, String approvalFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANGTYPE", lang);
 		map.put("v_TENANTID", tenantId);
 		map.put("companyID", companyID);
 		map.put("v_DEPTID", deptID);
-		logger.debug("lang : "+lang+"/ tenantid : "+tenantId+"/ companyid : "+companyID +"deptdi : "+deptID );
+		map.put("approvalFlag", approvalFlag);
+		
+		logger.debug("lang : "+lang+"/ tenantid : "+tenantId+"/ companyid : "+companyID +"/ deptdi : "+deptID +"/ approvalFlag : "+approvalFlag);
+		
 		List<ApprGTaskVO> CodeContainerList = ezApprovalGDAO.getCodeContainer(map);
+		List<ApprGLeftVO> apprGetKeepTypeList = ezApprovalGDAO.getKeepType(map);
+		
+		/* 2018-05-03 천성준 - 분류코드 보존기간별로 CODELIST의 name값 매칭 & 세팅 */
+		for (int i = 0; i < CodeContainerList.size(); i++) {
+			switch (CodeContainerList.get(i).getKeepingPeriod()) {
+			case "1": // 1년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(0).getName().split(";")[1]);
+				break;
+			case "2": // 2년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(1).getName().split(";")[1]);
+				break;
+			case "3": // 3년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(2).getName().split(";")[1]);
+				break;
+			case "5": // 5년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(3).getName().split(";")[1]);
+				break;
+			case "10": // 10년
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(4).getName().split(";")[1]);
+				break;
+			case "100": // 준영구
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(5).getName().split(";")[1]);
+				break;
+			case "1000": // 영구
+				CodeContainerList.get(i).setKeepingPeriod(apprGetKeepTypeList.get(6).getName().split(";")[1]);
+				break;
+			}
+		}
 		
 		return CodeContainerList;
 	}

@@ -549,6 +549,7 @@ public class EzJournalGWController {
 			}
 			param.put("tenantId", info.getTenantId());
 			param.put("lang", lang);
+			param.put("offset", commonUtil.getMinuteUTC(info.getOffSet()));
 			
 			List<JournalVO> journalList = ezJournalService.getJournalList(param);
 			result.put("data", journalList);
@@ -584,6 +585,7 @@ public class EzJournalGWController {
 				param.put(key, request.getParameter(key));
 			}
 			param.put("tenantId", info.getTenantId());
+			param.put("offset", commonUtil.getMinuteUTC(info.getOffSet()));
 			String totalCount = ezJournalService.getTotalListCount(param);
 			
 			result.put("data", totalCount);
@@ -684,12 +686,18 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			/*
 			String viewDate = "";
 			if (request.getParameter("viewDate") != null) {
 				viewDate = request.getParameter("viewDate");
 			}
+			*/
+			String isRead = "";
+			if (request.getParameter("isRead") != null) {
+				isRead = request.getParameter("isRead");
+			}
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			JournalVO journal = ezJournalService.getJournal(journalId, userId, viewDate, info.getTenantId(),lang);
+			JournalVO journal = ezJournalService.getJournal(journalId, userId, isRead, info.getTenantId(), lang, info.getOffSet());
 			
 			if (journal.getFileList().size() > 0) {
 				List<JournalFileVO> fileList = journal.getFileList();
@@ -1212,7 +1220,7 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName,  userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			List<JournalReceiverVO> receiverList = ezJournalService.getReceiverList(journalId, startCount, listCnt, info.getTenantId(), lang);
+			List<JournalReceiverVO> receiverList = ezJournalService.getReceiverList(journalId, startCount, listCnt, info.getTenantId(), lang, info.getOffSet());
 		
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1433,7 +1441,7 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			List<JournalReplyVO> replyList = ezJournalService.getJournalReplyList(journalId, userId, tenantId,lang);
+			List<JournalReplyVO> replyList = ezJournalService.getJournalReplyList(journalId, userId, tenantId, lang, info.getOffSet());
 			
 			result.put("data", replyList);
 			result.put("status", "ok");
@@ -1462,12 +1470,12 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			String replyContent = request.getParameter("replyContent");
-			String replyDate = request.getParameter("replyDate");
+		//	String replyDate = request.getParameter("replyDate");
 		//	String journalTitle = request.getParameter("journalTitle");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			String journalWriter = ezJournalService.saveJorunalReply(journalId, userId, replyContent, replyDate, tenantId);
+			String journalWriter = ezJournalService.saveJorunalReply(journalId, userId, replyContent, tenantId);
 			
 			result.put("data", journalWriter);
 			result.put("status", "ok");
@@ -1626,7 +1634,7 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			List<JournalReceiverVO> viewerList= ezJournalService.getJournalViewerList(journalId,startCount,listCnt, info.getTenantId(),lang);
+			List<JournalReceiverVO> viewerList= ezJournalService.getJournalViewerList(journalId, startCount, listCnt, info.getTenantId(), lang, info.getOffSet());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", viewerList);

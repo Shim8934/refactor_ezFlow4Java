@@ -21,6 +21,9 @@ public class PersonalSliderImageVO {
 	private int isUse;
 	/** 순서*/
 	private int sn;
+	/** 18-05-10 김민성 - 슬라이드 이미지 URL 추가 */
+	/** URL*/
+	private String url;
 	public String getSliderID() {
 		return sliderID;
 	}
@@ -80,5 +83,11 @@ public class PersonalSliderImageVO {
 	}
 	public void setSn(int sn) {
 		this.sn = sn;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }

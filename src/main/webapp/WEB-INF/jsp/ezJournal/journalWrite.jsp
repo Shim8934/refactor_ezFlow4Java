@@ -72,6 +72,109 @@
 	    	// 취합일지여부
 	    	var isSum = "N";
 	    	
+	    	
+    		window.onload = function () {
+				
+	    		selTypeId = $("#optType").find("option:selected").val();
+	    		
+	    		// 수정, 임시, 재사용 모드에서는 수신자 정보와 파일정보를 가져와 화면에 적용
+	    		if (mode == "modify" || mode == "reuse" || mode == "temp") {
+	    			$("#title").val("${journal.journalTitle}");
+	    			var receiverID = "${receiverIds}";
+	    			var receiverName = "${receiverNames}";
+	    			
+	    			if ((receiverID != null && receiverID != "") && (receiverName != null && receiverName != "")) {
+	    				receiverID = receiverID.slice(0, -2).split(", ");
+	    				receiverName = receiverName.slice(0, -2).split(", ");
+		    			for (var i = 0; i < receiverID.length; i++) {
+		    				selReceiver.push({"userName" : receiverName[i], "userId" : receiverID[i]});
+		    			}
+		    			showReceiver();
+	    			}
+	    			
+	    			var fileList = '${fileList}';
+	    			if (fileList != null && fileList != "") {
+	    			//	fileList = fileList.replace(/&nbsp;/gi, " ");
+	    				fileList = decodeURIComponent(fileList);
+		    			dadiframe.setAttachFileInfo(fileList);
+	    			}
+	    			
+    	    		var checkSum = "<c:out value='${journal.isSum}'/>";
+    	    		if (checkSum != null && checkSum != "") {
+    	    			isSum = checkSum;
+    	    		}
+	    		} else if (mode == "sum") {
+    	    		isSum = "Y"
+	    		}
+	    	
+	    	 	if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+                    self.resizeTo(760, 800);
+                } else {
+                    self.resizeTo(785, 830);
+                } 
+	    		
+	    		// IE10에서 에디터사이즈 조절
+	    		if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
+		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 310 + "PX";
+		    	}
+	    	}; 
+	    
+	    	// 양식내용을 에디터에 넣어주는 작업 
+		    function Editor_Complete() {
+				getFormList($("#optType"));
+	    		
+	    		switch (mode) {
+				case 'new':
+		    		getLastForm(typeId);
+				
+		    		if (lastFormId != null && lastFormId != "" ) {
+		    			selFormId = lastFormId;
+		    			getJournalForm(lastFormId);
+		    			$("#optForm option[value=" + lastFormId + "]").attr("selected", "selected");
+		    			lastFormId = "";
+		    		} else {
+		    			selFormId = $("#optForm").find("option:selected").val();
+			    		getJournalForm(selFormId);
+		    		}
+					break;
+					
+				case 'sum':
+					selFormId = opener.sumFormId;
+				//	selFormId = "${sumFormId}";
+					journalIdList = opener.journalIdList;
+					var selectedType = $("#optType");
+				
+// 					getFormList(selectedType).setTimeout(function(){
+// 						$('#loading').hide()
+// 					},0);
+					
+				//	getFormList(selectedType);
+					
+					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
+					
+					getSumJournal(selFormId);
+// 		    		opener.sumFormId = "";
+					break;
+					
+				case 'reuse': case 'modify': case 'temp':
+					selFormId = "${journal.formId}";
+					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
+					var content = '${content}';
+					content = content.replace(/&#39;/gi, "\'");
+	    			message.SetEditorContent(content);
+	    			
+	    			if (mode == 'modify') {
+	    				$("#optType").attr("disabled", "true");
+						$("#optForm").attr("disabled", "true");
+	    			}
+	    			
+					break;
+
+				default:
+					break;
+				}
+	    	}
+	    	
 			// 선택된 일지함의 양식 리스트 가져오기
 	    	function getFormList(elem) {
 	    		typeId = $(elem).val();
@@ -151,7 +254,6 @@
 						journalIdList : JSON.stringify(journalIdList)
 					},
    					success : function(result){
-   					//	console.log(result);
    						
    						if (result.formStatus == null) {
    							$("#btnGetOther").css("display", "none");
@@ -162,11 +264,45 @@
    						$("#title").val(result.journalTitle);
    						message.SetEditorContent(result.journalContent);
    					//	opener.journalIdList = [];
-//    						opener.journalIdList.length = 0;
-   						if(mode=="sum"){
-   			    			setTimeout(function(){
+//    					opener.journalIdList.length = 0;
+   						if(mode == "sum"){
+   			    			setTimeout(function() {
    								$('#loading').hide();
-   							},0);
+   							}, 0);
+   			    		}
+	   				},
+	   				error : function(request, status, error) {
+		    			alert("code : " + request.status + "\nerror : " + error);
+	   				}
+	    		});
+			}
+			
+			// 취합한 일지 가져오기
+			function getSumJournal(formId) {
+				
+				selFormId = formId;
+				
+				$.ajax({
+	    			type : "POST",
+	   				dataType : "json",
+	   			//	async:false,
+	   				url : "/ezJournal/journalGetForm.do",
+	   				data : {
+	   					mode : mode, formId : formId, typeId : typeId,
+						journalIdList : JSON.stringify(journalIdList)
+					},
+					beforeSend : function() {
+						$("#loading-image").remove();
+						$("#loading").html('<img id="loading-image" src="/images/ProgressBar.gif" alt="Loading...">');
+					},
+   					success : function(result){
+   						
+   						$("#title").val(result.journalTitle);
+   						message.SetEditorContent(result.journalContent);
+   						if(mode == "sum"){
+   			    			setTimeout(function() {
+   								$('#loading').hide();
+   							}, 0);
    			    		}
 	   				},
 	   				error : function(request, status, error) {
@@ -198,7 +334,9 @@
 	    	function selectReceiver(){			
 				var url = "/ezJournal/selectReceiver.do";
 			//	url += "?companyId=" + companyId;
-				GetOpenWindow(url, "selectReceiver", 980, 610);
+				var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
+	    		try { OpenWin.focus(); } catch (e) { }
+			//	GetOpenWindow(url, "selectReceiver", 980, 650);
 			}
 	    	
 			// 선택된 수신자 화면에 뿌리기
@@ -226,114 +364,6 @@
 		    function OpenUserInfo(pUserID) {
 		        GetOpenWindow("/ezCommon/showPersonInfo.do?id=" + pUserID, "UserInfo", 420, 450, "NO");
 		    }
-			
-	     	
-	    	window.onload = function () {
-	    		
-	    		if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
-                    self.resizeTo(760, 800);
-                } else {
-                    self.resizeTo(785, 830);
-                }
-	    		
-	    		// IE10에서 에디터사이즈 조절
-	    		if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
-		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 310 + "PX";
-		    	}
-				
-	    		selTypeId = $("#optType").find("option:selected").val();
-	    		
-	    		// 수정, 임시, 재사용 모드에서는 수신자 정보와 파일정보를 가져와 화면에 적용
-	    		if (mode == "modify" || mode == "reuse" || mode == "temp") {
-	    			$("#title").val("${journal.journalTitle}");
-	    			var receiverID = "${receiverIds}";
-	    			var receiverName = "${receiverNames}";
-	    			
-	    			if ((receiverID != null && receiverID != "") && (receiverName != null && receiverName != "")) {
-	    				receiverID = receiverID.slice(0, -2).split(", ");
-	    				receiverName = receiverName.slice(0, -2).split(", ");
-		    			for (var i = 0; i < receiverID.length; i++) {
-		    				selReceiver.push({"userName" : receiverName[i], "userId" : receiverID[i]});
-		    			}
-		    			showReceiver();
-	    			}
-	    			
-	    			var fileList = '${fileList}';
-	    			if (fileList != null && fileList != "") {
-	    			//	fileList = fileList.replace(/&nbsp;/gi, " ");
-	    				fileList = decodeURIComponent(fileList);
-		    			dadiframe.setAttachFileInfo(fileList);
-	    			}
-	    			
-    	    		var checkSum = "<c:out value='${journal.isSum}'/>";
-    	    		if (checkSum != null && checkSum != "") {
-    	    			isSum = checkSum;
-    	    		}
-	    		} else if (mode == "sum") {
-    	    		isSum = "Y"
-	    		}
-	    	
-	    	}; 
-	    
-	    	// 양식내용을 에디터에 넣어주는 작업 
-		    function Editor_Complete() {
-				getFormList($("#optType"));
-	    		
-	    		switch (mode) {
-				case 'new':
-//					getFormList($("#optType"));
-		    		getLastForm(typeId);
-				
-		    		if (lastFormId != null && lastFormId != "" ) {
-		    			selFormId = lastFormId;
-		    			getJournalForm(lastFormId);
-		    			$("#optForm option[value=" + lastFormId + "]").attr("selected", "selected");
-		    			lastFormId = "";
-		    		} else {
-		    			selFormId = $("#optForm").find("option:selected").val();
-			    		getJournalForm(selFormId);
-		    		}
-					break;
-					
-				case 'sum':
-					selFormId = opener.sumFormId;
-				//	selFormId = "${sumFormId}";
-					journalIdList = opener.journalIdList;
-					var selectedType = $("#optType");
-					
-				
-// 					getFormList(selectedType).setTimeout(function(){
-// 						$('#loading').hide()
-// 					},0);
-					
-					getFormList(selectedType);
-					
-					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
-		    		getJournalForm(selFormId);
-// 		    		opener.sumFormId = "";
-					break;
-					
-				case 'reuse': case 'modify': case 'temp':
-					selFormId = "${journal.formId}";
-					console.log(selFormId);
-			//		var selectedType = $("#optType");
-			//		getFormList(selectedType);
-					$("#optForm option[value=" + selFormId + "]").attr("selected", "selected");
-					var content = '${content}';
-					content = content.replace(/&#39;/gi, "\'");
-	    			message.SetEditorContent(content);
-	    			
-	    			if (mode == 'modify') {
-	    				$("#optType").attr("disabled", "true");
-						$("#optForm").attr("disabled", "true");
-	    			}
-	    			
-					break;
-
-				default:
-					break;
-				}
-	    	}
 	    
 		 	// 버튼 중복클릭 방지
 		    var doubleSubmitFlag = false;
@@ -675,12 +705,12 @@
 	    </table>
 
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	    <c:if test="${mode eq 'sum' }">
+	    	<span id="loading"><img id="loading-image" src="/images/ProgressBar.gif" alt="Loading..."></span>
+	    </c:if>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
-	    <c:if test="${mode eq 'sum' }">
-	    <div id="loading"><img id="loading-image" src="/images/ProgressBar.gif" alt="Loading..." /></div>
-	    </c:if>
 
 		<script>
 		// 다른일지 가져오기 리스트

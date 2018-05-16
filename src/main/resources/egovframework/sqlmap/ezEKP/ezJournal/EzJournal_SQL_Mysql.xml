@@ -5,22 +5,22 @@
 
 	<typeAlias alias="JournaltypeVO" 		type="egovframework.ezEKP.ezJournal.vo.JournaltypeVO" />
 	<typeAlias alias="JournalFormInfoVO" 	type="egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO" />
-	<typeAlias alias="companyVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalCompanyVO" />
-	<typeAlias alias="authorVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
-	<typeAlias alias="deptViewVO" 			type="egovframework.ezEKP.ezJournal.vo.DeptViewVO" />
-	<typeAlias alias="deptInfoVO" 			type="egovframework.ezEKP.ezJournal.vo.DeptInfoVO" />
-	<typeAlias alias="favoriteVO" 			type="egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO" />
+	<typeAlias alias="journalCompanyVO" 	type="egovframework.ezEKP.ezJournal.vo.JournalCompanyVO" />
+	<typeAlias alias="journalAuthorVO" 		type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
+	<typeAlias alias="journalDeptViewVO" 	type="egovframework.ezEKP.ezJournal.vo.DeptViewVO" />
+	<typeAlias alias="journalDeptInfoVO" 	type="egovframework.ezEKP.ezJournal.vo.DeptInfoVO" />
+	<typeAlias alias="journalFavoriteVO" 	type="egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO" />
 	<typeAlias alias="journalEnvVO" 		type="egovframework.ezEKP.ezJournal.vo.JournalEnvVO" />
 	<typeAlias alias="journalVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalVO" />
-	<typeAlias alias="fileVO" 				type="egovframework.ezEKP.ezJournal.vo.JournalFileVO" />
+	<typeAlias alias="journalFileVO" 		type="egovframework.ezEKP.ezJournal.vo.JournalFileVO" />
 	<typeAlias alias="journalReplyVO" 		type="egovframework.ezEKP.ezJournal.vo.JournalReplyVO" />
-	<typeAlias alias="receiverVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalReceiverVO"/>	
-	<typeAlias alias="journalAuthCheckVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalAuthCheckVO"/>	
+	<typeAlias alias="journalReceiverVO" 	type="egovframework.ezEKP.ezJournal.vo.JournalReceiverVO"/>	
+	<typeAlias alias="journalAuthCheckVO" 	type="egovframework.ezEKP.ezJournal.vo.JournalAuthCheckVO"/>	
 
 	<resultMap class="journalAuthCheckVO" id="journalAuthCheckMap">
 		<result property="isLive" 			column="is_live" />
-		<result property="checkSusin" 	column="check_susin" />
-		<result property="count" 		column="count" />
+		<result property="checkSusin" 		column="check_susin" />
+		<result property="count" 			column="count" />
 	</resultMap>
 	
 	<resultMap class="journalReplyVO" id="journalReplyMap">
@@ -56,7 +56,7 @@
 		<result property="fileList" 		resultMap="ezJournal.fileMap"/>
 	</resultMap>
 
-	<resultMap class="fileVO" id="fileMap">
+	<resultMap class="journalFileVO" id="fileMap">
 		<result property="filePath" 		column="file_path" />
 		<result property="fileSize"			column="file_size" />
 		<result property="fileName" 		column="file_name" />
@@ -82,7 +82,7 @@
 		<result property="mine"	 			column="mine" />
 	</resultMap>
 
-	<resultMap class="journalEnvVO" id="journalEnvMap">
+	<resultMap class="journalEnvVO" 	id="journalEnvMap">
 		<result property="listCnt" 			column="list_cnt" />
 		<result property="viewenv" 			column="viewenv" />
 		<result property="recvAlert" 		column="recv_alert" />
@@ -93,7 +93,7 @@
 		<result property="name" 			column="name" />
 	</resultMap>
 
-	<resultMap class="deptViewVO" id="deptViewMap">
+	<resultMap class="journalDeptViewVO" id="deptViewMap">
 		<result property="id" 				column="id" />
 		<result property="parent" 			column="parent" />
 		<result property="companyId" 		column="companyId" />
@@ -102,7 +102,7 @@
 		<result property="myDept" 			column="myDept" />
 	</resultMap>
 
-	<resultMap class="authorVO" id="authorMap">
+	<resultMap class="journalAuthorVO" id="authorMap">
 		<result property="userName" 		column="user_name" />
 		<result property="userId" 			column="user_id" />
 		<result property="jikwi" 			column="jikwi" />
@@ -110,7 +110,7 @@
 		<result property="authDept" 		column="auth_dept" />
 	</resultMap>
 
-	<resultMap class="authorVO" id="userMap">
+	<resultMap class="journalAuthorVO" id="userMap">
 		<result property="userName"			column="user_name" />
 		<result property="userId" 			column="user_id" />
 		<result property="jikwi" 			column="jikwi" />
@@ -119,18 +119,18 @@
 		<result property="userImg" 			column="user_img" />
 	</resultMap>
 
-	<resultMap class="authorVO" id="deptMap">
+	<resultMap class="journalAuthorVO" 		id="deptMap">
 		<result property="deptName" 		column="dept_name" />
 		<result property="deptId" 			column="dept_id" />
 		<result property="mine" 			column="mine" />
 	</resultMap>
 
-	<resultMap class="JournaltypeVO" id="JournaltypeMap">
+	<resultMap class="JournaltypeVO" 		id="JournaltypeMap">
 		<result property="journaltypeId" 	column="type_id" 	columnIndex="1" />
 		<result property="journalUse" 		column="used" 		columnIndex="2" />
 	</resultMap>
 
-	<resultMap class="JournalFormInfoVO" id="JournalFormInfo" groupBy="formId">
+	<resultMap class="JournalFormInfoVO" 	id="JournalFormInfo" groupBy="formId">
 		<result property="formId" 			column="form_id" />
 		<result property="formName" 		column="form_name" />
 		<result property="formInfo" 		column="form_info" />
@@ -138,7 +138,7 @@
 		<result property="formWriter" 		column="form_writer" />
 		<result property="formStatus" 		column="form_status" />
 		<result property="typeId" 			column="type_id" />
-		<result property="depts" 		resultMap="ezJournal.deptInfoVO"/>
+		<result property="depts" 			resultMap="ezJournal.deptInfoVO"/>
 	</resultMap>
 
 	<resultMap class="JournalFormInfoVO" id="formInfoVO">
@@ -156,18 +156,18 @@
 		<result property="formStatus" 		column="form_status" />
 	</resultMap>
 
-	<resultMap class="deptInfoVO" id="deptInfoVO">
+	<resultMap class="journalDeptInfoVO" id="deptInfoVO">
 		<result property="deptId" 			column="dept_id" />
 		<result property="deptName" 		column="dept_name" />
 	</resultMap>
 
-	<resultMap class="favoriteVO" id="favoriteVO">
+	<resultMap class="journalFavoriteVO" id="favoriteVO">
 		<result property="favoriteId" 		column="favorite_id" />
 		<result property="favoriteName" 	column="favorite_name" />
 		<result property="favoriteDate" 	column="favorite_date" />
 	</resultMap>
 
-	<resultMap class="receiverVO" id="receiverMap">
+	<resultMap class="journalReceiverVO" id="receiverMap">
 		<result property="userId"			column="user_id"/>
 		<result property="userName"			column="user_name"/>			
 		<result property="jikwi" 			column="jikwi"/>
@@ -175,7 +175,7 @@
 		<result property="deptName" 		column="dept_name"/>			
 	</resultMap>
 	
-	<resultMap class="receiverVO" id="receiverVO">
+	<resultMap class="journalReceiverVO" id="receiverVO">
 		<result property="userId"			column="user_id"/>
 		<result property="userName"			column="user_name"/>			
 		<result property="deptName"			column="dept_name"/>
@@ -184,8 +184,7 @@
 	</resultMap>
 
 	<!-- 양식함 리스트 세럭트 -->
-	<select id="selectJournalTypeList" resultMap="JournaltypeMap"
-		parameterClass="Map">
+	<select id="selectJournalTypeList" resultMap="JournaltypeMap" parameterClass="Map">
 		select 
 			type_id, 
 			used 
@@ -333,7 +332,11 @@
 					a.form_id,
 					a.form_name,
 					a.form_status,
-					a.type_id
+					a.type_id,
+					case
+						when form_status = 'basic' then 0
+						else 1
+					end as orderNo
 				from 
 					tbl_journal_form a left join tbl_journal_form_use_dept b 
 				on 
@@ -346,6 +349,7 @@
 					a.tenant_id = #tenantId#
 				and
 					a.company_id = #companyId#
+				order by orderNo, form_id
 			]]>
 		</isNotEmpty>
 	</select>
@@ -432,7 +436,7 @@
 	</select>
 
 	<!-- 회사 리스트를 가져오는 쿼리 -->
-	<select id="selectCompanyList" resultClass="companyVO" parameterClass="map">
+	<select id="selectCompanyList" resultClass="journalCompanyVO" parameterClass="map">
 		select 
 			d.CN as companyId,
 			d.DISPLAYNAME$lang$ as companyName,
@@ -740,7 +744,7 @@
 	<select id="selectJournalList" parameterClass="Map" resultMap="journalListMap">
 		select j.journal_id as journal_id,
 		j.journal_title as journal_title,
-		substring(j.journal_date,1,19) as journal_date,
+		DATE_ADD(DATE_FORMAT(j.journal_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as journal_date,
 		j.dept_share as dept_share,
 		u.DISPLAYNAME$lang$ as writer_name,
 		d.DISPLAYNAME$lang$ as dept_name,
@@ -874,8 +878,7 @@
 	</insert>
 
 	<!-- 즐겨찾기 리스트 가져오기 -->
-	<select id="getReceiverFavoriteList" parameterClass="map"
-		resultMap="favoriteVO">
+	<select id="getReceiverFavoriteList" parameterClass="map" resultMap="favoriteVO">
 		select
 			favorite_id,
 			favorite_name,
@@ -1047,34 +1050,35 @@
 	<!-- 일지 뷰 정보 저장 -->
 	<insert id="insertViewDate" parameterClass="map">
 		<selectKey resultClass="string" keyProperty="isUser">
-			select user_id
-			from jmocha.tbl_journal_recv
-			where journal_id=#journalId#
+			select 
+				user_id
+			from 
+				jmocha.tbl_journal_recv
+			where 
+				journal_id = #journalId#
 			and
-			tenant_id=#tenantId#
-			and user_id=#userId#
+				tenant_id = #tenantId#
+			and 
+				user_id = #userId#
 		</selectKey>
 		<isEmpty property="isUser">
-			insert into jmocha.tbl_journal_view (user_id,tenant_id,journal_id,
-			view_date)
-			values(#userId#,#tenantId#,#journalId#,#viewDate#)
-<!-- 			from dual -->
-<!-- 			where not exists( -->
-<!-- 			select -->
-<!-- 			journal_id -->
-<!-- 			from jmocha.tbl_journal where journal_id = #journalId# and journal_writer -->
-<!-- 			= #userId# and tenant_id = #tenantId#) -->
-			<!-- values (#userId#,#tenantId#,#journalId#,#viewDate#) -->
-			on duplicate key update tenant_id = #tenantId#
+			insert into jmocha.tbl_journal_view 
+				(user_id,	tenant_id,	journal_id, 	view_date)
+			values
+				(#userId#,	#tenantId#,	#journalId#,	#viewDate#)
+			<!-- on duplicate key update tenant_id = #tenantId# -->
 		</isEmpty>
 		<isNotEmpty property="isUser">
-			update jmocha.tbl_journal_recv
+			update 
+				jmocha.tbl_journal_recv
 			set
-			recieve_date=#viewDate#
-			where journal_id=#journalId#
+				recieve_date = #viewDate#
+			where 
+				journal_id = #journalId#
 			and
-			tenant_id=#tenantId#
-			and user_id=#userId#
+				tenant_id = #tenantId#
+			and 
+				user_id = #userId#
 		</isNotEmpty>
 	</insert>
 
@@ -1084,7 +1088,7 @@
 			j.journal_id as journal_id, 
 			j.journal_title as journal_title, 
 			j.journal_content as journal_content, 
-			substring(j.journal_date,1,19) as journal_date, 
+			DATE_ADD(DATE_FORMAT(j.journal_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as journal_date,
 			u.DISPLAYNAME$lang$ as writer_name, 
 			f.form_name as form_name, 
 			f.type_id as type_id,
@@ -1220,7 +1224,7 @@
 		select 
 			r.reply_id as reply_id,
 			r.reply_content as reply_content,
-			substring(r.reply_date,1,16) as reply_date,
+			DATE_ADD(DATE_FORMAT(r.reply_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as reply_date,
 			u.DISPLAYNAME$lang$ as reply_writer_name,
 			u.CN as reply_writer,
 			case u.CN
@@ -1289,7 +1293,7 @@
 			a.DISPLAYNAME$lang$ as user_name,
 			a.DESCRIPTION$lang$ as dept_name,
 			a.TITLE$lang$ as jikwi,
-			substring(ifnull(b.recieve_date, '-'),1,16) as date
+			ifnull(DATE_ADD(DATE_FORMAT(b.recieve_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '-') as date
 		from 
 			tbl_usermaster a join tbl_journal_recv b 
 		on 
@@ -1338,7 +1342,7 @@
 			a.DISPLAYNAME$lang$ as user_name,
 			a.DESCRIPTION$lang$ as dept_name,
 			a.TITLE$lang$ as jikwi,
-			substring(b.recieve_date,1,16) as date
+			DATE_ADD(DATE_FORMAT(b.recieve_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as date
 		from 
 			jmocha.tbl_usermaster a join jmocha.tbl_journal_recv b 
 		on 
@@ -1351,16 +1355,21 @@
 			b.recieve_date is not null)
 		union
 		(select
-		u.cn as user_id,
-		u.DISPLAYNAME$lang$ as user_name,
-		u.DESCRIPTION$lang$ as dept_name,
-		u.TITLE$lang$ as jikwi,
-		substring(v.view_date,1,16) as date
-		from jmocha.tbl_journal_view v
-		inner join jmocha.tbl_usermaster u on(v.tenant_id=u.TENANT_ID and u.CN=v.user_id)
-		where v.journal_id=#journalId#
-		and v.tenant_id =#tenantId#
-		and not(v.user_id = (select journal_writer from tbl_journal where journal_id =#journalId# and tenant_id = #tenantId#))
+			u.cn as user_id,
+			u.DISPLAYNAME$lang$ as user_name,
+			u.DESCRIPTION$lang$ as dept_name,
+			u.TITLE$lang$ as jikwi,
+			DATE_ADD(DATE_FORMAT(v.view_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as date
+		from 
+			jmocha.tbl_journal_view v
+		inner join 
+			jmocha.tbl_usermaster u on(v.tenant_id = u.TENANT_ID and u.CN = v.user_id)
+		where 
+			v.journal_id = #journalId#
+		and 
+			v.tenant_id = #tenantId#
+		and 
+			not(v.user_id = (select journal_writer from tbl_journal where journal_id = #journalId# and tenant_id = #tenantId#))
 		)
 		order by 5 desc
 		limit

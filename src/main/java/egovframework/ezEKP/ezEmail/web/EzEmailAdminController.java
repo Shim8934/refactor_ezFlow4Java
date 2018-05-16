@@ -829,7 +829,7 @@ public class EzEmailAdminController {
 
 		int maxItemPerPage = 20;
 		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage + 1;
 		int endRow = (Integer.parseInt(currPage)) * maxItemPerPage;
 		
 		if (currPage.equals("-1")) {
@@ -879,7 +879,7 @@ public class EzEmailAdminController {
 				String email = userId + "@" + domain;
 				logger.debug("email=" + email);
 				
-				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale);
+				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
 	
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 	
@@ -964,7 +964,7 @@ public class EzEmailAdminController {
 			try {
 				String email = userId + "@" + domain;
 				
-				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale);
+				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
 
 				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 	

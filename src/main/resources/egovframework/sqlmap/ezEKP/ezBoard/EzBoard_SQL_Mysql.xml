@@ -1951,7 +1951,7 @@
 				  ON 
 				  	A.TENANT_ID = I.TENANT_ID
 				  AND
-				  	A.BOARDID = I.BOARDID				
+				  	A.BOARDID = I.BOARDID 					
 				  WHERE 
 				  	$v_PWHEREBOARD$
 				  AND
@@ -3020,7 +3020,7 @@
 			SELECT 
 				COUNT(ITEMID)
    			FROM 
-   				TBL_BOARD_ITEM A
+   				TBL_BOARD_ITEM A 
    			WHERE    				
    				$v_PWHEREBOARD$ 
    			AND
@@ -3790,10 +3790,10 @@
 	<insert id="EzBoardDAO.brdNewItemTemp" parameterClass="BoardListVO">
 		<isEqual property="parentWriteDate" compareValue="docNO">
 			INSERT INTO TBL_Board_Item_temp ( 
-				ItemID,   BoardID, 	 WriterID, 	 WriterName,   WriterName2,   WriterDeptID,   WriterDeptName,   WriterDeptName2,   WriterCompanyID,   WriterCompanyName,   WriterCompanyName2,   WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content 
+				ItemID,   BoardID, 	 WriterID, 	 WriterName,   WriterName2,   WriterDeptID,   WriterDeptName,   WriterDeptName2,   WriterCompanyID,   WriterCompanyName,   WriterCompanyName2,   WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
 			)
 	       	VALUES ( 
-	       		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item_temp A WHERE TENANT_ID = #tenantID# ), #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item_temp A WHERE TENANT_ID = #tenantID# ), #docPassword#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#
+	       		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item_temp A WHERE TENANT_ID = #tenantID# ), #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item_temp A WHERE TENANT_ID = #tenantID# ), #docPassword#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#
 	       	)
 		</isEqual>
 		<isNotEqual property="parentWriteDate" compareValue="docNO">
@@ -4715,6 +4715,18 @@
 			   						ITEMID = #itemID# )
 	  	]]>
   </select>
-	
+  
+  <update id="EzBoardDAO.updateMoveOneLineReply" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_ONELINEREPLY
+			SET 
+				BOARDID = #destBoardID#,
+	            ITEMID = #destItemID#
+	        WHERE
+	        	BOARDID = #orgBoardID#
+	        AND
+	        	ITEMID = #orgItemID#
+		]]>
+  </update>
+  	
 </sqlMap>
-

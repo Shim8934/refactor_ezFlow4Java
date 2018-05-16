@@ -5,6 +5,7 @@
     /* height: 18px; */
     /* line-height:18px; */
     color: #666666;    
+    padding-left:3px;
     font-size: 12px;
     vertical-align: top;
     cursor: pointer;
@@ -21,7 +22,8 @@
     line-height:21px;
     /* height: 18px; */
     /* line-height:18px; */
-    color: #004a87;    
+    color: #333;
+    padding-left:3px;
     font-size: 12px;
     font-weight: bold;
     vertical-align: top;
@@ -39,7 +41,8 @@
     line-height:21px;
     /* height: 18px; */
     /* line-height:18px; */
-    color: #004a87;    
+    color: #333;
+    padding-left:3px;   
     font-size: 12px;
     font-weight: bold;
     vertical-align: top;

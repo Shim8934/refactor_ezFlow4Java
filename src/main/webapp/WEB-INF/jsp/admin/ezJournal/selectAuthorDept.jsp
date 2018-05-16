@@ -32,7 +32,7 @@
 	   		
 	   		function setLpDeptId(elem){
 	   			lpDeptId = $(elem).attr("targetId");
-	   			lpDeptName = $(elem).attr("targetName");
+	   			lpDeptName = $("#treeview").jstree().get_node(lpDeptId).text;
 	   		}
 	   	
 	   		function close_Click(){
@@ -48,10 +48,11 @@
 				}).jstree({ 
 					'core' : {'data' : treeContent, 'multiple' : false},
 					'plugins': ["wholerow"],
-					 'themes' : {'responsive' : true}
+					'themes' : {'responsive' : true}
 				}).on('ready.jstree', function(e, data) {
-					var offset = $(".jstree-clicked").offset();
-		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+					var offset = $(".jstree-wholerow-clicked").offset();
+		   	    	var jstree = document.getElementById("treeview");
+		   	        $('#treeview').animate({scrollTop : offset.top - jstree.offsetHeight / 2}, 40);
 			    });
 	   		}
 	   		
@@ -62,16 +63,16 @@
 	   				$('#treeview').jstree('open_all');
 	   				$("#"+lpDeptId).find("a").each(function(){
 	   					var childrenId = $(this).parent("li").attr("id");
-	   					var childrenName = $(this).text();
+	   					var childrenName = $("#treeview").jstree().get_node(childrenId).text;
 			   			var flag = true;
 			   			for (var i = 0; i < lpDepts.length ; i++) {
 							if(lpDepts[i] == childrenId){
-								flag=false;
+								flag = false;
 							}
 						}
-			   			if(flag){
+			   			if (flag) {
 				   			if (childrenId!=opener.userDeptId && opener.userAddIds.indexOf(childrenId) == -1) {
-					   			$("#lplistView .mainlist_free").append("<tr targetId="+childrenId+" targetName="+childrenName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+childrenName+"</td></tr>");
+					   			$("#lplistView .mainlist_free").append("<tr targetId=" + childrenId + " style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>" + childrenName + "</td></tr>");
 					   			lpDepts.push(childrenId);
 					   			lpDeptNames.push(childrenName);
 							} 
@@ -82,12 +83,12 @@
 		   			for (var i = 0; i < lpDepts.length ; i++) {
 						if(lpDepts[i] == lpDeptId){
 			   				alert("<spring:message code='ezJournal.t127'/>");
-							flag=false;
+							flag = false;
 						}
 					}
-		   			if(flag){
-			   			if (lpDeptId!=opener.userDeptId && opener.userAddIds.indexOf(lpDeptId) == -1) {
-				   			$("#lplistView .mainlist_free").append("<tr targetId="+lpDeptId+" targetName="+lpDeptName+" style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>"+lpDeptName+"</td></tr>");
+		   			if (flag) {
+			   			if (lpDeptId != opener.userDeptId && opener.userAddIds.indexOf(lpDeptId) == -1) {
+				   			$("#lplistView .mainlist_free").append("<tr targetId=" + lpDeptId + " style='cursor: pointer;' class='hover'><td align='left' style='width:250px;'>" + lpDeptName + "</td></tr>");
 				   			lpDepts.push(lpDeptId);
 				   			lpDeptNames.push(lpDeptName);
 						} else {
@@ -114,9 +115,11 @@
 	   		function delTargetDept(){
 	   			var targetDeptId = $(".selectTR").attr("targetId");
 	   			if(targetDeptId){
-		   			var targetDeptName = $(".selectTR").attr("targetName");
-	   				lpDepts.splice(lpDepts.indexOf(targetDeptId),1);
-	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
+		   		//	var targetDeptName = $(".selectTR").attr("targetName");
+		   			var targetDeptName = $("#treeview").jstree().get_node(targetDeptId).text;
+		   			console.log("targetDeptName:" + targetDeptName);
+	   				lpDepts.splice(lpDepts.indexOf(targetDeptId), 1);
+	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName), 1);
 	   				$(".selectTR").remove();
 	   			} else {
 	   				alert("<spring:message code='ezOrgan.t249'/>");
@@ -143,8 +146,8 @@
 	   				},"#lplistView tr");
 	   			});
 	   			for (var i = 0; i < opener.deptIds.length; i++) {
-	   				lpDeptId=opener.deptIds[i];
-	   				lpDeptName=opener.deptNames[i];
+	   				lpDeptId = opener.deptIds[i];
+	   				lpDeptName = opener.deptNames[i];
 	   				addDeptInLP();
 				}
    			});

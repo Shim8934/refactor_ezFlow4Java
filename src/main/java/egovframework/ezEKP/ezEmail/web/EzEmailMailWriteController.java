@@ -421,7 +421,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         IMAPAccess ia = null;
         try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, password, egovMessageSource, locale);
+					userAccount, password, egovMessageSource, locale, ezEmailUtil);
 			ia.makeTopLevelFolders();
 		} finally {
 			if (ia != null) {
@@ -429,6 +429,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				ia = null;
 			}
 		}
+        
+        String multipartFirstIdx = "0";
         
         // in case of new
         if (_url.equals("") && _cmd.equals("NEW")) {
@@ -494,16 +496,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	
 			try {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userAccount, password, egovMessageSource, locale);
+						userAccount, password, egovMessageSource, locale, ezEmailUtil);
 				
 	    		Folder orgFolder = ia.getFolder(folderPath);
 	    		orgFolder.open(Folder.READ_ONLY);       
 	    		
 				// retrieve the Drafts folder name
-	        	String draftsFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
+	        	String draftsFolderName = ezEmailUtil.getDraftsFolderId(locale);
 	    		
 	        	// retrieve the Sent folder name
-	        	String sentFolderName = egovMessageSource.getMessage("ezEmail.t99000026", locale);
+	        	String sentFolderName = ezEmailUtil.getSentFolderId(locale);
 	        	
 	    		// retrieve the specified message.
 				Message orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
@@ -539,6 +541,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						if (attachedFileList.size() > 0) {
 			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+
+			                multipartFirstIdx = attachedFileList.get(0).get("index");
+			                logger.debug("EDIT multipartFirstIdx=" + multipartFirstIdx);
 			                
 							for (int i = 0; i < attachedFileList.size(); i++) {
 								Map<String, String> fileInfo = attachedFileList.get(i);
@@ -573,7 +578,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		if (orgMessage.isMimeType("multipart/related")) {
 			        		MimeMultipart relatedPart = new MimeMultipart("related");
 			        		
-			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, false)) {
 			        			resendMessage.setContent(relatedPart);
 			        		}	        			
 			        		else {
@@ -655,6 +660,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        		if (attachedFileList.size() > 0) {
 			                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+
+			                multipartFirstIdx = attachedFileList.get(0).get("index");
+			                logger.debug("RESEND multipartFirstIdx=" + multipartFirstIdx);
 			                
 							for (int i = 0; i < attachedFileList.size(); i++) {
 								Map<String, String> fileInfo = attachedFileList.get(i);
@@ -703,7 +711,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        			if (orgMessage.isMimeType("multipart/related")) {
 				        		MimeMultipart relatedPart = new MimeMultipart("related");
 				        		
-				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+				        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, true)) {
 				        			replyMessage.setContent(relatedPart);
 				        		}	        			
 				        		else {
@@ -724,7 +732,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		else {
 			        		MimeMultipart relatedPart = new MimeMultipart("related");
 			        		
-			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart)) {
+			        		if (ezEmailUtil.copyInlineParts(orgMessage, relatedPart, false)) {
 			        			replyMessage.setContent(relatedPart);
 			        		}
 			        		else {
@@ -891,6 +899,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		if (_cmd.equals("FORWARD")) {
 							if (attachedFileList.size() > 0) {
 				                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
+
+				                multipartFirstIdx = attachedFileList.get(0).get("index");
+				                logger.debug("FORWARD multipartFirstIdx=" + multipartFirstIdx);
 				                
 								for (int i = 0; i < attachedFileList.size(); i++) {
 									Map<String, String> fileInfo = attachedFileList.get(i);
@@ -1103,7 +1114,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("useLetter", useLetter);
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 추가
-
+		model.addAttribute("drafts", ezEmailUtil.getDraftsFolderId(locale)); // 임시보관함 스트링 추가 (윤진) 
+		model.addAttribute("multipartFirstIdx", multipartFirstIdx);
+		
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);
 		
@@ -1304,6 +1317,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 }
                 
                 pBigFileUpload = "Y";
+                
+                pFileName[i] = commonUtil.normalizeFileName(pFileName[i]);
                 
                 String base64OrgFileName = Base64.encodeBase64String(pFileName[i].getBytes("UTF-8"));
                 FileOutputStream fos = null;
@@ -1626,7 +1641,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
-                	String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
+                	String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
                 	
                 	file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
                 	fos = new FileOutputStream(file);
@@ -1690,7 +1705,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis = new FileInputStream(filePath[i]);
 					bis = new BufferedInputStream(fis);
 					
-					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
+					String nfcFilename = commonUtil.normalizeFileName(newFileName[i]);
+					
+					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + nfcFilename);
 					bos = new BufferedOutputStream(fos);
 					
 					int data = 0;
@@ -1710,7 +1727,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	                }
 					
 					sb.append("<NODE>");
-					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
+					sb.append("<PUPLOADSN><![CDATA[" + nfcFilename + "]]></PUPLOADSN>");
 					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
 					sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
 					sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
@@ -1977,7 +1994,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
-					String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
+					String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
 					
 					file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
 					fos = new FileOutputStream(file);
@@ -2404,10 +2421,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				newMessage = sa.createMimeMessage();
 				
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userEmail, password, egovMessageSource, locale);
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
 				
 				// 임시 보관함 폴더 오픈 
-				folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+				folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 				folder.open(Folder.READ_WRITE);
 				
 				// 첨부파일 Part들을 삽입할 Multipart를 생성한다.
@@ -2496,9 +2513,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
 				        messageBodyPart.setDataHandler(new DataHandler(source));
 				        
+				        String nfcFilename = commonUtil.normalizeFileName(fileName);
+				        		
 				        // MimeUtility.encodeText is needed to encode a file name in UTF-8 explicitly, 
 				        // otherwise, a wrong encoding may be used on some systems(linux, etc)
-				        String encodedFileName = MimeUtility.encodeText(fileName, "UTF-8", null);
+				        String encodedFileName = MimeUtility.encodeText(nfcFilename, "UTF-8", null);
 				        
 						// folding a filename is done manually since BodyPart.setFileName method encodes it based on RFC 2231.
 						// and some mailers (Daum, etc) may not understand it.			        
@@ -2865,7 +2884,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		do {
 			try {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userAccount, password, egovMessageSource, locale);
+						userAccount, password, egovMessageSource, locale, ezEmailUtil);
 				
 				//메일 발송 재시도일 경우 draftUID의 메일을 지우고 retryFlag와 draftUID를 초기화한다.
 				if (retryFlag) {
@@ -2873,7 +2892,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     					Folder draftFolder = null;
     					
     					try {
-    						draftFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+    						draftFolder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
     						draftFolder.open(Folder.READ_WRITE);
     				        Message draftMessage = ((IMAPFolder)draftFolder).getMessageByUID(draftUID);
     		        		draftMessage.setFlag(Flags.Flag.DELETED, true);
@@ -2899,7 +2918,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                         Folder sentFolder = null;
                         
                         try {
-                            sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+                            sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
                             sentFolder.open(Folder.READ_WRITE);
                             Message sentMessage = ((IMAPFolder)sentFolder).getMessageByUID(sentFolderMessageUID);
                             sentMessage.setFlag(Flags.Flag.DELETED, true);
@@ -3180,7 +3199,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        Message oldMessage = null;
 		        long uid = 0;
 		        
-		        Folder draftFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+		        Folder draftFolder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 		        draftFolder.open(Folder.READ_WRITE);
 		        
 		        logger.debug("url=" + url);
@@ -3214,6 +3233,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								int count = mp.getCount();
 								BodyPart p = null;
 								boolean hasAttach = false;
+								boolean hasInlineImage = false;
+								boolean hasRelated = false;
 								
 								// Multipart의 각 Part별 처리를 수행한다.
 								for (int i = 0; i < count; i++) {
@@ -3225,6 +3246,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								    logger.debug("Part is multipart/related");
 	    								    
 	    									hasAttach = true;
+	    									hasRelated = true;
 	    									
 	    									logger.debug("relatedPart=" + relatedPart);
 	    									
@@ -3308,6 +3330,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								    if (!contentIdSet.contains(contentId)) {
 	    								        logger.debug("Adding ContentId=" + contentId);
 	    								        
+	    								        hasInlineImage = true;
 	    								        mixedPart.addBodyPart(p);
 	    								    }
 	    								}
@@ -3334,6 +3357,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								}							
 	    								
 	    								break;
+									}
+								}
+								
+								// multipart/related 안에 첨부파일이 들어 있는 메일이 코린도에서 수신되어
+								// 해당 메일이 인라인 이미지도 포함한 경우의 처리를 위해 추가함
+								if (oldMessage.isMimeType("multipart/related")) {
+									logger.debug("hasAttach=" + hasAttach + ",hasRelated=" + hasRelated
+													+ ",hasInlineImage=" + hasInlineImage);
+									
+									if (hasAttach && !hasRelated && hasInlineImage) {
+										hasAttach = false;
 									}
 								}
 								
@@ -3530,7 +3564,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            // mailSendCompleted가 true인 경우는 메일 전송까지 완료된 이후에 Exception이 발생하여 Retry하는 경우이다.
 			            // 이 경우에는 이미 보낸편지함에 저장된 메일이 있으므로 보낸편지함에 다시 저장하지 않는다.
 			            if (mailSendCompleted == false) {
-			            	Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+			            	Folder sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
 			            	
 			            	// 보안메일 처리
 			            	if (useSecureMail.equals("YES") && isSecureMail) {
@@ -3909,9 +3943,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                     Thread.sleep(1000);
                     
                     ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-                    		userAccount, password, egovMessageSource, locale);                
+                    		userAccount, password, egovMessageSource, locale, ezEmailUtil);                
                     
-                    sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+                    sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
                     sentFolder.open(Folder.READ_WRITE);
                     Message sentMessage = ((IMAPFolder)sentFolder).getMessageByUID(sentFolderMessageUID);
                     sentMessage.setFlag(Flags.Flag.DELETED, true);
@@ -3973,9 +4007,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     		IMAPAccess ia = null;
     		try {
     			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-    					userEmail, password, egovMessageSource, locale);
+    					userEmail, password, egovMessageSource, locale, ezEmailUtil);
     			
-    			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+    			Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
     			folder.open(Folder.READ_WRITE);
     			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
     			logger.debug("message=" + message);
@@ -4127,9 +4161,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				IMAPAccess ia = null;
 				try {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userEmail, password, egovMessageSource, locale);
+							userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
-					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+					Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
 					folder.open(Folder.READ_WRITE);
 					Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
 					

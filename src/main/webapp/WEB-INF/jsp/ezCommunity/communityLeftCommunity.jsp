@@ -327,7 +327,7 @@
 	                    	window.open("/ezCommunity/commHome/poll/pollMain.do?code=" + code + "&userLevel=" + UserLevel, "right");
 	                        break;
 	                    case "btn_MemberInfo": 
-	                    	alert("<spring:message code='ezCommunity.t1102' />");
+	                    	alert("<spring:message code='ezCommunity.t431' />");
 	                		break;
 			            case "btn_MemberOut": 
 			            	alert("<spring:message code='ezCommunity.t1102' />");
@@ -563,8 +563,11 @@
                 window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board&userLevel=" + UserLevel;
             }
             
+            /* 2018-05-15 홍승비 - 커뮤니티 만들기 팝업창으로 수정 */
             function make_Cop() {
-                window.open("/ezCommunity/commMake.do", "right");
+            	 var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=1,width=850,height=560";
+                 feature = feature + GetOpenPosition(850, 560);
+                window.open("/ezCommunity/commMake.do", "", feature);
             }
 		</script>
 	</head>

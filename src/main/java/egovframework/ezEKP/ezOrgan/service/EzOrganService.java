@@ -75,4 +75,10 @@ public interface EzOrganService {
 	public String getChildrenDeptID(String parentID, String companyID, int tenantID) throws Exception;
 	
 	public boolean checkRetired(String userID, String companyID, int tenantID) throws Exception;
+	
+	public String isProxyUser(int tenantId, String userId, String nowDateTime) throws Exception;
+
+	public String setListType(String listType, String userID, int tenantID, String companyID) throws Exception;
+
+	public String getListType(String userID, int tenantID, String companyID) throws Exception;
 }

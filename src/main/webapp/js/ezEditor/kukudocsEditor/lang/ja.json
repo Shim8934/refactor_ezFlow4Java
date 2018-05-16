@@ -445,6 +445,18 @@
     "image_upload_error": "画像をアップロードする際に問題がありました。\nもう一度お試しください。",
     "tooltip_status_image_default_size": "値を変更する場合は,画像を元のサイズに維持しないでください。"
   },
+  "horizontalDialog": {
+    "insert_title": "水平線を挿入",
+    "modify_title": "水平線の修正",
+    "horizontal_width" : "幅",
+    "horizontal_height" : "高",
+    "horizontal_background_color" : "背景色",
+    "horizontal_align" : "整列する",
+    "horizontal_align_default" : "デフォルト",
+    "horizontal_align_left" : "左",
+    "horizontal_align_center" : "中",
+    "horizontal_align_right" : "右"
+  },
   "videoDialog": {
     "insert_title": "ビデオを挿入する",
     "modify_title": "ビデオ編集",
@@ -578,7 +590,7 @@
     "horizontal": "水平線を挿入する",
     "date_format": "日付/時刻の挿入",
     "background_image": "背景画像",
-    "layer_modify": "Modify layer",
+    "layer_modify": "レイヤーを変更する",
     "image": "Image",
     "image_modify": "画像を変更する",
     "video": "Video",
@@ -588,7 +600,7 @@
     "emoticon": "絵文字",
     "upper_lower": "ケースを置き換える",
     "blockquote": "引用句",
-    "layer": "Insert layer",
+    "layer": "インサート層",
     "menuTableName": "テーブル",
     "tableModifyDialog": "テーブルプロパティ",
     "cellModifyDialog": "Cellプロパティ",
@@ -602,7 +614,7 @@
     "table_remove_col": "列を削除",
     "table_remove_row": "行を削除",
     "table_remove_table": "テーブルを削除する",
-    "table_merge": "Merge",
+    "table_merge": "マージ",
     "table_split_col": "列の分割",
     "table_split_row": "行分割",
     "table_background_color": "グリッドカラー",
@@ -691,7 +703,8 @@
       }
     },
     "borderLine": "色",
-    "cellBorderStyleNoneName": "枠線なし"
+    "cellBorderStyleNoneName": "枠線なし",
+    "editorResize" : "エディタのサイズを変更"
   },
   "alertMessage": {
     "textModeChangeConfirmMessage": "テキストを編集するときに入力,スタイル,イメージ,表などが失われます。\n続行しますか？",
@@ -705,7 +718,8 @@
     "pasteKeydownMessage": "Ctrl + V（Mac:CMD + V）キーボードショートカットを使用してください。",
     "cutKeydownMessage": "Ctrl + X（Mac:CMD + X）ショートカットを使用してください。",
     "notFoundTextErrorMessage": "文字列が見つかりません。",
-    "errorParsingError" : "変換中にエラーが発生しました。"
+    "errorParsingError" : "変換中にエラーが発生しました。",
+    "pasteParsingError" : "貼り付け中にエラーが発生しました。"
   },
   "processingMessage" : "変換中 ...",
   "paragraphInsert": "段落挿入",

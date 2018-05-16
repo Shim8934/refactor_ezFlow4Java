@@ -272,5 +272,7 @@ public interface EzBoardService {
 
 	//2018.04.16 홍승비
 	public void setAsReadNew(LoginVO userInfo, String pBoardID, String string) throws Exception;
-
+	
+	//2018-05-09 강민수92
+	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception;
 }

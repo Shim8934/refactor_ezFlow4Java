@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -999,7 +1000,9 @@ public class CommonUtil {
 	
 	//html entity unescape 메서드 2018-04-06 강민수92
 	public String htmlUnescape(String html) throws Exception {
-		html = html.replace("&amp;", "&");
+		logger.debug("htmlUnescape started");
+		
+		html = html.replace("&nbsp;", " ");
 		html = html.replace("&quot;", "\"");
 		html = html.replace("&#39;", "'");
 		html = html.replace("&lt;", "<");
@@ -1014,9 +1017,7 @@ public class CommonUtil {
 		html = html.replace("&sup3;", "³");
 		html = html.replace("&acute;", "´");
 		html = html.replace("&mu;", "μ");
-		html = html.replace("&pa "
-				+ " "
-				+ ";", "¶");
+		html = html.replace("&para;", "¶");
 		html = html.replace("&middot;", "·");
 		html = html.replace("&cedil;", "¸");
 		html = html.replace("&sup1;", "¹");
@@ -1036,10 +1037,12 @@ public class CommonUtil {
 		html = html.replace("&divide;", "÷");
 		html = html.replace("&oslash;", "ø");
 		html = html.replace("&thorn;", "þ");
+		html = html.replace("&amp;", "&");
 		
 		String result = html;
 		
 		logger.debug("html result : " + result); 
+		logger.debug("htmlUnescape ended");
 		return result;
 		
 	}
@@ -1103,5 +1106,21 @@ public class CommonUtil {
 		}
 		logger.debug("getJsonFromRestApi ended");
 		return resultBody;
+	}
+	
+	/**
+	 * 첨부파일명이 자소분리된 형태로 나올경우, 자소결합
+	 * @param filename
+	 * @return String
+	 */
+	public String normalizeFileName (String filename) {
+		logger.debug("normalizeFileName started");
+		logger.debug("filename=" + filename);
+		
+		String nfcFilename =  Normalizer.normalize(filename, Normalizer.Form.NFC);
+		
+		logger.debug("nfcFilename=" + nfcFilename);
+		logger.debug("normalizeFileName ended");
+		return nfcFilename;
 	}
 }

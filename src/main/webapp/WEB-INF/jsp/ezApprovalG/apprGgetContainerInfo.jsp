@@ -501,7 +501,7 @@
 		                } else {
 		                	left = (parseInt(width) - 1155) / 2;
 					        top = (parseInt(heigth) - 460) / 2;
-		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                }
 		            } else if (jobState == "ATTACH") {
 		            	var AttachfilenameA1 = tr.cells[1].innerHTML;
@@ -1241,7 +1241,7 @@
 	            aprgongramline_cross_dialogArguments[0] = para;
 	            aprgongramline_cross_dialogArguments[1] = sendCirCulation_onclick_Complete;
 	
-	            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1120, 740));
+	            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 740));
 	            try { OpenWin.focus(); } catch (e) { }
 		    }
 

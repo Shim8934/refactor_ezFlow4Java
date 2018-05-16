@@ -10,9 +10,15 @@
 		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
+		<style>
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;	    		
+	    	}
+	    </style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
 		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	   	<script type="text/javascript">
 	   		//트리조직도 JSON
 	   		var treeContent;
@@ -29,7 +35,7 @@
 	   		var targetDept;
 	   		//현재 레이어팝업에 선택된 유저
 	   		var updateUserId;
-	   		//선택된 유저으,ㅣ부서
+	   		//선택된 유저의 부서
 	   		var userDeptId;
 	   		//회사 아이디
 	   		var companyId;
@@ -49,8 +55,9 @@
 					'plugins': ["wholerow"],
 					'themes' : {'responsive' : true}
 				}).on('ready.jstree', function(e, data) {
-					var offset = $(".jstree-clicked").offset();
-		   	        $('#treeview').animate({scrollTop : offset.top}, 0);
+					var offset = $(".jstree-wholerow-clicked").offset();
+		   	    	var jstree = document.getElementById("treeview");
+		   	        $('#treeview').animate({scrollTop : offset.top - jstree.offsetHeight / 2}, 40);
 			    });
 	   		}
 	   		
@@ -68,7 +75,7 @@
 	   				data:{"key":key, "value":value, "deptName":deptName, "companyId":companyId},
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
-	   					if(picList.length==0 && key!="DEPARTMENT"){
+	   					if(picList.length == 0 && key != "DEPARTMENT"){
 	   						alert("<spring:message code='ezCommunity.t1379'/>");
 	   					} else {
 		   					$("#orglistView").html(result);
@@ -88,25 +95,25 @@
 	   				url:"/admin/ezJournal/authorDeptList.do",
 	   				data:{"userId":$(elem).attr("id")},
 	   				success: function(result){
-	   					lpDepts=[];
+	   					lpDepts = [];
 	   					lpDeptNames = [];
 	   					$("#authorDeptList").html(result);
 	   					var deptList = $("#authorDeptList tr");
-	   					if(deptList.length==1){
+	   					if(deptList.length == 1){
 	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezApprovalG.t431"/></td></tr>');
 		   					$("#authorDeptList tr").each(function(){
-		   						if($(this).attr("mine")=='Y'){
-		   							userDeptId=$(this).attr("targetId");
+		   						if($(this).attr("mine") == 'Y'){
+		   							userDeptId = $(this).attr("targetId");
 		   						} 
-		   						if($(this).attr("mine")=='A'){
+		   						if($(this).attr("mine") == 'A'){
 		   							userAddIds.push($(this).attr("targetId"));
 		   						} 
 		   					})
 	   					} else {
 		   					$("#authorDeptList tr").each(function(){
-		   						if($(this).attr("mine")=='Y'){
+		   						if($(this).attr("mine") == 'Y'){
 		   							userDeptId=$(this).attr("targetId");
-		   						} else if($(this).attr("mine")=='A'){
+		   						} else if($(this).attr("mine") == 'A'){
 		   							userAddIds.push($(this).attr("targetId"));
 		   						} else {
 			   						lpDepts.push($(this).attr("targetId"));
@@ -171,18 +178,21 @@
 	            <li><span onclick="close_Click()"><spring:message code='ezOrgan.t143'/></span></li>
 	        </ul>
 	    </div>
+	    <script type="text/javascript">
+			selToggleList(document.getElementById("close"), "ul", "li", "0");
+		</script>
 		<table id="TreeViewTD">
 		 	<tr>
 	            <td>
-	                <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
-	                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
+	                <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                    <div class="portlet_tabpart03_top" id="tab1">
 	                        <table style="margin-top: 3px; width: 100%;">
 	                            <tr>
 	                                <td>
 	                                </td>
 	                                <td>
-	                                    <div style="float:right">
-	                                        <select id="search_type">
+	                                    <div style="float:right; margin-right:5px;">
+	                                        <select id="search_type" style="height:22px;">
 	                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
 					                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
 					                            <option value="description"><spring:message code='ezOrgan.t68'/></option>
@@ -194,7 +204,7 @@
 					                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 					                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 	                                        </select>
-	                                        <input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" id="keyword" value="" style="width: 130px; margin: 0px;" />
+	                                        <input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" id="keyword" value="" style="width: 130px; height:22px; margin: 0px;" />
 	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 	                                    </div>
 	                                </td>    
@@ -203,7 +213,7 @@
 	                        </table>
 	                    </div>
 	                </div>
-					<table style="margin-top: 3px;">
+					<table style="margin-top: 4px;">
 			            <tr>
 			                <td class="box" style="border-right: 0px; height: 465px;">
 			                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
@@ -214,7 +224,7 @@
 			            </tr>
 			        </table>
 				</td>
-				<td style="vertical-align:top; padding-top:4px; padding-left:3px;">
+				<td style="vertical-align:top; padding-top:5px; padding-left:4px;">
 	                <table>
 						<tbody>
 							<tr>
@@ -223,7 +233,7 @@
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t41'/> </span>
 									</h2>
 									<div class="receiver_borderbox">
-										<div id="authorDeptList" style="width: 250px; Height: 475px; overflow-x: auto; overflow-y: auto;">
+										<div id="authorDeptList" style="width: 250px; Height: 472px; overflow-x: auto; overflow-y: auto;">
 										</div>
 									</div>
 								</td>

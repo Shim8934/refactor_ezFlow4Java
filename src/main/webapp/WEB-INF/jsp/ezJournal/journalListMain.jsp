@@ -89,7 +89,7 @@
 	background-color: rgb(233, 241, 255);
 }
 
-#lvBoardList #journalList tr<c:if test="${listType ne 'temp' }">.noView</c:if> td {
+#journalListBody #journalList tr<c:if test="${listType ne 'temp' }">.noView</c:if> td {
 	font-weight: bold;
 }
 </style>
@@ -159,6 +159,7 @@
 			//업무일지 리스트 뿌리기
 			function setJournalList() {
 				var url = "/ezJournal/journalList.do";
+				console.log("listCnt : " + listCnt);
 				var jsonParam={};
 				jsonParam["listType"] = listType;
 				jsonParam["formId"] = $("#formId").val();
@@ -478,6 +479,7 @@
 			function selectedTR(elem){
 // 				onPreview = false;
 				var parentElem = $(elem).parent();
+				var isRead = "";
 				$("#journalList tr").removeClass("selectTR");
 				$("#journalList tr").find("input[type='checkbox']").removeProp("checked");
 	   			$(parentElem).addClass("selectTR");
@@ -489,6 +491,7 @@
 		   				if($(parentElem).attr("mine") == 'N'){
 		   	   				$(vc).text(parseInt($(vc).text())+1);
 		   				}
+		   				isRead = "N";
 			   			$(parentElem).removeClass("noView");
 		   			}
 // 	   				$("#ifrmPreViewH").attr("src","/ezJournal/journalPreview.do?journalId="+journalId);
@@ -500,7 +503,7 @@
 		   				success : function(journal){
 							$("#Preview_ContentW").html(journal);
 							$("#Preview_ContentH").html(journal);
-							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId="+journalId);
+							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId=" + journalId + "&isRead=" + isRead);
 							if(listType == 'recv'){
 								parent.left.setRecvCount();
 // 								setJournalList();
@@ -614,6 +617,7 @@
 						document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 						document.getElementById("MailListRayer").style.width = "100%";
 						document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
+						document.getElementById("journalListBody").style.height = (CurrentHeight - 50-32) + "px";
 						g_bPrevShow = false;
 						onPreview=false;
 						$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
@@ -634,6 +638,7 @@
 						document.getElementById("PreviewRayerW").style.width = "100%";
 						document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
 						document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
+						document.getElementById("journalListBody").style.height = (pMailListHeightW - 50-32) + "px";
 						document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45)+ "px";
 
 // 						document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
@@ -680,8 +685,9 @@
 						document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
 						document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
 						document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
+						document.getElementById("journalListBody").style.height = (CurrentHeight - 50-32) + "px";
 
-						document.getElementById("divList").style.overflow = "auto";
+// 						document.getElementById("divList").style.overflow = "auto";
 						document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
 						document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 						document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
@@ -706,6 +712,13 @@
 					PreviewMode_ChangeBtn();
 					isPreviewChange = false;
 				} catch (e) { 	}
+			}
+			
+			function journalListScroll(){
+				var thWidth = document.getElementById("journalListHead").clientWidth - document.getElementById("journalList").clientWidth;
+				if(thWidth > 0){ 
+					$("#BoardList_TH").append('<th style=width:8px;></th>');
+				} 
 			}
 
 			$(function() {
@@ -788,6 +801,7 @@
 						}
 					}
 				});
+				journalListScroll();
 			}
 
 			// 일지작성
@@ -1191,6 +1205,7 @@
 	            document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
 	            document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
 	            document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
+	            document.getElementById("journalListBody").style.height = (CurrentHeight - 50-32) + "px";
 	            document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
 	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
@@ -1213,6 +1228,7 @@
 	            document.getElementById("PreviewRayerW").style.width = "100%";
 	            document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
 	            document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
+	            document.getElementById("journalListBody").style.height = (pMailListHeightW - 50-32) + "px";
 	            document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
 //                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
@@ -1314,10 +1330,12 @@
 	 //일지 상세화면
 	function goJournalDetail(elem){
 		var vc = $(elem).find(".viewCount");
+		var isRead = "";
 		if($(elem).hasClass("noView")){
 			if($(elem).attr("mine") == 'N'){
    				$(vc).text(parseInt($(vc).text()) + 1);
 			}
+			isRead = "N";
    			$(elem).removeClass("noView");
 		}
 // 	 	var pheight = window.sc reen.availHeight;
@@ -1334,7 +1352,7 @@
 								+ feature);
 			Openwin.focus();
 		} else {
-			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "journalDetail",
+			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId + "&isRead=" + isRead, "journalDetail",
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			Openwin.focus();

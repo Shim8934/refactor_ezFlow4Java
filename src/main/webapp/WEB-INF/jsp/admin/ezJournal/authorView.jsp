@@ -41,7 +41,7 @@
 	    			alert("<spring:message code='ezPortal.t23'/>");
 	    		}else{
 		    		var url = "/admin/ezJournal/selectAuthorDept.do";
-					url+="?companyId="+companyId+"&userId="+selectedUser;
+					url+="?companyId=" + companyId + "&userId=" + selectedUser;
 					window.open(url, "authorDept", GetOpenWindowfeature(500, 570));
 	    		}
 	    	}
@@ -54,14 +54,14 @@
 				}
 				var deptString;
 	    		for (var i = 0; i < deptNames.length; i++) {
-	    			if(i!=0){
-			    		deptString += ", "+deptNames[i];
+	    			deptNames[i] = deptNames[i];
+	    			if(i != 0){
+			    		deptString += ", " + deptNames[i];
 	    			} else {
-	    				deptString=deptNames[i];
+	    				deptString = deptNames[i];
 	    			}
 				}
-	    		console.log(deptIds);
-	    		$("#txtdept").val(deptString);
+	    		$("#txtdept").html(deptString);
 	    	}	  
 	    	
 	    	//열람권한 저장
