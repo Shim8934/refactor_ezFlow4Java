@@ -73,7 +73,7 @@
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '#contentlist table.mainlist th', function(){
 	    			if (!$(this).find("input[type=checkbox]").length) { // checkbox는 sort에서 제외
-	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+	    				if (!$(this).find("img").length && orderCell != $(this).attr("colname")) { // 새로운 th를 클릭한 경우
 	    					src = "";
 	    					orderOption = "";
 	    					orderCell = $(this).attr("colname");
@@ -88,7 +88,11 @@
 		    			}
 		    			
 		    			$("#contentlist table.mainlist th").find("img").remove();
-		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+						if (orderCell == "change_Startdate" || orderCell == "change_Type_Name") {
+							$("th[colname='" + orderCell + "']").first().append("<img src='" + src + "' align='absmiddle'/>");
+						} else {
+							$(this).append("<img src='" + src + "' align='absmiddle'/>");
+						}
 		    			
 		    			getAttitudeHistoryList();
 	    			}
@@ -237,12 +241,10 @@
 		   				}
 		   			}
 		   			
-		   			resultHtml += "<td style = 'width:10px;'> -> </td>";
-		   			
 		   			if (vo.changeEnddate == null || vo.changeEnddate == "") {
-		   				resultHtml += "<td>" + vo.changeStartdate + "</td>";
+		   				resultHtml += "<td>->&nbsp;&nbsp;" + vo.changeStartdate + "</td>";
 		   			} else {
-		   				resultHtml += "<td>" + vo.changeStartdate + " ~ " + vo.changeEnddate + "</td>";
+		   				resultHtml += "<td>->&nbsp;&nbsp;" + vo.changeStartdate + " ~ " + vo.changeEnddate + "</td>";
 		   			}
 		   			
 		   			if (vo.originTypeName == null || vo.originTypeName == "") {
@@ -251,9 +253,7 @@
 	    				resultHtml += "<td>" + vo.originTypeName + "</td>";
 	    			}
 		   			
-		   			resultHtml += "<td style = 'width:10px;'> -> </td>";
-		   			
-		   			resultHtml += "<td>" + vo.changeTypeName + "</td>"; 
+		   			resultHtml += "<td>->&nbsp;&nbsp;" + vo.changeTypeName + "</td>"; 
 		   			
 	    			resultHtml += "<td>" + vo.apprUserName + "</td>"
 	    						+ "<td>" + vo.apprDate + "</td></tr>";
@@ -409,8 +409,10 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Name"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Dept_Name"><spring:message code='ezAttitude.t9' /></th>
-						<th colspan=3 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate">일시</th>
-						<th colspan=3 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"><spring:message code='ezAttitude.lhj18' /></th>
+						<th style="width:15%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate">일시</th>
+						<th style="width:18%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate"></th>
+						<th style="width:6%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"><spring:message code='ezAttitude.lhj18' /></th>
+						<th style="width:8%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_User_Name">수정자</th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_Date">수정일시</th>
 					</tr>
