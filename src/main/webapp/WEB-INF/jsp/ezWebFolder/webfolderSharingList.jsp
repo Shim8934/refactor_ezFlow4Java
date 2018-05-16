@@ -356,7 +356,7 @@
 					detailName.className = "aName";
 					detailName.id = originPath[i];
 					detailName.onclick = function() {
-						getFileList(this.id);
+						nameFileList(this.id);
 					};
 
 					detailName.textContent = path[i] ;
