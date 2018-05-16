@@ -485,6 +485,7 @@
 					<option value="image"><spring:message code='ezWebFolder.t195'/></option>
 					<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
 					<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
+					<option value="unknown"><spring:message code='ezWebFolder.t311'/></option>
 				</select>
 			</li>
 		</ul>

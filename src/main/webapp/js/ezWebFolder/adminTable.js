@@ -230,6 +230,7 @@ function TableView() {
 		}
 		else {
 			var len = _dataSource.length;
+			
 			for (var i = 0; i < len; i++) {
 				var trElmt  = document.createElement("tr");
 				var tdElmt1 = document.createElement("td");
@@ -240,7 +241,11 @@ function TableView() {
 				var tdElmt6 = document.createElement("td");
 				
 				trElmt.setAttribute("class", _unselectClass);
-				tdElmt1.textContent = _dataSource[i]["fileType"];
+				var fileIconElmt = document.createElement("img");
+				fileIconElmt.setAttribute("class", "webFolderImg");
+				fileIconElmt.src = _dataSource[i]["fileType"];
+				tdElmt1.setAttribute("style", "text-align: center;");
+				tdElmt1.appendChild(fileIconElmt);
 				
 				tdElmt2.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
 				tdElmt2.setAttribute("title", _dataSource[i]["fileName"]);

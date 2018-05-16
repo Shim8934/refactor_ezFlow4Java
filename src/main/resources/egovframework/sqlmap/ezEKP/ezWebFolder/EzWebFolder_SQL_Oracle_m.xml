@@ -1707,17 +1707,17 @@
     	 FROM
 				TBL_WEBFOLDER_FILE f JOIN
 					(
-					SELECT
-					  *
-					FROM
-						TBL_WEBFOLDER_FOLDER
-								WHERE
-									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
-								AND
-									TENANT_ID = #tenantId#
+						SELECT 
+						       *
+						FROM
+							TBL_WEBFOLDER_FOLDER
+						WHERE
+							FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+						AND
+							TENANT_ID = #tenantId#
 					)  d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
-			WHERE
-				f.USE_STATUS != 'Y'
+		 WHERE
+				f.USE_STATUS = 'N'
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getFolderByFolderPath"  parameterClass="Map" resultMap="trashCanVO">
@@ -1762,6 +1762,10 @@
 			FILE_ID = #fileId#
  		AND
 			DELETER_ID = #userId#
+		<isNotNull property="updateDate">
+		AND 
+		   	UPDATE_DATE = TO_DATE(#updateDate#, 'YYYY-MM-DD HH24:MI:SS')
+		</isNotNull>
 	</update>
 	
 	<update id="EzWebFolderDAO_m.restoreFolder" parameterClass="Map">
@@ -2196,12 +2200,11 @@
 	</select>
 	
 	<update id="EzWebFolderDAO_m.moveSubFolders" parameterClass="Map">
-		<![CDATA[
 			UPDATE
 				tbl_webfolder_folder
 			SET
 				FOLDER_TYPE  = #folderType#,
-				UPDATE_DATE  = TO_DATE(#updateTime#, 'YYYY-MM-DD HH24:MI:SS'), 
+				UPDATE_DATE  = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS'), 
 				UPDATE_ID    = #userId#,
 				OWNER_ID     = #ownerId#,
 				FOLDER_PATH  = replace(FOLDER_PATH, #oldPath#, #newPath#),
@@ -2209,14 +2212,18 @@
 				USE_STATUS = 'Y',
 				DELETER_ID = null
 			WHERE
+				USE_STATUS = 'N'
+			AND
+				FOLDER_ID != #folderId#
+			AND
 				FOLDER_PATH like #oldPath# || '_' ||  '%'
 			AND
 				TENANT_ID    = #tenantId#
-		]]>
+			AND 
+				UPDATE_DATE  = TO_DATE(#updateDate#, 'YYYY-MM-DD HH24:MI:SS')
 	</update>
 	
 	<update id="EzWebFolderDAO_m.moveFile" parameterClass="Map">
-		<![CDATA[
 			UPDATE
 				TBL_WEBFOLDER_FILE
 			SET
@@ -2228,6 +2235,5 @@
 				FILE_ID = #fileId#
 			AND
 				TENANT_ID = #tenantId#
-		]]>
 	</update>
 </sqlMap>

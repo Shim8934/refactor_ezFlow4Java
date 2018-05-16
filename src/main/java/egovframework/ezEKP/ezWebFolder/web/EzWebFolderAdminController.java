@@ -1,11 +1,15 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,12 +22,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -1425,6 +1432,107 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		}
 		
 		return resultObj;
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/exportFileLogs.do", method = RequestMethod.POST)
+	public String exportFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
+		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
+		
+		if (!resultCheck.get("result").toString().equals("ok")) {
+			model.addAttribute("reason", resultCheck.get("reason").toString());
+			return "json";
+		}
+		
+		String companyId     = request.getParameter("companyId");
+		String column        = request.getParameter("column");
+		String order         = request.getParameter("order");
+		String startDate     = request.getParameter("startDate")  != null ? request.getParameter("startDate")  : "";
+		String endDate       = request.getParameter("endDate")    != null ? request.getParameter("endDate")    : "";
+		String fileExt       = request.getParameter("fileExt")    != null ? request.getParameter("fileExt")    : "";
+		String fileName      = request.getParameter("fileName")   != null ? request.getParameter("fileName")   : "";
+		String userName      = request.getParameter("userName")   != null ? request.getParameter("userName")   : "";
+		String fileType      = request.getParameter("fileType")   != null ? request.getParameter("fileType")   : "";
+		String actionType    = request.getParameter("actionType") != null ? request.getParameter("actionType") : "";
+		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
+		String url           = gwServerUrl + "/rest/ezwebfolderadmin/export-logs";
+		
+		HttpHeaders headers  = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("host-name", request.getServerName());
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+										.queryParam("userId", user.getId())
+										.queryParam("lang", user.getLang())
+										.queryParam("offset", user.getOffset())
+										.queryParam("companyId", companyId)
+										.queryParam("startDate", startDate)
+										.queryParam("fileExt", fileExt)
+										.queryParam("fileName", fileName)
+										.queryParam("fileType", fileType)
+										.queryParam("userName", userName)
+										.queryParam("column", column)
+										.queryParam("order", order)
+										.queryParam("actionType", actionType)
+										.queryParam("endDate", endDate);
+		
+		RestTemplate rest             = new RestTemplate();
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp                 = new JSONParser();
+		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		String status                 = resultBody.get("status").toString();
+		
+		if (!status.equals("ok")) {
+			String reason = resultBody.get("reason").toString();
+			model.addAttribute("reason", reason);
+		}
+		else {
+			String excelPath = resultBody.get("data").toString();
+			model.addAttribute("path", excelPath);
+		}
+		
+		return "json";
+	}
+	
+	@RequestMapping(value="/admin/ezWebFolder/downloadExcel.do")
+	public void downloadExcelReport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("Download excel is running!");
+		
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String fileName    = request.getParameter("fileName");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
+		String url         = gwServerUrl + "/rest/ezwebfolder/download-excel";
+		
+		UriComponentsBuilder builder    = UriComponentsBuilder.fromHttpUrl(url)
+											.queryParam("fileName", fileName)
+											.queryParam("userAgent", request.getHeader("User-Agent"));
+		RestTemplate rest               = new RestTemplate();
+		RequestCallback requestCallback = new RequestCallback() {
+			@Override
+			public void doWithRequest(ClientHttpRequest req) throws IOException {
+				req.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
+				req.getHeaders().set("host-name", request.getServerName());
+			}
+		};
+		
+		// Streams the response instead of loading it all in memory
+		ResponseExtractor<Void> responseExtractor = res -> {
+			response.setHeader("Content-Type", "application/zip");
+			response.setHeader("Content-Disposition", res.getHeaders().get("Content-Disposition").get(0));
+			
+			IOUtils.copy(res.getBody(), response.getOutputStream());
+			
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+			
+			return null;
+		};
+		
+		rest.execute(builder.build().encode().toUri(), HttpMethod.GET, requestCallback, responseExtractor);
+		
+		logger.debug("Download excel finishes!");
 	}
 	
 	/**

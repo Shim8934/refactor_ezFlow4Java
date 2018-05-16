@@ -453,11 +453,12 @@
 					<option value="image"><spring:message code='ezWebFolder.t195'/></option>
 					<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
 					<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
+					<option value="unknown"><spring:message code='ezWebFolder.t311'/></option>
 				</select>
 			</li>
 			<li id="right">
 				<span><spring:message code='ezWebFolder.t29'/></span>
-				<select id="listCount" style="height: 29px;" onchange="renderFileList();">
+				<select id="listCount" class="wfListCnt" onchange="renderFileList();">
 					<option selected="selected">10</option>
 					<option>20</option>
 					<option>30</option>

@@ -6,7 +6,7 @@ public class TrashCanVO {
 	private String trashCanIconUrl;
 	private String trashCanPath;
 	private String trashCanExt;
-	private int trashCanSize;
+	private long trashCanSize;
 	private String createId;
 	private String createName1;
 	private String createName2;
@@ -45,10 +45,10 @@ public class TrashCanVO {
 	public void setTrashCanExt(String trashCanExt) {
 		this.trashCanExt = trashCanExt;
 	}
-	public int getTrashCanSize() {
+	public long getTrashCanSize() {
 		return trashCanSize;
 	}
-	public void setTrashCanSize(int trashCanSize) {
+	public void setTrashCanSize(long trashCanSize) {
 		this.trashCanSize = trashCanSize;
 	}
 	public String getCreateId() {

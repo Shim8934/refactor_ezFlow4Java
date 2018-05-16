@@ -1,11 +1,31 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.ClientAnchor.AnchorType;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.util.Units;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,7 +33,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.util.FileCopyUtils;
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
@@ -29,7 +51,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderAdminService")
-public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
+public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWebFolderAdminService {
 	@Resource(name = "EzWebFolderAdminDAO")
 	private EzWebFolderAdminDAO ezWebFolderAdminDAO;
 	
@@ -41,6 +63,9 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 	
 	@Autowired
 	private EzOrganService ezOrganService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderAdminServiceImpl.class);
 	
@@ -660,4 +685,227 @@ public class EzWebFolderAdminServiceImpl implements EzWebFolderAdminService {
 		map.put("tenantId", tenantId);
 		return ezWebFolderAdminDAO.getUserCapacity(map);
 	}
+
+	@Override
+	public String createExcelFileLogs(String realPath, String dirPath, List<FileLogVO> listFileLogs, String primary, Locale locale) throws Exception {
+		Date date                  = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String fileName            = egovMessageSource.getMessage("ezWebFolder.t128", locale) + "_" + formatter.format(date) + ".xlsx";
+		String filePath            = dirPath + fileName;
+		File file                  = new File(dirPath);
+		File file2                 = new File(filePath);
+		
+		if (file == null || !file.exists()) {
+			file.mkdir();
+		}
+		else {
+			FileUtils.cleanDirectory(file); 
+		}
+		
+		
+		if (file2.exists()) {
+			int pos         = fileName.lastIndexOf(".");
+			String extend   = fileName.substring(pos + 1);
+			String mainName = fileName.substring(0, pos);
+			int k           = 1;
+			fileName        = mainName + "(" + Integer.toString(k) + ")." + extend;
+			filePath        = dirPath + fileName;
+			file2           = new File(filePath);
+			
+			while (file2.exists()) {
+				fileName = mainName + "(" + Integer.toString(++k) + ")." + extend;
+				filePath = dirPath + fileName;
+			}
+		}
+		
+		FileOutputStream fileOut = null;
+		Workbook workbook = new XSSFWorkbook();
+		
+		Sheet sheet1 = workbook.createSheet(egovMessageSource.getMessage("ezWebFolder.t128", locale));
+		sheet1.setDefaultRowHeight((short)500);
+		
+		//Set style
+		CellStyle centerStyle = workbook.createCellStyle();
+		centerStyle.setWrapText(false);
+		centerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		centerStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		
+		CellStyle centerStyle2 = workbook.createCellStyle();
+		centerStyle2.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		
+		CellStyle centerStyle3 = workbook.createCellStyle();
+		centerStyle3.setAlignment(CellStyle.ALIGN_LEFT);
+		centerStyle3.setIndention((short)3);
+		centerStyle3.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		
+		//sheet1.setColumnWidth(0, 8 * 256);
+		
+		//Process first row
+		Row rowhead1 = sheet1.createRow(0);
+		
+		rowhead1.createCell(0).setCellValue(egovMessageSource.getMessage("ezWebFolder.t188", locale));
+		rowhead1.createCell(1).setCellValue(egovMessageSource.getMessage("ezWebFolder.t156", locale));
+		rowhead1.createCell(2).setCellValue(egovMessageSource.getMessage("ezWebFolder.t157", locale));
+		rowhead1.createCell(3).setCellValue(egovMessageSource.getMessage("ezWebFolder.t154", locale));
+		rowhead1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t158", locale));
+		rowhead1.createCell(5).setCellValue(egovMessageSource.getMessage("ezWebFolder.t159", locale));
+		
+		rowhead1.getCell(0).setCellStyle(centerStyle);
+		rowhead1.getCell(1).setCellStyle(centerStyle2);
+		rowhead1.getCell(2).setCellStyle(centerStyle);
+		rowhead1.getCell(3).setCellStyle(centerStyle2);
+		rowhead1.getCell(4).setCellStyle(centerStyle2);
+		rowhead1.getCell(5).setCellStyle(centerStyle2);
+		
+		int i = 1;
+		
+		for (FileLogVO fileLog : listFileLogs) {
+			Row newRow1 = sheet1.createRow(i);
+			
+			newRow1.createCell(0).setCellValue(fileLog.getFileExt());
+			drawPictureInExcel(workbook, sheet1, realPath + fileLog.getFileType(), 0, i);
+			newRow1.createCell(1).setCellValue(fileLog.getFileName());
+			newRow1.createCell(2).setCellValue(formatFileSize(Double.parseDouble(fileLog.getFileSize())));
+			newRow1.createCell(3).setCellValue(primary.equals("1") ? fileLog.getCreateName1() : fileLog.getCreateName2());
+			
+			switch(fileLog.getLogType()) {
+				case "C" : newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t160", locale)); break;
+				case "D" : newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t161", locale)); break;
+				case "U" : newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t162", locale)); break;
+				case "R" : newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t111", locale)); break;
+				case "P" : newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t19",  locale)); break;
+				case "RE": newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t287", locale)); break;
+			}
+			
+			newRow1.createCell(5).setCellValue(fileLog.getCreateDate().substring(0, 19));
+			
+			newRow1.getCell(0).setCellStyle(centerStyle3);
+			newRow1.getCell(1).setCellStyle(centerStyle2);
+			newRow1.getCell(2).setCellStyle(centerStyle);
+			newRow1.getCell(3).setCellStyle(centerStyle2);
+			newRow1.getCell(4).setCellStyle(centerStyle2);
+			newRow1.getCell(5).setCellStyle(centerStyle2);
+			
+			i++;
+		}
+		
+		sheet1.autoSizeColumn(0);
+		sheet1.setColumnWidth(0, sheet1.getColumnWidth(0) + 200);
+		sheet1.autoSizeColumn(1);
+		sheet1.setColumnWidth(2, ((int)(10 * 1.14388)) * 256);
+		sheet1.setColumnWidth(3, ((int)(30 * 1.14388)) * 256);
+		sheet1.setColumnWidth(4, ((int)(20 * 1.14388)) * 256);
+		sheet1.setColumnWidth(5, ((int)(22 * 1.14388)) * 256);
+		
+		try {
+			fileOut = new FileOutputStream(filePath);
+			workbook.write(fileOut);
+			fileOut.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			fileName = "";
+		}
+		finally {
+			fileOut.close();
+			workbook.close();
+		}
+		
+		return fileName;
+	}
+	
+	private void drawPictureInExcel(Workbook workbook, Sheet sheet1, String picturePath, int colNum, int rowNum) throws Exception {
+		InputStream inputStream = new FileInputStream(picturePath);
+		byte[] imageBytes       = IOUtils.toByteArray(inputStream);
+		int pictureureIdx       = workbook.addPicture(imageBytes, Workbook.PICTURE_TYPE_PNG);
+		inputStream.close();
+		
+		CreationHelper helper   = workbook.getCreationHelper();
+		Drawing drawing         = sheet1.createDrawingPatriarch();
+		ClientAnchor anchor     = helper.createClientAnchor();
+		
+		anchor.setCol1(colNum);
+		anchor.setRow1(rowNum);
+		anchor.setRow2(rowNum);
+		anchor.setCol2(colNum );
+		
+		anchor.setDx1(Units.toEMU(5));
+		anchor.setDy1(Units.toEMU(5));
+		anchor.setDx2(Units.toEMU(19));
+		anchor.setDy2(Units.toEMU(21));
+		anchor.setAnchorType(AnchorType.MOVE_AND_RESIZE);
+		
+		drawing.createPicture(anchor, pictureureIdx);
+	}
+	
+	private String formatFileSize(double fileSize) {
+		String _fileSize = "";
+		
+		if (fileSize / 1024 / 1024 / 1024 >= 1) {
+			_fileSize = String.format("%.2f", (double)(fileSize / 1024 / 1024 * 10) / 10);
+			_fileSize = _fileSize + "GB";
+		}
+		else if (fileSize / 1024 / 1024 >= 1) {
+			_fileSize = String.format("%.2f", (double)(fileSize / 1024 / 1024 * 10) / 10);
+			_fileSize = _fileSize + "MB";
+		}
+		else if (fileSize / 1024 >= 1) {
+			_fileSize = String.format("%.2f", (double)(fileSize / 1024));
+			_fileSize = _fileSize + "KB";
+		}
+		else {
+			_fileSize = Double.toString(fileSize) + "B";
+		}
+		
+		return _fileSize;
+	}
+
+	@Override
+	public void getExcelFile(String fileName, String realPath, String userAgent, HttpServletResponse response, int tenantId) throws Exception {
+		String _fileName = CommonUtil.getEncodedFileNameForDownload(userAgent, fileName);
+		String dirPath   = ezWebFolderService.getWebFolderDirPath(tenantId);
+		dirPath          = realPath + dirPath + "temp" + commonUtil.separator;
+		File file        = new File(dirPath + fileName);
+		
+		if (!file.exists()) {
+			throw new FileNotFoundException(fileName);
+		}
+	
+		if (!file.isFile()) {
+			throw new FileNotFoundException(fileName);
+		}
+		
+		BufferedInputStream in = null;
+		
+		try {
+			in              = new BufferedInputStream(new FileInputStream(file));
+			String mimetype = "application/octet-stream";
+			
+			response.setBufferSize(BUFF_SIZE);
+			response.setContentType(mimetype);
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");
+			response.setContentLength((int)file.length());
+			
+			FileCopyUtils.copy(in, response.getOutputStream());
+		}
+		finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			
+			try {
+				file = new File(dirPath + fileName);
+				file.delete();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
 }
