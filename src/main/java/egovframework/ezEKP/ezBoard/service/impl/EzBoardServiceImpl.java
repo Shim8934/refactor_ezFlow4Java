@@ -895,7 +895,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<HashMap<String, Object>> getSearchBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+	public List<HashMap<String, Object>> getSearchBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO) throws Exception {
 		logger.debug("getSearchBoardItemList started");
 
 		if (boardListVO.getOrderBySub().length() > 0) {
@@ -932,11 +932,41 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
 		
-		if (boardVO.getSubFlag().equals("Y")) {
-			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
-		} else {
-			map.put("v_PWHEREBOARD", " A.BOARDID = '" + boardVO.getBoardId() + "' ");
+		//혜정 추가
+		map.put("v_pDeptID", userInfo.getDeptID());
+		map.put("v_pCompanyID", userInfo.getCompanyID());
+		
+		//권한체크
+		if(userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
+			logger.debug("v_GUHAN - 1 started");
+			map.put("v_GUHAN",  "1"); 
+			
+			if (boardVO.getSubFlag().equals("A")) { 
+				map.put("v_PWHEREBOARD", " (1=1) ");
+			} else if (boardVO.getSubFlag().equals("G")) {
+				map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND BOARDGROUPID = '" + boardVO.getBoardId() + "'))");
+			} else if (boardVO.getSubFlag().equals("Y")) {
+				map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
+			} else {
+				map.put("v_PWHEREBOARD", " A.BOARDID = '" + boardVO.getBoardId() + "' ");
+			}
+			
+		}else{
+			logger.debug("v_GUHAN - 2 started");
+			map.put("v_GUHAN",  "2");
+			
+			if (boardVO.getSubFlag().equals("Y")) {
+				map.put("v_PWHEREBOARD", " AND (A.BOARDID = '" + boardVO.getBoardId() + "' OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "')) AND M.LISTVIEW_FG = 'true'");
+			} else if(boardVO.getSubFlag().equals("A")) { 
+				map.put("v_PWHEREBOARD", " AND M.LISTVIEW_FG = 'true' ");
+			} else if(boardVO.getSubFlag().equals("G")) {
+				map.put("v_PWHEREBOARD", " AND (A.BOARDID = '" + boardVO.getBoardId() + "' OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND BOARDGROUPID = '" + boardVO.getBoardId() + "')) AND M.LISTVIEW_FG = 'true'");
+			} else {
+				map.put("v_PWHEREBOARD", " AND A.BOARDID = '" + boardVO.getBoardId() + "' AND M.LISTVIEW_FG = 'true' ");
+			}
+			
 		}
+		//혜정 수정 끝
 		
 		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
 		
@@ -1541,7 +1571,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception {
+	public int getSearchBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception {
 		logger.debug("getSearchBoardItemCount started");
 
 		if (boardVO.getSearchQuery().length() > 0) {
@@ -1556,14 +1586,40 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
-		if (boardVO.getSubFlag().equals("Y")) {
+		//혜정 수정 시작 
+		/*if (boardVO.getSubFlag().equals("Y")) {
 			map.put("v_PWHEREBOARD", " (BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
 		} else {
 			map.put("v_PWHEREBOARD", " BOARDID = '" + boardVO.getBoardId() + "' ");
+		}*/
+		if(userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
+			logger.debug("v_GUHAN : 1");
+			if (boardVO.getSubFlag().equals("Y")) {
+				map.put("v_PWHEREBOARD", " (BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
+			} else if(boardVO.getSubFlag().equals("A")){
+				map.put("v_PWHEREBOARD", "('1=1')");
+			} else if(boardVO.getSubFlag().equals("G")) {
+				map.put("v_PWHEREBOARD", " (BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND BOARDGROUPID = '" + boardVO.getBoardId() + "'))");
+			} else {
+				map.put("v_PWHEREBOARD", " BOARDID = '" + boardVO.getBoardId() + "' ");
+			}
+		}else{
+			//수정해야함
+			logger.debug("v_GUHAN : 2");
+			if (boardVO.getSubFlag().equals("Y")) {
+				map.put("v_PWHEREBOARD", " (BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
+			} else if(boardVO.getSubFlag().equals("A")){
+				map.put("v_PWHEREBOARD", "('1=1')");
+			} else if(boardVO.getSubFlag().equals("G")) {
+				map.put("v_PWHEREBOARD", " (BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND BOARDGROUPID = '" + boardVO.getBoardId() + "'))");
+			} else {
+				map.put("v_PWHEREBOARD", " BOARDID = '" + boardVO.getBoardId() + "' ");
+			}
 		}
+		//혜정 수정 끝
 
 		logger.debug("getSearchBoardItemCount ended");
-		return ezBoardDAO.getSearchBoardItemCount(map);
+		return ezBoardDAO.getSearchBoardItemCount(map); //2018-05-16 쿼리수정
 	}
 
 	@Override

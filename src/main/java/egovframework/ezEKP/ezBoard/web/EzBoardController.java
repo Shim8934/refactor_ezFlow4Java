@@ -2028,6 +2028,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getSearchQuery().indexOf("SEARCHSUBBOARD;") != -1) {
 			boardVO.setSubFlag("Y");
 		}
+		//혜정 추가
+		if (boardVO.getSearchQuery().indexOf("SEARCHGROBOARD;") != -1) {
+			boardVO.setSubFlag("G");
+		}
+		
+		if (boardVO.getSearchQuery().indexOf("SEARCHALLBOARD;") != -1) {
+			boardVO.setSubFlag("A");
+		}
+		//혜정 끝
 		
 		if (boardVO.getSearchQuery().indexOf("TITLE;") != -1) {
 			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent());
@@ -2072,7 +2081,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			boardXML = getSearchBoardListItemXML(userInfo, boardVO);
 		}
-
+		
 		logger.debug("getSearchBoardList ended");
     	return boardXML;
     }
@@ -2278,7 +2287,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		boardVO.setNowDate(commonUtil.getTodayUTCTime(""));
-		int boardCount = ezBoardService.getSearchBoardItemCount(boardVO);
+		//수정
+		int boardCount = ezBoardService.getSearchBoardItemCount(userInfo, boardVO);
 		
 		BoardListVO boardListVO = new BoardListVO();
 		
@@ -2427,7 +2437,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		boardVO.setNowDate(commonUtil.getTodayUTCTime(""));
-		int boardCount = ezBoardService.getSearchBoardItemCount(boardVO);
+		//혜정 수정 LoginVO userInfo 매개변수 추가
+		int boardCount = ezBoardService.getSearchBoardItemCount(userInfo, boardVO);
 		
 		BoardListVO boardListVO = new BoardListVO();
 		boardListVO.setPageCount(boardCount);
@@ -2454,8 +2465,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getWriterName() == null) {
 			boardVO.setWriterName("");
 		}
-		
-		List<HashMap<String, Object>> boardSearchList = ezBoardService.getSearchBoardItemList(boardListVO, boardVO);
+		//혜정 수정 LoginVO userInfo 매개변수 추가
+		List<HashMap<String, Object>> boardSearchList = ezBoardService.getSearchBoardItemList(userInfo, boardListVO, boardVO);
 		
 		int dlength = boardSearchList.size();
 		
@@ -2487,6 +2498,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String fieldName = "";
 		String fieldValue = "";
 		
+		
 		for (int j = 0; j < dlength; j++) {
 			resultXML.append("<ROW>");
 			for (i = 0; i < hlength; i++) {
@@ -2510,7 +2522,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
 				
 				if (i == 0) {
-					resultXML.append("<DATA1>" + boardSearchList.get(j).get("BOARDID") + "</DATA1>");
+					resultXML.append("<DATA1>" + boardSearchList.get(j).get("BOARDID") + "</DATA1>"); 
 					resultXML.append("<DATA2>" + boardSearchList.get(j).get("ITEMID") + "</DATA2>");
 					resultXML.append("<DATA3>" + boardSearchList.get(j).get("WRITERID") + "</DATA3>");
 					resultXML.append("<DATA4>" + boardSearchList.get(j).get("IMPORTANCE") + "</DATA4>");
@@ -2536,11 +2548,49 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("MAINCONTENT")) + "</DATA12>");
 					}
 					
+					//2018-05-14 혜정 추가
+					resultXML.append("<DATA13>" + boardSearchList.get(j).get("ATTRIBUTEYN") + "</DATA13>");
+					
+					//2018-05-09 혜정 추가 시작
+					String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(boardSearchList.get(j).get("BOARDID").toString(), userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
+					
+					if(userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
+						logger.debug("FG1"); //전체관리자, 회사관리자, 게시물관리자 
+						resultXML.append("<DATA14>" + "true" + "</DATA14>");
+						resultXML.append("<DATA15>" + "true" + "</DATA15>");
+						resultXML.append("<DATA16>" + "true" + "</DATA16>");
+						resultXML.append("<DATA17>" + "true" + "</DATA17>");
+						resultXML.append("<DATA18>" + "true" + "</DATA18>");
+						resultXML.append("<DATA19>" + "OK" + "</DATA19>");
+					} else if(boardGroupAdmin_FG != null && boardGroupAdmin_FG.equals("OK")) {
+						logger.debug("FG2"); //게시물그룹관리자 
+						resultXML.append("<DATA14>" + "true" + "</DATA14>");
+						resultXML.append("<DATA15>" + "true" + "</DATA15>");
+						resultXML.append("<DATA16>" + "true" + "</DATA16>");
+						resultXML.append("<DATA17>" + "true" + "</DATA17>");
+						resultXML.append("<DATA18>" + "true" + "</DATA18>");
+						resultXML.append("<DATA19>" + "OK" + "</DATA19>");
+						
+						//2018-05-16 혜정 추가
+						//ezBoardService.BoardGroupAdminList(boardSearchList.get(j).get("BOARDID").toString());
+					
+					} else{ 
+						logger.debug("FG3");
+						resultXML.append("<DATA14>" + boardSearchList.get(j).get("BOARDADMIN_FG") + "</DATA14>");
+						resultXML.append("<DATA15>" + boardSearchList.get(j).get("READ_FG") + "</DATA15>");
+						resultXML.append("<DATA16>" + boardSearchList.get(j).get("WRITE_FG") + "</DATA16>");
+						resultXML.append("<DATA17>" + boardSearchList.get(j).get("REPLY_FG") + "</DATA17>");
+						resultXML.append("<DATA18>" + boardSearchList.get(j).get("DELETE_FG") + "</DATA18>");
+						resultXML.append("<DATA19>" + "NO" + "</DATA19>");
+					}	
 				}
 				resultXML.append("</CELL>");
 			}
 			resultXML.append("</ROW>");
 		}
+		//2018-05-16  혜정 추가
+		
+		
 		resultXML.append("</ROWS>");
 		resultXML.append("</LISTVIEWDATA>");
 		resultXML.append("</DOCLIST>");
@@ -7193,7 +7243,42 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		logger.debug("set_TabUse2 ended");
 	}
-
-    
+	
+	/**
+	 * 2018-04-27 김혜정 게시판 검색
+	 */
+	@RequestMapping(value="/ezBoard/boardSearchView.do")
+	public String BoardSearchView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("boardSearchView started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+		String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()); 
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useRunTime", useRunTime);
+		model.addAttribute("use_ocs", use_ocs);
+		model.addAttribute("use_Editor", use_Editor);
+		
+		logger.debug("boardSearchView ended");
+		return "/ezBoard/boardSearchView";
+	}
+	
+	/**
+	 * 2018-04-27 김혜정 게시판 선택
+	 */
+	@RequestMapping(value="/ezBoard/selectBoardItem.do")
+	public String selectBoardItem(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) {
+		logger.debug("selectBoardItem started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("selectBoardItem ended");
+		return "/ezBoard/boardSelectItem2";
+	}
+	
 }
 

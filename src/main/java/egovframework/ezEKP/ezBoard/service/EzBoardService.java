@@ -64,7 +64,7 @@ public interface EzBoardService {
 	
 	public List<HashMap<String, Object>> getQnABoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, String adminType, int tenantID) throws Exception;
 	
-	public List<HashMap<String, Object>> getSearchBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	public List<HashMap<String, Object>> getSearchBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 	
 	public List<HashMap<String, Object>> getThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 	
@@ -150,7 +150,7 @@ public interface EzBoardService {
 	
 	public int getCheckApprUserList(String id, String itemID, int tenantID) throws Exception;
 	
-	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception;
+	public int getSearchBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception;
 	
 	public int checkApprUserList(String userID, String itemID, int tenantID) throws Exception;
 	
