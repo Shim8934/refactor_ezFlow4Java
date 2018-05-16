@@ -494,8 +494,17 @@ public class EzLadderServiceImpl implements EzLadderService {
 		if(mode.equals("pre") && !back.equals("back")) {
 			List<String> allUser = ezLadderDAO.getTblUserMaster(map);
 			for(int i=0; i<list.size(); i++) {	
-				if(!allUser.contains(list.get(i).getUserId())){
-					list.remove(i--);
+				String temp = list.get(i).getUserId();
+				if(temp.length()>14 ) {
+					if(!temp.substring(0, 14).equals("anonyAttendant")) {	// 익명 참여자가 아니고
+						if(!allUser.contains(list.get(i).getUserId())){	// 퇴직자(임시퇴직 포함) 일 경우
+							list.remove(i--);
+						}
+					}
+				} else {
+					if(!allUser.contains(list.get(i).getUserId())){	// 퇴직자(임시퇴직 포함)일 경우
+						list.remove(i--);
+					}
 				}
 			}
 		}
