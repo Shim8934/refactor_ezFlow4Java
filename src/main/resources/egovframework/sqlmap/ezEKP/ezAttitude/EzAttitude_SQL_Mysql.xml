@@ -1331,7 +1331,8 @@
 			ORIGIN_TYPE_ID,
 			ORIGIN_TYPE_NAME,
 			ORIGIN_TYPE_NAME2,
-			ORIGIN_DATE_TYPE
+			ORIGIN_DATE_TYPE,
+			APPR_DATE
 			)
 			SELECT
 				#attVO.companyId#,
@@ -1369,7 +1370,8 @@
 				#attVO.typeId#,
 				#attVO.typeName#,
 				#attVO.typeName2#,
-				#attVO.dateType#
+				#attVO.dateType#,
+				#apprDate#
 			FROM
 				(select 
 					*
