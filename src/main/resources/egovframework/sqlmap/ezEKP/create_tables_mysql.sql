@@ -8686,6 +8686,27 @@ CREATE TABLE `tbl_vote_user_and_question` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_vote_user_and_question`
+--
+
+DROP TABLE IF EXISTS `tbl_vote_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_vote_users` (
+  `TENANT_ID` int(11) NOT NULL,
+  `QST_ID` int(11) NOT NULL,
+  `USER_ID` varchar(80) NOT NULL,
+  `USER_NAME` varchar(120) NOT NULL,
+  `USER_NAME2` varchar(120),
+  `DEPT_ID` varchar(80),
+  `DEPT_NAME` varchar(200),
+  `DEPT_NAME2` varchar(200),
+  `USER_STATUS` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`TENANT_ID`,`QST_ID`,`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Temporary view structure for view `v_ajsb_emp`
 --
 

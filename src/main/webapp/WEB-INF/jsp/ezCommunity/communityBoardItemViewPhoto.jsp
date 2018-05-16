@@ -11,39 +11,21 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>		
 		<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
- 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+ 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 		<script type="text/javascript">
 			window.offscreenBuffering = true;
-	
-		    var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
-		    var curFontSize = 1;
 		    var pItemID = "<c:out value = '${item.itemID}' />";
 		    var pBoardID = "<c:out value = '${boardInfo.boardID}' />";
-		    var pBoardName = "<c:out value = '${boardInfo.boardName}' />";
 		    var strWriterID = "<c:out value = '${item.writerID}' />";
-		    var strWriterName = "<c:out value = '${item.writerName}' />";
-		    var strWriterDeptName = "<c:out value = '${item.writerDeptName}' />";
-		    var strWriterCompanyName = "<c:out value = '${item.writerCompanyName}' />";
-		    var strWriteDate = "<c:out value = '${item.writeDate}' />";
-		    var strImportance = "<c:out value = '${item.importance}' />";
-		    var strEndDate = "<c:out value = '${item.endDate}' />";
 		    var strContentLocation = "<c:out value = '${item.contentLocation}' />";
-		    var strAttachList = "<c:out value = '${strAttachments}' />";
 		    var SSUserID = "<c:out value = '${userInfo.id}' />";
-		    var SSUserName = "<c:out value = '${userInfo.displayName1}' />";
-		    var Access_FG = "<c:out value = '${boardInfo.access_FG}' />";
 		    var BoardAdmin_FG = "<c:out value = '${boardInfo.boardAdmin_FG}' />";
-		    var ListView_FG = "<c:out value = '${boardInfo.listView_FG}' />";
-		    var Read_FG = "<c:out value = '${boardInfo.read_FG}' />";
 		    var Write_FG = "<c:out value = '${boardInfo.write_FG}' />";
 		    var Reply_FG = "<c:out value = '${boardInfo.reply_FG}' />";
 		    var Delete_FG = "<c:out value = '${boardInfo.delete_FG}' />";
 		    var BoardGroupAdmin_FG = "<c:out value = '${boardInfo.boardGroupAdmin_FG}' />";
 		    var OneLineReplyFlag = "<c:out value = '${ oneLineReplyFlag }' />";
 		    var gubun = "<c:out value = '${boardInfo.gubun }' />";
-		    var lang = "<c:out value = '${ strUserLang }' />";
-		    var pUse_Editor = "<c:out value = '${ userEditor}' />";
 		    
 		    window.onload = function () {
 		    	var html = "";
@@ -154,7 +136,7 @@
 		    		<table class="content" style="width:100%">
 			        	<tr>
 				        	<th style="width:10%"><spring:message code = 'ezCommunity.t138' /></th>
-				          	<td id="WriteUserNM" style="white-space:nowrap; width:40%"><div id = title style="OVERFLOW-Y:auto;WIDTH:%;cursor:pointer;HEIGHT:16px;vertical-align:middle" onclick='OpenUserInfo("${item.writerID}")'><c:out value = '${item.writerName}' /></div></td>
+				          	<td id="WriteUserNM" style="white-space:nowrap; width:40%"><div id = title style="OVERFLOW-Y:auto;cursor:pointer;HEIGHT:16px;vertical-align:middle;" onclick='OpenUserInfo("${item.writerID}")'><c:out value = '${item.writerName}' /></div></td>
 				          	<th style="width:10%"><spring:message code = 'ezCommunity.t932' /></th>
 				          	<td id="User_DeptNM" style="padding-right:10px;white-space:nowrap"><span><c:out value = '${item.writerDeptName }' /></span></td>
 				        </tr>

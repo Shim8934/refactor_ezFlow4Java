@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserVO;
+import egovframework.ezEKP.ezPoll.vo.PollUsersVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPollDAO")
@@ -225,4 +226,25 @@ public class EzPollDAO extends EgovAbstractDAO {
 	public List<PollQuestionVO> getOpenToAllQuestion(Map<String, Object> map) {		
 		return (List<PollQuestionVO>) list("EzPollDAO.getOpenToAllQuestion", map);
 	}
+	
+	public void insertQstUsers(Map<String, Object> map) {
+		insert("EzPollDAO.insertQstUsers", map);
+	}
+	
+	public PollUsersVO getQstUsers(Map<String, Object> map) {		
+		return (PollUsersVO) select("EzPollDAO.getQstUsers", map);
+	}
+	
+	public void updateQstUsersStatus(Map<String, Object> map) {
+		update("EzPollDAO.updateQstUsersStatus", map);
+	}	
+	
+	public void deleteUsersForQst(Map<String, Object> map) {
+		delete("EzPollDAO.deleteUsersForQst", map);
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<PollUsersVO> getAllUsersForQst(Map<String, Object> map) {
+		return (List<PollUsersVO>) list("EzPollDAO.getQstUsers", map);
+	}	
 }
