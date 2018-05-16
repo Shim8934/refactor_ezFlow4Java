@@ -850,161 +850,15 @@
 		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 		 	}
 		 	
-			function fileDownload() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-	    		
-	    		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + selected.files.toString() + "&folderList=" + selected.folders.toString();
-				
-				AttachDownFrame.location.href = downloadUrl;
-			}
-			
-			function endUpdate() {
-
-			}
-			
-			function fileUpload2() {
-				document.getElementById("file").click();
-			}
-	       
 			function refreshView() {
 				getFileList();
-			}
-	       
-			function fileDelete() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-				
-				if (selected.folders.length > 0) {
-					alert(messages.strLang1);
-					return;
-				}
-				
-				$.ajax({
-					type: "POST",
-					url: "/ezWebFolder/checkPermission.do",
-					data: {
-						"fileList" : selected.files.toString()
-					},
-					dataType: "JSON",
-					async: true,
-					success : function(data) {
-						var result = data.resultValue;
-						
-						if (result != "ok") {
-							alert(messages.strLang13);
-						} else {
-							openLeftPanel();
-							DivPopUpShow(450, 150, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
-						}
-						
-						refreshView();
-					},
-					error : function(error) {
-						alert(messages.strLang7 + error);
-					}
-				});
-			}
-			
-			function fileRename() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-				
-				if (selected.folders.length > 0) {
-					alert(messages.strLang1);
-					return;
-				}
-				
-				if (selected.files.length > 1) {
-					alert(messages.strLang6);
-					return;
-				}
-				
-				var fileId = selected.files[0];
-				
-				$.ajax({
-					type: "POST",
-					url: "/ezWebFolder/checkPermission.do",
-					data: {
-						"fileId" : fileId
-					},
-					dataType: "JSON",
-					async: true,
-					success : function(data) {
-						var result = data.resultValue;
-						
-						if (result != "ok") {
-							alert(messages.strLang13);
-						} else {
-							openLeftPanel();
-							DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
-						}
-					},
-					error : function(error) {
-						alert(messages.strLang7 + error);
-					}
-				});
-			}
-			
-			function fileMoveCopy() {
-				var selected = getSelectedFoldersAndFiles();
-				
-				if (selected === undefined) {
-					return;
-				}
-				
-				if (selected.folders.length > 0) {
-					alert(messages.strLang1);
-					return;
-				}
-				
-				openLeftPanel();
-				DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString());
-			}
-			
-			function getSelectedFoldersAndFiles() {
-				var selectedRows = rowContext.getSelectedRows();
-				var selectedLength = selectedRows.length;
-				
-				if (selectedLength <= 0) {
-					alert(messages.strLang5);
-					return undefined;
-				}
-				
-				var files  = [];
-				var folders = [];
-				var rowInfo;
-				
-				for (var i = 0; i < selectedLength; i++) {
-					rowInfo = rowContext.getRowInfo(selectedRows[i]);
-					
-					if (rowInfo.type === 'D') {
-						folders.push(rowInfo.id);
-					} else {
-						files.push(rowInfo.id);
-					}
-				}
-				
-				return {
-					folders : folders,
-					files : files
-				}
 			}
 			
 			function onFileTypeChange(value) {
 				searchContext.setFileType(value);
 				pagination.setPage(1);
 			}
-	       
+			
 			function downloadFileByDbClick(event) {
 				event.stopPropagation();
 				event.preventDefault();
@@ -1025,7 +879,7 @@
 				blockLeft.style.height = height + "px";
 				blockLeft.style.display = "";
 			}
-
+			
 			function closeLeftPanel() {
 				var leftFrame = window.parent.frames["left"].document;
 				var blockLeft = leftFrame.getElementById("bnkBlockLeft");
@@ -1065,19 +919,19 @@
 			
 			<div id="mainmenu">
 				<ul>
-					<li><a onClick="fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-					<li id="uploadBtn"><a onClick="fileUpload2()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-					<li><a onClick="fileDelete()" style="margin-top: 3px;"><span>파일삭제</span></a></li>
-					<li><a onClick="fileRename()" style="margin-top: 3px;"><span>파일명변경</span></a></li>
-					<li><a onClick="fileMoveCopy()" style="margin-top: 3px;"><span>파일이동/복사</span></a></li>
+					<li><a onclick="buttons.fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
+					<li id="uploadBtn"><a onclick="buttons.fileUpload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+					<li><a onclick="buttons.fileDelete()" style="margin-top: 3px;"><span>파일삭제</span></a></li>
+					<li><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span>파일명변경</span></a></li>
+					<li><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span>파일이동/복사</span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
-					<li id="addShareBtn" style="display:none"><a onClick="shareContext.addShareView()" style="margin-top: 3px;"><span>공유</span></a></li>
-					<li id="modifyShareBtn"><a onClick="shareContext.addShareView()" style="margin-top: 3px;"><span>공유수정</span></a></li>
-					<li id="deleteShareBtn"><a onClick="shareContext.deleteShare()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t218'/></span></a></li>
+					<li id="addShareBtn" style="display:none"><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span>공유</span></a></li>
+					<li id="modifyShareBtn"><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span>공유수정</span></a></li>
+					<li id="deleteShareBtn"><a onclick="shareContext.deleteShare()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t218'/></span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
-					<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
-					<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
-					<li><a onClick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
+					<li><span onclick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
+					<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
+					<li><a onclick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 					<li><img src="/images/i_bar.gif"></li>
 					<li style="height: 28px;">
 						<select id="fileTypeSelect" class="select" onchange="onFileTypeChange(this.value);">

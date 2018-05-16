@@ -6,8 +6,8 @@
 	<head>
 	<title>Insert title here</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>	
+	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />" type="text/css">
+	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1' />"></script>	
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
@@ -22,9 +22,10 @@
 	<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 	<!-- module -->
 	<script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/context/buttons.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
 	<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
     <script type="text/javascript">
@@ -35,7 +36,7 @@
 		var appType     = "user";
 		var userName = "${userInfo.userName}";
 		var filelist = [];
-		var strSuccess  = "<spring:message code='ezWebFolder.t27'/>";
+		var strSuccess  = "<spring:message code='ezWebFolder.t27' />";
 		var pEnd =10;
 		var folderId = "${folderId}";
 		var folderType = "${folderType}";
@@ -106,38 +107,31 @@
 	        $(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $(".datepicker").datepicker('setDate', "");
 	        
-			$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
-				closeText: "<spring:message code='main.t3'/>",
-				prevText: "<spring:message code='main.t0604'/>",
-				nextText: "<spring:message code='main.t0605'/>",
-				currentText: "<spring:message code='main.t0606'/>",
-				monthNames: ["<spring:message code='main.t0607'/>", "<spring:message code='main.t0608'/>", "<spring:message code='main.t0609'/>", 
-				             "<spring:message code='main.t0610'/>", "<spring:message code='main.t0611'/>", "<spring:message code='main.t0612'/>",
-				             "<spring:message code='main.t0613'/>", "<spring:message code='main.t0614'/>", "<spring:message code='main.t0615'/>", 
-				             "<spring:message code='main.t0616'/>", "<spring:message code='main.t0617'/>", "<spring:message code='main.t0618'/>"],
-				monthNamesShort: ["<spring:message code='main.t0607'/>", "<spring:message code='main.t0608'/>", "<spring:message code='main.t0609'/>", 
-				                  "<spring:message code='main.t0610'/>", "<spring:message code='main.t0611'/>", "<spring:message code='main.t0612'/>",
-				                  "<spring:message code='main.t0613'/>", "<spring:message code='main.t0614'/>", "<spring:message code='main.t0615'/>", 
-				                  "<spring:message code='main.t0616'/>", "<spring:message code='main.t0617'/>", "<spring:message code='main.t0618'/>"],
-				dayNames: ["<spring:message code='main.t0621'/>", "<spring:message code='main.t0622'/>", "<spring:message code='main.t0623'/>", 
-				           "<spring:message code='main.t0624'/>", "<spring:message code='main.t0625'/>", "<spring:message code='main.t0626'/>",
-				           "<spring:message code='main.t0627'/>"],
-				dayNamesShort: ["<spring:message code='main.t0621'/>", "<spring:message code='main.t0622'/>", "<spring:message code='main.t0623'/>", 
-				                "<spring:message code='main.t0624'/>", "<spring:message code='main.t0625'/>", "<spring:message code='main.t0626'/>", 
-				                "<spring:message code='main.t0627'/>"],
-				dayNamesMin: ["<spring:message code='main.t0621'/>", "<spring:message code='main.t0622'/>", "<spring:message code='main.t0623'/>", 
-				              "<spring:message code='main.t0624'/>", "<spring:message code='main.t0625'/>", "<spring:message code='main.t0626'/>", 
-				              "<spring:message code='main.t0627'/>"],
-				weekHeader: "Wk",
-				dateFormat: "yy-mm-dd",
-				firstDay: 0,
-				isRTL: false,
-				duration: 200,
-				showAnim: "show",
-				showMonthAfterYear: true
-			};
-			
-			$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+	        var monthMsg = "<spring:message code='ezSchedule.t110' />";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayStr = dayMsg.split(";");
+		    
+	        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+	        	closeText: "<spring:message code='main.t3' />",
+	            prevText: "<spring:message code='main.t0604' />",
+	            nextText: "<spring:message code='main.t0605' />",
+				currentText: "<spring:message code='main.t0606' />",
+	            monthNames: monthStr,
+	            monthNamesShort: monthStr,
+	            dayNames: dayStr,
+	            dayNamesShort: dayStr,
+	            dayNamesMin: dayStr,
+	            weekHeader: 'Wk',
+	            dateFormat: 'yy-mm-dd',
+	            firstDay: 0,
+	            isRTL: false,
+	            duration: 200,
+	            showAnim: 'show',
+	            showMonthAfterYear: true
+	        };
+	        
+	        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	     }
 	    
 	    // 폴더관리
@@ -189,10 +183,10 @@
 				if (data.code == 1) {
 					console.log("<spring:message code='ezWebFolder.t306' />");
 					return;
-				}else if (data.code == 2) {
+				} else if (data.code == 2) {
 					alert("<spring:message code='ezWebFolder.t305' />");
 					return;
-				}else if (data.code == 3) {
+				} else if (data.code == 3) {
 					alert("<spring:message code='ezWebFolder.t300' />");
 					return;
 				}
@@ -341,7 +335,7 @@
 					
 					setStyles([tdElmt2, tdElmt3, tdElmt5, tdElmt10], function(style) {
 						style.textAlign = "center";
-					})
+					});
 
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
@@ -443,11 +437,6 @@
 				excutor(elements[i].style);
 			}
 		}
-		
-	   	// 날짜 초기화 버튼
-	   	function clearDatepicker() {
-	        $(".datepicker").datepicker('setDate', "");
-	    }
 	    
 	   	// TODO : 여기서부터 코드 정리하면서 내려가서 list 뿌리기 
 		function search(type) {
@@ -492,10 +481,11 @@
 		}
 		
 		function doLayerPopup(obj) {
-	        optionHidden();
 	        var searchRequirement = searchContext.getCurrentRequirement();
-	        clearDatepicker();
+	        optionHidden();
 	        
+	        // 검색 input 요소 초기화
+	        $(".datepicker").datepicker('setDate', "");
 	        $('#searchExt').val("");               
             $('#searchFileName').val("");
             $('#searchCreateName').val("");
@@ -520,7 +510,7 @@
 	    	$.modal.close();
 	    }
    	   
-	    function optionView(obj){
+	    function optionView(obj) {
 	   		 if (obj.getAttribute("mode") == "off") {
 	   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
 //	    	        if(pAdminType == "y")
@@ -541,156 +531,8 @@
 	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
 	 	}
 	 	
-		function fileDownload() {
-			var selected = getSelectedFoldersAndFiles();
-			
-			if (selected === undefined) {
-				return;
-			}
-    		
-    		var downloadUrl = "/ezWebFolder/downloadAttach.do?fileList=" + selected.files.toString() + "&folderList=" + selected.folders.toString();
-			
-			AttachDownFrame.location.href = downloadUrl;
-		}
-		
-		function endUpdate() {
-
-		}
-		
-		function fileUpload2() {
-			document.getElementById("file").click();
-//     	   refreshView();
-//     	   endUpdate();
-		}
-       
 		function refreshView() {
 			getFileList(folderId);
-		}
-       
-       function fileDelete() {
-			var selected = getSelectedFoldersAndFiles();
-			
-			if (selected === undefined) {
-				return;
-			}
-			
-			if (selected.folders.length > 0) {
-				alert(messages.strLang1);
-				return;
-			}
-			
-			$.ajax({
-				type: "POST",
-				url: "/ezWebFolder/checkPermission.do",
-				data: {
-					"fileList" : selected.files.toString()
-				},
-				dataType: "JSON",
-				async: true,
-				success : function(data) {
-					var result = data.resultValue;
-					
-					if (result != "ok") {
-						alert(messages.strLang13);
-					} else {
-						openLeftPanel();
-						DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString());
-					}
-					
-					refreshView();
-				},
-				error : function(error) {
-					alert(messages.strLang7 + error);
-				}
-			});
-		}
-		
-		function fileRename() {
-			var selected = getSelectedFoldersAndFiles();
-			
-			if (selected === undefined) {
-				return;
-			}
-			
-			if (selected.folders.length > 0) {
-				alert(messages.strLang1);
-				return;
-			}
-			
-			if (selected.files.length > 1) {
-				alert(messages.strLang6);
-				return;
-			}
-			
-			var fileId = selected.files[0];
-			
-			$.ajax({
-				type: "POST",
-				url: "/ezWebFolder/checkPermission.do",
-				data: {
-					"fileId" : fileId
-				},
-				dataType: "JSON",
-				async: true,
-				success : function(data) {
-					var result = data.resultValue;
-					
-					if (result != "ok") {
-						alert(messages.strLang13);
-					} else {
-						openLeftPanel();
-						DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
-					}
-				},
-				error : function(error) {
-					alert(messages.strLang7 + error);
-				}
-			});
-		}
-		
-		function fileMove() {
-			var selected = getSelectedFoldersAndFiles();
-			
-			if (selected === undefined) {
-				return;
-			}
-			
-			if (selected.folders.length > 0) {
-				alert(messages.strLang1);
-				return;
-			}
-			
-			openLeftPanel();
-			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString());
-		}
-		
-		function getSelectedFoldersAndFiles() {
-			var selectedRows = rowContext.getSelectedRows();
-			var selectedLength = selectedRows.length;
-			
-			if (selectedLength <= 0) {
-				alert(messages.strLang5);
-				return undefined;
-			}
-			
-			var files  = [];
-			var folders = [];
-			var rowInfo;
-			
-			for (var i = 0; i < selectedLength; i++) {
-				rowInfo = rowContext.getRowInfo(selectedRows[i]);
-				
-				if (rowInfo.type === 'D') {
-					folders.push(rowInfo.id);
-				} else {
-					files.push(rowInfo.id);
-				}
-			}
-			
-			return {
-				folders : folders,
-				files : files
-			}
 		}
        
 		function onFileTypeChange(value) {
@@ -741,38 +583,38 @@
     </script>
 </head>
 <body class="mainbody" style="padding-bottom:10px;">
-    <h1><spring:message code='ezWebFolder.t10'/><span id="mailBoxInfo"></span></h1>
+    <h1><spring:message code='ezWebFolder.t10' /><span id="mailBoxInfo"></span></h1>
     <div id="pageArea">
 		<div style="height:40px;">
 			<span style="font-size: 24px;font-weight: bold;font-weight: bold; display: block; float: left;" id ="originalPath" ></span>
 		</div>
 		<div id="mainmenu">
 			<ul>
-				<li><span onClick="fileDownload()"><spring:message code='ezWebFolder.t186'/></span></li>
-				<li id="upload"><span onClick="fileUpload2()"><spring:message code='ezWebFolder.t187'/></span></li>
-				<li><span onClick="fileDelete()"><spring:message code='ezWebFolder.t274'/></span></li>
-				<li><span onClick="fileRename()"><spring:message code='ezWebFolder.t273'/></span></li>
-				<li><span onClick="fileMove()"><spring:message code='ezWebFolder.t275'/></span></li>
-				<li><span onClick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254'/></span></li>			
-				<li><img src="/images/i_bar.gif"></li>
-				<li><span onClick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
+				<li><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
+				<li id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
+				<li><span onclick="buttons.fileDelete()"><spring:message code='ezWebFolder.t274' /></span></li>
+				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t273' /></span></li>
+				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t275' /></span></li>
+				<li><span onclick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254' /></span></li>			
+				<li><img src="/images/i_bar.gif" /></li>
+				<li><span onclick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281' /></span></li>
 	<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
-				<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
+				<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123' /></span></li>
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
 	<!-- 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li> -->
-				<li><span onClick="refreshView()"><spring:message code='ezWebFolder.t139'/></span></li>
-				<li><img src="/images/i_bar.gif"></li>
-				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
+				<li><span onclick="refreshView()"><spring:message code='ezWebFolder.t139' /></span></li>
+				<li><img src="/images/i_bar.gif" /></li>
+				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
 				<li style="float:left; height: 28px;">
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value)">
-						<option value=""><spring:message code='ezWebFolder.t191'/></option>
-						<option value="document"><spring:message code='ezWebFolder.t192'/></option>
-						<option value="music"><spring:message code='ezWebFolder.t193'/></option>
-						<option value="video"><spring:message code='ezWebFolder.t194'/></option>
-						<option value="image"><spring:message code='ezWebFolder.t195'/></option>
-						<option value="folder"><spring:message code='ezWebFolder.t213'/></option>
-						<option value="zip"><spring:message code='ezWebFolder.t196'/></option>
+						<option value=""><spring:message code='ezWebFolder.t191' /></option>
+						<option value="document"><spring:message code='ezWebFolder.t192' /></option>
+						<option value="music"><spring:message code='ezWebFolder.t193' /></option>
+						<option value="video"><spring:message code='ezWebFolder.t194' /></option>
+						<option value="image"><spring:message code='ezWebFolder.t195' /></option>
+						<option value="folder"><spring:message code='ezWebFolder.t213' /></option>
+						<option value="zip"><spring:message code='ezWebFolder.t196' /></option>
 					</select>
 				</li>
 			</ul>
