@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezWebFolder.service;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -26,23 +28,23 @@ public interface EzWebFolderService_y {
 			String folderType, int tenantId, String primary) throws Exception;
 	
 	// folder insert위한 폴서 세부 정보 folderDetail
-	FolderVO getFolderDetail(String folderUppId, String userId, int tenantId ,String comId)throws Exception;
+	FolderVO getFolderDetail(String folderUppId, String userId, int tenantId ,String comId) throws Exception;
 	
 	// 폴더 생성
-	String insertFolder (int tenantId, String comId,String deptId, String userId, String folderType, 
+	String insertFolder(int tenantId, String comId,String deptId, String userId, String folderType, 
 			String newFolderName1,String newFolderName2, FolderVO uppFolder, String timeUTC);
 	
 	// folderUser 테이블에 데이터 생성
-	LoginVO getUserInfo (int tenantId , String comId, String userId ) throws Exception;
+	LoginVO getUserInfo(int tenantId , String comId, String userId ) throws Exception;
 	
 	// 부서폴더 리스트 가져오는 메서드
-	List<Map<String, Object>> getDeptFolder (int tenantId, String userId ,String deptId , String comId, String folderType) throws Exception;
+	List<Map<String, Object>> getDeptFolder(int tenantId, String userId ,String deptId , String comId, String folderType) throws Exception;
 	
 	// 겸직자인지 판단하는 메서드 
 	List<String> getAddJobList(int tenantId, String userId) throws Exception;
 	
 	// 부서장인지 판단하는 메서드 
-	List<Map<String, Object>> getDeptHeader (int tenantId, String userId ,String deptId , String comId) throws Exception;
+	List<Map<String, Object>> getDeptHeader(int tenantId, String userId ,String deptId , String comId) throws Exception;
 
 	// 첫 로그인 후 폴더가 존재하는지 판단하는 메서드 
 	int existFolderChk(String userId, String deptId, String comId, String folderType, int tenantId, String primary);
@@ -54,18 +56,31 @@ public interface EzWebFolderService_y {
 	void updateFolder(String folderId, int tenantId, String userId, String comId, String newFolderName1, String newFolderName2 , String timeUTC);
 	
 	// 폴더 삭제
-	int deleteSubFldAFile(String folderId, int tenantId, String comId , String userId , String timeUTC) throws Exception ;
+	int deleteSubFldAFile(String folderId, int tenantId, String comId , String userId , String timeUTC) throws Exception;
 	
 	// 하위폴더가 모두 자신이 만든 폴더인지 확인하는 메서드
 	// 모두 자신이 만든 폴더이면 true , 아니라서 삭제가 불가능하면  false 
-	int checkCreater(String folderId , int tenantId, String comId, String userId )throws Exception ;
+	int checkCreater(String folderId , int tenantId, String comId, String userId ) throws Exception;
 	
 	// 본인이 환경설정에서 설정해놓은 listCount를 출력
-	int getUsrListCount (int tenantId, String userId ) ;
+	int getUsrListCount(int tenantId, String userId );
 
 	// listCount 수정시 insert
 	void insertEnv(String userId, int tenantId, int listCount);
 	
 	// folderFileId : targetId, folderFileType : 'D','F'
-	String checkPermission(String userId, String deptId, String comId, String folderFileId, String folderFileType, int tenantId ) throws Exception;
+	String checkPermission(String userId, String deptId, String comId, String folderFileId, String folderFileType, int tenantId) throws Exception;
+	
+	/** 
+	 * @param folders ex) {@code "2,4,7,11"}
+	 * @param files ex) {@code "3,8,12,15"}
+	 * 
+	 * @return 
+	 * <pre>
+	 * 성공 시: {"status": "ok", "code": 0}
+	 * 서버 에러: {"status": "error", "code": 2}
+	 * 권한 에러: {"status": "error", "code": 3}
+	 * </pre>
+	 * **/
+	JSONObject checkPermissions(String userId, String deptId, String comId, String folders, String files, int tenantId) throws Exception;
 }
