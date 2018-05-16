@@ -1734,15 +1734,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		String code = request.getParameter("code");
 		String copType = request.getParameter("type");
-		String defaultLogo = request.getParameter("default");
+		String defaultLogo = request.getParameter("defaultLogo");
+		String defaultThumb = request.getParameter("defaultThumb");
 		MultipartFile logoFile = request.getFile("logo");
 		MultipartFile thumbFile = request.getFile("thumb");
 		String logoFileNameLogo = "";
 		String logoFileNameThumbnail = "";
 		
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", tenantID) + commonUtil.separator;
-
-		//상단 이미지 저장
+		
+		// 상단 이미지 저장
 		if (!logoFile.isEmpty()) {
 			attachFile = logoFile.getOriginalFilename();
 			iStart = attachFile.lastIndexOf(".");
@@ -1766,7 +1767,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			file.delete();
 		}
-		//썸네일 저장
+		// 썸네일 저장
 		if (!thumbFile.isEmpty()) {
 			attachFile = thumbFile.getOriginalFilename();
 			iStart = attachFile.lastIndexOf(".");
@@ -1791,11 +1792,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			file.delete();
 		}
 		
-		if(defaultLogo != null) {
+		/* 2018-05-16 홍승비 - 등록한 로고, 썸네일 이미지 삭제 기능 추가 */
+		if (defaultLogo != null && !defaultLogo.equals("")) {
 			logoFileNameLogo = defaultLogo;
 		}
+		if (defaultThumb != null && !defaultThumb.equals("")) {
+			logoFileNameThumbnail = defaultThumb;
+		}
 		
-		if(!logoFileNameLogo.equals("") || !logoFileNameThumbnail.equals("") || !copType.equals("")) {
+		if (!logoFileNameLogo.equals("") || !logoFileNameThumbnail.equals("") || !copType.equals("")) {
 			adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, copType, code, tenantID);
 		}		
 	}
