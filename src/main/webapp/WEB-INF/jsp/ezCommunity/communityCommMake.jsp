@@ -177,15 +177,13 @@
 		            });
 		        }
 			</c:if>
-	        
-	        
+	                
 		</script>
 	</head>
 	<body class="popup">
 	    <div id="menu" style="margin-bottom:10px">
 	        <ul>
 	            <li><span id="btnDraft" onclick="check()"><spring:message code='ezCommunity.t1011' /></span></li>
-	            <li><span id="btnDraft" onclick="window.location.reload(true)"><spring:message code='ezCommunity.t109' /></span></li>
 	        </ul>
 	    </div>
 	    <div id="close">
