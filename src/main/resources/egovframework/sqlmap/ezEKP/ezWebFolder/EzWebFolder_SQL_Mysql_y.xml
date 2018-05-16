@@ -1327,12 +1327,12 @@
 				tbl_webfolder_file as file
 			set
 			    file.UPDATE_DATE = #timeUTC#,
-				file.use_status = 'N',
+				file.USE_STATUS = 'N',
 				file.DELETER_ID = #userId#
 			where 
 				file.TENANT_ID = #tenantId#
 			and
-				file.use_status = 'Y',
+				file.USE_STATUS = 'Y'
 			and
 				file.FOLDER_ID in (
 					select id 
