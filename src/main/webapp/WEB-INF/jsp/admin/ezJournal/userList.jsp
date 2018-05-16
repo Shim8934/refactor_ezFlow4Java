@@ -105,8 +105,8 @@
 				        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
 							<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.deptName }" /></td>
 							<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.userName }" /></td>
-							<td><c:out value="${user.jikwi }" /></td>
-							<td><c:out value="${user.mail }" /></td>
+							<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.jikwi }" /></td>
+							<td style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><c:out value="${user.mail }" /></td>
 						</tr>
 			        </c:forEach>
 		        </c:otherwise>
