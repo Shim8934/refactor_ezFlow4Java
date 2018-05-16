@@ -164,7 +164,6 @@
 		    	webfolder_folder_Manage[1] = drawVolume;
 	        	var OpenWin = window.open("/ezWebFolder/folderManage.do?folderType="+folderType, "", GetOpenWindowfeature(600, 500));
 	            try { OpenWin.focus(); } catch (e) { }
-	            console.log(drawVolume());
 	        }
 		    
 		    function getFileList(folderId) {
