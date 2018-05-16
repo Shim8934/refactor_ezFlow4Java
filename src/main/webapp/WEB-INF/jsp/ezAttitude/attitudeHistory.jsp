@@ -221,39 +221,46 @@
 	    		
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
-	    		for (var i = 0; i < result.length; i ++) {
-	    			resultHtml += "<tr attitudeId='" + result[i].attitudeId + "' userid='" + result[i].writerId + "';>"
-	    			   			+ "<td>" + result[i].writerName + "</td>"
-	    			   			+ "<td>" + result[i].writerTitle + "</td>"
-	    			   			+ "<td>" + result[i].writerDeptName + "</td>";
-	    						
-	    			if (result[i].originStartdate == null || result[i].originStartdate == "") {
-	    				resultHtml += "<td> 미입력  ->  " + result[i].changeStartdate;
-	    				if (result[i].changeEnddate == null || result[i].changeEnddate == "") {
-	    					resultHtml += "</td>";
-	    				} else {
-	    					resultHtml += "  ~  " + result[i].changeEnddate + "</td>";
-	    				}
+	    		result.forEach(function(vo, index) {
+	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' userid='" + vo.writerId + "';>";
+		   			resultHtml += "<td>" + vo.writerName + "</td>";
+		   			resultHtml += "<td>" + vo.writerTitle + "</td>";
+		   			resultHtml += "<td>" + vo.writerDeptName + "</td>";
+		   			
+		   			if (vo.originStartdate == null || vo.originStartdate == "") {
+		   				resultHtml += "<td>미입력</td>";
+		   			} else {
+		   				if (vo.originEnddate == null || vo.originEnddate =="") {
+		   					resultHtml += "<td>" + vo.originStartdate + " ~ " + vo.originEnddate + "</td>";
+		   				} else {
+		   					resultHtml += "<td>" + vo.originStartdate + "</td>";
+		   				}
+		   			}
+		   			
+		   			resultHtml += "<td style = 'width:10px;'> -> </td>";
+		   			
+		   			if (vo.changeEnddate == null || vo.changeEnddate == "") {
+		   				resultHtml += "<td>" + vo.changeStartdate + "</td>";
+		   			} else {
+		   				resultHtml += "<td>" + vo.changeStartdate + " ~ " + vo.changeEnddate + "</td>";
+		   			}
+		   			
+		   			if (vo.originTypeName == null || vo.originTypeName == "") {
+		   				resultHtml += "<td>미입력</td>";
 	    			} else {
-	    				resultHtml += "<td>" + result[i].originStartdate;
-	    				if (result[i].originEnddate == null || result[i].originEnddate == "") {
-	    					resultHtml += "  ->  " + result[i].changeStartdate + "</td>";
-	    				} else {
-	    					resultHtml += "  ~  " + result[i].originEnddate + "  ->  " + result[i].changeStartdate + "  ~  " + result[i].changeEnddate + "</td>";
-	    				}
+	    				resultHtml += "<td>" + vo.originTypeName + "</td>";
 	    			}
-	    			
-	    			if (result[i].originTypeName == null || result[i].originTypeName == "") {
-	    				resultHtml += "<td> 미입력  ->  " + result[i].changeTypeName + "</td>";
-	    			} else {
-	    				resultHtml += "<td>" + result[i].originTypeName + "  ->  " + result[i].changeTypeName + "</td>";
-	    			}
-	    			resultHtml += "<td>" + result[i].apprUserName + "</td>"
-	    						+ "<td>" + result[i].ApprDate + "</td></tr>";
-	    		}
+		   			
+		   			resultHtml += "<td style = 'width:10px;'> -> </td>";
+		   			
+		   			resultHtml += "<td>" + vo.changeTypeName + "</td>"; 
+		   			
+	    			resultHtml += "<td>" + vo.apprUserName + "</td>"
+	    						+ "<td>" + vo.apprDate + "</td></tr>";
+	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='10' style='text-align:center'><spring:message code='ezAttitude.lhj14' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
@@ -322,7 +329,6 @@
 			
 			function checkPattern() {
 				var datePattern =  /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
-				/* var timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/; */
 				
 				if (datePattern.test($("#Sdatepicker").val()) && datePattern.test($("#Edatepicker").val())) {
 					return true;
@@ -400,13 +406,13 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Name"><spring:message code='ezAttitude.t10' /></th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Title"><spring:message code='ezAttitude.t11' /></th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Dept_Name"><spring:message code='ezAttitude.t9' /></th>
-						<th style="width:30%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate">일시</th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"><spring:message code='ezAttitude.lhj18' /></th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_User_Name">수정자</th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_Date">수정일시</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Name"><spring:message code='ezAttitude.t10' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Title"><spring:message code='ezAttitude.t11' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="writer_Dept_Name"><spring:message code='ezAttitude.t9' /></th>
+						<th colspan=3 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Startdate">일시</th>
+						<th colspan=3 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="change_Type_Name"><spring:message code='ezAttitude.lhj18' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_User_Name">수정자</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="appr_Date">수정일시</th>
 					</tr>
 				</thead>
 				<tbody>
