@@ -497,12 +497,12 @@ public class EzLadderServiceImpl implements EzLadderService {
 				String temp = list.get(i).getUserId();
 				if(temp.length()>14 ) {
 					if(!temp.substring(0, 14).equals("anonyAttendant")) {	// 익명 참여자가 아니고
-						if(!allUser.contains(list.get(i).getUserId())){	// 퇴직자(임시퇴직 포함) 일 경우
+						if(!allUser.contains(temp)){	// 퇴직자(임시퇴직 포함) 일 경우
 							list.remove(i--);
 						}
 					}
 				} else {
-					if(!allUser.contains(list.get(i).getUserId())){	// 퇴직자(임시퇴직 포함)일 경우
+					if(!allUser.contains(temp)){	// 퇴직자(임시퇴직 포함)일 경우
 						list.remove(i--);
 					}
 				}
