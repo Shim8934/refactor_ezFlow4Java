@@ -334,7 +334,7 @@ public class EzWebFolderGWController {
 			}
 			else {
 				double totalCapByBytes = Double.parseDouble(userCapacity.getTotalCapacity()) * 10737418.24;
-				userCapacity.setUsedRate((int)(Integer.parseInt(userCapacity.getTotalUsed())/totalCapByBytes));
+				userCapacity.setUsedRate((int)(Double.parseDouble(userCapacity.getTotalUsed())/totalCapByBytes));
 			}
 			
 			result.put("data", userCapacity);
