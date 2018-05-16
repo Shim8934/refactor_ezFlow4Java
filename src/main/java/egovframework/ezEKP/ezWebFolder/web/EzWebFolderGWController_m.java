@@ -1343,48 +1343,6 @@ public class EzWebFolderGWController_m {
 		return result;
 	}
 	
-//	@RequestMapping(value="/rest/ezwebfolder/trashcan-check-admin/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-//	public JSONObject checkWfAdmin(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
-//		String serverName = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host") : "";
-//		JSONObject result = new JSONObject();
-//		
-//		logger.debug("ServerName: " + serverName + " || userId: " + userId);
-//		
-//		if (serverName.equals("") || userId.equals("")) {
-//			logger.debug("Parameter error!");
-//			result.put("status", "error");
-//			result.put("code", 1);
-//			result.put("data", "");
-//			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
-//			return result;
-//		}
-//		
-//		try {
-//			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName, "", "");
-//			boolean check = checkWfAdmin(userInfo);
-//			
-//			if (check == true) {
-//				result.put("data", "1");
-//			}
-//			else {
-//				result.put("data", "0");
-//				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t28", locale));
-//			}
-//			
-//			result.put("status", "ok");
-//			result.put("code", 0);
-//		} 
-//		catch (Exception e) {
-//			e.printStackTrace();
-//			result.put("status", "error");
-//			result.put("code", 1);
-//			result.put("data", "");
-//			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
-//		}
-//		
-//		return result;
-//	}
-	
 	private <T> T orElse(T value, T other) {
 		if (other == null) {
 			throw new IllegalArgumentException("other is null!");

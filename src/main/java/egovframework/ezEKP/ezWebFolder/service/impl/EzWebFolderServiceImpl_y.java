@@ -816,6 +816,10 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		// TODO refactoring (아래는 권장하지 않는 코드입니다, 좋은 방법이 있으면 수정해주세요)
 		class PermissionChecker {
 			boolean accept(String checkList, String checkType) throws Exception {
+				if (checkList == null) {
+					return true;
+				}
+				
 				String[] checkArray = checkList.split(",");
 				
 				if (checkArray.length == 1 && checkArray[0].isEmpty()) {
@@ -836,10 +840,11 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		
 		try {
 			if (permissionChecker.accept(folders, "D") && permissionChecker.accept(files, "F")) {
+				LOGGER.debug("permission allowed.");
 				result.put("status", "ok");
 				result.put("code", 0);
 			} else {
-				LOGGER.debug("this folder conection is not permission ");
+				LOGGER.debug("permission denied.");
 				result.put("status", "error");
 				result.put("code", 3);
 			}
@@ -848,8 +853,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			result.put("status", "error");
 			result.put("code", 2);
 		}
-
 		
+		LOGGER.debug(String.format("result: %s", result.toString()));
 		LOGGER.debug("checkPermissions ended.");
 		return new JSONObject(result);
 	}
