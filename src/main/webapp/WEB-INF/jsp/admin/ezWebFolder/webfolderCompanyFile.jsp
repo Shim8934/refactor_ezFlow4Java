@@ -141,7 +141,7 @@
 						<td class="wfSearchTd"><input id="fileNameVal" type="text" style="height: 23px; width: 200px;"></td>
 					</tr>
 					<tr>
-						<th class="wfSearchTh"><spring:message code='ezWebFolder.t197'/></th>
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t154'/></th>
 						<td class="wfSearchTd"><input id="fileCreatorVal" type="text" style="height: 23px; width: 200px;"></td>
 					</tr>
 					<tr>
