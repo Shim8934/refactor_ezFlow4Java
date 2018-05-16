@@ -1422,4 +1422,19 @@
 		AND 
 			LADDERBMID = #ladderBmId#
 	</delete>
+	
+	<select id="EzLadderDAO.getTblUserMaster" resultClass="String">
+		SELECT
+			C.CN
+		FROM
+			TBL_USERMASTER C
+		WHERE 
+			C.TENANT_ID = #tenantId# AND C.CN NOT IN (
+														SELECT
+															B.CN
+														FROM
+															TBL_USERMASTER_RETIRE B 
+														WHERE
+															B.TENANT_ID = #tenantId#)
+	</select>
 </sqlMap>
