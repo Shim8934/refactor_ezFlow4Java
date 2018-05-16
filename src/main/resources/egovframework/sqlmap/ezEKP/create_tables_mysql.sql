@@ -4938,7 +4938,7 @@ CREATE TABLE `tbl_journal_form` (
   `form_content` text COMMENT '양식 내용',
   `type_id` varchar(80) NOT NULL COMMENT '함 아이디',
   `form_date` datetime NOT NULL COMMENT '양식 일',
-  `form_writer` varchar(200) NOT NULL COMMENT '양식 작성자',
+  `form_writer` varchar(200) COMMENT '양식 작성자',
   `form_info` varchar(4000) DEFAULT NULL COMMENT '양식 설명',
   `form_status` varchar(45) DEFAULT NULL COMMENT '양식 상태',
   `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
