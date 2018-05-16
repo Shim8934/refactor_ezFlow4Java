@@ -99,11 +99,12 @@
 						<option value="4"         ><spring:message code='ezWebFolder.t194'/></option>
 						<option value="5"         ><spring:message code='ezWebFolder.t195'/></option>
 						<option value="6"         ><spring:message code='ezWebFolder.t196'/></option>
+						<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 					</select>
 				</li>
 				<li id="right">
 					<span><spring:message code='ezWebFolder.t29'/></span>
-					<select id="listCount" style="height: 29px;">
+					<select id="listCount" class="wfListCnt">
 						<option selected="selected">10</option>
 						<option>20</option>
 						<option>30</option>
@@ -141,7 +142,7 @@
 						<td class="wfSearchTd"><input id="fileNameVal" type="text" style="height: 23px; width: 200px;"></td>
 					</tr>
 					<tr>
-						<th class="wfSearchTh"><spring:message code='ezWebFolder.t197'/></th>
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t154'/></th>
 						<td class="wfSearchTd"><input id="fileCreatorVal" type="text" style="height: 23px; width: 200px;"></td>
 					</tr>
 					<tr>
@@ -154,6 +155,7 @@
 								<option value="4"         ><spring:message code='ezWebFolder.t194'/></option>
 								<option value="5"         ><spring:message code='ezWebFolder.t195'/></option>
 								<option value="6"         ><spring:message code='ezWebFolder.t196'/></option>
+								<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 							</select>
 						</td>
 					</tr>

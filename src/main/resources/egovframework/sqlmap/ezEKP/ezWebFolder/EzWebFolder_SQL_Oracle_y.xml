@@ -918,7 +918,7 @@
 	<select id="EzWebFolderDAO_y.getFileToTalCountR" resultClass="Integer" parameterClass="Map"> 
 		<![CDATA[
    		select count(*) from ( 
-   			SELECT file_id
+   			SELECT distinct file_id
 		]]>	
 		<isEqual property="folderType" compareValue="C" >
 	  		FROM 

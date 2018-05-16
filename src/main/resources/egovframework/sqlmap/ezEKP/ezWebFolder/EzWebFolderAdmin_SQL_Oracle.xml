@@ -72,6 +72,11 @@
 				t.TYPE_NAME = 'zip'
 			]]>
 		</isEqual>
+		<isEqual property="fileType" compareValue="7" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME is null
+			]]>
+		</isEqual>
 		
 		<isEqual property="searchChk" compareValue="1">
 			<isNotEqual property="fileExt" compareValue="" prepend="AND">
@@ -383,11 +388,10 @@
 							SELECT
 								l.LOG_ID                                                         AS LOG_ID,
 								CASE
-									WHEN t.TYPE_NAME IS NOT NULL 
-										THEN (CASE WHEN #primary# = '1' THEN t.TYPE_NAME2 ELSE t.TYPE_NAME END) 
-										ELSE (CASE WHEN #primary# = '1' THEN (SELECT TYPE_NAME2 FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#)
-												ELSE (SELECT TYPE_NAME FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END
-								) END                                                            AS FILE_TYPE,
+									WHEN t.TYPE_ICON IS NOT NULL
+										THEN t.TYPE_ICON 
+										ELSE (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) 
+								END                                                              AS FILE_TYPE,
 								l.FILE_NAME                                                      AS FILE_NAME,
 								l.FILE_SIZE                                                      AS FILE_SIZE,
 								l.FILE_EXT                                                       AS FILE_EXT,
@@ -421,7 +425,7 @@
 								TO_NUMBER(l.LOG_ID) DESC
 							]]>
 						</isEqual>
-						
+	<isNotEqual property="pageSize" compareValue="0">
 						<![CDATA[
 						) k
 					WHERE
@@ -430,6 +434,13 @@
 			WHERE
 				RNUM >= #startPoint# + 1
 		]]>
+	</isNotEqual>
+	<isEqual property="pageSize" compareValue="0">
+						<![CDATA[
+						) k
+					)
+		]]>
+	</isEqual>
 	</select>
 	
 	<select id="EzWebFolderAdminDAO.getTotalFileLogs" resultClass="Integer">

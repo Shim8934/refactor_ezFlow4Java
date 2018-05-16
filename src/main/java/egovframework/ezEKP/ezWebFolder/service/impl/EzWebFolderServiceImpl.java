@@ -1017,7 +1017,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		}
 	}
 	
-	private String getWebFolderDirPath(int tenantId) {
+	public String getWebFolderDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
 	}
 	

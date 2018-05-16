@@ -40,6 +40,8 @@
 			var tableView    = new TableView();
 			
 			window.onload = function () {
+				document.onselectstart = function() {return false;}
+				
 				tableView.setTableId("tblFileHistory");
 				tableView.setTableType("filelog");
 				tableView.setSelectedClass("bnkWebFolder2");
@@ -278,6 +280,41 @@
 				search_Set(currentPage);
 			}
 			
+			function excelExport() {
+				var orderInf = tableView.getOrderInfo();
+				
+				$.ajax({
+					type: "POST",
+					url: "/admin/ezWebFolder/exportFileLogs.do",
+					data: {
+						"startDate"   : startDateStr,
+						"endDate"     : endDateStr,
+						"fileExt"     : fileExtStr,
+						"fileName"    : fileNameStr,
+						"userName"    : userNameStr,
+						"actionType"  : actTypeStr,
+						"column"      : orderInf.col ? orderInf.col : "",
+						"order"       : orderInf.ord ? orderInf.ord : "",
+						"fileType"    : document.getElementById("fileTypeSelect").value,
+						"companyId"   : document.getElementById("companyList").value
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var reason = data.reason;
+						if (reason) {
+							alert(reason);
+						}
+						else {
+							var url      = "/admin/ezWebFolder/downloadExcel.do?fileName=" + data.path;
+							AttachDownFrame.location.href = url;
+						}
+					},
+					error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					}
+				});
+			}
 		</script>
 	</head>
 	<body class="mainbody" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
@@ -296,8 +333,9 @@
 		
 		<div id="mainmenu2" style="position: relative; margin-left: 5px;">
 			<ul>
-				<li id=""><a id="btnSearch"  style="margin-top: 3px;" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
-				<li id=""><a id="btnRefresh" style="margin-top: 3px;" onClick="refreshView();"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
+				<li id=""><a id="btnSearch"  style="margin-top: 3px;" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123' /></span></a></li>
+				<li id=""><a id="btnRefresh" style="margin-top: 3px;" onClick="refreshView();"    ><span><spring:message code='ezWebFolder.t139' /></span></a></li>
+				<li id=""><a id="btnSave"    style="margin-top: 3px;" onClick="excelExport();"    ><span><spring:message code='ezStatistics.t1003'/></span></a></li>
 				<li id="">
 					<select id="fileTypeSelect" onchange="search_Set('1');">
 						<option value="1" selected><spring:message code='ezWebFolder.t191'/></option>
@@ -306,11 +344,12 @@
 						<option value="4"         ><spring:message code='ezWebFolder.t194'/></option>
 						<option value="5"         ><spring:message code='ezWebFolder.t195'/></option>
 						<option value="6"         ><spring:message code='ezWebFolder.t196'/></option>
+						<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 					</select>
 				</li>
 				<li id="right">
 					<span><spring:message code='ezWebFolder.t29'/></span>
-					<select id="listCount" style="height: 29px;" onchange="search_Set(1);">
+					<select id="listCount" class="wfListCnt" onchange="search_Set(1);">
 						<option selected="selected">10</option>
 						<option>20</option>
 						<option>30</option>
@@ -392,18 +431,18 @@
 		<div id="mainSetting" style="margin: 10px 0px 10px 5px; height:500px; overflow: auto;">
 				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileHistory">
 				<tr>
-					<th headers="ft" style="width: 5%;"><spring:message code='ezWebFolder.t155'/></th>
-					<th headers="fn" style="width: 40%;"><spring:message code='ezWebFolder.t156'/></th>
-					<th headers="fs" style="width: 6%;"><spring:message code='ezWebFolder.t157'/></th>
-					<th headers="un" style="width: 8%;"><spring:message code='ezWebFolder.t154'/></th>
-					<th headers="at" style="width: 6%;"><spring:message code='ezWebFolder.t158'/></th>
-					<th headers="ad" style="text-align: center; width: 20%;"><spring:message code='ezWebFolder.t159'/></th>
+					<th headers="ft" style="text-align: center; width: 40px;"><spring:message code='ezWebFolder.t188'/></th>
+					<th headers="fn" style="width: 50%;"><spring:message code='ezWebFolder.t156'/></th>
+					<th headers="fs" style="width: 8%;"><spring:message code='ezWebFolder.t157'/></th>
+					<th headers="un" style="width: 10%;"><spring:message code='ezWebFolder.t154'/></th>
+					<th headers="at" style="width: 8%;"><spring:message code='ezWebFolder.t158'/></th>
+					<th headers="ad" style="text-align: center; width: 24%;"><spring:message code='ezWebFolder.t159'/></th>
 				</tr>
 			</table>
 		</div>
 		
 		<div id="tblPageRayer"></div>
-		
+		<iframe name="AttachDownFrame" id="AttachDownFrame"></iframe>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel" onclick="closeAllPopups();">&nbsp;</div>
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
