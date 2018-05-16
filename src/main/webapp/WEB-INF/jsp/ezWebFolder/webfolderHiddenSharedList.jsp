@@ -92,6 +92,7 @@
 			
 			function getFileList() {
 				searchRequirement = searchContext.getCurrentRequirement();
+				showProgress();
 				
 				$.ajax({
 					type: "POST",
@@ -103,6 +104,7 @@
 					dataType: "JSON",
 					async: true,
 					success : function(result) {
+						hideProgress();
 						if (result.status == "ok") {
 							var data = result.data;
 							
@@ -120,7 +122,8 @@
 						}
 					},
 					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134'/>");
+						hideProgress();
+// 						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
 			}
@@ -447,6 +450,10 @@
 				<iframe src="<spring:message code='main.kms4'/>" style="border:none;" id="iFrameLayer"></iframe>
 			</div>
 			<div id="tblPageRayer"></div>
+		</div>
+		
+		<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
+			<img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
 		</div>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

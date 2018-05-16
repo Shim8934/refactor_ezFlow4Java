@@ -747,7 +747,26 @@
 				DELETER_ID = #userId#,
 				UPDATE_DATE = #timeUTC#
 			WHERE
-				FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+				FOLDER_ID = #folderId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzWebFolderDAO.updateSubFolderUseStatus" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FOLDER
+			SET
+				USE_STATUS = 'N',
+				DELETER_ID = #userId#,
+				UPDATE_DATE = #timeUTC#
+			WHERE
+				USE_STATUS = 'Y'
+			AND
+				FOLDER_PATH LIKE CONCAT(#folderPath#, '%') 
+			AND
+				FOLDER_ID != #folderId#
 			AND
 				TENANT_ID = #tenantId#
 		]]>
@@ -768,7 +787,7 @@
 									TENANT_ID = #tenantId#
 					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
 			SET
-				f.USE_STATUS = 'T',
+				f.USE_STATUS = 'N',
 				f.DELETER_ID = #userId#,
 				UPDATE_DATE = #timeUTC#
 			WHERE

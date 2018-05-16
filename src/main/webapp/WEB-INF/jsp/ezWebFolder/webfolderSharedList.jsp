@@ -156,7 +156,7 @@
 			
 			function getSharedList() {
 				searchRequirement = searchContext.getCurrentRequirement();
-				
+				showProgress();
 				$.ajax({
 					type: "POST",
 					url: "/ezWebFolder/getSharedList.do",
@@ -172,8 +172,9 @@
 						"subSearchFlag" : isSubSearching
 					},
 					dataType: "JSON",
-					async: false,
+					async: true,
 					success : function(result) {
+						hideProgress();
 						if (result.status != "ok") {
 							if (result.code == 1) {
 								alert("<spring:message code='ezWebFolder.t306'/>");
@@ -208,13 +209,15 @@
 						folderId = "";
 					},
 					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134'/>");
+						hideProgress();
+// 						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
 			}
 			
 			function getFileList2() {
 				searchRequirement = searchContext.getCurrentRequirement();
+				showProgress();
 				
 				$.ajax({
 					type: "POST",
@@ -232,8 +235,9 @@
 						"searchEndDate" : searchRequirement.endDate
 					},
 					dataType: "JSON",
-					async: false,
+					async: true,
 					success : function(result) {
+						hideProgress();
 						if (result.status != "ok") {
 							if (result.code == 1) {
 								alert("<spring:message code='ezWebFolder.t306'/>");
@@ -281,7 +285,8 @@
 						setMailBoxInfo(result.fldCnt, result.fileCnt);
 					},
 					error : function(error) {
-						alert("<spring:message code='ezWebFolder.t134'/>");
+						hideProgress();
+// 						alert("<spring:message code='ezWebFolder.t134'/>");
 					}
 				});
 			}
@@ -1208,6 +1213,10 @@
 				</table>
 			</div>
 		</div>	
+		
+		<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
+			<img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+		</div>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

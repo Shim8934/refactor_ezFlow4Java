@@ -70,6 +70,8 @@
 		        pUserList.SetHeightFree(true);
 		        pUserList.DataSource(Resultxml);
 		        pUserList.DataBind("PermissionBasic"); 
+		        
+		        ChangeListView_onClick(getOrganListType());
 		    });
 		    
 		    function ListTypeChangeIcon() {
@@ -87,6 +89,7 @@
 		        pListType = Div;
 		        ListTypeChangeIcon();
 		        DisplayUserImageList();
+		        setOrganListType(pListType);
 		    }
 		    
 		    function event_GetDeptTreeInfo() {
@@ -166,7 +169,6 @@
 			        	success : function(xml){
 			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();
-// 		                    headerData = result;
 		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
 		                    if (CrossYN()) {
@@ -204,7 +206,6 @@
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
-// 		                headerData = result;
 
 		                if (CrossYN()) {
 		                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -827,7 +828,6 @@
 		        		var usedefault;		                
 		                var headerData = createXmlDom();
 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
-// 		                headerData = result;
 		                
 		                if (CrossYN()) {
 		                	usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
@@ -915,6 +915,36 @@
 	            		alert(strLang15);
 	            	}
 	            });
+	        }
+		    
+	        function setOrganListType(pListType) {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/setListType.do",
+	        		async : false,
+	        		data : {
+	        			listType : pListType
+	        		},
+	        		success : function(result) {
+	        			
+	        		}
+	        		
+	        	})
+	        }
+	        
+	        function getOrganListType() {
+	        	var organListType = "TXT";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/getListType.do",
+	        		async : false,
+	        		success : function(result) {
+	        			organListType = result;
+	        		}
+	        	})
+	        	return organListType;
 	        }
 	    </script>
 	</head>

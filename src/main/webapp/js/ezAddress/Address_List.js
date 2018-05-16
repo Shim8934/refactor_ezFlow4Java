@@ -94,6 +94,8 @@ function Get_SearchAddressList() {
     xmlHTTPAddressList.onreadystatechange = Complete_Get_AddressList;
     xmlHTTPAddressList.send(xmlDom);
     try { ShowMailProgress(); } catch (e) {}
+    
+    document.getElementById("HeaderAllCheckBox").checked = false;
 }
 function MakeAddressList() {
     var XmlRows = SelectNodes(ListXML, "DATA/ROW");
@@ -130,7 +132,7 @@ function MakeAddressList() {
             FolderType = SelectSingleNodeValue(XmlRows[Cnt], "FOLDERTYPE");
             FolderID = SelectSingleNodeValue(XmlRows[Cnt], "FOLDERID");
         }
-
+        
         if (document.getElementById("ListViewType").value == "list") {
             var _TR = document.createElement("TR");
             _TR.style.verticalAlign = "middle";
@@ -203,10 +205,11 @@ function MakeAddressList() {
             _TD3.style.whiteSpace = "nowrap";
             _TD3.style.overflow = "hidden";
             _TD3.style.textOverflow = "ellipsis";
+            
             if (CrossYN())
-                _TD3.innerText = Sname;
+                _TD3.innerText = Sname
             else
-                _TD3.innerHTML = "&nbsp;" + Sname;
+            	_TD3.innerHTML = "&nbsp;" + Sname;
             _TR.appendChild(_TD3);
 
             var _TD4 = document.createElement("TD");            
@@ -357,7 +360,9 @@ function MakeAddressList() {
             var ULTag = document.createElement("ul");
             /* 2018-04-25 장진혁 - 주소록 카드형식 UI 틀어짐현상때문에 수정 */
             ULTag.style.marginTop = "12px";
-
+            
+            Sname = replaceAll(Sname, "&", "&amp");
+            
             var UITag1 = document.createElement("li");
             UITag1.className = "name";            
             UITag1.innerHTML = imgType + Sname;
@@ -450,6 +455,7 @@ function Complete_Get_AddressList() {
         }
         document.getElementById("mailBoxInfo").style.visibility = "visible";
         MakeAddressList();
+        
     }
 }
 function MakeNoDateList() {
@@ -461,6 +467,7 @@ function MakeNoDateList() {
 
         var _TD = document.createElement("TD");
         _TD.style.textAlign = "center";
+        _TD.id = "noData";
         _TD.innerHTML = strLang100;
         _TR.appendChild(_TD);
         document.getElementById("MailList").appendChild(_TR);
@@ -691,6 +698,11 @@ function event_listCheckboxclick(obj) {
     listEventCheckbox = true;
 }
 function event_HeaderCheckBoxClick(obj) {
+	
+	if (document.getElementById("MailList").childNodes.item(0).childNodes.item(0).id == 'noData') {
+		return;
+	}
+	
     if (obj.checked) {
         for (var i = 0; i < document.getElementById("MailList").childNodes.length; i++) {
             document.getElementById("MailList").childNodes.item(i).childNodes.item(0).childNodes.item(0).checked = true;
@@ -1019,4 +1031,9 @@ function Get_SameAddressCnt()
 
     if (xmlHTTP.status == 200 )
         return xmlHTTP.responseText;
+}
+
+// 재은 수정
+function replaceAll(str, searchStr, replaceStr) {
+	return str.split(searchStr).join(replaceStr);
 }
