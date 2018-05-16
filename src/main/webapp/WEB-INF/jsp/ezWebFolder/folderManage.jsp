@@ -45,16 +45,14 @@
 		var moveCopyFolderDlg_cross_dialogArguments = [];
 		var deleteFolderDlg_cross_dialogArguments = [];
 		
+		window.onload = function() {
+			$('input:radio[name=treeType]:input[value=' + folderType + ']').prop("checked", true);
+			drawVolume = opener.webfolder_folder_Manage[1];
+			folderList(folderType);
+		}
+		
 		document.onselectstart = function() {
 			return event.srcElement.tagName == "INPUT" || event.srcElement.tagName == "TEXTAREA";
-		};
-		
-		function window_onload() {
-			try {
-				drawVolume = webfolder_folder_Manage[1];
-				$('input:radio[name=treeType]:input[value=' + folderType + ']').attr("checked", true);
-			} catch (e) {}
-			folderList(folderType);
 		}
 
 		function Window_Close() {
@@ -354,7 +352,7 @@
 		}
 	</script>
 </head>
-<body scroll="no" class="popup" onload="javascript:window_onload()">
+<body scroll="no" class="popup" >
 	<h1>폴더관리</h1>
 	<div id="close">
 		<ul>

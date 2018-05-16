@@ -259,25 +259,39 @@ public class EzWebFolderGWController_y {
 				return result;
 			}
 			
+			FolderVO folder     = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			FolderVO destFolder = ezWebFolderService.getFolderByFolderId(uppId, offset, tenantId);
 			int checkSbCreater = 0;
+			LOGGER.debug("mode : "+mode +" folderId : " + folderId + "destFolder.getFolderPath() : " + destFolder.getFolderPath());
+			
 			if (mode.equals("folder-move")) {
+				
+				// 하위의 있는 폴더가 모두 자신의 것이 아닐때
 				checkSbCreater = service.checkCreater(folderId, tenantId, comId, userId);
 				if (checkSbCreater != 1) {
 					LOGGER.debug("subFolder or SubFile is not mine!");
 					result.put("status", "ok");
 					result.put("code", 4);
 					return result;
-			
+				}
+				
+				//Check 같은 위치로 이동하려고 할때 
+				if (folder.getFolderUpper().equals(uppId)) {
+					result.put("status", "ok");
+					result.put("code", 5);
+					return result;
+				}
+				
+				// 상위의 폴더를 하위의 폴더로 이동하려는 경우 
+				if ( destFolder.getFolderPath().contains("|"+folderId+"|") ) {
+					result.put("status",  "ok");
+					result.put("code", 6);
+					return result;
 				}
 			}
-			FolderVO folder     = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
-			FolderVO destFolder = ezWebFolderService.getFolderByFolderId(uppId, offset, tenantId);
-			//Check copy/move conditions
-			if (folder.getFolderUpper().equals(uppId)) {
-				result.put("status", "error");
-				result.put("code", 2);
-				return result;
-			}
+			
+			
+			
 			
 			int pos = destFolder.getFolderPath().indexOf(folder.getFolderPath());
 		
